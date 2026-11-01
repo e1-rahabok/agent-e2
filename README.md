@@ -1,27 +1,23 @@
 # Isvara-2 — vSphere Knowledge Base for AI
 
-This repository contains **structured, high-quality vSphere knowledge** intended to power a Retrieval-Augmented Generation (RAG) AI assistant.
+This repository contains deep, structured vSphere knowledge designed to power a high-quality RAG AI assistant.
 
-The goal is simple: when an admin asks a question, the AI should retrieve accurate, grounded information from this knowledge base instead of guessing.
+The primary goal is **mastery and real understanding**, not just a dictionary of metrics.
 
 ---
 
-## Design Philosophy
+## Core Philosophy
 
-This repository is written for **veteran vSphere administrators** first.
+Performance counters are a **byproduct** of understanding how vSphere actually works.
 
-We use normal vSphere language:
+Half of true expertise comes from knowing the underlying architecture and resource management mechanisms. Only then do the counters become meaningful.
 
-- Managed Objects / Object Types
-- Properties
-- Performance Counters
-- Alarms
-- Logs
-- Faults
-- Advanced Settings
-- Troubleshooting flows
+This repository is organized accordingly:
 
-At the same time, the folder structure is deliberately organized so that a RAG system can retrieve information accurately. This dual purpose is intentional and documented.
+1. **Architecture** — How the system really works
+2. **Resource Management** — The rules and mechanisms
+3. **Counters** — Separated by perspective (Host vs VM)
+4. **Interpretation** — How experienced admins actually use the information
 
 ---
 
@@ -29,62 +25,51 @@ At the same time, the folder structure is deliberately organized so that a RAG s
 
 ```text
 knowledge/
-├── _templates/                  # Templates (copy these)
-├── vsphere/                     # All vSphere knowledge lives here
-│   ├── object-types/            # VirtualMachine, HostSystem, Datastore, etc.
-│   ├── properties/              # Important properties of managed objects
-│   ├── performance-counters/    # Real performance counters
-│   ├── alarms/                  # Alarm definitions and behaviour
-│   ├── logs/                    # Important log messages & signatures
-│   ├── faults/                  # Faults and error codes
-│   ├── advanced-settings/       # Advanced options / settings
-│   ├── troubleshooting/         # Decision trees and flows
-│   ├── glossary/                # Precise term definitions
+├── _templates/
+├── vsphere/
+│   ├── cpu/
+│   │   ├── architecture/
+│   │   ├── resource-management/
+│   │   ├── counters/
+│   │   │   ├── host/
+│   │   │   └── vm/
+│   │   └── interpretation/
+│   ├── memory/
+│   ├── storage/
+│   ├── network/
+│   ├── troubleshooting/          # Cross-cutting flows
+│   ├── glossary/
 │   └── README.md
 ├── nsx/                         # Future
 └── vsan/                        # Future
-
-evaluation/
-└── vsphere-golden-questions.md  # Questions used to test the AI
 ```
 
 ---
 
-## Why this structure? (RAG explanation)
+## Why this structure?
 
-A RAG system works by breaking knowledge into searchable pieces (chunks) and retrieving only the most relevant ones for each question.
+A veteran vSphere administrator does not think in isolated counter names.  
+They think in terms of:
 
-By separating knowledge into clear vSphere-native categories, we get two benefits:
+- How the CPU scheduler works
+- What Ready Time really means
+- How shares, reservations and limits interact
+- Why the same counter name means different things on a Host vs a VM
 
-1. **Admins feel at home** — the folders match how we already think about vSphere.
-2. **The AI retrieves better** — it can be guided to look in the right category (e.g. “only search Performance Counters + Alarms”).
-
-This is why we keep a clean separation even though a human could just put everything in one big folder.
-
----
-
-## How to add knowledge
-
-1. Go to `knowledge/_templates/`
-2. Copy the appropriate template
-3. Fill it with accurate information
-4. Save it in the correct folder under `knowledge/vsphere/`
-5. Use clear filenames (example: `host-not-responding.md`, `cpu.usage.average.md`)
+The folder structure reflects that mental model so both humans and the AI can build genuine understanding.
 
 ---
 
-## Priority order for content
+## Current Focus
 
-1. Troubleshooting flows (highest practical value)
-2. Faults and important log signatures
-3. Key Properties and Performance Counters
-4. Alarms
-5. Advanced Settings
-6. Object Types and Glossary
+**CPU** is the model area.  
+Other resource areas (memory, storage, network) will follow the same pattern.
 
 ---
 
-## Current Status
+## How to contribute
 
-Focus is currently on **vSphere** only.  
-NSX and vSAN will follow the exact same structure later.
+- Put deep architectural explanations in `architecture/`
+- Put mechanisms (shares, limits, scheduling behavior, etc.) in `resource-management/`
+- Put individual counters in `counters/host/` or `counters/vm/` — never mix perspectives
+- Put real-world diagnostic patterns in `interpretation/`

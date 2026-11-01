@@ -1,26 +1,29 @@
 # vSphere Knowledge
 
-This folder contains structured knowledge for the **vSphere** domain.
+This knowledge base is organized for **depth of understanding**, not just quick lookup.
 
-The organization follows normal vSphere concepts so that experienced administrators can navigate it easily.
+## Structure by Resource Area
 
-## Folders
+Each major resource area follows the same pattern:
 
-| Folder | What belongs here |
-|--------|-------------------|
-| `object-types/` | Managed Object types (VirtualMachine, HostSystem, ClusterComputeResource, Datastore, etc.) |
-| `properties/` | Important properties of managed objects |
-| `performance-counters/` | Performance counters (cpu.usage.average, mem.active.average, etc.) |
-| `alarms/` | Alarm definitions and what they mean |
-| `logs/` | Important log messages and signatures from hostd, vpxa, vpxd, ESXi, etc. |
-| `faults/` | Faults, error codes, and common failure signatures |
-| `advanced-settings/` | Advanced options / settings |
-| `troubleshooting/` | Decision trees and step-by-step troubleshooting flows |
-| `glossary/` | Precise definitions of terms |
+```text
+cpu/
+├── architecture/           # How it actually works
+├── resource-management/  # Mechanisms and rules
+├── counters/
+│   ├── host/             # HostSystem perspective
+│   └── vm/               # VirtualMachine perspective
+└── interpretation/       # How to use the knowledge in practice
+```
 
-## Guidelines
+The same structure applies to `memory/`, `storage/`, `network/`, etc.
 
-- One major topic per file
-- Prefer clear, descriptive filenames
-- Use the templates in `../_templates/`
-- Write for other experienced vSphere admins
+## Key Principle
+
+**Never mix Host and VM perspectives** in the same counter file.  
+Even when the counter name is identical, the meaning changes.
+
+## Other folders
+
+- `troubleshooting/` — Cross-cutting troubleshooting flows
+- `glossary/` — Precise definitions of terms
