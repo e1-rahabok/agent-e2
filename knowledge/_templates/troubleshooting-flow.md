@@ -1,53 +1,50 @@
-# Troubleshooting Flow Template
+# Troubleshooting Flow
 
-**Component**: vSphere / NSX / vSAN / ...
-**Title**: Short descriptive title
-**ID**: unique-id (optional)
+**Title**: 
+**Applies to**: vSphere 8.x / VCF 9.1 / ...
 **Last Updated**: YYYY-MM-DD
-**Applies to versions**: e.g. vSphere 8.x, VCF 9.1
+**Author / Source**: 
 
 ## Symptoms
-- Symptom 1
-- Symptom 2
+- 
+- 
 
-## Prerequisites / Quick Checks
-- [ ] Check 1
-- [ ] Check 2
+## Quick Checks (before deep troubleshooting)
+- [ ] 
+- [ ] 
 
-## Decision Tree / Flow
+## Decision Flow
 
 ```text
 Start
- ├─ Condition A?
- │    ├─ Yes → Action / Next step
- │    └─ No  → Go to Condition B
- ├─ Condition B?
- │    ├─ Yes → ...
- │    └─ No  → ...
- └─ ...
+├─ Check A?
+│  ├─ Yes → Action / Go to Step X
+│  └─ No  → Check B
+├─ Check B?
+│  ├─ Yes → ...
+│  └─ No  → ...
+└─ ...
 ```
-
-(You can also use Mermaid syntax if preferred)
 
 ## Detailed Steps
 
-### Step 1: ...
-- What to do
+### 1. 
+- Action
 - Expected result
-- If not → go to ...
+- If not as expected → 
 
-### Step 2: ...
+### 2. 
 
 ## Common Root Causes
-| Cause | How to confirm | Resolution |
-|-------|----------------|------------|
-| ...   | ...            | ...        |
+| Root Cause | How to Confirm | Resolution |
+|------------|----------------|------------|
+|            |                |            |
 
-## Related Errors / Events
-- Error code or event ID
+## Related Faults / Log Signatures
+- 
 
-## Related Documents
-- Official doc title / link or internal reference
+## Related Performance Counters / Properties
+- 
 
-## Notes
-Any tribal knowledge, gotchas, or version-specific behaviour.
+## Notes & Gotchas
+(Tribal knowledge, version-specific behaviour, things that often waste time)

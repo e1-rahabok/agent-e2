@@ -1,18 +1,26 @@
 # vSphere Knowledge
 
-This folder contains structured knowledge for the **vSphere** expert.
+This folder contains structured knowledge for the **vSphere** domain.
+
+The organization follows normal vSphere concepts so that experienced administrators can navigate it easily.
 
 ## Folders
 
-- `troubleshooting/` — Decision trees and flowcharts
-- `errors/` — Error codes, events, and log signatures
-- `config-parameters/` — Advanced settings and configuration parameters
-- `metrics/` — Performance and health metrics
-- `glossary/` — Precise term definitions
+| Folder | What belongs here |
+|--------|-------------------|
+| `object-types/` | Managed Object types (VirtualMachine, HostSystem, ClusterComputeResource, Datastore, etc.) |
+| `properties/` | Important properties of managed objects |
+| `performance-counters/` | Performance counters (cpu.usage.average, mem.active.average, etc.) |
+| `alarms/` | Alarm definitions and what they mean |
+| `logs/` | Important log messages and signatures from hostd, vpxa, vpxd, ESXi, etc. |
+| `faults/` | Faults, error codes, and common failure signatures |
+| `advanced-settings/` | Advanced options / settings |
+| `troubleshooting/` | Decision trees and step-by-step troubleshooting flows |
+| `glossary/` | Precise definitions of terms |
 
-## How to add content
+## Guidelines
 
-1. Copy the appropriate template from `../_templates/`
-2. Fill in accurate information
-3. Save with a clear filename (example: `host-not-responding.md`)
-4. Keep one major topic per file
+- One major topic per file
+- Prefer clear, descriptive filenames
+- Use the templates in `../_templates/`
+- Write for other experienced vSphere admins

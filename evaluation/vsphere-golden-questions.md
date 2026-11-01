@@ -1,17 +1,15 @@
-# vSphere Golden Evaluation Questions
+# vSphere Golden Questions
 
-Use this file to record high-quality questions that we will use to evaluate retrieval and answer quality.
+These questions are used to evaluate how well the AI retrieves and answers from the knowledge base.
 
-## Format
+Add real questions that matter to experienced vSphere administrators.
 
-```markdown
-### Q1: <question>
-**Expected sources / topics**:
-- ...
-**Notes**:
-- ...
-```
+### Format example
 
-## Questions
+**Q:** Host shows as Not Responding in vCenter but is still pingable. What should I check first?
 
-(Add real questions here)
+**Expected knowledge areas:** troubleshooting, logs, faults, properties
+
+---
+
+(Add questions below)

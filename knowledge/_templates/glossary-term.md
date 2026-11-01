@@ -1,15 +1,14 @@
-# Glossary Term Template
+# Glossary Term
 
 **Term**: 
-**Component**: vSphere / NSX / vSAN / ... (or "General")
 **Last Updated**: YYYY-MM-DD
 
 ## Precise Definition
-Clear, unambiguous definition in the context of VMware / vSphere.
+Clear definition in the context of vSphere.
 
 ## Common Confusion
-What people often mix this term up with.
+What this term is often mixed up with.
 
 ## Related Terms
 
-## Official References
+## Notes
