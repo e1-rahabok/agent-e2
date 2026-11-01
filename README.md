@@ -25,6 +25,7 @@ This repository is organized accordingly:
 
 ```text
 knowledge/
+├── raw-input/                 # Original source materials (Word, drawio, PPT, PDF, etc.)
 ├── _templates/
 ├── vsphere/
 │   ├── cpu/
@@ -37,7 +38,7 @@ knowledge/
 │   ├── memory/
 │   ├── storage/
 │   ├── network/
-│   ├── troubleshooting/          # Cross-cutting flows
+│   ├── troubleshooting/
 │   ├── glossary/
 │   └── README.md
 ├── nsx/                         # Future
@@ -65,11 +66,4 @@ The folder structure reflects that mental model so both humans and the AI can bu
 **CPU** is the model area.  
 Other resource areas (memory, storage, network) will follow the same pattern.
 
----
-
-## How to contribute
-
-- Put deep architectural explanations in `architecture/`
-- Put mechanisms (shares, limits, scheduling behavior, etc.) in `resource-management/`
-- Put individual counters in `counters/host/` or `counters/vm/` — never mix perspectives
-- Put real-world diagnostic patterns in `interpretation/`
+Raw source documents (including the metrics book) go into `knowledge/raw-input/`.
