@@ -25,4 +25,4 @@ This is **not** the same thing as the host counter with the same name.
 
 ## Notes
 This is the **VirtualMachine** view of the counter.  
-The HostSystem version lives in `counters/host/` and measures something different.
+The HostSystem version lives in `counters/esxi/` and measures something different.

@@ -82,15 +82,15 @@ Source: *PART 3 – Counters*, Chapter "The World of Metrics", section "Metrics 
 
 ### Q4 — Hyper-Threading and two vantage points
 
-**Q:** Two single-vCPU VMs are both fully busy, running on the two hardware threads of the same physical core. Each VM shows CPU Usage around 62.5%, not 100%. Is each VM only using 62.5% of what it needs? What does the host report for that core?
+**Q:** Two single-vCPU VMs are both fully busy, running on the two hardware threads of the same physical core. Each VM shows CPU Usage around 62.5%, not 100%. Is each VM only getting 62.5% of what it demands? What does the host report for that core?
 
 **Tests:** Same name, different meaning (consumer vs provider vantage point).
 **Likely wrong answer:** "The VMs are under-utilised" — or "it's a reporting bug".
 **Expected key points:**
-- VM Used is HT-aware: when both threads run, the VM is charged with a **37.5% penalty**, so it shows ~62.5%.
-- ESXi sees the core as fully busy (100%). ESXi Used is also HT-aware, with a different penalty (50%).
-- Different numbers come from different vantage points: consumer (VM) vs provider (ESXi). Both are correct.
-- ESXi Core Utilization shows 100% whether 1 or 2 threads run. Check **Thread Utilization** to tell which.
+- VM Usage is HT-aware: when both threads run, the VM is charged with a **37.5% penalty**, so it shows ~62.5%.
+- ESXi sees the core as fully busy (100%). ESXi can see both the core and its 2 threads, while a VM cannot.
+- Host values for that core: Usage (core level) = 100%; Usage (MHz, core level) reflects the Hyper-Threading benefit; Core Utilization = 100%; Thread Utilization = 100%.
+- Core Utilization shows 100% whether 1 or 2 threads run. **Thread Utilization** tells which.
 
 **Source:** Naming Complexity; Other Nuances (Formula).
 
@@ -146,14 +146,15 @@ Source: *PART 3 – Counters*, Chapter "The World of Metrics", section "Metrics 
 
 ### Q8 — Provider vs consumer metrics
 
-**Q:** A dashboard shows "CPU Ready" for an ESXi host. What does that number actually represent? Can a physical core itself have Ready time?
+**Q:** An ESXi host dashboard shows "CPU Ready" and "CPU Demand". For each, is it a provider metric or a sum of the VMs' metrics? Can a physical core itself have Ready time?
 
 **Tests:** Principle: provider vs consumer; provider metric vs sum-of-consumer metric.
-**Likely wrong answer:** "It's the host's own CPU Ready — time the host waited for CPU."
+**Likely wrong answer:** "Both are the host's own values" — or "Demand comes from the VMs, so ESXi Demand is the sum of VM Demand".
 **Expected key points:**
 - Virtualization splits the stack into **provider** and **consumer**.
 - Provider has 2 kinds of metrics: true **provider metrics** (don't exist on the consumer) and **sum of consumer** metrics.
 - Ready is a consumer concept. A physical core/thread is always ready. Host-level Ready can only be an aggregate of its VMs.
+- ESXi CPU Demand is a **provider metric**. It is not the sum of VM + VMkernel worlds. It is the CPU scheduler's internal value for the ideal total demand had there been no contention.
 - The metric name does not say which kind it is. You must know the mechanism.
 - ESXi ≠ sum of VMs + kernel. Host metrics are more complex than a sum.
 
