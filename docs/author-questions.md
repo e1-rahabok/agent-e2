@@ -233,5 +233,22 @@ Each entry has:
 - Written as now: bar 2 recommended, no numbers stated.
 - Answer:
 
+### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
+- Files: `vsphere/system/metrics/cluster/cluster-performance`
+- Search 1: "vMotion is not included as it only becomes an issue"
+- Search 2: "vMotion is included as it does impact the VM performance"
+- Question: is vMotion part of the cluster KPI or not? The threshold table has no vMotion row.
+- Written as now: vMotion described as a leading indicator, flagged.
+- Answer:
+
+### Q031 · Provider Objects > Performance · Cluster KPI table vs text
+- Files: `vsphere/system/metrics/cluster/cluster-performance`
+- Search 1: "Storage troubleshooting differs to compute troubleshooting" (disk latency listed as not used)
+- Search 2: "That’s why it’s given 4x the threshold of zipped + swapped" (balloon thresholds)
+- Search 3: "I did not set green = 0"
+- Question: the table includes disk latency rows, has no balloon or swapped rows, and sets packet green to 0%. Is the table or the text current?
+- Written as now: the table, with text reasons listed and the conflict flagged.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
