@@ -61,6 +61,7 @@ Standing rules for this repository. Read at the start of every session.
 - `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, `README.md`, `CLAUDE.md`.
 
 ## Git
-- Work on the branch named for the session. Do not push to `main`.
+- Work on the branch named for the session.
+- Early development: merge the session branch to `main` through a pull request, automatically, after each change set. Use a merge commit so each change stays visible.
 - Commit messages and PR text describe the change. No model names.
 - Do not delete files unless the author asks. Git history keeps them.
