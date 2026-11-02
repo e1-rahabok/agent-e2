@@ -44,7 +44,16 @@ Open work for this repository. Not indexed. Update when items close.
   - New: `cpu/concepts/esxi-thread-core-accounting`; host metric files peak-core-usage, reserved-capacity, imbalance, wait, cpu-utilization-for-resources; comparisons host-consumption-metrics, host-contention-metrics; diagnosis host-cpu-capacity-headroom.
   - Updated: host utilization, core-utilization, idle, usage, used, demand.
 - [x] Chapter 3 (Memory) > Architecture: extracted 2026-11-02. New: `memory/concepts/` memory-as-storage, memory-layers, guest-os-vs-vm-memory. Updated: VM latency, consumed, ballooned; host consumed.
-- [ ] Chapter 3 (Memory) > VM, ESXi; Storage and Network chapters: present in the uploaded `.docx`. Not started.
+- [x] Chapter 3 (Memory) > VM: extracted 2026-11-02.
+  - New concepts: ballooning, swap-and-compression. New VM metric files: granted, shared, zero-pages, active, compressed, swap-target, swap-in-rate, swap-out-rate, balloon-target, entitlement, overhead, utilization.
+  - New: comparisons/vm-memory-metrics, diagnosis/vm-memory-latency-high. Updated: VM latency, ballooned, consumed, swapped, usage; CPU swap-wait.
+- [ ] Chapter 3 (Memory) > ESXi; Storage and Network chapters: present in the uploaded `.docx`. Not started.
+- [ ] Chapter 3 Memory VM: open questions for the author, with verbatim search strings:
+  - Limit and balloon. Search 1: "Does limit result in Balloon?" (answer in book: no). Search 2: "heavily ballooned as limit was imposed on it". Search 3: "Since the VM needed more, it experienced heavy ballooning". Does a limit cause ballooning or not?
+  - Memory Latency definition. Search 1 (Architecture): "percentage of memory space". Search 2 (VM): "the amount of time a vCPU spends waiting on the completion of a page fault". Space or time?
+  - Meaning of Compressed and Swapped. Search 1 (VM): "indicates that the host is unable to satisfy the VM memory requirement". Search 2 (Architecture): "It does not mean VMs were contending for RAM". Which holds?
+  - Sharing savings. Search: "Savings = 29.83 TB". The formula Consumed = Granted - Savings gives 23.7 TB of savings, not 6.13 TB. Which is right?
+  - Memory Utilization formula. Search: "We add 5% of Total, not Used". Where does the 5% enter the formula?
 - [ ] Chapter 3 Memory Architecture: open questions for the author, with verbatim search strings:
   - Search: "ESXi uses 3 levels to manage memory". The list that follows has 4 items (TPS, Tiered Memory, Balloon, Compress/Swap). Which are the 3 levels?
   - Search: "The first sign of unmet demand". The next sentences say ballooning does not mean ESXi is unable to meet demand. Is balloon a sign of memory pressure rather than unmet demand?
@@ -69,6 +78,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
 - [ ] Add golden cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
 - [ ] Add golden cases for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
+- [ ] Add golden cases for Chapter 3 Memory traps: Active stuck at 100%, Windows In Use 7.2 GB on an idle VM, Granted above limit, Swapped is not swap in - swap out, balloon 63% flat for weeks, only Latency measures memory performance.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `evaluation/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
 
