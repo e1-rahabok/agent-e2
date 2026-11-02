@@ -18,6 +18,8 @@ related:
 - vsphere/cpu/configuration/side-channel-scheduling
 - vsphere/cpu/metrics/comparisons/consumption-metrics
 - vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/cpu-topology
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21)

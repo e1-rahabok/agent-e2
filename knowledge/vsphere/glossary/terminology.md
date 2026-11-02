@@ -18,6 +18,7 @@ review_notes:
   - "Section 'Book terminology' is a placeholder. The author will provide the book's terminology."
   - "Section 'Core words' is drafted by Claude to prevent mixing dimensions. Author to correct."
   - "Section 'VCF Operations object types': names other than vSphere World are from Claude's own knowledge. Verify against current VCF Operations documentation."
+  - "Section 'Proposed terms': added 2026-11-02 from the book, CPU > Architecture. Not yet in use as tag values. Author to confirm each term and its preferred name."
 status: draft
 ---
 
@@ -57,6 +58,23 @@ Tag values in front matter must use the terms defined here.
 ### VCF Operations
 - vSphere World: the top-level object covering all vCenter Server instances.
 - vCenter Server, Datacenter, Cluster Compute Resource, Host System, Virtual Machine, Datastore, Datastore Cluster, Resource Pool, vSphere Distributed Switch, Distributed Port Group.
+
+## Proposed terms (author to confirm)
+| Term | Meaning | Also called | Source |
+|---|---|---|---|
+| Run Time | How long a CPU or vCPU runs. Binary per moment. Used for capacity. | Run (VM), Utilization (ESXi) | Book, CPU > Architecture > 2 Metrics Not 1 |
+| Run Quality | Cycles completed while running. Varies with frequency and Hyper-Threading. Used for performance. | - | Book, same section |
+| CPU Throughput | Productive cycles attributed to a thread or vCPU. Excludes the idle loop. | Usage (MHz), Used | Book, CPU > Architecture > CPU Throughput |
+| Efficiency (CPU) | Hyper-Threading effect on cycles completed. Accounted as 1.25x per core, 0.625x per thread. | - | Book, Frequency \| Efficiency \| Efficacy |
+| Efficacy (CPU) | Work per cycle from core architecture. Not accounted by any metric. | - | Book, same section |
+| Base frequency | Nominal frequency. vSphere uses it as total capacity. | Nominal frequency, base clock speed | Book, CPU Frequency |
+| All-Core Turbo | Frequency when all cores of a socket are busy. | All Core Boost (AMD) | Book, CPU Frequency |
+| Single-Core Turbo | Highest frequency of one busy core. | Max Turbo Frequency (Intel) | Book, CPU Frequency |
+| Frozen time | Time a vCPU is de-scheduled. The Guest OS sees a time jump. | Steal Time (Linux, for Ready) | Book, Guest OS vs VM |
+| Co-stop | vCPU state: held back because a sibling vCPU of the same VM is too far behind. | Co-Stop, CoStop | Book, State of a VM vCPU |
+| SMT | Simultaneous multithreading. | Hyper-Threading (Intel) | Book, CPU Efficiency |
+| CCD | Core Complex Die. A group of cores sharing one L3 cache inside an AMD socket. | - | Book, System on a Chip |
+| CPPC | Collaborative Processor Performance Control (ACPI 5.0+). | Intel HWP | Book, ESXi Level |
 
 ## Words to avoid
 | Avoid | Use instead | Why |

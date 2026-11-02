@@ -13,17 +13,21 @@ object:
 metric_class: contention
 internal_derive:
 - vsphere/foundations/visibility-layers
+- vsphere/cpu/concepts/vcpu-states
+- vsphere/cpu/concepts/cpu-efficiency
 same_name:
 - vsphere/memory/metrics/virtual-machine/latency
 - vsphere/storage/metrics/virtual-machine/disk-latency
 same_meaning: []
 related:
 - vsphere/cpu/metrics/virtual-machine/ready
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
 source:
   document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Architecture intro; State of a VM vCPU
 corrections: []
-review_notes: []
+review_notes:
+- Sections Hyper-Threading: from CPU > Architecture in the pre-correction book file (uploaded 2026-11-02). Re-check when the corrected file is uploaded.
 status: draft
 ---
 
@@ -41,6 +45,11 @@ status: draft
 - Linux Steal Time includes only CPU Ready.
 - VM CPU Latency includes many factors, including CPU frequency.
 - Pattern: same purpose, different formula.
+
+## Hyper-Threading
+- Ready, Co-stop and Wait do not register Hyper-Threading contention. Contention for shared core resources happens in hardware, not in the scheduler.
+- CPU Latency is the counter for throughput lost when the sibling thread runs.
+- Hyper-Threading changes CPU Latency by 0% to 37.5%.
 
 ## Traps
 - "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See `vsphere/foundations/visibility-layers`, area D.

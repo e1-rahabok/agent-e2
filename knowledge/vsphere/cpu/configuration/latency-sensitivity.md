@@ -21,6 +21,8 @@ related:
 - vsphere/cluster-resource-management/configuration/resource-settings-guidance
 - vsphere/network/concepts/passthrough-and-offload
 - vsphere/network/configuration/rss-and-interrupt-coalescing
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/power-states
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54)

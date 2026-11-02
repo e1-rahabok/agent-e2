@@ -25,6 +25,8 @@ related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/demand
 - vsphere/cpu/metrics/host/core-utilization
+- vsphere/cpu/concepts/run-time-vs-run-quality
+- vsphere/cpu/concepts/cpu-measurement-levels
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances

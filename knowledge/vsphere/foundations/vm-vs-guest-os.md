@@ -20,6 +20,7 @@ internal_derive: []
 related:
 - vsphere/foundations/visibility-layers
 - vsphere/foundations/kernel-worlds
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?

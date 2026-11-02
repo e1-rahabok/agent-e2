@@ -17,6 +17,8 @@ related:
 - vsphere/cpu/concepts/numa
 - vsphere/system/configuration/bios-settings
 - vsphere/cluster-resource-management/concepts/dpm
+- vsphere/cpu/concepts/power-states
+- vsphere/cpu/concepts/cpu-frequency
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX CPU Considerations > Host Power Management in ESX (pp. 31-32); Power Management BIOS Settings (pp. 22-23); Intel Hardware P-States (p. 12)
