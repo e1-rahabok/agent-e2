@@ -21,7 +21,7 @@
 |---|---|---|
 | Speed | Nanoseconds | Generally ignored for RAM monitoring. DDR5 is faster than DDR4, but the difference does not matter for general monitoring. |
 | Speed | Nanoseconds | Matters with memory tiering: the second tier is NVMe, not DIMM. |
-| Speed | % | The only ESXi speed counter is Memory Latency: the percentage of memory space that takes longer than expected to read. Not the latency in ns. |
+| Speed | % | The only ESXi speed counter is Memory Latency. Not the latency in ns. See `vsphere/memory/metrics/virtual-machine/latency` for its definition. |
 | Space | Bytes | The bulk of memory metrics. Relatively static. |
 
 - Disk is the opposite: it tracks latency in time, not the share of space facing latency.
@@ -31,7 +31,7 @@
 
 ## Traps
 - "Memory at 100% is a problem" → memory is cache. Check paging and contention, not utilization.
-- "Memory Latency is in nanoseconds" → it is a percentage of memory space.
+- "Memory Latency is in nanoseconds" → it is a percentage, not a time.
 - "Memory reservation frees up when idle, like CPU" → memory reservation stays.
 
 ## Metadata
@@ -59,6 +59,7 @@ source:
   document: PART 3 - Counters.docx
   path: Memory > Architecture > Architecture intro
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Two dimensions'': the Architecture section defines Memory Latency as a share of memory space; the VM section defines it as a share of time. Open question in docs/todo.md.'
 status: draft
 ```

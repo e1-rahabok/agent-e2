@@ -11,6 +11,9 @@
 - Superseded by the Memory Contention metric.
 - VCF Operations counts Swap Wait as part of memory contention, not CPU Contention.
 
+## vs Memory Latency
+- Memory Latency is a superset: it covers swap-in and decompression. Swap Wait covers swap-in only.
+
 ## Traps
 - "Swap Wait is a CPU problem" → its cause is memory. Check memory metrics.
 
@@ -37,10 +40,12 @@ related:
 - vsphere/cpu/metrics/virtual-machine/wait
 - vsphere/cpu/metrics/virtual-machine/other-wait
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
+- vsphere/memory/metrics/virtual-machine/latency
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Wait Metrics
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''vs Memory Latency'': from Memory > VM > Latency.'
 status: draft
 ```

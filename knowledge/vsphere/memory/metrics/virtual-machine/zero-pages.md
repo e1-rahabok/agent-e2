@@ -1,0 +1,45 @@
+# VM Memory Zero Pages
+
+## Meaning
+- VM pages whose content is all zeroes (0x00).
+- A common way to initialize memory is to write zeroes. Windows initializes pages with 0.
+- The zero page is the most commonly shared page. Zero and Shared move together.
+- Zero pages count in Granted but cost almost no physical RAM.
+
+## Example
+- Guest OS Used constant at about 156 GB; Consumed never above 131 GB. Zero pages about 61-63 GB explain the gap.
+![Consumed below Guest OS Used because of zero pages](../../images/consumed-below-guest-used-zero-pages.png)
+
+## Traps
+- "Consumed below Guest OS Used means a data error" → check Shared and Zero pages.
+
+## Metadata
+```yaml
+id: vsphere/memory/metrics/virtual-machine/zero-pages
+retriever_guide: metric-meaning
+scope: vsphere
+technology:
+- memory
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+metric_class: context
+internal_derive:
+- vsphere/memory/concepts/page-sharing
+same_name: []
+same_meaning: []
+related:
+- vsphere/memory/metrics/virtual-machine/shared
+- vsphere/memory/metrics/virtual-machine/granted
+- vsphere/memory/metrics/virtual-machine/consumed
+source:
+  document: PART 3 - Counters.docx
+  path: Memory > VM > Consumption Metrics > Shared > Zero; Consumed > Guest OS
+corrections: []
+review_notes: []
+status: draft
+```

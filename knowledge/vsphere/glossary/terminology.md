@@ -70,6 +70,13 @@ Tag values in front matter must use the terms defined here.
 | CPU Utilization for Resources | 17 legacy rescpu.* metrics. Avoid. | rescpu | Book, CPU > ESXi > Metrics to Avoid |
 | VM pages | Pages in the VM address space. Vendor term: guest physical pages. | - | Book, Memory > Architecture > Relationship |
 | ESXi pages | Pages ESXi manages on DIMM, host cache or tiered NVMe. Vendor term: machine pages. | - | Book, Memory > Architecture > Relationship |
+| Page-fault latency | VM memory Latency (%), esxtop %LAT_M. VCF Operations: VM Memory Contention. | Memory Latency | Book, Memory > VM > Latency |
+| Granted | VM pages with ESXi pages mapped. VM view. | - | Book, Memory > VM > Granted |
+| Entitlement (memory) | Granted + Overhead. | - | Book, Memory > VM > Consumption Metrics |
+| Swap Target | Memory ESXi aims to reclaim by compression and swapping. | Compress-swap target | Book, Memory > VM > Transition |
+| Balloon Target | Memory ESXi asks the balloon driver to reclaim. | - | Book, Memory > VM > Balloon |
+| Active (memory) | Sampled estimate of recently touched VM memory. | Touch (ESXi), Non Zero Active (VCF Operations) | Book, Memory > VM > Active |
+| Guest OS Needed Memory | VCF Operations guest metric behind VM Memory Usage (%). | - | Book, Memory > VM > Usage (%) |
 
 ## Words to avoid
 | Avoid | Use instead | Why |
