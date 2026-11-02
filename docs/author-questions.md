@@ -117,6 +117,8 @@ Each entry has:
 - Search 1: "Does limit result in Balloon?" (the book answers no)
 - Search 2: "heavily ballooned as limit was imposed on it"
 - Search 3: "Since the VM needed more, it experienced heavy ballooning"
+- Search 4 (Memory > ESXi): "If you actually see balloon, that means there is limit imposed"
+- Search 5 (Memory > ESXi): "It takes longer to realize, and is not affected by limit"
 - Question: does a limit cause ballooning?
 - Written as now: both, flagged.
 - Answer:
@@ -149,6 +151,30 @@ Each entry has:
 - Search: "We add 5% of Total, not Used"
 - Question: where does the 5% enter the formula?
 - Written as now: formula and the 5% statement, flagged.
+- Answer:
+
+### Q019 · Chapter 3 Memory > ESXi · Swap Consumed formula
+- Files: `vsphere/memory/metrics/host/swap-used`
+- Search 1 (ESXi): "I think this is swapped out – swapped in"
+- Search 2 (VM): "This is why Swapped is not Swapped In – Swapped Out"
+- Question: is host Swap Consumed equal to swapped out minus swapped in?
+- Written as now: both statements, flagged.
+- Answer:
+
+### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
+- Files: `vsphere/memory/metrics/host/consumed`
+- Search 1: "It only includes the resultant zipped, not the amount subjected to compression"
+- Search 2: "Consumed does not include compressed"
+- Question: does host Consumed include the compressed result in DIMM?
+- Written as now: includes the result, flagged. Your diagram (physical view) also shows it inside Consumed.
+- Answer:
+
+### Q021 · Chapter 3 Memory > ESXi · Utilization formula
+- Files: `vsphere/memory/metrics/host/utilization`
+- Search 1: "the sum of running VM Utilization metrics + the kernel reservation"
+- Search 2: "Utilization. Machine Demand + ESX System Usage"
+- Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
+- Written as now: both forms, flagged.
 - Answer:
 
 ## Resolved

@@ -8,8 +8,29 @@
 - Physical memory is shared by VMs and the hypervisor. Manage them as one.
 - Very high Consumed triggers compression and swapping proactively. That alone does not mean VMs contend for RAM.
 
+## Formula
+```text
+Consumed = physical memory - free
+VCF Operations Usage (%) = Consumed / Total Capacity
+```
+- Only pages mapped in physical DIMM.
+- excludes: ballooned (guest level), swapped (on disk or host cache).
+- includes: the resulting compressed size (not the input), the result of TPS savings (not the shared amount), VM overhead, all kernel processes (user and kernel space).
+- Includes actual kernel use, not kernel reservation.
+
+## Behaviour
+- The primary ESXi utilization counter, but full of cache and inactive pages. Near 100% in an overcommitted host is the goal, not a problem.
+- Drops when balloon or swap out rises.
+- Includes non-VM consumers: kernel, vSAN, NSX. Can exceed the memory allocated to all running VMs.
+- Host with 0 VMs: example 17 GB consumed, likely vSAN.
+- Example: 255 GB host, 229 GB consumed = 191 GB by the one VM + 36 GB by the kernel. Kernel consumption = sum of 3 kernel resource pools.
+- Evacuated host: Consumed fell from 400 GB to 32 GB (vSAN), not 0. Kernel usage stayed nearly constant; kernel reservation did not change.
+![ESXi Consumed = VM consumed + kernel](../../images/esxi-consumed-vm-plus-kernel.png)
+
 ## Traps
 - Summing VM Consumed and expecting ESXi Consumed.
+- "Host Consumed near 100% is a problem" → memory is cache. Check balloon, swap-in and VM contention.
+- "Host with no VMs should show 0 Consumed" → kernel, vSAN and NSX consume memory.
 
 ## Metadata
 ```yaml
@@ -33,11 +54,16 @@ same_name:
 same_meaning: []
 related:
 - vsphere/memory/concepts/memory-layers
+- vsphere/memory/metrics/host/granted
+- vsphere/memory/metrics/host/utilization
+- vsphere/memory/concepts/host-memory-states
 source:
   document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship; Memory > ESXi > Consumption Metrics > Consumed
 corrections: []
 review_notes:
 - 'Section ''Scope'': from Memory > Architecture.'
+- 'Sections Formula, Behaviour: from Memory > ESXi.'
+- 'Section ''Formula'': the book says Consumed includes the resulting compressed size, and also says Consumed does not include compressed. Open question in docs/author-questions.md.'
 status: draft
 ```
