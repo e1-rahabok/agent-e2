@@ -25,7 +25,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Questions for the author: `docs/author-questions.md` (32 open).
+- [ ] Questions for the author: `docs/author-questions.md` (33 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
 - [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
@@ -65,13 +65,14 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Provider Objects > Other Metrics: extracted 2026-11-02. New: system/metrics/cluster cluster-consumption, cluster-risk; system/metrics/comparisons/availability.
 - [x] Provider Objects > esxtop (Overview, CPU, Memory): extracted 2026-11-02. New: system/concepts/esxtop; cpu/metrics/comparisons/esxtop-cpu; memory/metrics/comparisons/esxtop-memory.
 - [x] Provider Objects > esxtop (Storage, Network): extracted 2026-11-02. Provider Objects complete. New: storage/metrics/comparisons/esxtop-storage; network/metrics/comparisons/esxtop-network.
-- [ ] MS Windows (Introduction, CPU, Memory, Storage): not started.
+- [x] MS Windows (Introduction, CPU, Memory, Storage): extracted 2026-11-02. Book extraction complete. New: cpu/concepts/windows-cpu-scheduling; cpu/metrics/virtual-machine guest-run-queue, guest-context-switch, guest-processor-time; memory/concepts/windows-memory; storage/metrics/virtual-machine/guest-disk-queue.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
 - [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
+- [ ] Add golden cases for MS Windows traps: Windows 100% on a shared core vs VM CPU Usage 62.5%, queue excludes running threads on Windows but includes them on Linux, 100% utilization with a low queue, Available = Standby + Free, guest disk queue invisible to VM latency.
 - [ ] Add golden cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
 - [ ] Add golden cases for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
 - [ ] Add golden cases for Chapter 3 Memory traps: Active stuck at 100%, Windows In Use 7.2 GB on an idle VM, Granted above limit, Swapped is not swap in - swap out, balloon 63% flat for weeks, only Latency measures memory performance.
