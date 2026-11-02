@@ -1,7 +1,7 @@
 # Memory overcommit techniques
 
 ## Purpose
-- ESX uses five mechanisms to reduce the machine physical memory required by each VM.
+- ESX uses five mechanisms to reduce the ESXi physical memory (vendor term: machine memory) required by each VM.
 - The five mechanisms are page sharing, ballooning, memory compression, swap to host cache, and regular host-level swapping.
 - Page sharing runs continuously. The other four are triggered in order as memory pressure rises. Each trigger is listed under its mechanism below.
 - Sharing, ballooning, compression and swap to host cache allow significant overcommitment, usually with little or no impact on performance.

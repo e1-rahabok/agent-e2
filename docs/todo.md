@@ -43,7 +43,11 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Chapter 2 (CPU) > ESXi: extracted 2026-11-02. Chapter 2 CPU complete.
   - New: `cpu/concepts/esxi-thread-core-accounting`; host metric files peak-core-usage, reserved-capacity, imbalance, wait, cpu-utilization-for-resources; comparisons host-consumption-metrics, host-contention-metrics; diagnosis host-cpu-capacity-headroom.
   - Updated: host utilization, core-utilization, idle, usage, used, demand.
-- [ ] Memory, Storage, Network chapters: present in the uploaded `.docx` (pp. after CPU). Not started.
+- [x] Chapter 3 (Memory) > Architecture: extracted 2026-11-02. New: `memory/concepts/` memory-as-storage, memory-layers, guest-os-vs-vm-memory. Updated: VM latency, consumed, ballooned; host consumed.
+- [ ] Chapter 3 (Memory) > VM, ESXi; Storage and Network chapters: present in the uploaded `.docx`. Not started.
+- [ ] Chapter 3 Memory Architecture: open questions for the author, with verbatim search strings:
+  - Search: "ESXi uses 3 levels to manage memory". The list that follows has 4 items (TPS, Tiered Memory, Balloon, Compress/Swap). Which are the 3 levels?
+  - Search: "The first sign of unmet demand". The next sentences say ballooning does not mean ESXi is unable to meet demand. Is balloon a sign of memory pressure rather than unmet demand?
 - [ ] Chapter 2 ESXi: open questions for the author, with verbatim search strings:
   - ESXi Demand: provider or consumer? Your correction (2026-11-02) says provider. Search: "Demand is consumer-view, while Usage is provider view". Also: "The value you see at ESXi is the summation of all the VMs".
   - ESXi Usage cap. Your correction says capped at 100% (KB pending). Search: "Usage no longer capped at 100% of total capacity at the nominal frequency". Is the cap only in vCenter, and removed in VCF Operations since Aria Operations 8.18?
