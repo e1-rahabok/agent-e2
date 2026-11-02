@@ -174,7 +174,7 @@ Each entry has:
 - Search 1: "the sum of running VM Utilization metrics + the kernel reservation"
 - Search 2: "Utilization. Machine Demand + ESX System Usage"
 - Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
-- Written as now: both forms, flagged.
+- Written as now: both forms, flagged. Note: Provider Objects > Capacity says "Memory \\ ESX System Usage (KB)" is the kernel reservation (legacy name). If so, the two forms agree; please confirm.
 - Answer:
 
 ### Q022 · Chapter 4 Storage > Architecture · IP storage read and network direction
