@@ -7,9 +7,9 @@ related: [vsphere/network/distinctions, vsphere/cpu/distinctions]
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
-corrections: []
-review_notes:
-  - "Uploaded document says '1 GiB = 1024 KiB and 1 GB = 1000 KB'. Written here as GiB = 1024 MiB and GB = 1000 MB. Please confirm."
+corrections:
+  - "2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB; author has fixed the book."
+review_notes: []
 status: draft
 ---
 
@@ -19,8 +19,8 @@ status: draft
 - Decimal: 1 GHz = 1000 MHz.
 
 ## Memory and disk space
-- Binary prefix: 1 GiB = 1024 MiB.
-- Decimal prefix: 1 GB = 1000 MB.
+- Binary prefix: 1 GiB = 1024 MiB. [author-correction 2026-11-02]
+- Decimal prefix: 1 GB = 1000 MB. [author-correction 2026-11-02]
 - Mixing binary and decimal prefixes causes apparent mismatches between tools.
 
 ## Storage throughput

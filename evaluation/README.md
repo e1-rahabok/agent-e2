@@ -1,40 +1,55 @@
 # Evaluation
 
-This folder contains **golden evaluation cases** used to measure and improve the quality of the AI system.
+Golden cases that measure whether the knowledge base improves AI answers.
+Never index this folder: it contains answer keys.
 
-## Purpose
-
-Golden cases serve two critical roles:
-
-1. **Measurement** — They let us objectively test whether changes to the knowledge base, chunking, retrieval, or prompts actually improve answers.
-2. **Teaching signal** — High-quality examples help shape the style, depth, and reasoning pattern we want from the AI.
-
-We deliberately support more than clean text questions. Real vSphere admins often submit screenshots, diagrams, log fragments, or files and simply say “Explain the problem and why I have it.”
-
-## Case Types
-
-| Type | Description |
-|------|-------------|
-| `text` | Classic question → expected answer |
-| `screenshot` | Image + short prompt (e.g. “What’s wrong?”) |
-| `diagram` | Architecture or flow diagram + question |
-| `log` | Log excerpt or error dump + question |
-| `mixed` | Combination of the above |
-
-## File Format
-
-Each golden case is a Markdown file. See the template in `_templates/golden-case.md`.
-
-Recommended naming:
+## Layout
 
 ```text
 evaluation/
-├── vsphere/
-│   ├── cpu/
-│   ├── memory/
-│   ├── storage/
-│   ├── network/
-│   └── general/
-└── _templates/
-    └── golden-case.md
+├── cases/<scope>/<area>/<area>-<nnn>-<slug>.md   # one case per file
+├── attachments/<case-id>/                        # screenshots, logs, diagrams for a case
+├── results/results.csv                           # one row per case per run
+└── _templates/case.md
 ```
+
+- scope: `vendor-neutral`, `vsphere` (later `nsx`, `vsan`).
+- area: `foundations`, `cpu`, `memory`, `storage`, `network`, `general` (spans several areas).
+- One file per case: scales to hundreds of cases, one diff per case, attachments per case.
+- Ids never change and are never reused. Retired cases get `status: retired`, not deleted.
+
+## Case fields
+| Field | Meaning |
+|---|---|
+| `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `attachments/<id>/`. |
+| `tests` | concept, distinction, judgment, troubleshooting. |
+| `knowledge` | Knowledge ids the answer should draw on. Used to check retrieval, not only the answer. |
+| `origin` | book, live-lab, real-ticket, synthetic. |
+| `source_path` | Heading path in the source document, for QA. |
+
+## How to run
+1. Send only the `## Prompt` section (plus attachments) to the AI. Never send the rest of the file.
+2. Run twice with the same model and effort:
+   - `baseline`: no knowledge base.
+   - `kb`: retrieval from `knowledge/`.
+3. Score each answer against `## Expected key points`.
+4. Append one row per case per run to `results/results.csv`.
+
+## Scoring (per case, 0–3)
+| Score | Meaning |
+|---|---|
+| 0 | Falls into the trap, or wrong. |
+| 1 | Avoids the trap, but cannot explain why. |
+| 2 | Correct, with the right reason (mechanism or vantage point). |
+| 3 | Correct, right reason, and states what to check next. |
+
+## results.csv columns
+| Column | Example |
+|---|---|
+| date | 2026-11-02 |
+| model | model id |
+| effort | medium / high / max |
+| mode | baseline / kb |
+| case_id | vsphere-cpu-003 |
+| score | 0–3 |
+| notes | short reason for the score |

@@ -12,10 +12,11 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
 corrections:
+  - "2026-11-02: Shares apply at two scheduler levels: cluster and host."
+  - "2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author."
   - "2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled."
 review_notes:
-  - "Shares: document says relative to other VMs on the same cluster; the Entitlement part says shares of other VMs on the same host. Both kept as written. Confirm whether both scopes are intended."
-  - "Memory reservation: document says Consumed jumps to the reserved amount at power-on (BIOS state), and also that the reservation does not take effect until the VM asks for memory (no physical RAM allocated). Written as: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirm."
+  - "Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge, marked [claude-knowledge]. Confirm."
 status: draft
 ---
 
@@ -26,12 +27,18 @@ status: draft
 |---|---|
 | Reservation | Absolute. A guarantee (minimum). |
 | Limit | Absolute. A cap. |
-| Shares | Relative to other VMs on the same cluster. |
+| Shares | Relative. Applied at two scheduler levels: cluster and host. [author-correction 2026-11-02] |
 | Entitlement | Dynamic. Determined by the hypervisor. See below. |
 
 - Reservation, limit and shares are configured on the VM, outside the Guest OS (VM Edit Settings → CPU / Memory). CPU values are in MHz.
 - Windows or Linux does not know these settings exist.
 - Minimise use of limit and reservation. They make operations more complex.
+
+## Two scheduler levels [author-correction 2026-11-02]
+| Level | Shares are relative to |
+|---|---|
+| Cluster | Siblings under the same parent in the cluster resource pool hierarchy (VMs and resource pools). [claude-knowledge] |
+| Host | Other VMs running on the same ESXi host. Used for Entitlement. |
 
 ## Which metric types apply per resource [author-correction 2026-11-02]
 | Resource | Utilization | Reservation | Allocation |

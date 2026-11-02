@@ -1,5 +1,6 @@
-# Documentation
+# Docs
 
-This folder explains the **why** behind the repository.
+Design decisions for maintaining this repository. Not indexed.
 
-It is written for future contributors (especially experienced vSphere administrators) so they can understand the design decisions, limitations, and how to improve the system.
+- `philosophy-and-structure.md`: purpose, principles, structure decisions, limitations.
+- Conventions (layout, front matter, writing rules, indexing): root `README.md`.

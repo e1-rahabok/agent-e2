@@ -24,12 +24,13 @@ knowledge/
 │   └── troubleshooting/
 ├── _templates/               # concept, distinction, counter
 └── raw-input/                # source documents (not indexed)
-evaluation/                   # golden questions with answer keys (not indexed)
+evaluation/                   # golden cases with answer keys (not indexed); see evaluation/README.md
+docs/                         # design decisions for maintainers (not indexed)
 ```
 
 ## Indexing rules
 - Index: `knowledge/**/*.md`.
-- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`.
+- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, this README.
   - `evaluation/` holds answer keys. Indexing it invalidates the evaluation.
 - Parse YAML front matter as metadata, not as text to embed.
 - When a file is retrieved, also consider retrieving the ids in its `related` list.
@@ -57,11 +58,12 @@ evaluation/                   # golden questions with answer keys (not indexed)
 
 - Inside a file, `src:` on a block gives the heading path relative to `source.path`.
 - `[author-correction YYYY-MM-DD]` marks a fact that differs from the uploaded source document.
+- `[claude-knowledge]` marks a fact added from Claude's own knowledge, not from the source. Listed in `review_notes` until the author confirms; then the marker is removed.
 
 ## Writing rules
 - One fact per bullet or table row. A mistake should sit on one line.
 - State mechanism and reason, not only the definition.
-- Only facts from the source or the author. No generic filler. No invented thresholds.
+- Facts come from the source or the author. Claude's own knowledge only when it fills a gap the source leaves, marked `[claude-knowledge]`. No generic filler. No invented thresholds.
 - No text aimed at human motivation.
 - Never mix vantage points in one counter file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
@@ -72,4 +74,4 @@ evaluation/                   # golden questions with answer keys (not indexed)
 2. Author reviews, answers `review_notes`, fixes errors.
 3. Author sets `status: reviewed`.
 4. When the source document is updated, move `corrections` into the normal text and clear them.
-5. Run `evaluation/` golden questions with and without the knowledge base; record results.
+5. Run `evaluation/` golden cases with and without the knowledge base; record results in `evaluation/results/results.csv`.

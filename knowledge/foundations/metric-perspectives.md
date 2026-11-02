@@ -7,9 +7,9 @@ related: [foundations/resource-nature]
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Documentation Challenge
-corrections: []
-review_notes:
-  - "Document orders raw metrics per resource as contention first, then consumption. Left out: unclear if this is an analysis rule or only the book's layout. Confirm if it should be added as a rule."
+corrections:
+  - "2026-11-02: Contention first, then consumption, is an analysis rule (not only document layout)."
+review_notes: []
 status: draft
 ---
 
@@ -44,3 +44,6 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 - Derived metric: combines multiple raw metrics. Often spans multiple areas.
 - Raw metrics map best to the technology perspective.
 - Derived metrics map best to the product/object perspective, then the pillar perspective.
+
+## Analysis order per resource [author-correction 2026-11-02]
+- Look at contention metrics first, then consumption metrics.
