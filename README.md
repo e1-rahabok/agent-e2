@@ -30,7 +30,7 @@ docs/                         # design decisions for maintainers (not indexed)
 
 ## Indexing rules
 - Index: `knowledge/**/*.md`.
-- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, this README.
+- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, this README, `CLAUDE.md`.
   - `evaluation/` holds answer keys. Indexing it invalidates the evaluation.
 - Parse YAML front matter as metadata, not as text to embed.
 - When a file is retrieved, also consider retrieving the ids in its `related` list.
