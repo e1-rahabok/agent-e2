@@ -1,18 +1,30 @@
 ---
 id: vsphere/foundations/overhead
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu, memory, storage]
-objects: [vm, esxi, cluster]
+technology:
+- cpu
+- memory
+- storage
+pillar:
+- capacity
+- value
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+- ClusterComputeResource
+internal_derive: []
 related:
-  - vsphere/foundations/visibility-layers
-  - vsphere/memory/distinctions
+- vsphere/foundations/visibility-layers
+- vsphere/memory/metrics/virtual-machine/usage
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead
 corrections:
-  - "2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it 'VM memory snapshot'."
-  - "2026-11-02: Four buffer types listed. Uploaded document says 'at least 3'."
+- '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
+- '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
 review_notes: []
 status: draft
 ---
@@ -37,12 +49,12 @@ status: draft
 | Item | Note |
 |---|---|
 | VM snapshot | Optional. Delivers functionality not available in the Guest OS. |
-| VM swap file (`.vswp`) [author-correction 2026-11-02] | Enables memory overcommit at ESXi level. |
+| VM swap file (`.vswp`) | Enables memory overcommit at ESXi level. |
 | vSphere HA spare capacity | Extra ESXi hosts provide availability protection. |
 | vSAN Failures-to-Tolerate (FTT) policy | Availability protection, because vSAN does not use hardware-level redundancy. For transient VMs with a master template, FTT can be 0 (no protection). |
 
 ## Buffers
-- Buffers are a separate category, in addition to overhead. Four types: [author-correction 2026-11-02]
+- Buffers are a separate category, in addition to overhead. Four types:
 
 | Buffer | Effect |
 |---|---|

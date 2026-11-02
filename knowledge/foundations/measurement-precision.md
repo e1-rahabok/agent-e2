@@ -1,9 +1,19 @@
 ---
 id: foundations/measurement-precision
-type: concept
+retriever_guide: how-it-works
 scope: vendor-neutral
-resources: [cpu, memory, storage, network]
-related: [foundations/resource-nature, foundations/units]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+product: []
+internal_derive: []
+related:
+- foundations/resource-nature
+- foundations/units
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
@@ -31,4 +41,4 @@ status: draft
 
 ## Past tense metrics
 - Some metric names are in past tense because the value reflects what happened in the past, not current activity.
-- See `vsphere/memory/distinctions` (Memory Ballooned).
+- See `vsphere/memory/metrics/virtual-machine/ballooned`.

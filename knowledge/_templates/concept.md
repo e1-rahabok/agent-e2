@@ -1,16 +1,19 @@
 ---
-id: <scope>/<area>/<slug>            # e.g. vsphere/foundations/provider-consumer
-type: concept
-scope: vendor-neutral                # vendor-neutral | vsphere
-resources: [cpu, memory, storage, network]   # only those that apply
-objects: [vm, esxi]                  # vantage points covered; omit if none
-related: []                          # ids of files to retrieve together
+id: vsphere/<technology>/concepts/<slug>     # path without knowledge/ and .md
+retriever_guide: how-it-works                # see README: how-it-works | metric-meaning | term-meaning | what-to-set | what-to-check
+scope: vsphere                               # vendor-neutral | vsphere
+technology: [cpu]                            # cpu | memory | storage | network | system
+pillar: [performance]                        # availability | performance | security | capacity | value
+product: [vsphere]                           # vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
+object: [VirtualMachine, HostSystem]         # vSphere managed object types; omit if none
+internal_derive: []                          # ids of other knowledge-base files this file is derived from (internal links only)
+related: []                                  # ids to retrieve together
 source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > <Heading 4> > <Heading 5>
-corrections: []                      # facts from the author not yet in the uploaded document
-review_notes: []                     # open questions for the author
-status: draft                        # draft | reviewed
+  document: <document name, version, revision>
+  path: <heading path and pages>
+corrections: []                              # author facts not yet in the uploaded source; name the section
+review_notes: []                             # open questions, source URLs, Claude-knowledge facts with section names
+status: draft                                # draft | reviewed
 ---
 
 # <Concept name>
@@ -19,15 +22,12 @@ status: draft                        # draft | reviewed
 - One fact per bullet.
 
 ## Mechanism
-- How it works. Why the metric behaves this way.
+- How it works. Why metrics behave this way.
 
 ## Formula
 ```text
 <plain-text formula, if any>
 ```
-
-## Consequences for metrics
-- What this changes when reading a metric.
 
 ## Traps
 - Wrong conclusion → correct conclusion, with the reason.

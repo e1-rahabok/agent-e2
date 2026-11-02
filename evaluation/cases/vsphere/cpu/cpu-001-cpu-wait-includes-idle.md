@@ -6,7 +6,7 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/cpu/distinctions
+  - vsphere/cpu/metrics/virtual-machine/wait
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Confusing name)."

@@ -1,18 +1,27 @@
 ---
 id: foundations/resource-nature
-type: concept
+retriever_guide: how-it-works
 scope: vendor-neutral
-resources: [cpu, memory, storage, network]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product: []
+internal_derive: []
 related:
-  - foundations/measurement-precision
-  - vsphere/foundations/resource-management
-  - vsphere/memory/distinctions
-  - vsphere/storage/distinctions
+- foundations/measurement-precision
+- vsphere/foundations/resource-management
+- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/storage/metrics/virtual-machine/virtual-disk
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
 corrections:
-  - "2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A."
+- '2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A.'
 review_notes: []
 status: draft
 ---
@@ -28,7 +37,7 @@ status: draft
 
 | Resource | Speed | Space | Measured as |
 |---|---|---|---|
-| CPU | Yes | Yes [author-correction 2026-11-02] | Speed: Hertz. Space: vCPU or physical thread. |
+| CPU | Yes | Yes | Speed: Hertz. Space: vCPU or physical thread. |
 | Memory | Limited | Yes | Speed: latency in nanoseconds, practically not used in performance management. Space: bytes. |
 | Storage | Yes | Yes | Speed: IOPS and throughput (bytes/second). Space: bytes. |
 | Network | Depends on the component | Depends on the component | Network is both a line and a dot: cables are lines, switches are dots. |

@@ -1,12 +1,25 @@
 ---
 id: vsphere/foundations/vm-vs-guest-os
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu, memory, storage, network]
-objects: [vm, guest-os]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- availability
+- performance
+product:
+- vsphere
+- windows
+- linux
+object:
+- VirtualMachine
+internal_derive: []
 related:
-  - vsphere/foundations/visibility-layers
-  - vsphere/foundations/kernel-worlds
+- vsphere/foundations/visibility-layers
+- vsphere/foundations/kernel-worlds
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?

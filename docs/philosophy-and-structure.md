@@ -32,8 +32,11 @@ Conventions (layout, front matter, writing rules) are in the root `README.md`.
 |---|---|
 | `knowledge/foundations/` at top level | Vendor-neutral content also applies to NSX, vSAN and other products. |
 | `knowledge/vsphere/foundations/` | Cross-resource vSphere mechanisms (provider/consumer, visibility, resource management) do not belong to one resource. |
-| `distinctions.md` per resource | Same-name traps are the highest-value content. One block per trap retrieves cleanly. |
-| `counters/<object>/` | One object per file. Same counter name on another object is a different file, linked via `same_name_as`. |
+| Technology first, then concepts / metrics / configuration / diagnosis | Book raw metrics follow technology. The four subfolders match the four question types in `retriever_guide`. |
+| `metrics/<object-folder>/` | One vSphere object type per file. Same label on another object is a different file, linked via `same_name`. Different labels with the same meaning are linked via `same_meaning`. |
+| No `distinctions.md` | Same-name traps live in the metric files they belong to. Groups of metrics live in `metrics/comparisons/`. |
+| Tags for pillar, product, object | Folders give one hierarchy. Tags let the AI slice by the other two angles of the book. |
+| `cluster-resource-management/` | DRS, DPM, shares and vCLS span CPU, memory and network at cluster level. |
 | YAML front matter | Retrievers filter on it. Reviewers see source, corrections and status in one place. |
 | `raw-input/` not indexed | Source documents are binary and unstructured. Derived files are what the AI reads. |
 | `evaluation/` one file per case | Scales to hundreds of cases. Never indexed: holds answer keys. |

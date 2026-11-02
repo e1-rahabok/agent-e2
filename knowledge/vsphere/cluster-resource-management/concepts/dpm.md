@@ -1,0 +1,110 @@
+---
+id: vsphere/cluster-resource-management/concepts/dpm
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- value
+- availability
+product:
+- vsphere
+object:
+- ClusterComputeResource
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/cluster-resource-management/concepts/drs-overview
+- vsphere/cluster-resource-management/configuration/drs-migration-levels
+- vsphere/cpu/configuration/host-power-management
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Power Management (DPM) (pp. 80-81)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 80-81. Content unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Predictive DRS and predictive DPM require VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature still applies in vSphere 9.0 and VCF Operations.
+status: draft
+---
+
+# Distributed Power Management (DPM)
+
+## Purpose
+- DPM conserves power when hosts in a cluster are underutilized.
+- Mechanism:
+  - consolidates VMs onto a subset of the hosts in the cluster,
+  - puts the remaining hosts into standby mode.
+- DPM keeps enough hosts powered on to meet the demand of the VMs in the cluster.
+- When demand increases, DPM powers on additional hosts and migrates VMs to them. Load is then balanced across the powered-on hosts.
+
+## Suitable clusters
+- Most appropriate: clusters where the composite VM demand varies significantly over time.
+- Example from the source: demand is higher during the day and much lower at night.
+- Clusters with consistently high demand relative to cluster capacity have little opportunity to standby hosts.
+
+## Demand inputs
+- Starting with vSphere 7.0, DPM calculates VM memory demand from granted memory.
+- Granted memory is typically stable over time.
+- DPM considers both CPU and memory demand, but it mostly responds to changes in CPU demand.
+
+## Relation to DRS
+- DPM uses DRS. Most DRS best practices also apply to DPM. See `vsphere/cluster-resource-management/concepts/drs-overview`.
+
+## DPM vs host power management
+- DPM powers off hosts to save power.
+- Host power management reduces power on hosts that stay powered on. See `vsphere/cpu/configuration/host-power-management`.
+- DPM and host power management can be used together for the best power conservation.
+- Host power management policies allow efficient use of the hosts that remain on. Using both together can save more power than either alone.
+
+## Automation levels
+- Hosts in a DPM-activated cluster inherit the automation level set at the cluster level.
+- The automation level can also be set per host. A host-level setting overrides the inherited level.
+- Manual DPM: vCenter asks for user approval before it puts a host into standby or takes it out of standby.
+- Automatic DPM: the most flexibility and the most power savings.
+- DPM prefers hosts in automatic mode over hosts in manual mode.
+- DPM can be deactivated for individual hosts, even when DPM is active for the cluster.
+- Example from the source: deactivate DPM for hosts running mission-critical VMs. VM/Host affinity rules then keep those VMs from being migrated away from those hosts.
+
+## DPM Threshold
+- Set in the cluster settings menu, as DPM Threshold.
+- Controls how aggressively DPM recommends migrations, and how aggressively it puts hosts into and out of standby.
+- Default: 3 (medium aggressiveness).
+
+## Demand history and excess capacity
+- DPM considers historical demand when it decides how much capacity to keep powered on.
+- DPM keeps some excess capacity for increases in demand.
+- DPM powers on additional hosts when demand of existing VMs rises unexpectedly, or to admit new VMs.
+- A host is put into standby only if the VM memory demand in the cluster is low.
+- Starting with vSphere 7.0, memory demand is low only if the granted memory is low.
+
+## Minimum capacity variables
+- For clusters with frequent unexpected demand spikes, two advanced options set the minimum capacity that DPM keeps powered on:
+  - `MinPoweredOnCpuCapacity`: default 1 MHz.
+  - `MinPoweredOnMemCapacity`: default 1 MB.
+
+## Scheduling
+- Advanced option `DPMPowerOffInterval` (introduced in vSphere 7.0): minimum time DPM waits between calculations of whether hosts should go into standby.
+- Default: 30 minutes. Maximum: 12 hours. Configured independently for each cluster.
+- DPM can be activated or deactivated on a schedule with Scheduled Tasks in vCenter Server.
+- Deactivating DPM with Scheduled Tasks powers on all standby hosts in the cluster.
+- Use case from the source: reduce the delay in responding to load spikes that occur at set times of the day.
+- Restarting the vCenter Server or the vCenter vpxd service powers on all standby ESX hosts managed by that vCenter Server.
+
+## Predictive DRS and predictive DPM
+- Requires vRealize Operations 6.4 or later, per the source.
+- With predictive DRS configured to receive predictions, DPM can bring hosts back from standby before demand increases.
+- Example from the source: if demand rises every morning at 9 am, DPM can bring hosts out of standby by 8 am.
+
+## HA interaction
+- DPM respects vSphere HA settings. It accounts for them when it recommends standby or power-on.
+- In a cluster with HA active, DPM keeps excess powered-on capacity to meet HA requirements.
+- Effect: fewer hosts can go into standby than in a cluster without HA.
+- Effect: additional VMs might not be admitted even when the cluster seems to have available resources. HA reserves this capacity.
+- If HA is active and one or more VMs are powered on, DPM keeps at least two hosts powered on. This applies even when HA admission control is deactivated.
+
+## Traps
+- "DPM saves power with no effect on capacity" → DPM keeps excess capacity and HA capacity powered on. Fewer hosts go into standby than the raw load suggests.
+- "Scheduled DPM deactivation keeps standby hosts off" → deactivating DPM with Scheduled Tasks powers on all standby hosts.

@@ -1,9 +1,20 @@
 ---
 id: foundations/terminology
-type: concept
+retriever_guide: how-it-works
 scope: vendor-neutral
-resources: [cpu, memory, storage, network]
-related: [foundations/naming-patterns, vsphere/foundations/resource-management]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- capacity
+- performance
+product: []
+internal_derive: []
+related:
+- foundations/naming-patterns
+- vsphere/foundations/resource-management
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity

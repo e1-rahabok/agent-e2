@@ -40,15 +40,17 @@ Standing rules for this repository. Read at the start of every session.
 
 ## Facts and sources
 - Allowed fact sources: the author's book, the author's answers, official docs, Claude's own knowledge.
-- Mark any fact not from the book `[claude-knowledge]`. List it in `review_notes` until the author confirms.
+- Record any fact not from the book in `review_notes`, naming the section, until the author confirms.
+- Audit information lives only in front matter. Never put markers such as author corrections or Claude-knowledge tags in headings or body text.
 - No invented thresholds. A threshold goes in only if the book, the author or an official source gives it. Quote the source.
-- Keep every `[author-correction ...]` marker. Clear a `corrections` entry only when the source document is updated.
+- Keep every `corrections` entry, naming the section it affects. Clear it only when the source document is updated.
 - `knowledge/raw-input/` is read-only.
 
 ## Writing
 - One fact per bullet or table row.
 - Explain the mechanism and the reason before the metric name.
-- Never mix vantage points in one counter file: vCPU, VM, ESXi, cluster, datastore, guest OS.
+- One vSphere managed object type per metric file (VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ...). Instance levels such as per-vCPU go in the `instance` tag.
+- Folder rules: technology first (cpu, memory, storage, network, system), then concepts / metrics / configuration / diagnosis. Tags and field meanings: see `README.md`.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Every new knowledge file has YAML front matter (see `README.md`).
