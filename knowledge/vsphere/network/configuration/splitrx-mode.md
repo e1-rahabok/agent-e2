@@ -50,7 +50,7 @@ status: draft
 - `"0"`: deactivates SplitRx for the host.
 - `"1"`: activates SplitRx for the host. This is the default.
 - Change in vSphere Client: select the host, Configure tab, expand System, Advanced System Settings, Edit, find NetSplitRxMode, set the value, OK.
-- The change takes effect immediately. The host does not need to restart.
+- The change takes effect immediately. The host does not require a restart.
 
 ## Per virtual NIC setting
 - Variable in the VMX file: `ethernetX.emuRxMode`, where X is the adapter ID.

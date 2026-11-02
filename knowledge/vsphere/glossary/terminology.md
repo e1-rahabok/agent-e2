@@ -67,3 +67,22 @@ Tag values in front matter must use the terms defined here.
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | diagnosis | Interpretation is the purpose of every metric file. |
+
+## Allowed tag values
+Read by `scripts/validate.py`. Change values here, not in the script.
+
+```yaml
+retriever_guide: [how-it-works, metric-meaning, term-meaning, what-to-set, what-to-check]
+scope: [vendor-neutral, vsphere]
+technology: [cpu, memory, storage, network, system]
+pillar: [availability, performance, security, capacity, value]
+product: [vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes]
+object: [VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, StoragePod, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, vSphereWorld, VCenterServer]
+instance: [aggregate, per-vcpu, per-vmnic, per-vmhba, per-virtual-disk]
+metric_class: [contention, consumption, context]
+status: [draft, reviewed]
+# Phrases rejected in body text of files whose technology includes cpu (scheduling language rule).
+avoid_in_cpu_files: ['\bneeds?\b', '\bneeded\b', '\bwants?\b', '\bwish(es)?\b', 'uses only .* of what it needs']
+# Phrases rejected in body text of every knowledge file.
+avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
+```

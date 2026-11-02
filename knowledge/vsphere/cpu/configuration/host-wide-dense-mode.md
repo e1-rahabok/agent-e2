@@ -31,7 +31,7 @@ status: draft
 
 ## Purpose
 - Default: ESX supports high consolidation ratios and still gives good response times for every VM and request.
-- Where very high consolidation ratios are needed, dense mode optimizes an individual host.
+- Where very high consolidation ratios are required, dense mode optimizes an individual host.
 - The source says dense mode allows consolidation up to about 10% higher than without it.
 - Dense mode is also called host-wide performance tuning.
 - Source priority for very high consolidation: keeping average response times low matters more than keeping all response times low.
