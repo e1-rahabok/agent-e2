@@ -12,6 +12,7 @@ source:
   path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (pp. 55-57)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source refers to KB 81383 and the 'Virtual Machine vCPU and vNUMA Rightsizing' blog, and to the Virtual Machine Compute Optimizer tool. Not read."
 status: draft

@@ -15,6 +15,7 @@ source:
   path: ESX CPU Considerations > Hyper-Threading (p. 26); Guest Operating System CPU Considerations (p. 55); Hardware BIOS Settings (p. 21)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "This source gives no Hyper-Threading penalty percentages. The book's 37.5% (VM Usage) and 50% (ESXi Used) figures are not confirmed by this source. Author to confirm."
 status: draft

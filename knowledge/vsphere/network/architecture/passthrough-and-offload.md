@@ -13,6 +13,7 @@ source:
   path: ESX Networking Considerations > Data Processing Units (DPUs, or SmartNICs) (p. 46); DirectPath I/O (p. 46); Single Root I/O Virtualization (SR-IOV) (p. 46)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Not read: Enhanced Data Path (p. 44). Source links DPU configuration to NSX Manager and to 'What is VMware vSphere Distributed Services Engine' in ESX Installation and Setup. Not read."
 status: draft

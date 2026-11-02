@@ -10,7 +10,19 @@ Standing rules for this repository. Read at the start of every session.
 ## Level
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases.
 - No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
-- Target: vSphere 9 and VCF 9. Check version differences before writing.
+- Target: the current release in the Versions section. Never write from an older release when a newer one exists.
+
+## Versions
+- Current releases (update when Broadcom ships a new one):
+  - vSphere: 9.1. Performance Best Practices for vSphere 9.1, revision 20260624.
+  - VCF: 9.1.1 (GA Sep 2026). 9.1.2 is coming.
+- Before writing from any vendor document:
+  - search for the current version of that document, e.g. "Performance Best Practices for VMware vSphere 9.1",
+  - fetch it and read the revision date on the copyright page,
+  - if a newer version exists than the one you have, use the newer one.
+- Do not treat a search result, an older PDF, or a TechDocs hub page as the current version. Check the version each time.
+- Record the version and revision in `source.document`, e.g. "Performance Best Practices for VMware vSphere 9.1 (revision 20260624)".
+- If a file was written from an older version, add a `review_notes` line naming the newer version, and re-check the file before setting `status: reviewed`.
 
 ## Check the docs before asking the author
 - Before asking the author a question, look up official sources:

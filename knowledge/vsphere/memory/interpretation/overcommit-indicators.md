@@ -13,6 +13,7 @@ source:
   path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 32)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source gives menu paths for the vSphere Client. Verify them for vSphere 9.0."
 status: draft

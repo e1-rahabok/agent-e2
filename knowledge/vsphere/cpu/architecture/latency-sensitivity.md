@@ -16,6 +16,7 @@ source:
   path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 49-51)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Inconsistent source naming: p. 50 says 'Set the ESX host power policy to Maximum performance'. The power policy list on p. 29 names 'High Performance'. Likely the same policy. Author to confirm."
   - "Source names the white paper 'Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs' and calls it dated. Not read."

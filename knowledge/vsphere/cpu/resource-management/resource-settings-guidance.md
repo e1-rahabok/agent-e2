@@ -14,6 +14,7 @@ source:
   path: Virtual Infrastructure Management > General Resource Management (p. 65)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "The source does not define a headroom percentage for memory virtualization overhead and migration overhead. Author to confirm whether the book gives one."
 status: draft

@@ -12,6 +12,7 @@ source:
   path: ESX Networking Considerations > SplitRx Mode (pp. 46-47)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "The 10,000 packets per second threshold is the source's automatic activation condition. Author to confirm it still applies to vSphere 9.0."
 status: draft

@@ -12,6 +12,7 @@ source:
   path: ESX Memory Considerations > Memory Overcommit Techniques > Page Sharing (p. 31); Memory Page Sharing (pp. 32-33)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source KB articles for security issues: 2080735 and 2097593. Not read."
 status: draft

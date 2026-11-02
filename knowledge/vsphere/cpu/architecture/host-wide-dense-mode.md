@@ -12,6 +12,7 @@ source:
   path: Host-Wide Performance Tuning (pp. 51-52)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "The source gives the dense mode thresholds in one line. The exact comparison of CPU utilization (50%) is as written in the source."
 status: draft

@@ -14,6 +14,7 @@ source:
   path: ESX Memory Considerations > Memory Swapping Optimizations (pp. 33-34)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source states the swap file location setting path in the vSphere Client. Verify the menu path for vSphere 9.0 against the vSphere Client."
 status: draft

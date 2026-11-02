@@ -14,6 +14,7 @@ source:
   path: ESX Memory Considerations > Memory Overcommit Techniques (pp. 31-32)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source points to white paper 'Understanding Memory Resource Management in VMware vSphere 5.0'. The source says most concepts still apply. Not read."
 status: draft

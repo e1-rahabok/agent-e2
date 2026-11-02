@@ -13,6 +13,7 @@ source:
   path: ESX CPU Considerations (pp. 24-25); Guest Operating System CPU Considerations (p. 55); Virtual NUMA (pp. 55-57)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
 status: draft
 ---

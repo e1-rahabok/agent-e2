@@ -13,6 +13,7 @@ source:
   path: CPU Hardware Considerations > Hardware-Assisted Virtualization (p. 12)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Not read: 2MB Large Memory Pages (p. 35), DirectPath I/O (p. 46), SR-IOV (p. 46). AES-NI is in vsphere/cpu/architecture/bios-settings."
 status: draft

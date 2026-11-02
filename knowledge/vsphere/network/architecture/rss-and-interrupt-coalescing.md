@@ -13,6 +13,7 @@ source:
   path: ESX Networking Considerations > Receive Side Scaling (RSS) (p. 48); Virtual Network Interrupt Coalescing (pp. 48-49)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Exact driver and module commands for RSS are in the source (p. 48). Not copied here. Verify against the NIC driver release before use."
 status: draft

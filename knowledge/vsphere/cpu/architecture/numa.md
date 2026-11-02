@@ -13,6 +13,7 @@ source:
   path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 27-28); Hardware BIOS Settings > General BIOS Settings (p. 21)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read."
 status: draft

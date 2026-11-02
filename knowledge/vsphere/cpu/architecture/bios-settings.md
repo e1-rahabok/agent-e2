@@ -14,6 +14,7 @@ source:
   path: Hardware for Use with VMware vSphere > Hardware BIOS Settings > General BIOS Settings; Processor-Specific BIOS Settings (pp. 21-22); AES-NI Support (p. 13)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Source states the BIOS options it lists might not be comprehensive for every server. Server-specific guidance is outside the source."
 status: draft

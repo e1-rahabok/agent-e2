@@ -13,6 +13,7 @@ source:
   path: ESX Memory Considerations > Memory Sizing (p. 31)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
 status: draft
 ---

@@ -12,6 +12,7 @@ source:
   path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Sizing and Resource Settings (p. 79)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Table values come from the 9.0 source. Check them against VMware Configuration Maximums before use."
 status: draft

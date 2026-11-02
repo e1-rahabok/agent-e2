@@ -14,6 +14,7 @@ source:
   path: ESX CPU Considerations > Host Power Management in ESX (pp. 29-30); Hardware BIOS Settings > Power Management BIOS Settings (pp. 21-22)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Not read: Host Power Management Policies in the vSphere Resource Management guide (referenced for Custom policy details). Running Network Latency Sensitive Workloads (p. 49) is network, not CPU."
 status: draft

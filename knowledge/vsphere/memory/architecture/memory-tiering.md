@@ -12,6 +12,7 @@ source:
   path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 36)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Newly supported in vSphere 9.0, per the source. Source refers to white paper 'Memory Tiering Performance: VMware Cloud Foundation 9.0' and to 'Memory Tiering over NVMe' in vSphere Resource Management. Not read."
 status: draft

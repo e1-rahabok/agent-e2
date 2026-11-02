@@ -14,6 +14,7 @@ source:
   path: ESX CPU Considerations (pp. 24-25)
 corrections: []
 review_notes:
+  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states 'sustained values above ~80-85%' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Author to decide whether to replace the old threshold."
 status: draft
