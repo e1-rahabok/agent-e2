@@ -63,7 +63,7 @@ docs/                         # design decisions for maintainers (not indexed)
 ## Writing rules
 - One fact per bullet or table row. A mistake should sit on one line.
 - State mechanism and reason, not only the definition.
-- Facts come from the source or the author. Claude's own knowledge only when it fills a gap the source leaves, marked `[claude-knowledge]`. No generic filler. No invented thresholds.
+- Facts may come from the source, the author, or Claude's own knowledge. Mark any fact not in the source document `[claude-knowledge]`. No generic filler. No invented thresholds: a threshold is recorded only if the source or the author gives it.
 - No text aimed at human motivation.
 - Never mix vantage points in one counter file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
