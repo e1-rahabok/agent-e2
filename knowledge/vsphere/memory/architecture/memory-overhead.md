@@ -9,12 +9,12 @@ related:
   - vsphere/memory/architecture/host-level-swapping
   - vsphere/memory/resource-management/memory-sizing
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Memory Considerations > Memory Overhead (pp. 34-35)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 36-37 unchanged."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Source links the per-VM overhead section to vSphere Resource Management for overhead details. Not read."
 status: draft
 ---

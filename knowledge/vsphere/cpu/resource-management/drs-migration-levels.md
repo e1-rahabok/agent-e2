@@ -9,12 +9,12 @@ related:
   - vsphere/cpu/resource-management/scalable-shares
   - vsphere/cpu/resource-management/dpm
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 80-81)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 78-79. Migration levels, Cluster DRS Score causes and Predictive DRS unchanged."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Predictive DRS requires VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature applies to vSphere 9.0 and VCF Operations."
 status: draft
 ---

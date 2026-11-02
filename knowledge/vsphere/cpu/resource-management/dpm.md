@@ -9,12 +9,12 @@ related:
   - vsphere/cpu/resource-management/drs-migration-levels
   - vsphere/cpu/architecture/host-power-management
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: VMware Distributed Power Management (DPM) (pp. 82-83)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Power Management (DPM) (pp. 80-81)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 80-81. Content unchanged."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Predictive DRS and predictive DPM require VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature still applies in vSphere 9.0 and VCF Operations."
 status: draft
 ---

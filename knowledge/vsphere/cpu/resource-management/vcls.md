@@ -9,16 +9,18 @@ related:
   - vsphere/cpu/resource-management/scalable-shares
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Sizing and Resource Settings (p. 79)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Sizing and Resource Settings (p. 79) [9.0 document]
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
+  - "Not in the 9.1 document. Its table of contents has no vCLS section, and DRS pages 76-79 do not give the vCLS footprint. Content is from the 9.0 document. Verify before use."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Table values come from the 9.0 source. Check them against VMware Configuration Maximums before use."
 status: draft
 ---
 
 # vSphere Cluster Services (vCLS)
+
+> Not in the 9.1 document. Content below is from the 9.0 document (pp. 76, 79). Verify before use.
 
 ## Purpose
 - vCLS runs cluster services, such as DRS and HA, as agent VMs.

@@ -10,12 +10,12 @@ related:
   - vsphere/cpu/architecture/bios-settings
   - vsphere/cpu/resource-management/dpm
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX CPU Considerations > Host Power Management in ESX (pp. 29-30); Hardware BIOS Settings > Power Management BIOS Settings (pp. 21-22)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations > Host Power Management in ESX (pp. 31-32); Power Management BIOS Settings (pp. 22-23); Intel Hardware P-States (p. 12)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 31-32 read. Verification path changed to Overview tab. ACPI CPPC and Intel HWP added (pp. 12, 32)."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Not read: Host Power Management Policies in the vSphere Resource Management guide (referenced for Custom policy details). Running Network Latency Sensitive Workloads (p. 49) is network, not CPU."
 status: draft
 ---
@@ -41,16 +41,26 @@ status: draft
 - The Balanced policy can slightly reduce performance of latency-sensitive workloads.
 - In those cases, High Performance gives the full hardware performance.
 
-## Verify technology availability
+## Verify technology availability (9.1 p. 32)
 1. In the vSphere Client, select the host.
 2. Select the Configure tab.
-3. Under Hardware, select Power Management.
-4. The Technology field lists the available technologies: ACPI P-states, ACPI C-states, or both.
-- Both technologies available: best power savings.
+3. Under Hardware, select Overview. Scroll to the bottom.
+4. Look for Power Management. The Technology field lists the available technologies.
+- ACPI C-states: ESX manages deeper C-states (C2 or below). If not listed, ESX does not use deeper C-states.
+- ACPI P-states: ESX uses software-based P-state management to control active frequencies.
+- ACPI CPPC: ESX uses Intel hardware-based P-state management (HWP), configured per the power policy.
+- Neither ACPI P-states nor ACPI CPPC listed: the firmware has not given P-state control to ESX. The BIOS then controls P-states.
+- For the best power savings: one P-state technology (ACPI P-states or ACPI CPPC) plus ACPI C-states.
 - Missing technologies do not cause problems. The system can use more power than necessary.
 
+## Intel Hardware P-States (HWP) (9.1 p. 12)
+- ESX 9.0 and later support HWP on fourth-generation and later Intel Xeon Scalable processors, starting with Sapphire Rapids. This is also called ACPI CPPC.
+- Before ESX 9.0, ESX managed P-states directly. ESX 9.0 and later still manage P-states directly on Intel Xeon processors before fourth generation, and on AMD processors.
+- ESX attempts to enable HWP at boot. ESX gives hints to the processor based on the power policy. The CPU microcode tracks load and sets frequencies at core and package level.
+- Conditions: HWP must not be disabled in the BIOS, and the BIOS must allow frequency control by the OS. When these are met, ESX 9.0 and later enable HWP by default.
+
 ## BIOS power management settings (pp. 21-22)
-- Set power management in the BIOS to "OS Controlled Mode" or an equivalent setting.
+- Set power management in the BIOS to "OS Controlled Mode", "OS Controlled EPB", or an equivalent setting (9.1 p. 22).
 - Effect: ESX controls the CPU power-saving features. This applies even when those features are not used.
 - C1E:
   - a hardware-managed state. ESX puts the CPU into C1. The CPU hardware can deepen the state to C1E on its own criteria.
@@ -62,6 +72,8 @@ status: draft
   - This leaves the choice of use to ESX host power management.
 - Turbo Boost or Turbo Core activated: C1E and deep halt states (C3, C6) can sometimes increase performance of lightly threaded workloads, which leave hardware threads idle.
 - Results vary between processor vendors and generations.
+
+- Intel Granite Rapids C-state recommendations by workload: see `vsphere/cpu/architecture/bios-settings`.
 
 ## Traps
 - "Deactivate C-states for better performance everywhere" → the source names only a few latency-sensitive multithreaded workloads that gain from it. Activating all C-states gives the best performance per watt.

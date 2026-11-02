@@ -9,10 +9,10 @@ related:
   - vsphere/cpu/architecture/hardware-assisted-virtualization
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26); Guest Operating System CPU Considerations > Side-Channel Vulnerability Mitigation in Guest Operating Systems (p. 55)
+  path: "Not in the 9.1 document. Previously in 9.0: CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26); Guest OS CPU Considerations (p. 55)"
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
+  - "Not in the 9.1 document. Its table of contents has no side-channel section. Checked CPU hardware pp. 11-13, ESX pp. 25-32, guest OS pp. 55-57. Content is from the 9.0 document. Verify against KB 55806 and current VMware security documentation before use."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
   - "Only the 9.0 source was read. The default scheduler behaviour in vSphere 9.x is not checked against KB 55806."
   - "Not read: KB 52245, 54951, 55636, 56931. Source names these for details."
@@ -20,6 +20,8 @@ status: draft
 ---
 
 # Side-channel vulnerabilities and the ESX scheduler
+
+> Not in the 9.1 document. Content below is from the 9.0 document. Verify before use.
 
 ## Vulnerability classes
 - Side-channel vulnerabilities include Spectre, Meltdown, Foreshadow, L1TF, and others.

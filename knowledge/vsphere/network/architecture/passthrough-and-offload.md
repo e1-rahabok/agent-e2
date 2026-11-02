@@ -9,13 +9,13 @@ related:
   - vsphere/cpu/architecture/hardware-assisted-virtualization
   - vsphere/network/architecture/splitrx-mode
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Networking Considerations > Data Processing Units (DPUs, or SmartNICs) (p. 46); DirectPath I/O (p. 46); Single Root I/O Virtualization (SR-IOV) (p. 46)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Networking Considerations > Data Processing Units (DPUs, or SmartNICs) (p. 48); DirectPath I/O (p. 48); Single Root I/O Virtualization (SR-IOV) (p. 49)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "Not read: Enhanced Data Path (p. 44). Source links DPU configuration to NSX Manager and to 'What is VMware vSphere Distributed Services Engine' in ESX Installation and Setup. Not read."
+  - "Checked against 9.1 (revision 20260624). Pages 48-49 unchanged. Page references updated."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "Not read: Enhanced Data Path (9.1 p. 46). Source links DPU configuration to NSX Manager and to 'What is VMware vSphere Distributed Services Engine' in ESX Installation and Setup. Not read."
 status: draft
 ---
 

@@ -12,13 +12,13 @@ related:
   - vsphere/network/architecture/passthrough-and-offload
   - vsphere/network/architecture/rss-and-interrupt-coalescing
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 49-51)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "Inconsistent source naming: p. 50 says 'Set the ESX host power policy to Maximum performance'. The power policy list on p. 29 names 'High Performance'. Likely the same policy. Author to confirm."
+  - "Checked against 9.1 (revision 20260624). Pages 52-54 read. EDP Dedicated mode named in NFV guidance (p. 54). Power policy wording still inconsistent (p. 53 vs p. 31)."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "Inconsistent source naming, still present in 9.1: p. 53 says 'Set the ESX host power policy to Maximum performance'. The power policy list on p. 31 names 'High Performance'. Likely the same policy. Author to confirm."
   - "Source names the white paper 'Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs' and calls it dated. Not read."
 status: draft
 ---
@@ -79,8 +79,8 @@ status: draft
 ## Other measures for latency-sensitive traffic
 - SR-IOV or DirectPath I/O, to give the VM direct access to the network device. Also tune the interrupt rate for the device in the guest. See `vsphere/network/architecture/passthrough-and-offload`.
 - VMXNET3 is the best choice when direct device access is unavailable or undesirable.
-- Enhanced Data Path (EDP) is an option without the limitations of SR-IOV. See the source, p. 44. Not read.
-- NFV workloads that depend on high packet throughput (telco, 5G, IoT) might benefit from Enhanced Network Stack (ENS), also called EDP, in VCF.
+- Enhanced Data Path (EDP) is an option without the limitations of SR-IOV. See the 9.1 document, p. 46. Not read.
+- NFV workloads that depend on high packet throughput (telco, 5G, IoT) might benefit from Enhanced Network Stack (also called EDP Dedicated mode) in VCF (9.1 p. 54).
 
 ## Host power management
 - Power management features in newer server hardware can increase network latency.

@@ -9,13 +9,13 @@ related:
   - vsphere/cpu/architecture/side-channel-scheduling
   - vsphere/foundations/overhead
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: CPU Hardware Considerations > Hardware-Assisted Virtualization (p. 12)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: CPU Hardware Considerations > Hardware-Assisted Virtualization (p. 11)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "Not read: 2MB Large Memory Pages (p. 35), DirectPath I/O (p. 46), SR-IOV (p. 46). AES-NI is in vsphere/cpu/architecture/bios-settings."
+  - "Checked against 9.1 (revision 20260624). Pages 11-12 unchanged. Large pages now p. 37, DirectPath I/O p. 48, SR-IOV p. 49."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "2MB large pages: memory/architecture/large-memory-pages. DirectPath I/O and SR-IOV: network/architecture/passthrough-and-offload. AES-NI: cpu/architecture/bios-settings."
 status: draft
 ---
 

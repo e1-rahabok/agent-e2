@@ -12,25 +12,21 @@ related:
   - vsphere/cpu/resource-management/resource-settings-guidance
   - vsphere/foundations/resource-management
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-79)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 76-77. The vCLS dependency statement is not in the 9.1 DRS section. Virtual hardware version 22 constraint added (ESX 9.1 p. 26)."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
 status: draft
 ---
 
 # DRS overview
 
-## Dependencies in vSphere 9.0
-- vSphere Cluster Services (vCLS) maintains cluster services such as DRS and HA.
-- Source: vCLS maintains workload resources and health regardless of vCenter availability.
-- As of vSphere 9.0, cluster services still require both the vCLS VMs and vCenter Server.
-- Not all functions have moved to the vCLS VMs.
-- If there are issues with the vCLS VMs, DRS cannot be activated. If DRS is already active, the issues stop it from operating.
-- Warning on the Cluster Summary page indicates these issues.
-- See `vsphere/cpu/resource-management/vcls`.
+## Dependencies
+- 9.0 document (p. 76): vSphere Cluster Services (vCLS) maintains cluster services such as DRS and HA, regardless of vCenter availability. As of vSphere 9.0, cluster services still require both the vCLS VMs and vCenter Server. If the vCLS VMs have issues, DRS cannot be activated, or stops operating if already active.
+- 9.1 document: this statement does not appear in the DRS pages (76-79). Status: unverified for 9.1.
+- See `vsphere/cpu/resource-management/vcls` (9.0 document only).
 
 ## Cluster health indicators
 - Watch for manual recommendations. Unaddressed manual recommendations can stop DRS from generating new recommendations.
@@ -56,6 +52,7 @@ status: draft
   - VM hardware version incompatibility,
   - VM network not available on the destination host.
 - More vMotion-compatible hosts give DRS more options for recommendations.
+- ESX 9.1 supports virtual hardware version 22 (9.1 p. 26). VMs on version 22 run only on ESX 9.0 or later hosts. Pre-9.0 hosts in the cluster limit vMotion choices for DRS and DPM.
 - Connectivity: every host in a DRS cluster should reach the full set of datastores that the other hosts reach.
 
 ## VM size and memory

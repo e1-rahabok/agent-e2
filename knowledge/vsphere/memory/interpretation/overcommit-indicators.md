@@ -9,13 +9,13 @@ related:
   - vsphere/memory/architecture/host-level-swapping
   - vsphere/memory/distinctions
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 32)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 34)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "Source gives menu paths for the vSphere Client. Verify them for vSphere 9.0."
+  - "Checked against 9.1 (revision 20260624). Page 34 unchanged. Menu paths unchanged in 9.1."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "Menu paths are unchanged in the 9.1 document (p. 34)."
 status: draft
 ---
 

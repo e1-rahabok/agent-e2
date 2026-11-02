@@ -8,12 +8,12 @@ related:
   - vsphere/cpu/architecture/virtualization-overhead
   - vsphere/network/architecture/rss-and-interrupt-coalescing
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: Host-Wide Performance Tuning (pp. 51-52)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Host-Wide Performance Tuning (p. 54)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Page 54 unchanged. Page reference updated."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "The source gives the dense mode thresholds in one line. The exact comparison of CPU utilization (50%) is as written in the source."
 status: draft
 ---

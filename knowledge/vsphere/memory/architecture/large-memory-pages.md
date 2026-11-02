@@ -9,12 +9,12 @@ related:
   - vsphere/memory/architecture/memory-overhead
   - vsphere/cpu/architecture/hardware-assisted-virtualization
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 35-36); Guest Operating System Memory Considerations (p. 58)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 37-38); Guest Operating System Memory Considerations (p. 59)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 37-38 unchanged. Guest page reference now p. 59."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Source uses 'large pages' only for 2 MB pages. It says 1 GB pages exist on some CPUs but are out of its scope."
 status: draft
 ---

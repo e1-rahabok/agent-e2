@@ -8,13 +8,13 @@ related:
   - vsphere/network/architecture/passthrough-and-offload
   - vsphere/network/architecture/rss-and-interrupt-coalescing
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Networking Considerations > SplitRx Mode (pp. 46-47)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Networking Considerations > SplitRx Mode (pp. 49-50)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "The 10,000 packets per second threshold is the source's automatic activation condition. Author to confirm it still applies to vSphere 9.0."
+  - "Checked against 9.1 (revision 20260624). Pages 49-50 unchanged. The 10,000 packets per second condition is unchanged."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "The 10,000 packets per second condition is confirmed in the 9.1 document (p. 49)."
 status: draft
 ---
 

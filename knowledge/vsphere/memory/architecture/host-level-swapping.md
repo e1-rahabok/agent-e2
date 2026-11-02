@@ -10,13 +10,13 @@ related:
   - vsphere/memory/interpretation/overcommit-indicators
   - vsphere/cpu/resource-management/resource-settings-guidance
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Memory Considerations > Memory Swapping Optimizations (pp. 33-34)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Swapping Optimizations (pp. 35-36)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "Source states the swap file location setting path in the vSphere Client. Verify the menu path for vSphere 9.0 against the vSphere Client."
+  - "Checked against 9.1 (revision 20260624). Pages 35-36 unchanged. Swap file location menu path unchanged (p. 36)."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "Swap file location menu path is unchanged in the 9.1 document (p. 36)."
 status: draft
 ---
 

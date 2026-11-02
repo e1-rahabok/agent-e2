@@ -8,12 +8,12 @@ related:
   - vsphere/cpu/architecture/numa
   - vsphere/cpu/architecture/idle-and-unused-vcpus
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (pp. 55-57)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Source refers to KB 81383 and the 'Virtual Machine vCPU and vNUMA Rightsizing' blog, and to the Virtual Machine Compute Optimizer tool. Not read."
 status: draft
 ---

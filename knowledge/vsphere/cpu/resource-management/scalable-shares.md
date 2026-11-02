@@ -9,12 +9,12 @@ related:
   - vsphere/cpu/resource-management/resource-settings-guidance
   - vsphere/cpu/resource-management/drs-overview
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS Cluster Sizing and Resource Settings (p. 79); DRS in General (p. 77)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 77); DRS Cluster Sizing and Resource Settings (p. 78)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Scalable Shares text on p. 77. Reservation and share guidance on p. 78. Unchanged."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Source does not state whether Scalable Shares is on or off by default. Not read."
 status: draft
 ---

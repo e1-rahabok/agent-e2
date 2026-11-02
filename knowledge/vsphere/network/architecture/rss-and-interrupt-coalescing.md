@@ -9,12 +9,12 @@ related:
   - vsphere/network/architecture/splitrx-mode
   - vsphere/cpu/architecture/host-wide-dense-mode
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX Networking Considerations > Receive Side Scaling (RSS) (p. 48); Virtual Network Interrupt Coalescing (pp. 48-49)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Networking Considerations > Receive Side Scaling (RSS) (p. 50); Virtual Network Interrupt Coalescing (p. 51)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). RSS NIC list changed in 9.1 (pp. 50-51). Coalescing unchanged."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Exact driver and module commands for RSS are in the source (p. 48). Not copied here. Verify against the NIC driver release before use."
 status: draft
 ---
@@ -22,17 +22,19 @@ status: draft
 # Receive Side Scaling and virtual interrupt coalescing
 
 ## Receive Side Scaling (RSS)
-- RSS schedules network packets from a single NIC in parallel on multiple CPUs, by creating multiple hardware queues.
+- RSS schedules network packets from a single NIC in parallel on multiple CPUs by creating multiple hardware queues.
 - Gain: higher packet processing rates and overall throughput.
-- Cost: additional CPU utilization, which is incurred only when the traffic requires it.
+- Cost: additional CPU utilization, incurred only when the traffic requires it.
 - The source notes that with large numbers of CPU threads in recent CPUs, the additional CPU use might not be a concern.
 - Use case: environments where a single MAC address gets large amounts of traffic, such as network-intensive virtual appliances.
 - Some configurations have RSS deactivated by default, because of the potential for increased CPU overhead.
-- Usable with 10 Gb/s or faster Ethernet physical NICs. The VM uses the RSS capabilities of the physical NIC through the virtual NIC.
-- Activation per NIC type (source, p. 48):
-  - Intel 82599, X450 and X550 NICs: activate through the ixgben driver module parameter `RSS`.
-  - Mellanox ConnectX-4, ConnectX-5 and ConnectX-6 NICs: the driver supports Default Queue RSS (DRSS) and NetQueue RSS by default.
-- For each VM using the feature, add `ethernetX.pNicFeatures = "4"` to the VMX file, where X is the virtual NIC number.
+- Activation per NIC type (9.1 pp. 50-51):
+  - Broadcom BCM5741x, BCM5750x, BCM5760x: the bnxtnet driver supports DRSS and NetQueue RSS by default. RSS is supported in pktHandle mode and EDP mode.
+  - Intel 82599, X450, X550, X557, E610, E710, XL710, XXV710, E810, E830, E835: enable with the ixgben driver module parameter `RSS`.
+  - Marvell FastLinQ 45xxx and 41xxx: the qedentv driver supports DRSS and NetQueue RSS by default. RSS is supported with and without EDP.
+  - NVIDIA (previously Mellanox) ConnectX-4 through ConnectX-9: the nmlx5_core driver supports DRSS and NetQueue RSS by default.
+- For each VM that uses the feature, once RSS is enabled (by default or by command), add `ethernetX.pNicFeatures = "4"` to the VMX file, where X is the virtual NIC number.
+- Exact driver commands are in the source. They are not copied here. Verify against the NIC driver release before use.
 
 ## Virtual network interrupt coalescing
 - Coalescing reduces the number of interrupts, which can reduce CPU utilization.

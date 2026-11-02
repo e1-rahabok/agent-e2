@@ -10,12 +10,12 @@ related:
   - vsphere/cpu/architecture/hardware-assisted-virtualization
   - vsphere/cpu/architecture/host-power-management
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: Hardware for Use with VMware vSphere > Hardware BIOS Settings > General BIOS Settings; Processor-Specific BIOS Settings (pp. 21-22); AES-NI Support (p. 13)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Hardware BIOS Settings > General BIOS Settings; Processor-Specific BIOS Settings (pp. 21-23); Power Management BIOS Settings (pp. 22-23); AES-NI Support (p. 12); Intel QAT Support (p. 13)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Pages 21-23 and 12-13 read. Intel Granite Rapids settings, C-state table and QAT added."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Source states the BIOS options it lists might not be comprehensive for every server. Server-specific guidance is outside the source."
 status: draft
 ---
@@ -38,6 +38,7 @@ status: draft
   - See `vsphere/cpu/architecture/numa`.
 - Activate the hardware-assisted virtualization features: VT-x, AMD-V, EPT, RVI, and similar.
 - Some systems require a full power-down before these changes take effect.
+- Make sure the snoop mode selection is appropriate for the environment. See `vsphere/cpu/architecture/numa`.
 - Deactivate devices in the BIOS that will not be used. Examples: serial, USB, or network ports.
 - If the BIOS allows the memory scrubbing rate to be set, leave it at the manufacturer default.
 
@@ -50,9 +51,37 @@ status: draft
 - Deactivating AES-NI passthrough can allow vMotion from an AES-NI host to a host without it.
 - Features that use AES-NI are listed in the source (pp. 42, 73, 88). Not read.
 
+## Intel QAT (9.1 p. 13)
+- Intel QuickAssist Technology offloads compression, decompression, and cryptographic encryption and decryption from general-purpose cores.
+- Significantly reduces the CPU cost of encrypted vMotion.
+- To get this benefit, choose processors that support Intel QAT.
+- Verify on an ESX host: `lspci | grep -i qat`.
+
 ## Processor-specific settings
-- Snoop mode selection. See `vsphere/cpu/architecture/numa`.
-- AMD EPYC NUMA settings (NPS and CCX as NUMA Domain). See `vsphere/cpu/architecture/numa`.
+### Intel processors (9.1 pp. 21-22)
+- Granite Rapids: enable SNC2 or SNC3, depending on processor variant. Effect: reduces memory latency and improves NUMA domain visibility to ESX.
+- Latency-sensitive workloads: enable Latency Optimized Mode. It prevents cores and other components from entering a low-power state. Some processors and BIOS versions enable it by default.
+- Prefetchers:
+  - keep all L1 and L2 core prefetchers enabled, unless workload analysis suggests otherwise,
+  - memory-bound, read-heavy workloads with frequent LLC misses: consider disabling LLC prefetch and enabling XPT prefetch, unless workload-specific tuning suggests otherwise.
+- DRAM page policy:
+  - Open Adaptive: typically best for energy efficiency, server-side Java, and workloads sensitive to idle memory latency,
+  - Closed Page: typically best for I/O-intensive workloads, OLTP, and HPC.
+### AMD processors
+- AMD EPYC NUMA settings: see `vsphere/cpu/architecture/numa`.
+
+## C-states for Intel Granite Rapids (9.1 pp. 22-23)
+- Disable deep C-states (C6) for latency-sensitive workloads.
+- Recommendations by workload (source Table 1-1):
+
+| Workload | Core C-states | Package C-states | Rationale |
+|---|---|---|---|
+| Latency critical (AI, network function virtualization) | C0/C1 only (C6 disabled) | Disabled | Avoid jitter and wake latency |
+| Cloud native / microservices | C0/C1 (C6 optional) | PC6 allowed | Better performance per watt |
+| Databases | C0/C1 (be cautious about C6) | Limited | Balance latency against idle |
+| HPC / batch | Typically irrelevant | Typically irrelevant | With high utilization the CPU rarely enters C-states |
+| Idle or spare capacity | C6 or C6-P | PC6 | Maximize power savings |
+
 
 ## Traps
 - "BIOS defaults are optimal" → the source says defaults might not be the best choice for performance.

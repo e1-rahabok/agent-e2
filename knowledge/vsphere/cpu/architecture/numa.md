@@ -9,12 +9,12 @@ related:
   - vsphere/cpu/architecture/hyper-threading
   - vsphere/cpu/architecture/idle-and-unused-vcpus
 source:
-  document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 27-28); Hardware BIOS Settings > General BIOS Settings (p. 21)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
 corrections: []
 review_notes:
-  - "Superseded: vSphere 9.1 (revision 20260624) exists. This file was written from the 9.0 document (revision 20250731). Re-check against 9.1 before review."
-  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
+  - "Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30)."
+  - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
   - "Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read."
 status: draft
 ---
@@ -62,7 +62,9 @@ status: draft
   - exposes NUMA for virtual devices, and vNUMA topology, when CPU hot plug is enabled.
 
 ## Snoop modes
-- Five snoop modes exist. Not all modes are available on all processors:
+- 9.1 document (p. 30): no mode list. The best mode depends on the workload and the hardware.
+- Follow the server manufacturer's guidance.
+- 9.0 document (p. 28) listed five modes. Kept for reference. Verify before use:
   - Early Snoop (ES),
   - Home Snoop (HS),
   - Home snoop with Directory and Opportunistic Snoop Broadcast (HS with DIS + OSB),
@@ -70,8 +72,21 @@ status: draft
   - Sub-NUMA Cluster (SNC).
 - COD partitions a processor at boot into one or more NUMA nodes.
 - SNC is similar to COD. It differs in how it uses the last-level cache.
-- The best mode depends on the workload and the hardware.
-- Follow the server manufacturer's guidance.
+
+## Hardware locality (9.1 p. 30)
+- NICs, NVMe drives and GPUs are usually associated with a specific NUMA node.
+- To reduce data traffic across NUMA boundaries:
+  - distribute devices across NUMA nodes,
+  - place workloads on the NUMA node local to the devices they use.
+- Find device locality:
+  - Linux: `lspci -v`, look for the NUMA node output,
+  - Windows Server, PowerShell: `Get-NetAdapterRss -Name <AdapterName>`, shows the closest NUMA node.
+
+## Intel Granite Rapids (9.1 p. 30)
+- Size VMs to align with NUMA node and SNC domain boundaries.
+- Design workloads to maximize NUMA locality. Consider vCPU placement, memory allocation, and NUMA node and SNC domain boundaries.
+- Reduce unnecessary VM movement to stabilize NUMA locality: set the NUMA migration threshold to 50 or greater, `numa.migThreshold = XX`.
+- The source names these workloads as especially relevant: in-memory databases, HPC, low-latency and real-time services, and high I/O applications.
 
 ## AMD EPYC
 - NUMA Nodes per Socket (NPS). Not all EPYC processors offer all values:
