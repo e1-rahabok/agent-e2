@@ -64,6 +64,10 @@ Standing rules for this repository. Read at the start of every session.
 ## Do not index
 - `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, `README.md`, `CLAUDE.md`.
 
+## Validation
+- Run `python3 scripts/validate.py` before every merge. Do not merge if it fails.
+- Allowed tag values and avoided phrases live in `knowledge/vsphere/glossary/terminology.md` (section Allowed tag values). Change them there, not in the script.
+
 ## Git
 - Work on the branch named for the session.
 - Early development: merge the session branch to `main` through a pull request, automatically, after each change set. Use a merge commit so each change stays visible.

@@ -81,6 +81,7 @@ docs/                                # design decisions, To Do, legacy files (no
 
 ## QA workflow
 1. AI extracts a section into files with `status: draft`.
+   - Run `python3 scripts/validate.py`. It must pass before merge.
 2. Author reviews, answers `review_notes`, fixes errors.
 3. Author sets `status: reviewed`.
 4. When the source document is updated, move `corrections` into the normal text and clear them.

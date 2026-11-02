@@ -54,7 +54,7 @@ threshold(VM layer) < threshold(Guest OS layer) < threshold(application layer)
 - That value is at the SQL Server layer.
 - At the Windows layer the value must be lower.
 - At the vSphere VM layer the value must be lower still.
-- Read and write latency may need different thresholds.
+- Read and write latency may require different thresholds.
 - Reference: https://learn.microsoft.com/en-us/troubleshoot/sql/database-engine/performance/troubleshoot-sql-io-performance
 
 ## Traps

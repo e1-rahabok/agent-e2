@@ -41,7 +41,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Pillar example re-mapping in `foundations/metric-perspectives`: Compliance Score under Security, Month-to-Date Cost under Value. Author to confirm.
 - [ ] Parked until Chapter 6 of the book: placement of `cluster-resource-management/` (outside the technology-first rule).
 - [ ] Terminology: author to provide the book terminology for `vsphere/glossary/terminology`.
-- [ ] Validator: reject tag values and terms not in the terminology file.
+- [x] Validator: `scripts/validate.py`, run before every merge.
 - [ ] Legacy files in `docs/legacy/` (old `cpu.usage.average` files): decide whether to rewrite as metric files or remove.
 - [ ] `vsphere/system/diagnosis/host-not-responding` is not from the book. Decide whether to keep.
 - [ ] Add a script that generates per-tag index files and checks front matter and links.

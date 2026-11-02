@@ -39,7 +39,7 @@ status: draft
 - ESX does this even when the guest OS does not request large pages.
 
 ## Full benefit requires the guest
-- The full benefit needs the guest OS and applications to use large pages as well.
+- The full benefit requires the guest OS and applications to use large pages as well.
 - Guest OS and application configuration: see the guest OS documentation.
 - The source says an OS or application that benefits from large pages on native hardware can achieve a similar improvement on a VM backed by 2 MB machine pages.
 
