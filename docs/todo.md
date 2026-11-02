@@ -39,7 +39,9 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.
 - [ ] metric_class for Wait, Idle, Swapped, Swap Used, Ballooned: set provisionally. Author to confirm.
 - [ ] Pillar example re-mapping in `foundations/metric-perspectives`: Compliance Score under Security, Month-to-Date Cost under Value. Author to confirm.
-- [ ] `cluster-resource-management/` sits outside the technology-first rule. Author to confirm the placement.
+- [ ] Parked until Chapter 6 of the book: placement of `cluster-resource-management/` (outside the technology-first rule).
+- [ ] Terminology: author to provide the book terminology for `vsphere/glossary/terminology`.
+- [ ] Validator: reject tag values and terms not in the terminology file.
 - [ ] Legacy files in `docs/legacy/` (old `cpu.usage.average` files): decide whether to rewrite as metric files or remove.
 - [ ] `vsphere/system/diagnosis/host-not-responding` is not from the book. Decide whether to keep.
 - [ ] Add a script that generates per-tag index files and checks front matter and links.
