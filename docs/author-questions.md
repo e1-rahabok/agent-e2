@@ -191,5 +191,12 @@ Each entry has:
 - Written as now: associated with the VM, flagged as unsure.
 - Answer:
 
+### Q024 · Chapter 5 Network > Architecture · VM and ingress
+- Files: `vsphere/network/concepts/network-observability`
+- Search: "That’s why a VM does not have ingress traffic"
+- Question: if moving further inside is ingress, traffic arriving at a VM looks like ingress. What does "a VM does not have ingress traffic" mean? That VM metrics use receive/transmit instead?
+- Written as now: definitions only; the VM statement is flagged.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
