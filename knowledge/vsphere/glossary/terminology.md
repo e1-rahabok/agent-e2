@@ -61,6 +61,13 @@ Tag values in front matter must use the terms defined here.
 | Contention (VCF Operations) | Overlap + Co-stop + Ready + Other Wait. Before July 2024: mapped to CPU Latency. | - | Book, CPU > VM > Contention |
 | Usage Disparity | Spread of usage across the vCPUs of one VM. | Imbalance vCPU Usage (avoid) | Book, CPU > VM > CPU Usage Disparity |
 | MKS, VMX, Helper | VM worlds charged to VM-level Used: console, VM management and emulation, IO helpers. | - | Book, CPU > VM > Used |
+| Thread Utilization | ESXi Utilization (%) read per physical thread. Binary per moment. | Utilization (%) | Book, CPU > ESXi > High Load Example |
+| Core Utilization | 100% when 1 or 2 threads of a core run. | - | Book, CPU > ESXi > Thread Utilization |
+| NHCC | Non-Halted Core Cycles. Hardware counter behind Used. | - | Book, CPU > ESXi > Used \| Usage |
+| Peak Core Usage | VCF Operations: highest Usage among the cores of a host. | Peak CPU Core Usage | Book, CPU > ESXi > Peak Core CPU Usage |
+| ESXi CPU Imbalance | Running threads / running cores. | Imbalance Score | Book, CPU > ESXi > Imbalance |
+| Consumed CPU (%) | Host list column in vSphere Client. Maps to Usage (%). | - | Book, CPU > ESXi > Consumed |
+| CPU Utilization for Resources | 17 legacy rescpu.* metrics. Avoid. | rescpu | Book, CPU > ESXi > Metrics to Avoid |
 
 ## Words to avoid
 | Avoid | Use instead | Why |

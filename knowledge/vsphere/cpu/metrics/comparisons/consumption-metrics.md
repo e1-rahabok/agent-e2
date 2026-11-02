@@ -61,6 +61,8 @@ related:
 - vsphere/cpu/metrics/virtual-machine/system
 - vsphere/cpu/metrics/virtual-machine/usage-disparity
 - vsphere/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test
+- vsphere/cpu/metrics/comparisons/host-consumption-metrics
+- vsphere/cpu/concepts/esxi-thread-core-accounting
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > VM (pp. 78-118) > Consumption Metrics
