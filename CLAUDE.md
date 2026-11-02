@@ -54,6 +54,8 @@ Standing rules for this repository. Read at the start of every session.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Every new knowledge file has YAML front matter (see `README.md`).
+- Use terms from `knowledge/vsphere/glossary/terminology.md`. Tag values must match it. A new term is added there as a proposal and flagged for the author before use.
+- When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
 
 ## Evaluation
 - Never send `## Expected key points` or `## Likely wrong answer` to the AI under test.
