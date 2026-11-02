@@ -212,5 +212,26 @@ Each entry has:
 - Written as now: the table values, with the conflict flagged.
 - Answer:
 
+### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
+- Files: `vsphere/system/concepts/vm-footprint-sizing`
+- Search: "VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System"
+- Question: is the whole sum divided by 20,000, or only System? VM-level Used already includes System (Chapter 2 VM, Used formula). Is System counted twice?
+- Written as now: formula copied as is, flagged.
+- Answer:
+
+### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
+- Files: `vsphere/system/concepts/guest-os-sizing`
+- Search: "Exclude balloon"
+- Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
+- Written as now: exclude, flagged.
+- Answer:
+
+### Q029 · Consumer Objects > Capacity · Memory utilization ranges
+- Files: `vsphere/system/concepts/guest-os-sizing`
+- Search: "The company is wasting money if the utilization falls below 50%"
+- Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
+- Written as now: bar 2 recommended, no numbers stated.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
