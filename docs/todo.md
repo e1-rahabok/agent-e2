@@ -36,7 +36,20 @@ Open work for this repository. Not indexed. Update when items close.
   - New: `cpu/concepts/` guest-os-vs-vm-cpu, cpu-measurement-levels, cpu-topology, vcpu-states, run-time-vs-run-quality, cpu-efficiency, cpu-frequency, power-states, frequency-and-ht-impact-on-vm.
   - Updated: VM run, ready, wait, used, usage, latency; host core-utilization, utilization.
 - [ ] Re-check extracted chapters when the author uploads the corrected `.docx` (author uploads when enough corrections accumulate).
-- [ ] Chapter 2 (CPU) > VM and later sections: not started.
+- [x] Chapter 2 (CPU) > VM (pp. 78-118): extracted 2026-11-02.
+  - New VM metric files: co-stop, overlap, other-wait, swap-wait, idle, contention, net-run, demand, system, usage-disparity.
+  - New comparisons: vm-contention-metrics, vm-vs-esxi-ht-ramp-test. New diagnosis: vm-cpu-contention-high, run-vs-used-gap, oversized-vm-downsizing, vm-other-wait-high.
+  - Updated: VM ready, run, used, usage, wait, latency; comparisons/consumption-metrics.
+- [ ] Chapter 2 (CPU) > ESXi and later sections: not started.
+- [ ] Chapter 2 VM: open questions for the author, with verbatim search strings:
+  - Steal Time. Search 1 (Chapter 1): "Steal Time in Linux only includes CPU Ready". Search 2 (VM > Overlap): "Linux Guest OS tracks this as Stolen time". Does Linux Steal include Ready only, Overlap only, or both?
+  - System charged to vCPU 0. Search 1: "this is charged to the VM CPU 0". Search 2 (diagram text): "Charged at VM level, not at vCPU 1". Chapter 1 also says per-vCPU Used excludes System. Which is right?
+  - Run for sizing. Search 1: "suitable as input to size the Guest OS and not the VM". Search 2: "This counter is suitable for VM Capacity sizing". Guest OS sizing, VM sizing, or both?
+  - Contention formula. Search: "Other Wait (if less than 1%)". What does the condition mean?
+  - Contention and limit. Search 1: "Unlike CPU Ready, it does not account for Limit". Search 2: "Why does the counter include Ready by Limit?". Is the first about the pre-July-2024 Contention (mapped to Latency)?
+  - Used above Run. Search: "Why is Used consistently 41% higher than Run?". How does Ready make Used higher than Run?
+  - Ready and VM size. Search 1 (VM): "CPU Ready tends to be higher, ceteris paribus, in larger VMs". Search 2 (Architecture): "You can reduce Co-stop by reducing the VM size". Does downsizing reduce Ready too?
+  - Ramp test. Search: "ESXi CPU Core Utilization (%) matches VM Run. Both went 2x." Core Utilization stayed at 100%. Should this be Utilization (%)?
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Memory, Storage, Network chapters: waiting for upload.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
@@ -44,6 +57,7 @@ Open work for this repository. Not indexed. Update when items close.
 ## Evaluation
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
 - [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
+- [ ] Add golden cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `evaluation/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
 

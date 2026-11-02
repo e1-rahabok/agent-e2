@@ -25,9 +25,27 @@
 - Two VMs share one core, each runs half the time, half of it overlapping: Run 50%, Used 40.625%.
 - Both threads busy all the time: Run 100%, Used 62.5%.
 
+## Not included in Run
+- Interrupts (Overlap).
+- System time: IO done by the hypervisor and charged back to the VM.
+- Power management and frequency scaling.
+- Simultaneous multithreading (Hyper-Threading).
+- Run is the only consumption counter not affected by frequency scaling and Hyper-Threading.
+
+## Instance
+```text
+Run (VM) = sum of Run (vCPU)
+```
+- In vCenter, VM-level Run can exceed 20,000 ms.
+
+## Use
+- Input for Guest OS sizing. Remove Overlap first: Net Run = Run - Overlap.
+- Run higher than Used: the gap comes from power management, Hyper-Threading or both. Run cannot tell which.
+
 ## Traps
 - "Run 100% means full performance" → Run is time. Throughput depends on frequency and Hyper-Threading.
 - "Compare Run (ms) across VMs" → ms scales with vCPU count. Use %.
+- "Run includes the hypervisor IO done for the VM" → System is not in Run.
 
 ## Metadata
 ```yaml
@@ -56,11 +74,16 @@ related:
 - vsphere/cpu/concepts/cpu-efficiency
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+- vsphere/cpu/metrics/virtual-machine/net-run
+- vsphere/cpu/metrics/virtual-machine/overlap
+- vsphere/cpu/diagnosis/run-vs-used-gap
 source:
   document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency; CPU > VM (pp. 78-118) > Consumption Metrics > Run | Net Run
 corrections: []
 review_notes:
 - Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 traps: from CPU > Architecture.
+- 'Sections Not included in Run, Instance, Use: from CPU > VM.'
+- 'Section ''Use'': the book says Run suits Guest OS sizing, not VM sizing, and later says Run suits VM capacity sizing (HT ramp test). Open question in docs/todo.md.'
 status: draft
 ```
