@@ -33,6 +33,13 @@
 
 - Make sure there is enough CPU headroom to handle the CPU cost of memory tiering (9.1 p. 38).
 
+## Operations (book)
+- Use memory tiering actively, as part of memory, not as an occasional buffer.
+- Leave 25% of the NVMe drive unpartitioned (for example 1.2 TB of a 1.6 TB drive). The flash translation layer then has spare blocks for lazy garbage collection, avoiding urgent inline garbage collection under write pressure.
+- Track the read latency of the tier device.
+- SSD pages (4-16 KB) are the read/write unit; blocks (4-32 MB) are the erase unit. This asymmetry makes NAND fragmentation the main NVMe performance risk.
+- An idle tier device shows latency spikes on sporadic reads: power-state wake-up. See `vsphere/storage/metrics/host/disk`.
+
 ## Traps
 - "Tiered memory performs like DRAM" → infrequently accessed data sits on the NVMe tier.
 - "Any SSD works for memory tiering" → the source specifies a high-performance NVMe device with the write rate and endurance above.
@@ -58,13 +65,15 @@ internal_derive: []
 related:
 - vsphere/memory/concepts/overcommit-techniques
 - vsphere/memory/configuration/host-level-swapping
+- vsphere/storage/metrics/host/disk
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38)
+  path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38); Storage > ESXi > Disk or Device > Memory Tiering
 corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 14 and 38 read. Setup changes and CPU headroom bullet added (p. 38).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Introduced in vSphere 9.0. The 9.1 document (p. 38) refers to ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub''. Not read.'
+- 'Section ''Operations (book)'': from Storage > ESXi. The 25% figure is the author''s practice.'
 status: draft
 ```

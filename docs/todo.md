@@ -53,7 +53,8 @@ Open work for this repository. Not indexed. Update when items close.
   - Updated: host consumed, swap-used, usage.
 - [x] Chapter 4 (Storage) > Architecture: extracted 2026-11-02. New: `storage/concepts/` storage-dimensions, storage-layers, guest-os-vs-vm-storage; `storage/diagnosis/vm-storage-performance-checks`. Updated: VM disk-latency.
 - [x] Chapter 4 (Storage) > VM: extracted 2026-11-02. New: concepts vm-files, snapshot-impact; VM metric files outstanding-io, disk, datastore, virtual-disk-used, disk-space-used, provisioned-space, snapshot-space. Updated: virtual-disk, disk-latency, iops.
-- [ ] Storage > ESXi; Network, Consumer Objects, Provider Objects, MS Windows chapters: not started.
+- [x] Chapter 4 (Storage) > ESXi: extracted 2026-11-02. Chapter 4 Storage complete. New: concept esxi-storage-latency-stack; host metric files disk, adapter-and-path, datastore; diagnosis host-storage-latency. Updated: memory-tiering.
+- [ ] Network, Consumer Objects, Provider Objects, MS Windows chapters: not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
