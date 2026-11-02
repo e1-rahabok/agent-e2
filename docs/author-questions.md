@@ -205,5 +205,12 @@ Each entry has:
 - Written as now: flagged, no number stated.
 - Answer:
 
+### Q026 · Consumer Objects > Performance · Compressed + Swapped threshold
+- Files: `vsphere/system/metrics/virtual-machine/vm-performance`
+- Search: "their threshold is 2x of memory contention"
+- Question: the table gives Compressed + Swapped green at 0-0.25%, half of Memory Contention (0-0.5%), not 2x. Which is intended?
+- Written as now: the table values, with the conflict flagged.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.

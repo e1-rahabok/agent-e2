@@ -72,10 +72,20 @@
 - Workloads with many outstanding network requests can see reduced performance when interrupt coalescing is deactivated.
 - See `vsphere/network/configuration/rss-and-interrupt-coalescing`.
 
+## Effect on metrics (High)
+- The vCPU is scheduled 100% of the time: no wake-up or scheduling latency. Exclusive affinity is literal.
+- esxtop: each vcpu world shows %RUN about 100% and %WAIT, %IDLE 0. %USED stays low (0.15-0.31%).
+- Run and Demand go to 100%. Wait and Idle go to 0%. Usage stays near 0%. Contention stays 0%.
+- The usual relationship between Run and Used does not hold: a physical core is carved out for the VM.
+- System and Ready are not affected.
+- Memory counters do not change: a fully reserved 4 GB idle VM showed no change. Memory is storage; counters rise only when used.
+![Run and Demand at 100%, Wait at 0%, Usage unchanged](../images/latency-sensitivity-run-demand-wait-usage.png)
+
 ## Traps
 - "High latency sensitivity is free" → it removes the physical cores from the pool for other VMs and VMkernel worlds.
 - "High with Hyperthreading gives more performance for any VM" → the source says it is not a general-purpose setting, and can reduce performance for most workloads.
 - "A 100% CPU reservation guarantees exclusive cores" → not if no NUMA node has enough non-exclusive cores when the VM powers on.
+- "Demand 100% with Latency Sensitivity High means CPU shortage" → the vCPU is pinned and always scheduled; Usage stays low.
 
 ## Metadata
 ```yaml
@@ -105,12 +115,13 @@ related:
 - vsphere/cpu/concepts/power-states
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54)
+  path: 'Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54); Consumer Objects > Performance: VM & Guest OS > Latency Sensitivity'
 corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 52-54 read. EDP Dedicated mode named in NFV guidance (p. 54). Power policy wording still inconsistent (p. 53 vs p. 31).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Inconsistent source naming, still present in 9.1: p. 53 says ''Set the ESX host power policy to Maximum performance''. The power policy list on p. 31 names ''High Performance''. Likely the same policy. Author to confirm.'
 - Source names the white paper 'Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs' and calls it dated. Not read.
+- 'Section ''Effect on metrics (High)'': from Consumer Objects > Latency Sensitivity.'
 status: draft
 ```
