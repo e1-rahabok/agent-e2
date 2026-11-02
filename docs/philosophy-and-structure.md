@@ -19,9 +19,9 @@ Conventions (layout, metadata, writing rules) are in the root `README.md`.
    - Same name, different meaning (and the reverse) is stored as distinction blocks, not buried in prose.
 4. **Vantage points are never mixed.**
    - A counter file covers one object (vCPU, VM, ESXi, cluster, datastore, ...) and one data source (ESXi, vCenter, VCF Operations, Guest OS).
-5. **Vendor-neutral vs vSphere-specific.**
-   - Naming, units, sampling and thresholds apply beyond vSphere: `knowledge/foundations/`.
-   - Virtualization mechanisms: `knowledge/vsphere/foundations/`.
+5. **General vs vSphere-specific.**
+   - `knowledge/foundations/`: applies across VCF 9 components (naming, units, sampling, thresholds).
+   - `knowledge/vsphere/foundations/`: true only in vSphere (virtualization mechanisms). Different scope; never merged.
 6. **Traceable to source.**
    - Every file records the source document and heading path. Needed for QA and for updating when the source changes.
 7. **Measured, not assumed.**
@@ -36,10 +36,19 @@ Conventions (layout, metadata, writing rules) are in the root `README.md`.
 | `metrics/<object-folder>/` | One vSphere object type per file. Same label on another object is a different file, linked via `same_name`. Different labels with the same meaning are linked via `same_meaning`. |
 | No `distinctions.md` | Same-name traps live in the metric files they belong to. Groups of metrics live in `metrics/comparisons/`. |
 | Tags for pillar, product, object | Folders give one hierarchy. Tags let the AI slice by the other two angles of the book. |
+| `knowledge/glossary/` at top level | Terminology and tag values apply to all products. |
 | `cluster-resource-management/` | DRS, DPM, shares and vCLS span CPU, memory and network at cluster level. |
 | Metadata block at the end of each file | Retrievers filter on it. Reviewers see source, corrections and status in one place. At the end, so the content reads first on GitHub. |
 | `raw-input/` not indexed | Source documents are binary and unstructured. Derived files are what the AI reads. |
 | `evaluation/` one file per case | Scales to hundreds of cases. Never indexed: holds answer keys. |
+
+## Reader model
+- Reader: a local LLM using retrieval. Small context window; retrieves a few chunks per question.
+- Consequences:
+  - Small files and one fact per line keep each chunk on topic.
+  - Links in metadata let the retriever expand from one hit to its traps and mechanisms.
+  - Diagrams carry text equivalents, because the model may not read images.
+- Ingest, query and answer steps: root `README.md`, section How a local LLM uses it.
 
 ## Limitations
 - Converting expert knowledge into files is lossy. Some tacit knowledge is hard to codify.
