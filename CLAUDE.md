@@ -60,7 +60,7 @@ Standing rules for this repository. Read at the start of every session.
 - When asking the author about the book, give a verbatim search string.
 - Questions for the author go in `docs/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - Extract the book one Heading 3 at a time. Add that section's questions to `docs/author-questions.md` and continue; do not wait for answers.
-- Use terms from `knowledge/vsphere/glossary/terminology.md`. Tag values must match it. A new term is added there as a proposal and flagged for the author before use.
+- Use terms from `knowledge/glossary/terminology.md`. Tag values must match it. A new term is added there as a proposal and flagged for the author before use.
 - When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
 
 ## Evaluation
@@ -72,7 +72,7 @@ Standing rules for this repository. Read at the start of every session.
 
 ## Validation
 - Run `python3 scripts/validate.py` before every merge. Do not merge if it fails.
-- Allowed tag values and avoided phrases live in `knowledge/vsphere/glossary/terminology.md` (section Allowed tag values). Change them there, not in the script.
+- Allowed tag values and avoided phrases live in `knowledge/glossary/terminology.md` (section Allowed tag values). Change them there, not in the script.
 
 ## Git
 - Work on the branch named for the session.
