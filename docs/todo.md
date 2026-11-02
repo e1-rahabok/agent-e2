@@ -59,7 +59,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Chapter 5 (Network) > ESXi: extracted 2026-11-02. Chapter 5 Network complete. New: host metric files errors, packets-dropped, throughput; diagnosis vnic-rx-drops.
 - [x] Consumer Objects > Performance: VM & Guest OS: extracted 2026-11-02. New: system/concepts/performance-kpi-design; system/metrics/virtual-machine vm-performance, guest-os-performance, vmotion; comparisons/peak-20-second-metrics. Updated: cpu/configuration/latency-sensitivity.
 - [x] Consumer Objects > Capacity: Guest OS: extracted 2026-11-02. New: system/concepts rightsizing, guest-os-sizing, vm-footprint-sizing. Validator: allow list for book metric names containing Needed.
-- [ ] Provider Objects (Overview, Performance, Capacity, Other Metrics, esxtop); MS Windows: not started.
+- [x] Provider Objects > Overview: extracted 2026-11-02. New: system/concepts/cluster-operations; system/metrics/cluster/vm-operations; cpu/metrics/cluster/inter-host-imbalance.
+- [ ] Provider Objects (Performance, Capacity, Other Metrics, esxtop); MS Windows: not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
