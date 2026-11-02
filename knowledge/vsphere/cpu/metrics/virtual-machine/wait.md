@@ -15,6 +15,18 @@
 - Wait is one of 4 states: Run + Ready + Co-stop + Wait = 100%, per vCPU.
 - See `vsphere/cpu/concepts/vcpu-states`.
 
+## Sub-metrics
+```text
+Wait = Idle + Swap Wait + Other Wait
+```
+| Sub-metric | Waiting for | Guest OS sizing |
+|---|---|---|
+| Idle | Work. | Exclude. |
+| Swap Wait | Memory pages from ESXi swap. | Include. |
+| Other Wait | Anything else: disk IO, network IO, vMotion, snapshots. | Include. |
+- Wait mixes consumption (Idle) and contention (Swap Wait, Other Wait). The book groups it separately.
+- The Guest OS does not see Swap Wait or Other Wait. It experiences a freeze.
+
 ## Traps
 - "High CPU Wait means the VM waits for disk or memory" → wrong. Mostly idle time.
 - "VM Wait equals Guest OS IO Wait" → Guest OS IO wait can show as VM Run or VM Wait.
@@ -41,12 +53,16 @@ same_meaning: []
 related:
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/metrics/virtual-machine/idle
+- vsphere/cpu/metrics/virtual-machine/swap-wait
+- vsphere/cpu/metrics/virtual-machine/other-wait
 source:
   document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; CPU > VM (pp. 78-118) > Wait Metrics
 corrections: []
 review_notes:
 - metric_class set to context. The book groups Wait separately from contention and consumption. Author to confirm.
 - Sections Mechanism and the last trap: from CPU > Architecture.
+- 'Section Sub-metrics: from CPU > VM. The IO wait and memory wait cases in vsphere/cpu/concepts/vcpu-states map to Other Wait and Swap Wait.'
 status: draft
 ```

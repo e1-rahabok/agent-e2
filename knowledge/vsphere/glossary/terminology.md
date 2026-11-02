@@ -53,6 +53,14 @@ Tag values in front matter must use the terms defined here.
 | SMT | Simultaneous multithreading. | Hyper-Threading (Intel) | Book, CPU Efficiency |
 | CCD | Core Complex Die. A group of cores sharing one L3 cache inside an AMD socket. | - | Book, System on a Chip |
 | CPPC | Collaborative Processor Performance Control (ACPI 5.0+). | Intel HWP | Book, ESXi Level |
+| Readiness | Ready expressed in %, normalized by vCPU count. | Ready (%) | Book, CPU > VM > Ready \| Readiness |
+| Max Limited | Part of Ready caused by a CPU limit. | Limbo time | Book, CPU > VM > Ready |
+| Overlap | Time a running vCPU is interrupted by a kernel system service. | Stolen (some VMware documents) | Book, CPU > VM > Overlap |
+| Other Wait | Wait not caused by idle or swap: disk IO, network IO, vMotion, snapshots. | VM Wait | Book, CPU > VM > Other Wait |
+| Net Run | VCF Operations metric: Run - Overlap. | - | Book, CPU > VM > Run \| Net Run |
+| Contention (VCF Operations) | Overlap + Co-stop + Ready + Other Wait. Before July 2024: mapped to CPU Latency. | - | Book, CPU > VM > Contention |
+| Usage Disparity | Spread of usage across the vCPUs of one VM. | Imbalance vCPU Usage (avoid) | Book, CPU > VM > CPU Usage Disparity |
+| MKS, VMX, Helper | VM worlds charged to VM-level Used: console, VM management and emulation, IO helpers. | - | Book, CPU > VM > Used |
 
 ## Words to avoid
 | Avoid | Use instead | Why |
@@ -63,6 +71,7 @@ Tag values in front matter must use the terms defined here.
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | diagnosis | Interpretation is the purpose of every metric file. |
+| Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
 
 ## Allowed tag values
 Read by `scripts/validate.py`. Change values here, not in the script.
