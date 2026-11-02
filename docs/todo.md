@@ -56,7 +56,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Chapter 4 (Storage) > ESXi: extracted 2026-11-02. Chapter 4 Storage complete. New: concept esxi-storage-latency-stack; host metric files disk, adapter-and-path, datastore; diagnosis host-storage-latency. Updated: memory-tiering.
 - [x] Chapter 5 (Network) > Architecture: extracted 2026-11-02. New: concepts network-characteristics, network-observability.
 - [x] Chapter 5 (Network) > VM: extracted 2026-11-02. New: comparisons/vm-network-metrics; VM metric files packets-dropped, packets, throughput.
-- [ ] Network > ESXi; Consumer Objects, Provider Objects, MS Windows chapters: not started.
+- [x] Chapter 5 (Network) > ESXi: extracted 2026-11-02. Chapter 5 Network complete. New: host metric files errors, packets-dropped, throughput; diagnosis vnic-rx-drops.
+- [ ] Consumer Objects, Provider Objects, MS Windows chapters: not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
