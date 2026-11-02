@@ -198,5 +198,12 @@ Each entry has:
 - Written as now: definitions only; the VM statement is flagged.
 - Answer:
 
+### Q025 · Chapter 5 Network > VM · Dropped packet volume
+- Files: `vsphere/network/metrics/virtual-machine/packets-dropped`
+- Search: "1 thousand packets dropped = 1500 MB worth of packets within 300 seconds"
+- Question: 1,000 × 1.5 KB = 1.5 MB. Should it be 1 million packets = 1,500 MB, or 1,000 packets = 1.5 MB?
+- Written as now: flagged, no number stated.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.

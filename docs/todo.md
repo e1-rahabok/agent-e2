@@ -25,7 +25,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Questions for the author: `docs/author-questions.md` (24 open).
+- [ ] Questions for the author: `docs/author-questions.md` (25 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
 - [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
@@ -55,7 +55,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Chapter 4 (Storage) > VM: extracted 2026-11-02. New: concepts vm-files, snapshot-impact; VM metric files outstanding-io, disk, datastore, virtual-disk-used, disk-space-used, provisioned-space, snapshot-space. Updated: virtual-disk, disk-latency, iops.
 - [x] Chapter 4 (Storage) > ESXi: extracted 2026-11-02. Chapter 4 Storage complete. New: concept esxi-storage-latency-stack; host metric files disk, adapter-and-path, datastore; diagnosis host-storage-latency. Updated: memory-tiering.
 - [x] Chapter 5 (Network) > Architecture: extracted 2026-11-02. New: concepts network-characteristics, network-observability.
-- [ ] Network > VM, ESXi; Consumer Objects, Provider Objects, MS Windows chapters: not started.
+- [x] Chapter 5 (Network) > VM: extracted 2026-11-02. New: comparisons/vm-network-metrics; VM metric files packets-dropped, packets, throughput.
+- [ ] Network > ESXi; Consumer Objects, Provider Objects, MS Windows chapters: not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 

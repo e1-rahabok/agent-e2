@@ -1,0 +1,48 @@
+# VM Network Packets (transmitted and received)
+
+## Meaning
+- Count of packets in the sampling window, per direction.
+- Packets transmitted counts only packets sent successfully. Dropped packets are excluded.
+- Includes broadcast and multicast.
+
+## Formula
+```text
+Packets transmitted per second = Total Packets Transmitted / 300   (VCF Operations 5-minute interval)
+```
+
+## Why it matters
+- Each packet costs CPU. Bandwidth can remain while packets per second saturate.
+- Example outage: 700,000 packets per second used only 800 Mbps. The broadcast packets were 60 bytes, not 1,500.
+![Packets transmitted excludes dropped packets](../../images/packets-transmitted-excludes-dropped.png)
+
+## Traps
+- "Low Mbps means low network load" → check packets per second.
+
+## Metadata
+```yaml
+id: vsphere/network/metrics/virtual-machine/packets
+retriever_guide: metric-meaning
+scope: vsphere
+technology:
+- network
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+metric_class: consumption
+internal_derive: []
+same_name: []
+same_meaning: []
+related:
+- vsphere/network/metrics/virtual-machine/throughput
+- vsphere/network/metrics/virtual-machine/packets-dropped
+source:
+  document: PART 3 - Counters.docx
+  path: Network > VM > Overview; Consumption Metrics
+corrections: []
+review_notes:
+- 'Example outage cited by the book: https://communities.vmware.com/t5/VMware-vSphere-Discussions/Limit-on-network-packets-per-second-for-VMs/td-p/2312644 (community post).'
+status: draft
+```
