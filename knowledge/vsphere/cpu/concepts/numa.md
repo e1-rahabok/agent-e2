@@ -18,6 +18,7 @@ related:
 - vsphere/cpu/concepts/virtual-numa
 - vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/concepts/cpu-topology
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)

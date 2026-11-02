@@ -24,14 +24,33 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Existing `cpu/counters/*/cpu.usage.average.md` uses an unsourced "~80-85%" threshold. Replace or source it.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
+## Open points from book extraction
+- [ ] Chapter 2 Architecture questions for the author (details in each file's `review_notes`):
+  - Impacts on ESXi table shows ESXi Usage (%) at 120% and 150%. Conflicts with the 100% cap correction in `host/usage`.
+  - Same table: meaning of the "My Recommendation" column (values = Core Utilization × 0.8), and Core Utilization 125%.
+  - Fair Share Scheduler: "Used increases run time on a shared core" vs the CPU Efficiency example (Used 62.5% < Run 100%).
+  - ESXi ≠ VM + Kernel: "a thread is consumer" read as provider.
+  - State of a VM vCPU: Co-stop listed as a sub-case of IO wait.
+  - Power states: C/P combination table (P-states off = no Turbo) vs "highest available frequency" vs Turbo at 129% under static high performance.
+  - Typos assumed: remote L3 "80 ms" = 80 ns; "812 GHz" = 812 MHz (image confirms); "CPCC" = CPPC.
+  - Linux Steal applies to VMs only ("I think"), and Idle "correlates with run queue".
+  - "14 grades" of P-states: processor-specific?
+  - "Run – Overlap – VMX – System": formula or list?
+
 ## Book extraction
 - [x] Metrics Nuances (Chapter 1): re-extracted.
-- [ ] Chapter 2 (CPU): waiting for the corrected `.docx` upload. The copy on main is the pre-correction version.
+- [x] Chapter 2 (CPU) > Architecture (pp. 52-78): extracted 2026-11-02 from the pre-correction `.docx` on main.
+  - New: `cpu/concepts/` guest-os-vs-vm-cpu, cpu-measurement-levels, cpu-topology, vcpu-states, run-time-vs-run-quality, cpu-efficiency, cpu-frequency, power-states, frequency-and-ht-impact-on-vm.
+  - Updated: VM run, ready, wait, used, usage, latency; host core-utilization, utilization.
+- [ ] Chapter 2 (CPU) > Architecture: re-check all files above when the corrected `.docx` is uploaded.
+- [ ] Chapter 2 (CPU) > VM and later sections: not started.
+- [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Memory, Storage, Network chapters: waiting for upload.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
+- [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `evaluation/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
 
