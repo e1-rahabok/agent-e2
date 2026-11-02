@@ -64,7 +64,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Provider Objects > Capacity: extracted 2026-11-02. New: system/concepts capacity-model, hypervisor-overhead; cpu/concepts/cpu-capacity; memory/concepts/memory-capacity.
 - [x] Provider Objects > Other Metrics: extracted 2026-11-02. New: system/metrics/cluster cluster-consumption, cluster-risk; system/metrics/comparisons/availability.
 - [x] Provider Objects > esxtop (Overview, CPU, Memory): extracted 2026-11-02. New: system/concepts/esxtop; cpu/metrics/comparisons/esxtop-cpu; memory/metrics/comparisons/esxtop-memory.
-- [ ] Provider Objects > esxtop (Storage, Network); MS Windows: not started.
+- [x] Provider Objects > esxtop (Storage, Network): extracted 2026-11-02. Provider Objects complete. New: storage/metrics/comparisons/esxtop-storage; network/metrics/comparisons/esxtop-network.
+- [ ] MS Windows (Introduction, CPU, Memory, Storage): not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
