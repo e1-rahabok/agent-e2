@@ -177,5 +177,12 @@ Each entry has:
 - Written as now: both forms, flagged.
 - Answer:
 
+### Q022 · Chapter 4 Storage > Architecture · IP storage read and network direction
+- Files: `vsphere/storage/metrics/virtual-machine/disk-latency`
+- Search: "Read and Write are both mapped to Transmit counter"
+- Question: for a read, the data returns to ESXi as received traffic. Do reads show mostly as Receive (data) with only the command on Transmit?
+- Written as now: both map to Transmit, as in the book.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
