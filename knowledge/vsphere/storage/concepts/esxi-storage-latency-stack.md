@@ -59,7 +59,7 @@ source:
   path: Storage > ESXi > Disk or Device > Contention Metrics
 corrections: []
 review_notes:
-- 'Section ''vSphere Client names'': exact counter labels are from the book''s screenshots, transcribed by Claude; the book lists the guest set as Command Latency, Write Latency and ''Ready Latency'', read as Read Latency.'
+- "Section 'vSphere Client names': device, kernel and queue labels checked against the book's screenshots. The book lists the guest set as Command Latency, Write Latency and Ready Latency; Ready read as a typo for Read."
 - 'Diagram source cited by the book: https://frankdenneman.nl/2012/07/23/to-which-host-level-latency-statistic-is-the-sioc-congestion-threshold-related/ (third-party, not copied).'
 - 'QAVG source from the book: https://www.codyhosterman.com/2018/03/what-is-the-latency-stat-qavg/ (third-party).'
 - The book is unsure what DAVG measures for vSAN when data is local.
