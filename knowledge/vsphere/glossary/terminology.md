@@ -105,6 +105,8 @@ metric_class: [contention, consumption, context]
 status: [draft, reviewed]
 # Phrases rejected in body text of files whose technology includes cpu (scheduling language rule).
 avoid_in_cpu_files: ['\bneeds?\b', '\bneeded\b', '\bwants?\b', '\bwish(es)?\b', 'uses only .* of what it needs']
+# Metric names from the book that contain an avoided word. Case-sensitive. Removed before the check above.
+allow_in_cpu_files: ['Guest OS (CPU )?Needed( Memory)?', 'VM (CPU|Memory) Needed', 'Needed Memory']
 # Phrases rejected in body text of every knowledge file.
 avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
 ```

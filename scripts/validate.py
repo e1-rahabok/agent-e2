@@ -84,8 +84,11 @@ def main():
             if re.search(pat, body): bad(f, f'body contains audit marker matching {pat}')
         if 'cpu' in (fm.get('technology') or []):
             for line in body.splitlines():
+                checked = line
+                for ok in allowed.get('allow_in_cpu_files', []):
+                    checked = re.sub(ok, '', checked)
                 for pat in allowed.get('avoid_in_cpu_files', []):
-                    if re.search(pat, line, re.I):
+                    if re.search(pat, checked, re.I):
                         bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
 
     for f in sorted(glob.glob('evaluation/cases/**/*.md', recursive=True)):
