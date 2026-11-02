@@ -61,7 +61,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Consumer Objects > Capacity: Guest OS: extracted 2026-11-02. New: system/concepts rightsizing, guest-os-sizing, vm-footprint-sizing. Validator: allow list for book metric names containing Needed.
 - [x] Provider Objects > Overview: extracted 2026-11-02. New: system/concepts/cluster-operations; system/metrics/cluster/vm-operations; cpu/metrics/cluster/inter-host-imbalance.
 - [x] Provider Objects > Performance: extracted 2026-11-02. New: system/concepts/cluster-utilization-vs-contention; system/metrics/cluster cluster-performance, cluster-sla-sli; system/diagnosis/cluster-vm-contention.
-- [ ] Provider Objects (Capacity, Other Metrics, esxtop); MS Windows: not started.
+- [x] Provider Objects > Capacity: extracted 2026-11-02. New: system/concepts capacity-model, hypervisor-overhead; cpu/concepts/cpu-capacity; memory/concepts/memory-capacity.
+- [ ] Provider Objects (Other Metrics, esxtop); MS Windows: not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
