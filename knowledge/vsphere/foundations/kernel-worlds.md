@@ -1,13 +1,21 @@
 ---
 id: vsphere/foundations/kernel-worlds
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu]
-objects: [vm, vcpu, esxi]
+technology:
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
 related:
-  - vsphere/foundations/vm-vs-guest-os
-  - vsphere/foundations/visibility-layers
-  - vsphere/cpu/distinctions
+- vsphere/foundations/vm-vs-guest-os
+- vsphere/foundations/visibility-layers
+- vsphere/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM? > Kernel
@@ -39,4 +47,4 @@ From the kernel's viewpoint, a VM is a group of user worlds. Three main types:
 - Example errors in these processes: https://kb.vmware.com/s/article/1019471
 
 ## Consequences for metrics
-- Work charged at VM level (e.g. MKS, System) does not appear in per-vCPU metrics. See `vsphere/cpu/distinctions` (VM CPU Used: vCPU vs VM level).
+- Work charged at VM level (e.g. MKS, System) does not appear in per-vCPU metrics. See `vsphere/cpu/metrics/virtual-machine/used`.

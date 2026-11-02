@@ -1,10 +1,25 @@
 ---
 id: vsphere/foundations/object-relationships
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [storage, cpu, memory]
-objects: [vm, datastore, esxi, cluster, datacenter]
-related: [vsphere/storage/distinctions, vsphere/foundations/provider-consumer]
+technology:
+- storage
+- cpu
+- memory
+pillar:
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- Datastore
+- HostSystem
+- ClusterComputeResource
+- Datacenter
+internal_derive: []
+related:
+- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/foundations/provider-consumer
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity

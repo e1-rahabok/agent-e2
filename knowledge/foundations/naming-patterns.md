@@ -1,19 +1,28 @@
 ---
 id: foundations/naming-patterns
-type: distinction
+retriever_guide: metric-meaning
 scope: vendor-neutral
-resources: [cpu, memory, storage, network]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product: []
+internal_derive: []
 related:
-  - foundations/terminology
-  - vsphere/cpu/distinctions
-  - vsphere/memory/distinctions
-  - vsphere/storage/distinctions
-  - vsphere/network/distinctions
+- foundations/terminology
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
 corrections:
-  - "2026-11-02: Windows queue counters. Processor Queue Length excludes running threads; Current Disk Queue Length includes IOs being processed. Uploaded document states the disk part reversed."
+- '2026-11-02: Windows queue counters. Processor Queue Length excludes running threads; Current Disk Queue Length includes IOs being processed. Uploaded document states the disk part reversed.'
 review_notes: []
 status: draft
 ---
@@ -63,8 +72,8 @@ The patterns below classify the ways names mislead.
 
 ### Windows queue counters
 - pattern: same-name-different-behaviour
-- Processor Queue Length: counts only threads waiting. Excludes threads currently running. [author-correction 2026-11-02]
-- Current Disk Queue Length: includes IOs being processed, not only IOs waiting. [author-correction 2026-11-02]
+- Processor Queue Length: counts only threads waiting. Excludes threads currently running.
+- Current Disk Queue Length: includes IOs being processed, not only IOs waiting.
 - trap: treating both "queue" counters as the same kind of count.
 
 ### Windows "Task Manager"

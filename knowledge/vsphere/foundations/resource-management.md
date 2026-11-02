@@ -1,22 +1,34 @@
 ---
 id: vsphere/foundations/resource-management
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu, memory, storage, network]
-objects: [vm, esxi]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
 related:
-  - foundations/terminology
-  - vsphere/cpu/distinctions
-  - vsphere/memory/distinctions
+- foundations/terminology
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/memory/metrics/virtual-machine/usage
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
 corrections:
-  - "2026-11-02: Shares apply at two scheduler levels: cluster and host."
-  - "2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author."
-  - "2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled."
+- '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
+- '2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author.'
+- '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
 review_notes:
-  - "Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge, marked [claude-knowledge]. Confirm."
+- Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge (section: Two scheduler levels, Cluster row). Confirm.
 status: draft
 ---
 
@@ -27,20 +39,20 @@ status: draft
 |---|---|
 | Reservation | Absolute. A guarantee (minimum). |
 | Limit | Absolute. A cap. |
-| Shares | Relative. Applied at two scheduler levels: cluster and host. [author-correction 2026-11-02] |
+| Shares | Relative. Applied at two scheduler levels: cluster and host. |
 | Entitlement | Dynamic. Determined by the hypervisor. See below. |
 
 - Reservation, limit and shares are configured on the VM, outside the Guest OS (VM Edit Settings → CPU / Memory). CPU values are in MHz.
 - Windows or Linux does not know these settings exist.
 - Minimise use of limit and reservation. They make operations more complex.
 
-## Two scheduler levels [author-correction 2026-11-02]
+## Two scheduler levels
 | Level | Shares are relative to |
 |---|---|
-| Cluster | Siblings under the same parent in the cluster resource pool hierarchy (VMs and resource pools). [claude-knowledge] |
+| Cluster | Siblings under the same parent in the cluster resource pool hierarchy (VMs and resource pools). |
 | Host | Other VMs running on the same ESXi host. Used for Entitlement. |
 
-## Which metric types apply per resource [author-correction 2026-11-02]
+## Which metric types apply per resource
 | Resource | Utilization | Reservation | Allocation |
 |---|---|---|---|
 | CPU | Yes (unit: thread and Hertz) | Yes (unit: Hertz) | Yes (unit: vCPU) |

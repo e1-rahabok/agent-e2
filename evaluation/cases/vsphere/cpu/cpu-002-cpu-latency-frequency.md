@@ -6,7 +6,8 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/cpu/distinctions
+  - vsphere/cpu/metrics/virtual-machine/latency
+  - vsphere/cpu/metrics/virtual-machine/ready
   - vsphere/foundations/visibility-layers
 attachments: []
 origin: book

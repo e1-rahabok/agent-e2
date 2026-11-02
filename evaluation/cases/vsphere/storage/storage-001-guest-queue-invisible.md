@@ -7,7 +7,7 @@ input: text
 tests: concept
 knowledge:
   - vsphere/foundations/visibility-layers
-  - vsphere/storage/distinctions
+  - vsphere/storage/metrics/virtual-machine/iops
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."

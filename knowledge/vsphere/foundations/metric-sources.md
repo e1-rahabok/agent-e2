@@ -1,10 +1,20 @@
 ---
 id: vsphere/foundations/metric-sources
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu]
-objects: [vm, esxi]
-related: [vsphere/cpu/distinctions, vsphere/foundations/provider-consumer]
+technology:
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/foundations/provider-consumer
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity

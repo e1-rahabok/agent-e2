@@ -1,9 +1,19 @@
 ---
 id: foundations/thresholds
-type: concept
+retriever_guide: how-it-works
 scope: vendor-neutral
-resources: [cpu, memory, storage, network]
-related: [foundations/metrics-as-accounting, vsphere/foundations/visibility-layers]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+product: []
+internal_derive: []
+related:
+- foundations/metrics-as-accounting
+- vsphere/foundations/visibility-layers
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge

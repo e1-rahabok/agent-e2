@@ -1,9 +1,20 @@
 ---
 id: foundations/metrics-as-accounting
-type: concept
+retriever_guide: how-it-works
 scope: vendor-neutral
-resources: [cpu, memory, storage, network]
-related: [foundations/naming-patterns, foundations/thresholds]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product: []
+internal_derive: []
+related:
+- foundations/naming-patterns
+- foundations/thresholds
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances

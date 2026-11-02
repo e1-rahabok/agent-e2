@@ -1,19 +1,31 @@
 ---
 id: vsphere/foundations/provider-consumer
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu, memory, storage, network]
-objects: [vm, esxi]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
 related:
-  - vsphere/foundations/metric-sources
-  - vsphere/foundations/object-relationships
-  - vsphere/foundations/visibility-layers
-  - vsphere/cpu/distinctions
+- vsphere/foundations/metric-sources
+- vsphere/foundations/object-relationships
+- vsphere/foundations/visibility-layers
+- vsphere/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact
 corrections:
-  - "2026-11-02: ESXi CPU Demand is a provider metric. Not answered in uploaded document."
+- '2026-11-02: ESXi CPU Demand is a provider metric. Not answered in uploaded document.'
 review_notes: []
 status: draft
 ---
@@ -34,7 +46,7 @@ status: draft
 
 - The metric name does not say which kind it is.
 
-## ESXi CPU Demand [author-correction 2026-11-02]
+## ESXi CPU Demand
 - kind: provider metric.
 - Not the sum of all VM worlds + VMkernel worlds.
 - It is an internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.

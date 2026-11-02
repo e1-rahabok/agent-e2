@@ -1,19 +1,33 @@
 ---
 id: vsphere/foundations/visibility-layers
-type: concept
+retriever_guide: how-it-works
 scope: vsphere
-resources: [cpu, memory, storage, network]
-objects: [guest-os, vm, esxi]
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+- windows
+- linux
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
 related:
-  - vsphere/foundations/vm-vs-guest-os
-  - vsphere/foundations/kernel-worlds
-  - vsphere/foundations/overhead
-  - foundations/thresholds
+- vsphere/foundations/vm-vs-guest-os
+- vsphere/foundations/kernel-worlds
+- vsphere/foundations/overhead
+- foundations/thresholds
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility
 corrections:
-  - "2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not 'overhead' in the strict sense. Disk snapshot is not overhead (see vsphere/foundations/overhead). Uploaded document labels layer C 'hypervisor overhead'."
+- '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/foundations/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
 review_notes: []
 status: draft
 ---
@@ -33,7 +47,7 @@ status: draft
 |---|---|---|---|
 | A | Queues inside the Guest OS: CPU run queue, RAM page file, disk queue length, driver queue, network card ring buffer. | Yes | No |
 | B | What the Guest OS uses. | Yes | Yes |
-| C | Work done by the hypervisor for the VM, outside the guest: CPU System, CPU MKS, CPU VMX, RAM Overhead, Disk Snapshot. [author-correction 2026-11-02: not "overhead" in the strict sense] | No | Yes |
+| C | Work done by the hypervisor for the VM, outside the guest: CPU System, CPU MKS, CPU VMX, RAM Overhead, Disk Snapshot. | No | Yes |
 | D | Unmet demand: CPU Ready, CPU Co-Stop, CPU Overlap, CPU VM Wait, RAM Contention, VM Outstanding IO. | No (Guest OS only experiences frozen time or slowness, cannot account for it) | Yes |
 
 ## Formula
