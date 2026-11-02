@@ -18,15 +18,18 @@ corrections: []
 review_notes:
   - "Checked against 9.1 (revision 20260624). Pages 76-77. The vCLS dependency statement is not in the 9.1 DRS section. Virtual hardware version 22 constraint added (ESX 9.1 p. 26)."
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices"
+  - "Broadcom KB 312147 (vCLS): https://knowledge.broadcom.com/external/article?articleNumber=312147. Overrides the 9.0 DRS-requires-vCLS statement for vCenter 9.0 and later. 9.1 status unverified."
 status: draft
 ---
 
 # DRS overview
 
 ## Dependencies
-- 9.0 document (p. 76): vSphere Cluster Services (vCLS) maintains cluster services such as DRS and HA, regardless of vCenter availability. As of vSphere 9.0, cluster services still require both the vCLS VMs and vCenter Server. If the vCLS VMs have issues, DRS cannot be activated, or stops operating if already active.
-- 9.1 document: this statement does not appear in the DRS pages (76-79). Status: unverified for 9.1.
-- See `vsphere/cpu/resource-management/vcls` (9.0 document only).
+- vCenter 9.0 and later: Broadcom KB 312147 says deactivating vCLS does not impact DRS or HA.
+- The 9.0 performance document (p. 76) says DRS requires the vCLS VMs and vCenter Server. KB 312147 overrides that statement for 9.0 and later.
+- The 9.1 performance document has no vCLS statement in its DRS pages (76-79). This matches the deprecation.
+- vCenter 9.1: vCLS is deprecated (author statement). Third-party sources say it is off by default and cannot be re-enabled. Not verified.
+- See `vsphere/cpu/resource-management/vcls`.
 
 ## Cluster health indicators
 - Watch for manual recommendations. Unaddressed manual recommendations can stop DRS from generating new recommendations.
