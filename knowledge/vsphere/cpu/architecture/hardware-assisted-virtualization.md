@@ -14,7 +14,7 @@ source:
 corrections: []
 review_notes:
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "Not read: 2MB Large Memory Pages (p. 35), DirectPath I/O (p. 46), SR-IOV (p. 46), AES-NI Support (p. 13)."
+  - "Not read: 2MB Large Memory Pages (p. 35), DirectPath I/O (p. 46), SR-IOV (p. 46). AES-NI is in vsphere/cpu/architecture/bios-settings."
 status: draft
 ---
 

@@ -9,7 +9,7 @@ related:
   - vsphere/cpu/architecture/hardware-assisted-virtualization
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26)
+  path: CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26); Guest Operating System CPU Considerations > Side-Channel Vulnerability Mitigation in Guest Operating Systems (p. 55)
 corrections: []
 review_notes:
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
@@ -53,6 +53,11 @@ status: draft
   - activates multithreading,
   - never schedules threads from different VMs on the same core at the same time,
   - lower performance penalty than SCAv1 in nearly all cases.
+
+## Guest OS mitigations (p. 55)
+- Some side-channel mitigations take place inside the guest OS.
+- These mitigations address serious security vulnerabilities, but can affect performance.
+- Lower the performance impact by choosing recent CPUs that mitigate some vulnerabilities in hardware.
 
 ## Tool
 - HTAware Mitigation Tool (KB 56931):

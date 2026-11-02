@@ -10,7 +10,7 @@ related:
   - vsphere/cpu/architecture/idle-and-unused-vcpus
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 27-28)
+  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 27-28); Hardware BIOS Settings > General BIOS Settings (p. 21)
 corrections: []
 review_notes:
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
@@ -27,6 +27,7 @@ status: draft
 - BIOS node interleaving:
   - interleaving deactivated: ESX detects the system as NUMA and applies NUMA optimizations,
   - interleaving activated: ESX does not detect the system as NUMA.
+- Recommendation: in most cases, deactivate node interleaving. This leaves NUMA active. The source gives this as the best-performance setting (p. 21).
 
 ## VM categories
 | Category | vCPU placement | Memory placement | Memory access |

@@ -6,6 +6,7 @@ resources: [cpu, memory]
 objects: [cluster, vm]
 related:
   - vsphere/foundations/resource-management
+  - vsphere/cpu/resource-management/resource-settings-guidance
   - vsphere/cpu/resource-management/drs-overview
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)

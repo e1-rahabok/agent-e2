@@ -11,7 +11,7 @@ related:
   - vsphere/cpu/architecture/idle-and-unused-vcpus
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: ESX CPU Considerations > Hyper-Threading (p. 26); Guest Operating System CPU Considerations (p. 55)
+  path: ESX CPU Considerations > Hyper-Threading (p. 26); Guest Operating System CPU Considerations (p. 55); Hardware BIOS Settings (p. 21)
 corrections: []
 review_notes:
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"

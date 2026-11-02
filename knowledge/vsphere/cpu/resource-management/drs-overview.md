@@ -8,6 +8,8 @@ related:
   - vsphere/cpu/resource-management/drs-migration-levels
   - vsphere/cpu/resource-management/scalable-shares
   - vsphere/cpu/resource-management/vcls
+  - vsphere/cpu/resource-management/dpm
+  - vsphere/cpu/resource-management/resource-settings-guidance
   - vsphere/foundations/resource-management
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)

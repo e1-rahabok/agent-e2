@@ -7,13 +7,14 @@ objects: [cluster, vm]
 related:
   - vsphere/cpu/resource-management/drs-overview
   - vsphere/cpu/resource-management/scalable-shares
+  - vsphere/cpu/resource-management/dpm
 source:
   document: Performance Best Practices for VMware vSphere 9.0 (revision 20250731)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (p. 80)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 80-81)
 corrections: []
 review_notes:
   - "Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices"
-  - "The Cluster DRS Score causes list continues on p. 81. Not read."
+  - "Predictive DRS requires VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature applies to vSphere 9.0 and VCF Operations."
 status: draft
 ---
 
@@ -46,7 +47,14 @@ status: draft
   - reduce resource demands on the cluster.
 - Causes of a low score that the source lists:
   - migrations filtered out by affinity or anti-affinity rules,
-  - migrations filtered out by VM-host incompatibilities.
+  - migrations filtered out by VM-host incompatibilities,
+  - cost estimate for potential migrations, based on the costs of previous migrations, exceeds the expected benefit of the migrations,
+  - all hosts in the cluster are network saturated,
+  - the cluster does not have enough usable resources to meet VM demands.
+
+## Predictive DRS
+- Predictive DRS can receive predictions from VMware vRealize Operations and use them for vMotion decisions.
+- Requires vRealize Operations 6.4 or later, per the source.
 
 ## Traps
 - "A Cluster DRS Score of 85% and one of 95% differ in performance" → the source says the range matters, not the exact value. Scores above 80% indicate no performance impact.
