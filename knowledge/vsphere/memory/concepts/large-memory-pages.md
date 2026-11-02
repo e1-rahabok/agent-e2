@@ -5,7 +5,7 @@
 - The source calls 2 MB pages "large pages". It does not cover 1 GB pages.
 
 ## ESX behaviour
-- ESX assigns 2 MB machine pages to guest OSes whenever possible.
+- ESX backs guest memory with 2 MB ESXi pages (vendor term: machine pages) whenever possible.
 - ESX does this even when the guest OS does not request large pages.
 
 ## Full benefit requires the guest

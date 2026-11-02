@@ -68,6 +68,8 @@ Tag values in front matter must use the terms defined here.
 | ESXi CPU Imbalance | Running threads / running cores. | Imbalance Score | Book, CPU > ESXi > Imbalance |
 | Consumed CPU (%) | Host list column in vSphere Client. Maps to Usage (%). | - | Book, CPU > ESXi > Consumed |
 | CPU Utilization for Resources | 17 legacy rescpu.* metrics. Avoid. | rescpu | Book, CPU > ESXi > Metrics to Avoid |
+| VM pages | Pages in the VM address space. Vendor term: guest physical pages. | - | Book, Memory > Architecture > Relationship |
+| ESXi pages | Pages ESXi manages on DIMM, host cache or tiered NVMe. Vendor term: machine pages. | - | Book, Memory > Architecture > Relationship |
 
 ## Words to avoid
 | Avoid | Use instead | Why |
@@ -79,6 +81,7 @@ Tag values in front matter must use the terms defined here.
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | diagnosis | Interpretation is the purpose of every metric file. |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
+| guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Author: the term is illogical. Keep the vendor term once in parentheses for retrieval. |
 
 ## Allowed tag values
 Read by `scripts/validate.py`. Change values here, not in the script.

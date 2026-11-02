@@ -10,7 +10,7 @@ Three hardware features assist virtualization: CPU, MMU, and I/O MMU.
 
 ## MMU: Intel EPT and AMD RVI (nested page tables)
 - Adds a second level of page tables.
-- These tables map guest physical memory to host physical memory.
+- These tables map VM pages (vendor term: guest physical memory) to ESXi pages (vendor term: host physical memory).
 - ESX does not maintain shadow page tables.
 - Effects:
   - reduces memory consumption,
