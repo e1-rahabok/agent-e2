@@ -1,10 +1,19 @@
 # vSphere Knowledge
 
-This knowledge base is organized for **depth of understanding**, not just quick lookup.
+This knowledge base prioritizes **depth of understanding** over quick lookup.
 
-## Structure by Resource Area
+## Structure
 
-Each major resource area follows the same pattern:
+### 1. Foundations (cross-cutting)
+Deep mental models that apply across all resource areas:
+
+- `metrics-philosophy/` — Nature of metrics, naming complexity, industry-wide nuances
+- `vm-vs-guest-os/` — Virtual motherboard vs Guest OS
+- `overhead-and-buffers/` — What is real overhead, types of buffers
+- `observability-principles/`
+
+### 2. Resource Areas
+Each major resource follows the same pattern:
 
 ```text
 cpu/
@@ -16,14 +25,8 @@ cpu/
 └── interpretation/       # How to use the knowledge in practice
 ```
 
-The same structure applies to `memory/`, `storage/`, `network/`, etc.
+The same structure applies to `memory/`, `storage/`, and `network/`.
 
 ## Key Principle
 
-**Never mix Host and VM perspectives** in the same counter file.  
-Even when the counter name is identical, the meaning changes.
-
-## Other folders
-
-- `troubleshooting/` — Cross-cutting troubleshooting flows
-- `glossary/` — Precise definitions of terms
+**Never mix Host and VM perspectives** in the same counter file.

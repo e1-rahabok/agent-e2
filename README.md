@@ -10,14 +10,13 @@ The primary goal is **mastery and real understanding**, not just a dictionary of
 
 Performance counters are a **byproduct** of understanding how vSphere actually works.
 
-Half of true expertise comes from knowing the underlying architecture and resource management mechanisms. Only then do the counters become meaningful.
+True expertise requires internalizing:
+- The nature of metrics themselves
+- The difference between the VM (virtual motherboard) and the Guest OS
+- Resource management mechanisms
+- Architectural realities of each resource area
 
-This repository is organized accordingly:
-
-1. **Architecture** — How the system really works
-2. **Resource Management** — The rules and mechanisms
-3. **Counters** — Separated by perspective (Host vs VM)
-4. **Interpretation** — How experienced admins actually use the information
+Only then do the individual counters become meaningful.
 
 ---
 
@@ -25,9 +24,14 @@ This repository is organized accordingly:
 
 ```text
 knowledge/
-├── raw-input/                 # Original source materials (Word, drawio, PPT, PDF, etc.)
+├── raw-input/                      # Original source materials (Word, drawio, PPT, PDF)
 ├── _templates/
 ├── vsphere/
+│   ├── foundations/                 # Cross-cutting deep knowledge
+│   │   ├── metrics-philosophy/      # What metrics really are, nuances, industry problems
+│   │   ├── vm-vs-guest-os/          # Virtual motherboard vs Guest OS
+│   │   ├── overhead-and-buffers/    # Overhead concepts and different types of buffers
+│   │   └── observability-principles/
 │   ├── cpu/
 │   │   ├── architecture/
 │   │   ├── resource-management/
@@ -41,29 +45,24 @@ knowledge/
 │   ├── troubleshooting/
 │   ├── glossary/
 │   └── README.md
-├── nsx/                         # Future
-└── vsan/                        # Future
+├── nsx/                            # Future
+└── vsan/                           # Future
 ```
 
 ---
 
-## Why this structure?
+## Layer Responsibilities
 
-A veteran vSphere administrator does not think in isolated counter names.  
-They think in terms of:
-
-- How the CPU scheduler works
-- What Ready Time really means
-- How shares, reservations and limits interact
-- Why the same counter name means different things on a Host vs a VM
-
-The folder structure reflects that mental model so both humans and the AI can build genuine understanding.
+| Layer | Purpose |
+|-------|--------|
+| `foundations/` | Deep, cross-cutting mental models. How to *think* about metrics and virtualization. |
+| `cpu/`, `memory/`, etc. | Resource-specific architecture, mechanisms, counters, and interpretation. |
+| `counters/host/` vs `counters/vm/` | Never mix perspectives. Same counter name can mean different things. |
+| `raw-input/` | Original source documents (your book, diagrams, decks). |
 
 ---
 
 ## Current Focus
 
-**CPU** is the model area.  
-Other resource areas (memory, storage, network) will follow the same pattern.
-
-Raw source documents (including the metrics book) go into `knowledge/raw-input/`.
+1. Build out `foundations/` from Chapter 1 of the metrics book.
+2. Then deepen the CPU area as the first full resource example.
