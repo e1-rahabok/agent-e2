@@ -1,4 +1,15 @@
----
+# ESXi CPU Demand
+
+## Meaning
+- A provider metric.
+- Not the sum of VM worlds plus VMkernel worlds.
+- An internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.
+
+## Traps
+- "Demand comes from consumers, so ESXi Demand is the sum of VM Demand" → wrong.
+
+## Metadata
+```yaml
 id: vsphere/cpu/metrics/host/demand
 retriever_guide: metric-meaning
 scope: vsphere
@@ -25,14 +36,4 @@ corrections:
 - '2026-11-02: ESXi CPU Demand is a provider metric (section: Meaning). Not answered in the uploaded document.'
 review_notes: []
 status: draft
----
-
-# ESXi CPU Demand
-
-## Meaning
-- A provider metric.
-- Not the sum of VM worlds plus VMkernel worlds.
-- An internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.
-
-## Traps
-- "Demand comes from consumers, so ESXi Demand is the sum of VM Demand" → wrong.
+```

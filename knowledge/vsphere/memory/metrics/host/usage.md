@@ -1,4 +1,14 @@
----
+# ESXi Memory Usage
+
+## Meaning
+- Maps to Consumed: what the VMs have claimed. Related to capacity management.
+- Memory is a cache, so values near 100% are expected.
+
+## Traps
+- "Host Usage at 95% means the host is short of memory" → Usage is Consumed, not Active. Check contention metrics.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/host/usage
 retriever_guide: metric-meaning
 scope: vsphere
@@ -25,13 +35,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# ESXi Memory Usage
-
-## Meaning
-- Maps to Consumed: what the VMs have claimed. Related to capacity management.
-- Memory is a cache, so values near 100% are expected.
-
-## Traps
-- "Host Usage at 95% means the host is short of memory" → Usage is Consumed, not Active. Check contention metrics.
+```

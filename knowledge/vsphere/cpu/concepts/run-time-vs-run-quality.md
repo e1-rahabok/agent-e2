@@ -1,44 +1,8 @@
----
-id: vsphere/cpu/concepts/run-time-vs-run-quality
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive:
-- vsphere/cpu/concepts/vcpu-states
-related:
-- vsphere/cpu/concepts/cpu-efficiency
-- vsphere/cpu/concepts/cpu-frequency
-- vsphere/cpu/concepts/cpu-measurement-levels
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/used
-- vsphere/cpu/metrics/virtual-machine/usage
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-source:
-  document: PART 3 - Counters.docx (uploaded 2026-11-02, pre-correction version)
-  path: CPU > Architecture (pp. 64-68, 77) > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
-corrections: []
-review_notes:
-- Source is the pre-correction book file. Re-check this file when the corrected file is uploaded.
-- "Section 'Fair Share Scheduler': the book says Used 'increases the run time if the vCPU runs on a shared physical core'. The CPU Efficiency section shows Used lower than Run on a shared core (62.5% vs 100%). Written per the worked example. Possible meaning of the book text: the scheduler grants more time to compensate. Author to confirm."
-- "Section 'Efficacy': the 30% figure is the author's estimate for a new vs a 5-year-old Intel Xeon at the same clock speed."
-- "Section 'CPU Throughput': 'CPU Throughput' is the author's preferred name. Proposed in vsphere/glossary/terminology. Author to confirm which counters it names (Usage (MHz) at minimum)."
-- "Section 'Fair Share Scheduler': the book compares with the Linux EEVDF scheduler (replaced CFS in Linux 6.12; https://lwn.net/Articles/925371/). Left out of the body as a tangent."
-status: draft
----
-
 # Run Time vs Run Quality
 
 ## Two metrics, not one
+![Frequency varying between base, all-core Turbo and 1-core Turbo while running](../images/frequency-during-run.png)
+![Car time moving vs speed mapped to CPU Run and CPU Throughput](../images/run-time-vs-throughput-analogy.png)
 | Metric | Nature | Measures | Unit | Use for |
 |---|---|---|---|---|
 | Run Time | Binary: the CPU runs or does not. | Duration. | ms, or % of the period | Capacity management |
@@ -78,7 +42,7 @@ status: draft
   - hypervisor IO done for a VM consumes CPU on its behalf.
 - The scheduler gives each vCPU a slice of time. It extends the time of a vCPU to keep relative fairness.
 - It charges with Used (ms). Used adjusts Run:
-  - shared physical core: Used is lower than Run (62.5% vs 100% when both threads run all the time).
+  - shared physical core: Used goes down. Used is lower than Run (62.5% vs 100% when both threads run all the time). Usage also goes down.
   - CPU frequency: Used is adjusted for the actual frequency.
   - hypervisor IO done on behalf of the vCPU: Used is decreased.
 
@@ -94,3 +58,41 @@ status: draft
 - "Same MHz, same work done across CPU generations" → efficacy differs. No counter shows it.
 - "Used equals Run" → Used is adjusted for shared cores, frequency and hypervisor IO.
 - "Use MHz metrics for capacity" → they mix frequency into the value. Use Run Time for capacity.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/run-time-vs-run-quality
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive:
+- vsphere/cpu/concepts/vcpu-states
+related:
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/cpu-frequency
+- vsphere/cpu/concepts/cpu-measurement-levels
+- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+- vsphere/cpu/metrics/virtual-machine/run
+- vsphere/cpu/metrics/virtual-machine/used
+- vsphere/cpu/metrics/virtual-machine/usage
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+source:
+  document: PART 3 - Counters.docx
+  path: CPU > Architecture (pp. 64-68, 77) > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
+corrections: []
+review_notes:
+- "Section 'Fair Share Scheduler': author (2026-11-02): VM CPU Used and Usage go down when the vCPU runs on a shared core. Book text to be corrected."
+- "Section 'Efficacy': the 30% figure is the author's estimate for a new vs a 5-year-old Intel Xeon at the same clock speed."
+- "Section 'CPU Throughput': 'CPU Throughput' is the author's preferred name. Proposed in vsphere/glossary/terminology. Author to confirm which counters it names (Usage (MHz) at minimum)."
+- "Section 'Fair Share Scheduler': the book compares with the Linux EEVDF scheduler (replaced CFS in Linux 6.12; https://lwn.net/Articles/925371/). Left out of the body as a tangent."
+status: draft
+```

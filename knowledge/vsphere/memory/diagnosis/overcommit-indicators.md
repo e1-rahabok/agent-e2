@@ -1,32 +1,3 @@
----
-id: vsphere/memory/diagnosis/overcommit-indicators
-retriever_guide: what-to-check
-scope: vsphere
-technology:
-- memory
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/memory/concepts/overcommit-techniques
-- vsphere/memory/configuration/host-level-swapping
-- vsphere/memory/metrics/virtual-machine/usage
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 34)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 34 unchanged. Menu paths unchanged in 9.1.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Menu paths are unchanged in the 9.1 document (p. 34).
-status: draft
----
-
 # Overcommit indicators: is overcommitment affecting this VM?
 
 ## Principle
@@ -59,3 +30,33 @@ status: draft
 - "Ballooned memory above zero means the VM is short of memory now" → some ballooning is normal, and ballooning can reflect earlier reclamation. See `vsphere/memory/metrics/virtual-machine/ballooned`.
 - "No ballooning means no memory problem" → the indicator is valid only when the balloon driver works. Check Swapped and Compressed too.
 - "Guest swap activity proves host overcommitment" → guest swap can have other causes. Check the host indicators first.
+
+## Metadata
+```yaml
+id: vsphere/memory/diagnosis/overcommit-indicators
+retriever_guide: what-to-check
+scope: vsphere
+technology:
+- memory
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/configuration/host-level-swapping
+- vsphere/memory/metrics/virtual-machine/usage
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 34)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Page 34 unchanged. Menu paths unchanged in 9.1.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Menu paths are unchanged in the 9.1 document (p. 34).
+status: draft
+```

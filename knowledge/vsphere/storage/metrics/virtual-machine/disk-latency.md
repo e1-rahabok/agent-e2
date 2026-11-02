@@ -1,4 +1,12 @@
----
+# VM Disk Latency
+
+## Meaning
+- Indicates a performance problem. A primary counter for how well the VM is served.
+- Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/cpu/metrics/virtual-machine/latency`.
+- Threshold setting by layer: see `foundations/thresholds`.
+
+## Metadata
+```yaml
 id: vsphere/storage/metrics/virtual-machine/disk-latency
 retriever_guide: metric-meaning
 scope: vsphere
@@ -25,11 +33,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# VM Disk Latency
-
-## Meaning
-- Indicates a performance problem. A primary counter for how well the VM is served.
-- Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/cpu/metrics/virtual-machine/latency`.
-- Threshold setting by layer: see `foundations/thresholds`.
+```

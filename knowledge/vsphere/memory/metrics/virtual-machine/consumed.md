@@ -1,4 +1,14 @@
----
+# VM Memory Consumed
+
+## Meaning
+- Excludes overhead.
+- Includes reserved memory, even if the Guest OS has not used it yet. See `vsphere/foundations/resource-management`.
+
+## vMotion effect
+- After vMotion, Consumed on the destination can increase. Swapped or compressed pages can become regular pages. See `vsphere/foundations/overhead`.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/virtual-machine/consumed
 retriever_guide: metric-meaning
 scope: vsphere
@@ -25,13 +35,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# VM Memory Consumed
-
-## Meaning
-- Excludes overhead.
-- Includes reserved memory, even if the Guest OS has not used it yet. See `vsphere/foundations/resource-management`.
-
-## vMotion effect
-- After vMotion, Consumed on the destination can increase. Swapped or compressed pages can become regular pages. See `vsphere/foundations/overhead`.
+```

@@ -2,7 +2,7 @@
 """Validate knowledge-base files. Run before every merge: python3 scripts/validate.py
 Exit code 0 = pass, 1 = problems found. Allowed values come from
 knowledge/vsphere/glossary/terminology.md (section 'Allowed tag values')."""
-import glob, re, sys, yaml
+import glob, os, re, sys, yaml
 
 TERMS = 'knowledge/vsphere/glossary/terminology.md'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
@@ -18,12 +18,16 @@ def load_allowed():
         sys.exit(f'{TERMS}: section "Allowed tag values" with a yaml block not found')
     return yaml.safe_load(m.group(1))
 
+META = '\n## Metadata\n```yaml\n'
+
 def split(path):
+    """Metadata is the last section of the file: '## Metadata' and one yaml block."""
     s = open(path).read()
-    if not s.startswith('---\n'):
+    i = s.rfind(META)
+    if i < 0 or not s.rstrip().endswith('```'):
         return None, s
-    _, head, body = s.split('---\n', 2)
-    return yaml.safe_load(head) or {}, body
+    head = s[i + len(META):].rstrip().removesuffix('```')
+    return yaml.safe_load(head) or {}, s[:i]
 
 def main():
     allowed = load_allowed()
@@ -36,7 +40,7 @@ def main():
     for f in files:
         fm, body = split(f)
         if fm is None:
-            bad(f, 'no YAML front matter'); continue
+            bad(f, 'no metadata block at the end (## Metadata + yaml)'); continue
         docs[f] = (fm, body)
 
     ids = {fm.get('id') for fm, _ in docs.values()}
@@ -64,6 +68,9 @@ def main():
         for k in LINK_FIELDS:
             for r in fm.get(k) or []:
                 if r not in ids: bad(f, f'{k} link "{r}" does not exist')
+        for img in re.findall(r'!\[[^\]]*\]\(([^)]+)\)', body):
+            if not os.path.exists(os.path.normpath(os.path.join(os.path.dirname(f), img))):
+                bad(f, f'image not found: {img}')
         for r in re.findall(r'`((?:vsphere|foundations)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
         if '/metrics/' in f:
@@ -82,7 +89,8 @@ def main():
                         bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
 
     for f in sorted(glob.glob('evaluation/cases/**/*.md', recursive=True)):
-        fm, _ = split(f)
+        t = open(f).read()  # evaluation cases keep front matter at the top
+        fm = yaml.safe_load(t.split('---\n', 2)[1]) if t.startswith('---\n') else {}
         for r in (fm or {}).get('knowledge') or []:
             if r not in ids: bad(f, f'knowledge link "{r}" does not exist')
 

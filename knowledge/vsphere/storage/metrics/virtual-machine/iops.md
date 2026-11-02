@@ -1,4 +1,14 @@
----
+# VM Disk IOPS
+
+## Under-reporting
+- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See `vsphere/foundations/visibility-layers`, area A.
+
+## Limits
+- A disk IOPS limit exists.
+- A disk throughput limit does not exist. Throughput depends on block size, which varies, so a throughput limit is not practical.
+
+## Metadata
+```yaml
 id: vsphere/storage/metrics/virtual-machine/iops
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,13 +34,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# VM Disk IOPS
-
-## Under-reporting
-- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See `vsphere/foundations/visibility-layers`, area A.
-
-## Limits
-- A disk IOPS limit exists.
-- A disk throughput limit does not exist. Throughput depends on block size, which varies, so a throughput limit is not practical.
+```

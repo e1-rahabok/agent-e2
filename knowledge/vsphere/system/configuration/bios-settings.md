@@ -1,35 +1,3 @@
----
-id: vsphere/system/configuration/bios-settings
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- system
-- cpu
-- memory
-pillar:
-- performance
-- security
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/hyper-threading
-- vsphere/cpu/concepts/numa
-- vsphere/cpu/concepts/hardware-assisted-virtualization
-- vsphere/cpu/configuration/host-power-management
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Hardware BIOS Settings > General BIOS Settings; Processor-Specific BIOS Settings (pp. 21-23); Power Management BIOS Settings (pp. 22-23); AES-NI Support (p. 12); Intel QAT Support (p. 13)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 21-23 and 12-13 read. Intel Granite Rapids settings, C-state table and QAT added.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source states the BIOS options it lists might not be comprehensive for every server. Server-specific guidance is outside the source.
-status: draft
----
-
 # CPU-related BIOS settings
 
 ## Status
@@ -96,3 +64,36 @@ status: draft
 ## Traps
 - "BIOS defaults are optimal" → the source says defaults might not be the best choice for performance.
 - "Turn NUMA off in BIOS for better performance" → in most cases the source recommends leaving NUMA active by deactivating node interleaving.
+
+## Metadata
+```yaml
+id: vsphere/system/configuration/bios-settings
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- system
+- cpu
+- memory
+pillar:
+- performance
+- security
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/hyper-threading
+- vsphere/cpu/concepts/numa
+- vsphere/cpu/concepts/hardware-assisted-virtualization
+- vsphere/cpu/configuration/host-power-management
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Hardware BIOS Settings > General BIOS Settings; Processor-Specific BIOS Settings (pp. 21-23); Power Management BIOS Settings (pp. 22-23); AES-NI Support (p. 12); Intel QAT Support (p. 13)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 21-23 and 12-13 read. Intel Granite Rapids settings, C-state table and QAT added.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source states the BIOS options it lists might not be comprehensive for every server. Server-specific guidance is outside the source.
+status: draft
+```

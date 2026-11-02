@@ -1,34 +1,3 @@
----
-id: vsphere/foundations/vm-vs-guest-os
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- availability
-- performance
-product:
-- vsphere
-- windows
-- linux
-object:
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/foundations/visibility-layers
-- vsphere/foundations/kernel-worlds
-- vsphere/cpu/concepts/guest-os-vs-vm-cpu
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?
-corrections: []
-review_notes: []
-status: draft
----
-
 # VM vs Guest OS
 
 ## Definition
@@ -73,3 +42,35 @@ status: draft
 ## Traps
 - "Guest OS crashed, so the VM is down" → wrong. The VM is available while BIOS runs; the Guest OS is unavailable.
 - Asking for VM process or thread counts → wrong layer. Those are Guest OS metrics.
+
+## Metadata
+```yaml
+id: vsphere/foundations/vm-vs-guest-os
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- availability
+- performance
+product:
+- vsphere
+- windows
+- linux
+object:
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/foundations/visibility-layers
+- vsphere/foundations/kernel-worlds
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?
+corrections: []
+review_notes: []
+status: draft
+```

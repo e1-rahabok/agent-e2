@@ -1,4 +1,10 @@
----
+# Datastore Virtual Disk
+
+## Meaning
+- Excludes RDM. The RDM data sits on an external LUN, not on the datastore.
+
+## Metadata
+```yaml
 id: vsphere/storage/metrics/datastore/virtual-disk
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,9 +30,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# Datastore Virtual Disk
-
-## Meaning
-- Excludes RDM. The RDM data sits on an external LUN, not on the datastore.
+```

@@ -1,43 +1,7 @@
----
-id: vsphere/cpu/concepts/power-states
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- system
-pillar:
-- performance
-- value
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/configuration/host-power-management
-- vsphere/cpu/concepts/cpu-frequency
-- vsphere/cpu/configuration/latency-sensitivity
-- vsphere/cpu/concepts/idle-and-unused-vcpus
-source:
-  document: PART 3 - Counters.docx (uploaded 2026-11-02, pre-correction version)
-  path: CPU > Architecture (pp. 70-75) > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
-corrections: []
-review_notes:
-- Source is the pre-correction book file. Re-check this file when the corrected file is uploaded.
-- "Section 'P-states': '14 grades' is from the book. Claude's own knowledge: the number of P-states is processor-specific. Author to confirm."
-- "Section 'ESXi level': advanced option names Power.UseCStates and Power.UsePStates are from Claude's own knowledge. The book shows them as 'Use C States' and 'Use P States' in the UI."
-- "Section 'ESXi level': the book says that with Use C States, 'frequency will go lower than base clock speed'. Kept as written. C-states are idle states, not frequencies. Author to confirm the intended meaning."
-- "Section 'C-state × P-state combinations': the row Use C States = 1, Use P States = 0 says no Turbo. The ESXi level text says P-states off means 'highest available frequency'. The Turbo section reports Turbo (129%) under BIOS static high performance. Author to reconcile."
-- "Section 'CPPC': the book spells it 'CPCC' once. Written as CPPC. Specification from the book: https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html"
-- "Section 'High Performance vs Balanced': the book cites the vSphere 9.0 Performance Best Practices. The current version (9.1, revision 20260624) is covered in vsphere/cpu/configuration/host-power-management."
-- "Section 'Oversized VM': chart from 'Host Power Management in VMware vSphere 7.0' (2021), p. 24: https://www.vmware.com/docs/hpm-vsphere7-perf. No newer standalone version found on 2026-11-02."
-- "The book also cites the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series). Not read."
-status: draft
----
-
 # CPU power states (ACPI)
 
 ## Two types
+![ACPI C-states and P-states](../images/acpi-power-states.png)
 - ACPI defines 2 types of power state: C-states (C = CPU) and P-states (P = performance).
 - P-states exist only inside C0.
 
@@ -57,10 +21,11 @@ status: draft
 - Power policies that do not use deep C-states stop at C1.
 
 ## P-states
-- P-states grade CPU performance by frequency. The book gives 14 grades.
+- P-states grade CPU performance by frequency.
+- The number of P-states varies by processor. Not an industry standard.
 - P0: Turbo Boost.
 - P1: nominal frequency.
-- P13: lowest frequency.
+- Highest P number: lowest frequency. Example with 14 grades: P13.
 - esxtop shows the P-state frequencies when the hardware supports it.
 
 ## Two control levels
@@ -84,6 +49,7 @@ Platform Power Management Features
 ```
 
 ### ESXi level
+![ESXi Advanced Settings Use C States and Use P States](../images/esxi-advanced-power-settings.png)
 - BIOS handing control to ESXi does not enable the feature. 2 ESXi Advanced Settings control it.
 
 | Setting | Effect |
@@ -133,3 +99,40 @@ Platform Power Management Features
 - "Disabling deep C-states disables Turbo" → firmware thermal management still sets per-core frequency.
 - "ESXi controls power states" → only when the BIOS hands control to the OS.
 - "Lower clock speed means the VM completes less work" → not necessarily. Check contention counters.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/power-states
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- system
+pillar:
+- performance
+- value
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/configuration/host-power-management
+- vsphere/cpu/concepts/cpu-frequency
+- vsphere/cpu/configuration/latency-sensitivity
+- vsphere/cpu/concepts/idle-and-unused-vcpus
+source:
+  document: PART 3 - Counters.docx
+  path: CPU > Architecture (pp. 70-75) > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
+corrections: []
+review_notes:
+- "Section 'P-states': author (2026-11-02): the number of P-states varies by processor. Not an industry standard."
+- "Section 'ESXi level': advanced option names Power.UseCStates and Power.UsePStates are from Claude's own knowledge. The book shows them as 'Use C States' and 'Use P States' in the UI."
+- "Section 'ESXi level': the book states that with Use C States the frequency goes lower than base clock speed. C-states are idle states, not frequencies. Open question; search string in docs/todo.md."
+- "Section 'C-state × P-state combinations': the row Use C States = 1, Use P States = 0 says no Turbo. The ESXi level text says P-states off means 'highest available frequency'. The Turbo section reports Turbo (129%) under BIOS static high performance. Author to reconcile."
+- "Section 'CPPC': specification from the book: https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html"
+- "Section 'High Performance vs Balanced': the book cites the vSphere 9.0 Performance Best Practices. The current version (9.1, revision 20260624) is covered in vsphere/cpu/configuration/host-power-management."
+- "Section 'Oversized VM': chart from 'Host Power Management in VMware vSphere 7.0' (2021), p. 24: https://www.vmware.com/docs/hpm-vsphere7-perf. No newer standalone version found on 2026-11-02."
+- "The book also cites the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series). Not read."
+status: draft
+```

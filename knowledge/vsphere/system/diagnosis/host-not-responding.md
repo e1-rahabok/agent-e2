@@ -1,26 +1,3 @@
----
-id: vsphere/system/diagnosis/host-not-responding
-retriever_guide: what-to-check
-scope: vsphere
-technology:
-- system
-pillar:
-- availability
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive: []
-related: []
-source:
-  document: Not from the book. Generic content from an earlier repository version.
-  path: n/a
-corrections: []
-review_notes:
-- Not from the book or an official source. Level 200 content. Author to decide whether to keep, rewrite, or remove.
-status: draft
----
-
 # Troubleshooting Flow: Host Not Responding in vCenter
 
 **Title**: Host shows as Not Responding / Disconnected in vCenter  
@@ -108,3 +85,27 @@ If not running, restart them:
 - Always check both hostd and vpxa.
 - After fixing, it can take a minute or two for vCenter to update the host status.
 - In VCF environments also check SDDC Manager health if the host is part of a workload domain.
+
+## Metadata
+```yaml
+id: vsphere/system/diagnosis/host-not-responding
+retriever_guide: what-to-check
+scope: vsphere
+technology:
+- system
+pillar:
+- availability
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive: []
+related: []
+source:
+  document: Not from the book. Generic content from an earlier repository version.
+  path: n/a
+corrections: []
+review_notes:
+- Not from the book or an official source. Level 200 content. Author to decide whether to keep, rewrite, or remove.
+status: draft
+```

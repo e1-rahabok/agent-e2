@@ -1,35 +1,3 @@
----
-id: vsphere/foundations/provider-consumer
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/foundations/metric-sources
-- vsphere/foundations/object-relationships
-- vsphere/foundations/visibility-layers
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact
-corrections:
-- '2026-11-02: ESXi CPU Demand is a provider metric. Not answered in uploaded document.'
-review_notes: []
-status: draft
----
-
 # Provider vs consumer
 
 ## Definition
@@ -74,3 +42,36 @@ status: draft
 ## Tools not built for vSphere
 - Monitoring tools not purpose-built for vSphere often understand its characteristics only partially.
 - Partial understanding → wrong interpretation → wrong action.
+
+## Metadata
+```yaml
+id: vsphere/foundations/provider-consumer
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/foundations/metric-sources
+- vsphere/foundations/object-relationships
+- vsphere/foundations/visibility-layers
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact
+corrections:
+- '2026-11-02: ESXi CPU Demand is a provider metric. Not answered in uploaded document.'
+review_notes: []
+status: draft
+```

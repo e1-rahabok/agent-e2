@@ -1,35 +1,3 @@
----
-id: vsphere/cpu/configuration/host-power-management
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- value
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/hyper-threading
-- vsphere/cpu/concepts/numa
-- vsphere/system/configuration/bios-settings
-- vsphere/cluster-resource-management/concepts/dpm
-- vsphere/cpu/concepts/power-states
-- vsphere/cpu/concepts/cpu-frequency
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Host Power Management in ESX (pp. 31-32); Power Management BIOS Settings (pp. 22-23); Intel Hardware P-States (p. 12)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 31-32 read. Verification path changed to Overview tab. ACPI CPPC and Intel HWP added (pp. 12, 32).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Not read: Host Power Management Policies in the vSphere Resource Management guide (referenced for Custom policy details). Running Network Latency Sensitive Workloads (p. 49) is network, not CPU.'
-status: draft
----
-
 # Host power management (ESX)
 
 ## Purpose
@@ -89,3 +57,36 @@ status: draft
 - "Deactivate C-states for better performance everywhere" → the source names only a few latency-sensitive multithreaded workloads that gain from it. Activating all C-states gives the best performance per watt.
 - "Balanced always lowers performance" → typically it has little or no effect. On systems with idle CPUs it can raise performance through Turbo Boost.
 - "Low Power is a safe default" → Low Power reduces power aggressively, at the risk of reduced performance.
+
+## Metadata
+```yaml
+id: vsphere/cpu/configuration/host-power-management
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- value
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/hyper-threading
+- vsphere/cpu/concepts/numa
+- vsphere/system/configuration/bios-settings
+- vsphere/cluster-resource-management/concepts/dpm
+- vsphere/cpu/concepts/power-states
+- vsphere/cpu/concepts/cpu-frequency
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations > Host Power Management in ESX (pp. 31-32); Power Management BIOS Settings (pp. 22-23); Intel Hardware P-States (p. 12)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 31-32 read. Verification path changed to Overview tab. ACPI CPPC and Intel HWP added (pp. 12, 32).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Not read: Host Power Management Policies in the vSphere Resource Management guide (referenced for Custom policy details). Running Network Latency Sensitive Workloads (p. 49) is network, not CPU.'
+status: draft
+```

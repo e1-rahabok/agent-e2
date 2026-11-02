@@ -1,4 +1,18 @@
----
+# CPU consumption metrics: VM and ESXi
+
+## The choices
+- VM: 5 consumption metrics: Run, Used, Usage, Usage (MHz), Demand.
+- ESXi: 7 consumption metrics: Core Utilization, Utilization, Used, Usage, Usage (MHz), Consumed, Demand.
+
+## Source of each
+- ESXi provides Run (ms), Used (ms), Demand (MHz).
+- vCenter adds Usage (MHz) and Usage (%).
+
+## Reservation
+- CPU reservation is on demand. It is not included in Run, Used, Demand or Usage.
+
+## Metadata
+```yaml
 id: vsphere/cpu/metrics/comparisons/consumption-metrics
 retriever_guide: metric-meaning
 scope: vsphere
@@ -33,17 +47,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# CPU consumption metrics: VM and ESXi
-
-## The choices
-- VM: 5 consumption metrics: Run, Used, Usage, Usage (MHz), Demand.
-- ESXi: 7 consumption metrics: Core Utilization, Utilization, Used, Usage, Usage (MHz), Consumed, Demand.
-
-## Source of each
-- ESXi provides Run (ms), Used (ms), Demand (MHz).
-- vCenter adds Usage (MHz) and Usage (%).
-
-## Reservation
-- CPU reservation is on demand. It is not included in Run, Used, Demand or Usage.
+```

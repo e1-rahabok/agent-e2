@@ -1,26 +1,3 @@
----
-id: foundations/metric-volume
-retriever_guide: how-it-works
-scope: vendor-neutral
-technology:
-- cpu
-- memory
-pillar:
-- value
-product: []
-object:
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
-corrections: []
-review_notes: []
-status: draft
----
-
 # Metric volume
 
 ## Choice problem
@@ -43,3 +20,27 @@ every minute, per day ≈ 134 million metrics
 ## Consequence
 - The business value per collected metric becomes a valid concern at this volume.
 - This is a reason not every available metric is collected or retained.
+
+## Metadata
+```yaml
+id: foundations/metric-volume
+retriever_guide: how-it-works
+scope: vendor-neutral
+technology:
+- cpu
+- memory
+pillar:
+- value
+product: []
+object:
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
+corrections: []
+review_notes: []
+status: draft
+```

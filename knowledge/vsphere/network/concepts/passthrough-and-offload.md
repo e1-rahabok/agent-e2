@@ -1,33 +1,3 @@
----
-id: vsphere/network/concepts/passthrough-and-offload
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- network
-- cpu
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/configuration/latency-sensitivity
-- vsphere/cpu/concepts/hardware-assisted-virtualization
-- vsphere/network/configuration/splitrx-mode
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Networking Considerations > Data Processing Units (DPUs, or SmartNICs) (p. 48); DirectPath I/O (p. 48); Single Root I/O Virtualization (SR-IOV) (p. 49)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 48-49 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Not read: Enhanced Data Path (9.1 p. 46). Source links DPU configuration to NSX Manager and to ''What is VMware vSphere Distributed Services Engine'' in ESX Installation and Setup. Not read.'
-status: draft
----
-
 # Direct device access, SR-IOV and DPUs
 
 ## DirectPath I/O
@@ -73,3 +43,34 @@ status: draft
 - "DirectPath I/O is a general performance upgrade" → the source says typical VMs do not require it. It removes vMotion, snapshots, FT and NetIOC.
 - "SR-IOV gives the same limits as DirectPath I/O" → the list of incompatible features is the same, but SR-IOV allows one device to be shared among guests.
 - "UPTv2 works without a memory reservation" → it requires full memory reservation and pinning.
+
+## Metadata
+```yaml
+id: vsphere/network/concepts/passthrough-and-offload
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- network
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/configuration/latency-sensitivity
+- vsphere/cpu/concepts/hardware-assisted-virtualization
+- vsphere/network/configuration/splitrx-mode
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Networking Considerations > Data Processing Units (DPUs, or SmartNICs) (p. 48); DirectPath I/O (p. 48); Single Root I/O Virtualization (SR-IOV) (p. 49)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 48-49 unchanged. Page references updated.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Not read: Enhanced Data Path (9.1 p. 46). Source links DPU configuration to NSX Manager and to ''What is VMware vSphere Distributed Services Engine'' in ESX Installation and Setup. Not read.'
+status: draft
+```

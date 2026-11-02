@@ -1,32 +1,3 @@
----
-id: foundations/naming-patterns
-retriever_guide: metric-meaning
-scope: vendor-neutral
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-- capacity
-product: []
-internal_derive: []
-related:
-- foundations/terminology
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/memory/metrics/virtual-machine/usage
-- vsphere/storage/metrics/virtual-machine/virtual-disk
-- vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
-corrections:
-- '2026-11-02: Windows queue counters. Processor Queue Length excludes running threads; Current Disk Queue Length includes IOs being processed. Uploaded document states the disk part reversed.'
-review_notes: []
-status: draft
----
-
 # Naming patterns
 
 A metric name does not reliably tell what the metric measures.
@@ -80,3 +51,33 @@ The patterns below classify the ways names mislead.
 - pattern: incorrect-name
 - The Windows kernel has no "task" concept. The closest Windows concept is a Job: a group of processes managed as one.
 - What runs on top of the kernel are processes. "Process Manager" would match the concept.
+
+## Metadata
+```yaml
+id: foundations/naming-patterns
+retriever_guide: metric-meaning
+scope: vendor-neutral
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product: []
+internal_derive: []
+related:
+- foundations/terminology
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
+corrections:
+- '2026-11-02: Windows queue counters. Processor Queue Length excludes running threads; Current Disk Queue Length includes IOs being processed. Uploaded document states the disk part reversed.'
+review_notes: []
+status: draft
+```

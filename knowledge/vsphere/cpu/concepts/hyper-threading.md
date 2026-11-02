@@ -1,36 +1,3 @@
----
-id: vsphere/cpu/concepts/hyper-threading
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/numa
-- vsphere/cpu/configuration/latency-sensitivity
-- vsphere/cpu/configuration/side-channel-scheduling
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/cpu/concepts/idle-and-unused-vcpus
-- vsphere/cpu/concepts/cpu-efficiency
-- vsphere/cpu/concepts/cpu-topology
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- This source gives no Hyper-Threading penalty percentages. The book's 37.5% (VM Usage) and 50% (ESXi Used) figures are not confirmed by this source. Author to confirm.
-status: draft
----
-
 # Hyper-Threading
 
 ## Definition
@@ -76,3 +43,37 @@ status: draft
 ## Traps
 - "Hyper-Threading doubles CPU capacity" → the source gives a slight to significant gain, not a doubling.
 - "Pin each vCPU to a logical processor for isolation" → pinning both threads of one core can cause poor performance.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/hyper-threading
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/numa
+- vsphere/cpu/configuration/latency-sensitivity
+- vsphere/cpu/configuration/side-channel-scheduling
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/cpu-topology
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- This source gives no Hyper-Threading penalty percentages. The book's 37.5% (VM Usage) and 50% (ESXi Used) figures are not confirmed by this source. Author to confirm.
+status: draft
+```

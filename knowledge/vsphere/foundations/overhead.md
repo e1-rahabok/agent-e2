@@ -1,34 +1,3 @@
----
-id: vsphere/foundations/overhead
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-pillar:
-- capacity
-- value
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-- ClusterComputeResource
-internal_derive: []
-related:
-- vsphere/foundations/visibility-layers
-- vsphere/memory/metrics/virtual-machine/usage
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead
-corrections:
-- '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
-- '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
-review_notes: []
-status: draft
----
-
 # Overhead vs not overhead
 
 ## Definition
@@ -71,3 +40,35 @@ status: draft
 ## Traps
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
 - Area C in `vsphere/foundations/visibility-layers` (work invisible to the guest) is not the same as overhead.
+
+## Metadata
+```yaml
+id: vsphere/foundations/overhead
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+pillar:
+- capacity
+- value
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+- ClusterComputeResource
+internal_derive: []
+related:
+- vsphere/foundations/visibility-layers
+- vsphere/memory/metrics/virtual-machine/usage
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead
+corrections:
+- '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
+- '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
+review_notes: []
+status: draft
+```

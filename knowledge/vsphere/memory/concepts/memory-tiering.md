@@ -1,33 +1,3 @@
----
-id: vsphere/memory/concepts/memory-tiering
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- memory
-- storage
-pillar:
-- capacity
-- value
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/memory/concepts/overcommit-techniques
-- vsphere/memory/configuration/host-level-swapping
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 14 and 38 read. Setup changes and CPU headroom bullet added (p. 38).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Introduced in vSphere 9.0. The 9.1 document (p. 38) refers to ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub''. Not read.'
-status: draft
----
-
 # Memory tiering
 
 ## Definition
@@ -67,3 +37,34 @@ status: draft
 - "Tiered memory performs like DRAM" → infrequently accessed data sits on the NVMe tier.
 - "Any SSD works for memory tiering" → the source specifies a high-performance NVMe device with the write rate and endurance above.
 - "Active memory at 75% of DRAM is the limit" → 75% is the point where some workloads begin to suffer. The ideal is 50%.
+
+## Metadata
+```yaml
+id: vsphere/memory/concepts/memory-tiering
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- memory
+- storage
+pillar:
+- capacity
+- value
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/configuration/host-level-swapping
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 14 and 38 read. Setup changes and CPU headroom bullet added (p. 38).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Introduced in vSphere 9.0. The 9.1 document (p. 38) refers to ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub''. Not read.'
+status: draft
+```

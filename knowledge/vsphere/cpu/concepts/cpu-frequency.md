@@ -1,42 +1,3 @@
----
-id: vsphere/cpu/concepts/cpu-frequency
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive:
-- vsphere/cpu/concepts/run-time-vs-run-quality
-related:
-- vsphere/cpu/concepts/power-states
-- vsphere/cpu/configuration/host-power-management
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-- vsphere/cpu/concepts/cpu-measurement-levels
-- vsphere/cpu/metrics/host/usage
-- vsphere/cpu/metrics/host/core-utilization
-source:
-  document: PART 3 - Counters.docx (uploaded 2026-11-02, pre-correction version)
-  path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi
-corrections: []
-review_notes:
-- Source is the pre-correction book file. Re-check this file when the corrected file is uploaded.
-- "Section 'Impacts on ESXi': the table shows Usage (%) above 100% (120%, 150%). This contradicts the author correction in vsphere/cpu/metrics/host/usage: ESXi CPU Usage is capped at 100%. Author to resolve."
-- "Section 'Impacts on ESXi': the meaning of the 'Author recommendation' column is not stated in the text. Its values equal Core Utilization × 0.8. Core Utilization 125% is also unexplained (Core Utilization is normally at most 100%). Author to clarify."
-- "Section 'Turbo': whitepaper 'Host Power Management in VMware vSphere 7.0' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices."
-- "Section 'Turbo': %A/MPERF is the esxtop ratio of actual to nominal frequency (APERF/MPERF registers). From Claude's own knowledge."
-- "Section 'Three speeds': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q are from the book. Not checked against vendor pages."
-- "Section 'Turbo': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html"
-- "Section 'Three speeds': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book)."
-- "Section 'All-Core Turbo': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party)."
-status: draft
----
-
 # CPU frequency and Turbo
 
 ## Three speeds
@@ -98,17 +59,19 @@ status: draft
 - All-Core Turbo is not always exposed via the CPU API.
 
 ## Impacts on ESXi
+![Core Utilization vs actual usage with 20% All-Core Turbo](../images/turbo-impact-on-esxi.png)
 - Example with All-Core Turbo at 20% above base.
-- Usage (%) is what the vSphere Client shows.
+- The table shows actual values.
+- The reported Usage (%) metric is capped at 100%. Actual usage above 100% is hidden by the cap.
 
-| Core Utilization | Usage (%) | Author recommendation | Analysis |
-|---|---|---|---|
-| 25% | 30% | 20% | No performance impact on VMs: no HT pair running. The gap is Turbo. |
-| 50% | 60% | 40% | Same. |
-| 67% | 80% | 54% | Same. |
-| 75% | 90% | 60% | Same. |
-| 100% | 120% | 80% | Same. |
-| 125% | 150% | 100% | Performance impact from Hyper-Threading. |
+| Core Utilization | Actual usage | Analysis |
+|---|---|---|
+| 25% | 30% | No performance impact on VMs: no HT pair running. The gap is Turbo. |
+| 50% | 60% | Same. |
+| 67% | 80% | Same. |
+| 75% | 90% | Same. |
+| 100% | 120% | Same. |
+| 125% | 150% | Performance impact from Hyper-Threading. |
 
 ## Traps
 - "Base frequency is the capacity" → the CPU runs above base most of the time. Base understates capacity.
@@ -116,3 +79,42 @@ status: draft
 - "BIOS static high performance means no Turbo" → Turbo was observed at 129% (%A/MPERF).
 - "All cores run at the same frequency" → frequency is per core and changes with load.
 - "Usage (%) above Core Utilization means a problem" → the gap is Turbo.
+- "Usage (%) at 100% means the host is at its limit" → the metric is capped. Actual usage can be higher due to Turbo.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/cpu-frequency
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive:
+- vsphere/cpu/concepts/run-time-vs-run-quality
+related:
+- vsphere/cpu/concepts/power-states
+- vsphere/cpu/configuration/host-power-management
+- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+- vsphere/cpu/concepts/cpu-measurement-levels
+- vsphere/cpu/metrics/host/usage
+- vsphere/cpu/metrics/host/core-utilization
+source:
+  document: PART 3 - Counters.docx
+  path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi
+corrections: []
+review_notes:
+- "Section 'Impacts on ESXi': author (2026-11-02): the table shows actual values. The Usage (%) metric is capped at 100%. The book's 'My Recommendation' column (a single-counter recommendation) is left out until later; see docs/todo.md."
+- "Section 'Turbo': whitepaper 'Host Power Management in VMware vSphere 7.0' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices."
+- "Section 'Turbo': %A/MPERF is the esxtop ratio of actual to nominal frequency (APERF/MPERF registers). From Claude's own knowledge."
+- "Section 'Three speeds': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q are from the book. Not checked against vendor pages."
+- "Section 'Turbo': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html"
+- "Section 'Three speeds': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book)."
+- "Section 'All-Core Turbo': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party)."
+status: draft
+```

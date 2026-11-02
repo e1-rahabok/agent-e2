@@ -1,35 +1,3 @@
----
-id: vsphere/memory/concepts/overcommit-techniques
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- memory
-pillar:
-- capacity
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-- ClusterComputeResource
-internal_derive: []
-related:
-- vsphere/memory/concepts/page-sharing
-- vsphere/memory/configuration/host-level-swapping
-- vsphere/memory/diagnosis/overcommit-indicators
-- vsphere/memory/metrics/virtual-machine/usage
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 33-34 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source points to white paper 'Understanding Memory Resource Management in VMware vSphere 5.0'. The source says most concepts still apply. Not read.
-status: draft
----
-
 # Memory overcommit techniques
 
 ## Purpose
@@ -74,3 +42,36 @@ status: draft
 - "Ballooning means memory pressure now" → ballooning can reflect reclamation that happened earlier. See `vsphere/memory/metrics/virtual-machine/ballooned`.
 - "Host-level swapping and guest OS swapping are the same" → they are distinct. Host-level swapping is transparent to the guest.
 - "Memory compression is as costly as swapping" → decompression latency is much smaller than swap-in latency.
+
+## Metadata
+```yaml
+id: vsphere/memory/concepts/overcommit-techniques
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- memory
+pillar:
+- capacity
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+- ClusterComputeResource
+internal_derive: []
+related:
+- vsphere/memory/concepts/page-sharing
+- vsphere/memory/configuration/host-level-swapping
+- vsphere/memory/diagnosis/overcommit-indicators
+- vsphere/memory/metrics/virtual-machine/usage
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 33-34 unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source points to white paper 'Understanding Memory Resource Management in VMware vSphere 5.0'. The source says most concepts still apply. Not read.
+status: draft
+```

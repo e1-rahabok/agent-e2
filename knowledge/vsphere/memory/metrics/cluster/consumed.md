@@ -1,4 +1,12 @@
----
+# Cluster Memory Consumed
+
+## Meaning
+- Includes only memory consumed by VMs.
+- Includes VM overhead.
+- Excludes memory consumed by ESXi itself.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/cluster/consumed
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,11 +32,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# Cluster Memory Consumed
-
-## Meaning
-- Includes only memory consumed by VMs.
-- Includes VM overhead.
-- Excludes memory consumed by ESXi itself.
+```

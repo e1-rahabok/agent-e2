@@ -1,35 +1,3 @@
----
-id: vsphere/cpu/metrics/virtual-machine/ready
-retriever_guide: metric-meaning
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-metric_class: contention
-internal_derive:
-- vsphere/foundations/provider-consumer
-- vsphere/foundations/resource-management
-- vsphere/cpu/concepts/vcpu-states
-same_name: []
-same_meaning: []
-related:
-- vsphere/cpu/metrics/virtual-machine/latency
-- vsphere/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/cpu/metrics/virtual-machine/run
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture (pp. 52-78) > State of a VM vCPU; State Across Time; State Across Multiple vCPU
-corrections: []
-review_notes:
-- Sections Mechanism, Read against Run, Units, and the last 2 traps: from CPU > Architecture in the pre-correction book file (uploaded 2026-11-02). Re-check when the corrected file is uploaded.
-status: draft
----
-
 # VM CPU Ready
 
 ## Meaning
@@ -62,3 +30,36 @@ status: draft
 - "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See `vsphere/foundations/provider-consumer`.
 - "Ready 2% is always low" → read it against Run.
 - "Reduce VM size to fix Ready" → that reduces Co-stop. Ready is caused by ESXi.
+
+## Metadata
+```yaml
+id: vsphere/cpu/metrics/virtual-machine/ready
+retriever_guide: metric-meaning
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+metric_class: contention
+internal_derive:
+- vsphere/foundations/provider-consumer
+- vsphere/foundations/resource-management
+- vsphere/cpu/concepts/vcpu-states
+same_name: []
+same_meaning: []
+related:
+- vsphere/cpu/metrics/virtual-machine/latency
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+- vsphere/cpu/metrics/virtual-machine/run
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture (pp. 52-78) > State of a VM vCPU; State Across Time; State Across Multiple vCPU
+corrections: []
+review_notes:
+- Sections Mechanism, Read against Run, Units, and the last 2 traps: from CPU > Architecture.
+status: draft
+```

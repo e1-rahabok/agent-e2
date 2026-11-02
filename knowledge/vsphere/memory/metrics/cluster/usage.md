@@ -1,4 +1,10 @@
----
+# Cluster Memory Usage
+
+## Meaning
+- Maps to Consumed + Overhead.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/cluster/usage
 retriever_guide: metric-meaning
 scope: vsphere
@@ -25,9 +31,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# Cluster Memory Usage
-
-## Meaning
-- Maps to Consumed + Overhead.
+```

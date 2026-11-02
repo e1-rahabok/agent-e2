@@ -1,32 +1,3 @@
----
-id: vsphere/memory/concepts/page-sharing
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- memory
-pillar:
-- capacity
-- security
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/memory/concepts/overcommit-techniques
-- vsphere/memory/concepts/large-memory-pages
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > Memory Overcommit Techniques > Page Sharing (p. 33); Memory Page Sharing (pp. 34-35)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 33-35 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Source KB articles for security issues: 2080735 and 2097593. Not read.'
-status: draft
----
-
 # Page sharing
 
 ## Definition
@@ -58,3 +29,33 @@ status: draft
 - "Page sharing shares pages between all VMs by default" → since vSphere 6.0, the default is sharing within a VM only.
 - "Page sharing saves significant memory in most deployments" → the source says the effect is little in most deployments. Benefit is large in small-page environments such as VDI.
 - "Setting one salt for all VMs is harmless" → the source describes it as a single pool, which recreates the pre-6.0 default. Review the security implications (KB 2080735, 2097593).
+
+## Metadata
+```yaml
+id: vsphere/memory/concepts/page-sharing
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- memory
+pillar:
+- capacity
+- security
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/large-memory-pages
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Overcommit Techniques > Page Sharing (p. 33); Memory Page Sharing (pp. 34-35)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 33-35 unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Source KB articles for security issues: 2080735 and 2097593. Not read.'
+status: draft
+```

@@ -1,27 +1,3 @@
----
-id: vsphere/glossary/terminology
-retriever_guide: term-meaning
-scope: vsphere
-technology: [cpu, memory, storage, network, system]
-pillar: [availability, performance, security, capacity, value]
-product: [vsphere, vcf-operations]
-internal_derive: []
-related:
-  - vsphere/glossary/logical-processor
-  - foundations/terminology
-  - foundations/naming-patterns
-source:
-  document: Author statements (2026-11-02); vSphere API type names; VCF Operations object types
-  path: n/a
-corrections: []
-review_notes:
-  - "Section 'Book terminology' is a placeholder. The author will provide the book's terminology."
-  - "Section 'Core words' is drafted by Claude to prevent mixing dimensions. Author to correct."
-  - "Section 'VCF Operations object types': names other than vSphere World are from Claude's own knowledge. Verify against current VCF Operations documentation."
-  - "Section 'Proposed terms': added 2026-11-02 from the book, CPU > Architecture. Not yet in use as tag values. Author to confirm each term and its preferred name."
-status: draft
----
-
 # Terminology
 
 Single source of truth for terms, synonyms, and words to avoid.
@@ -50,6 +26,8 @@ Tag values in front matter must use the terms defined here.
 | Counter | The raw performance counter as exposed by the source (for example vCenter `cpu.ready.summation`). A metric may be built from one or more counters. | The interpreted meaning. |
 | Property | A configuration or inventory attribute of an object (for example number of vCPUs). Often used as context. | A measured value over time. |
 | Metric class | contention, consumption, context. | A pillar. |
+| Thread (physical) | Hardware thread of a CPU core. A provider. | A software thread. |
+| Thread (software) | Thread in an OS (VMkernel, Windows, Linux). A consumer. | A physical thread. |
 
 ## Object types
 ### vSphere (API type names)
@@ -103,4 +81,29 @@ status: [draft, reviewed]
 avoid_in_cpu_files: ['\bneeds?\b', '\bneeded\b', '\bwants?\b', '\bwish(es)?\b', 'uses only .* of what it needs']
 # Phrases rejected in body text of every knowledge file.
 avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
+```
+
+## Metadata
+```yaml
+id: vsphere/glossary/terminology
+retriever_guide: term-meaning
+scope: vsphere
+technology: [cpu, memory, storage, network, system]
+pillar: [availability, performance, security, capacity, value]
+product: [vsphere, vcf-operations]
+internal_derive: []
+related:
+  - vsphere/glossary/logical-processor
+  - foundations/terminology
+  - foundations/naming-patterns
+source:
+  document: Author statements (2026-11-02); vSphere API type names; VCF Operations object types
+  path: n/a
+corrections: []
+review_notes:
+  - "Section 'Book terminology' is a placeholder. The author will provide the book's terminology."
+  - "Section 'Core words' is drafted by Claude to prevent mixing dimensions. Author to correct."
+  - "Section 'VCF Operations object types': names other than vSphere World are from Claude's own knowledge. Verify against current VCF Operations documentation."
+  - "Section 'Proposed terms': added 2026-11-02 from the book, CPU > Architecture. Not yet in use as tag values. Author to confirm each term and its preferred name."
+status: draft
 ```

@@ -1,27 +1,3 @@
----
-id: foundations/thresholds
-retriever_guide: how-it-works
-scope: vendor-neutral
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-product: []
-internal_derive: []
-related:
-- foundations/metrics-as-accounting
-- vsphere/foundations/visibility-layers
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge
-corrections: []
-review_notes: []
-status: draft
----
-
 # Thresholds and interpretation
 
 ## Definition
@@ -60,3 +36,28 @@ threshold(VM layer) < threshold(Guest OS layer) < threshold(application layer)
 ## Traps
 - Using an application-layer threshold (e.g. 15 ms) directly as a VM-layer alert → too high.
 - Treating "consistently" as a 5-minute average → many alerts, few complaints.
+
+## Metadata
+```yaml
+id: foundations/thresholds
+retriever_guide: how-it-works
+scope: vendor-neutral
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+product: []
+internal_derive: []
+related:
+- foundations/metrics-as-accounting
+- vsphere/foundations/visibility-layers
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge
+corrections: []
+review_notes: []
+status: draft
+```

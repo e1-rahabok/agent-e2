@@ -1,34 +1,3 @@
----
-id: vsphere/cluster-resource-management/concepts/vcls
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-pillar:
-- availability
-product:
-- vsphere
-object:
-- ClusterComputeResource
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/cluster-resource-management/concepts/drs-overview
-- vsphere/cluster-resource-management/concepts/scalable-shares
-source:
-  document: vSphere Cluster Services (vCLS) in vSphere 7.0 Update 1 and newer versions (Broadcom KB 312147)
-  path: Status (vCenter 9.0 section); Context (pre-9.0). Footprint section from Performance Best Practices for VMware vSphere 9.0 (revision 20250731), pp. 76 and 79.
-corrections: []
-review_notes:
-- 'Source URL: https://knowledge.broadcom.com/external/article?articleNumber=312147 (last updated date not shown on the page). Source states: ''vCenter 9.0 deprecates vCLS, and the service will be removed in a future vCenter release.'' and ''Deactivating vCLS does not impact the operation of vSphere DRS and vSphere HA services.'''
-- Broadcom KB 316514 (Retreat Mode) is referenced by KB 312147. Not read.
-- 'vCenter 9.1: user states vCLS is deprecated in 9.1. Third-party sources (vinfrastructure.it, May 2026; StarWind) say vCenter 9.1 turns vCLS off by default and it cannot be re-enabled, and that SDDC Manager and VCF Installer controls were removed. Not verified against official 9.1 release notes or Product Support Notes. Author to confirm the 9.1 status and wording.'
-- Footprint tables are from the 9.0 performance document (pp. 76, 79). The 9.1 document has no vCLS section. Treat as historical (7.0 Update 1 to 8.x). Check VMware Configuration Maximums before any use.
-status: draft
----
-
 # vSphere Cluster Services (vCLS)
 
 ## Status
@@ -87,3 +56,35 @@ status: draft
 - "vCLS is available in vCenter 9.1" → the author states it is deprecated. Third-party sources say it is off by default and cannot be re-enabled. Verify against official 9.1 notes.
 - "vCLS VMs are a large cost to cluster capacity" → the 9.0 document describes the footprint as minimal, with a 100 MHz CPU reservation per VM.
 - "External and Embedded vCLS are the same" → they differ in VM count, memory and CPU limits, and disk footprint.
+
+## Metadata
+```yaml
+id: vsphere/cluster-resource-management/concepts/vcls
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+pillar:
+- availability
+product:
+- vsphere
+object:
+- ClusterComputeResource
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/cluster-resource-management/concepts/drs-overview
+- vsphere/cluster-resource-management/concepts/scalable-shares
+source:
+  document: vSphere Cluster Services (vCLS) in vSphere 7.0 Update 1 and newer versions (Broadcom KB 312147)
+  path: Status (vCenter 9.0 section); Context (pre-9.0). Footprint section from Performance Best Practices for VMware vSphere 9.0 (revision 20250731), pp. 76 and 79.
+corrections: []
+review_notes:
+- 'Source URL: https://knowledge.broadcom.com/external/article?articleNumber=312147 (last updated date not shown on the page). Source states: ''vCenter 9.0 deprecates vCLS, and the service will be removed in a future vCenter release.'' and ''Deactivating vCLS does not impact the operation of vSphere DRS and vSphere HA services.'''
+- Broadcom KB 316514 (Retreat Mode) is referenced by KB 312147. Not read.
+- 'vCenter 9.1: user states vCLS is deprecated in 9.1. Third-party sources (vinfrastructure.it, May 2026; StarWind) say vCenter 9.1 turns vCLS off by default and it cannot be re-enabled, and that SDDC Manager and VCF Installer controls were removed. Not verified against official 9.1 release notes or Product Support Notes. Author to confirm the 9.1 status and wording.'
+- Footprint tables are from the 9.0 performance document (pp. 76, 79). The 9.1 document has no vCLS section. Treat as historical (7.0 Update 1 to 8.x). Check VMware Configuration Maximums before any use.
+status: draft
+```

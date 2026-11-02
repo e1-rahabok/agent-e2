@@ -1,7 +1,7 @@
 # Philosophy and structure
 
 Not indexed. Explains design decisions for whoever (AI or human) maintains the repository.
-Conventions (layout, front matter, writing rules) are in the root `README.md`.
+Conventions (layout, metadata, writing rules) are in the root `README.md`.
 
 ## Purpose
 - Give an AI assistant Level 400 understanding of vSphere metrics.
@@ -37,7 +37,7 @@ Conventions (layout, front matter, writing rules) are in the root `README.md`.
 | No `distinctions.md` | Same-name traps live in the metric files they belong to. Groups of metrics live in `metrics/comparisons/`. |
 | Tags for pillar, product, object | Folders give one hierarchy. Tags let the AI slice by the other two angles of the book. |
 | `cluster-resource-management/` | DRS, DPM, shares and vCLS span CPU, memory and network at cluster level. |
-| YAML front matter | Retrievers filter on it. Reviewers see source, corrections and status in one place. |
+| Metadata block at the end of each file | Retrievers filter on it. Reviewers see source, corrections and status in one place. At the end, so the content reads first on GitHub. |
 | `raw-input/` not indexed | Source documents are binary and unstructured. Derived files are what the AI reads. |
 | `evaluation/` one file per case | Scales to hundreds of cases. Never indexed: holds answer keys. |
 

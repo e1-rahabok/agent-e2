@@ -1,42 +1,3 @@
----
-id: vsphere/cpu/concepts/vcpu-states
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-- vcf-operations
-object:
-- VirtualMachine
-internal_derive:
-- vsphere/foundations/provider-consumer
-related:
-- vsphere/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/cpu/concepts/cpu-measurement-levels
-- vsphere/cpu/concepts/run-time-vs-run-quality
-- vsphere/cpu/concepts/cpu-efficiency
-- vsphere/cpu/concepts/idle-and-unused-vcpus
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/ready
-- vsphere/cpu/metrics/virtual-machine/wait
-- vsphere/cpu/metrics/virtual-machine/latency
-source:
-  document: PART 3 - Counters.docx (uploaded 2026-11-02, pre-correction version)
-  path: CPU > Architecture (pp. 60-67) > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
-corrections: []
-review_notes:
-- Source is the pre-correction book file. Re-check this file when the corrected file is uploaded.
-- "Section 'Basic states': the book lists 3 sub-cases of waiting for IO: Co-stop, VM Wait and memory wait. Co-stop is also listed as a state of a vCPU being used. Author to confirm whether Co-stop belongs in the IO sub-cases."
-- "Section 'State diagram': transitions are read from the book's state diagram image. Three arrows (Wait to Run, Wait to Co-stop, Run to Co-stop) carry no label in the image. The meaning given for them in the body is Claude's reading. Author to confirm."
-- "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/cpu/metrics/virtual-machine/ready)."
-- "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
-status: draft
----
-
 # States of a VM vCPU
 
 ## Scheduler goals
@@ -60,6 +21,7 @@ status: draft
 | Not being used | Waiting for IO. Book sub-cases: Co-stop, VM Wait, memory wait. | Wait | Wait |
 
 ## State diagram
+![vCPU state diagram: New, Ready, Run, Co-stop, Wait, Zombie](../images/vcpu-state-diagram.png)
 ```mermaid
 stateDiagram-v2
     [*] --> Ready: Add
@@ -128,6 +90,9 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - Co-stop has no OS equivalent. It exists because a multi-vCPU VM is one entity with several schedules.
 
 ## State across time
+![VCF Operations chart: 4-vCPU VM states stack to 80,000 ms](../images/state-sum-vcf-operations.png)
+![vCenter chart: 4-vCPU VM states stack to 80,000 ms](../images/state-sum-vcenter.png)
+![Run, Wait, Co-stop and Ready stacked per 1000 ms block](../images/vcpu-states-over-time.png)
 - The diagram is a single moment. Reporting adds a time dimension.
 - The scheduler checks state every 2-30 ms.
 - Conversion from ms to %: state time / sample period.
@@ -145,6 +110,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - Reason: Ready is runtime demanded and not given. Compare it with runtime given.
 
 ## State across multiple vCPUs
+![Two vCPUs over periods A to G](../images/multi-vcpu-timeline.png)
 - Ready and Co-stop affect each other.
 - Example: a 2-vCPU VM over 7 periods.
 
@@ -167,3 +133,42 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - "High Wait means IO problems" → Wait includes idle.
 - "No Ready, so no Hyper-Threading contention" → states are blind to Hyper-Threading. Check CPU Latency.
 - "Compare ms counters across VMs" → ms counters scale with vCPU count. Use %.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/vcpu-states
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+- vcf-operations
+object:
+- VirtualMachine
+internal_derive:
+- vsphere/foundations/provider-consumer
+related:
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+- vsphere/cpu/concepts/cpu-measurement-levels
+- vsphere/cpu/concepts/run-time-vs-run-quality
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/metrics/virtual-machine/run
+- vsphere/cpu/metrics/virtual-machine/ready
+- vsphere/cpu/metrics/virtual-machine/wait
+- vsphere/cpu/metrics/virtual-machine/latency
+source:
+  document: PART 3 - Counters.docx
+  path: CPU > Architecture (pp. 60-67) > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
+corrections: []
+review_notes:
+- "Section 'Basic states': Co-stop is listed both as a state of a vCPU being used and as a sub-case of IO wait. Open question; search string in docs/todo.md."
+- "Section 'State diagram': transitions are read from the book's state diagram image. Three arrows (Wait to Run, Wait to Co-stop, Run to Co-stop) carry no label in the image. The meaning given for them in the body is Claude's reading. Author to confirm."
+- "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/cpu/metrics/virtual-machine/ready)."
+- "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
+status: draft
+```

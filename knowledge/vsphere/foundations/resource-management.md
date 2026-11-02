@@ -1,37 +1,3 @@
----
-id: vsphere/foundations/resource-management
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- foundations/terminology
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/memory/metrics/virtual-machine/usage
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
-corrections:
-- '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
-- '2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author.'
-- '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
-review_notes:
-- Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge (section: Two scheduler levels, Cluster row). Confirm.
-status: draft
----
-
 # Resource management
 
 ## Controls
@@ -102,3 +68,38 @@ Usage <= Entitlement   (at any point in time)
 - "CPU reservation shows up in CPU usage" → wrong. CPU reservation is on demand and not in utilization metrics.
 - "High Memory Consumed means the VM is actively using that memory" → not necessarily. Reservation is counted in Consumed.
 - Using a limit instead of right-sizing → unpredictable; the guest cannot see the limit.
+
+## Metadata
+```yaml
+id: vsphere/foundations/resource-management
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- foundations/terminology
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/memory/metrics/virtual-machine/usage
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
+corrections:
+- '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
+- '2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author.'
+- '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
+review_notes:
+- Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge (section: Two scheduler levels, Cluster row). Confirm.
+status: draft
+```

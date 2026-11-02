@@ -1,4 +1,10 @@
----
+# ESXi Memory Swap Used
+
+## Meaning
+- The host-level counterpart of VM Swapped. Different names for different vantage points.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/host/swap-used
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,9 +30,4 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 status: draft
----
-
-# ESXi Memory Swap Used
-
-## Meaning
-- The host-level counterpart of VM Swapped. Different names for different vantage points.
+```

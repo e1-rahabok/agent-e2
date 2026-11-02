@@ -1,33 +1,3 @@
----
-id: vsphere/network/configuration/rss-and-interrupt-coalescing
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- network
-- cpu
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/configuration/latency-sensitivity
-- vsphere/network/configuration/splitrx-mode
-- vsphere/cpu/configuration/host-wide-dense-mode
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Networking Considerations > Receive Side Scaling (RSS) (p. 50); Virtual Network Interrupt Coalescing (p. 51)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). RSS NIC list changed in 9.1 (pp. 50-51). Coalescing unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Exact driver and module commands for RSS are in the source (p. 48). Not copied here. Verify against the NIC driver release before use.
-status: draft
----
-
 # Receive Side Scaling and virtual interrupt coalescing
 
 ## Receive Side Scaling (RSS)
@@ -68,3 +38,34 @@ status: draft
 - "Coalescing is always good" → it can add latency, and disabling it raises CPU use.
 - "RSS is free" → it adds CPU use. The source says it is acceptable with recent CPUs, but it is deactivated by default in some configurations.
 - "Coalescing latency is always microseconds" → the source gives a few hundred microseconds up to a few milliseconds.
+
+## Metadata
+```yaml
+id: vsphere/network/configuration/rss-and-interrupt-coalescing
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- network
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/configuration/latency-sensitivity
+- vsphere/network/configuration/splitrx-mode
+- vsphere/cpu/configuration/host-wide-dense-mode
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Networking Considerations > Receive Side Scaling (RSS) (p. 50); Virtual Network Interrupt Coalescing (p. 51)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). RSS NIC list changed in 9.1 (pp. 50-51). Coalescing unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Exact driver and module commands for RSS are in the source (p. 48). Not copied here. Verify against the NIC driver release before use.
+status: draft
+```
