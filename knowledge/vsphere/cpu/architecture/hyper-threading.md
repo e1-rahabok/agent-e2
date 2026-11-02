@@ -6,6 +6,7 @@ resources: [cpu]
 objects: [vcpu, esxi]
 related:
   - vsphere/cpu/architecture/numa
+  - vsphere/cpu/architecture/latency-sensitivity
   - vsphere/cpu/architecture/side-channel-scheduling
   - vsphere/cpu/distinctions
   - vsphere/cpu/architecture/idle-and-unused-vcpus
