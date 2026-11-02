@@ -74,6 +74,6 @@ source:
 corrections: []
 review_notes:
 - Test data provided to the author by Valentin Bondzio (book footnote).
-- 'Section ''Why'': the book says ESXi Core Utilization matches VM Run and both went 2x, but its own values show Core Utilization at 100% throughout. Written as ESXi Utilization. Open question in docs/todo.md.'
+- 'Section ''Why'': the book says ESXi Core Utilization matches VM Run and both went 2x, but its own values show Core Utilization at 100% throughout. Written as ESXi Utilization. Open question in docs/author-questions.md.'
 status: draft
 ```

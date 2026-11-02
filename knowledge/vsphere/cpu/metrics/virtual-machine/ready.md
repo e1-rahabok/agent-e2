@@ -98,7 +98,7 @@ corrections: []
 review_notes:
 - Sections Mechanism, Read against Run, Units, and the last 2 traps: from CPU > Architecture.
 - 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
-- 'Section ''Floor and size'': the VM section says Ready is higher on larger VMs. The Architecture section says VM size reduces Co-stop but not Ready. Open question in docs/todo.md.'
+- 'Section ''Floor and size'': the VM section says Ready is higher on larger VMs. The Architecture section says VM size reduces Co-stop but not Ready. Open question in docs/author-questions.md.'
 - 'Section ''Observed values'': the 50% statement is the book''s observation on a 16-vCPU VM, not a stated threshold.'
 status: draft
 ```

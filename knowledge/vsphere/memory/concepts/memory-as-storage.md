@@ -60,6 +60,6 @@ source:
   path: Memory > Architecture > Architecture intro
 corrections: []
 review_notes:
-- 'Section ''Two dimensions'': the Architecture section defines Memory Latency as a share of memory space; the VM section defines it as a share of time. Open question in docs/todo.md.'
+- 'Section ''Two dimensions'': the Architecture section defines Memory Latency as a share of memory space; the VM section defines it as a share of time. Open question in docs/author-questions.md.'
 status: draft
 ```

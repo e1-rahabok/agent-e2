@@ -62,7 +62,7 @@ source:
   path: CPU > VM (pp. 78-118) > Consumption Metrics > System
 corrections: []
 review_notes:
-- 'Section ''Instance'': the book text says System is charged to vCPU 0, while its diagram says charged at VM level, not at vCPU 1, and Chapter 1 says per-vCPU Used excludes System. Open question in docs/todo.md.'
+- 'Section ''Instance'': the book text says System is charged to vCPU 0, while its diagram says charged at VM level, not at vCPU 1, and Chapter 1 says per-vCPU Used excludes System. Open question in docs/author-questions.md.'
 - 'Section ''Values'': KB from the book: https://kb.vmware.com/s/article/59640 (not read).'
 - 'vCenter counter description reads: amount of time spent on system processes on each virtual CPU in the virtual machine. Differs from the book''s per-vCPU statement.'
 status: draft

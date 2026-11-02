@@ -66,6 +66,6 @@ source:
   path: CPU > VM (pp. 78-118) > Contention Metrics > Overlap
 corrections: []
 review_notes:
-- 'Section ''Names'': the book''s Chapter 1 says Linux Steal Time includes only CPU Ready. Open question in docs/todo.md.'
+- 'Section ''Names'': the book''s Chapter 1 says Linux Steal Time includes only CPU Ready. Open question in docs/author-questions.md.'
 status: draft
 ```

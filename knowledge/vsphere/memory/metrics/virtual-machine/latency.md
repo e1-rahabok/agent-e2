@@ -65,6 +65,6 @@ corrections: []
 review_notes:
 - 'Section ''Unit'': from Memory > Architecture.'
 - 'Sections Mechanism, Observed values: from Memory > VM.'
-- 'Section ''Unit'': the Architecture section defines the counter as a share of memory space; the VM section and vCenter define it as a share of time. Open question in docs/todo.md.'
+- 'Section ''Unit'': the Architecture section defines the counter as a share of memory space; the VM section and vCenter define it as a share of time. Open question in docs/author-questions.md.'
 status: draft
 ```

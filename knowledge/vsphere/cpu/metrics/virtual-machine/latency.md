@@ -83,6 +83,6 @@ corrections: []
 review_notes:
 - Sections Hyper-Threading: from CPU > Architecture.
 - 'Sections What Latency includes, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram modified by the author from a Valentin Bondzio diagram.'
-- 'Section ''Contrast with Linux Steal Time'': Chapter 1 says Steal includes only Ready; the VM section says Linux tracks Overlap as stolen time. Open question in docs/todo.md.'
+- 'Section ''Contrast with Linux Steal Time'': Chapter 1 says Steal includes only Ready; the VM section says Linux tracks Overlap as stolen time. Open question in docs/author-questions.md.'
 status: draft
 ```

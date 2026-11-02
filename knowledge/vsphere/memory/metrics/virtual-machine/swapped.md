@@ -44,6 +44,6 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 - 'Sections Behaviour: from Memory > VM.'
-- 'Section ''Behaviour'': the VM section says any Compressed or Swapped value means the host could not satisfy the VM; the Architecture section says it does not mean VMs contended for RAM. Open question in docs/todo.md.'
+- 'Section ''Behaviour'': the VM section says any Compressed or Swapped value means the host could not satisfy the VM; the Architecture section says it does not mean VMs contended for RAM. Open question in docs/author-questions.md.'
 status: draft
 ```

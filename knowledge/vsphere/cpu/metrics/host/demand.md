@@ -52,6 +52,6 @@ corrections:
 - '2026-11-02: ESXi CPU Demand is a provider metric (section: Meaning). Not answered in the uploaded document.'
 review_notes:
 - 'Section Behaviour: from CPU > ESXi.'
-- 'Section ''Behaviour'' vs the correction in this file: the ESXi section calls Demand consumer-view and the sum of VMs; the author''s correction calls ESXi Demand a provider metric. Open question in docs/todo.md.'
+- 'Section ''Behaviour'' vs the correction in this file: the ESXi section calls Demand consumer-view and the sum of VMs; the author''s correction calls ESXi Demand a provider metric. Open question in docs/author-questions.md.'
 status: draft
 ```
