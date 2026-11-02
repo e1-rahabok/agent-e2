@@ -250,5 +250,15 @@ Each entry has:
 - Written as now: the table, with text reasons listed and the conflict flagged.
 - Answer:
 
+### Q032 · Provider Objects > Other Metrics · Monster VM threshold
+- Files: `vsphere/system/metrics/cluster/cluster-risk`, `vsphere/system/concepts/cluster-operations`
+- Search 1 (Overview): "If a VM vCPU > 45% of the ESXi count of threads"
+- Search 2 (Monster VM): "if a VM vCPU size is > 40% of the ESXi count of threads"
+- Search 3 (Cluster Risk): "the VM size needs to be at least half the ESXi"
+- Search 4 (recommendation): "Monster VM > 50% of physical core, not thread"
+- Question: which CPU threshold defines a monster VM?
+- Written as now: the recommendation (above 50% of physical cores); the others flagged.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
