@@ -25,10 +25,9 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Chapter 2 Architecture: open questions for the author, with verbatim search strings:
-  - Co-stop as an IO sub-case. Search: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)". Co-stop is also listed under "Being used".
-  - Use P States off vs Turbo. Search 1: "When deactivated, the ESX configures to use the highest available frequency". Search 2: "Rigid Base / Sleep Only". Search 3: "Turbo can still kick in despite the BIOS setting". Question: with P-states off, is the frequency pinned at base (no Turbo), or the highest available (Turbo)?
-  - Use C States and frequency. Search: "Frequency will go lower than base clock speed". C-states are idle states; how do they lower frequency?
+- [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
+- [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
+- [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
 - [ ] Later: add the author's "My Recommendation" column (single-counter recommendation) from the Impacts on ESXi table to `cpu/concepts/cpu-frequency`.
 
 ## Book extraction

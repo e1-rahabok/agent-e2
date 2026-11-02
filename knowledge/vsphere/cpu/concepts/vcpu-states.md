@@ -18,7 +18,7 @@
 | Being used | The kernel has no physical thread to run it. The VM is ready; the hypervisor is not. | Ready | Ready |
 | Being used | The kernel has a thread, but another vCPU of the same VM is far behind. | Co-stop | Co-stop |
 | Not being used | Truly idle. No work. | Wait (idle) | Idle Wait |
-| Not being used | Waiting for IO. Book sub-cases: Co-stop, VM Wait, memory wait. | Wait | Wait |
+| Not being used | Waiting. 3 sub-cases: IO wait, memory wait, other wait. | Wait | Wait |
 
 ## State diagram
 ![vCPU state diagram: New, Ready, Run, Co-stop, Wait, Zombie](../images/vcpu-state-diagram.png)
@@ -166,7 +166,7 @@ source:
   path: CPU > Architecture (pp. 60-67) > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
 corrections: []
 review_notes:
-- "Section 'Basic states': Co-stop is listed both as a state of a vCPU being used and as a sub-case of IO wait. Open question; search string in docs/todo.md."
+- "Section 'Basic states': author (2026-11-02): the wait sub-cases are IO wait, memory wait and other wait. The book text listing Co-stop is wrong and will be corrected."
 - "Section 'State diagram': transitions are read from the book's state diagram image. Three arrows (Wait to Run, Wait to Co-stop, Run to Co-stop) carry no label in the image. The meaning given for them in the body is Claude's reading. Author to confirm."
 - "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/cpu/metrics/virtual-machine/ready)."
 - "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
