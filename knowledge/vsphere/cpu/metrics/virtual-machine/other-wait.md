@@ -61,6 +61,6 @@ source:
 corrections: []
 review_notes:
 - 'KB 85393 (legacy id) from the book: https://knowledge.broadcom.com/external/article?legacyId=85393 (not read).'
-- 'Section ''Meaning'': the book uses VM Wait and Other Wait for the same metric. Proposed as synonyms in vsphere/glossary/terminology.'
+- 'Section ''Meaning'': the book uses VM Wait and Other Wait for the same metric. Proposed as synonyms in glossary/terminology.'
 status: draft
 ```

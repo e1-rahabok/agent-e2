@@ -92,7 +92,7 @@ corrections: []
 review_notes:
 - "Section 'Fair Share Scheduler': author (2026-11-02): VM CPU Used and Usage go down when the vCPU runs on a shared core. Book text to be corrected."
 - "Section 'Efficacy': the 30% figure is the author's estimate for a new vs a 5-year-old Intel Xeon at the same clock speed."
-- "Section 'CPU Throughput': 'CPU Throughput' is the author's preferred name. Proposed in vsphere/glossary/terminology. Author to confirm which counters it names (Usage (MHz) at minimum)."
+- "Section 'CPU Throughput': 'CPU Throughput' is the author's preferred name. Proposed in glossary/terminology. Author to confirm which counters it names (Usage (MHz) at minimum)."
 - "Section 'Fair Share Scheduler': the book compares with the Linux EEVDF scheduler (replaced CFS in Linux 6.12; https://lwn.net/Articles/925371/). Left out of the body as a tangent."
 status: draft
 ```

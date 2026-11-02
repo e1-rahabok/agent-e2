@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Validate knowledge-base files. Run before every merge: python3 scripts/validate.py
 Exit code 0 = pass, 1 = problems found. Allowed values come from
-knowledge/vsphere/glossary/terminology.md (section 'Allowed tag values')."""
+knowledge/glossary/terminology.md (section 'Allowed tag values')."""
 import glob, os, re, sys, yaml
 
-TERMS = 'knowledge/vsphere/glossary/terminology.md'
+TERMS = 'knowledge/glossary/terminology.md'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
             'source', 'corrections', 'review_notes', 'status']
 LIST_FIELDS = ['technology', 'pillar', 'product', 'object', 'instance']
@@ -44,7 +44,7 @@ def main():
         docs[f] = (fm, body)
 
     ids = {fm.get('id') for fm, _ in docs.values()}
-    EXEMPT_WORDS = {'knowledge/vsphere/glossary/terminology.md'}  # defines the avoided words
+    EXEMPT_WORDS = {'knowledge/glossary/terminology.md'}  # defines the avoided words
     for f, (fm, body) in docs.items():
         expected = f[len('knowledge/'):-3]
         if fm.get('id') != expected:

@@ -113,9 +113,9 @@ avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
 
 ## Metadata
 ```yaml
-id: vsphere/glossary/terminology
+id: glossary/terminology
 retriever_guide: term-meaning
-scope: vsphere
+scope: vendor-neutral
 technology: [cpu, memory, storage, network, system]
 pillar: [availability, performance, security, capacity, value]
 product: [vsphere, vcf-operations]
@@ -133,5 +133,6 @@ review_notes:
   - "Section 'Core words' is drafted by Claude to prevent mixing dimensions. Author to correct."
   - "Section 'VCF Operations object types': names other than vSphere World are from Claude's own knowledge. Verify against current VCF Operations documentation."
   - "Section 'Proposed terms': added 2026-11-02 from the book, CPU > Architecture. Not yet in use as tag values. Author to confirm each term and its preferred name."
+  - "Moved 2026-11-02 from knowledge/vsphere/glossary/ to knowledge/glossary/: applies to all products. Scope set to vendor-neutral."
 status: draft
 ```
