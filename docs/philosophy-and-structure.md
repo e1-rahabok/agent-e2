@@ -1,91 +1,53 @@
-# Philosophy and Structure
+# Philosophy and structure
 
-## Why this repository exists
+Not indexed. Explains design decisions for whoever (AI or human) maintains the repository.
+Conventions (layout, front matter, writing rules) are in the root `README.md`.
 
-Most documentation-based AI systems end up as shallow metric dictionaries. They can retrieve a counter definition but cannot reason about *why* the counter behaves the way it does, how it relates to architecture, or how an experienced admin actually thinks.
+## Purpose
+- Give an AI assistant Level 400 understanding of vSphere metrics.
+- Target: the cases where a generic AI answers confidently and wrongly, because the general meaning of a metric does not hold in vSphere.
+- Most documentation-based AI systems become metric dictionaries. They retrieve a definition but cannot explain why a value behaves as it does.
 
-This repository is an attempt to codify **depth of understanding**, not just facts.
+## Principles
+1. **AI is the reader. Humans only review.**
+   - Content is facts, mechanisms, formulas and reasons.
+   - No text aimed at human motivation, narrative or the author's voice.
+   - Format still supports human QA: one fact per line, source path per file, flagged corrections, review status.
+2. **Mechanism before counter.**
+   - Counters are a byproduct of the architecture. A counter file points back to the concepts it follows from.
+3. **Nuance is captured explicitly.**
+   - Same name, different meaning (and the reverse) is stored as distinction blocks, not buried in prose.
+4. **Vantage points are never mixed.**
+   - A counter file covers one object (vCPU, VM, ESXi, cluster, datastore, ...) and one data source (ESXi, vCenter, VCF Operations, Guest OS).
+5. **Vendor-neutral vs vSphere-specific.**
+   - Naming, units, sampling and thresholds apply beyond vSphere: `knowledge/foundations/`.
+   - Virtualization mechanisms: `knowledge/vsphere/foundations/`.
+6. **Traceable to source.**
+   - Every file records the source document and heading path. Needed for QA and for updating when the source changes.
+7. **Measured, not assumed.**
+   - Golden cases in `evaluation/` test answers with and without the knowledge base.
 
-The ultimate goal is an AI assistant that can support real vSphere / VCF administrators with the same quality of reasoning that a seasoned human expert would provide.
+## Structure decisions
+| Decision | Reason |
+|---|---|
+| `knowledge/foundations/` at top level | Vendor-neutral content also applies to NSX, vSAN and other products. |
+| `knowledge/vsphere/foundations/` | Cross-resource vSphere mechanisms (provider/consumer, visibility, resource management) do not belong to one resource. |
+| `distinctions.md` per resource | Same-name traps are the highest-value content. One block per trap retrieves cleanly. |
+| `counters/<object>/` | One object per file. Same counter name on another object is a different file, linked via `same_name_as`. |
+| YAML front matter | Retrievers filter on it. Reviewers see source, corrections and status in one place. |
+| `raw-input/` not indexed | Source documents are binary and unstructured. Derived files are what the AI reads. |
+| `evaluation/` one file per case | Scales to hundreds of cases. Never indexed: holds answer keys. |
 
-## Core Philosophy
+## Limitations
+- Converting expert knowledge into files is lossy. Some tacit knowledge is hard to codify.
+- The AI retrieves and recombines text. Structure and golden cases improve answer quality; they do not create understanding.
+- Quality drifts without regular review. `status: draft` files are unreviewed.
+- Screenshots and diagrams must be converted to text (formulas, Mermaid, descriptions) to be retrievable.
+- Coverage is intentionally partial: depth first, breadth later.
 
-1. **Architecture and mental models first**  
-   Performance counters are a byproduct. Real mastery comes from understanding how the system works.
-
-2. **Preserve nuance**  
-   The same counter name can mean different things on a Host versus a VM. Naming is inconsistent across the industry. Thresholds are rarely universal. These nuances must be explicitly captured.
-
-3. **Cross-cutting foundations matter**  
-   Concepts such as “Metrics as accounting”, “VM vs Guest OS”, and “Overhead vs feature” apply across CPU, Memory, Storage, and Network. They deserve their own layer.
-
-4. **Real admin behavior > clean textbook questions**  
-   Administrators often submit screenshots, diagrams, or logs and simply say “Explain the problem.” The evaluation system must reflect this reality.
-
-5. **Written for humans first**  
-   The repository should feel natural to veteran vSphere admins. AI retrieval is a secondary (but important) concern.
-
-## Why the structure looks the way it does
-
-```text
-knowledge/
-├── raw-input/                 ← Original source materials (book, diagrams, decks)
-├── vsphere/
-│   ├── foundations/            ← Cross-cutting mental models
-│   ├── cpu/ memory/ storage/ network/
-│   │   ├── architecture/
-│   │   ├── resource-management/
-│   │   ├── counters/host/ and counters/vm/
-│   │   └── interpretation/
-│   ├── troubleshooting/
-│   └── glossary/
-```
-
-### Reasoning behind key decisions
-
-| Decision | Why |
-|----------|-----|
-| Separate `foundations/` | Deep conceptual material (e.g. Metrics Nuances) does not belong under a single resource area. |
-| Split counters into `host/` and `vm/` | The same counter name often has different meaning and interpretation depending on the object type. Mixing them destroys clarity. |
-| `architecture/` + `resource-management/` before counters | Forces the knowledge base to capture *why* before *what*. |
-| `raw-input/` at the knowledge root | Source documents often cut across components. Keeping them separate from derived structured knowledge avoids confusion. |
-| Evaluation supports screenshots, diagrams, logs | Matches how real admins actually interact with tools. |
-
-## Limitations (honest)
-
-- Turning deep human expertise into structured files is lossy. Some tacit knowledge is extremely hard to codify.
-- The AI does not “understand” the way a human expert does. It retrieves and recombines. High-quality structure and golden cases improve the *appearance* and usefulness of understanding, but it remains statistical pattern matching at its core.
-- Maintaining consistency as the knowledge base grows requires discipline. Without regular review, quality will drift.
-- Multi-modal inputs (screenshots, diagrams) currently rely on good textual descriptions or future vision capabilities. Pure image understanding is still limited in local/offline setups.
-- Coverage is incomplete. This is intentional — we prefer depth in the areas we have touched over shallow coverage of everything.
-
-## How to improve this repository
-
-1. **Add depth before breadth**  
-   Prefer one excellent architectural explanation over twenty shallow counter definitions.
-
-2. **Keep Host and VM perspectives strictly separated**  
-   Never mix them in the same file.
-
-3. **Use real cases for evaluation**  
-   Generate golden cases from the live lab and from actual operational problems.
-
-4. **Document tribal knowledge**  
-   If something is only known by experienced admins, write it down explicitly (with appropriate caveats).
-
-5. **Review and prune**  
-   Outdated or low-quality files should be improved or removed. Volume is not a virtue.
-
-6. **Preserve the author’s voice when extracting from the book**  
-   The value of the source material is often in the thinking style, not just the facts.
-
-## Relationship to RAG / AI systems
-
-This repository is deliberately organized so that a Retrieval-Augmented Generation system can:
-
-- Pull the right conceptual foundation before diving into specific counters
-- Distinguish Host vs VM perspectives
-- Retrieve interpretation patterns rather than isolated definitions
-- Be evaluated against realistic admin interactions
-
-The structure is a compromise between human readability and machine retrievability. When the two conflict, we currently bias toward human clarity and explicitness.
+## How to improve
+1. Depth before breadth: one complete mechanism beats twenty shallow counter definitions.
+2. Extract a source section in full. Keep every distinction.
+3. Add golden cases for each new section, especially traps a generic AI falls into.
+4. Run evaluation before and after a change. Keep changes that raise scores.
+5. Remove files that are generic, unsourced or contradicted by the source.
