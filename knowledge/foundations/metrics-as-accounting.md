@@ -1,4 +1,17 @@
----
+# Metrics as accounting
+
+## Definition
+- A metric is an accounting of a system in operation.
+- A counter records what the system did, using the system's own accounting rules.
+
+## Consequences for metrics
+- Interpreting a counter correctly requires knowing how the whole system works.
+- Without the mechanism, interpretation falls back to memorising definitions. Memorised definitions fail on cases not covered by the definition.
+- A threshold can only be judged once it is known how the value is calculated.
+- To explain a counter value, explain the mechanism that produced it first.
+
+## Metadata
+```yaml
 id: foundations/metrics-as-accounting
 retriever_guide: how-it-works
 scope: vendor-neutral
@@ -21,16 +34,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# Metrics as accounting
-
-## Definition
-- A metric is an accounting of a system in operation.
-- A counter records what the system did, using the system's own accounting rules.
-
-## Consequences for metrics
-- Interpreting a counter correctly requires knowing how the whole system works.
-- Without the mechanism, interpretation falls back to memorising definitions. Memorised definitions fail on cases not covered by the definition.
-- A threshold can only be judged once it is known how the value is calculated.
-- To explain a counter value, explain the mechanism that produced it first.
+```

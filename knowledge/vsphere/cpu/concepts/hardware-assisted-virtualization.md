@@ -1,35 +1,3 @@
----
-id: vsphere/cpu/concepts/hardware-assisted-virtualization
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/numa
-- vsphere/cpu/configuration/side-channel-scheduling
-- vsphere/foundations/overhead
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: CPU Hardware Considerations > Hardware-Assisted Virtualization (p. 11)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 11-12 unchanged. Large pages now p. 37, DirectPath I/O p. 48, SR-IOV p. 49.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- '2MB large pages: memory/architecture/large-memory-pages. DirectPath I/O and SR-IOV: network/architecture/passthrough-and-offload. AES-NI: cpu/architecture/bios-settings.'
-status: draft
----
-
 # Hardware-assisted virtualization
 
 Three hardware features assist virtualization: CPU, MMU, and I/O MMU.
@@ -61,3 +29,36 @@ Three hardware features assist virtualization: CPU, MMU, and I/O MMU.
 ## Traps
 - "Hardware MMU assist is always faster" → it reduces page table overhead, but it increases TLB miss service time. Workloads that stress the TLB can slow down.
 - "VT-d is a CPU feature" → it is a chipset feature.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/hardware-assisted-virtualization
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/numa
+- vsphere/cpu/configuration/side-channel-scheduling
+- vsphere/foundations/overhead
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: CPU Hardware Considerations > Hardware-Assisted Virtualization (p. 11)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 11-12 unchanged. Large pages now p. 37, DirectPath I/O p. 48, SR-IOV p. 49.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- '2MB large pages: memory/architecture/large-memory-pages. DirectPath I/O and SR-IOV: network/architecture/passthrough-and-offload. AES-NI: cpu/architecture/bios-settings.'
+status: draft
+```

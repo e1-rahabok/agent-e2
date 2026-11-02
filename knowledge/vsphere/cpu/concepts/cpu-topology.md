@@ -1,43 +1,7 @@
----
-id: vsphere/cpu/concepts/cpu-topology
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-pillar:
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/cpu/concepts/numa
-- vsphere/cpu/concepts/virtual-numa
-- vsphere/cpu/concepts/hyper-threading
-- vsphere/cpu/configuration/numa-settings
-- vsphere/cpu/concepts/vcpu-states
-source:
-  document: PART 3 - Counters.docx (uploaded 2026-11-02, pre-correction version)
-  path: CPU > Architecture (pp. 57-60) > CPU vs vCPU > System on a Chip; NUMA
-corrections: []
-review_notes:
-- Source is the pre-correction book file. Re-check this file when the corrected file is uploaded.
-- "Section 'Cache latency': the book says remote L3 latency is '80 ms'. Written as 80 ns: the local figure is 33 ns and the cited test reports nanoseconds. Author to confirm."
-- "Section 'System on a Chip': AMD source from the book: https://www.amd.com/system/files/documents/overview-amd-epyc7003-series-processors-microarchitecture.pdf (p. 5)."
-- "Section 'System on a Chip': performance example from the book: https://blogs.vmware.com/performance/2020/04/amd-epyc-rome-application-performance-on-vsphere-series-part-1-sql-server-2019.html"
-- "Section 'NUMA': AMD EPYC 9005 white paper from the book: https://www.amd.com/content/dam/amd/en/documents/epyc-business-docs/white-papers/5th-gen-amd-epyc-processor-architecture-white-paper.pdf"
-- "Section 'NUMA': Broadcom KB from the book: https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html (not read)."
-- "Section 'NUMA': SAP source from the book: https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html (not read)."
-- "Section 'Cache latency': test source from the book: https://chipsandcheese.com/p/a-look-into-intel-xeon-6s-memory"
-status: draft
----
-
 # CPU topology: CPU vs vCPU
 
 ## No Hyper-Threading inside a VM
+![Physical CPU with threads vs vCPU with virtual sockets and cores](../images/cpu-vs-vcpu-topology.png)
 - vSphere exposes only virtual sockets and virtual cores to a VM.
 - A virtual core has no hyper-threads.
 - So Hyper-Threading exists at the physical CPU level only, not at the vCPU level.
@@ -67,3 +31,39 @@ status: draft
 - "A vCPU can use Hyper-Threading" → a virtual core has no hyper-threads. Hyper-Threading is a property of the physical core.
 - "All cores in a socket are equal distance from each other" → CCD and L3 boundaries create locality inside a socket.
 - "NUMA node = socket" → NUMA node = package or a sub-socket domain (Cluster-on-Die, NPS4, SNC).
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/cpu-topology
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/cpu/concepts/numa
+- vsphere/cpu/concepts/virtual-numa
+- vsphere/cpu/concepts/hyper-threading
+- vsphere/cpu/configuration/numa-settings
+- vsphere/cpu/concepts/vcpu-states
+source:
+  document: PART 3 - Counters.docx
+  path: CPU > Architecture (pp. 57-60) > CPU vs vCPU > System on a Chip; NUMA
+corrections: []
+review_notes:
+- "Section 'System on a Chip': AMD source from the book: https://www.amd.com/system/files/documents/overview-amd-epyc7003-series-processors-microarchitecture.pdf (p. 5)."
+- "Section 'System on a Chip': performance example from the book: https://blogs.vmware.com/performance/2020/04/amd-epyc-rome-application-performance-on-vsphere-series-part-1-sql-server-2019.html"
+- "Section 'NUMA': AMD EPYC 9005 white paper from the book: https://www.amd.com/content/dam/amd/en/documents/epyc-business-docs/white-papers/5th-gen-amd-epyc-processor-architecture-white-paper.pdf"
+- "Section 'NUMA': Broadcom KB from the book: https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html (not read)."
+- "Section 'NUMA': SAP source from the book: https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html (not read)."
+- "Section 'Cache latency': test source from the book: https://chipsandcheese.com/p/a-look-into-intel-xeon-6s-memory"
+status: draft
+```

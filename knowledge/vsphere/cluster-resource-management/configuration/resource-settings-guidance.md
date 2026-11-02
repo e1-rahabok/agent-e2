@@ -1,36 +1,3 @@
----
-id: vsphere/cluster-resource-management/configuration/resource-settings-guidance
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- cpu
-- memory
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- ClusterComputeResource
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/foundations/resource-management
-- vsphere/cluster-resource-management/concepts/scalable-shares
-- vsphere/cluster-resource-management/concepts/drs-overview
-- vsphere/cluster-resource-management/concepts/dpm
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Virtual Infrastructure Management > General Resource Management (p. 65)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 65 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- The source does not define a headroom percentage for memory virtualization overhead and migration overhead. Author to confirm whether the book gives one.
-status: draft
----
-
 # Resource settings: when and how
 
 ## Principle
@@ -64,3 +31,37 @@ status: draft
 ## Traps
 - "Reservation is a target to aim for" → Reservation is a minimum. Shares divide the rest.
 - "Set reservations high to be safe" → high reservations limit how many VMs can power on, and stop DRS migrations when they fully commit capacity.
+
+## Metadata
+```yaml
+id: vsphere/cluster-resource-management/configuration/resource-settings-guidance
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- ClusterComputeResource
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/foundations/resource-management
+- vsphere/cluster-resource-management/concepts/scalable-shares
+- vsphere/cluster-resource-management/concepts/drs-overview
+- vsphere/cluster-resource-management/concepts/dpm
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Virtual Infrastructure Management > General Resource Management (p. 65)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Page 65 unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- The source does not define a headroom percentage for memory virtualization overhead and migration overhead. Author to confirm whether the book gives one.
+status: draft
+```

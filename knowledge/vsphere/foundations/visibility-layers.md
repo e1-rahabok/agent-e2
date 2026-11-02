@@ -1,37 +1,3 @@
----
-id: vsphere/foundations/visibility-layers
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-- windows
-- linux
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/foundations/vm-vs-guest-os
-- vsphere/foundations/kernel-worlds
-- vsphere/foundations/overhead
-- foundations/thresholds
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility
-corrections:
-- '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/foundations/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
-review_notes: []
-status: draft
----
-
 # Visibility layers: Guest OS view vs VM view
 
 ## Definition
@@ -96,3 +62,38 @@ flowchart TB
 
 ## Reference
 - Detailed scientific treatment: Benjamin Serebrin and Daniel Hecht, https://link.springer.com/chapter/10.1007%2F978-3-642-29737-3_26
+
+## Metadata
+```yaml
+id: vsphere/foundations/visibility-layers
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+- windows
+- linux
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/foundations/vm-vs-guest-os
+- vsphere/foundations/kernel-worlds
+- vsphere/foundations/overhead
+- foundations/thresholds
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility
+corrections:
+- '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/foundations/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
+review_notes: []
+status: draft
+```

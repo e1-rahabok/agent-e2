@@ -1,34 +1,3 @@
----
-id: vsphere/cluster-resource-management/configuration/drs-migration-levels
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- cpu
-- memory
-- network
-pillar:
-- performance
-product:
-- vsphere
-object:
-- ClusterComputeResource
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/cluster-resource-management/concepts/drs-overview
-- vsphere/cluster-resource-management/concepts/scalable-shares
-- vsphere/cluster-resource-management/concepts/dpm
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 78-79. Migration levels, Cluster DRS Score causes and Predictive DRS unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Predictive DRS requires VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature applies to vSphere 9.0 and VCF Operations.
-status: draft
----
-
 # DRS migration threshold levels and Cluster DRS Score
 
 ## Migration threshold levels (since vSphere 7.0)
@@ -70,3 +39,35 @@ status: draft
 ## Traps
 - "A Cluster DRS Score of 85% and one of 95% differ in performance" → the source says the range matters, not the exact value. Scores above 80% indicate no performance impact.
 - "DRS Level 3 reacts to every spike" → Level 3 is tuned for mostly stable workloads. Bursty or dynamic workloads are served by Level 4 or 5.
+
+## Metadata
+```yaml
+id: vsphere/cluster-resource-management/configuration/drs-migration-levels
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- cpu
+- memory
+- network
+pillar:
+- performance
+product:
+- vsphere
+object:
+- ClusterComputeResource
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/cluster-resource-management/concepts/drs-overview
+- vsphere/cluster-resource-management/concepts/scalable-shares
+- vsphere/cluster-resource-management/concepts/dpm
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 78-79. Migration levels, Cluster DRS Score causes and Predictive DRS unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Predictive DRS requires VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature applies to vSphere 9.0 and VCF Operations.
+status: draft
+```

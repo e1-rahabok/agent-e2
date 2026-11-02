@@ -1,35 +1,3 @@
----
-id: vsphere/memory/configuration/host-level-swapping
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- memory
-- storage
-pillar:
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-- Datastore
-internal_derive: []
-related:
-- vsphere/memory/concepts/overcommit-techniques
-- vsphere/memory/concepts/memory-overhead
-- vsphere/memory/diagnosis/overcommit-indicators
-- vsphere/cluster-resource-management/configuration/resource-settings-guidance
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > Memory Swapping Optimizations (pp. 35-36)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 35-36 unchanged. Swap file location menu path unchanged (p. 36).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Swap file location menu path is unchanged in the 9.1 document (p. 36).
-status: draft
----
-
 # Host-level swapping and swap placement
 
 ## Bounded overcommit
@@ -79,3 +47,36 @@ status: draft
 - "Put the swap file on the fastest datastore" → the source ranks local SSD first, then remote SSD, then fastest available storage. Thin-provisioned storage is excluded.
 - "Local swap files speed up vMotion" → the source says they can reduce vMotion performance.
 - "Turning off page sharing or compression improves performance" → they reduce the need for host-level swapping, and should stay active.
+
+## Metadata
+```yaml
+id: vsphere/memory/configuration/host-level-swapping
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- memory
+- storage
+pillar:
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+- Datastore
+internal_derive: []
+related:
+- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/memory-overhead
+- vsphere/memory/diagnosis/overcommit-indicators
+- vsphere/cluster-resource-management/configuration/resource-settings-guidance
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Swapping Optimizations (pp. 35-36)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 35-36 unchanged. Swap file location menu path unchanged (p. 36).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Swap file location menu path is unchanged in the 9.1 document (p. 36).
+status: draft
+```

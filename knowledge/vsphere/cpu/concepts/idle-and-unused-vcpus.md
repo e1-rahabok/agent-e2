@@ -1,32 +1,3 @@
----
-id: vsphere/cpu/concepts/idle-and-unused-vcpus
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/virtualization-overhead
-- vsphere/cpu/concepts/virtual-numa
-- vsphere/foundations/vm-vs-guest-os
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations (pp. 27-28); Guest Operating System CPU Considerations (p. 57); Virtual NUMA (p. 57)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 27-28 and 57 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-status: draft
----
-
 # Unused and idle vCPUs
 
 ## Cost of extra vCPUs
@@ -81,3 +52,33 @@ status: draft
 ## Traps
 - "Idle vCPUs cost nothing" → idle vCPUs still cost timer interrupts (some guests), memory-view upkeep, and busy-wait loops (some guests).
 - "More vCPUs is always safer" → extra vCPUs add overhead and can degrade scheduling in the guest.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/idle-and-unused-vcpus
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/virtualization-overhead
+- vsphere/cpu/concepts/virtual-numa
+- vsphere/foundations/vm-vs-guest-os
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations (pp. 27-28); Guest Operating System CPU Considerations (p. 57); Virtual NUMA (p. 57)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 27-28 and 57 unchanged. Page references updated.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+status: draft
+```

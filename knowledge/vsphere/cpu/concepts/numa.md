@@ -1,35 +1,3 @@
----
-id: vsphere/cpu/concepts/numa
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-pillar:
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-- ClusterComputeResource
-internal_derive: []
-related:
-- vsphere/cpu/concepts/virtual-numa
-- vsphere/cpu/concepts/hyper-threading
-- vsphere/cpu/concepts/idle-and-unused-vcpus
-- vsphere/cpu/concepts/cpu-topology
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.
-status: draft
----
-
 # NUMA on ESXi
 
 ## Activation
@@ -70,3 +38,36 @@ status: draft
 
 ## Traps
 - "A VM with more vCPUs than cores per node is as fast as one that fits" → wide VMs can access remote memory and have higher average memory latency.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/numa
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+- ClusterComputeResource
+internal_derive: []
+related:
+- vsphere/cpu/concepts/virtual-numa
+- vsphere/cpu/concepts/hyper-threading
+- vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/concepts/cpu-topology
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.
+status: draft
+```

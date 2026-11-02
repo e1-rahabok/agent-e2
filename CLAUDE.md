@@ -41,7 +41,7 @@ Standing rules for this repository. Read at the start of every session.
 ## Facts and sources
 - Allowed fact sources: the author's book, the author's answers, official docs, Claude's own knowledge.
 - Record any fact not from the book in `review_notes`, naming the section, until the author confirms.
-- Audit information lives only in front matter. Never put markers such as author corrections or Claude-knowledge tags in headings or body text.
+- Audit information lives only in the metadata block. Never put markers such as author corrections or Claude-knowledge tags in headings or body text.
 - No invented thresholds. A threshold goes in only if the book, the author or an official source gives it. Quote the source.
 - Keep every `corrections` entry, naming the section it affects. Clear it only when the source document is updated.
 - `knowledge/raw-input/` is read-only.
@@ -53,7 +53,11 @@ Standing rules for this repository. Read at the start of every session.
 - Folder rules: technology first (cpu, memory, storage, network, system), then concepts / metrics / configuration / diagnosis. Tags and field meanings: see `README.md`.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
-- Every new knowledge file has YAML front matter (see `README.md`).
+- Every knowledge file ends with a `## Metadata` section holding one yaml block (see `README.md`). No front matter at the top.
+- Keep the author's own diagrams from the book in `knowledge/vsphere/<technology>/images/`, linked under the section they explain, with alt text.
+- Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
+- Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
+- When asking the author about the book, give a verbatim search string.
 - Use terms from `knowledge/vsphere/glossary/terminology.md`. Tag values must match it. A new term is added there as a proposal and flagged for the author before use.
 - When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
 

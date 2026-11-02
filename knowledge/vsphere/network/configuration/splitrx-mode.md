@@ -1,32 +1,3 @@
----
-id: vsphere/network/configuration/splitrx-mode
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- network
-- cpu
-pillar:
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/network/concepts/passthrough-and-offload
-- vsphere/network/configuration/rss-and-interrupt-coalescing
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Networking Considerations > SplitRx Mode (pp. 49-50)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 49-50 unchanged. The 10,000 packets per second condition is unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- The 10,000 packets per second condition is confirmed in the 9.1 document (p. 49).
-status: draft
----
-
 # SplitRx mode
 
 ## Definition
@@ -61,3 +32,33 @@ status: draft
 ## Traps
 - "SplitRx is always on for all traffic" → automatic activation requires the conditions above. The default host setting only allows it.
 - "SplitRx helps traffic that stays inside the host" → automatic activation does not apply to purely internal traffic. Manual activation is required for that.
+
+## Metadata
+```yaml
+id: vsphere/network/configuration/splitrx-mode
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- network
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/network/concepts/passthrough-and-offload
+- vsphere/network/configuration/rss-and-interrupt-coalescing
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Networking Considerations > SplitRx Mode (pp. 49-50)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 49-50 unchanged. The 10,000 packets per second condition is unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- The 10,000 packets per second condition is confirmed in the 9.1 document (p. 49).
+status: draft
+```

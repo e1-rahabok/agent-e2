@@ -1,39 +1,3 @@
----
-id: vsphere/cluster-resource-management/concepts/drs-overview
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-pillar:
-- performance
-- capacity
-- availability
-product:
-- vsphere
-object:
-- ClusterComputeResource
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cluster-resource-management/configuration/drs-migration-levels
-- vsphere/cluster-resource-management/concepts/scalable-shares
-- vsphere/cluster-resource-management/concepts/vcls
-- vsphere/cluster-resource-management/concepts/dpm
-- vsphere/cluster-resource-management/configuration/resource-settings-guidance
-- vsphere/foundations/resource-management
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 76-77. The vCLS dependency statement is not in the 9.1 DRS section. Virtual hardware version 22 constraint added (ESX 9.1 p. 26).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Broadcom KB 312147 (vCLS): https://knowledge.broadcom.com/external/article?articleNumber=312147. Overrides the 9.0 DRS-requires-vCLS statement for vCenter 9.0 and later. 9.1 status unverified.'
-status: draft
----
-
 # DRS overview
 
 ## Dependencies
@@ -98,3 +62,40 @@ status: draft
 - Do not connect VMs to host devices that prevent them from moving off the host.
 - DRS includes NetIOC bandwidth reservations in its calculations.
 - Leave unused and unreserved CPU capacity in the cluster for vMotion. ESX reserves some CPU resources for each vMotion operation.
+
+## Metadata
+```yaml
+id: vsphere/cluster-resource-management/concepts/drs-overview
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- performance
+- capacity
+- availability
+product:
+- vsphere
+object:
+- ClusterComputeResource
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cluster-resource-management/configuration/drs-migration-levels
+- vsphere/cluster-resource-management/concepts/scalable-shares
+- vsphere/cluster-resource-management/concepts/vcls
+- vsphere/cluster-resource-management/concepts/dpm
+- vsphere/cluster-resource-management/configuration/resource-settings-guidance
+- vsphere/foundations/resource-management
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 76-77. The vCLS dependency statement is not in the 9.1 DRS section. Virtual hardware version 22 constraint added (ESX 9.1 p. 26).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Broadcom KB 312147 (vCLS): https://knowledge.broadcom.com/external/article?articleNumber=312147. Overrides the 9.0 DRS-requires-vCLS statement for vCenter 9.0 and later. 9.1 status unverified.'
+status: draft
+```

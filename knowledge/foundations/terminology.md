@@ -1,28 +1,3 @@
----
-id: foundations/terminology
-retriever_guide: how-it-works
-scope: vendor-neutral
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- capacity
-- performance
-product: []
-internal_derive: []
-related:
-- foundations/naming-patterns
-- vsphere/foundations/resource-management
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
-corrections: []
-review_notes: []
-status: draft
----
-
 # Terminology
 
 Precise definitions used across this knowledge base.
@@ -54,3 +29,29 @@ reservation is guaranteed; utilization may be < reservation
 - Usage: amount used out of a known total.
 - Utilization: fraction of usage out of its limit.
 - vSphere does not follow this convention. See `foundations/naming-patterns`.
+
+## Metadata
+```yaml
+id: foundations/terminology
+retriever_guide: how-it-works
+scope: vendor-neutral
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- capacity
+- performance
+product: []
+internal_derive: []
+related:
+- foundations/naming-patterns
+- vsphere/foundations/resource-management
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
+corrections: []
+review_notes: []
+status: draft
+```

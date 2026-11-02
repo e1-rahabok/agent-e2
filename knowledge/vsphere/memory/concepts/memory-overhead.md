@@ -1,32 +1,3 @@
----
-id: vsphere/memory/concepts/memory-overhead
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- memory
-pillar:
-- capacity
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/foundations/overhead
-- vsphere/memory/configuration/host-level-swapping
-- vsphere/memory/configuration/memory-sizing
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source links the per-VM overhead section to vSphere Resource Management for overhead details. Not read.
-status: draft
----
-
 # Memory overhead
 
 ## Definition
@@ -79,3 +50,33 @@ esxcli sched swap system set -d true -n <datastore name>
 - "Overhead is counted inside the configured memory of the VM" → the per-VM overhead is reserved in addition to the configured memory.
 - "The VMX swap file is a regular swap file" → it is unrelated to host-level swapping and swap to host cache.
 - "The system swap file is the same as a VM swap file" → it is a separate 1 GB file for the VMkernel and host agents.
+
+## Metadata
+```yaml
+id: vsphere/memory/concepts/memory-overhead
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- memory
+pillar:
+- capacity
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/foundations/overhead
+- vsphere/memory/configuration/host-level-swapping
+- vsphere/memory/configuration/memory-sizing
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source links the per-VM overhead section to vSphere Resource Management for overhead details. Not read.
+status: draft
+```

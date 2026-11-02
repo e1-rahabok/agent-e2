@@ -1,4 +1,11 @@
----
+# VM Memory Swapped
+
+## Meaning
+- Memory of the VM swapped out at host level.
+- The ESXi equivalent is called Swap Used. Different names for different vantage points.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/virtual-machine/swapped
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,10 +31,4 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 status: draft
----
-
-# VM Memory Swapped
-
-## Meaning
-- Memory of the VM swapped out at host level.
-- The ESXi equivalent is called Swap Used. Different names for different vantage points.
+```

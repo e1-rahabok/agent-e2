@@ -1,33 +1,3 @@
----
-id: vsphere/cpu/configuration/numa-settings
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- cpu
-- memory
-pillar:
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-- ClusterComputeResource
-internal_derive: []
-related:
-- vsphere/cpu/concepts/numa
-- vsphere/cpu/concepts/virtual-numa
-- vsphere/system/configuration/bios-settings
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.
-status: draft
----
 # NUMA settings
 
 ## Controls
@@ -82,3 +52,35 @@ status: draft
 
 ## Traps
 - "NUMA settings are always better tuned manually" → the source says the default ESX NUMA scheduling is intelligent and adaptive. Manual controls are for specific cases.
+
+## Metadata
+```yaml
+id: vsphere/cpu/configuration/numa-settings
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+- ClusterComputeResource
+internal_derive: []
+related:
+- vsphere/cpu/concepts/numa
+- vsphere/cpu/concepts/virtual-numa
+- vsphere/system/configuration/bios-settings
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.
+status: draft
+```

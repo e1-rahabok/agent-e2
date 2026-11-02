@@ -1,33 +1,3 @@
----
-id: vsphere/memory/concepts/large-memory-pages
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- memory
-- cpu
-pillar:
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/memory/concepts/page-sharing
-- vsphere/memory/concepts/memory-overhead
-- vsphere/cpu/concepts/hardware-assisted-virtualization
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 37-38); Guest Operating System Memory Considerations (p. 59)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 37-38 unchanged. Guest page reference now p. 59.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source uses 'large pages' only for 2 MB pages. It says 1 GB pages exist on some CPUs but are out of its scope.
-status: draft
----
-
 # Large memory pages (2 MB)
 
 ## Definition
@@ -56,3 +26,34 @@ status: draft
 ## Traps
 - "Large pages in ESX are enough" → the guest OS and applications must use large pages for the full benefit.
 - "Large pages make page sharing more effective" → ESX does not share large pages.
+
+## Metadata
+```yaml
+id: vsphere/memory/concepts/large-memory-pages
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- memory
+- cpu
+pillar:
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/memory/concepts/page-sharing
+- vsphere/memory/concepts/memory-overhead
+- vsphere/cpu/concepts/hardware-assisted-virtualization
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 37-38); Guest Operating System Memory Considerations (p. 59)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 37-38 unchanged. Guest page reference now p. 59.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source uses 'large pages' only for 2 MB pages. It says 1 GB pages exist on some CPUs but are out of its scope.
+status: draft
+```

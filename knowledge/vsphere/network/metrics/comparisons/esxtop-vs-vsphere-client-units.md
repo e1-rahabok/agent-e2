@@ -1,4 +1,14 @@
----
+# Network units: esxtop vs vSphere Client
+
+## Meaning
+- esxtop shows network counters in megabits.
+- vSphere Client shows network counters in kilobytes.
+
+## Traps
+- Comparing values from the two tools without converting bits to bytes and mega to kilo.
+
+## Metadata
+```yaml
 id: vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,13 +34,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# Network units: esxtop vs vSphere Client
-
-## Meaning
-- esxtop shows network counters in megabits.
-- vSphere Client shows network counters in kilobytes.
-
-## Traps
-- Comparing values from the two tools without converting bits to bytes and mega to kilo.
+```

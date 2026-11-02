@@ -35,7 +35,8 @@ docs/                                # design decisions, To Do, legacy files (no
 - Index: `knowledge/**/*.md`.
 - Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, this README, `CLAUDE.md`.
   - `evaluation/` holds answer keys. Indexing it invalidates the evaluation.
-- Parse YAML front matter as metadata, not as text to embed.
+- Metadata is the last section of each file: `## Metadata` followed by one yaml block. Parse it as metadata, not as text to embed.
+- Images live in `knowledge/vsphere/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
 - When a file is retrieved, also consider retrieving the ids in `related`, `internal_derive`, `same_name` and `same_meaning`.
 
 ## retriever_guide: which question a file answers
@@ -47,7 +48,7 @@ docs/                                # design decisions, To Do, legacy files (no
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
 | what-to-check | Something is wrong. What do I check, in what order? | `diagnosis/` | `diagnosis.md` |
 
-## Front matter
+## Metadata (end of file)
 | Field | Meaning |
 |---|---|
 | `id` | Path without `knowledge/` and `.md`. |
@@ -68,7 +69,7 @@ docs/                                # design decisions, To Do, legacy files (no
 | `review_notes` | Open questions, source URLs, and facts from Claude's own knowledge (with section names). |
 | `status` | draft (AI-extracted, not reviewed) or reviewed (author approved). |
 
-- Audit information (corrections, Claude's own knowledge, review state) lives only in front matter. Body text and headings carry no audit markers.
+- Audit information (corrections, Claude's own knowledge, review state) lives only in the metadata block. Body text and headings carry no audit markers.
 
 ## Writing rules
 - One fact per bullet or table row. A mistake should sit on one line.
@@ -78,6 +79,11 @@ docs/                                # design decisions, To Do, legacy files (no
 - One vSphere object type per metric file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
+
+## Images
+- Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains.
+- Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
+- Third-party images (vendor diagrams, documentation screenshots) are not copied. Link the source in `review_notes`.
 
 ## QA workflow
 1. AI extracts a section into files with `status: draft`.

@@ -25,24 +25,18 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Chapter 2 Architecture questions for the author (details in each file's `review_notes`):
-  - Impacts on ESXi table shows ESXi Usage (%) at 120% and 150%. Conflicts with the 100% cap correction in `host/usage`.
-  - Same table: meaning of the "My Recommendation" column (values = Core Utilization × 0.8), and Core Utilization 125%.
-  - Fair Share Scheduler: "Used increases run time on a shared core" vs the CPU Efficiency example (Used 62.5% < Run 100%).
-  - ESXi ≠ VM + Kernel: "a thread is consumer" read as provider.
-  - State of a VM vCPU: Co-stop listed as a sub-case of IO wait.
-  - Power states: C/P combination table (P-states off = no Turbo) vs "highest available frequency" vs Turbo at 129% under static high performance.
-  - Typos assumed: remote L3 "80 ms" = 80 ns; "812 GHz" = 812 MHz (image confirms); "CPCC" = CPPC.
-  - Linux Steal applies to VMs only ("I think"), and Idle "correlates with run queue".
-  - "14 grades" of P-states: processor-specific?
-  - "Run – Overlap – VMX – System": formula or list?
+- [ ] Chapter 2 Architecture: open questions for the author, with verbatim search strings:
+  - Co-stop as an IO sub-case. Search: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)". Co-stop is also listed under "Being used".
+  - Use P States off vs Turbo. Search 1: "When deactivated, the ESX configures to use the highest available frequency". Search 2: "Rigid Base / Sleep Only". Search 3: "Turbo can still kick in despite the BIOS setting". Question: with P-states off, is the frequency pinned at base (no Turbo), or the highest available (Turbo)?
+  - Use C States and frequency. Search: "Frequency will go lower than base clock speed". C-states are idle states; how do they lower frequency?
+- [ ] Later: add the author's "My Recommendation" column (single-counter recommendation) from the Impacts on ESXi table to `cpu/concepts/cpu-frequency`.
 
 ## Book extraction
 - [x] Metrics Nuances (Chapter 1): re-extracted.
-- [x] Chapter 2 (CPU) > Architecture (pp. 52-78): extracted 2026-11-02 from the pre-correction `.docx` on main.
+- [x] Chapter 2 (CPU) > Architecture (pp. 52-78): extracted 2026-11-02.
   - New: `cpu/concepts/` guest-os-vs-vm-cpu, cpu-measurement-levels, cpu-topology, vcpu-states, run-time-vs-run-quality, cpu-efficiency, cpu-frequency, power-states, frequency-and-ht-impact-on-vm.
   - Updated: VM run, ready, wait, used, usage, latency; host core-utilization, utilization.
-- [ ] Chapter 2 (CPU) > Architecture: re-check all files above when the corrected `.docx` is uploaded.
+- [ ] Re-check extracted chapters when the author uploads the corrected `.docx` (author uploads when enough corrections accumulate).
 - [ ] Chapter 2 (CPU) > VM and later sections: not started.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Memory, Storage, Network chapters: waiting for upload.

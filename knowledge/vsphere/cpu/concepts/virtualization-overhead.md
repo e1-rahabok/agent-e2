@@ -1,35 +1,3 @@
----
-id: vsphere/cpu/concepts/virtualization-overhead
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-- ClusterComputeResource
-internal_derive: []
-related:
-- vsphere/cpu/concepts/idle-and-unused-vcpus
-- vsphere/cpu/concepts/numa
-- vsphere/foundations/overhead
-- vsphere/foundations/visibility-layers
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: ESX CPU Considerations (pp. 27-28)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 27-28 unchanged. Page references updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states 'sustained values above ~80-85%' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Author to decide whether to replace the old threshold.
-status: draft
----
-
 # CPU virtualization overhead
 
 ## Definition
@@ -68,3 +36,36 @@ status: draft
 ## Traps
 - "Overcommit is never safe" → overcommit is allowed in most environments. The risk is saturation, which happens when VMs use their full allocations at the same time.
 - "Host average CPU looks fine, so there is no saturation risk" → saturation risk depends on how many VMs can use their full allocation at once, not only on the average.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/virtualization-overhead
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+- ClusterComputeResource
+internal_derive: []
+related:
+- vsphere/cpu/concepts/idle-and-unused-vcpus
+- vsphere/cpu/concepts/numa
+- vsphere/foundations/overhead
+- vsphere/foundations/visibility-layers
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: ESX CPU Considerations (pp. 27-28)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 27-28 unchanged. Page references updated.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states 'sustained values above ~80-85%' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Author to decide whether to replace the old threshold.
+status: draft
+```

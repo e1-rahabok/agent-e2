@@ -1,31 +1,3 @@
----
-id: vsphere/cpu/concepts/virtual-numa
-retriever_guide: how-it-works
-scope: vsphere
-technology:
-- cpu
-- memory
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-internal_derive: []
-related:
-- vsphere/cpu/concepts/numa
-- vsphere/cpu/concepts/idle-and-unused-vcpus
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source refers to KB 81383 and the 'Virtual Machine vCPU and vNUMA Rightsizing' blog, and to the Virtual Machine Compute Optimizer tool. Not read.
-status: draft
----
-
 # Virtual NUMA (vNUMA)
 
 ## Definition
@@ -73,3 +45,32 @@ status: draft
 ## Traps
 - "corespersocket sets the NUMA layout" → from vSphere 6.5 it does not. It sets the guest socket presentation.
 - "vNUMA is on for every VM" → by default it is on only for VMs with more than 8 vCPUs.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/virtual-numa
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+internal_derive: []
+related:
+- vsphere/cpu/concepts/numa
+- vsphere/cpu/concepts/idle-and-unused-vcpus
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- Source refers to KB 81383 and the 'Virtual Machine vCPU and vNUMA Rightsizing' blog, and to the Virtual Machine Compute Optimizer tool. Not read.
+status: draft
+```

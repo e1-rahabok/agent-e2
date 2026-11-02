@@ -1,4 +1,19 @@
----
+# <Setting or practice>
+
+## What to set
+- Setting, value, scope (host, VM, cluster).
+
+## Why
+- Mechanism and trade-off.
+
+## When not to
+- Conditions where the setting hurts.
+
+## Traps
+- Wrong conclusion → correct conclusion.
+
+## Metadata
+```yaml
 id: vsphere/<technology>/configuration/<slug>
 retriever_guide: what-to-set
 scope: vsphere
@@ -14,18 +29,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# <Setting or practice>
-
-## What to set
-- Setting, value, scope (host, VM, cluster).
-
-## Why
-- Mechanism and trade-off.
-
-## When not to
-- Conditions where the setting hurts.
-
-## Traps
-- Wrong conclusion → correct conclusion.
+```

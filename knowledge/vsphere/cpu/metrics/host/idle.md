@@ -1,4 +1,16 @@
----
+# ESXi CPU Idle (ms)
+
+## Meaning
+- Includes low activities, not only true idle.
+- Considers CPU frequency, not simply whether the CPU is running.
+
+## Rollup with Hyper-Threading
+- vCenter measures every 20,000 ms.
+- With Hyper-Threading enabled, the maximum value for a completely idle thread is 10,000 ms.
+- Why: 20,000 ms is set at core level. A core has 2 threads, each allocated 10,000 ms.
+
+## Metadata
+```yaml
 id: vsphere/cpu/metrics/host/idle
 retriever_guide: metric-meaning
 scope: vsphere
@@ -23,15 +35,4 @@ corrections: []
 review_notes:
 - metric_class set to context. Author to confirm.
 status: draft
----
-
-# ESXi CPU Idle (ms)
-
-## Meaning
-- Includes low activities, not only true idle.
-- Considers CPU frequency, not simply whether the CPU is running.
-
-## Rollup with Hyper-Threading
-- vCenter measures every 20,000 ms.
-- With Hyper-Threading enabled, the maximum value for a completely idle thread is 10,000 ms.
-- Why: 20,000 ms is set at core level. A core has 2 threads, each allocated 10,000 ms.
+```

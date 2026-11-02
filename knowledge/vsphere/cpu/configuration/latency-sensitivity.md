@@ -1,40 +1,3 @@
----
-id: vsphere/cpu/configuration/latency-sensitivity
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- cpu
-- memory
-- network
-pillar:
-- performance
-product:
-- vsphere
-object:
-- VirtualMachine
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/hyper-threading
-- vsphere/cpu/configuration/host-power-management
-- vsphere/system/configuration/bios-settings
-- vsphere/cluster-resource-management/configuration/resource-settings-guidance
-- vsphere/network/concepts/passthrough-and-offload
-- vsphere/network/configuration/rss-and-interrupt-coalescing
-- vsphere/cpu/concepts/cpu-efficiency
-- vsphere/cpu/concepts/power-states
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 52-54 read. EDP Dedicated mode named in NFV guidance (p. 54). Power policy wording still inconsistent (p. 53 vs p. 31).
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Inconsistent source naming, still present in 9.1: p. 53 says ''Set the ESX host power policy to Maximum performance''. The power policy list on p. 31 names ''High Performance''. Likely the same policy. Author to confirm.'
-- Source names the white paper 'Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs' and calls it dated. Not read.
-status: draft
----
-
 # Latency sensitivity
 
 ## Default trade-off
@@ -113,3 +76,41 @@ status: draft
 - "High latency sensitivity is free" → it removes the physical cores from the pool for other VMs and VMkernel worlds.
 - "High with Hyperthreading gives more performance for any VM" → the source says it is not a general-purpose setting, and can reduce performance for most workloads.
 - "A 100% CPU reservation guarantees exclusive cores" → not if no NUMA node has enough non-exclusive cores when the VM powers on.
+
+## Metadata
+```yaml
+id: vsphere/cpu/configuration/latency-sensitivity
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- cpu
+- memory
+- network
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VirtualMachine
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/hyper-threading
+- vsphere/cpu/configuration/host-power-management
+- vsphere/system/configuration/bios-settings
+- vsphere/cluster-resource-management/configuration/resource-settings-guidance
+- vsphere/network/concepts/passthrough-and-offload
+- vsphere/network/configuration/rss-and-interrupt-coalescing
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/power-states
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Pages 52-54 read. EDP Dedicated mode named in NFV guidance (p. 54). Power policy wording still inconsistent (p. 53 vs p. 31).
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Inconsistent source naming, still present in 9.1: p. 53 says ''Set the ESX host power policy to Maximum performance''. The power policy list on p. 31 names ''High Performance''. Likely the same policy. Author to confirm.'
+- Source names the white paper 'Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs' and calls it dated. Not read.
+status: draft
+```

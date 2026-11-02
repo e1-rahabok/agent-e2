@@ -1,21 +1,3 @@
----
-id: vsphere/<technology>/concepts/<slug>     # path without knowledge/ and .md
-retriever_guide: how-it-works                # see README: how-it-works | metric-meaning | term-meaning | what-to-set | what-to-check
-scope: vsphere                               # vendor-neutral | vsphere
-technology: [cpu]                            # cpu | memory | storage | network | system
-pillar: [performance]                        # availability | performance | security | capacity | value
-product: [vsphere]                           # vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
-object: [VirtualMachine, HostSystem]         # vSphere managed object types; omit if none
-internal_derive: []                          # ids of other knowledge-base files this file is derived from (internal links only)
-related: []                                  # ids to retrieve together
-source:
-  document: <document name, version, revision>
-  path: <heading path and pages>
-corrections: []                              # author facts not yet in the uploaded source; name the section
-review_notes: []                             # open questions, source URLs, Claude-knowledge facts with section names
-status: draft                                # draft | reviewed
----
-
 # <Concept name>
 
 ## Definition
@@ -31,3 +13,22 @@ status: draft                                # draft | reviewed
 
 ## Traps
 - Wrong conclusion → correct conclusion, with the reason.
+
+## Metadata
+```yaml
+id: vsphere/<technology>/concepts/<slug>     # path without knowledge/ and .md
+retriever_guide: how-it-works                # see README: how-it-works | metric-meaning | term-meaning | what-to-set | what-to-check
+scope: vsphere                               # vendor-neutral | vsphere
+technology: [cpu]                            # cpu | memory | storage | network | system
+pillar: [performance]                        # availability | performance | security | capacity | value
+product: [vsphere]                           # vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
+object: [VirtualMachine, HostSystem]         # vSphere managed object types; omit if none
+internal_derive: []                          # ids of other knowledge-base files this file is derived from (internal links only)
+related: []                                  # ids to retrieve together
+source:
+  document: <document name, version, revision>
+  path: <heading path and pages>
+corrections: []                              # author facts not yet in the uploaded source; name the section
+review_notes: []                             # open questions, source URLs, Claude-knowledge facts with section names
+status: draft                                # draft | reviewed
+```

@@ -1,4 +1,11 @@
----
+# VM Memory Latency
+
+## Meaning
+- Indicates a performance problem. A primary counter for how well the VM is served.
+- Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/cpu/metrics/virtual-machine/latency`.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/virtual-machine/latency
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,10 +31,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# VM Memory Latency
-
-## Meaning
-- Indicates a performance problem. A primary counter for how well the VM is served.
-- Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/cpu/metrics/virtual-machine/latency`.
+```

@@ -1,4 +1,15 @@
----
+# VM Memory Ballooned
+
+## Meaning
+- Past tense. A non-zero value does not mean ballooning is happening now.
+- Ballooning may have happened days ago. The page stays ballooned while idle, because the Guest OS has not asked for it.
+- Some ballooning is normal. See `vsphere/memory/diagnosis/overcommit-indicators`.
+
+## Traps
+- "Ballooned > 0, so the host is under memory pressure now" → not necessarily.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/virtual-machine/ballooned
 retriever_guide: metric-meaning
 scope: vsphere
@@ -25,14 +36,4 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 status: draft
----
-
-# VM Memory Ballooned
-
-## Meaning
-- Past tense. A non-zero value does not mean ballooning is happening now.
-- Ballooning may have happened days ago. The page stays ballooned while idle, because the Guest OS has not asked for it.
-- Some ballooning is normal. See `vsphere/memory/diagnosis/overcommit-indicators`.
-
-## Traps
-- "Ballooned > 0, so the host is under memory pressure now" → not necessarily.
+```

@@ -1,31 +1,3 @@
----
-id: foundations/resource-nature
-retriever_guide: how-it-works
-scope: vendor-neutral
-technology:
-- cpu
-- memory
-- storage
-- network
-pillar:
-- performance
-- capacity
-product: []
-internal_derive: []
-related:
-- foundations/measurement-precision
-- vsphere/foundations/resource-management
-- vsphere/memory/metrics/virtual-machine/usage
-- vsphere/storage/metrics/virtual-machine/virtual-disk
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
-corrections:
-- '2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A.'
-review_notes: []
-status: draft
----
-
 # Nature of the four infrastructure resources
 
 ## Definition
@@ -78,3 +50,32 @@ status: draft
 - Applying one threshold philosophy to all four resources → wrong. The same % means different things per resource.
 - Comparing GHz across CPU generations or models → wrong. Work per GHz differs.
 - Expecting a "memory demand" metric like CPU demand → wrong. Memory is space, not time.
+
+## Metadata
+```yaml
+id: foundations/resource-nature
+retriever_guide: how-it-works
+scope: vendor-neutral
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product: []
+internal_derive: []
+related:
+- foundations/measurement-precision
+- vsphere/foundations/resource-management
+- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/storage/metrics/virtual-machine/virtual-disk
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
+corrections:
+- '2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A.'
+review_notes: []
+status: draft
+```

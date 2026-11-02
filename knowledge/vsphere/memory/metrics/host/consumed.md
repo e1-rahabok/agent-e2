@@ -1,4 +1,13 @@
----
+# ESXi Memory Consumed
+
+## Meaning
+- Includes memory consumed by ESXi itself.
+
+## Traps
+- Summing VM Consumed and expecting ESXi Consumed.
+
+## Metadata
+```yaml
 id: vsphere/memory/metrics/host/consumed
 retriever_guide: metric-meaning
 scope: vsphere
@@ -24,12 +33,4 @@ source:
 corrections: []
 review_notes: []
 status: draft
----
-
-# ESXi Memory Consumed
-
-## Meaning
-- Includes memory consumed by ESXi itself.
-
-## Traps
-- Summing VM Consumed and expecting ESXi Consumed.
+```

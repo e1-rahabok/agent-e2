@@ -1,32 +1,3 @@
----
-id: vsphere/cpu/configuration/host-wide-dense-mode
-retriever_guide: what-to-set
-scope: vsphere
-technology:
-- cpu
-- network
-pillar:
-- capacity
-- performance
-product:
-- vsphere
-object:
-- HostSystem
-internal_derive: []
-related:
-- vsphere/cpu/concepts/virtualization-overhead
-- vsphere/network/configuration/rss-and-interrupt-coalescing
-source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Host-Wide Performance Tuning (p. 54)
-corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Page 54 unchanged. Page reference updated.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- The source gives the dense mode thresholds in one line. The exact comparison of CPU utilization (50%) is as written in the source.
-status: draft
----
-
 # Host-wide performance tuning (dense mode)
 
 ## Purpose
@@ -69,3 +40,33 @@ status: draft
 ## Traps
 - "Dense mode is always beneficial" → the source warns about higher individual latency, and lower system-wide throughput at low CPU utilization.
 - "Setting dense mode activates the optimizations" → the optimizations run only when the host meets the thresholds.
+
+## Metadata
+```yaml
+id: vsphere/cpu/configuration/host-wide-dense-mode
+retriever_guide: what-to-set
+scope: vsphere
+technology:
+- cpu
+- network
+pillar:
+- capacity
+- performance
+product:
+- vsphere
+object:
+- HostSystem
+internal_derive: []
+related:
+- vsphere/cpu/concepts/virtualization-overhead
+- vsphere/network/configuration/rss-and-interrupt-coalescing
+source:
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Host-Wide Performance Tuning (p. 54)
+corrections: []
+review_notes:
+- Checked against 9.1 (revision 20260624). Page 54 unchanged. Page reference updated.
+- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- The source gives the dense mode thresholds in one line. The exact comparison of CPU utilization (50%) is as written in the source.
+status: draft
+```

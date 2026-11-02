@@ -1,38 +1,3 @@
----
-id: vsphere/cpu/metrics/virtual-machine/run
-retriever_guide: metric-meaning
-scope: vsphere
-technology:
-- cpu
-pillar:
-- performance
-- capacity
-product:
-- vsphere
-object:
-- VirtualMachine
-metric_class: consumption
-internal_derive:
-- vsphere/foundations/provider-consumer
-- vsphere/cpu/concepts/vcpu-states
-- vsphere/cpu/concepts/run-time-vs-run-quality
-same_name: []
-same_meaning:
-- vsphere/cpu/metrics/host/utilization
-related:
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/cpu/concepts/cpu-efficiency
-- vsphere/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency
-corrections: []
-review_notes:
-- Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 traps: from CPU > Architecture in the pre-correction book file (uploaded 2026-11-02). Re-check when the corrected file is uploaded.
-status: draft
----
-
 # VM CPU Run
 
 ## Meaning
@@ -63,3 +28,39 @@ status: draft
 ## Traps
 - "Run 100% means full performance" → Run is time. Throughput depends on frequency and Hyper-Threading.
 - "Compare Run (ms) across VMs" → ms scales with vCPU count. Use %.
+
+## Metadata
+```yaml
+id: vsphere/cpu/metrics/virtual-machine/run
+retriever_guide: metric-meaning
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+object:
+- VirtualMachine
+metric_class: consumption
+internal_derive:
+- vsphere/foundations/provider-consumer
+- vsphere/cpu/concepts/vcpu-states
+- vsphere/cpu/concepts/run-time-vs-run-quality
+same_name: []
+same_meaning:
+- vsphere/cpu/metrics/host/utilization
+related:
+- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+source:
+  document: PART 3 - Counters.docx
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency
+corrections: []
+review_notes:
+- Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 traps: from CPU > Architecture.
+status: draft
+```

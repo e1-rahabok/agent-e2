@@ -1,4 +1,29 @@
----
+# VM CPU Latency
+
+## Meaning
+- Does not always indicate a performance problem.
+- Affected by CPU frequency, which goes up or down.
+- At lower frequency the VM runs slower but is not waiting to be served. Equivalent to running on an older CPU.
+
+## Contrast with other Latency metrics
+- Memory Latency and Disk Latency do indicate a performance problem. They are primary counters for how well the VM is served.
+
+## Contrast with Linux Steal Time
+- Linux Steal Time includes only CPU Ready.
+- VM CPU Latency includes many factors, including CPU frequency.
+- Pattern: same purpose, different formula.
+
+## Hyper-Threading
+- Ready, Co-stop and Wait do not register Hyper-Threading contention. Contention for shared core resources happens in hardware, not in the scheduler.
+- CPU Latency is the counter for throughput lost when the sibling thread runs.
+- Hyper-Threading changes CPU Latency by 0% to 37.5%.
+
+## Traps
+- "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See `vsphere/foundations/visibility-layers`, area D.
+- "Steal Time inside Linux equals VM CPU Latency" → different formulas.
+
+## Metadata
+```yaml
 id: vsphere/cpu/metrics/virtual-machine/latency
 retriever_guide: metric-meaning
 scope: vsphere
@@ -27,30 +52,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Architecture intro; State of a VM vCPU
 corrections: []
 review_notes:
-- Sections Hyper-Threading: from CPU > Architecture in the pre-correction book file (uploaded 2026-11-02). Re-check when the corrected file is uploaded.
+- Sections Hyper-Threading: from CPU > Architecture.
 status: draft
----
-
-# VM CPU Latency
-
-## Meaning
-- Does not always indicate a performance problem.
-- Affected by CPU frequency, which goes up or down.
-- At lower frequency the VM runs slower but is not waiting to be served. Equivalent to running on an older CPU.
-
-## Contrast with other Latency metrics
-- Memory Latency and Disk Latency do indicate a performance problem. They are primary counters for how well the VM is served.
-
-## Contrast with Linux Steal Time
-- Linux Steal Time includes only CPU Ready.
-- VM CPU Latency includes many factors, including CPU frequency.
-- Pattern: same purpose, different formula.
-
-## Hyper-Threading
-- Ready, Co-stop and Wait do not register Hyper-Threading contention. Contention for shared core resources happens in hardware, not in the scheduler.
-- CPU Latency is the counter for throughput lost when the sibling thread runs.
-- Hyper-Threading changes CPU Latency by 0% to 37.5%.
-
-## Traps
-- "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See `vsphere/foundations/visibility-layers`, area D.
-- "Steal Time inside Linux equals VM CPU Latency" → different formulas.
+```

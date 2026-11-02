@@ -1,4 +1,27 @@
----
+# ESXi CPU Usage
+
+## Hyper-Threading
+- When both threads of a core run, ESXi sees the core as fully busy.
+
+| ESXi metric (core level) | Value |
+|---|---|
+| Usage (%) | 100% |
+| Usage (MHz) | Reflects the Hyper-Threading benefit |
+| Core Utilization | 100% |
+| Thread Utilization | 100% |
+
+## Cap
+- ESXi CPU Usage is artificially capped at 100%. Usage (MHz) does not exceed total capacity.
+- Cause: an accounting decision error in ESXi. Known issue, documented in an official VMware KB.
+
+## Same metric, two names
+- vCenter shows the same ESXi CPU utilization as Consumed (%) and as Usage (%).
+
+## Traps
+- "ESXi CPU Usage = 100% means maximum possible work" → the value is capped, not measured beyond 100%.
+
+## Metadata
+```yaml
 id: vsphere/cpu/metrics/host/usage
 retriever_guide: metric-meaning
 scope: vsphere
@@ -30,26 +53,4 @@ corrections:
 review_notes:
 - KB article number for the 100% cap not yet provided.
 status: draft
----
-
-# ESXi CPU Usage
-
-## Hyper-Threading
-- When both threads of a core run, ESXi sees the core as fully busy.
-
-| ESXi metric (core level) | Value |
-|---|---|
-| Usage (%) | 100% |
-| Usage (MHz) | Reflects the Hyper-Threading benefit |
-| Core Utilization | 100% |
-| Thread Utilization | 100% |
-
-## Cap
-- ESXi CPU Usage is artificially capped at 100%. Usage (MHz) does not exceed total capacity.
-- Cause: an accounting decision error in ESXi. Known issue, documented in an official VMware KB.
-
-## Same metric, two names
-- vCenter shows the same ESXi CPU utilization as Consumed (%) and as Usage (%).
-
-## Traps
-- "ESXi CPU Usage = 100% means maximum possible work" → the value is capped, not measured beyond 100%.
+```
