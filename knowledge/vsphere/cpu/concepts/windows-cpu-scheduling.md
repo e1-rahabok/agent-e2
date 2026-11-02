@@ -1,0 +1,89 @@
+# Windows CPU scheduling and thread states
+
+## Tools
+- Performance Monitor (oldest), Task Manager, Resource Monitor. Names and possibly formulas differ.
+- Guest OS observability per thread or process is minimal: no per-process CPU queue, page faults, dropped packets or disk latency.
+- Sysinternals tools show utilization only, no contention.
+- PerfMon puts Processor Queue Length and Context Switches under System (system-wide), not Processor.
+
+## Objects
+- An application has 1 or more processes; a process has 1 or more threads. Threads are scheduled on processors.
+
+## Thread states (Windows Internals, 7th edition)
+![Windows thread states](../images/windows-thread-states.png)
+| State | Group | Meaning |
+|---|---|---|
+| Ready | CPU issue | Waiting for a processor; all are busy. Includes threads waiting to be in-swapped after a wait, and preempted threads (put at the front of the queue). Should be near 0. Many high-priority threads bumping low-priority ones keep it high. |
+| Standby | CPU issue | Selected as next on a processor. At most one per processor. A higher-priority thread (often an IO interrupt) can still take the CPU. |
+| Deferred Ready | CPU issue | Assigned to a processor but not started. Kept in a general list to minimize per-processor lock time. Shown as Unknown in PerfMon and WMI. |
+| Waiting | Non-CPU | Natural for most threads (for example 2,950 of 3,000). Voluntary synchronization, OS waits (paging IO), or subsystem suspension. Points to disk or network. |
+| Transition | Non-CPU | Waiting because its kernel stack was paged out. Page faults rise. A memory problem: add memory. |
+| Initialized | Other | Being created. Near 0; high values: excessive thread spawning or slow creation. |
+| Terminated | Other | Finished. Not a problem when planned. |
+| Running | Other | Productive. Should approximate infrastructure sizing (OS, Tools, agents) plus application sizing. |
+- Tools count threads per state at one instant. Collecting thousands of threads takes about 100 ms, during which Standby slots change hundreds of times. Counts can exceed the number of processors.
+
+## Priority
+- Windows prioritizes foreground work: 6 priority levels. ESXi has no priority concept: it uses a fair-share scheduler with no foreground.
+- A process often in the queue may have low relative priority. Give agents low priority and limited CPU.
+
+## Usage, utilization, time
+| Tool | Name |
+|---|---|
+| Performance Monitor | Processor Time |
+| Task Manager | CPU Utilization |
+| Resource Monitor | CPU Usage |
+- They do not measure the same thing.
+- Windows CPU Usage ignores hypervisor Hyper-Threading. Windows at 100% on a shared core: VM CPU Usage 62.5%, VM CPU Demand 100%.
+- Windows 8 and later report CPU usage above 100% when frequency exceeds nominal. Maximum Frequency shows speed relative to nominal. Example: 134% speed; 69% speed at low load (8% usage means 8% productive cycles).
+- How Windows fills frozen time (Ready, Co-stop, Overlap, Other Wait) is unknown to the author.
+![Windows CPU usage above 100% with Turbo](../images/windows-cpu-usage-above-100.png)
+
+| Metric | Frequency scaling | Hyper-Threading | VM contention |
+|---|---|---|---|
+| Guest CPU Usage | Yes | No | No |
+| VM CPU Run | No | Yes (book) | No |
+| VM CPU Usage | Yes | Yes | No |
+| VM CPU Demand | Yes | No | Yes |
+- Slowness with low utilization: check whether the CPU runs in a lower power state. Matters for frequency-sensitive applications.
+- C1 + C2 + C3 time below 100% is time in C0. The idle loop typically runs in C3: Idle Time and C3 Time track each other.
+
+## OS vs process
+- OS-level CPU can look healthy while one process hangs. Example: Word hung (100% on one CPU) while Windows showed 57% overall and Word 18.9%. The author's guess: OS-level counters include Turbo, process counters do not.
+- Monitor process state for hangs, and the peak among vCPUs (VCF Operations provides it).
+- Runaway process: one CPU flat at 100% (example: Diagnostic Policy Service in an infinite loop) while the OS stays responsive. Track the highest CPU, not only the total.
+![CPU0 flat out from a runaway service](../images/windows-runaway-process-cpu0.png)
+
+## Traps
+- "Task Manager, Resource Monitor and PerfMon agree" → different names and calculations.
+- "Windows 100% means the VM is at 100%" → HT and frequency differ by layer.
+
+## Metadata
+```yaml
+id: vsphere/cpu/concepts/windows-cpu-scheduling
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+pillar:
+- performance
+product:
+- windows
+- vsphere
+object:
+- VirtualMachine
+internal_derive:
+- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+related:
+- vsphere/cpu/metrics/virtual-machine/guest-run-queue
+- vsphere/cpu/metrics/virtual-machine/guest-context-switch
+- vsphere/cpu/metrics/virtual-machine/guest-processor-time
+source:
+  document: PART 3 - Counters.docx
+  path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
+corrections: []
+review_notes:
+- 'Section ''Usage, utilization, time'': the book''s table marks VM CPU Run as Hyper-Threading aware. Chapter 2 says Run ignores Hyper-Threading. Open question in docs/author-questions.md.'
+- 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
+status: draft
+```

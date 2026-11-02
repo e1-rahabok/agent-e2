@@ -260,5 +260,13 @@ Each entry has:
 - Written as now: the recommendation (above 50% of physical cores); the others flagged.
 - Answer:
 
+### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
+- Files: `vsphere/cpu/concepts/windows-cpu-scheduling`, `vsphere/cpu/metrics/virtual-machine/run`
+- Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
+- Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
+- Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
+- Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.
