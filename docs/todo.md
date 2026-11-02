@@ -40,7 +40,14 @@ Open work for this repository. Not indexed. Update when items close.
   - New VM metric files: co-stop, overlap, other-wait, swap-wait, idle, contention, net-run, demand, system, usage-disparity.
   - New comparisons: vm-contention-metrics, vm-vs-esxi-ht-ramp-test. New diagnosis: vm-cpu-contention-high, run-vs-used-gap, oversized-vm-downsizing, vm-other-wait-high.
   - Updated: VM ready, run, used, usage, wait, latency; comparisons/consumption-metrics.
-- [ ] Chapter 2 (CPU) > ESXi and later sections: not started.
+- [x] Chapter 2 (CPU) > ESXi: extracted 2026-11-02. Chapter 2 CPU complete.
+  - New: `cpu/concepts/esxi-thread-core-accounting`; host metric files peak-core-usage, reserved-capacity, imbalance, wait, cpu-utilization-for-resources; comparisons host-consumption-metrics, host-contention-metrics; diagnosis host-cpu-capacity-headroom.
+  - Updated: host utilization, core-utilization, idle, usage, used, demand.
+- [ ] Memory, Storage, Network chapters: present in the uploaded `.docx` (pp. after CPU). Not started.
+- [ ] Chapter 2 ESXi: open questions for the author, with verbatim search strings:
+  - ESXi Demand: provider or consumer? Your correction (2026-11-02) says provider. Search: "Demand is consumer-view, while Usage is provider view". Also: "The value you see at ESXi is the summation of all the VMs".
+  - ESXi Usage cap. Your correction says capped at 100% (KB pending). Search: "Usage no longer capped at 100% of total capacity at the nominal frequency". Is the cap only in vCenter, and removed in VCF Operations since Aria Operations 8.18?
+  - ESXi CPU Imbalance: built-in VCF Operations metric or your own? Search: "ESXi CPU Imbalance = Count of Running Threads / Count of Running Cores".
 - [ ] Chapter 2 VM: open questions for the author, with verbatim search strings:
   - Steal Time. Search 1 (Chapter 1): "Steal Time in Linux only includes CPU Ready". Search 2 (VM > Overlap): "Linux Guest OS tracks this as Stolen time". Does Linux Steal include Ready only, Overlap only, or both?
   - System charged to vCPU 0. Search 1: "this is charged to the VM CPU 0". Search 2 (diagram text): "Charged at VM level, not at vCPU 1". Chapter 1 also says per-vCPU Used excludes System. Which is right?
@@ -51,13 +58,13 @@ Open work for this repository. Not indexed. Update when items close.
   - Ready and VM size. Search 1 (VM): "CPU Ready tends to be higher, ceteris paribus, in larger VMs". Search 2 (Architecture): "You can reduce Co-stop by reducing the VM size". Does downsizing reduce Ready too?
   - Ramp test. Search: "ESXi CPU Core Utilization (%) matches VM Run. Both went 2x." Core Utilization stayed at 100%. Should this be Utilization (%)?
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
-- [ ] Memory, Storage, Network chapters: waiting for upload.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
 - [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
 - [ ] Add golden cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
+- [ ] Add golden cases for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `evaluation/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
 
