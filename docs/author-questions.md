@@ -184,5 +184,12 @@ Each entry has:
 - Written as now: both map to Transmit, as in the book.
 - Answer:
 
+### Q023 · Chapter 4 Storage > VM · Disk metric scope
+- Files: `vsphere/storage/metrics/virtual-machine/disk`
+- Search: "if the value is per VM or per disk"
+- Question: is the VM Disk (device-level) metric value for this VM only, or for the whole device shared by many VMs?
+- Written as now: associated with the VM, flagged as unsure.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.

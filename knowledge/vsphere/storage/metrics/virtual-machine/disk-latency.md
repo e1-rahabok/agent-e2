@@ -11,6 +11,16 @@
 - Read and write latency have different patterns. Often only one has a problem. Check both when troubleshooting.
 - IP storage: read and write both map to network Transmit, because ESXi issues the commands.
 
+## Units and levels
+- Virtual disk latency is provided in ms and in microseconds.
+- Disk and datastore levels add Highest Latency, rolled up as Latest.
+- Contention can come from the VM (an IOPS limit) or from the infrastructure.
+
+## Threshold
+- No universal threshold: ranges vary widely by storage. Profile your environment and compare with what the storage vendor sold.
+- Example profile: more than 63 million data points (2,400 VMs × 3 months).
+![Virtual disk latency profile across 2,400 VMs](../../images/vdisk-latency-profile-2400-vms.png)
+
 ## Traps
 - "Total latency = average of read and write latency" → it is weighted by command count.
 
@@ -38,11 +48,15 @@ related:
 - vsphere/storage/metrics/virtual-machine/iops
 - vsphere/storage/diagnosis/vm-storage-performance-checks
 - vsphere/storage/concepts/guest-os-vs-vm-storage
+- vsphere/storage/metrics/virtual-machine/outstanding-io
+- vsphere/storage/metrics/virtual-machine/disk
+- vsphere/storage/metrics/virtual-machine/datastore
 source:
   document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance; Storage > VM > Performance Metrics > Contention Metrics
 corrections: []
 review_notes:
 - 'Section ''Mechanism'': from Storage > Architecture.'
+- 'Sections Units and levels, Threshold: from Storage > VM.'
 status: draft
 ```
