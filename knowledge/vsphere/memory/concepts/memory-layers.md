@@ -96,8 +96,8 @@ source:
   path: Memory > Architecture > The 4 Layers; Virtual Memory; Relationship
 corrections: []
 review_notes:
-- 'Section ''ESXi memory management'': the book says ESXi uses 3 levels, then lists 4 (TPS, tiered memory, balloon, compress/swap). Open question in docs/todo.md.'
-- 'Section ''ESXi memory management'': the book calls Balloon the first sign of unmet demand, then says it does not mean ESXi is unable to meet demand. Written as proactive, not unmet demand. Open question in docs/todo.md.'
+- 'Section ''ESXi memory management'': the book says ESXi uses 3 levels, then lists 4 (TPS, tiered memory, balloon, compress/swap). Open question in docs/author-questions.md.'
+- 'Section ''ESXi memory management'': the book calls Balloon the first sign of unmet demand, then says it does not mean ESXi is unable to meet demand. Written as proactive, not unmet demand. Open question in docs/author-questions.md.'
 - 'Section ''Page mapping across layers'': diagram modified by the author from a Valentin Bondzio diagram.'
 - 'Section ''ESXi memory management'': the book cites VMware vSphere 6.5 Host Resources Deep Dive (Denneman, Hagoort), chapter 11, p. 243, for the overcommit backing types. Third-party excerpt not copied.'
 - 'Section ''ESXi memory management'': TPS KB from the book: https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html (not read).'

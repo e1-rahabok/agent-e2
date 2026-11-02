@@ -48,6 +48,6 @@ source:
   path: CPU > VM (pp. 78-118) > When Run is lower than Used; When Run is higher than Used
 corrections: []
 review_notes:
-- 'Section ''How to read the result'': how Ready makes Used 41% higher than Run is not explained in the book. Open question in docs/todo.md.'
+- 'Section ''How to read the result'': how Ready makes Used 41% higher than Run is not explained in the book. Open question in docs/author-questions.md.'
 status: draft
 ```

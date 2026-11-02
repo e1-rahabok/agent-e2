@@ -45,6 +45,6 @@ source:
   path: Memory > VM > Consumption Metrics > Utilization
 corrections: []
 review_notes:
-- 'Section ''Why it can be high'': the 5% addition is not visible in the formula as written. Open question in docs/todo.md.'
+- 'Section ''Why it can be high'': the 5% addition is not visible in the formula as written. Open question in docs/author-questions.md.'
 status: draft
 ```

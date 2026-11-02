@@ -54,7 +54,7 @@ source:
   path: CPU > VM (pp. 78-118) > Contention Metrics > Contention
 corrections: []
 review_notes:
-- 'Section ''Formula'': meaning of ''(if less than 1%)'' for Other Wait is unclear. Open question in docs/todo.md.'
-- 'Section ''Meaning'': the book''s Latency section describes a Contention value that excludes limit. That is read as the pre-July-2024 mapping to Latency. Open question in docs/todo.md.'
+- 'Section ''Formula'': meaning of ''(if less than 1%)'' for Other Wait is unclear. Open question in docs/author-questions.md.'
+- 'Section ''Meaning'': the book''s Latency section describes a Contention value that excludes limit. That is read as the pre-July-2024 mapping to Latency. Open question in docs/author-questions.md.'
 status: draft
 ```

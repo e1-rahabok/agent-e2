@@ -82,6 +82,6 @@ corrections:
 review_notes:
 - KB article number for the 100% cap not yet provided.
 - 'Sections Formula, Names and units, Cap by tool: from CPU > ESXi.'
-- 'Section ''Cap by tool'': the author''s correction states the metric is capped (KB pending); the ESXi section states VCF Operations removed the cap in Aria Operations 8.18. Open question in docs/todo.md.'
+- 'Section ''Cap by tool'': the author''s correction states the metric is capped (KB pending); the ESXi section states VCF Operations removed the cap in Aria Operations 8.18. Open question in docs/author-questions.md.'
 status: draft
 ```

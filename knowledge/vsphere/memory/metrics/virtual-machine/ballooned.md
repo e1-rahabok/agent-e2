@@ -54,7 +54,7 @@ review_notes:
 - metric_class set to contention. Author to confirm.
 - 'Section ''Mechanism'': from Memory > Architecture.'
 - 'Sections Behaviour: from Memory > VM.'
-- 'Section ''Behaviour'': the book says a limit does not cause ballooning (Limit section), but its examples show ballooning under a limit. Open question in docs/todo.md.'
+- 'Section ''Behaviour'': the book says a limit does not cause ballooning (Limit section), but its examples show ballooning under a limit. Open question in docs/author-questions.md.'
 - 'Section ''Behaviour'': the balloon maximum is the Mem.CtlMaxPercent setting, default 65% (Claude''s own knowledge). The book states around 63%.'
 status: draft
 ```

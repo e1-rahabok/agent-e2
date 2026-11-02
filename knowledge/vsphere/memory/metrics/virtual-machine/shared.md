@@ -51,6 +51,6 @@ source:
   path: Memory > VM > Consumption Metrics > Shared; Savings
 corrections: []
 review_notes:
-- 'Section ''Savings'': the book''s calculation (savings = Shared - (Granted - Consumed)) conflicts with its formula Consumed = Granted - Savings, which gives savings = 23.7 TB. Open question in docs/todo.md.'
+- 'Section ''Savings'': the book''s calculation (savings = Shared - (Granted - Consumed)) conflicts with its formula Consumed = Granted - Savings, which gives savings = 23.7 TB. Open question in docs/author-questions.md.'
 status: draft
 ```

@@ -25,6 +25,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
+- [ ] Questions for the author: `docs/author-questions.md` (18 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
 - [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
@@ -48,28 +49,6 @@ Open work for this repository. Not indexed. Update when items close.
   - New concepts: ballooning, swap-and-compression. New VM metric files: granted, shared, zero-pages, active, compressed, swap-target, swap-in-rate, swap-out-rate, balloon-target, entitlement, overhead, utilization.
   - New: comparisons/vm-memory-metrics, diagnosis/vm-memory-latency-high. Updated: VM latency, ballooned, consumed, swapped, usage; CPU swap-wait.
 - [ ] Chapter 3 (Memory) > ESXi; Storage and Network chapters: present in the uploaded `.docx`. Not started.
-- [ ] Chapter 3 Memory VM: open questions for the author, with verbatim search strings:
-  - Limit and balloon. Search 1: "Does limit result in Balloon?" (answer in book: no). Search 2: "heavily ballooned as limit was imposed on it". Search 3: "Since the VM needed more, it experienced heavy ballooning". Does a limit cause ballooning or not?
-  - Memory Latency definition. Search 1 (Architecture): "percentage of memory space". Search 2 (VM): "the amount of time a vCPU spends waiting on the completion of a page fault". Space or time?
-  - Meaning of Compressed and Swapped. Search 1 (VM): "indicates that the host is unable to satisfy the VM memory requirement". Search 2 (Architecture): "It does not mean VMs were contending for RAM". Which holds?
-  - Sharing savings. Search: "Savings = 29.83 TB". The formula Consumed = Granted - Savings gives 23.7 TB of savings, not 6.13 TB. Which is right?
-  - Memory Utilization formula. Search: "We add 5% of Total, not Used". Where does the 5% enter the formula?
-- [ ] Chapter 3 Memory Architecture: open questions for the author, with verbatim search strings:
-  - Search: "ESXi uses 3 levels to manage memory". The list that follows has 4 items (TPS, Tiered Memory, Balloon, Compress/Swap). Which are the 3 levels?
-  - Search: "The first sign of unmet demand". The next sentences say ballooning does not mean ESXi is unable to meet demand. Is balloon a sign of memory pressure rather than unmet demand?
-- [ ] Chapter 2 ESXi: open questions for the author, with verbatim search strings:
-  - ESXi Demand: provider or consumer? Your correction (2026-11-02) says provider. Search: "Demand is consumer-view, while Usage is provider view". Also: "The value you see at ESXi is the summation of all the VMs".
-  - ESXi Usage cap. Your correction says capped at 100% (KB pending). Search: "Usage no longer capped at 100% of total capacity at the nominal frequency". Is the cap only in vCenter, and removed in VCF Operations since Aria Operations 8.18?
-  - ESXi CPU Imbalance: built-in VCF Operations metric or your own? Search: "ESXi CPU Imbalance = Count of Running Threads / Count of Running Cores".
-- [ ] Chapter 2 VM: open questions for the author, with verbatim search strings:
-  - Steal Time. Search 1 (Chapter 1): "Steal Time in Linux only includes CPU Ready". Search 2 (VM > Overlap): "Linux Guest OS tracks this as Stolen time". Does Linux Steal include Ready only, Overlap only, or both?
-  - System charged to vCPU 0. Search 1: "this is charged to the VM CPU 0". Search 2 (diagram text): "Charged at VM level, not at vCPU 1". Chapter 1 also says per-vCPU Used excludes System. Which is right?
-  - Run for sizing. Search 1: "suitable as input to size the Guest OS and not the VM". Search 2: "This counter is suitable for VM Capacity sizing". Guest OS sizing, VM sizing, or both?
-  - Contention formula. Search: "Other Wait (if less than 1%)". What does the condition mean?
-  - Contention and limit. Search 1: "Unlike CPU Ready, it does not account for Limit". Search 2: "Why does the counter include Ready by Limit?". Is the first about the pre-July-2024 Contention (mapped to Latency)?
-  - Used above Run. Search: "Why is Used consistently 41% higher than Run?". How does Ready make Used higher than Run?
-  - Ready and VM size. Search 1 (VM): "CPU Ready tends to be higher, ceteris paribus, in larger VMs". Search 2 (Architecture): "You can reduce Co-stop by reducing the VM size". Does downsizing reduce Ready too?
-  - Ramp test. Search: "ESXi CPU Core Utilization (%) matches VM Run. Both went 2x." Core Utilization stayed at 100%. Should this be Utilization (%)?
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
