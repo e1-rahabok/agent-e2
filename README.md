@@ -82,6 +82,16 @@ docs/                                # design decisions, To Do, legacy files (no
 - Use terms from `knowledge/glossary/terminology.md`. Avoid the words in its Words to avoid table.
 - Quote a threshold only when a file states it with its source.
 
+### Troubleshooting questions (`what-to-check`)
+- Retrieve the matching `diagnosis/` file first. Retrieve its `internal_derive` metric files with it.
+- Follow the numbered steps in `## Checks, in order`, from step 1. Do not skip to a later step.
+- At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives.
+- Use the Mermaid flow only to confirm the branch. The numbered steps win if they differ.
+- When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
+- Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
+- No diagnosis file matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
+- Contention before consumption before context, unless the file states another order.
+
 ### Measurement
 - `evaluation/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.
 

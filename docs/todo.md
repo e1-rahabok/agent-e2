@@ -93,5 +93,22 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `vsphere/system/diagnosis/host-not-responding` is not from the book. Decide whether to keep.
 - [ ] Add a script that generates per-tag index files and checks front matter and links.
 
+## Troubleshooting flows
+- Rule: README, section Troubleshooting flow diagrams. Each file gets: Symptom, Flow (Mermaid), numbered Checks with metric, object, threshold with source, next step per outcome; Why this order.
+- Source: the author's draw.io flows when available; otherwise derive from the file's current checks and flag in `review_notes`.
+- [ ] `vsphere/cpu/diagnosis/vm-cpu-contention-high`: add flow.
+- [ ] `vsphere/cpu/diagnosis/vm-other-wait-high`: add flow.
+- [ ] `vsphere/cpu/diagnosis/run-vs-used-gap`: add flow.
+- [ ] `vsphere/cpu/diagnosis/host-cpu-capacity-headroom`: add flow.
+- [ ] `vsphere/cpu/diagnosis/oversized-vm-downsizing`: add flow.
+- [ ] `vsphere/memory/diagnosis/vm-memory-latency-high`: add flow.
+- [ ] `vsphere/memory/diagnosis/overcommit-indicators`: add flow.
+- [ ] `vsphere/storage/diagnosis/vm-storage-performance-checks`: add flow.
+- [ ] `vsphere/storage/diagnosis/host-storage-latency`: add flow.
+- [ ] `vsphere/network/diagnosis/vnic-rx-drops`: add flow.
+- [ ] `vsphere/system/diagnosis/cluster-vm-contention`: add flow.
+- [ ] `vsphere/system/diagnosis/host-not-responding`: add flow.
+- [ ] New flows for symptoms with no diagnosis file yet: list to be agreed with the author.
+
 ## Diagrams
 - [ ] Convert the author's draw.io troubleshooting flows to Mermaid plus numbered steps in `diagnosis/` files. Keep the `.drawio` source and an exported `.png` next to them. Rule: README, section Troubleshooting flow diagrams.
