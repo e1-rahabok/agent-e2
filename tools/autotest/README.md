@@ -34,6 +34,48 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 ```
 - Continue a run; failed answers are retried.
 
+## Methodology
+
+### Question and score
+- Each golden case is a multiple-choice question with one or more correct options.
+- A run asks every question once, per model and mode.
+- 5 runs per question, because hosted models do not answer the same way twice. Reason: `docs/design-kb-test-site.md`, section Why 5 runs.
+- Exact: answer letters match the key exactly. 1 or 0 per answer.
+- Model score for a run = Exact averaged over the questions, 0-100%.
+- Model score in the report = the average of its 5 run scores. Column `Exact`.
+- Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
+- Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
+- Margin: 95% interval on Majority. Set by the number of questions: 17 questions gives about ±20-24 points.
+
+### Index version
+- The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
+- Index version = the git commit SHA of the repository when the run started. Example: `de5f19e22860`.
+- To see the exact knowledge files a run used: `git checkout <index version>`.
+- Two runs with different index versions compare knowledge-base changes. Two runs with the same index version compare models or settings.
+- The runner reads the files on disk but records the commit SHA. Commit all knowledge changes before a run, or the recorded version is wrong.
+
+### Hybrid retrieval
+- Retrieval = finding the knowledge-base sections to give the model. Used in classic and agentic modes.
+- The knowledge files are cut into chunks, one per `##` heading.
+- Two searches run on the same question:
+  - Keyword search (BM25): scores chunks that share the question's words. Strong on exact terms: metric names, counter names such as %LAT_M.
+  - Vector search (embeddings): an embedding model (`embedding_model` in `config.yaml`) turns each chunk and the question into vectors; nearest vectors score highest. Strong on meaning when the words differ, e.g. "VM waits for memory" vs "page-fault latency".
+- Fusion: reciprocal rank fusion. Each chunk gets 1 / (60 + rank) from each list; the sums decide the order. A chunk ranked well by both searches comes first.
+- Best chunk per file; top files go to the model (classic: `classic_k`, plus linked files).
+- Hybrid = both searches fused. `bm25` in a report = embeddings were off or unavailable; keyword search only.
+- Why hybrid: keyword search misses paraphrases; vector search misses rare exact terms. Fusing both is the common practice for technical text.
+
+### Temperature
+- Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
+- Set to 0.2 in `config.yaml`.
+- Reasons:
+  - Factual multiple-choice questions need stable answers, so temperature stays low.
+  - 0 does not make hosted models deterministic (see Why 5 runs). The 5 runs measure the remaining variation either way.
+  - Some reasoning models loop or repeat at 0. Their vendors advise against greedy decoding. A small value avoids this.
+  - The test should match production: `config.yaml` says to use the value the website will use. The website value is not fixed yet; 0.2 is the working assumption.
+- Fixed for a whole run. Comparing runs at different temperatures mixes two effects.
+- The 0.2 choice is a design default, not a measured optimum. A temperature sweep (0, 0.2, 0.7) on the best model would test it.
+
 ## What it does
 1. Loads `knowledge/` exactly as README, section How a local LLM uses it: metadata split off, body chunked by `##` heading.
 2. Builds the index: BM25, plus embeddings (`embedding_model`) when the API key is set. Embeddings are cached in `tools/autotest/.cache/`.
