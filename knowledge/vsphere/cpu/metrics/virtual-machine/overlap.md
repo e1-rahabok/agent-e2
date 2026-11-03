@@ -19,6 +19,7 @@
 - Used and Demand account for it. Usage goes down when Overlap goes up.
 - Ready does not include Overlap: the vCPU stays in the Run state.
 - Net Run = Run - Overlap.
+- Linux Steal Time does not include Overlap. ESXi counts Overlap as Run, so the guest is not told the time was taken. Net Run is the only way to see actual execution time.
 
 ## Effect on the Guest OS
 - A freeze. The guest clock does not tick for that vCPU. Time jumps when it runs again.
@@ -72,6 +73,6 @@ source:
   path: CPU > VM (pp. 78-118) > Contention Metrics > Overlap
 corrections: []
 review_notes:
-- 'Section ''Names'': the book''s Chapter 1 says Linux Steal Time includes only CPU Ready. Open question in docs/author-questions.md.'
+- "Section 'Hyper-Threading': author (2026-11-03), Q001: Linux Steal Time includes Ready only, not Overlap. The book's VM section statement that Linux tracks Overlap as stolen time is wrong."
 status: draft
 ```

@@ -12,7 +12,7 @@
 | Used higher than Run | Turbo raises Used. System, VMX, MKS and Helper add to VM-level Used. | Check frequency and System. |
 | Used lower than Run, little System and Overlap | Power saving and Hyper-Threading lower Used. | Do not add vCPUs. Check power management and SMT. |
 | Example: 4-vCPU Ubuntu VM, Used about 44% of Run | Power saving plus SMT. | If Run is far from 100% and the team asks for speed, adding vCPUs is the wrong answer. |
-| Example: 1-vCPU VM, 2.095 GHz host, 2 GHz limit | Demand and Usage flat around 1.96 GHz (about 94%). Used about 18,600 ms (93%). Run much lower: Used 41% higher than Run. | The book attributes the gap to Ready. Run + Ready + Overlap + Idle = 20,000 ms. |
+| Example: 1-vCPU VM, 2.095 GHz host, 2 GHz limit | Demand and Usage flat around 1.96 GHz (about 94%). Used about 18,600 ms (93%). Run much lower: Used 41% higher than Run. | Cause: CPU frequency. The VM ran above nominal clock speed because of Turbo Boost. Used grows with frequency; Run is time only. |
 
 - Under a limit, Demand equals Usage: the kernel does not see the limited time as demand.
 
@@ -48,6 +48,6 @@ source:
   path: CPU > VM (pp. 78-118) > When Run is lower than Used; When Run is higher than Used
 corrections: []
 review_notes:
-- 'Section ''How to read the result'': how Ready makes Used 41% higher than Run is not explained in the book. Open question in docs/author-questions.md.'
+- "Section 'How to read the result': author (2026-11-03), Q006: the cause is CPU frequency (Turbo Boost), not Ready. The book was wrong."
 status: draft
 ```

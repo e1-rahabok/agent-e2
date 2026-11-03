@@ -11,7 +11,8 @@
 | Thread Utilization | 100% |
 
 ## Cap
-- ESXi CPU Usage is artificially capped at 100%. Usage (MHz) does not exceed total capacity.
+- ESXi CPU Usage is no longer capped at 100%, in vCenter or VCF Operations. On a busy host with Turbo it exceeds 100% of nominal capacity.
+- Older releases capped it at 100%: older charts and the book's ESXi 7 examples show a flat 100%.
 - Cause: an accounting decision error in ESXi. Known issue, documented in an official VMware KB.
 
 ## Same metric, two names
@@ -38,11 +39,12 @@ ESXi Usage = sum over physical cores (not sum of VMs + kernel)
 - vSphere Host Client shows the same, with a breakdown per CPU package.
 
 ## Cap by tool
-- vCenter: Usage (%) is capped at 100%.
-- VCF Operations: ESXi Usage is no longer capped at 100% of nominal capacity. Fixed in Aria Operations 8.18. On a busy host it exceeds 100%.
+- vCenter: no longer capped (Broadcom KB 417702, KB 431027).
+- VCF Operations: no longer capped since Aria Operations 8.18.
 
 ## Traps
-- "ESXi CPU Usage = 100% means maximum possible work" → the value is capped, not measured beyond 100%.
+- "ESXi CPU Usage cannot exceed 100%" → the cap is removed. Above 100% means Turbo above nominal frequency.
+- "A flat 100% line means the host is at its limit" → on older releases the value was capped.
 - "ESXi Usage = sum of VM Usage + kernel" → it is summed over physical cores.
 - "Usage below Core Utilization means an error" → power saving clocks cores down at low load.
 
@@ -83,5 +85,6 @@ review_notes:
 - KB article number for the 100% cap not yet provided.
 - 'Sections Formula, Names and units, Cap by tool: from CPU > ESXi.'
 - 'Section ''Cap by tool'': the author''s correction states the metric is capped (KB pending); the ESXi section states VCF Operations removed the cap in Aria Operations 8.18. Open question in docs/author-questions.md.'
+- "Sections 'Cap', 'Cap by tool': author (2026-11-03), Q010: cap removed in both vCenter and VCF Operations. https://knowledge.broadcom.com/external/article/417702/esxi-host-reporting-over-100-cpu-usage.html and https://knowledge.broadcom.com/external/article/431027/esxi-host-cpu-usage-appears-high-in-vcen.html"
 status: draft
 ```

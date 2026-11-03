@@ -43,6 +43,11 @@
 - Monitoring tools not purpose-built for vSphere often understand its characteristics only partially.
 - Partial understanding → wrong interpretation → wrong action.
 
+## Provider metric types
+- Provider metric: exists only at the provider. Example: ESXi physical network (vmnic).
+- Sum of consumer metric: the provider aggregates its consumers. Example: sum of VM network at ESXi; ESXi CPU Demand.
+- Before reading a provider value, decide which kind it is. A sum of consumers says nothing about provider-only work (kernel, vSAN, NSX).
+
 ## Metadata
 ```yaml
 id: vsphere/foundations/provider-consumer
@@ -72,6 +77,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Virtualization Impact
 corrections:
 - '2026-11-02: ESXi CPU Demand is a provider metric. Not answered in uploaded document.'
-review_notes: []
+review_notes:
+- "Section 'Provider metric types': author (2026-11-03), Q009."
 status: draft
 ```

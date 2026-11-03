@@ -9,7 +9,7 @@
 - Proactive: starts before ESXi fails to meet demand.
 - Reduces guest cache.
 - Ballooned pages exist only in the VM view. They map to no ESXi page.
-- Not unmet demand. Demand is unmet only when Contention occurs.
+- The first sign of memory pressure, not of unmet demand. Demand is unmet only when Contention occurs.
 
 ## Behaviour
 - Ballooned pages are removed from Granted: not functionally used.
@@ -56,5 +56,6 @@ review_notes:
 - 'Sections Behaviour: from Memory > VM.'
 - 'Section ''Behaviour'': the book says a limit does not cause ballooning (Limit section), but its examples show ballooning under a limit. Open question in docs/author-questions.md.'
 - 'Section ''Behaviour'': the balloon maximum is the Mem.CtlMaxPercent setting, default 65% (Claude''s own knowledge). The book states around 63%.'
+- "Section 'Meaning': author (2026-11-03), Q013."
 status: draft
 ```

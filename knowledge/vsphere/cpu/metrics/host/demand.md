@@ -1,7 +1,10 @@
 # ESXi CPU Demand
 
 ## Meaning
-- A provider metric.
+- A sum-of-consumers metric at the provider. Providers have 2 kinds of counters:
+  - Provider metric: exists only at the provider. Example: ESXi physical network.
+  - Sum of consumer metric: aggregates the consumers. Example: sum of VM network at ESXi.
+- ESXi Demand is the second kind: the sum over the VMs.
 - Not the sum of VM worlds plus VMkernel worlds.
 - An internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.
 
@@ -55,9 +58,9 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact; CPU > ESXi > Demand
 corrections:
-- '2026-11-02: ESXi CPU Demand is a provider metric (section: Meaning). Not answered in the uploaded document.'
+- "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
 review_notes:
 - 'Section Behaviour: from CPU > ESXi.'
-- 'Section ''Behaviour'' vs the correction in this file: the ESXi section calls Demand consumer-view and the sum of VMs; the author''s correction calls ESXi Demand a provider metric. Open question in docs/author-questions.md.'
+- "Section 'Meaning': author (2026-11-03), Q009: providers have provider metrics and sum-of-consumer metrics. ESXi Demand is a sum of VM Demand."
 status: draft
 ```

@@ -17,7 +17,9 @@
 ## Instance
 - Not available per vCPU. The physical core doing the IO may serve more than one vCPU. No breakdown is possible.
 - In vCenter, selecting System shows no per-vCPU instances.
-- System is charged to vCPU 0. vCPU 0 can show higher Used than the others while Run is balanced. This is accounting, not a scheduling problem.
+- System is charged at VM level, not to vCPU 0 or any other vCPU.
+- Result: total VM Used is higher than the sum of its vCPUs' Used.
+- This is kernel accounting. It does not affect CPU scheduling.
 
 ## Scope
 - CPU accounting only, not storage accounting.
@@ -29,7 +31,8 @@
 - The System counter in Linux differs from System in vSphere.
 
 ## Traps
-- "Higher Used on vCPU 0 is a scheduling imbalance" → System is charged to vCPU 0.
+- "System is charged to vCPU 0" → it is charged at VM level only.
+- "VM Used should equal the sum of vCPU Used" → VM Used also holds System, so it is higher.
 - "Add vCPUs to a high-System VM" → for NSX Edge it makes performance worse.
 - "Guest OS System = VM System" → different counters.
 
@@ -68,7 +71,7 @@ source:
   path: CPU > VM (pp. 78-118) > Consumption Metrics > System
 corrections: []
 review_notes:
-- 'Section ''Instance'': the book text says System is charged to vCPU 0, while its diagram says charged at VM level, not at vCPU 1, and Chapter 1 says per-vCPU Used excludes System. Open question in docs/author-questions.md.'
+- "Section 'Instance': author (2026-11-03), Q002: System is charged at VM level, not vCPU 0. Total VM > sum of vCPUs. Book text saying vCPU 0 is wrong."
 - 'Section ''Values'': KB from the book: https://kb.vmware.com/s/article/59640 (not read).'
 - 'vCenter counter description reads: amount of time spent on system processes on each virtual CPU in the virtual machine. Differs from the book''s per-vCPU statement.'
 status: draft
