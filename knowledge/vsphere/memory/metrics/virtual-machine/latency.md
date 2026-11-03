@@ -5,11 +5,11 @@
 - Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/cpu/metrics/virtual-machine/latency`.
 
 ## Unit
-- Memory Architecture section: percentage of memory space that takes longer than expected to read.
-- Memory VM section and vCenter description: percentage of time the VM waits to swap in or decompress pages.
+- Percentage of time, not of memory space.
+- Share of time a vCPU waits for a page fault to complete.
 - Not latency in nanoseconds.
 - The only ESXi counter for memory speed.
-- Disk is the opposite: disk latency is time, not share of space.
+- Disk latency is a time per IO in ms. Memory Latency is a share of time in %. Do not compare the two.
 
 ## Mechanism
 - Also called page-fault latency. esxtop: %LAT_M.
@@ -30,7 +30,8 @@
 ![Worst VM memory contention per VM across 2,441 VMs](../../images/vm-memory-contention-worst-value-distribution-across-vms.png)
 
 ## Traps
-- "Memory Latency 5% means 5 ns" → it is a percentage, not a time.
+- "Memory Latency 5% means 5 ns" → it is a percentage of time, not a duration.
+- "Memory Latency is the share of memory space that is slow to read" → it is a share of time a vCPU waits on page faults.
 
 ## Metadata
 ```yaml
@@ -72,6 +73,6 @@ corrections: []
 review_notes:
 - 'Section ''Unit'': from Memory > Architecture.'
 - 'Sections Mechanism, Observed values: from Memory > VM.'
-- 'Section ''Unit'': the Architecture section defines the counter as a share of memory space; the VM section and vCenter define it as a share of time. Open question in docs/author-questions.md.'
+- "Section 'Unit': author (2026-11-03), Q015: share of time a vCPU waits on page-fault completion, not share of memory space. The book's Architecture definition (space) was wrong and is updated in the book."
 status: draft
 ```

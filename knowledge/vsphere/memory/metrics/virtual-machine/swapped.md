@@ -10,6 +10,16 @@
 - Swapped is not Swap in - Swap out: both run in parallel on different pages.
 - Swapped pages stay out until the guest requests them.
 - A limit causes swapping and compression.
+
+## What a non-zero value means
+- Compressed or Swapped happens for one of two reasons:
+  - ESXi Consumed is very high.
+  - The VM hit its limit.
+- It does not mean the host failed to serve the VM. The Consumed pages taken can hold a lot of cache.
+- So it does not always result in VM Memory Latency. Check Latency for unmet demand.
+
+## Traps
+- "Swapped > 0, so the host cannot satisfy the VM's memory" → not always. The pages taken can be guest cache. Check Latency.
 - See `vsphere/memory/concepts/swap-and-compression`.
 
 ## Metadata
@@ -44,6 +54,6 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 - 'Sections Behaviour: from Memory > VM.'
-- 'Section ''Behaviour'': the VM section says any Compressed or Swapped value means the host could not satisfy the VM; the Architecture section says it does not mean VMs contended for RAM. Open question in docs/author-questions.md.'
+- "Section 'What a non-zero value means': author (2026-11-03), Q016: VM Compressed happens when ESXi Consumed is very high or the VM hit its limit. Consumed pages can hold a lot of cache, so it does not always translate to VM latency. The Architecture statement holds; the VM-section statement is superseded."
 status: draft
 ```

@@ -13,8 +13,15 @@
 - Not counted as savings: decompression costs performance.
 - Windows also compresses its In Use pages inside the guest. Different counter.
 
+## What a non-zero value means
+- VM Compressed happens for one of two reasons:
+  - ESXi Consumed is very high.
+  - The VM hit its limit.
+- The Consumed pages taken can hold a lot of cache. So it does not always result in VM Memory Latency.
+
 ## Traps
 - "Compressed > 0 means the VM is slow now" → only decompression on access causes latency.
+- "Compressed > 0 means the host cannot satisfy the VM" → the cause is high ESXi Consumed or a limit, and the pages can be cache.
 
 ## Metadata
 ```yaml
@@ -45,5 +52,6 @@ source:
 corrections: []
 review_notes:
 - metric_class set to contention, matching Swapped and Ballooned. Author to confirm.
+- "Section 'What a non-zero value means': author (2026-11-03), Q016."
 status: draft
 ```
