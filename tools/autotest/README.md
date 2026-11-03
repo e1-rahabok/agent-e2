@@ -55,6 +55,8 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 - The runner reads the files on disk but records the commit SHA. Commit all knowledge changes before a run, or the recorded version is wrong.
 
 ### Hybrid retrieval
+- No internet access in any mode. Retrieval searches only the `knowledge/` files.
+- In this test the models and the embedding model run in the cloud through Vercel AI Gateway, to compare candidates cheaply. In production the chosen model runs locally; the knowledge base lookup is the same.
 - Retrieval = finding the knowledge-base sections to give the model. Used in classic and agentic modes.
 - The knowledge files are cut into chunks, one per `##` heading.
 - Two searches run on the same question:
