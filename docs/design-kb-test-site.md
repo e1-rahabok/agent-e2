@@ -261,13 +261,34 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 ### Multiple-choice scoring
 - Answer format fixed: `ANSWER: <letters>` then `REASON: <one line>`. Unparseable answer = wrong; parse failures counted per model.
 - Option order shuffled per run; letters mapped back before scoring. Removes position bias.
-- Single-answer questions: right or wrong.
-- Multi-select questions: exact match is the headline score; partial credit (correct picks minus wrong picks, floor 0, divided by the size of the correct set) is reported beside it.
+- Every question carries the same instruction: "Choose all the correct options. There can be more than one." The number of correct options is never revealed.
+- Two options are always appended after the shuffled options: "Not covered by the knowledge base" and "Unsure".
+- Exact match is the base score; partial credit (correct picks minus wrong picks, floor 0, divided by the size of the correct set) is reported beside it.
+
+### Removing luck (author, 2026-11-03)
+- Goal: a score that reflects knowledge, not guessing. A confident wrong answer is the worst outcome for the user; "unsure, check the source" is safe.
+- Two mechanisms, both active in every run.
+- 1. Unsure option with a guessing penalty:
+  - The model may answer Unsure: the topic is covered, but the text it has does not settle every option.
+  - Points per answer: +1 exact match; 0 Unsure chosen alone; -1 anything else (wrong letters, missed letters, Unsure mixed with other letters, unparseable).
+  - The model is told this scoring in its instructions. With a wrong answer costing as much as a right one earns, guessing has no expected gain.
+  - Not covered stays a normal option: picking it on a covered question scores -1.
+- 2. Stability across the 5 runs:
+  - A question counts as known only when all 5 runs give the exact correct answer.
+  - Correct in some runs but not all = luck. It counts as not known.
+- Headline score: Stable correct = share of questions answered correctly in all 5 runs.
+- Reported beside it: Luck (share of questions correct in some runs only), Stable unsure, Net points (mean points, -100% to +100%), Unsure rate, Accuracy when answered.
+- Watch for over-use of Unsure: a high Unsure rate with high accuracy when answered means a cautious model with knowledge gaps; check retrieval and the knowledge base for those questions.
+- Runs before 2026-11-03 used the old scoring and 17 questions. They built the test logic and are not compared with later runs.
 - The reason line is not scored. It is read for every wrong answer to tag the cause.
 
 ### Measured per model and mode
 | Measure | How |
 |---|---|
+| Stable correct | Headline. Share of questions answered exactly right in all 5 runs. |
+| Luck | Share of questions right in some runs only. |
+| Net points | Mean of +1 / 0 / -1 per answer. |
+| Unsure rate, accuracy when answered | Share of Unsure answers; exact share among the rest. |
 | Mean score | Mean over 5 runs; exact match and partial credit. |
 | Majority score | Most common answer per question across 5 runs. |
 | Consistency | Share of questions answered identically in all 5 runs. Low consistency = two visitors get different answers. |
@@ -292,8 +313,8 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 
 ### Target (author, 2026-11-03)
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
-- Target: 99% exact on the golden multiple-choice set (Majority score, chosen mode).
-- Minimum: 85% exact. A model below 85% is not usable.
+- Target: 99% Stable correct on the golden multiple-choice set (chosen mode). See Removing luck.
+- Minimum: 85% Stable correct. A model below 85% is not usable.
 - mistral/ministral-8b dropped from future runs (author, 2026-11-03): 29-40% exact in run 20261103-081849.
 - The other 7 candidates stay until the question set reaches 100 (author, 2026-11-03). No model is dropped on the 17-question results: the margin (about ±20-24 points) is too wide.
 - Reference point: the best frontier model in baseline mode (no knowledge base). Measured each run.
@@ -305,7 +326,7 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 
 ### Decision rules
 - Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
-- Pick the model: highest majority score in the chosen mode, with consistency of at least 80%; ties go to the smaller model.
+- Pick the model: highest Stable correct in the chosen mode; then lowest share of wrong answers (Net points); ties go to the smaller model.
 - Agentic is dropped for a model with more than 10% fallbacks.
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
 - Screenshot upload on isvara.io only if the chosen model passes the vision track.

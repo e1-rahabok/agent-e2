@@ -7,7 +7,12 @@ FORMAT = ('Reply with exactly two lines and nothing else:\n'
           'ANSWER: <letter or letters, comma separated>\n'
           'REASON: <one sentence>')
 
-SYSTEM_BASE = ('You are an expert on VMware vSphere and VCF metrics. Answer the multiple-choice question.\n' + FORMAT)
+UNSURE_RULE = ('Scoring: a correct answer earns 1 point, Unsure earns 0, any wrong answer loses 1 point. '
+               'A wrong answer costs as much as a right one earns, so do not guess. '
+               'If you cannot decide every option with certainty, choose only the Unsure option.\n')
+
+SYSTEM_BASE = ('You are an expert on VMware vSphere and VCF metrics. Answer the multiple-choice question.\n'
+               + UNSURE_RULE + FORMAT)
 
 SYSTEM_KB = (
     'You answer questions about VMware vSphere and VCF metrics using ONLY the knowledge base text provided to you.\n'
@@ -16,7 +21,8 @@ SYSTEM_KB = (
     '- Prefer mechanism and reason over definitions. Watch for metrics with the same name on different objects.\n'
     '- Quote a threshold only when the knowledge base states it.\n'
     '- If the knowledge base does not cover the question, choose the option "Not covered by the knowledge base."\n'
-    + FORMAT)
+    '- If the knowledge base covers the topic but its text does not settle every option, choose only the Unsure option.\n'
+    + UNSURE_RULE + FORMAT)
 
 SYSTEM_AGENT = SYSTEM_KB.replace(
     'using ONLY the knowledge base text provided to you',

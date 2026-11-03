@@ -40,9 +40,14 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 - Each golden case is a multiple-choice question with one or more correct options.
 - A run asks every question once, per model and mode.
 - 5 runs per question, because hosted models do not answer the same way twice. Reason: `docs/design-kb-test-site.md`, section Why 5 runs.
+- Every question says: "Choose all the correct options. There can be more than one." Two options are appended: "Not covered by the knowledge base" and "Unsure".
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
-- Model score for a run = Exact averaged over the questions, 0-100%.
-- Model score in the report = the average of its 5 run scores. Column `Exact`.
+- Points: +1 exact; 0 for Unsure chosen alone; -1 for anything else, including unparseable answers. The model is told this scoring, so guessing does not pay.
+- Stable correct (headline): share of questions answered exactly right in all 5 runs. Report table `Luck-free scores`.
+- Luck: share of questions right in some runs only. Counted as not known.
+- Net points: mean points, -100% to +100%. Accuracy when answered: exact share among non-Unsure answers.
+- Exact (mean over runs) is still reported in table `Scores`.
+- Reason and design: `docs/design-kb-test-site.md`, section Removing luck.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
 - Margin: 95% interval on Majority. Set by the number of questions: 17 questions gives about ±20-24 points.
@@ -117,13 +122,13 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 2. Builds the index: BM25, plus embeddings (`embedding_model`) when the API key is set. Embeddings are cached in `tools/autotest/.cache/`.
 3. Loads golden cases with `format: multiple-choice`. Other formats are listed as skipped.
 4. For each model, mode, case and run:
-   - shuffles the options (same order for every model and mode within a run) and appends "Not covered by the knowledge base";
+   - shuffles the options (same order for every model and mode within a run) and appends "Not covered by the knowledge base" and "Unsure";
    - answers in the mode:
      - `baseline`: no knowledge base;
      - `classic`: one search, link expansion (`same_name`, `related`), 8K-token context;
      - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. Falls back to classic after 2 tool-format errors;
    - parses `ANSWER:` and maps letters back;
-   - scores exact match, partial credit, trap hit, Not-covered pick.
+   - scores exact match, partial credit, trap hit, Not-covered pick, Unsure pick and points (+1 / 0 / -1).
 5. Questions with image attachments get a second `vision` track on models tagged `vision` on the gateway.
 6. Writes the run folder and appends one summary row per model, mode and case to `evaluation/results/results.csv`.
 
