@@ -32,7 +32,7 @@ input: text
 tests: distinction
 knowledge:
   - vsphere/system/concepts/rightsizing
-  - vsphere/system/concepts/guest-os-sizing
+  - guest-os/system/concepts/guest-os-sizing
   - vsphere/cpu/metrics/virtual-motherboard/net-run
   - vsphere/cpu/metrics/virtual-motherboard/demand
   - vsphere/cpu/metrics/virtual-motherboard/usage
