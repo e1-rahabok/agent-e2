@@ -14,8 +14,11 @@ import yaml
 from kb import ROOT
 
 NOT_COVERED = 'Not covered by the knowledge base.'
+UNSURE = 'Unsure: the information available does not settle this question.'
+# Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
+POINTS = {'exact': 1, 'unsure': 0, 'wrong': -1}
 OPTION = re.compile(r'^([A-H])\.\s+(.*)$')
-ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-H](?:\s*(?:,|and|&)?\s*[A-H])*)\b', re.I)
+ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 
 
 class Case:
@@ -62,22 +65,24 @@ class Case:
         return any(a.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')) for a in self.attachments)
 
     def render(self, rng):
-        """Shuffle options, append Not covered, return (text, map shown_letter -> original)."""
+        """Shuffle options, append Not covered and Unsure, return (text, map shown_letter -> original)."""
         opts = self.options[:]
         rng.shuffle(opts)
-        letters = 'ABCDEFGH'
+        letters = 'ABCDEFGHIJ'
         mapping, lines = {}, []
         for i, (orig, text) in enumerate(opts):
             mapping[letters[i]] = orig
             lines.append(f'{letters[i]}. {text}')
-        nc = letters[len(opts)]
+        nc, un = letters[len(opts)], letters[len(opts) + 1]
         mapping[nc] = 'NC'
         lines.append(f'{nc}. {NOT_COVERED}')
+        mapping[un] = 'UN'
+        lines.append(f'{un}. {UNSURE}')
         parts = [self.stem, '', '\n'.join(lines)]
         if self.footer:
             parts += ['', self.footer]
-        multi = len(self.answer) > 1
-        parts += ['', 'Choose all correct options.' if multi else 'Choose the single best option.']
+        # Same instruction for every question: the number of correct options is never revealed.
+        parts += ['', 'Choose all the correct options. There can be more than one.']
         return '\n'.join(parts), mapping
 
     def image_parts(self):
@@ -105,21 +110,30 @@ def parse(text, mapping):
         pass  # last ANSWER line wins (models sometimes draft first)
     if not m:
         return None
-    shown = set(re.findall(r'[A-H]', m.group(1).upper()))
+    shown = set(re.findall(r'[A-J]', m.group(1).upper()))
     if not shown or not shown <= set(mapping):
         return None
     return sorted(mapping[s] for s in shown)
 
 
 def score(case, picked):
+    """Exact match, partial credit, trap hit, and points: +1 exact, 0 Unsure, -1 anything else.
+
+    Unsure counts only when chosen alone; Unsure mixed with other letters is a hedge and scores as wrong.
+    An unparseable answer scores as wrong: the user would get no usable answer.
+    """
     if picked is None:
-        return {'exact': 0, 'partial': 0.0, 'trap': 0, 'not_covered': 0, 'parse_ok': 0}
+        return {'exact': 0, 'partial': 0.0, 'trap': 0, 'not_covered': 0, 'unsure': 0, 'points': POINTS['wrong'], 'parse_ok': 0}
     correct, chosen = set(case.answer), set(picked)
+    unsure = int(chosen == {'UN'})
+    exact = int(chosen == correct)
     hits, wrong = len(correct & chosen), len(chosen - correct)
     return {
-        'exact': int(chosen == correct),
+        'exact': exact,
         'partial': round(max(0, hits - wrong) / len(correct), 3),
         'trap': int(bool(chosen & set(case.trap))),
         'not_covered': int('NC' in chosen),
+        'unsure': unsure,
+        'points': POINTS['exact'] if exact else POINTS['unsure'] if unsure else POINTS['wrong'],
         'parse_ok': 1,
     }

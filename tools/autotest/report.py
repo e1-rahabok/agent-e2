@@ -33,18 +33,26 @@ def aggregate(rows):
         by_case = defaultdict(list)
         for r in rs:
             by_case[r['case_id']].append(r)
-        majority, consistent = [], []
+        majority, consistent, stable, luck, stable_unsure = [], [], [], [], []
         for cid, crs in by_case.items():
             answers = Counter(r['answer_letters'] for r in crs)
             top, _ = answers.most_common(1)[0]
             majority.append(int(top == crs[0]['correct']))
             consistent.append(int(len(answers) == 1))
+            ex = [int(r['exact']) for r in crs]
+            stable.append(int(all(ex)))                      # correct in every run: known, not guessed
+            luck.append(int(any(ex) and not all(ex)))        # correct in some runs only: luck
+            stable_unsure.append(int(all(int(r.get('unsure') or 0) for r in crs)))
+        answered = [r for r in rs if not int(r.get('unsure') or 0)]
         n_cases = len(by_case)
         maj = _mean(majority)
         out[key] = {
             'answers': len(rs), 'cases': n_cases,
             'exact': _mean(r['exact'] for r in rs), 'partial': _mean(r['partial'] for r in rs),
             'majority': maj, 'margin': _margin(maj, n_cases), 'consistency': _mean(consistent),
+            'stable': _mean(stable), 'stable_margin': _margin(_mean(stable), n_cases), 'luck': _mean(luck),
+            'stable_unsure': _mean(stable_unsure), 'points': _mean(r.get('points') for r in rs),
+            'unsure': _mean(r.get('unsure') for r in rs), 'answered_accuracy': _mean(r['exact'] for r in answered),
             'trap': _mean(r['trap'] for r in rs), 'not_covered': _mean(r['not_covered'] for r in rs),
             'parse_fail': 1 - _mean(r['parse_ok'] for r in rs),
             'recall': _mean(r['retrieval_recall'] for r in rs),
@@ -64,7 +72,18 @@ def write(run_dir):
          f'- Index version: `{cfg["index_version"][:12]}`. Retrieval: {cfg["retrieval"]}. Temperature: {cfg["temperature"]}. Runs: {cfg["runs"]}.',
          f'- Cases: {len(cfg["cases"])} multiple-choice. Skipped (not multiple-choice): {", ".join(cfg["skipped_cases"]) or "none"}.',
          f'- Answers: {len(rows)} scored, {len(all_rows) - len(rows)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
-         '', '## Scores', '',
+         '', '## Luck-free scores', '',
+         '| Model | Mode | Track | Stable correct | ± margin | Luck | Stable unsure | Net points | Unsure | Accuracy when answered |',
+         '|---|---|---|---|---|---|---|---|---|---|']
+    for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['stable'])):
+        L.append(f'| {m} | {mode} | {tr} | {_pct(s["stable"])} | {_pct(s["stable_margin"])} | {_pct(s["luck"])} | '
+                 f'{_pct(s["stable_unsure"])} | {_pct(s["points"])} | {_pct(s["unsure"])} | {_pct(s["answered_accuracy"])} |')
+    L += ['', '- Stable correct: share of questions answered correctly in every run. The headline score: a known answer, not a guess.',
+          '- Luck: share of questions correct in some runs but not all. Counted as not known.',
+          '- Stable unsure: share of questions where the model chose Unsure in every run.',
+          '- Net points: mean of +1 (exact), 0 (Unsure alone), -1 (anything else, including unparsed). Range -100% to +100%. Guessing does not raise it.',
+          '- Accuracy when answered: exact share among answers that were not Unsure.', '',
+         '## Scores', '',
          '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Trap | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',
          '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['majority'])):

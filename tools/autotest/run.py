@@ -29,7 +29,7 @@ from llm import GatewayClient, LLMError, MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
 FIELDS = ['run_id', 'time', 'model', 'provider', 'mode', 'track', 'case_id', 'area', 'level', 'run', 'temperature',
-          'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'parse_ok',
+          'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason']
 
@@ -124,7 +124,7 @@ def main():
         images = c.image_parts() if track == 'vision' else []
         row = {'run_id': run_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
                'track': track, 'case_id': c.id, 'area': c.area, 'level': c.level, 'run': r,
-               'temperature': cfg['temperature'], 'options_order': ''.join(v if v != 'NC' else '*' for v in mapping.values()),
+               'temperature': cfg['temperature'], 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
             res, used, trace, fb = modes.answer(mode, client, m, question, images, cfg, retriever)
