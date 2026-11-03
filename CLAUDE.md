@@ -66,6 +66,7 @@ Standing rules for this repository. Read at the start of every session.
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 - Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
 - When asking the author about the book, give a verbatim search string.
+- When asking the author to check a file, give its full GitHub URL on `main`, so it is clickable. Name the item to check (case id, option letters, section).
 - Questions for the author go in `docs/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - Extract the book one Heading 3 at a time. Add that section's questions to `docs/author-questions.md` and continue; do not wait for answers.
 - Use terms from `knowledge/glossary/terminology.md`. Tag values must match it. A new term is added there as a proposal and flagged for the author before use.
