@@ -65,6 +65,22 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 - Hybrid = both searches fused. `bm25` in a report = embeddings were off or unavailable; keyword search only.
 - Why hybrid: keyword search misses paraphrases; vector search misses rare exact terms. Fusing both is the common practice for technical text.
 
+### Concurrency (speed)
+- `concurrency` in `config.yaml` = requests sent to the gateway at the same time. Default 12.
+- Cost does not change with concurrency: the same tokens are sent, only in parallel.
+- Tested in run 20261103-081849:
+
+| Concurrency | Answers per minute | Errors |
+|---|---|---|
+| 4 | about 25 | 0 (128 answers) |
+| 12 | about 54 | 0 (2032 answers) |
+
+- At 12, the full matrix (2160 answers) took about 38 minutes.
+- Limit: a Claude Code cloud background command stops after 2 hours. `--resume` continues a stopped run; saved answers are kept.
+- Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; find it by test.
+- Above the ceiling, providers return HTTP 429. The runner retries 429, 408 and 5xx. Answers still failing are listed; `--resume` retries them.
+- To test a higher value: `--concurrency 16` (or 20) on one run. Keep it if errors stay at 0 and answers per minute rise.
+
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
 - Set to 0.2 in `config.yaml`.
