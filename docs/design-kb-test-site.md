@@ -33,8 +33,8 @@ flowchart LR
   UI[Web UI] --> API[API service]
   API --> RET[Retriever]
   RET --> DB
-  API --> LLM[Local LLM server]
-  API --> EMB[Local embedding model]
+  API --> LLM[Vercel AI Gateway: open-weight model]
+  API --> EMB[Embedding model via AI Gateway]
   RET --> EMB
   API --> LOG[(SQLite: questions, answers, ratings, flags)]
   EVAL[Golden case runner] --> API
@@ -43,7 +43,7 @@ flowchart LR
 - Indexer: reads `knowledge/**/*.md` except the excluded folders. Uses the repo's own `scripts/validate.py` split logic for metadata. Refuses to index if the validator fails.
 - Retriever: hybrid search (keyword BM25 + vector), filtered by metadata, then link expansion.
 - API service: query pipeline, prompt assembly, streaming answer, logging.
-- Local LLM server: open-weights model served on the same host. No data leaves the host.
+- LLM: open-weight model via Vercel AI Gateway for the test site. At a customer, the same weights run on their own VM, so no data leaves their environment.
 - Golden case runner: sends only `## Prompt` of each case, never the answer key.
 - Every answer stores the index version (git commit SHA). A score is always tied to the knowledge that produced it.
 
@@ -83,13 +83,15 @@ flowchart LR
 ## Technology choice
 | Part | Choice | Reason |
 |---|---|---|
-| LLM serving | Ollama for the first build; vLLM if concurrency matters | Ollama is one binary and swaps models easily. vLLM serves several users at once. |
-| Model | Open-weights instruction model, 7B-32B class, at least 16K context | Small enough for one GPU. Pick by golden case score, not by benchmark. |
-| Embeddings | Local open embedding model on the same server | No external calls. |
+| LLM serving (test) | Vercel AI Gateway, open-weight models only | No hardware to buy. One API for all candidate models. Pay per token. The author already has a Vercel account. |
+| LLM serving (customer) | Ollama or vLLM on the customer's own VM | Same open weights the test site scores. vLLM when several users query at once. |
+| Model | Open-weight, Apache 2.0, 8B-32B, at least 16K context. Candidates below. | Must be downloadable and runnable by VMware customers. Pick by golden case score, not by benchmark. |
+| Embeddings | `alibaba/qwen3-embedding-0.6b` via Vercel for the test; same model on CPU at the customer | Small, open, runs without a GPU. |
 | Index and logs | SQLite with a vector extension | About 200 files: no separate vector database needed. One file to back up. |
 | API | Python (FastAPI) | Reuses `scripts/validate.py`. Same language as the repo tooling. |
 | UI | Server-rendered pages with light JavaScript; streaming answers | Few pages, low maintenance. |
-| Hosting | One host with a GPU, Docker Compose, reverse proxy with TLS | Everything local; matches "local LLM". |
+| Hosting (test site) | Vercel: web app, API routes, AI Gateway | No server to run. Index and logs in a hosted database. |
+| Hosting (customer) | One VM with a GPU, or CPU only for the smallest model | The deployment target the scores must predict. |
 | Rebuild | GitHub webhook or scheduled pull of `main` | Index always matches merged knowledge. |
 
 ## Security and abuse
@@ -100,16 +102,42 @@ flowchart LR
 - Logs hold questions. Tell visitors. No customer names in answers or logs shown on public pages.
 - Admin pages behind author login.
 
+## Candidate models
+Source: Vercel AI Gateway model list, checked 2026-11-03. Prices per 1M input / output tokens; re-check before use.
+
+| Vercel model id | Size | Customer hardware at 4-bit (estimate) | Price | Role |
+|---|---|---|---|---|
+| `openai/gpt-oss-20b` | 20B, mixture-of-experts | One 16 GB GPU | $0.07 / $0.30 | Main candidate |
+| `google/gemma-4-31b-it` | 31B dense | One 24-48 GB GPU | $0.14 / $0.40 | Strongest deployable size |
+| `google/gemma-4-26b-a4b-it` | 26B, 4B active | One 16-24 GB GPU | $0.13 / $0.40 | Fast option |
+| `alibaba/qwen-3-14b` | 14B dense | One 12-16 GB GPU or a large CPU VM | $0.12 / $0.24 | Small-hardware option |
+| `mistral/ministral-8b` | 8B | CPU VM or small GPU | $0.15 / $0.15 | Lower bound |
+
+- Excluded: frontier closed models (customers cannot run them); Llama (licence restrictions).
+- 70B class: test only if 31B misses golden cases through reasoning errors, not retrieval errors.
+- Gemini API (free Gemma 4) is a fallback for testing only: free-tier data may be used by Google.
+
+## Why 8B-32B is enough
+- The knowledge is not stored in the model. It is retrieved per question (RAG). Parameters hold general skill, not the repository.
+- Repository: 203 files, about 95,000 words (about 125K tokens). Average file about 600 tokens.
+- One answer uses 5-10 files: 4K-8K tokens. A 16K-32K context window is enough.
+- Size matters for: reasoning across files, unit arithmetic, trusting retrieved text over training. 27-32B is the expected sweet spot.
+- Order of impact on quality: retrieval, then knowledge writing, then model size.
+
+## Score transfer to customers
+- Providers may serve higher precision than a customer's 4-bit build. Hosted scores are an upper bound.
+- Before recommending a model: re-run the golden cases on the 4-bit build (for example, one hour on a rented GPU).
+
 ## Build phases
-1. Runner first, no website: CLI that indexes, answers golden cases in kb and baseline mode, writes `results.csv`. Proves the pipeline.
+1. Runner first, no website: CLI that indexes, answers golden cases in kb and baseline mode on all 5 candidate models via Vercel AI Gateway, writes `results.csv`. Proves the pipeline and picks the default model.
 2. Ask page with citations and retrieval trace. Author only.
 3. Ratings, flags, review queue. Invite visitors.
 4. Compare page (blind A/B) and dashboard.
-5. Optional: model comparison (same cases, several models) to pick the default model.
+5. 4-bit re-test of the chosen model on customer-like hardware.
 
 ## Decisions for the author
-- Hosting: own GPU machine, or rented GPU server?
+- Hosting: decided 2026-11-03: Vercel AI Gateway for the test site.
 - Audience: author only, invited experts, or public?
 - Who scores: author only, or visitor ratings count too?
-- Model: start with one model, or compare several in phase 5?
+- Model: decided 2026-11-03: compare the 5 candidates in phase 1.
 - Domain name and branding.

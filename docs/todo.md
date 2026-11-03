@@ -114,5 +114,5 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Convert the author's draw.io troubleshooting flows to Mermaid plus numbered steps in `diagnosis/` files. Keep the `.drawio` source and an exported `.png` next to them. Rule: README, section Troubleshooting flow diagrams.
 
 ## Test site
-- [ ] Author decisions: hosting, audience, scoring, model. See `docs/design-kb-test-site.md`, section Decisions for the author.
-- [ ] Build phase 1: CLI runner (index, answer golden cases in kb and baseline mode, write results.csv).
+- [ ] Author decisions: audience, scoring (hosting and model decided 2026-11-03). See `docs/design-kb-test-site.md`, section Decisions for the author.
+- [ ] Build phase 1: CLI runner via Vercel AI Gateway, 5 candidate models, kb and baseline mode, write results.csv.
