@@ -11,11 +11,12 @@
 - Text track only. Vision track: see below.
 - Modes:
   - baseline: no knowledge base.
-  - classic: one search of the knowledge base, results pasted into the prompt.
-  - agentic: the model calls search tools itself, up to 8 calls.
+  - classic: one lookup in the local knowledge base, results pasted into the prompt.
+  - agentic: the model calls lookup tools on the local knowledge base itself, up to 8 calls.
+  - No mode has internet access. "Search" in this report always means a lookup in the knowledge base files.
 - Method, index version, hybrid retrieval and temperature: `tools/autotest/README.md`, section Methodology.
 
-| Model | Baseline avg (no KB) | Classic avg (KB, one search) | Agentic avg (KB, model searches) | Classic, 5 runs |
+| Model | Baseline avg (no KB) | Classic avg (KB, one lookup) | Agentic avg (KB, model looks up) | Classic, 5 runs |
 |---|---|---|---|---|
 | google/gemma-4-31b-it | 34% | 58% | 49% | 47, 53, 71, 53, 65 |
 | mistral/mistral-small | 34% | 51% | 32% | 47, 47, 47, 59, 53 |
