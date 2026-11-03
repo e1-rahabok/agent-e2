@@ -34,6 +34,7 @@ evaluation/
 
 ## Automatic run
 - Multiple-choice cases: `tools/autotest/run.py`. See `tools/autotest/README.md`.
+- Methodology (score, index version, hybrid retrieval, temperature): `tools/autotest/README.md`, section Methodology.
 
 ## How to run (manual)
 1. Send only the `## Prompt` section (plus attachments) to the AI. Never send the rest of the file.

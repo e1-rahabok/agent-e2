@@ -4,7 +4,69 @@
 - Cases: 17 multiple-choice. Skipped (not multiple-choice): vsphere-cpu-001, vsphere-cpu-002, vsphere-cpu-003, vsphere-cpu-006, vsphere-foundations-001, vsphere-foundations-002, vsphere-foundations-003, vsphere-foundations-004, vsphere-memory-001, vsphere-storage-001, vsphere-storage-002.
 - Answers: 2160 scored, 0 failed.
 
-## Scores
+## Summary: one score per model
+
+- Score = Exact: share of the 17 questions answered fully correctly, 0-100%.
+- Each run asks all 17 questions once. The table shows the 5 run scores, then their average.
+- Text track only. Vision track: see below.
+- Modes:
+  - baseline: no knowledge base.
+  - classic: one search of the knowledge base, results pasted into the prompt.
+  - agentic: the model calls search tools itself, up to 8 calls.
+- Method, index version, hybrid retrieval and temperature: `tools/autotest/README.md`, section Methodology.
+
+| Model | Baseline avg | Classic avg | Agentic avg | Classic, 5 runs |
+|---|---|---|---|---|
+| google/gemma-4-31b-it | 34% | 58% | 49% | 47, 53, 71, 53, 65 |
+| mistral/mistral-small | 34% | 51% | 32% | 47, 47, 47, 59, 53 |
+| alibaba/qwen-3-32b | 41% | 48% | 45% | 53, 47, 53, 47, 41 |
+| openai/gpt-oss-20b | 32% | 48% | 27% | 47, 59, 53, 41, 41 |
+| google/gemma-4-26b-a4b-it | 41% | 45% | 41% | 53, 35, 53, 47, 35 |
+| alibaba/qwen-3-14b | 35% | 42% | 19% | 35, 47, 47, 47, 35 |
+| mistral/ministral-8b | 36% | 40% | 29% | 35, 35, 53, 41, 35 |
+| nvidia/nemotron-3-nano-30b-a3b | 22% | 25% | 24% | 18, 18, 18, 35, 35 |
+
+## Analysis
+
+### Read with care
+- 17 questions only. One question = 6 points of score.
+- 95% margin on a model's score: about ±20-24 points. Most gaps between neighbouring models are inside it.
+- One run swings by up to 24 points for the same model (gemma-4-31b-it classic: 47% to 71%). Use the 5-run average, not one run.
+- Ranking is a first signal, not a decision. A decision needs the planned 100 questions.
+
+### Knowledge base effect
+- Classic beat baseline for all 8 models. Gain: +3 (nemotron) to +24 points (gemma-4-31b-it).
+- Best result: gemma-4-31b-it classic, 58%.
+- mistral-small classic has the highest Majority (65%): its most common answer per question is right more often than any single run.
+
+### Agentic mode
+- Agentic scored below classic for 7 of 8 models. It used 2-3x the tokens and cost.
+- Recall shows why: agentic retrieved 0-50% of the expected files; classic retrieved 63%. The models search badly or stop early.
+- Weak cases:
+  - qwen-3-14b agentic: 19%, recall 0%. It rarely calls the tools.
+  - nemotron agentic: 0.2 tool steps per answer, recall 1%. It answers without searching.
+  - gpt-oss-20b agentic: 48% parse failures. It does not end with the `ANSWER:` line.
+- Agentic mode needs prompt or tool-format work before it is a fair test.
+
+### Parse failures
+- An answer without a parseable `ANSWER:` line scores wrong.
+- nemotron classic: 55% parse failures. Its score measures format compliance more than knowledge.
+
+### Hardest questions
+- vendor-neutral-general-001: 0%. Most models chose "Not covered by the knowledge base". The knowledge base has no cost content; expected.
+- vsphere-cpu-011, vsphere-cpu-013: about 0%. Multi-answer questions; models pick extra options. Check the knowledge files for these traps.
+
+### Vision track
+- 2 questions with screenshots, gemma and mistral models only.
+- gemma-4-26b-a4b-it classic: 90%. gemma-4-31b-it baseline: 80%.
+- mistral-small and ministral-8b: 0-30%. Not usable for screenshot questions.
+- 2 questions is too few for any conclusion beyond a first signal.
+
+### Run notes
+- Started at concurrency 4, stopped after 128 answers, resumed at concurrency 12. No answer lost. `config.json` holds the resumed settings.
+- Duration 42 minutes. Cost US$ 1.89 at gateway list prices.
+
+## Scores: all metrics
 
 | Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Trap | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
