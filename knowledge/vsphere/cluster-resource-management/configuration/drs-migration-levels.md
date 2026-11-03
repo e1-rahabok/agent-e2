@@ -16,6 +16,11 @@
 - Location in the vSphere Client: cluster, Configure tab, Services, vSphere DRS, Edit, Additional Options.
 
 ## Cluster DRS Score
+- VM DRS Score = VM happiness, a measure of the VM's execution efficiency. DRS recommendations aim to raise individual VM scores.
+- Cluster DRS Score = weighted average of the VM DRS Scores of all powered-on VMs. A good cluster score can hide a few VMs with low scores; the VM list under Monitor > vSphere DRS sorts VMs by score, lowest first.
+- DRS scans the cluster every minute for load-balancing recommendations.
+- DRS also weighs host network saturation in initial placement.
+- A VM that becomes incompatible with its current host (HA agent error, lost storage path, NSX component down) triggers DRS migrations to compatible hosts. Since vCenter 8.0 Update 3 the default of CompatCheckTransientFailureTimeSeconds is -1: DRS no longer moves a VM out only because of incompatibility with its current host. Earlier default: 600 seconds of tolerance.
 - Since vSphere 7.0, the Cluster DRS Score replaces the cluster load balance metric as the indicator of cluster balance and health.
 - Higher values are better. The exact value matters less than the range.
 - Score above 80%: the source indicates no performance impact.
@@ -66,6 +71,7 @@ source:
   path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79)
 corrections: []
 review_notes:
+- 'Section ''Cluster DRS Score'': VM happiness, weighted average, one-minute scan, network-aware placement and the compatibility-check option from the vSphere 9.1 documentation, vSphere Resource Management > Admission Control and Initial Placement, DRS Migration Threshold > DRS Score, VM migrations initiated by DRS due to incompatibility (pp. 1894, 1896, 1954-1955).'
 - Checked against 9.1 (revision 20260624). Pages 78-79. Migration levels, Cluster DRS Score causes and Predictive DRS unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - Predictive DRS requires VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature applies to vSphere 9.0 and VCF Operations.

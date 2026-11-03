@@ -30,6 +30,11 @@ esxcli sched swap system set -d true -n <datastore name>
   - the VMM execution mode,
   - the features activated for the VM.
 - The VMM and virtual device memory are fully reserved when the VM powers on.
+- The exact overhead of a VM is written to its vmware.log at power-on: search for VMMEM.
+- Representative per-VM overhead (documentation): about 4.5% of VM memory for a 256 GB VM, 5.5% for 64 GB, 6% for 16 GB. Smaller VMs carry proportionally more.
+- The largest VM that powers on with a full reservation is smaller than free host memory: its overhead is reserved too.
+- Hypervisor overhead: about 2% of memory on a 1 TB non-tiered host; about 7.96% on a host with 512 GB DRAM + 512 GB NVMe tiering.
+- Reconfiguration changes overhead. Example: lowering a reservation from 250 GB to 0 adds about 25 MB of overhead for page-table mappings. Since vSphere 8.0 Update 3, DRS raises the VM's overhead limit before a reconfiguration, so the change does not fail on overhead.
 
 ## VMX swap
 - VMX swap can significantly reduce the per-VM VMX memory reservation, which allows more memory to be swapped out when the host is overcommitted.
@@ -75,6 +80,7 @@ source:
   path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
 corrections: []
 review_notes:
+- 'Section ''Per-VM overhead'': VMMEM, the overhead percentages, hypervisor overhead and the DRS overhead limit from the vSphere 9.1 documentation, vSphere Resource Management > Overhead Memory on Virtual Machines, DRS Overhead Memory Management for VMs, Memory Tiering Troubleshooting > The Reservable Memory is Lower than Expected (pp. 1838, 1902-1903, 1958).'
 - Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - Source links the per-VM overhead section to vSphere Resource Management for overhead details. Not read.

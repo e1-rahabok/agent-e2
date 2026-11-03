@@ -220,6 +220,13 @@ Each entry has:
 - Written as now: both described as no longer shown, per the book.
 - Answer:
 
+### Q047 · The World of Metrics > Resource management · Untouched memory reservation
+- Files: `vsphere/foundations/resource-management`
+- Search: "since ESXi has reserved the space, it is not available to other VMs"
+- Question: the vSphere 9.1 documentation (vSphere Resource Management > Virtual Machine Memory, pp. 1833-1834) says that until a VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; only touched reserved memory is kept, even when idle. Does the book statement mean admission control (the reservation cannot be promised to another VM), while the physical pages can still be used by others until touched?
+- Written as now: Consumed jumps to the reservation at power-on; the reserved space is not available to other VMs. The existing correction says RAM is backed on first use, then stays locked.
+- Answer:
+
 ## Resolved
 ### Q001 · Chapter 2 CPU > VM · Linux Steal Time
 - Files: `vsphere/cpu/metrics/virtual-machine/overlap`, `vsphere/cpu/metrics/virtual-machine/latency`

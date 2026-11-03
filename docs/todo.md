@@ -17,6 +17,12 @@ Open work for this repository. Not indexed. Update when items close.
   - Updated: esxtop-cpu, esxtop-memory, system/concepts/esxtop, memory-tiering, storage host datastore; links in ready, host memory usage, host-storage-latency, metric-sources.
   - Left out as not relevant to performance monitoring: UI click steps, alarm and event configuration, preconfigured alarm list, SNMP, log files, vimtop, Solutions Manager, host hardware health, Configuration Maximums checker, Fault Tolerance charts, DPU charts, PMem Memory Mode, GPU chart details beyond their statistics level.
   - Questions: Q044-Q046.
+- [x] GPU monitoring (Monitoring and Performance + Resource Management): `vsphere/system/concepts/gpu-monitoring`, 2026-11-03.
+- [x] vSphere Resource Management, pp. 1824-1959: extracted 2026-11-03.
+  - New: `cluster-resource-management/concepts/admission-control-and-cluster-state`, `cluster-resource-management/diagnosis/vm-insufficient-resources-in-drs-cluster`.
+  - Updated: memory-tiering (mechanism, sizing, DRAM-only VMs, interactions, NVMe bandwidth threshold), memory-overhead, swap-and-compression, foundations/resource-management (memory allocation, default CPU shares), numa (scheduler mechanics), hyper-threading, latency-sensitivity (vHT), large-memory-pages (1 GB pages), drs-migration-levels (DRS Score), storage-io-control (deprecation).
+  - Left out: configuration steps, power policy parameters, affinity rule and span limit setup, DPM setup, HA and FT, PMem and vMMR, storage policies and I/O filters, Storage DRS setup, swap file location setup, memory tiering setup and NVMe failure handling, DRS fault definitions, reliable memory, EVC.
+  - Question: Q047.
 
 ## Open points to verify
 - [ ] vCLS status in vCenter 9.1: official VCF 9.1 Product Support Notes or release notes (currently third-party only).
@@ -32,7 +38,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Questions for the author: `docs/author-questions.md` (26 open).
+- [ ] Questions for the author: `docs/author-questions.md` (27 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
 - [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.

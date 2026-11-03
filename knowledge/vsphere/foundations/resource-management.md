@@ -58,6 +58,18 @@ Usage <= Entitlement   (at any point in time)
 - Healthy host (enough resources for all VMs, with headroom) and a highly utilized VM → Entitlement ≈ Usage.
 - Low-utilized VM → Entitlement much higher than Usage.
 
+### How memory entitlement is set under overcommit
+- Without overcommit, a VM gets all the memory it touches, up to its configured size. The configured size is an implicit limit: a 1 GB VM with a 2 GB limit never gets more than 1 GB.
+- Under overcommit, each VM gets an amount between its reservation and its limit, set from two inputs:
+  - its shares (a modified proportional-share policy);
+  - its estimated working set (Active), sampled every 60 seconds by default (Mem.SamplePeriod).
+- The working-set estimate rises fast and falls slowly, so a VM whose idle memory was reclaimed can ramp back up quickly.
+- Idle memory tax: idle pages are charged more than active ones, progressively as the idle-to-active ratio rises. A VM with many shares but little activity loses idle memory first. Changing Mem.IdleTax is rarely appropriate.
+
+### Default CPU shares
+- Default CPU shares are per vCPU: Low, Normal and High are in the ratio 1:2:4 per vCPU.
+- With default settings, a 1-vCPU VM gets half the CPU share of a 2-vCPU VM under contention.
+
 ### Why Usage can appear slightly above Entitlement
 - Reporting technique, not a real violation.
 - vCenter reports Usage in % as the average over the sample period.
@@ -100,6 +112,8 @@ corrections:
 - '2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author.'
 - '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
 review_notes:
+- 'Sections ''How memory entitlement is set under overcommit'', ''Default CPU shares'': from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839). Shares per vCPU (Normal = 1,000 per vCPU) is Claude''s own knowledge; the documentation states equal share per vCPU and the 1:2:4 ratio.'
+- 'Section ''Reservation: CPU vs memory'': the vSphere 9.1 documentation (Virtual Machine Memory, pp. 1833-1834) says that until the VM touches all memory within its reservation, the VMkernel can give the untouched part to other VMs. The table says the reserved space is not available to other VMs. Open question Q047.'
 - Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge (section: Two scheduler levels, Cluster row). Confirm.
 status: draft
 ```
