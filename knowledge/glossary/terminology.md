@@ -85,6 +85,7 @@ Tag values in front matter must use the terms defined here.
 | "uses only X% of what it needs" | "is charged X%" or "gets X% of the runtime it demands" | Same reason. |
 | object (for vCPU, Guest OS) | instance (vCPU), layer (Guest OS) | vCPU and Guest OS are not vSphere object types. |
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
+| Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | diagnosis | Interpretation is the purpose of every metric file. |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |

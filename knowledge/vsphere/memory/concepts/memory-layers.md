@@ -34,9 +34,11 @@
 |---|---|
 | Transparent Page Sharing (TPS) | Runs even when ESXi has plenty of RAM. Not a sign of unmet demand. Scope (intra-VM vs inter-VM): see `vsphere/memory/concepts/page-sharing`. |
 | Memory tiering | Transparent to the VM. ESXi moves inactive pages to NVMe. |
-| Balloon | Proactive: starts before ESXi fails to meet demand. Reduces guest cache. |
+| Balloon | The first sign of memory pressure, not of unmet demand. Proactive: starts before ESXi fails to meet demand. Reduces guest cache. |
 | Compress / swap | Proactive. Means ESXi Consumed is very high, not that VMs contend for RAM. Consumed can hold a lot of cache. Host cache is used first if present. |
 
+- ESXi uses 4 levels: TPS, memory tiering, balloon, compress/swap.
+- Memory management is a gradient across the 4 levels. Pressure and unmet demand are not a clean switch.
 - Demand is unmet only when Contention occurs.
 - The kernel large page setting contributes more to ESXi capacity and VM performance than these mechanisms.
 
@@ -113,8 +115,8 @@ source:
   path: Memory > Architecture > The 4 Layers; Virtual Memory; Relationship
 corrections: []
 review_notes:
-- 'Section ''ESXi memory management'': the book says ESXi uses 3 levels, then lists 4 (TPS, tiered memory, balloon, compress/swap). Open question in docs/author-questions.md.'
-- 'Section ''ESXi memory management'': the book calls Balloon the first sign of unmet demand, then says it does not mean ESXi is unable to meet demand. Written as proactive, not unmet demand. Open question in docs/author-questions.md.'
+- "Section 'ESXi memory management': author (2026-11-03), Q012: 4 levels. Book corrected."
+- "Section 'ESXi memory management': author (2026-11-03), Q013: balloon is the first sign of memory pressure, not unmet demand; a grey area because of the 4-level gradient."
 - 'Section ''Page mapping across layers'': diagram modified by the author from a Valentin Bondzio diagram.'
 - 'Section ''ESXi memory management'': the book cites VMware vSphere 6.5 Host Resources Deep Dive (Denneman, Hagoort), chapter 11, p. 243, for the overcommit backing types. Third-party excerpt not copied.'
 - 'Section ''ESXi memory management'': TPS KB from the book: https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html (not read).'

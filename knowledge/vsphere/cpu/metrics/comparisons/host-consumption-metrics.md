@@ -31,7 +31,7 @@
 
 ## With power management
 - Frequency 0.6x: Usage 60%, 60%, 60%, 30%, 30%, 0% for scenarios 1-6. Proposed value: 75%, 68%, 60%, 38%, 30%, 0%.
-- Frequency 1.3x: Usage 100%, 100%, 100%, 65%, 65%, 0% (capped at 100%). Proposed value: 163%, 146%, 130%, 81%, 65%, 0%.
+- Frequency 1.3x: Usage 100%, 100%, 100%, 65%, 65%, 0% (capped at 100% on older releases; current releases are not capped). Proposed value: 163%, 146%, 130%, 81%, 65%, 0%.
 - Demand is not capped.
 ![Usage vs the author's proposed value at 0.6x and 1.3x frequency](../../images/esxi-cpu-usage-vs-proposed-value-at-low-and-turbo-frequency.png)
 
@@ -100,5 +100,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Rollup over 6 scenarios'': the author''s proposed value column is included because the book text explains it. The similar column in the Turbo table (vsphere/cpu/concepts/cpu-frequency) is parked in docs/todo.md.'
+- "Section with the 1.3x frequency example: author (2026-11-03), Q010: Usage cap removed in vCenter and VCF Operations."
 status: draft
 ```

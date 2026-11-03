@@ -10,6 +10,8 @@
 
 ## Contrast with Linux Steal Time
 - Linux Steal Time includes only CPU Ready.
+- Overlap is not in Steal Time. ESXi accounts Overlap as Run, not as wait, so it bypasses the steal-time accumulator. The guest is not told the time was taken.
+- Linux Steal Time is blind to Overlap. Use Net Run = Run - Overlap (VCF Operations) for actual execution time.
 - VM CPU Latency includes many factors, including CPU frequency.
 - Pattern: same purpose, different formula.
 
@@ -89,6 +91,6 @@ corrections: []
 review_notes:
 - Sections Hyper-Threading: from CPU > Architecture.
 - 'Sections What Latency includes, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram modified by the author from a Valentin Bondzio diagram.'
-- 'Section ''Contrast with Linux Steal Time'': Chapter 1 says Steal includes only Ready; the VM section says Linux tracks Overlap as stolen time. Open question in docs/author-questions.md.'
+- "Section 'Contrast with Linux Steal Time': author (2026-11-03), Q001: Steal Time = Ready only; blind to Overlap."
 status: draft
 ```

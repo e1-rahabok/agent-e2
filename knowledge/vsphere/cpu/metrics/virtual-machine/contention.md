@@ -2,12 +2,14 @@
 
 ## Meaning
 - Time the vCPU does not get CPU time.
-- A VCF Operations metric. Before July 2024 it mapped to CPU Latency. From July 2024 it has its own formula.
+- A VCF Operations metric. vSphere has no Contention counter. The vSphere counter is CPU Latency (esxtop %LAT_C).
+- Before VCF Operations 8.18 (July 2024) Contention mapped to CPU Latency, which excludes limit. From 8.18 it has its own formula, which includes limit.
 
 ## Formula (from July 2024)
 ```text
 Contention (%) = Overlap + Co-stop + Ready + Other Wait (if less than 1%)
 ```
+- Other Wait is added only when below 1%. The condition prevents false positives: idle VMs can report raised VM Wait after some upgrades (Broadcom KB 338438).
 ![Contention covers Overlap, Co-stop, Ready including Limit, and Other Wait; Swap Wait belongs to memory contention](../../images/vm-cpu-contention-components-overlap-costop-ready-other-wait.png)
 
 ## Mechanism
@@ -60,7 +62,7 @@ source:
   path: CPU > VM (pp. 78-118) > Contention Metrics > Contention
 corrections: []
 review_notes:
-- 'Section ''Formula'': meaning of ''(if less than 1%)'' for Other Wait is unclear. Open question in docs/author-questions.md.'
-- 'Section ''Meaning'': the book''s Latency section describes a Contention value that excludes limit. That is read as the pre-July-2024 mapping to Latency. Open question in docs/author-questions.md.'
+- "Section 'Formula': author (2026-11-03), Q004: the 1% condition avoids false positives. https://knowledge.broadcom.com/external/article/338438/increased-vmwait-for-idle-vms-after-upgr.html"
+- "Section 'Meaning': author (2026-11-03), Q005: Contention is a VCF Operations counter; vSphere has CPU Latency (%LAT_C). The formula changed in VCF Operations 8.18."
 status: draft
 ```

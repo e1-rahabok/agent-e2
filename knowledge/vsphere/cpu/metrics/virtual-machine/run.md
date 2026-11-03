@@ -84,6 +84,6 @@ corrections: []
 review_notes:
 - Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 traps: from CPU > Architecture.
 - 'Sections Not included in Run, Instance, Use: from CPU > VM.'
-- 'Section ''Use'': the book says Run suits Guest OS sizing, not VM sizing, and later says Run suits VM capacity sizing (HT ramp test). Open question in docs/author-questions.md.'
+- "Section 'Use': author (2026-11-03), Q003: Run is for Guest OS sizing. Book updated."
 status: draft
 ```

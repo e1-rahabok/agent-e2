@@ -3,6 +3,7 @@
 ## Meaning
 - How many threads run per running core.
 - Use it together with Core Utilization.
+- Not a built-in VCF Operations metric. The author's own metric, published in the VCF vCommunity Adapter: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/tree/main/docs/reference/metrics
 
 ## Formula
 ```text
@@ -67,5 +68,6 @@ source:
 corrections: []
 review_notes:
 - The book does not say whether ESXi CPU Imbalance is a built-in VCF Operations metric or the author's custom metric. Author to confirm.
+- "Section 'Meaning': author (2026-11-03), Q011: author's own metric, not built-in."
 status: draft
 ```

@@ -39,6 +39,8 @@
 - Example: below 0.2% Ready on an idle VM running at 0.8%.
 - Ready is lower when the guest stays busy than when processes keep waking and sleeping (more scheduling events).
 - All else equal, Ready is higher on larger VMs. A busy host is less likely to run many vCPUs at the same time.
+- Downsizing reduces both Ready and Co-stop: a smaller VM fits into free threads more easily.
+- Counter-effect: shares scale with vCPU count by default. A smaller VM gets fewer shares, which can raise Ready under contention.
 - High Ready with low Co-stop: whenever the VM runs, there are enough threads for all its vCPUs. An all-or-nothing pattern.
 
 ## Guest OS sizing
@@ -107,5 +109,6 @@ review_notes:
 - 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
 - 'Section ''Floor and size'': the VM section says Ready is higher on larger VMs. The Architecture section says VM size reduces Co-stop but not Ready. Open question in docs/author-questions.md.'
 - 'Section ''Observed values'': the 50% statement is the book''s observation on a 16-vCPU VM, not a stated threshold.'
+- "Section 'Larger VMs': author (2026-11-03), Q007: downsizing reduces Ready and Co-stop; fewer shares can raise Ready. 'Shares scale with vCPU count by default' is from Claude's own knowledge."
 status: draft
 ```

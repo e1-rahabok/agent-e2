@@ -63,7 +63,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 | Run | Measures how long the vCPU runs. Unit: ms, not GHz. |
 | Run | Does not measure how fast it runs (frequency) or how efficiently (Hyper-Threading). |
 | Ready | Caused by ESXi: no physical thread available. |
-| Ready | Not reduced by making the VM smaller. |
+| Ready | Usually reduced by making the VM smaller: it fits free threads more easily. Fewer shares on a smaller VM can raise it. |
 | Co-stop | Caused by the VM: its vCPUs drift apart. |
 | Co-stop | Reduced by making the VM smaller, especially relative to the NUMA boundary. |
 | Ready, Co-stop | Opposite causes. For the guest the effect is the same: a freeze. |
@@ -129,7 +129,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 ## Traps
 - "Ready + Co-stop + Run + Wait is 100% for the VM" → it is 100% per vCPU. Sum over vCPUs for the VM total in ms.
 - "Ready 5% is always worse than Ready 2%" → read against Run.
-- "A smaller VM reduces Ready" → it reduces Co-stop. Ready is caused by ESXi.
+- "A smaller VM reduces only Co-stop" → it usually reduces Ready too. Fewer shares can work the other way.
 - "High Wait means IO problems" → Wait includes idle.
 - "No Ready, so no Hyper-Threading contention" → states are blind to Hyper-Threading. Check CPU Latency.
 - "Compare ms counters across VMs" → ms counters scale with vCPU count. Use %.
@@ -199,5 +199,6 @@ review_notes:
 - "Section 'State diagram': transitions are read from the book's state diagram image. Three arrows (Wait to Run, Wait to Co-stop, Run to Co-stop) carry no label in the image. The meaning given for them in the body is Claude's reading. Author to confirm."
 - "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/cpu/metrics/virtual-machine/ready)."
 - "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
+- "Section 'Effect of VM size': author (2026-11-03), Q007: downsizing reduces both Ready and Co-stop; smaller shares can increase Ready."
 status: draft
 ```

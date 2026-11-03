@@ -79,7 +79,7 @@
 ![Core Utilization vs actual usage with 20% All-Core Turbo](../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png)
 - Example with All-Core Turbo at 20% above base.
 - The table shows actual values.
-- The reported Usage (%) metric is capped at 100%. Actual usage above 100% is hidden by the cap.
+- Older releases capped the reported Usage (%) at 100%, hiding actual usage above it. Current vCenter and VCF Operations no longer cap it (Broadcom KB 417702, KB 431027).
 
 | Core Utilization | Actual usage | Analysis |
 |---|---|---|
@@ -145,5 +145,6 @@ review_notes:
 - "Section 'All-Core Turbo': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party)."
 - "Sections 'All-Core Turbo', 'Likely vCPU speed on a busy cluster', 'TDP': author (2026-11-03), quiz answers CPU Q2 and Q4 (vSphere Metric Quiz.docx). Author confirmed 2.4 GHz (All-Core Turbo x 80%) in Q034."
 - "Section 'Likely vCPU speed on a busy cluster': `vsphere/cpu/metrics/virtual-machine/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written."
+- "Section 'Impacts on ESXi': author (2026-11-03), Q010: Usage cap removed in both vCenter and VCF Operations; supersedes the 2026-11-02 note that the metric is capped."
 status: draft
 ```
