@@ -10,6 +10,18 @@
 - Host cache (if designed on fast SSD) is faster than disk swap.
 - Compressed and swapped data stays out until the guest requests it. Bringing it back costs CPU.
 
+## When ESXi swaps instead of ballooning
+- Host swapping is the fallback when the balloon driver cannot reclaim:
+  - VMware Tools (balloon driver) never installed;
+  - balloon driver deactivated;
+  - balloon driver not running yet, for example while the guest boots;
+  - balloon driver too slow for current demand;
+  - balloon at its maximum size (sched.mem.maxmemctl, or the guest-type maximum).
+- Ballooning lets the guest choose which pages to give back. Host swapping picks pages without guest knowledge.
+- Compression cache: up to 10% of VM memory by default (Mem.MemZipMaxPct, 5-100%). Compressed pages beyond the cache are swapped.
+- Swap space reserved per VM = configured memory - memory reservation. In practice only a fraction is used.
+- Guest swap (page file) should be at least configured memory - memory reservation, because ballooning pushes the guest to page.
+
 ## Transition: input, process, output
 | Stage | Metric | Meaning |
 |---|---|---|
@@ -85,6 +97,7 @@ source:
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz
 corrections: []
 review_notes:
+- 'Section ''When ESXi swaps instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
 - 'Section ''Mechanism'': the book''s sentence on why there is no 3:1 compression is incomplete. Left out.'
 status: draft
 ```

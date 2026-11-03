@@ -18,6 +18,17 @@
 - A VM with no more vCPUs than cores per NUMA node can have a slight performance advantage.
 - Wide VM latency increase can be reduced with vNUMA. See `vsphere/cpu/concepts/virtual-numa`.
 
+## Scheduler mechanics
+- Each VM gets a home node at power-on, chosen to balance CPU and memory load across nodes. Its vCPUs run only on that node; new memory comes from that node.
+- Wide VMs are split into NUMA clients, each managed as a normal single-node client. ESXi measures inter-node latency at boot and places a wide VM's clients on nodes close to each other.
+- Every 2 seconds (default) the rebalancer checks node loads. It can move a VM to a less loaded node, preferring a VM that already has memory there, or swap VMs between nodes to improve locality.
+- After a move, ESXi migrates the VM's memory to the new home node page by page (4 KB), at a controlled rate. Memory is not moved if the VM stays only briefly.
+- Until migration completes, the VM runs with remote memory: esxtop N%L below 100%, NRMEM above 0. NMIG counts the moves. See `vsphere/memory/metrics/comparisons/esxtop-memory`.
+- After a large workload change (many VMs started) placement settles within seconds to minutes.
+- Page sharing is per node: each node keeps its own copy of a shared page, so shared pages never force remote access.
+- A VM with manual CPU affinity or memory affinity is no longer managed by the NUMA scheduler: no rebalancing, no memory migration. NUMA node affinity (numa.nodeAffinity) keeps NUMA management but limits the nodes.
+- Memory affinity without CPU affinity breaks automatic rebalancing.
+
 ## Virtual topology (ESXi 8.0 and later)
 - ESXi 8.0 enhanced virtual topology:
   - selects optimal coresPerSocket values for VMs,
@@ -66,6 +77,7 @@ source:
   path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
 corrections: []
 review_notes:
+- 'Section ''Scheduler mechanics'': from the vSphere 9.1 documentation, vSphere Resource Management > How ESX NUMA Scheduling Works, Home Nodes and Initial Placement, Dynamic Load Balancing and Page Migration, Transparent Page Sharing Optimized for NUMA, Specifying NUMA Controls (pp. 1936-1942). The esxtop counter mapping is Claude''s own knowledge.'
 - Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.

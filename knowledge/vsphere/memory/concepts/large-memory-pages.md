@@ -23,6 +23,14 @@
 - ESX does not share large pages. See `vsphere/memory/concepts/page-sharing`.
 - Large pages can change sharing behaviour. Page sharing might not occur until overcommitment is high enough to force large pages to break into small pages.
 
+## 1 GB pages
+- ESXi backs VM memory with 2 MB pages by default. 1 GB pages are opt-in per VM: sched.mem.lpage.enable1GPage = TRUE, set while powered off.
+- A 1 GB page VM powers on only with a full memory reservation. All its memory is preallocated at power-on and never reclaimed: Consumed stays at the configured size for the VM's lifetime.
+- Backing is best effort: host memory fragments over time, so 1 GB pages are most likely on a freshly booted host.
+- After vMotion, part of the memory may no longer be backed by 1 GB pages. DRS and HA ignore 1 GB capability in placement.
+- 1 GB page VMs are excluded from memory tiering.
+- The guest gains most when it also uses large pages. Hypervisor-only large pages still reduce TLB misses.
+
 ## Traps
 - "Large pages in ESX are enough" → the guest OS and applications must use large pages for the full benefit.
 - "Large pages make page sharing more effective" → ESX does not share large pages.
@@ -52,6 +60,7 @@ source:
   path: ESX Memory Considerations > 2MB Large Memory Pages (pp. 37-38); Guest Operating System Memory Considerations (p. 59)
 corrections: []
 review_notes:
+- 'Section ''1 GB pages'': from the vSphere 9.1 documentation, vSphere Resource Management > Support for Large Page Sizes, Backing Guest vRAM with 1 GB Pages, Memory Tiering VM profiles (pp. 1837, 1846, 1947-1948).'
 - Checked against 9.1 (revision 20260624). Pages 37-38 unchanged. Guest page reference now p. 59.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - Source uses 'large pages' only for 2 MB pages. It says 1 GB pages exist on some CPUs but are out of its scope.

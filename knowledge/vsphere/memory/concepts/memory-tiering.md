@@ -10,6 +10,33 @@
 - Memory tiering transparently monitors VM memory activity.
 - Frequently accessed data stays on DRAM.
 - Infrequently accessed data is placed on the NVMe tier.
+- Tiering starts when host memory consumption reaches about 80% of DRAM capacity. Below that, all pages stay in DRAM.
+- Pages are classified by recency (how recently accessed) and frequency (how often accessed).
+- The whole memory of each VM is scanned in batches; the scan cycle length depends on VM memory size, the scan rate on memory pressure. Pages move at the end of each cycle.
+- Only VM pages are tiered. Kernel memory never goes to NVMe.
+- CPU cost: about an eighth of a core on smaller hosts.
+- Compared with host swapping: tiering picks cold pages by age on a dedicated local NVMe device; swapping picks pages at random, often on shared SAN or NAS storage.
+
+## Sizing (documentation)
+- Default DRAM:NVMe ratio 1:1: doubles host memory. NVMe used = the smaller of the ratio and the tier partition, at most 4 TB.
+- Example: 256 GB DRAM with a 4 TB NVMe device at 1:1 → 256 GB of tiered memory.
+- Good candidates: hosts where consumed memory is high (above 50% allocated across VMs) while active memory stays below 50% of DRAM.
+- Most workloads keep active memory between 10% and 30% of host memory.
+- Example: 1 TB DRAM host, 200 GB active, 800 GB consumed. With 1 TB NVMe and twice the VMs: 400 GB active is still within 50% of DRAM.
+- A tiered host has higher hypervisor overhead: about 7.96% of total memory for 512 GB DRAM + 512 GB NVMe, against about 2% for a 1 TB non-tiered host. Less memory is reservable.
+
+## VMs kept in DRAM
+- Excluded from tiering automatically: 1 GB page VMs, confidential VMs, Fault Tolerance VMs, large VMs, low latency VMs, nested virtualization VMs (VBS can opt in), PCI passthrough VMs (including vGPU), preallocated VMs, vQAT VMs.
+- VMs with more than 512 GB of memory and 64 vCPUs can degrade on a tiered host. The documentation advises disabling tiering for them, with a full memory reservation.
+- A VM with tiering disabled needs a full memory reservation. Without it, it competes for DRAM with tiered VMs and its pages go to the host swap file, slower than NVMe.
+- Each DRAM-only reservation shrinks the DRAM left for tiered VMs. Example: 1 TB DRAM, 1 TB NVMe; two 200 GB VMs fully reserved and excluded → the remaining VMs run at about 0.6:1 (600 GB DRAM : 1 TB NVMe).
+
+## Interactions
+- Do not combine memory overcommit with memory tiering: ballooning and swapping on top of NVMe pages degrade performance.
+- Memory reservations (not pinned memory) can be split between DRAM and NVMe when the reserved VMs together exceed DRAM.
+- vMotion of a tiered VM takes 1.5x to 2x longer: pages are fetched from NVMe first. The running VM is barely affected.
+- After vMotion the destination host starts tiering the VM from scratch: page heat is not transferred.
+- On a tiered destination host, DRS also weighs active memory in its placement decision.
 
 ## Hardware selection
 - Select a high-performance NVMe device with:
@@ -43,7 +70,11 @@
 | bandwidth.read, bandwidth.write | Host, VM | MBps, Latest, level 2 | Read and write bandwidth per tier (DRAM = tier 0, NVMe = tier 1). |
 | latency.read, latency.write | Host | ns, Latest, level 3 | DRAM and NVMe read and write latency. |
 
-- Tier in rate is the performance signal: a VM touches a page that sits on NVMe and waits for it. Tier out rate is housekeeping of cold pages.
+- Tier in rate (NVMe read bandwidth) is the performance signal: a VM touches a page that sits on NVMe and waits for it. Tier out rate (NVMe write bandwidth) is cold pages moving down.
+- NVMe read bandwidth above 200 MB/s: start watching NVMe device latency (documentation threshold).
+- Documentation observation: read latency below 200 µs at about 400 MB/s on a strong device; about 300 µs at similar bandwidth on other devices.
+- To investigate one slow VM, check that VM's NVMe read bandwidth.
+- NVMe device wear: `esxcli nvme device log smart get -A <adapter>` shows remaining life and wear rate.
 - NVMe read latency against the thresholds above uses latency.read of the NVMe tier, in nanoseconds: 200 µs = 200,000 ns.
 - The NVMe charts appear only on hosts with memory tiering configured.
 - latency.read and latency.write are level 3: not stored at the default statistics level. See `vsphere/foundations/vcenter-statistics`.
@@ -60,6 +91,9 @@
 - "Tiered memory performs like DRAM" → infrequently accessed data sits on the NVMe tier.
 - "Any SSD works for memory tiering" → the source specifies a high-performance NVMe device with the write rate and endurance above.
 - "Active memory at 75% of DRAM is the limit" → 75% is the point where some workloads begin to suffer. The ideal is 50%.
+- "High consumed memory on a tiered host is a problem" → consumed may exceed DRAM by design; active memory against DRAM decides performance.
+- "Disable tiering for a VM and it gets DRAM" → only with a full memory reservation; otherwise it can be swapped.
+- "NVMe tiering behaves like swap" → tiering selects cold pages by age on a dedicated device; swap picks random pages.
 
 ## Metadata
 ```yaml
@@ -92,6 +126,8 @@ review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Introduced in vSphere 9.0. The 9.1 document (p. 38) refers to ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub''. Not read.'
 - 'Section ''Operations (book)'': from Storage > ESXi. The 25% figure is the author''s practice.'
+- 'Sections ''Mechanism'' (from the 80% line on), ''Sizing (documentation)'', ''VMs kept in DRAM'', ''Interactions'' and the bandwidth, latency and SMART lines in ''Monitoring counters'': from the vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe, Capacity Planning Considerations, Virtual Machine Profiles, Configuration Parameters, Assessing Customer Workloads, Memory Tiering Considerations and Best Practices, NVMe Failure Scenarios, Troubleshooting > The Reservable Memory is Lower than Expected, NVMe Device Health Monitoring (pp. 1844-1849, 1868-1873, 1957-1959).'
+- 'Section ''Interactions'': the reason given for not combining overcommit with tiering is Claude''s paraphrase of the documentation (potential performance impact).'
 - 'Section ''Monitoring counters'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Hosts > Memory (MB), Memory Rate (MBps), Memory Bandwidth (MBps), Memory Latency (ns); View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145). The reading of tier in rate as the performance signal is Claude''s inference.'
 status: draft
 ```

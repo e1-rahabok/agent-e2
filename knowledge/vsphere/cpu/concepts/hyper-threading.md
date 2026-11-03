@@ -23,12 +23,20 @@
 - ESX spreads load across all physical cores.
 - A logical processor with no work is halted.
 - Its execution resources become available to the other logical processor on the same core.
+- The scheduler places a VM's vCPUs on two different cores before using both logical processors of one core.
+- A vCPU running on one logical processor of a busy core gets slightly more than half the throughput it gets alone on the core.
+- The scheduler accounts for this: a VM running with a whole core (sibling halted) is charged more than a VM running on half a core.
+- The gain is application dependent. Some applications slow down, because the two logical processors share caches and execution units.
 
 ## Affinity caution
 - The two logical processors share most processor resources.
 - Pinning vCPUs to both logical processors of one core can cause poor performance.
 - The source gives this example: CPU 0 and CPU 1 on the same core.
 - The caution applies whether the vCPUs come from different VMs or from one SMP VM.
+
+- CPU admission control ignores affinity: a pinned VM can be admitted and still not get its reservation.
+- A VM's affinity covers its vCPUs and its helper worlds (devices, display). Pinning a 1-vCPU VM to one CPU, or a 2-vCPU VM to two CPUs, stops the helpers from running alongside the vCPUs. Include at least one extra CPU.
+- Affinity may no longer fit after vMotion to a host with a different CPU count.
 
 ## vCPU count and hyper-threads
 - Hyper-threads count as logical threads.
@@ -72,6 +80,7 @@ source:
   path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21)
 corrections: []
 review_notes:
+- 'Sections ''Scheduling behaviour'', ''Affinity caution'': throughput, charging, scheduler preference and affinity side effects from the vSphere 9.1 documentation, vSphere Resource Management > Hyperthreading and ESX Hosts, Using CPU Affinity, Potential Issues with CPU Affinity (pp. 1829-1831).'
 - Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - This source gives no Hyper-Threading penalty percentages. The book's 37.5% (VM Usage) and 50% (ESXi Used) figures are not confirmed by this source. Author to confirm.

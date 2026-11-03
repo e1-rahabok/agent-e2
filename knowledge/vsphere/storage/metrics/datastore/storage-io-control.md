@@ -4,6 +4,7 @@
 - Datastore-wide counters computed by Storage I/O Control (SIOC). They span all hosts and VMs on the datastore, unlike the host datastore counters.
 - All show 0 when SIOC is deactivated on the datastore.
 - Statistics level 3. Not stored at the default level 1.
+- Storage I/O Control components are deprecated as of VCF 9.0. The counters still appear in the vSphere 9.1 charts.
 
 | Counter | Chart label | Unit, rollup | Meaning |
 |---|---|---|---|
@@ -65,6 +66,7 @@ source:
   path: vSphere Monitoring and Performance > Overview Performance Charts > Datastores and Datastore Clusters > Storage I/O Control Normalized Latency, Aggregate IOPs, Activity, Maximum Queue Depth per Host, Virtual Machine Observed Latency per Datastore (pp. 2048-2052)
 corrections: []
 review_notes:
+- 'Section ''Meaning'': SIOC deprecation from the vSphere 9.1 documentation, vSphere Resource Management > Manage Storage I/O Resources with vSphere (p. 1886).'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Formula'': the plain-text formula restates the documentation text (IO count as weight, adjusted for IO size). The exact size adjustment is not published.'
 - 'Section ''Why'': SIOC lowering per-host device queue depth by shares when the congestion threshold is crossed is Claude''s own knowledge; the documentation says only that queue depth can change over time when congestion is detected at the array.'
