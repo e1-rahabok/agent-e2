@@ -12,6 +12,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"
+format: multiple-choice
+level: l400
+answer: [A,B,C,D]
+trap: [E,F,G]
 status: draft
 ---
 

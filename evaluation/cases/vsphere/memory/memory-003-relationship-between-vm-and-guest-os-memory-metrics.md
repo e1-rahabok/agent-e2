@@ -13,6 +13,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 VM vs Guest OS"
+format: multiple-choice
+level: l400
+answer: [A,B,D,E]
+trap: [C]
 status: draft
 ---
 

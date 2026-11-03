@@ -11,6 +11,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."
+format: free-text
 status: draft
 ---
 

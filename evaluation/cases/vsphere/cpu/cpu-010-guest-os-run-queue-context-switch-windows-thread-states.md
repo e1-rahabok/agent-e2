@@ -13,6 +13,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q7 Guest OS CPU"
+format: multiple-choice
+level: l400
+answer: [D,E,F]
+trap: [A,B,C]
 status: draft
 ---
 

@@ -213,6 +213,7 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 | 5 | Auto Test | 4-bit re-test of the chosen model and mode on customer-like hardware. Re-run after each major knowledge update. |
 
 ## Auto Test plan
+- Implementation: `tools/autotest/` (README there). Built 2026-11-03.
 ### Question set
 - Target: 100 multiple-choice questions. Start with the 30 existing quiz-style questions; grow to 100.
 - Every question has: options A-G, the correct set, one trap option named in `## Likely wrong answer`, and the `knowledge` ids that answer it.

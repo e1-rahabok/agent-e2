@@ -27,8 +27,15 @@ evaluation/
 | `knowledge` | Knowledge ids the answer should draw on. Used to check retrieval, not only the answer. |
 | `origin` | book, quiz, live-lab, real-ticket, synthetic. |
 | `source_path` | Heading path in the source document, for QA. |
+| `format` | multiple-choice (auto-scored by `tools/autotest`), free-text (rubric, judge or author), compound (scored by hand). |
+| `level` | recall, l400, multi-hop, screenshot. Multiple-choice only. |
+| `answer` | Correct option letters as written in `## Prompt`. Multiple-choice only. Never sent to the AI. |
+| `trap` | Option letters of the known wrong answer. Multiple-choice only. Never sent to the AI. |
 
-## How to run
+## Automatic run
+- Multiple-choice cases: `tools/autotest/run.py`. See `tools/autotest/README.md`.
+
+## How to run (manual)
 1. Send only the `## Prompt` section (plus attachments) to the AI. Never send the rest of the file.
 2. Run twice with the same model and effort:
    - `baseline`: no knowledge base.

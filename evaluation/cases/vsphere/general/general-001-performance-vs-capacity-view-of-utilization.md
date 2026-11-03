@@ -12,6 +12,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Performance vs Capacity"
+format: multiple-choice
+level: l400
+answer: [A,B,C,D,E]
+trap: []
 status: draft
 ---
 

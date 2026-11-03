@@ -10,6 +10,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Resource Management."
+format: free-text
 status: draft
 ---
 

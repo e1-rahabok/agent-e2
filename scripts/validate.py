@@ -112,6 +112,21 @@ def main():
         fm = yaml.safe_load(t.split('---\n', 2)[1]) if t.startswith('---\n') else {}
         for r in (fm or {}).get('knowledge') or []:
             if r not in ids: bad(f, f'knowledge link "{r}" does not exist')
+        fmt = (fm or {}).get('format')
+        if fmt not in ('multiple-choice', 'free-text', 'compound'):
+            bad(f, f'format "{fmt}" must be multiple-choice, free-text or compound')
+        if fmt == 'multiple-choice':
+            prompt = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
+            letters = set(re.findall(r'^([A-H])\.\s', prompt.group(1), re.M)) if prompt else set()
+            for k in ('answer', 'trap'):
+                for x in fm.get(k) or []:
+                    if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
+            if not fm.get('answer'): bad(f, 'multiple-choice case has no answer')
+            if fm.get('level') not in ('recall', 'l400', 'multi-hop', 'screenshot'):
+                bad(f, 'level must be recall, l400, multi-hop or screenshot')
+        for att in (fm or {}).get('attachments') or []:
+            if not os.path.exists(os.path.join('evaluation', 'attachments', att)):
+                bad(f, f'attachment not found: {att}')
 
     # every image file must be linked from a knowledge file, so the AI gets its context
     for img in glob.glob('knowledge/**/images/*.png', recursive=True):
