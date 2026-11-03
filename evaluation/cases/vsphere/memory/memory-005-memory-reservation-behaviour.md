@@ -1,24 +1,4 @@
----
-id: vsphere-memory-005
-title: "Memory reservation behaviour"
-scope: vsphere
-area: memory
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/resource-management
-  - vsphere/memory/metrics/host/reservation
-  - vsphere/memory/concepts/memory-as-storage
-  - vsphere/system/concepts/hypervisor-overhead
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
-format: multiple-choice
-level: l400
-answer: [A,B]
-trap: [C,D]
-status: draft
----
+# Memory reservation behaviour
 
 ## Prompt
 Reservation, shares and limit are the 3 resource management controls. Choose the correct statements:
@@ -42,3 +22,26 @@ D (reservation assumed to block memory before use) or C.
 
 ## Notes
 - The knowledge base (`vsphere/system/concepts/hypervisor-overhead`) says kernel memory reservation stays steady even when kernel use drops 90%. Check E's key against it during review.
+
+## Metadata
+```yaml
+id: vsphere-memory-005
+title: "Memory reservation behaviour"
+scope: vsphere
+area: memory
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/resource-management
+  - vsphere/memory/metrics/host/reservation
+  - vsphere/memory/concepts/memory-as-storage
+  - vsphere/system/concepts/hypervisor-overhead
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
+format: multiple-choice
+level: l400
+answer: [A,B]
+trap: [C,D]
+status: draft
+```

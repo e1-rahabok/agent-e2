@@ -1,27 +1,4 @@
----
-id: vsphere-cpu-004
-title: "ESXi true utilization from Usage, Core Utilization and Utilization"
-scope: vsphere
-area: cpu
-input: screenshot
-tests: judgment
-knowledge:
-  - vsphere/cpu/metrics/host/usage
-  - vsphere/cpu/metrics/host/core-utilization
-  - vsphere/cpu/metrics/host/utilization
-  - vsphere/cpu/concepts/esxi-thread-core-accounting
-  - vsphere/cpu/concepts/cpu-capacity
-attachments: 
-  - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png
-  - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q1 ESXi CPU Utilisation"
-format: multiple-choice
-level: screenshot
-answer: [C]
-trap: [A,B]
-status: draft
----
+# ESXi true utilization from Usage, Core Utilization and Utilization
 
 ## Prompt
 Study the attached vCenter chart (not VCF Operations) of a single ESXi host. Hyper-Threading is enabled: each core runs 2 hardware threads. The second attachment zooms into the start of the chart.
@@ -54,3 +31,29 @@ A (100%): reading CPU Usage as utilization. Or B (70%): treating Core Utilizatio
 
 ## Notes
 - Attachments: host names masked in the legend before commit.
+
+## Metadata
+```yaml
+id: vsphere-cpu-004
+title: "ESXi true utilization from Usage, Core Utilization and Utilization"
+scope: vsphere
+area: cpu
+input: screenshot
+tests: judgment
+knowledge:
+  - vsphere/cpu/metrics/host/usage
+  - vsphere/cpu/metrics/host/core-utilization
+  - vsphere/cpu/metrics/host/utilization
+  - vsphere/cpu/concepts/esxi-thread-core-accounting
+  - vsphere/cpu/concepts/cpu-capacity
+attachments: 
+  - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png
+  - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q1 ESXi CPU Utilisation"
+format: multiple-choice
+level: screenshot
+answer: [C]
+trap: [A,B]
+status: draft
+```

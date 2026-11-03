@@ -1,20 +1,4 @@
----
-id: vsphere-cpu-002
-title: "CPU Latency without contention"
-scope: vsphere
-area: cpu
-input: text
-tests: distinction
-knowledge:
-  - vsphere/cpu/metrics/virtual-motherboard/latency
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/foundations/visibility-layers
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."
-format: free-text
-status: draft
----
+# CPU Latency without contention
 
 ## Prompt
 After a host BIOS power policy change, VM CPU Latency went up by about 15%. CPU Ready and Co-Stop are unchanged. Is the VM now suffering CPU contention?
@@ -31,3 +15,22 @@ After a host BIOS power policy change, VM CPU Latency went up by about 15%. CPU 
 
 ## Notes
 - Tests: Same name, different meaning (CPU Latency vs Disk / Memory Latency).
+
+## Metadata
+```yaml
+id: vsphere-cpu-002
+title: "CPU Latency without contention"
+scope: vsphere
+area: cpu
+input: text
+tests: distinction
+knowledge:
+  - vsphere/cpu/metrics/virtual-motherboard/latency
+  - vsphere/cpu/metrics/virtual-motherboard/ready
+  - vsphere/foundations/visibility-layers
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."
+format: free-text
+status: draft
+```

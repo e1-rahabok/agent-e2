@@ -1,23 +1,4 @@
----
-id: vsphere-general-001
-title: "Performance vs capacity view of utilization"
-scope: vsphere
-area: general
-input: text
-tests: concept
-knowledge:
-  - vsphere/system/concepts/capacity-model
-  - vsphere/system/concepts/cluster-utilization-vs-contention
-  - foundations/metric-perspectives
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Performance vs Capacity"
-format: multiple-choice
-level: l400
-answer: [A,B,C,D,E]
-trap: []
-status: draft
----
+# Performance vs capacity view of utilization
 
 ## Prompt
 Performance management and capacity management are highly related, so they are not the same thing.
@@ -43,3 +24,24 @@ Rejecting A (100% utilization seen as a performance problem) or C.
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-general-001
+title: "Performance vs capacity view of utilization"
+scope: vsphere
+area: general
+input: text
+tests: concept
+knowledge:
+  - vsphere/system/concepts/capacity-model
+  - vsphere/system/concepts/cluster-utilization-vs-contention
+  - foundations/metric-perspectives
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Performance vs Capacity"
+format: multiple-choice
+level: l400
+answer: [A,B,C,D,E]
+trap: []
+status: draft
+```

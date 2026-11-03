@@ -1,25 +1,4 @@
----
-id: vsphere-cpu-007
-title: "Reading an Intel Xeon specification: base, all-core Turbo, TDP"
-scope: vsphere
-area: cpu
-input: mixed
-tests: concept
-knowledge:
-  - vsphere/cpu/concepts/cpu-frequency
-  - vsphere/cpu/concepts/power-states
-  - vsphere/cpu/configuration/host-power-management
-  - vsphere/system/configuration/bios-settings
-attachments: 
-  - vsphere-cpu-007/intel-xeon-6520p-specification.png
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q4 ESXi CPU Frequency"
-format: multiple-choice
-level: screenshot
-answer: [A]
-trap: [B,C,D]
-status: draft
----
+# Reading an Intel Xeon specification: base, all-core Turbo, TDP
 
 ## Prompt
 Review the attached CPU specification, taken unchanged from the Intel website: Intel Xeon 6 6520P (Granite Rapids). 24 cores, 48 threads, Max Turbo Frequency 4 GHz, All Core Turbo Frequency 3.4 GHz, Processor Base Frequency 2.4 GHz, cache 144 MB, TDP 210 W.
@@ -44,3 +23,27 @@ B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance)
 
 ## Notes
 - Fact source for the TDP definition: Intel's published definition, as quoted in the author's key.
+
+## Metadata
+```yaml
+id: vsphere-cpu-007
+title: "Reading an Intel Xeon specification: base, all-core Turbo, TDP"
+scope: vsphere
+area: cpu
+input: mixed
+tests: concept
+knowledge:
+  - vsphere/cpu/concepts/cpu-frequency
+  - vsphere/cpu/concepts/power-states
+  - vsphere/cpu/configuration/host-power-management
+  - vsphere/system/configuration/bios-settings
+attachments: 
+  - vsphere-cpu-007/intel-xeon-6520p-specification.png
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q4 ESXi CPU Frequency"
+format: multiple-choice
+level: screenshot
+answer: [A]
+trap: [B,C,D]
+status: draft
+```

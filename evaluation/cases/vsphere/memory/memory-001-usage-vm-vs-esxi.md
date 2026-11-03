@@ -1,20 +1,4 @@
----
-id: vsphere-memory-001
-title: "Memory usage: VM vs ESXi"
-scope: vsphere
-area: memory
-input: text
-tests: distinction
-knowledge:
-  - vsphere/memory/metrics/virtual-motherboard/usage
-  - vsphere/memory/metrics/host/usage
-  - foundations/resource-nature
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Architecture Complexity (Memory)."
-format: free-text
-status: draft
----
+# Memory usage: VM vs ESXi
 
 ## Prompt
 Every VM on an ESXi host shows Memory Usage below 25% in vCenter. The host itself shows Memory Usage at 95%. The customer wants to buy more RAM. Is the host running out of memory?
@@ -31,3 +15,22 @@ Every VM on an ESXi host shows Memory Usage below 25% in vCenter. The host itsel
 
 ## Notes
 - Tests: Same name, different formula per object (distinction).
+
+## Metadata
+```yaml
+id: vsphere-memory-001
+title: "Memory usage: VM vs ESXi"
+scope: vsphere
+area: memory
+input: text
+tests: distinction
+knowledge:
+  - vsphere/memory/metrics/virtual-motherboard/usage
+  - vsphere/memory/metrics/host/usage
+  - foundations/resource-nature
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Architecture Complexity (Memory)."
+format: free-text
+status: draft
+```

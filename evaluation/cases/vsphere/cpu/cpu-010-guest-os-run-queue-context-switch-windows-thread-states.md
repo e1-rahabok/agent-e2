@@ -1,24 +1,4 @@
----
-id: vsphere-cpu-010
-title: "Guest OS run queue, context switch, Windows thread states"
-scope: vsphere
-area: cpu
-input: text
-tests: concept
-knowledge:
-  - vsphere/cpu/concepts/windows-cpu-scheduling
-  - vsphere/cpu/metrics/guest-os/run-queue
-  - vsphere/cpu/metrics/guest-os/context-switch
-  - vsphere/cpu/concepts/guest-os-vs-vm-cpu
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q7 Guest OS CPU"
-format: multiple-choice
-level: l400
-answer: [D,E,F]
-trap: [A,B,C]
-status: draft
----
+# Guest OS run queue, context switch, Windows thread states
 
 ## Prompt
 Windows or Linux performance affects application performance. Some of these issues are not visible to the VM.
@@ -46,3 +26,26 @@ A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dis
 
 ## Notes
 - Author confirmed D, E, F (Q036, 2026-11-03). The quiz document's answer column lists D, E only.
+
+## Metadata
+```yaml
+id: vsphere-cpu-010
+title: "Guest OS run queue, context switch, Windows thread states"
+scope: vsphere
+area: cpu
+input: text
+tests: concept
+knowledge:
+  - vsphere/cpu/concepts/windows-cpu-scheduling
+  - vsphere/cpu/metrics/guest-os/run-queue
+  - vsphere/cpu/metrics/guest-os/context-switch
+  - vsphere/cpu/concepts/guest-os-vs-vm-cpu
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q7 Guest OS CPU"
+format: multiple-choice
+level: l400
+answer: [D,E,F]
+trap: [A,B,C]
+status: draft
+```

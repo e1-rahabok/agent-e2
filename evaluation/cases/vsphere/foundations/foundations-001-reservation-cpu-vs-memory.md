@@ -1,18 +1,4 @@
----
-id: vsphere-foundations-001
-title: "Memory reservation vs CPU reservation"
-scope: vsphere
-area: foundations
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/resource-management
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Resource Management."
-format: free-text
-status: draft
----
+# Memory reservation vs CPU reservation
 
 ## Prompt
 A 16 GB VM with a 10 GB memory reservation and a 4 GHz CPU reservation is powered on and sits at the BIOS screen (no OS booted). What do its Memory Consumed and CPU usage metrics show?
@@ -27,3 +13,20 @@ A 16 GB VM with a 10 GB memory reservation and a 4 GHz CPU reservation is powere
 
 ## Notes
 - Tests: Same name, different behaviour (principle: CPU vs memory are different in nature).
+
+## Metadata
+```yaml
+id: vsphere-foundations-001
+title: "Memory reservation vs CPU reservation"
+scope: vsphere
+area: foundations
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/resource-management
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Resource Management."
+format: free-text
+status: draft
+```

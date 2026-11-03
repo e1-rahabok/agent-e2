@@ -1,18 +1,4 @@
----
-id: vsphere-foundations-004
-title: "What counts as overhead"
-scope: vsphere
-area: foundations
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/overhead
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Overhead vs Not Overhead."
-format: free-text
-status: draft
----
+# What counts as overhead
 
 ## Prompt
 A capacity report lists the following as "virtualization overhead": VM snapshots, the spare host kept for vSphere HA, vSAN FTT=1 storage, ESXi kernel memory, and VM log files. Is this classification correct?
@@ -30,3 +16,20 @@ A capacity report lists the following as "virtualization overhead": VM snapshots
 
 ## Notes
 - Tests: Principle: overhead vs not overhead.
+
+## Metadata
+```yaml
+id: vsphere-foundations-004
+title: "What counts as overhead"
+scope: vsphere
+area: foundations
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/overhead
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Overhead vs Not Overhead."
+format: free-text
+status: draft
+```

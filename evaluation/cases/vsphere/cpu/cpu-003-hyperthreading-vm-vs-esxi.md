@@ -1,20 +1,4 @@
----
-id: vsphere-cpu-003
-title: "Hyper-Threading and two vantage points"
-scope: vsphere
-area: cpu
-input: text
-tests: distinction
-knowledge:
-  - vsphere/cpu/metrics/virtual-motherboard/usage
-  - vsphere/cpu/metrics/host/usage
-  - vsphere/cpu/metrics/host/core-utilization
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
-format: free-text
-status: draft
----
+# Hyper-Threading and two vantage points
 
 ## Prompt
 Two single-vCPU VMs are both fully busy, running on the two hardware threads of the same physical core. Each VM shows CPU Usage around 62.5%, not 100%. Is each VM only getting 62.5% of what it demands? What does the host report for that core?
@@ -30,3 +14,22 @@ Two single-vCPU VMs are both fully busy, running on the two hardware threads of 
 
 ## Notes
 - Tests: Same name, different meaning (consumer vs provider vantage point).
+
+## Metadata
+```yaml
+id: vsphere-cpu-003
+title: "Hyper-Threading and two vantage points"
+scope: vsphere
+area: cpu
+input: text
+tests: distinction
+knowledge:
+  - vsphere/cpu/metrics/virtual-motherboard/usage
+  - vsphere/cpu/metrics/host/usage
+  - vsphere/cpu/metrics/host/core-utilization
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
+format: free-text
+status: draft
+```

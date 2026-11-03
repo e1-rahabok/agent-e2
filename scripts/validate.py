@@ -119,8 +119,10 @@ def main():
                         bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
 
     for f in sorted(glob.glob('evaluation/cases/**/*.md', recursive=True)):
-        t = open(f).read()  # evaluation cases keep front matter at the top
-        fm = yaml.safe_load(t.split('---\n', 2)[1]) if t.startswith('---\n') else {}
+        t = open(f).read()  # evaluation cases: metadata at the end, like knowledge files
+        if t.startswith('---\n'): bad(f, 'front matter at the top: move it to a ## Metadata section at the end')
+        fm, _ = split(f)
+        if fm is None: bad(f, 'missing ## Metadata section with one yaml block at the end'); fm = {}
         for r in (fm or {}).get('knowledge') or []:
             if r not in ids: bad(f, f'knowledge link "{r}" does not exist')
         fmt = (fm or {}).get('format')

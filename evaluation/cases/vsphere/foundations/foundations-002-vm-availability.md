@@ -1,18 +1,4 @@
----
-id: vsphere-foundations-002
-title: "VM availability"
-scope: vsphere
-area: foundations
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/vm-vs-guest-os
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"
-format: free-text
-status: draft
----
+# VM availability
 
 ## Prompt
 A VM is powered on, but Windows inside it has crashed and is stuck on a blue screen. Is the VM available? How would you measure VM availability vs Guest OS availability?
@@ -29,3 +15,20 @@ A VM is powered on, but Windows inside it has crashed and is stuck on a blue scr
 
 ## Notes
 - Tests: Principle: a VM is a virtual motherboard, not the OS.
+
+## Metadata
+```yaml
+id: vsphere-foundations-002
+title: "VM availability"
+scope: vsphere
+area: foundations
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/vm-vs-guest-os
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"
+format: free-text
+status: draft
+```

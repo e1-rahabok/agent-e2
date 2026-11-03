@@ -1,7 +1,7 @@
 # Terminology
 
 Single source of truth for terms, synonyms, and words to avoid.
-Tag values in front matter must use the terms defined here.
+Tag values in the metadata block must use the terms defined here.
 
 ## Book terminology
 - Placeholder. To be provided by the author.
