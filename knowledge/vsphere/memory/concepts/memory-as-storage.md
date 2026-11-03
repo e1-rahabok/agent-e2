@@ -21,17 +21,18 @@
 |---|---|---|
 | Speed | Nanoseconds | Generally ignored for RAM monitoring. DDR5 is faster than DDR4, but the difference does not matter for general monitoring. |
 | Speed | Nanoseconds | Matters with memory tiering: the second tier is NVMe, not DIMM. |
-| Speed | % | The only ESXi speed counter is Memory Latency. Not the latency in ns. See `vsphere/memory/metrics/virtual-machine/latency` for its definition. |
+| Speed | % of time | The only ESXi speed counter is Memory Latency (page-fault latency, esxtop %LAT_M). Share of time a vCPU waits on page-fault completion. Not the latency in ns. See `vsphere/memory/metrics/virtual-machine/latency`. |
 | Space | Bytes | The bulk of memory metrics. Relatively static. |
 
-- Disk is the opposite: it tracks latency in time, not the share of space facing latency.
+- Disk tracks latency as time per IO (ms). Memory tracks it as share of time waiting (%).
 - The storage nature of memory makes memory monitoring harder than CPU monitoring.
 - Space is static enough for a heat map of all Guest OS or VM memory consumption.
 - Target: near 100% use, with page-in and page-out rates within normal expectation.
 
 ## Traps
 - "Memory at 100% is a problem" → memory is cache. Check paging and contention, not utilization.
-- "Memory Latency is in nanoseconds" → it is a percentage, not a time.
+- "Memory Latency is in nanoseconds" → it is a percentage of time, not a duration.
+- "Memory Latency is the share of memory space facing latency" → it is a share of time.
 - "Memory reservation frees up when idle, like CPU" → memory reservation stays.
 
 ## Metadata
@@ -60,6 +61,6 @@ source:
   path: Memory > Architecture > Architecture intro
 corrections: []
 review_notes:
-- 'Section ''Two dimensions'': the Architecture section defines Memory Latency as a share of memory space; the VM section defines it as a share of time. Open question in docs/author-questions.md.'
+- "Section 'Two dimensions': author (2026-11-03), Q015: Memory Latency is a share of time, not of memory space. Book updated."
 status: draft
 ```

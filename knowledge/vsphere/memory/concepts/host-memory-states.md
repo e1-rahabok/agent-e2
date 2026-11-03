@@ -30,7 +30,8 @@
 - Example: 12 hosts, sized for 11 (one for HA or maintenance).
 - Target 99% during HA or maintenance → 99% × 11 / 12 = 90.75% in normal operation.
 - At that level hosts do not reach the balloon state, so VMs are not swapped.
-- The book states: if you see balloon in such a cluster, a limit is imposed.
+- Balloon in such a cluster points to a VM-level cause such as a limit, not host pressure.
+- A limit does not cause balloon directly. It causes Compressed or Swapped when Consumed tries to grow beyond it. See `vsphere/memory/metrics/virtual-machine/ballooned`.
 
 ## Low Free Threshold
 - Counter: Low Free Threshold (KB). The free-memory level below which ESXi reclaims memory from VMs.
@@ -97,6 +98,6 @@ corrections: []
 review_notes:
 - 'Section ''States'': minFree for 1 TB = 10.8 GB per the book. Calculator cited by the book: https://blogs.virtualmaestro.in/2020/06/02/vmware-vsphere-7-x-memory-reclamation-part-2-mem-memminfreepct/ (third-party). The minFree rule (899 MB for the first 28 GB, then 1% of the rest) is Claude''s own knowledge; it gives about 10.8 GB for 1 TB.'
 - 'Section ''When ballooning starts'': book typo ''993.1 BB'' written as GB.'
-- 'Section ''HA headroom'': the book''s statement that balloon implies a limit relates to Q014 in docs/author-questions.md.'
+- "Section 'HA headroom': author (2026-11-03), Q014: a limit does not cause ballooning directly. The book's phrase that balloon means a limit is imposed is read as a pointer to a VM-level cause."
 status: draft
 ```
