@@ -47,6 +47,23 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
 - Margin: 95% interval on Majority. Set by the number of questions: 17 questions gives about ±20-24 points.
 
+### Modes: baseline, classic, agentic
+
+| | Baseline | Classic | Agentic |
+|---|---|---|---|
+| Knowledge base | None | Yes | Yes |
+| Who looks up | Nobody | The runner | The model |
+| Lookups | 0 | 1, before the model starts | Up to `agent_max_calls` (8), chosen by the model |
+| What the model gets | The question only | Top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (8K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, within `agent_tool_tokens` (12K) |
+| Can it go back for more | - | No | Yes |
+| What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
+
+- Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this test's label, not an industry term.
+- Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), traps and diagnosis files exist so a model can follow a chain across files.
+- Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well.
+- The agentic limits (8 calls, 12K tokens) are cost caps for the test, not a design choice.
+- Run 20261103-081849: agentic scored below classic for 7 of 8 small models. Cause: weak tool use (recall 0-50% vs 63% for classic; some models made almost no calls; one broke the answer format). A model problem, not a knowledge-base problem.
+
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
 - Index version = the git commit SHA of the repository when the run started. Example: `de5f19e22860`.

@@ -82,6 +82,12 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `evaluation/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
 - [ ] Next Auto Test run, after more questions are added: try `--concurrency 16`. Keep 16 if errors stay at 0 and answers per minute rise. At 100 questions (about 12,700 answers, about US$ 11) the run takes about 4 hours at 12 and about 3 hours at 16 if speed scales: above the 2-hour command limit either way. Plan `--resume` once, or split by model.
+- [ ] Close the agentic gap (run 20261103-081849: agentic below classic for 7 of 8 models):
+  - [ ] Better agentic prompt: example lookups; keep going until linked files (`same_name`, `related`) are read.
+  - [ ] Hybrid mode: start from the classic results, then let the model follow links.
+  - [ ] Test a larger local model if hardware allows; tool use improves with size.
+  - [ ] Raise `agent_max_calls` and `agent_tool_tokens` once models use the calls they have.
+  - [ ] Frontier model as a reference ceiling for agentic.
 
 ## Structure (after the re-organization of 2026-11-02)
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.
