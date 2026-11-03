@@ -30,10 +30,13 @@ related:
 - vsphere/storage/metrics/host/disk
 - vsphere/storage/metrics/host/adapter-and-path
 - vsphere/storage/metrics/host/datastore
+- vsphere/system/concepts/vsphere-client-performance-guidance
+- vsphere/storage/metrics/datastore/storage-io-control
 source:
   document: PART 3 - Counters.docx
   path: Storage > ESXi > Disk or Device; Storage Adapter & Path
 corrections: []
-review_notes: []
+review_notes:
+- 'The vSphere 9.1 documentation gives other values: kernelLatency best 0-1 ms and a problem above 4 ms; deviceLatency above 15 ms; queueLatency must be 0 (vSphere Monitoring and Performance > Solutions for Disk Performance Problems, p. 2121). Kept in vsphere/system/concepts/vsphere-client-performance-guidance. Open question Q044.'
 status: draft
 ```

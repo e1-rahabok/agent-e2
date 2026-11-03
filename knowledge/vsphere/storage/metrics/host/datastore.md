@@ -11,6 +11,8 @@
 - Highest latency: a normalized average of read and write, so it can be lower.
 - Outstanding IO: derive from latency and IOPS. Latency is more insightful: little IO in the queue can still mean high latency.
 - Queue depth per datastore (likely the backing LUN). Check settings are as expected and consistent; list them per cluster.
+- Maximum Queue Depth (maxQueueDepth): commands the SCSI driver queues to the HBA for this datastore.
+- With Storage I/O Control enabled, Maximum Queue Depth changes over time when congestion is detected at the array. A drop is throttling, not a configuration change. See `vsphere/storage/metrics/datastore/storage-io-control`.
 ![Datastore latency observed by VMs vs datastore latency](../../images/datastore-latency-vs-latency-observed-by-vms.png)
 
 ## Traps
@@ -37,6 +39,7 @@ same_meaning: []
 related:
 - vsphere/storage/metrics/virtual-machine/datastore
 - vsphere/storage/metrics/host/disk
+- vsphere/storage/metrics/datastore/storage-io-control
 images:
   - path: ../../images/datastore-latency-vs-latency-observed-by-vms.png
     product: [vsphere]
@@ -49,5 +52,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency is unexplained in the book.'
+- 'Section ''Counters'': Maximum Queue Depth definition and its change under Storage I/O Control from the vSphere 9.1 documentation (vSphere Monitoring and Performance > Datastores and Datastore Clusters > Maximum Queue Depth per Host, p. 2050).'
 status: draft
 ```

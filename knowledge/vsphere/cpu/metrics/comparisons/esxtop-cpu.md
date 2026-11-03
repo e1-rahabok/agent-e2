@@ -2,10 +2,12 @@
 
 ## Summary lines (provider view)
 - Line 1: physical CPU load average over 1, 5 and 15 minutes.
+- Load average counts running and ready-to-run worlds. 1.00 = all PCPUs fully used. 2.00 = demand for twice the PCPUs present. 0.50 = PCPUs half used.
 - Then PCPU USED (%), PCPU UTIL (%) and CORE UTIL (%). Used builds on Utilization and is more complex.
 - Used (%) can exceed 100% (example 131%) while Utilization maxes at 100%.
 - Used (%) maps to vSphere Client Usage (%); Utilization (%) maps to Utilization (%).
 - PCPU = hardware execution context: a core with SMT off, a thread with SMT on. Not a socket. 10 cores × 2 threads = 20 PCPUs.
+- CORE UTIL (%) appears only when Hyper-Threading is active. In batch mode it is repeated for each PCPU of the core: PCPU 0 and PCPU 1 both show core 0's value.
 - Each line ends with per-NUMA-node averages and AVG for the whole host: spots an overloaded NUMA node.
 ![Used (%) above 100% while Utilization stays at 100%](../../images/esxtop-cpu-used-above-100-while-utilization-at-100.png)
 
@@ -25,7 +27,15 @@
 | %RDY | Ready, summed over vCPUs: can exceed 100%. |
 | %CSTP | Co-stop, 100% per vCPU. |
 | %OVRLP | Overlap. |
-| %MLMTD | Max Limited: halted by a manual limit, not by lack of CPU. Limits should not be set. |
+| %MLMTD | Max Limited: halted by a manual limit, not by lack of CPU. Counted inside %RDY. Limits should not be set. |
+
+```text
+%USED = %RUN + %SYS - %OVRLP
+100% = %RUN + %RDY + %CSTP + %WAIT      (per vCPU world)
+```
+- On a Hyper-Threading host %RUN can be twice %USED: two busy sibling threads are each charged half.
+- %WAIT includes %IDLE. %WAIT - %IDLE (= %VMWAIT) of the vCPU worlds estimates guest IO wait. Expand the VM with e and read the worlds named vcpu. Estimate only: a vCPU also waits for events other than IO.
+- A world's percentages are of one physical core. A resource pool at 30% %USED on a 2-way host uses 30% of one core, not of the host.
 
 ## Event counts
 | Counter | Meaning |
@@ -68,6 +78,12 @@
 | %UTIL | Thread utilization, not core. |
 | %CState, %PState, %TState | Time in each state. |
 | %A/MPERF | Actual / nominal performance. Above 100%: Turbo. Below: power saving. Valid only in C0. Per PCPU, not per vCPU. Since ESXi 6.5; not in vSphere Client. |
+
+```text
+current frequency = %A/MPERF x nominal frequency
+```
+- With ACPI Collaborative Processor Performance Control (CPPC) enabled, the hardware controls frequency: PSTATE MHZ shows Hardware Controlled and no %Px columns appear. Use %A/MPERF for the frequency.
+- Without CPPC, on Processor Clocking Control systems, P0 is time at full speed and P1 is time at any lower speed.
 - Example: PCPU 10 and 11 share core 6, both Utilization 100%, %A/MPERF 130%, C0 and P0. Used shows 63.0% and 62.9%: Used adds to 100% per core (50% per thread) × 130% Turbo = 65%.
 ![Two sibling threads at 100% utilization with Turbo](../../images/esxtop-power-sibling-threads-at-100-percent-with-turbo.png)
 
@@ -132,6 +148,8 @@ source:
   path: Provider Objects > esxtop > CPU
 corrections: []
 review_notes:
+- 'Sections ''Summary lines'', ''State counters'', ''Power'': load average meaning, CORE UTIL batch behaviour, %MLMTD inside %RDY, the two formulas, %RUN vs %USED with Hyper-Threading, %WAIT - %IDLE as guest IO wait estimate, per-core percentages, %A/MPERF formula and CPPC from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > CPU Panel, CPU Power Panel (pp. 2150-2155).'
+- 'The 9.1 documentation still lists HTQ in the CPU panel; the book says HTQ is no longer shown since ESXi 7.0. Open question Q046.'
 - 'Section ''Summary stats'': the book is unsure what the CPU column shows (always blank for the author) and whether AMLMT shows when a limit is applied.'
 status: draft
 ```

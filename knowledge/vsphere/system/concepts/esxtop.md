@@ -21,6 +21,18 @@
 - F: choose fields; %State Times is the most useful CPU field set.
 - A VM row has %VMWAIT; non-VM worlds do not.
 
+## Collection modes
+| Mode | How | Sampling |
+|---|---|---|
+| Interactive | `esxtop` on the host, or `resxtop --server <host or vCenter> [--vihost <host>]` from Linux | Default 5 seconds between updates; minimum 2 seconds. |
+| Batch | `esxtop -b -a -d <seconds> -n <iterations> > file.csv` | Minimum supported delay 10 seconds; shorter can cause issues. Runs until n iterations or Ctrl+C. |
+| Replay | Collect with `vm-support -p -i <interval> -d <duration>`, extract, then `esxtop -R <directory>` | Replays the snapshots captured by vm-support. |
+
+- esxtop samples are much finer than vCenter history (20-second real-time, 5-minute 1 Day). Use batch mode to keep a burst for later analysis. See `vsphere/foundations/vcenter-statistics`.
+- `-a` exports every counter. Without it, batch exports the fields saved with the W command in the configuration file.
+- Replay works only on esxtop of the same ESX version that produced the vm-support bundle. Batch CSV output cannot be replayed.
+- Secure mode (`-s`) disables changing the delay.
+
 ## Export
 - Avoid CSV export of everything: over 100 MB and more than 10,000 metrics (example: 16,384). Limit metrics and duration.
 
@@ -47,6 +59,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
+- vsphere/foundations/vcenter-statistics
 - vsphere/cpu/metrics/comparisons/esxtop-cpu
 images:
   - path: ../images/esxtop-panels-overview.png
@@ -58,6 +71,7 @@ source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > Overview
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Collection modes'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > Using the resxtop Utility, Interactive Mode, Batch Mode, Replay Mode (pp. 2148-2166).'
 status: draft
 ```
