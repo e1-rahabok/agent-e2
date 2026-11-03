@@ -2,6 +2,26 @@
 
 ![What to include and exclude in Guest OS sizing](../images/guest-os-sizing-what-to-include-and-exclude.png)
 
+## No such thing as VM rightsizing
+- "VM rightsizing" mixes two different sizing jobs with two different formulas. Asking "what size should this VM be?" without saying which one leads to the wrong counters.
+
+| Purpose | Question | Counters | Includes | Excludes |
+|---|---|---|---|---|
+| Guest OS sizing (internal) | CPU and RAM that Windows or Linux and its applications demand; disk = size of the guest partitions, expressed as virtual disks | Windows / Linux counters | Guest OS queue (Run Queue, Disk Queue) | VM overhead, Hyper-Threading, frequency |
+| VM footprint (external) | What the VM costs the ESXi host and the infrastructure underneath | vSphere counters | VM overhead | Guest OS queue |
+
+- Use cases:
+  - The application team asks for more vCPUs → Guest OS sizing. Hypervisor overhead is irrelevant: an NSX Edge does not get extra vCPUs for the packet-processing overhead.
+  - Migrating to an ESXi host with CPUs twice as fast (2 GHz to 4 GHz) → VM footprint: all else equal, 16 vCPUs become 8, and the hypervisor counter is the accurate one. Then check the Guest OS after the change: the application may expect 16 slow threads, not 8 fast ones, and queue inside the guest.
+  - Migrating from classic VMFS to vSAN → VM footprint: the hypervisor metric adjusts for the vSAN FTT policy.
+  - Converting virtual disks from thin to thick → VM footprint: guest consumption is irrelevant, the disk inflates to its configured size.
+- After the demand is known, project it from past data and adjust the new size to fit NUMA.
+- CPU, RAM and storage each use a different approach. VM footprint: see `vsphere/system/concepts/vm-footprint-sizing`.
+
+## Layer
+- Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
+- Guest OS sizing reads Guest OS counters and corrects VM counters for what the guest never sees (Hyper-Threading, frequency, hypervisor overhead). VCF Operations shows the result on the VirtualMachine object: a data path, not ownership.
+
 ## CPU: exclude
 | Item | Reason |
 |---|---|
@@ -62,9 +82,9 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 ## Metadata
 ```yaml
-id: vsphere/system/concepts/guest-os-sizing
+id: guest-os/system/concepts/guest-os-sizing
 retriever_guide: how-it-works
-scope: vsphere
+scope: guest-os
 technology:
 - cpu
 - memory
@@ -74,10 +94,11 @@ pillar:
 - performance
 - value
 product:
-- vsphere
+- windows
+- linux
 - vcf-operations
-object:
-- VirtualMachine
+layer:
+- guest-os
 internal_derive:
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/memory/concepts/guest-os-vs-vm-memory
@@ -101,6 +122,7 @@ source:
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
 corrections: []
 review_notes:
+- "Section 'No such thing as VM rightsizing': from the author's other book, section VM Footprint | Guest OS Sizing (screenshot provided 2026-11-03). Author: VM rightsizing is a common misconception; the full book will be provided later."
 - 'Section ''Memory'': the book''s text describes waste below 50% and risk above 75%, while its recommended option 2 shows green starting near 75%. Open question in docs/author-questions.md.'
 - 'Section ''Memory'': the book''s sizing table marks Ballooned as included, while the text says exclude balloon. Open question in docs/author-questions.md.'
 - 'References from the book: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html (not read).'

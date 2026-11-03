@@ -3,6 +3,9 @@
 ## Purpose
 - Size what the VM costs the underlying platform, for example to place or migrate it.
 
+- One of two sizing jobs. The other is Guest OS sizing (Windows or Linux demand). There is no single "VM rightsizing": see `guest-os/system/concepts/guest-os-sizing`, section No such thing as VM rightsizing.
+- Examples: migration to faster or slower CPUs, VMFS to vSAN (FTT policy), thin to thick disks.
+
 ## CPU
 | Rule | Reason |
 |---|---|
@@ -51,7 +54,7 @@ object:
 internal_derive:
 - vsphere/cpu/metrics/virtual-motherboard/used
 related:
-- vsphere/system/concepts/guest-os-sizing
+- guest-os/system/concepts/guest-os-sizing
 - vsphere/memory/metrics/virtual-motherboard/consumed
 source:
   document: PART 3 - Counters.docx

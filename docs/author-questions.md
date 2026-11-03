@@ -82,14 +82,14 @@ Each entry has:
 - Answer:
 
 ### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
-- Files: `vsphere/system/concepts/guest-os-sizing`
+- Files: `guest-os/system/concepts/guest-os-sizing`
 - Search: "Exclude balloon"
 - Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
 - Written as now: exclude, flagged.
 - Answer:
 
 ### Q029 · Consumer Objects > Capacity · Memory utilization ranges
-- Files: `vsphere/system/concepts/guest-os-sizing`
+- Files: `guest-os/system/concepts/guest-os-sizing`
 - Search: "The company is wasting money if the utilization falls below 50%"
 - Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
 - Written as now: bar 2 recommended, no numbers stated.

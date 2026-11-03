@@ -1,5 +1,9 @@
 # Why rightsizing matters for VMs
 
+## Two sizing jobs, not one
+- There is no single "VM rightsizing". Guest OS sizing (internal, Guest OS counters, includes guest queue, excludes VM overhead) and VM footprint (external, vSphere counters, includes VM overhead, excludes guest queue) answer different questions. See `guest-os/system/concepts/guest-os-sizing` and `vsphere/system/concepts/vm-footprint-sizing`.
+- This file covers why a smaller vCPU count helps once the right size is known.
+
 ## NUMA example
 - Host: 2 sockets × 16 cores. VM: 16 vCPU at 90%, fits one socket.
 - Linux run queue below 2 per vCPU 95% of the time: busy but serving all processes.
@@ -38,7 +42,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- vsphere/system/concepts/guest-os-sizing
+- guest-os/system/concepts/guest-os-sizing
 - vsphere/system/concepts/vm-footprint-sizing
 - vsphere/cpu/concepts/cpu-topology
 - vsphere/cpu/concepts/numa

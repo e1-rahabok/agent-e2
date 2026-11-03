@@ -33,7 +33,7 @@ area: memory
 input: text
 tests: distinction
 knowledge:
-  - vsphere/system/concepts/guest-os-sizing
+  - guest-os/system/concepts/guest-os-sizing
   - vsphere/memory/concepts/guest-os-vs-vm-memory
   - vsphere/memory/metrics/virtual-motherboard/consumed
   - vsphere/memory/metrics/virtual-motherboard/active

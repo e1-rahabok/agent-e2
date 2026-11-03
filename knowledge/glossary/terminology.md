@@ -82,6 +82,7 @@ Tag values in the metadata block must use the terms defined here.
 ## Words to avoid
 | Avoid | Use instead | Why |
 |---|---|---|
+| VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
 | VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
 | virtual machine, thought of as a complete machine | virtual motherboard (VM) | A VM has no OS of its own; Guest OS and VM are not interchangeable. Author's book. |
 | need, want, wish (for a vCPU or VM) | demands runtime; the kernel decides how much it gets | A vCPU is a thread in the scheduler. It has no intent. |
