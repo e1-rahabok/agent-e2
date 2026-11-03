@@ -99,6 +99,7 @@ python3 tools/autotest/run.py --resume evaluation/results/autotest/<run-id>
 - Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; find it by test.
 - Above the ceiling, providers return HTTP 429. The runner retries 429, 408 and 5xx. Answers still failing are listed; `--resume` retries them.
 - To test a higher value: `--concurrency 16` (or 20) on one run. Keep it if errors stay at 0 and answers per minute rise.
+- Limits differ per model. anthropic/claude-opus-5.5 failed at 12 (HTTP 429 "No access to this model at this time"); 3 ran with 0 errors. Use `--concurrency 3` for frontier models.
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.

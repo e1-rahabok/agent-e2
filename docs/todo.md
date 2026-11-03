@@ -87,7 +87,10 @@ Open work for this repository. Not indexed. Update when items close.
   - [ ] Hybrid mode: start from the classic results, then let the model follow links.
   - [ ] Test a larger local model if hardware allows; tool use improves with size.
   - [ ] Raise `agent_max_calls` and `agent_tool_tokens` once models use the calls they have.
-  - [ ] Frontier model as a reference ceiling for agentic.
+  - [x] Frontier model as a reference ceiling: run 20261103-093742 (claude-opus-5.5). Baseline 75%, classic 67%, agentic 67%.
+- [ ] Author decision: kb-mode prompt says ONLY the knowledge base. It cost the frontier model 3 questions where the knowledge base is silent. Test a knowledge-base-first variant (knowledge base wins on conflict; general knowledge fills gaps)?
+- [ ] Author check of questions wrong in every mode, incl. frontier: vsphere-cpu-004, vsphere-cpu-011, vsphere-memory-003. Knowledge gap, knowledge error, or key error?
+- [ ] vendor-neutral-general-001 (hyperscaler cost): knowledge base has no cost content. Add content, or score this case in baseline only.
 
 ## Structure (after the re-organization of 2026-11-02)
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.
