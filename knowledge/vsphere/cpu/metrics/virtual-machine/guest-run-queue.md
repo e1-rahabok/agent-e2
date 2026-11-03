@@ -19,6 +19,7 @@
 ## Observed values
 - 3,385 Windows VMs, 1 week, 20-second peaks (30,240 points per VM): some VMs have high queues.
 - 800 VMs, 1 month: the 99th percentile is under half of the peak; for peaks of 3 or more, the 99th percentile averaged 34% of the peak.
+![Windows run queue: peak vs 99th percentile per VM, scatter over 1 month](../../images/windows-run-queue-peak-vs-99th-percentile-scatter.png)
 - Whether Hyper-Threading doubles the queue is undocumented.
 ![Run queue profile across 3,385 Windows VMs](../../images/windows-run-queue-distribution-across-vms.png)
 

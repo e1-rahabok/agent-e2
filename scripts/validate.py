@@ -33,6 +33,7 @@ def main():
     allowed = load_allowed()
     problems = []
     def bad(path, msg): problems.append(f'{path}: {msg}')
+    linked_images = set()
 
     files = [f for f in sorted(glob.glob('knowledge/**/*.md', recursive=True))
              if '/_templates/' not in f and '/raw-input/' not in f]
@@ -69,7 +70,9 @@ def main():
             for r in fm.get(k) or []:
                 if r not in ids: bad(f, f'{k} link "{r}" does not exist')
         for img in re.findall(r'!\[[^\]]*\]\(([^)]+)\)', body):
-            if not os.path.exists(os.path.normpath(os.path.join(os.path.dirname(f), img))):
+            full = os.path.normpath(os.path.join(os.path.dirname(f), img))
+            linked_images.add(full)
+            if not os.path.exists(full):
                 bad(f, f'image not found: {img}')
         for r in re.findall(r'`((?:vsphere|foundations)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
@@ -96,6 +99,11 @@ def main():
         fm = yaml.safe_load(t.split('---\n', 2)[1]) if t.startswith('---\n') else {}
         for r in (fm or {}).get('knowledge') or []:
             if r not in ids: bad(f, f'knowledge link "{r}" does not exist')
+
+    # every image file must be linked from a knowledge file, so the AI gets its context
+    for img in glob.glob('knowledge/**/images/*.png', recursive=True):
+        if os.path.normpath(img) not in linked_images:
+            bad(img, 'image not linked from any knowledge file')
 
     for p in problems: print(p)
     print(f'{len(docs)} knowledge files checked, {len(problems)} problems')

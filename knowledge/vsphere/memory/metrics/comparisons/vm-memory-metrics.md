@@ -7,10 +7,13 @@
 
 ## Performance checks, in order
 1. Page-fault latency (Latency): the only counter that tracks actual performance.
+![vCenter VM memory page-fault latency counter](../../images/vcenter-vm-memory-page-fault-latency-counter-table.png)
 2. Swap: 6 metrics (Swap in, Swap in rate, Swap out, Swap out rate, Swap target, Swapped). Slower than compression.
 3. Compression: Compressed, Compression rate, Compression saved, Decompression rate.
 4. Host cache: Host cache consumed, swap in rate, swap out rate. Faster than disk if built on fast SSD.
+![vCenter VM memory host cache counters](../../images/vcenter-vm-memory-host-cache-counters-table.png)
 5. Balloon: Balloon target, Ballooned memory.
+![vCenter VM memory balloon counters](../../images/vcenter-vm-memory-balloon-counters-table.png)
 - Intel Optane memory has no metric: it is meant to be transparent to ESXi.
 ![vCenter VM memory swap counters](../../images/vcenter-vm-memory-swap-counters-table.png)
 ![vCenter VM memory compression counters](../../images/vcenter-vm-memory-compression-counters-table.png)
@@ -22,6 +25,8 @@
 - Consumed (main), Granted, Entitlement, Shared, Host consumed %. Plus Active, Active write, Overhead, Zero pages.
 - Reservation and allocation are properties.
 ![vCenter VM memory consumption counters](../../images/vcenter-vm-memory-consumption-counters-table.png)
+![vCenter VM memory Active and Active write counters](../../images/vcenter-vm-memory-active-counters-table.png)
+![vCenter VM memory Overhead and Zero pages counters](../../images/vcenter-vm-memory-overhead-and-zero-counters-table.png)
 
 ## Virtual view vs physical view
 ![Virtual and physical view of one VM's memory: Granted, Shared, Zero, Before Zip, Swapped, Host Cache, Ballooned, Free, Overhead](../../images/vm-memory-virtual-view-vs-physical-view.png)

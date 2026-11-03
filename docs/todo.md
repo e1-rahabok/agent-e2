@@ -67,7 +67,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Provider Objects > esxtop (Storage, Network): extracted 2026-11-02. Provider Objects complete. New: storage/metrics/comparisons/esxtop-storage; network/metrics/comparisons/esxtop-network.
 - [x] MS Windows (Introduction, CPU, Memory, Storage): extracted 2026-11-02. Book extraction complete. New: cpu/concepts/windows-cpu-scheduling; cpu/metrics/virtual-machine guest-run-queue, guest-context-switch, guest-processor-time; memory/concepts/windows-memory; storage/metrics/virtual-machine/guest-disk-queue.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
-- [ ] 24 book images are in `images/` folders but not linked from any file. Link each under the section it explains, or confirm it is not needed.
+- [x] 24 unlinked book images linked under the sections they explain. Validator now fails on any unlinked image.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation

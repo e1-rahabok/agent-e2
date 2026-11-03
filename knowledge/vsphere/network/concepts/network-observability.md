@@ -50,6 +50,7 @@
 - Receive (RX) and transmit (TX): relative to one port. A port has both.
 - On a distributed switch, the ESXi physical NIC is the uplink. The ESXi host is not a hop.
 ![Ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
+![Distributed switch: ingress and egress vs receive and transmit from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 
 ## Traffic type metrics
 - VCF Operations has unicast, multicast and broadcast metrics at VM, ESXi, distributed port group and distributed switch level (also vSphere Pods, which are VMs).

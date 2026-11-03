@@ -44,6 +44,8 @@
 
 ## CPU metrics
 - Kernel CPU: plot host/iofilters, host/system and host/vim, stacked. Sub-pools are part of them and small (well below 0.5 GHz).
+- Example: top 7 of about 400 hosts by system group: system up to 3.66 GHz, vim up to 0.48 GHz, iofilters near 0; user dominates Usage.
+![ESXi CPU usage by resource group (system, vim, iofilters, user) with Usage and Demand, top 7 of about 400 hosts](../images/esxi-cpu-usage-by-resource-group-system-vim-iofilters-user.png)
 - Counters: Usage, Running, Active. Use Usage: it covers all groups. Running and Active lack host/user and host/opt; Active rolls up as Latest.
 - Latest roll-ups tend to read higher than averages.
 - Host CPU | Usage (MHz) equals System | Resource CPU Usage (Average) (MHz) at host level: it includes VMs.
@@ -53,6 +55,7 @@
 - Storage: above 200K IOPS: kernel above 10 GHz.
 - Reservation is stable; usage fluctuates every 20 s and exceeds reservation at high load. Maximum limited stays flat: kernel processes have no limit.
 - host/system CPU reservation is low; host/vim about 6.6 GHz. Across about 400 hosts: mostly 6-10 GHz, usually stable.
+![ESXi hypervisor CPU overhead distribution across about 400 hosts: mostly 6-10 GHz](../images/esxi-hypervisor-cpu-overhead-distribution-across-hosts.png)
 ![No predictable relation between hypervisor reservation, hypervisor use and total use](../images/esxi-hypervisor-cpu-reservation-vs-use-no-correlation.png)
 
 ## Memory metrics
@@ -60,6 +63,7 @@
 - Allocation maximum = limit. Allocation minimum = reservation. Shares: internal; do not change.
 - Consumed: actual use; can be below reservation. Mapped: meaning unclear, no operational use. Also Overhead, Share Saved, Shared, Swapped, Touched, Zero.
 - 607 hosts with vSAN and NSX, 650-1,450 GB consumed: kernel overhead falls below 10% once consumed exceeds 800 GB; absolute values plateau in about 5 levels (likely vSAN configuration).
+![ESXi hypervisor memory overhead (GB) vs ESXi Consumed (GB): values cluster in 5 levels](../images/esxi-hypervisor-memory-overhead-vs-consumed-scatter-levels.png)
 - Kernel reservation: Memory | ESX System Usage (KB), a legacy name. Across 500+ hosts: 6-88 GB; a 12 TB host with vSAN and NSX: 300 GB.
 - Reservation stays steady even when kernel use drops 90% (40 GB to single digits), and when all VMs are gone.
 - Actual use: stack Resource Memory Consumed per group; system dwarfs the others.
