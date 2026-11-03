@@ -295,6 +295,7 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 - Target: 99% exact on the golden multiple-choice set (Majority score, chosen mode).
 - Minimum: 85% exact. A model below 85% is not usable.
 - mistral/ministral-8b dropped from future runs (author, 2026-11-03): 29-40% exact in run 20261103-081849.
+- The other 7 candidates stay until the question set reaches 100 (author, 2026-11-03). No model is dropped on the 17-question results: the margin (about ±20-24 points) is too wide.
 - Reference point: the best frontier model in baseline mode (no knowledge base). Measured each run.
 - What 99% requires:
   - At 17 questions, 99% allows no wrong question. One wrong question = 94%.
