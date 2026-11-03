@@ -15,6 +15,7 @@ evaluation/
 
 - scope: `vendor-neutral`, `vsphere` (later `nsx`, `vsan`).
 - area: `foundations`, `cpu`, `memory`, `storage`, `network`, `general` (spans several areas).
+- origin `quiz`: the author's quiz documents (multiple choice, with answer key).
 - One file per case: scales to hundreds of cases, one diff per case, attachments per case.
 - Ids never change and are never reused. Retired cases get `status: retired`, not deleted.
 
@@ -24,7 +25,7 @@ evaluation/
 | `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `attachments/<id>/`. |
 | `tests` | concept, distinction, judgment, troubleshooting. |
 | `knowledge` | Knowledge ids the answer should draw on. Used to check retrieval, not only the answer. |
-| `origin` | book, live-lab, real-ticket, synthetic. |
+| `origin` | book, quiz, live-lab, real-ticket, synthetic. |
 | `source_path` | Heading path in the source document, for QA. |
 
 ## How to run

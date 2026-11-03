@@ -8,7 +8,7 @@ tests: distinction                # concept | distinction | judgment | troublesh
 knowledge:                        # knowledge ids the answer should draw on (retrieval check)
   - vsphere/cpu/metrics/virtual-machine/ready
 attachments: []                   # paths under evaluation/attachments/<id>/
-origin: book                      # book | live-lab | real-ticket | synthetic
+origin: book                      # book | quiz | live-lab | real-ticket | synthetic
 source_path: "<heading path in the source document>"
 status: draft                     # draft | reviewed
 ---
