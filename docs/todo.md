@@ -25,7 +25,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Questions for the author: `docs/author-questions.md` (17 open).
+- [ ] Questions for the author: `docs/author-questions.md` (23 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
 - [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
@@ -88,9 +88,7 @@ Open work for this repository. Not indexed. Update when items close.
   - [ ] Test a larger local model if hardware allows; tool use improves with size.
   - [ ] Raise `agent_max_calls` and `agent_tool_tokens` once models use the calls they have.
   - [x] Frontier model as a reference ceiling: run 20261103-093742 (claude-opus-5.5). Baseline 75%, classic 67%, agentic 67%.
-- [ ] Author decision: kb-mode prompt says ONLY the knowledge base. It cost the frontier model 3 questions where the knowledge base is silent. Test a knowledge-base-first variant (knowledge base wins on conflict; general knowledge fills gaps)?
-- [ ] Author check of questions wrong in every mode, incl. frontier: vsphere-cpu-004, vsphere-cpu-011, vsphere-memory-003. Knowledge gap, knowledge error, or key error?
-- [ ] vendor-neutral-general-001 (hyperscaler cost): knowledge base has no cost content. Add content, or score this case in baseline only.
+- [ ] Frontier run findings for the author: Q038-Q043 in `docs/author-questions.md` (prompt rule, cost case, 4 golden cases wrong for all models). Re-run the frontier model after the answers are applied.
 
 ## Structure (after the re-organization of 2026-11-02)
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.

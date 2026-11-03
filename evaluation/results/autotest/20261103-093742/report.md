@@ -45,6 +45,9 @@
 - vsphere-memory-003: key A,B,D,E; models drop A or D.
 - For each: either the knowledge base is missing or contradicting the fact, or the key needs checking. Author check needed.
 
+### Open items
+- Author questions Q038-Q043 in `docs/author-questions.md`: prompt rule, cost case, and the 4 golden cases wrong for all models (cpu-004, cpu-011, cpu-013, memory-003).
+
 ### What it means for the targets (minimum 85%, target 99%)
 - Even the frontier model reaches 67-75%. No small model can pass 85% until the knowledge base, prompt and keys are fixed.
 - The 6 questions above hold most of the gap. Fixing them would move the frontier classic score toward 90%+.
