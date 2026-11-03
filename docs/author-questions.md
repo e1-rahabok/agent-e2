@@ -21,7 +21,7 @@ Each entry has:
 - Search 2 (CPU > VM > Overlap): "Linux Guest OS tracks this as Stolen time"
 - Question: does Linux Steal Time include Ready only, Overlap only, or both?
 - Written as now: both statements, flagged.
-- Answer:
+- Answer: CPU Ready only. Because ESXi accounts for Overlap as active CPU Run time rather than wait time, it bypasses the hypervisor steal-time accumulator. The hypervisor does not report this interrupted time to the guest OS as stolen. The Linux OS Steal Time metric remains completely blind to vCPU Overlap. This ESXi accounting behavior necessitates the VCF Operations Net Run = Run - Overlap metric to determine actual execution time.
 
 ### Q002 · Chapter 2 CPU > VM · System charged to vCPU 0
 - Files: `vsphere/cpu/metrics/virtual-machine/system`, `vsphere/cpu/metrics/virtual-machine/used`
@@ -29,7 +29,7 @@ Each entry has:
 - Search 2 (diagram text): "Charged at VM level, not at vCPU 1"
 - Question: is System charged to vCPU 0 or to the VM level only? Chapter 1 says per-vCPU Used excludes System.
 - Written as now: charged to vCPU 0, flagged.
-- Answer:
+- Answer: Charged at VM level, not vCPU 0 or 1. This results in Total VM cost > sum of all vCPU. This is not a problem for CPU scheduling. It’s just the way the kernel does the CPU accounting. 
 
 ### Q003 · Chapter 2 CPU > VM · Run for sizing
 - Files: `vsphere/cpu/metrics/virtual-machine/run`, `vsphere/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test`
@@ -37,14 +37,14 @@ Each entry has:
 - Search 2: "This counter is suitable for VM Capacity sizing"
 - Question: is Run for Guest OS sizing, VM sizing, or both?
 - Written as now: both statements, flagged.
-- Answer:
+- Answer: Guest OS. I've updated my document.
 
 ### Q004 · Chapter 2 CPU > VM · Contention formula condition
 - Files: `vsphere/cpu/metrics/virtual-machine/contention`
 - Search: "Other Wait (if less than 1%)"
 - Question: what does the condition mean?
 - Written as now: formula copied as is.
-- Answer:
+- Answer: The condition of < 1% is added to ensure no false positive. See https://knowledge.broadcom.com/external/article/338438/increased-vmwait-for-idle-vms-after-upgr.html
 
 ### Q005 · Chapter 2 CPU > VM · Contention and limit
 - Files: `vsphere/cpu/metrics/virtual-machine/contention`, `vsphere/cpu/metrics/virtual-machine/latency`
@@ -52,14 +52,14 @@ Each entry has:
 - Search 2: "Why does the counter include Ready by Limit?"
 - Question: is the first statement about the pre-July-2024 Contention, which mapped to Latency?
 - Written as now: yes, pre-July-2024 Contention excludes limit; current Contention includes it.
-- Answer:
+- Answer: This is VCF Operations counter, not vSphere. vSphere does not have counter. vSphere has CPU Latency, also known as %LAT_C in esxtop. The formula for CPU Contention changed in VCF Operations 8.18
 
 ### Q006 · Chapter 2 CPU > VM · Used above Run
 - Files: `vsphere/cpu/diagnosis/run-vs-used-gap`
 - Search: "Why is Used consistently 41% higher than Run?"
 - Question: how does Ready make Used higher than Run?
 - Written as now: the book's answer (Ready), without explanation.
-- Answer:
+- Answer: Book was wrong. Answer is CPU frequency. The VM run at a higher clock speed due to turbo boost.
 
 ### Q007 · Chapter 2 CPU > VM · Ready and VM size
 - Files: `vsphere/cpu/metrics/virtual-machine/ready`, `vsphere/cpu/concepts/vcpu-states`
@@ -67,14 +67,14 @@ Each entry has:
 - Search 2 (Architecture): "You can reduce Co-stop by reducing the VM size"
 - Question: does downsizing reduce Ready too, or only Co-stop?
 - Written as now: both statements, flagged.
-- Answer:
+- Answer: It should reduce both, as the VM can be slot more easily. On the other than, having smaller share can increase CPU Ready.
 
 ### Q008 · Chapter 2 CPU > VM · Ramp test
 - Files: `vsphere/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test`
 - Search: "ESXi CPU Core Utilization (%) matches VM Run. Both went 2x."
 - Question: Core Utilization stayed at 100%. Should this read Utilization (%)?
 - Written as now: Utilization (%).
-- Answer:
+- Answer: Correct. Make it clearer by using Thread Utilization instead of just Utilization.
 
 ### Q009 · Chapter 2 CPU > ESXi · Demand: provider or consumer
 - Files: `vsphere/cpu/metrics/host/demand`
@@ -82,35 +82,38 @@ Each entry has:
 - Search 2: "The value you see at ESXi is the summation of all the VMs"
 - Question: your correction (2026-11-02) says ESXi Demand is a provider metric. Which holds?
 - Written as now: both, flagged.
-- Answer:
+- Answer: The providers have 2 types of counters:
+•	Provider metric. This metric does not exist at consumer. For example, the physical network in ESXi.
+•	Sum of Consumer metric. This metric aggregates the metric of consumers. For example, the sum of VM network in the ESXi.
+
 
 ### Q010 · Chapter 2 CPU > ESXi · Usage cap
 - Files: `vsphere/cpu/metrics/host/usage`
 - Search: "Usage no longer capped at 100% of total capacity at the nominal frequency"
 - Question: your correction says capped at 100% (KB pending). Is the cap only in vCenter, removed in VCF Operations since Aria Operations 8.18?
 - Written as now: vCenter capped; VCF Operations not capped since 8.18.
-- Answer:
+- Answer: Cap have been removed in both. Add the KBs https://knowledge.broadcom.com/external/article/417702/esxi-host-reporting-over-100-cpu-usage.html and https://knowledge.broadcom.com/external/article/431027/esxi-host-cpu-usage-appears-high-in-vcen.html
 
 ### Q011 · Chapter 2 CPU > ESXi · CPU Imbalance
 - Files: `vsphere/cpu/metrics/host/imbalance`
 - Search: "ESXi CPU Imbalance = Count of Running Threads / Count of Running Cores"
 - Question: built-in VCF Operations metric, or your own?
 - Written as now: product tagged vsphere and vcf-operations, flagged.
-- Answer:
+- Answer: my own metric, not built-in. Add reference to https://github.com/e1-rahabok/VCF-vCommunity-Adapter/tree/main/docs/reference/metrics
 
 ### Q012 · Chapter 3 Memory > Architecture · 3 levels
 - Files: `vsphere/memory/concepts/memory-layers`
 - Search: "ESXi uses 3 levels to manage memory"
 - Question: the list after it has 4 items (TPS, Tiered Memory, Balloon, Compress/Swap). Which are the 3 levels?
 - Written as now: 4 mechanisms listed, no level count.
-- Answer:
+- Answer: 4 level. Book corrected.
 
 ### Q013 · Chapter 3 Memory > Architecture · Balloon and unmet demand
 - Files: `vsphere/memory/concepts/memory-layers`, `vsphere/memory/metrics/virtual-machine/ballooned`
 - Search: "The first sign of unmet demand"
 - Question: the next sentences say ballooning does not mean ESXi is unable to meet demand. Is balloon a sign of memory pressure rather than unmet demand?
 - Written as now: proactive, not unmet demand.
-- Answer:
+- Answer: The first sign of memory pressure, not unmet demand. It's a grey matter as memory management has gradient as ESXi applies 4 different layers.
 
 ### Q014 · Chapter 3 Memory > VM · Limit and balloon
 - Files: `vsphere/memory/metrics/virtual-machine/ballooned`, `vsphere/memory/concepts/ballooning`
