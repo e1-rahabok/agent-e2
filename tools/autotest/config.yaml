@@ -1,7 +1,7 @@
 # Auto Test configuration. See docs/design-kb-test-site.md, section Auto Test plan.
 gateway: https://ai-gateway.vercel.sh/v1   # API key from env AI_GATEWAY_API_KEY
 
-models:                       # the 8 candidates
+models:                       # the 7 candidates (ministral-8b dropped 2026-11-03)
   - google/gemma-4-31b-it
   - alibaba/qwen-3-32b
   - mistral/mistral-small
@@ -9,7 +9,6 @@ models:                       # the 8 candidates
   - nvidia/nemotron-3-nano-30b-a3b
   - openai/gpt-oss-20b
   - alibaba/qwen-3-14b
-  - mistral/ministral-8b
 
 modes: [baseline, classic, agentic]
 runs: 5                       # repeats per question per model per mode

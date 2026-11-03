@@ -292,7 +292,9 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 
 ### Target (author, 2026-11-03)
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
-- Pass mark: 99% exact on the golden multiple-choice set (Majority score, chosen mode).
+- Target: 99% exact on the golden multiple-choice set (Majority score, chosen mode).
+- Minimum: 85% exact. A model below 85% is not usable.
+- mistral/ministral-8b dropped from future runs (author, 2026-11-03): 29-40% exact in run 20261103-081849.
 - Reference point: the best frontier model in baseline mode (no knowledge base). Measured each run.
 - What 99% requires:
   - At 17 questions, 99% allows no wrong question. One wrong question = 94%.
