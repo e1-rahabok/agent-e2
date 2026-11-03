@@ -46,4 +46,4 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 - E is less likely: most cores are busy and most run two threads, so Single Core Turbo does not apply.
 
 ## Notes
-- Conflict with the knowledge base: `vm/cpu/usage` and `used` say each thread is charged 62.5% when both threads run (1.25x / 2). 3.0 GHz x 62.5% = 1.875 GHz, not 2.4 GHz. The key uses 80% (1 / 1.25). Open question Q034 in docs/author-questions.md.
+- Author confirmed the key (Q034, 2026-11-03). Knowledge: `vsphere/cpu/concepts/cpu-frequency`, section Likely vCPU speed on a busy cluster.

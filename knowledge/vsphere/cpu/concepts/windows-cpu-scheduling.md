@@ -21,6 +21,7 @@
 | Initialized | Other | Being created. Near 0; high values: excessive thread spawning or slow creation. |
 | Terminated | Other | Finished. Not a problem when planned. |
 | Running | Other | Productive. Should approximate infrastructure sizing (OS, Tools, agents) plus application sizing. |
+- Processor Queue Length includes threads in Ready, Standby and Deferred Ready (shown as Unknown). All 3 indicate a CPU problem.
 - Tools count threads per state at one instant. Collecting thousands of threads takes about 100 ms, during which Standby slots change hundreds of times. Counts can exceed the number of processors.
 
 ## Priority
@@ -101,5 +102,6 @@ corrections: []
 review_notes:
 - 'Section ''Usage, utilization, time'': the book''s table marks VM CPU Run as Hyper-Threading aware. Chapter 2 says Run ignores Hyper-Threading. Open question in docs/author-questions.md.'
 - 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
+- "Section 'Thread states': author (2026-11-03), quiz CPU Q7 F confirmed correct (Q036)."
 status: draft
 ```

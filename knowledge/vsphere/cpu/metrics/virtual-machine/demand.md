@@ -5,6 +5,8 @@
 - Like Usage, but assumes the VM does not share the physical core.
 - An internal metric of the kernel resource scheduler. The book's advice: ignore it for operations.
 - Unit: MHz. Source: ESXi. VM level only. vCenter counter: cpu.demand.average.
+- VM realm, not Guest OS realm: the VMkernel computes it and sees physical threads. Its value is affected by Hyper-Threading (it removes the Hyper-Threading charge that Usage applies).
+- Not a contention counter: it does not measure a vCPU being unable to run.
 
 ## Not unmet demand
 - Demand is not what Usage would be if the VM got all the runtime it demanded.
@@ -64,6 +66,7 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Consumption Metrics > Demand
 corrections: []
-review_notes: []
+review_notes:
+- "Section 'Meaning': author (2026-11-03), answer to Q035: Demand is affected by Hyper-Threading; Guest OS and VM are different realms."
 status: draft
 ```

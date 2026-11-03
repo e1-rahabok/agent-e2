@@ -32,7 +32,7 @@ F. In Windows, the processor queue length counter includes thread states such as
 A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dismissed as normal).
 
 ## Expected key points
-- Answer per key: D, E. The key's explanation also marks F correct.
+- Answer: D, E, F.
 - A is wrong: the Guest OS is unaware of host Hyper-Threading.
 - B is wrong: Run Queue directly accounts for lack of CPU.
 - C is wrong: a context switch swaps the thread out. It is expensive.
@@ -41,4 +41,4 @@ A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dis
 - F: Windows has 8 thread states. Ready, Standby and Deferred Ready measure a CPU problem.
 
 ## Notes
-- Answer key conflict: answer line says D, E; explanation says F is correct. Open question Q036 in docs/author-questions.md. Score F as correct until answered.
+- Author confirmed D, E, F (Q036, 2026-11-03). The quiz document's answer column lists D, E only.

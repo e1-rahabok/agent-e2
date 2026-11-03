@@ -41,6 +41,6 @@ A or B (compute list price only, ignoring disk, network, support and management)
 - About US$ 2,000 per VM per year.
 
 ## Notes
-- The key has no explanation for A, B and D. Open question Q037 in docs/author-questions.md.
+- The key has no explanation for A, B and D, and no pricing date or source. Tracked in docs/todo.md.
 - Prices change. Re-check against current hyperscaler pricing before each evaluation run.
 - No knowledge file covers cloud pricing yet; `knowledge` points to the closest file.
