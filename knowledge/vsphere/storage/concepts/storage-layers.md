@@ -82,7 +82,7 @@ internal_derive:
 related:
 - vsphere/storage/concepts/storage-dimensions
 - vsphere/storage/concepts/guest-os-vs-vm-storage
-- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/storage/metrics/datastore/virtual-disk
 images:
   - path: ../images/storage-layers-guest-os-to-storage-subsystem.png

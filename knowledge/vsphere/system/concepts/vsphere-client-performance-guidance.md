@@ -14,7 +14,7 @@
 
 - Causes the documentation lists: host short of CPU; too many vCPUs relative to physical cores; storage or network IO that puts the CPU in a wait state; Guest OS load.
 - VM CPU Ready in the vCenter chart is a percentage averaged over the vCPUs at statistics level 1.
-- The knowledge base reads Ready against Run, not against a fixed value: 2% Ready on 10% Run delayed 20% of transactions. See `vsphere/cpu/metrics/virtual-machine/ready`.
+- The knowledge base reads Ready against Run, not against a fixed value: 2% Ready on 10% Run delayed 20% of transactions. See `vsphere/cpu/metrics/virtual-motherboard/ready`.
 - High Ready while Usage sits at the VM CPU limit: the limit causes it. esxtop %MLMTD is counted inside %RDY. Remove or raise the limit.
 - More shares give one VM more chances to run. Total host Ready stays the same when the host itself is short of CPU.
 - Idle vCPUs still cost host CPU: the hypervisor maintains them. Right-size to the vCPUs the workload runs. See `vsphere/cpu/concepts/idle-and-unused-vcpus`.
@@ -89,7 +89,7 @@ object:
 - ResourcePool
 - Datastore
 internal_derive:
-- vsphere/cpu/metrics/virtual-machine/ready
+- vsphere/cpu/metrics/virtual-motherboard/ready
 - vsphere/memory/metrics/host/usage
 - vsphere/memory/concepts/swap-and-compression
 - vsphere/storage/diagnosis/host-storage-latency

@@ -38,7 +38,7 @@ object:
 - VirtualMachine
 - HostSystem
 internal_derive:
-- vsphere/network/metrics/virtual-machine/packets-dropped
+- vsphere/network/metrics/virtual-motherboard/packets-dropped
 related:
 - vsphere/network/metrics/host/packets-dropped
 - vsphere/network/configuration/rss-and-interrupt-coalescing

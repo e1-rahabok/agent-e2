@@ -55,10 +55,10 @@ internal_derive:
 - vsphere/memory/concepts/memory-layers
 - vsphere/memory/concepts/overcommit-techniques
 related:
-- vsphere/memory/metrics/virtual-machine/ballooned
-- vsphere/memory/metrics/virtual-machine/balloon-target
+- vsphere/memory/metrics/virtual-motherboard/ballooned
+- vsphere/memory/metrics/virtual-motherboard/balloon-target
 - vsphere/memory/concepts/swap-and-compression
-- vsphere/memory/metrics/virtual-machine/latency
+- vsphere/memory/metrics/virtual-motherboard/latency
 images:
   - path: ../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png
     product: [vsphere]

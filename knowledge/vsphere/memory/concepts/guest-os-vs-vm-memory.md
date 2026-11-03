@@ -75,8 +75,8 @@ internal_derive:
 - vsphere/foundations/visibility-layers
 related:
 - vsphere/memory/concepts/memory-layers
-- vsphere/memory/metrics/virtual-machine/consumed
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/consumed
+- vsphere/memory/metrics/virtual-motherboard/usage
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 images:
   - path: ../images/vm-memory-hypervisor-view-vs-guest-os-view.png

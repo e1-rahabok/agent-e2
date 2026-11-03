@@ -27,7 +27,7 @@
   - the guest memory size is too small.
 
 ## Traps
-- "Ballooned memory above zero means the VM is short of memory now" → some ballooning is normal, and ballooning can reflect earlier reclamation. See `vsphere/memory/metrics/virtual-machine/ballooned`.
+- "Ballooned memory above zero means the VM is short of memory now" → some ballooning is normal, and ballooning can reflect earlier reclamation. See `vsphere/memory/metrics/virtual-motherboard/ballooned`.
 - "No ballooning means no memory problem" → the indicator is valid only when the balloon driver works. Check Swapped and Compressed too.
 - "Guest swap activity proves host overcommitment" → guest swap can have other causes. Check the host indicators first.
 
@@ -49,7 +49,7 @@ internal_derive: []
 related:
 - vsphere/memory/concepts/overcommit-techniques
 - vsphere/memory/configuration/host-level-swapping
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/usage
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Memory Considerations > Memory Overcommit Techniques > steps a-d (p. 34)

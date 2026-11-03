@@ -84,7 +84,7 @@ internal_derive:
 related:
 - vsphere/system/concepts/rightsizing
 - vsphere/system/concepts/vm-footprint-sizing
-- vsphere/memory/metrics/virtual-machine/utilization
+- vsphere/memory/metrics/virtual-motherboard/utilization
 images:
   - path: ../images/guest-os-sizing-what-to-include-and-exclude.png
     product: [vcf-operations]

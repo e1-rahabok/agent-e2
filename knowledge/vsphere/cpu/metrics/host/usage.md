@@ -67,7 +67,7 @@ internal_derive:
 - vsphere/cpu/concepts/hyper-threading
 - vsphere/foundations/provider-consumer
 same_name:
-- vsphere/cpu/metrics/virtual-machine/usage
+- vsphere/cpu/metrics/virtual-motherboard/usage
 same_meaning: []
 related:
 - vsphere/cpu/metrics/host/core-utilization

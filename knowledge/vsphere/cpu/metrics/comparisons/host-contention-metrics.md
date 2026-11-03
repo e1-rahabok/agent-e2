@@ -47,8 +47,8 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
-- vsphere/cpu/metrics/virtual-machine/ready
-- vsphere/cpu/metrics/virtual-machine/co-stop
+- vsphere/cpu/metrics/virtual-motherboard/ready
+- vsphere/cpu/metrics/virtual-motherboard/co-stop
 images:
   - path: ../../images/vcenter-esxi-cpu-contention-counters-table.png
     product: [vsphere]

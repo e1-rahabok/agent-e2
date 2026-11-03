@@ -48,18 +48,18 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/used
-- vsphere/cpu/metrics/virtual-machine/usage
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/metrics/virtual-motherboard/used
+- vsphere/cpu/metrics/virtual-motherboard/usage
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/demand
 - vsphere/cpu/metrics/host/core-utilization
 - vsphere/cpu/concepts/run-time-vs-run-quality
 - vsphere/cpu/concepts/cpu-measurement-levels
-- vsphere/cpu/metrics/virtual-machine/demand
-- vsphere/cpu/metrics/virtual-machine/net-run
-- vsphere/cpu/metrics/virtual-machine/system
-- vsphere/cpu/metrics/virtual-machine/usage-disparity
+- vsphere/cpu/metrics/virtual-motherboard/demand
+- vsphere/cpu/metrics/virtual-motherboard/net-run
+- vsphere/cpu/metrics/virtual-motherboard/system
+- vsphere/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/cpu/concepts/esxi-thread-core-accounting

@@ -6,9 +6,9 @@ area: memory
 input: text
 tests: distinction
 knowledge:
-  - vsphere/memory/metrics/virtual-machine/latency
-  - vsphere/memory/metrics/virtual-machine/ballooned
-  - vsphere/memory/metrics/virtual-machine/swapped
+  - vsphere/memory/metrics/virtual-motherboard/latency
+  - vsphere/memory/metrics/virtual-motherboard/ballooned
+  - vsphere/memory/metrics/virtual-motherboard/swapped
   - vsphere/memory/diagnosis/vm-memory-latency-high
 attachments: []
 origin: quiz

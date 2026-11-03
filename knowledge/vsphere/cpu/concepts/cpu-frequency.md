@@ -144,7 +144,7 @@ review_notes:
 - "Section 'Three speeds': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book)."
 - "Section 'All-Core Turbo': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party)."
 - "Sections 'All-Core Turbo', 'Likely vCPU speed on a busy cluster', 'TDP': author (2026-11-03), quiz answers CPU Q2 and Q4 (vSphere Metric Quiz.docx). Author confirmed 2.4 GHz (All-Core Turbo x 80%) in Q034."
-- "Section 'Likely vCPU speed on a busy cluster': `vsphere/cpu/metrics/virtual-machine/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written."
+- "Section 'Likely vCPU speed on a busy cluster': `vsphere/cpu/metrics/virtual-motherboard/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written."
 - "Section 'Impacts on ESXi': author (2026-11-03), Q010: Usage cap removed in both vCenter and VCF Operations; supersedes the 2026-11-02 note that the metric is capped."
 status: draft
 ```

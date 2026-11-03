@@ -6,9 +6,9 @@ area: storage
 input: text
 tests: concept
 knowledge:
-  - vsphere/storage/metrics/virtual-machine/outstanding-io
-  - vsphere/storage/metrics/virtual-machine/disk-latency
-  - vsphere/storage/metrics/virtual-machine/iops
+  - vsphere/storage/metrics/virtual-motherboard/outstanding-io
+  - vsphere/storage/metrics/virtual-motherboard/disk-latency
+  - vsphere/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1 Latency vs OIO"

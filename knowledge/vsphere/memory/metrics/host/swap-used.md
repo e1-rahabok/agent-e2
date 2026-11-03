@@ -32,7 +32,7 @@ internal_derive:
 - vsphere/memory/concepts/overcommit-techniques
 same_name: []
 same_meaning:
-- vsphere/memory/metrics/virtual-machine/swapped
+- vsphere/memory/metrics/virtual-motherboard/swapped
 related:
 - vsphere/memory/metrics/host/compressed
 - vsphere/memory/concepts/swap-and-compression

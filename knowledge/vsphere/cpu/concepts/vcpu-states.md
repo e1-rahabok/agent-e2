@@ -157,10 +157,10 @@ related:
 - vsphere/cpu/concepts/run-time-vs-run-quality
 - vsphere/cpu/concepts/cpu-efficiency
 - vsphere/cpu/concepts/idle-and-unused-vcpus
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/ready
-- vsphere/cpu/metrics/virtual-machine/wait
-- vsphere/cpu/metrics/virtual-machine/latency
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/metrics/virtual-motherboard/ready
+- vsphere/cpu/metrics/virtual-motherboard/wait
+- vsphere/cpu/metrics/virtual-motherboard/latency
 images:
   - path: ../images/vcpu-state-diagram-new-ready-run-costop-wait-zombie.png
     product: [vsphere]
@@ -197,7 +197,7 @@ corrections: []
 review_notes:
 - "Section 'Basic states': author (2026-11-02): the wait sub-cases are IO wait, memory wait and other wait. The book text listing Co-stop is wrong and will be corrected."
 - "Section 'State diagram': transitions are read from the book's state diagram image. Three arrows (Wait to Run, Wait to Co-stop, Run to Co-stop) carry no label in the image. The meaning given for them in the body is Claude's reading. Author to confirm."
-- "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/cpu/metrics/virtual-machine/ready)."
+- "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/cpu/metrics/virtual-motherboard/ready)."
 - "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
 - "Section 'Effect of VM size': author (2026-11-03), Q007: downsizing reduces both Ready and Co-stop; smaller shares can increase Ready."
 status: draft

@@ -7,7 +7,7 @@ input: text
 tests: concept
 knowledge:
   - vsphere/foundations/provider-consumer
-  - vsphere/cpu/metrics/virtual-machine/ready
+  - vsphere/cpu/metrics/virtual-motherboard/ready
   - vsphere/cpu/metrics/host/demand
 attachments: []
 origin: book

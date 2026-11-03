@@ -26,10 +26,10 @@ object:
 metric_class: context
 internal_derive: []
 same_name:
-- vsphere/cpu/metrics/virtual-machine/wait
+- vsphere/cpu/metrics/virtual-motherboard/wait
 same_meaning: []
 related:
-- vsphere/cpu/metrics/virtual-machine/wait
+- vsphere/cpu/metrics/virtual-motherboard/wait
 - vsphere/cpu/metrics/host/idle
 source:
   document: PART 3 - Counters.docx

@@ -23,10 +23,10 @@ object:
 metric_class: contention
 internal_derive: []
 same_name:
-- vsphere/memory/metrics/virtual-machine/latency
+- vsphere/memory/metrics/virtual-motherboard/latency
 same_meaning: []
 related:
-- vsphere/memory/metrics/virtual-machine/latency
+- vsphere/memory/metrics/virtual-motherboard/latency
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Overview; Contention Metrics

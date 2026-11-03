@@ -90,8 +90,8 @@ related:
 - vsphere/memory/concepts/memory-tiering
 - vsphere/memory/concepts/large-memory-pages
 - vsphere/memory/concepts/guest-os-vs-vm-memory
-- vsphere/memory/metrics/virtual-machine/ballooned
-- vsphere/memory/metrics/virtual-machine/consumed
+- vsphere/memory/metrics/virtual-motherboard/ballooned
+- vsphere/memory/metrics/virtual-motherboard/consumed
 - vsphere/memory/metrics/host/consumed
 images:
   - path: ../images/vm-memory-address-space-vs-esxi-backing-pages.png

@@ -81,9 +81,9 @@ related:
 - vsphere/cpu/concepts/cpu-frequency
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/used
-- vsphere/cpu/metrics/virtual-machine/usage
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/metrics/virtual-motherboard/used
+- vsphere/cpu/metrics/virtual-motherboard/usage
 - vsphere/cpu/metrics/comparisons/consumption-metrics
 images:
   - path: ../images/cpu-frequency-base-vs-all-core-turbo-vs-single-core-turbo-while-running.png

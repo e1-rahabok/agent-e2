@@ -75,11 +75,11 @@ object:
 internal_derive:
 - vsphere/memory/concepts/overcommit-techniques
 related:
-- vsphere/memory/metrics/virtual-machine/swapped
-- vsphere/memory/metrics/virtual-machine/compressed
-- vsphere/memory/metrics/virtual-machine/swap-target
-- vsphere/memory/metrics/virtual-machine/swap-in-rate
-- vsphere/memory/metrics/virtual-machine/latency
+- vsphere/memory/metrics/virtual-motherboard/swapped
+- vsphere/memory/metrics/virtual-motherboard/compressed
+- vsphere/memory/metrics/virtual-motherboard/swap-target
+- vsphere/memory/metrics/virtual-motherboard/swap-in-rate
+- vsphere/memory/metrics/virtual-motherboard/latency
 - vsphere/memory/concepts/ballooning
 images:
   - path: ../images/vm-memory-swap-out-rate-sum-matches-swapped.png

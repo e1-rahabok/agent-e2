@@ -6,7 +6,7 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/cpu/metrics/virtual-machine/usage
+  - vsphere/cpu/metrics/virtual-motherboard/usage
   - vsphere/cpu/metrics/host/usage
   - vsphere/cpu/metrics/host/core-utilization
 attachments: []

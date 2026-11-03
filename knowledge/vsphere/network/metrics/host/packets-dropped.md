@@ -35,11 +35,11 @@ object:
 metric_class: contention
 internal_derive: []
 same_name:
-- vsphere/network/metrics/virtual-machine/packets-dropped
+- vsphere/network/metrics/virtual-motherboard/packets-dropped
 same_meaning: []
 related:
 - vsphere/network/metrics/host/errors
-- vsphere/network/metrics/virtual-machine/packets-dropped
+- vsphere/network/metrics/virtual-motherboard/packets-dropped
 - vsphere/network/diagnosis/vnic-rx-drops
 images:
   - path: ../../images/esxi-network-transmit-dropped-across-hosts.png

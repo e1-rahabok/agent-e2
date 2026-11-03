@@ -40,10 +40,10 @@ object:
 internal_derive: []
 related:
 - vsphere/storage/concepts/vm-files
-- vsphere/storage/metrics/virtual-machine/datastore
-- vsphere/cpu/metrics/virtual-machine/co-stop
-- vsphere/cpu/metrics/virtual-machine/other-wait
-- vsphere/cpu/metrics/virtual-machine/system
+- vsphere/storage/metrics/virtual-motherboard/datastore
+- vsphere/cpu/metrics/virtual-motherboard/co-stop
+- vsphere/cpu/metrics/virtual-motherboard/other-wait
+- vsphere/cpu/metrics/virtual-motherboard/system
 images:
   - path: ../images/datastore-read-iops-rise-with-vm-snapshot.png
     product: [vsphere]

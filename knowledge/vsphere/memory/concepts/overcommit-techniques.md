@@ -39,7 +39,7 @@
 - Overcommit indicators: see `vsphere/memory/diagnosis/overcommit-indicators`.
 
 ## Traps
-- "Ballooning means memory pressure now" → ballooning can reflect reclamation that happened earlier. See `vsphere/memory/metrics/virtual-machine/ballooned`.
+- "Ballooning means memory pressure now" → ballooning can reflect reclamation that happened earlier. See `vsphere/memory/metrics/virtual-motherboard/ballooned`.
 - "Host-level swapping and guest OS swapping are the same" → they are distinct. Host-level swapping is transparent to the guest.
 - "Memory compression is as costly as swapping" → decompression latency is much smaller than swap-in latency.
 
@@ -64,7 +64,7 @@ related:
 - vsphere/memory/concepts/page-sharing
 - vsphere/memory/configuration/host-level-swapping
 - vsphere/memory/diagnosis/overcommit-indicators
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/usage
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34)

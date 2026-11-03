@@ -74,7 +74,7 @@ same_meaning: []
 related:
 - vsphere/system/concepts/cluster-utilization-vs-contention
 - vsphere/system/metrics/cluster/cluster-sla-sli
-- vsphere/system/metrics/virtual-machine/vm-performance
+- vsphere/system/metrics/virtual-motherboard/vm-performance
 images:
   - path: ../../images/cluster-performance-thresholds-table.png
     product: [vcf-operations]

@@ -62,7 +62,7 @@ object:
 internal_derive: []
 related:
 - vsphere/foundations/visibility-layers
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/usage
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead

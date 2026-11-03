@@ -103,7 +103,7 @@ internal_derive: []
 related:
 - foundations/terminology
 - vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/usage
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management

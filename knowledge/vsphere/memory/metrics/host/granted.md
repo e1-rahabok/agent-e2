@@ -30,11 +30,11 @@ object:
 metric_class: consumption
 internal_derive: []
 same_name:
-- vsphere/memory/metrics/virtual-machine/granted
+- vsphere/memory/metrics/virtual-motherboard/granted
 same_meaning: []
 related:
 - vsphere/memory/metrics/host/consumed
-- vsphere/memory/metrics/virtual-machine/granted
+- vsphere/memory/metrics/virtual-motherboard/granted
 images:
   - path: ../../images/esxi-memory-granted-above-total-capacity.png
     product: [vsphere]

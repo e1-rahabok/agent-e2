@@ -32,11 +32,11 @@ object:
 metric_class: context
 internal_derive: []
 same_name:
-- vsphere/memory/metrics/virtual-machine/ballooned
+- vsphere/memory/metrics/virtual-motherboard/ballooned
 same_meaning: []
 related:
 - vsphere/memory/concepts/host-memory-states
-- vsphere/memory/metrics/virtual-machine/ballooned
+- vsphere/memory/metrics/virtual-motherboard/ballooned
 - vsphere/memory/metrics/host/consumed
 images:
   - path: ../../images/esxi-memory-balloon-7-days-without-vm-contention.png

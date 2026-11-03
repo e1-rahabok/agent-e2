@@ -37,10 +37,10 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/cpu/metrics/virtual-machine/usage-disparity
-- vsphere/cpu/metrics/virtual-machine/usage
+- vsphere/cpu/metrics/virtual-motherboard/usage-disparity
+- vsphere/cpu/metrics/virtual-motherboard/usage
 related:
-- vsphere/cpu/metrics/virtual-machine/run
+- vsphere/cpu/metrics/virtual-motherboard/run
 - vsphere/cpu/concepts/idle-and-unused-vcpus
 source:
   document: PART 3 - Counters.docx

@@ -21,7 +21,7 @@
 |---|---|---|
 | Speed | Nanoseconds | Generally ignored for RAM monitoring. DDR5 is faster than DDR4, but the difference does not matter for general monitoring. |
 | Speed | Nanoseconds | Matters with memory tiering: the second tier is NVMe, not DIMM. |
-| Speed | % of time | The only ESXi speed counter is Memory Latency (page-fault latency, esxtop %LAT_M). Share of time a vCPU waits on page-fault completion. Not the latency in ns. See `vsphere/memory/metrics/virtual-machine/latency`. |
+| Speed | % of time | The only ESXi speed counter is Memory Latency (page-fault latency, esxtop %LAT_M). Share of time a vCPU waits on page-fault completion. Not the latency in ns. See `vsphere/memory/metrics/virtual-motherboard/latency`. |
 | Space | Bytes | The bulk of memory metrics. Relatively static. |
 
 - Disk tracks latency as time per IO (ms). Memory tracks it as share of time waiting (%).
@@ -53,7 +53,7 @@ object:
 internal_derive: []
 related:
 - vsphere/memory/concepts/memory-layers
-- vsphere/memory/metrics/virtual-machine/latency
+- vsphere/memory/metrics/virtual-motherboard/latency
 - vsphere/foundations/resource-management
 - vsphere/memory/concepts/memory-tiering
 source:

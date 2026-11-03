@@ -114,10 +114,10 @@ related:
 - vsphere/cpu/concepts/vcpu-states
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/concepts/cpu-efficiency
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/wait
-- vsphere/cpu/metrics/virtual-machine/usage
-- vsphere/cpu/metrics/virtual-machine/latency
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/metrics/virtual-motherboard/wait
+- vsphere/cpu/metrics/virtual-motherboard/usage
+- vsphere/cpu/metrics/virtual-motherboard/latency
 images:
   - path: ../images/guest-os-cpu-vs-vm-vcpu-vs-vm-layers.png
     product: [vsphere]

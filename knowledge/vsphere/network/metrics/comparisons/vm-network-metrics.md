@@ -16,7 +16,7 @@
 | Metric | Facts |
 |---|---|
 | Broadcast packets, Multicast packets | Count in the sampling window, not a rate. Should be low for most VMs. |
-| Packets dropped | See `vsphere/network/metrics/virtual-machine/packets-dropped`. |
+| Packets dropped | See `vsphere/network/metrics/virtual-motherboard/packets-dropped`. |
 | Total packets | Includes broadcast and multicast. Excludes dropped. |
 | Throughput | KB per second. esxtop uses megabits. Assumed to include broadcast and multicast, exclude dropped. |
 
@@ -54,9 +54,9 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/network/metrics/virtual-machine/packets-dropped
-- vsphere/network/metrics/virtual-machine/packets
-- vsphere/network/metrics/virtual-machine/throughput
+- vsphere/network/metrics/virtual-motherboard/packets-dropped
+- vsphere/network/metrics/virtual-motherboard/packets
+- vsphere/network/metrics/virtual-motherboard/throughput
 source:
   document: PART 3 - Counters.docx
   path: Network > VM > Overview

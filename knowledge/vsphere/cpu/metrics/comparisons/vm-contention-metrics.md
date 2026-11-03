@@ -61,13 +61,13 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/cpu/metrics/virtual-machine/ready
-- vsphere/cpu/metrics/virtual-machine/co-stop
-- vsphere/cpu/metrics/virtual-machine/overlap
-- vsphere/cpu/metrics/virtual-machine/other-wait
-- vsphere/cpu/metrics/virtual-machine/swap-wait
-- vsphere/cpu/metrics/virtual-machine/latency
-- vsphere/cpu/metrics/virtual-machine/contention
+- vsphere/cpu/metrics/virtual-motherboard/ready
+- vsphere/cpu/metrics/virtual-motherboard/co-stop
+- vsphere/cpu/metrics/virtual-motherboard/overlap
+- vsphere/cpu/metrics/virtual-motherboard/other-wait
+- vsphere/cpu/metrics/virtual-motherboard/swap-wait
+- vsphere/cpu/metrics/virtual-motherboard/latency
+- vsphere/cpu/metrics/virtual-motherboard/contention
 - vsphere/cpu/diagnosis/vm-cpu-contention-high
 images:
   - path: ../../images/vcenter-vm-cpu-contention-counters-table.png

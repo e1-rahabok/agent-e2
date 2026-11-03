@@ -42,7 +42,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/memory/metrics/virtual-machine/shared
+- vsphere/memory/metrics/virtual-motherboard/shared
 - vsphere/memory/concepts/large-memory-pages
 images:
   - path: ../../images/esxi-memory-shared-common-above-half-of-shared.png
