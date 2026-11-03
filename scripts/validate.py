@@ -7,7 +7,7 @@ import glob, os, re, sys, yaml
 TERMS = 'knowledge/glossary/terminology.md'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
             'source', 'corrections', 'review_notes', 'status']
-LIST_FIELDS = ['technology', 'pillar', 'product', 'object', 'instance']
+LIST_FIELDS = ['technology', 'pillar', 'product', 'object', 'instance', 'layer']
 LINK_FIELDS = ['related', 'internal_derive', 'same_name', 'same_meaning']
 OLD_FIELDS = ['type', 'resources', 'objects', 'derived_from', 'same_name_as', 'kind']
 
@@ -91,7 +91,18 @@ def main():
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
         if '/metrics/' in f:
             if fm.get('retriever_guide') != 'metric-meaning': bad(f, 'metric file must have retriever_guide: metric-meaning')
-            if not fm.get('object'): bad(f, 'metric file must have object')
+            layer = fm.get('layer') or []
+            title = body.lstrip().split('\n', 1)[0]
+            # A VM is a virtual motherboard; the Guest OS is a separate layer, not a vSphere object.
+            if '/metrics/guest-os/' in f:
+                if layer != ['guest-os']: bad(f, 'Guest OS metric file must have layer: [guest-os]')
+                if 'VirtualMachine' in (fm.get('object') or []): bad(f, 'Guest OS metric file must not have object VirtualMachine: Guest OS is a layer, not the VM')
+            else:
+                if not fm.get('object'): bad(f, 'metric file must have object')
+                if 'guest-os' in layer or title.startswith('# Guest OS'):
+                    bad(f, 'Guest OS metric must live in metrics/guest-os/, not with VM (virtual motherboard) metrics')
+            if '/metrics/virtual-motherboard/' in f and layer != ['virtual-motherboard']:
+                bad(f, 'VM metric file must have layer: [virtual-motherboard]')
             if not fm.get('metric_class'): bad(f, 'metric file must have metric_class')
             if '/comparisons/' not in f and len(fm.get('object') or []) > 1:
                 bad(f, 'metric file must have exactly one object type (comparisons excepted)')

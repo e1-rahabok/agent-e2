@@ -28,7 +28,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/memory/metrics/host/swap-used
-- vsphere/memory/metrics/virtual-machine/compressed
+- vsphere/memory/metrics/virtual-motherboard/compressed
 - vsphere/memory/concepts/swap-and-compression
 images:
   - path: ../../images/esxi-memory-compressed-flat-for-1-year.png

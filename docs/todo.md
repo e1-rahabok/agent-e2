@@ -70,7 +70,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Chapter 5 (Network) > Architecture: extracted 2026-11-02. New: concepts network-characteristics, network-observability.
 - [x] Chapter 5 (Network) > VM: extracted 2026-11-02. New: comparisons/vm-network-metrics; VM metric files packets-dropped, packets, throughput.
 - [x] Chapter 5 (Network) > ESXi: extracted 2026-11-02. Chapter 5 Network complete. New: host metric files errors, packets-dropped, throughput; diagnosis vnic-rx-drops.
-- [x] Consumer Objects > Performance: VM & Guest OS: extracted 2026-11-02. New: system/concepts/performance-kpi-design; system/metrics/virtual-machine vm-performance, guest-os-performance, vmotion; comparisons/peak-20-second-metrics. Updated: cpu/configuration/latency-sensitivity.
+- [x] Consumer Objects > Performance: VM & Guest OS: extracted 2026-11-02. New: system/concepts/performance-kpi-design; system/metrics/virtual-motherboard vm-performance, guest-os-performance, vmotion; comparisons/peak-20-second-metrics. Updated: cpu/configuration/latency-sensitivity.
 - [x] Consumer Objects > Capacity: Guest OS: extracted 2026-11-02. New: system/concepts rightsizing, guest-os-sizing, vm-footprint-sizing. Validator: allow list for book metric names containing Needed.
 - [x] Provider Objects > Overview: extracted 2026-11-02. New: system/concepts/cluster-operations; system/metrics/cluster/vm-operations; cpu/metrics/cluster/inter-host-imbalance.
 - [x] Provider Objects > Performance: extracted 2026-11-02. New: system/concepts/cluster-utilization-vs-contention; system/metrics/cluster cluster-performance, cluster-sla-sli; system/diagnosis/cluster-vm-contention.
@@ -78,7 +78,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Provider Objects > Other Metrics: extracted 2026-11-02. New: system/metrics/cluster cluster-consumption, cluster-risk; system/metrics/comparisons/availability.
 - [x] Provider Objects > esxtop (Overview, CPU, Memory): extracted 2026-11-02. New: system/concepts/esxtop; cpu/metrics/comparisons/esxtop-cpu; memory/metrics/comparisons/esxtop-memory.
 - [x] Provider Objects > esxtop (Storage, Network): extracted 2026-11-02. Provider Objects complete. New: storage/metrics/comparisons/esxtop-storage; network/metrics/comparisons/esxtop-network.
-- [x] MS Windows (Introduction, CPU, Memory, Storage): extracted 2026-11-02. Book extraction complete. New: cpu/concepts/windows-cpu-scheduling; cpu/metrics/virtual-machine guest-run-queue, guest-context-switch, guest-processor-time; memory/concepts/windows-memory; storage/metrics/virtual-machine/guest-disk-queue.
+- [x] MS Windows (Introduction, CPU, Memory, Storage): extracted 2026-11-02. Book extraction complete. New: cpu/concepts/windows-cpu-scheduling; cpu/metrics/virtual-motherboard guest-run-queue, guest-context-switch, guest-processor-time; memory/concepts/windows-memory; storage/metrics/virtual-motherboard/guest-disk-queue.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [x] 24 unlinked book images linked under the sections they explain. Validator now fails on any unlinked image.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.

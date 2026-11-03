@@ -6,7 +6,7 @@ area: memory
 input: text
 tests: distinction
 knowledge:
-  - vsphere/memory/metrics/virtual-machine/usage
+  - vsphere/memory/metrics/virtual-motherboard/usage
   - vsphere/memory/metrics/host/usage
   - foundations/resource-nature
 attachments: []

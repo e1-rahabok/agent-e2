@@ -18,6 +18,7 @@ Tag values in front matter must use the terms defined here.
 | Object | One named instance of an object type. Example: a VM called "db01". | A metric or a layer. |
 | Instance (metric) | A sub-component a metric is reported for, inside one object. Examples: vCPU 0, vmnic1, vmhba0. Tag: `instance`. | An object type. |
 | Layer | A level of the stack: Guest OS, VM, hypervisor, physical. | An object type. Guest OS is a layer, not a vSphere object type. |
+| Virtual motherboard | What a VM is: a virtual circuit board (vCPU, memory, virtual disks, vNICs) that runs a Guest OS. Folder name for VM metrics: `virtual-motherboard`. Tag: `layer: virtual-motherboard`, `object: VirtualMachine`. | A complete machine. The Guest OS is not part of it: Guest OS metrics are a separate layer (`layer: guest-os`, folder `guest-os`). Author's book. |
 | Vantage point | The layer or object a metric is observed from. Consumer (VM) vs provider (ESXi). | A tag value by itself. Expressed through `object` and `layer`. |
 | Perspective (book) | One of three angles on metrics: technology, pillar of operations, product. | A layer or vantage point. |
 | Technology | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. | A product. |
@@ -81,6 +82,8 @@ Tag values in front matter must use the terms defined here.
 ## Words to avoid
 | Avoid | Use instead | Why |
 |---|---|---|
+| VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
+| virtual machine, thought of as a complete machine | virtual motherboard (VM) | A VM has no OS of its own; Guest OS and VM are not interchangeable. Author's book. |
 | need, want, wish (for a vCPU or VM) | demands runtime; the kernel decides how much it gets | A vCPU is a thread in the scheduler. It has no intent. |
 | "uses only X% of what it needs" | "is charged X%" or "gets X% of the runtime it demands" | Same reason. |
 | object (for vCPU, Guest OS) | instance (vCPU), layer (Guest OS) | vCPU and Guest OS are not vSphere object types. |
@@ -102,6 +105,7 @@ pillar: [availability, performance, security, capacity, value]
 product: [vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes]
 object: [VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, StoragePod, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, vSphereWorld, VCenterServer]
 instance: [aggregate, per-vcpu, per-vmnic, per-vmhba, per-virtual-disk]
+layer: [guest-os, virtual-motherboard, hypervisor, physical]
 metric_class: [contention, consumption, context]
 status: [draft, reviewed]
 image_type: [diagram, table, timeline, distribution, scatter, screenshot]

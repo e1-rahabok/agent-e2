@@ -78,8 +78,8 @@ object:
 internal_derive:
 - foundations/thresholds
 related:
-- vsphere/system/metrics/virtual-machine/vm-performance
-- vsphere/system/metrics/virtual-machine/guest-os-performance
+- vsphere/system/metrics/virtual-motherboard/vm-performance
+- vsphere/system/metrics/guest-os/guest-os-performance
 - vsphere/system/metrics/comparisons/peak-20-second-metrics
 images:
   - path: ../images/guest-os-and-vm-performance-kpi-metrics.png

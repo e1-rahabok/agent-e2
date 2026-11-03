@@ -101,7 +101,7 @@ internal_derive:
 related:
 - vsphere/foundations/metric-sources
 - vsphere/system/metrics/comparisons/peak-20-second-metrics
-- vsphere/cpu/metrics/virtual-machine/ready
+- vsphere/cpu/metrics/virtual-motherboard/ready
 - vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
 - vsphere/system/concepts/vsphere-client-performance-guidance
 source:

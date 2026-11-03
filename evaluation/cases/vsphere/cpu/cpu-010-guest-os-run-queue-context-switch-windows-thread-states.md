@@ -7,8 +7,8 @@ input: text
 tests: concept
 knowledge:
   - vsphere/cpu/concepts/windows-cpu-scheduling
-  - vsphere/cpu/metrics/virtual-machine/guest-run-queue
-  - vsphere/cpu/metrics/virtual-machine/guest-context-switch
+  - vsphere/cpu/metrics/guest-os/run-queue
+  - vsphere/cpu/metrics/guest-os/context-switch
   - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: quiz

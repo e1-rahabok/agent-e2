@@ -31,10 +31,10 @@ object:
 - VirtualMachine
 - Datastore
 internal_derive:
-- vsphere/storage/metrics/virtual-machine/disk-latency
+- vsphere/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/storage/concepts/storage-layers
 related:
-- vsphere/storage/metrics/virtual-machine/iops
+- vsphere/storage/metrics/virtual-motherboard/iops
 source:
   document: PART 3 - Counters.docx
   path: Storage > Architecture > VM Layer > Performance; Backing Device

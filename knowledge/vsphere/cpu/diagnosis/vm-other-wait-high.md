@@ -30,10 +30,10 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/cpu/metrics/virtual-machine/other-wait
+- vsphere/cpu/metrics/virtual-motherboard/other-wait
 related:
-- vsphere/cpu/metrics/virtual-machine/wait
-- vsphere/cpu/metrics/virtual-machine/idle
+- vsphere/cpu/metrics/virtual-motherboard/wait
+- vsphere/cpu/metrics/virtual-motherboard/idle
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Wait Metrics > Other Wait

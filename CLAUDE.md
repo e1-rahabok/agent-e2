@@ -46,6 +46,14 @@ Standing rules for this repository. Read at the start of every session.
 - Keep every `corrections` entry, naming the section it affects. Clear it only when the source document is updated.
 - `knowledge/raw-input/` is read-only.
 
+## Architecture: VM vs Guest OS
+- A VM is a virtual motherboard, not a complete machine. The Guest OS (Windows, Linux) is a separate layer that runs on it.
+- Never file, tag or describe a Guest OS metric as a VM metric. Guest OS metrics go in `<technology>/metrics/guest-os/` with `layer: [guest-os]` and no `object: VirtualMachine`.
+- VM metrics go in `<technology>/metrics/virtual-motherboard/` with `layer: [virtual-motherboard]` and `object: [VirtualMachine]`.
+- That vCenter or VCF Operations store a counter on the VM object does not make it a VM metric. Decide by the layer that produces it.
+- When a repository rule conflicts with the author's architecture, raise it in `docs/author-questions.md`; do not resolve it silently.
+- `scripts/validate.py` enforces the folder and tag rules.
+
 ## Writing
 - One fact per bullet or table row.
 - Explain the mechanism and the reason before the metric name.

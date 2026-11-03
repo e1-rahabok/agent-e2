@@ -31,7 +31,7 @@
 - Target 99% during HA or maintenance → 99% × 11 / 12 = 90.75% in normal operation.
 - At that level hosts do not reach the balloon state, so VMs are not swapped.
 - Balloon in such a cluster points to a VM-level cause such as a limit, not host pressure.
-- A limit does not cause balloon directly. It causes Compressed or Swapped when Consumed tries to grow beyond it. See `vsphere/memory/metrics/virtual-machine/ballooned`.
+- A limit does not cause balloon directly. It causes Compressed or Swapped when Consumed tries to grow beyond it. See `vsphere/memory/metrics/virtual-motherboard/ballooned`.
 
 ## Low Free Threshold
 - Counter: Low Free Threshold (KB). The free-memory level below which ESXi reclaims memory from VMs.

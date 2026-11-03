@@ -2,7 +2,7 @@
 
 ## Meaning
 - Static-frequency CPU utilization, from the host vantage point.
-- The VM equivalent is called Run. See `vsphere/cpu/metrics/virtual-machine/run`.
+- The VM equivalent is called Run. See `vsphere/cpu/metrics/virtual-motherboard/run`.
 
 ## Why the names differ
 - Different vantage points: provider (ESXi) and consumer (VM).
@@ -46,7 +46,7 @@ internal_derive:
 - vsphere/cpu/concepts/cpu-measurement-levels
 same_name: []
 same_meaning:
-- vsphere/cpu/metrics/virtual-machine/run
+- vsphere/cpu/metrics/virtual-motherboard/run
 related:
 - vsphere/cpu/metrics/host/core-utilization
 - vsphere/cpu/concepts/esxi-thread-core-accounting

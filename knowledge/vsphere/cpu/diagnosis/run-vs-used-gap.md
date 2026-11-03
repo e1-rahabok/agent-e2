@@ -36,11 +36,11 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/used
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/metrics/virtual-motherboard/used
 related:
-- vsphere/cpu/metrics/virtual-machine/ready
-- vsphere/cpu/metrics/virtual-machine/demand
+- vsphere/cpu/metrics/virtual-motherboard/ready
+- vsphere/cpu/metrics/virtual-motherboard/demand
 - vsphere/cpu/concepts/power-states
 - vsphere/cpu/concepts/cpu-efficiency
 source:

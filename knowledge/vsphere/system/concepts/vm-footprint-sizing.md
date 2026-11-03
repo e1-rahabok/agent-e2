@@ -49,10 +49,10 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/cpu/metrics/virtual-machine/used
+- vsphere/cpu/metrics/virtual-motherboard/used
 related:
 - vsphere/system/concepts/guest-os-sizing
-- vsphere/memory/metrics/virtual-machine/consumed
+- vsphere/memory/metrics/virtual-motherboard/consumed
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > VM Footprint'

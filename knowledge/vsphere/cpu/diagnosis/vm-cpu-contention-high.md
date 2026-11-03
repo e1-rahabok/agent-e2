@@ -33,12 +33,12 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/cpu/metrics/virtual-machine/contention
-- vsphere/cpu/metrics/virtual-machine/latency
+- vsphere/cpu/metrics/virtual-motherboard/contention
+- vsphere/cpu/metrics/virtual-motherboard/latency
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
 related:
-- vsphere/cpu/metrics/virtual-machine/ready
-- vsphere/cpu/metrics/virtual-machine/co-stop
+- vsphere/cpu/metrics/virtual-motherboard/ready
+- vsphere/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/cpu/concepts/power-states
 - vsphere/cpu/concepts/cpu-efficiency
 source:

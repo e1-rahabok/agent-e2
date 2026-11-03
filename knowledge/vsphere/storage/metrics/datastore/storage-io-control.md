@@ -58,7 +58,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/storage/metrics/host/datastore
-- vsphere/storage/metrics/virtual-machine/datastore
+- vsphere/storage/metrics/virtual-motherboard/datastore
 - vsphere/storage/diagnosis/host-storage-latency
 - vsphere/foundations/vcenter-statistics
 source:

@@ -38,7 +38,7 @@ metric_class: consumption
 internal_derive:
 - vsphere/foundations/metric-sources
 same_name:
-- vsphere/cpu/metrics/virtual-machine/used
+- vsphere/cpu/metrics/virtual-motherboard/used
 same_meaning: []
 related:
 - vsphere/cpu/metrics/comparisons/consumption-metrics

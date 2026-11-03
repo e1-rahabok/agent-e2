@@ -76,17 +76,17 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/memory/metrics/virtual-machine/latency
-- vsphere/memory/metrics/virtual-machine/consumed
-- vsphere/memory/metrics/virtual-machine/granted
-- vsphere/memory/metrics/virtual-machine/shared
-- vsphere/memory/metrics/virtual-machine/active
-- vsphere/memory/metrics/virtual-machine/ballooned
-- vsphere/memory/metrics/virtual-machine/swapped
-- vsphere/memory/metrics/virtual-machine/compressed
-- vsphere/memory/metrics/virtual-machine/entitlement
-- vsphere/memory/metrics/virtual-machine/overhead
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/latency
+- vsphere/memory/metrics/virtual-motherboard/consumed
+- vsphere/memory/metrics/virtual-motherboard/granted
+- vsphere/memory/metrics/virtual-motherboard/shared
+- vsphere/memory/metrics/virtual-motherboard/active
+- vsphere/memory/metrics/virtual-motherboard/ballooned
+- vsphere/memory/metrics/virtual-motherboard/swapped
+- vsphere/memory/metrics/virtual-motherboard/compressed
+- vsphere/memory/metrics/virtual-motherboard/entitlement
+- vsphere/memory/metrics/virtual-motherboard/overhead
+- vsphere/memory/metrics/virtual-motherboard/usage
 images:
   - path: ../../images/vcenter-vm-memory-page-fault-latency-counter-table.png
     product: [vsphere]

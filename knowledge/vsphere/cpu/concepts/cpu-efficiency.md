@@ -63,10 +63,10 @@ internal_derive:
 related:
 - vsphere/cpu/configuration/latency-sensitivity
 - vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-- vsphere/cpu/metrics/virtual-machine/run
-- vsphere/cpu/metrics/virtual-machine/used
-- vsphere/cpu/metrics/virtual-machine/usage
-- vsphere/cpu/metrics/virtual-machine/latency
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/metrics/virtual-motherboard/used
+- vsphere/cpu/metrics/virtual-motherboard/usage
+- vsphere/cpu/metrics/virtual-motherboard/latency
 images:
   - path: ../images/hyper-threading-vm-cpu-used-62-5-percent-when-sibling-runs.png
     product: [vsphere]

@@ -47,9 +47,9 @@ internal_derive:
 - vsphere/foundations/vm-vs-guest-os
 related:
 - vsphere/storage/concepts/storage-layers
-- vsphere/storage/metrics/virtual-machine/disk-latency
-- vsphere/storage/metrics/virtual-machine/iops
-- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/storage/metrics/virtual-motherboard/disk-latency
+- vsphere/storage/metrics/virtual-motherboard/iops
+- vsphere/storage/metrics/virtual-motherboard/virtual-disk
 images:
   - path: ../images/vm-storage-capacity-sources-disks-and-virtualization-files.png
     product: [vsphere]

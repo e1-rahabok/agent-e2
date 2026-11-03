@@ -8,7 +8,7 @@ tests: concept
 knowledge:
   - vsphere/memory/concepts/guest-os-vs-vm-memory
   - vsphere/memory/concepts/ballooning
-  - vsphere/memory/metrics/virtual-machine/usage
+  - vsphere/memory/metrics/virtual-motherboard/usage
   - vsphere/foundations/vm-vs-guest-os
 attachments: []
 origin: quiz

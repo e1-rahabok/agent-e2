@@ -37,12 +37,12 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/memory/metrics/virtual-machine/latency
+- vsphere/memory/metrics/virtual-motherboard/latency
 - vsphere/memory/concepts/swap-and-compression
 related:
-- vsphere/memory/metrics/virtual-machine/swap-in-rate
-- vsphere/memory/metrics/virtual-machine/swapped
-- vsphere/memory/metrics/virtual-machine/compressed
+- vsphere/memory/metrics/virtual-motherboard/swap-in-rate
+- vsphere/memory/metrics/virtual-motherboard/swapped
+- vsphere/memory/metrics/virtual-motherboard/compressed
 - vsphere/memory/diagnosis/overcommit-indicators
 source:
   document: PART 3 - Counters.docx

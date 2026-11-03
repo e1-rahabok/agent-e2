@@ -17,7 +17,7 @@
 
 ## Values above 100%
 - A metric computed by summation (not average) can exceed 100%.
-- vSphere example: VM CPU Ready, and many VM-level values in esxtop. See `vsphere/cpu/metrics/virtual-machine/ready`.
+- vSphere example: VM CPU Ready, and many VM-level values in esxtop. See `vsphere/cpu/metrics/virtual-motherboard/ready`.
 
 ## Metadata
 ```yaml

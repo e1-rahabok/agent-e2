@@ -70,8 +70,8 @@ internal_derive: []
 related:
 - foundations/terminology
 - vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/memory/metrics/virtual-machine/usage
-- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/memory/metrics/virtual-motherboard/usage
+- vsphere/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
 source:
   document: PART 3 - Counters.docx

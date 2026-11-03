@@ -37,7 +37,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vsphere/storage/metrics/virtual-machine/datastore
+- vsphere/storage/metrics/virtual-motherboard/datastore
 - vsphere/storage/metrics/host/disk
 - vsphere/storage/metrics/datastore/storage-io-control
 images:

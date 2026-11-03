@@ -76,9 +76,9 @@ object:
 internal_derive:
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 related:
-- vsphere/cpu/metrics/virtual-machine/guest-run-queue
-- vsphere/cpu/metrics/virtual-machine/guest-context-switch
-- vsphere/cpu/metrics/virtual-machine/guest-processor-time
+- vsphere/cpu/metrics/guest-os/run-queue
+- vsphere/cpu/metrics/guest-os/context-switch
+- vsphere/cpu/metrics/guest-os/processor-time
 images:
   - path: ../images/windows-thread-states-diagram.png
     product: [windows]

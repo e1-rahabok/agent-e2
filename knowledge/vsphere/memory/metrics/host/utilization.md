@@ -39,7 +39,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/memory/metrics/host/consumed
-- vsphere/memory/metrics/virtual-machine/utilization
+- vsphere/memory/metrics/virtual-motherboard/utilization
 - vsphere/memory/metrics/comparisons/host-memory-metrics
 images:
   - path: ../../images/esxi-memory-utilization-vs-consumed-across-hosts.png

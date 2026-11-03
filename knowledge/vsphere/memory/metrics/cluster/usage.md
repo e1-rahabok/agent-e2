@@ -20,7 +20,7 @@ metric_class: consumption
 internal_derive:
 - foundations/resource-nature
 same_name:
-- vsphere/memory/metrics/virtual-machine/usage
+- vsphere/memory/metrics/virtual-motherboard/usage
 - vsphere/memory/metrics/host/usage
 same_meaning: []
 related:

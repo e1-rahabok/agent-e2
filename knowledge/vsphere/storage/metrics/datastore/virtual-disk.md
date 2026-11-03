@@ -21,7 +21,7 @@ metric_class: consumption
 internal_derive:
 - vsphere/foundations/object-relationships
 same_name:
-- vsphere/storage/metrics/virtual-machine/virtual-disk
+- vsphere/storage/metrics/virtual-motherboard/virtual-disk
 same_meaning: []
 related: []
 source:

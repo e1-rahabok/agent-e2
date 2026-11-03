@@ -41,10 +41,10 @@ object:
 metric_class: consumption
 internal_derive: []
 same_name:
-- vsphere/network/metrics/virtual-machine/throughput
+- vsphere/network/metrics/virtual-motherboard/throughput
 same_meaning: []
 related:
-- vsphere/network/metrics/virtual-machine/throughput
+- vsphere/network/metrics/virtual-motherboard/throughput
 - vsphere/network/metrics/host/packets-dropped
 images:
   - path: ../../images/esxi-network-usage-rate-equals-receive-plus-transmit.png

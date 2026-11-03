@@ -45,8 +45,8 @@ object:
 internal_derive: []
 related:
 - vsphere/storage/concepts/storage-layers
-- vsphere/storage/metrics/virtual-machine/disk-latency
-- vsphere/storage/metrics/virtual-machine/iops
+- vsphere/storage/metrics/virtual-motherboard/disk-latency
+- vsphere/storage/metrics/virtual-motherboard/iops
 source:
   document: PART 3 - Counters.docx
   path: Storage > Architecture > Architecture intro

@@ -53,7 +53,7 @@ internal_derive:
 - vsphere/foundations/provider-consumer
 same_name:
 - vsphere/memory/metrics/cluster/consumed
-- vsphere/memory/metrics/virtual-machine/consumed
+- vsphere/memory/metrics/virtual-motherboard/consumed
 same_meaning: []
 related:
 - vsphere/memory/concepts/memory-layers

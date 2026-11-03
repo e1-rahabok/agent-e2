@@ -8,8 +8,8 @@ tests: distinction
 knowledge:
   - vsphere/system/concepts/guest-os-sizing
   - vsphere/memory/concepts/guest-os-vs-vm-memory
-  - vsphere/memory/metrics/virtual-machine/consumed
-  - vsphere/memory/metrics/virtual-machine/active
+  - vsphere/memory/metrics/virtual-motherboard/consumed
+  - vsphere/memory/metrics/virtual-motherboard/active
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"

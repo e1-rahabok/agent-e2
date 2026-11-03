@@ -8,9 +8,9 @@ tests: distinction
 knowledge:
   - vsphere/system/concepts/rightsizing
   - vsphere/system/concepts/guest-os-sizing
-  - vsphere/cpu/metrics/virtual-machine/net-run
-  - vsphere/cpu/metrics/virtual-machine/demand
-  - vsphere/cpu/metrics/virtual-machine/usage
+  - vsphere/cpu/metrics/virtual-motherboard/net-run
+  - vsphere/cpu/metrics/virtual-motherboard/demand
+  - vsphere/cpu/metrics/virtual-motherboard/usage
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"

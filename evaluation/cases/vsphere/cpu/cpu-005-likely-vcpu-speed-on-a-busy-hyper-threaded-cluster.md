@@ -9,7 +9,7 @@ knowledge:
   - vsphere/cpu/concepts/cpu-frequency
   - vsphere/cpu/concepts/hyper-threading
   - vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-  - vsphere/cpu/metrics/virtual-machine/usage
+  - vsphere/cpu/metrics/virtual-motherboard/usage
   - vsphere/cpu/configuration/host-power-management
 attachments: []
 origin: quiz

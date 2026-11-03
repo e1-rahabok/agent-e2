@@ -60,8 +60,8 @@ internal_derive:
 - vsphere/cpu/concepts/cpu-efficiency
 - vsphere/cpu/concepts/run-time-vs-run-quality
 related:
-- vsphere/cpu/metrics/virtual-machine/usage
-- vsphere/cpu/metrics/virtual-machine/run
+- vsphere/cpu/metrics/virtual-motherboard/usage
+- vsphere/cpu/metrics/virtual-motherboard/run
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/concepts/idle-and-unused-vcpus
 images:

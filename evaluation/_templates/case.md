@@ -6,7 +6,7 @@ area: cpu                         # foundations | cpu | memory | storage | netwo
 input: text                       # text | screenshot | diagram | log | mixed
 tests: distinction                # concept | distinction | judgment | troubleshooting
 knowledge:                        # knowledge ids the answer should draw on (retrieval check)
-  - vsphere/cpu/metrics/virtual-machine/ready
+  - vsphere/cpu/metrics/virtual-motherboard/ready
 attachments: []                   # paths under evaluation/attachments/<id>/
 origin: book                      # book | quiz | live-lab | real-ticket | synthetic
 source_path: "<heading path in the source document>"
