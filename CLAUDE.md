@@ -66,6 +66,7 @@ Standing rules for this repository. Read at the start of every session.
 ## Evaluation
 - Never send `## Expected key points` or `## Likely wrong answer` to the AI under test.
 - Baseline runs use no knowledge base. Record model and effort in `evaluation/results/results.csv`.
+- During an Auto Test run, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Do not index
 - `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, `README.md`, `CLAUDE.md`.
