@@ -9,7 +9,7 @@
 - Can exceed total capacity. Example: 1,053 GB granted on a 755 GB host.
 - Consumed + Swapped + Compressed stays below total capacity.
 - Not 0 on a host with no running VMs. The book's guess: non-VM user worlds.
-![Granted above total capacity](../../images/esxi-granted-above-capacity.png)
+![Granted above total capacity](../../images/esxi-memory-granted-above-total-capacity.png)
 
 ## Traps
 - "Granted above capacity is impossible" → it is the VMs' view.

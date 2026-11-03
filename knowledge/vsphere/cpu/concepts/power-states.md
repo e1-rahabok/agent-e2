@@ -1,7 +1,7 @@
 # CPU power states (ACPI)
 
 ## Two types
-![ACPI C-states and P-states](../images/acpi-power-states.png)
+![ACPI C-states and P-states](../images/acpi-c-states-and-p-states-diagram.png)
 - ACPI defines 2 types of power state: C-states (C = CPU) and P-states (P = performance).
 - P-states exist only inside C0.
 
@@ -49,7 +49,7 @@ Platform Power Management Features
 ```
 
 ### ESXi level
-![ESXi Advanced Settings Use C States and Use P States](../images/esxi-advanced-power-settings.png)
+![ESXi Advanced Settings Use C States and Use P States](../images/esxi-advanced-settings-use-c-states-and-p-states.png)
 - BIOS handing control to ESXi does not enable the feature. 2 ESXi Advanced Settings control it.
 
 | Setting | Effect |

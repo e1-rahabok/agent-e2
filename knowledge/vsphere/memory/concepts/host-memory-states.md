@@ -13,7 +13,7 @@
 | Soft | 64% | 6.9 GB | Ballooning starts. |
 | Hard | 32% | 3.5 GB | Compression and swapping start. |
 | Low | 16% | 1.7 GB | VM execution is blocked. |
-![ESXi memory State counter](../images/esxi-mem-state-counter.png)
+![ESXi memory State counter](../images/esxi-memory-state-counter.png)
 
 - Keep hosts in High or Clear. Unless high utilization is the goal, hosts sit in High.
 
@@ -44,7 +44,7 @@ Free   = Total Capacity - Consumed
 ```
 - Memory is cache: the active part is far smaller and more volatile than the inactive part.
 - Overcommitted host at 100%: inactive granted pages cause no ballooning at first. When Active rises, Consumed rises and ballooning starts. When Active falls, ESXi deflates the balloon.
-![Overcommitted host: balloon follows Active](../images/esxi-overcommit-balloon-cycle.png)
+![Overcommitted host: balloon follows Active](../images/esxi-memory-overcommit-balloon-follows-active.png)
 
 ## Traps
 - "Ballooning starts at 90% host memory" → about 99%.

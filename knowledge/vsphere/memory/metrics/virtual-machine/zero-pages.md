@@ -8,7 +8,7 @@
 
 ## Example
 - Guest OS Used constant at about 156 GB; Consumed never above 131 GB. Zero pages about 61-63 GB explain the gap.
-![Consumed below Guest OS Used because of zero pages](../../images/consumed-below-guest-used-zero-pages.png)
+![Consumed below Guest OS Used because of zero pages](../../images/vm-memory-consumed-below-guest-os-used-due-to-zero-pages.png)
 
 ## Traps
 - "Consumed below Guest OS Used means a data error" → check Shared and Zero pages.

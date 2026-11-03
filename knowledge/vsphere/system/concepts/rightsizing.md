@@ -13,7 +13,7 @@
 - Faster snapshots, especially with memory.
 - Faster vMotion: Windows and Linux use memory as cache; more memory, more to copy.
 - Faster boot: without a reservation, vSphere creates a swap file the size of configured RAM; slow storage delays boot.
-![Usage (MHz) per vCPU](../images/vcpu-usage-mhz-per-vcpu.png)
+![Usage (MHz) per vCPU](../images/vm-cpu-usage-mhz-per-vcpu.png)
 
 ## Traps
 - "Size on CPU Usage" → Turbo inflates it 25% in this example, pushing the VM across NUMA nodes.

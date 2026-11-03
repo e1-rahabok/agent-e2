@@ -16,7 +16,7 @@
 | RAM | Contention | 1% |
 | Disk | Latency | 10 ms |
 | Network | TX dropped packets | 0% |
-![SLI thresholds](../../images/sli-thresholds.png)
+![SLI thresholds](../../images/sli-thresholds-table.png)
 
 ```text
 Cluster SLI (%) = 100 - ( (Sum [VM] Performance|Number of KPIs Breached + Sum [Pod] Performance|Number of KPIs Breached)

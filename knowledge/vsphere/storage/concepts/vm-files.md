@@ -18,7 +18,7 @@
 | Swap | .vswp | Size = configured RAM - memory reservation. Deleted at power-off. |
 | Swap | VMX swap file | Small (MB). The book has not observed it. |
 | Others | Logs, .vmx, .nvram | Small (KB or MB). Any file placed in the VM folder counts, for example an ISO. A large value means unneeded files. |
-![Snapshot files](../images/snapshot-files.png)
+![Snapshot files](../images/vm-snapshot-files.png)
 
 - A snapshot protects VMDK, memory and configuration.
 - Snapshots do not apply to RDM. RDM snapshots happen in the storage system, transparent to ESXi.
@@ -26,13 +26,13 @@
 - Storing .vswp on local host storage saves vSAN space. Trade-off: vMotion must copy the swap file.
 
 ## Single thin VMDK on vSAN
-![Thin VMDK on vSAN: used, unmapped, uncommitted, vSAN protection](../images/single-vmdk-space-layers.png)
+![Thin VMDK on vSAN: used, unmapped, uncommitted, vSAN protection](../images/vsan-thin-vmdk-space-used-unmapped-uncommitted-protection.png)
 - Unmapped blocks are also protected by vSAN.
 - Uncommitted space (room to grow) has no vSAN overhead: not yet written.
 - Virtual Disk Used and Configured Size are not aware of vSAN.
 
 ## Thin, thick and RDM in one VM
-![Thin VMDK, thick VMDK and RDM consumption](../images/vm-files-thin-thick-rdm.png)
+![Thin VMDK, thick VMDK and RDM consumption](../images/vm-disk-consumption-thin-vs-thick-vs-rdm.png)
 | Disk | Facts |
 |---|---|
 | RDM | Not on vSAN or VMFS data: mapped to an external LUN. Always counts as thick (configured size), whatever the guest uses. A thin LUN on the array is transparent to ESXi. |

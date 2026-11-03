@@ -1,7 +1,7 @@
 # Storage layers
 
 ## Layers
-![Storage layers from Guest OS to storage subsystem](../images/storage-layers.png)
+![Storage layers from Guest OS to storage subsystem](../images/storage-layers-guest-os-to-storage-subsystem.png)
 | Layer | Facts |
 |---|---|
 | Guest OS | Sees virtual disks presented by the VM motherboard. Has partitions, each with a filesystem (OS, page file, data). |
@@ -20,7 +20,7 @@
 - Datastores on the same array can have problems at the same time. The array can have its own hot spots.
 
 ## VM layer: 3 disk layers
-![VM disks on VMFS, NFS, RDM and vSAN](../images/vm-three-disk-layers.png)
+![VM disks on VMFS, NFS, RDM and vSAN](../images/vm-disks-on-vmfs-nfs-rdm-vsan.png)
 - vSphere Client shows exactly 3 layers: virtual disk, datastore, disk (device).
 - The VM sees simple local SCSI disks. That is why MS-DOS can run on Fibre Channel.
 - A virtual disk is identified as scsiM:N, starting at scsi0:0. M is the adapter bus number.
@@ -28,13 +28,13 @@
 - A VMFS datastore can span several disks (extents). Avoid: it complicates operations, and each extent adds about 4 paths.
 
 ## ESXi layer
-![ESXi storage metric groups: vmnic, adapters, paths, datastores, disks](../images/esxi-storage-metric-groups.png)
+![ESXi storage metric groups: vmnic, adapters, paths, datastores, disks](../images/esxi-storage-metric-groups-vmnic-adapter-path-datastore-disk.png)
 - ESXi virtualizes different storage subsystems. The kernel does IO for all VMs and its own modules (for example vSAN).
 - IO blender: sequential IO from many VMs and hosts becomes random when combined. The kernel also re-sequences IO to lower average latency.
 - No VM breakdown at physical layers: vmnic, adapter, path and vSAN objects (cache tier, capacity disk, disk group) are aggregates.
 - NFS: uses the vmnic. Adapter types (FC, FCoE, iSCSI) do not apply. Multipathing is in the network, not visible in the storage layer.
 - VMFS and RDM: adapters are visible. One adapter serves many devices. One device is typically reached through 2 adapters with 2 paths each: 4 paths.
-![Four paths from 2 adapters to one device](../images/four-paths-per-device.png)
+![Four paths from 2 adapters to one device](../images/esxi-storage-four-paths-from-two-adapters-to-one-device.png)
 - A path runs from ESXi to the LUN (device), not to the datastore.
 - Not all paths carry IO: it depends on configuration and multipathing.
 - Example FC: vmhba2 connected to 5 devices × 4 paths = 20 paths.
@@ -48,7 +48,7 @@
 - A datastore relates to VMs (1:M), ESXi hosts (shared) and clusters.
 - Datastore metrics include every file on the datastore, including orphaned files. They exclude VMDKs on other datastores and RDMs.
 - VMs spanning datastores and datastores spanning clusters create many-to-many relationships. ESXi and cluster metrics then do not match datastore metrics. Cluster storage capacity cannot be aggregated when datastores are shared with other clusters.
-![4 VMs on 2 hosts and 2 datastores: many-to-many](../images/datastore-many-to-many.png)
+![4 VMs on 2 hosts and 2 datastores: many-to-many](../images/vm-host-datastore-many-to-many-relationship.png)
 
 ## Backing device
 - A datastore is a filesystem. Monitor the backing device (LUN or NFS export) in the storage system.

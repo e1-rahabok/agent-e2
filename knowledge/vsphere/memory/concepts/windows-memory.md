@@ -9,7 +9,7 @@ Cached    = Standby + Modified
 Available = Standby + Free
 In Use    = Total - (Modified + Standby + Free)
 ```
-![Windows memory categories](../images/windows-memory-categories.png)
+![Windows memory categories](../images/windows-memory-categories-diagram.png)
 - Available: usable immediately, without saving the page first.
 - Sysinternals also shows Transition and Zeroed.
 
@@ -20,7 +20,7 @@ In Use    = Total - (Modified + Standby + Free)
 | Standby | Three levels in VMware Tools: Standby Core, Standby Normal, Standby Reserve. Behaviour differs by application: example Exchange 2013 with Standby Normal swinging up to 90%; example Tableau where Standby Reserve grew after memory doubled. Hard to size on. |
 | Cache | More cache, fewer misses. Prefetch and SuperFetch show the complexity; the UI simplifies it. |
 | Free | Immediately usable, excluding cache. Low Free is fine with high Standby; it can touch 0 MB momentarily. |
-![Windows In Use with compressed pages](../images/windows-in-use-compressed.png)
+![Windows In Use with compressed pages](../images/windows-memory-in-use-with-compressed-pages.png)
 
 ## Free memory guidance (book)
 - Keep above 500 MB for server VMs, above 100 MB for VDI VMs (VDI adds up: 10K users × 100 MB = 1 TB).
@@ -49,7 +49,7 @@ In Use    = Total - (Modified + Standby + Free)
 - Both are momentary: the 99th percentile is usually far below the maximum (about 1,000 VMs checked).
 - Example Oracle RAC VM: page-in and page-out correlated. 100,000 pages/s × 4 KB = 400 MB/s, 120 GB in 5 minutes.
 - Profile view: highest and 99th percentile page-in and page-out, colour thresholds 1,000, 10,000, 100,000 (each 10x), plus sums. At least 1 week (2,016 points; the 99th percentile drops the top 20), preferably 3 months.
-![Page-in vs page-out averages across about 3K VMs](../images/windows-page-in-vs-page-out-avg.png)
+![Page-in vs page-out averages across about 3K VMs](../images/windows-memory-page-in-vs-page-out-average-across-vms.png)
 
 ## Other counters
 | Counter | Facts |

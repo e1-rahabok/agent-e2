@@ -10,7 +10,7 @@
 - Swapped constant for the hour (max = min). No limit, no resource pool: likely historical.
 - Granted constant: the VM did not request more.
 - Consumed fluctuated slightly. Consumed and Swap Target mirror each other: when Consumed rises, Swap Target falls.
-![Swap Target, Swapped, Granted and Consumed table](../../images/swap-target-quiz-table.png)
+![Swap Target, Swapped, Granted and Consumed table](../../images/vm-memory-swap-target-swapped-granted-consumed-quiz-table.png)
 
 ## Traps
 - "Swap Target = Swapped" → the target is an input; Swapped is the result.

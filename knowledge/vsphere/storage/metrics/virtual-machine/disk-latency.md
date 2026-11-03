@@ -19,7 +19,7 @@
 ## Threshold
 - No universal threshold: ranges vary widely by storage. Profile your environment and compare with what the storage vendor sold.
 - Example profile: more than 63 million data points (2,400 VMs × 3 months).
-![Virtual disk latency profile across 2,400 VMs](../../images/vdisk-latency-profile-2400-vms.png)
+![Virtual disk latency profile across 2,400 VMs](../../images/vm-virtual-disk-latency-distribution-across-vms.png)
 
 ## Traps
 - "Total latency = average of read and write latency" → it is weighted by command count.

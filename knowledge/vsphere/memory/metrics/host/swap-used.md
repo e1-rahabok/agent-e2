@@ -12,7 +12,7 @@
 - 5 swap counters at host level, not 6: Swap Target is missing.
 - Swap Out is cumulative: it does not fall when pages are swapped in.
 - Small swap-in rates matter little: 1-2 KB/s averaged over 20 s = 20-40 KB.
-![Cumulative swap in and swap out](../../images/esxi-swap-in-out-cumulative.png)
+![Cumulative swap in and swap out](../../images/esxi-memory-swap-in-vs-swap-out-cumulative.png)
 
 ## Metadata
 ```yaml

@@ -15,7 +15,7 @@
 | Other | Zero, Overhead, Heap (kernel heap, small and constant) | - |
 | Internal | Active (kernel memory allocation), Persistent Memory, VMFS pointer block cache | Not for operations. The cache capacity miss ratio may be of interest. |
 - Besides Latency, all memory metrics are capacity metrics.
-![Virtual view (sum of VMs) vs physical view (kernel + VM pages) of an ESXi host](../../images/esxi-memory-virtual-vs-physical-view.png)
+![Virtual view (sum of VMs) vs physical view (kernel + VM pages) of an ESXi host](../../images/esxi-memory-virtual-view-vs-physical-view.png)
 
 ## 185-host comparison (averages)
 | Metric | Value | Meaning |
@@ -28,7 +28,7 @@
 | Utilization | 299.56 GB | Machine Demand + ESX System Usage. |
 | Consumed | 404.42 GB | Highest, unless sharing savings are large. |
 - Workload = Utilization / Usable.
-![Host Usage, Machine Demand, Utilization, Consumed across hosts](../../images/esxi-mem-metrics-185-hosts.png)
+![Host Usage, Machine Demand, Utilization, Consumed across hosts](../../images/esxi-memory-usage-demand-utilization-consumed-across-hosts.png)
 
 ## Traps
 - "Use host Latency for performance" → it is an average. Use the worst VM.

@@ -1,7 +1,7 @@
 # esxtop memory counters
 
 ## Summary lines (host)
-![esxtop memory summary](../../images/esxtop-memory-summary.png)
+![esxtop memory summary](../../images/esxtop-memory-summary-panel.png)
 | Line | Meaning |
 |---|---|
 | MEM overcommit avg | 1, 5, 15-minute exponentially weighted averages. Ratio of total requested memory to managed memory, minus 1. Requested = VM configured memory (or limit) + user world memory + reserved overhead. Above 0 (ratio above 1): requested exceeds physical; fine with ballooning and sharing. The book prefers configured VM memory alone for capacity. |

@@ -19,7 +19,7 @@
 - Each VM sees a contiguous address space, isolated from other VMs.
 - The ESXi pages behind it need not be contiguous.
 - A VM cannot see what backs its pages: DIMM, swap file, copy-on-write (shared), compressed, or ballooned. This makes overcommit possible.
-![Each VM sees its own address space; ESXi backs it with shared, DIMM, compressed, swapped and ballooned pages](../images/vm-address-space-vs-esxi-backing.png)
+![Each VM sees its own address space; ESXi backs it with shared, DIMM, compressed, swapped and ballooned pages](../images/vm-memory-address-space-vs-esxi-backing-pages.png)
 
 ## Two sets of metrics
 | Set | Tracks | Instances | Examples |
@@ -41,7 +41,7 @@
 - The kernel large page setting contributes more to ESXi capacity and VM performance than these mechanisms.
 
 ## Page mapping across layers
-![A page mapped from process to Guest OS, VM and ESXi host](../images/page-mapping-4-layers.png)
+![A page mapped from process to Guest OS, VM and ESXi host](../images/memory-page-mapping-process-guest-os-vm-esxi.png)
 - The VM monitor of each VM maps VM pages to ESXi pages.
 - Not 1:1:
   - several VM pages can point to one ESXi page (TPS).
@@ -54,7 +54,7 @@
 - A page may map to a non-local DIMM: NUMA effect.
 
 ## VM view vs ESXi view of one VM
-![VM view (Granted, Zipped, Swapped, Ballooned) vs ESXi view (Consumed, Swapped)](../images/vm-view-vs-esxi-view-pages.png)
+![VM view (Granted, Zipped, Swapped, Ballooned) vs ESXi view (Consumed, Swapped)](../images/vm-memory-vm-view-vs-esxi-view-of-pages.png)
 - The VM view counts the input. The ESXi view counts the output.
 - Example: 3 VM pages shared into 1 ESXi page. VM metrics report 3 shared pages; ESXi metrics report 1.
 - Ballooned pages exist only in the VM view. They point to no ESXi page.

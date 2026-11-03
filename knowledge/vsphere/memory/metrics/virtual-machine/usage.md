@@ -13,7 +13,7 @@
 - VCF Operations Usage (%) = Guest OS Needed Memory (KB) / VM Memory Total Capacity (KB) × 100.
 - Example: 1 GB VM, Guest OS Needed Memory 757 MB: 757 / 1,024 = 74%.
 - Guest OS metrics missing: VCF Operations Usage (%) falls back to Active (example: dropped to 6.99%). Workload (%) falls back to Consumed (example: jumped to 98.95%).
-![VCF Operations Usage falls back to Active when guest metrics are missing](../../images/vcf-ops-usage-fallback.png)
+![VCF Operations Usage falls back to Active when guest metrics are missing](../../images/vcf-operations-vm-memory-usage-falls-back-to-active.png)
 
 ## Traps
 - Comparing VM Usage with ESXi Usage as if they measure the same thing. This confusion has led customers to buy more RAM than required.

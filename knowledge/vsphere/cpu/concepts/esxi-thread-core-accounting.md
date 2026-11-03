@@ -25,7 +25,7 @@
 
 ## Example: one core
 - In 20 s, thread 0 runs 10 s, thread 1 runs 10 s, overlapping 5 s.
-![One core, two threads: each runs 10 s, the core runs 15 s](../images/one-core-two-threads-utilization.png)
+![One core, two threads: each runs 10 s, the core runs 15 s](../images/esxi-cpu-one-core-two-threads-thread-vs-core-utilization.png)
 
 ```text
 Thread Utilization (HT 0) = 10 s / 20 s = 50%
@@ -39,7 +39,7 @@ Core Utilization          = 15 s / 20 s = 75%
 
 ## Example: ESXi with 2 cores
 - Core 1: threads at 50% and 50% (core 75%). Core 2: threads at 100% and 0% (core 100%).
-![Two-core ESXi: rollup of thread and core utilization](../images/two-core-esxi-rollup.png)
+![Two-core ESXi: rollup of thread and core utilization](../images/esxi-cpu-two-core-host-thread-and-core-utilization-rollup.png)
 
 ```text
 Thread Utilization (ESXi) = (50% + 50% + 100% + 0%) / 4 = 50%
@@ -57,7 +57,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 - Used splits a core's time when both threads run: 10,000 ms each, not 20,000.
 - ESXi considers Hyper-Threading to deliver 1.25x. The author finds 12,500 ms per thread easier to read.
 - At ESXi level the split is normalized back.
-![Utilization and Used per thread for 6 scenarios on a 2-core host](../images/esxi-utilization-vs-used-6-scenarios.png)
+![Utilization and Used per thread for 6 scenarios on a 2-core host](../images/esxi-cpu-utilization-vs-used-per-thread-6-scenarios-2-core-host.png)
 
 | Scenario | Utilization (ms) C1-HT1, C1-HT2, C2-HT1, C2-HT2 | Used (ms) |
 |---|---|---|
@@ -74,7 +74,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
   - efficiency: a thread executes less efficiently when its sibling runs.
   - speed: power management lowers or raises the clock while running.
 - A physical thread has no Overlap. System does not apply: it runs in the kernel.
-![CPU Used = Utilization plus efficiency, adjusted by power saving and Turbo](../images/esxi-used-vs-utilization.png)
+![CPU Used = Utilization plus efficiency, adjusted by power saving and Turbo](../images/esxi-cpu-used-vs-utilization-power-saving-and-turbo.png)
 
 ## Time taken vs distance travelled
 | Time taken (run time) | Distance travelled (cycles) |
@@ -87,7 +87,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 - Example, 1 GHz base, both threads busy: each vCPU and each thread 625 MHz; the core 1,250 MHz. The 2 threads sum to the core.
 - Usage has 3 factors: running time, efficiency of the run, speed of the run.
 - The cycle-based counters are volatile: typically 15%-40% upward from Turbo Boost.
-![Time taken vs distance travelled for VM and ESXi CPU metrics](../images/time-taken-vs-distance-travelled.png)
+![Time taken vs distance travelled for VM and ESXi CPU metrics](../images/cpu-metrics-time-taken-vs-work-done-vm-and-esxi.png)
 
 ## Traps
 - "Sum thread utilization to get core utilization" → each thread has its own 100%. Read Core Utilization.

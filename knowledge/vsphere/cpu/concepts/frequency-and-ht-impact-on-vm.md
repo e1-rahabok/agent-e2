@@ -1,7 +1,7 @@
 # Impact of frequency and Hyper-Threading on a VM
 
 ## Sample CPU
-![Sample CPU: 1 GHz nominal, 1.3 GHz all cores, 1.7 GHz single core](../images/sample-cpu-boost.png)
+![Sample CPU: 1 GHz nominal, 1.3 GHz all cores, 1.7 GHz single core](../images/cpu-turbo-boost-example-nominal-all-core-single-core.png)
 - 20 cores. Nominal clock speed 1 GHz, for ease of calculation.
 - All 20 cores busy: 30% above nominal (1.3 GHz).
 - One core busy: up to 70% above nominal (1.7 GHz).
@@ -10,7 +10,7 @@
 - A real CPU with this boost profile: AMD EPYC 9634.
 
 ## Scenarios
-![Throughput per vCPU: 1 core runs vs all cores run, 1 vs 2 vCPU](../images/vcpu-throughput-scenarios.png)
+![Throughput per vCPU: 1 core runs vs all cores run, 1 vs 2 vCPU](../images/vcpu-throughput-one-core-vs-all-cores-running.png)
 - Assumption: the vCPU runs 100% with 0% contention.
 - 2-vCPU cases assume both vCPUs land on the 2 threads of one core.
 
@@ -28,7 +28,7 @@
 - In the last case each vCPU runs at about 81% and the VM seems maxed out.
 
 ## Over time
-![Run stays 100% while Usage falls 1.7, 1.3, 0.8 GHz](../images/throughput-degradation-over-time.png)
+![Run stays 100% while Usage falls 1.7, 1.3, 0.8 GHz](../images/vm-cpu-run-flat-while-usage-falls-with-frequency.png)
 - Run stays at 100% throughout.
 - Throughput falls: 1.7 GHz → 1.3 GHz → 1.06 GHz → 0.81 GHz.
 - Cause: VMs are added to the cluster over time, and the ESXi scheduler maximizes total throughput.

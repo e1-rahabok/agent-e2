@@ -20,12 +20,12 @@
 - 3,385 Windows VMs, 1 week, 20-second peaks (30,240 points per VM): some VMs have high queues.
 - 800 VMs, 1 month: the 99th percentile is under half of the peak; for peaks of 3 or more, the 99th percentile averaged 34% of the peak.
 - Whether Hyper-Threading doubles the queue is undocumented.
-![Run queue profile across 3,385 Windows VMs](../../images/windows-run-queue-3385-vms.png)
+![Run queue profile across 3,385 Windows VMs](../../images/windows-run-queue-distribution-across-vms.png)
 
 ## Cases
 - 8-vCPU VM at 52% with queue 53: expected about 8. Queue cycled 14-59 (sharp rise in 5-10 minutes, slow fall over an hour) and trended up over 7 days (possible leak). Ready, Co-stop, Other Wait, memory contention and disk latency were low. vCPU Run was very imbalanced (gap above 140%). Check software locks (mutex, semaphore) holding ready threads, and high Privileged Time with low User Time (driver or kernel locking).
 - High queue while idle: the application created many threads. 20-second spikes are much smaller in the 5-minute average.
-![Imbalanced vCPU run with a high queue](../../images/windows-high-queue-vcpu-imbalance.png)
+![Imbalanced vCPU run with a high queue](../../images/windows-high-run-queue-with-imbalanced-vcpu-run.png)
 
 ## Traps
 - "Queue 53 on 8 vCPUs means add vCPUs" → check locks, imbalance and kernel time first.

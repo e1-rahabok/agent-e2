@@ -136,6 +136,10 @@ docs/                                # design decisions, To Do, legacy files (no
 ## Images
 - Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains.
 - Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
+- File names describe what the image shows. No length limit applies (GitHub, git and Markdown accept long names); clarity wins.
+  - Pattern: `<object>-<metric or topic>-<what it shows>.png`, lowercase, hyphens. Example: `esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png`.
+  - Chart type at the end when it helps: `-distribution`, `-scatter`, `-timeline`, `-table`, `-diagram`.
+  - No bare numbers. Sample sizes (192 hosts, 3,385 VMs) go in the alt text and body, not the file name. A number stays only when it is the point, e.g. `62-5-percent`.
 - Third-party images (vendor diagrams, documentation screenshots) are not copied. Link the source in `review_notes`.
 
 ## QA workflow

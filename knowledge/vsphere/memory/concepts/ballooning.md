@@ -18,7 +18,7 @@
 - The more ballooned, swapped and compressed, the higher the chance of a future performance hit.
 - Severity depends on VM shares, reservation, limit and configured RAM. 10 MB ballooned hurts a 4 GB VM more than a 512 GB VM.
 - Example: a 16 GB VM with 10,430 MB ballooned (63.66%) for 4 weeks, flat. The Guest OS never requested those pages; it worked within the remaining 6 GB. Granted + Swapped + Compressed was a flat line.
-![Heavily ballooned VM: latency spikes are rare](../images/balloon-vs-latency-limited-vm.png)
+![Heavily ballooned VM: latency spikes are rare](../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png)
 
 ## Capacity impact
 - A balloon is a request from ESXi, not from the application. Exclude it from Guest OS sizing.

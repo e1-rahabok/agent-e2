@@ -27,7 +27,7 @@
 ## Observed values
 - Without memory overcommit and limits, memory contention is basically 0.
 - 2,441 VMs, worst value per VM over 4 months: only 13 VMs above 1%.
-![Worst VM memory contention per VM across 2,441 VMs](../../images/vm-mem-contention-max-2441-vms.png)
+![Worst VM memory contention per VM across 2,441 VMs](../../images/vm-memory-contention-worst-value-distribution-across-vms.png)
 
 ## Traps
 - "Memory Latency 5% means 5 ns" → it is a percentage, not a time.

@@ -4,7 +4,7 @@
 - Two host counters: the amount subjected to compression, and the resulting compressed amount.
 - The book takes Compressed to be the result.
 - Pages can stay compressed for a long time when nothing requests them. Example: about 5 GB compressed for about 1 year, with balloon at 0 (no current pressure).
-![Compressed flat at about 5 GB for a year](../../images/esxi-compressed-flat-1-year.png)
+![Compressed flat at about 5 GB for a year](../../images/esxi-memory-compressed-flat-for-1-year.png)
 
 ## Traps
 - "Compressed > 0 means current pressure" → it can be years old. Check balloon and swap-in.

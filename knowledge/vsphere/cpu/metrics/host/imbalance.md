@@ -15,7 +15,7 @@ Cluster ESXi CPU Imbalance = average (ESXi CPU Imbalance)
 - With Hyper-Threading the worst score is 2.0.
 - While cores are idle, no core should run 2 threads. The ideal is 1.0 until Core Utilization reaches 100%.
 - The score's colour moves from red to green as Core Utilization reaches 100%.
-![Score by number of running cores and running threads](../../images/esxi-imbalance-score-matrix.png)
+![Score by number of running cores and running threads](../../images/esxi-cpu-imbalance-score-by-running-cores-and-threads.png)
 
 ## Example
 - 64 cores, 128 threads. Score 1.5 with 40 running cores:

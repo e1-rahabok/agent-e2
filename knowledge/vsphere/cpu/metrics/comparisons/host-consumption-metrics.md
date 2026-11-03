@@ -2,7 +2,7 @@
 
 ## The set
 - vSphere Client: 6 ESXi CPU consumption counters: Core Utilization (%), Demand (MHz), Usage (%), Usage (MHz), Used (ms), Utilization (%). Plus 1 for reservation.
-![vCenter ESXi CPU consumption counters](../../images/vcenter-esxi-cpu-consumption-counters.png)
+![vCenter ESXi CPU consumption counters](../../images/vcenter-esxi-cpu-consumption-counters-table.png)
 
 ## Same host, three answers
 - Example: Thread Utilization about 47-55%, Core Utilization about 70%, Usage (%) flat at 100% (older capped version).
@@ -21,7 +21,7 @@
 | 4 | 2 on core 1 | 50% | 50% | 50% | (125% + 0%) / 2 = 62.5% |
 | 5 | 1 on core 1 | 25% | 50% | 50% | (100% + 0%) / 2 = 50% |
 | 6 | none | 0% | 0% | 0% | 0% |
-![ESXi rollup of 6 scenarios, with the author's proposed value](../../images/esxi-rollup-6-scenarios.png)
+![ESXi rollup of 6 scenarios, with the author's proposed value](../../images/esxi-cpu-utilization-rollup-6-scenarios-with-proposed-value.png)
 
 - 6 scenarios give fewer than 6 distinct values. The cause is Hyper-Threading.
 - Scenario 1: Usage is 100%, though each thread shows 50% Used. Each core has 20,000 ms, not 40,000 ms. Same behaviour as Core Utilization.
@@ -33,7 +33,7 @@
 - Frequency 0.6x: Usage 60%, 60%, 60%, 30%, 30%, 0% for scenarios 1-6. Proposed value: 75%, 68%, 60%, 38%, 30%, 0%.
 - Frequency 1.3x: Usage 100%, 100%, 100%, 65%, 65%, 0% (capped at 100%). Proposed value: 163%, 146%, 130%, 81%, 65%, 0%.
 - Demand is not capped.
-![Usage vs the author's proposed value at 0.6x and 1.3x frequency](../../images/esxi-usage-with-frequency.png)
+![Usage vs the author's proposed value at 0.6x and 1.3x frequency](../../images/esxi-cpu-usage-vs-proposed-value-at-low-and-turbo-frequency.png)
 
 ## Sensitivity
 | Metric | Behaviour |

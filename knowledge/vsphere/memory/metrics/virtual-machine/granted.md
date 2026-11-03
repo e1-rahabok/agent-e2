@@ -21,8 +21,8 @@ Granted = normal pages + shared pages + zero pages + pages being swapped in + ti
 - Granted ignores physical savings. It can stay flat while Consumed falls as sharing rises.
 - Granted ignores limits. Example: 12 GB Windows VM with an 8 GB limit: Granted moved well above 8 GB; Consumed stayed below the limit.
 - Granted rises when Compressed and Swapped fall: pages come back.
-![Granted ignores the limit; Consumed stays below it](../../images/granted-ignores-limit.png)
-![Granted rises as Compressed and Swapped fall](../../images/granted-vs-compressed-swapped.png)
+![Granted ignores the limit; Consumed stays below it](../../images/vm-memory-granted-ignores-limit-consumed-below-limit.png)
+![Granted rises as Compressed and Swapped fall](../../images/vm-memory-granted-rises-as-compressed-and-swapped-fall.png)
 
 ## Traps
 - "Granted = Consumed" → Granted is the VM view, Consumed the ESXi view after savings and limits.

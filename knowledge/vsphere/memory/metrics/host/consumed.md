@@ -25,7 +25,7 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Host with 0 VMs: example 17 GB consumed, likely vSAN.
 - Example: 255 GB host, 229 GB consumed = 191 GB by the one VM + 36 GB by the kernel. Kernel consumption = sum of 3 kernel resource pools.
 - Evacuated host: Consumed fell from 400 GB to 32 GB (vSAN), not 0. Kernel usage stayed nearly constant; kernel reservation did not change.
-![ESXi Consumed = VM consumed + kernel](../../images/esxi-consumed-vm-plus-kernel.png)
+![ESXi Consumed = VM consumed + kernel](../../images/esxi-memory-consumed-equals-vm-consumed-plus-kernel.png)
 
 ## Traps
 - Summing VM Consumed and expecting ESXi Consumed.

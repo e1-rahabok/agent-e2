@@ -14,7 +14,7 @@
 - High IOPS also load the shared pipe: a few VMs at 1 Gb/s each can saturate a 10 Gb link.
 - Sustained load raises the chance of affecting other VMs. Discuss unusually high IOPS with the application team.
 - Low IOPS with high throughput: large blocks. Compare with the planned block size.
-![IOPS distribution across 3,500 VMs](../../images/vm-iops-distribution-3500-vms.png)
+![IOPS distribution across 3,500 VMs](../../images/vm-disk-iops-distribution-across-vms.png)
 
 ## IOPS limit
 - Set per virtual disk, not per VM. Not possible for snapshots or swap files.

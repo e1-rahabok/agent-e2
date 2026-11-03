@@ -6,7 +6,7 @@
 - Sum of VM CPU Usage can exceed ESXi total capacity: total capacity is nominal.
 
 ## Example
-![ESXi 1: 20 cores at 1 GHz; ESXi 2: 10 cores at 2 GHz](../images/two-esxi-cpu-capacity-example.png)
+![ESXi 1: 20 cores at 1 GHz; ESXi 2: 10 cores at 2 GHz](../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png)
 - ESXi 1: 20 cores × 1 GHz = 20 GHz. ESXi 2: 10 cores × 2 GHz = 20 GHz. Same by vSphere's measure.
 - On ESXi 2, VMs run 2x faster, but only half as many fit. The same vCPU count on ESXi 2 gives about 50% CPU Ready, unpredictable performance and very high context switching.
 - ESXi 2 has 2x performance and 0.5x capacity. Performance and capacity do not correlate: one number cannot measure both.

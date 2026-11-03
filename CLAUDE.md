@@ -54,7 +54,7 @@ Standing rules for this repository. Read at the start of every session.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Every knowledge file ends with a `## Metadata` section holding one yaml block (see `README.md`). No front matter at the top.
-- Keep the author's own diagrams from the book in `knowledge/vsphere/<technology>/images/`, linked under the section they explain, with alt text.
+- Keep the author's own diagrams from the book in `knowledge/vsphere/<technology>/images/`, linked under the section they explain, with alt text. Name each file by what it shows (pattern in `README.md`, section Images).
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 - Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
 - When asking the author about the book, give a verbatim search string.

@@ -41,7 +41,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 - Typical: 10% CPU and 0% memory; stretched cluster 50% for both; DR depends on the DR workload.
 
 ## Overcommit (allocation model)
-![Overcommit ratio excludes buffer](../images/overcommit-excludes-buffer.png)
+![Overcommit ratio excludes buffer](../images/cluster-overcommit-ratio-excludes-buffer.png)
 - The overcommit ratio excludes buffer. Allocation ignores utilization and the provider part.
 - CPU: include Hyper-Threading; a vCPU maps to a thread. Say 4:1 per thread instead of 8:1 per core.
 - CPU: a thread on a shared 1 GHz core gets 625 MHz; 1.6 GHz restores 1 GHz per thread. Tenants buying 4 GHz expect 4 GHz; with HT, state 2.5 GHz.
@@ -54,7 +54,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 - Recent data weighs more (exponential decay). Projections can look visually odd for that reason.
 - Momentary one-off peaks barely affect the projection. Sustained non-periodic peaks fade over time. Periodic peaks (hourly, daily, weekly, month-end, overlapping) are detected; 5-minute granularity is required as input.
 - Without 3 months of data: use the 97th percentile for overall sizing. 2 standard deviations ≈ 95%, 3 ≈ 99.7%; the 97th sits between.
-![Projection vs percentile](../images/projection-vs-percentile.png)
+![Projection vs percentile](../images/capacity-projection-vs-percentile.png)
 
 ## Capacity Remaining (%) and Time Remaining (days)
 - Capacity Remaining is projected 3 days ahead (hardcoded). It ignores committed future demand.
@@ -75,7 +75,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | DR | Use buffer to reserve for rare DR workload. |
 
 ## Total vs usable after host loss (10 hosts, N+1, 0% buffer)
-![Total vs usable capacity](../images/total-vs-usable-capacity.png)
+![Total vs usable capacity](../images/cluster-total-vs-usable-capacity.png)
 | Event | Intentional | Desired | Impacts |
 |---|---|---|---|
 | DPM | Yes | Yes | Total capacity |

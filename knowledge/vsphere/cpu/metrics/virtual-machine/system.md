@@ -12,7 +12,7 @@
 - The Guest OS does not see the second processing. It sees a slower disk.
 - Snapshots add work: the kernel traverses the snapshot chain.
 - ESXi processes IO for all VMs issuing IO at that time. It may serialize random IO into sequential IO.
-![IO is processed twice: Guest OS first, then VMkernel; System is charged at VM level](../../images/io-processed-twice-system.png)
+![IO is processed twice: Guest OS first, then VMkernel; System is charged at VM level](../../images/vm-cpu-system-io-processed-by-guest-os-and-vmkernel.png)
 
 ## Instance
 - Not available per vCPU. The physical core doing the IO may serve more than one vCPU. No breakdown is possible.

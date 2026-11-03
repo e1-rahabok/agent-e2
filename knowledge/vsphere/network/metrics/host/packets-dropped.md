@@ -9,8 +9,8 @@
 - Transmit: 319 hosts over 3 months: minimal. One host had 362 dropped transmit packets (average 0.6 Gbps, peak 8.38 Gbps). 99th percentile: 0.
 - Another 123 hosts, 6 months: no transmit drops. A few had high receive drops, starting when load increased.
 - Receive is worse than transmit, as at VM level. Some hosts dropped over 1 million packets in 5 minutes; some regularly (high 99th percentile). Highest drops matched the lowest packets received.
-![Transmit drops across 319 hosts](../../images/esxi-tx-dropped-319-hosts.png)
-![Receive drops per host](../../images/esxi-rx-dropped-hosts.png)
+![Transmit drops across 319 hosts](../../images/esxi-network-transmit-dropped-across-hosts.png)
+![Receive drops per host](../../images/esxi-network-receive-dropped-per-host.png)
 
 ## Action
 - Find which vmnic drops and which VMkernel interface is affected.

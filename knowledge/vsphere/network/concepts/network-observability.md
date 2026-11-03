@@ -1,7 +1,7 @@
 # Network layers and observability
 
 ## Two layers
-![Virtual network (VM and kernel port groups) above the physical vmnics](../images/virtual-vs-physical-network.png)
+![Virtual network (VM and kernel port groups) above the physical vmnics](../images/virtual-network-port-groups-vs-physical-vmnics.png)
 | Layer | Facts |
 |---|---|
 | Virtual | vNICs and software switches. The top-of-rack switch now lives inside each ESXi host. |
@@ -11,7 +11,7 @@
 | Physical | Physical NICs are vmnics. No per-VM or per-kernel-interface breakdown. |
 
 ## Four areas to monitor in one host
-![VM network, kernel network, kernel modules and agent VMs](../images/esxi-network-observability-areas.png)
+![VM network, kernel network, kernel modules and agent VMs](../images/esxi-network-observability-areas-vm-kernel-modules-agent-vms.png)
 1. VM network.
 2. Kernel network.
 3. ESXi kernel modules: NSX Distributed Logical Router and Distributed Firewall route and filter traffic inside the host.
@@ -26,17 +26,17 @@
 - One per host. No HA: usually on local datastore.
 - Examples: storage service (for example Nutanix CVM), network service, security (for example Trend Micro Deep Security).
 - A slow security agent VM in the data path looks like a network or storage problem to business VMs. The interception happens in the hypervisor, not on the network.
-![Host with storage, network and security agent VMs](../images/agent-vms.png)
+![Host with storage, network and security agent VMs](../images/esxi-agent-vms-storage-network-security.png)
 
 ## Five data sources
 - Application, Guest OS, NSX, NetFlow/sFlow/IPFIX from vDS and physical devices, and vSphere.
 - VDI: application-level data is required. Example: Horizon Blast saw packet loss while Windows saw no drops; packets arrived out of order and were unusable to the protocol.
 - Packet analysis: header analysis (light, broad visibility) or full packet analysis (deep, heavy).
-![Five data sources and the tools to get them](../images/network-data-sources.png)
+![Five data sources and the tools to get them](../images/network-five-data-sources-and-tools.png)
 
 ## NSX Edge
 - A VM's network problem can come from another VM on another host. Example: VM 1 reaches the outside through an NSX Edge VM on another cluster. An Edge CPU problem or its host's RAM problem slows VM 1's network.
-![VM traffic through an NSX Edge VM on another cluster](../images/nsx-edge-traffic-flow.png)
+![VM traffic through an NSX Edge VM on another cluster](../images/nsx-edge-vm-traffic-flow-across-clusters.png)
 
 ## Guest OS vs VM
 | Type | Guest OS metric | VM equivalent |
@@ -49,7 +49,7 @@
 - Ingress and egress: relative to an environment. Moving further inside is ingress.
 - Receive (RX) and transmit (TX): relative to one port. A port has both.
 - On a distributed switch, the ESXi physical NIC is the uplink. The ESXi host is not a hop.
-![Ingress and egress vs receive and transmit](../images/ingress-egress-vs-rx-tx.png)
+![Ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
 
 ## Traffic type metrics
 - VCF Operations has unicast, multicast and broadcast metrics at VM, ESXi, distributed port group and distributed switch level (also vSphere Pods, which are VMs).

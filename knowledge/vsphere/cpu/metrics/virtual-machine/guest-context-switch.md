@@ -20,7 +20,7 @@
 - Example: Horizon Connection Server, 10 vCPU, about 120 processes and over 2,000 threads: steady 34K-37K (about 3.5K per CPU) while idle.
 - Use a value between the 95th and 99th percentile: momentary peaks rarely matter.
 - Profile per application: healthy for one VM may not be for another.
-![Context switch distribution across 11,372 VMs](../../images/context-switch-distribution-11372-vms.png)
+![Context switch distribution across 11,372 VMs](../../images/guest-os-context-switch-rate-distribution-across-vms.png)
 
 ## Correlation
 - Weak with CPU utilization across 3,328 VMs: not all instructions switch. Strong in some VMs.

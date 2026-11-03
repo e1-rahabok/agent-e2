@@ -1,7 +1,7 @@
 # Guest OS CPU vs VM CPU
 
 ## Layers
-![Guest OS CPU, VM vCPU, VM and other VM vCPUs as separate layers](../images/cpu-layers-guest-vm-vcpu.png)
+![Guest OS CPU, VM vCPU, VM and other VM vCPUs as separate layers](../images/guest-os-cpu-vs-vm-vcpu-vs-vm-layers.png)
 - CPU has 3 layers: Guest OS, VM, ESXi.
 - Memory has 4 layers: a process inside the Guest OS is the extra layer.
 - Guest OS CPU and VM CPU are calculated independently, by 2 different kernels: the Guest OS kernel and the VMkernel.
@@ -43,7 +43,7 @@
 - VM CPU Usage includes IO processing done by the hypervisor on behalf of the VM. Significant for heavy databases and NSX Edge.
 
 ## Counter visibility
-![Guest OS counters not visible to the VM; VM counters not visible to the Guest OS](../images/counter-visibility-guest-vs-vm.png)
+![Guest OS counters not visible to the VM; VM counters not visible to the Guest OS](../images/guest-os-vs-vm-cpu-counter-visibility.png)
 | Counter group | Counters | Not visible to |
 |---|---|---|
 | Guest OS level | Context Switch, Run Queue, Utilization, IO Wait | VM (ESXi) |
@@ -70,7 +70,7 @@
 | Steal | Time the vCPU is frozen because the hypervisor has no physical thread to run it. Exists only in a VM. On dedicated physical hardware there is no Steal Time. |
 
 ## State mapping for one vCPU
-![Guest OS states mapped to VM states for one vCPU](../images/guest-vs-vm-state-mapping.png)
+![Guest OS states mapped to VM states for one vCPU](../images/guest-os-cpu-states-mapped-to-vm-vcpu-states.png)
 | Guest OS state | VM state | Note |
 |---|---|---|
 | Run (productive) | Run | vCPU running. |

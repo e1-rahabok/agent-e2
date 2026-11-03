@@ -23,7 +23,7 @@
 - Includes: Overlap, Co-stop (also when caused by a limit), Ready excluding Max Limited, Hyper-Threading effect, power saving below nominal frequency.
 - Excludes: Max Limited, Other Wait, Swap Wait, Idle.
 - Hyper-Threading and frequency are effects, not metrics. esxtop %A/MPERF shows the frequency effect.
-![Latency spans Overlap, Co-stop, Ready without Limit, plus HT and power-saving effects](../../images/vm-cpu-latency-components.png)
+![Latency spans Overlap, Co-stop, Ready without Limit, plus HT and power-saving effects](../../images/vm-cpu-latency-components-overlap-costop-ready-ht-power.png)
 
 ## Hyper-Threading
 ```text

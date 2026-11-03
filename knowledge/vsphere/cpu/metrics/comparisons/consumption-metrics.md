@@ -24,7 +24,7 @@
 - vCenter lists 9 VM CPU consumption counters, including Demand-to-entitlement ratio, Entitlement, System and VCPU Usage. Some exist for the kernel scheduler, not for operations. Their names follow the scheduler's view.
 - Reservation and allocation are properties, not metrics.
 - VM CPU reservation is set in MHz or GHz, not in vCPUs. Moving the VM to a host with a different frequency requires a manual adjustment.
-![vCenter VM CPU consumption counters](../../images/vcenter-vm-cpu-consumption-counters.png)
+![vCenter VM CPU consumption counters](../../images/vcenter-vm-cpu-consumption-counters-table.png)
 
 ## Metadata
 ```yaml

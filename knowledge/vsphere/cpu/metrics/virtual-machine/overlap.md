@@ -12,7 +12,7 @@
 - Only system services (kernel processes) cause Overlap. Other vCPU worlds do not.
 - So Overlap is usually lower than Ready and Co-stop.
 - Disk and network IO drive the value. The IO can come from the host or other VMs, not only this VM.
-![Run keeps accumulating during Overlap; Used excludes it](../../images/used-vs-run-overlap-system.png)
+![Run keeps accumulating during Overlap; Used excludes it](../../images/vm-cpu-used-vs-run-overlap-and-system.png)
 
 ## Effect on other metrics
 - Run does not see Overlap. Run keeps accumulating during the interruption.
