@@ -10,6 +10,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"
+format: free-text
 status: draft
 ---
 

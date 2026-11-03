@@ -13,6 +13,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q9 ESXi CPU Utilisation"
+format: multiple-choice
+level: l400
+answer: [A]
+trap: [B]
 status: draft
 ---
 

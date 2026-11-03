@@ -14,6 +14,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"
+format: multiple-choice
+level: l400
+answer: [E]
+trap: [C,D]
 status: draft
 ---
 

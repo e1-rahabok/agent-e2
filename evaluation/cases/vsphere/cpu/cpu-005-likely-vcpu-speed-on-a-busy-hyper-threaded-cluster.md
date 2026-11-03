@@ -14,6 +14,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"
+format: multiple-choice
+level: multi-hop
+answer: [C]
+trap: [B,D]
 status: draft
 ---
 

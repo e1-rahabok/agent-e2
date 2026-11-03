@@ -12,6 +12,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1 Latency vs OIO"
+format: multiple-choice
+level: l400
+answer: [B]
+trap: [A,D]
 status: draft
 ---
 

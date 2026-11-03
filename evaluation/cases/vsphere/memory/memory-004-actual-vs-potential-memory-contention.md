@@ -13,6 +13,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q3 VM Memory Contention"
+format: multiple-choice
+level: l400
+answer: [C]
+trap: [A,B]
 status: draft
 ---
 

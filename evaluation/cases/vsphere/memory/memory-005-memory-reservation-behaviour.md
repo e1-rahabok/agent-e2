@@ -13,6 +13,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
+format: multiple-choice
+level: l400
+answer: [A,B]
+trap: [C,D]
 status: draft
 ---
 

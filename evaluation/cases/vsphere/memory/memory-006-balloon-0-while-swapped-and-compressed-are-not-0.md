@@ -14,6 +14,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"
+format: multiple-choice
+level: l400
+answer: [B,C]
+trap: [A,D]
 status: draft
 ---
 

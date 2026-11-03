@@ -1,0 +1,129 @@
+"""Hybrid retrieval: BM25 keyword search plus optional embeddings, fused by reciprocal rank."""
+import hashlib
+import json
+import math
+import os
+import re
+from collections import Counter, defaultdict
+
+from kb import FILTER_FIELDS, ROOT
+
+TOKEN = re.compile(r'[a-z0-9]+(?:[.\-][a-z0-9]+)*')
+STOP = set('a an and are as at be by for from has in is it its of on or that the this to was were with which what when how why does do not no'.split())
+
+
+def tokens(text):
+    return [t for t in TOKEN.findall(text.lower()) if t not in STOP]
+
+
+class BM25:
+    def __init__(self, texts, k1=1.4, b=0.75):
+        self.k1, self.b = k1, b
+        self.docs = [Counter(tokens(t)) for t in texts]
+        self.lens = [sum(c.values()) for c in self.docs]
+        self.avg = sum(self.lens) / max(1, len(self.lens))
+        df = defaultdict(int)
+        for c in self.docs:
+            for t in c:
+                df[t] += 1
+        n = len(self.docs)
+        self.idf = {t: math.log(1 + (n - v + 0.5) / (v + 0.5)) for t, v in df.items()}
+
+    def scores(self, query):
+        q = tokens(query)
+        out = []
+        for i, c in enumerate(self.docs):
+            s = 0.0
+            for t in q:
+                f = c.get(t)
+                if f:
+                    s += self.idf[t] * f * (self.k1 + 1) / (f + self.k1 * (1 - self.b + self.b * self.lens[i] / self.avg))
+            out.append(s)
+        return out
+
+
+class Retriever:
+    def __init__(self, docs, chunks, client=None, embed_model=None, cache_dir=None):
+        self.docs, self.chunks = docs, chunks
+        self.bm25 = BM25([c.text for c in chunks])
+        self.vectors = None
+        self.client, self.embed_model = client, embed_model
+        if client and embed_model:
+            self.vectors = self._embed_chunks(cache_dir or os.path.join(ROOT, 'tools', 'autotest', '.cache'))
+
+    # ---- embeddings -------------------------------------------------------
+    def _embed_chunks(self, cache_dir):
+        os.makedirs(cache_dir, exist_ok=True)
+        path = os.path.join(cache_dir, 'embeddings-' + self.embed_model.replace('/', '_') + '.json')
+        cache = json.load(open(path)) if os.path.exists(path) else {}
+        keys = [hashlib.sha1(c.text.encode()).hexdigest() for c in self.chunks]
+        missing = [(k, c.text) for k, c in zip(keys, self.chunks) if k not in cache]
+        for i in range(0, len(missing), 64):
+            batch = missing[i:i + 64]
+            vecs = self.client.embed(self.embed_model, [t[:8000] for _, t in batch])
+            for (k, _), v in zip(batch, vecs):
+                cache[k] = v
+        if missing:
+            json.dump(cache, open(path, 'w'))
+        return [self._norm(cache[k]) for k in keys]
+
+    @staticmethod
+    def _norm(v):
+        n = math.sqrt(sum(x * x for x in v)) or 1.0
+        return [x / n for x in v]
+
+    def _vector_scores(self, query):
+        q = self._norm(self.client.embed(self.embed_model, [query])[0])
+        return [sum(a * b for a, b in zip(q, v)) for v in self.vectors]
+
+    # ---- search -------------------------------------------------------------
+    def _allowed(self, doc, filters):
+        for f in FILTER_FIELDS:
+            want = filters.get(f) if filters else None
+            if not want:
+                continue
+            want = want if isinstance(want, list) else [want]
+            if not set(want) & set(doc.tags(f)):
+                return False
+        return True
+
+    def search(self, query, filters=None, k=8, min_hits=3):
+        """Return the top k documents (best chunk per document)."""
+        ranked = self._rank(query, filters)
+        if filters and len(ranked) < min_hits:
+            ranked = self._rank(query, None)
+        return ranked[:k]
+
+    def _rank(self, query, filters):
+        lists = [self.bm25.scores(query)]
+        if self.vectors is not None:
+            lists.append(self._vector_scores(query))
+        fused = defaultdict(float)
+        for scores in lists:
+            order = sorted(range(len(scores)), key=lambda i: -scores[i])
+            for r, i in enumerate(order[:200]):
+                if scores[i] > 0:
+                    fused[i] += 1.0 / (60 + r)
+        best = {}
+        for i, s in sorted(fused.items(), key=lambda x: -x[1]):
+            c = self.chunks[i]
+            if not self._allowed(c.doc, filters):
+                continue
+            if c.doc.id not in best:
+                best[c.doc.id] = (s, c)
+        return [{'id': d, 'score': round(s, 4), 'title': c.doc.title, 'heading': c.heading,
+                 'snippet': ' '.join(c.text.split('\n')[1:3])[:240], 'status': c.doc.status}
+                for d, (s, c) in best.items()]
+
+    def links(self, doc_id, link_type='all'):
+        d = self.docs.get(doc_id)
+        if not d:
+            return []
+        types = list(d.links) if link_type == 'all' else [link_type]
+        out = []
+        for t in types:
+            for lid in d.links.get(t, []):
+                ld = self.docs.get(lid)
+                out.append({'id': lid, 'type': t, 'title': ld.title if ld else '(missing)',
+                            'status': ld.status if ld else 'missing'})
+        return out

@@ -16,6 +16,10 @@ attachments:
   - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q1 ESXi CPU Utilisation"
+format: multiple-choice
+level: screenshot
+answer: [C]
+trap: [A,B]
 status: draft
 ---
 

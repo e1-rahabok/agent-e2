@@ -16,6 +16,10 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"
+format: multiple-choice
+level: l400
+answer: [A,B,C,D]
+trap: [G]
 status: draft
 ---
 
