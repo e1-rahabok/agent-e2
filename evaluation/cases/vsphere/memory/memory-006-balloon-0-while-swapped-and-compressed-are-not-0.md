@@ -1,25 +1,4 @@
----
-id: vsphere-memory-006
-title: "Balloon 0 while Swapped and Compressed are not 0"
-scope: vsphere
-area: memory
-input: text
-tests: troubleshooting
-knowledge:
-  - vsphere/memory/metrics/host/ballooned
-  - vsphere/memory/metrics/host/swap-used
-  - vsphere/memory/metrics/host/compressed
-  - vsphere/memory/concepts/swap-and-compression
-  - vsphere/memory/concepts/host-memory-states
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"
-format: multiple-choice
-level: l400
-answer: [B,C]
-trap: [A,D]
-status: draft
----
+# Balloon 0 while Swapped and Compressed are not 0
 
 ## Prompt
 On ESXi 007:
@@ -46,3 +25,26 @@ A (reclamation order read as a current-state rule) or D.
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-memory-006
+title: "Balloon 0 while Swapped and Compressed are not 0"
+scope: vsphere
+area: memory
+input: text
+tests: troubleshooting
+knowledge:
+  - vsphere/memory/metrics/host/ballooned
+  - vsphere/memory/metrics/host/swap-used
+  - vsphere/memory/metrics/host/compressed
+  - vsphere/memory/concepts/swap-and-compression
+  - vsphere/memory/concepts/host-memory-states
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"
+format: multiple-choice
+level: l400
+answer: [B,C]
+trap: [A,D]
+status: draft
+```

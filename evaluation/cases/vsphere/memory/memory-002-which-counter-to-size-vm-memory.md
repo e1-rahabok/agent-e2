@@ -1,24 +1,4 @@
----
-id: vsphere-memory-002
-title: "Which counter to size VM memory"
-scope: vsphere
-area: memory
-input: text
-tests: distinction
-knowledge:
-  - vsphere/system/concepts/guest-os-sizing
-  - vsphere/memory/concepts/guest-os-vs-vm-memory
-  - vsphere/memory/metrics/virtual-motherboard/consumed
-  - vsphere/memory/metrics/virtual-motherboard/active
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"
-format: multiple-choice
-level: l400
-answer: [E]
-trap: [A,B,D]
-status: draft
----
+# Which counter to size VM memory
 
 ## Prompt
 Choose the most accurate counter to rightsize a VM.
@@ -44,3 +24,25 @@ A or B (VM-level counters), or D (mixing VM and Guest OS realms).
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-memory-002
+title: "Which counter to size VM memory"
+scope: vsphere
+area: memory
+input: text
+tests: distinction
+knowledge:
+  - vsphere/system/concepts/guest-os-sizing
+  - vsphere/memory/concepts/guest-os-vs-vm-memory
+  - vsphere/memory/metrics/virtual-motherboard/consumed
+  - vsphere/memory/metrics/virtual-motherboard/active
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"
+format: multiple-choice
+level: l400
+answer: [E]
+trap: [A,B,D]
+status: draft
+```

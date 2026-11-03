@@ -1,21 +1,4 @@
----
-id: vendor-neutral-general-001
-title: "Hyperscaler cost of 1,000 VMs"
-scope: vendor-neutral
-area: general
-input: text
-tests: judgment
-knowledge:
-  - vsphere/system/concepts/capacity-model
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Cost and Price > Q1 VM Cost"
-format: multiple-choice
-level: l400
-answer: [C]
-trap: [A,B]
-status: draft
----
+# Hyperscaler cost of 1,000 VMs
 
 ## Prompt
 Roughly how much would you pay to buy 1,000 VMs from hyperscalers? The VMs average 4 vCPU, 16 GB RAM, 0.5 TB disk, up to 10 Gb network.
@@ -48,3 +31,23 @@ A or B (compute list price only, ignoring disk, network, support and management)
 - The key has no explanation for A, B and D, and no pricing date or source. Tracked in docs/todo.md.
 - Prices change. Re-check against current hyperscaler pricing before each evaluation run.
 - No knowledge file covers cloud pricing yet; `knowledge` points to the closest file.
+
+## Metadata
+```yaml
+id: vendor-neutral-general-001
+title: "Hyperscaler cost of 1,000 VMs"
+scope: vendor-neutral
+area: general
+input: text
+tests: judgment
+knowledge:
+  - vsphere/system/concepts/capacity-model
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Cost and Price > Q1 VM Cost"
+format: multiple-choice
+level: l400
+answer: [C]
+trap: [A,B]
+status: draft
+```

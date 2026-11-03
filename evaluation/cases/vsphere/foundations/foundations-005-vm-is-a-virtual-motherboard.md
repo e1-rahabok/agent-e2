@@ -1,28 +1,8 @@
----
-id: vsphere-foundations-005
-title: "VM (virtual motherboard) vs Guest OS metrics"
-scope: vsphere
-area: foundations
-input: text
-tests: distinction
-knowledge:
-  - vsphere/foundations/vm-vs-guest-os
-  - vsphere/storage/metrics/guest-os/disk-queue
-  - vsphere/cpu/metrics/guest-os/run-queue
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/cpu/concepts/guest-os-vs-vm-cpu
-attachments: []
-origin: synthetic
-source_path: "Author's book, opening chapter: Think virtual motherboard, not virtual machine. Author instruction 2026-11-03."
-format: multiple-choice
-level: l400
-answer: [A, C, E]
-trap: [B, D]
-status: draft
----
+# VM (virtual motherboard) vs Guest OS metrics
 
 ## Prompt
-A Windows VM with 8 vCPUs is slow. VCF Operations shows these values on the VM object, averaged over the last hour:
+The application team complains that their Windows Server 2025 VM (8 vCPUs) was slow at 10:15 this morning. Users waited several seconds for each screen.
+You open VCF Operations on the VM object. Each value below is the data point at 10:15, which covers 10:10-10:15. The 20-second peak counters show the same picture as these values.
 
 | Counter | Value |
 |---|---|
@@ -51,3 +31,27 @@ B (data stored on the VM object read as a VM metric) or D (Guest OS counters ass
 - Where a counter is stored (the VM object) does not decide which layer it belongs to.
 - Guest OS queues (Run Queue, Disk Queue) and VM contention (Ready, disk latency) are different queues at different layers.
 - F is false: Run Queue is threads waiting for a vCPU inside Windows; Ready is a vCPU waiting for a physical thread in ESXi.
+
+## Metadata
+```yaml
+id: vsphere-foundations-005
+title: "VM (virtual motherboard) vs Guest OS metrics"
+scope: vsphere
+area: foundations
+input: text
+tests: distinction
+knowledge:
+  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/storage/metrics/guest-os/disk-queue
+  - vsphere/cpu/metrics/guest-os/run-queue
+  - vsphere/cpu/metrics/virtual-motherboard/ready
+  - vsphere/cpu/concepts/guest-os-vs-vm-cpu
+attachments: []
+origin: synthetic
+source_path: "Author's book, opening chapter: Think virtual motherboard, not virtual machine. Author instruction 2026-11-03."
+format: multiple-choice
+level: l400
+answer: [A, C, E]
+trap: [B, D]
+status: reviewed
+```

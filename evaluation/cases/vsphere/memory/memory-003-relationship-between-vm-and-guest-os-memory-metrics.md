@@ -1,24 +1,4 @@
----
-id: vsphere-memory-003
-title: "Relationship between VM and Guest OS memory metrics"
-scope: vsphere
-area: memory
-input: text
-tests: concept
-knowledge:
-  - vsphere/memory/concepts/guest-os-vs-vm-memory
-  - vsphere/memory/concepts/ballooning
-  - vsphere/memory/metrics/virtual-motherboard/usage
-  - vsphere/foundations/vm-vs-guest-os
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 VM vs Guest OS"
-format: multiple-choice
-level: l400
-answer: [A,B,D,E]
-trap: [C]
-status: draft
----
+# Relationship between VM and Guest OS memory metrics
 
 ## Prompt
 These sentences cover the relationship between VM metrics and Guest OS metrics. Choose all the correct ones:
@@ -42,3 +22,25 @@ C (a guest free assumed to propagate to ESXi).
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-memory-003
+title: "Relationship between VM and Guest OS memory metrics"
+scope: vsphere
+area: memory
+input: text
+tests: concept
+knowledge:
+  - vsphere/memory/concepts/guest-os-vs-vm-memory
+  - vsphere/memory/concepts/ballooning
+  - vsphere/memory/metrics/virtual-motherboard/usage
+  - vsphere/foundations/vm-vs-guest-os
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 VM vs Guest OS"
+format: multiple-choice
+level: l400
+answer: [A,B,D,E]
+trap: [C]
+status: draft
+```

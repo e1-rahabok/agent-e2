@@ -1,19 +1,4 @@
----
-id: vsphere-storage-001
-title: "Guest queue invisible to the hypervisor"
-scope: vsphere
-area: storage
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/visibility-layers
-  - vsphere/storage/metrics/virtual-motherboard/iops
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."
-format: free-text
-status: draft
----
+# Guest queue invisible to the hypervisor
 
 ## Prompt
 Oracle on a Windows VM is slow. Windows shows a high Disk Queue Length. In vCenter, the VM's disk IOPS and disk latency look normal. The storage team says storage is fine, so it is not an infrastructure problem. Is that conclusion valid?
@@ -29,3 +14,21 @@ Oracle on a Windows VM is slow. Windows shows a high Disk Queue Length. In vCent
 
 ## Notes
 - Tests: Visibility layers (principle + diagram).
+
+## Metadata
+```yaml
+id: vsphere-storage-001
+title: "Guest queue invisible to the hypervisor"
+scope: vsphere
+area: storage
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/visibility-layers
+  - vsphere/storage/metrics/virtual-motherboard/iops
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."
+format: free-text
+status: draft
+```

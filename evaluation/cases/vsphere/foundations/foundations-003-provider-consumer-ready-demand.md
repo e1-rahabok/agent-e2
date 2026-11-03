@@ -1,20 +1,4 @@
----
-id: vsphere-foundations-003
-title: "Provider vs consumer metrics"
-scope: vsphere
-area: foundations
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/provider-consumer
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/cpu/metrics/host/demand
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Virtualization Impact; Architecture Complexity (VM vs ESXi; ESXi ≠ VMs + Kernel)."
-format: free-text
-status: draft
----
+# Provider vs consumer metrics
 
 ## Prompt
 An ESXi host dashboard shows "CPU Ready" and "CPU Demand". For each, is it a provider metric or a sum of the VMs' metrics? Can a physical core itself have Ready time?
@@ -32,3 +16,22 @@ An ESXi host dashboard shows "CPU Ready" and "CPU Demand". For each, is it a pro
 
 ## Notes
 - Tests: Principle: provider vs consumer; provider metric vs sum-of-consumer metric.
+
+## Metadata
+```yaml
+id: vsphere-foundations-003
+title: "Provider vs consumer metrics"
+scope: vsphere
+area: foundations
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/provider-consumer
+  - vsphere/cpu/metrics/virtual-motherboard/ready
+  - vsphere/cpu/metrics/host/demand
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Virtualization Impact; Architecture Complexity (VM vs ESXi; ESXi ≠ VMs + Kernel)."
+format: free-text
+status: draft
+```

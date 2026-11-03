@@ -1,7 +1,7 @@
 """Golden cases: load, shuffle options, render, parse and score answers.
 
 Only `## Prompt` and attachments are ever shown to the model. The answer key
-(front matter `answer`, `trap`) is read here for scoring only.
+(metadata `answer`, `trap` in the `## Metadata` section at the end) is read here for scoring only.
 """
 import base64
 import glob
@@ -13,6 +13,7 @@ import yaml
 
 from kb import ROOT
 
+META = '\n## Metadata\n```yaml\n'
 NOT_COVERED = 'Not covered by the knowledge base.'
 UNSURE = 'Unsure: the information available does not settle this question.'
 # Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
@@ -24,7 +25,10 @@ ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re
 class Case:
     def __init__(self, path):
         text = open(path).read()
-        _, fm, body = text.split('---\n', 2)
+        i = text.rfind(META)
+        if i < 0:
+            raise ValueError(f'{path}: no ## Metadata section at the end')
+        body, fm = text[:i], text[i + len(META):].rstrip().removesuffix('```')
         self.path = path
         self.meta = yaml.safe_load(fm)
         self.id = self.meta['id']

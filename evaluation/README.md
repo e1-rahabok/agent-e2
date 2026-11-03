@@ -20,6 +20,7 @@ evaluation/
 - Ids never change and are never reused. Retired cases get `status: retired`, not deleted.
 
 ## Case fields
+- Each case file: `# Title`, then `## Prompt`, `## Likely wrong answer`, `## Expected key points`, and a `## Metadata` section at the end with one yaml block holding the fields below. No front matter at the top.
 | Field | Meaning |
 |---|---|
 | `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `attachments/<id>/`. |

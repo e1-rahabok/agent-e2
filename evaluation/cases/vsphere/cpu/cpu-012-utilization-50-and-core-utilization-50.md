@@ -1,24 +1,4 @@
----
-id: vsphere-cpu-012
-title: "Utilization 50% and Core Utilization 50%"
-scope: vsphere
-area: cpu
-input: text
-tests: distinction
-knowledge:
-  - vsphere/cpu/metrics/host/utilization
-  - vsphere/cpu/metrics/host/core-utilization
-  - vsphere/cpu/metrics/host/imbalance
-  - vsphere/cpu/concepts/esxi-thread-core-accounting
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q9 ESXi CPU Utilisation"
-format: multiple-choice
-level: l400
-answer: [A]
-trap: [B]
-status: draft
----
+# Utilization 50% and Core Utilization 50%
 
 ## Prompt
 On an ESXi host, CPU Utilization shows 50% and CPU Core Utilization also shows 50%.
@@ -42,3 +22,25 @@ B (equal values read as one thread per core).
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-cpu-012
+title: "Utilization 50% and Core Utilization 50%"
+scope: vsphere
+area: cpu
+input: text
+tests: distinction
+knowledge:
+  - vsphere/cpu/metrics/host/utilization
+  - vsphere/cpu/metrics/host/core-utilization
+  - vsphere/cpu/metrics/host/imbalance
+  - vsphere/cpu/concepts/esxi-thread-core-accounting
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q9 ESXi CPU Utilisation"
+format: multiple-choice
+level: l400
+answer: [A]
+trap: [B]
+status: draft
+```

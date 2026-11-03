@@ -1,24 +1,4 @@
----
-id: vsphere-cpu-013
-title: "Reclaiming vCPUs from an idle VM"
-scope: vsphere
-area: cpu
-input: text
-tests: judgment
-knowledge:
-  - vsphere/system/concepts/rightsizing
-  - vsphere/cpu/diagnosis/oversized-vm-downsizing
-  - vsphere/cpu/concepts/idle-and-unused-vcpus
-  - vsphere/memory/concepts/memory-as-storage
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q11 Reclamation"
-format: multiple-choice
-level: l400
-answer: [C,D]
-trap: [B,E]
-status: draft
----
+# Reclaiming vCPUs from an idle VM
 
 ## Prompt
 A 32-vCPU VM has been idle for weeks. You want to reclaim it to free capacity.
@@ -44,3 +24,25 @@ B (vCPU x GHz counted as freed capacity) or E (IO assumed to cost no CPU).
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-cpu-013
+title: "Reclaiming vCPUs from an idle VM"
+scope: vsphere
+area: cpu
+input: text
+tests: judgment
+knowledge:
+  - vsphere/system/concepts/rightsizing
+  - vsphere/cpu/diagnosis/oversized-vm-downsizing
+  - vsphere/cpu/concepts/idle-and-unused-vcpus
+  - vsphere/memory/concepts/memory-as-storage
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q11 Reclamation"
+format: multiple-choice
+level: l400
+answer: [C,D]
+trap: [B,E]
+status: draft
+```

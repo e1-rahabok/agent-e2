@@ -1,22 +1,4 @@
----
-id: vsphere-cpu-006
-title: "ESXi CPU capacity: threads, not hertz"
-scope: vsphere
-area: cpu
-input: mixed
-tests: concept
-knowledge:
-  - vsphere/cpu/concepts/cpu-capacity
-  - vsphere/system/concepts/capacity-model
-  - vsphere/cpu/concepts/cpu-frequency
-attachments: 
-  - vsphere-cpu-006/two-esxi-hosts-specification-and-capacity-options.png
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESXi Total Capacity"
-format: compound            # two answers (one per host); scored by hand
-level: l400
-status: draft
----
+# ESXi CPU capacity: threads, not hertz
 
 ## Prompt
 Review the two ESXi hosts in the attachment.
@@ -44,3 +26,24 @@ A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo o
 
 ## Notes
 - The second hint pushes toward GHz on purpose. It is a distractor.
+
+## Metadata
+```yaml
+id: vsphere-cpu-006
+title: "ESXi CPU capacity: threads, not hertz"
+scope: vsphere
+area: cpu
+input: mixed
+tests: concept
+knowledge:
+  - vsphere/cpu/concepts/cpu-capacity
+  - vsphere/system/concepts/capacity-model
+  - vsphere/cpu/concepts/cpu-frequency
+attachments: 
+  - vsphere-cpu-006/two-esxi-hosts-specification-and-capacity-options.png
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESXi Total Capacity"
+format: compound            # two answers (one per host); scored by hand
+level: l400
+status: draft
+```

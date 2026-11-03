@@ -1,27 +1,4 @@
----
-id: vsphere-cpu-009
-title: "Counters where a vCPU cannot run at all"
-scope: vsphere
-area: cpu
-input: text
-tests: distinction
-knowledge:
-  - vsphere/foundations/vm-vs-guest-os
-  - vsphere/cpu/metrics/comparisons/vm-contention-metrics
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/cpu/metrics/virtual-motherboard/co-stop
-  - vsphere/cpu/metrics/virtual-motherboard/overlap
-  - vsphere/cpu/metrics/virtual-motherboard/other-wait
-  - vsphere/cpu/metrics/virtual-motherboard/demand
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"
-format: multiple-choice
-level: l400
-answer: [A,B,C,D]
-trap: [G]
-status: draft
----
+# Counters where a vCPU cannot run at all
 
 ## Prompt
 In a shared environment, a VM vCPU may not get the resource it asks for: because of settings (VM, resource pool or ESXi) or a highly utilized ESXi host.
@@ -47,3 +24,29 @@ Omitting Overlap or Other Wait; including Demand as a contention counter.
 ## Notes
 - Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: `vsphere/foundations/vm-vs-guest-os`, section Two realms.
 - Trap: applying a Guest OS-realm statement to a VM-realm counter.
+
+## Metadata
+```yaml
+id: vsphere-cpu-009
+title: "Counters where a vCPU cannot run at all"
+scope: vsphere
+area: cpu
+input: text
+tests: distinction
+knowledge:
+  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/cpu/metrics/comparisons/vm-contention-metrics
+  - vsphere/cpu/metrics/virtual-motherboard/ready
+  - vsphere/cpu/metrics/virtual-motherboard/co-stop
+  - vsphere/cpu/metrics/virtual-motherboard/overlap
+  - vsphere/cpu/metrics/virtual-motherboard/other-wait
+  - vsphere/cpu/metrics/virtual-motherboard/demand
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"
+format: multiple-choice
+level: l400
+answer: [A,B,C,D]
+trap: [G]
+status: draft
+```

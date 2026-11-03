@@ -1,23 +1,4 @@
----
-id: vsphere-cpu-011
-title: "CPU reservation behaviour"
-scope: vsphere
-area: cpu
-input: text
-tests: concept
-knowledge:
-  - vsphere/foundations/resource-management
-  - vsphere/cpu/metrics/host/reserved-capacity
-  - vsphere/system/concepts/hypervisor-overhead
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"
-format: multiple-choice
-level: l400
-answer: [A,B,C,D]
-trap: [E,F,G]
-status: draft
----
+# CPU reservation behaviour
 
 ## Prompt
 Reservation, shares and limit are the 3 resource management controls. Sometimes you need a reservation on a VM or a resource pool.
@@ -47,3 +28,24 @@ E (non-sticky read as overcommittable), F (kernel assumed to need no reservation
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-cpu-011
+title: "CPU reservation behaviour"
+scope: vsphere
+area: cpu
+input: text
+tests: concept
+knowledge:
+  - vsphere/foundations/resource-management
+  - vsphere/cpu/metrics/host/reserved-capacity
+  - vsphere/system/concepts/hypervisor-overhead
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"
+format: multiple-choice
+level: l400
+answer: [A,B,C,D]
+trap: [E,F,G]
+status: draft
+```

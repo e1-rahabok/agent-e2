@@ -1,23 +1,4 @@
----
-id: vsphere-storage-003
-title: "Latency and outstanding IO"
-scope: vsphere
-area: storage
-input: text
-tests: concept
-knowledge:
-  - vsphere/storage/metrics/virtual-motherboard/outstanding-io
-  - vsphere/storage/metrics/virtual-motherboard/disk-latency
-  - vsphere/storage/metrics/virtual-motherboard/iops
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1 Latency vs OIO"
-format: multiple-choice
-level: l400
-answer: [B]
-trap: [A,D]
-status: draft
----
+# Latency and outstanding IO
 
 ## Prompt
 What is the relationship between the disk latency metric and disk outstanding IO?
@@ -38,3 +19,24 @@ A, or D (throughput instead of commands).
 
 ## Notes
 
+## Metadata
+```yaml
+id: vsphere-storage-003
+title: "Latency and outstanding IO"
+scope: vsphere
+area: storage
+input: text
+tests: concept
+knowledge:
+  - vsphere/storage/metrics/virtual-motherboard/outstanding-io
+  - vsphere/storage/metrics/virtual-motherboard/disk-latency
+  - vsphere/storage/metrics/virtual-motherboard/iops
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1 Latency vs OIO"
+format: multiple-choice
+level: l400
+answer: [B]
+trap: [A,D]
+status: draft
+```

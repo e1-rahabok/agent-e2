@@ -1,25 +1,4 @@
----
-id: vsphere-cpu-005
-title: "Likely vCPU speed on a busy Hyper-Threaded cluster"
-scope: vsphere
-area: cpu
-input: text
-tests: judgment
-knowledge:
-  - vsphere/cpu/concepts/cpu-frequency
-  - vsphere/cpu/concepts/hyper-threading
-  - vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-  - vsphere/cpu/metrics/virtual-motherboard/usage
-  - vsphere/cpu/configuration/host-power-management
-attachments: []
-origin: quiz
-source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"
-format: multiple-choice
-level: multi-hop
-answer: [C]
-trap: [B,D]
-status: draft
----
+# Likely vCPU speed on a busy Hyper-Threaded cluster
 
 ## Prompt
 Cluster 007 runs ESXi 9.1 hosts with identical specifications:
@@ -51,3 +30,27 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 
 ## Notes
 - Author confirmed the key (Q034, 2026-11-03). Knowledge: `vsphere/cpu/concepts/cpu-frequency`, section Likely vCPU speed on a busy cluster.
+
+## Metadata
+```yaml
+id: vsphere-cpu-005
+title: "Likely vCPU speed on a busy Hyper-Threaded cluster"
+scope: vsphere
+area: cpu
+input: text
+tests: judgment
+knowledge:
+  - vsphere/cpu/concepts/cpu-frequency
+  - vsphere/cpu/concepts/hyper-threading
+  - vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+  - vsphere/cpu/metrics/virtual-motherboard/usage
+  - vsphere/cpu/configuration/host-power-management
+attachments: []
+origin: quiz
+source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"
+format: multiple-choice
+level: multi-hop
+answer: [C]
+trap: [B,D]
+status: draft
+```

@@ -1,18 +1,4 @@
----
-id: vsphere-cpu-001
-title: "High CPU Wait"
-scope: vsphere
-area: cpu
-input: text
-tests: distinction
-knowledge:
-  - vsphere/cpu/metrics/virtual-motherboard/wait
-attachments: []
-origin: book
-source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Confusing name)."
-format: free-text
-status: draft
----
+# High CPU Wait
 
 ## Prompt
 A VM shows CPU Wait at 90%. The application owner says the VM must be stuck waiting on disk or memory. Are they right?
@@ -28,3 +14,20 @@ A VM shows CPU Wait at 90%. The application owner says the VM must be stuck wait
 
 ## Notes
 - Tests: Confusing name (distinction).
+
+## Metadata
+```yaml
+id: vsphere-cpu-001
+title: "High CPU Wait"
+scope: vsphere
+area: cpu
+input: text
+tests: distinction
+knowledge:
+  - vsphere/cpu/metrics/virtual-motherboard/wait
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Confusing name)."
+format: free-text
+status: draft
+```
