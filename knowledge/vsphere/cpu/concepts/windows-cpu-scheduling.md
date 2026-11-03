@@ -78,6 +78,22 @@ related:
 - vsphere/cpu/metrics/virtual-machine/guest-run-queue
 - vsphere/cpu/metrics/virtual-machine/guest-context-switch
 - vsphere/cpu/metrics/virtual-machine/guest-processor-time
+images:
+  - path: ../images/windows-thread-states-diagram.png
+    product: [windows]
+    object: [VirtualMachine]
+    topic: 'Windows thread states'
+    image_type: diagram
+  - path: ../images/windows-cpu-usage-above-100-percent-with-turbo.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS CPU Usage']
+    image_type: timeline
+  - path: ../images/windows-cpu0-flat-out-from-runaway-service.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS CPU Usage']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process

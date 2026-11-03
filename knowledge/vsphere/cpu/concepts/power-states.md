@@ -121,6 +121,17 @@ related:
 - vsphere/cpu/concepts/cpu-frequency
 - vsphere/cpu/configuration/latency-sensitivity
 - vsphere/cpu/concepts/idle-and-unused-vcpus
+images:
+  - path: ../images/acpi-c-states-and-p-states-diagram.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'CPU power states'
+    image_type: diagram
+  - path: ../images/esxi-advanced-settings-use-c-states-and-p-states.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'CPU power states'
+    image_type: screenshot
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 70-75) > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM

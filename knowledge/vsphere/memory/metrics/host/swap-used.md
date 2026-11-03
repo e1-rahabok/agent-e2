@@ -36,6 +36,12 @@ same_meaning:
 related:
 - vsphere/memory/metrics/host/compressed
 - vsphere/memory/concepts/swap-and-compression
+images:
+  - path: ../../images/esxi-memory-swap-in-vs-swap-out-cumulative.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Swap In', 'ESXi Memory Swap Out']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Swap + Compress

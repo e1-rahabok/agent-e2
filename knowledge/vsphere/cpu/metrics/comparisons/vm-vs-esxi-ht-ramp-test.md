@@ -68,6 +68,19 @@ related:
 - vsphere/cpu/metrics/host/core-utilization
 - vsphere/cpu/metrics/host/utilization
 - vsphere/cpu/metrics/host/usage
+images:
+  - path: ../../images/hyper-threading-ramp-test-vm-cpu-run-used-usage.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Run', 'VM CPU Used', 'VM CPU Usage']
+    topic: 'Hyper-Threading accounting'
+    image_type: timeline
+  - path: ../../images/hyper-threading-ramp-test-esxi-cpu-usage-core-utilization-utilization.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Usage', 'ESXi CPU Core Utilization', 'ESXi CPU Utilization']
+    topic: 'Hyper-Threading accounting'
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Quiz! > VM vs ESXi

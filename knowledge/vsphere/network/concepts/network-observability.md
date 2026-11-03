@@ -91,6 +91,42 @@ related:
 - vsphere/network/concepts/network-characteristics
 - vsphere/network/concepts/netioc
 - vsphere/network/concepts/passthrough-and-offload
+images:
+  - path: ../images/virtual-network-port-groups-vs-physical-vmnics.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup]
+    topic: 'Network layers'
+    image_type: diagram
+  - path: ../images/esxi-network-observability-areas-vm-kernel-modules-agent-vms.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'Network observability'
+    image_type: diagram
+  - path: ../images/esxi-agent-vms-storage-network-security.png
+    product: [vsphere, vsan, nsx]
+    object: [HostSystem]
+    topic: 'Agent VMs'
+    image_type: diagram
+  - path: ../images/network-five-data-sources-and-tools.png
+    product: [vsphere, nsx]
+    object: [VirtualMachine, HostSystem, VmwareDistributedVirtualSwitch]
+    topic: 'Network data sources'
+    image_type: diagram
+  - path: ../images/nsx-edge-vm-traffic-flow-across-clusters.png
+    product: [nsx]
+    object: [VirtualMachine]
+    topic: 'NSX Edge traffic flow'
+    image_type: diagram
+  - path: ../images/network-ingress-egress-vs-receive-transmit.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'Network direction'
+    image_type: diagram
+  - path: ../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png
+    product: [vsphere]
+    object: [VirtualMachine, VmwareDistributedVirtualSwitch]
+    topic: 'Network direction'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Network > Architecture > Architecture intro; Network Observability

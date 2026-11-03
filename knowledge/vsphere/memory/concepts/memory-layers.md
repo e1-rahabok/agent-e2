@@ -91,6 +91,23 @@ related:
 - vsphere/memory/metrics/virtual-machine/ballooned
 - vsphere/memory/metrics/virtual-machine/consumed
 - vsphere/memory/metrics/host/consumed
+images:
+  - path: ../images/vm-memory-address-space-vs-esxi-backing-pages.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'Memory page mapping'
+    image_type: diagram
+  - path: ../images/memory-page-mapping-process-guest-os-vm-esxi.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'Memory page mapping'
+    image_type: diagram
+  - path: ../images/vm-memory-vm-view-vs-esxi-view-of-pages.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    metric: ['VM Memory Granted', 'ESXi Memory Consumed']
+    topic: 'Memory page mapping'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Memory > Architecture > The 4 Layers; Virtual Memory; Relationship

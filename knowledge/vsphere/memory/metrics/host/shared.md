@@ -44,6 +44,12 @@ same_meaning: []
 related:
 - vsphere/memory/metrics/virtual-machine/shared
 - vsphere/memory/concepts/large-memory-pages
+images:
+  - path: ../../images/esxi-memory-shared-common-above-half-of-shared.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Shared', 'ESXi Memory Shared Common']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Consumption Metrics > Shared

@@ -64,6 +64,7 @@ docs/                                # design decisions, To Do, legacy files (no
 3. Chunk the body by `##` heading. Files are short, so one file is often one chunk.
 4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.
 5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
+6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
 
 ### Query
 1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, what-to-check.
@@ -117,6 +118,7 @@ docs/                                # design decisions, To Do, legacy files (no
 | `same_name` | Metric files only. Ids of metrics with the same label but a different meaning. |
 | `same_meaning` | Metric files only. Ids of metrics with a different label but the same meaning. |
 | `related` | Ids to retrieve together. |
+| `images` | One entry per image linked in the body. Fields: `path` (as linked), `product`, `object`, `metric` (list of metric names shown) and/or `topic` (concept shown), `image_type` (diagram, table, timeline, distribution, scatter, screenshot), `sample` (optional: fleet size and period). The image's own tags: they can differ from the file's, e.g. an ESXi chart inside a cluster concept. |
 | `source.document` / `source.path` | Source document (with version and revision) and heading path or pages. |
 | `corrections` | Author facts not yet in the uploaded source document. Each entry names the section it affects. |
 | `review_notes` | Open questions, source URLs, and facts from Claude's own knowledge (with section names). |
@@ -136,6 +138,7 @@ docs/                                # design decisions, To Do, legacy files (no
 ## Images
 - Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains.
 - Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
+- Every image has its own tags in the file's metadata `images` list (see Metadata). The validator fails on a missing or invalid entry.
 - Every image file is linked from a knowledge file. The validator fails on an unlinked image: an unlinked image has no context for the AI.
 - File names describe what the image shows. No length limit applies (GitHub, git and Markdown accept long names); clarity wins.
   - Pattern: `<object>-<metric or topic>-<what it shows>.png`, lowercase, hyphens. Example: `esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png`.

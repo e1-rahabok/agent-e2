@@ -54,6 +54,12 @@ related:
 - vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/configuration/numa-settings
 - vsphere/cpu/concepts/vcpu-states
+images:
+  - path: ../images/physical-cpu-threads-vs-vcpu-virtual-sockets-and-cores.png
+    product: [vsphere]
+    object: [HostSystem, VirtualMachine]
+    topic: 'CPU topology'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 57-60) > CPU vs vCPU > System on a Chip; NUMA

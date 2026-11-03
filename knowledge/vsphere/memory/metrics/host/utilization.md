@@ -41,6 +41,13 @@ related:
 - vsphere/memory/metrics/host/consumed
 - vsphere/memory/metrics/virtual-machine/utilization
 - vsphere/memory/metrics/comparisons/host-memory-metrics
+images:
+  - path: ../../images/esxi-memory-utilization-vs-consumed-across-hosts.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi Memory Utilization', 'ESXi Memory Consumed']
+    image_type: table
+    sample: '192 hosts'
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Consumption Metrics > Utilization; Analysis

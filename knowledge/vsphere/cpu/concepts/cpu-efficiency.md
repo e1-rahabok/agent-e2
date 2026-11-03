@@ -67,6 +67,19 @@ related:
 - vsphere/cpu/metrics/virtual-machine/used
 - vsphere/cpu/metrics/virtual-machine/usage
 - vsphere/cpu/metrics/virtual-machine/latency
+images:
+  - path: ../images/hyper-threading-vm-cpu-used-62-5-percent-when-sibling-runs.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    metric: ['VM CPU Used']
+    topic: 'Hyper-Threading accounting'
+    image_type: diagram
+  - path: ../images/hyper-threading-two-vms-on-sibling-threads-run-idle-combinations.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    metric: ['VM CPU Run', 'VM CPU Idle']
+    topic: 'Hyper-Threading accounting'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 75-77) > CPU Efficiency

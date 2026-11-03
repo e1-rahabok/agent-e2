@@ -107,6 +107,40 @@ related:
 - vsphere/system/concepts/capacity-model
 - vsphere/memory/metrics/host/utilization
 - vsphere/memory/metrics/host/consumed
+images:
+  - path: ../images/esxi-cpu-usage-by-resource-group-system-vim-iofilters-user.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Usage', 'ESXi CPU Demand', 'ESXi Resource Group CPU Usage']
+    image_type: table
+    sample: 'top 7 of about 400 hosts'
+  - path: ../images/esxi-hypervisor-cpu-overhead-distribution-across-hosts.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Resource Group CPU Reservation']
+    topic: 'Hypervisor overhead'
+    image_type: distribution
+    sample: 'about 400 hosts'
+  - path: ../images/esxi-hypervisor-cpu-reservation-vs-use-no-correlation.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Resource Group CPU Reservation', 'ESXi Resource Group CPU Usage']
+    topic: 'Hypervisor overhead'
+    image_type: scatter
+  - path: ../images/esxi-hypervisor-memory-overhead-vs-consumed-scatter-levels.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Consumed', 'ESXi Resource Group Memory Consumed']
+    topic: 'Hypervisor overhead'
+    image_type: scatter
+    sample: '607 hosts'
+  - path: ../images/esxi-hypervisor-memory-overhead-relative-to-consumed-across-hosts.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Consumed', 'ESXi Resource Group Memory Consumed']
+    topic: 'Hypervisor overhead'
+    image_type: scatter
+    sample: '607 hosts'
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Capacity > Hypervisor; CPU > Hypervisor; Memory > Hypervisor Metrics

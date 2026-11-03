@@ -74,6 +74,22 @@ related:
 - vsphere/storage/metrics/virtual-machine/disk-space-used
 - vsphere/storage/metrics/virtual-machine/provisioned-space
 - vsphere/storage/metrics/virtual-machine/snapshot-space
+images:
+  - path: ../images/vm-snapshot-files.png
+    product: [vsphere]
+    object: [VirtualMachine, Datastore]
+    topic: 'VM snapshot'
+    image_type: screenshot
+  - path: ../images/vsan-thin-vmdk-space-used-unmapped-uncommitted-protection.png
+    product: [vsan]
+    object: [VirtualMachine, Datastore]
+    topic: 'VM disk space'
+    image_type: diagram
+  - path: ../images/vm-disk-consumption-thin-vs-thick-vs-rdm.png
+    product: [vsphere]
+    object: [VirtualMachine, Datastore]
+    topic: 'VM disk space'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Storage > VM > Capacity Metrics > VM Files; Single VMDK; All VM Files; vSphere Client UI

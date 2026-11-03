@@ -57,6 +57,35 @@ same_meaning: []
 related:
 - vsphere/network/metrics/comparisons/vm-network-metrics
 - vsphere/network/metrics/virtual-machine/packets
+images:
+  - path: ../../images/vm-network-dropped-99th-percentile-vs-max-list-view.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM Network Packets Dropped']
+    image_type: table
+    sample: '4,060 VMs'
+  - path: ../../images/vm-network-receive-vs-transmit-dropped-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Network Receive Packets Dropped', 'VM Network Transmit Packets Dropped']
+    image_type: table
+    sample: '3,938 VMs, 1 month'
+  - path: ../../images/vm-network-dropped-percent-spike-at-low-throughput.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM Network Packets Dropped (%)', 'VM Network Usage Rate']
+    image_type: timeline
+  - path: ../../images/vm-network-transmit-dropped-regular-spike-pattern.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Network Transmit Packets Dropped']
+    image_type: timeline
+    sample: '1 VM'
+  - path: ../../images/vm-network-transmit-dropped-profile.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Network Transmit Packets Dropped']
+    image_type: distribution
 source:
   document: PART 3 - Counters.docx
   path: Network > VM > Contention Metrics

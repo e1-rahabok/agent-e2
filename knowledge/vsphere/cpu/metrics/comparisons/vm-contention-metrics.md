@@ -69,6 +69,17 @@ related:
 - vsphere/cpu/metrics/virtual-machine/latency
 - vsphere/cpu/metrics/virtual-machine/contention
 - vsphere/cpu/diagnosis/vm-cpu-contention-high
+images:
+  - path: ../../images/vcenter-vm-cpu-contention-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Ready', 'VM CPU Co-stop', 'VM CPU Latency', 'VM CPU Overlap']
+    image_type: table
+  - path: ../../images/vcenter-vm-cpu-wait-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Wait', 'VM CPU Idle', 'VM CPU Swap Wait']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Contention Metrics; Wait Metrics

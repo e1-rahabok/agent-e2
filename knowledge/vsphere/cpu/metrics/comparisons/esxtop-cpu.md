@@ -111,6 +111,22 @@ related:
 - vsphere/system/concepts/esxtop
 - vsphere/cpu/concepts/power-states
 - vsphere/cpu/concepts/cpu-frequency
+images:
+  - path: ../../images/esxtop-cpu-used-above-100-while-utilization-at-100.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['esxtop %USED', 'esxtop %UTIL']
+    image_type: screenshot
+  - path: ../../images/esxtop-cpu-state-counters-composition.png
+    product: [vsphere]
+    object: [HostSystem, VirtualMachine]
+    metric: ['esxtop %RUN', 'esxtop %USED', 'esxtop %SYS', 'esxtop %OVRLP']
+    image_type: diagram
+  - path: ../../images/esxtop-power-sibling-threads-at-100-percent-with-turbo.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['esxtop %A/MPERF', 'esxtop %UTIL']
+    image_type: screenshot
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > CPU

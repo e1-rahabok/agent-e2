@@ -45,6 +45,12 @@ related:
 - vsphere/cpu/concepts/esxi-thread-core-accounting
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/cpu/metrics/host/reserved-capacity
+images:
+  - path: ../../images/esxi-cpu-demand-chart.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Demand']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact; CPU > ESXi > Demand

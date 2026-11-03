@@ -60,6 +60,23 @@ related:
 - vsphere/memory/metrics/host/granted
 - vsphere/memory/metrics/host/utilization
 - vsphere/memory/concepts/host-memory-states
+images:
+  - path: ../../images/esxi-memory-consumed-above-vm-allocated.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Consumed']
+    image_type: timeline
+  - path: ../../images/esxi-memory-system-usage-vs-consumed-host-without-vms.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory ESX System Usage', 'ESXi Memory Consumed']
+    image_type: timeline
+    sample: '1 host, 0 VMs'
+  - path: ../../images/esxi-memory-consumed-equals-vm-consumed-plus-kernel.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Consumed']
+    image_type: screenshot
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship; Memory > ESXi > Consumption Metrics > Consumed

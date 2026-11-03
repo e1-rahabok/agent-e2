@@ -49,6 +49,12 @@ related:
 - vsphere/cpu/metrics/virtual-machine/other-wait
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/cpu/diagnosis/vm-cpu-contention-high
+images:
+  - path: ../../images/vm-cpu-contention-components-overlap-costop-ready-other-wait.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM CPU Contention']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Contention Metrics > Contention

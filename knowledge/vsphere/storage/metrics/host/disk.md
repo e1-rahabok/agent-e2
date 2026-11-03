@@ -49,6 +49,13 @@ related:
 - vsphere/storage/concepts/esxi-storage-latency-stack
 - vsphere/memory/concepts/memory-tiering
 - vsphere/storage/metrics/host/adapter-and-path
+images:
+  - path: ../../images/nvme-memory-tier-device-high-latency-at-near-zero-io.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Disk Device Latency']
+    topic: 'Memory tiering'
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Storage > ESXi > Disk or Device

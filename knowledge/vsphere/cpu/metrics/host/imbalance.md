@@ -50,6 +50,17 @@ related:
 - vsphere/cpu/metrics/host/core-utilization
 - vsphere/cpu/metrics/host/utilization
 - vsphere/cpu/metrics/host/peak-core-usage
+images:
+  - path: ../../images/esxi-cpu-imbalance-core-utilization-vs-thread-utilization-best-and-worst.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi CPU Imbalance', 'ESXi CPU Core Utilization', 'ESXi CPU Utilization']
+    image_type: diagram
+  - path: ../../images/esxi-cpu-imbalance-score-by-running-cores-and-threads.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi CPU Imbalance']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Imbalance

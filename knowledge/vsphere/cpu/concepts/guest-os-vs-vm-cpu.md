@@ -117,6 +117,22 @@ related:
 - vsphere/cpu/metrics/virtual-machine/wait
 - vsphere/cpu/metrics/virtual-machine/usage
 - vsphere/cpu/metrics/virtual-machine/latency
+images:
+  - path: ../images/guest-os-cpu-vs-vm-vcpu-vs-vm-layers.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'Guest OS vs VM'
+    image_type: diagram
+  - path: ../images/guest-os-vs-vm-cpu-counter-visibility.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'Guest OS vs VM'
+    image_type: diagram
+  - path: ../images/guest-os-cpu-states-mapped-to-vm-vcpu-states.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'vCPU states'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 52-55) > Guest OS vs VM

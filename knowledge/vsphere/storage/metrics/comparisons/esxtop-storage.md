@@ -97,6 +97,12 @@ related:
 - vsphere/system/concepts/esxtop
 - vsphere/storage/metrics/host/disk
 - vsphere/storage/metrics/host/adapter-and-path
+images:
+  - path: ../../images/esxtop-disk-adapter-vs-disk-device-metric-groups.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'esxtop storage'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > Storage

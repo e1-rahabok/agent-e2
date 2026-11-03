@@ -25,6 +25,13 @@ product: [vsphere]                           # vsphere | vsan | nsx | vcf-operat
 object: [VirtualMachine, HostSystem]         # vSphere managed object types; omit if none
 internal_derive: []                          # ids of other knowledge-base files this file is derived from (internal links only)
 related: []                                  # ids to retrieve together
+images:  # one entry per image linked in the body; omit when none
+  - path: ../../images/<name>.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['<metric name>']   # and/or topic: '<concept>'
+    image_type: timeline         # diagram, table, timeline, distribution, scatter, screenshot
+    sample: '<optional: fleet size and period>'
 source:
   document: <document name, version, revision>
   path: <heading path and pages>

@@ -64,6 +64,13 @@ same_meaning: []
 related:
 - vsphere/system/metrics/virtual-machine/vm-performance
 - vsphere/system/metrics/virtual-machine/guest-os-performance
+images:
+  - path: ../../images/vm-disk-latency-20-second-peak-vs-300-second-average.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Disk Latency']
+    topic: '20-second peak vs 5-minute average'
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics'

@@ -118,6 +118,32 @@ related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/idle
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
+images:
+  - path: ../images/esxi-cpu-one-core-two-threads-thread-vs-core-utilization.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Utilization', 'ESXi CPU Core Utilization']
+    image_type: diagram
+  - path: ../images/esxi-cpu-two-core-host-thread-and-core-utilization-rollup.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Utilization', 'ESXi CPU Core Utilization']
+    image_type: table
+  - path: ../images/esxi-cpu-utilization-vs-used-per-thread-6-scenarios-2-core-host.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Utilization', 'ESXi CPU Used']
+    image_type: table
+  - path: ../images/esxi-cpu-used-vs-utilization-power-saving-and-turbo.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Used', 'ESXi CPU Utilization']
+    image_type: diagram
+  - path: ../images/cpu-metrics-time-taken-vs-work-done-vm-and-esxi.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'CPU time-based vs work-based metrics'
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Core vs Thread; Thread Utilization; Used | Usage; Summary

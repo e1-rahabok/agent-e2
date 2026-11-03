@@ -52,6 +52,13 @@ related:
 - vsphere/cpu/concepts/windows-cpu-scheduling
 - vsphere/cpu/metrics/virtual-machine/guest-run-queue
 - vsphere/cpu/metrics/virtual-machine/usage-disparity
+images:
+  - path: ../../images/guest-os-context-switch-rate-distribution-across-vms.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS CPU Context Switch Rate']
+    image_type: distribution
+    sample: '11,372 VMs'
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > CPU > Context Switch

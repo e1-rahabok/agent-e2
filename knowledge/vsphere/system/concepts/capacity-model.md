@@ -127,6 +127,22 @@ related:
 - vsphere/system/concepts/hypervisor-overhead
 - vsphere/cpu/concepts/cpu-capacity
 - vsphere/memory/concepts/memory-capacity
+images:
+  - path: ../images/cluster-overcommit-ratio-excludes-buffer.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    topic: 'Capacity model'
+    image_type: diagram
+  - path: ../images/capacity-projection-vs-percentile.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    topic: 'Capacity model'
+    image_type: diagram
+  - path: ../images/cluster-total-vs-usable-capacity.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    topic: 'Capacity model'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Capacity > Key Metrics; Projected Metrics; Cluster Capacity

@@ -55,6 +55,12 @@ related:
 - vsphere/system/concepts/capacity-model
 - vsphere/system/concepts/hypervisor-overhead
 - vsphere/cpu/metrics/host/core-utilization
+images:
+  - path: ../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'CPU capacity'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Capacity > CPU

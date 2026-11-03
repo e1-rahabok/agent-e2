@@ -81,6 +81,12 @@ related:
 - vsphere/system/metrics/virtual-machine/vm-performance
 - vsphere/system/metrics/virtual-machine/guest-os-performance
 - vsphere/system/metrics/comparisons/peak-20-second-metrics
+images:
+  - path: ../images/guest-os-and-vm-performance-kpi-metrics.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM Performance', 'Guest OS Performance']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > Approach; Metrics Not Used; Implementation'

@@ -91,6 +91,12 @@ related:
 - vsphere/cpu/metrics/virtual-machine/system
 - vsphere/cpu/metrics/virtual-machine/overlap
 - vsphere/cpu/diagnosis/run-vs-used-gap
+images:
+  - path: ../../images/vm-cpu-used-vs-run-overlap-and-system.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Used', 'VM CPU Run', 'VM CPU Overlap', 'VM CPU System']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Fair Share Scheduler; CPU Efficiency; CPU > VM (pp. 78-118) > Consumption Metrics > Used | Usage > Used

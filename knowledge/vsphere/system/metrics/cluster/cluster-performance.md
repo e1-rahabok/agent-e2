@@ -75,6 +75,12 @@ related:
 - vsphere/system/concepts/cluster-utilization-vs-contention
 - vsphere/system/metrics/cluster/cluster-sla-sli
 - vsphere/system/metrics/virtual-machine/vm-performance
+images:
+  - path: ../../images/cluster-performance-thresholds-table.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster Performance']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Performance > Cluster Performance (%)

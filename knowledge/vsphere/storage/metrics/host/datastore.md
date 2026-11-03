@@ -37,6 +37,12 @@ same_meaning: []
 related:
 - vsphere/storage/metrics/virtual-machine/datastore
 - vsphere/storage/metrics/host/disk
+images:
+  - path: ../../images/datastore-latency-vs-latency-observed-by-vms.png
+    product: [vsphere]
+    object: [Datastore, VirtualMachine]
+    metric: ['Datastore Latency', 'VM Disk Latency']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Storage > ESXi > Datastore

@@ -30,6 +30,13 @@ related:
 - vsphere/memory/metrics/host/swap-used
 - vsphere/memory/metrics/virtual-machine/compressed
 - vsphere/memory/concepts/swap-and-compression
+images:
+  - path: ../../images/esxi-memory-compressed-flat-for-1-year.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Compressed']
+    image_type: timeline
+    sample: '1 host, 1 year'
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Overview; Swap + Compress

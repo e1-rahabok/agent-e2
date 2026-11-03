@@ -38,6 +38,12 @@ same_meaning: []
 related:
 - vsphere/network/metrics/virtual-machine/throughput
 - vsphere/network/metrics/virtual-machine/packets-dropped
+images:
+  - path: ../../images/network-packets-transmitted-excludes-dropped.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Network Packets Transmitted', 'VM Network Transmit Packets Dropped']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Network > VM > Overview; Consumption Metrics

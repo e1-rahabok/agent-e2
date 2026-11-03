@@ -53,6 +53,12 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/network/metrics/host/packets-dropped
+images:
+  - path: ../../images/vcenter-esxi-network-error-counters-table.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Network Error Packets', 'ESXi Network Unknown Protocol Frames']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Network > ESXi > Contention Metrics > Error Metrics; esxcli

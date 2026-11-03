@@ -39,6 +39,12 @@ related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/imbalance
 - vsphere/cpu/concepts/esxi-thread-core-accounting
+images:
+  - path: ../../images/esxi-cpu-three-threads-above-90-percent-on-lightly-loaded-host.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi Peak CPU Core Usage']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Thread Utilization > Peak Core CPU Usage

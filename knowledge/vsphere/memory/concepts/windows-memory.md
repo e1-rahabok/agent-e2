@@ -96,6 +96,35 @@ related:
 - vsphere/memory/metrics/virtual-machine/utilization
 - vsphere/system/concepts/guest-os-sizing
 - vsphere/system/metrics/virtual-machine/guest-os-performance
+images:
+  - path: ../images/windows-memory-categories-diagram.png
+    product: [windows]
+    object: [VirtualMachine]
+    topic: 'Windows memory categories'
+    image_type: diagram
+  - path: ../images/windows-memory-in-use-with-compressed-pages.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Memory In Use', 'Guest OS Memory Compressed']
+    image_type: screenshot
+  - path: ../images/windows-memory-standby-normal-swings-on-exchange-server.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Memory Standby Normal', 'Guest OS Memory Standby Core', 'Guest OS Memory Standby Reserve']
+    image_type: timeline
+    sample: '1 VM'
+  - path: ../images/windows-memory-page-out-99th-percentile-distribution-across-vms.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Memory Page Out']
+    image_type: distribution
+    sample: '3,325 VMs, 4 months'
+  - path: ../images/windows-memory-page-in-vs-page-out-average-across-vms.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Memory Page In', 'Guest OS Memory Page Out']
+    image_type: table
+    sample: 'about 3,000 VMs'
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > Memory

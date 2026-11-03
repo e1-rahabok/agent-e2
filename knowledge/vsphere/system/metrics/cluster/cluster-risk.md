@@ -67,6 +67,12 @@ related:
 - vsphere/cpu/metrics/host/imbalance
 - vsphere/system/concepts/cluster-operations
 - vsphere/cpu/concepts/cpu-capacity
+images:
+  - path: ../../images/cluster-risk-thresholds-table.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster Risk']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM

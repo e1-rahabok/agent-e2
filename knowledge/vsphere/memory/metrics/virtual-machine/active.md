@@ -50,6 +50,12 @@ same_meaning: []
 related:
 - vsphere/memory/metrics/virtual-machine/consumed
 - vsphere/memory/metrics/virtual-machine/usage
+images:
+  - path: ../../images/vm-memory-active-falls-while-consumed-rises.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Active', 'VM Memory Consumed']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Consumption Metrics > Active; Consumed vs Active
