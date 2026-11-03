@@ -6,6 +6,7 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
+  - vsphere/foundations/vm-vs-guest-os
   - vsphere/cpu/metrics/comparisons/vm-contention-metrics
   - vsphere/cpu/metrics/virtual-machine/ready
   - vsphere/cpu/metrics/virtual-machine/co-stop
@@ -40,4 +41,5 @@ Omitting Overlap or Other Wait; including Demand as a contention counter.
 - G is wrong: Demand is an internal counter (the key says it is affected by Hyper-Threading).
 
 ## Notes
-- The knowledge base describes Demand as what utilization would be with no contention, including no Hyper-Threading loss (`vsphere/cpu/metrics/virtual-machine/demand`). The key's reason for G may conflict. Open question Q035 in docs/author-questions.md.
+- Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: `vsphere/foundations/vm-vs-guest-os`, section Two realms.
+- Trap: applying a Guest OS-realm statement to a VM-realm counter.

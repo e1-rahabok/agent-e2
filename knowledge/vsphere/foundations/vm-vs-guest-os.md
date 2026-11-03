@@ -16,6 +16,13 @@
 - Resources consumed by the Guest OS ≠ resources consumed by the VM. Power management and CPU SMT add to the difference.
 - See `vsphere/foundations/visibility-layers` for what each layer can and cannot see.
 
+## Two realms
+- VM (virtual motherboard) and Guest OS are 2 different realms. Each has its own kernel and its own metrics.
+- The VM realm is managed by the VMkernel. It sees physical cores, physical threads, frequency and other VMs.
+- The Guest OS realm is managed by Windows or Linux. It sees only vCPUs. It does not see physical threads, so it is unaware of Hyper-Threading.
+- A statement about one realm does not transfer to the other. Example: Guest OS CPU Usage is not Hyper-Threading aware; VM CPU Usage and VM CPU Demand are, because they live in the VM realm.
+- Before comparing two metrics, place each in its realm. Mixing realms gives contradictory answers.
+
 ## Availability: VM
 - The virtual motherboard is unavailable in only two states:
 
@@ -42,6 +49,7 @@
 ## Traps
 - "Guest OS crashed, so the VM is down" → wrong. The VM is available while BIOS runs; the Guest OS is unavailable.
 - Asking for VM process or thread counts → wrong layer. Those are Guest OS metrics.
+- "Demand is not affected by Hyper-Threading because the Guest OS cannot see threads" → mixes realms. Demand is a VM-realm kernel counter; the VMkernel sees threads.
 
 ## Metadata
 ```yaml
@@ -71,6 +79,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?
 corrections: []
-review_notes: []
+review_notes:
+- "Section 'Two realms': author (2026-11-03), answer to Q035."
 status: draft
 ```

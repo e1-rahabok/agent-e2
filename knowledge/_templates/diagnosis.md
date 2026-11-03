@@ -1,7 +1,22 @@
 # <Symptom or question>
 
+## Symptom
+- What is observed, on which object.
+
+## Flow
+```mermaid
+flowchart TD
+  S1[1. <metric> above <threshold>?] -->|yes| S2[2. <next check>]
+  S1 -->|no| S4[4. <next check>]
+```
+![<what the author's diagram shows>](../../images/<name>.png)
+
 ## Checks, in order
-1. Contention metrics first, then consumption, then context.
+1. <Metric> (<object>). <Threshold, with source> → step 2. Otherwise → step 4.
+2. Contention metrics first, then consumption, then context.
+
+## Why this order
+- <Reason for each step's position.>
 
 ## How to read the result
 - Value pattern → meaning → next check.

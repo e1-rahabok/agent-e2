@@ -57,6 +57,23 @@
 ## All-Core Turbo
 - A loaded CPU runs above base frequency: more capacity than vSphere shows.
 - All-Core Turbo is not always exposed via the CPU API.
+- A CPU rarely runs at base clock. Under load it spends most of its time at All-Core Turbo.
+- All-Core Turbo is the frequency every core can hold at the same time. Single-Core Turbo is reached only when few cores are active and the rest are idle.
+- Turbo works under the Balanced policy too. Balanced also reaches Max Turbo, and is likely to, because power per core is more flexible.
+- Balanced does not mean lower performance for every workload. Most workloads suit it.
+
+## Likely vCPU speed on a busy cluster
+- Scenario: many cores busy, most running 2 threads, Balanced policy, OS Controlled BIOS.
+- Starting point: All-Core Turbo, not base and not Single-Core Turbo.
+- Hyper-Threading delivers 1.25x per core in total. Each vCPU on a shared core realistically gets 80% (1 / 1.25) of All-Core Turbo.
+- Formula: likely vCPU speed = All-Core Turbo × 0.8.
+- Example: base 2.0 GHz, All-Core Turbo 3.0 GHz, Single-Core Turbo 4.0 GHz → about 2.4 GHz, as reported by VM CPU Usage (MHz).
+- Base 2.0 GHz understates it. 3.0 GHz ignores Hyper-Threading: VM CPU Usage is Hyper-Threading aware. 4.0 GHz does not apply while most cores are busy.
+
+## TDP
+- TDP is Thermal Design Power, not maximum power draw.
+- Intel definition: the average power the processor dissipates at Base Frequency with all cores active, under an Intel-defined high-complexity workload.
+- Power and frequency are not linear. At Single-Core Turbo, total power can be below TDP because the other cores are idle.
 
 ## Impacts on ESXi
 ![Core Utilization vs actual usage with 20% All-Core Turbo](../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png)
@@ -78,6 +95,9 @@
 - "Turbo can be turned off in ESXi" → no direct setting. Use the power policy or BIOS.
 - "BIOS static high performance means no Turbo" → Turbo was observed at 129% (%A/MPERF).
 - "All cores run at the same frequency" → frequency is per core and changes with load.
+- "A busy vCPU runs at base speed" → it runs near All-Core Turbo; with Hyper-Threading, about 80% of it.
+- "TDP is the maximum power the CPU draws" → TDP is thermal design power at base frequency.
+- "Only High Performance reaches Max Turbo" → Balanced reaches it too.
 - "Usage (%) above Core Utilization means a problem" → the gap is Turbo.
 - "Usage (%) at 100% means the host is at its limit" → the metric is capped. Actual usage can be higher due to Turbo.
 
@@ -123,5 +143,7 @@ review_notes:
 - "Section 'Turbo': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html"
 - "Section 'Three speeds': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book)."
 - "Section 'All-Core Turbo': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party)."
+- "Sections 'All-Core Turbo', 'Likely vCPU speed on a busy cluster', 'TDP': author (2026-11-03), quiz answers CPU Q2 and Q4 (vSphere Metric Quiz.docx). Author confirmed 2.4 GHz (All-Core Turbo x 80%) in Q034."
+- "Section 'Likely vCPU speed on a busy cluster': `vsphere/cpu/metrics/virtual-machine/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written."
 status: draft
 ```

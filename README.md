@@ -85,6 +85,20 @@ docs/                                # design decisions, To Do, legacy files (no
 ### Measurement
 - `evaluation/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.
 
+## Troubleshooting flow diagrams
+- Location: the `diagnosis/` folder of the technology. A flow across technologies goes in `knowledge/vsphere/system/diagnosis/`.
+- One flow per file. Order: symptom, Mermaid flowchart, numbered steps, why this order, traps, metadata.
+- The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
+- Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
+  - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.
+- Every metric named in a step is linked in `internal_derive`, so retrieval brings in the metric files with the flow.
+- Mermaid node text repeats the step number: `S1[1. VM CPU Ready above threshold?]`. Step numbers tie the chart to the text.
+- Keep each flowchart to about 15 nodes. Split a larger flow into linked diagnosis files.
+- draw.io files are not read by the LLM: the XML is mostly layout and style, and compressed files are unreadable.
+  - Keep the `.drawio` file and an exported `.png` in `knowledge/vsphere/<technology>/images/` as the editable source.
+  - Link the `.png` under the flowchart and tag it in `images` (`image_type: diagram`).
+  - The Mermaid chart and numbered steps are the content the LLM uses.
+
 ## Indexing rules
 - Index: `knowledge/**/*.md`.
 - Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, this README, `CLAUDE.md`.
