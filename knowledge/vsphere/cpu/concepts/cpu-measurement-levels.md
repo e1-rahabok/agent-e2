@@ -1,7 +1,7 @@
 # CPU measurement levels: vCPU, thread, core
 
 ## ESXi is not VM + kernel
-![VM sees 2 vCPUs; ESXi sees 1 core with 2 threads](../images/vm-vs-esxi-view.png)
+![VM sees 2 vCPUs; ESXi sees 1 core with 2 threads](../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png)
 - VM and ESXi metrics come from different vantage points. They measure different things.
 - So an ESXi CPU counter is not the sum of its VM counters plus the kernel.
 - VM: consumer view. It sees the virtual layer. Example: 2 vCPUs, unaware of Hyper-Threading.
@@ -11,7 +11,7 @@
 - The kernel has the highest priority. It practically does not experience contention.
 
 ## Three levels
-![Measurement at vCPU, thread and core level](../images/vcpu-thread-core-levels.png)
+![Measurement at vCPU, thread and core level](../images/cpu-measurement-at-vcpu-thread-core-level.png)
 | Level | Side | Behaviour |
 |---|---|---|
 | VM vCPU | Consumer | When it does not get the runtime it demands, the gap is accounted. Hence Ready and Co-stop. |
@@ -25,13 +25,13 @@
 - Read the context before deciding which side a thread is on.
 
 ## Frequency and efficiency
-![Usage and Usage (MHz) seen from vCPU, thread and core perspective](../images/usage-by-perspective.png)
+![Usage and Usage (MHz) seen from vCPU, thread and core perspective](../images/cpu-usage-and-usage-mhz-from-vcpu-thread-core-perspective.png)
 - A running core can run at different frequency and efficiency.
 - Usage (MHz) captures this. Read "Usage" as throughput: cycles completed.
 - Two threads sharing a core run in parallel. Each thread adds up to 100%. The core adds up to 100%. This is the source of confusion.
 
 ## Capacity vs performance
-![Capacity and performance metrics for vCPU, core and socket](../images/capacity-vs-performance.png)
+![Capacity and performance metrics for vCPU, core and socket](../images/cpu-capacity-vs-performance-metrics-at-vcpu-core-socket-level.png)
 | Level | Capacity management | Performance management |
 |---|---|---|
 | VM vCPU | Running + cannot run + idling = 100%. | Unit is GHz, not %. 100% cannot be defined: it is volatile. |

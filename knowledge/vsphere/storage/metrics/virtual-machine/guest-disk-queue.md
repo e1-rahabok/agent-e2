@@ -20,8 +20,8 @@
 - 3,000 VMs, 3 months: about 70% below 10; about 10% above 100.
 - Some values are extreme (spikes above 1,000). Guest queues are rarer than latency spikes.
 - 20-second peak about 200-250 while the 5-minute average stays above 125: volatile, not sustained.
-![Guest disk queue distribution across 3,000 VMs](../../images/guest-disk-queue-distribution-3000-vms.png)
-![Guest queue spikes with good VM latency](../../images/guest-queue-vs-vm-latency.png)
+![Guest disk queue distribution across 3,000 VMs](../../images/guest-os-disk-queue-distribution-across-vms.png)
+![Guest queue spikes with good VM latency](../../images/guest-os-disk-queue-spikes-while-vm-disk-latency-good.png)
 
 ## Guest OS storage questions
 | Area | Required data |

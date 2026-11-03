@@ -5,7 +5,7 @@
 - Problems can be microbursts. A 5-minute average hides them.
 - The 20-second peak is 15x sharper. Example: 10,370 ms disk latency at 20-second peak vs 257 ms at 300-second average.
 - The gap can exceed 15x: one or two bursts far above the average, and many sets (a VM with 20 virtual disks has 40 sets × 15 points = 600 values; the peak is the highest).
-![20-second peak vs 300-second average disk latency](../../images/peak-20s-vs-300s-latency.png)
+![20-second peak vs 300-second average disk latency](../../images/vm-disk-latency-20-second-peak-vs-300-second-average.png)
 
 ## Design (VCF Operations 8.3 and later)
 - A new metric, not a replacement. The 5-minute average stays for SLAs; the peak is an early warning toward the SLA.

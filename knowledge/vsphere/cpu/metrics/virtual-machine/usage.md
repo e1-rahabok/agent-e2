@@ -44,7 +44,7 @@ Usage (%) = (sum of Usage (MHz) of each vCPU + VM-level load) / VM static CPU sp
 ## Usage vs Run at scale
 - 1,102 VMs with Usage above 2 GHz and above 50%: Usage tends to be 25% higher than Run.
 - VMs with Usage above 90% and Run below 90% are likely to be upsized without reason.
-![Usage vs Run across 1,102 VMs](../../images/usage-vs-run-1102-vms.png)
+![Usage vs Run across 1,102 VMs](../../images/vm-cpu-usage-vs-run-scatter-across-vms.png)
 
 ## Traps
 - "VM shows 62.5%, so the metric is wrong" → wrong. Different vantage point from the host.

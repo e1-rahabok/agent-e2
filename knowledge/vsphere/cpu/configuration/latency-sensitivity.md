@@ -79,7 +79,7 @@
 - The usual relationship between Run and Used does not hold: a physical core is carved out for the VM.
 - System and Ready are not affected.
 - Memory counters do not change: a fully reserved 4 GB idle VM showed no change. Memory is storage; counters rise only when used.
-![Run and Demand at 100%, Wait at 0%, Usage unchanged](../images/latency-sensitivity-run-demand-wait-usage.png)
+![Run and Demand at 100%, Wait at 0%, Usage unchanged](../images/latency-sensitivity-high-vm-cpu-run-demand-100-wait-0.png)
 
 ## Traps
 - "High latency sensitivity is free" → it removes the physical cores from the pool for other VMs and VMkernel worlds.

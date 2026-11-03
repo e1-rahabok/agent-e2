@@ -18,7 +18,7 @@
 | Allocation | Highest ESXi memory overcommit ratio | 1 | 1-1.4 | 1.4-1.6 | 1.6-2.0 |
 | Monster VM | CPU monster VM : host ratio | 0 | 1 | 2 | 4 |
 | Monster VM | Memory monster VM : host ratio | 0 | 1 | 2 | 4 |
-![Cluster Risk thresholds](../../images/cluster-risk-thresholds.png)
+![Cluster Risk thresholds](../../images/cluster-risk-thresholds-table.png)
 
 ## Reasons
 - CPU reservation is against base clock speed: All-Core Turbo is unknown.

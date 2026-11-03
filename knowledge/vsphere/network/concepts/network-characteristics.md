@@ -35,7 +35,7 @@
 - Compute overhead is low: around 10% even with vSAN.
 - Network overhead is high: mass vMotion, Storage vMotion and cloning on IP storage, vSAN. Non-VM traffic can take most of the bandwidth.
 - Example: VM traffic has 100 of 500 NIOC shares: overhead can reach 80%.
-![VM traffic has 100 of 500 shares](../images/nioc-vm-100-of-500-shares.png)
+![VM traffic has 100 of 500 shares](../images/nioc-vm-traffic-100-of-500-shares.png)
 
 ## Coarse allocation
 - vNIC speed cannot be set. It takes the speed of the vmnic behind the port group: 1, 10 or 25 GbE (with the right vNIC driver).

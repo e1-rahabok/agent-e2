@@ -6,7 +6,7 @@
 - 90% for core, not 100%: sustained 100% for 300 s is too late, and NUMA keeps some cores busy while others idle.
 - 80% for thread, not lower: lower would include hosts that still have many idle threads.
 - Focus is imbalance at high utilization. Imbalance at low utilization is not operationally important.
-![High and low hosts in a cluster](../../images/cluster-high-low-hosts.png)
+![High and low hosts in a cluster](../../images/cluster-cpu-imbalance-count-of-high-vs-low-utilization-hosts.png)
 
 ## Formula
 ```text
@@ -24,7 +24,7 @@ Imbalance = High hosts / Low hosts
 | Green (good) | Utilized and balanced. | 0 |
 | Grey (waste) | Low hosts, no high host. Underutilized. | -1, -2, ... (whole numbers) |
 - Pink can reach 63: maximum 64 hosts minus 1 low host.
-![Imbalance colours for a 6-host cluster](../../images/cluster-imbalance-colors-6-hosts.png)
+![Imbalance colours for a 6-host cluster](../../images/cluster-cpu-imbalance-score-colors-for-6-host-cluster.png)
 
 ## Limitation
 - Summarizing loses detail: 1 high over 2 low and 4 high over 8 low both give 0.5.

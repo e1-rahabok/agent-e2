@@ -21,7 +21,7 @@
 - Active is lower than Consumed and Guest OS Used: those two measure space held, including inactive pages.
 - Active can fall while Consumed rises.
 - Active is sampled. It can stay constant when it should not, and can stay at 100% for hours (see `vsphere/memory/concepts/guest-os-vs-vm-memory`).
-![Active falls while Consumed rises](../../images/active-down-consumed-up.png)
+![Active falls while Consumed rises](../../images/vm-memory-active-falls-while-consumed-rises.png)
 
 ## Traps
 - "Active = VM memory utilization" → it is a sampled estimate for the kernel.

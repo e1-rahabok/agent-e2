@@ -27,7 +27,7 @@
 - Average utilization 12%, Usage Disparity above 100%.
 - Per-vCPU plot: only the first vCPU was busy. Likely a uniprocessor kernel, compiled without SMP support.
 - Above 100%: Turbo.
-![Only the first vCPU is busy; the others are near 0](../../images/usage-disparity-single-vcpu-busy.png)
+![Only the first vCPU is busy; the others are near 0](../../images/vm-cpu-usage-disparity-only-first-vcpu-busy.png)
 
 ## Traps
 - "Disparity means the guest is broken" → it is an observation, not a diagnosis.

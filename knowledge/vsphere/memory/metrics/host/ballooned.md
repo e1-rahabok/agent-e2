@@ -11,7 +11,7 @@
 - Balloon is slower to act than swap and compress and works at a different layer. Host balloon can be 0 while swap and compress exist.
 - Consumed drops when balloon rises: ballooned pages are no longer backed by ESXi pages.
 - Balloon does not mean contention. Example: constant, significant balloon for 7 days; worst VM contention below 1%; most of 19 VMs had none.
-![Host balloon for 7 days with almost no VM contention](../../images/esxi-balloon-no-contention.png)
+![Host balloon for 7 days with almost no VM contention](../../images/esxi-memory-balloon-7-days-without-vm-contention.png)
 
 ## Traps
 - "Host balloon means VMs are slow" → check Max VM Memory Contention.

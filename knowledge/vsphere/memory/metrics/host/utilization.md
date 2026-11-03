@@ -15,7 +15,7 @@ Utilization = sum of running VM Utilization + kernel reservation
 
 ## Observed values
 - 192 hosts, 6,840 VMs: Utilization was 122 GB lower than Consumed on average. Including Shared Common, the gap is 152 GB.
-![Utilization vs Consumed across 192 hosts](../../images/esxi-utilization-vs-consumed-192-hosts.png)
+![Utilization vs Consumed across 192 hosts](../../images/esxi-memory-utilization-vs-consumed-across-hosts.png)
 
 ## Traps
 - "Utilization = Consumed" → it removes cache and inactive pages via guest metrics.

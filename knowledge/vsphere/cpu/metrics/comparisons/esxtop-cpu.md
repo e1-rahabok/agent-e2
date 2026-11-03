@@ -7,14 +7,14 @@
 - Used (%) maps to vSphere Client Usage (%); Utilization (%) maps to Utilization (%).
 - PCPU = hardware execution context: a core with SMT off, a thread with SMT on. Not a socket. 10 cores × 2 threads = 20 PCPUs.
 - Each line ends with per-NUMA-node averages and AVG for the whole host: spots an overloaded NUMA node.
-![Used (%) above 100% while Utilization stays at 100%](../../images/esxtop-cpu-summary-used-vs-util.png)
+![Used (%) above 100% while Utilization stays at 100%](../../images/esxtop-cpu-used-above-100-while-utilization-at-100.png)
 
 ## Detail table (consumer view)
 - Mixes VM and non-VM worlds. Non-VM worlds have Ready but no VM Wait.
 - The system group shows high Ready because it contains the idle thread.
 
 ## State counters
-![How esxtop CPU state counters compose](../../images/esxtop-cpu-state-composition.png)
+![How esxtop CPU state counters compose](../../images/esxtop-cpu-state-counters-composition.png)
 | Counter | Meaning |
 |---|---|
 | %USED | Not a state: affected by power management and Hyper-Threading. |
@@ -69,7 +69,7 @@
 | %CState, %PState, %TState | Time in each state. |
 | %A/MPERF | Actual / nominal performance. Above 100%: Turbo. Below: power saving. Valid only in C0. Per PCPU, not per vCPU. Since ESXi 6.5; not in vSphere Client. |
 - Example: PCPU 10 and 11 share core 6, both Utilization 100%, %A/MPERF 130%, C0 and P0. Used shows 63.0% and 62.9%: Used adds to 100% per core (50% per thread) × 130% Turbo = 65%.
-![Two sibling threads at 100% utilization with Turbo](../../images/esxtop-power-pcpu-turbo.png)
+![Two sibling threads at 100% utilization with Turbo](../../images/esxtop-power-sibling-threads-at-100-percent-with-turbo.png)
 
 ## Interrupts
 | Counter | Meaning |

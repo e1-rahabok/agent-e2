@@ -53,7 +53,7 @@
 - Storage: above 200K IOPS: kernel above 10 GHz.
 - Reservation is stable; usage fluctuates every 20 s and exceeds reservation at high load. Maximum limited stays flat: kernel processes have no limit.
 - host/system CPU reservation is low; host/vim about 6.6 GHz. Across about 400 hosts: mostly 6-10 GHz, usually stable.
-![No predictable relation between hypervisor reservation, hypervisor use and total use](../images/hypervisor-cpu-no-correlation.png)
+![No predictable relation between hypervisor reservation, hypervisor use and total use](../images/esxi-hypervisor-cpu-reservation-vs-use-no-correlation.png)
 
 ## Memory metrics
 - Roll-ups are Latest and stat type Absolute: memory is space.
@@ -64,7 +64,7 @@
 - Reservation stays steady even when kernel use drops 90% (40 GB to single digits), and when all VMs are gone.
 - Actual use: stack Resource Memory Consumed per group; system dwarfs the others.
 - Memory | VMkernel consumed covers host/system only, not vSAN.
-![Kernel memory overhead relative to consumed, 607 hosts](../images/kernel-memory-relative-607-hosts.png)
+![Kernel memory overhead relative to consumed, 607 hosts](../images/esxi-hypervisor-memory-overhead-relative-to-consumed-across-hosts.png)
 
 ## Recommended static values (book)
 | Stack | CPU (at 2.5 GHz) | Memory |

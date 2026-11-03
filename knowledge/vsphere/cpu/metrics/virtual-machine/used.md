@@ -36,7 +36,7 @@ Used (vCPU) = Run - Overlap ± E
   - Turbo Boost gain. Can be 50% more when other cores in the socket are idle.
   - power-saving loss. Frequency at 40% of nominal: 60% of the CPU time counts as stolen.
   - SMT loss: 37.5%. ESXi records Hyper-Threading as 1.25x per core, so each thread gets 62.5%.
-![Used vs Run: Overlap removed, System added, adjusted for HT and frequency](../../images/used-vs-run-overlap-system.png)
+![Used vs Run: Overlap removed, System added, adjusted for HT and frequency](../../images/vm-cpu-used-vs-run-overlap-and-system.png)
 
 ## Worlds charged to the VM
 | World | Work | Size |

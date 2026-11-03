@@ -18,8 +18,8 @@
 - Used accounts for the shared core.
 
 ## Worked example
-![What VM A gets: 62.5% when VM B also runs, 100% otherwise](../images/ht-used-allocation.png)
-![Two VMs on sibling threads: four Run and Idle combinations](../images/ht-run-idle-combinations.png)
+![What VM A gets: 62.5% when VM B also runs, 100% otherwise](../images/hyper-threading-vm-cpu-used-62-5-percent-when-sibling-runs.png)
+![Two VMs on sibling threads: four Run and Idle combinations](../images/hyper-threading-two-vms-on-sibling-threads-run-idle-combinations.png)
 - 2 VMs share one physical core. Each runs on one thread.
 - 4 combinations are possible: both run, only A runs, only B runs, both idle.
 - Each VM runs half the time. Half of VM A's runtime overlaps with VM B.

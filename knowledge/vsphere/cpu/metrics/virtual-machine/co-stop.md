@@ -10,7 +10,7 @@
 - Reason: keep the vCPUs close enough in progress to prevent a Guest OS crash.
 - Typical chain: one vCPU hits Ready. The others are co-stopped until all vCPUs are co-started.
 - The co-stopped vCPUs stop even when physical threads are free for them.
-![vCPU 0 hits Ready first; the other 7 vCPUs are co-stopped afterwards](../../images/vcpu0-ready-siblings-costop.png)
+![vCPU 0 hits Ready first; the other 7 vCPUs are co-stopped afterwards](../../images/vm-cpu-vcpu0-ready-causes-sibling-vcpus-costop.png)
 
 ## Scope
 - Applies only to multi-vCPU (SMP) VMs. The Guest OS kernel runs parallel threads.
@@ -31,7 +31,7 @@
 - Observation: 2,429 production VMs, highest Co-stop per VM over 3 months (26,298 data points each). 97.69% of VMs stayed below 0.5%. 0.82% were 0.5-1%. 1.48% were 1-10%.
 - Co-stop tends to be smaller than Ready.
 - Ready and Co-stop may or may not correlate with Usage.
-![Distribution of the highest Co-stop per VM across 2,429 VMs](../../images/costop-max-distribution-2429-vms.png)
+![Distribution of the highest Co-stop per VM across 2,429 VMs](../../images/vm-cpu-costop-highest-value-distribution-across-vms.png)
 
 ## Traps
 - "Co-stop is caused by ESXi, like Ready" → Co-stop is caused by the VM's own vCPUs drifting apart. Reduce VM size.

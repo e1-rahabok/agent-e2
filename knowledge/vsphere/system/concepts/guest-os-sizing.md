@@ -1,6 +1,6 @@
 # Guest OS sizing
 
-![What to include and exclude in Guest OS sizing](../images/guest-os-sizing-include-exclude.png)
+![What to include and exclude in Guest OS sizing](../images/guest-os-sizing-what-to-include-and-exclude.png)
 
 ## CPU: exclude
 | Item | Reason |
@@ -45,7 +45,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - The book recommends option 2 of two range schemes: wide grey (waste) zone, then a narrow green band near the top.
 - Applications touch only part of their working set; the rest becomes cache. Active + cache above 95% is fine.
 - ESXi waits until about 99% before ballooning. Windows and Linux also cache.
-![Two memory utilization range schemes](../images/memory-utilization-ranges-two-options.png)
+![Two memory utilization range schemes](../images/memory-utilization-range-two-schemes.png)
 
 | Rule | Reason |
 |---|---|

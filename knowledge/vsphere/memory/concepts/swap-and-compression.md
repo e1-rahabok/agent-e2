@@ -32,14 +32,14 @@
 - Swap out rate 6,331.93 + 5,026.4 + 1,882.13 + 615.86 = 13,856 KB/s over 300 s: 13,856 × 300 / 1,024 ≈ 4,059 MB. Swapped was 4,157 MB.
 - No swap in during the period.
 - Consumed dropped 4,868 MB (7,719 - 2,851). Other factors also contributed.
-![Swap out rate summed over 300 seconds matches Swapped](../images/swap-out-rate-example.png)
+![Swap out rate summed over 300 seconds matches Swapped](../images/vm-memory-swap-out-rate-sum-matches-swapped.png)
 
 ## Example: limit, swap and compress in opposite directions
 - 64 GB VM. Swapped plus compressed peaked at 20 GB over 7 days.
 - Consumed was flat for 7 days: a limit. The small gap above the limit is VM overhead.
 - Granted hovered above Consumed.
 - The guest kept using pages: some were swapped in; others were compressed or swapped to make room. So Swapped and Compressed moved in opposite directions.
-![Limit: Consumed flat, swapped and compressed move in opposite directions](../images/limit-swap-compress-opposite.png)
+![Limit: Consumed flat, swapped and compressed move in opposite directions](../images/vm-memory-limit-swapped-and-compressed-move-opposite.png)
 
 ## Traps
 - "Swapped = Swap in - Swap out" → in and out run in parallel on different pages.

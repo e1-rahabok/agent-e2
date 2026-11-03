@@ -21,7 +21,7 @@
 | Not being used | Waiting. 3 sub-cases: IO wait, memory wait, other wait. | Wait | Wait |
 
 ## State diagram
-![vCPU state diagram: New, Ready, Run, Co-stop, Wait, Zombie](../images/vcpu-state-diagram.png)
+![vCPU state diagram: New, Ready, Run, Co-stop, Wait, Zombie](../images/vcpu-state-diagram-new-ready-run-costop-wait-zombie.png)
 ```mermaid
 stateDiagram-v2
     [*] --> Ready: Add
@@ -90,9 +90,9 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - Co-stop has no OS equivalent. It exists because a multi-vCPU VM is one entity with several schedules.
 
 ## State across time
-![VCF Operations chart: 4-vCPU VM states stack to 80,000 ms](../images/state-sum-vcf-operations.png)
-![vCenter chart: 4-vCPU VM states stack to 80,000 ms](../images/state-sum-vcenter.png)
-![Run, Wait, Co-stop and Ready stacked per 1000 ms block](../images/vcpu-states-over-time.png)
+![VCF Operations chart: 4-vCPU VM states stack to 80,000 ms](../images/vm-cpu-states-sum-to-20000-ms-per-vcpu-vcf-operations-chart.png)
+![vCenter chart: 4-vCPU VM states stack to 80,000 ms](../images/vm-cpu-states-sum-to-20000-ms-per-vcpu-vcenter-chart.png)
+![Run, Wait, Co-stop and Ready stacked per 1000 ms block](../images/vcpu-run-wait-costop-ready-stacked-per-second.png)
 - The diagram is a single moment. Reporting adds a time dimension.
 - The scheduler checks state every 2-30 ms.
 - Conversion from ms to %: state time / sample period.
@@ -110,7 +110,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - Reason: Ready is runtime demanded and not given. Compare it with runtime given.
 
 ## State across multiple vCPUs
-![Two vCPUs over periods A to G](../images/multi-vcpu-timeline.png)
+![Two vCPUs over periods A to G](../images/multi-vcpu-vm-state-timeline-two-vcpus.png)
 - Ready and Co-stop affect each other.
 - Example: a 2-vCPU VM over 7 periods.
 

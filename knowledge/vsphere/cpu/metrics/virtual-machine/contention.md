@@ -8,7 +8,7 @@
 ```text
 Contention (%) = Overlap + Co-stop + Ready + Other Wait (if less than 1%)
 ```
-![Contention covers Overlap, Co-stop, Ready including Limit, and Other Wait; Swap Wait belongs to memory contention](../../images/vm-cpu-contention-components.png)
+![Contention covers Overlap, Co-stop, Ready including Limit, and Other Wait; Swap Wait belongs to memory contention](../../images/vm-cpu-contention-components-overlap-costop-ready-other-wait.png)
 
 ## Mechanism
 - CPU frequency does not apply: the vCPU is not running.

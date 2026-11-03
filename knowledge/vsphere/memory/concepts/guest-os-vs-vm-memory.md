@@ -4,7 +4,7 @@
 - Guest OS and VM memory metrics do not map to each other.
 - Neither the VMkernel nor the Guest OS has full visibility into the other.
 - Consumed, Shared and Reservation do not exist in Windows.
-![What the hypervisor sees vs what the Guest OS sees, for an 8 GB VM](../images/hypervisor-vs-guest-os-memory-view.png)
+![What the hypervisor sees vs what the Guest OS sees, for an 8 GB VM](../images/vm-memory-hypervisor-view-vs-guest-os-view.png)
 
 | Type | Guest OS metric | VM metric |
 |---|---|---|
@@ -29,7 +29,7 @@
 
 ## Example: Guest OS more accurate
 - Windows Server running Active Directory, 4 GB, light load.
-![Guest OS memory vs VM Active for an Active Directory server](../images/ad-server-guest-vs-active.png)
+![Guest OS memory vs VM Active for an Active Directory server](../images/vm-memory-guest-os-used-vs-vm-active-active-directory-server.png)
 
 | Period | Event | Observation |
 |---|---|---|
@@ -44,7 +44,7 @@
 - Idle Windows Server 2016 VM, 16 GB. VM Active: 0 GB. Correct: the guest is idle.
 - Windows In Use: 7.2 GB, shown as if constantly in use. 1.5 GB of it compressed by Windows.
 - ESXi does the actual reads and writes, so it sees the VM is idle.
-![Idle VM: Windows shows 7.2 GB In Use](../images/idle-vm-windows-in-use.png)
+![Idle VM: Windows shows 7.2 GB In Use](../images/windows-memory-in-use-on-idle-vm.png)
 - Applications that manage their own memory reserve a contiguous block up front. Example: java.exe holding 26 GB.
 - Windows cannot see inside the block. It counts all of it as used and committed.
 

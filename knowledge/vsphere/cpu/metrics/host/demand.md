@@ -14,7 +14,7 @@
 - Kernel reservation below kernel use: Demand below Usage.
 - Once VMs share cores, Demand is higher than Usage.
 - Not capped at 100%.
-![ESXi CPU Demand chart](../../images/esxi-demand-chart.png)
+![ESXi CPU Demand chart](../../images/esxi-cpu-demand-chart.png)
 
 ## Traps
 - "ESXi Demand = VM usage + kernel usage" → wrong. Demand counts VM demand and reservations, not usage.

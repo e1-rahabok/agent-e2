@@ -12,7 +12,7 @@
 | VM utilization | CPU Net Run (%) | 60-95 | 95-97 | 97-99 | 99-100 |
 | IaaS high utilization | VM Memory Ballooned (%) | 0-2 | 2-4 | 4-8 | 8-16 |
 | IaaS high utilization | VM Memory Compressed + Swapped (%) | 0-0.25 | 0.25-0.5 | 0.5-1 | 1-2 |
-![VM Performance thresholds](../../images/vm-performance-thresholds.png)
+![VM Performance thresholds](../../images/vm-performance-thresholds-table.png)
 
 ## Reasons
 - CPU uses 4 metrics (Co-stop, Ready, Overlap, Net Run). They do not peak in the same 20-second period, so they cannot be combined. Known limitation: CPU weight is larger.

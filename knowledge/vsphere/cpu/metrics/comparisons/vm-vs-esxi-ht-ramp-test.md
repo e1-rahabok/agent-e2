@@ -4,8 +4,8 @@
 - One 24-vCPU VM on an ESXi host with 12 cores, Hyper-Threading on (24 threads).
 - Power management fixed: cores run at nominal clock speed. No frequency effect.
 - Start: 12 vCPUs busy, each pinned to a different core. Then load ramps to all 24 vCPUs at 100%.
-![VM CPU Run, Used and Usage during the ramp](../../images/ht-ramp-test-vm-metrics.png)
-![ESXi CPU Usage, Core Utilization and Utilization during the ramp](../../images/ht-ramp-test-esxi-metrics.png)
+![VM CPU Run, Used and Usage during the ramp](../../images/hyper-threading-ramp-test-vm-cpu-run-used-usage.png)
+![ESXi CPU Usage, Core Utilization and Utilization during the ramp](../../images/hyper-threading-ramp-test-esxi-cpu-usage-core-utilization-utilization.png)
 
 ## Values
 | Metric | Start (12 vCPUs, 1 thread per core) | End (24 vCPUs, 2 threads per core) |

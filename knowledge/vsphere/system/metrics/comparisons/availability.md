@@ -15,7 +15,7 @@
 | + not in quarantine | +25% |
 | + connected to vCenter | +25% |
 - VCF Operations super metric: 1 point per condition met (0-4), × 25.
-![ESXi operational availability states](../../images/esxi-operational-availability-states.png)
+![ESXi operational availability states](../../images/esxi-operational-availability-scoring-states.png)
 
 ## Cluster availability
 - Not the average of hosts: HA matters.
@@ -27,7 +27,7 @@
 - Operational availability should be near 100%. 99.9% in a month signals operations to improve.
 - Actual availability is likely lower.
 - In VM-as-a-service, a cluster is internal: no official SLA.
-![Cluster availability with HA](../../images/cluster-availability-ha.png)
+![Cluster availability with HA](../../images/cluster-operational-availability-with-ha.png)
 
 ## Roll-up (Datacenter, vCenter, vSphere World)
 | Roll-up | Use |

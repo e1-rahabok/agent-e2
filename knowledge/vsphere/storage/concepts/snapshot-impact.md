@@ -5,7 +5,7 @@
 - The extra reads return no data: datastore throughput stays equal to virtual-disk throughput while datastore read IOPS is consistently higher.
 - Test: with no snapshot, datastore and virtual-disk read IOPS overlap 100%. With a snapshot, datastore read IOPS is consistently higher.
 - The .vmsd metadata file is updated on every snapshot create and delete.
-![Datastore read IOPS rises when a snapshot exists](../images/snapshot-datastore-read-iops.png)
+![Datastore read IOPS rises when a snapshot exists](../images/datastore-read-iops-rise-with-vm-snapshot.png)
 
 ## Space
 - A snapshot can exceed the size of its VMDK, especially for thin disks snapshotted early while nearly empty.

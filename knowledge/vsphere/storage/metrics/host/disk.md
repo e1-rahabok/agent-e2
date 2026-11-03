@@ -23,7 +23,7 @@
 - Tiering moves pages in 4 KB. One 4 KB read in a 20-second sample = 0.0002 MBps, shown as 0 MBps. The IO is not 0.
 - An idle NVMe controller enters deep power states (PS3, PS4, ASPM L1.2). PS4 entry takes 5-10 seconds of idle.
 - Waking to D0/PS0 adds 50-100 ms to the first IO.
-![NVMe memory-tier device: high latency at near-zero activity](../../images/nvme-memory-tier-idle-latency.png)
+![NVMe memory-tier device: high latency at near-zero activity](../../images/nvme-memory-tier-device-high-latency-at-near-zero-io.png)
 
 ## Traps
 - "High latency on an idle NVMe tier device is a problem" → wake-up penalty on sporadic IO.

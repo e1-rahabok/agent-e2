@@ -12,8 +12,8 @@
 4. Host cache: Host cache consumed, swap in rate, swap out rate. Faster than disk if built on fast SSD.
 5. Balloon: Balloon target, Ballooned memory.
 - Intel Optane memory has no metric: it is meant to be transparent to ESXi.
-![vCenter VM memory swap counters](../../images/vcenter-vm-mem-swap-counters.png)
-![vCenter VM memory compression counters](../../images/vcenter-vm-mem-compress-counters.png)
+![vCenter VM memory swap counters](../../images/vcenter-vm-memory-swap-counters-table.png)
+![vCenter VM memory compression counters](../../images/vcenter-vm-memory-compression-counters-table.png)
 
 ## Contention
 - Only Latency is true contention. VCF Operations VM Memory Contention is the vCenter Latency counter.
@@ -21,10 +21,10 @@
 ## Consumption set
 - Consumed (main), Granted, Entitlement, Shared, Host consumed %. Plus Active, Active write, Overhead, Zero pages.
 - Reservation and allocation are properties.
-![vCenter VM memory consumption counters](../../images/vcenter-vm-mem-consumption-counters.png)
+![vCenter VM memory consumption counters](../../images/vcenter-vm-memory-consumption-counters-table.png)
 
 ## Virtual view vs physical view
-![Virtual and physical view of one VM's memory: Granted, Shared, Zero, Before Zip, Swapped, Host Cache, Ballooned, Free, Overhead](../../images/vm-memory-virtual-vs-physical-view.png)
+![Virtual and physical view of one VM's memory: Granted, Shared, Zero, Before Zip, Swapped, Host Cache, Ballooned, Free, Overhead](../../images/vm-memory-virtual-view-vs-physical-view.png)
 | Item | View | Meaning |
 |---|---|---|
 | Configured | VM | What the Guest OS sees. The guest cannot see overhead. |

@@ -5,7 +5,7 @@
 - No path panel: it would show dead or inactive paths (all zeros) and lopsided active/active paths.
 - No datastore panel: VMFS is covered by Device with 1:1 mapping and no extents; NFS is not covered.
 - Adapter and Device share most contention and utilization groups.
-![Disk Adapter vs Disk Device metric groups](../../images/esxtop-adapter-vs-device-groups.png)
+![Disk Adapter vs Disk Device metric groups](../../images/esxtop-disk-adapter-vs-disk-device-metric-groups.png)
 
 ## Disk VM (per VM and per virtual disk)
 | Counter | Meaning |

@@ -1,8 +1,8 @@
 # Run Time vs Run Quality
 
 ## Two metrics, not one
-![Frequency varying between base, all-core Turbo and 1-core Turbo while running](../images/frequency-during-run.png)
-![Car time moving vs speed mapped to CPU Run and CPU Throughput](../images/run-time-vs-throughput-analogy.png)
+![Frequency varying between base, all-core Turbo and 1-core Turbo while running](../images/cpu-frequency-base-vs-all-core-turbo-vs-single-core-turbo-while-running.png)
+![Car time moving vs speed mapped to CPU Run and CPU Throughput](../images/cpu-run-time-vs-throughput-car-analogy.png)
 | Metric | Nature | Measures | Unit | Use for |
 |---|---|---|---|---|
 | Run Time | Binary: the CPU runs or does not. | Duration. | ms, or % of the period | Capacity management |

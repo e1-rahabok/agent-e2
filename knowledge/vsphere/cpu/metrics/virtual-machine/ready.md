@@ -55,7 +55,7 @@
 - Worst 20-second value per VM: the 10 worst VMs were bad (17%-40%). Average of the worst values: 0.97%.
 - After removing the worst 1% of samples (about 350 per VM, the worst 29 hours in 4 months): average 0.37%. Most VMs green.
 - Ready above 50% with high Usage results in poor performance.
-![Worst and 99th percentile 20-second Ready across 3,937 VMs](../../images/ready-20s-worst-vs-p99-3937-vms.png)
+![Worst and 99th percentile 20-second Ready across 3,937 VMs](../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png)
 
 ## Traps
 - "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See `vsphere/foundations/provider-consumer`.

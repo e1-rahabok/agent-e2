@@ -7,7 +7,7 @@
 - VM Performance (%) and Guest OS Performance (%): one per realm.
 - Pros: the direction of troubleshooting is clear; each score is higher (a single number dilutes less).
 - Cons: twice the metrics; application teams see both as infrastructure and ask for one number.
-![Guest OS and VM metrics used in the KPIs](../images/guest-os-and-vm-kpi-metrics.png)
+![Guest OS and VM metrics used in the KPIs](../images/guest-os-and-vm-performance-kpi-metrics.png)
 
 ## Which metrics qualify
 - A metric qualifies only if its values map to the 4 ranges (green, yellow, orange, red). Otherwise it distorts the KPI.

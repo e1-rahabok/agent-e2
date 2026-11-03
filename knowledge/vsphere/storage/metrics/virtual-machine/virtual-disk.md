@@ -33,7 +33,7 @@
 - Several VMs share one VMDK or RDM, for example database clusters. Complicates capacity, cost and performance management.
 - Active/passive pair: after failover the passive VM reports 0 (vCenter returns 0, not blank). The new active VM reported blank before it took over.
 - Disk Space | Active Not Shared (GB) = Disk Space | Not Shared (GB) - Disk Space | Snapshot Space (GB). Space of VMDKs and RDMs owned only by this VM. Snapshots count as non-active.
-![Passive VM in a multi-writer pair shows 0 IOPS](../../images/multi-writer-passive-vm-zero.png)
+![Passive VM in a multi-writer pair shows 0 IOPS](../../images/vm-disk-multi-writer-passive-vm-shows-zero-iops.png)
 
 ## Traps
 - "VM disk totals should match datastore totals" → RDM and many-to-many relationships break that. See `vsphere/foundations/object-relationships`.

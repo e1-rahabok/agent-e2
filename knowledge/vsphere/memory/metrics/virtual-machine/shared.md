@@ -17,7 +17,7 @@
 - Per group of pages pointing to the same ESXi page: 10 pages → 9 pages saved.
 - Compression is not counted as savings: it costs performance.
 - Observation across 7,505 VMs: Granted 103.26 TB, Shared 29.83 TB, Consumed 79.56 TB. The book computes Granted - Consumed = 23.7 TB, then savings = 29.83 - 23.7 = 6.13 TB, about 6%.
-![Granted, Shared and Consumed across 7,505 VMs](../../images/granted-shared-consumed-7505-vms.png)
+![Granted, Shared and Consumed across 7,505 VMs](../../images/vm-memory-granted-shared-consumed-across-vms.png)
 
 ## Traps
 - "Shared = memory saved" → it is the amount subjected to sharing.

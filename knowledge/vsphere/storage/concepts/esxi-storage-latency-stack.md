@@ -30,7 +30,7 @@ GAVG = KAVG + DAVG
 
 ## Example
 - Worst host of a set: device latency below 1.75 ms; kernel latency 0.2 ms except one spike. Kernel and device did not correlate; both were healthy.
-![Kernel vs device latency](../images/esxi-kernel-vs-device-latency.png)
+![Kernel vs device latency](../images/esxi-storage-kernel-latency-vs-device-latency.png)
 
 ## Traps
 - "Guest latency is measured inside Windows" → it starts at the VMM.

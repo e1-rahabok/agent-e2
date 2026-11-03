@@ -11,7 +11,7 @@
 - Highest latency: a normalized average of read and write, so it can be lower.
 - Outstanding IO: derive from latency and IOPS. Latency is more insightful: little IO in the queue can still mean high latency.
 - Queue depth per datastore (likely the backing LUN). Check settings are as expected and consistent; list them per cluster.
-![Datastore latency observed by VMs vs datastore latency](../../images/datastore-latency-observed-by-vms.png)
+![Datastore latency observed by VMs vs datastore latency](../../images/datastore-latency-vs-latency-observed-by-vms.png)
 
 ## Traps
 - "Host datastore IOPS = datastore total" → one host's share only.

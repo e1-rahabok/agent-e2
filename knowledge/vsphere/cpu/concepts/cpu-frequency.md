@@ -59,7 +59,7 @@
 - All-Core Turbo is not always exposed via the CPU API.
 
 ## Impacts on ESXi
-![Core Utilization vs actual usage with 20% All-Core Turbo](../images/turbo-impact-on-esxi.png)
+![Core Utilization vs actual usage with 20% All-Core Turbo](../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png)
 - Example with All-Core Turbo at 20% above base.
 - The table shows actual values.
 - The reported Usage (%) metric is capped at 100%. Actual usage above 100% is hidden by the cap.

@@ -5,7 +5,7 @@
 - Unknown: ESXi cannot decode the packet, so does not know its type. Disabled by default in VCF Operations; enable it.
 - Expect error, unknown and dropped packets to be 0 at all times.
 - Fleet view in VCF Operations: vSphere \ ESXi Bad Network Packets.
-![vCenter ESXi network error counters](../../images/vcenter-esxi-network-error-counters.png)
+![vCenter ESXi network error counters](../../images/vcenter-esxi-network-error-counters-table.png)
 
 ## Detail with esxcli
 ```text

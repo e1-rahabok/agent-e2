@@ -10,7 +10,7 @@
 - Usage rate = receive + transmit. With full duplex it can exceed the physical link speed.
 - Packets per second: receive, transmit.
 - List all vmnics in a table to find which one to plot.
-![Usage rate is the sum of receive and transmit](../../images/esxi-usage-rate-rx-plus-tx.png)
+![Usage rate is the sum of receive and transmit](../../images/esxi-network-usage-rate-equals-receive-plus-transmit.png)
 
 ## Packet size
 ```text
