@@ -1,5 +1,9 @@
 # Windows memory management
 
+## Layer
+- Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
+- Counters here come from inside the Guest OS (PerfMon, WMI, or VMware Tools). vCenter and VCF Operations store some of them on the VirtualMachine object. That is a data path, not ownership.
+
 ## Nature
 - Poorly documented; even Microsoft sources conflict. Mark Russinovich's description of virtual memory is a reference.
 
@@ -77,9 +81,9 @@ Unneeded = Free + Reserve Cache + Normal Priority Cache
 
 ## Metadata
 ```yaml
-id: vsphere/memory/concepts/windows-memory
+id: guest-os/memory/concepts/windows-memory
 retriever_guide: how-it-works
-scope: vsphere
+scope: guest-os
 technology:
 - memory
 pillar:
@@ -88,14 +92,14 @@ pillar:
 product:
 - windows
 - vcf-operations
-object:
-- VirtualMachine
+layer:
+- guest-os
 internal_derive:
 - vsphere/memory/concepts/guest-os-vs-vm-memory
 related:
 - vsphere/memory/metrics/virtual-motherboard/utilization
 - vsphere/system/concepts/guest-os-sizing
-- vsphere/system/metrics/guest-os/guest-os-performance
+- guest-os/system/metrics/guest-os-performance
 images:
   - path: ../images/windows-memory-categories-diagram.png
     product: [windows]

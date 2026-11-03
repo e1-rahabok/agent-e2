@@ -42,8 +42,8 @@ input: text
 tests: distinction
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
-  - vsphere/storage/metrics/guest-os/disk-queue
-  - vsphere/cpu/metrics/guest-os/run-queue
+  - guest-os/storage/metrics/disk-queue
+  - guest-os/cpu/metrics/run-queue
   - vsphere/cpu/metrics/virtual-motherboard/ready
   - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []

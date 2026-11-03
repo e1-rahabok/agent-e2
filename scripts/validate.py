@@ -87,21 +87,26 @@ def main():
             linked_images.add(full)
             if not os.path.exists(full):
                 bad(f, f'image not found: {img}')
-        for r in re.findall(r'`((?:vsphere|foundations)/[a-z0-9\-/]+)`', body):
+        for r in re.findall(r'`((?:vsphere|foundations|guest-os)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
+        # A VM is a virtual motherboard. The Guest OS (Windows, Linux) is not a Broadcom product and not part of the VM:
+        # its knowledge lives in knowledge/guest-os/, outside knowledge/vsphere/.
+        layer = fm.get('layer') or []
+        title = body.lstrip().split('\n', 1)[0]
+        if f.startswith('knowledge/guest-os/'):
+            if fm.get('scope') != 'guest-os': bad(f, 'file in knowledge/guest-os/ must have scope: guest-os')
+            if layer != ['guest-os']: bad(f, 'file in knowledge/guest-os/ must have layer: [guest-os]')
+            if 'VirtualMachine' in (fm.get('object') or []): bad(f, 'Guest OS file must not have object VirtualMachine: the Guest OS is a layer, not the VM')
+        else:
+            # Boundary files (Guest OS vs VM, Guest OS sizing from VM data) stay in vSphere; Guest OS metrics never do.
+            if 'guest-os' in layer or fm.get('scope') == 'guest-os' or ('/metrics/' in f and title.startswith(('# Guest OS ', '# Windows', '# Linux'))):
+                bad(f, 'Guest OS knowledge must live in knowledge/guest-os/, not under vSphere')
         if '/metrics/' in f:
             if fm.get('retriever_guide') != 'metric-meaning': bad(f, 'metric file must have retriever_guide: metric-meaning')
-            layer = fm.get('layer') or []
-            title = body.lstrip().split('\n', 1)[0]
-            # A VM is a virtual motherboard; the Guest OS is a separate layer, not a vSphere object.
-            if '/metrics/guest-os/' in f:
-                if layer != ['guest-os']: bad(f, 'Guest OS metric file must have layer: [guest-os]')
-                if 'VirtualMachine' in (fm.get('object') or []): bad(f, 'Guest OS metric file must not have object VirtualMachine: Guest OS is a layer, not the VM')
-            else:
-                if not fm.get('object'): bad(f, 'metric file must have object')
-                if 'guest-os' in layer or title.startswith('# Guest OS'):
-                    bad(f, 'Guest OS metric must live in metrics/guest-os/, not with VM (virtual motherboard) metrics')
-            if '/metrics/virtual-motherboard/' in f and layer != ['virtual-motherboard']:
+            if f.startswith('knowledge/guest-os/'):
+                pass  # Guest OS metrics have no vSphere object; rules below
+            elif not fm.get('object'): bad(f, 'metric file must have object')
+            if '/metrics/virtual-motherboard/' in f and (fm.get('layer') or []) != ['virtual-motherboard']:
                 bad(f, 'VM metric file must have layer: [virtual-motherboard]')
             if not fm.get('metric_class'): bad(f, 'metric file must have metric_class')
             if '/comparisons/' not in f and len(fm.get('object') or []) > 1:

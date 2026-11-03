@@ -23,10 +23,10 @@
 ## Observed values
 - 3,000 VMs, 3 months: about 70% below 10; about 10% above 100.
 - Some values are extreme (spikes above 1,000). Guest queues are rarer than latency spikes.
-![Guest OS disk queue timeline for one VM: regular spikes, last above 1,000](../../images/guest-os-disk-queue-spikes-timeline.png)
+![Guest OS disk queue timeline for one VM: regular spikes, last above 1,000](../images/guest-os-disk-queue-spikes-timeline.png)
 - 20-second peak about 200-250 while the 5-minute average stays above 125: volatile, not sustained.
-![Guest disk queue distribution across 3,000 VMs](../../images/guest-os-disk-queue-distribution-across-vms.png)
-![Guest queue spikes with good VM latency](../../images/guest-os-disk-queue-spikes-while-vm-disk-latency-good.png)
+![Guest disk queue distribution across 3,000 VMs](../images/guest-os-disk-queue-distribution-across-vms.png)
+![Guest queue spikes with good VM latency](../images/guest-os-disk-queue-spikes-while-vm-disk-latency-good.png)
 
 ## Guest OS storage questions
 | Area | Required data |
@@ -41,9 +41,9 @@
 
 ## Metadata
 ```yaml
-id: vsphere/storage/metrics/guest-os/disk-queue
+id: guest-os/storage/metrics/disk-queue
 retriever_guide: metric-meaning
-scope: vsphere
+scope: guest-os
 technology:
 - storage
 pillar:
@@ -62,21 +62,21 @@ related:
 - vsphere/storage/metrics/virtual-motherboard/outstanding-io
 - vsphere/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/storage/concepts/guest-os-vs-vm-storage
-- vsphere/system/metrics/guest-os/guest-os-performance
+- guest-os/system/metrics/guest-os-performance
 images:
-  - path: ../../images/guest-os-disk-queue-spikes-timeline.png
+  - path: ../images/guest-os-disk-queue-spikes-timeline.png
     product: [windows]
     object: [VirtualMachine]
     metric: ['Guest OS Disk Queue']
     image_type: timeline
     sample: '1 VM'
-  - path: ../../images/guest-os-disk-queue-distribution-across-vms.png
+  - path: ../images/guest-os-disk-queue-distribution-across-vms.png
     product: [windows]
     object: [VirtualMachine]
     metric: ['Guest OS Disk Queue']
     image_type: distribution
     sample: '3,000 VMs'
-  - path: ../../images/guest-os-disk-queue-spikes-while-vm-disk-latency-good.png
+  - path: ../images/guest-os-disk-queue-spikes-while-vm-disk-latency-good.png
     product: [windows]
     object: [VirtualMachine]
     metric: ['Guest OS Disk Queue', 'VM Disk Latency']

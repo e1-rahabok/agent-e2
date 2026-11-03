@@ -11,7 +11,7 @@
 | Guest OS contention | Peak disk queue length (count) | 0-20 | 20-40 | 40-80 | 80-160 |
 | Guest OS utilization | Free memory (MB) | 512-1,024 | 256-512 | 128-256 | 0-128 |
 | Guest OS utilization | Memory page-out rate (pages/s) | 0-1,000 | 1K-2K | 2K-4K | 4K-8K |
-![Guest OS Performance thresholds](../../images/guest-os-performance-thresholds-table.png)
+![Guest OS Performance thresholds](../images/guest-os-performance-thresholds-table.png)
 
 ## Reasons
 - Guest OS metrics with no VM equivalent, which change the course of troubleshooting.
@@ -24,9 +24,9 @@
 
 ## Metadata
 ```yaml
-id: vsphere/system/metrics/guest-os/guest-os-performance
+id: guest-os/system/metrics/guest-os-performance
 retriever_guide: metric-meaning
-scope: vsphere
+scope: guest-os
 technology:
 - cpu
 - memory
@@ -49,7 +49,7 @@ same_meaning: []
 related:
 - vsphere/system/metrics/virtual-motherboard/vm-performance
 images:
-  - path: ../../images/guest-os-performance-thresholds-table.png
+  - path: ../images/guest-os-performance-thresholds-table.png
     product: [vcf-operations]
     object: [VirtualMachine]
     metric: ['Guest OS Performance']

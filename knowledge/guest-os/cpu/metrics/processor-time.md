@@ -26,9 +26,9 @@
 
 ## Metadata
 ```yaml
-id: vsphere/cpu/metrics/guest-os/processor-time
+id: guest-os/cpu/metrics/processor-time
 retriever_guide: metric-meaning
-scope: vsphere
+scope: guest-os
 technology:
 - cpu
 pillar:
@@ -44,7 +44,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vsphere/cpu/concepts/windows-cpu-scheduling
+- guest-os/cpu/concepts/windows-cpu-scheduling
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > CPU; DPC Time

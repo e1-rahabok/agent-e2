@@ -63,7 +63,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/system/metrics/virtual-motherboard/vm-performance
-- vsphere/system/metrics/guest-os/guest-os-performance
+- guest-os/system/metrics/guest-os-performance
 images:
   - path: ../../images/vm-disk-latency-20-second-peak-vs-300-second-average.png
     product: [vsphere]

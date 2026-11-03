@@ -27,7 +27,7 @@ technology: [cpu]
 pillar: [performance]
 product: [vsphere]
 object: [VirtualMachine]           # exactly one vSphere managed object type per file (comparisons may list several); omit for guest-os files
-layer: [virtual-motherboard]       # guest-os | virtual-motherboard | hypervisor | physical; required in virtual-motherboard/ and guest-os/ folders
+layer: [virtual-motherboard]       # guest-os | virtual-motherboard | hypervisor | physical; required in metrics/virtual-motherboard/ and in knowledge/guest-os/
 instance: [aggregate]              # optional: aggregate | per-vcpu | per-vmnic | ... when the formula differs by instance
 metric_class: contention           # contention | consumption | context
 internal_derive: []                # ids of concept files this metric's meaning is derived from (internal links only)

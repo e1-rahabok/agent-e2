@@ -36,9 +36,9 @@ area: cpu
 input: text
 tests: concept
 knowledge:
-  - vsphere/cpu/concepts/windows-cpu-scheduling
-  - vsphere/cpu/metrics/guest-os/run-queue
-  - vsphere/cpu/metrics/guest-os/context-switch
+  - guest-os/cpu/concepts/windows-cpu-scheduling
+  - guest-os/cpu/metrics/run-queue
+  - guest-os/cpu/metrics/context-switch
   - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: quiz

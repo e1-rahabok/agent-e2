@@ -48,7 +48,9 @@ Standing rules for this repository. Read at the start of every session.
 
 ## Architecture: VM vs Guest OS
 - A VM is a virtual motherboard, not a complete machine. The Guest OS (Windows, Linux) is a separate layer that runs on it.
-- Never file, tag or describe a Guest OS metric as a VM metric. Guest OS metrics go in `<technology>/metrics/guest-os/` with `layer: [guest-os]` and no `object: VirtualMachine`.
+- Never file, tag or describe a Guest OS metric as a VM metric.
+- Windows and Linux are not Broadcom products. Guest OS knowledge lives in `knowledge/guest-os/<technology>/`, a peer of `knowledge/vsphere/`, with `scope: guest-os`, `layer: [guest-os]` and no `object: VirtualMachine`.
+- Boundary files that compare the two layers from the vSphere side (Guest OS vs VM CPU, memory, storage; Guest OS sizing from VM data) stay in `knowledge/vsphere/` and link to the Guest OS files.
 - VM metrics go in `<technology>/metrics/virtual-motherboard/` with `layer: [virtual-motherboard]` and `object: [VirtualMachine]`.
 - That vCenter or VCF Operations store a counter on the VM object does not make it a VM metric. Decide by the layer that produces it.
 - When a repository rule conflicts with the author's architecture, raise it in `docs/author-questions.md`; do not resolve it silently.
