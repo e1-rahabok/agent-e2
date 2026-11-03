@@ -268,5 +268,35 @@ Each entry has:
 - Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
 - Answer:
 
+### Q034 · Quiz > CPU > Q2 VM CPU Speed · 80% vs 62.5% Hyper-Threading charge
+- Files: `evaluation/cases/vsphere/cpu/cpu-005-...`, `vsphere/cpu/metrics/virtual-machine/usage`, `vsphere/cpu/metrics/virtual-machine/used`
+- Search 1 (quiz key): "3.0 (All Cores Turbo) x 80% (as HT delivers 1.25x total)"
+- Search 2 (book): "37.5%"
+- Question: the quiz key gives 3.0 GHz x 80% = 2.4 GHz. The knowledge base charges each thread 62.5% when both threads run, which gives 1.875 GHz. Which factor does VM CPU Usage apply?
+- Written as now: case uses the key (2.4 GHz), flagged in Notes. KB unchanged.
+- Answer:
+
+### Q035 · Quiz > CPU > Q6 VM CPU Contention · Demand and Hyper-Threading
+- Files: `evaluation/cases/vsphere/cpu/cpu-009-...`, `vsphere/cpu/metrics/virtual-machine/demand`
+- Search 1 (quiz key): "G is wrong as Demand is affected by hyper threading"
+- Search 2 (book, MS Windows table): "| VM CPU Demand   | Yes               | No             | Yes           |"
+- Question: the key says Demand is affected by Hyper-Threading. The MS Windows table marks Demand as not affected. Which is right?
+- Written as now: case keeps the key's answer (G wrong); reason flagged.
+- Answer:
+
+### Q036 · Quiz > CPU > Q7 Guest OS CPU · Is F correct?
+- Files: `evaluation/cases/vsphere/cpu/cpu-010-...`
+- Search 1 (quiz key): "F is correct. Windows has 8 states."
+- Question: the answer column says D, E. The explanation says F is correct. Is the answer D, E, F?
+- Written as now: scored as D, E, F until answered.
+- Answer:
+
+### Q037 · Quiz > Cost and Price > Q1 VM Cost · Missing explanations
+- Files: `evaluation/cases/vendor-neutral/general/general-001-...`
+- Search 1 (quiz key): "C is correct. The VM costs around US$ 2000 per year."
+- Question: the key has empty explanations for A, B and D. What is the reason each is wrong? Which pricing date and source should the case record?
+- Written as now: answer C only; no reasons for the others.
+- Answer:
+
 ## Resolved
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.

@@ -25,7 +25,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] `troubleshooting/host-not-responding.md` has no front matter and is not from the book.
 
 ## Open points from book extraction
-- [ ] Questions for the author: `docs/author-questions.md` (33 open).
+- [ ] Questions for the author: `docs/author-questions.md` (37 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
 - [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
@@ -71,6 +71,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [x] Author quiz (vSphere Metric Quiz.docx): 18 golden cases added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
 - [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
 - [ ] Add golden cases for MS Windows traps: Windows 100% on a shared core vs VM CPU Usage 62.5%, queue excludes running threads on Windows but includes them on Linux, 100% utilization with a low queue, Available = Standby + Free, guest disk queue invisible to VM latency.
