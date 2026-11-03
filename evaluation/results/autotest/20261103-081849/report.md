@@ -15,7 +15,7 @@
   - agentic: the model calls search tools itself, up to 8 calls.
 - Method, index version, hybrid retrieval and temperature: `tools/autotest/README.md`, section Methodology.
 
-| Model | Baseline avg | Classic avg | Agentic avg | Classic, 5 runs |
+| Model | Baseline avg (no KB) | Classic avg (KB, one search) | Agentic avg (KB, model searches) | Classic, 5 runs |
 |---|---|---|---|---|
 | google/gemma-4-31b-it | 34% | 58% | 49% | 47, 53, 71, 53, 65 |
 | mistral/mistral-small | 34% | 51% | 32% | 47, 47, 47, 59, 53 |
