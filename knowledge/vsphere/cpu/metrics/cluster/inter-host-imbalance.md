@@ -24,12 +24,15 @@ Imbalance = High hosts / Low hosts
 | Green (good) | Utilized and balanced. | 0 |
 | Grey (waste) | Low hosts, no high host. Underutilized. | -1, -2, ... (whole numbers) |
 - Pink can reach 63: maximum 64 hosts minus 1 low host.
+- The colour ranges do not overlap, so a value maps to one colour. Below 0 is wastage; above 1 is performance risk.
+![Cluster CPU imbalance score ranges: grey wastage below 0, green 0, yellow 0-1, orange 1, pink above 1 as performance risk, red](../../images/cluster-cpu-imbalance-score-ranges-wastage-vs-performance-risk.png)
 ![Imbalance colours for a 6-host cluster](../../images/cluster-cpu-imbalance-score-colors-for-6-host-cluster.png)
 
 ## Limitation
 - Summarizing loses detail: 1 high over 2 low and 4 high over 8 low both give 0.5.
 - Concatenation (1.2, 4.8) keeps the detail but makes sorting less meaningful.
 - A 12-host cluster has 169 possible values.
+![Cluster CPU imbalance score table for a 12-host cluster: all 169 values by count of high and low hosts](../../images/cluster-cpu-imbalance-score-table-by-count-of-high-and-low-hosts.png)
 
 ## Traps
 - "Imbalance 0 means every host is idle" → 0 also means no high hosts while some hosts are well used.

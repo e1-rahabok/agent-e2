@@ -16,6 +16,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 ## Behaviour
 - Receive drops are far higher than transmit drops: 3,938 VMs, 1 month, about 35 million data points. Receive drops are left out of the SLA for this reason.
 - Drops are short and spiky: the 99th percentile was 35x smaller than the maximum.
+![VM network dropped: 99th percentile vs maximum, list view](../../images/vm-network-dropped-99th-percentile-vs-max-list-view.png)
 - Packets Dropped (%) can jump above 95% for under 15 minutes. Driven by low throughput and high receive drops.
 ![Receive vs transmit drops across 3,938 VMs](../../images/vm-network-receive-vs-transmit-dropped-across-vms.png)
 ![Dropped % spike with low throughput and high receive drops](../../images/vm-network-dropped-percent-spike-at-low-throughput.png)
@@ -25,6 +26,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 - Millions of transmit drops a month need investigation with the network team. Nobody complains because TCP retransmits.
 - Rare huge spikes: example above 100 million packets in 5 minutes, about 333 MB/s for 300 s at 1 KB per packet.
 - Regular patterns (example: about 3,800 packets every 5 minutes) are worth raising with the network team.
+![VM network transmit dropped: regular spikes of about 3,800 packets every 5 minutes](../../images/vm-network-transmit-dropped-regular-spike-pattern.png)
 ![Transmit drop profile per VM](../../images/vm-network-transmit-dropped-profile.png)
 
 ## Known causes

@@ -43,6 +43,8 @@ Cached = Consumed - Active
 Free   = Total Capacity - Consumed
 ```
 - Memory is cache: the active part is far smaller and more volatile than the inactive part.
+- Example: an ESXi host with low Consumed and lower Active over 3 months, both far below total capacity.
+![ESXi memory Consumed vs Guest Active vs total capacity over 3 months](../images/esxi-memory-consumed-vs-guest-active-vs-capacity.png)
 - Overcommitted host at 100%: inactive granted pages cause no ballooning at first. When Active rises, Consumed rises and ballooning starts. When Active falls, ESXi deflates the balloon.
 ![Overcommitted host: balloon follows Active](../images/esxi-memory-overcommit-balloon-follows-active.png)
 

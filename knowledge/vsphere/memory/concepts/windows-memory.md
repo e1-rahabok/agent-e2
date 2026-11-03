@@ -21,6 +21,7 @@ In Use    = Total - (Modified + Standby + Free)
 | Cache | More cache, fewer misses. Prefetch and SuperFetch show the complexity; the UI simplifies it. |
 | Free | Immediately usable, excluding cache. Low Free is fine with high Standby; it can touch 0 MB momentarily. |
 ![Windows In Use with compressed pages](../images/windows-memory-in-use-with-compressed-pages.png)
+![Windows Standby Normal swinging widely on an Exchange 2013 mailbox server; Standby Core and Standby Reserve stay negligible](../images/windows-memory-standby-normal-swings-on-exchange-server.png)
 
 ## Free memory guidance (book)
 - Keep above 500 MB for server VMs, above 100 MB for VDI VMs (VDI adds up: 10K users × 100 MB = 1 TB).
@@ -44,6 +45,7 @@ In Use    = Total - (Modified + Standby + Free)
 - Page-in rate: reads through the paging and cache system, including cacheable reads (double-counted pages/s).
 - Page-out: less important; usually idle pages. Large pages are never paged out.
 - 3,325 VMs, 4 months, 99th percentile of 5-minute values: 97% below 32,000 pages; a few above 500,000.
+![Windows page-out 99th percentile distribution across 3,325 VMs over 4 months](../images/windows-memory-page-out-99th-percentile-distribution-across-vms.png)
 - Example arithmetic: 10,000 pages/s × 8 KB × 300 s = 24 GB in 5 minutes.
 - Across about 3K VMs: page-in max about 4x page-out; at the 99th percentile about 9x. Likely read-only pages (binaries) discarded instead of written.
 - Both are momentary: the 99th percentile is usually far below the maximum (about 1,000 VMs checked).

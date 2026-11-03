@@ -17,6 +17,7 @@
 - Worst write latency in a week: 250 ms on one host, while its 95th percentile was 0.33 ms: a one-off.
 - The other 191 hosts: maximum 5 ms.
 - Using the 99th percentile instead of the maximum still revealed hosts with real latency problems. Drill down per adapter.
+![ESXi storage adapter latency: 99th and 95th percentile read and write, sorted by write latency](../../images/esxi-storage-adapter-latency-99th-vs-95th-percentile-sorted.png)
 ![Highest adapter read and write latency across 192 hosts](../../images/esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png)
 
 ## Traps
