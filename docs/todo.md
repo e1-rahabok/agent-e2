@@ -115,4 +115,6 @@ Open work for this repository. Not indexed. Update when items close.
 
 ## Test site
 - [ ] Author decisions: audience, scoring (hosting and model decided 2026-11-03). See `docs/design-kb-test-site.md`, section Decisions for the author.
-- [ ] Build phase 1: CLI runner via Vercel AI Gateway, 5 candidate models, kb and baseline mode, write results.csv.
+- [ ] Build phase 1 (Auto Test): runner via Vercel AI Gateway, 8 candidate models, 3 modes, 5 runs, multiple-choice auto-scoring, write results.csv.
+- [ ] Grow the golden question set from 30 to 100 multiple-choice questions: 20% recall, 50% Level 400, 20% multi-hop, 10% screenshot; at least 10 per area; about 10 out-of-scope questions.
+- [ ] Add a "Not covered by the knowledge base" option and a fixed answer format to every multiple-choice case.

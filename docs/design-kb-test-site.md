@@ -172,18 +172,22 @@ Recorded for every answer, shown collapsed on the Ask page, stored in `answers.t
 - Admin pages behind author login.
 
 ## Candidate models
-Source: Vercel AI Gateway model list, checked 2026-11-03. Prices per 1M input / output tokens; re-check before use.
+Source: Vercel AI Gateway model list, checked 2026-11-03. Prices per 1M input / output tokens; re-check before use. Sizes and image input: confirm on each model card before the first run.
 
-| Vercel model id | Size | Customer hardware at 4-bit (estimate) | Price | Role |
-|---|---|---|---|---|
-| `openai/gpt-oss-20b` | 20B, mixture-of-experts | One 16 GB GPU | $0.07 / $0.30 | Main candidate |
-| `google/gemma-4-31b-it` | 31B dense | One 24-48 GB GPU | $0.14 / $0.40 | Strongest deployable size |
-| `google/gemma-4-26b-a4b-it` | 26B, 4B active | One 16-24 GB GPU | $0.13 / $0.40 | Fast option |
-| `alibaba/qwen-3-14b` | 14B dense | One 12-16 GB GPU or a large CPU VM | $0.12 / $0.24 | Small-hardware option |
-| `mistral/ministral-8b` | 8B | CPU VM or small GPU | $0.15 / $0.15 | Lower bound |
+| Vercel model id | Size | Customer hardware at 4-bit (estimate) | Price | Image input | Role |
+|---|---|---|---|---|---|
+| `google/gemma-4-31b-it` | 31B dense | One 24-48 GB GPU | $0.14 / $0.40 | Expected yes | 30B band |
+| `alibaba/qwen-3-32b` | 32B dense | One 24-48 GB GPU | $0.08 / $0.28 | Expected no | 30B band |
+| `mistral/mistral-small` | about 24B | One 16-24 GB GPU | $0.15 / $0.60 | Expected yes | 30B band |
+| `google/gemma-4-26b-a4b-it` | 26B, 4B active | One 16-24 GB GPU | $0.13 / $0.40 | Expected yes | 30B band, fast |
+| `nvidia/nemotron-3-nano-30b-a3b` | 30B, 3B active | One 16-24 GB GPU | $0.05 / $0.20 | Expected no | 30B band, fast |
+| `openai/gpt-oss-20b` | 20B, mixture-of-experts | One 16 GB GPU | $0.07 / $0.30 | No | 20B |
+| `alibaba/qwen-3-14b` | 14B dense | One 12-16 GB GPU or a large CPU VM | $0.12 / $0.24 | Expected no | Small hardware |
+| `mistral/ministral-8b` | 8B | CPU VM or small GPU | $0.15 / $0.15 | Check | Floor |
 
+- 6 models in the 20-32B band from 5 vendors; 2 small models show how far down a customer can go.
 - Excluded: frontier closed models (customers cannot run them); Llama (licence restrictions).
-- 70B class: test only if 31B misses golden cases through reasoning errors, not retrieval errors.
+- 70B class: test only if the 30B band misses questions through reasoning errors, not retrieval errors.
 - Gemini API (free Gemma 4) is a fallback for testing only: free-tier data may be used by Google.
 
 ## Why 8B-32B is enough
@@ -198,54 +202,109 @@ Source: Vercel AI Gateway model list, checked 2026-11-03. Prices per 1M input / 
 - Before recommending a model: re-run the golden cases on the 4-bit build (for example, one hour on a rented GPU).
 
 ## Build phases
-1. Runner first, no website. See Phase 1 test plan.
-2. Ask page with citations and retrieval trace. Author only. Uses the mode and model that won phase 1.
-3. Ratings, flags, review queue. Invite visitors.
-4. Compare page (blind A/B) and dashboard.
-5. 4-bit re-test of the chosen model and mode on customer-like hardware.
+The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the Human Test.
 
-## Phase 1 test plan
+| Phase | Stage | Content |
+|---|---|---|
+| 1 | Auto Test | Claude runs the question set on all candidate models and modes; scoring is automatic. Picks the default model and mode. See Auto Test plan. |
+| 2 | Human Test | Ask page on isvara.io with citations and retrieval trace. Author only. Uses the phase 1 winner. Replaces the current basic agent on isvara.io. |
+| 3 | Human Test | Ratings, flags, review queue. Invite visitors. |
+| 4 | Human Test | Compare page (blind A/B) and dashboard. Screenshot upload when a vision-capable model is chosen. |
+| 5 | Auto Test | 4-bit re-test of the chosen model and mode on customer-like hardware. Re-run after each major knowledge update. |
+
+## Auto Test plan
+### Question set
+- Target: 100 multiple-choice questions. Start with the 30 existing quiz-style questions; grow to 100.
+- Every question has: options A-G, the correct set, one trap option named in `## Likely wrong answer`, and the `knowledge` ids that answer it.
+- Mix by difficulty (not all hard):
+
+| Share | Level | Purpose | Example |
+|---|---|---|---|
+| 20% | Recall | Retrieval works at all; a failure here is a retrieval bug, not a reasoning limit. | What does VM CPU Co-stop measure? |
+| 50% | Level 400 reasoning and traps | The core: mechanism, vantage point, same-name traps. | Utilization 50% and Core Utilization 50%: what does it mean? |
+| 20% | Multi-hop | Combine 3 or more files, with arithmetic or units. | Likely vCPU speed on a busy cluster from a spec sheet. |
+| 10% | Screenshot | Read a chart or table image and apply the knowledge. | The vCenter ESXi CPU chart question. |
+
+- Balance by area: cpu, memory, storage, network, system, in proportion to the knowledge base; at least 10 questions per area.
+- Include about 10 questions the knowledge base cannot answer. Correct behaviour: choose "Not covered by the knowledge base" (an option on every question). Measures guessing.
+- Golden questions are never used for fine-tuning or as retrieval content.
+
+### Screenshot questions
+- Purpose: prepare for users who upload screenshots and ask the agent to explain the problem.
+- Two tracks, scored separately:
+  - Vision track: the image is sent to vision-capable models only.
+  - Text track: the same question with the image replaced by a written description (values, axes, legend). Every model takes it.
+- The gap between the two tracks shows how much reading the image itself costs.
+- Images: author screenshots with host and customer names masked before commit.
+
 ### Matrix
 | Dimension | Values |
 |---|---|
-| Model | the 5 candidates (see Candidate models) |
+| Model | the 8 candidates (see Candidate models) |
 | Mode | baseline (no knowledge base), classic RAG, agentic retrieval |
-| Cases | all golden cases (21 now) |
-| Repeats | 3 runs per cell, temperature 0.2, to see variance |
-- Cells: 5 models x 3 modes x 21 cases x 3 repeats = 945 answers per full run.
-- Cost estimate: under US$ 5 per full run at current Vercel prices (agentic uses about 2-3x the tokens of classic). Re-check prices.
+| Questions | 100 (30 at start) |
+| Runs | 5 per question per model per mode |
+| Temperature | the value the website will use; fixed for the whole run |
+- Full run: 8 x 3 x 100 x 5 = 12,000 answers. At 30 questions: 3,600.
+- Cost estimate: about US$ 10-30 per full run at 100 questions, mostly agentic mode. Re-check prices.
+- Duration: 1-3 hours per full run, set by provider rate limits and agentic steps (10-30 s per agentic answer).
 
-### Measured per answer
+### Why 5 runs
+- Hosted models do not give the same answer twice, even at temperature 0:
+  - sampling randomness above temperature 0;
+  - batching with other users' requests changes GPU arithmetic order; near-tied tokens flip;
+  - the gateway can route the same model id to different providers, precision and hardware;
+  - providers update serving software without notice.
+- Pin one provider per model in the gateway when possible. Record per answer: model, provider, temperature, date and time.
+
+### Multiple-choice scoring
+- Answer format fixed: `ANSWER: <letters>` then `REASON: <one line>`. Unparseable answer = wrong; parse failures counted per model.
+- Option order shuffled per run; letters mapped back before scoring. Removes position bias.
+- Single-answer questions: right or wrong.
+- Multi-select questions: exact match is the headline score; partial credit (correct picks minus wrong picks, floor 0, divided by the size of the correct set) is reported beside it.
+- The reason line is not scored. It is read for every wrong answer to tag the cause.
+
+### Measured per model and mode
 | Measure | How |
 |---|---|
-| Score 0-3 | Rubric from `evaluation/README.md`. First pass by a judge model against `## Expected key points`; author checks every 0 and every disagreement between repeats. |
-| Trap hit | Answer matches `## Likely wrong answer`. |
-| Retrieval recall | Share of the case's `knowledge` ids that were retrieved (classic) or read (agentic). |
-| Retrieval precision | Share of retrieved or read ids that the answer cited. |
+| Mean score | Mean over 5 runs; exact match and partial credit. |
+| Majority score | Most common answer per question across 5 runs. |
+| Consistency | Share of questions answered identically in all 5 runs. Low consistency = two visitors get different answers. |
+| Trap rate | Share of answers that picked the trap option. |
+| Not-covered accuracy | Share of out-of-scope questions answered "Not covered". |
+| Retrieval recall | Share of the question's `knowledge` ids retrieved (classic) or read (agentic). |
 | Tool errors (agentic) | Bad format, refused repeats, budget hits, fallbacks. |
-| Steps (agentic) | Tool calls used. |
-| Tokens and latency | Per answer. |
-| Post-check result | pass, pass after retry, warning. |
+| Parse failures | Answers not in the fixed format. |
+| Tokens, latency | Per answer. |
+| Vision gap | Vision track minus text track, screenshot questions only. |
+- All measures also per area and per difficulty level.
 
-### Judge rules
-- The judge model is a different model from the one under test, and never one of the 5 candidates. A frontier model is fine here: the judge is not deployed to customers. It sees the prompt, the answer and the answer key; the model under test never sees the key.
-- The judge returns a score and the key points matched. The author's score overrides it. Author overrides are logged to calibrate the judge.
+### Reading the numbers
+- 30 questions, score near 70%: about plus or minus 16 points at 95% confidence. 100 questions: about plus or minus 9 points.
+- Repeats remove run-to-run noise, not the luck of which questions were chosen.
+- Compare models question by question on the same set (paired comparison), not only by totals.
+- Treat a gap below the margin as a tie; prefer the smaller model.
+
+### Free-text questions
+- Golden cases without options keep the 0-3 rubric. A judge model scores first; the author checks every 0 and every disagreement between runs.
+- The judge is never one of the candidates. A frontier model is fine: it is not deployed to customers. It sees the answer key; the model under test never does. Author scores override and are logged.
 
 ### Decision rules
-- Pick the mode: agentic must beat classic RAG by at least 0.3 mean score on the same model, or classic RAG stays the default (simpler, cheaper).
-- Pick the model: highest mean score in the chosen mode; ties go to the smaller model.
+- Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
+- Pick the model: highest majority score in the chosen mode, with consistency of at least 80%; ties go to the smaller model.
 - Agentic is dropped for a model with more than 10% fallbacks.
-- Knowledge base lift: kb modes must beat baseline on every technology area. An area with no lift is a knowledge or retrieval problem, not a model problem.
-- 70B test: only if the best 31B result loses points through reasoning errors (trace shows the right files were read).
+- Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
+- Screenshot upload on isvara.io only if the chosen model passes the vision track.
+- 70B test: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
 
 ### Outputs
-- `evaluation/results/results.csv`: one row per answer (add columns: mode, retrieval_recall, steps, tokens, post_check).
-- A short report per run in `evaluation/results/`: matrix of mean scores, worst cases, trace links.
-- Every failed case tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a to-do or author question.
+- `evaluation/results/results.csv`: one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).
+- A short report per run in `evaluation/results/`: score matrix, consistency, worst questions, trace links.
+- Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a to-do or author question.
 
 ## Decisions for the author
 - Hosting: decided 2026-11-03: Vercel AI Gateway for the test site.
 - Audience: author only, invited experts, or public?
 - Who scores: author only, or visitor ratings count too?
-- Model: decided 2026-11-03: compare the 5 candidates in phase 1.
+- Model: decided 2026-11-03: compare the 8 candidates in the Auto Test; 5 runs; 100-question target.
 - Domain name and branding.
