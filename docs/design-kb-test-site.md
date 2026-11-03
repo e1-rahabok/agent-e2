@@ -290,6 +290,16 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 - Golden cases without options keep the 0-3 rubric. A judge model scores first; the author checks every 0 and every disagreement between runs.
 - The judge is never one of the candidates. A frontier model is fine: it is not deployed to customers. It sees the answer key; the model under test never does. Author scores override and are logged.
 
+### Target (author, 2026-11-03)
+- Goal: the local model with the knowledge base answers better than the best frontier model without it.
+- Pass mark: 99% exact on the golden multiple-choice set (Majority score, chosen mode).
+- Reference point: the best frontier model in baseline mode (no knowledge base). Measured each run.
+- What 99% requires:
+  - At 17 questions, 99% allows no wrong question. One wrong question = 94%.
+  - At 100 questions, 99% allows 1 wrong question. The 95% margin near 99% is about ±2 points, so the claim is testable only at 100+ questions.
+  - Answer keys must be correct. Every wrong answer from the best model gets an author check: model error, knowledge-base gap, or key error.
+- Status at run 20261103-081849: best small model 58% exact (classic). Gap: 41 points.
+
 ### Decision rules
 - Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
 - Pick the model: highest majority score in the chosen mode, with consistency of at least 80%; ties go to the smaller model.
