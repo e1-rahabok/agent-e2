@@ -6,9 +6,9 @@
 |---|---|
 | MEM overcommit avg | 1, 5, 15-minute exponentially weighted averages. Ratio of total requested memory to managed memory, minus 1. Requested = VM configured memory (or limit) + user world memory + reserved overhead. Above 0 (ratio above 1): requested exceeds physical; fine with ballooning and sharing. The book prefers configured VM memory alone for capacity. |
 | PMEM | Physical memory. Total (from BIOS) = vmk + other + free. vmk: kernel code, data, heap, management. Other: VMs and non-VM user worlds. |
-| VMKMEM | Managed (slightly below total; allocatable to VMs, user worlds, kernel), minfree (kept free for critical use; inside Free), reserved (group reservations + overhead reservations + minfree), unreserved (available for reservation), state (keep High). |
+| VMKMEM | Managed (slightly below total; allocatable to VMs, user worlds, kernel), minfree (kept free for critical use; inside Free), reserved (group reservations + overhead reservations + minfree), unreserved (available for reservation), state (keep High). 5 states: high (no pressure), clear, soft, hard, low (under pressure). See `vsphere/memory/concepts/host-memory-states`. |
 | NUMA | Per node: total and free. Sum is slightly below total. Cluster-on-Die doubles the nodes. |
-| PSHARE | shared (VM memory shared), common (machine memory common across worlds), saving (machine memory saved). |
+| PSHARE | shared (VM memory shared), common (machine memory common across worlds), saving (machine memory saved). shared = common + saving. |
 | SWAP | Sum of VM swapped. rclmtgt: target MB to swap. |
 | ZIP | Sum of VM zipped. |
 | MEMCTL | Sum of VM ballooned. |
@@ -47,8 +47,8 @@
 | Counter | Meaning |
 |---|---|
 | MEMSZ (MB) | Memory allocated to the VM. MEMSZ = GRANT + MCTLSZ + SWCUR + never touched. Where compressed pages go is unclear. |
-| GRANT (MB) | Granted. Not Consumed. |
-| CNSM | Consumed. |
+| GRANT (MB) | Granted. Not Consumed. Consumed = GRANT - SHRDSVD. |
+| CNSM | Consumed: memory the VM uses now, minus sharing savings and minus compression savings. |
 | SZTGT (MB) | Machine memory the kernel aims to allocate. |
 | TCHD (MB) | Touched: working set estimate. |
 | TCHD_W | Touched by writes. Far below TCHD: mostly reads. |
@@ -112,6 +112,7 @@ source:
   path: Provider Objects > esxtop > Memory
 corrections: []
 review_notes:
+- 'Sections ''Summary lines'', ''Consumption'': state values, shared = common + saving, Consumed = GRANT - SHRDSVD and the CNSM definition from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > esxtop > Memory Panel (pp. 2155-2157). The esxtop section of the documentation lists only 4 states (high, soft, hard, low); the file keeps the 5 states of vsphere/memory/concepts/host-memory-states (Clear added in ESXi 6.0, Claude''s own knowledge).'
 - 'Section ''Summary lines'': overcommit formula source cited by the book: https://communities.vmware.com/t5/Storage-Performance/Interpreting-esxtop-4-1-Statistics/ta-p/2786881 (esxtop 4.1 era).'
 status: draft
 ```

@@ -81,6 +81,7 @@ source:
   path: Provider Objects > esxtop > Network
 corrections: []
 review_notes:
+- 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the book says DTYP is no longer shown. Open question Q046.'
 - 'KB from the book: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html (not read).'
 status: draft
 ```

@@ -197,6 +197,29 @@ Each entry has:
 - Written as now: guest-os-vs-vm-memory says neither the VMkernel nor the Guest OS has full visibility into the other (close to A, but not "managed independently"). No file states that ballooning requires VMware Tools running (D).
 - Answer:
 
+### Q044 · Chapter 4 Storage > ESXi · Latency thresholds vs vSphere 9.1 documentation
+- Files: `vsphere/storage/diagnosis/host-storage-latency`, `vsphere/system/concepts/vsphere-client-performance-guidance`
+- Search 1: "the value should be within 0.5 ms"
+- Search 2: "In a healthy environment, it should be well within 5 ms"
+- Question: the vSphere 9.1 documentation (vSphere Monitoring and Performance > Solutions for Disk Performance Problems, p. 2121) says kernelLatency best 0-1 ms and a problem above 4 ms; deviceLatency above 15 ms indicates an array problem; queueLatency must be 0. Keep the book values as the knowledge-base thresholds, and the documentation values only as the vendor's published guidance?
+- Written as now: diagnosis file uses the book values (KAVG 0.5 ms, DAVG well within 5 ms). The guidance file lists the documentation values, says the 15 ms value comes from spinning-disk arrays, and points to the book values.
+- Answer:
+
+### Q045 · Chapter 3 Memory > VM · Swapped formula in the vSphere 9.1 documentation
+- Files: `vsphere/memory/metrics/virtual-machine/swapped`
+- Search: "This is why Swapped is not Swapped In – Swapped Out"
+- Question: the vSphere 9.1 documentation (Virtual Machines > Memory (MB), p. 2103) defines VM Swapped = swapout – swapin, and adds that vMotion can make Swapped larger than swapout – swapin. Is the documentation wrong, or does its formula hold for cumulative counters (total swapped out minus total swapped in) while the book means the rates?
+- Written as now: Swapped is not Swap in - Swap out: both run in parallel on different pages. Related to Q019 (host Swap Consumed).
+- Answer:
+
+### Q046 · Provider Objects > esxtop · HTQ and DTYP still in the 9.1 documentation
+- Files: `vsphere/cpu/metrics/comparisons/esxtop-cpu`, `vsphere/network/metrics/comparisons/esxtop-network`
+- Search 1: "The column HTQ is no longer shown in ESXi 7.0"
+- Search 2: "does not seem to be available anymore"
+- Question: the vSphere 9.1 documentation still lists HTQ (CPU panel) and DTYP (network panel). Do they show on an ESXi 9.1 host?
+- Written as now: both described as no longer shown, per the book.
+- Answer:
+
 ## Resolved
 ### Q001 · Chapter 2 CPU > VM · Linux Steal Time
 - Files: `vsphere/cpu/metrics/virtual-machine/overlap`, `vsphere/cpu/metrics/virtual-machine/latency`

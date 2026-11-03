@@ -33,6 +33,22 @@
 
 - Make sure there is enough CPU headroom to handle the CPU cost of memory tiering (9.1 p. 38).
 
+## Monitoring counters (vSphere Client, host and VM)
+| Counter | Object | Unit, rollup, level | Meaning |
+|---|---|---|---|
+| tier.consumed (Tier memory consumed) | Host | MB, Latest, level 2 | ESXi pages consumed per tier. |
+| Tier in rate | Host | MBps | Rate at which pages are brought back from the NVMe tier to DRAM. |
+| Tier out rate | Host | MBps | Rate at which pages are moved to the NVMe tier. |
+| bandwidth.total (Estimated DRAM / NVMe Bandwidth) | Host | MBps, Latest, level 1 | Total read and write bandwidth per memory type. |
+| bandwidth.read, bandwidth.write | Host, VM | MBps, Latest, level 2 | Read and write bandwidth per tier (DRAM = tier 0, NVMe = tier 1). |
+| latency.read, latency.write | Host | ns, Latest, level 3 | DRAM and NVMe read and write latency. |
+
+- Tier in rate is the performance signal: a VM touches a page that sits on NVMe and waits for it. Tier out rate is housekeeping of cold pages.
+- NVMe read latency against the thresholds above uses latency.read of the NVMe tier, in nanoseconds: 200 µs = 200,000 ns.
+- The NVMe charts appear only on hosts with memory tiering configured.
+- latency.read and latency.write are level 3: not stored at the default statistics level. See `vsphere/foundations/vcenter-statistics`.
+- The vSphere Client lists each tier device with its details on the host's Memory Tiering pane.
+
 ## Operations (book)
 - Use memory tiering actively, as part of memory, not as an occasional buffer.
 - Leave 25% of the NVMe drive unpartitioned (for example 1.2 TB of a 1.6 TB drive). The flash translation layer then has spare blocks for lazy garbage collection, avoiding urgent inline garbage collection under write pressure.
@@ -64,6 +80,7 @@ object:
 internal_derive: []
 related:
 - vsphere/memory/concepts/overcommit-techniques
+- vsphere/foundations/vcenter-statistics
 - vsphere/memory/configuration/host-level-swapping
 - vsphere/storage/metrics/host/disk
 source:
@@ -75,5 +92,6 @@ review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Introduced in vSphere 9.0. The 9.1 document (p. 38) refers to ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub''. Not read.'
 - 'Section ''Operations (book)'': from Storage > ESXi. The 25% figure is the author''s practice.'
+- 'Section ''Monitoring counters'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Hosts > Memory (MB), Memory Rate (MBps), Memory Bandwidth (MBps), Memory Latency (ns); View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145). The reading of tier in rate as the performance signal is Claude''s inference.'
 status: draft
 ```

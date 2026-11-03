@@ -93,6 +93,8 @@ related:
 - vsphere/cpu/metrics/virtual-machine/co-stop
 - vsphere/cpu/metrics/virtual-machine/contention
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
+- vsphere/system/concepts/vsphere-client-performance-guidance
+- vsphere/foundations/vcenter-statistics
 images:
   - path: ../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png
     product: [vsphere]
