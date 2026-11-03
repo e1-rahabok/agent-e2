@@ -50,6 +50,12 @@ related:
 - vsphere/storage/metrics/virtual-machine/disk-latency
 - vsphere/storage/metrics/virtual-machine/iops
 - vsphere/storage/metrics/virtual-machine/virtual-disk
+images:
+  - path: ../images/vm-storage-capacity-sources-disks-and-virtualization-files.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'VM storage capacity'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Storage > Architecture > VM Layer > Metric Mapping; Capacity

@@ -88,6 +88,28 @@ related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/demand
 - vsphere/cpu/metrics/comparisons/consumption-metrics
+images:
+  - path: ../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'CPU measurement levels'
+    image_type: diagram
+  - path: ../images/cpu-measurement-at-vcpu-thread-core-level.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'CPU measurement levels'
+    image_type: diagram
+  - path: ../images/cpu-usage-and-usage-mhz-from-vcpu-thread-core-perspective.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    metric: ['CPU Usage', 'CPU Usage (MHz)']
+    topic: 'CPU measurement levels'
+    image_type: diagram
+  - path: ../images/cpu-capacity-vs-performance-metrics-at-vcpu-core-socket-level.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'CPU measurement levels'
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 52, 55-57) > Architecture intro; ESXi ≠ VM + Kernel

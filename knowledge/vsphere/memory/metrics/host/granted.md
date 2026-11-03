@@ -35,6 +35,12 @@ same_meaning: []
 related:
 - vsphere/memory/metrics/host/consumed
 - vsphere/memory/metrics/virtual-machine/granted
+images:
+  - path: ../../images/esxi-memory-granted-above-total-capacity.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Granted']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Consumption Metrics > Granted

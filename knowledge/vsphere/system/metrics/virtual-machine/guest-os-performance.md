@@ -44,6 +44,12 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/system/metrics/virtual-machine/vm-performance
+images:
+  - path: ../../images/guest-os-performance-thresholds-table.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['Guest OS Performance']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > Guest OS Performance (%)'

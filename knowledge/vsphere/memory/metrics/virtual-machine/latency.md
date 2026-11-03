@@ -58,6 +58,13 @@ related:
 - vsphere/memory/metrics/virtual-machine/swap-in-rate
 - vsphere/memory/diagnosis/vm-memory-latency-high
 - vsphere/cpu/metrics/virtual-machine/swap-wait
+images:
+  - path: ../../images/vm-memory-contention-worst-value-distribution-across-vms.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM Memory Contention']
+    image_type: distribution
+    sample: '2,441 VMs'
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture; Memory > VM > Contention Metrics > Latency; Best Practice

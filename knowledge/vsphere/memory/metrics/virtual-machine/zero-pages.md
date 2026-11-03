@@ -36,6 +36,12 @@ related:
 - vsphere/memory/metrics/virtual-machine/shared
 - vsphere/memory/metrics/virtual-machine/granted
 - vsphere/memory/metrics/virtual-machine/consumed
+images:
+  - path: ../../images/vm-memory-consumed-below-guest-os-used-due-to-zero-pages.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Consumed', 'VM Memory Zero Pages', 'Guest OS Memory Used']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Consumption Metrics > Shared > Zero; Consumed > Guest OS

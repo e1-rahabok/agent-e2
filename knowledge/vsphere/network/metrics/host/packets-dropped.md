@@ -41,6 +41,18 @@ related:
 - vsphere/network/metrics/host/errors
 - vsphere/network/metrics/virtual-machine/packets-dropped
 - vsphere/network/diagnosis/vnic-rx-drops
+images:
+  - path: ../../images/esxi-network-transmit-dropped-across-hosts.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Network Transmit Packets Dropped']
+    image_type: table
+    sample: '319 hosts'
+  - path: ../../images/esxi-network-receive-dropped-per-host.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Network Receive Packets Dropped']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Network > ESXi > Contention Metrics > Dropped Packet; Received

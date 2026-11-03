@@ -46,6 +46,13 @@ related:
 - vsphere/memory/metrics/virtual-machine/zero-pages
 - vsphere/memory/metrics/virtual-machine/granted
 - vsphere/memory/metrics/virtual-machine/consumed
+images:
+  - path: ../../images/vm-memory-granted-shared-consumed-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Granted', 'VM Memory Shared', 'VM Memory Consumed']
+    image_type: table
+    sample: '7,505 VMs'
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Consumption Metrics > Shared; Savings

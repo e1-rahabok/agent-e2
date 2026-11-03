@@ -113,6 +113,13 @@ related:
 - vsphere/network/configuration/rss-and-interrupt-coalescing
 - vsphere/cpu/concepts/cpu-efficiency
 - vsphere/cpu/concepts/power-states
+images:
+  - path: ../images/latency-sensitivity-high-vm-cpu-run-demand-100-wait-0.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Run', 'VM CPU Demand', 'VM CPU Wait', 'VM CPU Usage']
+    topic: 'Latency sensitivity'
+    image_type: timeline
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: 'Network Considerations > Running Network Latency Sensitive Workloads (pp. 52-54); Consumer Objects > Performance: VM & Guest OS > Latency Sensitivity'

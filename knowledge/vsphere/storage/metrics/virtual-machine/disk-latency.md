@@ -51,6 +51,13 @@ related:
 - vsphere/storage/metrics/virtual-machine/outstanding-io
 - vsphere/storage/metrics/virtual-machine/disk
 - vsphere/storage/metrics/virtual-machine/datastore
+images:
+  - path: ../../images/vm-virtual-disk-latency-distribution-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Disk Latency']
+    image_type: distribution
+    sample: '2,400 VMs'
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance; Storage > VM > Performance Metrics > Contention Metrics

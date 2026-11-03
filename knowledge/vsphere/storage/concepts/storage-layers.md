@@ -84,6 +84,32 @@ related:
 - vsphere/storage/concepts/guest-os-vs-vm-storage
 - vsphere/storage/metrics/virtual-machine/virtual-disk
 - vsphere/storage/metrics/datastore/virtual-disk
+images:
+  - path: ../images/storage-layers-guest-os-to-storage-subsystem.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem, Datastore]
+    topic: 'Storage layers'
+    image_type: diagram
+  - path: ../images/vm-disks-on-vmfs-nfs-rdm-vsan.png
+    product: [vsphere, vsan]
+    object: [VirtualMachine, Datastore]
+    topic: 'Storage layers'
+    image_type: diagram
+  - path: ../images/esxi-storage-metric-groups-vmnic-adapter-path-datastore-disk.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'ESXi storage metric groups'
+    image_type: diagram
+  - path: ../images/esxi-storage-four-paths-from-two-adapters-to-one-device.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'Storage paths'
+    image_type: diagram
+  - path: ../images/vm-host-datastore-many-to-many-relationship.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem, Datastore]
+    topic: 'Object relationships'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Storage > Architecture > Storage Layers; VM Layer; ESXi Layer; Datastore Layer

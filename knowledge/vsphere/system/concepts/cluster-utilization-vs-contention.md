@@ -55,6 +55,35 @@ internal_derive:
 related:
 - vsphere/system/metrics/cluster/cluster-performance
 - vsphere/system/diagnosis/cluster-vm-contention
+images:
+  - path: ../images/cluster-cpu-demand-low-timeline.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster CPU Demand']
+    image_type: timeline
+    sample: '32 hosts, 2,357 VMs'
+  - path: ../images/cluster-cpu-demand-low-while-vm-ready-and-costop-high.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource, VirtualMachine]
+    metric: ['Cluster CPU Demand', 'VM CPU Ready', 'VM CPU Co-stop']
+    image_type: timeline
+    sample: '32 hosts, 2,357 VMs'
+  - path: ../images/cluster-utilization-flat-while-worst-vm-contention-spikes.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource, VirtualMachine]
+    metric: ['Cluster CPU Utilization', 'VM CPU Contention']
+    image_type: timeline
+  - path: ../images/esxi-memory-compressed-history-timeline.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Compressed']
+    image_type: timeline
+    sample: '1 host'
+  - path: ../images/esxi-worst-vm-memory-contention-with-free-memory.png
+    product: [vcf-operations]
+    object: [HostSystem, VirtualMachine]
+    metric: ['VM Memory Contention', 'ESXi Memory Free']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Performance > Contention vs Consumption

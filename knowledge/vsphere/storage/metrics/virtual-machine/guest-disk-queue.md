@@ -59,6 +59,24 @@ related:
 - vsphere/storage/metrics/virtual-machine/disk-latency
 - vsphere/storage/concepts/guest-os-vs-vm-storage
 - vsphere/system/metrics/virtual-machine/guest-os-performance
+images:
+  - path: ../../images/guest-os-disk-queue-spikes-timeline.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Disk Queue']
+    image_type: timeline
+    sample: '1 VM'
+  - path: ../../images/guest-os-disk-queue-distribution-across-vms.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Disk Queue']
+    image_type: distribution
+    sample: '3,000 VMs'
+  - path: ../../images/guest-os-disk-queue-spikes-while-vm-disk-latency-good.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Disk Queue', 'VM Disk Latency']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > Storage

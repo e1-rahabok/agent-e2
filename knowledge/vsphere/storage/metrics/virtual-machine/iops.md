@@ -46,6 +46,13 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/storage/metrics/virtual-machine/disk-latency
+images:
+  - path: ../../images/vm-disk-iops-distribution-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Disk IOPS']
+    image_type: distribution
+    sample: '3,500 VMs'
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; Storage > VM > Performance Metrics > Consumption metrics

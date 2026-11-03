@@ -63,6 +63,12 @@ related:
 - vsphere/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/cpu/concepts/esxi-thread-core-accounting
+images:
+  - path: ../../images/vcenter-vm-cpu-consumption-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Usage', 'VM CPU Usage (MHz)', 'VM CPU Demand', 'VM CPU Used', 'VM CPU Run']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > VM (pp. 78-118) > Consumption Metrics

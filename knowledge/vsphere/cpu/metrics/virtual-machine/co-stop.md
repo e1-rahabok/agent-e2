@@ -61,6 +61,18 @@ related:
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/cpu/concepts/cpu-topology
+images:
+  - path: ../../images/vm-cpu-vcpu0-ready-causes-sibling-vcpus-costop.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Ready', 'VM CPU Co-stop']
+    image_type: timeline
+  - path: ../../images/vm-cpu-costop-highest-value-distribution-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Co-stop']
+    image_type: distribution
+    sample: '2,429 VMs'
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Contention Metrics > Co-stop

@@ -57,6 +57,12 @@ related:
 - vsphere/cpu/metrics/virtual-machine/usage
 - vsphere/cpu/metrics/virtual-machine/overlap
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
+images:
+  - path: ../../images/vm-cpu-system-io-processed-by-guest-os-and-vmkernel.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU System']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Consumption Metrics > System

@@ -43,6 +43,12 @@ related:
 - vsphere/memory/metrics/virtual-machine/consumed
 - vsphere/memory/metrics/virtual-machine/utilization
 - vsphere/memory/metrics/virtual-machine/active
+images:
+  - path: ../../images/vcf-operations-vm-memory-usage-falls-back-to-active.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM Memory Usage', 'VM Memory Active']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Consumption Metrics > Usage (%)

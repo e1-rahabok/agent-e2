@@ -78,6 +78,22 @@ related:
 - vsphere/cpu/metrics/host/used
 - vsphere/cpu/metrics/host/demand
 - vsphere/cpu/diagnosis/host-cpu-capacity-headroom
+images:
+  - path: ../../images/vcenter-esxi-cpu-consumption-counters-table.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Usage', 'ESXi CPU Utilization', 'ESXi CPU Core Utilization', 'ESXi CPU Used']
+    image_type: table
+  - path: ../../images/esxi-cpu-utilization-rollup-6-scenarios-with-proposed-value.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Utilization', 'ESXi CPU Usage']
+    image_type: table
+  - path: ../../images/esxi-cpu-usage-vs-proposed-value-at-low-and-turbo-frequency.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Usage']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: 'CPU > ESXi > Consumption Metrics > Quiz: 50% or 75% or 100%?; Summary > Comparison'

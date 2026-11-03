@@ -46,6 +46,12 @@ same_meaning: []
 related:
 - vsphere/network/metrics/virtual-machine/throughput
 - vsphere/network/metrics/host/packets-dropped
+images:
+  - path: ../../images/esxi-network-usage-rate-equals-receive-plus-transmit.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Network Usage Rate', 'ESXi Network Data Receive Rate', 'ESXi Network Data Transmit Rate']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Network > ESXi > ESXi intro; Consumption Metrics; Unusual Packets

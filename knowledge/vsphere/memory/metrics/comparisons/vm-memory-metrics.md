@@ -87,6 +87,52 @@ related:
 - vsphere/memory/metrics/virtual-machine/entitlement
 - vsphere/memory/metrics/virtual-machine/overhead
 - vsphere/memory/metrics/virtual-machine/usage
+images:
+  - path: ../../images/vcenter-vm-memory-page-fault-latency-counter-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Latency']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-host-cache-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Host Cache Consumed', 'VM Memory Host Cache Swap In Rate', 'VM Memory Host Cache Swap Out Rate']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-balloon-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Balloon Target', 'VM Memory Ballooned']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-swap-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Swap In', 'VM Memory Swap Out', 'VM Memory Swap Target', 'VM Memory Swapped']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-compression-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Compressed', 'VM Memory Compression Rate', 'VM Memory Decompression Rate']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-consumption-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Consumed', 'VM Memory Granted', 'VM Memory Entitlement', 'VM Memory Shared']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-active-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Active', 'VM Memory Active Write']
+    image_type: table
+  - path: ../../images/vcenter-vm-memory-overhead-and-zero-counters-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Overhead', 'VM Memory Zero Pages']
+    image_type: table
+  - path: ../../images/vm-memory-virtual-view-vs-physical-view.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'VM memory views'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Overview; Contention Metrics; Consumption Metrics; Demand

@@ -44,6 +44,19 @@ same_meaning: []
 related:
 - vsphere/storage/metrics/host/disk
 - vsphere/storage/diagnosis/host-storage-latency
+images:
+  - path: ../../images/esxi-storage-adapter-latency-99th-vs-95th-percentile-sorted.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi Storage Adapter Read Latency', 'ESXi Storage Adapter Write Latency']
+    image_type: table
+    sample: '192 hosts'
+  - path: ../../images/esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi Storage Adapter Read Latency', 'ESXi Storage Adapter Write Latency']
+    image_type: table
+    sample: '192 hosts, 1 week'
 source:
   document: PART 3 - Counters.docx
   path: Storage > ESXi > Storage Adapter & Path

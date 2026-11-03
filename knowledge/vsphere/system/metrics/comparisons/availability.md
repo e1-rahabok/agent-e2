@@ -61,6 +61,17 @@ same_meaning: []
 related:
 - vsphere/system/concepts/capacity-model
 - vsphere/system/concepts/cluster-operations
+images:
+  - path: ../../images/esxi-operational-availability-scoring-states.png
+    product: [vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi Operational Availability']
+    image_type: table
+  - path: ../../images/cluster-operational-availability-with-ha.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster Operational Availability']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Other Metrics > Availability

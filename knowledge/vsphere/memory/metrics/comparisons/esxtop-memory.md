@@ -101,6 +101,12 @@ related:
 - vsphere/system/concepts/esxtop
 - vsphere/memory/concepts/host-memory-states
 - vsphere/cpu/concepts/numa
+images:
+  - path: ../../images/esxtop-memory-summary-panel.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'esxtop memory'
+    image_type: screenshot
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > Memory

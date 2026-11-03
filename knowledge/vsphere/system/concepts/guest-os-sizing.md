@@ -85,6 +85,17 @@ related:
 - vsphere/system/concepts/rightsizing
 - vsphere/system/concepts/vm-footprint-sizing
 - vsphere/memory/metrics/virtual-machine/utilization
+images:
+  - path: ../images/guest-os-sizing-what-to-include-and-exclude.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    topic: 'Guest OS sizing'
+    image_type: table
+  - path: ../images/memory-utilization-range-two-schemes.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    topic: 'Guest OS sizing'
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'

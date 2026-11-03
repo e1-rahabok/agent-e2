@@ -38,6 +38,13 @@ related:
 - vsphere/memory/concepts/host-memory-states
 - vsphere/memory/metrics/virtual-machine/ballooned
 - vsphere/memory/metrics/host/consumed
+images:
+  - path: ../../images/esxi-memory-balloon-7-days-without-vm-contention.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Ballooned', 'VM Memory Contention']
+    image_type: timeline
+    sample: '1 host, 7 days'
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Overview; Contention Metrics > Balloon; All Together; Consumed > Ballooned

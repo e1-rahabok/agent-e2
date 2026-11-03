@@ -86,6 +86,13 @@ related:
 - vsphere/cpu/metrics/virtual-machine/demand
 - vsphere/cpu/metrics/virtual-machine/usage-disparity
 - vsphere/cpu/diagnosis/oversized-vm-downsizing
+images:
+  - path: ../../images/vm-cpu-usage-vs-run-scatter-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Usage', 'VM CPU Run']
+    image_type: scatter
+    sample: '1,102 VMs'
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Guest OS vs VM; ESXi ≠ VM + Kernel; CPU Throughput; Impacts on VM; CPU > VM (pp. 78-118) > Consumption Metrics > Used | Usage > Usage

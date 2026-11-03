@@ -73,6 +73,23 @@ related:
 - vsphere/memory/metrics/host/ballooned
 - vsphere/memory/metrics/host/consumed
 - vsphere/memory/configuration/host-level-swapping
+images:
+  - path: ../images/esxi-memory-state-counter.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory State']
+    image_type: timeline
+  - path: ../images/esxi-memory-consumed-vs-guest-active-vs-capacity.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Consumed', 'ESXi Memory Active', 'ESXi Memory Total Capacity']
+    image_type: timeline
+    sample: '1 host, 3 months'
+  - path: ../images/esxi-memory-overcommit-balloon-follows-active.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Memory Ballooned', 'ESXi Memory Active', 'ESXi Memory Consumed']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Contention Metrics > Balloon

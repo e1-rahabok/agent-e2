@@ -53,6 +53,24 @@ related:
 - vsphere/cpu/concepts/windows-cpu-scheduling
 - vsphere/system/concepts/guest-os-sizing
 - vsphere/system/metrics/virtual-machine/guest-os-performance
+images:
+  - path: ../../images/windows-run-queue-peak-vs-99th-percentile-scatter.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS CPU Run Queue']
+    image_type: scatter
+    sample: '800 VMs, 1 month'
+  - path: ../../images/windows-run-queue-distribution-across-vms.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS CPU Run Queue']
+    image_type: distribution
+    sample: '3,385 VMs, 1 week'
+  - path: ../../images/windows-high-run-queue-with-imbalanced-vcpu-run.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS CPU Run Queue', 'VM CPU Run']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > CPU > Run Queue

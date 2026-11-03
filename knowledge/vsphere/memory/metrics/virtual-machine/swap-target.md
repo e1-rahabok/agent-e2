@@ -38,6 +38,12 @@ related:
 - vsphere/memory/metrics/virtual-machine/swapped
 - vsphere/memory/metrics/virtual-machine/compressed
 - vsphere/memory/metrics/virtual-machine/consumed
+images:
+  - path: ../../images/vm-memory-swap-target-swapped-granted-consumed-quiz-table.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Swap Target', 'VM Memory Swapped', 'VM Memory Granted', 'VM Memory Consumed']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Swap + Compress > Transition; Quiz!

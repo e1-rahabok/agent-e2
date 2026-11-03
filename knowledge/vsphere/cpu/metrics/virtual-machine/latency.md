@@ -76,6 +76,12 @@ related:
 - vsphere/cpu/metrics/virtual-machine/contention
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/cpu/diagnosis/vm-cpu-contention-high
+images:
+  - path: ../../images/vm-cpu-latency-components-overlap-costop-ready-ht-power.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Latency']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Architecture intro; State of a VM vCPU; CPU > VM (pp. 78-118) > Contention Metrics > Latency

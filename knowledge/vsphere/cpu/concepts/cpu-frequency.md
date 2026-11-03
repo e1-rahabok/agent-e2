@@ -104,6 +104,13 @@ related:
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/core-utilization
+images:
+  - path: ../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Core Utilization', 'ESXi CPU Usage']
+    topic: 'Turbo Boost'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi

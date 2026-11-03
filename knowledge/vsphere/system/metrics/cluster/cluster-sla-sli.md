@@ -55,6 +55,12 @@ same_meaning: []
 related:
 - vsphere/system/metrics/cluster/cluster-performance
 - foundations/thresholds
+images:
+  - path: ../../images/sli-thresholds-table.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource, VirtualMachine]
+    topic: 'SLA and SLI'
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Performance > Service Level Metrics

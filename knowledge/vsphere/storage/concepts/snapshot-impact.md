@@ -44,6 +44,13 @@ related:
 - vsphere/cpu/metrics/virtual-machine/co-stop
 - vsphere/cpu/metrics/virtual-machine/other-wait
 - vsphere/cpu/metrics/virtual-machine/system
+images:
+  - path: ../images/datastore-read-iops-rise-with-vm-snapshot.png
+    product: [vsphere]
+    object: [Datastore, VirtualMachine]
+    metric: ['Datastore Read IOPS']
+    topic: 'VM snapshot'
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Storage > VM > Performance Metrics > Consumption metrics > Datastore

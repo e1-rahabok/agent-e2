@@ -85,6 +85,12 @@ internal_derive: []
 related:
 - vsphere/network/concepts/netioc
 - vsphere/network/concepts/network-observability
+images:
+  - path: ../images/nioc-vm-traffic-100-of-500-shares.png
+    product: [vsphere]
+    object: [VmwareDistributedVirtualSwitch, HostSystem]
+    topic: 'Network I/O Control'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Network > Architecture > Unique Characteristics

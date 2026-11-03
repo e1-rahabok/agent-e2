@@ -60,6 +60,29 @@ same_meaning: []
 related:
 - vsphere/cpu/metrics/host/imbalance
 - vsphere/system/concepts/cluster-operations
+images:
+  - path: ../../images/cluster-cpu-imbalance-count-of-high-vs-low-utilization-hosts.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster CPU Inter-Host Imbalance']
+    image_type: diagram
+  - path: ../../images/cluster-cpu-imbalance-score-ranges-wastage-vs-performance-risk.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster CPU Inter-Host Imbalance']
+    image_type: diagram
+  - path: ../../images/cluster-cpu-imbalance-score-colors-for-6-host-cluster.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster CPU Inter-Host Imbalance']
+    image_type: table
+    sample: '6 hosts'
+  - path: ../../images/cluster-cpu-imbalance-score-table-by-count-of-high-and-low-hosts.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster CPU Inter-Host Imbalance']
+    image_type: table
+    sample: '12 hosts'
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Overview > Inter-Host Imbalance

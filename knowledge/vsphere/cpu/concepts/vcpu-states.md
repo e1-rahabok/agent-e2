@@ -161,6 +161,35 @@ related:
 - vsphere/cpu/metrics/virtual-machine/ready
 - vsphere/cpu/metrics/virtual-machine/wait
 - vsphere/cpu/metrics/virtual-machine/latency
+images:
+  - path: ../images/vcpu-state-diagram-new-ready-run-costop-wait-zombie.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'vCPU states'
+    image_type: diagram
+  - path: ../images/vm-cpu-states-sum-to-20000-ms-per-vcpu-vcf-operations-chart.png
+    product: [vsphere, vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM CPU Run', 'VM CPU Ready', 'VM CPU Co-stop', 'VM CPU Wait']
+    topic: 'vCPU states'
+    image_type: timeline
+  - path: ../images/vm-cpu-states-sum-to-20000-ms-per-vcpu-vcenter-chart.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Run', 'VM CPU Ready', 'VM CPU Co-stop', 'VM CPU Wait']
+    topic: 'vCPU states'
+    image_type: timeline
+  - path: ../images/vcpu-run-wait-costop-ready-stacked-per-second.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Run', 'VM CPU Ready', 'VM CPU Co-stop', 'VM CPU Wait']
+    topic: 'vCPU states'
+    image_type: diagram
+  - path: ../images/multi-vcpu-vm-state-timeline-two-vcpus.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'vCPU states'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 60-67) > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU

@@ -39,6 +39,12 @@ related:
 - vsphere/system/metrics/cluster/cluster-risk
 - vsphere/system/metrics/cluster/cluster-performance
 - vsphere/system/concepts/capacity-model
+images:
+  - path: ../../images/cluster-consumption-thresholds-table.png
+    product: [vcf-operations]
+    object: [ClusterComputeResource]
+    metric: ['Cluster Consumption']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Other Metrics > Cluster Consumption (%)

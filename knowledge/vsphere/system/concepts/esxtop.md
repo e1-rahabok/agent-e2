@@ -48,6 +48,12 @@ object:
 internal_derive: []
 related:
 - vsphere/cpu/metrics/comparisons/esxtop-cpu
+images:
+  - path: ../images/esxtop-panels-overview.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'esxtop panels'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > Overview

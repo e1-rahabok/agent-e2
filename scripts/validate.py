@@ -69,6 +69,19 @@ def main():
         for k in LINK_FIELDS:
             for r in fm.get(k) or []:
                 if r not in ids: bad(f, f'{k} link "{r}" does not exist')
+        # every image link needs an entry in metadata 'images' with valid tags
+        entries = {e.get('path'): e for e in (fm.get('images') or []) if isinstance(e, dict)}
+        body_imgs = set(re.findall(r'!\[[^\]]*\]\(([^)]+)\)', body))
+        for p in body_imgs - set(entries): bad(f, f'image {p} has no entry in metadata images')
+        for p in set(entries) - body_imgs: bad(f, f'metadata images entry {p} is not linked in the body')
+        for p, e in entries.items():
+            for k in ('product', 'object', 'image_type'):
+                vals = e.get(k)
+                if not vals: bad(f, f'images entry {p}: {k} missing'); continue
+                for x in (vals if isinstance(vals, list) else [vals]):
+                    if x not in allowed[k]: bad(f, f'images entry {p}: {k} "{x}" not allowed')
+            if not e.get('metric') and not e.get('topic'):
+                bad(f, f'images entry {p}: needs metric or topic')
         for img in re.findall(r'!\[[^\]]*\]\(([^)]+)\)', body):
             full = os.path.normpath(os.path.join(os.path.dirname(f), img))
             linked_images.add(full)

@@ -65,6 +65,18 @@ related:
 - vsphere/memory/metrics/host/latency
 - vsphere/memory/metrics/host/swap-used
 - vsphere/memory/metrics/host/compressed
+images:
+  - path: ../../images/esxi-memory-virtual-view-vs-physical-view.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'ESXi memory views'
+    image_type: diagram
+  - path: ../../images/esxi-memory-usage-demand-utilization-consumed-across-hosts.png
+    product: [vsphere, vcf-operations]
+    object: [HostSystem]
+    metric: ['ESXi Memory Usage', 'ESXi Memory Demand', 'ESXi Memory Utilization', 'ESXi Memory Consumed']
+    image_type: table
+    sample: '185 hosts'
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Overview; Consumption Metrics > Analysis

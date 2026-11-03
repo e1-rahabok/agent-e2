@@ -64,6 +64,22 @@ related:
 - vsphere/cpu/metrics/virtual-machine/run
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/concepts/idle-and-unused-vcpus
+images:
+  - path: ../images/cpu-turbo-boost-example-nominal-all-core-single-core.png
+    product: [vsphere]
+    object: [HostSystem]
+    topic: 'Turbo Boost'
+    image_type: diagram
+  - path: ../images/vcpu-throughput-one-core-vs-all-cores-running.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'Turbo Boost'
+    image_type: table
+  - path: ../images/vm-cpu-run-flat-while-usage-falls-with-frequency.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Run', 'VM CPU Usage']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 77-78) > Impacts on VM

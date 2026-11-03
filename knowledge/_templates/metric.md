@@ -33,6 +33,13 @@ internal_derive: []                # ids of concept files this metric's meaning 
 same_name: []                      # ids of metrics with the same label but a different meaning
 same_meaning: []                   # ids of metrics with a different label but the same meaning
 related: []
+images:  # one entry per image linked in the body; omit when none
+  - path: ../../images/<name>.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['<metric name>']   # and/or topic: '<concept>'
+    image_type: timeline         # diagram, table, timeline, distribution, scatter, screenshot
+    sample: '<optional: fleet size and period>'
 source:
   document: <document name, version, revision>
   path: <heading path and pages>

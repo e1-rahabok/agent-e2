@@ -69,6 +69,17 @@ related:
 - vsphere/memory/metrics/virtual-machine/swap-in-rate
 - vsphere/memory/metrics/virtual-machine/latency
 - vsphere/memory/concepts/ballooning
+images:
+  - path: ../images/vm-memory-swap-out-rate-sum-matches-swapped.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Swap Out Rate', 'VM Memory Swapped']
+    image_type: timeline
+  - path: ../images/vm-memory-limit-swapped-and-compressed-move-opposite.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Consumed', 'VM Memory Swapped', 'VM Memory Compressed']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz

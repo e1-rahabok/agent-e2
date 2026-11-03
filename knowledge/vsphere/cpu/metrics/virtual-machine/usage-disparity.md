@@ -57,6 +57,12 @@ same_meaning: []
 related:
 - vsphere/cpu/metrics/virtual-machine/usage
 - vsphere/cpu/diagnosis/oversized-vm-downsizing
+images:
+  - path: ../../images/vm-cpu-usage-disparity-only-first-vcpu-busy.png
+    product: [vcf-operations]
+    object: [VirtualMachine]
+    metric: ['VM CPU Usage Disparity']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Consumption Metrics > CPU Usage Disparity

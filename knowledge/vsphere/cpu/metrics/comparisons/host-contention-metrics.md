@@ -49,6 +49,12 @@ related:
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/cpu/metrics/virtual-machine/ready
 - vsphere/cpu/metrics/virtual-machine/co-stop
+images:
+  - path: ../../images/vcenter-esxi-cpu-contention-counters-table.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Ready', 'ESXi CPU Co-stop', 'ESXi CPU Latency']
+    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Contention Metrics

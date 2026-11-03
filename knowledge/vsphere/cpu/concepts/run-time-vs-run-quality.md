@@ -85,6 +85,18 @@ related:
 - vsphere/cpu/metrics/virtual-machine/used
 - vsphere/cpu/metrics/virtual-machine/usage
 - vsphere/cpu/metrics/comparisons/consumption-metrics
+images:
+  - path: ../images/cpu-frequency-base-vs-all-core-turbo-vs-single-core-turbo-while-running.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    topic: 'Turbo Boost'
+    image_type: timeline
+  - path: ../images/cpu-run-time-vs-throughput-car-analogy.png
+    product: [vsphere]
+    object: [VirtualMachine, HostSystem]
+    metric: ['VM CPU Run']
+    topic: 'CPU throughput'
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > Architecture (pp. 64-68, 77) > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput

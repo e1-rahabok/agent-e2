@@ -61,6 +61,12 @@ related:
 - vsphere/cpu/metrics/virtual-machine/used
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/cpu/metrics/virtual-machine/system
+images:
+  - path: ../../images/vm-cpu-used-vs-run-overlap-and-system.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Used', 'VM CPU Run', 'VM CPU Overlap', 'VM CPU System']
+    image_type: diagram
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Contention Metrics > Overlap

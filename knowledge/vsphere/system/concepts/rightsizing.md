@@ -42,6 +42,13 @@ related:
 - vsphere/system/concepts/vm-footprint-sizing
 - vsphere/cpu/concepts/cpu-topology
 - vsphere/cpu/concepts/numa
+images:
+  - path: ../images/vm-cpu-usage-mhz-per-vcpu.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Usage (MHz)']
+    topic: 'Rightsizing'
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > Benefits'

@@ -52,6 +52,17 @@ related:
 - vsphere/memory/metrics/virtual-machine/shared
 - vsphere/memory/metrics/virtual-machine/zero-pages
 - vsphere/memory/metrics/comparisons/vm-memory-metrics
+images:
+  - path: ../../images/vm-memory-granted-ignores-limit-consumed-below-limit.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Granted', 'VM Memory Consumed']
+    image_type: timeline
+  - path: ../../images/vm-memory-granted-rises-as-compressed-and-swapped-fall.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Granted', 'VM Memory Compressed', 'VM Memory Swapped']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Consumption Metrics > Granted

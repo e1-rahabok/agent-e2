@@ -62,6 +62,13 @@ related:
 - vsphere/storage/metrics/virtual-machine/disk
 - vsphere/storage/metrics/virtual-machine/datastore
 - vsphere/storage/concepts/vm-files
+images:
+  - path: ../../images/vm-disk-multi-writer-passive-vm-shows-zero-iops.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Disk IOPS']
+    topic: 'Multi-writer disk'
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > VM > Overview > Virtual Disk; Multi-Writer Disk

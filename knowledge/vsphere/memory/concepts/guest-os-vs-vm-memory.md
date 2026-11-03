@@ -78,6 +78,22 @@ related:
 - vsphere/memory/metrics/virtual-machine/consumed
 - vsphere/memory/metrics/virtual-machine/usage
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
+images:
+  - path: ../images/vm-memory-hypervisor-view-vs-guest-os-view.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'Guest OS vs VM'
+    image_type: diagram
+  - path: ../images/vm-memory-guest-os-used-vs-vm-active-active-directory-server.png
+    product: [vsphere, windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Memory Used', 'VM Memory Active']
+    image_type: timeline
+  - path: ../images/windows-memory-in-use-on-idle-vm.png
+    product: [windows]
+    object: [VirtualMachine]
+    metric: ['Guest OS Memory In Use']
+    image_type: screenshot
 source:
   document: PART 3 - Counters.docx
   path: 'Memory > Architecture > Guest OS vs VM; Example: Guest OS More Accurate; Example: VM More Accurate'

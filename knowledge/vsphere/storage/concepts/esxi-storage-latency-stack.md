@@ -54,6 +54,12 @@ related:
 - vsphere/storage/metrics/host/disk
 - vsphere/storage/diagnosis/host-storage-latency
 - vsphere/storage/metrics/virtual-machine/disk-latency
+images:
+  - path: ../images/esxi-storage-kernel-latency-vs-device-latency.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi Disk Kernel Latency', 'ESXi Disk Device Latency']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Storage > ESXi > Disk or Device > Contention Metrics

@@ -59,6 +59,12 @@ related:
 - vsphere/memory/metrics/virtual-machine/balloon-target
 - vsphere/memory/concepts/swap-and-compression
 - vsphere/memory/metrics/virtual-machine/latency
+images:
+  - path: ../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM Memory Ballooned', 'VM Memory Latency']
+    image_type: timeline
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Contention Metrics > Balloon; Swap + Compress > Balloon

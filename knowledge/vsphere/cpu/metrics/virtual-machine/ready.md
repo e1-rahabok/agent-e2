@@ -91,6 +91,13 @@ related:
 - vsphere/cpu/metrics/virtual-machine/co-stop
 - vsphere/cpu/metrics/virtual-machine/contention
 - vsphere/cpu/metrics/comparisons/vm-contention-metrics
+images:
+  - path: ../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    metric: ['VM CPU Ready']
+    image_type: scatter
+    sample: '3,937 VMs'
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture (pp. 52-78) > State of a VM vCPU; State Across Time; State Across Multiple vCPU; CPU > VM (pp. 78-118) > Contention Metrics > Ready; Best Practice; Ready | Readiness
