@@ -144,6 +144,59 @@ Each entry has:
 - Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
 - Answer:
 
+### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
+- Files: `tools/autotest/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `evaluation/results/autotest/20261103-093742/report.md`, section Analysis.
+- Search: not from the book. Finding from the frontier reference run 20261103-093742.
+- Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
+- Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
+- Finding:
+  - Frontier model: baseline (no knowledge base) 75%, classic 67%, agentic 67%.
+  - The ONLY rule cost 3 questions where the knowledge base is silent: vendor-neutral-general-001 (5 of 5 to 0 of 5), vsphere-cpu-013 (5 to 0), vsphere-general-001 (5 to 2).
+  - The knowledge base cut the trap rate: 16% to 6-9%.
+- Options:
+  - Keep ONLY: fewer invented answers; no credit where the knowledge base is silent; every gap must be filled in the knowledge base.
+  - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.
+  - Test both in one run and compare.
+- Answer:
+
+### Q039 · Auto Test > Golden case vendor-neutral-general-001 · Hyperscaler cost not in the knowledge base
+- Files: `evaluation/cases/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`
+- Search: not from the book.
+- Question: add hyperscaler cost content to the knowledge base, or score this case in baseline mode only?
+- Written as now: the knowledge base has no cost content. In knowledge-base modes every model chose "Not covered" (frontier: 10 of 10 runs). Baseline frontier: correct 5 of 5.
+- Answer:
+
+### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
+- Files: `evaluation/cases/vsphere/cpu/cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/cpu/metrics/host/core-utilization`, `vsphere/cpu/metrics/host/utilization`, `vsphere/cpu/metrics/host/usage`
+- Search 1 (quiz): "It is a balanced reporting"
+- Search 2 (quiz): "Plenty of physical threads are idle"
+- Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
+- Written as now: core-utilization says Core Utilization is a capacity metric (ignores frequency). utilization says Utilization suits capacity management. No file says which one is the ESXi true utilization, or why Core Utilization overstates it.
+- Answer:
+
+### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
+- Files: `evaluation/cases/vsphere/cpu/cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-management`, `vsphere/cpu/metrics/host/reserved-capacity`, `vsphere/system/concepts/hypervisor-overhead`
+- Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
+- Search 2 (quiz): "CPU reservation only comes into play during contention"
+- Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
+- Written as now: reservation in MHz/Hertz (supports D); CPU reservation not sticky, memory reservation sticky (supports C). No file states the cap at base nominal clock speed (A) or that the reservation only matters under contention (B).
+- Answer:
+
+### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
+- Files: `evaluation/cases/vsphere/cpu/cpu-013-reclaiming-vcpus-from-an-idle-vm.md`; `vsphere/system/concepts/rightsizing`, `vsphere/cpu/concepts/idle-and-unused-vcpus`, `vsphere/cpu/diagnosis/oversized-vm-downsizing`
+- Search (quiz): "Power off the VM, as this also frees the VM memory"
+- Question: key is C,D. Frontier baseline chose C,D in 5 of 5; frontier classic chose C only in 5 of 5, citing that the knowledge base does not make the claim. Should the knowledge base state that powering off an idle VM frees its memory, as part of reclamation?
+- Written as now: no file states that powering off an idle VM frees its memory. idle-and-unused-vcpus covers the CPU cost of idle vCPUs only.
+- Answer:
+
+### Q043 · Quiz > Memory > Q2 VM vs Guest OS · Options A and D
+- Files: `evaluation/cases/vsphere/memory/memory-003-relationship-between-vm-and-guest-os-memory-metrics.md`; `vsphere/memory/concepts/guest-os-vs-vm-memory`, `vsphere/memory/concepts/ballooning`, `vsphere/memory/metrics/virtual-machine/usage`
+- Search 1 (quiz): "Neither layer considers the other"
+- Search 2 (quiz): "the hypervisor cannot balloon the VM"
+- Question: key is A,B,D,E. Frontier dropped A or D in every run (baseline and agentic B,D,E; classic A,B,E). Are A and D both correct? If yes, which statements should the knowledge base add?
+- Written as now: guest-os-vs-vm-memory says neither the VMkernel nor the Guest OS has full visibility into the other (close to A, but not "managed independently"). No file states that ballooning requires VMware Tools running (D).
+- Answer:
+
 ## Resolved
 ### Q001 · Chapter 2 CPU > VM · Linux Steal Time
 - Files: `vsphere/cpu/metrics/virtual-machine/overlap`, `vsphere/cpu/metrics/virtual-machine/latency`
