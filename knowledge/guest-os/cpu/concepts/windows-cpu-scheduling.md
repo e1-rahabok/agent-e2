@@ -1,5 +1,9 @@
 # Windows CPU scheduling and thread states
 
+## Layer
+- Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
+- Counters here come from inside the Guest OS (PerfMon, WMI, or VMware Tools). vCenter and VCF Operations store some of them on the VirtualMachine object. That is a data path, not ownership.
+
 ## Tools
 - Performance Monitor (oldest), Task Manager, Resource Monitor. Names and possibly formulas differ.
 - Guest OS observability per thread or process is minimal: no per-process CPU queue, page faults, dropped packets or disk latency.
@@ -61,24 +65,23 @@
 
 ## Metadata
 ```yaml
-id: vsphere/cpu/concepts/windows-cpu-scheduling
+id: guest-os/cpu/concepts/windows-cpu-scheduling
 retriever_guide: how-it-works
-scope: vsphere
+scope: guest-os
 technology:
 - cpu
 pillar:
 - performance
 product:
 - windows
-- vsphere
-object:
-- VirtualMachine
+layer:
+- guest-os
 internal_derive:
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 related:
-- vsphere/cpu/metrics/guest-os/run-queue
-- vsphere/cpu/metrics/guest-os/context-switch
-- vsphere/cpu/metrics/guest-os/processor-time
+- guest-os/cpu/metrics/run-queue
+- guest-os/cpu/metrics/context-switch
+- guest-os/cpu/metrics/processor-time
 images:
   - path: ../images/windows-thread-states-diagram.png
     product: [windows]

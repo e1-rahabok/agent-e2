@@ -12,6 +12,8 @@ knowledge/
 ├── foundations/                     # general: applies across VCF 9 components (vSphere, vSAN, NSX, VCF Operations, Guest OS)
 │                                    # naming, units, sampling, thresholds, perspectives
 ├── glossary/                        # terminology.md: terms, allowed tag values, words to avoid (all products)
+├── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
+│   └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
 ├── vsphere/
 │   ├── foundations/                 # vSphere-specific only: provider/consumer, VM vs Guest OS,
 │   │                                # visibility layers, kernel worlds, resource management, overhead
@@ -19,7 +21,6 @@ knowledge/
 │   │   ├── concepts/                # how it works
 │   │   ├── metrics/<object-folder>/ # one metric, one vSphere object type per file
 │   │   │   ├── virtual-motherboard/ # VM metrics (a VM is a virtual motherboard)
-│   │   │   ├── guest-os/            # Guest OS metrics: a separate layer, not the VM
 │   │   │   └── comparisons/         # groups of metrics compared side by side
 │   │   ├── configuration/           # what to set, for any pillar
 │   │   └── diagnosis/               # symptom → checks → meaning
@@ -40,7 +41,7 @@ docs/                                # design decisions, To Do, legacy files (no
   - Test: if the fact is still true for vSAN, NSX or a Guest OS, it goes in `knowledge/foundations/`.
 - `object-folder` names: `virtual-motherboard`, `guest-os`, `host`, `cluster`, `datastore`, ... The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its metrics live in `virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
-- Guest OS metrics (Windows, Linux) are a separate layer. They live in `guest-os/` with `layer: guest-os` and no VM object, even though VMware Tools stores them on the VM object. `scripts/validate.py` enforces both rules.
+- Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. `scripts/validate.py` enforces these rules.
 
 ## Why this structure
 - Full reasoning: `docs/philosophy-and-structure.md`.
@@ -140,7 +141,7 @@ docs/                                # design decisions, To Do, legacy files (no
 | `pillar` | availability, performance, security, capacity, value. |
 | `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
 | `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
-| `layer` | Metric files: required in `virtual-motherboard/` and `guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
+| `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
 | `instance` | Metric files only, optional. The instance level when the formula differs by instance: aggregate, per-vcpu, per-vmnic, ... |
 | `metric_class` | Metric files only. contention, consumption, or context. Context metrics account for inventory or configuration and answer "it depends" questions. |
 | `internal_derive` | Ids of other knowledge-base files that this file is derived from. Internal links only. Not book chapters, not URLs. |

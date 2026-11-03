@@ -24,7 +24,7 @@
 - Example: Horizon Connection Server, 10 vCPU, about 120 processes and over 2,000 threads: steady 34K-37K (about 3.5K per CPU) while idle.
 - Use a value between the 95th and 99th percentile: momentary peaks rarely matter.
 - Profile per application: healthy for one VM may not be for another.
-![Context switch distribution across 11,372 VMs](../../images/guest-os-context-switch-rate-distribution-across-vms.png)
+![Context switch distribution across 11,372 VMs](../images/guest-os-context-switch-rate-distribution-across-vms.png)
 
 ## Correlation
 - Weak with CPU utilization across 3,328 VMs: not all instructions switch. Strong in some VMs.
@@ -36,9 +36,9 @@
 
 ## Metadata
 ```yaml
-id: vsphere/cpu/metrics/guest-os/context-switch
+id: guest-os/cpu/metrics/context-switch
 retriever_guide: metric-meaning
-scope: vsphere
+scope: guest-os
 technology:
 - cpu
 pillar:
@@ -53,11 +53,11 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vsphere/cpu/concepts/windows-cpu-scheduling
-- vsphere/cpu/metrics/guest-os/run-queue
+- guest-os/cpu/concepts/windows-cpu-scheduling
+- guest-os/cpu/metrics/run-queue
 - vsphere/cpu/metrics/virtual-motherboard/usage-disparity
 images:
-  - path: ../../images/guest-os-context-switch-rate-distribution-across-vms.png
+  - path: ../images/guest-os-context-switch-rate-distribution-across-vms.png
     product: [windows]
     object: [VirtualMachine]
     metric: ['Guest OS CPU Context Switch Rate']

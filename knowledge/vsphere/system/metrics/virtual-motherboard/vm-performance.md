@@ -52,7 +52,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/system/metrics/guest-os/guest-os-performance
+- guest-os/system/metrics/guest-os-performance
 - vsphere/system/metrics/comparisons/peak-20-second-metrics
 images:
   - path: ../../images/vm-performance-thresholds-table.png

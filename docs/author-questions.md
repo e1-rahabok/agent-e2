@@ -15,20 +15,6 @@ Each entry has:
 
 ## Open
 
-### Q017 · Chapter 3 Memory > VM · Sharing savings
-- Files: `vsphere/memory/metrics/virtual-motherboard/shared`, `vsphere/memory/metrics/virtual-motherboard/consumed`
-- Search: "Savings = 29.83 TB"
-- Question: Consumed = Granted - Savings gives 23.7 TB of savings, not 6.13 TB. Which is right?
-- Written as now: the book's calculation, flagged.
-- Answer:
-
-### Q018 · Chapter 3 Memory > VM · Utilization 5%
-- Files: `vsphere/memory/metrics/virtual-motherboard/utilization`
-- Search: "We add 5% of Total, not Used"
-- Question: where does the 5% enter the formula?
-- Written as now: formula and the 5% statement, flagged.
-- Answer:
-
 ### Q019 · Chapter 3 Memory > ESXi · Swap Consumed formula
 - Files: `vsphere/memory/metrics/host/swap-used`
 - Search 1 (ESXi): "I think this is swapped out – swapped in"
@@ -137,7 +123,7 @@ Each entry has:
 - Answer:
 
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
-- Files: `vsphere/cpu/concepts/windows-cpu-scheduling`, `vsphere/cpu/metrics/virtual-motherboard/run`
+- Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/cpu/metrics/virtual-motherboard/run`
 - Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
 - Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
 - Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
@@ -355,6 +341,20 @@ Each entry has:
 - Question: which holds?
 - Written as now: Architecture statement in the concept file; VM statement flagged.
 - Answer: VM compressed happens when ESXi Consumed is very high or a particular VM hit its limit. That Consumed page of a VM can contain a lot of cache, so it does not always translate to VM hitting latency.
+
+### Q017 · Chapter 3 Memory > VM · Sharing savings
+- Files: `vsphere/memory/metrics/virtual-motherboard/shared`, `vsphere/memory/metrics/virtual-motherboard/consumed`
+- Search: "Savings = 29.83 TB"
+- Question: Consumed = Granted - Savings gives 23.7 TB of savings, not 6.13 TB. Which is right?
+- Written as now: the book's calculation, flagged.
+- Answer:
+
+### Q018 · Chapter 3 Memory > VM · Utilization 5%
+- Files: `vsphere/memory/metrics/virtual-motherboard/utilization`
+- Search: "We add 5% of Total, not Used"
+- Question: where does the 5% enter the formula?
+- Written as now: formula and the 5% statement, flagged.
+- Answer:
 
 ### Q034 · Quiz > CPU > Q2 VM CPU Speed · 80% vs 62.5% Hyper-Threading charge
 - Files: `evaluation/cases/vsphere/cpu/cpu-005-...`, `vsphere/cpu/metrics/virtual-motherboard/usage`, `vsphere/cpu/metrics/virtual-motherboard/used`
