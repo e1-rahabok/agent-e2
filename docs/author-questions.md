@@ -24,7 +24,7 @@ Each entry has:
 - Search 5 (Memory > ESXi): "It takes longer to realize, and is not affected by limit"
 - Question: does a limit cause ballooning?
 - Written as now: both, flagged.
-- Answer:
+- Answer: The answer is not directly. Why an in-between answer? Go back to the 4 layers of memory. They are at different level on memory management. Limit results in swapped or compressed is Consumed tries to grow beyond. Consumed grows because Guest OS uses more. These uses can come from balloon driver or other processes.
 
 ### Q015 · Chapter 3 Memory > VM · Memory Latency: space or time
 - Files: `vsphere/memory/metrics/virtual-machine/latency`, `vsphere/memory/concepts/memory-as-storage`
@@ -32,7 +32,8 @@ Each entry has:
 - Search 2 (VM): "the amount of time a vCPU spends waiting on the completion of a page fault"
 - Question: is Memory Latency a share of space or a share of time?
 - Written as now: both definitions, flagged. vCenter description says time.
-- Answer:
+- Answer: Search 1 is wrong. Book updated. The correct answer is Search 2. Memory Latency, aka "Page-fault latency" is tracking the amount of time a vCPU spends waiting on the completion of a page fault. Its value is mostly swap wait, with a bit of page decompression / copy-on-write-break. The counter is called %LAT_M in esxtop. The latency metric is highly corelated with the swap-in rate.
+
 
 ### Q016 · Chapter 3 Memory > VM · Meaning of Compressed and Swapped
 - Files: `vsphere/memory/metrics/virtual-machine/swapped`, `vsphere/memory/concepts/memory-layers`
@@ -40,7 +41,7 @@ Each entry has:
 - Search 2 (Architecture): "It does not mean VMs were contending for RAM"
 - Question: which holds?
 - Written as now: Architecture statement in the concept file; VM statement flagged.
-- Answer:
+- Answer: VM compressed happens when ESXi Consumed is very high or a particular VM hit its limit. That Consumed page of a VM can contain a lot of cache, so it does not always translate to VM hitting latency.
 
 ### Q017 · Chapter 3 Memory > VM · Sharing savings
 - Files: `vsphere/memory/metrics/virtual-machine/shared`, `vsphere/memory/metrics/virtual-machine/consumed`
