@@ -47,7 +47,15 @@ flowchart LR
 - Golden case runner: sends only `## Prompt` of each case, never the answer key.
 - Every answer stores the index version (git commit SHA). A score is always tied to the knowledge that produced it.
 
-## Query pipeline
+## Retrieval approach
+- Retrieval, not fine-tuning, supplies the facts. Reasons: the knowledge is not on the internet; it changes often (author answers); answers must cite files; small models memorise facts poorly.
+- Two modes, both built and compared in phase 1:
+  - Classic RAG: one fixed retrieval pass, then answer. Baseline and fallback.
+  - Agentic retrieval: the model calls tools in a loop until it has enough, then answers. Target mode.
+- Optional later: light fine-tune (LoRA) for style and terminology only. Facts stay in retrieval.
+- Not used: full long-context stuffing (125K tokens is too much for small models and too slow per question); a separate graph database (metadata links already form the graph).
+
+## Query pipeline: classic RAG
 1. Classify the question into one `retriever_guide` value. Small prompt to the same LLM, or keyword rules first.
 2. Extract filters: `product`, `object`, `technology`, `pillar`. Values must match `knowledge/glossary/terminology.md`.
 3. Hybrid search within filters. Fall back to no filter if fewer than N hits.
@@ -56,8 +64,69 @@ flowchart LR
 6. `what-to-check`: retrieve the diagnosis file first; follow README, section Troubleshooting questions.
 7. Fit to the context budget. Priority: diagnosis or metric file, its concepts, foundations, other links.
 8. Generate. System prompt = the Answer rules in README. Chunks carry `id` and `status`.
-9. Post-check: every cited id was retrieved; every threshold in the answer appears in a cited chunk. Fail → regenerate once, then show a warning.
-10. Return: answer, cited files (with status), matching images from `images` records, retrieval trace.
+9. Post-check (below).
+10. Return: answer, cited files, images, retrieval trace.
+
+## Query pipeline: agentic retrieval (tool loop)
+```mermaid
+flowchart TD
+  Q[Question] --> P[Plan: classify, pick filters]
+  P --> T{Next action}
+  T -->|search| S[search]
+  T -->|read| R[read_file]
+  T -->|follow| F[follow_links]
+  T -->|image| I[get_images]
+  S --> O[Observation added to working notes]
+  R --> O
+  F --> O
+  I --> O
+  O --> B{Budget left and gaps remain?}
+  B -->|yes| T
+  B -->|no| A[Answer from notes]
+  A --> C[Post-check]
+  C -->|fail once| A
+  C -->|pass| OUT[Answer, citations, images, trace]
+```
+
+### Tools
+| Tool | Input | Output | Rules |
+|---|---|---|---|
+| `search` | query text; optional filters (product, object, technology, pillar, retriever_guide) | Top 8 hits: id, title, heading, 2-line snippet, status, score | Filters must use terminology.md values. Hybrid BM25 + vector. |
+| `read_file` | file id; optional heading | Body text of the file or one section. No metadata block. | One file per call. Long files: section by section. |
+| `follow_links` | file id; link type (related, internal_derive, same_name, same_meaning, all) | Linked ids with titles and status | Cheap: titles only. The model then reads what it chooses. |
+| `get_images` | file id, or filters (object, metric, image_type) | Image records: path, alt text, tags, sample | Returns records only. The UI shows the image. |
+| `draw_mermaid` (later) | Mermaid code | Rendered diagram in the UI | For flows or layers that no stored image shows. |
+
+### Loop rules
+- System prompt: the README Answer and Troubleshooting rules, plus the tool list. The model is told it knows nothing about vSphere metrics beyond what tools return.
+- First action is always `search`. The answer may use only text returned by `read_file`.
+- Before answering a metric question, the model must call `follow_links` with `same_name` on the metric file (trap guard).
+- `what-to-check` questions: the first `read_file` must be the matching diagnosis file; then follow its numbered steps.
+- Budget per question: at most 8 tool calls and 12K tokens of tool output. On budget end, answer with what is held and say what is missing.
+- Repeated identical calls are refused by the loop controller and counted as an error.
+- Model fails to call tools in the right format twice: fall back to classic RAG for that question; record the fallback.
+
+### Post-check (both modes)
+- Every cited id was returned by a tool (agentic) or retrieved (classic).
+- Every number with a unit or % in the answer appears in a cited chunk.
+- Every metric name in the answer exists as a metric file title or is a quoted user term.
+- Fail: regenerate once with the failures listed. Fail again: show the answer with a warning.
+
+### Retrieval trace
+Recorded for every answer, shown collapsed on the Ask page, stored in `answers.trace`.
+
+| Field | Content |
+|---|---|
+| step | 1, 2, 3, ... |
+| action | plan, search, read_file, follow_links, get_images, answer, post_check, fallback |
+| input | tool arguments |
+| output summary | ids returned, tokens returned |
+| model reasoning | the model's short reason for the action, if the model gives one |
+| tokens, latency | per step |
+| index version | git SHA |
+
+- The trace explains each failure. Example: right file never searched = retrieval or filter problem; file read but fact ignored = model problem; fact missing = knowledge gap.
+- The review queue shows the trace next to the flagged answer.
 
 ## Pages
 | Page | Content |
@@ -129,11 +198,50 @@ Source: Vercel AI Gateway model list, checked 2026-11-03. Prices per 1M input / 
 - Before recommending a model: re-run the golden cases on the 4-bit build (for example, one hour on a rented GPU).
 
 ## Build phases
-1. Runner first, no website: CLI that indexes, answers golden cases in kb and baseline mode on all 5 candidate models via Vercel AI Gateway, writes `results.csv`. Proves the pipeline and picks the default model.
-2. Ask page with citations and retrieval trace. Author only.
+1. Runner first, no website. See Phase 1 test plan.
+2. Ask page with citations and retrieval trace. Author only. Uses the mode and model that won phase 1.
 3. Ratings, flags, review queue. Invite visitors.
 4. Compare page (blind A/B) and dashboard.
-5. 4-bit re-test of the chosen model on customer-like hardware.
+5. 4-bit re-test of the chosen model and mode on customer-like hardware.
+
+## Phase 1 test plan
+### Matrix
+| Dimension | Values |
+|---|---|
+| Model | the 5 candidates (see Candidate models) |
+| Mode | baseline (no knowledge base), classic RAG, agentic retrieval |
+| Cases | all golden cases (21 now) |
+| Repeats | 3 runs per cell, temperature 0.2, to see variance |
+- Cells: 5 models x 3 modes x 21 cases x 3 repeats = 945 answers per full run.
+- Cost estimate: under US$ 5 per full run at current Vercel prices (agentic uses about 2-3x the tokens of classic). Re-check prices.
+
+### Measured per answer
+| Measure | How |
+|---|---|
+| Score 0-3 | Rubric from `evaluation/README.md`. First pass by a judge model against `## Expected key points`; author checks every 0 and every disagreement between repeats. |
+| Trap hit | Answer matches `## Likely wrong answer`. |
+| Retrieval recall | Share of the case's `knowledge` ids that were retrieved (classic) or read (agentic). |
+| Retrieval precision | Share of retrieved or read ids that the answer cited. |
+| Tool errors (agentic) | Bad format, refused repeats, budget hits, fallbacks. |
+| Steps (agentic) | Tool calls used. |
+| Tokens and latency | Per answer. |
+| Post-check result | pass, pass after retry, warning. |
+
+### Judge rules
+- The judge model is a different model from the one under test, and never one of the 5 candidates. A frontier model is fine here: the judge is not deployed to customers. It sees the prompt, the answer and the answer key; the model under test never sees the key.
+- The judge returns a score and the key points matched. The author's score overrides it. Author overrides are logged to calibrate the judge.
+
+### Decision rules
+- Pick the mode: agentic must beat classic RAG by at least 0.3 mean score on the same model, or classic RAG stays the default (simpler, cheaper).
+- Pick the model: highest mean score in the chosen mode; ties go to the smaller model.
+- Agentic is dropped for a model with more than 10% fallbacks.
+- Knowledge base lift: kb modes must beat baseline on every technology area. An area with no lift is a knowledge or retrieval problem, not a model problem.
+- 70B test: only if the best 31B result loses points through reasoning errors (trace shows the right files were read).
+
+### Outputs
+- `evaluation/results/results.csv`: one row per answer (add columns: mode, retrieval_recall, steps, tokens, post_check).
+- A short report per run in `evaluation/results/`: matrix of mean scores, worst cases, trace links.
+- Every failed case tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a to-do or author question.
 
 ## Decisions for the author
 - Hosting: decided 2026-11-03: Vercel AI Gateway for the test site.
