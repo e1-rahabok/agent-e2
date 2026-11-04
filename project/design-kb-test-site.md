@@ -95,22 +95,27 @@ flowchart TD
 | `read_file` | file id; optional heading | Body text of the file or one section. No metadata block. | One file per call. Long files: section by section. |
 | `follow_links` | file id; link type (related, internal_derive, same_name, same_meaning, all) | Linked ids with titles and status | Cheap: titles only. The model then reads what it chooses. |
 | `get_images` | file id, or filters (object, metric, image_type) | Image records: path, alt text, tags, sample | Returns records only. The UI shows the image. |
+| `catalog` | name: vCenter counter, chart label, esxtop field, metric title or object type; optional object filter; optional second object (`to`) | Counter unit, rollup, statistics level, min/max level, kb file; esxtop field text; thresholds with source; colour bands; object role and relations, or the path between two object types | Exact values from `knowledge/catalog/`. Built 2026-11-04. |
+| `calculate` | expression | Result plus source notes | Summation ms ↔ %, unit conversion (vCenter KB = 1,024 bytes, kb = 1,000 bits), capacity, esxtop identities. Built 2026-11-04. |
+| `flow` | diagnosis file id; optional step | All steps in order, or one step with next step, referenced steps and metric files to read | Reads the markdown steps. Built 2026-11-04. |
 | `draw_mermaid` (later) | Mermaid code | Rendered diagram in the UI | For flows or layers that no stored image shows. |
 
 ### Loop rules
 - System prompt: the README Answer and Troubleshooting rules, plus the tool list. The model is told it knows nothing about vSphere metrics beyond what tools return.
-- First action is always `search`. The answer may use only text returned by `read_file`.
+- First action is `search` or `catalog`. The answer may use only text returned by `read_file`, `catalog`, `flow` and `calculate`.
+- Units, rollups, statistics levels, thresholds, object relations: `catalog`. Arithmetic and unit conversion: `calculate`.
 - Before answering a metric question, the model must call `follow_links` with `same_name` on the metric file (trap guard).
-- `what-to-check` questions: the first `read_file` must be the matching diagnosis file; then follow its numbered steps.
+- `what-to-check` questions: call `flow` on the matching diagnosis file; then follow its steps in order.
 - Budget per question: at most 8 tool calls and 12K tokens of tool output. On budget end, answer with what is held and say what is missing.
 - Repeated identical calls are refused by the loop controller and counted as an error.
 - Model fails to call tools in the right format twice: fall back to classic RAG for that question; record the fallback.
 
 ### Post-check (both modes)
-- Every cited id was returned by a tool (agentic) or retrieved (classic).
-- Every number with a unit or % in the answer appears in a cited chunk.
-- Every metric name in the answer exists as a metric file title or is a quoted user term.
-- Fail: regenerate once with the failures listed. Fail again: show the answer with a warning.
+- Built 2026-11-04 as `harness/verify.py`. Baseline mode is not checked, so it stays a pure no-knowledge baseline.
+- Hard checks, one repair turn with the failures listed: ANSWER line present; letters are options; Unsure or Not covered chosen alone.
+- Soft checks, recorded only (`verify_flags`): REASON present; every cited id exists; every number with a unit or % in REASON appears in the question or in text the model was given.
+- A soft check becomes a repair trigger only after results show it predicts wrong answers (`project/todo.md`).
+- Planned: every metric name in the answer exists as a metric file title or is a quoted user term.
 
 ### Retrieval trace
 Recorded for every answer, shown collapsed on the Ask page, stored in `answers.trace`.
@@ -296,6 +301,8 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 | Not-covered accuracy | Share of out-of-scope questions answered "Not covered". |
 | Retrieval recall | Share of the question's `knowledge` ids retrieved (classic) or read (agentic). |
 | Tool errors (agentic) | Bad format, refused repeats, budget hits, fallbacks. |
+| Tools used (agentic) | `tools_used` per answer: which of search, read_file, follow_links, get_images, catalog, calculate, flow were called. |
+| Verifier | `verify_flags` (hard and soft issues) and `repaired` (a repair turn ran) per answer. |
 | Parse failures | Answers not in the fixed format. |
 | Tokens, latency | Per answer. |
 | Vision gap | Vision track minus text track, screenshot questions only. |

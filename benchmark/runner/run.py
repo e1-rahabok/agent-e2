@@ -32,7 +32,7 @@ from retrieval import Retriever  # noqa: E402
 FIELDS = ['run_id', 'time', 'model', 'provider', 'mode', 'track', 'case_id', 'area', 'level', 'run', 'temperature',
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
-          'latency', 'cost_usd', 'index_version', 'error', 'reason']
+          'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired']
 
 
 def main():
@@ -110,9 +110,11 @@ def main():
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
     lock = threading.Lock()
-    new = not os.path.exists(answers_path)
+    new = not os.path.exists(answers_path) or os.path.getsize(answers_path) == 0
     fa = open(answers_path, 'a', newline='')
-    w = csv.DictWriter(fa, fieldnames=FIELDS)
+    # A resumed run keeps the header it started with (older runs lack the newer columns).
+    fields = FIELDS if new else next(csv.reader(open(answers_path)))
+    w = csv.DictWriter(fa, fieldnames=fields, extrasaction='ignore')
     if new:
         w.writeheader()
     ft = open(os.path.join(run_dir, 'traces.jsonl'), 'a')
@@ -137,7 +139,10 @@ def main():
             row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace)
             row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace)
             row['latency'] = round(sum(s.get('latency') or 0 for s in trace), 2)
-            row['steps'] = sum(1 for s in trace if s['action'] in ('search', 'read_file', 'follow_links', 'get_images'))
+            row['steps'] = sum(1 for s in trace if s['action'] in modes.TOOL_NAMES)
+            row['tools_used'] = ' '.join(sorted({s['action'] for s in trace if s['action'] in modes.TOOL_NAMES}))
+            row['verify_flags'] = ' | '.join(f for s in trace if s['action'] == 'verify' for f in s['output'])[:300]
+            row['repaired'] = int(any(s['action'] == 'repair' for s in trace))
             row['tool_errors'] = sum(1 for s in trace if s['action'] in ('tool_error', 'refused'))
             row['fallback'] = int(fb)
             row['ids_used'] = ' '.join(used)

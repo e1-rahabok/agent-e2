@@ -1,0 +1,363 @@
+meta:
+  id: catalog/thresholds
+  title: Thresholds stated in the knowledge base
+  fields:
+    id: Stable key.
+    metric: Metric as the knowledge file names it.
+    object: Managed object type, when the metric belongs to one.
+    layer: Layer that produces the metric.
+    operator: '>, >=, <, <=, =, range.'
+    value: Number the rule compares against. For range, value is the low end and value_high the high end.
+    unit: Unit of value.
+    condition: Other condition that must hold at the same time, if any.
+    meaning: What the knowledge file says the value means.
+    source: book (the author's book), vsphere-9.1-docs, performance-best-practices-9.1, microsoft.
+    kb: Knowledge file that states the threshold.
+    quote: Text copied from the kb file. tools/lint.py checks that it is still there, so the catalog cannot drift from the file.
+  review_notes:
+  - 'Whole file: every row restates a threshold already written in its kb file. No new facts. The kb file holds the source and the review notes.'
+  - Colour band tables (Green, Yellow, Orange, Red) are not copied here. harness/catalog.py reads them from the knowledge files at load time.
+  status: draft
+rows:
+- id: vm-cpu-ready-poor
+  metric: VM CPU Ready
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 50
+  unit: '%'
+  condition: high VM CPU Usage
+  meaning: Poor performance.
+  source: book
+  kb: vsphere/cpu/metrics/virtual-motherboard/ready
+  quote: Ready above 50% with high Usage results in poor performance.
+- id: vm-cpu-ready-usage-docs
+  metric: VM CPU Ready
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 20
+  unit: '%'
+  condition: VM CPU Usage above 90%
+  meaning: Performance is impacted (documentation reading; the knowledge base reads Ready against Run).
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: '| VM CPU Usage above 90% and VM CPU Ready above 20% | Performance is impacted. |'
+- id: vm-cpu-costop-high-performing
+  metric: VM CPU Co-stop
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: <
+  value: 1
+  unit: '%'
+  meaning: Level in a high-performing environment.
+  source: book
+  kb: vsphere/cpu/metrics/virtual-motherboard/co-stop
+  quote: In a high-performing environment Co-stop stays below 1%.
+- id: vm-cpu-contention-high
+  metric: VM CPU Contention
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 37.5
+  unit: '%'
+  meaning: Contention high. Next check Guest OS Run Queue, Context Switch, CPU Usage, VM Ready and Co-stop.
+  source: book
+  kb: vsphere/cpu/diagnosis/vm-cpu-contention-high
+  quote: Contention high (above 37.5%)
+- id: vm-cpu-usage-above-run
+  metric: VM CPU Usage
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 90
+  unit: '%'
+  condition: VM CPU Run below 90%
+  meaning: Likely Turbo, not demand. Not a reason to add vCPUs.
+  source: book
+  kb: vsphere/cpu/diagnosis/oversized-vm-downsizing
+  quote: Usage above 90% with Run below 90% is likely Turbo, not demand.
+- id: vm-cpu-ready-with-zero-latency
+  metric: VM CPU Ready
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 15
+  unit: '%'
+  condition: VM CPU Latency near 0%
+  meaning: A limit. Latency excludes limit time.
+  source: book
+  kb: vsphere/cpu/metrics/virtual-motherboard/latency
+  quote: 'Latency near 0% with Ready above 15%: a limit.'
+- id: host-cpu-cores-free
+  metric: ESXi Core Utilization
+  object: HostSystem
+  layer: hypervisor
+  operator: <
+  value: 100
+  unit: '%'
+  condition: or ESXi Thread Utilization below 50%
+  meaning: Physical cores are still free. New VMs can go on.
+  source: book
+  kb: vsphere/cpu/diagnosis/host-cpu-capacity-headroom
+  quote: 'Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free.'
+- id: host-cpu-thread-utilization-target
+  metric: ESXi Thread Utilization
+  object: HostSystem
+  layer: hypervisor
+  operator: range
+  value: 80
+  value_high: 90
+  unit: '%'
+  condition: Core Utilization at 100%
+  meaning: Level the author keeps per host. Cluster level is lower.
+  source: book
+  kb: vsphere/cpu/diagnosis/host-cpu-capacity-headroom
+  quote: The author keeps it around 80%-90% per host
+- id: host-memory-usage-docs
+  metric: ESXi Memory Usage
+  object: HostSystem
+  layer: hypervisor
+  operator: '>='
+  value: 94
+  unit: '%'
+  condition: consistently; and balloon or swap high
+  meaning: Host probably short of memory. Without high balloon and swap, performance is probably not affected.
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: '| Host memory usage consistently 94% or higher |'
+- id: memory-usage-low-docs
+  metric: Memory Usage
+  operator: <=
+  value: 24
+  unit: '%'
+  condition: consistently
+  meaning: Memory size probably too large.
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: '| Memory usage consistently 24% or lower | Memory size probably too large. |'
+- id: host-free-memory-docs
+  metric: ESXi Free Memory
+  object: HostSystem
+  layer: hypervisor
+  operator: <=
+  value: 6
+  unit: '%'
+  condition: with frequent swapping
+  meaning: Host cannot meet the combined active memory of its VMs. Reclamation degrades performance.
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: '| Host free memory 6% or less, with frequent swapping |'
+- id: tiering-active-ideal
+  metric: Active memory on a memory tiering host
+  object: HostSystem
+  layer: hypervisor
+  operator: <=
+  value: 50
+  unit: '% of host DRAM'
+  meaning: Ideal.
+  source: performance-best-practices-9.1
+  kb: vsphere/memory/concepts/memory-tiering
+  quote: 'ideal: no more than 50% of the host DRAM capacity'
+- id: tiering-active-suffer
+  metric: Active memory on a memory tiering host
+  object: HostSystem
+  layer: hypervisor
+  operator: '>='
+  value: 75
+  unit: '% of host DRAM'
+  meaning: Some workloads begin to suffer.
+  source: performance-best-practices-9.1
+  kb: vsphere/memory/concepts/memory-tiering
+  quote: some workloads do not begin to suffer until active memory approaches 75%
+- id: tiering-nvme-latency-ideal
+  metric: NVMe read latency (memory tiering)
+  object: HostSystem
+  layer: physical
+  operator: <
+  value: 200
+  unit: µs
+  meaning: Ideal.
+  source: performance-best-practices-9.1
+  kb: vsphere/memory/concepts/memory-tiering
+  quote: 'ideal: below 200 microseconds'
+- id: tiering-nvme-latency-suffer
+  metric: NVMe read latency (memory tiering)
+  object: HostSystem
+  layer: physical
+  operator: '>='
+  value: 400
+  unit: µs
+  meaning: Some workloads begin to suffer.
+  source: performance-best-practices-9.1
+  kb: vsphere/memory/concepts/memory-tiering
+  quote: some workloads do not begin to suffer until latency approaches 400 microseconds
+- id: tiering-nvme-bandwidth-watch
+  metric: NVMe read bandwidth (memory tiering)
+  object: HostSystem
+  layer: physical
+  operator: '>'
+  value: 200
+  unit: MB/s
+  meaning: Start watching NVMe device latency.
+  source: performance-best-practices-9.1
+  kb: vsphere/memory/concepts/memory-tiering
+  quote: 'NVMe read bandwidth above 200 MB/s: start watching NVMe device latency'
+- id: tiering-large-vm
+  metric: VM memory size on a tiered host
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 512
+  unit: GB
+  condition: and 64 vCPUs
+  meaning: Can degrade on a tiered host. Disable tiering for the VM, with a full memory reservation.
+  source: performance-best-practices-9.1
+  kb: vsphere/memory/concepts/memory-tiering
+  quote: VMs with more than 512 GB of memory and 64 vCPUs can degrade on a tiered host.
+- id: kavg-book
+  metric: KAVG
+  object: HostSystem
+  layer: hypervisor
+  operator: '>'
+  value: 0.5
+  unit: ms
+  meaning: Check QAVG and the queue depths at each level of the stack.
+  source: book
+  kb: vsphere/storage/diagnosis/host-storage-latency
+  quote: 'KAVG above 0.5 ms: check QAVG and the queue depths at each level of the stack.'
+- id: davg-book
+  metric: DAVG
+  object: HostSystem
+  layer: physical
+  operator: <
+  value: 5
+  unit: ms
+  meaning: Healthy is well within 5 ms; lower with SSD.
+  source: book
+  kb: vsphere/storage/concepts/esxi-storage-latency-stack
+  quote: Well within 5 ms; lower with SSD.
+- id: kernel-latency-docs
+  metric: kernelLatency (KAVG)
+  object: HostSystem
+  layer: hypervisor
+  operator: '>'
+  value: 4
+  unit: ms
+  meaning: VMs send more throughput than the configuration supports. Best is 0-1 ms.
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: Best 0-1 ms. Above 4 ms
+- id: device-latency-docs
+  metric: deviceLatency (DAVG)
+  object: HostSystem
+  layer: physical
+  operator: '>'
+  value: 15
+  unit: ms
+  meaning: Probable array problem, depending on the hardware. The value comes from spinning-disk arrays.
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: 'Above 15 ms, depending on the hardware: probable array problem.'
+- id: queue-latency-docs
+  metric: queueLatency (QAVG)
+  object: HostSystem
+  layer: hypervisor
+  operator: '>'
+  value: 0
+  unit: ms
+  meaning: Workload too high; the array cannot process data fast enough. Must always be 0.
+  source: vsphere-9.1-docs
+  kb: vsphere/system/concepts/vsphere-client-performance-guidance
+  quote: Must always be 0.
+- id: sql-server-disk-latency
+  metric: SQL Server disk latency (application layer)
+  operator: range
+  value: 10
+  value_high: 15
+  unit: ms
+  meaning: Microsoft guidance at the SQL Server layer. Lower at the Windows layer, lower still at the VM layer.
+  source: microsoft
+  kb: foundations/thresholds
+  quote: 'Microsoft guidance for SQL Server: disk latency should consistently stay within 10–15 ms.'
+- id: drs-score-healthy
+  metric: Cluster DRS Score
+  object: ClusterComputeResource
+  operator: '>'
+  value: 80
+  unit: '%'
+  meaning: No performance impact.
+  source: performance-best-practices-9.1
+  kb: vsphere/resource-management/configuration/drs-migration-levels
+  quote: 'Score above 80%: the source indicates no performance impact.'
+- id: drs-score-degraded
+  metric: Cluster DRS Score
+  object: ClusterComputeResource
+  operator: <
+  value: 80
+  unit: '%'
+  meaning: Potential performance degradation in one or more cluster workloads.
+  source: performance-best-practices-9.1
+  kb: vsphere/resource-management/configuration/drs-migration-levels
+  quote: 'Score below 80%: potential performance degradation in one or more cluster workloads.'
+- id: cluster-unreserved-capacity
+  metric: Unreserved cluster capacity
+  object: ClusterComputeResource
+  operator: '>='
+  value: 10
+  unit: '%'
+  meaning: Documentation advice for admission control.
+  source: vsphere-9.1-docs
+  kb: vsphere/resource-management/concepts/admission-control-and-cluster-state
+  quote: The documentation advises leaving at least 10% of capacity unreserved.
+- id: monster-vm-cpu
+  metric: VM vCPU count relative to host physical cores
+  object: VirtualMachine
+  operator: '>'
+  value: 50
+  unit: '% of physical cores (not threads)'
+  meaning: Monster VM (book recommendation).
+  source: book
+  kb: vsphere/system/metrics/cluster/cluster-risk
+  quote: '| CPU | More than 50% of physical cores (not threads) |'
+- id: monster-vm-memory
+  metric: VM memory relative to host physical RAM
+  object: VirtualMachine
+  operator: '>'
+  value: 40
+  unit: '% of physical RAM, or 256 GB'
+  meaning: Monster VM (book recommendation). DIMM only, excluding memory tiering.
+  source: book
+  kb: vsphere/system/metrics/cluster/cluster-risk
+  quote: '| Memory | More than 40% of physical RAM, or 256 GB.'
+- id: windows-committed
+  metric: Windows % Committed
+  layer: guest-os
+  operator: <
+  value: 80
+  unit: '%'
+  meaning: Keep below 80%. Performance drops at 90%.
+  source: book
+  kb: guest-os/memory/concepts/windows-memory
+  quote: '| % Committed | Keep below 80%. Performance drops at 90%.'
+- id: windows-system-calls
+  metric: Windows System Calls/sec
+  layer: guest-os
+  operator: '>'
+  value: 20000
+  unit: per core
+  meaning: High. Usually below 2,000.
+  source: book
+  kb: guest-os/cpu/metrics/processor-time
+  quote: Above 20,000 per core is high; usually below 2,000.
+- id: windows-privileged-time
+  metric: Windows Privileged Time
+  layer: guest-os
+  operator: '>'
+  value: 30
+  unit: '%'
+  condition: together with high System Calls/sec
+  meaning: Too much OS work.
+  source: book
+  kb: guest-os/cpu/metrics/processor-time
+  quote: 'High together with Privileged Time above 30%: too much OS work.'

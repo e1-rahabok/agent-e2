@@ -1,6 +1,14 @@
-"""Answer modes: baseline (no knowledge base), classic RAG, agentic retrieval (tool loop)."""
+"""Answer modes: baseline (no knowledge base), classic RAG, agentic retrieval (tool loop).
+
+Classic and agentic replies pass the answer verifier (verify.py); a hard issue gets one repair turn.
+Classic context carries catalog facts for the files it holds; agentic mode adds the catalog, calculate and flow tools.
+"""
 import json
 
+import calc
+import catalog
+import flows
+import verify
 from llm import LLMError
 
 FORMAT = ('Reply with exactly two lines and nothing else:\n'
@@ -28,10 +36,12 @@ SYSTEM_AGENT = SYSTEM_KB.replace(
     'using ONLY the knowledge base text provided to you',
     'using ONLY knowledge base text you retrieve with the tools. You know nothing about vSphere metrics beyond what the tools return') + (
     '\nTool rules:\n'
-    '- Your first action must be search.\n'
-    '- Answer only from text returned by read_file.\n'
+    '- Your first action must be search or catalog.\n'
+    '- Answer only from text returned by read_file, catalog, flow and calculate. Search snippets are not enough.\n'
     '- Before answering about a metric, call follow_links with link_type "same_name" on its file.\n'
-    '- For a troubleshooting question, read the matching diagnosis file first and follow its numbered steps.\n'
+    '- For a unit, rollup, statistics level, esxtop field, threshold or object relationship, call catalog. Its values are exact.\n'
+    '- For any arithmetic or unit conversion, call calculate. Do not compute in your head.\n'
+    '- For a troubleshooting question, call flow on the matching diagnosis file and follow its steps in order.\n'
     '- You have at most {max_calls} tool calls. Then answer.')
 
 TOOLS = [
@@ -57,7 +67,34 @@ TOOLS = [
     {'type': 'function', 'function': {
         'name': 'get_images', 'description': 'List image records (diagrams, charts) of a file.',
         'parameters': {'type': 'object', 'properties': {'id': {'type': 'string'}}, 'required': ['id']}}},
+    {'type': 'function', 'function': {
+        'name': 'catalog',
+        'description': ('Exact facts from the metric catalog. name = a vCenter counter (cpu.ready.summation), chart label (Ready), '
+                        'esxtop field (%RDY, DAVG) or metric title: returns unit, rollup, statistics level, thresholds with source, '
+                        'and the knowledge file. name = an object type (VirtualMachine, HostSystem, Datastore, ...): returns its role '
+                        'and relations; add "to" for the path between two object types.'),
+        'parameters': {'type': 'object', 'properties': {
+            'name': {'type': 'string'},
+            'object': {'type': 'string', 'description': 'Filter: VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ResourcePool'},
+            'to': {'type': 'string', 'description': 'Second object type, for a relation path'}},
+            'required': ['name']}}},
+    {'type': 'function', 'function': {
+        'name': 'calculate',
+        'description': ('Exact arithmetic and unit conversion. Numbers without thousands separators. Functions: '
+                        'summation_to_percent(ms, interval_seconds=20, vcpus=1), percent_to_summation(percent, interval_seconds=20, vcpus=1), '
+                        'convert(value, "from", "to") for KB MB GB TB (binary), KBd MBd GBd (decimal), b kb Mb Gb (bits), '
+                        'rates with ps or /s, ns us ms s min h, MHz GHz; capacity_ghz(cores, ghz_per_core), pct(part, whole), '
+                        'cpu_states(run, ready, costop, wait, vcpus=1), used_pct(run, system, overlap), min, max, round, sum, avg.'),
+        'parameters': {'type': 'object', 'properties': {'expression': {'type': 'string'}}, 'required': ['expression']}}},
+    {'type': 'function', 'function': {
+        'name': 'flow',
+        'description': ('Troubleshooting flow from a diagnosis file, one step at a time. Without step: all steps in order. '
+                        'With step: that step, the next step, and the metric files to read.'),
+        'parameters': {'type': 'object', 'properties': {
+            'id': {'type': 'string', 'description': 'Diagnosis file id, e.g. vsphere/cpu/diagnosis/vm-cpu-contention-high'},
+            'step': {'type': 'string'}}, 'required': ['id']}}},
 ]
+TOOL_NAMES = [t['function']['name'] for t in TOOLS]
 
 
 def _user(text, images):
@@ -93,6 +130,10 @@ def classic_context(retriever, question, cfg):
             if link['id'] in retriever.docs and link['id'] not in ids:
                 ids.append(link['id'])
     budget, parts, used = cfg['context_tokens'], [], []
+    facts = catalog.get(retriever.docs).facts_for(ids) if cfg.get('catalog_facts', True) else ''
+    if facts:
+        parts.append(facts)
+        budget -= _tok(facts)
     for i in ids:
         d = retriever.docs[i]
         block = f'### {d.title}\nid: {d.id} | status: {d.status}\n{d.body}'
@@ -112,10 +153,28 @@ def classic(client, model, question, images, cfg, trace, retriever):
     _step(trace, 'context', '', used)
     msgs = [{'role': 'system', 'content': SYSTEM_KB},
             _user(f'Knowledge base:\n{context}\n\nQuestion:\n{question}', images)]
-    res = client.chat(model, msgs, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'],
-                      provider_order=cfg.get('provider_order', {}).get(model))
+    po = cfg.get('provider_order', {}).get(model)
+    res = client.chat(model, msgs, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
     _step(trace, 'answer', '', res['content'][:400], res)
+    res = _verified(client, model, msgs, res, question, context, set(retriever.docs), cfg, trace, po)
     return res, used
+
+
+def _verified(client, model, msgs, res, question, context, kb_ids, cfg, trace, po):
+    """Run the answer verifier. Hard issues get one repair turn; soft issues are only recorded."""
+    if not cfg.get('verify', True):
+        return res
+    issues = verify.check(res.get('content') or '', question, context, kb_ids)
+    if not issues:
+        return res
+    _step(trace, 'verify', '', [f"{i['type']}: {i['detail']}" for i in issues])
+    if not any(i['hard'] for i in issues):
+        return res
+    msgs = msgs + [{'role': 'assistant', 'content': res.get('content') or ''},
+                   {'role': 'user', 'content': verify.repair_prompt(issues, FORMAT)}]
+    res2 = client.chat(model, msgs, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
+    _step(trace, 'repair', '', (res2.get('content') or '')[:400], res2)
+    return res2
 
 
 def _run_tool(retriever, name, args, state):
@@ -141,6 +200,26 @@ def _run_tool(retriever, name, args, state):
     if name == 'get_images':
         d = retriever.docs.get(args.get('id', ''))
         return json.dumps(d.images if d else [], indent=0)
+    if name == 'catalog':
+        state['searched'] = True
+        cat = catalog.get(retriever.docs)
+        nm, to = args.get('name', ''), args.get('to')
+        if to:
+            out = cat.path(nm, to)
+        elif 'error' not in cat.object_info(nm):
+            out = cat.object_info(nm)
+        else:
+            out = cat.lookup(nm, args.get('object'))
+            if not any(out[k] for k in ('counters', 'esxtop', 'metric_files', 'thresholds', 'bands')):
+                out['note'] = 'No catalog entry. Use search.'
+        return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
+    if name == 'calculate':
+        return json.dumps(calc.evaluate(args.get('expression', '')), ensure_ascii=False)
+    if name == 'flow':
+        out = flows.run(retriever.docs, args.get('id', ''), args.get('step'))
+        if 'flow' in out and out['flow'] not in state['read']:
+            state['read'].append(out['flow'])
+        return json.dumps(out, ensure_ascii=False, indent=0)
     return json.dumps({'error': f'unknown tool {name}'})
 
 
@@ -167,6 +246,8 @@ def agentic(client, model, question, images, cfg, trace, retriever):
                 _step(trace, 'reminder', '', unchecked[:3], res)
                 continue
             _step(trace, 'answer', '', (res['content'] or '')[:400], res)
+            seen_text = '\n'.join(m['content'] for m in msgs if m['role'] == 'tool' and isinstance(m.get('content'), str))
+            res = _verified(client, model, msgs, res, question, seen_text, set(retriever.docs), cfg, trace, po)
             return res, state['read']
         msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
         for n, tc in enumerate(tcs):
@@ -184,8 +265,8 @@ def agentic(client, model, question, images, cfg, trace, retriever):
                     raise FallbackNeeded('tool call format errors')
             else:
                 key = name + json.dumps(args, sort_keys=True)
-                if not state['searched'] and name != 'search':
-                    out = json.dumps({'error': 'Your first action must be search.'})
+                if not state['searched'] and name not in ('search', 'catalog'):
+                    out = json.dumps({'error': 'Your first action must be search or catalog.'})
                     _step(trace, 'refused', {name: args}, 'search first', r)
                 elif key in seen:
                     out = json.dumps({'error': 'Identical call already made. Use the earlier result.'})
@@ -204,6 +285,12 @@ def _summary(name, out):
             return [x['id'] for x in json.loads(out)]
         except Exception:
             return out[:120]
+    if name == 'calculate':
+        o = json.loads(out)
+        return o.get('result', o.get('error'))
+    if name == 'catalog':
+        o = json.loads(out)
+        return {k: len(v) for k, v in o.items() if isinstance(v, list)} or out[:120]
     return f'{_tok(out)} tokens'
 
 

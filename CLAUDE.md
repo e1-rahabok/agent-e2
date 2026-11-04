@@ -44,6 +44,7 @@ Standing rules for this repository. Read at the start of every session.
 - Audit information lives only in the metadata block. Never put markers such as author corrections or Claude-knowledge tags in headings or body text.
 - No invented thresholds. A threshold goes in only if the book, the author or an official source gives it. Quote the source.
 - Keep every `corrections` entry, naming the section it affects. Clear it only when the source document is updated.
+- A row in `knowledge/catalog/thresholds.yaml` quotes the text of its knowledge file. When you change that text, update the row; lint fails otherwise.
 - `knowledge/raw-input/` is read-only.
 
 ## Architecture: VM vs Guest OS
@@ -80,13 +81,14 @@ Standing rules for this repository. Read at the start of every session.
 - During an Auto Test run, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Repository layout
-- `knowledge/`: what the model reads. `harness/`: the software around the model (retrieval, tool loop, prompts). `benchmark/`: proof that the model benefits (questions with answer keys, runner, results). `project/`: design, decisions, author questions, to-do. `tools/`: repository maintenance (lint, tag values).
+- `knowledge/`: what the model reads. `knowledge/catalog/`: structured data (YAML) the harness tools query: vCenter counters, esxtop fields, thresholds, object model. `harness/`: the software around the model (retrieval, tools, verifier, prompts). `benchmark/`: proof that the model benefits (questions with answer keys, runner, results). `project/`: design, decisions, author questions, to-do. `tools/`: repository maintenance (lint, tag values).
 
 ## Do not index
 - `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, `README.md`, `CLAUDE.md`.
 
 ## Validation
 - Run `python3 tools/lint.py` before every merge. Do not merge if it fails.
+- After changing `harness/` or `knowledge/catalog/`, run `python3 -m unittest harness/test_tools.py`.
 - Allowed tag values and avoided phrases live in `tools/tags.yaml`. Change them there, not in the script. Term meanings live in `knowledge/glossary.md`.
 
 ## Git
