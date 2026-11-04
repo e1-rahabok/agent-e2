@@ -1,15 +1,14 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Isvara-Level%20400%20private%20cloud%20expertise-1f6feb?style=for-the-badge" alt="Isvara: Level 400 private cloud expertise">
+  <img src="https://img.shields.io/badge/Isvara-Level%20400%20private%20cloud%20expertise-6e7781?style=for-the-badge&labelColor=3d444d" alt="Isvara: Level 400 private cloud expertise">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/vSphere-9.1-607078?logo=vmware&logoColor=white" alt="vSphere 9.1">
-  <img src="https://img.shields.io/badge/VCF-9.1.1-607078?logo=vmware&logoColor=white" alt="VCF 9.1.1">
-  <img src="https://img.shields.io/badge/model-27--32B%20open%20weights-6f42c1" alt="Model: 27-32B open weights">
-  <img src="https://img.shields.io/badge/runs-offline%20%28dark%20site%29-2da44e" alt="Runs offline">
-  <img src="https://img.shields.io/badge/knowledge%20files-205-0969da" alt="Knowledge files: 205">
-  <img src="https://img.shields.io/badge/benchmark%20cases-28-bf8700" alt="Benchmark cases: 28">
-  <img src="https://img.shields.io/badge/target-99%25%20stable%20correct-d1242f" alt="Target: 99% stable correct">
-  <img src="https://img.shields.io/badge/python-3.10%2B-3776ab?logo=python&logoColor=white" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/vSphere-9.1-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSphere 9.1">
+  <img src="https://img.shields.io/badge/VCF-9.1.1-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="VCF 9.1.1">
+  <img src="https://img.shields.io/badge/model-27--32B%20open%20weights-6e7781?labelColor=3d444d" alt="Model: 27-32B open weights">
+  <img src="https://img.shields.io/badge/runs-offline%20%28dark%20site%29-6e7781?labelColor=3d444d" alt="Runs offline">
+  <img src="https://img.shields.io/badge/knowledge%20files-205-6e7781?labelColor=3d444d" alt="Knowledge files: 205">
+  <img src="https://img.shields.io/badge/benchmark%20cases-28-6e7781?labelColor=3d444d" alt="Benchmark cases: 28">
+  <img src="https://img.shields.io/badge/target-99%25%20stable%20correct-6e7781?labelColor=3d444d" alt="Target: 99% stable correct">
 </p>
 
 # Isvara: private cloud expertise
