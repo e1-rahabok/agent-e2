@@ -1,4 +1,4 @@
-"""Load the knowledge base the way README 'How a local LLM uses it' describes.
+"""Load the knowledge base the way README "Local LLM use" describes.
 
 - Index knowledge/**/*.md except _templates and raw-input.
 - Split each file at '## Metadata'; the yaml block becomes filter fields, never text.

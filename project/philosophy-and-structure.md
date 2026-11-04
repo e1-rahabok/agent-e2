@@ -48,7 +48,7 @@ Conventions (layout, metadata, writing rules) are in the root `README.md`.
   - Small files and one fact per line keep each chunk on topic.
   - Links in metadata let the retriever expand from one hit to its traps and mechanisms.
   - Diagrams carry text equivalents, because the model may not read images.
-- Ingest, query and answer steps: root `README.md`, section How a local LLM uses it.
+- Ingest, query and answer steps: root `README.md`, section Local LLM use.
 
 ## Limitations
 - Converting expert knowledge into files is lossy. Some tacit knowledge is hard to codify.

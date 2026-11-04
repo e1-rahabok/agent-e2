@@ -56,7 +56,7 @@ benchmark/
 | Unsure, chosen alone | Unsure (not correct, not wrong) |
 | Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong |
 
-- The model is told that a wrong answer is worse than Unsure. No points and no -1: see `benchmark/test-design.md`, section 7.0.
+- The model is told that a wrong answer is worse than Unsure. No points and no -1: see `benchmark/test-design.md`, section 7.1.
 - Headline: **Stable correct**, the share of questions answered exactly right in all 5 runs. Target: at least 85%, aim 99% (author, 2026-11-03).
 - Also reported: Luck (right in some runs only), confident-wrong rate, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
 - Reason and design: `benchmark/test-design.md` (blueprint, why 100 questions, scoring, validity threats).

@@ -1,9 +1,9 @@
-# Benchmark design: the 100-question test
+# Benchmark design
 
 For human experts who verify that the test is legitimate, complete and free of fluff. Not indexed.
 Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Trap definition: root `README.md`, section Traps and Level 400.
 
-## 1. The claim under test
+## 1. Claim
 - Claim: a local 27-32B open-weight model, with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - Release gate: at least 85% Stable correct. Target: 99% (author, 2026-11-03).
 - The test must therefore do three things:
@@ -11,7 +11,7 @@ Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/READM
   2. show whether a configuration clears 85%;
   3. show how close it is to 99%, and say honestly what the number can and cannot prove.
 
-## 2. What the test measures, and what it does not
+## 2. Scope
 | Measured | Not measured (and where it is measured instead) |
 |---|---|
 | Correct reading of metrics: mechanism, vantage point, unit, rollup | Installation, configuration steps, UI navigation (out of scope for the product) |
@@ -24,7 +24,7 @@ Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/READM
 
 - Multiple choice is used because it can be scored without a judge, on thousands of answers, with no scorer bias. Its weakness, guessing, is removed by the scoring in section 7.
 
-## 3. The blueprint: what 100 questions must cover
+## 3. Blueprint
 A test is a sample of a domain. The blueprint defines the domain and how the 100 questions sample it, so that a reviewer can check coverage question by question.
 
 ### 3.1 By area (author, 2026-11-04)
@@ -53,7 +53,7 @@ A test is a sample of a domain. The blueprint defines the domain and how the 100
 
 - At least 10 of the Level 400 and multi-hop questions require a troubleshooting flow (a `diagnosis/` file) to be followed in order.
 
-### 3.3 Coverage constraints (checked before a run)
+### 3.3 Coverage constraints
 | Constraint | Minimum |
 |---|---|
 | Each trap type in root `README.md` (12 types) | 3 questions each |
@@ -70,7 +70,7 @@ A test is a sample of a domain. The blueprint defines the domain and how the 100
 - The number of correct options varies: about 30% of questions have 1 correct option, 50% have 2-3, 20% have 4 or more. The model is never told how many.
 - A model that learns "usually one answer" or "usually all but one" gains nothing.
 
-## 4. Why 100 questions, not 50 or 150
+## 4. Sample size
 The headline score is a share of questions. Its precision depends on the number of questions, not on the number of runs: runs remove run-to-run noise, not the luck of which questions were picked.
 
 | Questions | 95% margin at 85% | 1 question is worth | Lower bound if all correct (Wilson 95%) | Lower bound with 1 wrong | Author time to write and verify keys |
@@ -94,7 +94,7 @@ The headline score is a share of questions. Its precision depends on the number 
   - 100 questions: model and mode selection, the 85% gate, and tracking progress. Version 1.0.
   - 300 questions: the 99% claim for release, built over later releases from book quizzes, real tickets and held-out questions.
 
-## 5. Why the 100 form a set
+## 5. Set design
 A set is more than 100 good questions. It must measure one thing (Level 400 operations knowledge) evenly, so the total means something.
 - Coverage: the blueprint (section 3) makes every area, object, layer and trap type count. No area can carry the score alone.
 - Balance of difficulty: recall questions anchor the scale. If recall fails, the problem is retrieval, and harder questions are not interpreted.
@@ -102,7 +102,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - Independence: no question gives away another's answer. No two questions test the same single fact.
 - Every option is decidable from the knowledge base (or clearly outside it, for Not covered questions). A question the knowledge base cannot settle is rewritten or removed, never kept as a coin flip.
 
-## 6. How a question is written
+## 6. Question writing
 - Stem: a realistic situation with the values an operator would see (counter names, numbers, units, time window). Not a definition prompt, except for recall questions.
 - Options:
   - one fact per option;
@@ -114,7 +114,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - Key: `answer` letters, and `## Expected key points` with the reason for every option and the knowledge file ids.
 - Sources: the author's books and quizzes first; then real tickets and field questions; then synthetic questions drafted by Claude. A synthetic question needs the author's approval before it counts.
 
-## 7. Scoring: removing luck
+## 7. Scoring
 - Answer format fixed: `ANSWER: <letters>` then `REASON: <one line>`. An unparseable answer scores as wrong.
 - Option order shuffled per run; letters mapped back before scoring. Removes position bias.
 - Each answer falls in one of three classes:
@@ -128,7 +128,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - Two numbers are reported: **Stable correct** (headline, absolute, against the fixed set) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
 - The model is told: a wrong answer is worse than Unsure, because an operator would act on it; if it cannot decide every option, choose Unsure.
 
-### 7.0 Why no points and no -1 (author, 2026-11-04)
+### 7.1 No points, no -1 (author, 2026-11-04)
 - An earlier version scored +1 / 0 / -1 and reported "Net points". It was dropped:
   - The test is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
   - Net points mixed two things an operator cares about separately: how often the system is right, and how often it is confidently wrong. Two plain shares say both without arithmetic.
@@ -136,7 +136,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - Unsure applies to an AI, not only to a human expert: on a dark site nobody checks the answer against the Internet, so "the knowledge base does not settle this" is the safe answer. It is not a feeling of doubt; it is the model reporting that its sources do not decide the question, which can be checked against the cited files.
 - Check after the next run: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
 
-### 7.1 Why 5 runs, and why all 5 must agree
+### 7.2 Five runs
 - Hosted models do not answer the same way twice, even at the same temperature: sampling, batching on shared GPUs, provider routing, silent serving updates.
 - A question counts as known (Stable correct) only when all 5 runs are exactly right. Right in some runs only = Luck, counted as not known.
 - Chance of passing all runs, by per-run probability of being right:
@@ -151,7 +151,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - 5 runs cut that to 1 in 32, and still reward a model that is right 99% of the time (95% pass).
 - 10 runs double the cost for little gain, and punish a genuinely good model (99% per run passes only 90%).
 
-### 7.2 Reported beside the headline
+### 7.3 Secondary measures
 | Measure | Why |
 |---|---|
 | Luck | How much of a model's score is unstable. |
@@ -165,20 +165,20 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 
 ## 8. Comparison design
 - Why both classic and agentic modes are run, and why the agentic call limit is what it is: `ARCHITECTURE.md`, sections 2a and 2b.
-- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark vs deployment.
-- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark vs deployment.
+- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
+- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See `benchmark/runner/README.md`.
 - Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's Stable correct exceeds it by more than the margin.
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - A gap smaller than the margin is a tie; the smaller model wins a tie.
 - Run matrix at 100 questions: 10 models x 3 modes x 100 questions x 5 runs = 15,000 answers, about US$ 25-40 and 2-4 hours (re-check prices and rate limits before each run).
 
-## 8a. Testing the harness separately
+## 9. Harness-only test
 - The final score mixes harness and model. A harness-only test separates them: `benchmark/runner/retrieval_eval.py` checks, without a model, whether each case's `knowledge` files are found and placed in the classic context.
 - Result 2026-11-04 (28 cases, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 cases. This caps classic mode: raise it before judging the model.
-- Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
+- Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 8.
 
-## 9. Threats to validity, and the guard against each
+## 10. Validity threats
 | Threat | Guard |
 |---|---|
 | Wrong answer key | Every wrong answer from the best model is checked by the author: model error, knowledge gap, or key error. Keys cite knowledge ids. |
@@ -192,7 +192,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 | Frontier model knows public material | Baseline tests exactly that. The knowledge base must add what public material lacks. |
 | Version drift | Every run records the index version (git commit), model, provider and settings. Scores are compared only within one scoring scheme. |
 
-## 10. Review checklist for an expert
+## 11. Review checklist
 For each question:
 1. Is the situation realistic for an operator of vSphere 9.1?
 2. Is every option decidable from the cited knowledge files, and is the key right?
@@ -206,12 +206,12 @@ For the set:
 8. Is every trap type covered at least 3 times?
 9. Are at least 20% of questions from sources other than the author's books?
 
-## 11. Status (2026-11-04)
+## 12. Status (2026-11-04)
 - 17 multiple-choice questions (cpu 9, memory 5, storage 1, foundations 1, general 1) and 11 free-text or compound cases.
 - Gaps against the blueprint: network 0 of 15, storage 1 of 20, system about 3 of 20, recall 0 of 20, Not covered 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
 - Next: write the questions to the blueprint from the author's book quizzes; add `trap_type`; add a coverage script; set up the held-out set.
 
-## 12. Screenshot questions
+## 13. Screenshot questions
 - Purpose: prepare for users who upload screenshots and ask the agent to explain the problem.
 - Two tracks, scored separately:
   - Vision track: the image is sent to vision-capable models only.
@@ -219,11 +219,11 @@ For the set:
 - The gap between the two tracks shows how much reading the image itself costs.
 - Images: author screenshots with host and customer names masked before commit.
 
-## 13. Free-text questions
+## 14. Free-text questions
 - Golden cases without options keep the 0-3 rubric. A judge model scores first; the author checks every 0 and every disagreement between runs.
 - The judge is never one of the candidates. A frontier model is fine: it is not deployed to customers. It sees the answer key; the model under test never does. Author scores override and are logged.
 
-## 14. Target history (author, 2026-11-03)
+## 15. Target history (author, 2026-11-03)
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
 - Target: 99% Stable correct on the golden multiple-choice set (chosen mode). See section 7.
 - Minimum: 85% Stable correct. A model below 85% is not usable.
@@ -236,7 +236,7 @@ For the set:
   - Answer keys must be correct. Every wrong answer from the best model gets an author check: model error, knowledge-base gap, or key error.
 - Status at run 20261103-081849: best small model 58% exact (classic). Gap: 41 points.
 
-## 15. Decision rules
+## 16. Decision rules
 - Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
 - Pick the model: highest Stable correct in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
 - Agentic is dropped for a model with more than 10% fallbacks.
@@ -244,7 +244,7 @@ For the set:
 - Screenshot upload on isvara.io only if the chosen model passes the vision track.
 - 70B test: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
 
-## 16. Outputs
+## 17. Outputs
 - `benchmark/results/results.csv`: one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).
 - A short report per run in `benchmark/results/`: score matrix, consistency, worst questions, trace links.
 - Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a to-do or author question.

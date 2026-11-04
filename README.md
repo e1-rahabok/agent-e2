@@ -95,7 +95,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - Screen library (`screens/`, release 1.1): one file per screen type with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `knowledge/_templates/screen.md`.
 - `tools/lint.py` enforces the folder and tag rules.
 
-## Why this structure
+## Structure rationale
 - Full reasoning: `project/philosophy-and-structure.md`.
 - A generic AI fails on vSphere metrics in a known way: it knows the general meaning of a label and applies it where vSphere differs.
 - Each structural choice blocks one failure:
@@ -125,7 +125,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - The knowledge base is written at Level 400. Levels 100-200 are assumed; generic models already reach Level 300 from public text.
 - What separates 400 from 300 is the trap: a Level 300 reader takes the reading at face value and acts on it; a Level 400 reader knows when the reading lies.
 
-### What a trap is
+### Trap definition
 - A trap is a wrong conclusion drawn from a true observation. The number is right; the reading is wrong.
 - It is plausible: an experienced administrator, a generic AI, or even the vendor documentation would draw it.
 - It has a mechanism: the knowledge base can say why the conclusion fails and what to check instead.
@@ -153,14 +153,14 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 | Reclamation read as contention | Balloon, swapped or compressed memory is read as current waiting | "Balloon above 0, so the VM is slow" |
 | Tool confusion | vCenter and VCF Operations, or esxtop and vCenter, are treated as the same reading | "Same counter name, so the values match" |
 
-### How traps are used
+### Trap use
 - Retrieval: a trap line holds the wrong conclusion in the user's own words, so a question that carries the misconception retrieves the file that corrects it.
 - `same_name` links bring in the other object's meaning of the same label: the main guard against the first trap type.
 - The model is told to watch for same-name metrics and to answer with the mechanism, not the definition.
 - Benchmark: every multiple-choice question has a trap option named in `## Likely wrong answer`; the trap rate is reported per model. See `benchmark/test-design.md`.
 - A trap without a mechanism is an opinion, not a trap: it needs a source like any other fact.
 
-## How a local LLM uses it
+## Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
 - `harness/` implements the steps below. They are also the contract for any other RAG stack.
 
@@ -225,7 +225,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - Images live in the `images/` folder of the folder that uses them: `vsphere/technology/<tech>/images/`, `vsphere/object-types/<object>/images/`, `vsphere/foundations/images/`, `operations-management/<pillar>/images/`, `guest-os/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
 - When a file is retrieved, also consider retrieving the ids in `related`, `internal_derive`, `same_name` and `same_meaning`.
 
-## retriever_guide: which question a file answers
+## retriever_guide
 | Value | Question it answers | Folder | Template |
 |---|---|---|---|
 | how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `foundations/` | `concept.md` |

@@ -126,7 +126,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] After Q048: fill `interval` and `instance` in `knowledge/catalog/thresholds.yaml`; add an Interval column to the band tables; have the catalog lookup return them.
 - [ ] Harness profiles in `benchmark/runner/config.yaml`: `deployment` (context window capped to the deployed size, tool-output token budget, no-progress stop, turn limit from the target GPU) and named experiment profiles; record the profile per answer; only `deployment` feeds the release score.
 - [ ] Measure seconds per model turn on the target GPU (phase 5) to set the turn limit; set the time limit from user tests.
-- [ ] Budget test: re-run the agentic answers that hit the 8-call limit with 16 calls; replace the fixed count with token, time and no-progress stops (see `ARCHITECTURE.md`, section 2a).
+- [ ] Budget test: re-run the agentic answers that hit the 8-call limit with 16 calls; replace the fixed count with token, time and no-progress stops (see `ARCHITECTURE.md`, section 3).
 - [ ] Test agentic mode primed with the classic context (first search done, catalog facts included).
 - [ ] After the 100-question run picks model and mode: routine runs use the chosen mode plus baseline only.
 - [ ] Raise retrieval recall (67% hybrid, 12 of 28 cases complete): question understanding and filters, query rewriting with glossary synonyms, smarter link expansion. Measure with `benchmark/runner/retrieval_eval.py`.
