@@ -31,7 +31,7 @@ Related: `solution-design.md` (system design), `design-kb-test-site.md` (test si
 | Embedding model nomic-embed-text; the benchmark uses qwen3-embedding-0.6b. | Different embeddings retrieve different files, so the score does not transfer. | Use the benchmarked embedding model, or benchmark the app's model before release. |
 | System prompt and retrieval settings editable in the UI. | An edited prompt is an untested prompt. | Prompt and settings live in the repo with a version. Each answer stores prompt version, settings, model and index version. A UI edit marks answers as untested. |
 | No rating or flag on answers. | Weak answers cannot be fed back into the knowledge base. | Rate and flag on every answer, with a cause tag (knowledge gap, wrong fact, retrieval miss, model error). Feeds the review queue in `design-kb-test-site.md`. |
-| Every answer ends with "all sources are draft". | Nearly every file is draft, so the line is noise and costs tokens. | Show draft as a badge on the source card. Decision D1 below. |
+| Every answer ends with "all sources are draft". | Release content is all reviewed (D1). | Answers never mention review status. |
 | "View on GitHub" links. | A dark site has no internet. | The local viewer (Open) is the default. The GitHub link is optional and hidden when offline. |
 | Repo sync from GitHub every 24 h. | A dark site cannot pull. | Also accept an offline bundle (signed archive of `knowledge/` + catalog + index), imported by an admin. |
 
@@ -48,8 +48,8 @@ Related: `solution-design.md` (system design), `design-kb-test-site.md` (test si
 | # | Mode | Input | What the system does | Release |
 |---|---|---|---|---|
 | 1 | Text | A typed question | Retrieve, use tools, answer with citations. | 1.0 |
-| 2 | Screenshots | 1 or more images: vCenter charts, esxtop, VCF Operations dashboards | Recognize the screen type. Read metric names, values, units, time range and interval. Show what was read for confirmation. Answer from the knowledge base. | 1.0 if a vision model passes the screenshot track; else 1.1 |
-| 3 | Data files | esxtop batch CSV, vCenter chart export CSV, VCF Operations export, pasted text | Parse with code, not with the model: peak, 95th percentile, time of peak, per object. Feed the exact values to the answer. | 1.1 |
+| 2 | Screenshots | 1 or more images: vCenter charts, esxtop, VCF Operations dashboards | Recognize the screen type. Read metric names, values, units, time range and interval. Show what was read for confirmation. Answer from the knowledge base. | 1.1 (knowledge structure prepared in 1.0) |
+| 3 | Data files | esxtop batch CSV, vCenter chart export CSV, VCF Operations export, pasted text | Parse with code, not with the model: peak, 95th percentile, time of peak, per object. Feed the exact values to the answer. | 1.2 |
 | 4 | Guided troubleshooting | A symptom ("VM is slow") | Run the matching flow one step at a time. Ask for the next value. Show the step ("Step 2 of 6") and the branch taken. | 1.0 (flow tool exists) |
 | 5 | Live instance | Connection to VCF Operations | Read metrics for a named object and apply the flows to live values. | After 1.0 |
 
@@ -92,11 +92,11 @@ Related: `solution-design.md` (system design), `design-kb-test-site.md` (test si
 | Concurrency | Several users: vLLM instead of Ollama. |
 | Knowledge sources | The isvara knowledge base is the authoritative source. Customer runbooks can be added as extra sources later, ranked below it, and labelled in citations. |
 
-## 5. Decisions for the author
-- D1: draft status. Today the README rule says: say so when the answer depends on a draft file. Nearly all files are draft, so every answer says it. Proposal: show draft on the source cards only, and drop the sentence from answers until files are reviewed.
-- D2: screenshot mode in 1.0 or 1.1. Depends on a vision model passing the screenshot track.
-- D3: data file mode (esxtop and vCenter CSV) in 1.1. Proposal: yes; it is exact and works on a dark site.
-- D4: whether the vCommunity Ask app calls `harness/` directly. Proposal: yes, so the benchmark score applies to the app.
+## 5. Decisions (author, 2026-11-04)
+- D1: no draft status in the product. Release content is final and curated: every file is reviewed before release. `status: draft` is a review-tracking field for the author only; answers never mention it.
+- D2: screenshot upload is version 1.1. Prepare the knowledge and folder structure for it now, so no redesign later.
+- D3: data file upload is version 1.2. Export formats are hard to infer, and VCF Operations output can mislead; each format needs its own documented reading first.
+- The demo app is a sample, not the target. Learn from it; do not treat it as complete.
 
 ## 6. After 1.0: live VCF Operations
 - Goal: the compound system applies its knowledge to a live instance.

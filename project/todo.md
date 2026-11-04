@@ -22,13 +22,13 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Move section "Host CPU monitoring" (esxtop load average, PCPU 80% / 90%) out of `vsphere/foundations/overhead`: it is not overhead. Place it with the host CPU metrics and state the book view next to it (host utilization is capacity; performance is read from contention).
 - [ ] Add overview files per object for broad questions: "ESXi CPU: what to monitor", then memory, storage, network, and the VM and cluster equivalents. Each links the metric files in priority order.
 - [ ] Benchmark case: "most important CPU metrics on an ESXi host" (trap: utilization and load average first).
-- [ ] App uses `harness/` for retrieval, tools, prompt and verifier (decision D4), and the benchmarked embedding model.
+- [ ] The shipped app uses `harness/` for retrieval, tools, prompt and verifier, and the benchmarked embedding model.
 - [ ] Store prompt version, settings, model and index version with every answer; mark answers from a UI-edited prompt as untested.
 - [ ] Rate and flag buttons with cause tags, feeding the review queue.
-- [ ] Draft status: badge on source cards instead of a sentence in every answer (decision D1).
+- [ ] Release gate: every knowledge file `status: reviewed` (D1). Remove the draft rule from the answer prompt before release.
 - [ ] Offline bundle import for dark sites; local viewer as the default source link.
-- [ ] Screenshot mode: recognition against the screenshot library, read-back of values for confirmation, multi-image comparison (decision D2).
-- [ ] Data file mode: parse esxtop batch CSV and vCenter chart export CSV in code (decision D3).
+- [ ] Screenshot upload (1.1, D2): prepare the screen library structure in 1.0; recognition, read-back of values, multi-image comparison in 1.1.
+- [ ] Data file upload (1.2, D3): document each export format and its traps first, then parse in code.
 - [ ] Guided troubleshooting UX: step progress and branch shown, user enters values.
 - [ ] After 1.0: connect to VCF Operations (read-only service account). Find objects, read metrics and properties, run the flows on live values, cite live data with timestamps. Needs the VCF Operations 9.1 metric reference in the catalog first.
 
