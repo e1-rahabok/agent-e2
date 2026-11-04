@@ -20,6 +20,8 @@ Microsoft says SQL Server disk latency should consistently stay below 10–15 ms
 id: vsphere-storage-002
 title: "Setting a disk latency threshold"
 scope: vsphere
+product: [vsphere]
+technology: [storage]
 area: storage
 input: text
 tests: judgment

@@ -32,6 +32,8 @@ A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo o
 id: vsphere-cpu-006
 title: "ESXi CPU capacity: threads, not hertz"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: mixed
 tests: concept

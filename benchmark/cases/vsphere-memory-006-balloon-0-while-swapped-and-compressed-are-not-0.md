@@ -30,6 +30,8 @@ A (reclamation order read as a current-state rule) or D.
 id: vsphere-memory-006
 title: "Balloon 0 while Swapped and Compressed are not 0"
 scope: vsphere
+product: [vsphere]
+technology: [memory]
 area: memory
 input: text
 tests: troubleshooting

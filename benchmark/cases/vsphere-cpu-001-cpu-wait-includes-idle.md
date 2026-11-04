@@ -20,6 +20,8 @@ A VM shows CPU Wait at 90%. The application owner says the VM must be stuck wait
 id: vsphere-cpu-001
 title: "High CPU Wait"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: distinction

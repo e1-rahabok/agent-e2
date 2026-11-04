@@ -7,7 +7,7 @@ Never index this folder: it contains answer keys.
 
 ```text
 benchmark/
-├── cases/<scope>/<area>/<area>-<nnn>-<slug>.md   # one case per file
+├── cases/<id>-<slug>.md                          # one case per file, one flat folder
 ├── attachments/<case-id>/                        # screenshots, logs, diagrams for a case
 ├── runner/                                       # Auto Test: run.py, cases.py, report.py, config.yaml
 ├── results/results.csv                           # summary: one row per case per model per mode per run set
@@ -15,9 +15,10 @@ benchmark/
 └── _templates/case.md
 ```
 
-- scope: `vendor-neutral`, `vsphere` (later `nsx`, `vsan`).
-- area (folder and id): the main area of the question: `foundations`, `cpu`, `memory`, `storage`, `network`, `general`.
-- Every area a question touches goes in its `technology` list (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/test-design.md`, section 3.1.
+- One flat folder: a case often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and areas, so folders cannot hold it. The slices are metadata:
+  - `product`: every product the case touches (values from `tools/tags.yaml`);
+  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/test-design.md`, section 3.1.
+- Existing ids keep their old form (`vsphere-cpu-004`); new cases get neutral ids (`case-0031`).
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per case: scales to hundreds of cases, one diff per case, attachments per case.
 - Ids never change and are never reused. Retired cases get `status: retired`. A case is deleted only when the author asks.
@@ -29,7 +30,9 @@ benchmark/
 
 | Field | Meaning |
 |---|---|
-| `id` | `<scope>-<area>-<nnn>`. Never reused. |
+| `id` | Never reused. New cases: `case-<nnnn>`. |
+| `product` | Every product the case touches: vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. |
+| `technology` | Every area the case touches: cpu, memory, storage, network, system. |
 | `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `attachments/<id>/`. |
 | `tests` | concept, distinction, judgment, troubleshooting. |
 | `knowledge` | Knowledge ids the answer should draw on. Used to measure retrieval recall, not only the answer. |

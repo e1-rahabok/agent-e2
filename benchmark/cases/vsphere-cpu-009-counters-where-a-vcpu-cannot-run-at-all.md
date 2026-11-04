@@ -30,6 +30,8 @@ Omitting Overlap or Other Wait; including Demand as a contention counter.
 id: vsphere-cpu-009
 title: "Counters where a vCPU cannot run at all"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: distinction

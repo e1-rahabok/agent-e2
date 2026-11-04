@@ -27,6 +27,8 @@ C or D (Demand), because it includes unmet demand; or A/B (Usage).
 id: vsphere-cpu-008
 title: "Which counter to size VM CPU"
 scope: vsphere
+product: [vsphere, windows]
+technology: [cpu]
 area: cpu
 input: text
 tests: distinction

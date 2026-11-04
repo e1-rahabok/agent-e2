@@ -21,6 +21,8 @@ A VM is powered on, but Windows inside it has crashed and is stuck on a blue scr
 id: vsphere-foundations-002
 title: "VM availability"
 scope: vsphere
+product: [vsphere]
+technology: [system]
 area: foundations
 input: text
 tests: concept

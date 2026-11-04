@@ -20,6 +20,8 @@ Two single-vCPU VMs are both fully busy, running on the two hardware threads of 
 id: vsphere-cpu-003
 title: "Hyper-Threading and two vantage points"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: distinction

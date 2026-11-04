@@ -145,6 +145,13 @@ def main():
         if fm is None: bad(f, 'missing ## Metadata section with one yaml block at the end'); fm = {}
         for r in (fm or {}).get('knowledge') or []:
             if r not in ids: bad(f, f'knowledge link "{r}" does not exist')
+        for k in ('product', 'technology'):
+            v = (fm or {}).get(k)
+            if not isinstance(v, list) or not v: bad(f, f'{k} must be a non-empty list')
+            else:
+                for x in v:
+                    if x not in allowed[k]: bad(f, f'{k} "{x}" not allowed')
+        if os.path.dirname(f) != 'benchmark/cases': bad(f, 'cases live in one flat folder: benchmark/cases/')
         fmt = (fm or {}).get('format')
         if fmt not in ('multiple-choice', 'free-text', 'compound'):
             bad(f, f'format "{fmt}" must be multiple-choice, free-text or compound')

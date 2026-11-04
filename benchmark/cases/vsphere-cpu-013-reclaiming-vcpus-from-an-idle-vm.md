@@ -29,6 +29,8 @@ B (vCPU x GHz counted as freed capacity) or E (IO assumed to cost no CPU).
 id: vsphere-cpu-013
 title: "Reclaiming vCPUs from an idle VM"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: judgment

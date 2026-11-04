@@ -21,6 +21,8 @@ Every VM on an ESXi host shows Memory Usage below 25% in vCenter. The host itsel
 id: vsphere-memory-001
 title: "Memory usage: VM vs ESXi"
 scope: vsphere
+product: [vsphere]
+technology: [memory]
 area: memory
 input: text
 tests: distinction

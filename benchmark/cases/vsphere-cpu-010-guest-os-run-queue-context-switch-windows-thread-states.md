@@ -32,6 +32,8 @@ A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dis
 id: vsphere-cpu-010
 title: "Guest OS run queue, context switch, Windows thread states"
 scope: vsphere
+product: [vsphere, windows]
+technology: [cpu]
 area: cpu
 input: text
 tests: concept

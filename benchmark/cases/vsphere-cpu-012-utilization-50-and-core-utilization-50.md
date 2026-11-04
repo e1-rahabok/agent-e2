@@ -27,6 +27,8 @@ B (equal values read as one thread per core).
 id: vsphere-cpu-012
 title: "Utilization 50% and Core Utilization 50%"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: distinction

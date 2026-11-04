@@ -22,6 +22,8 @@ An ESXi host dashboard shows "CPU Ready" and "CPU Demand". For each, is it a pro
 id: vsphere-foundations-003
 title: "Provider vs consumer metrics"
 scope: vsphere
+product: [vsphere]
+technology: [system]
 area: foundations
 input: text
 tests: concept
