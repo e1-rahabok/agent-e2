@@ -21,7 +21,7 @@ Each entry has:
 - Search 2 (VM): "This is why Swapped is not Swapped In – Swapped Out"
 - Question: is host Swap Consumed equal to swapped out minus swapped in?
 - Written as now: both statements, flagged.
-- Answer:
+- Answer: Search 1 is wrong. Search 2 is correct. 
 
 ### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
 - Files: `vsphere/technology/memory/metrics/host/consumed`
@@ -37,14 +37,15 @@ Each entry has:
 - Search 2: "Utilization. Machine Demand + ESX System Usage"
 - Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
 - Written as now: both forms, flagged. Note: Provider Objects > Capacity says "Memory \\ ESX System Usage (KB)" is the kernel reservation (legacy name). If so, the two forms agree; please confirm.
-- Answer:
+- Answer: They are the same thing. See my book for Reservation. The metric name is Memory \ ESX System Usage (KB). It is a raw counter from vCenter. Just in case you’re wondering, the name ESX System Usage is a legacy name.
+
 
 ### Q022 · Chapter 4 Storage > Architecture · IP storage read and network direction
 - Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`
 - Search: "Read and Write are both mapped to Transmit counter"
 - Question: for a read, the data returns to ESXi as received traffic. Do reads show mostly as Receive (data) with only the command on Transmit?
 - Written as now: both map to Transmit, as in the book.
-- Answer:
+- Answer: book was wrong. Answer is If you are using IP storage, take note that Read and Write in storage do not map 1:1 to Transmit (Tx) and Receive (Rx) in Networking metrics. This depends on the storage block size (normally 4K or 8K), network packet size (ideally 9000 MTU), and TCP/IP handshakes packets. Get detail from https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit?usp=sharing and add it accordingly.
 
 ### Q023 · Chapter 4 Storage > VM · Disk metric scope
 - Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk`
