@@ -62,7 +62,7 @@ related:
 - vsphere/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 images:
   - path: ../../images/vcenter-vm-cpu-consumption-counters-table.png
     product: [vsphere]

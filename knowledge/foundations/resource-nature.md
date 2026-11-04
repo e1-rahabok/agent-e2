@@ -68,7 +68,7 @@ product: []
 internal_derive: []
 related:
 - foundations/measurement-precision
-- vsphere/foundations/resource-management
+- vsphere/resource-management/concepts/resource-controls
 - vsphere/memory/metrics/virtual-motherboard/usage
 - vsphere/storage/metrics/virtual-motherboard/virtual-disk
 source:

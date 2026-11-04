@@ -2,7 +2,7 @@
 
 ## Meaning
 - Excludes overhead.
-- Includes reserved memory, even if the Guest OS has not used it yet. See `vsphere/foundations/resource-management`.
+- Includes reserved memory, even if the Guest OS has not used it yet. See `vsphere/resource-management/concepts/resource-controls`.
 
 ## vMotion effect
 - After vMotion, Consumed on the destination can increase. Swapped or compressed pages can become regular pages. See `vsphere/foundations/overhead`.
@@ -49,7 +49,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/resource-management
+- vsphere/resource-management/concepts/resource-controls
 - vsphere/foundations/overhead
 same_name:
 - vsphere/memory/metrics/host/consumed

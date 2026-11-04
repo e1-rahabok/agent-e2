@@ -120,7 +120,7 @@ object:
 metric_class: contention
 internal_derive:
 - vsphere/cpu/concepts/vcpu-states
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 same_name: []
 same_meaning: []
 related:

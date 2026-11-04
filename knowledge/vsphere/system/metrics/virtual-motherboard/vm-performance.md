@@ -65,6 +65,6 @@ source:
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%)'
 corrections: []
 review_notes:
-- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention, but the table gives half (0.25% vs 0.5%). Open question in docs/author-questions.md.'
+- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention, but the table gives half (0.25% vs 0.5%). Open question in project/author-questions.md.'
 status: draft
 ```

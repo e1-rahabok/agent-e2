@@ -47,7 +47,7 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 - vsphere/memory/configuration/host-level-swapping
 - vsphere/memory/metrics/virtual-motherboard/usage
 source:

@@ -25,7 +25,7 @@
 ## Scope
 - NetIOC controls transmit traffic only. It does not limit receive traffic.
 - Traffic shaping limits the bandwidth of a vNIC. It can be set separately for transmit and receive. See Network Traffic Shaping (p. 46, not read).
-- DRS includes NetIOC bandwidth reservations in its load-balancing calculations. See `vsphere/cluster-resource-management/concepts/drs-overview`.
+- DRS includes NetIOC bandwidth reservations in its load-balancing calculations. See `vsphere/resource-management/concepts/drs-overview`.
 
 ## Shares
 - A share gives a proportion of the physical link bandwidth: the pool's shares divided by the total shares.
@@ -80,7 +80,7 @@ internal_derive: []
 related:
 - vsphere/network/concepts/passthrough-and-offload
 - vsphere/network/configuration/rss-and-interrupt-coalescing
-- vsphere/cluster-resource-management/concepts/drs-overview
+- vsphere/resource-management/concepts/drs-overview
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Networking Considerations > Network I/O Control (NetIOC) (pp. 47-48)

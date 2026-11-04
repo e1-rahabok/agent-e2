@@ -38,7 +38,7 @@ same_meaning: []
 related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/imbalance
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 images:
   - path: ../../images/esxi-cpu-three-threads-above-90-percent-on-lightly-loaded-host.png
     product: [vcf-operations]

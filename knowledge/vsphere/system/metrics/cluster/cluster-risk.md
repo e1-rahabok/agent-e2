@@ -66,7 +66,7 @@ related:
 - vsphere/system/metrics/cluster/cluster-consumption
 - vsphere/cpu/metrics/host/imbalance
 - vsphere/system/concepts/cluster-operations
-- vsphere/cpu/concepts/cpu-capacity
+- vsphere/cpu/concepts/cpu-measurement-levels
 images:
   - path: ../../images/cluster-risk-thresholds-table.png
     product: [vcf-operations]
@@ -78,6 +78,6 @@ source:
   path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections: []
 review_notes:
-- 'Section ''Monster VM'': the book gives several CPU thresholds: above 45% of threads (Overview), above 40% of threads (Monster VM factors), at least half the host (Cluster Risk), and above 50% of physical cores (recommendation). Open question in docs/author-questions.md.'
+- 'Section ''Monster VM'': the book gives several CPU thresholds: above 45% of threads (Overview), above 40% of threads (Monster VM factors), at least half the host (Cluster Risk), and above 50% of physical cores (recommendation). Open question in project/author-questions.md.'
 status: draft
 ```

@@ -86,7 +86,7 @@ internal_derive:
 - vsphere/foundations/provider-consumer
 related:
 - vsphere/memory/concepts/page-sharing
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 - vsphere/memory/concepts/memory-tiering
 - vsphere/memory/concepts/large-memory-pages
 - vsphere/memory/concepts/guest-os-vs-vm-memory

@@ -10,7 +10,7 @@
 - The performance impact of over-allocating memory is far less than the impact of under-allocating it.
 - Avoid substantial over-allocation nevertheless.
 - Memory allocated beyond the working set is typically used by the guest OS for file system caches.
-- When host memory is low, ESX uses ballooning to reclaim that cache memory. See `vsphere/memory/concepts/overcommit-techniques`.
+- When host memory is low, ESX uses ballooning to reclaim that cache memory. See `vsphere/memory/concepts/host-memory-states`.
 - ESX can reclaim over-allocated memory. It cannot reclaim the memory overhead associated with over-allocated memory.
 - Result: over-allocation consumes memory that could otherwise support more VMs.
 
@@ -36,8 +36,8 @@ object:
 internal_derive: []
 related:
 - vsphere/memory/concepts/memory-overhead
-- vsphere/memory/concepts/overcommit-techniques
-- vsphere/cluster-resource-management/configuration/resource-settings-guidance
+- vsphere/memory/concepts/host-memory-states
+- vsphere/resource-management/configuration/resource-settings-guidance
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Memory Considerations > Memory Sizing (p. 33)

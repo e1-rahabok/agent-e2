@@ -108,12 +108,11 @@ object:
 - VirtualMachine
 internal_derive:
 - vsphere/foundations/vm-vs-guest-os
-- vsphere/foundations/visibility-layers
 - vsphere/foundations/kernel-worlds
 related:
 - vsphere/cpu/concepts/vcpu-states
 - vsphere/cpu/concepts/cpu-measurement-levels
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/metrics/virtual-motherboard/run
 - vsphere/cpu/metrics/virtual-motherboard/wait
 - vsphere/cpu/metrics/virtual-motherboard/usage

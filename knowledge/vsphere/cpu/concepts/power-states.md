@@ -139,8 +139,8 @@ corrections: []
 review_notes:
 - "Section 'P-states': author (2026-11-02): the number of P-states varies by processor. Not an industry standard."
 - "Section 'ESXi level': advanced option names Power.UseCStates and Power.UsePStates are from Claude's own knowledge. The book shows them as 'Use C States' and 'Use P States' in the UI."
-- "Section 'ESXi level': author (2026-11-02): an idle CPU lowers its frequency to save power. The author will elaborate in the book; see docs/todo.md."
-- "Section 'C-state × P-state combinations': conflicts with the Use P States text and the Turbo observation. The author will update the book; see docs/todo.md."
+- "Section 'ESXi level': author (2026-11-02): an idle CPU lowers its frequency to save power. The author will elaborate in the book; see project/todo.md."
+- "Section 'C-state × P-state combinations': conflicts with the Use P States text and the Turbo observation. The author will update the book; see project/todo.md."
 - "Section 'C-state × P-state combinations': the row Use C States = 1, Use P States = 0 says no Turbo. The ESXi level text says P-states off means 'highest available frequency'. The Turbo section reports Turbo (129%) under BIOS static high performance. Author to reconcile."
 - "Section 'CPPC': specification from the book: https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html"
 - "Section 'High Performance vs Balanced': the book cites the vSphere 9.0 Performance Best Practices. The current version (9.1, revision 20260624) is covered in vsphere/cpu/configuration/host-power-management."

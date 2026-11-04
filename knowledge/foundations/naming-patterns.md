@@ -68,7 +68,7 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/terminology
+- glossary
 - vsphere/cpu/metrics/comparisons/consumption-metrics
 - vsphere/memory/metrics/virtual-motherboard/usage
 - vsphere/storage/metrics/virtual-motherboard/virtual-disk

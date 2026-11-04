@@ -113,7 +113,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 - vsphere/foundations/vcenter-statistics
 - vsphere/memory/configuration/host-level-swapping
 - vsphere/storage/metrics/host/disk

@@ -20,7 +20,7 @@
 - Ignores frequency and Hyper-Threading. Relevant only with Hyper-Threading on.
 - Disregards that Hyper-Threading does not deliver 2x. Example: both threads of every core busy = 100%; one thread per core = 50%.
 - Usually lower than Core Utilization. Without Hyper-Threading, equal to it.
-- See `vsphere/cpu/concepts/esxi-thread-core-accounting`.
+- See `vsphere/cpu/concepts/hyper-threading`.
 
 ## Traps
 - "ESXi Utilization = sum of VM Run + kernel" → different vantage points. See `vsphere/cpu/concepts/cpu-measurement-levels`.
@@ -49,7 +49,7 @@ same_meaning:
 - vsphere/cpu/metrics/virtual-motherboard/run
 related:
 - vsphere/cpu/metrics/host/core-utilization
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/metrics/host/imbalance
 source:
   document: PART 3 - Counters.docx

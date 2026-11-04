@@ -22,7 +22,7 @@
 ## Masked degradation
 - At Run 100%, throughput per vCPU can fall from 1.7 GHz to 0.81 GHz as the host fills up (sample CPU, 1 GHz nominal).
 - Usage (%) masks this degradation.
-- See `vsphere/cpu/concepts/frequency-and-ht-impact-on-vm`.
+- See `vsphere/cpu/concepts/cpu-frequency`.
 
 ## Formula
 ```text
@@ -81,8 +81,8 @@ same_meaning: []
 related:
 - vsphere/cpu/metrics/comparisons/consumption-metrics
 - vsphere/cpu/metrics/host/core-utilization
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/cpu-frequency
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/cpu/metrics/virtual-motherboard/net-run
 - vsphere/cpu/metrics/virtual-motherboard/demand

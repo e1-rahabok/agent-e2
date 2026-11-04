@@ -45,7 +45,7 @@ object:
 - HostSystem
 internal_derive:
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 related:
 - vsphere/cpu/metrics/host/core-utilization
 - vsphere/cpu/metrics/host/utilization

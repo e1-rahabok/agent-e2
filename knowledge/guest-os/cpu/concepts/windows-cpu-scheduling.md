@@ -103,7 +103,7 @@ source:
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
 corrections: []
 review_notes:
-- 'Section ''Usage, utilization, time'': the book''s table marks VM CPU Run as Hyper-Threading aware. Chapter 2 says Run ignores Hyper-Threading. Open question in docs/author-questions.md.'
+- 'Section ''Usage, utilization, time'': the book''s table marks VM CPU Run as Hyper-Threading aware. Chapter 2 says Run ignores Hyper-Threading. Open question in project/author-questions.md.'
 - 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
 - "Section 'Thread states': author (2026-11-03), quiz CPU Q7 F confirmed correct (Q036)."
 status: draft

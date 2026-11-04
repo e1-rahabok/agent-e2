@@ -25,7 +25,7 @@
 |---|---|---|
 | Two VMs share a core, each runs half the time, half of it overlapping | 50% | 40.625% |
 | Both threads busy all the time | 100% | 62.5% |
-- See `vsphere/cpu/concepts/cpu-efficiency`.
+- See `vsphere/cpu/concepts/hyper-threading`.
 
 ## Formula
 ```text
@@ -83,7 +83,7 @@ metric_class: consumption
 internal_derive:
 - vsphere/foundations/kernel-worlds
 - vsphere/cpu/concepts/run-time-vs-run-quality
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/hyper-threading
 same_name:
 - vsphere/cpu/metrics/host/used
 same_meaning: []

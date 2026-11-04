@@ -72,7 +72,6 @@ object:
 - VirtualMachine
 internal_derive:
 - vsphere/foundations/vm-vs-guest-os
-- vsphere/foundations/visibility-layers
 related:
 - vsphere/memory/concepts/memory-layers
 - vsphere/memory/metrics/virtual-motherboard/consumed

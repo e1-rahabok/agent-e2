@@ -93,7 +93,7 @@ source:
   path: Network > VM > Contention Metrics
 corrections: []
 review_notes:
-- 'Section ''Profile transmit drops'': the book says 1 thousand packets × 1.5 KB = 1,500 MB within 300 seconds. 1,000 × 1.5 KB = 1.5 MB. Open question in docs/author-questions.md.'
+- 'Section ''Profile transmit drops'': the book says 1 thousand packets × 1.5 KB = 1,500 MB within 300 seconds. 1,000 × 1.5 KB = 1.5 MB. Open question in project/author-questions.md.'
 - 'KBs from the book: https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495 (not read).'
 status: draft
 ```

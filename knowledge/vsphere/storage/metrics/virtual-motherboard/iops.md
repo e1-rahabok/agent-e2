@@ -1,7 +1,7 @@
 # VM Disk IOPS
 
 ## Under-reporting
-- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See `vsphere/foundations/visibility-layers`, area A.
+- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See `vsphere/foundations/vm-vs-guest-os`, area A.
 
 ## Limits
 - A disk IOPS limit exists.
@@ -42,7 +42,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/visibility-layers
+- vsphere/foundations/vm-vs-guest-os
 - foundations/resource-nature
 same_name: []
 same_meaning: []

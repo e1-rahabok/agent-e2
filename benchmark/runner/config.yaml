@@ -1,0 +1,29 @@
+# Auto Test configuration. See project/design-kb-test-site.md, section Auto Test plan.
+gateway: https://ai-gateway.vercel.sh/v1   # API key from env AI_GATEWAY_API_KEY
+
+models:                       # the 10 candidates (ministral-8b dropped 2026-11-03; 3 added 2026-11-04)
+  - google/gemma-4-31b-it
+  - alibaba/qwen-3-32b
+  - mistral/mistral-small
+  - google/gemma-4-26b-a4b-it
+  - nvidia/nemotron-3-nano-30b-a3b
+  - openai/gpt-oss-20b
+  - alibaba/qwen-3-14b
+  - alibaba/qwen3.8-27b          # added 2026-11-04: 27.8B dense, Apache 2.0 (Hugging Face Qwen/Qwen3.8-27B)
+  - alibaba/qwen3.6-27b          # added 2026-11-04: 27.8B dense, Apache 2.0 (Hugging Face Qwen/Qwen3.6-27B)
+  - zai/glm-4.7-flash            # added 2026-11-04: 31.2B MoE (30B-A3B), MIT (Hugging Face zai-org/GLM-4.7-Flash)
+
+modes: [baseline, classic, agentic]
+runs: 5                       # repeats per question per model per mode
+temperature: 0.2              # use the value the website will use; fixed for a whole run
+max_tokens: 4000              # reasoning models spend tokens before the ANSWER line
+concurrency: 12               # parallel requests; 12 tested OK (run 20261103-081849); lower it on HTTP 429
+
+embedding_model: alibaba/qwen3-embedding-0.6b   # null = BM25 only
+classic_k: 6                  # files from the search before link expansion
+context_tokens: 8000          # classic mode context budget
+agent_max_calls: 8            # tool calls per question
+agent_tool_tokens: 12000      # tool output budget per question
+
+# Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
+provider_order: {}

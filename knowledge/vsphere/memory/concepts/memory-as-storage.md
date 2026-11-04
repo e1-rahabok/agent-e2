@@ -54,7 +54,7 @@ internal_derive: []
 related:
 - vsphere/memory/concepts/memory-layers
 - vsphere/memory/metrics/virtual-motherboard/latency
-- vsphere/foundations/resource-management
+- vsphere/resource-management/concepts/resource-controls
 - vsphere/memory/concepts/memory-tiering
 source:
   document: PART 3 - Counters.docx

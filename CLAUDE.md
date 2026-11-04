@@ -5,7 +5,7 @@ Standing rules for this repository. Read at the start of every session.
 ## Purpose
 - Knowledge base for an AI assistant on vSphere and VCF metrics.
 - Primary reader: the AI. The author reviews for QA only.
-- No text aimed at human motivation or narrative. See `docs/philosophy-and-structure.md`.
+- No text aimed at human motivation or narrative. See `project/philosophy-and-structure.md`.
 
 ## Level
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases.
@@ -53,8 +53,8 @@ Standing rules for this repository. Read at the start of every session.
 - Boundary files that compare the two layers from the vSphere side (Guest OS vs VM CPU, memory, storage; Guest OS sizing from VM data) stay in `knowledge/vsphere/` and link to the Guest OS files.
 - VM metrics go in `<technology>/metrics/virtual-motherboard/` with `layer: [virtual-motherboard]` and `object: [VirtualMachine]`.
 - That vCenter or VCF Operations store a counter on the VM object does not make it a VM metric. Decide by the layer that produces it.
-- When a repository rule conflicts with the author's architecture, raise it in `docs/author-questions.md`; do not resolve it silently.
-- `scripts/validate.py` enforces the folder and tag rules.
+- When a repository rule conflicts with the author's architecture, raise it in `project/author-questions.md`; do not resolve it silently.
+- `tools/lint.py` enforces the folder and tag rules.
 
 ## Writing
 - One fact per bullet or table row.
@@ -64,27 +64,30 @@ Standing rules for this repository. Read at the start of every session.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation. Troubleshooting flows: rule in `README.md`, section Troubleshooting flow diagrams.
 - Every knowledge file and every evaluation case ends with a `## Metadata` section holding one yaml block (see `README.md`). No front matter at the top.
-- Keep the author's own diagrams from the book in `knowledge/vsphere/<technology>/images/`, linked under the section they explain, with alt text. Name each file by what it shows (pattern in `README.md`, section Images). Tag each image in the metadata `images` list.
+- Keep the author's own diagrams from the book in the `images/` folder of the technology folder that uses them (`knowledge/vsphere/<technology>/images/`, `knowledge/guest-os/<technology>/images/`), linked under the section they explain, with alt text. Name each file by what it shows (pattern in `README.md`, section Images). Tag each image in the metadata `images` list.
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 - Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
 - When asking the author about the book, give a verbatim search string.
 - When asking the author to check a file, give its full GitHub URL on `main`, so it is clickable. Name the item to check (case id, option letters, section).
-- Questions for the author go in `docs/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
-- Extract the book one Heading 3 at a time. Add that section's questions to `docs/author-questions.md` and continue; do not wait for answers.
-- Use terms from `knowledge/glossary/terminology.md`. Tag values must match it. A new term is added there as a proposal and flagged for the author before use.
+- Questions for the author go in `project/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
+- Extract the book one Heading 3 at a time. Add that section's questions to `project/author-questions.md` and continue; do not wait for answers.
+- Use terms from `knowledge/glossary.md`. Tag values must match `tools/tags.yaml`. A new term is added there as a proposal and flagged for the author before use.
 - When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
 
 ## Evaluation
 - Never send `## Expected key points` or `## Likely wrong answer` to the AI under test.
-- Baseline runs use no knowledge base. Record model and effort in `evaluation/results/results.csv`.
+- Baseline runs use no knowledge base. Record model and effort in `benchmark/results/results.csv`.
 - During an Auto Test run, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
+## Repository layout
+- `knowledge/`: what the model reads. `harness/`: the software around the model (retrieval, tool loop, prompts). `benchmark/`: proof that the model benefits (questions with answer keys, runner, results). `project/`: design, decisions, author questions, to-do. `tools/`: repository maintenance (lint, tag values).
+
 ## Do not index
-- `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, `README.md`, `CLAUDE.md`.
+- `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, `README.md`, `CLAUDE.md`.
 
 ## Validation
-- Run `python3 scripts/validate.py` before every merge. Do not merge if it fails.
-- Allowed tag values and avoided phrases live in `knowledge/glossary/terminology.md` (section Allowed tag values). Change them there, not in the script.
+- Run `python3 tools/lint.py` before every merge. Do not merge if it fails.
+- Allowed tag values and avoided phrases live in `tools/tags.yaml`. Change them there, not in the script. Term meanings live in `knowledge/glossary.md`.
 
 ## Git
 - Work on the branch named for the session.

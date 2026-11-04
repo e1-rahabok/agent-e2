@@ -70,7 +70,7 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/cpu/concepts/virtualization-overhead
+- vsphere/foundations/overhead
 - vsphere/cpu/concepts/virtual-numa
 - vsphere/foundations/vm-vs-guest-os
 source:

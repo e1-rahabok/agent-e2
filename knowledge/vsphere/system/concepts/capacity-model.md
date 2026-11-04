@@ -124,8 +124,8 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/system/concepts/hypervisor-overhead
-- vsphere/cpu/concepts/cpu-capacity
+- vsphere/foundations/overhead
+- vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/memory/concepts/memory-capacity
 images:
   - path: ../images/cluster-overcommit-ratio-excludes-buffer.png

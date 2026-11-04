@@ -45,7 +45,7 @@ Used + Latency = 100%
 - ESXi 6.5 and older: VMs with Latency Sensitivity = High showed guest idle time as %LAT_C. Fixed in ESXi 6.7.
 
 ## Traps
-- "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See `vsphere/foundations/visibility-layers`, area D.
+- "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See `vsphere/foundations/vm-vs-guest-os`, area D.
 - "Steal Time inside Linux equals VM CPU Latency" → different formulas.
 - "Latency is the best SLA metric" → too volatile. Use Ready.
 - "Latency 0% means no contention" → limits are excluded. Check Ready.
@@ -67,9 +67,9 @@ layer:
 - virtual-motherboard
 metric_class: contention
 internal_derive:
-- vsphere/foundations/visibility-layers
+- vsphere/foundations/vm-vs-guest-os
 - vsphere/cpu/concepts/vcpu-states
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/hyper-threading
 same_name:
 - vsphere/memory/metrics/virtual-motherboard/latency
 - vsphere/storage/metrics/virtual-motherboard/disk-latency
