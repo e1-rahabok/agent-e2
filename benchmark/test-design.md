@@ -117,16 +117,24 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 ## 7. Scoring: removing luck
 - Answer format fixed: `ANSWER: <letters>` then `REASON: <one line>`. An unparseable answer scores as wrong.
 - Option order shuffled per run; letters mapped back before scoring. Removes position bias.
-- Points per answer:
+- Each answer falls in one of three classes:
 
-| Answer | Points |
-|---|---|
-| Exactly the correct letters | +1 |
-| Unsure, chosen alone | 0 |
-| Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | -1 |
+| Answer | Class | Counts toward |
+|---|---|---|
+| Exactly the correct letters | Correct | Stable correct (if correct in all 5 runs) |
+| Unsure, chosen alone | Unsure | Not correct; not counted as wrong |
+| Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong | Confident-wrong rate |
 
-- The model is told the scoring. A wrong answer costs as much as a right one earns, so guessing has no expected gain.
-- A confident wrong answer is the worst outcome for an operator; "unsure, check the source" is safe. The scoring rewards the safe behaviour.
+- Two numbers are reported: **Stable correct** (headline, absolute, against the fixed set) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
+- The model is told: a wrong answer is worse than Unsure, because an operator would act on it; if it cannot decide every option, choose Unsure.
+
+### 7.0 Why no points and no -1 (author, 2026-11-04)
+- An earlier version scored +1 / 0 / -1 and reported "Net points". It was dropped:
+  - The test is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
+  - Net points mixed two things an operator cares about separately: how often the system is right, and how often it is confidently wrong. Two plain shares say both without arithmetic.
+- What the -1 really did was change the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
+- Unsure applies to an AI, not only to a human expert: on a dark site nobody checks the answer against the Internet, so "the knowledge base does not settle this" is the safe answer. It is not a feeling of doubt; it is the model reporting that its sources do not decide the question, which can be checked against the cited files.
+- Check after the next run: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
 
 ### 7.1 Why 5 runs, and why all 5 must agree
 - Hosted models do not answer the same way twice, even at the same temperature: sampling, batching on shared GPUs, provider routing, silent serving updates.
@@ -147,7 +155,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 | Measure | Why |
 |---|---|
 | Luck | How much of a model's score is unstable. |
-| Net points | Penalizes confident wrong answers. |
+| Confident-wrong rate | Answers that would mislead an operator. |
 | Unsure rate, accuracy when answered | A cautious model with gaps vs a reckless one. |
 | Trap rate | How often the trap option is picked. The core Level 400 signal. |
 | Not-covered accuracy | Guessing outside the knowledge base. |
@@ -156,6 +164,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 | Per area, per level | Diagnosis only (small counts). |
 
 ## 8. Comparison design
+- Why both classic and agentic modes are run, and why the agentic call limit is what it is: `ARCHITECTURE.md`, sections 2a and 2b.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See `benchmark/runner/README.md`.
 - Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's Stable correct exceeds it by more than the margin.
 - Paired comparison: models are compared question by question on the same set, not only by totals.
@@ -176,7 +185,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 | Synthetic questions drafted by Claude mirror Claude's view | Author approval required; share capped at about 30% of the set. |
 | Ambiguous options | A question with a disputed option is fixed or removed, and the run is re-scored. |
 | Position, length and count bias | Shuffled options; similar option length; varied number of correct options. |
-| Guessing | Unsure option, -1 penalty, 5-run stability. |
+| Guessing | Unsure option, the prompt rule that a wrong answer is worse than Unsure, confident-wrong rate, 5-run stability. |
 | Leakage into the model | Cases are never indexed, never used for fine-tuning, and `## Expected key points` is never sent to the model. |
 | Frontier model knows public material | Baseline tests exactly that. The knowledge base must add what public material lacks. |
 | Version drift | Every run records the index version (git commit), model, provider and settings. Scores are compared only within one scoring scheme. |
@@ -227,7 +236,7 @@ For the set:
 
 ## 15. Decision rules
 - Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
-- Pick the model: highest Stable correct in the chosen mode; then lowest share of wrong answers (Net points); ties go to the smaller model.
+- Pick the model: highest Stable correct in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
 - Agentic is dropped for a model with more than 10% fallbacks.
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
 - Screenshot upload on isvara.io only if the chosen model passes the vision track.

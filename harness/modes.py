@@ -15,8 +15,7 @@ FORMAT = ('Reply with exactly two lines and nothing else:\n'
           'ANSWER: <letter or letters, comma separated>\n'
           'REASON: <one sentence>')
 
-UNSURE_RULE = ('Scoring: a correct answer earns 1 point, Unsure earns 0, any wrong answer loses 1 point. '
-               'A wrong answer costs as much as a right one earns, so do not guess. '
+UNSURE_RULE = ('A wrong answer is worse than Unsure: an operator would act on it. Do not guess. '
                'If you cannot decide every option with certainty, choose only the Unsure option.\n')
 
 SYSTEM_BASE = ('You are an expert on VMware vSphere and VCF metrics. Answer the multiple-choice question.\n'

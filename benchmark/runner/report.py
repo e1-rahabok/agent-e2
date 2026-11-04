@@ -51,7 +51,8 @@ def aggregate(rows):
             'exact': _mean(r['exact'] for r in rs), 'partial': _mean(r['partial'] for r in rs),
             'majority': maj, 'margin': _margin(maj, n_cases), 'consistency': _mean(consistent),
             'stable': _mean(stable), 'stable_margin': _margin(_mean(stable), n_cases), 'luck': _mean(luck),
-            'stable_unsure': _mean(stable_unsure), 'points': _mean(r.get('points') for r in rs),
+            'stable_unsure': _mean(stable_unsure),
+            'confident_wrong': _mean(int(not int(r['exact']) and not int(r.get('unsure') or 0)) for r in rs),
             'unsure': _mean(r.get('unsure') for r in rs), 'answered_accuracy': _mean(r['exact'] for r in answered),
             'trap': _mean(r['trap'] for r in rs), 'not_covered': _mean(r['not_covered'] for r in rs),
             'parse_fail': 1 - _mean(r['parse_ok'] for r in rs),
@@ -73,15 +74,15 @@ def write(run_dir):
          f'- Cases: {len(cfg["cases"])} multiple-choice. Skipped (not multiple-choice): {", ".join(cfg["skipped_cases"]) or "none"}.',
          f'- Answers: {len(rows)} scored, {len(all_rows) - len(rows)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
          '', '## Luck-free scores', '',
-         '| Model | Mode | Track | Stable correct | ± margin | Luck | Stable unsure | Net points | Unsure | Accuracy when answered |',
+         '| Model | Mode | Track | Stable correct | ± margin | Luck | Stable unsure | Confident wrong | Unsure | Accuracy when answered |',
          '|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['stable'])):
         L.append(f'| {m} | {mode} | {tr} | {_pct(s["stable"])} | {_pct(s["stable_margin"])} | {_pct(s["luck"])} | '
-                 f'{_pct(s["stable_unsure"])} | {_pct(s["points"])} | {_pct(s["unsure"])} | {_pct(s["answered_accuracy"])} |')
+                 f'{_pct(s["stable_unsure"])} | {_pct(s["confident_wrong"])} | {_pct(s["unsure"])} | {_pct(s["answered_accuracy"])} |')
     L += ['', '- Stable correct: share of questions answered correctly in every run. The headline score: a known answer, not a guess.',
           '- Luck: share of questions correct in some runs but not all. Counted as not known.',
           '- Stable unsure: share of questions where the model chose Unsure in every run.',
-          '- Net points: mean of +1 (exact), 0 (Unsure alone), -1 (anything else, including unparsed). Range -100% to +100%. Guessing does not raise it.',
+          '- Confident wrong: share of answers that are wrong and not Unsure (wrong letters, partly right, Unsure mixed with other letters, unparseable). The answers that mislead an operator. Target: near 0.',
           '- Accuracy when answered: exact share among answers that were not Unsure.', '',
          '## Scores', '',
          '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Trap | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',

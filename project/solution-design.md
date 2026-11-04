@@ -9,7 +9,7 @@ Status: proposal, 2026-11-04. For the author and for VMware professionals who as
 - Scope:
   - version 1.0: vSphere 9.1 metrics, plus the Guest OS layer (Windows first);
   - later: vSAN, NSX, VCF Operations, VMware Kubernetes, Linux. The end scope is the whole private cloud stack.
-- Target, measured on the benchmark: minimum 85%, target 99% Stable correct (correct in all 5 runs; guessing penalised).
+- Target, measured on the benchmark: minimum 85%, target 99% Stable correct (correct in all 5 runs), with the confident-wrong rate near 0.
 
 ## 2. The system: model + harness + knowledge
 - The product is not "a model". It is a compound AI system: three parts, each doing what it is best at.
@@ -48,7 +48,7 @@ Six mechanisms, in order of weight.
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters at statistics level 4) is newer than most training data. The knowledge base is current by rule.
 4. **Exactness from tools.** Small and large models both slip on arithmetic and unit conversion (ms summation to %, GHz × vCPU, KB vs kb). A calculator tool and a metric catalog lookup return exact values; the model only chooses which tool to call.
 5. **Structure built for a small model.** One fact per bullet, one object per metric file, same-name traps linked, layers separated in folders and tags, metadata for filtering. Enterprise RAG usually fails on messy chunking; this corpus is written to be chunked.
-6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
+6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, confident-wrong rate, 5 runs must agree).
 
 - Honest status: not achieved yet. On 17 questions (old scoring), the best small model with the knowledge base scored 58%; the frontier model without it scored 75%. The gap is in specific questions (knowledge gaps, answer keys, the "ONLY the knowledge base" prompt rule, weak agentic tool use), each tracked in `project/author-questions.md` Q038-Q043 and `project/todo.md`.
 
@@ -139,7 +139,7 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 ## 8. How we prove it
 - Benchmark: 100 multiple-choice questions written from the author's books and quizzes, 50% Level 400 traps, plus screenshot questions. Answer keys are never indexed.
 - Every model runs in three modes: no knowledge base, one lookup, model-driven lookups.
-- Headline score: Stable correct (exactly right in all 5 runs). Guessing is penalised; Unsure is allowed.
+- Headline score: Stable correct (exactly right in all 5 runs). Also reported: confident-wrong rate (wrong and not Unsure). Unsure is allowed and preferred over a guess.
 - The frontier model is scored the same way, with and without the knowledge base.
 - Detail: `benchmark/test-design.md`; runner `benchmark/runner/`.
 
