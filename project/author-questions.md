@@ -35,21 +35,27 @@ Each entry has:
 - Search: "VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System"
 - Question: is the whole sum divided by 20,000, or only System? VM-level Used already includes System (Chapter 2 VM, Used formula). Is System counted twice?
 - Written as now: formula copied as is, flagged.
-- Answer:
+- Answer: VM CPU Needed = (Sum of all vCPU (Used + Overlap + Co-stop + Ready + Other Wait) + System ) / 20000 * vCPU
+Emphasize that this is a narrow use case, as it's about the footprint of the VM on the underlying ESXi. This is only useful in VM migration to a different ESXi. What's more relevant in the Guest OS (Windows or Linux) capacity sizing. 
+
 
 ### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
 - Files: `guest-os/system/concepts/guest-os-sizing`
 - Search: "Exclude balloon"
 - Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
 - Written as now: exclude, flagged.
-- Answer:
+- Answer: include. It is hard to know if the page used by balloon was a free page or not. 
+If it’s from free page, then exclude. 
+If it’s from non-free page, then include. 
+To be conservative, I recommend include.
+
 
 ### Q029 · Consumer Objects > Capacity · Memory utilization ranges
 - Files: `guest-os/system/concepts/guest-os-sizing`
 - Search: "The company is wasting money if the utilization falls below 50%"
 - Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
 - Written as now: bar 2 recommended, no numbers stated.
-- Answer:
+- Answer: I’d recommend 0 - 75% - 85% – 95% - 100% as Windows and Linux tend to cache memory.
 
 ### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
 - Files: `vsphere/object-types/cluster/metrics/cluster-performance`
@@ -57,7 +63,7 @@ Each entry has:
 - Search 2: "vMotion is included as it does impact the VM performance"
 - Question: is vMotion part of the cluster KPI or not? The threshold table has no vMotion row.
 - Written as now: vMotion described as a leading indicator, flagged.
-- Answer:
+- Answer: vMotion should not be included in actual performance as the metric counts the number of vmotion, not the length of the actual downtime. In a healthy environment, each vMotion down time is below 0.2 second and does not impact the Guest OS. Broadbase infrastructure capabilities like vMotion, NSX Edge, vSAN resync and general infrastructure (e.g. network) should be monitored separately. For example, track the maximum downtime for all vMotion across entire environment as a high downtime is a leading indicator of performance degradation.
 
 ### Q031 · Provider Objects > Performance · Cluster KPI table vs text
 - Files: `vsphere/object-types/cluster/metrics/cluster-performance`
