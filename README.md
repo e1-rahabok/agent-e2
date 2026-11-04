@@ -1,9 +1,17 @@
-# Isvara-2 — vSphere metrics knowledge base for AI
+# Isvara: private cloud expertise for a local 32B LLM
 
-Level 400 knowledge of vSphere metrics, for retrieval by an AI assistant.
-Primary reader: AI. Secondary reader: the author, for QA.
+**Goal:** a 32B-class open-weight model, running offline on one GPU (dark site, no Internet, no per-token cost), answers Level 400 private cloud operations questions better than frontier models.
 
-Metrics are a byproduct of how the system works. Concepts explain the mechanism; metric files explain the meaning from one vantage point.
+**How:** model + harness + knowledge.
+- **Knowledge** (`knowledge/`): Level 400 mechanisms, metrics, traps and troubleshooting flows, written to be retrieved by a small model. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
+- **Harness**: the software around the model: hybrid retrieval, link expansion, exact tools (metric lookup, calculator, flow executor), grounding and answer checks. Prototype: `tools/autotest/retrieval.py`, `tools/autotest/modes.py`.
+- **Model**: a 27-32B open-weight model on a local GPU, chosen by benchmark.
+- **Proof** (`evaluation/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
+
+**Why it can work, why 32B, which models:** `docs/solution-design.md`.
+**Status and review:** not achieved yet; best small model 58% vs frontier 75% on the first 17 questions. Findings and proposed restructure: `docs/review-2026-11-04.md`.
+
+Readers: the model reads `knowledge/`. The author reviews for QA. Everything below is the contract the files are written to.
 
 ## Layout
 
