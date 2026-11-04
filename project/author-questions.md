@@ -35,21 +35,39 @@ Each entry has:
 - Search: "That’s why a VM does not have ingress traffic"
 - Question: if moving further inside is ingress, traffic arriving at a VM looks like ingress. What does "a VM does not have ingress traffic" mean? That VM metrics use receive/transmit instead?
 - Written as now: definitions only; the VM statement is flagged.
-- Answer:
+- Answer: Diagram is wrong. Correct answer is RX / TX (Receive / Transmit): L1/L2 hardware and driver domain. Used by physical interface cards (NICs), hypervisor VMkernel drivers, and DMA ring buffers. RX measures frame processing at the lowest stack layer regardless of protocol payload.
+Ingress / Egress: L3–L7 policy and control plane domain. Used by routing engines, distributed firewalls, and microsegmentation policies. Ingress evaluates stateful rule processing upon crossing a defined logical security or administrative boundary.
+Incoming / Outgoing: Operational telemetry domain. Used in application dashboards, capacity planning, and generalized monitoring to describe directional bandwidth utilization without mapping to a specific hardware driver or firewall rule.
+Here is a simple mermaid diagram. If you can add to the diagram, that's good.
+flowchart LR
+    Traffic["Network → VM Interface<br/><b>(100 Packets / 150 KB)</b>"]
+
+    subgraph AbstractionLayers ["Operational Abstraction Layers"]
+        direction TB
+        L1["<b>L1/L2 Driver Layer</b><br/>RX Count: 100<br/><i>(DMA Ring Buffer)</i>"]
+        L2["<b>L3/L7 Policy Layer</b><br/>Ingress Count: 100<br/><i>(Stateful Firewall Rule)</i>"]
+        L3["<b>Telemetry Layer</b><br/>Incoming Count: 100<br/><i>(Monitoring Dashboard)</i>"]
+    end
+
+    Traffic --> L1
+    L1 --> L2
+    L2 --> L3
+
+
 
 ### Q025 · Chapter 5 Network > VM · Dropped packet volume
 - Files: `vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`
 - Search: "1 thousand packets dropped = 1500 MB worth of packets within 300 seconds"
 - Question: 1,000 × 1.5 KB = 1.5 MB. Should it be 1 million packets = 1,500 MB, or 1,000 packets = 1.5 MB?
 - Written as now: flagged, no number stated.
-- Answer:
+- Answer: 1.5 MB. Book was wrong.
 
 ### Q026 · Consumer Objects > Performance · Compressed + Swapped threshold
 - Files: `vsphere/object-types/vm/metrics/vm-performance`
 - Search: "their threshold is 2x of memory contention"
 - Question: the table gives Compressed + Swapped green at 0-0.25%, half of Memory Contention (0-0.5%), not 2x. Which is intended?
 - Written as now: the table values, with the conflict flagged.
-- Answer:
+- Answer: Swapped and Compressed are combined as they are the result of the same action. Together they tell the complete picture. As they may not indicate actual problem, their threshold is higher. However, since we measure at 5 minute sample, while memory contention is measured at 20 second, I adjust the threshold.
 
 ### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
 - Files: `operations-management/capacity/vm-footprint-sizing`
