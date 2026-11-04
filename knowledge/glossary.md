@@ -32,6 +32,8 @@ Allowed tag values (machine settings for the linter) are in `tools/tags.yaml`.
 | Counter | The raw performance counter as exposed by the source (for example vCenter `cpu.ready.summation`). A metric may be built from one or more counters. | The interpreted meaning. |
 | Property | A configuration or inventory attribute of an object (for example number of vCPUs). Often used as context. | A measured value over time. |
 | Metric class | contention, consumption, context. | A pillar. |
+| Trap | A wrong conclusion drawn from a true observation: the number is right, the reading is wrong. Written in each file's `## Traps` section as "wrong conclusion" → correct reading. Types and format: `README.md`, section Traps and Level 400. | A wrong number or a data error. |
+| Level 400 | Knowledge that explains the mechanism behind a metric, predicts where its reading misleads (the trap), and says what to check instead. | Level 300: using a metric and a common threshold at face value. |
 | Thread (physical) | Hardware thread of a CPU core. A provider. | A software thread. |
 | Thread (software) | Thread in an OS (VMkernel, Windows, Linux). A consumer. | A physical thread. |
 

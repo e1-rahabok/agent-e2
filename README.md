@@ -83,11 +83,60 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 | Concepts separate from metrics | Answering from a definition without the mechanism behind the value. |
 | One object type per metric file | Mixing the VM, ESXi and cluster meanings of the same label. |
 | `same_name` / `same_meaning` links | Treating two metrics as equal because the labels match, or as different because the labels differ. |
-| Technology-first folders plus tags | One hierarchy for browsing; tags give the other angles (pillar, product, object) for filtering. |
+| Book-order folders plus tags | One hierarchy for review in the book's order; tags give the other perspectives (technology, pillar, product, object). |
 | `retriever_guide` | Retrieving a definition when the question asks what to check or what to set. |
 | Small files, one fact per line | A retrieved chunk carrying unrelated facts; an error spreading beyond one line. |
 | Metadata at the end, parsed separately | Audit text (status, corrections) polluting the embedded content. |
-| Two foundations levels | vSphere-only rules applied to other products, or general rules duplicated per product. |
+| Foundations at three levels | vSphere-only rules applied to other products, or general rules duplicated per product. |
+| A `## Traps` section in every metric file | A true observation read to the wrong conclusion. See Traps and Level 400. |
+
+## Traps and Level 400
+
+### Levels
+| Level | Can do | Example (VM CPU Ready) |
+|---|---|---|
+| 100 | Name the metric. | "Ready is a CPU metric." |
+| 200 | Define it. | "Ready is time a vCPU waited for a physical thread." |
+| 300 | Use it: read the value, apply a common threshold, follow a runbook. | "Ready above 5% is bad; add capacity." |
+| 400 | Explain the mechanism, predict where the reading misleads, and say what to check instead. | "2% Ready on 10% Run delayed 20% of the work; 2% on 98% Run is fine. Ready includes limit time and the summation counter grows with vCPU count, so check Run, Max Limited and the per-vCPU %." |
+
+- The knowledge base is written at Level 400. Levels 100-200 are assumed; generic models already reach Level 300 from public text.
+- What separates 400 from 300 is the trap: a Level 300 reader takes the reading at face value and acts on it; a Level 400 reader knows when the reading lies.
+
+### What a trap is
+- A trap is a wrong conclusion drawn from a true observation. The number is right; the reading is wrong.
+- It is plausible: an experienced administrator, a generic AI, or even the vendor documentation would draw it.
+- It has a mechanism: the knowledge base can say why the conclusion fails and what to check instead.
+- Format, one per line, in the `## Traps` section at the end of the file body:
+
+```text
+- "<the wrong conclusion, in the words someone would use>" → <the correct reading, the reason, and what to check instead>.
+```
+
+- Example: "Swap Consumed = Swap Out - Swap In" → no. Swap Out and Swap In are cumulative totals; Swap Consumed is what sits in swap now, like VM Swapped.
+
+### Trap types
+| Type | The reading goes wrong because | Example |
+|---|---|---|
+| Same name, other object | One label has different meanings on VM, ESXi, cluster | VM CPU Usage vs ESXi CPU Usage |
+| Layer confusion | A Guest OS reading is taken as a VM reading, or the reverse | Guest OS run queue called a VM metric |
+| Consumption read as contention | Utilization is taken as a performance signal | "Host CPU 90%, so VMs are slow" |
+| Average hides the worst | A host or cluster average hides the VM that suffers | "Host Ready is low, so every VM is fine" |
+| Rollup and interval | Averaging over 5 minutes or a day removes 20-second peaks | "The 1-week chart shows the peak" |
+| Unit and normalization | Summation, per-vCPU vs per-VM, KB vs kb, ms vs % | "Ready of 2,000 ms is high" |
+| Frequency and Hyper-Threading | Turbo, power management and HT bend percentages | "Usage above 100% is a data error" |
+| Provider vs consumer | A consumer concept is applied to the provider, or the reverse | "Ready applies to ESXi" |
+| Cumulative vs current | A running total is read as a current amount | "Swap Consumed = Swap Out - Swap In" |
+| Threshold transplanted | A threshold from one layer, product or hardware era is applied elsewhere | "DAVG 10 ms is fine; the docs allow 15 ms" |
+| Reclamation read as contention | Balloon, swapped or compressed memory is read as current waiting | "Balloon above 0, so the VM is slow" |
+| Tool confusion | vCenter and VCF Operations, or esxtop and vCenter, are treated as the same reading | "Same counter name, so the values match" |
+
+### How traps are used
+- Retrieval: a trap line holds the wrong conclusion in the user's own words, so a question that carries the misconception retrieves the file that corrects it.
+- `same_name` links bring in the other object's meaning of the same label: the main guard against the first trap type.
+- The model is told to watch for same-name metrics and to answer with the mechanism, not the definition.
+- Benchmark: every multiple-choice question has a trap option named in `## Likely wrong answer`; the trap rate is reported per model. See `benchmark/test-design.md`.
+- A trap without a mechanism is an opinion, not a trap: it needs a source like any other fact.
 
 ## How a local LLM uses it
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -195,6 +244,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - No text aimed at human motivation.
 - One vSphere object type per metric file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
+- Every metric file ends its body with `## Traps`, written in the format of section Traps and Level 400.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
 
 ## Images

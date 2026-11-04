@@ -1,7 +1,7 @@
 # Auto Test runner
 
 Runs the golden multiple-choice questions against candidate open-weight models through Vercel AI Gateway, scores them automatically, and writes a report.
-Design: `project/design-kb-test-site.md`, section Auto Test plan. Not indexed.
+Design: `benchmark/test-design.md`. Not indexed.
 
 ## Setup
 - Python 3.10+ with `pyyaml` and `requests`.
@@ -39,7 +39,7 @@ python3 benchmark/runner/run.py --resume benchmark/results/autotest/<run-id>
 ### Question and score
 - Each golden case is a multiple-choice question with one or more correct options.
 - A run asks every question once, per model and mode.
-- 5 runs per question, because hosted models do not answer the same way twice. Reason: `project/design-kb-test-site.md`, section Why 5 runs.
+- 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/test-design.md`, section 7.1.
 - Every question says: "Choose all the correct options. There can be more than one." Two options are appended: "Not covered by the knowledge base" and "Unsure".
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
 - Points: +1 exact; 0 for Unsure chosen alone; -1 for anything else, including unparseable answers. The model is told this scoring, so guessing does not pay.
@@ -47,7 +47,7 @@ python3 benchmark/runner/run.py --resume benchmark/results/autotest/<run-id>
 - Luck: share of questions right in some runs only. Counted as not known.
 - Net points: mean points, -100% to +100%. Accuracy when answered: exact share among non-Unsure answers.
 - Exact (mean over runs) is still reported in table `Scores`.
-- Reason and design: `project/design-kb-test-site.md`, section Removing luck.
+- Reason and design: `benchmark/test-design.md`, section 7.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
 - Margin: 95% interval on Majority. Set by the number of questions: 17 questions gives about ±20-24 points.

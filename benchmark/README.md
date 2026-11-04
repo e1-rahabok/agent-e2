@@ -55,7 +55,7 @@ benchmark/
 - The model is told this scoring, so guessing does not pay.
 - Headline: **Stable correct**, the share of questions answered exactly right in all 5 runs. Target: at least 85%, aim 99% (author, 2026-11-03).
 - Also reported: Luck (right in some runs only), Net points, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
-- Reason and design: `project/design-kb-test-site.md`, sections Removing luck and Target.
+- Reason and design: `benchmark/test-design.md` (blueprint, why 100 questions, scoring, validity threats).
 
 ## Free-text and compound scoring (manual, per case, 0-3)
 

@@ -140,7 +140,7 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 - Every model runs in three modes: no knowledge base, one lookup, model-driven lookups.
 - Headline score: Stable correct (exactly right in all 5 runs). Guessing is penalised; Unsure is allowed.
 - The frontier model is scored the same way, with and without the knowledge base.
-- Detail: `project/design-kb-test-site.md`, section Auto Test plan; runner `benchmark/runner/`.
+- Detail: `benchmark/test-design.md`; runner `benchmark/runner/`.
 
 ## 9. Repository structure (revised 2026-11-04, second author review)
 ```text
