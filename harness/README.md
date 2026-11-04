@@ -1,6 +1,6 @@
 # Harness
 
-The software around the model. It turns a question into a grounded answer. Not indexed. Design: `project/solution-design.md`, sections 2 and 6.
+The software around the model. It turns a question into a grounded answer. Not indexed. How harness, model and knowledge work together: `ARCHITECTURE.md`. Design reasons: `project/solution-design.md`.
 
 | File | Job |
 |---|---|
@@ -13,6 +13,8 @@ The software around the model. It turns a question into a grounded answer. Not i
 | `modes.py` | Answer modes: baseline (no knowledge base, no verifier), classic (one lookup; context starts with catalog facts for the files it holds), agentic (tool loop: search, read_file, follow_links, get_images, catalog, calculate, flow). Prompts and answer format. |
 | `llm.py` | Model client: Vercel AI Gateway for testing (OpenAI-compatible API); a local OpenAI-compatible server (vLLM, llama.cpp) for deployment. `MockClient` exercises the tool loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
+
+- Retrieval test without a model: `python3 benchmark/runner/retrieval_eval.py` (recall of the files each golden case needs).
 
 ## Agentic tools
 | Tool | Returns | Use |

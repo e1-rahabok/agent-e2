@@ -34,6 +34,12 @@ python3 benchmark/runner/run.py --resume benchmark/results/autotest/<run-id>
 ```
 - Continue a run; failed answers are retried.
 
+## Retrieval test (no model)
+```bash
+python3 benchmark/runner/retrieval_eval.py
+```
+- Recall of each case's `knowledge` files in search and in the classic context. Add `--embeddings` for hybrid search (needs `AI_GATEWAY_API_KEY`).
+
 ## Methodology
 
 ### Question and score

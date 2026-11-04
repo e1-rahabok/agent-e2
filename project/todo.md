@@ -123,6 +123,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Raise retrieval recall (67% hybrid, 12 of 28 cases complete): question understanding and filters, query rewriting with glossary synonyms, smarter link expansion. Measure with `benchmark/runner/retrieval_eval.py`.
 - [ ] Write questions to the blueprint in `benchmark/test-design.md` (areas CPU 25%, memory 25%, storage 20%, network 15%, system 20%; a question may count for several; gaps: network, storage, system, recall, Not covered).
 - [ ] Add `technology` (list of areas) and `trap_type` to case metadata and a coverage script that checks the blueprint counts.
 - [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read cases from another folder.
