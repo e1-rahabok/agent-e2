@@ -39,7 +39,7 @@ knowledge:
   - guest-os/cpu/concepts/windows-cpu-scheduling
   - guest-os/cpu/metrics/run-queue
   - guest-os/cpu/metrics/context-switch
-  - vsphere/cpu/concepts/guest-os-vs-vm-cpu
+  - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q7 Guest OS CPU"

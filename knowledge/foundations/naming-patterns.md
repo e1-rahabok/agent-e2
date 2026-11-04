@@ -69,10 +69,10 @@ product: []
 internal_derive: []
 related:
 - glossary
-- vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/memory/metrics/virtual-motherboard/usage
-- vsphere/storage/metrics/virtual-motherboard/virtual-disk
-- vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
+- vsphere/technology/memory/metrics/virtual-motherboard/usage
+- vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
+- vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity

@@ -22,7 +22,7 @@ class CatalogTest(unittest.TestCase):
         r = CAT.lookup('cpu.ready.summation')
         top = r['counters'][0]
         self.assertEqual((top['counter'], top['object'], top['rollup'], top['level']), ('cpu.ready', 'VirtualMachine', 'Summation', 1))
-        self.assertEqual(top['kb'], 'vsphere/cpu/metrics/virtual-motherboard/ready')
+        self.assertEqual(top['kb'], 'vsphere/technology/cpu/metrics/virtual-motherboard/ready')
 
     def test_gpu_is_level_4(self):
         r = CAT.lookup('GPU utilization')
@@ -53,7 +53,7 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('many-to-many', ' '.join(CAT.path('VirtualMachine', 'Datastore')['path']))
 
     def test_facts_for_context(self):
-        f = CAT.facts_for(['vsphere/cpu/metrics/virtual-motherboard/ready'])
+        f = CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/ready'])
         self.assertIn('cpu.ready', f)
         self.assertIn('statistics level 1', f)
         self.assertIn('Threshold', f)
@@ -88,16 +88,16 @@ class FlowTest(unittest.TestCase):
         self.assertGreaterEqual(len(flows.flow_ids(DOCS)), 12)
 
     def test_step_and_reference(self):
-        out = flows.run(DOCS, 'vsphere/cpu/diagnosis/vm-cpu-contention-high', '4')
+        out = flows.run(DOCS, 'vsphere/technology/cpu/diagnosis/vm-cpu-contention-high', '4')
         self.assertEqual((out['of'], out['next'], out['refers_to']), (6, '5', ['2']))
 
     def test_lettered_steps(self):
-        out = flows.run(DOCS, 'vsphere/memory/diagnosis/overcommit-indicators')
+        out = flows.run(DOCS, 'vsphere/technology/memory/diagnosis/overcommit-indicators')
         self.assertEqual(len(out['steps']), 4)
         self.assertTrue(out['steps'][0].startswith('a. '))
 
     def test_unknown(self):
-        self.assertIn('flows', flows.run(DOCS, 'vsphere/cpu/metrics/virtual-motherboard/ready'))
+        self.assertIn('flows', flows.run(DOCS, 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'))
 
 
 class VerifyTest(unittest.TestCase):

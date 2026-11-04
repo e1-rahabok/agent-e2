@@ -19,24 +19,30 @@ Readers: the model reads `knowledge/`. The author reviews for QA. Everything bel
 knowledge/                           # what the model reads (indexed)
 ├── catalog/                         # structured data read by harness tools, not chunked as prose:
 │                                    # vCenter counters, esxtop fields, thresholds, object model (YAML)
-├── foundations/                     # cross-product concepts: units, sampling, thresholds, naming, perspectives
+├── foundations/                     # vendor-neutral: units, sampling, accounting, perspectives, naming
 ├── glossary.md                      # one glossary: terms, synonyms, distinctions, words to avoid (all products)
+├── operations-management/           # pillars of operations that cut across products
+│   ├── performance/                 # KPI design, troubleshooting method
+│   └── capacity/                    # capacity model, sizing
+├── vsphere/
+│   ├── foundations/                 # vSphere-wide: provider/consumer, VM vs Guest OS, vCenter statistics, esxtop,
+│   │                                # overhead, resource controls (reservation, limit, shares)
+│   ├── technology/                  # raw metrics, by technology (book route: contention first, then consumption)
+│   │   └── cpu/ gpu/ memory/ storage/ network/
+│   │       ├── concepts/            # how it works
+│   │       ├── metrics/<object>/    # one metric, one object type per file: virtual-motherboard/, host/,
+│   │       │                        # cluster/, datastore/; comparisons/ for side-by-side groups
+│   │       ├── configuration/       # what to set
+│   │       ├── diagnosis/           # flows within this technology
+│   │       └── images/
+│   ├── object-types/                # derived metrics and multi-technology content, by object (book route)
+│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, diagnosis/, images/
+│   └── screens/                     # screen library for screenshot upload (release 1.1): vsphere-client/, esxtop/
+├── vcf-operations/                  # what VCF Operations adds: computed metrics, KPIs, capacity engine, policies,
+│                                    # alerts, super metrics. Links to the source files; never repeats them.
 ├── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
 │   └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
-├── vsphere/
-│   ├── foundations/                 # vSphere-specific only: provider/consumer, VM vs Guest OS, kernel worlds,
-│   │                                # overhead, metric sources, vCenter statistics
-│   ├── cpu/
-│   │   ├── concepts/                # how it works
-│   │   ├── metrics/<object-folder>/ # one metric, one vSphere object type per file
-│   │   │   ├── virtual-motherboard/ # VM metrics (a VM is a virtual motherboard)
-│   │   │   └── comparisons/         # groups of metrics compared side by side, esxtop references
-│   │   ├── configuration/           # what to set, for any pillar
-│   │   ├── diagnosis/               # symptom → checks → meaning
-│   │   └── images/                  # the author's diagrams, linked from the files they explain
-│   ├── memory/  storage/  network/  system/     # same subfolders
-│   └── resource-management/         # reservation, limit, shares, admission control, DRS, DPM, vCLS
-├── _templates/                      # concept, metric, configuration, diagnosis (not indexed)
+├── _templates/                      # concept, metric, configuration, diagnosis, screen (not indexed)
 └── raw-input/                       # source documents (not indexed)
 harness/                             # the software around the model: retrieval, tools, verifier, prompts (not indexed)
 benchmark/                           # proof: questions with answer keys, attachments, runner, results (not indexed)
@@ -44,14 +50,28 @@ project/                             # design, decisions, author questions, to-d
 tools/                               # lint.py (file and tag checks), tags.yaml (allowed tag values) (not indexed)
 ```
 
-- Folders follow technology first. Tags give the other angles (pillar, product, object).
-- Two foundations levels. They have different scope; do not merge them.
-  - `knowledge/foundations/`: holds only what applies across VCF 9 components.
-  - `knowledge/vsphere/foundations/`: holds what is true only in vSphere.
-  - Test: if the fact is still true for vSAN, NSX or a Guest OS, it goes in `knowledge/foundations/`.
-- `object-folder` names: `virtual-motherboard`, `guest-os`, `host`, `cluster`, `datastore`, ... The `object` tag holds the vSphere managed object type name.
-- A VM is a virtual motherboard, not a complete machine. Its metrics live in `virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
-- Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. `tools/lint.py` enforces these rules.
+- The author's book sees metrics from 3 perspectives: technology, pillar of operations, product. A folder tree holds one hierarchy; tags (`technology`, `pillar`, `product`, `object`) hold the others, and retrieval and the website browse by any of them.
+- The folders follow the book's blend:
+  - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
+  - derived metrics follow the object route, and within each object the pillars: `vsphere/object-types/<object>/`;
+  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`.
+- Placement rules, so a fact lives in one place:
+  - A metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
+  - `object-types/` holds what combines technologies for one object: KPIs, vMotion, cluster risk, DRS, admission control. Each object folder gets an overview file that lists what to monitor, in priority order, linking the technology files.
+  - `operations-management/` holds only content that applies across products. Product-specific pillar content stays with the product's object (cluster usable capacity with HA: `vsphere/object-types/cluster/`) and is linked from there.
+  - Flows: one technology → `technology/<tech>/diagnosis/`; one object, several technologies → `object-types/<object>/diagnosis/`; across products → `operations-management/performance/`.
+  - VCF Operations is a thin derived layer. A metric about a source object is documented once, at the source. `vcf-operations/` holds only what VCF Operations computes or adds, with `internal_derive` links to the source files. See `vcf-operations/concepts/vcf-operations-role`.
+- Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
+- vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
+- Three foundations levels, different scope:
+  - `knowledge/foundations/`: true across VCF 9 components and Guest OS.
+  - `knowledge/operations-management/`: how a pillar uses metrics, across products.
+  - `knowledge/vsphere/foundations/`: true only in vSphere.
+- `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore`. The `object` tag holds the vSphere managed object type name.
+- A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
+- Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`.
+- Screen library (`screens/`, release 1.1): one file per screen type with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `knowledge/_templates/screen.md`.
+- `tools/lint.py` enforces the folder and tag rules.
 
 ## Why this structure
 - Full reasoning: `project/philosophy-and-structure.md`.
@@ -113,7 +133,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - `benchmark/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.
 
 ## Troubleshooting flow diagrams
-- Location: the `diagnosis/` folder of the technology. A flow across technologies goes in `knowledge/vsphere/system/diagnosis/`.
+- Location: one technology → `vsphere/technology/<tech>/diagnosis/`; one object, several technologies → `vsphere/object-types/<object>/diagnosis/`; across products → `operations-management/performance/`.
 - One flow per file. Order: symptom, Mermaid flowchart, numbered steps, why this order, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
@@ -131,7 +151,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, this README, `CLAUDE.md`.
   - `benchmark/` holds answer keys. Indexing it invalidates the evaluation.
 - Metadata is the last section of each file: `## Metadata` followed by one yaml block. Parse it as metadata, not as text to embed.
-- Images live in the `images/` folder of the technology folder that uses them: `knowledge/vsphere/<technology>/images/`, `knowledge/guest-os/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
+- Images live in the `images/` folder of the folder that uses them: `vsphere/technology/<tech>/images/`, `vsphere/object-types/<object>/images/`, `vsphere/foundations/images/`, `operations-management/<pillar>/images/`, `guest-os/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
 - When a file is retrieved, also consider retrieving the ids in `related`, `internal_derive`, `same_name` and `same_meaning`.
 
 ## retriever_guide: which question a file answers

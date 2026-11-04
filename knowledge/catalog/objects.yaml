@@ -51,13 +51,13 @@ objects:
   supplies: [cpu, memory]
   charts: true
   note: Aggregate of its hosts. Totals across cluster, host, VM and datastore do not reconcile because of many-to-many relationships.
-  kb: [vsphere/resource-management/concepts/drs-overview, vsphere/system/concepts/cluster-operations, vsphere/system/metrics/cluster/cluster-performance]
+  kb: [vsphere/object-types/cluster/concepts/drs-overview, vsphere/object-types/cluster/concepts/cluster-operations, vsphere/object-types/cluster/metrics/cluster-performance]
 - type: ResourcePool
   role: both
   supplies: [cpu, memory]
   charts: true
   note: Consumer of the cluster or host, provider to its child pools and VMs. Can apply limits unintentionally.
-  kb: [vsphere/resource-management/concepts/resource-controls]
+  kb: [vsphere/foundations/resource-controls]
 - type: HostSystem
   role: provider
   layer: hypervisor
@@ -77,7 +77,7 @@ objects:
   supplies: [storage]
   charts: true
   note: Space charts show the latest value only; space is refreshed every 30 minutes.
-  kb: [vsphere/storage/metrics/datastore/storage-io-control, vsphere/foundations/object-relationships]
+  kb: [vsphere/technology/storage/metrics/datastore/storage-io-control, vsphere/foundations/object-relationships]
 - type: StoragePod
   role: container
   charts: true

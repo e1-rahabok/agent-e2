@@ -33,8 +33,8 @@ area: general
 input: text
 tests: concept
 knowledge:
-  - vsphere/system/concepts/capacity-model
-  - vsphere/system/concepts/cluster-utilization-vs-contention
+  - operations-management/capacity/capacity-model
+  - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
   - foundations/metric-perspectives
 attachments: []
 origin: quiz

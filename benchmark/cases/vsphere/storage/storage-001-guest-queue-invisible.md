@@ -25,7 +25,7 @@ input: text
 tests: concept
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
-  - vsphere/storage/metrics/virtual-motherboard/iops
+  - vsphere/technology/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."

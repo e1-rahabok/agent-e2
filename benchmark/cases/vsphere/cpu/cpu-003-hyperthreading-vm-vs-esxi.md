@@ -24,9 +24,9 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/cpu/metrics/virtual-motherboard/usage
-  - vsphere/cpu/metrics/host/usage
-  - vsphere/cpu/metrics/host/core-utilization
+  - vsphere/technology/cpu/metrics/virtual-motherboard/usage
+  - vsphere/technology/cpu/metrics/host/usage
+  - vsphere/technology/cpu/metrics/host/core-utilization
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."

@@ -31,10 +31,10 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/cpu/metrics/host/utilization
-  - vsphere/cpu/metrics/host/core-utilization
-  - vsphere/cpu/metrics/host/imbalance
-  - vsphere/cpu/concepts/hyper-threading
+  - vsphere/technology/cpu/metrics/host/utilization
+  - vsphere/technology/cpu/metrics/host/core-utilization
+  - vsphere/technology/cpu/metrics/host/imbalance
+  - vsphere/technology/cpu/concepts/hyper-threading
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q9 ESXi CPU Utilisation"

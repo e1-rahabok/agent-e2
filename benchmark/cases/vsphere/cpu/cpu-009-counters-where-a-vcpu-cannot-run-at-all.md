@@ -35,12 +35,12 @@ input: text
 tests: distinction
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
-  - vsphere/cpu/metrics/comparisons/vm-contention-metrics
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/cpu/metrics/virtual-motherboard/co-stop
-  - vsphere/cpu/metrics/virtual-motherboard/overlap
-  - vsphere/cpu/metrics/virtual-motherboard/other-wait
-  - vsphere/cpu/metrics/virtual-motherboard/demand
+  - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
+  - vsphere/technology/cpu/metrics/virtual-motherboard/ready
+  - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
+  - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
+  - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
+  - vsphere/technology/cpu/metrics/virtual-motherboard/demand
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"

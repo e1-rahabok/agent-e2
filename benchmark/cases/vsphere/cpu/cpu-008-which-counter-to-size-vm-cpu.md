@@ -31,11 +31,11 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/system/concepts/rightsizing
+  - operations-management/capacity/rightsizing
   - guest-os/system/concepts/guest-os-sizing
-  - vsphere/cpu/metrics/virtual-motherboard/net-run
-  - vsphere/cpu/metrics/virtual-motherboard/demand
-  - vsphere/cpu/metrics/virtual-motherboard/usage
+  - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
+  - vsphere/technology/cpu/metrics/virtual-motherboard/demand
+  - vsphere/technology/cpu/metrics/virtual-motherboard/usage
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"

@@ -35,7 +35,7 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vsphere/foundations/provider-consumer
 - vsphere/foundations/vcenter-statistics
 source:

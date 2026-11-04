@@ -14,9 +14,17 @@ Open work for this repository. Not indexed. Update when items close.
 ## Restructure (holistic review 2026-11-04)
 - [x] Decisions 1, 4, 5, 6, 7 carried out; 2 and 3 declined. Record: `project/review-2026-11-04.md`, section 9.
 - [ ] Thin files (review section 5): fill from the book or merge into the parent file.
-- [ ] Re-check `vsphere/cpu/configuration/side-channel-scheduling` against Performance Best Practices 9.1.
-- [ ] Shorten `vsphere/resource-management/concepts/vcls` to the 9.1 status.
+- [ ] Re-check `vsphere/technology/cpu/configuration/side-channel-scheduling` against Performance Best Practices 9.1.
+- [ ] Shorten `vsphere/object-types/cluster/concepts/vcls` to the 9.1 status.
 - [x] Metric catalog (`knowledge/catalog/`) and harness tools: catalog lookup, calculator, flow executor, answer verifier (2026-11-04).
+
+## Structure (author review 2, 2026-11-04)
+- [x] Moved 174 files and 161 images: `vsphere/technology/`, `vsphere/object-types/`, `operations-management/`; `system/` and `resource-management/` dissolved. Ids repointed everywhere; lint enforces the folders.
+- [x] `vcf-operations/` created with `concepts/vcf-operations-role`. Glossary: storage vs disk, vCenter vs VCF Operations.
+- [x] Screen template (`knowledge/_templates/screen.md`) and lint rules for `screens/` (release 1.1).
+- [ ] Overview file per object folder: what to monitor, in priority order (vm, esxi, cluster).
+- [ ] Review `operations-management/capacity/capacity-model`: it holds vSphere cluster capacity. Split the vSphere-specific part into `vsphere/object-types/cluster/` if it is not cross-product.
+- [ ] VCF Operations knowledge: map its objects, engines and metric groups; fetch the VCF Operations 9.1 metric reference; ask the author for the VCF Operations book chapters.
 
 ## Product (from the vCommunity Ask demo, 2026-11-04; see `project/product-requirements.md`)
 - [ ] Move section "Host CPU monitoring" (esxtop load average, PCPU 80% / 90%) out of `vsphere/foundations/overhead`: it is not overhead. Place it with the host CPU metrics and state the book view next to it (host utilization is capacity; performance is read from contention).
@@ -44,11 +52,11 @@ Open work for this repository. Not indexed. Update when items close.
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
 - [x] vSphere Monitoring and Performance, pp. 2025-2184: extracted 2026-11-03.
-  - New: `vsphere/foundations/vcenter-statistics`, `vsphere/system/concepts/vsphere-client-performance-guidance`, `vsphere/storage/metrics/datastore/storage-io-control`.
+  - New: `vsphere/foundations/vcenter-statistics`, `vsphere/foundations/vsphere-client-performance-guidance`, `vsphere/technology/storage/metrics/datastore/storage-io-control`.
   - Updated: esxtop-cpu, esxtop-memory, system/concepts/esxtop, memory-tiering, storage host datastore; links in ready, host memory usage, host-storage-latency, metric-sources.
   - Left out as not relevant to performance monitoring: UI click steps, alarm and event configuration, preconfigured alarm list, SNMP, log files, vimtop, Solutions Manager, host hardware health, Configuration Maximums checker, Fault Tolerance charts, DPU charts, PMem Memory Mode, GPU chart details beyond their statistics level.
   - Questions: Q044-Q046.
-- [x] GPU monitoring (Monitoring and Performance + Resource Management): `vsphere/system/concepts/gpu-monitoring`, 2026-11-03.
+- [x] GPU monitoring (Monitoring and Performance + Resource Management): `vsphere/technology/gpu/concepts/gpu-monitoring`, 2026-11-03.
 - [x] vSphere Resource Management, pp. 1824-1959: extracted 2026-11-03.
   - New: `resource-management/concepts/admission-control-and-cluster-state`, `resource-management/diagnosis/vm-insufficient-resources-in-drs-cluster`.
   - Updated: memory-tiering (mechanism, sizing, DRAM-only VMs, interactions, NVMe bandwidth threshold), memory-overhead, swap-and-compression, foundations/resource-management (memory allocation, default CPU shares), numa (scheduler mechanics), hyper-threading, latency-sensitivity (vHT), large-memory-pages (1 GB pages), drs-migration-levels (DRS Score), storage-io-control (deprecation).
@@ -62,7 +70,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Hyper-Threading penalties (37.5% VM, 50% ESXi): not in the source. Book figures need author confirmation.
 - [ ] `numPCPUs` in the dense mode trigger: not defined in the source.
 - [ ] KB number for the ESXi CPU Usage 100% cap (author correction, pending).
-- [ ] Cluster-level share scope: marked `[claude-knowledge]` in `vsphere/resource-management/concepts/resource-controls`.
+- [ ] Cluster-level share scope: marked `[claude-knowledge]` in `vsphere/foundations/resource-controls`.
 - [ ] Memory reservation headroom: source gives no percentage. Does the book?
 - [ ] Predictive DRS and DPM require vRealize Operations 6.4 or later per the source. Check the current equivalent (VCF Operations).
 - [ ] Existing `cpu/counters/*/cpu.usage.average.md` uses an unsourced "~80-85%" threshold. Replace or source it.
@@ -138,7 +146,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.
 - [ ] metric_class for Wait, Idle, Swapped, Swap Used, Ballooned: set provisionally. Author to confirm.
 - [ ] Pillar example re-mapping in `foundations/metric-perspectives`: Compliance Score under Security, Month-to-Date Cost under Value. Author to confirm.
-- [ ] Parked until Chapter 6 of the book: placement of `resource-management/` (outside the technology-first rule).
+- [x] Placement of `resource-management/`: split 2026-11-04 (resource controls → `vsphere/foundations/`, DRS and cluster mechanisms → `vsphere/object-types/cluster/`).
 - [ ] Terminology: author to provide the book terminology for `glossary`.
 - [x] Validator: `tools/lint.py`, run before every merge.
 - [ ] Legacy files in `project/legacy/` (old `cpu.usage.average` files): decide whether to rewrite as metric files or remove.
@@ -148,17 +156,17 @@ Open work for this repository. Not indexed. Update when items close.
 ## Troubleshooting flows
 - Rule: README, section Troubleshooting flow diagrams. Each file gets: Symptom, Flow (Mermaid), numbered Checks with metric, object, threshold with source, next step per outcome; Why this order.
 - Source: the author's draw.io flows when available; otherwise derive from the file's current checks and flag in `review_notes`.
-- [ ] `vsphere/cpu/diagnosis/vm-cpu-contention-high`: add flow.
-- [ ] `vsphere/cpu/diagnosis/vm-other-wait-high`: add flow.
-- [ ] `vsphere/cpu/diagnosis/run-vs-used-gap`: add flow.
-- [ ] `vsphere/cpu/diagnosis/host-cpu-capacity-headroom`: add flow.
-- [ ] `vsphere/cpu/diagnosis/oversized-vm-downsizing`: add flow.
-- [ ] `vsphere/memory/diagnosis/vm-memory-latency-high`: add flow.
-- [ ] `vsphere/memory/diagnosis/overcommit-indicators`: add flow.
-- [ ] `vsphere/storage/diagnosis/vm-storage-performance-checks`: add flow.
-- [ ] `vsphere/storage/diagnosis/host-storage-latency`: add flow.
-- [ ] `vsphere/network/diagnosis/vnic-rx-drops`: add flow.
-- [ ] `vsphere/system/diagnosis/cluster-vm-contention`: add flow.
+- [ ] `vsphere/technology/cpu/diagnosis/vm-cpu-contention-high`: add flow.
+- [ ] `vsphere/technology/cpu/diagnosis/vm-other-wait-high`: add flow.
+- [ ] `vsphere/technology/cpu/diagnosis/run-vs-used-gap`: add flow.
+- [ ] `vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom`: add flow.
+- [ ] `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`: add flow.
+- [ ] `vsphere/technology/memory/diagnosis/vm-memory-latency-high`: add flow.
+- [ ] `vsphere/technology/memory/diagnosis/overcommit-indicators`: add flow.
+- [ ] `vsphere/technology/storage/diagnosis/vm-storage-performance-checks`: add flow.
+- [ ] `vsphere/technology/storage/diagnosis/host-storage-latency`: add flow.
+- [ ] `vsphere/technology/network/diagnosis/vnic-rx-drops`: add flow.
+- [ ] `vsphere/object-types/cluster/diagnosis/cluster-vm-contention`: add flow.
 - [ ] `vsphere/system/diagnosis/host-not-responding`: add flow.
 - [ ] New flows for symptoms with no diagnosis file yet: list to be agreed with the author.
 

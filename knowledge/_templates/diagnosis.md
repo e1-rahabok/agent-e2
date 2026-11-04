@@ -26,7 +26,7 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: vsphere/<technology>/diagnosis/<slug>
+id: vsphere/technology/<technology>/diagnosis/<slug>
 retriever_guide: what-to-check
 scope: vsphere
 technology: [cpu]

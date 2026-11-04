@@ -22,7 +22,11 @@ Allowed tag values (machine settings for the linter) are in `tools/tags.yaml`.
 | Virtual motherboard | What a VM is: a virtual circuit board (vCPU, memory, virtual disks, vNICs) that runs a Guest OS. Folder name for VM metrics: `virtual-motherboard`. Tag: `layer: virtual-motherboard`, `object: VirtualMachine`. | A complete machine. The Guest OS is not part of it: Guest OS knowledge is a separate layer and lives in `knowledge/guest-os/` (`scope: guest-os`, `layer: guest-os`). Author's book. |
 | Vantage point | The layer or object a metric is observed from. Consumer (VM) vs provider (ESXi). | A tag value by itself. Expressed through `object` and `layer`. |
 | Perspective (book) | One of three angles on metrics: technology, pillar of operations, product. | A layer or vantage point. |
-| Technology | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. | A product. |
+| Technology | cpu, gpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. | A product. |
+| Storage | The whole IO path from the Guest OS to the array: virtual disk, vSCSI, datastore, storage adapter (vmhba), path, device (LUN), array, vSAN. Folder and tag: `storage`. | Disk. A disk is one layer of storage. Datastores, adapters, paths and vSAN are storage but not disks. vCenter keeps separate counter groups for each layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`): the same label (latency, IOPS) means a different scope in each group. See `vsphere/technology/storage/concepts/storage-layers`. |
+| Disk | One layer of storage. In vCenter, the `disk` counter group reports the device (LUN) as seen by ESXi, or the virtual disk as seen by the VM. | The storage technology as a whole. |
+| vCenter | The administrative tool of vSphere: create VMs, configure switches, set reservations and limits. It keeps performance charts with short history. | The operations tool. Capacity planning and performance troubleshooting are done in VCF Operations, not in vCenter. Admins often use the two names interchangeably; the knowledge base does not. |
+| VCF Operations | Monitoring and operations management software. A thin layer above the source systems (vSphere, vSAN, NSX, Windows, Linux, VKS): every metric it shows is derived, passed through or computed from a source. See `vcf-operations/concepts/vcf-operations-role`. | The source of a metric's meaning. A passed-through metric means what it means at its source object. |
 | Pillar | availability, performance, security, capacity, value. | A technology. |
 | Metric | A measured value with a name, unit and formula, for one object type. | A counter ID alone. |
 | Counter | The raw performance counter as exposed by the source (for example vCenter `cpu.ready.summation`). A metric may be built from one or more counters. | The interpreted meaning. |
@@ -137,7 +141,7 @@ product: [vsphere, vcf-operations]
 internal_derive: []
 related:
   - foundations/naming-patterns
-  - vsphere/resource-management/concepts/resource-controls
+  - vsphere/foundations/resource-controls
 source:
   document: Author statements (2026-11-02); vSphere API type names; VCF Operations object types
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"

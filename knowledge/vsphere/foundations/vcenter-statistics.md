@@ -59,7 +59,7 @@
 ## Units
 - KB in vCenter counters = 1,024 bytes. KBps = 1,024 bytes per second.
 - kb (kilobit) = 1,000 bits. kbps = 1,000 bits per second.
-- Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See `vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units`.
+- Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See `vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units`.
 
 ## Where history is lost
 - Removing an object from vCenter and adding it again deletes its history.
@@ -100,10 +100,10 @@ internal_derive:
 - vsphere/foundations/metric-sources
 related:
 - vsphere/foundations/metric-sources
-- vsphere/system/metrics/comparisons/peak-20-second-metrics
-- vsphere/cpu/metrics/virtual-motherboard/ready
-- vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
-- vsphere/system/concepts/vsphere-client-performance-guidance
+- vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready
+- vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+- vsphere/foundations/vsphere-client-performance-guidance
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
   path: vSphere Monitoring and Performance > Monitoring Inventory Objects with Performance Charts > Data Counters, Data Collection Intervals, Statistics Levels, Performance Chart Types; Troubleshoot and Enhance Performance > Empty Performance Charts; Hosts > GPU charts (pp. 2025-2031, 2065-2067, 2123-2124)

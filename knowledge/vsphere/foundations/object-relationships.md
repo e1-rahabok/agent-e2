@@ -34,7 +34,7 @@ object:
 - Datacenter
 internal_derive: []
 related:
-- vsphere/storage/metrics/virtual-motherboard/virtual-disk
+- vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/foundations/provider-consumer
 source:
   document: PART 3 - Counters.docx

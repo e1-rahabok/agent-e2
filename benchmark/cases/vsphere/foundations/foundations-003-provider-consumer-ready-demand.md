@@ -27,8 +27,8 @@ input: text
 tests: concept
 knowledge:
   - vsphere/foundations/provider-consumer
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/cpu/metrics/host/demand
+  - vsphere/technology/cpu/metrics/virtual-motherboard/ready
+  - vsphere/technology/cpu/metrics/host/demand
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Virtualization Impact; Architecture Complexity (VM vs ESXi; ESXi ≠ VMs + Kernel)."

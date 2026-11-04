@@ -20,7 +20,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/<technology>/metrics/<object-folder>/<metric-slug>   # object-folder: virtual-motherboard | guest-os | host | cluster | datastore | ...
+id: vsphere/technology/<technology>/metrics/<object-folder>/<metric-slug>   # object-folder: virtual-motherboard | guest-os | host | cluster | datastore | ...
 retriever_guide: metric-meaning
 scope: vsphere
 technology: [cpu]

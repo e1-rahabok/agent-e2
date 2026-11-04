@@ -23,7 +23,7 @@ area: foundations
 input: text
 tests: concept
 knowledge:
-  - vsphere/resource-management/concepts/resource-controls
+  - vsphere/foundations/resource-controls
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Resource Management."

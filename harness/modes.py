@@ -91,7 +91,7 @@ TOOLS = [
         'description': ('Troubleshooting flow from a diagnosis file, one step at a time. Without step: all steps in order. '
                         'With step: that step, the next step, and the metric files to read.'),
         'parameters': {'type': 'object', 'properties': {
-            'id': {'type': 'string', 'description': 'Diagnosis file id, e.g. vsphere/cpu/diagnosis/vm-cpu-contention-high'},
+            'id': {'type': 'string', 'description': 'Diagnosis file id, e.g. vsphere/technology/cpu/diagnosis/vm-cpu-contention-high'},
             'step': {'type': 'string'}}, 'required': ['id']}}},
 ]
 TOOL_NAMES = [t['function']['name'] for t in TOOLS]

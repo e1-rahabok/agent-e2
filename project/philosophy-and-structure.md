@@ -37,7 +37,7 @@ Conventions (layout, metadata, writing rules) are in the root `README.md`.
 | No `distinctions.md` | Same-name traps live in the metric files they belong to. Groups of metrics live in `metrics/comparisons/`. |
 | Tags for pillar, product, object | Folders give one hierarchy. Tags let the AI slice by the other two angles of the book. |
 | `knowledge/glossary.md` at top level | One glossary for all products. Allowed tag values are machine settings and live in `tools/tags.yaml`. |
-| `vsphere/resource-management/` | Reservation, limit, shares, admission control, DRS, DPM and vCLS: one topic that spans CPU and memory at VM, host and cluster level. |
+| `vsphere/object-types/` (was `resource-management/`, split 2026-11-04) | Reservation, limit and shares in `vsphere/foundations/`; DRS, admission control, DPM, vCLS in `object-types/cluster/`. |
 | Metadata block at the end of each file | Retrievers filter on it. Reviewers see source, corrections and status in one place. At the end, so the content reads first on GitHub. |
 | `raw-input/` not indexed | Source documents are binary and unstructured. Derived files are what the AI reads. |
 | `benchmark/` one file per case | Scales to hundreds of cases. Never indexed: holds answer keys. |

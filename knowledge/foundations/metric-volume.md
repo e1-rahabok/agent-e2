@@ -2,7 +2,7 @@
 
 ## Choice problem
 - Several metrics measure similar things. Two watches showing different times leave you unsure which is right.
-- vSphere example: 5 VM CPU "consumption" metrics and 7 ESXi CPU "consumption" metrics. See `vsphere/cpu/metrics/comparisons/consumption-metrics`.
+- vSphere example: 5 VM CPU "consumption" metrics and 7 ESXi CPU "consumption" metrics. See `vsphere/technology/cpu/metrics/comparisons/consumption-metrics`.
 
 ## Volume problem (vCenter example)
 - Per VM: 17 CPU metrics at VM level. 12 of them also exist per vCPU. 28 memory metrics.
@@ -36,7 +36,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances

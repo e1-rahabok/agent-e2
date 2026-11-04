@@ -97,9 +97,9 @@ product:
 layer:
 - guest-os
 internal_derive:
-- vsphere/memory/concepts/guest-os-vs-vm-memory
+- vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 related:
-- vsphere/memory/metrics/virtual-motherboard/utilization
+- vsphere/technology/memory/metrics/virtual-motherboard/utilization
 - guest-os/system/concepts/guest-os-sizing
 - guest-os/system/metrics/guest-os-performance
 images:

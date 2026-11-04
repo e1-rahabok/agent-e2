@@ -81,7 +81,7 @@ product:
 layer:
 - guest-os
 internal_derive:
-- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+- vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 related:
 - guest-os/cpu/metrics/run-queue
 - guest-os/cpu/metrics/context-switch

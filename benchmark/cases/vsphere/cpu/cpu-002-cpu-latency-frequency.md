@@ -25,8 +25,8 @@ area: cpu
 input: text
 tests: distinction
 knowledge:
-  - vsphere/cpu/metrics/virtual-motherboard/latency
-  - vsphere/cpu/metrics/virtual-motherboard/ready
+  - vsphere/technology/cpu/metrics/virtual-motherboard/latency
+  - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/foundations/vm-vs-guest-os
 attachments: []
 origin: book

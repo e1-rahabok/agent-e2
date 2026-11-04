@@ -14,7 +14,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/<technology>/configuration/<slug>
+id: vsphere/technology/<technology>/configuration/<slug>
 retriever_guide: what-to-set
 scope: vsphere
 technology: [cpu]

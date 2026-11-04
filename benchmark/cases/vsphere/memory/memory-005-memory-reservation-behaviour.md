@@ -32,9 +32,9 @@ area: memory
 input: text
 tests: concept
 knowledge:
-  - vsphere/resource-management/concepts/resource-controls
-  - vsphere/memory/metrics/host/reservation
-  - vsphere/memory/concepts/memory-as-storage
+  - vsphere/foundations/resource-controls
+  - vsphere/technology/memory/metrics/host/reservation
+  - vsphere/technology/memory/concepts/memory-as-storage
   - vsphere/foundations/overhead
 attachments: []
 origin: quiz

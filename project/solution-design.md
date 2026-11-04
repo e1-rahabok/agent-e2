@@ -132,7 +132,7 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 ## 7. Dark-site deployment
 - One VM with a GPU (passthrough or vGPU) on the customer's own VCF: model server (vLLM or llama.cpp), embedding model (qwen3-embedding-0.6b runs on CPU), harness, index built from this repository.
 - Delivered as an offline bundle: model weights, containers, index. Updates are a new bundle; nothing calls out.
-- The same GPU monitoring rules apply to the assistant's own VM: see `knowledge/vsphere/system/concepts/gpu-monitoring.md`.
+- The same GPU monitoring rules apply to the assistant's own VM: see `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.
 - Broadcom's VMware Private AI Foundation with NVIDIA is the natural platform for this VM (to verify against current product documentation).
 
 ## 8. How we prove it
@@ -142,20 +142,27 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 - The frontier model is scored the same way, with and without the knowledge base.
 - Detail: `project/design-kb-test-site.md`, section Auto Test plan; runner `benchmark/runner/`.
 
-## 9. Repository structure (decided 2026-11-04)
+## 9. Repository structure (revised 2026-11-04, second author review)
 ```text
 README.md            mission, how it works, status, where things are
 knowledge/           what the model reads (indexed)
-  foundations/       cross-product concepts (units, thresholds, naming, perspectives)
+  catalog/           structured data for the harness tools (YAML)
+  foundations/       vendor-neutral concepts (units, sampling, naming, perspectives)
   glossary.md        one glossary: terms, synonyms, distinctions, words to avoid
-  vsphere/           technology first: cpu, memory, storage, network, system; then concepts / metrics / configuration / diagnosis
-    foundations/     vSphere-wide mechanisms (provider/consumer, VM vs Guest OS, overhead, vCenter statistics)
-    resource-management/   reservation, limit, shares, admission control, DRS, DPM
+  operations-management/   pillars across products: performance/, capacity/
+  vsphere/
+    foundations/     vSphere-wide mechanisms (provider/consumer, VM vs Guest OS, overhead, vCenter statistics, resource controls)
+    technology/      raw metrics: cpu/ gpu/ memory/ storage/ network/
+    object-types/    derived and multi-technology content: vm/ esxi/ cluster/ ...
+    screens/         screen library for screenshot upload (1.1)
+  vcf-operations/    what VCF Operations computes or adds; links to source files
   guest-os/          Windows, Linux: a separate layer
 harness/             the software around the model: retrieval, tool loop, prompts
 benchmark/           proof: questions with answer keys, attachments, runner, results
 project/             for humans: design, decisions, author questions, to-do, archive
 tools/               repository maintenance: lint.py, tags.yaml
 ```
-- Kept technology-first metric folders, and VCF Operations metrics stay in the vSphere technology folders with `product: vcf-operations` (author decisions 2 and 3: no).
+- Follows the book's three perspectives (technology, pillar, product): raw metrics by technology, derived metrics by object, cross-product pillars in `operations-management/` (author, 2026-11-04). Rules: `README.md`, section Layout.
+- VCF Operations is a thin derived layer: a metric about a source object is written once, at the source; `vcf-operations/` holds only what VCF Operations computes or adds (author, 2026-11-04; replaces decision 3).
+- `storage`, not `disk`, for folder, tag and glossary (author, 2026-11-04).
 - Built 2026-11-04: `knowledge/catalog/` (metric catalog, object model) and the harness tools (catalog lookup, calculator, flow executor, answer verifier). See section 6 and `harness/README.md`.

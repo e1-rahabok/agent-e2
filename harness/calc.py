@@ -75,7 +75,7 @@ class Evaluator:
     def summation_to_percent(self, ms, interval_seconds=20, vcpus=1):
         self.note(f'Summation time counters (Ready, Co-stop, Run, Wait in ms): 100% = {interval_seconds:g} s x 1,000 ms per vCPU '
                   f'per sample. Real-time samples are 20 s; 1 Day points are 5 minutes (300 s). See {SRC_STATS} and '
-                  'vsphere/cpu/metrics/virtual-motherboard/ready.')
+                  'vsphere/technology/cpu/metrics/virtual-motherboard/ready.')
         return ms / (interval_seconds * 1000 * vcpus) * 100
 
     def percent_to_summation(self, percent, interval_seconds=20, vcpus=1):
@@ -99,7 +99,7 @@ class Evaluator:
 
     def capacity_ghz(self, cores, ghz_per_core):
         self.note('Nominal capacity = physical cores x base frequency (vSphere 9.1 docs, cluster totalmhz example). '
-                  'Usage and Demand can exceed it with Turbo. See vsphere/cpu/metrics/virtual-motherboard/demand.')
+                  'Usage and Demand can exceed it with Turbo. See vsphere/technology/cpu/metrics/virtual-motherboard/demand.')
         return cores * ghz_per_core
 
     def pct(self, part, whole):
