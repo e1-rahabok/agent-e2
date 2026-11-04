@@ -169,6 +169,34 @@ Each entry has:
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
 - Answer:
 
+### Q049 · vCenter API counters · clusterServices.cpufairness and memfairness (low priority)
+- Files: `knowledge/catalog/vcenter-api-counters.yaml` (HostSystem rows); no knowledge file yet.
+- Search: not from the book. vCenter 9.1.0 API summaries: cpufairness "Fairness of distributed CPU resource allocation"; memfairness "Aggregate available memory resources of all the hosts within a cluster" (looks copied from another counter).
+- Question: what do the two host counters measure, and are they worth documenting for operations?
+- Written as now: listed in the catalog only, no knowledge file.
+- Answer:
+
+### Q050 · vCenter API counters · clusterServices.effectivecpu and effectivemem vs totalmhz and totalmb (low priority)
+- Files: `knowledge/catalog/vcenter-api-counters.yaml` (ClusterComputeResource rows); candidate: `operations-management/capacity/capacity-model`.
+- Search: not from the book. vCenter 9.1.0 API summaries: effectivecpu "Total available CPU resources of all hosts within a cluster"; effectivemem "Total amount of machine memory of all hosts in the cluster that is available for use for virtual machine memory and overhead".
+- Question: Claude's own knowledge (the API's cluster summary) says effective capacity excludes hosts in maintenance mode or not responding, and virtualization overhead. Is that right, and should the knowledge base prefer it over totalmhz and totalmb for usable capacity?
+- Written as now: listed in the catalog only.
+- Answer:
+
+### Q051 · vCenter API counters · clusterServices.failover
+- Files: `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`.
+- Search: not from the book. vCenter 9.1.0 API summary: "vSphere HA number of failures that can be tolerated".
+- Question: how does the value behave under each HA admission control policy (slot, percentage of cluster resources, dedicated failover hosts, disabled)? Any trap in reading it?
+- Written as now: the counter, its level and its summary; behaviour per policy left open.
+- Answer:
+
+### Q052 · vCenter API counters · vmop counters: cumulative or per interval (low priority)
+- Files: `vsphere/object-types/cluster/metrics/vm-operations`.
+- Search: "Cumulative since the cluster was created"
+- Question: vCenter stores the 20 vmop counters with rollup latest and stat type absolute, on the cluster and the datacenter. Your hypothesis: vCenter accumulates them while VCF Operations shows a rate. Confirm? Do the vCenter counts ever reset (vCenter restart, cluster re-creation)?
+- Written as now: cumulative since cluster creation (book); VCF Operations converts them to rates (book).
+- Answer:
+
 ## Resolved
 
 ### Q024 · Chapter 5 Network > Architecture · VM and ingress

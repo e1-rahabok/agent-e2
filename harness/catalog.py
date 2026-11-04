@@ -5,6 +5,7 @@ the esxtop field behind a name, thresholds with their source, and how managed ob
 
 Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
+  api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
   thresholds  curated thresholds (knowledge/catalog/thresholds.yaml) + colour bands parsed from knowledge files
   metrics     one row per knowledge metric file, from its metadata
@@ -78,6 +79,8 @@ class Catalog:
     def _build(self):
         c = self.db
         c.executescript('''
+          CREATE TABLE api_counters (counter TEXT, name TEXT, object TEXT, rollup TEXT, stat_type TEXT, unit TEXT, level INT,
+                                     summary TEXT, kb TEXT);
           CREATE TABLE counters (counter TEXT, name TEXT, grp TEXT, object TEXT, shows TEXT, chart TEXT, label TEXT, unit TEXT,
                                  stat_type TEXT, rollup TEXT, level INT, minmax_level INT, description TEXT, page INT, kb TEXT);
           CREATE TABLE esxtop (panel TEXT, field TEXT, key TEXT, description TEXT, page INT);
@@ -90,6 +93,10 @@ class Catalog:
           CREATE TABLE relations (src TEXT, dst TEXT, kind TEXT, cardinality TEXT);
           CREATE TABLE formulas (formula TEXT, source TEXT);
         ''')
+        for r in load_yaml('vcenter-api-counters.yaml')['rows']:
+            c.execute('INSERT INTO api_counters VALUES (?,?,?,?,?,?,?,?,?)',
+                      (r['counter'], r['counter'].split('.', 1)[1], r['object'], r['rollup'], r['stat_type'], r['unit'],
+                       r['level'], r.get('summary', ''), r.get('kb')))
         cv = load_yaml('vcenter-counters.yaml')
         for r in cv['rows']:
             grp, _, name = r['counter'].rpartition('.') if r['counter'].count('.') == 1 else (r['counter'].split('.')[0], '', '.'.join(r['counter'].split('.')[1:]))
@@ -150,6 +157,11 @@ class Catalog:
                        text=f"{r['counter']} {r['label']} {r['chart']}".lower(), desc=r['description'].lower())
             if s:
                 counters.append((s, r))
+        api = []
+        for r in self._q('SELECT * FROM api_counters' + (' WHERE object = ?' if obj else ''), (obj,) if obj else ()):
+            s = _score(key, words, exact=[r['counter'].lower(), r['name'].lower()], text=r['counter'].lower(), desc=r['summary'].lower())
+            if s:
+                api.append((s, r))
         esx = []
         ek = _esx_key(q)
         for r in self._q('SELECT * FROM esxtop'):
@@ -163,7 +175,7 @@ class Catalog:
             s = _score(key, words, exact=[r['title'].lower()], text=r['title'].lower(), desc='')
             if s:
                 metrics.append((s, r))
-        counters, esx, metrics = _best(counters, limit * 3), _best(esx, limit), _best(metrics, limit)
+        counters, esx, metrics, api = _best(counters, limit * 3), _best(esx, limit), _best(metrics, limit), _best(api, limit)
         seen, uniq = set(), []
         for r in counters:   # the same counter appears on several charts of one object
             k = (r['counter'], r['object'], r['unit'], r['rollup'], r['level'])
@@ -171,10 +183,11 @@ class Catalog:
                 seen.add(k)
                 uniq.append(r)
         counters = uniq[:limit]
-        kb_ids = list(dict.fromkeys([r['kb'] for r in counters if r['kb']] + [r['id'] for r in metrics]))
+        kb_ids = list(dict.fromkeys([r['kb'] for r in counters + api if r['kb']] + [r['id'] for r in metrics]))
         thresholds = self.thresholds(name=q, kb_ids=kb_ids, object=obj, limit=limit)
         return {'query': q, 'object': obj,
                 'counters': [_compact(r, ('counter', 'object', 'shows', 'chart', 'label', 'unit', 'stat_type', 'rollup', 'level', 'minmax_level', 'kb')) for r in counters],
+                'api': [_compact(r, ('counter', 'object', 'unit', 'stat_type', 'rollup', 'level', 'summary', 'kb')) for r in api],
                 'esxtop': [_compact(r, ('panel', 'field', 'description')) for r in esx],
                 'metric_files': [_compact(r, ('id', 'title', 'object', 'layer', 'metric_class', 'same_name')) for r in metrics],
                 **thresholds}
@@ -258,7 +271,7 @@ class Catalog:
 
     def stats(self):
         return {t: self._q(f'SELECT COUNT(*) AS n FROM {t}')[0]['n']
-                for t in ('counters', 'esxtop', 'thresholds', 'bands', 'metrics', 'objects', 'relations')}
+                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'bands', 'metrics', 'objects', 'relations')}
 
 
 def _esx_key(s):

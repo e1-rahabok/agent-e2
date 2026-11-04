@@ -1,0 +1,58 @@
+# Distributed Switch Packets Dropped (switch, port and LAG)
+
+## Meaning
+- Dropped packet counts that vCenter keeps on the distributed switch object, at the switch, per distributed port (DVPort) and per link aggregation group (LAG), each for transmit and receive.
+- Dropped packets are the only network contention signal vSphere has: there is no network latency or retransmit counter.
+
+## Counters (vCenter 9.1 API)
+| Scope | Transmit | Receive |
+|---|---|---|
+| Switch | `net.throughput.droppedTx` | `net.throughput.droppedRx` |
+| DVPort | `net.throughput.vds.droppedTx` | `net.throughput.vds.droppedRx` |
+| LAG | `net.throughput.vds.lagDropTx` | `net.throughput.vds.lagDropRx` |
+
+- Statistics level 3, rollup average: no history at the default level 1.
+- No vSphere Client chart: read them through the API or a tool that reads it.
+
+## Reading it
+- Drops at a DVPort but not at the VM vNIC: the loss is at the switch port, outside the guest. Drops at the vNIC: see `vsphere/technology/network/diagnosis/vnic-rx-drops`.
+- Drops on a LAG: uplink side. Compare with the vmnic drop counters of the hosts. See `vsphere/technology/network/metrics/host/packets-dropped`.
+- A drop count means little without the packet count of the same scope: read it as a share of `net.throughput` packets. See `vsphere/technology/network/metrics/distributed-switch/packets`.
+
+## Traps
+- "No dropped packets at the switch, so no VM drops packets" → the switch total hides one port; check per DVPort and per vNIC.
+- "Drops at level 1 history" → these counters are level 3; the default history holds none.
+
+## Metadata
+```yaml
+id: vsphere/technology/network/metrics/distributed-switch/packets-dropped
+retriever_guide: metric-meaning
+scope: vsphere
+technology:
+- network
+pillar:
+- performance
+product:
+- vsphere
+object:
+- VmwareDistributedVirtualSwitch
+metric_class: contention
+internal_derive:
+- vsphere/technology/network/concepts/network-observability
+same_name:
+- vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
+- vsphere/technology/network/metrics/host/packets-dropped
+same_meaning: []
+related:
+- vsphere/technology/network/metrics/distributed-switch/packets
+- vsphere/technology/network/diagnosis/vnic-rx-drops
+- vsphere/foundations/vcenter-statistics
+source:
+  document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
+  path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
+corrections: []
+review_notes:
+- 'Whole file: counter names, scopes, level and rollup from the author''s vCenter 9.1.0 API export. The author asked for the distributed switch to be documented (2026-11-04).'
+- 'Section ''Reading it'': where a drop sits (port vs vNIC vs uplink) is Claude''s inference from the counter scopes. Author to confirm.'
+status: draft
+```

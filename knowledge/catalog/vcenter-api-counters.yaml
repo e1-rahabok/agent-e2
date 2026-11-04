@@ -1,0 +1,1071 @@
+meta:
+  id: catalog/vcenter-api-counters
+  title: vCenter performance counters as the API returns them (vCenter 9.1.0)
+  source:
+    document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922; PerformanceManager.perfCounter and QueryAvailablePerfMetric)
+    path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
+  fields:
+    counter: group.name as the API returns it (nameInfo.key with its group).
+    object: Managed object type the counter was available on.
+    rollup: Rollup type as the API returns it.
+    stat_type: rate, absolute or delta, as the API returns it.
+    unit: 'Unit as the API returns it. Charts often convert (KB shown as MB, KBps as Mbps): see vsphere/foundations/vcenter-statistics, Units.'
+    level: Collection level of the counter definition.
+    summary: Counter summary from the vCenter counter definition, verbatim.
+    kb: Knowledge file that explains the metric, where one exists.
+  review_notes:
+  - 'Whole file: copied from the authors CSV, one row per object type and counter. Union over every instance of each object type in one vCenter 9.1.0 inventory; the inventory had no vApp or datastore cluster.
+    Folder, Network, Distributed Port Group and Compute Resource returned no counters.'
+  - 'Field kb: mapping by Claude. Rows without kb have no knowledge file yet (clusterServices.cpufairness, memfairness, effectivecpu, effectivemem: author questions Q049, Q050).'
+  - Summaries are verbatim from vCenter, including apparent copy errors (memfairness, mem.usage on VM says host physical memory).
+  status: draft
+rows:
+- counter: cpu.usage
+  object: VirtualMachine
+  rollup: average
+  stat_type: rate
+  unit: percent
+  level: 1
+  summary: CPU usage as a percentage during the interval
+  kb: vsphere/technology/cpu/metrics/virtual-motherboard/usage
+- counter: cpu.usagemhz
+  object: VirtualMachine
+  rollup: average
+  stat_type: rate
+  unit: megaHertz
+  level: 1
+  summary: CPU usage in megahertz during the interval
+  kb: vsphere/technology/cpu/metrics/virtual-motherboard/usage
+- counter: cpu.ready
+  object: VirtualMachine
+  rollup: summation
+  stat_type: delta
+  unit: millisecond
+  level: 1
+  summary: Time that the virtual machine was ready, but could not get scheduled to run on the physical CPU during last measurement interval
+  kb: vsphere/technology/cpu/metrics/virtual-motherboard/ready
+- counter: mem.usage
+  object: VirtualMachine
+  rollup: average
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: Percentage of host physical memory that has been consumed
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/usage
+- counter: mem.swapinRate
+  object: VirtualMachine
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: Rate at which guest physical memory is swapped in from the swap space
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
+- counter: mem.swapoutRate
+  object: VirtualMachine
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: Rate at which guest physical memory is swapped out to the swap space
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/swap-out-rate
+- counter: mem.vmmemctl
+  object: VirtualMachine
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of guest physical memory reclaimed from the virtual machine by the balloon driver in the guest
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/ballooned
+- counter: mem.consumed
+  object: VirtualMachine
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of host physical memory consumed for backing up guest physical memory pages
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/consumed
+- counter: mem.overhead
+  object: VirtualMachine
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Host physical memory consumed by ESXi data structures for running the virtual machines
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/overhead
+- counter: disk.usage
+  object: VirtualMachine
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: usage
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk
+- counter: disk.maxTotalLatency
+  object: VirtualMachine
+  rollup: latest
+  stat_type: absolute
+  unit: millisecond
+  level: 1
+  summary: maxTotalLatency
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
+- counter: net.usage
+  object: VirtualMachine
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: Network utilization (combined transmit-rates and receive-rates) during the interval
+  kb: vsphere/technology/network/metrics/virtual-motherboard/throughput
+- counter: sys.uptime
+  object: VirtualMachine
+  rollup: latest
+  stat_type: absolute
+  unit: second
+  level: 1
+  summary: Total time elapsed, in seconds, since last system startup
+  kb: vsphere/object-types/cluster/metrics/comparisons/availability
+- counter: clusterServices.vmDrsScore
+  object: VirtualMachine
+  rollup: latest
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: DRS score of the virtual machine
+  kb: vsphere/object-types/cluster/configuration/drs-migration-levels
+- counter: disk.used
+  object: VirtualMachine
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: used
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+- counter: disk.provisioned
+  object: VirtualMachine
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: provisioned
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/provisioned-space
+- counter: disk.unshared
+  object: VirtualMachine
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: unshared
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+- counter: cpu.usage
+  object: HostSystem
+  rollup: average
+  stat_type: rate
+  unit: percent
+  level: 1
+  summary: CPU usage as a percentage during the interval
+  kb: vsphere/technology/cpu/metrics/host/usage
+- counter: cpu.usagemhz
+  object: HostSystem
+  rollup: average
+  stat_type: rate
+  unit: megaHertz
+  level: 1
+  summary: CPU usage in megahertz during the interval
+  kb: vsphere/technology/cpu/metrics/host/usage
+- counter: cpu.ready
+  object: HostSystem
+  rollup: summation
+  stat_type: delta
+  unit: millisecond
+  level: 1
+  summary: Time that the virtual machine was ready, but could not get scheduled to run on the physical CPU during last measurement interval
+  kb: vsphere/technology/cpu/metrics/comparisons/host-contention-metrics
+- counter: mem.usage
+  object: HostSystem
+  rollup: average
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: Percentage of host physical memory that has been consumed
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/usage
+- counter: mem.swapinRate
+  object: HostSystem
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: Rate at which guest physical memory is swapped in from the swap space
+  kb: vsphere/technology/memory/metrics/host/swap-used
+- counter: mem.swapoutRate
+  object: HostSystem
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: Rate at which guest physical memory is swapped out to the swap space
+  kb: vsphere/technology/memory/metrics/host/swap-used
+- counter: mem.vmmemctl
+  object: HostSystem
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of guest physical memory reclaimed from the virtual machine by the balloon driver in the guest
+  kb: vsphere/technology/memory/metrics/host/ballooned
+- counter: mem.consumed
+  object: HostSystem
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of host physical memory consumed for backing up guest physical memory pages
+  kb: vsphere/technology/memory/metrics/host/consumed
+- counter: mem.overhead
+  object: HostSystem
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Host physical memory consumed by ESXi data structures for running the virtual machines
+  kb: vsphere/technology/memory/concepts/memory-overhead
+- counter: mem.bandwidth.total
+  object: HostSystem
+  rollup: latest
+  stat_type: absolute
+  unit: megaBytesPerSecond
+  level: 1
+  summary: Total read and write bandwidth of this memory type
+  kb: vsphere/technology/memory/concepts/memory-tiering
+- counter: disk.usage
+  object: HostSystem
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: usage
+  kb: vsphere/technology/storage/metrics/host/disk
+- counter: disk.maxTotalLatency
+  object: HostSystem
+  rollup: latest
+  stat_type: absolute
+  unit: millisecond
+  level: 1
+  summary: maxTotalLatency
+  kb: vsphere/technology/storage/metrics/host/disk
+- counter: net.usage
+  object: HostSystem
+  rollup: average
+  stat_type: rate
+  unit: kiloBytesPerSecond
+  level: 1
+  summary: Network utilization (combined transmit-rates and receive-rates) during the interval
+  kb: vsphere/technology/network/metrics/virtual-motherboard/throughput
+- counter: sys.uptime
+  object: HostSystem
+  rollup: latest
+  stat_type: absolute
+  unit: second
+  level: 1
+  summary: Total time elapsed, in seconds, since last system startup
+  kb: vsphere/object-types/cluster/metrics/comparisons/availability
+- counter: clusterServices.cpufairness
+  object: HostSystem
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Fairness of distributed CPU resource allocation
+- counter: clusterServices.memfairness
+  object: HostSystem
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Aggregate available memory resources of all the hosts within a cluster
+- counter: cpu.usage
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: rate
+  unit: percent
+  level: 1
+  summary: CPU usage as a percentage during the interval
+- counter: cpu.usagemhz
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: rate
+  unit: megaHertz
+  level: 1
+  summary: CPU usage in megahertz during the interval
+- counter: mem.usage
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: Percentage of host physical memory that has been consumed
+  kb: vsphere/technology/memory/metrics/cluster/usage
+- counter: mem.vmmemctl
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of guest physical memory reclaimed from the virtual machine by the balloon driver in the guest
+- counter: mem.consumed
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of host physical memory consumed for backing up guest physical memory pages
+  kb: vsphere/technology/memory/metrics/cluster/consumed
+- counter: mem.overhead
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Host physical memory consumed by ESXi data structures for running the virtual machines
+  kb: vsphere/technology/memory/concepts/memory-overhead
+- counter: vmop.numPoweron
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine power on operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numPoweroff
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine power off operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numSuspend
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine suspend operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numReset
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine reset operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numRebootGuest
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine guest reboot operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numStandbyGuest
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine standby guest operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numShutdownGuest
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine guest shutdown operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numCreate
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine create operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numDestroy
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine delete operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numRegister
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine register operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numUnregister
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine unregister operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numReconfigure
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine reconfigure operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numClone
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine clone operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numDeploy
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine template deploy operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numChangeHost
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of host change operations for powered-off and suspended VMs
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numChangeDS
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of datastore change operations for powered-off and suspended virtual machines
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numChangeHostDS
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of host and datastore change operations for powered-off and suspended virtual machines
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numVMotion
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of migrations with vMotion (host change operations for powered-on VMs)
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numSVMotion
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of migrations with Storage vMotion (datastore change operations for powered-on VMs)
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numXVMotion
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of host and datastore change operations for powered-on and suspended virtual machines
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: clusterServices.effectivecpu
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: rate
+  unit: megaHertz
+  level: 1
+  summary: Total available CPU resources of all hosts within a cluster
+- counter: clusterServices.effectivemem
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: megaBytes
+  level: 1
+  summary: Total amount of machine memory of all hosts in the cluster that is available for use for virtual machine memory and overhead memory
+- counter: cpu.totalmhz
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: rate
+  unit: megaHertz
+  level: 1
+  summary: Total amount of CPU resources of all hosts in the cluster
+- counter: mem.totalmb
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: megaBytes
+  level: 1
+  summary: Total amount of host physical memory of all hosts in the cluster that is available for virtual machine memory (physical memory for use by the guest OS) and virtual machine overhead memory
+- counter: clusterServices.clusterDrsScore
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: DRS score of the cluster
+  kb: vsphere/object-types/cluster/configuration/drs-migration-levels
+- counter: clusterServices.failover
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: vSphere HA number of failures that can be tolerated
+  kb: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
+- counter: gpu.utilization
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: The compute utilization of a GPU in percentage
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.mem.used
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: The amount of GPU memory used by workloads in kilobytes
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.mem.reserved
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: The amount of GPU memory consumed by virtual GPUs in kilobytes
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.power.used
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: watt
+  level: 1
+  summary: The power used by a GPU in watts
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.temperature
+  object: ClusterComputeResource
+  rollup: average
+  stat_type: absolute
+  unit: celsius
+  level: 1
+  summary: The temperature of a GPU in degrees Celsius
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.mem.total
+  object: ClusterComputeResource
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: The total amount of GPU memory in kilobytes
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: disk.numberReadAveraged
+  object: Datastore
+  rollup: average
+  stat_type: rate
+  unit: number
+  level: 1
+  summary: numberReadAveraged
+- counter: disk.numberWriteAveraged
+  object: Datastore
+  rollup: average
+  stat_type: rate
+  unit: number
+  level: 1
+  summary: numberWriteAveraged
+- counter: datastore.numberReadAveraged
+  object: Datastore
+  rollup: average
+  stat_type: rate
+  unit: number
+  level: 1
+  summary: Average number of read commands issued per second to the datastore during the collection interval
+  kb: vsphere/technology/storage/metrics/host/datastore
+- counter: datastore.numberWriteAveraged
+  object: Datastore
+  rollup: average
+  stat_type: rate
+  unit: number
+  level: 1
+  summary: Average number of write commands issued per second to the datastore during the collection interval
+  kb: vsphere/technology/storage/metrics/host/datastore
+- counter: disk.used
+  object: Datastore
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: used
+  kb: vsphere/technology/storage/concepts/vm-files
+- counter: disk.provisioned
+  object: Datastore
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: provisioned
+- counter: disk.capacity
+  object: Datastore
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: capacity
+- counter: disk.unshared
+  object: Datastore
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: unshared
+- counter: cpu.usagemhz
+  object: ResourcePool
+  rollup: average
+  stat_type: rate
+  unit: megaHertz
+  level: 1
+  summary: CPU usage in megahertz during the interval
+  kb: vsphere/technology/cpu/metrics/virtual-motherboard/usage
+- counter: mem.vmmemctl
+  object: ResourcePool
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of guest physical memory reclaimed from the virtual machine by the balloon driver in the guest
+- counter: mem.consumed
+  object: ResourcePool
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Amount of host physical memory consumed for backing up guest physical memory pages
+  kb: vsphere/technology/memory/metrics/virtual-motherboard/consumed
+- counter: mem.overhead
+  object: ResourcePool
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: Host physical memory consumed by ESXi data structures for running the virtual machines
+  kb: vsphere/technology/memory/concepts/memory-overhead
+- counter: gpu.utilization
+  object: ResourcePool
+  rollup: average
+  stat_type: absolute
+  unit: percent
+  level: 1
+  summary: The compute utilization of a GPU in percentage
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.mem.used
+  object: ResourcePool
+  rollup: average
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: The amount of GPU memory used by workloads in kilobytes
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.mem.reserved
+  object: ResourcePool
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: The amount of GPU memory consumed by virtual GPUs in kilobytes
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.power.used
+  object: ResourcePool
+  rollup: latest
+  stat_type: absolute
+  unit: watt
+  level: 1
+  summary: The power used by a GPU in watts
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.temperature
+  object: ResourcePool
+  rollup: average
+  stat_type: absolute
+  unit: celsius
+  level: 1
+  summary: The temperature of a GPU in degrees Celsius
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: gpu.mem.total
+  object: ResourcePool
+  rollup: latest
+  stat_type: absolute
+  unit: kiloBytes
+  level: 1
+  summary: The total amount of GPU memory in kilobytes
+  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+- counter: vmop.numPoweron
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine power on operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numPoweroff
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine power off operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numSuspend
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine suspend operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numReset
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine reset operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numRebootGuest
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine guest reboot operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numStandbyGuest
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine standby guest operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numShutdownGuest
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine guest shutdown operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numCreate
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine create operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numDestroy
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine delete operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numRegister
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine register operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numUnregister
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine unregister operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numReconfigure
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine reconfigure operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numClone
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine clone operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numDeploy
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of virtual machine template deploy operations
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numChangeHost
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of host change operations for powered-off and suspended VMs
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numChangeDS
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of datastore change operations for powered-off and suspended virtual machines
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numChangeHostDS
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of host and datastore change operations for powered-off and suspended virtual machines
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numVMotion
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of migrations with vMotion (host change operations for powered-on VMs)
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numSVMotion
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of migrations with Storage vMotion (datastore change operations for powered-on VMs)
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: vmop.numXVMotion
+  object: Datacenter
+  rollup: latest
+  stat_type: absolute
+  unit: number
+  level: 1
+  summary: Number of host and datastore change operations for powered-on and suspended virtual machines
+  kb: vsphere/object-types/cluster/metrics/vm-operations
+- counter: net.throughput.pktsTx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.pktsTxMulticast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted Multicast packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.pktsTxBroadcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted Broadcast packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.pktsRx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received packets for this vDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.pktsRxMulticast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received Multicast packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.pktsRxBroadcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received Broadcast packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.droppedTx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: Count of dropped transmitted packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets-dropped
+- counter: net.throughput.droppedRx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: Count of dropped received packets for this VDS
+  kb: vsphere/technology/network/metrics/distributed-switch/packets-dropped
+- counter: net.throughput.vds.pktsTx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.pktsTxMcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted multicast packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.pktsTxBcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted broadcast packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.pktsRx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.pktsRxMcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received multicast packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.pktsRxBcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received broadcast packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.droppedTx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: Count of dropped transmitted packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets-dropped
+- counter: net.throughput.vds.droppedRx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: Count of dropped received packets for this DVPort
+  kb: vsphere/technology/network/metrics/distributed-switch/packets-dropped
+- counter: net.throughput.vds.lagTx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.lagTxMcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted Multicast packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.lagTxBcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of transmitted Broadcast packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.lagRx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.lagRxMcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received multicast packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.lagRxBcast
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: The rate of received Broadcast packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets
+- counter: net.throughput.vds.lagDropTx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: Count of dropped transmitted packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets-dropped
+- counter: net.throughput.vds.lagDropRx
+  object: VmwareDistributedVirtualSwitch
+  rollup: average
+  stat_type: absolute
+  unit: number
+  level: 3
+  summary: Count of dropped received packets for this LAG
+  kb: vsphere/technology/network/metrics/distributed-switch/packets-dropped

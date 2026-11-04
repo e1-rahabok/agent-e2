@@ -209,7 +209,7 @@ def _run_tool(retriever, name, args, state):
             out = cat.object_info(nm)
         else:
             out = cat.lookup(nm, args.get('object'))
-            if not any(out[k] for k in ('counters', 'esxtop', 'metric_files', 'thresholds', 'bands')):
+            if not any(out[k] for k in ('counters', 'api', 'esxtop', 'metric_files', 'thresholds', 'bands')):
                 out['note'] = 'No catalog entry. Use search.'
         return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
     if name == 'calculate':

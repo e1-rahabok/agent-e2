@@ -228,6 +228,15 @@ def check_catalog(allowed, ids, bodies, bad):
                 if r.get('stat_type') not in ('Rate', 'Absolute', 'Delta'): bad(path, f'{w}: stat_type "{r.get("stat_type")}"')
                 if r.get('rollup') not in ('Average', 'Summation', 'Latest', 'Minimum', 'Maximum'): bad(path, f'{w}: rollup "{r.get("rollup")}"')
                 kb_ok(path, w, r.get('kb'))
+        elif name == 'vcenter-api-counters.yaml':
+            for n, r in enumerate(rows):
+                w = f'row {n + 1} ({r.get("counter")})'
+                for k in ('counter', 'object', 'rollup', 'stat_type', 'unit', 'level'):
+                    if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                if r.get('object') not in objects: bad(path, f'{w}: object "{r.get("object")}" not allowed')
+                if r.get('stat_type') not in ('rate', 'absolute', 'delta'): bad(path, f'{w}: stat_type "{r.get("stat_type")}"')
+                if r.get('level') not in (1, 2, 3, 4): bad(path, f'{w}: level must be 1-4')
+                kb_ok(path, w, r.get('kb'))
         elif name == 'esxtop-fields.yaml':
             for n, r in enumerate(rows):
                 for k in ('panel', 'field', 'description', 'page'):

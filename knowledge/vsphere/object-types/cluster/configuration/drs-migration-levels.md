@@ -18,6 +18,7 @@
 ## Cluster DRS Score
 - VM DRS Score = VM happiness, a measure of the VM's execution efficiency. DRS recommendations aim to raise individual VM scores.
 - Cluster DRS Score = weighted average of the VM DRS Scores of all powered-on VMs. A good cluster score can hide a few VMs with low scores; the VM list under Monitor > vSphere DRS sorts VMs by score, lowest first.
+- vCenter stores both scores as level 1 counters, so their history exists by default: `clusterServices.vmDrsScore` on the VM and `clusterServices.clusterDrsScore` on the cluster (percent, rollup latest).
 - DRS scans the cluster every minute for load-balancing recommendations.
 - DRS also weighs host network saturation in initial placement.
 - A VM that becomes incompatible with its current host (HA agent error, lost storage path, NSX component down) triggers DRS migrations to compatible hosts. Since vCenter 8.0 Update 3 the default of CompatCheckTransientFailureTimeSeconds is -1: DRS no longer moves a VM out only because of incompatibility with its current host. Earlier default: 600 seconds of tolerance.
@@ -71,6 +72,7 @@ source:
   path: VMware Distributed Resource Scheduler (DRS) > DRS Performance Tuning (pp. 78-79); Cluster DRS Score (p. 79)
 corrections: []
 review_notes:
+- 'Section ''Cluster DRS Score'': counter names, level and rollup from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 - 'Section ''Cluster DRS Score'': VM happiness, weighted average, one-minute scan, network-aware placement and the compatibility-check option from the vSphere 9.1 documentation, vSphere Resource Management > Admission Control and Initial Placement, DRS Migration Threshold > DRS Score, VM migrations initiated by DRS due to incompatibility (pp. 1894, 1896, 1954-1955).'
 - Checked against 9.1 (revision 20260624). Pages 78-79. Migration levels, Cluster DRS Score causes and Predictive DRS unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
