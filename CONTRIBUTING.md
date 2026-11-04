@@ -2,7 +2,7 @@
 
 How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
 
-## Where the work is
+## Open work
 | What | Where |
 |---|---|
 | Questions waiting for the author | [project/author-questions.md](project/author-questions.md) |

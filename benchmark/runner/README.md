@@ -45,10 +45,10 @@ python3 benchmark/runner/retrieval_eval.py
 ### Question and score
 - Each golden case is a multiple-choice question with one or more correct options.
 - A run asks every question once, per model and mode.
-- 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/test-design.md`, section 7.1.
+- 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/test-design.md`, section 7.2.
 - Every question says: "Choose all the correct options. There can be more than one." Two options are appended: "Not covered by the knowledge base" and "Unsure".
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
-- Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/test-design.md`, section 7.0.
+- Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/test-design.md`, section 7.1.
 - Stable correct (headline): share of questions answered exactly right in all 5 runs. Report table `Luck-free scores`.
 - Luck: share of questions right in some runs only. Counted as not known.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
@@ -125,7 +125,7 @@ python3 benchmark/runner/retrieval_eval.py
 - The 0.2 choice is a design default, not a measured optimum. A temperature sweep (0, 0.2, 0.7) on the best model would test it.
 
 ## What it does
-1. Loads `knowledge/` exactly as README, section How a local LLM uses it: metadata split off, body chunked by `##` heading.
+1. Loads `knowledge/` exactly as README, section Local LLM use: metadata split off, body chunked by `##` heading.
 2. Builds the index: BM25, plus embeddings (`embedding_model`) when the API key is set. Embeddings are cached in `harness/.cache/`.
 3. Loads golden cases with `format: multiple-choice`. Other formats are listed as skipped.
 4. For each model, mode, case and run:

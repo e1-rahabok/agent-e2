@@ -1,4 +1,4 @@
-# Knowledge engineering: how expert knowledge is captured in this repository
+# Knowledge engineering
 
 For human experts who want to judge how much of an expert's knowledge and experience this repository holds, and how. Not indexed.
 How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
@@ -11,7 +11,7 @@ How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: `README
   - a human expert, who must be able to review every fact and trace it to its source.
 - One format cannot serve all three. The knowledge is therefore split into forms, each chosen for the kind of knowledge it holds. All forms live in one git repository, reviewed and versioned together.
 
-## 2. The forms of codified knowledge
+## 2. Knowledge forms
 | Form | Holds | Where | Size (2026-11-04) |
 |---|---|---|---|
 | Structured prose | Mechanisms, reasons, edge cases | `knowledge/**/*.md` | 203 files, 1,332 chunks |
@@ -46,7 +46,7 @@ Why each form was chosen, and who reads it:
 | Rules as code | A rule that a script checks cannot drift | Lint |
 | Executable expectations | Proves the knowledge works, not only that it exists | Benchmark |
 
-## 3. Three slices of the same knowledge
+## 3. Slices
 The author's books describe metrics from three perspectives: technology, object, and operations management (pillar). A folder tree holds one; tags and links hold the others.
 - Example: VM CPU Ready.
   - Technology: `vsphere/technology/cpu/metrics/virtual-motherboard/ready` (folder), `technology: cpu` (tag).
@@ -54,7 +54,7 @@ The author's books describe metrics from three perspectives: technology, object,
   - Operations management: `pillar: performance` (tag), used by `operations-management/performance/performance-kpi-design` and the cluster KPI (links).
 - Retrieval can filter on any tag, the model can follow any link, and a website can render any slice without moving a file.
 
-## 4. Readable by machines without losing the human reader
+## 4. Machine and human readers
 | Choice | Machine benefit | Human benefit |
 |---|---|---|
 | Markdown, not HTML or JSON | Clean chunking by heading | Readable and reviewable on GitHub |
@@ -66,7 +66,7 @@ The author's books describe metrics from three perspectives: technology, object,
 | Exact data in YAML, prose in markdown | Lookups are exact; prose stays short | Data is reviewable as a table |
 | Mermaid plus text for diagrams | Text-only models read the steps | GitHub renders the chart |
 
-## 5. Thresholds: where they live and what a threshold really is
+## 5. Thresholds
 - Two sources today:
   - colour bands (green, yellow, orange, red) in the KPI files: `vsphere/object-types/vm/metrics/vm-performance`, `vsphere/object-types/cluster/metrics/cluster-performance`, `cluster-consumption`, `cluster-risk`, `cluster-sla-sli`, `guest-os/system/metrics/guest-os-performance`. The harness catalog reads these tables at start-up (38 bands);
   - single thresholds (above X means Y) in `knowledge/catalog/thresholds.yaml` (31 rows), each quoting its knowledge file so the two cannot drift (lint checks the quote).
@@ -80,7 +80,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - Instance reading: for a metric with instances (per vCPU, per disk), the worst instance is always at least the object value. The worst vCPU of a 64-vCPU VM can be far above the VM's normalized Ready. A band must say which reading it applies to, as "Peak CPU Ready among any vCPU" does.
 - The rule is written for the model in `foundations/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields; they are filled only where a source states them. The values for each band row are an open author question (Q048).
 
-## 6. How knowledge enters, and how it is kept right
+## 6. Intake and quality
 1. Extract: the book one Heading 3 at a time, then official documentation for the current release (vSphere 9.1, VCF 9.1.1), checking the document revision each time.
 2. Structure: write each fact in the form that fits it (section 2); add tags, links and traps.
 3. Ask: every conflict or gap becomes an author question with a verbatim search string. The author's answer is applied, marked in the file's review notes, and kept as a correction until the book is updated.
@@ -88,7 +88,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 5. Prove: the benchmark runs the golden cases against the whole system, the harness-only retrieval test checks that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
 6. Review: the author reviews every file before release; release content is final and curated.
 
-## 7. What is not yet captured
+## 7. Gaps
 | Gap | Plan |
 |---|---|
 | Interval and instance reading of each threshold band | Author question Q048; catalog fields ready |

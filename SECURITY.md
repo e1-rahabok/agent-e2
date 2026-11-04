@@ -7,11 +7,11 @@ How Isvara handles the risks of an AI application, and how to report a problem. 
 - Do not open a public issue for a vulnerability.
 - Include: what you found, the file or component, and how to reproduce it.
 
-## What the system is
+## System
 - A local model, a harness and a knowledge base, running on the customer's own server with no Internet access. See [ARCHITECTURE.md](ARCHITECTURE.md).
 - It answers questions. It does not change any system: no write access to vCenter, ESXi, VCF Operations or any other product.
 
-## AI application risks and how each is handled
+## AI risks
 | Risk | Applies? | How it is handled |
 |---|---|---|
 | Prompt injection hidden in the knowledge base | Guarded | Every knowledge file is plain markdown, reviewed by the author before release, and versioned in git. Lint rejects instruction-like text, hidden HTML comments and invisible Unicode characters in `knowledge/` and in benchmark prompts (patterns in `tools/tags.yaml`, `injection_patterns`). |
@@ -30,7 +30,7 @@ How Isvara handles the risks of an AI application, and how to report a problem. 
 | Benchmark contamination | Guarded | Answer keys are never indexed and never sent to the model; a held-out question set is kept outside the repository. |
 | Resource exhaustion | Guarded | Tool calls, tool output and context size are capped per question. |
 
-## What a security reviewer can check
+## Review checks
 - `knowledge/` holds only markdown and YAML: no executable content.
 - `python3 tools/lint.py` reports 0 problems, including the injection pattern scan.
 - `harness/calc.py` (whitelist expression parser) and `harness/modes.py` (tool list) show that no tool executes code or changes a system.
