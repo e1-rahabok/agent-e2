@@ -25,15 +25,27 @@ Related: `solution-design.md` (system design), `design-kb-test-site.md` (test si
 
 ### Gaps against what the benchmark tests
 
-| Gap | Why it matters | Requirement |
-|---|---|---|
-| Classic retrieval only: 8 chunks + linked files. No catalog facts, calculator, flow executor or answer verifier. | The benchmark scores the harness. An app that rebuilds retrieval on its own is an untested system. | The app calls `harness/` (library or local API) for retrieval, tools, prompt and verifier. One implementation, tested and shipped. |
-| Embedding model nomic-embed-text; the benchmark uses qwen3-embedding-0.6b. | Different embeddings retrieve different files, so the score does not transfer. | Use the benchmarked embedding model, or benchmark the app's model before release. |
-| System prompt and retrieval settings editable in the UI. | An edited prompt is an untested prompt. | Prompt and settings live in the repo with a version. Each answer stores prompt version, settings, model and index version. A UI edit marks answers as untested. |
-| No rating or flag on answers. | Weak answers cannot be fed back into the knowledge base. | Rate and flag on every answer, with a cause tag (knowledge gap, wrong fact, retrieval miss, model error). Feeds the review queue in `design-kb-test-site.md`. |
-| Every answer ends with "all sources are draft". | Release content is all reviewed (D1). | Answers never mention review status. |
-| "View on GitHub" links. | A dark site has no internet. | The local viewer (Open) is the default. The GitHub link is optional and hidden when offline. |
-| Repo sync from GitHub every 24 h. | A dark site cannot pull. | Also accept an offline bundle (signed archive of `knowledge/` + catalog + index), imported by an admin. |
+- **Classic retrieval only: 8 chunks + linked files. No catalog facts, calculator, flow executor or answer verifier.**
+  - Why it matters: The benchmark scores the harness. An app that rebuilds retrieval on its own is an untested system.
+  - Requirement: The app calls `harness/` (library or local API) for retrieval, tools, prompt and verifier. One implementation, tested and shipped.
+- **Embedding model nomic-embed-text; the benchmark uses qwen3-embedding-0.6b.**
+  - Why it matters: Different embeddings retrieve different files, so the score does not transfer.
+  - Requirement: Use the benchmarked embedding model, or benchmark the app's model before release.
+- **System prompt and retrieval settings editable in the UI.**
+  - Why it matters: An edited prompt is an untested prompt.
+  - Requirement: Prompt and settings live in the repo with a version. Each answer stores prompt version, settings, model and index version. A UI edit marks answers as untested.
+- **No rating or flag on answers.**
+  - Why it matters: Weak answers cannot be fed back into the knowledge base.
+  - Requirement: Rate and flag on every answer, with a cause tag (knowledge gap, wrong fact, retrieval miss, model error). Feeds the review queue in `design-kb-test-site.md`.
+- **Every answer ends with "all sources are draft".**
+  - Why it matters: Release content is all reviewed (D1).
+  - Requirement: Answers never mention review status.
+- **"View on GitHub" links.**
+  - Why it matters: A dark site has no internet.
+  - Requirement: The local viewer (Open) is the default. The GitHub link is optional and hidden when offline.
+- **Repo sync from GitHub every 24 h.**
+  - Why it matters: A dark site cannot pull.
+  - Requirement: Also accept an offline bundle (signed archive of `knowledge/` + catalog + index), imported by an admin.
 
 ### Answer quality seen in the demo
 - Question 1, "most important CPU metrics to monitor on an ESX host": the answer led with esxtop load average (1 or more = overloaded) and PCPU 80% / 90%.

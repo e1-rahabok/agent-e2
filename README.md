@@ -246,7 +246,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - No text aimed at human motivation.
 - One vSphere object type per metric file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
-- Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
+- Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
 - Every metric file ends its body with `## Traps`, written in the format of section Traps and Level 400.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
 

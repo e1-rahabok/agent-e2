@@ -55,12 +55,18 @@ Why this design and why a 32B model: `project/solution-design.md`. How the knowl
 - What is the same in both: prompt, tools, retrieval settings, verifier, context window, token budget for tool output, no-progress stops.
 - What differs, and how it is handled:
 
-| Difference | Why | Handling |
-|---|---|---|
-| Time | Test time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the test would grade the provider. | The test stops on hardware-independent limits only: tokens and no-progress. A maximum number of model turns is derived from the deployment time limit: turns = time limit ÷ seconds per turn measured on the target GPU (benchmark phase 5). |
-| Context window | Gateway models often offer 128K or more; the deployed server may run 32K. | The test caps the context to the deployed window. |
-| User in the loop | In deployment the user can stop, ask to keep digging, or answer a clarifying question. A test has no user. | The test answers at the end of the budget with no help: a worst case. Clarifying questions are scored as a separate set later. |
-| Experiments | Some runs ask "what if" (16 calls, primed agentic, another embedding model). | Run as named experiment profiles. Only the deployment profile produces the release score. |
+- **Time**
+  - Why: Test time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the test would grade the provider.
+  - Handling: The test stops on hardware-independent limits only: tokens and no-progress. A maximum number of model turns is derived from the deployment time limit: turns = time limit ÷ seconds per turn measured on the target GPU (benchmark phase 5).
+- **Context window**
+  - Why: Gateway models often offer 128K or more; the deployed server may run 32K.
+  - Handling: The test caps the context to the deployed window.
+- **User in the loop**
+  - Why: In deployment the user can stop, ask to keep digging, or answer a clarifying question. A test has no user.
+  - Handling: The test answers at the end of the budget with no help: a worst case. Clarifying questions are scored as a separate set later.
+- **Experiments**
+  - Why: Some runs ask "what if" (16 calls, primed agentic, another embedding model).
+  - Handling: Run as named experiment profiles. Only the deployment profile produces the release score.
 
 - So the harness has profiles, not a second harness: one deployment profile (the release score and the product) and named experiment profiles (diagnosis only).
 

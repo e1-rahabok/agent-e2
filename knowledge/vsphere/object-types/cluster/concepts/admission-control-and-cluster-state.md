@@ -25,11 +25,17 @@
 - If RP-MOM instead runs 3 GHz of VM reservations: 6 - 3 - 2 = 1 GHz unreserved. VM-K2 cannot power on.
 
 ## Cluster state (DRS)
-| State | Condition | Running VMs | Fix |
-|---|---|---|---|
-| Valid | Every reservation in the resource pool tree fits within its parent and within cluster capacity. | All get their reservations. | - |
-| Overcommitted (yellow) | The tree is consistent, but cluster capacity no longer covers all resource pool reservations. Typical cause: a host fails or leaves. | Still covered: the VMs of the lost host are no longer running. | Add hosts, or lower resource pool reservations. |
-| Invalid (red) | The tree is inconsistent: children's reservations exceed a parent's fixed reservation. Can happen at any level, even with free capacity at the root. | Some may not get their reservations. | Power off or move VMs, or edit the pool settings. Adding capacity does not fix red. |
+- **Valid**
+  - Condition: Every reservation in the resource pool tree fits within its parent and within cluster capacity.
+  - Running VMs: All get their reservations.
+- **Overcommitted (yellow)**
+  - Condition: The tree is consistent, but cluster capacity no longer covers all resource pool reservations. Typical cause: a host fails or leaves.
+  - Running VMs: Still covered: the VMs of the lost host are no longer running.
+  - Fix: Add hosts, or lower resource pool reservations.
+- **Invalid (red)**
+  - Condition: The tree is inconsistent: children's reservations exceed a parent's fixed reservation. Can happen at any level, even with free capacity at the root.
+  - Running VMs: Some may not get their reservations.
+  - Fix: Power off or move VMs, or edit the pool settings. Adding capacity does not fix red.
 
 - A cluster also turns red when HA can no longer meet its failover capacity.
 - Changing a pool reservation while a VM is failing over can turn the cluster red: the failing-over VM is not charged to the pool until the failover completes.
