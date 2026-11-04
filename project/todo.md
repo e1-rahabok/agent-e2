@@ -123,8 +123,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
-- [ ] Write questions to the blueprint in `benchmark/test-design.md` (gaps: network, storage, GPU, object level, recall, Not covered).
-- [ ] Add `trap_type` to case metadata and a coverage script that checks the blueprint counts.
+- [ ] Write questions to the blueprint in `benchmark/test-design.md` (areas CPU 25%, memory 25%, storage 20%, network 15%, system 20%; a question may count for several; gaps: network, storage, system, recall, Not covered).
+- [ ] Add `technology` (list of areas) and `trap_type` to case metadata and a coverage script that checks the blueprint counts.
 - [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read cases from another folder.
 - [ ] Add `## Traps` to the 7 metric files that lack it; then make lint require it.
 - [x] Case vendor-neutral-general-001 (hyperscaler VM cost): removed 2026-11-04. Cost and price are out of scope (author, Q039).

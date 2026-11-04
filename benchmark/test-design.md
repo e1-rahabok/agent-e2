@@ -27,22 +27,20 @@ Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/READM
 ## 3. The blueprint: what 100 questions must cover
 A test is a sample of a domain. The blueprint defines the domain and how the 100 questions sample it, so that a reviewer can check coverage question by question.
 
-### 3.1 By area
+### 3.1 By area (author, 2026-11-04)
 
-| Area | Questions | Why this share |
+| Area | Share of the 100 questions | Covers |
 |---|---|---|
-| CPU | 22 | Largest part of the knowledge base (56 files) and the densest in traps (Ready, Usage vs Utilization, Hyper-Threading, frequency). |
-| Memory | 18 | 49 files; the most misread area in the field (Consumed, Active, balloon, Latency). |
-| Storage | 14 | 25 files; latency stack and layer confusion. |
-| Network | 10 | 16 files; few metrics, but unit and drop traps are common. Floor of 10 so the area can be reported. |
-| GPU | 2 | One concept file today; grows with the knowledge base. |
-| Object level: VM, ESXi, cluster KPIs, DRS, admission control, capacity | 14 | Derived metrics and multi-technology reasoning (23 object-type files). |
-| Foundations and operations management: provider/consumer, statistics, units, thresholds, sizing | 10 | Cross-cutting rules every other answer depends on. |
-| Guest OS vs VM boundary | 5 | The architecture rule of the knowledge base: Guest OS is a separate layer. |
-| Not covered by the knowledge base | 5 | Measures guessing outside the knowledge base. Correct answer: Not covered. |
+| CPU | 25% | vCPU states, Ready, Co-stop, Usage vs Utilization, Hyper-Threading, frequency, NUMA |
+| Memory | 25% | Consumed, Active, balloon, swap, compression, Latency, tiering |
+| Storage | 20% | latency stack, layers, outstanding IO, space, IP storage |
+| Network | 15% | drops, throughput, units, offload |
+| System | 20% | the object as a whole: KPIs, capacity, availability, DRS, admission control, provider/consumer, statistics and rollups, GPU, Guest OS vs VM boundary |
 
-- Shares follow the size of each area in the knowledge base, adjusted for how often the area causes wrong decisions in operations (author judgment), with a floor of 10 for the four technologies.
-- Per-area scores with 10-22 questions are diagnostic only (margin about ±15-30 points). Decisions use the total.
+- The shares add up to more than 100% on purpose: a question can span several areas. A question on VM CPU Ready caused by host memory swapping counts for CPU and Memory.
+- Each case lists every area it touches (`technology` in its metadata, values from `tools/tags.yaml`). The share is the minimum number of questions that touch the area.
+- About 5 questions sit outside the knowledge base (correct answer: Not covered). They are spread across the areas.
+- Per-area scores (15-25 questions) are diagnostic only (margin about ±15-20 points). Decisions use the total.
 
 ### 3.2 By level
 
@@ -61,6 +59,7 @@ A test is a sample of a domain. The blueprint defines the domain and how the 100
 | Each trap type in root `README.md` (12 types) | 3 questions each |
 | Same-name pairs: one label asked on two objects (VM vs ESXi, ESXi vs cluster) | 5 pairs |
 | Questions about the VM / ESXi / cluster / datastore | 30 / 20 / 10 / 5 |
+| Questions outside the knowledge base (Not covered) | 5 |
 | Questions where the knowledge base and the vSphere documentation disagree | 3 |
 | Questions needing the calculator (summation to %, units, capacity) | 5 |
 
@@ -193,7 +192,7 @@ For the set:
 
 ## 11. Status (2026-11-04)
 - 17 multiple-choice questions (cpu 9, memory 5, storage 1, foundations 1, general 1) and 11 free-text or compound cases.
-- Gaps against the blueprint: network 0 of 10, storage 1 of 14, GPU 0 of 2, object level 0 of 14, recall 0 of 20, Not covered 0 of 5; `trap_type` not yet recorded.
+- Gaps against the blueprint: network 0 of 15, storage 1 of 20, system about 3 of 20, recall 0 of 20, Not covered 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
 - Next: write the questions to the blueprint from the author's book quizzes; add `trap_type`; add a coverage script; set up the held-out set.
 
 ## 12. Screenshot questions

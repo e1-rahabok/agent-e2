@@ -16,7 +16,8 @@ benchmark/
 ```
 
 - scope: `vendor-neutral`, `vsphere` (later `nsx`, `vsan`).
-- area: `foundations`, `cpu`, `memory`, `storage`, `network`, `general` (spans several areas).
+- area (folder and id): the main area of the question: `foundations`, `cpu`, `memory`, `storage`, `network`, `general`.
+- Every area a question touches goes in its `technology` list (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/test-design.md`, section 3.1.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per case: scales to hundreds of cases, one diff per case, attachments per case.
 - Ids never change and are never reused. Retired cases get `status: retired`. A case is deleted only when the author asks.
