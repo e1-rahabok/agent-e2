@@ -47,11 +47,38 @@
 | Utilization | Throughput, packets per second | Should match VM metrics. If not, packets are dropped. Report by traffic type (unicast, multicast, broadcast). |
 
 ## Direction terms
-- Ingress and egress: relative to an environment. Moving further inside is ingress.
-- Receive (RX) and transmit (TX): relative to one port. A port has both.
+- Three vocabularies describe the same traffic. Each belongs to one domain; they are not synonyms.
+
+| Terms | Domain | Used by | What it measures |
+|---|---|---|---|
+| Receive (RX) / Transmit (TX) | L1/L2 hardware and driver | Physical NICs, VMkernel drivers, DMA ring buffers, vNIC metrics | Frame processing at the lowest layer, whatever the payload |
+| Ingress / Egress | L3-L7 policy and control plane | Routing, distributed firewall, microsegmentation | Stateful rule processing when traffic crosses a logical security or administrative boundary |
+| Incoming / Outgoing | Operational telemetry | Dashboards, capacity planning, general monitoring | Directional bandwidth, without tying it to a driver or a firewall rule |
+
+- vSphere VM and ESXi network metrics are RX and TX. A VM has receive and transmit counters; ingress and egress belong to the policy layer, not to the VM metrics.
 - On a distributed switch, the ESXi physical NIC is the uplink. The ESXi host is not a hop.
-![Ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
-![Distributed switch: ingress and egress vs receive and transmit from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
+
+```mermaid
+flowchart LR
+    Traffic["Network to VM interface<br/>(100 packets / 150 KB)"]
+    subgraph Layers ["Same traffic, three vocabularies"]
+        direction TB
+        L1["L1/L2 driver layer<br/>RX count: 100<br/>(DMA ring buffer)"]
+        L2["L3-L7 policy layer<br/>Ingress count: 100<br/>(stateful firewall rule)"]
+        L3["Telemetry layer<br/>Incoming count: 100<br/>(monitoring dashboard)"]
+    end
+    Traffic --> L1
+    L1 --> L2
+    L2 --> L3
+    VMout["VM to network<br/>TX / Egress / Outgoing"]
+```
+
+- Reading the diagram: 100 packets arriving at a VM count as 100 RX at the driver, 100 ingress at the firewall, 100 incoming on a dashboard. The traffic in the other direction is TX, egress and outgoing.
+
+### Book diagrams (superseded)
+- The two book diagrams below show the earlier view that a VM has no ingress traffic. The author corrected it (2026-11-04): use the table above.
+![Superseded book diagram: ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
+![Superseded book diagram: distributed switch direction from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 
 ## Traffic type metrics
 - VCF Operations has unicast, multicast and broadcast metrics at VM, ESXi, distributed port group and distributed switch level (also vSphere Pods, which are VMs).
@@ -131,8 +158,9 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: Network > Architecture > Architecture intro; Network Observability
-corrections: []
+corrections:
+- 'Section ''Direction terms'': the book diagrams and text say a VM has no ingress traffic. Superseded by author answer Q024 (2026-11-04). Keep until the book is updated.'
 review_notes:
-- 'Section ''Direction terms'': the book says a VM has no ingress traffic. Open question in project/author-questions.md.'
+- 'Section ''Direction terms'': author answer Q024 (2026-11-04): RX/TX, ingress/egress and incoming/outgoing are three domains (driver, policy, telemetry); the table and Mermaid diagram are from the answer. The book diagrams are kept as superseded.'
 status: draft
 ```

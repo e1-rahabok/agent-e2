@@ -13,6 +13,8 @@ meta:
     meaning: What the knowledge file says the value means.
     source: book (the author's book), vsphere-9.1-docs, performance-best-practices-9.1, microsoft.
     kb: Knowledge file that states the threshold.
+    interval: 'Sample interval the threshold was set on: 2s (esxtop), 20s, 5m, 1d. Empty until the source states it (see knowledge/foundations/thresholds, Interval rule).'
+    instance: 'Which reading it applies to: object aggregate, worst instance, percentile. Empty until the source states it.'
     quote: Text copied from the kb file. tools/lint.py checks that it is still there, so the catalog cannot drift from the file.
   review_notes:
   - 'Whole file: every row restates a threshold already written in its kb file. No new facts. The kb file holds the source and the review notes.'

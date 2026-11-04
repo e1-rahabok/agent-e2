@@ -240,6 +240,7 @@ def check_catalog(allowed, ids, bodies, bad):
                 seen.add(r.get('id'))
                 for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb', 'quote'):
                     if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
                 if r.get('operator') not in OPERATORS: bad(path, f'{w}: operator "{r.get("operator")}" not allowed')
                 if r.get('operator') == 'range' and r.get('value_high') is None: bad(path, f'{w}: range needs value_high')
                 if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
