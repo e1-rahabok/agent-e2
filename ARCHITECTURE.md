@@ -1,7 +1,7 @@
 # Architecture: how the whole system answers at Level 400 without Internet
 
 For readers who want to know how the parts work together at run time: model, harness, knowledge. Not indexed.
-Why this design and why a 32B model: `project/solution-design.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
+Why this design and why a 32B model: `project/solution-design.md`. How the knowledge itself is built: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
 
 ## 1. Three parts, one system
 | Part | What it is | Where | What it decides |

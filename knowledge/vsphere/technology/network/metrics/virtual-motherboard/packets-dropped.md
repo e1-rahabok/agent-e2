@@ -24,6 +24,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 ## Profile transmit drops
 - Columns: 99th percentile of drop %; sum of transmitted dropped packets; 99th percentile of the maximum dropped in any 300 seconds.
 - Millions of transmit drops a month need investigation with the network team. Nobody complains because TCP retransmits.
+- Volume: 1,000 dropped packets at about 1.5 KB each = about 1.5 MB.
 - Rare huge spikes: example above 100 million packets in 5 minutes, about 333 MB/s for 300 s at 1 KB per packet.
 - Regular patterns (example: about 3,800 packets every 5 minutes) are worth raising with the network team.
 ![VM network transmit dropped: regular spikes of about 3,800 packets every 5 minutes](../../images/vm-network-transmit-dropped-regular-spike-pattern.png)
@@ -91,9 +92,10 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: Network > VM > Contention Metrics
-corrections: []
+corrections:
+- 'Section ''Profile transmit drops'': the book says 1 thousand dropped packets = 1,500 MB within 300 seconds. Correct: 1.5 MB (author answer Q025, 2026-11-04). Keep until the book is updated.'
 review_notes:
-- 'Section ''Profile transmit drops'': the book says 1 thousand packets × 1.5 KB = 1,500 MB within 300 seconds. 1,000 × 1.5 KB = 1.5 MB. Open question in project/author-questions.md.'
+- 'Section ''Profile transmit drops'': author answer Q025 (2026-11-04): 1,000 packets = 1.5 MB; the book''s 1,500 MB is wrong.'
 - 'KBs from the book: https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495 (not read).'
 status: draft
 ```

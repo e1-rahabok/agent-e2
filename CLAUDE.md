@@ -90,7 +90,7 @@ Standing rules for this repository. Read at the start of every session.
 - `knowledge/`: what the model reads. `knowledge/catalog/`: structured data (YAML) the harness tools query: vCenter counters, esxtop fields, thresholds, object model. `harness/`: the software around the model (retrieval, tools, verifier, prompts). `benchmark/`: proof that the model benefits (questions with answer keys, runner, results). `project/`: design, decisions, author questions, to-do. `tools/`: repository maintenance (lint, tag values).
 
 ## Do not index
-- `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, `README.md`, `CLAUDE.md`, `ARCHITECTURE.md`.
+- `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, `README.md`, `CLAUDE.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`.
 
 ## Validation
 - Run `python3 tools/lint.py` before every merge. Do not merge if it fails.

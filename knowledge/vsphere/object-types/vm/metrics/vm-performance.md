@@ -21,6 +21,8 @@
 - High CPU utilization threshold: high utilization means work is done.
 - Memory Contention is the only counter that shows a VM memory problem. VM and Guest OS can have memory problems independently.
 - Ballooned and Compressed + Swapped are leading indicators, not real performance problems.
+- Compressed and Swapped are combined: both result from the same action (reclaiming a page), so together they tell the complete picture.
+- Their band is tighter than Memory Contention (green 0-0.25% vs 0-0.5%) although they are less serious: they are measured on 5-minute samples, Memory Contention on 20-second peaks. A 5-minute average reads lower than a 20-second peak, so its band must be lower too.
 - Ballooned and Compressed + Swapped are divided by Guest OS used memory, not configured memory. Configured would under-report the risk.
 - Network: vCenter has no latency or retransmit, so transmit dropped packets are used. Threshold not low: drops are retransmitted and often unnoticed.
 - Known limitation: dropped packets use the 20-second peak, but packets transmitted uses the period average (which of the 15 points to take is unknown).
@@ -64,8 +66,9 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%)'
-corrections: []
+corrections:
+- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded by author answer Q026 (2026-11-04). Keep until the book is updated.'
 review_notes:
-- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention, but the table gives half (0.25% vs 0.5%). Open question in project/author-questions.md.'
+- 'Section ''Reasons'': author answer Q026 (2026-11-04): the table is right; the band was lowered because Compressed + Swapped is measured at 5 minutes and Memory Contention at 20 seconds.'
 status: draft
 ```
