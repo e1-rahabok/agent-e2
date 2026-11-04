@@ -123,6 +123,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Harness profiles in `benchmark/runner/config.yaml`: `deployment` (context window capped to the deployed size, tool-output token budget, no-progress stop, turn limit from the target GPU) and named experiment profiles; record the profile per answer; only `deployment` feeds the release score.
+- [ ] Measure seconds per model turn on the target GPU (phase 5) to set the turn limit; set the time limit from user tests.
 - [ ] Budget test: re-run the agentic answers that hit the 8-call limit with 16 calls; replace the fixed count with token, time and no-progress stops (see `ARCHITECTURE.md`, section 2a).
 - [ ] Test agentic mode primed with the classic context (first search done, catalog facts included).
 - [ ] After the 100-question run picks model and mode: routine runs use the chosen mode plus baseline only.
