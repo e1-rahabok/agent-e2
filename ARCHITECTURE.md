@@ -1,18 +1,19 @@
 # Architecture
 
-For readers who want to know how the parts work together at run time: model, harness, knowledge. Not indexed.
-Why this design and why a 32B model: `project/solution-design.md`. How the knowledge itself is built: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
+How the model, harness and knowledge work together at run time. Not indexed.
+Design reasons and model size: `project/solution-design.md`. Knowledge capture: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
-| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. It is the only source of truth the answer may use. |
+| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. The answer may use no other source. |
 | Harness | The software around the model: retrieval, tools, rules, answer checks | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
 | Model | A 27-32B open-weight LLM on a local GPU | served by vLLM, llama.cpp or Ollama | What to look up next (agentic mode), how to read the text, which options are right. |
 
-- The model knows nothing about vSphere metrics that counts: its memory is the Internet's average, including the misconceptions the knowledge base corrects. It is told to answer only from what the harness returns.
-- The knowledge base cannot answer by itself: it has to be found, read and applied to the question.
-- The harness cannot answer either: it does not understand language. It finds, computes, enforces and checks.
+- The model's own memory of vSphere metrics comes from public Internet text and repeats the misconceptions the knowledge base corrects.
+- The model is told to answer only from what the harness returns.
+- The knowledge base does not answer by itself. It must be found, read and applied to the question.
+- The harness does not understand language. It searches, computes, enforces rules and checks answers.
 
 ## 2. Control by mode
 | Mode | Who decides what to read | Model calls per question | Role of the model | Role of the harness |
@@ -21,15 +22,15 @@ Why this design and why a 32B model: `project/solution-design.md`. How the knowl
 | Classic | The harness | 1 (+1 repair if needed) | Reads what it is given and answers | Driver: one search, link expansion, catalog facts, context budget, verifier. |
 | Agentic | The model, within the harness's rules | up to 9 (+1 repair) | Driver of the lookups: chooses tools, queries, files, steps | Referee and toolbox: runs the tools, enforces the rules, checks the answer, falls back to classic. |
 
-- Agentic mode is a two-way collaboration:
+- Agentic mode splits the work:
   - the model decides what it needs next ("search Ready", "read this file", "convert 8,000 ms");
   - the harness decides what is allowed and how it is done (search must come first, no repeated calls, 8 calls and 12K tokens of tool output at most, a reminder to check same-name metrics, exact tools for numbers, a verifier on the final answer).
-- Classic mode is harness-led: the model is a reader. It cannot ask for a missing file, so retrieval sets the ceiling (section 8).
-- Agentic mode is the target design: Level 400 questions often need a chain across files (metric → same-name metric on another object → concept → flow) that one search cannot predict.
+- In classic mode the harness leads and the model only reads. The model cannot ask for a missing file, so retrieval caps the score (section 8).
+- Agentic mode is the target design. Level 400 questions often need a chain across files (metric → same-name metric on another object → concept → flow). One search cannot predict that chain.
 
 ## 3. Tool-call limit
-- The test limit (8 tool calls, 12K tokens of tool output) is a cost cap for running 15,000 answers, not a design value. Nothing in the knowledge base needs exactly 8.
-- What the runs show (2026-11-03, agentic mode, exact answers by number of calls):
+- The test limit (8 tool calls, 12K tokens of tool output) caps the cost of 15,000 answers. It is not a design value. No knowledge-base need sets it at 8.
+- Run results (2026-11-03, agentic mode, exact answers by number of calls):
 
 | Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
 |---|---|---|---|
@@ -38,9 +39,10 @@ Why this design and why a 32B model: `project/solution-design.md`. How the knowl
 | mistral/mistral-small | 0 of 3 | 7 of 20 | 21 of 72 |
 | alibaba/qwen-3-32b | 36 of 82 | 2 of 3 | never reached |
 
-- Reading: answers that hit the limit are mostly wrong. That is mostly a model that is lost (searching in circles), not a model one call short. Hard questions also take more calls, so the table cannot prove that more calls would not help: that needs a test (re-run the limit-hit answers with 16 calls).
-- Some models under-use the tools (qwen-3-32b averages 1.8 calls): for them the limit never matters.
-- In deployment there is no per-token fee. The real limits are:
+- Answers that hit the limit are mostly wrong. In most traces the model searches in circles; one more call would not have helped.
+- Hard questions also take more calls, so the table does not prove that more calls are useless. Test: re-run the limit-hit answers with 16 calls.
+- Some models make few tool calls (qwen-3-32b averages 1.8). The limit does not affect them.
+- Deployment has no per-token fee. Its limits are:
   - the context window: every tool result stays in the conversation; with a 32K window, about 12-16K tokens of tool output leaves room for the prompt and the answer;
   - waiting time: each call is a model turn on the local GPU (seconds each).
 - Deployment rule, replacing a fixed count:
@@ -48,12 +50,12 @@ Why this design and why a 32B model: `project/solution-design.md`. How the knowl
   - stop early on no progress: repeated searches, re-reading the same file, two calls returning nothing new;
   - at the stop, answer with what was read and say what is missing, or answer Unsure;
   - show progress (what is being read) and let the user stop or ask to keep digging.
-- The test then uses the same budget as deployment, so the score predicts the product.
+- The test uses the same budget as deployment, so the score predicts the product.
 
 ### Benchmark and deployment
-- Principle: the release score is measured on the deployed configuration. A different harness setting in the test would grade a system nobody ships.
-- What is the same in both: prompt, tools, retrieval settings, verifier, context window, token budget for tool output, no-progress stops.
-- What differs, and how it is handled:
+- The release score is measured on the deployed configuration. A different test setting would grade a system that is not shipped.
+- Same in both: prompt, tools, retrieval settings, verifier, context window, token budget for tool output, no-progress stops.
+- Different:
 
 - **Time**
   - Why: Test time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the test would grade the provider.
@@ -68,16 +70,16 @@ Why this design and why a 32B model: `project/solution-design.md`. How the knowl
   - Why: Some runs ask "what if" (16 calls, primed agentic, another embedding model).
   - Handling: Run as named experiment profiles. Only the deployment profile produces the release score.
 
-- So the harness has profiles, not a second harness: one deployment profile (the release score and the product) and named experiment profiles (diagnosis only).
+- One harness, several profiles: the deployment profile (release score and product) and named experiment profiles (diagnosis only).
 
 ## 4. Classic mode
-- Classic mode costs a third of the test runs. It earns its place four ways:
+- Classic mode costs a third of the test runs. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
   2. It is the better mode for some models today. Run 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/test-design.md`.
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
-- When it stops costing runs: once the 100-question set has chosen the model and mode, routine runs drop to the chosen mode plus baseline. Classic stays in the code as the fallback.
-- Worth testing: agentic mode that starts from the classic context (the first search already done, catalog facts included). It removes the weakest step for small models, the first search, and keeps the ability to go back for more.
+- After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
+- To test: agentic mode that starts from the classic context (first search done, catalog facts included). This skips the first search, the weakest step for small models, and keeps further lookups.
 
 ## 5. Agentic mode walkthrough
 Real trace (2026-11-04, alibaba/qwen-3-32b): "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?" Options include the rollup and statistics level, 10% Ready and 40% Ready.
@@ -113,7 +115,7 @@ sequenceDiagram
 6. The answer goes out with the files it used.
 
 ## 6. Level 400 offline
-Each mechanism blocks one way a small model fails. None of them needs the Internet.
+Each mechanism blocks one failure of a small model. None needs the Internet.
 
 | Failure of a model alone | Mechanism | Part |
 |---|---|---|
@@ -140,7 +142,7 @@ Each mechanism blocks one way a small model fails. None of them needs the Intern
 - The test site uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 
 ## 8. Harness testing
-- Yes: the harness is tested on its own, because a retrieval miss and a reasoning error look the same in the final score.
+- The harness is tested on its own. In the final score, a retrieval miss and a reasoning error look the same.
 - Three levels:
 
 | Level | Test | Needs a model | Command |
@@ -149,7 +151,7 @@ Each mechanism blocks one way a small model fails. None of them needs the Intern
 | Retrieval | For every golden case, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
 | Whole system | Model + harness + knowledge on the golden set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
 
-- Retrieval result, 28 golden cases (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 cases. In classic mode the model cannot answer better than its context, so this is the ceiling to raise first.
+- Retrieval result, 28 golden cases (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 cases. Classic mode cannot answer better than its context, so retrieval is the first thing to improve.
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 9. Status (2026-11-04)

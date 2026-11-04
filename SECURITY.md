@@ -9,7 +9,7 @@ How Isvara handles the risks of an AI application, and how to report a problem. 
 
 ## System
 - A local model, a harness and a knowledge base, running on the customer's own server with no Internet access. See [ARCHITECTURE.md](ARCHITECTURE.md).
-- It answers questions. It does not change any system: no write access to vCenter, ESXi, VCF Operations or any other product.
+- It answers questions and changes no system: no write access to vCenter, ESXi, VCF Operations or any other product.
 
 ## AI risks
 | Risk | Applies? | How it is handled |
