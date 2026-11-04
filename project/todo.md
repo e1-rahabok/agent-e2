@@ -22,13 +22,13 @@ Open work for this repository. Not indexed. Update when items close.
 - [x] Moved 174 files and 161 images: `vsphere/technology/`, `vsphere/object-types/`, `operations-management/`; `system/` and `resource-management/` dissolved. Ids repointed everywhere; lint enforces the folders.
 - [x] `vcf-operations/` created with `concepts/vcf-operations-role`. Glossary: storage vs disk, vCenter vs VCF Operations.
 - [x] Screen template (`knowledge/_templates/screen.md`) and lint rules for `screens/` (release 1.1).
-- [ ] Overview file per object folder: what to monitor, in priority order (vm, esxi, cluster).
+- [x] Overview file per object folder: what to monitor, in priority order (vm, esxi, cluster), 2026-11-04.
 - [ ] Review `operations-management/capacity/capacity-model`: it holds vSphere cluster capacity. Split the vSphere-specific part into `vsphere/object-types/cluster/` if it is not cross-product.
 - [ ] VCF Operations knowledge: map its objects, engines and metric groups; fetch the VCF Operations 9.1 metric reference; ask the author for the VCF Operations book chapters.
 
 ## Product (from the vCommunity Ask demo, 2026-11-04; see `project/product-requirements.md`)
-- [ ] Move section "Host CPU monitoring" (esxtop load average, PCPU 80% / 90%) out of `vsphere/foundations/overhead`: it is not overhead. Place it with the host CPU metrics and state the book view next to it (host utilization is capacity; performance is read from contention).
-- [ ] Add overview files per object for broad questions: "ESXi CPU: what to monitor", then memory, storage, network, and the VM and cluster equivalents. Each links the metric files in priority order.
+- [x] Section "Host CPU monitoring" moved from `vsphere/foundations/overhead` to `vsphere/object-types/esxi/overview-what-to-monitor`, with the knowledge base reading next to it.
+- [x] Overview files for VM, ESXi and cluster. Next: datastore and resource pool when their content grows.
 - [ ] Benchmark case: "most important CPU metrics on an ESXi host" (trap: utilization and load average first).
 - [ ] The shipped app uses `harness/` for retrieval, tools, prompt and verifier, and the benchmarked embedding model.
 - [ ] Store prompt version, settings, model and index version with every answer; mark answers from a UI-edited prompt as untested.
