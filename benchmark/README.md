@@ -47,15 +47,15 @@ benchmark/
 - Every question says there can be more than one correct option. The number of correct options is never revealed.
 - Each question runs 5 times per model and mode.
 
-| Answer | Points |
+| Answer | Class |
 |---|---|
-| Exactly the correct letters | +1 |
-| Unsure, chosen alone | 0 |
-| Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | -1 |
+| Exactly the correct letters | Correct |
+| Unsure, chosen alone | Unsure (not correct, not wrong) |
+| Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong |
 
-- The model is told this scoring, so guessing does not pay.
+- The model is told that a wrong answer is worse than Unsure. No points and no -1: see `benchmark/test-design.md`, section 7.0.
 - Headline: **Stable correct**, the share of questions answered exactly right in all 5 runs. Target: at least 85%, aim 99% (author, 2026-11-03).
-- Also reported: Luck (right in some runs only), Net points, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
+- Also reported: Luck (right in some runs only), confident-wrong rate, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
 - Reason and design: `benchmark/test-design.md` (blueprint, why 100 questions, scoring, validity threats).
 
 ## Free-text and compound scoring (manual, per case, 0-3)

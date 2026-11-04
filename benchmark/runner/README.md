@@ -48,10 +48,10 @@ python3 benchmark/runner/retrieval_eval.py
 - 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/test-design.md`, section 7.1.
 - Every question says: "Choose all the correct options. There can be more than one." Two options are appended: "Not covered by the knowledge base" and "Unsure".
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
-- Points: +1 exact; 0 for Unsure chosen alone; -1 for anything else, including unparseable answers. The model is told this scoring, so guessing does not pay.
+- Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/test-design.md`, section 7.0.
 - Stable correct (headline): share of questions answered exactly right in all 5 runs. Report table `Luck-free scores`.
 - Luck: share of questions right in some runs only. Counted as not known.
-- Net points: mean points, -100% to +100%. Accuracy when answered: exact share among non-Unsure answers.
+- Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
 - Exact (mean over runs) is still reported in table `Scores`.
 - Reason and design: `benchmark/test-design.md`, section 7.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
