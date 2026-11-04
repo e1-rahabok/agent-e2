@@ -48,7 +48,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] After the next benchmark run: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
 - [ ] After the next benchmark run: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
 - [ ] Add benchmark cases that need the catalog, calculator and object paths (units, statistics levels, summation to %, multi-hop).
-- [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan.
+- [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan (benchmark plan done 2026-11-04: `benchmark/test-design.md`).
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
 - [x] vSphere Monitoring and Performance, pp. 2025-2184: extracted 2026-11-03.
@@ -123,6 +123,10 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Write questions to the blueprint in `benchmark/test-design.md` (gaps: network, storage, GPU, object level, recall, Not covered).
+- [ ] Add `trap_type` to case metadata and a coverage script that checks the blueprint counts.
+- [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read cases from another folder.
+- [ ] Add `## Traps` to the 7 metric files that lack it; then make lint require it.
 - [x] Case vendor-neutral-general-001 (hyperscaler VM cost): removed 2026-11-04. Cost and price are out of scope (author, Q039).
 - [x] Author quiz (vSphere Metric Quiz.docx): 18 golden cases added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.

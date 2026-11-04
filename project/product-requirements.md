@@ -85,7 +85,7 @@ Related: `solution-design.md` (system design), `design-kb-test-site.md` (test si
 | Dark site | No call outside the customer network to answer, index or update. Offline bundle for updates. |
 | Model | 27-32B open weights, Apache 2.0 or MIT, at least 16K context, runs on one customer GPU VM. Chosen by the benchmark. |
 | Reproducibility | Every answer stores: question, answer, cited ids, tool trace, index version, prompt version, model, settings. |
-| Accuracy | Release gate: Stable correct at or above the target in `design-kb-test-site.md`, section Target, on the shipped configuration. |
+| Accuracy | Release gate: Stable correct at or above the target in `benchmark/test-design.md`, section 1, on the shipped configuration. |
 | Speed | Demo baseline: 6.8 s for a full answer at 81.5 tokens/s (classic mode, local Mac). Agentic mode makes several model calls; measure before setting a target. |
 | Users and access | Single user for the demo. Enterprise: SSO, roles (user, admin), audit log. Admin API token not stored in the browser in production. |
 | Privacy | Questions, screenshots and files stay on site. Retention configurable. |
