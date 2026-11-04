@@ -27,6 +27,38 @@ Why this design and why a 32B model: `project/solution-design.md`. Folder and wr
 - Classic mode is harness-led: the model is a reader. It cannot ask for a missing file, so retrieval sets the ceiling (section 6).
 - Agentic mode is the target design: Level 400 questions often need a chain across files (metric → same-name metric on another object → concept → flow) that one search cannot predict.
 
+## 2a. Why a call limit, and how it should work in deployment
+- The test limit (8 tool calls, 12K tokens of tool output) is a cost cap for running 15,000 answers, not a design value. Nothing in the knowledge base needs exactly 8.
+- What the runs show (2026-11-03, agentic mode, exact answers by number of calls):
+
+| Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
+|---|---|---|---|
+| frontier model | 31 of 33 | 27 of 42 | 6 of 20 |
+| google/gemma-4-31b-it | 28 of 44 | 14 of 28 | 5 of 23 |
+| mistral/mistral-small | 0 of 3 | 7 of 20 | 21 of 72 |
+| alibaba/qwen-3-32b | 36 of 82 | 2 of 3 | never reached |
+
+- Reading: answers that hit the limit are mostly wrong. That is mostly a model that is lost (searching in circles), not a model one call short. Hard questions also take more calls, so the table cannot prove that more calls would not help: that needs a test (re-run the limit-hit answers with 16 calls).
+- Some models under-use the tools (qwen-3-32b averages 1.8 calls): for them the limit never matters.
+- In deployment there is no per-token fee. The real limits are:
+  - the context window: every tool result stays in the conversation; with a 32K window, about 12-16K tokens of tool output leaves room for the prompt and the answer;
+  - waiting time: each call is a model turn on the local GPU (seconds each).
+- Deployment rule, replacing a fixed count:
+  - stop on a token budget (tool output that still fits the context) or a time budget (set from user tests), whichever comes first;
+  - stop early on no progress: repeated searches, re-reading the same file, two calls returning nothing new;
+  - at the stop, answer with what was read and say what is missing, or answer Unsure;
+  - show progress (what is being read) and let the user stop or ask to keep digging.
+- The test then uses the same budget as deployment, so the score predicts the product.
+
+## 2b. Why keep classic mode
+- Classic mode costs a third of the test runs. It earns its place four ways:
+  1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
+  2. It is the better mode for some models today. Run 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/test-design.md`.
+  3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
+  4. It is fast: one model call instead of up to nine.
+- When it stops costing runs: once the 100-question set has chosen the model and mode, routine runs drop to the chosen mode plus baseline. Classic stays in the code as the fallback.
+- Worth testing: agentic mode that starts from the classic context (the first search already done, catalog facts included). It removes the weakest step for small models, the first search, and keeps the ability to go back for more.
+
 ## 3. One question, step by step (agentic mode)
 Real trace (2026-11-04, alibaba/qwen-3-32b): "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?" Options include the rollup and statistics level, 10% Ready and 40% Ready.
 
