@@ -5,10 +5,16 @@
 ## No such thing as VM rightsizing
 - "VM rightsizing" mixes two different sizing jobs with two different formulas. Asking "what size should this VM be?" without saying which one leads to the wrong counters.
 
-| Purpose | Question | Counters | Includes | Excludes |
-|---|---|---|---|---|
-| Guest OS sizing (internal) | CPU and RAM that Windows or Linux and its applications demand; disk = size of the guest partitions, expressed as virtual disks | Windows / Linux counters | Guest OS queue (Run Queue, Disk Queue) | VM overhead, Hyper-Threading, frequency |
-| VM footprint (external) | What the VM costs the ESXi host and the infrastructure underneath | vSphere counters | VM overhead | Guest OS queue |
+- **Guest OS sizing (internal)**
+  - Question: CPU and RAM that Windows or Linux and its applications demand; disk = size of the guest partitions, expressed as virtual disks
+  - Counters: Windows / Linux counters
+  - Includes: Guest OS queue (Run Queue, Disk Queue)
+  - Excludes: VM overhead, Hyper-Threading, frequency
+- **VM footprint (external)**
+  - Question: What the VM costs the ESXi host and the infrastructure underneath
+  - Counters: vSphere counters
+  - Includes: VM overhead
+  - Excludes: Guest OS queue
 
 - Use cases:
   - The application team asks for more vCPUs → Guest OS sizing. Hypervisor overhead is irrelevant: an NSX Edge does not get extra vCPUs for the packet-processing overhead.

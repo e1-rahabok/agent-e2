@@ -13,29 +13,69 @@ Allowed tag values (machine settings for the linter) are in `tools/tags.yaml`.
 | Physical CPU (esxtop) | Logical Processor (vSphere Client), PCPU | One hardware execution context: a thread with Hyper-Threading on, a core with it off. The author prefers the pair virtual vs physical; "logical" is confusing. |
 
 ## Core words (do not mix these dimensions)
-| Term | Meaning | Is not |
-|---|---|---|
-| Object type | A kind of managed object in vSphere or VCF Operations. It has a name per instance. Examples: VirtualMachine, HostSystem, Folder, VmwareDistributedVirtualSwitch. | A component inside an object (vCPU, vmnic). |
-| Object | One named instance of an object type. Example: a VM called "db01". | A metric or a layer. |
-| Instance (metric) | A sub-component a metric is reported for, inside one object. Examples: vCPU 0, vmnic1, vmhba0. Tag: `instance`. | An object type. |
-| Layer | A level of the stack: Guest OS, VM, hypervisor, physical. | An object type. Guest OS is a layer, not a vSphere object type. |
-| Virtual motherboard | What a VM is: a virtual circuit board (vCPU, memory, virtual disks, vNICs) that runs a Guest OS. Folder name for VM metrics: `virtual-motherboard`. Tag: `layer: virtual-motherboard`, `object: VirtualMachine`. | A complete machine. The Guest OS is not part of it: Guest OS knowledge is a separate layer and lives in `knowledge/guest-os/` (`scope: guest-os`, `layer: guest-os`). Author's book. |
-| Vantage point | The layer or object a metric is observed from. Consumer (VM) vs provider (ESXi). | A tag value by itself. Expressed through `object` and `layer`. |
-| Perspective (book) | One of three angles on metrics: technology, pillar of operations, product. | A layer or vantage point. |
-| Technology | cpu, gpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. | A product. |
-| Storage | The whole IO path from the Guest OS to the array: virtual disk, vSCSI, datastore, storage adapter (vmhba), path, device (LUN), array, vSAN. Folder and tag: `storage`. | Disk. A disk is one layer of storage. Datastores, adapters, paths and vSAN are storage but not disks. vCenter keeps separate counter groups for each layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`): the same label (latency, IOPS) means a different scope in each group. See `vsphere/technology/storage/concepts/storage-layers`. |
-| Disk | One layer of storage. In vCenter, the `disk` counter group reports the device (LUN) as seen by ESXi, or the virtual disk as seen by the VM. | The storage technology as a whole. |
-| vCenter | The administrative tool of vSphere: create VMs, configure switches, set reservations and limits. It keeps performance charts with short history. | The operations tool. Capacity planning and performance troubleshooting are done in VCF Operations, not in vCenter. Admins often use the two names interchangeably; the knowledge base does not. |
-| VCF Operations | Monitoring and operations management software. A thin layer above the source systems (vSphere, vSAN, NSX, Windows, Linux, VKS): every metric it shows is derived, passed through or computed from a source. See `vcf-operations/concepts/vcf-operations-role`. | The source of a metric's meaning. A passed-through metric means what it means at its source object. |
-| Pillar | availability, performance, security, capacity, value. | A technology. |
-| Metric | A measured value with a name, unit and formula, for one object type. | A counter ID alone. |
-| Counter | The raw performance counter as exposed by the source (for example vCenter `cpu.ready.summation`). A metric may be built from one or more counters. | The interpreted meaning. |
-| Property | A configuration or inventory attribute of an object (for example number of vCPUs). Often used as context. | A measured value over time. |
-| Metric class | contention, consumption, context. | A pillar. |
-| Trap | A wrong conclusion drawn from a true observation: the number is right, the reading is wrong. Written in each file's `## Traps` section as "wrong conclusion" → correct reading. Types and format: `README.md`, section Traps and Level 400. | A wrong number or a data error. |
-| Level 400 | Knowledge that explains the mechanism behind a metric, predicts where its reading misleads (the trap), and says what to check instead. | Level 300: using a metric and a common threshold at face value. |
-| Thread (physical) | Hardware thread of a CPU core. A provider. | A software thread. |
-| Thread (software) | Thread in an OS (VMkernel, Windows, Linux). A consumer. | A physical thread. |
+- **Object type**
+  - Meaning: A kind of managed object in vSphere or VCF Operations. It has a name per instance. Examples: VirtualMachine, HostSystem, Folder, VmwareDistributedVirtualSwitch.
+  - Is not: A component inside an object (vCPU, vmnic).
+- **Object**
+  - Meaning: One named instance of an object type. Example: a VM called "db01".
+  - Is not: A metric or a layer.
+- **Instance (metric)**
+  - Meaning: A sub-component a metric is reported for, inside one object. Examples: vCPU 0, vmnic1, vmhba0. Tag: `instance`.
+  - Is not: An object type.
+- **Layer**
+  - Meaning: A level of the stack: Guest OS, VM, hypervisor, physical.
+  - Is not: An object type. Guest OS is a layer, not a vSphere object type.
+- **Virtual motherboard**
+  - Meaning: What a VM is: a virtual circuit board (vCPU, memory, virtual disks, vNICs) that runs a Guest OS. Folder name for VM metrics: `virtual-motherboard`. Tag: `layer: virtual-motherboard`, `object: VirtualMachine`.
+  - Is not: A complete machine. The Guest OS is not part of it: Guest OS knowledge is a separate layer and lives in `knowledge/guest-os/` (`scope: guest-os`, `layer: guest-os`). Author's book.
+- **Vantage point**
+  - Meaning: The layer or object a metric is observed from. Consumer (VM) vs provider (ESXi).
+  - Is not: A tag value by itself. Expressed through `object` and `layer`.
+- **Perspective (book)**
+  - Meaning: One of three angles on metrics: technology, pillar of operations, product.
+  - Is not: A layer or vantage point.
+- **Technology**
+  - Meaning: cpu, gpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device.
+  - Is not: A product.
+- **Storage**
+  - Meaning: The whole IO path from the Guest OS to the array: virtual disk, vSCSI, datastore, storage adapter (vmhba), path, device (LUN), array, vSAN. Folder and tag: `storage`.
+  - Is not: Disk. A disk is one layer of storage. Datastores, adapters, paths and vSAN are storage but not disks. vCenter keeps separate counter groups for each layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`): the same label (latency, IOPS) means a different scope in each group. See `vsphere/technology/storage/concepts/storage-layers`.
+- **Disk**
+  - Meaning: One layer of storage. In vCenter, the `disk` counter group reports the device (LUN) as seen by ESXi, or the virtual disk as seen by the VM.
+  - Is not: The storage technology as a whole.
+- **vCenter**
+  - Meaning: The administrative tool of vSphere: create VMs, configure switches, set reservations and limits. It keeps performance charts with short history.
+  - Is not: The operations tool. Capacity planning and performance troubleshooting are done in VCF Operations, not in vCenter. Admins often use the two names interchangeably; the knowledge base does not.
+- **VCF Operations**
+  - Meaning: Monitoring and operations management software. A thin layer above the source systems (vSphere, vSAN, NSX, Windows, Linux, VKS): every metric it shows is derived, passed through or computed from a source. See `vcf-operations/concepts/vcf-operations-role`.
+  - Is not: The source of a metric's meaning. A passed-through metric means what it means at its source object.
+- **Pillar**
+  - Meaning: availability, performance, security, capacity, value.
+  - Is not: A technology.
+- **Metric**
+  - Meaning: A measured value with a name, unit and formula, for one object type.
+  - Is not: A counter ID alone.
+- **Counter**
+  - Meaning: The raw performance counter as exposed by the source (for example vCenter `cpu.ready.summation`). A metric may be built from one or more counters.
+  - Is not: The interpreted meaning.
+- **Property**
+  - Meaning: A configuration or inventory attribute of an object (for example number of vCPUs). Often used as context.
+  - Is not: A measured value over time.
+- **Metric class**
+  - Meaning: contention, consumption, context.
+  - Is not: A pillar.
+- **Trap**
+  - Meaning: A wrong conclusion drawn from a true observation: the number is right, the reading is wrong. Written in each file's `## Traps` section as "wrong conclusion" → correct reading. Types and format: `README.md`, section Traps and Level 400.
+  - Is not: A wrong number or a data error.
+- **Level 400**
+  - Meaning: Knowledge that explains the mechanism behind a metric, predicts where its reading misleads (the trap), and says what to check instead.
+  - Is not: Level 300: using a metric and a common threshold at face value.
+- **Thread (physical)**
+  - Meaning: Hardware thread of a CPU core. A provider.
+  - Is not: A software thread.
+- **Thread (software)**
+  - Meaning: Thread in an OS (VMkernel, Windows, Linux). A consumer.
+  - Is not: A physical thread.
 
 ## Term distinctions
 ### Allocation vs Reservation

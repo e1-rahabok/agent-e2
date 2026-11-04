@@ -90,16 +90,38 @@ flowchart TD
 ```
 
 ### Tools
-| Tool | Input | Output | Rules |
-|---|---|---|---|
-| `search` | query text; optional filters (product, object, technology, pillar, retriever_guide) | Top 8 hits: id, title, heading, 2-line snippet, status, score | Filters must use `tools/tags.yaml` values. Hybrid BM25 + vector. |
-| `read_file` | file id; optional heading | Body text of the file or one section. No metadata block. | One file per call. Long files: section by section. |
-| `follow_links` | file id; link type (related, internal_derive, same_name, same_meaning, all) | Linked ids with titles and status | Cheap: titles only. The model then reads what it chooses. |
-| `get_images` | file id, or filters (object, metric, image_type) | Image records: path, alt text, tags, sample | Returns records only. The UI shows the image. |
-| `catalog` | name: vCenter counter, chart label, esxtop field, metric title or object type; optional object filter; optional second object (`to`) | Counter unit, rollup, statistics level, min/max level, kb file; esxtop field text; thresholds with source; colour bands; object role and relations, or the path between two object types | Exact values from `knowledge/catalog/`. Built 2026-11-04. |
-| `calculate` | expression | Result plus source notes | Summation ms ↔ %, unit conversion (vCenter KB = 1,024 bytes, kb = 1,000 bits), capacity, esxtop identities. Built 2026-11-04. |
-| `flow` | diagnosis file id; optional step | All steps in order, or one step with next step, referenced steps and metric files to read | Reads the markdown steps. Built 2026-11-04. |
-| `draw_mermaid` (later) | Mermaid code | Rendered diagram in the UI | For flows or layers that no stored image shows. |
+- **`search`**
+  - Input: query text; optional filters (product, object, technology, pillar, retriever_guide)
+  - Output: Top 8 hits: id, title, heading, 2-line snippet, status, score
+  - Rules: Filters must use `tools/tags.yaml` values. Hybrid BM25 + vector.
+- **`read_file`**
+  - Input: file id; optional heading
+  - Output: Body text of the file or one section. No metadata block.
+  - Rules: One file per call. Long files: section by section.
+- **`follow_links`**
+  - Input: file id; link type (related, internal_derive, same_name, same_meaning, all)
+  - Output: Linked ids with titles and status
+  - Rules: Cheap: titles only. The model then reads what it chooses.
+- **`get_images`**
+  - Input: file id, or filters (object, metric, image_type)
+  - Output: Image records: path, alt text, tags, sample
+  - Rules: Returns records only. The UI shows the image.
+- **`catalog`**
+  - Input: name: vCenter counter, chart label, esxtop field, metric title or object type; optional object filter; optional second object (`to`)
+  - Output: Counter unit, rollup, statistics level, min/max level, kb file; esxtop field text; thresholds with source; colour bands; object role and relations, or the path between two object types
+  - Rules: Exact values from `knowledge/catalog/`. Built 2026-11-04.
+- **`calculate`**
+  - Input: expression
+  - Output: Result plus source notes
+  - Rules: Summation ms ↔ %, unit conversion (vCenter KB = 1,024 bytes, kb = 1,000 bits), capacity, esxtop identities. Built 2026-11-04.
+- **`flow`**
+  - Input: diagnosis file id; optional step
+  - Output: All steps in order, or one step with next step, referenced steps and metric files to read
+  - Rules: Reads the markdown steps. Built 2026-11-04.
+- **`draw_mermaid` (later)**
+  - Input: Mermaid code
+  - Output: Rendered diagram in the UI
+  - Rules: For flows or layers that no stored image shows.
 
 ### Loop rules
 - System prompt: the README Answer and Troubleshooting rules, plus the tool list. The model is told it knows nothing about vSphere metrics beyond what tools return.

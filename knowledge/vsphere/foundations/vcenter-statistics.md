@@ -43,12 +43,18 @@
 | Minimum, Maximum | Lowest, highest value in the interval | Stored only at statistics level 4. For historical data: the minimum or maximum of the aggregated values, not of the raw 20-second samples. |
 
 ## Statistics levels
-| Level | Adds | Intended use |
-|---|---|---|
-| 1 | Aggregate counters only. CPU: usage, usagemhz, totalmhz, cpuentitlement. Memory: consumed, overhead, swapinRate, swapoutRate, swapused, vmmemctl (balloon), mementitlement, totalmb, usage, total bandwidth (DRAM, PMem, NVMe). Disk: capacity, maxTotalLatency, provisioned, unshared, usage, used. Network: usage. System: heartbeat, uptime. DRS cluster services. VM operations: numChangeDS, numChangeHost, numChangeHostDS. VM power. | Long-term monitoring. Default for every interval. |
-| 2 | CPU: idle, reservedCapacity. Disk: all except numberRead and numberWrite. Memory: all except memUsed, min/max rollups and DRAM/PMem/NVMe read and write latency. All VM operations counters. | Long-term monitoring beyond the basic counters. |
-| 3 | All counters except min/max rollups. Per-instance (device) counters: per vCPU, per physical CPU, per NIC, per disk. | Short-term, after a problem appears. |
-| 4 | Everything, including minimum and maximum rollups. | Short-term, after a problem appears. |
+- **1**
+  - Adds: Aggregate counters only. CPU: usage, usagemhz, totalmhz, cpuentitlement. Memory: consumed, overhead, swapinRate, swapoutRate, swapused, vmmemctl (balloon), mementitlement, totalmb, usage, total bandwidth (DRAM, PMem, NVMe). Disk: capacity, maxTotalLatency, provisioned, unshared, usage, used. Network: usage. System: heartbeat, uptime. DRS cluster services. VM operations: numChangeDS, numChangeHost, numChangeHostDS. VM power.
+  - Intended use: Long-term monitoring. Default for every interval.
+- **2**
+  - Adds: CPU: idle, reservedCapacity. Disk: all except numberRead and numberWrite. Memory: all except memUsed, min/max rollups and DRAM/PMem/NVMe read and write latency. All VM operations counters.
+  - Intended use: Long-term monitoring beyond the basic counters.
+- **3**
+  - Adds: All counters except min/max rollups. Per-instance (device) counters: per vCPU, per physical CPU, per NIC, per disk.
+  - Intended use: Short-term, after a problem appears.
+- **4**
+  - Adds: Everything, including minimum and maximum rollups.
+  - Intended use: Short-term, after a problem appears.
 
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
 - Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
