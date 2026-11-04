@@ -46,7 +46,7 @@ layer:
 - virtual-motherboard
 metric_class: contention
 internal_derive:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 same_name: []
 same_meaning: []
 related:

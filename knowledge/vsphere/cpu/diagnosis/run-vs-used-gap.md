@@ -42,7 +42,7 @@ related:
 - vsphere/cpu/metrics/virtual-motherboard/ready
 - vsphere/cpu/metrics/virtual-motherboard/demand
 - vsphere/cpu/concepts/power-states
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/hyper-threading
 source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > When Run is lower than Used; When Run is higher than Used

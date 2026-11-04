@@ -70,7 +70,7 @@ internal_derive: []
 related:
 - vsphere/foundations/metric-sources
 - vsphere/foundations/object-relationships
-- vsphere/foundations/visibility-layers
+- vsphere/foundations/vm-vs-guest-os
 - vsphere/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx

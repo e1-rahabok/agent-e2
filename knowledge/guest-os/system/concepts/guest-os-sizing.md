@@ -123,8 +123,8 @@ source:
 corrections: []
 review_notes:
 - "Section 'No such thing as VM rightsizing': from the author's other book, section VM Footprint | Guest OS Sizing (screenshot provided 2026-11-03). Author: VM rightsizing is a common misconception; the full book will be provided later."
-- 'Section ''Memory'': the book''s text describes waste below 50% and risk above 75%, while its recommended option 2 shows green starting near 75%. Open question in docs/author-questions.md.'
-- 'Section ''Memory'': the book''s sizing table marks Ballooned as included, while the text says exclude balloon. Open question in docs/author-questions.md.'
+- 'Section ''Memory'': the book''s text describes waste below 50% and risk above 75%, while its recommended option 2 shows green starting near 75%. Open question in project/author-questions.md.'
+- 'Section ''Memory'': the book''s sizing table marks Ballooned as included, while the text says exclude balloon. Open question in project/author-questions.md.'
 - 'References from the book: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html (not read).'
 status: draft
 ```

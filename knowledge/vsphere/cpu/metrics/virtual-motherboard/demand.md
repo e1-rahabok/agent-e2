@@ -34,7 +34,7 @@ Demand (%) = Demand (MHz) / Total Capacity (MHz) × 100
 
 ## Traps
 - "Demand - Usage = unmet demand" → a limit leaves Demand equal to Usage. Check Ready.
-- "Demand above 100% means add vCPUs" → Turbo raises Demand above 100%. See `vsphere/cpu/concepts/frequency-and-ht-impact-on-vm`.
+- "Demand above 100% means add vCPUs" → Turbo raises Demand above 100%. See `vsphere/cpu/concepts/cpu-frequency`.
 - "Usage above Demand is impossible" → Demand is smoothed over a longer window.
 
 ## Metadata
@@ -56,7 +56,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+- vsphere/cpu/concepts/cpu-frequency
 same_name:
 - vsphere/cpu/metrics/host/demand
 same_meaning: []

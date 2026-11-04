@@ -155,7 +155,7 @@ related:
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/concepts/run-time-vs-run-quality
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/concepts/idle-and-unused-vcpus
 - vsphere/cpu/metrics/virtual-motherboard/run
 - vsphere/cpu/metrics/virtual-motherboard/ready

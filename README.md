@@ -4,42 +4,42 @@
 
 **How:** model + harness + knowledge.
 - **Knowledge** (`knowledge/`): Level 400 mechanisms, metrics, traps and troubleshooting flows, written to be retrieved by a small model. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
-- **Harness**: the software around the model: hybrid retrieval, link expansion, exact tools (metric lookup, calculator, flow executor), grounding and answer checks. Prototype: `tools/autotest/retrieval.py`, `tools/autotest/modes.py`.
+- **Harness** (`harness/`): the software around the model: hybrid retrieval, link expansion, exact tools (metric lookup, calculator, flow executor), grounding and answer checks. Today: retrieval and the tool loop.
 - **Model**: a 27-32B open-weight model on a local GPU, chosen by benchmark.
-- **Proof** (`evaluation/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
+- **Proof** (`benchmark/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
 
-**Why it can work, why 32B, which models:** `docs/solution-design.md`.
-**Status and review:** not achieved yet; best small model 58% vs frontier 75% on the first 17 questions. Findings and proposed restructure: `docs/review-2026-11-04.md`.
+**Why it can work, why 32B, which models:** `project/solution-design.md`.
+**Status and review:** not achieved yet; best small model 58% vs frontier 75% on the first 17 questions. Findings and decisions: `project/review-2026-11-04.md`.
 
 Readers: the model reads `knowledge/`. The author reviews for QA. Everything below is the contract the files are written to.
 
 ## Layout
 
 ```text
-knowledge/
-├── foundations/                     # general: applies across VCF 9 components (vSphere, vSAN, NSX, VCF Operations, Guest OS)
-│                                    # naming, units, sampling, thresholds, perspectives
-├── glossary/                        # terminology.md: terms, allowed tag values, words to avoid (all products)
+knowledge/                           # what the model reads (indexed)
+├── foundations/                     # cross-product concepts: units, sampling, thresholds, naming, perspectives
+├── glossary.md                      # one glossary: terms, synonyms, distinctions, words to avoid (all products)
 ├── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
 │   └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
 ├── vsphere/
-│   ├── foundations/                 # vSphere-specific only: provider/consumer, VM vs Guest OS,
-│   │                                # visibility layers, kernel worlds, resource management, overhead
+│   ├── foundations/                 # vSphere-specific only: provider/consumer, VM vs Guest OS, kernel worlds,
+│   │                                # overhead, metric sources, vCenter statistics
 │   ├── cpu/
 │   │   ├── concepts/                # how it works
 │   │   ├── metrics/<object-folder>/ # one metric, one vSphere object type per file
 │   │   │   ├── virtual-motherboard/ # VM metrics (a VM is a virtual motherboard)
-│   │   │   └── comparisons/         # groups of metrics compared side by side
+│   │   │   └── comparisons/         # groups of metrics compared side by side, esxtop references
 │   │   ├── configuration/           # what to set, for any pillar
-│   │   └── diagnosis/               # symptom → checks → meaning
-│   ├── memory/  storage/  network/  system/     # same four subfolders
-│   ├── cluster-resource-management/ # DRS, DPM, shares, vCLS: concepts/, configuration/, diagnosis/
-│   ├── <technology>/images/         # the author's diagrams, linked from the files they explain
-│   └── glossary/                    # vSphere-specific term definitions
-├── _templates/                      # concept, metric, configuration, diagnosis
+│   │   ├── diagnosis/               # symptom → checks → meaning
+│   │   └── images/                  # the author's diagrams, linked from the files they explain
+│   ├── memory/  storage/  network/  system/     # same subfolders
+│   └── resource-management/         # reservation, limit, shares, admission control, DRS, DPM, vCLS
+├── _templates/                      # concept, metric, configuration, diagnosis (not indexed)
 └── raw-input/                       # source documents (not indexed)
-evaluation/                          # golden cases with answer keys (not indexed)
-docs/                                # design decisions, To Do, legacy files (not indexed)
+harness/                             # the software around the model: retrieval, tool loop, prompts (not indexed)
+benchmark/                           # proof: questions with answer keys, attachments, runner, results (not indexed)
+project/                             # design, decisions, author questions, to-do, archive (not indexed)
+tools/                               # lint.py (file and tag checks), tags.yaml (allowed tag values) (not indexed)
 ```
 
 - Folders follow technology first. Tags give the other angles (pillar, product, object).
@@ -49,10 +49,10 @@ docs/                                # design decisions, To Do, legacy files (no
   - Test: if the fact is still true for vSAN, NSX or a Guest OS, it goes in `knowledge/foundations/`.
 - `object-folder` names: `virtual-motherboard`, `guest-os`, `host`, `cluster`, `datastore`, ... The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its metrics live in `virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
-- Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. `scripts/validate.py` enforces these rules.
+- Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. `tools/lint.py` enforces these rules.
 
 ## Why this structure
-- Full reasoning: `docs/philosophy-and-structure.md`.
+- Full reasoning: `project/philosophy-and-structure.md`.
 - A generic AI fails on vSphere metrics in a known way: it knows the general meaning of a label and applies it where vSphere differs.
 - Each structural choice blocks one failure:
 
@@ -92,7 +92,7 @@ docs/                                # design decisions, To Do, legacy files (no
 - Answer from the retrieved text. Prefer mechanism and reason over a definition.
 - Cite each file `id` used.
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
-- Use terms from `knowledge/glossary/terminology.md`. Avoid the words in its Words to avoid table.
+- Use terms from `knowledge/glossary.md`. Avoid the words in its Words to avoid table.
 - Quote a threshold only when a file states it with its source.
 
 ### Troubleshooting questions (`what-to-check`)
@@ -106,7 +106,7 @@ docs/                                # design decisions, To Do, legacy files (no
 - Contention before consumption before context, unless the file states another order.
 
 ### Measurement
-- `evaluation/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.
+- `benchmark/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.
 
 ## Troubleshooting flow diagrams
 - Location: the `diagnosis/` folder of the technology. A flow across technologies goes in `knowledge/vsphere/system/diagnosis/`.
@@ -118,16 +118,16 @@ docs/                                # design decisions, To Do, legacy files (no
 - Mermaid node text repeats the step number: `S1[1. VM CPU Ready above threshold?]`. Step numbers tie the chart to the text.
 - Keep each flowchart to about 15 nodes. Split a larger flow into linked diagnosis files.
 - draw.io files are not read by the LLM: the XML is mostly layout and style, and compressed files are unreadable.
-  - Keep the `.drawio` file and an exported `.png` in `knowledge/vsphere/<technology>/images/` as the editable source.
+  - Keep the `.drawio` file and an exported `.png` in the `images/` folder of the technology as the editable source.
   - Link the `.png` under the flowchart and tag it in `images` (`image_type: diagram`).
   - The Mermaid chart and numbered steps are the content the LLM uses.
 
 ## Indexing rules
 - Index: `knowledge/**/*.md`.
-- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `evaluation/`, `docs/`, this README, `CLAUDE.md`.
-  - `evaluation/` holds answer keys. Indexing it invalidates the evaluation.
+- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, this README, `CLAUDE.md`.
+  - `benchmark/` holds answer keys. Indexing it invalidates the evaluation.
 - Metadata is the last section of each file: `## Metadata` followed by one yaml block. Parse it as metadata, not as text to embed.
-- Images live in `knowledge/vsphere/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
+- Images live in the `images/` folder of the technology folder that uses them: `knowledge/vsphere/<technology>/images/`, `knowledge/guest-os/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
 - When a file is retrieved, also consider retrieving the ids in `related`, `internal_derive`, `same_name` and `same_meaning`.
 
 ## retriever_guide: which question a file answers
@@ -135,7 +135,7 @@ docs/                                # design decisions, To Do, legacy files (no
 |---|---|---|---|
 | how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `foundations/` | `concept.md` |
 | metric-meaning | What does this number mean on this object? | `metrics/` | `metric.md` |
-| term-meaning | What does this term mean? | `glossary/` | `concept.md` |
+| term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
 | what-to-check | Something is wrong. What do I check, in what order? | `diagnosis/` | `diagnosis.md` |
 
@@ -186,8 +186,8 @@ docs/                                # design decisions, To Do, legacy files (no
 
 ## QA workflow
 1. AI extracts a section into files with `status: draft`.
-   - Run `python3 scripts/validate.py`. It must pass before merge.
+   - Run `python3 tools/lint.py`. It must pass before merge.
 2. Author reviews, answers `review_notes`, fixes errors.
 3. Author sets `status: reviewed`.
 4. When the source document is updated, move `corrections` into the normal text and clear them.
-5. Run `evaluation/` golden cases with and without the knowledge base; record results in `evaluation/results/results.csv`.
+5. Run `benchmark/` golden cases with and without the knowledge base; record results in `benchmark/results/results.csv`.

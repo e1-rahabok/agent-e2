@@ -1,4 +1,4 @@
-# CPU frequency and Turbo
+# CPU frequency, Turbo and their impact on a VM
 
 ## Three speeds
 | Speed | Meaning | Facts |
@@ -90,6 +90,41 @@
 | 100% | 120% | Same. |
 | 125% | 150% | Performance impact from Hyper-Threading. |
 
+## Sample CPU
+![Sample CPU: 1 GHz nominal, 1.3 GHz all cores, 1.7 GHz single core](../images/cpu-turbo-boost-example-nominal-all-core-single-core.png)
+- 20 cores. Nominal clock speed 1 GHz, for ease of calculation.
+- All 20 cores busy: 30% above nominal (1.3 GHz).
+- One core busy: up to 70% above nominal (1.7 GHz).
+- The vSphere Client shows the nominal speed and treats it as 100%.
+- Using nominal speed as total capacity understates capacity.
+- A real CPU with this boost profile: AMD EPYC 9634.
+
+## Scenarios
+![Throughput per vCPU: 1 core runs vs all cores run, 1 vs 2 vCPU](../images/vcpu-throughput-one-core-vs-all-cores-running.png)
+- Assumption: the vCPU runs 100% with 0% contention.
+- 2-vCPU cases assume both vCPUs land on the 2 threads of one core.
+
+| Socket load | vCPUs | Throughput per vCPU | VM CPU Demand | Total |
+|---|---|---|---|---|
+| 1 core of 20 busy | 1 | 1.7 GHz | 170% | 1.7 GHz |
+| 1 core of 20 busy | 2, same core | 1.06 GHz (1.7 × 0.625) | - | 2.12 GHz, not 3.4 GHz |
+| All cores busy | 1 | 1.3 GHz | 130% | 1.3 GHz |
+| All cores busy | 2, same core | 812 MHz (1.3 × 0.625) | about 81% | 1.625 GHz |
+
+## Impact on a VM: Mechanism
+- VM CPU Demand is based on the 1 GHz nominal speed. So it reports 170% or 130%.
+- Demand above 100% suggests more vCPUs. Adding a vCPU can make it worse: the Hyper-Threading penalty applies when both vCPUs share a core.
+- When all cores are busy, the chance that 2 vCPUs of one VM share a core rises.
+- In the last case each vCPU runs at about 81% and the VM seems maxed out.
+
+## Over time
+![Run stays 100% while Usage falls 1.7, 1.3, 0.8 GHz](../images/vm-cpu-run-flat-while-usage-falls-with-frequency.png)
+- Run stays at 100% throughout.
+- Throughput falls: 1.7 GHz → 1.3 GHz → 1.06 GHz → 0.81 GHz.
+- Cause: VMs are added to the cluster over time, and the ESXi scheduler maximizes total throughput.
+- A VM can run 100% for hours while the work it completes varies by the second. This is why VM performance feels unpredictable.
+- CPU Usage (%) masks this degradation.
+
 ## Traps
 - "Base frequency is the capacity" → the CPU runs above base most of the time. Base understates capacity.
 - "Turbo can be turned off in ESXi" → no direct setting. Use the power policy or BIOS.
@@ -100,6 +135,10 @@
 - "Only High Performance reaches Max Turbo" → Balanced reaches it too.
 - "Usage (%) above Core Utilization means a problem" → the gap is Turbo.
 - "Usage (%) at 100% means the host is at its limit" → the metric is capped. Actual usage can be higher due to Turbo.
+- "Demand 170%, so add vCPUs" → the vCPU already runs on a boosted core. A second vCPU on the same core gets 0.625x.
+- "Run 100% means constant performance" → throughput varies with frequency and Hyper-Threading.
+- "2 vCPUs give 2x the throughput of 1 vCPU" → 2.12 GHz vs 1.7 GHz in the single-core case.
+- "Usage (%) stable, so performance stable" → Usage (%) masks the drop in GHz.
 
 ## Metadata
 ```yaml
@@ -115,36 +154,71 @@ product:
 - vsphere
 object:
 - HostSystem
+- VirtualMachine
 internal_derive:
 - vsphere/cpu/concepts/run-time-vs-run-quality
+- vsphere/cpu/concepts/hyper-threading
 related:
 - vsphere/cpu/concepts/power-states
 - vsphere/cpu/configuration/host-power-management
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
 - vsphere/cpu/concepts/cpu-measurement-levels
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/core-utilization
+- vsphere/cpu/metrics/virtual-motherboard/usage
+- vsphere/cpu/metrics/virtual-motherboard/run
+- vsphere/cpu/concepts/idle-and-unused-vcpus
 images:
-  - path: ../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png
-    product: [vsphere]
-    object: [HostSystem]
-    metric: ['ESXi CPU Core Utilization', 'ESXi CPU Usage']
-    topic: 'Turbo Boost'
-    image_type: diagram
+- path: ../images/esxi-cpu-core-utilization-vs-actual-usage-with-turbo.png
+  product:
+  - vsphere
+  object:
+  - HostSystem
+  metric:
+  - ESXi CPU Core Utilization
+  - ESXi CPU Usage
+  topic: Turbo Boost
+  image_type: diagram
+- path: ../images/cpu-turbo-boost-example-nominal-all-core-single-core.png
+  product:
+  - vsphere
+  object:
+  - HostSystem
+  topic: Turbo Boost
+  image_type: diagram
+- path: ../images/vcpu-throughput-one-core-vs-all-cores-running.png
+  product:
+  - vsphere
+  object:
+  - VirtualMachine
+  topic: Turbo Boost
+  image_type: table
+- path: ../images/vm-cpu-run-flat-while-usage-falls-with-frequency.png
+  product:
+  - vsphere
+  object:
+  - VirtualMachine
+  metric:
+  - VM CPU Run
+  - VM CPU Usage
+  image_type: diagram
 source:
   document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi
+  path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture (pp. 77-78) > Impacts on VM (from former vsphere/cpu/concepts/cpu-frequency)
 corrections: []
 review_notes:
-- "Section 'Impacts on ESXi': author (2026-11-02): the table shows actual values. The Usage (%) metric is capped at 100%. The book's 'My Recommendation' column (a single-counter recommendation) is left out until later; see docs/todo.md."
-- "Section 'Turbo': whitepaper 'Host Power Management in VMware vSphere 7.0' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices."
-- "Section 'Turbo': %A/MPERF is the esxtop ratio of actual to nominal frequency (APERF/MPERF registers). From Claude's own knowledge."
-- "Section 'Three speeds': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q are from the book. Not checked against vendor pages."
-- "Section 'Turbo': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html"
-- "Section 'Three speeds': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book)."
-- "Section 'All-Core Turbo': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party)."
-- "Sections 'All-Core Turbo', 'Likely vCPU speed on a busy cluster', 'TDP': author (2026-11-03), quiz answers CPU Q2 and Q4 (vSphere Metric Quiz.docx). Author confirmed 2.4 GHz (All-Core Turbo x 80%) in Q034."
-- "Section 'Likely vCPU speed on a busy cluster': `vsphere/cpu/metrics/virtual-motherboard/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written."
-- "Section 'Impacts on ESXi': author (2026-11-03), Q010: Usage cap removed in both vCenter and VCF Operations; supersedes the 2026-11-02 note that the metric is capped."
+- 'Section ''Impacts on ESXi'': author (2026-11-02): the table shows actual values. The Usage (%) metric is capped at 100%. The book''s ''My Recommendation'' column (a single-counter recommendation) is left out until later; see project/todo.md.'
+- 'Section ''Turbo'': whitepaper ''Host Power Management in VMware vSphere 7.0'' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices.'
+- 'Section ''Turbo'': %A/MPERF is the esxtop ratio of actual to nominal frequency (APERF/MPERF registers). From Claude''s own knowledge.'
+- 'Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q are from the book. Not checked against vendor pages.'
+- 'Section ''Turbo'': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html'
+- 'Section ''Three speeds'': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book).'
+- 'Section ''All-Core Turbo'': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party).'
+- 'Sections ''All-Core Turbo'', ''Likely vCPU speed on a busy cluster'', ''TDP'': author (2026-11-03), quiz answers CPU Q2 and Q4 (vSphere Metric Quiz.docx). Author confirmed 2.4 GHz (All-Core Turbo x 80%) in Q034.'
+- 'Section ''Likely vCPU speed on a busy cluster'': `vsphere/cpu/metrics/virtual-motherboard/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written.'
+- 'Section ''Impacts on ESXi'': author (2026-11-03), Q010: Usage cap removed in both vCenter and VCF Operations; supersedes the 2026-11-02 note that the metric is capped.'
+- '[from former vsphere/cpu/concepts/cpu-frequency] Section ''Scenarios'': the ''Total'' column is Claude''s arithmetic from the book''s per-vCPU values (2 × 0.8125 = 1.625 GHz).'
+- '[from former vsphere/cpu/concepts/cpu-frequency] Section ''Scenarios'': the book names VM CPU Demand (170%, 130%). No VM Demand metric file exists yet. Create it when the book''s VM section is extracted.'
+- '[from former vsphere/cpu/concepts/cpu-frequency] Section ''Sample CPU'': example CPU from the book: AMD EPYC 9634, https://www.amd.com/en/products/processors/server/epyc/4th-generation-9004-and-8004-series/amd-epyc-9634.html'
+- '2026-11-04: merged vsphere/cpu/concepts/cpu-frequency into this file (author decision 5, holistic review).'
 status: draft
 ```

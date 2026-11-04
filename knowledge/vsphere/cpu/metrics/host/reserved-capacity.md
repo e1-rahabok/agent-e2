@@ -33,7 +33,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/cpu/metrics/host/demand
-- vsphere/foundations/resource-management
+- vsphere/resource-management/concepts/resource-controls
 source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Reservation

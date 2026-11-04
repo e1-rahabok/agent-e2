@@ -73,9 +73,9 @@ same_meaning:
 - vsphere/cpu/metrics/host/utilization
 related:
 - vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/cpu/concepts/cpu-efficiency
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/cpu/concepts/frequency-and-ht-impact-on-vm
+- vsphere/cpu/concepts/cpu-frequency
 - vsphere/cpu/metrics/virtual-motherboard/net-run
 - vsphere/cpu/metrics/virtual-motherboard/overlap
 - vsphere/cpu/diagnosis/run-vs-used-gap

@@ -32,6 +32,12 @@
 - Balloon can be 0 while Compressed or Swapped are above 0, although ballooning comes first in the reclamation order.
 - Reason: past pressure. Compressed and swapped data is not brought back until requested (it costs CPU). The balloon deflates proactively when pressure ends.
 
+## Trigger and requirement
+- Trigger: host memory begins to get low and the VM's memory usage approaches its memory target.
+- The `vmmemctl` module (VMware Tools) makes the guest OS give up the pages it considers least valuable.
+- Performance closely matches a native system under similar memory constraints.
+- The guest OS must have enough swap space configured.
+
 ## Traps
 - "Ballooned 10 GB, so the guest is slow" → only requested pages cause a hit. Check Latency.
 - "Balloon frees exactly its size in ESXi" → shared pages free less.
@@ -53,7 +59,7 @@ object:
 - VirtualMachine
 internal_derive:
 - vsphere/memory/concepts/memory-layers
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 related:
 - vsphere/memory/metrics/virtual-motherboard/ballooned
 - vsphere/memory/metrics/virtual-motherboard/balloon-target
@@ -70,6 +76,7 @@ source:
   path: Memory > VM > Contention Metrics > Balloon; Swap + Compress > Balloon
 corrections: []
 review_notes:
+- '2026-11-04: content from former vsphere/memory/concepts/host-memory-states folded in (author decision 5). Source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''Mechanism'': Idle Memory Tax is the Mem.IdleTax setting (Claude''s own knowledge).'
 status: draft
 ```

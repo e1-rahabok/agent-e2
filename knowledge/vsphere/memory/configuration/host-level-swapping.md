@@ -40,7 +40,7 @@
 - A reservation is a guaranteed lower bound on the physical memory ESX reserves for the VM.
 - Set through vSphere Client: right-click the VM, Edit Settings, Virtual Hardware tab, expand Memory, set the reservation.
 - Trade-off: reservations reduce the number of VMs that can run on a host, cluster or resource pool. ESX keeps enough memory for all reservations, so it does not power on a VM if that would reduce available memory below the reserved amount.
-- See `vsphere/cluster-resource-management/configuration/resource-settings-guidance` for reservation guidance.
+- See `vsphere/resource-management/configuration/resource-settings-guidance` for reservation guidance.
 
 ## Traps
 - "Swap file size equals configured memory" → size is configured memory minus reservation.
@@ -66,10 +66,10 @@ object:
 - Datastore
 internal_derive: []
 related:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 - vsphere/memory/concepts/memory-overhead
 - vsphere/memory/diagnosis/overcommit-indicators
-- vsphere/cluster-resource-management/configuration/resource-settings-guidance
+- vsphere/resource-management/configuration/resource-settings-guidance
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Memory Considerations > Memory Swapping Optimizations (pp. 35-36)

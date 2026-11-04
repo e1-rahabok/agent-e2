@@ -118,10 +118,9 @@ related:
 - vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/configuration/host-power-management
 - vsphere/system/configuration/bios-settings
-- vsphere/cluster-resource-management/configuration/resource-settings-guidance
+- vsphere/resource-management/configuration/resource-settings-guidance
 - vsphere/network/concepts/passthrough-and-offload
 - vsphere/network/configuration/rss-and-interrupt-coalescing
-- vsphere/cpu/concepts/cpu-efficiency
 - vsphere/cpu/concepts/power-states
 images:
   - path: ../images/latency-sensitivity-high-vm-cpu-run-demand-100-wait-0.png

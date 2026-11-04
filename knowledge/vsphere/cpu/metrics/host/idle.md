@@ -34,7 +34,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > ESXi > Wait Metric > Idle

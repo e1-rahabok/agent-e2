@@ -106,7 +106,7 @@ source:
 corrections: []
 review_notes:
 - 'Whole file: thresholds and actions from the vSphere 9.1 documentation, not the book. The knowledge-base readings are from the existing files linked in each section.'
-- 'Section ''Storage latency'': the documentation (4 ms kernel, 15 ms device, queue 0) differs from the book values in vsphere/storage/diagnosis/host-storage-latency (KAVG 0.5 ms, DAVG within 5 ms). Open question Q044 in docs/author-questions.md.'
+- 'Section ''Storage latency'': the documentation (4 ms kernel, 15 ms device, queue 0) differs from the book values in vsphere/storage/diagnosis/host-storage-latency (KAVG 0.5 ms, DAVG within 5 ms). Open question Q044 in project/author-questions.md.'
 - 'Section ''Storage latency'': the statement that the 15 ms value comes from spinning-disk arrays is Claude''s inference from the remedy text (more spindles).'
 - 'Section ''CPU'': the documentation gives VM CPU Ready above 20% with Usage above 90% in the VM chart analysis and in Solutions for Consistently High CPU Usage.'
 - 'Section ''Network'': the documentation names VMware AppSpeed for network latency. AppSpeed is a discontinued product (Claude''s own knowledge), so the file says external tools.'

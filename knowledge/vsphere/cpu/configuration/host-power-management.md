@@ -77,7 +77,7 @@ related:
 - vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/concepts/numa
 - vsphere/system/configuration/bios-settings
-- vsphere/cluster-resource-management/concepts/dpm
+- vsphere/resource-management/concepts/dpm
 - vsphere/cpu/concepts/power-states
 - vsphere/cpu/concepts/cpu-frequency
 source:

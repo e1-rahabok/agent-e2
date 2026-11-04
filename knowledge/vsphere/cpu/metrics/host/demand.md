@@ -45,7 +45,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/cpu/metrics/comparisons/consumption-metrics
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/cpu/metrics/host/reserved-capacity
 images:

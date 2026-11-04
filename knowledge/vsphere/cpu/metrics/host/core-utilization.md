@@ -44,7 +44,7 @@ same_meaning: []
 related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/concepts/cpu-frequency
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 - vsphere/cpu/metrics/host/imbalance
 source:
   document: PART 3 - Counters.docx

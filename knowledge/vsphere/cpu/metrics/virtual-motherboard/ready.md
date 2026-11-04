@@ -84,7 +84,7 @@ layer:
 metric_class: contention
 internal_derive:
 - vsphere/foundations/provider-consumer
-- vsphere/foundations/resource-management
+- vsphere/resource-management/concepts/resource-controls
 - vsphere/cpu/concepts/vcpu-states
 same_name: []
 same_meaning: []
@@ -111,7 +111,7 @@ corrections: []
 review_notes:
 - Sections Mechanism, Read against Run, Units, and the last 2 traps: from CPU > Architecture.
 - 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
-- 'Section ''Floor and size'': the VM section says Ready is higher on larger VMs. The Architecture section says VM size reduces Co-stop but not Ready. Open question in docs/author-questions.md.'
+- 'Section ''Floor and size'': the VM section says Ready is higher on larger VMs. The Architecture section says VM size reduces Co-stop but not Ready. Open question in project/author-questions.md.'
 - 'Section ''Observed values'': the 50% statement is the book''s observation on a 16-vCPU VM, not a stated threshold.'
 - "Section 'Larger VMs': author (2026-11-03), Q007: downsizing reduces Ready and Co-stop; fewer shares can raise Ready. 'Shares scale with vCPU count by default' is from Claude's own knowledge."
 status: draft

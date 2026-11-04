@@ -132,6 +132,6 @@ source:
   path: Network > Architecture > Architecture intro; Network Observability
 corrections: []
 review_notes:
-- 'Section ''Direction terms'': the book says a VM has no ingress traffic. Open question in docs/author-questions.md.'
+- 'Section ''Direction terms'': the book says a VM has no ingress traffic. Open question in project/author-questions.md.'
 status: draft
 ```

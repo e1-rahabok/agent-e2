@@ -53,11 +53,20 @@
 - The guest kept using pages: some were swapped in; others were compressed or swapped to make room. So Swapped and Compressed moved in opposite directions.
 ![Limit: Consumed flat, swapped and compressed move in opposite directions](../images/vm-memory-limit-swapped-and-compressed-move-opposite.png)
 
+## Compression, host cache and swap: triggers and cost
+- Compression starts when VM memory usage approaches the level at which host-level swapping would be required. It reduces the pages ESX must swap out.
+- Decompression latency is much smaller than swap-in latency: compression costs far less than swapping out the same pages.
+- Swap to host cache starts when compression does not keep usage low enough, if a host cache is configured (an administrator-configured swap cache, in most cases on SSD). Much faster than regular swap files on hard disks, even if some swapped pages are active.
+- Regular host-level swapping starts when the host cache is full or none is configured. High access latency can degrade VM performance significantly.
+- Host-level swapping is transparent to the guest OS and distinct from swapping inside the guest OS.
+
 ## Traps
 - "Swapped = Swap in - Swap out" → in and out run in parallel on different pages.
 - "Swap out means contention" → only swap in is contention.
 - "Swapped 0 means no reclamation" → pages may all be compressed.
 
+- "Host-level swapping and guest OS swapping are the same" → they are distinct. Host-level swapping is transparent to the guest.
+- "Memory compression is as costly as swapping" → decompression latency is much smaller than swap-in latency.
 ## Metadata
 ```yaml
 id: vsphere/memory/concepts/swap-and-compression
@@ -73,7 +82,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 related:
 - vsphere/memory/metrics/virtual-motherboard/swapped
 - vsphere/memory/metrics/virtual-motherboard/compressed
@@ -97,6 +106,7 @@ source:
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz
 corrections: []
 review_notes:
+- '2026-11-04: content from former vsphere/memory/concepts/host-memory-states folded in (author decision 5). Source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''When ESXi swaps instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
 - 'Section ''Mechanism'': the book''s sentence on why there is no 3:1 compression is incomplete. Left out.'
 status: draft

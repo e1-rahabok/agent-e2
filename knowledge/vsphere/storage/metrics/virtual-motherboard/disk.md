@@ -45,6 +45,6 @@ source:
   path: Storage > VM > Overview > Disk; Performance Metrics > Disk
 corrections: []
 review_notes:
-- 'Section ''Meaning'': the book is unsure whether the Disk metric value is per VM or per disk. Open question in docs/author-questions.md.'
+- 'Section ''Meaning'': the book is unsure whether the Disk metric value is per VM or per disk. Open question in project/author-questions.md.'
 status: draft
 ```

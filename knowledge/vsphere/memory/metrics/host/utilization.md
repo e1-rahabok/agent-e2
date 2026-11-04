@@ -53,6 +53,6 @@ source:
   path: Memory > ESXi > Consumption Metrics > Utilization; Analysis
 corrections: []
 review_notes:
-- 'Section ''Formula'': the Utilization section uses kernel reservation; the Analysis section uses ESX System Usage. Open question in docs/author-questions.md.'
+- 'Section ''Formula'': the Utilization section uses kernel reservation; the Analysis section uses ESX System Usage. Open question in project/author-questions.md.'
 status: draft
 ```

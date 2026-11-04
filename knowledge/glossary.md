@@ -1,0 +1,153 @@
+# Terminology
+
+Single source of truth for terms, synonyms, distinctions and words to avoid, across all products.
+Allowed tag values (machine settings for the linter) are in `tools/tags.yaml`.
+
+## Book terminology
+- Placeholder. To be provided by the author.
+
+## Synonyms (same thing, several names)
+| Preferred term | Also called | Note |
+|---|---|---|
+| ESXi | ESX, ESXi Host, HostSystem | HostSystem is the vSphere API object type. The 9.1 performance document uses "ESX". |
+| Physical CPU (esxtop) | Logical Processor (vSphere Client), PCPU | One hardware execution context: a thread with Hyper-Threading on, a core with it off. The author prefers the pair virtual vs physical; "logical" is confusing. |
+
+## Core words (do not mix these dimensions)
+| Term | Meaning | Is not |
+|---|---|---|
+| Object type | A kind of managed object in vSphere or VCF Operations. It has a name per instance. Examples: VirtualMachine, HostSystem, Folder, VmwareDistributedVirtualSwitch. | A component inside an object (vCPU, vmnic). |
+| Object | One named instance of an object type. Example: a VM called "db01". | A metric or a layer. |
+| Instance (metric) | A sub-component a metric is reported for, inside one object. Examples: vCPU 0, vmnic1, vmhba0. Tag: `instance`. | An object type. |
+| Layer | A level of the stack: Guest OS, VM, hypervisor, physical. | An object type. Guest OS is a layer, not a vSphere object type. |
+| Virtual motherboard | What a VM is: a virtual circuit board (vCPU, memory, virtual disks, vNICs) that runs a Guest OS. Folder name for VM metrics: `virtual-motherboard`. Tag: `layer: virtual-motherboard`, `object: VirtualMachine`. | A complete machine. The Guest OS is not part of it: Guest OS knowledge is a separate layer and lives in `knowledge/guest-os/` (`scope: guest-os`, `layer: guest-os`). Author's book. |
+| Vantage point | The layer or object a metric is observed from. Consumer (VM) vs provider (ESXi). | A tag value by itself. Expressed through `object` and `layer`. |
+| Perspective (book) | One of three angles on metrics: technology, pillar of operations, product. | A layer or vantage point. |
+| Technology | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. | A product. |
+| Pillar | availability, performance, security, capacity, value. | A technology. |
+| Metric | A measured value with a name, unit and formula, for one object type. | A counter ID alone. |
+| Counter | The raw performance counter as exposed by the source (for example vCenter `cpu.ready.summation`). A metric may be built from one or more counters. | The interpreted meaning. |
+| Property | A configuration or inventory attribute of an object (for example number of vCPUs). Often used as context. | A measured value over time. |
+| Metric class | contention, consumption, context. | A pillar. |
+| Thread (physical) | Hardware thread of a CPU core. A provider. | A software thread. |
+| Thread (software) | Thread in an OS (VMkernel, Windows, Linux). A consumer. | A physical thread. |
+
+## Term distinctions
+### Allocation vs Reservation
+- Allocation and reservation are two different concepts.
+- Allocation: what is given to a consumer. Not guaranteed. It is a maximum: utilization cannot exceed it.
+- Reservation: a guarantee. It is a minimum.
+- Actual utilization can be below the reservation. It cannot exceed the allocation.
+```text
+utilization <= allocation
+reservation is guaranteed; utilization may be < reservation
+```
+- Allocation can be overcommitted, because it is not a guarantee.
+- Reservation cannot be overcommitted, because it is a guarantee.
+- pattern when mixed: mixing-terminology. Invalid metric names:
+  - "Allocation Reservation": meaningless.
+  - "Maximum Reservation": means Allocation.
+  - "Minimum Allocation": means Reservation.
+
+### Device vs Disk vs LUN
+- These three words are often used interchangeably. They are not identical.
+- Device: generic. Not necessarily storage. Can be a network device or a security device.
+- Disk: physical. Typically part of a disk group (RAID).
+- LUN: a logical volume created by a storage array. Can span multiple RAID groups. "Logical volume" is the more accurate name; "LUN" is the common name.
+- ESXi mounts a LUN and formats it with the VMFS filesystem.
+
+### Usage vs Utilization (OpenTelemetry convention)
+- Usage: amount used out of a known total.
+- Utilization: fraction of usage out of its limit.
+- vSphere does not follow this convention. See `foundations/naming-patterns`.
+
+## Object types
+### vSphere (API type names)
+- VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, StoragePod (datastore cluster), Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup.
+
+### VCF Operations
+- vSphere World: the top-level object covering all vCenter Server instances.
+- vCenter Server, Datacenter, Cluster Compute Resource, Host System, Virtual Machine, Datastore, Datastore Cluster, Resource Pool, vSphere Distributed Switch, Distributed Port Group.
+
+## Proposed terms (author to confirm)
+| Term | Meaning | Also called | Source |
+|---|---|---|---|
+| Run Time | How long a CPU or vCPU runs. Binary per moment. Used for capacity. | Run (VM), Utilization (ESXi) | Book, CPU > Architecture > 2 Metrics Not 1 |
+| Run Quality | Cycles completed while running. Varies with frequency and Hyper-Threading. Used for performance. | - | Book, same section |
+| CPU Throughput | Productive cycles attributed to a thread or vCPU. Excludes the idle loop. | Usage (MHz), Used | Book, CPU > Architecture > CPU Throughput |
+| Efficiency (CPU) | Hyper-Threading effect on cycles completed. Accounted as 1.25x per core, 0.625x per thread. | - | Book, Frequency \| Efficiency \| Efficacy |
+| Efficacy (CPU) | Work per cycle from core architecture. Not accounted by any metric. | - | Book, same section |
+| Base frequency | Nominal frequency. vSphere uses it as total capacity. | Nominal frequency, base clock speed | Book, CPU Frequency |
+| All-Core Turbo | Frequency when all cores of a socket are busy. | All Core Boost (AMD) | Book, CPU Frequency |
+| Single-Core Turbo | Highest frequency of one busy core. | Max Turbo Frequency (Intel) | Book, CPU Frequency |
+| Frozen time | Time a vCPU is de-scheduled. The Guest OS sees a time jump. | Steal Time (Linux, for Ready) | Book, Guest OS vs VM |
+| Co-stop | vCPU state: held back because a sibling vCPU of the same VM is too far behind. | Co-Stop, CoStop | Book, State of a VM vCPU |
+| SMT | Simultaneous multithreading. | Hyper-Threading (Intel) | Book, CPU Efficiency |
+| CCD | Core Complex Die. A group of cores sharing one L3 cache inside an AMD socket. | - | Book, System on a Chip |
+| CPPC | Collaborative Processor Performance Control (ACPI 5.0+). | Intel HWP | Book, ESXi Level |
+| Readiness | Ready expressed in %, normalized by vCPU count. | Ready (%) | Book, CPU > VM > Ready \| Readiness |
+| Max Limited | Part of Ready caused by a CPU limit. | Limbo time | Book, CPU > VM > Ready |
+| Overlap | Time a running vCPU is interrupted by a kernel system service. | Stolen (some VMware documents) | Book, CPU > VM > Overlap |
+| Other Wait | Wait not caused by idle or swap: disk IO, network IO, vMotion, snapshots. | VM Wait | Book, CPU > VM > Other Wait |
+| Net Run | VCF Operations metric: Run - Overlap. | - | Book, CPU > VM > Run \| Net Run |
+| Contention (VCF Operations) | Overlap + Co-stop + Ready + Other Wait. Before July 2024: mapped to CPU Latency. | - | Book, CPU > VM > Contention |
+| Usage Disparity | Spread of usage across the vCPUs of one VM. | Imbalance vCPU Usage (avoid) | Book, CPU > VM > CPU Usage Disparity |
+| MKS, VMX, Helper | VM worlds charged to VM-level Used: console, VM management and emulation, IO helpers. | - | Book, CPU > VM > Used |
+| Thread Utilization | ESXi Utilization (%) read per physical thread. Binary per moment. | Utilization (%) | Book, CPU > ESXi > High Load Example |
+| Core Utilization | 100% when 1 or 2 threads of a core run. | - | Book, CPU > ESXi > Thread Utilization |
+| NHCC | Non-Halted Core Cycles. Hardware counter behind Used. | - | Book, CPU > ESXi > Used \| Usage |
+| Peak Core Usage | VCF Operations: highest Usage among the cores of a host. | Peak CPU Core Usage | Book, CPU > ESXi > Peak Core CPU Usage |
+| ESXi CPU Imbalance | Running threads / running cores. | Imbalance Score | Book, CPU > ESXi > Imbalance |
+| Consumed CPU (%) | Host list column in vSphere Client. Maps to Usage (%). | - | Book, CPU > ESXi > Consumed |
+| CPU Utilization for Resources | 17 legacy rescpu.* metrics. Avoid. | rescpu | Book, CPU > ESXi > Metrics to Avoid |
+| VM pages | Pages in the VM address space. Vendor term: guest physical pages. | - | Book, Memory > Architecture > Relationship |
+| ESXi pages | Pages ESXi manages on DIMM, host cache or tiered NVMe. Vendor term: machine pages. | - | Book, Memory > Architecture > Relationship |
+| Page-fault latency | VM memory Latency (%), esxtop %LAT_M. VCF Operations: VM Memory Contention. | Memory Latency | Book, Memory > VM > Latency |
+| Granted | VM pages with ESXi pages mapped. VM view. | - | Book, Memory > VM > Granted |
+| Entitlement (memory) | Granted + Overhead. | - | Book, Memory > VM > Consumption Metrics |
+| Swap Target | Memory ESXi aims to reclaim by compression and swapping. | Compress-swap target | Book, Memory > VM > Transition |
+| Balloon Target | Memory ESXi asks the balloon driver to reclaim. | - | Book, Memory > VM > Balloon |
+| Active (memory) | Sampled estimate of recently touched VM memory. | Touch (ESXi), Non Zero Active (VCF Operations) | Book, Memory > VM > Active |
+| Guest OS Needed Memory | VCF Operations guest metric behind VM Memory Usage (%). | - | Book, Memory > VM > Usage (%) |
+
+## Words to avoid
+| Avoid | Use instead | Why |
+|---|---|---|
+| VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
+| VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
+| virtual machine, thought of as a complete machine | virtual motherboard (VM) | A VM has no OS of its own; Guest OS and VM are not interchangeable. Author's book. |
+| need, want, wish (for a vCPU or VM) | demands runtime; the kernel decides how much it gets | A vCPU is a thread in the scheduler. It has no intent. |
+| "uses only X% of what it needs" | "is charged X%" or "gets X% of the runtime it demands" | Same reason. |
+| object (for vCPU, Guest OS) | instance (vCPU), layer (Guest OS) | vCPU and Guest OS are not vSphere object types. |
+| kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
+| Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
+| architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
+| interpretation (as a folder) | diagnosis | Interpretation is the purpose of every metric file. |
+| Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
+| guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Author: the term is illogical. Keep the vendor term once in parentheses for retrieval. |
+
+
+## Metadata
+```yaml
+id: glossary
+retriever_guide: term-meaning
+scope: vendor-neutral
+technology: [cpu, memory, storage, network, system]
+pillar: [availability, performance, security, capacity, value]
+product: [vsphere, vcf-operations]
+internal_derive: []
+related:
+  - foundations/naming-patterns
+  - vsphere/resource-management/concepts/resource-controls
+source:
+  document: Author statements (2026-11-02); vSphere API type names; VCF Operations object types
+  path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
+corrections: []
+review_notes:
+  - "Section 'Book terminology' is a placeholder. The author will provide the book's terminology."
+  - "Section 'Core words' is drafted by Claude to prevent mixing dimensions. Author to correct."
+  - "Section 'VCF Operations object types': names other than vSphere World are from Claude's own knowledge. Verify against current VCF Operations documentation."
+  - "Section 'Proposed terms': added 2026-11-02 from the book, CPU > Architecture. Not yet in use as tag values. Author to confirm each term and its preferred name."
+  - "Moved 2026-11-02 from knowledge/vsphere/glossary/ to knowledge/glossary/: applies to all products. Scope set to vendor-neutral."
+  - "2026-11-04: merged glossary and glossary into this file (author decision); allowed tag values moved to tools/tags.yaml."
+status: draft
+```

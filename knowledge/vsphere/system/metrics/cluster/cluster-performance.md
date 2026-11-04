@@ -86,6 +86,6 @@ source:
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections: []
 review_notes:
-- 'Sections ''Thresholds'' and ''Not used'': the table includes disk latency, which the text lists as not used; the text describes balloon and vMotion thresholds that are not in the table; the text says green is not set to 0 for packets, the table shows 0%. Open questions in docs/author-questions.md.'
+- 'Sections ''Thresholds'' and ''Not used'': the table includes disk latency, which the text lists as not used; the text describes balloon and vMotion thresholds that are not in the table; the text says green is not set to 0 for packets, the table shows 0%. Open questions in project/author-questions.md.'
 status: draft
 ```

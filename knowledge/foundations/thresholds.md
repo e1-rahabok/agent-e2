@@ -53,7 +53,7 @@ product: []
 internal_derive: []
 related:
 - foundations/metrics-as-accounting
-- vsphere/foundations/visibility-layers
+- vsphere/foundations/vm-vs-guest-os
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge

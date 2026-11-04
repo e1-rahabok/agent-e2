@@ -40,7 +40,6 @@ object:
 internal_derive: []
 related:
 - vsphere/foundations/vm-vs-guest-os
-- vsphere/foundations/visibility-layers
 - vsphere/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx

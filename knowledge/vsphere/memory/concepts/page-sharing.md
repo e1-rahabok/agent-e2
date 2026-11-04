@@ -47,7 +47,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 - vsphere/memory/concepts/large-memory-pages
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)

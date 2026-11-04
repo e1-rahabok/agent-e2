@@ -29,7 +29,7 @@ object:
 - HostSystem
 metric_class: contention
 internal_derive:
-- vsphere/memory/concepts/overcommit-techniques
+- vsphere/memory/concepts/host-memory-states
 same_name: []
 same_meaning:
 - vsphere/memory/metrics/virtual-motherboard/swapped
@@ -49,6 +49,6 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 - 'Section ''Swap counters at host level'': from Memory > ESXi.'
-- 'Section ''Swap counters at host level'': the book suggests Swap Consumed = swapped out - swapped in, which conflicts with its VM section (Swapped is not swap in - swap out). Open question in docs/author-questions.md.'
+- 'Section ''Swap counters at host level'': the book suggests Swap Consumed = swapped out - swapped in, which conflicts with its VM section (Swapped is not swap in - swap out). Open question in project/author-questions.md.'
 status: draft
 ```

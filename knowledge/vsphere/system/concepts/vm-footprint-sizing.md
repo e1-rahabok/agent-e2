@@ -61,6 +61,6 @@ source:
   path: 'Consumer Objects > Capacity: Guest OS > VM Footprint'
 corrections: []
 review_notes:
-- 'Section ''CPU'': the formula''s grouping is unclear (System / 20,000 or the whole sum / 20,000), and VM-level Used already includes System. Open question in docs/author-questions.md.'
+- 'Section ''CPU'': the formula''s grouping is unclear (System / 20,000 or the whole sum / 20,000), and VM-level Used already includes System. Open question in project/author-questions.md.'
 status: draft
 ```

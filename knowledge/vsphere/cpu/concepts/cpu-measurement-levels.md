@@ -1,4 +1,4 @@
-# CPU measurement levels: vCPU, thread, core
+# CPU measurement levels and capacity: vCPU, thread, core
 
 ## ESXi is not VM + kernel
 ![VM sees 2 vCPUs; ESXi sees 1 core with 2 threads](../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png)
@@ -54,12 +54,42 @@
 - So % cannot be the unit for performance.
 - With no known upper limit, complement with contention counters (for example Ready and Overlap) to manage proactively.
 
+## vSphere's number
+- ESXi CPU total capacity = base frequency × cores. No Turbo, no Hyper-Threading.
+- Conservative: suits mission-critical clusters. Other workloads can be packed more.
+- Sum of VM CPU Usage can exceed ESXi total capacity: total capacity is nominal.
+
+## CPU capacity: Example
+![ESXi 1: 20 cores at 1 GHz; ESXi 2: 10 cores at 2 GHz](../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png)
+- ESXi 1: 20 cores × 1 GHz = 20 GHz. ESXi 2: 10 cores × 2 GHz = 20 GHz. Same by vSphere's measure.
+- On ESXi 2, VMs run 2x faster, but only half as many fit. The same vCPU count on ESXi 2 gives about 50% CPU Ready, unpredictable performance and very high context switching.
+- ESXi 2 has 2x performance and 0.5x capacity. Performance and capacity do not correlate: one number cannot measure both.
+- Capacity (space): ESXi 1 = 40 threads, ESXi 2 = 20 threads.
+
+## CPU capacity: Rules
+- Capacity is counted in physical threads: where a vCPU can run. Speed is performance.
+- Running 40 vCPU on 40 threads is not overcommit (ignoring hypervisor overhead): no Ready. They run slower, like on slower hardware.
+- AWS also counts threads and sells allocation without overcommit.
+- Do not express capacity in MHz: Hyper-Threading adds only 1.25x while each thread slows 37.5%, and All-Core Turbo varies per model. GHz mixes performance and capacity.
+- Enable Hyper-Threading, but set customer expectations on speed. Future CPUs may drop HT (some new Intel Xeon use performance and efficiency cores; AMD keeps SMT).
+- Reservation is in hertz; allocation is in vCPUs. After vMotion to a faster host, adjust reservations manually if they do not scale.
+
+| Metric | Allocation model | Demand model |
+|---|---|---|
+| Total capacity | Physical threads in the host | Core and thread utilization. Not GHz. |
+| Hypervisor overhead | Threads assigned manually | Already in ESXi counters |
+| Consumption | Sum of running VM vCPUs | Core and thread utilization; max(Usage, Reservation) per running VM. Usage tends to over-report. |
+| Performance | Not applicable | Ready + Co-stop (Swap Wait and Other Wait are not CPU causes) |
+- Do not add VM CPU contention to consumption; track performance explicitly.
+
 ## Traps
 - "ESXi CPU = sum of VM CPU + kernel CPU" → different vantage points. The sum does not hold.
 - "esxtop shows 200% on a core, so the core does 2x the work" → each thread reports its own 100%. Read Core Utilization.
 - "Core Utilization 50% when one of two threads runs" → the core registers 100%.
 - "Use Usage or Demand for capacity" → they include frequency. Capacity uses static counters (Run, Utilization).
 - "Usage (%) near 100% means no headroom" → nominal speed is not the upper limit. Check contention counters.
+- "Faster CPU = more capacity" → more speed, not more space.
+- "Sum of VM Usage above total capacity is impossible" → total is nominal; Turbo exceeds it.
 
 ## Metadata
 ```yaml
@@ -73,11 +103,14 @@ pillar:
 - capacity
 product:
 - vsphere
+- vcf-operations
 object:
 - VirtualMachine
 - HostSystem
+- ClusterComputeResource
 internal_derive:
 - vsphere/foundations/provider-consumer
+- vsphere/cpu/concepts/hyper-threading
 related:
 - vsphere/cpu/concepts/vcpu-states
 - vsphere/cpu/concepts/run-time-vs-run-quality
@@ -88,34 +121,58 @@ related:
 - vsphere/cpu/metrics/host/usage
 - vsphere/cpu/metrics/host/demand
 - vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/system/concepts/capacity-model
+- vsphere/foundations/overhead
 images:
-  - path: ../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png
-    product: [vsphere]
-    object: [VirtualMachine, HostSystem]
-    topic: 'CPU measurement levels'
-    image_type: diagram
-  - path: ../images/cpu-measurement-at-vcpu-thread-core-level.png
-    product: [vsphere]
-    object: [VirtualMachine, HostSystem]
-    topic: 'CPU measurement levels'
-    image_type: diagram
-  - path: ../images/cpu-usage-and-usage-mhz-from-vcpu-thread-core-perspective.png
-    product: [vsphere]
-    object: [VirtualMachine, HostSystem]
-    metric: ['CPU Usage', 'CPU Usage (MHz)']
-    topic: 'CPU measurement levels'
-    image_type: diagram
-  - path: ../images/cpu-capacity-vs-performance-metrics-at-vcpu-core-socket-level.png
-    product: [vsphere]
-    object: [VirtualMachine, HostSystem]
-    topic: 'CPU measurement levels'
-    image_type: table
+- path: ../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png
+  product:
+  - vsphere
+  object:
+  - VirtualMachine
+  - HostSystem
+  topic: CPU measurement levels
+  image_type: diagram
+- path: ../images/cpu-measurement-at-vcpu-thread-core-level.png
+  product:
+  - vsphere
+  object:
+  - VirtualMachine
+  - HostSystem
+  topic: CPU measurement levels
+  image_type: diagram
+- path: ../images/cpu-usage-and-usage-mhz-from-vcpu-thread-core-perspective.png
+  product:
+  - vsphere
+  object:
+  - VirtualMachine
+  - HostSystem
+  metric:
+  - CPU Usage
+  - CPU Usage (MHz)
+  topic: CPU measurement levels
+  image_type: diagram
+- path: ../images/cpu-capacity-vs-performance-metrics-at-vcpu-core-socket-level.png
+  product:
+  - vsphere
+  object:
+  - VirtualMachine
+  - HostSystem
+  topic: CPU measurement levels
+  image_type: table
+- path: ../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png
+  product:
+  - vsphere
+  object:
+  - HostSystem
+  topic: CPU capacity
+  image_type: diagram
 source:
   document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 52, 55-57) > Architecture intro; ESXi ≠ VM + Kernel
+  path: CPU > Architecture (pp. 52, 55-57) > Architecture intro; ESXi ≠ VM + Kernel; Provider Objects > Capacity > CPU (from former vsphere/cpu/concepts/cpu-measurement-levels)
 corrections: []
 review_notes:
-- "Section 'Three levels': author (2026-11-02): a physical thread of a CPU core is a provider. A software thread in an OS (VMkernel, Windows) is a consumer."
-- "Section 'Capacity vs performance': the infographic says 'ESXi Usage (GHz) = Average (thread Usage)'. An average of GHz values is unusual; a sum is expected for GHz. Written as in the book. Author to confirm."
+- 'Section ''Three levels'': author (2026-11-02): a physical thread of a CPU core is a provider. A software thread in an OS (VMkernel, Windows) is a consumer.'
+- 'Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''. An average of GHz values is unusual; a sum is expected for GHz. Written as in the book. Author to confirm.'
+- '2026-11-04: merged vsphere/cpu/concepts/cpu-measurement-levels into this file (author decision 5, holistic review).'
 status: draft
 ```

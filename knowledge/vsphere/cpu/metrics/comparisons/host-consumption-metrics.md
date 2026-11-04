@@ -68,7 +68,7 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- vsphere/cpu/concepts/esxi-thread-core-accounting
+- vsphere/cpu/concepts/hyper-threading
 same_name: []
 same_meaning: []
 related:
@@ -99,7 +99,7 @@ source:
   path: 'CPU > ESXi > Consumption Metrics > Quiz: 50% or 75% or 100%?; Summary > Comparison'
 corrections: []
 review_notes:
-- 'Section ''Rollup over 6 scenarios'': the author''s proposed value column is included because the book text explains it. The similar column in the Turbo table (vsphere/cpu/concepts/cpu-frequency) is parked in docs/todo.md.'
+- 'Section ''Rollup over 6 scenarios'': the author''s proposed value column is included because the book text explains it. The similar column in the Turbo table (vsphere/cpu/concepts/cpu-frequency) is parked in project/todo.md.'
 - "Section with the 1.3x frequency example: author (2026-11-03), Q010: Usage cap removed in vCenter and VCF Operations."
 status: draft
 ```

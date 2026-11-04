@@ -75,7 +75,7 @@ internal_derive:
 related:
 - vsphere/foundations/vcenter-statistics
 - vsphere/memory/concepts/memory-tiering
-- vsphere/cluster-resource-management/concepts/drs-overview
+- vsphere/resource-management/concepts/drs-overview
 - vsphere/cpu/concepts/numa
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
