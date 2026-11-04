@@ -12,21 +12,39 @@ How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: `README
 - One format cannot serve all three. The knowledge is therefore split into forms, each chosen for the kind of knowledge it holds. All forms live in one git repository, reviewed and versioned together.
 
 ## 2. The forms of codified knowledge
-| Form | Holds | Why this form | Read by | Where | Size (2026-11-04) |
-|---|---|---|---|---|---|
-| Structured prose | Mechanisms, reasons, edge cases | Language is the only way to state "why"; one fact per bullet keeps a mistake to one line and a chunk to one topic | Model, human | `knowledge/**/*.md` | 203 files, 1,332 chunks |
-| Traps | Misconceptions and their correction | The expert's main asset is knowing when a true number is read wrongly; writing the wrong conclusion in the user's words makes it retrievable | Model, human, benchmark | `## Traps` in each file | 411 trap lines |
-| Metadata tags | Technology, pillar, product, object, layer, instance, metric class | Lets one file be found from several perspectives and filters retrieval | Harness, website | `## Metadata` yaml at the end of each file | every file |
-| Links | Same name, same meaning, derived from, related | Encodes the expert's mental map: which facts must be read together | Harness, model | `same_name`, `same_meaning`, `internal_derive`, `related` | 32 / 4 / 162 / 725 |
-| Folder hierarchy | Book order: raw metrics by technology, derived metrics by object, pillars across products | One browsable tree in the order the author reviews | Human | `knowledge/` | 4 top areas |
-| Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | Exact values must not depend on retrieval luck or model memory | Harness tools | `knowledge/catalog/*.yaml` → SQLite | 131 counters, 178 esxtop fields, 31 thresholds, 38 bands, 12 object types |
-| Troubleshooting flows | The expert's order of checks and the branch at each step | Small models skip steps; an ordered, executable form keeps them on the path | Harness (flow tool), model | `diagnosis/` files | 12 flows |
-| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | Arithmetic is where models slip; code does it exactly | Harness | `harness/calc.py`, formulas in files | 7 functions |
-| Images with text twins | The author's diagrams and charts | Diagrams carry expert insight; the text twin makes them usable by a text-only model | Model, human, vision model | `images/` folders | 180 images |
-| Glossary | Controlled vocabulary, synonyms, words to avoid | Wrong words produce wrong reasoning (VM vs Guest OS, storage vs disk, vCenter vs VCF Operations) | Model, human, lint | `knowledge/glossary.md` | 76 entries |
-| Provenance | Source, review notes, corrections, author answers | Every fact must be traceable and challengeable | Human | metadata, `project/author-questions.md` | 48 author questions |
-| Rules as code | Architecture and writing rules | A rule that a script checks cannot drift | Lint | `tools/lint.py`, `tools/tags.yaml` | runs before every merge |
-| Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | Proves the knowledge works, not only that it exists | Benchmark | `benchmark/cases/` | 28 cases |
+| Form | Holds | Where | Size (2026-11-04) |
+|---|---|---|---|
+| Structured prose | Mechanisms, reasons, edge cases | `knowledge/**/*.md` | 203 files, 1,332 chunks |
+| Traps | Misconceptions and their correction | `## Traps` in each file | 411 trap lines |
+| Metadata tags | Technology, pillar, product, object, layer, instance, metric class | `## Metadata` yaml at the end of each file | every file |
+| Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | 32 / 4 / 162 / 725 |
+| Folder hierarchy | Book order: raw metrics by technology, derived metrics by object, pillars across products | `knowledge/` | 4 top areas |
+| Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite | 131 counters, 178 esxtop fields, 31 thresholds, 38 bands, 12 object types |
+| Troubleshooting flows | The expert's order of checks and the branch at each step | `diagnosis/` files | 12 flows |
+| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files | 7 functions |
+| Images with text twins | The author's diagrams and charts | `images/` folders | 180 images |
+| Glossary | Controlled vocabulary, synonyms, words to avoid | `knowledge/glossary.md` | 76 entries |
+| Provenance | Source, review notes, corrections, author answers | metadata, `project/author-questions.md` | 48 author questions |
+| Rules as code | Architecture and writing rules | `tools/lint.py`, `tools/tags.yaml` | runs before every merge |
+| Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/cases/` | 28 cases |
+
+Why each form was chosen, and who reads it:
+
+| Form | Why this form | Read by |
+|---|---|---|
+| Structured prose | Language is the only way to state "why"; one fact per bullet keeps a mistake to one line and a chunk to one topic | Model, human |
+| Traps | The expert's main asset is knowing when a true number is read wrongly; writing the wrong conclusion in the user's words makes it retrievable | Model, human, benchmark |
+| Metadata tags | Lets one file be found from several perspectives and filters retrieval | Harness, website |
+| Links | Encodes the expert's mental map: which facts must be read together | Harness, model |
+| Folder hierarchy | One browsable tree in the order the author reviews | Human |
+| Catalog | Exact values must not depend on retrieval luck or model memory | Harness tools |
+| Troubleshooting flows | Small models skip steps; an ordered, executable form keeps them on the path | Harness (flow tool), model |
+| Formulas and calculator | Arithmetic is where models slip; code does it exactly | Harness |
+| Images with text twins | Diagrams carry expert insight; the text twin makes them usable by a text-only model | Model, human, vision model |
+| Glossary | Wrong words produce wrong reasoning (VM vs Guest OS, storage vs disk, vCenter vs VCF Operations) | Model, human, lint |
+| Provenance | Every fact must be traceable and challengeable | Human |
+| Rules as code | A rule that a script checks cannot drift | Lint |
+| Executable expectations | Proves the knowledge works, not only that it exists | Benchmark |
 
 ## 3. Three slices of the same knowledge
 The author's books describe metrics from three perspectives: technology, object, and operations management (pillar). A folder tree holds one; tags and links hold the others.
