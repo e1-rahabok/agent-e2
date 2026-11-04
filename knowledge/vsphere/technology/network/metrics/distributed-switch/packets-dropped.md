@@ -15,8 +15,8 @@
 - No vSphere Client chart: read them through the API or a tool that reads it.
 
 ## Reading it
-- Drops at a DVPort but not at the VM vNIC: the loss is at the switch port, outside the guest. Drops at the vNIC: see `vsphere/technology/network/diagnosis/vnic-rx-drops`.
-- Drops on a LAG: uplink side. Compare with the vmnic drop counters of the hosts. See `vsphere/technology/network/metrics/host/packets-dropped`.
+- Each component counts its own drops: the distributed port, the VM vNIC (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`), the LAG and the host vmnic (`vsphere/technology/network/metrics/host/packets-dropped`). Read each counter for its own component.
+- Which component caused a drop is a troubleshooting question the counters alone do not settle. For vNIC receive drops, see `vsphere/technology/network/diagnosis/vnic-rx-drops`.
 - A drop count means little without the packet count of the same scope: read it as a share of `net.throughput` packets. See `vsphere/technology/network/metrics/distributed-switch/packets`.
 
 ## Traps
@@ -53,6 +53,6 @@ source:
 corrections: []
 review_notes:
 - 'Whole file: counter names, scopes, level and rollup from the author''s vCenter 9.1.0 API export. The author asked for the distributed switch to be documented (2026-11-04).'
-- 'Section ''Reading it'': where a drop sits (port vs vNIC vs uplink) is Claude''s inference from the counter scopes. Author to confirm.'
+- 'Section ''Reading it'': author answer (2026-11-04): port, vNIC and uplink each have their own dropped packet counter; using them to find the component that caused a drop is not settled.'
 status: draft
 ```

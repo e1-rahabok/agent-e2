@@ -197,6 +197,21 @@ Each entry has:
 - Written as now: cumulative since cluster creation (book); VCF Operations converts them to rates (book).
 - Answer:
 
+### Q053 · vCenter API counters · gpu.mem.reserved vs gpu.mem.used
+- Files: `vsphere/technology/gpu/concepts/gpu-monitoring` (sections Counters, Reading the counters, vGPU capacity).
+- Search: not from the book. Counters and vCenter 9.1.0 API summaries, on ClusterComputeResource and ResourcePool, level 1:
+  - `gpu.mem.reserved` (latest, KB): "The amount of GPU memory consumed by virtual GPUs in kilobytes".
+  - `gpu.mem.used` (average, KB): "The amount of GPU memory used by workloads in kilobytes".
+  - `gpu.mem.total` (latest, KB): "The total amount of GPU memory in kilobytes".
+  - `gpu.utilization` (average, %): "The compute utilization of a GPU in percentage".
+- Context: the knowledge base says a vGPU profile fixes the frame buffer per VM, reserved at power-on, so host GPU memory can look high while VMs are idle. Per-device host counters (GPU Memory Usage) are level 4 in the chart tables.
+- Question:
+  1. Is `gpu.mem.reserved` the sum of the vGPU profile frame buffers of powered-on VMs?
+  2. Is `gpu.mem.used` the frame buffer the workloads actually touch, so it is always at or below reserved?
+  3. When reserved approaches total, can no further vGPU be placed even with low utilization? (Placement is per physical GPU, so the cluster total may hide fragmentation.)
+- Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
+- Answer:
+
 ## Resolved
 
 ### Q024 · Chapter 5 Network > Architecture · VM and ingress
