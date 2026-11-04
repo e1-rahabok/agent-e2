@@ -86,6 +86,6 @@ source:
   path: Provider Objects > Other Metrics > Availability
 corrections: []
 review_notes:
-- 'Section ''Restarts: sys.uptime'': counter, level, rollup and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. Reading a drop as a restart, and whether a Guest OS reboot resets the VM counter, are Claude''s own knowledge. Author to confirm.'
+- 'Section ''Restarts: sys.uptime'': counter, level, rollup and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. Reading a drop toward 0 as a restart: confirmed by the author (2026-11-04). Whether a Guest OS reboot without a VM power cycle resets the VM counter is Claude''s own knowledge, not yet confirmed.'
 status: draft
 ```

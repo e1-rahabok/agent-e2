@@ -21,7 +21,6 @@
 
 ## Reading it
 - Most traffic should be unicast. A high multicast or broadcast share explains receive drops and wasted CPU on every VM in the broadcast domain. See `vsphere/technology/network/metrics/comparisons/vm-network-metrics`.
-- DVPort counts let one VM's traffic be compared at the switch port and at the vNIC. A difference points to drops between the two.
 - LAG counts show whether traffic spreads across the uplinks of a link aggregation group.
 - VCF Operations shows distributed port group metrics aggregated over all hosts. vCenter itself keeps none on the port group. See `vsphere/technology/network/concepts/network-observability`.
 

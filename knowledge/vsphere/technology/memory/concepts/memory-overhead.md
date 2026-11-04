@@ -38,7 +38,8 @@ esxcli sched swap system set -d true -n <datastore name>
 
 ## Overhead counter
 - vCenter stores `mem.overhead` at level 1 on the VM, the ESXi host, the cluster and the resource pool: host physical memory consumed by ESXi data structures for running the VMs, in KB.
-- The host, cluster and resource pool values sum the overhead of their VMs. They do not include the system-wide overhead of the VMkernel and host agents.
+- ESXi and cluster values include the VMkernel overhead, not only the VMs' overhead.
+- The resource pool value is the sum of its VMs' overhead. It is negligible: a resource pool has no overhead of its own.
 - VM-level reading: `vsphere/technology/memory/metrics/virtual-motherboard/overhead`.
 
 ## VMX swap
@@ -57,6 +58,7 @@ esxcli sched swap system set -d true -n <datastore name>
 - ESX page sharing and other optimizations can save more memory than the overhead described here in some cases.
 
 ## Traps
+- "Resource pool overhead is a cost of the pool" → it is the sum of its VMs' overhead; the pool adds none.
 - "Overhead is counted inside the configured memory of the VM" → the per-VM overhead is reserved in addition to the configured memory.
 - "The VMX swap file is a regular swap file" → it is unrelated to host-level swapping and swap to host cache.
 - "The system swap file is the same as a VM swap file" → it is a separate 1 GB file for the VMkernel and host agents.
@@ -85,7 +87,7 @@ source:
   path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
 corrections: []
 review_notes:
-- 'Section ''Overhead counter'': objects, level, unit and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. That host, cluster and resource pool values sum VM overhead and exclude system-wide overhead is Claude''s inference from the counter summary. Author to confirm.'
+- 'Section ''Overhead counter'': objects, level, unit and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. What the host, cluster and resource pool values include: author answer (2026-11-04): ESXi and cluster include VMkernel overhead; resource pool is the sum of VM overhead, negligible.'
 - 'Section ''Per-VM overhead'': VMMEM, the overhead percentages, hypervisor overhead and the DRS overhead limit from the vSphere 9.1 documentation, vSphere Resource Management > Overhead Memory on Virtual Machines, DRS Overhead Memory Management for VMs, Memory Tiering Troubleshooting > The Reservable Memory is Lower than Expected (pp. 1838, 1902-1903, 1958).'
 - Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
