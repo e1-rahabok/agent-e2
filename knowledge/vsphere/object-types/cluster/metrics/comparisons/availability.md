@@ -18,6 +18,11 @@
 - VCF Operations super metric: 1 point per condition met (0-4), × 25.
 ![ESXi operational availability states](../../images/esxi-operational-availability-scoring-states.png)
 
+## Restarts: sys.uptime
+- vCenter stores `sys.uptime` on every VM and ESXi host at level 1: seconds since the last start, rollup latest.
+- Uptime falls back toward 0 at every restart. A drop between two samples marks a reboot or power cycle, even when the object was down for less than one sample.
+- The VM counter restarts with the VM (power cycle, reset, HA restart). A Guest OS reboot without a VM power cycle is a Guest OS event. See `vsphere/object-types/cluster/metrics/vm-operations`.
+
 ## Cluster availability
 - Not the average of hosts: HA matters.
 
@@ -62,6 +67,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
+- vsphere/object-types/cluster/metrics/vm-operations
 - operations-management/capacity/capacity-model
 - vsphere/object-types/cluster/concepts/cluster-operations
 images:
@@ -79,6 +85,7 @@ source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Other Metrics > Availability
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Restarts: sys.uptime'': counter, level, rollup and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. Reading a drop as a restart, and whether a Guest OS reboot resets the VM counter, are Claude''s own knowledge. Author to confirm.'
 status: draft
 ```

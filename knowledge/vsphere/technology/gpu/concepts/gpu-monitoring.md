@@ -8,7 +8,18 @@
 | Temperature (GPU Temperature) | HostSystem, per GPU device | °C, Average, level 4 | GPU device temperature. |
 | GPU (watts) | VirtualMachine | Watts, level 1 (VM power group) | Power drawn by the VM's virtual GPU. |
 
-- Utilization, memory used and temperature are statistics level 4 counters. At the default level 1, vCenter keeps no GPU history: only real-time data. See `vsphere/foundations/vcenter-statistics`.
+- Utilization, memory used and temperature per GPU device on the host are statistics level 4 counters in the chart tables: at the default level 1, vCenter keeps no per-device history. See `vsphere/foundations/vcenter-statistics`.
+- Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API, so their history exists by default:
+
+| Counter | Rollup | Meaning (vCenter summary) |
+|---|---|---|
+| `gpu.utilization` | average | Compute utilization of a GPU, % |
+| `gpu.mem.used` | average | GPU memory used by workloads, KB |
+| `gpu.mem.reserved` | latest | GPU memory consumed by virtual GPUs, KB |
+| `gpu.mem.total` | latest | Total GPU memory, KB |
+| `gpu.power.used` | latest | Power used by a GPU, watts |
+| `gpu.temperature` | average | GPU temperature, °C |
+
 - GPU counters appear only when the GPU vendor driver is installed on the host.
 - The host GPU charts show the 10 devices with the highest value: compute usage, memory allocation, temperature.
 - The VM GPU power group appears only for VMs with NVIDIA GPUs.
@@ -17,6 +28,7 @@
 ## Reading the counters
 - High GPU utilization means either effective use or a bottleneck at peak. It does not show which, and it is not comparable across GPU vendors or architectures.
 - GPU memory used with vGPU reflects the frame buffer reserved for each vGPU profile, not the active workload of the VM. A host can show high GPU memory while the VMs are idle.
+- At cluster and resource pool level vCenter separates the two: `gpu.mem.reserved` is the frame buffer the vGPUs hold; `gpu.mem.used` is what the workloads use. Reserved far above used means profiles larger than the workloads. Reserved close to total means no room for another vGPU, even while utilization is low.
 - Rising temperature leads to thermal throttling: the GPU lowers its clock and performance drops before any failure. It can also damage hardware.
 - vSphere has no GPU contention counter. Quality-of-service problems inside a vGPU (time slicing between vGPUs) are tracked with the GPU vendor's tools.
 
@@ -50,7 +62,8 @@
 
 ## Traps
 - "GPU memory 90% used, so the VMs are busy" → vGPU frame buffers are reserved at power-on. Check GPU utilization.
-- "The 1-week chart shows no GPU data, so the GPU was idle" → GPU counters are level 4; default history holds none.
+- "The 1-week chart shows no GPU data, so the GPU was idle" → per-device host GPU counters are level 4; default history holds none. Use the cluster or resource pool GPU counters, which are level 1.
+- "GPU memory reserved is high, so the workloads are busy" → compare with `gpu.mem.used` and utilization.
 - "Cluster GPU memory is free, so the vGPU VM will power on" → placement is per physical GPU and per profile. Check DirectPath Profiles Remaining.
 - "Balloon the vGPU VM to free host memory" → vGPU VMs are fully reserved; nothing is reclaimed.
 
@@ -82,6 +95,7 @@ source:
   path: vSphere Monitoring and Performance > Metric Groups, Statistics Levels, Hosts > GPU Compute, GPU Memory, GPU Compute Usage, GPU Memory Allocation, GPU Temperature, Preconfigured vSphere Alarms (pp. 2028-2030, 2065-2067, 2142); vSphere Resource Management > Configure Virtual Graphics, Migrating VMs with vGPUs, Configuring vGPU Size, Capacity Visualization of DirectPath Profiles, DRS Placement of vGPUs (pp. 1880-1884, 1902)
 corrections: []
 review_notes:
+- 'Section ''Counters'' (cluster and resource pool table) and ''Reading the counters'' (reserved vs used): counters, rollups, levels and summaries from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. The reading of reserved vs used vs total is Claude''s inference from the summaries. Author to confirm.'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Reading the counters'': thermal throttling as a clock reduction, and vGPU time slicing as the quality-of-service mechanism, are Claude''s own knowledge. The documentation says overheating can cause throttling and reduced performance, and points to the GPU vendor for QoS.'
 - 'Section ''Placement and migration'': the statement that breadth-first placement fragments GPU capacity is Claude''s inference from the documentation''s remedies (same profile, GPU consolidation, manual migration to open up unused physical GPU capacity). The pause during GPU state copy is Claude''s own knowledge.'

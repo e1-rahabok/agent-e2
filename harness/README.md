@@ -6,7 +6,7 @@ The software around the model. It turns a question into a grounded answer. Not i
 |---|---|
 | `kb.py` | Load `knowledge/`: metadata split off, body chunked by `##` heading, chunks prefixed with title and id. |
 | `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, link expansion (`same_name`, `related`). |
-| `catalog.py` | Metric catalog: `knowledge/catalog/*.yaml` plus metric-file metadata, compiled to an in-memory SQLite database. Lookups by counter, chart label, esxtop field or title; thresholds; colour bands read from the knowledge files; object relations and paths. |
+| `catalog.py` | Metric catalog: `knowledge/catalog/*.yaml` plus metric-file metadata, compiled to an in-memory SQLite database. Lookups by counter, chart label, esxtop field or title, returning chart units and API units (`vcenter-api-counters.yaml`); thresholds; colour bands read from the knowledge files; object relations and paths. |
 | `calc.py` | Calculator: safe arithmetic plus domain functions (summation ms ↔ %, unit conversion with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each function returns a note naming its source. |
 | `flows.py` | Flow executor: diagnosis files served as ordered steps, one step at a time, with the next step and the steps a step refers to. Reads the markdown directly; no second copy of the flow. |
 | `verify.py` | Answer verifier. Hard issues (no ANSWER line, letters that are not options, Unsure or Not covered mixed with other letters) get one repair turn. Soft issues (no REASON, unknown file id, a number with a unit that the model was never shown) are recorded only. |

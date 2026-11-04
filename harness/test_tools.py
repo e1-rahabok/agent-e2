@@ -29,6 +29,11 @@ class CatalogTest(unittest.TestCase):
         self.assertTrue(r['counters'])
         self.assertTrue(all(c['level'] == 4 for c in r['counters']))
 
+    def test_api_units(self):
+        r = CAT.lookup('mem.vmmemctl', object='vm')
+        self.assertEqual((r['api'][0]['unit'], r['api'][0]['level']), ('kiloBytes', 1))
+        self.assertEqual(r['counters'][0]['unit'], 'Megabytes (MB)')
+
     def test_esxtop_field(self):
         self.assertEqual(CAT.lookup('%RDY')['esxtop'][0]['field'], '%RDY')
         self.assertTrue(CAT.lookup('DAVG')['esxtop'][0]['field'].startswith('DAVG'))

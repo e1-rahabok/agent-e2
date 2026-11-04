@@ -87,7 +87,7 @@ Standing rules for this repository. Read at the start of every session.
 - During an Auto Test run, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Repository layout
-- `knowledge/`: what the model reads. `knowledge/catalog/`: structured data (YAML) the harness tools query: vCenter counters, esxtop fields, thresholds, object model. `harness/`: the software around the model (retrieval, tools, verifier, prompts). `benchmark/`: proof that the model benefits (questions with answer keys, runner, results). `project/`: design, decisions, author questions, to-do. `tools/`: repository maintenance (lint, tag values).
+- `knowledge/`: what the model reads. `knowledge/catalog/`: structured data (YAML) the harness tools query: vCenter chart counters, vCenter API counters, esxtop fields, thresholds, object model. `harness/`: the software around the model (retrieval, tools, verifier, prompts). `benchmark/`: proof that the model benefits (questions with answer keys, runner, results). `project/`: design, decisions, author questions, to-do. `tools/`: repository maintenance (lint, tag values).
 
 ## Do not index
 - `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, `README.md`, `CLAUDE.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`.

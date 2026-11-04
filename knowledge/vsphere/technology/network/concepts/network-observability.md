@@ -80,6 +80,11 @@ flowchart LR
 ![Superseded book diagram: ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
 ![Superseded book diagram: distributed switch direction from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 
+## vCenter counters on switches and port groups
+- The distributed switch has API counters at level 3: packets (all, multicast, broadcast) and drops, at switch, distributed port (DVPort) and LAG scope. See `vsphere/technology/network/metrics/distributed-switch/packets` and `vsphere/technology/network/metrics/distributed-switch/packets-dropped`.
+- The distributed port group has no vCenter performance counters. Port-level data sits on the switch object, per DVPort.
+- The vSphere Client shows no performance charts for either.
+
 ## Traffic type metrics
 - VCF Operations has unicast, multicast and broadcast metrics at VM, ESXi, distributed port group and distributed switch level (also vSphere Pods, which are VMs).
 - No aggregation at higher levels: use super metrics.
@@ -116,6 +121,8 @@ object:
 - DistributedVirtualPortgroup
 internal_derive: []
 related:
+- vsphere/technology/network/metrics/distributed-switch/packets
+- vsphere/technology/network/metrics/distributed-switch/packets-dropped
 - vsphere/technology/network/concepts/network-characteristics
 - vsphere/technology/network/concepts/netioc
 - vsphere/technology/network/concepts/passthrough-and-offload
@@ -161,6 +168,7 @@ source:
 corrections:
 - 'Section ''Direction terms'': the book diagrams and text say a VM has no ingress traffic. Superseded by author answer Q024 (2026-11-04). Keep until the book is updated.'
 review_notes:
+- 'Section ''vCenter counters on switches and port groups'': from the author''s vCenter 9.1.0 API export and its README (distributed port group returns no counters), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 - 'Section ''Direction terms'': author answer Q024 (2026-11-04): RX/TX, ingress/egress and incoming/outgoing are three domains (driver, policy, telemetry); the table and Mermaid diagram are from the answer. The book diagrams are kept as superseded.'
 status: draft
 ```

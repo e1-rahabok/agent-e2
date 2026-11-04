@@ -59,12 +59,30 @@
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
 - Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
 - The VM CPU Ready chart shows the average of all vCPUs at level 1. Ready per vCPU appears only at level 3.
-- GPU utilization, GPU memory used and GPU temperature are level 4 counters. At the default level, vCenter stores no GPU history.
+- Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See `vsphere/technology/gpu/concepts/gpu-monitoring`.
 - Levels 3 and 4 raise vCenter load significantly. If vpxd cannot write statistics to the database fast enough, its memory grows until it runs out of memory and crashes. After raising a level, watch the vpxd process size.
+
+## Level 1 counters per object (vCenter 9.1 API)
+What the vCenter 9.1 API offered per object type in one inventory (author's export). This is the history that exists when nobody raised the statistics level.
+
+| Object | Counters |
+|---|---|
+| VM | cpu: usage, usagemhz, ready. mem: usage, consumed, overhead, vmmemctl, swapinRate, swapoutRate. disk: usage, maxTotalLatency, used, provisioned, unshared. net: usage. sys: uptime. clusterServices: vmDrsScore |
+| ESXi | cpu: usage, usagemhz, ready. mem: usage, consumed, overhead, vmmemctl, swapinRate, swapoutRate, bandwidth.total. disk: usage, maxTotalLatency. net: usage. sys: uptime. clusterServices: cpufairness, memfairness |
+| Cluster | cpu: usage, usagemhz, totalmhz. mem: usage, consumed, overhead, vmmemctl, totalmb. clusterServices: effectivecpu, effectivemem, clusterDrsScore, failover. vmop: 20 operation counts. gpu: utilization, mem.used, mem.reserved, mem.total, power.used, temperature |
+| Resource pool | cpu: usagemhz. mem: consumed, overhead, vmmemctl. gpu: same 6 as cluster |
+| Datastore | disk: used, provisioned, capacity, unshared, numberReadAveraged, numberWriteAveraged. datastore: numberReadAveraged, numberWriteAveraged |
+| Datacenter | vmop: 20 operation counts |
+| Distributed switch | net.throughput: packets and drops at switch, port and LAG scope; level 3, not level 1 |
+| Distributed port group, folder | none |
+
+- At the default level a VM keeps no Co-stop, no per-vCPU Ready, no memory Latency, no per-disk latency and no network drops. Its contention history is Ready, Highest Latency (maxTotalLatency), balloon and swap rates.
+- Every counter with its API unit, rollup and summary: `knowledge/catalog/vcenter-api-counters.yaml`.
 
 ## Units
 - KB in vCenter counters = 1,024 bytes. KBps = 1,024 bytes per second.
 - kb (kilobit) = 1,000 bits. kbps = 1,000 bits per second.
+- The API and the charts use different units for the same counter. The API returns memory in KB (mem.consumed, mem.vmmemctl, mem.overhead), swap rates in KBps, disk and network usage in KBps, and space in KB. The vSphere Client charts convert: memory to MB, space to GB, network usage to Mbps. A value exported through the API and read as MB is 1,024 times too large.
 - Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See `vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units`.
 
 ## Where history is lost
@@ -76,10 +94,11 @@
 ## Chart behaviour
 - Stacked charts show the 10 child objects with the highest values. Smaller children are not shown.
 - Datastore space charts show the latest data only, not history. Space statistics are refreshed every 30 minutes and collected asynchronously across datastores, so they can be up to 30 minutes old.
-- Performance charts do not exist for network objects (switches, port groups).
+- Performance charts do not exist for network objects (switches, port groups). The distributed switch still has API counters at level 3 (switch, port, LAG); the distributed port group has none. See `vsphere/technology/network/metrics/distributed-switch/packets`.
 - Overview and advanced charts show a subset of the counters. The vSphere API reference lists all counters.
 
 ## Traps
+- "An API value of 4,194,304 for VM Consumed is 4 TB" → the API unit is KB: 4 GB.
 - "The 1 Week chart shows the peak" → it shows 30-minute averages. Use real-time or esxtop for bursts.
 - "Max rollup is always available" → only at statistics level 4.
 - "Ready of 2,000 ms is high" → it depends on the interval: 2,000 ms in 20 seconds is 10% of one vCPU; in a 5-minute point it is 0.67%.
@@ -115,6 +134,7 @@ source:
   path: vSphere Monitoring and Performance > Monitoring Inventory Objects with Performance Charts > Data Counters, Data Collection Intervals, Statistics Levels, Performance Chart Types; Troubleshoot and Enhance Performance > Empty Performance Charts; Hosts > GPU charts (pp. 2025-2031, 2065-2067, 2123-2124)
 corrections: []
 review_notes:
+- 'Sections ''Level 1 counters per object'', ''Units'' (API units), ''Chart behaviour'' (distributed switch) and the GPU line in ''Statistics levels'': from the author''s vCenter 9.1.0 API export (build 25370922), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. The chart-unit conversions are from the vSphere 9.1 chart tables (catalog/vcenter-counters).'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Collection intervals'': the document says 1 Week rolls up 12 points of 1 Day every 2 hours (text under 1 Week) and 6 points every 30 minutes (text under 1 Day). The table uses the arithmetic: 6 x 5 min = 30 min; 4 x 30 min = 2 h; 12 x 2 h = 1 day.'
 - 'Section ''Rollup type'': the Summation example (20,000 ms per vCPU per 20-second sample = 100%) and the burst dilution factors are Claude''s own arithmetic.'

@@ -36,6 +36,11 @@ esxcli sched swap system set -d true -n <datastore name>
 - Hypervisor overhead: about 2% of memory on a 1 TB non-tiered host; about 7.96% on a host with 512 GB DRAM + 512 GB NVMe tiering.
 - Reconfiguration changes overhead. Example: lowering a reservation from 250 GB to 0 adds about 25 MB of overhead for page-table mappings. Since vSphere 8.0 Update 3, DRS raises the VM's overhead limit before a reconfiguration, so the change does not fail on overhead.
 
+## Overhead counter
+- vCenter stores `mem.overhead` at level 1 on the VM, the ESXi host, the cluster and the resource pool: host physical memory consumed by ESXi data structures for running the VMs, in KB.
+- The host, cluster and resource pool values sum the overhead of their VMs. They do not include the system-wide overhead of the VMkernel and host agents.
+- VM-level reading: `vsphere/technology/memory/metrics/virtual-motherboard/overhead`.
+
 ## VMX swap
 - VMX swap can significantly reduce the per-VM VMX memory reservation, which allows more memory to be swapped out when the host is overcommitted.
 - A VMX swap file is created automatically for each VM. This reduces the host memory reserved for that VM.
@@ -80,6 +85,7 @@ source:
   path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
 corrections: []
 review_notes:
+- 'Section ''Overhead counter'': objects, level, unit and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. That host, cluster and resource pool values sum VM overhead and exclude system-wide overhead is Claude''s inference from the counter summary. Author to confirm.'
 - 'Section ''Per-VM overhead'': VMMEM, the overhead percentages, hypervisor overhead and the DRS overhead limit from the vSphere 9.1 documentation, vSphere Resource Management > Overhead Memory on Virtual Machines, DRS Overhead Memory Management for VMs, Memory Tiering Troubleshooting > The Reservable Memory is Lower than Expected (pp. 1838, 1902-1903, 1958).'
 - Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'

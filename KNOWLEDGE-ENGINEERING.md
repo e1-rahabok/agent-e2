@@ -19,7 +19,7 @@ How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: `README
 | Metadata tags | Technology, pillar, product, object, layer, instance, metric class | `## Metadata` yaml at the end of each file | every file |
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | 32 / 4 / 162 / 725 |
 | Folder hierarchy | Book order: raw metrics by technology, derived metrics by object, pillars across products | `knowledge/` | 4 top areas |
-| Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite | 131 counters, 178 esxtop fields, 31 thresholds, 38 bands, 12 object types |
+| Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite | 131 chart counters, 133 API counters, 178 esxtop fields, 31 thresholds, 38 bands, 12 object types |
 | Troubleshooting flows | The expert's order of checks and the branch at each step | `diagnosis/` files | 12 flows |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files | 7 functions |
 | Images with text twins | The author's diagrams and charts | `images/` folders | 180 images |
