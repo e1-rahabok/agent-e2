@@ -33,7 +33,7 @@
 **Why it can work, why 32B, which models:** `project/solution-design.md`.
 **Status and review:** not achieved yet; best small model 58% vs frontier 75% on the first 17 questions. Findings and decisions: `project/review-2026-11-04.md`.
 
-Readers: the model reads `knowledge/`. The author reviews for QA. Everything below is the contract the files are written to.
+Readers: the model reads `knowledge/`. The author reviews for QA. The sections below are the rules the files follow.
 
 ## Layout
 
@@ -123,7 +123,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 | 400 | Explain the mechanism, predict where the reading misleads, and say what to check instead. | "2% Ready on 10% Run delayed 20% of the work; 2% on 98% Run is fine. Ready includes limit time and the summation counter grows with vCPU count, so check Run, Max Limited and the per-vCPU %." |
 
 - The knowledge base is written at Level 400. Levels 100-200 are assumed; generic models already reach Level 300 from public text.
-- What separates 400 from 300 is the trap: a Level 300 reader takes the reading at face value and acts on it; a Level 400 reader knows when the reading lies.
+- The trap separates 400 from 300. A Level 300 reader acts on the reading at face value. A Level 400 reader knows when the reading misleads.
 
 ### Trap definition
 - A trap is a wrong conclusion drawn from a true observation. The number is right; the reading is wrong.
@@ -155,10 +155,10 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 
 ### Trap use
 - Retrieval: a trap line holds the wrong conclusion in the user's own words, so a question that carries the misconception retrieves the file that corrects it.
-- `same_name` links bring in the other object's meaning of the same label: the main guard against the first trap type.
+- `same_name` links bring in the other object's meaning of the same label. They are the main guard against the first trap type.
 - The model is told to watch for same-name metrics and to answer with the mechanism, not the definition.
 - Benchmark: every multiple-choice question has a trap option named in `## Likely wrong answer`; the trap rate is reported per model. See `benchmark/test-design.md`.
-- A trap without a mechanism is an opinion, not a trap: it needs a source like any other fact.
+- A trap needs a mechanism and a source, like any other fact.
 
 ## Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -275,7 +275,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 - Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
 - Every image has its own tags in the file's metadata `images` list (see Metadata). The validator fails on a missing or invalid entry.
 - Every image file is linked from a knowledge file. The validator fails on an unlinked image: an unlinked image has no context for the AI.
-- File names describe what the image shows. No length limit applies (GitHub, git and Markdown accept long names); clarity wins.
+- File names describe what the image shows. No length limit applies (GitHub, git and Markdown accept long names).
   - Pattern: `<object>-<metric or topic>-<what it shows>.png`, lowercase, hyphens. Example: `esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png`.
   - Chart type at the end when it helps: `-distribution`, `-scatter`, `-timeline`, `-table`, `-diagram`.
   - No bare numbers. Sample sizes (192 hosts, 3,385 VMs) go in the alt text and body, not the file name. A number stays only when it is the point, e.g. `62-5-percent`.

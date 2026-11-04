@@ -1,15 +1,16 @@
 # Knowledge engineering
 
-For human experts who want to judge how much of an expert's knowledge and experience this repository holds, and how. Not indexed.
+How much expert knowledge this repository holds, and in what form. For human reviewers. Not indexed.
 How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
 
 ## 1. The problem
-- The source is an expert: the author's books, quizzes, field answers and 20+ years of operating vSphere. Most of that knowledge is tacit: it lives in judgment ("this reading lies when…"), not in definitions.
+- Source: the author's books, quizzes, field answers and 20+ years of operating vSphere.
+- Most of this knowledge is tacit. It is judgment ("this reading is misleading when…"), not definitions.
 - Three readers must use the same knowledge:
   - a small local model, which reads short retrieved passages and follows rules literally;
   - the harness, which needs exact, structured values it can look up and compute with;
   - a human expert, who must be able to review every fact and trace it to its source.
-- One format cannot serve all three. The knowledge is therefore split into forms, each chosen for the kind of knowledge it holds. All forms live in one git repository, reviewed and versioned together.
+- No single format serves all three. Each kind of knowledge gets its own form. All forms live in one git repository, reviewed and versioned together.
 
 ## 2. Knowledge forms
 | Form | Holds | Where | Size (2026-11-04) |
@@ -28,12 +29,12 @@ How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: `README
 | Rules as code | Architecture and writing rules | `tools/lint.py`, `tools/tags.yaml` | runs before every merge |
 | Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/cases/` | 28 cases |
 
-Why each form was chosen, and who reads it:
+Reason for each form, and its readers:
 
 | Form | Why this form | Read by |
 |---|---|---|
-| Structured prose | Language is the only way to state "why"; one fact per bullet keeps a mistake to one line and a chunk to one topic | Model, human |
-| Traps | The expert's main asset is knowing when a true number is read wrongly; writing the wrong conclusion in the user's words makes it retrievable | Model, human, benchmark |
+| Structured prose | Reasons need prose; one fact per bullet keeps a mistake to one line and a chunk to one topic | Model, human |
+| Traps | Experts know when a true number is read wrongly; the wrong conclusion, written in the user's words, retrieves its correction | Model, human, benchmark |
 | Metadata tags | Lets one file be found from several perspectives and filters retrieval | Harness, website |
 | Links | Encodes the expert's mental map: which facts must be read together | Harness, model |
 | Folder hierarchy | One browsable tree in the order the author reviews | Human |
@@ -44,7 +45,7 @@ Why each form was chosen, and who reads it:
 | Glossary | Wrong words produce wrong reasoning (VM vs Guest OS, storage vs disk, vCenter vs VCF Operations) | Model, human, lint |
 | Provenance | Every fact must be traceable and challengeable | Human |
 | Rules as code | A rule that a script checks cannot drift | Lint |
-| Executable expectations | Proves the knowledge works, not only that it exists | Benchmark |
+| Executable expectations | Shows that the knowledge changes answers | Benchmark |
 
 ## 3. Slices
 The author's books describe metrics from three perspectives: technology, object, and operations management (pillar). A folder tree holds one; tags and links hold the others.
@@ -52,7 +53,7 @@ The author's books describe metrics from three perspectives: technology, object,
   - Technology: `vsphere/technology/cpu/metrics/virtual-motherboard/ready` (folder), `technology: cpu` (tag).
   - Object: `object: VirtualMachine` (tag), listed in `vsphere/object-types/vm/overview-what-to-monitor` (link), part of the VM Performance KPI.
   - Operations management: `pillar: performance` (tag), used by `operations-management/performance/performance-kpi-design` and the cluster KPI (links).
-- Retrieval can filter on any tag, the model can follow any link, and a website can render any slice without moving a file.
+- Retrieval filters on any tag. The model follows any link. A website can show any slice without moving a file.
 
 ## 4. Machine and human readers
 | Choice | Machine benefit | Human benefit |
@@ -70,7 +71,7 @@ The author's books describe metrics from three perspectives: technology, object,
 - Two sources today:
   - colour bands (green, yellow, orange, red) in the KPI files: `vsphere/object-types/vm/metrics/vm-performance`, `vsphere/object-types/cluster/metrics/cluster-performance`, `cluster-consumption`, `cluster-risk`, `cluster-sla-sli`, `guest-os/system/metrics/guest-os-performance`. The harness catalog reads these tables at start-up (38 bands);
   - single thresholds (above X means Y) in `knowledge/catalog/thresholds.yaml` (31 rows), each quoting its knowledge file so the two cannot drift (lint checks the quote).
-- A threshold is not a number. It is:
+- A threshold has more parts than a number:
 
 ```text
 threshold = (metric, object, instance reading, sample interval, time window) -> band values and source

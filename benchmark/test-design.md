@@ -1,15 +1,15 @@
 # Benchmark design
 
-For human experts who verify that the test is legitimate, complete and free of fluff. Not indexed.
+For human experts who check that the test is valid and complete. Not indexed.
 Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Trap definition: root `README.md`, section Traps and Level 400.
 
 ## 1. Claim
 - Claim: a local 27-32B open-weight model, with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - Release gate: at least 85% Stable correct. Target: 99% (author, 2026-11-03).
-- The test must therefore do three things:
+- The test must:
   1. rank candidate models and answer modes against each other;
   2. show whether a configuration clears 85%;
-  3. show how close it is to 99%, and say honestly what the number can and cannot prove.
+  3. show how close it is to 99%, and state what the number proves.
 
 ## 2. Scope
 | Measured | Not measured (and where it is measured instead) |
@@ -22,10 +22,10 @@ Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/READM
 | Knowing the limits: choosing Not covered or Unsure instead of guessing | Cost and price (out of scope, author 2026-11-04) |
 | Consistency: the same answer on every run | |
 
-- Multiple choice is used because it can be scored without a judge, on thousands of answers, with no scorer bias. Its weakness, guessing, is removed by the scoring in section 7.
+- Multiple choice is used because it can be scored without a judge, on thousands of answers, with no scorer bias. Guessing is handled by the scoring in section 7.
 
 ## 3. Blueprint
-A test is a sample of a domain. The blueprint defines the domain and how the 100 questions sample it, so that a reviewer can check coverage question by question.
+The blueprint defines the domain and how the 100 questions sample it. A reviewer can check coverage question by question.
 
 ### 3.1 By area (author, 2026-11-04)
 
@@ -37,7 +37,7 @@ A test is a sample of a domain. The blueprint defines the domain and how the 100
 | Network | 15% | drops, throughput, units, offload |
 | System | 20% | the object as a whole: KPIs, capacity, availability, DRS, admission control, provider/consumer, statistics and rollups, GPU, Guest OS vs VM boundary |
 
-- The shares add up to more than 100% on purpose: a question can span several areas. A question on VM CPU Ready caused by host memory swapping counts for CPU and Memory.
+- The shares add up to more than 100% because a question can span several areas. A question on VM CPU Ready caused by host memory swapping counts for CPU and Memory.
 - Each case lists every area it touches (`technology` in its metadata, values from `tools/tags.yaml`). The share is the minimum number of questions that touch the area.
 - About 5 questions sit outside the knowledge base (correct answer: Not covered). They are spread across the areas.
 - Per-area scores (15-25 questions) are diagnostic only (margin about ±15-20 points). Decisions use the total.
@@ -71,7 +71,7 @@ A test is a sample of a domain. The blueprint defines the domain and how the 100
 - A model that learns "usually one answer" or "usually all but one" gains nothing.
 
 ## 4. Sample size
-The headline score is a share of questions. Its precision depends on the number of questions, not on the number of runs: runs remove run-to-run noise, not the luck of which questions were picked.
+The headline score is a share of questions. Its precision depends on the number of questions. More runs remove run-to-run noise; they do not remove the luck of which questions were picked.
 
 | Questions | 95% margin at 85% | 1 question is worth | Lower bound if all correct (Wilson 95%) | Lower bound with 1 wrong | Author time to write and verify keys |
 |---|---|---|---|---|---|
@@ -88,14 +88,14 @@ The headline score is a share of questions. Its precision depends on the number 
   - reads the 85% gate with a margin of about ±7 points;
   - separates candidate models whose scores differ by more than about 10 points (paired, question by question, the separation is better than the margin suggests);
   - gives a clean reading: one question is one point, so 99% means exactly one miss.
-- 150 buys little: margin improves from ±7.0 to ±5.7 points (precision grows with the square root of the count) for 50% more author time. The author's time is the scarce resource: every key is verified by hand.
-- What 100 cannot do: prove 99%. Even a perfect score only shows at least 96.3% with 95% confidence. Proving 99% needs about 300 questions with no wrong answer (rule of three: 0 misses in 300 → error rate below 1%).
+- 150 adds little: margin improves from ±7.0 to ±5.7 points (precision grows with the square root of the count) for 50% more author time. Author time is the constraint: every key is checked by hand.
+- 100 cannot prove 99%. Even a perfect score only shows at least 96.3% with 95% confidence. Proving 99% needs about 300 questions with no wrong answer (rule of three: 0 misses in 300 → error rate below 1%).
 - Plan:
   - 100 questions: model and mode selection, the 85% gate, and tracking progress. Version 1.0.
   - 300 questions: the 99% claim for release, built over later releases from book quizzes, real tickets and held-out questions.
 
 ## 5. Set design
-A set is more than 100 good questions. It must measure one thing (Level 400 operations knowledge) evenly, so the total means something.
+The set must measure one thing (Level 400 operations knowledge) evenly, so the total has meaning.
 - Coverage: the blueprint (section 3) makes every area, object, layer and trap type count. No area can carry the score alone.
 - Balance of difficulty: recall questions anchor the scale. If recall fails, the problem is retrieval, and harder questions are not interpreted.
 - Paired questions: the same concept on two objects. A model that answers both right understands the vantage point; one that answers one right was lucky or pattern-matched.
@@ -132,8 +132,9 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - An earlier version scored +1 / 0 / -1 and reported "Net points". It was dropped:
   - The test is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
   - Net points mixed two things an operator cares about separately: how often the system is right, and how often it is confidently wrong. Two plain shares say both without arithmetic.
-- What the -1 really did was change the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
-- Unsure applies to an AI, not only to a human expert: on a dark site nobody checks the answer against the Internet, so "the knowledge base does not settle this" is the safe answer. It is not a feeling of doubt; it is the model reporting that its sources do not decide the question, which can be checked against the cited files.
+- In practice the -1 changed the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
+- Unsure applies to an AI too. On a dark site nobody checks the answer against the Internet, so "the knowledge base does not settle this" is the safe answer.
+- Unsure means the sources do not decide the question. This can be checked against the cited files.
 - Check after the next run: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
 
 ### 7.2 Five runs
@@ -147,9 +148,9 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 | **5** | **3.1%** | **33%** | **59%** | **77%** | **95%** |
 | 10 | 0.1% | 11% | 35% | 60% | 90% |
 
-- 3 runs let a coin-flip question pass 1 time in 8: too much luck.
+- 3 runs let a coin-flip question pass 1 time in 8.
 - 5 runs cut that to 1 in 32, and still reward a model that is right 99% of the time (95% pass).
-- 10 runs double the cost for little gain, and punish a genuinely good model (99% per run passes only 90%).
+- 10 runs double the cost for little gain, and penalize a good model (99% per run passes only 90%).
 
 ### 7.3 Secondary measures
 | Measure | Why |
@@ -164,8 +165,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 | Per area, per level | Diagnosis only (small counts). |
 
 ## 8. Comparison design
-- Why both classic and agentic modes are run, and why the agentic call limit is what it is: `ARCHITECTURE.md`, sections 2a and 2b.
-- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
+- Reasons for running both modes and for the call limit: `ARCHITECTURE.md`, sections 3 and 4.
 - The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See `benchmark/runner/README.md`.
 - Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's Stable correct exceeds it by more than the margin.
@@ -175,7 +175,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 
 ## 9. Harness-only test
 - The final score mixes harness and model. A harness-only test separates them: `benchmark/runner/retrieval_eval.py` checks, without a model, whether each case's `knowledge` files are found and placed in the classic context.
-- Result 2026-11-04 (28 cases, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 cases. This caps classic mode: raise it before judging the model.
+- Result 2026-11-04 (28 cases, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 cases. This caps classic mode. Improve it before judging the model.
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 8.
 
 ## 10. Validity threats
