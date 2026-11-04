@@ -59,9 +59,9 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vsphere/storage/metrics/virtual-motherboard/outstanding-io
-- vsphere/storage/metrics/virtual-motherboard/disk-latency
-- vsphere/storage/concepts/guest-os-vs-vm-storage
+- vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
+- vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 - guest-os/system/metrics/guest-os-performance
 images:
   - path: ../images/guest-os-disk-queue-spikes-timeline.png

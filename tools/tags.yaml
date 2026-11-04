@@ -1,8 +1,8 @@
 # Allowed tag values and avoided phrases. Read by tools/lint.py.
 # Change values here, not in the script. Term meanings: knowledge/glossary.md.
 retriever_guide: [how-it-works, metric-meaning, term-meaning, what-to-set, what-to-check]
-scope: [vendor-neutral, vsphere, guest-os]
-technology: [cpu, memory, storage, network, system]
+scope: [vendor-neutral, operations-management, vsphere, vcf-operations, guest-os]
+technology: [cpu, gpu, memory, storage, network, system]
 pillar: [availability, performance, security, capacity, value]
 product: [vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes]
 object: [VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, StoragePod, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, vSphereWorld, VCenterServer]
@@ -10,6 +10,7 @@ instance: [aggregate, per-vcpu, per-vmnic, per-vmhba, per-virtual-disk]
 layer: [guest-os, virtual-motherboard, hypervisor, physical]
 metric_class: [contention, consumption, context]
 status: [draft, reviewed]
+ui: [vsphere-client, esxtop, vcf-operations]   # screen library files (knowledge/*/screens/)
 image_type: [diagram, table, timeline, distribution, scatter, screenshot]
 # Phrases rejected in body text of files whose technology includes cpu (scheduling language rule).
 avoid_in_cpu_files: ['\bneeds?\b', '\bneeded\b', '\bwants?\b', '\bwish(es)?\b', 'uses only .* of what it needs']

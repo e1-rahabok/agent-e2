@@ -36,9 +36,9 @@ area: cpu
 input: mixed
 tests: concept
 knowledge:
-  - vsphere/cpu/concepts/cpu-measurement-levels
-  - vsphere/system/concepts/capacity-model
-  - vsphere/cpu/concepts/cpu-frequency
+  - vsphere/technology/cpu/concepts/cpu-measurement-levels
+  - operations-management/capacity/capacity-model
+  - vsphere/technology/cpu/concepts/cpu-frequency
 attachments: 
   - vsphere-cpu-006/two-esxi-hosts-specification-and-capacity-options.png
 origin: quiz

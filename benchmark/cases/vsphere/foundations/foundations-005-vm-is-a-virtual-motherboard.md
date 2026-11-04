@@ -44,8 +44,8 @@ knowledge:
   - vsphere/foundations/vm-vs-guest-os
   - guest-os/storage/metrics/disk-queue
   - guest-os/cpu/metrics/run-queue
-  - vsphere/cpu/metrics/virtual-motherboard/ready
-  - vsphere/cpu/concepts/guest-os-vs-vm-cpu
+  - vsphere/technology/cpu/metrics/virtual-motherboard/ready
+  - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: synthetic
 source_path: "Author's book, opening chapter: Think virtual motherboard, not virtual machine. Author instruction 2026-11-03."

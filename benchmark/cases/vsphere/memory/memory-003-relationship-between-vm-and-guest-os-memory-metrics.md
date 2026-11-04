@@ -31,9 +31,9 @@ area: memory
 input: text
 tests: concept
 knowledge:
-  - vsphere/memory/concepts/guest-os-vs-vm-memory
-  - vsphere/memory/concepts/ballooning
-  - vsphere/memory/metrics/virtual-motherboard/usage
+  - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
+  - vsphere/technology/memory/concepts/ballooning
+  - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/foundations/vm-vs-guest-os
 attachments: []
 origin: quiz

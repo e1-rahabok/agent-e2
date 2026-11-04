@@ -21,7 +21,7 @@ From the kernel's viewpoint, a VM is a group of user worlds. Three main types:
 - Example errors in these processes: https://kb.vmware.com/s/article/1019471
 
 ## Consequences for metrics
-- Work charged at VM level (e.g. MKS, System) does not appear in per-vCPU metrics. See `vsphere/cpu/metrics/virtual-motherboard/used`.
+- Work charged at VM level (e.g. MKS, System) does not appear in per-vCPU metrics. See `vsphere/technology/cpu/metrics/virtual-motherboard/used`.
 
 ## Metadata
 ```yaml
@@ -40,7 +40,7 @@ object:
 internal_derive: []
 related:
 - vsphere/foundations/vm-vs-guest-os
-- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM? > Kernel

@@ -135,7 +135,7 @@ object:
 internal_derive: []
 related:
 - vsphere/foundations/kernel-worlds
-- vsphere/cpu/concepts/guest-os-vs-vm-cpu
+- vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/foundations/overhead
 - foundations/thresholds
 source:

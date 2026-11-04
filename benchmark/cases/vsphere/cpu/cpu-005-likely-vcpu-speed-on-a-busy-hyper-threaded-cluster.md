@@ -29,7 +29,7 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 - E is less likely: most cores are busy and most run two threads, so Single Core Turbo does not apply.
 
 ## Notes
-- Author confirmed the key (Q034, 2026-11-03). Knowledge: `vsphere/cpu/concepts/cpu-frequency`, section Likely vCPU speed on a busy cluster.
+- Author confirmed the key (Q034, 2026-11-03). Knowledge: `vsphere/technology/cpu/concepts/cpu-frequency`, section Likely vCPU speed on a busy cluster.
 
 ## Metadata
 ```yaml
@@ -40,11 +40,11 @@ area: cpu
 input: text
 tests: judgment
 knowledge:
-  - vsphere/cpu/concepts/cpu-frequency
-  - vsphere/cpu/concepts/hyper-threading
-  - vsphere/cpu/concepts/cpu-frequency
-  - vsphere/cpu/metrics/virtual-motherboard/usage
-  - vsphere/cpu/configuration/host-power-management
+  - vsphere/technology/cpu/concepts/cpu-frequency
+  - vsphere/technology/cpu/concepts/hyper-threading
+  - vsphere/technology/cpu/concepts/cpu-frequency
+  - vsphere/technology/cpu/metrics/virtual-motherboard/usage
+  - vsphere/technology/cpu/configuration/host-power-management
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"

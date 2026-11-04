@@ -34,11 +34,11 @@ area: memory
 input: text
 tests: troubleshooting
 knowledge:
-  - vsphere/memory/metrics/host/ballooned
-  - vsphere/memory/metrics/host/swap-used
-  - vsphere/memory/metrics/host/compressed
-  - vsphere/memory/concepts/swap-and-compression
-  - vsphere/memory/concepts/host-memory-states
+  - vsphere/technology/memory/metrics/host/ballooned
+  - vsphere/technology/memory/metrics/host/swap-used
+  - vsphere/technology/memory/metrics/host/compressed
+  - vsphere/technology/memory/concepts/swap-and-compression
+  - vsphere/technology/memory/concepts/host-memory-states
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"

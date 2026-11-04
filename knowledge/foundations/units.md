@@ -13,11 +13,11 @@
 
 ## Same metric, different unit per tool
 - Tools can show the same metric in different units.
-- vSphere example: esxtop shows network in megabits; vSphere Client shows kilobytes. See `vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units`.
+- vSphere example: esxtop shows network in megabits; vSphere Client shows kilobytes. See `vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units`.
 
 ## Values above 100%
 - A metric computed by summation (not average) can exceed 100%.
-- vSphere example: VM CPU Ready, and many VM-level values in esxtop. See `vsphere/cpu/metrics/virtual-motherboard/ready`.
+- vSphere example: VM CPU Ready, and many VM-level values in esxtop. See `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
 
 ## Metadata
 ```yaml
@@ -35,8 +35,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- vsphere/network/metrics/comparisons/esxtop-vs-vsphere-client-units
-- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances

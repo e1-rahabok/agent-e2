@@ -68,9 +68,9 @@ product: []
 internal_derive: []
 related:
 - foundations/measurement-precision
-- vsphere/resource-management/concepts/resource-controls
-- vsphere/memory/metrics/virtual-motherboard/usage
-- vsphere/storage/metrics/virtual-motherboard/virtual-disk
+- vsphere/foundations/resource-controls
+- vsphere/technology/memory/metrics/virtual-motherboard/usage
+- vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity

@@ -71,7 +71,7 @@ related:
 - vsphere/foundations/metric-sources
 - vsphere/foundations/object-relationships
 - vsphere/foundations/vm-vs-guest-os
-- vsphere/cpu/metrics/comparisons/consumption-metrics
+- vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact

@@ -41,11 +41,11 @@ area: cpu
 input: screenshot
 tests: judgment
 knowledge:
-  - vsphere/cpu/metrics/host/usage
-  - vsphere/cpu/metrics/host/core-utilization
-  - vsphere/cpu/metrics/host/utilization
-  - vsphere/cpu/concepts/hyper-threading
-  - vsphere/cpu/concepts/cpu-measurement-levels
+  - vsphere/technology/cpu/metrics/host/usage
+  - vsphere/technology/cpu/metrics/host/core-utilization
+  - vsphere/technology/cpu/metrics/host/utilization
+  - vsphere/technology/cpu/concepts/hyper-threading
+  - vsphere/technology/cpu/concepts/cpu-measurement-levels
 attachments: 
   - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png
   - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png

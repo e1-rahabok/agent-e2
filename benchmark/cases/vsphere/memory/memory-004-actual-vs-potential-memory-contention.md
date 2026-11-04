@@ -31,10 +31,10 @@ area: memory
 input: text
 tests: distinction
 knowledge:
-  - vsphere/memory/metrics/virtual-motherboard/latency
-  - vsphere/memory/metrics/virtual-motherboard/ballooned
-  - vsphere/memory/metrics/virtual-motherboard/swapped
-  - vsphere/memory/diagnosis/vm-memory-latency-high
+  - vsphere/technology/memory/metrics/virtual-motherboard/latency
+  - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
+  - vsphere/technology/memory/metrics/virtual-motherboard/swapped
+  - vsphere/technology/memory/diagnosis/vm-memory-latency-high
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q3 VM Memory Contention"

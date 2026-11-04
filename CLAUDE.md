@@ -52,7 +52,7 @@ Standing rules for this repository. Read at the start of every session.
 - Never file, tag or describe a Guest OS metric as a VM metric.
 - Windows and Linux are not Broadcom products. Guest OS knowledge lives in `knowledge/guest-os/<technology>/`, a peer of `knowledge/vsphere/`, with `scope: guest-os`, `layer: [guest-os]` and no `object: VirtualMachine`.
 - Boundary files that compare the two layers from the vSphere side (Guest OS vs VM CPU, memory, storage; Guest OS sizing from VM data) stay in `knowledge/vsphere/` and link to the Guest OS files.
-- VM metrics go in `<technology>/metrics/virtual-motherboard/` with `layer: [virtual-motherboard]` and `object: [VirtualMachine]`.
+- VM raw metrics go in `vsphere/technology/<tech>/metrics/virtual-motherboard/` with `layer: [virtual-motherboard]` and `object: [VirtualMachine]`.
 - That vCenter or VCF Operations store a counter on the VM object does not make it a VM metric. Decide by the layer that produces it.
 - When a repository rule conflicts with the author's architecture, raise it in `project/author-questions.md`; do not resolve it silently.
 - `tools/lint.py` enforces the folder and tag rules.
@@ -61,11 +61,17 @@ Standing rules for this repository. Read at the start of every session.
 - One fact per bullet or table row.
 - Explain the mechanism and the reason before the metric name.
 - One vSphere managed object type per metric file (VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ...). Instance levels such as per-vCPU go in the `instance` tag.
-- Folder rules: technology first (cpu, memory, storage, network, system), then concepts / metrics / configuration / diagnosis. Tags and field meanings: see `README.md`.
+- Folder rules (author, 2026-11-04; full rules in `README.md`, section Layout):
+  - raw metrics by technology: `vsphere/technology/<cpu|gpu|memory|storage|network>/`;
+  - derived and multi-technology content by object: `vsphere/object-types/<vm|esxi|cluster|...>/`;
+  - pillars across products: `operations-management/<performance|capacity>/`;
+  - VCF Operations is a derived layer: `vcf-operations/` holds only what it computes or adds, linking the source files; a metric about a source object is written once, at the source.
+- Storage, not disk: one word for folder, tag and glossary.
+- vCenter is the administrative tool; VCF Operations is the operations tool. Never use the names interchangeably.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation. Troubleshooting flows: rule in `README.md`, section Troubleshooting flow diagrams.
 - Every knowledge file and every evaluation case ends with a `## Metadata` section holding one yaml block (see `README.md`). No front matter at the top.
-- Keep the author's own diagrams from the book in the `images/` folder of the technology folder that uses them (`knowledge/vsphere/<technology>/images/`, `knowledge/guest-os/<technology>/images/`), linked under the section they explain, with alt text. Name each file by what it shows (pattern in `README.md`, section Images). Tag each image in the metadata `images` list.
+- Keep the author's own diagrams from the book in the `images/` folder of the technology folder that uses them (for example `knowledge/vsphere/technology/<tech>/images/`, `knowledge/guest-os/<technology>/images/`), linked under the section they explain, with alt text. Name each file by what it shows (pattern in `README.md`, section Images). Tag each image in the metadata `images` list.
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 - Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
 - When asking the author about the book, give a verbatim search string.

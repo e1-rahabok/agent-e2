@@ -33,10 +33,10 @@ area: cpu
 input: text
 tests: judgment
 knowledge:
-  - vsphere/system/concepts/rightsizing
-  - vsphere/cpu/diagnosis/oversized-vm-downsizing
-  - vsphere/cpu/concepts/idle-and-unused-vcpus
-  - vsphere/memory/concepts/memory-as-storage
+  - operations-management/capacity/rightsizing
+  - vsphere/technology/cpu/diagnosis/oversized-vm-downsizing
+  - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
+  - vsphere/technology/memory/concepts/memory-as-storage
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q11 Reclamation"

@@ -44,11 +44,11 @@ layer:
 - guest-os
 metric_class: contention
 internal_derive:
-- vsphere/system/concepts/performance-kpi-design
+- operations-management/performance/performance-kpi-design
 same_name: []
 same_meaning: []
 related:
-- vsphere/system/metrics/virtual-motherboard/vm-performance
+- vsphere/object-types/vm/metrics/vm-performance
 images:
   - path: ../images/guest-os-performance-thresholds-table.png
     product: [vcf-operations]

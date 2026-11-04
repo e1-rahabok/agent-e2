@@ -25,8 +25,8 @@ area: memory
 input: text
 tests: distinction
 knowledge:
-  - vsphere/memory/metrics/virtual-motherboard/usage
-  - vsphere/memory/metrics/host/usage
+  - vsphere/technology/memory/metrics/virtual-motherboard/usage
+  - vsphere/technology/memory/metrics/host/usage
   - foundations/resource-nature
 attachments: []
 origin: book

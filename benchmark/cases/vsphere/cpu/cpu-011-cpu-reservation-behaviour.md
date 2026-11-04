@@ -37,8 +37,8 @@ area: cpu
 input: text
 tests: concept
 knowledge:
-  - vsphere/resource-management/concepts/resource-controls
-  - vsphere/cpu/metrics/host/reserved-capacity
+  - vsphere/foundations/resource-controls
+  - vsphere/technology/cpu/metrics/host/reserved-capacity
   - vsphere/foundations/overhead
 attachments: []
 origin: quiz

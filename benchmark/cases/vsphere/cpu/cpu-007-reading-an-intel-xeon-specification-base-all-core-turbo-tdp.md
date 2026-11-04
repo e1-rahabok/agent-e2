@@ -33,10 +33,10 @@ area: cpu
 input: mixed
 tests: concept
 knowledge:
-  - vsphere/cpu/concepts/cpu-frequency
-  - vsphere/cpu/concepts/power-states
-  - vsphere/cpu/configuration/host-power-management
-  - vsphere/system/configuration/bios-settings
+  - vsphere/technology/cpu/concepts/cpu-frequency
+  - vsphere/technology/cpu/concepts/power-states
+  - vsphere/technology/cpu/configuration/host-power-management
+  - vsphere/object-types/esxi/configuration/bios-settings
 attachments: 
   - vsphere-cpu-007/intel-xeon-6520p-specification.png
 origin: quiz
