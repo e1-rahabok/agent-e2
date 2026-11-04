@@ -123,6 +123,9 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Budget test: re-run the agentic answers that hit the 8-call limit with 16 calls; replace the fixed count with token, time and no-progress stops (see `ARCHITECTURE.md`, section 2a).
+- [ ] Test agentic mode primed with the classic context (first search done, catalog facts included).
+- [ ] After the 100-question run picks model and mode: routine runs use the chosen mode plus baseline only.
 - [ ] Raise retrieval recall (67% hybrid, 12 of 28 cases complete): question understanding and filters, query rewriting with glossary synonyms, smarter link expansion. Measure with `benchmark/runner/retrieval_eval.py`.
 - [ ] Write questions to the blueprint in `benchmark/test-design.md` (areas CPU 25%, memory 25%, storage 20%, network 15%, system 20%; a question may count for several; gaps: network, storage, system, recall, Not covered).
 - [ ] Add `technology` (list of areas) and `trap_type` to case metadata and a coverage script that checks the blueprint counts.
