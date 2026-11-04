@@ -44,6 +44,7 @@
 | SWTCH/s | World switches per second. Lower is better. Likely correlates with overcommit, VM count and load. |
 | MIG/s | NUMA and core migrations per second. |
 | WAKE/s | Wake-ups per second (Wait to Ready). High values can hurt performance. |
+
 - QEXP/s was removed in ESXi 6.5.
 - Microbursts can make Ready high relative to Run: many scheduling events, each cheap. Check these counters.
 
@@ -58,6 +59,7 @@
 | AFFINITY BIT MASK | Current scheduling affinity. Not set for Latency Sensitivity High VMs. |
 | CPU | PCPU the world ran on (often blank). |
 | EXC_AF | Yes: exclusive affinity (Latency Sensitivity). |
+
 - HTQ (quarantine) is no longer shown since ESXi 7.0.
 - Only EMIN to EXC_AF are absent from vSphere Client and VCF Operations.
 
@@ -97,6 +99,7 @@ current frequency = %A/MPERF x nominal frequency
 | TIME/int | Average processing time per interrupt (µs). |
 | TIME_x | Average per interrupt on CPU x (µs). |
 | DEVICES | Devices on the vector; angle brackets mean not enabled. |
+
 - Device list: `sched-stats -t sys-service-stats` (service, count, time, name such as VMK-igbn-rxq0, TCPIPRX, Netpoll, SCSI).
 - Some services are reported under VMK-timer, for example vDS IOChain.
 

@@ -156,7 +156,7 @@ def main():
     return 1 if problems else 0
 
 def check_tables(bad):
-    """A table right after a list item, image or paragraph renders as text on GitHub. A blank line must come first."""
+    """Tables need a blank line before (else they render as text) and after (else the next line becomes a table row)."""
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if '/raw-input/' in f or '/autotest/' in f or f.startswith('project/archive/'):
             continue
@@ -167,6 +167,9 @@ def check_tables(bad):
             if (not fence and i > 0 and line.startswith('|') and i + 1 < len(lines) and lines[i + 1].startswith('|---')
                     and lines[i - 1].strip() and not lines[i - 1].startswith(('|', '#'))):
                 bad(f, f'line {i + 1}: table needs a blank line before it')
+            if (not fence and line.startswith('|') and i + 1 < len(lines) and lines[i + 1].strip()
+                    and not lines[i + 1].startswith('|')):
+                bad(f, f'line {i + 2}: blank line needed after a table (an image or text right after it becomes a table row)')
 
 
 CATALOG = 'knowledge/catalog'

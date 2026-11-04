@@ -74,6 +74,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 | Exclude balloon | It inflates In Use when taken from free pages. |
 | No fallback to VM metrics | Inaccurate for the guest. |
 | Exclude latency | Memory contention measures speed; sizing measures space. |
+
 - Windows and Linux differ more for memory than for CPU.
 
 ## Traps

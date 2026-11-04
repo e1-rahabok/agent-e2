@@ -96,6 +96,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | Usable capacity | 7 | 8 |
 | Actual availability | 8/8 = 100% | 8/10 = 80% |
 | Operational availability | 8/7 → 100% | 8/9 = 89% |
+
 - Total Capacity counts only hosts connected to vCenter. A disconnected host's value goes blank.
 
 ## Traps

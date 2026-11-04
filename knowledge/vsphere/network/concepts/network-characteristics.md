@@ -51,6 +51,7 @@
 | Dropped packets | Yes |
 | Retransmitted packets (TCP retransmits drops) | No |
 | Jitter (variation of latency) | No |
+
 - Applications can tolerate poor latency better than variable latency.
 - NIOC has no metric that shows it capped bandwidth (unlike Storage I/O Control). Check logs.
 - Consumption: throughput and packets per second (PPS). PPS is less used, but high PPS at low latency costs a lot of CPU, as in NSX Edge VMs.

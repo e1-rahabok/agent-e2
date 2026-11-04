@@ -19,6 +19,7 @@
 | Breadth | 90th percentile memory latency among VMs (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
 | Breadth | 90th percentile read/write latency among VM virtual disks (ms) | 0-20 | 20-40 | 40-60 | 60-80 |
 | ESXi | Highest ESXi (error + dropped) network packets (%) | 0 | below 0.2 | 0.2-0.4 | 0.4-0.8 |
+
 ![Cluster Performance thresholds](../../images/cluster-performance-thresholds-table.png)
 
 ## Threshold reasons (book text)

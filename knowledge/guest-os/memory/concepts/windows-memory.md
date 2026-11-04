@@ -24,6 +24,7 @@ In Use    = Total - (Modified + Standby + Free)
 | Standby | Three levels in VMware Tools: Standby Core, Standby Normal, Standby Reserve. Behaviour differs by application: example Exchange 2013 with Standby Normal swinging up to 90%; example Tableau where Standby Reserve grew after memory doubled. Hard to size on. |
 | Cache | More cache, fewer misses. Prefetch and SuperFetch show the complexity; the UI simplifies it. |
 | Free | Immediately usable, excluding cache. Low Free is fine with high Standby; it can touch 0 MB momentarily. |
+
 ![Windows In Use with compressed pages](../images/windows-memory-in-use-with-compressed-pages.png)
 ![Windows Standby Normal swinging widely on an Exchange 2013 mailbox server; Standby Core and Standby Reserve stay negligible](../images/windows-memory-standby-normal-swings-on-exchange-server.png)
 
@@ -64,6 +65,7 @@ In Use    = Total - (Modified + Standby + Free)
 | Committed Bytes | Committed virtual memory; not all written to the page file yet. Measures demand: can rise without In Use rising (example: committed 2x usage, Free and Cached unchanged). |
 | Commit Limit | RAM + page file, typically 2x RAM. A growing limit is an early warning: Windows grows pagefile.sys under pressure. |
 | % Committed | Keep below 80%. Performance drops at 90%. With the page file disabled, Windows slowed and applications crashed despite over 1 GB free. |
+
 - Reserved memory (databases, JVM reserve a contiguous block) holds no data until committed. Committed memory is guaranteed in RAM or on disk (page file).
 
 ## Needed Memory (VMware Tools)

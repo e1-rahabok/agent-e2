@@ -82,6 +82,7 @@
 | Hypervisor overhead | Threads assigned manually | Already in ESXi counters |
 | Consumption | Sum of running VM vCPUs | Core and thread utilization; max(Usage, Reservation) per running VM. Usage tends to over-report. |
 | Performance | Not applicable | Ready + Co-stop (Swap Wait and Other Wait are not CPU causes) |
+
 - Do not add VM CPU contention to consumption; track performance explicitly.
 
 ## Traps

@@ -16,6 +16,7 @@
 | RAM | Contention | 1% |
 | Disk | Latency | 10 ms |
 | Network | TX dropped packets | 0% |
+
 ![SLI thresholds](../../images/sli-thresholds-table.png)
 
 ```text

@@ -26,6 +26,7 @@
 | Initialized | Other | Being created. Near 0; high values: excessive thread spawning or slow creation. |
 | Terminated | Other | Finished. Not a problem when planned. |
 | Running | Other | Productive. Should approximate infrastructure sizing (OS, Tools, agents) plus application sizing. |
+
 - Processor Queue Length includes threads in Ready, Standby and Deferred Ready (shown as Unknown). All 3 indicate a CPU problem.
 - Tools count threads per state at one instant. Collecting thousands of threads takes about 100 ms, during which Standby slots change hundreds of times. Counts can exceed the number of processors.
 
@@ -39,6 +40,7 @@
 | Performance Monitor | Processor Time |
 | Task Manager | CPU Utilization |
 | Resource Monitor | CPU Usage |
+
 - They do not measure the same thing.
 - Windows CPU Usage ignores hypervisor Hyper-Threading. Windows at 100% on a shared core: VM CPU Usage 62.5%, VM CPU Demand 100%.
 - Windows 8 and later report CPU usage above 100% when frequency exceeds nominal. Maximum Frequency shows speed relative to nominal. Example: 134% speed; 69% speed at low load (8% usage means 8% productive cycles).
@@ -51,6 +53,7 @@
 | VM CPU Run | No | Yes (book) | No |
 | VM CPU Usage | Yes | Yes | No |
 | VM CPU Demand | Yes | No | Yes |
+
 - Slowness with low utilization: check whether the CPU runs in a lower power state. Matters for frequency-sensitive applications.
 - C1 + C2 + C3 time below 100% is time in C0. The idle loop typically runs in C3: Idle Time and C3 Time track each other.
 

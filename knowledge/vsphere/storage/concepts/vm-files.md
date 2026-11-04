@@ -18,6 +18,7 @@
 | Swap | .vswp | Size = configured RAM - memory reservation. Deleted at power-off. |
 | Swap | VMX swap file | Small (MB). The book has not observed it. |
 | Others | Logs, .vmx, .nvram | Small (KB or MB). Any file placed in the VM folder counts, for example an ISO. A large value means unneeded files. |
+
 ![Snapshot files](../images/vm-snapshot-files.png)
 
 - A snapshot protects VMDK, memory and configuration.
@@ -39,6 +40,7 @@
 | RDM | Not on vSAN or VMFS data: mapped to an external LUN. Always counts as thick (configured size), whatever the guest uses. A thin LUN on the array is transparent to ESXi. |
 | Thin VMDK | One file holds data + vSAN protection - dedupe - compression. Accumulates unmapped blocks: reclaim with trim/unmap. |
 | Thick VMDK | Used = configured size, whatever the guest uses. |
+
 - vSAN protection applies to every file on the datastore, including snapshots and logs.
 
 ## vSphere Client: Used vs Allocated

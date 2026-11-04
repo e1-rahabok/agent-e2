@@ -17,6 +17,7 @@
 | SC_UMP_MBS/s, FL_UMP_MBS/s | Same in MB/s. |
 | NUMIOFILTERS, IOFILTERCLASS, FAILEDIO, TOTALIO, LATENCY | IO filter counters (replication, caching, QoS, encryption). Not in vSphere Client. FAILEDIO should be 0. Unclear whether LATENCY is filter overhead or total. |
 | ID, GID, VMNAME, VSCSINAME, NDK | VSCSI device ID, resource pool ID, name, VSCSI device name, number of VSCSI devices. |
+
 - Unmap failures: example fixed in ESXi 6.7 patch ESXi670-202008001: the guest did not refresh unmap granularity and hit a limit.
 
 ## Disk Adapter
@@ -32,6 +33,7 @@
 | PAE and split | PAECMD/s, PAECP/s | PAE commands and copies. Obsolete with 64-bit drivers. Paths only. |
 | PAE and split | SPLTCMD/s, SPLTCP/s | Large IOs split by the kernel. Higher values reduce performance. |
 | Configuration | NPTH | Number of paths. Should match the design. |
+
 - See `vsphere/storage/concepts/esxi-storage-latency-stack` for GAVG, KAVG, QAVG, DAVG.
 
 ## Disk Device

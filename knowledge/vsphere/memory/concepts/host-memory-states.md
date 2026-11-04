@@ -13,6 +13,7 @@
 | Soft | 64% | 6.9 GB | Ballooning starts. |
 | Hard | 32% | 3.5 GB | Compression and swapping start. |
 | Low | 16% | 1.7 GB | VM execution is blocked. |
+
 ![ESXi memory State counter](../images/esxi-memory-state-counter.png)
 
 - Keep hosts in High or Clear. Unless high utilization is the goal, hosts sit in High.

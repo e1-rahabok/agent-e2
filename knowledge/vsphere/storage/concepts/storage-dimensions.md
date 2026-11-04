@@ -5,6 +5,7 @@
 |---|---|---|
 | Speed | IOPS, throughput | Throughput = IOPS × block size. |
 | Space | Disk space (bytes) | Capacity. |
+
 - Both dimensions have consumption metrics, but they are unrelated.
 
 ## Speed: contention at 3 stages of IO
@@ -13,6 +14,7 @@
 | Pre-processing | Each layer has its own queue: outstanding IO. |
 | Processing | Aborted SCSI commands, dropped frames, packet loss. |
 | Post-processing | Latency. |
+
 - Performance is measured as contention and utilization.
 
 ## Space
