@@ -12,9 +12,14 @@
   <img src="https://img.shields.io/badge/python-3.10%2B-3776ab?logo=python&logoColor=white" alt="Python 3.10+">
 </p>
 
-# Isvara: private cloud expertise for a local 32B LLM
+# Isvara: private cloud expertise
 
 **🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🧪 [Test design](benchmark/test-design.md) · ⚙️ [Harness](harness/README.md)**
+
+**Business problem:**
+- Many private cloud customers cannot send operational data to a cloud AI service: regulated industries, government and defence, and dark sites with no Internet at all.
+- Others can use cloud AI but must contain its cost: per-token fees grow with every question, user and automated check.
+- Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers sound expert and are often wrong at Level 400.
 
 **Goal:** a 32B-class open-weight model, running offline on one GPU (dark site, no Internet, no per-token cost), answers Level 400 private cloud operations questions better than frontier models.
 
