@@ -29,6 +29,8 @@ A or B (VM-level counters), or D (mixing VM and Guest OS realms).
 id: vsphere-memory-002
 title: "Which counter to size VM memory"
 scope: vsphere
+product: [vsphere, windows]
+technology: [memory]
 area: memory
 input: text
 tests: distinction

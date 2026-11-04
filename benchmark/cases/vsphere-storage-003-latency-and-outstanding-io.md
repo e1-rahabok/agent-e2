@@ -24,6 +24,8 @@ A, or D (throughput instead of commands).
 id: vsphere-storage-003
 title: "Latency and outstanding IO"
 scope: vsphere
+product: [vsphere]
+technology: [storage]
 area: storage
 input: text
 tests: concept

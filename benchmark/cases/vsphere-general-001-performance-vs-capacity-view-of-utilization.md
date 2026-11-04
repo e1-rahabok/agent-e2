@@ -29,6 +29,8 @@ Rejecting A (100% utilization seen as a performance problem) or C.
 id: vsphere-general-001
 title: "Performance vs capacity view of utilization"
 scope: vsphere
+product: [vsphere]
+technology: [system]
 area: general
 input: text
 tests: concept

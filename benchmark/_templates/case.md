@@ -17,10 +17,12 @@
 
 ## Metadata
 ```yaml
-id: <scope>-<area>-<nnn>          # e.g. vsphere-cpu-004. Never reuse an id.
+id: case-<nnnn>                    # e.g. case-0031. Never reuse an id.
 title: <short title>
 scope: vsphere                    # vendor-neutral | vsphere | nsx | vsan
-area: cpu                         # foundations | cpu | memory | storage | network | general
+product: [vsphere]                # every product touched: vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
+technology: [cpu]                 # every area touched: cpu | memory | storage | network | system
+area: cpu                         # optional, legacy: main area
 input: text                       # text | screenshot | diagram | log | mixed
 tests: distinction                # concept | distinction | judgment | troubleshooting
 knowledge:                        # knowledge ids the answer should draw on (retrieval check)

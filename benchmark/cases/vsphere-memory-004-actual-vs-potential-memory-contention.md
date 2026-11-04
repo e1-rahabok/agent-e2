@@ -27,6 +27,8 @@ A or B (balloon, swap or compression read as slowness).
 id: vsphere-memory-004
 title: "Actual vs potential memory contention"
 scope: vsphere
+product: [vsphere]
+technology: [memory]
 area: memory
 input: text
 tests: distinction

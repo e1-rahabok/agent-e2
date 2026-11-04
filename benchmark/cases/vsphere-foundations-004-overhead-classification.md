@@ -22,6 +22,8 @@ A capacity report lists the following as "virtualization overhead": VM snapshots
 id: vsphere-foundations-004
 title: "What counts as overhead"
 scope: vsphere
+product: [vsphere]
+technology: [system]
 area: foundations
 input: text
 tests: concept

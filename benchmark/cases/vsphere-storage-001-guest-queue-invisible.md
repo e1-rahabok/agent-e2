@@ -20,6 +20,8 @@ Oracle on a Windows VM is slow. Windows shows a high Disk Queue Length. In vCent
 id: vsphere-storage-001
 title: "Guest queue invisible to the hypervisor"
 scope: vsphere
+product: [vsphere]
+technology: [storage]
 area: storage
 input: text
 tests: concept

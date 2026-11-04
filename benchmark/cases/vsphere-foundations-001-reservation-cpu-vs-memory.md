@@ -19,6 +19,8 @@ A 16 GB VM with a 10 GB memory reservation and a 4 GHz CPU reservation is powere
 id: vsphere-foundations-001
 title: "Memory reservation vs CPU reservation"
 scope: vsphere
+product: [vsphere]
+technology: [system]
 area: foundations
 input: text
 tests: concept

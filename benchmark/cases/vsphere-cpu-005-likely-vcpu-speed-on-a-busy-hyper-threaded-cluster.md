@@ -36,6 +36,8 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 id: vsphere-cpu-005
 title: "Likely vCPU speed on a busy Hyper-Threaded cluster"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: judgment

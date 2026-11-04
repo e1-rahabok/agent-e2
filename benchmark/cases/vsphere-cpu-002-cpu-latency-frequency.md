@@ -21,6 +21,8 @@ After a host BIOS power policy change, VM CPU Latency went up by about 15%. CPU 
 id: vsphere-cpu-002
 title: "CPU Latency without contention"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: distinction

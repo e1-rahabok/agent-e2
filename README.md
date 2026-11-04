@@ -1,5 +1,7 @@
 # Isvara: private cloud expertise for a local 32B LLM
 
+**[Architecture](ARCHITECTURE.md) · [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · [Test design](benchmark/test-design.md) · [Harness](harness/README.md) · [Author questions](project/author-questions.md) · [To do](project/todo.md)**
+
 **Goal:** a 32B-class open-weight model, running offline on one GPU (dark site, no Internet, no per-token cost), answers Level 400 private cloud operations questions better than frontier models.
 
 **How:** model + harness + knowledge.
@@ -8,7 +10,7 @@
 - **How the parts work together** (who drives, one question step by step, how Level 400 is delivered offline): `ARCHITECTURE.md`.
 - **How expert knowledge is captured** (the forms of codified knowledge, three slices, thresholds, how knowledge enters and is kept right): `KNOWLEDGE-ENGINEERING.md`.
 - **Model**: a 27-32B open-weight model on a local GPU, chosen by benchmark.
-- **Proof** (`benchmark/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
+- **Proof** (`benchmark/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, confident-wrong rate, 5 runs must agree).
 
 **Why it can work, why 32B, which models:** `project/solution-design.md`.
 **Status and review:** not achieved yet; best small model 58% vs frontier 75% on the first 17 questions. Findings and decisions: `project/review-2026-11-04.md`.

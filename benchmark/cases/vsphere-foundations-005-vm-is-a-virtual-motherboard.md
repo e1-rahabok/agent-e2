@@ -37,6 +37,8 @@ B (data stored on the VM object read as a VM metric) or D (Guest OS counters ass
 id: vsphere-foundations-005
 title: "VM (virtual motherboard) vs Guest OS metrics"
 scope: vsphere
+product: [vsphere, windows]
+technology: [system]
 area: foundations
 input: text
 tests: distinction

@@ -27,6 +27,8 @@ C (a guest free assumed to propagate to ESXi).
 id: vsphere-memory-003
 title: "Relationship between VM and Guest OS memory metrics"
 scope: vsphere
+product: [vsphere]
+technology: [memory]
 area: memory
 input: text
 tests: concept

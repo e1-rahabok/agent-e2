@@ -33,6 +33,8 @@ E (non-sticky read as overcommittable), F (kernel assumed to need no reservation
 id: vsphere-cpu-011
 title: "CPU reservation behaviour"
 scope: vsphere
+product: [vsphere]
+technology: [cpu]
 area: cpu
 input: text
 tests: concept
