@@ -5,6 +5,7 @@
 **How:** model + harness + knowledge.
 - **Knowledge** (`knowledge/`): Level 400 mechanisms, metrics, traps and troubleshooting flows, written to be retrieved by a small model. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
 - **Harness** (`harness/`): the software around the model: hybrid retrieval, link expansion, exact tools (metric catalog lookup, calculator, flow executor), and an answer verifier. See `harness/README.md`.
+- **How the parts work together** (who drives, one question step by step, how Level 400 is delivered offline): `ARCHITECTURE.md`.
 - **Model**: a 27-32B open-weight model on a local GPU, chosen by benchmark.
 - **Proof** (`benchmark/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
 
@@ -197,7 +198,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 
 ## Indexing rules
 - Index: `knowledge/**/*.md`.
-- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, this README, `CLAUDE.md`.
+- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `tools/`, this README, `CLAUDE.md`, `ARCHITECTURE.md`.
   - `benchmark/` holds answer keys. Indexing it invalidates the evaluation.
 - Metadata is the last section of each file: `## Metadata` followed by one yaml block. Parse it as metadata, not as text to embed.
 - Images live in the `images/` folder of the folder that uses them: `vsphere/technology/<tech>/images/`, `vsphere/object-types/<object>/images/`, `vsphere/foundations/images/`, `operations-management/<pillar>/images/`, `guest-os/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.

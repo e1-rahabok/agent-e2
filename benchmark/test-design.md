@@ -162,6 +162,11 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 - A gap smaller than the margin is a tie; the smaller model wins a tie.
 - Run matrix at 100 questions: 10 models x 3 modes x 100 questions x 5 runs = 15,000 answers, about US$ 25-40 and 2-4 hours (re-check prices and rate limits before each run).
 
+## 8a. Testing the harness separately
+- The final score mixes harness and model. A harness-only test separates them: `benchmark/runner/retrieval_eval.py` checks, without a model, whether each case's `knowledge` files are found and placed in the classic context.
+- Result 2026-11-04 (28 cases, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 cases. This caps classic mode: raise it before judging the model.
+- Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
+
 ## 9. Threats to validity, and the guard against each
 | Threat | Guard |
 |---|---|

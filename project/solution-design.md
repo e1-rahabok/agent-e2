@@ -37,6 +37,7 @@ flowchart LR
 | Model | Reads the retrieved text, reasons over it, writes the answer. | This is the part that needs language understanding. |
 
 - Name for the wrapper: **harness**. It is the common term in agent engineering for the code around a model that supplies context, tools, control flow and checks. Other names in use: orchestration layer, RAG pipeline (narrower: retrieval only).
+- Run-time walkthrough (who drives, one question step by step): `ARCHITECTURE.md`.
 - The harness lives in `harness/`: `retrieval.py` (hybrid search, link expansion), `modes.py` (classic and agentic tool loop), `kb.py` (loads and chunks `knowledge/`), `llm.py` (model client). The benchmark runner (`benchmark/runner/`) drives the same harness, so the tested system is the shipped system.
 
 ## 3. Why a 32B model can beat a frontier model here
