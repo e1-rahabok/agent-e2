@@ -29,6 +29,7 @@
 
 ## Imbalance
 - Imbalance explains contention while total utilization is below 100%.
+
 | Type | Facts |
 |---|---|
 | Utilization, inter-host | See `vsphere/cpu/metrics/cluster/inter-host-imbalance`. |

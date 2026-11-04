@@ -57,7 +57,7 @@ flowchart LR
 
 ## Query pipeline: classic RAG
 1. Classify the question into one `retriever_guide` value. Small prompt to the same LLM, or keyword rules first.
-2. Extract filters: `product`, `object`, `technology`, `pillar`. Values must match `knowledge/glossary.md`.
+2. Extract filters: `product`, `object`, `technology`, `pillar`. Values must match `tools/tags.yaml`.
 3. Hybrid search within filters. Fall back to no filter if fewer than N hits.
 4. Expand: `related`, `internal_derive`, `same_name`, `same_meaning`. `same_name` always included (trap guard).
 5. Add matching foundations files when units, sampling, thresholds or provider/consumer apply.
@@ -91,7 +91,7 @@ flowchart TD
 ### Tools
 | Tool | Input | Output | Rules |
 |---|---|---|---|
-| `search` | query text; optional filters (product, object, technology, pillar, retriever_guide) | Top 8 hits: id, title, heading, 2-line snippet, status, score | Filters must use terminology.md values. Hybrid BM25 + vector. |
+| `search` | query text; optional filters (product, object, technology, pillar, retriever_guide) | Top 8 hits: id, title, heading, 2-line snippet, status, score | Filters must use `tools/tags.yaml` values. Hybrid BM25 + vector. |
 | `read_file` | file id; optional heading | Body text of the file or one section. No metadata block. | One file per call. Long files: section by section. |
 | `follow_links` | file id; link type (related, internal_derive, same_name, same_meaning, all) | Linked ids with titles and status | Cheap: titles only. The model then reads what it chooses. |
 | `get_images` | file id, or filters (object, metric, image_type) | Image records: path, alt text, tags, sample | Returns records only. The UI shows the image. |

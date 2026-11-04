@@ -53,6 +53,7 @@
 ## VAAI (Device panel)
 - Array offload; vendor dependent. No VAAI counters at adapter or path level.
 - VAAI offload raises KAVG. Other latency counters are unaffected; no issue without other symptoms.
+
 | Primitive | Counters |
 |---|---|
 | Extended copy (XCOPY, 0x83) | CLONE_RD, CLONE_WR, CLONE_F; LCLONE_RD, LCLONE_WR, LCLONE_F (linked clones); MBC_RD/s, MBC_WR/s; average latency per successful and failed command. |

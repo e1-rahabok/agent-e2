@@ -1,6 +1,6 @@
 # Evaluation
 
-Golden cases that measure whether the knowledge base improves AI answers.
+Golden cases that measure whether the knowledge base and harness improve AI answers.
 Never index this folder: it contains answer keys.
 
 ## Layout
@@ -9,43 +9,56 @@ Never index this folder: it contains answer keys.
 benchmark/
 ├── cases/<scope>/<area>/<area>-<nnn>-<slug>.md   # one case per file
 ├── attachments/<case-id>/                        # screenshots, logs, diagrams for a case
-├── results/results.csv                           # one row per case per run
+├── runner/                                       # Auto Test: run.py, cases.py, report.py, config.yaml
+├── results/results.csv                           # summary: one row per case per model per mode per run set
+├── results/autotest/<run-id>/                    # per run: answers.csv, report.md, config.json (traces.jsonl not in git)
 └── _templates/case.md
 ```
 
 - scope: `vendor-neutral`, `vsphere` (later `nsx`, `vsan`).
 - area: `foundations`, `cpu`, `memory`, `storage`, `network`, `general` (spans several areas).
-- origin `quiz`: the author's quiz documents (multiple choice, with answer key).
+- Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per case: scales to hundreds of cases, one diff per case, attachments per case.
-- Ids never change and are never reused. Retired cases get `status: retired`, not deleted.
+- Ids never change and are never reused. Retired cases get `status: retired`. A case is deleted only when the author asks.
+- Deleted on author request: `vendor-neutral-general-001` (hyperscaler VM cost; out of scope, Q039).
 
 ## Case fields
-- Each case file: `# Title`, then `## Prompt`, `## Likely wrong answer`, `## Expected key points`, and a `## Metadata` section at the end with one yaml block holding the fields below. No front matter at the top.
+- Each case file: `# Title`, then `## Prompt`, `## Likely wrong answer`, `## Expected key points`, and a `## Metadata` section at the end with one yaml block. No front matter at the top.
+- Only `## Prompt` (plus attachments) is ever sent to the AI.
+
 | Field | Meaning |
 |---|---|
+| `id` | `<scope>-<area>-<nnn>`. Never reused. |
 | `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `attachments/<id>/`. |
 | `tests` | concept, distinction, judgment, troubleshooting. |
-| `knowledge` | Knowledge ids the answer should draw on. Used to check retrieval, not only the answer. |
+| `knowledge` | Knowledge ids the answer should draw on. Used to measure retrieval recall, not only the answer. |
 | `origin` | book, quiz, live-lab, real-ticket, synthetic. |
 | `source_path` | Heading path in the source document, for QA. |
 | `format` | multiple-choice (auto-scored by `benchmark/runner`), free-text (rubric, judge or author), compound (scored by hand). |
 | `level` | recall, l400, multi-hop, screenshot. Multiple-choice only. |
 | `answer` | Correct option letters as written in `## Prompt`. Multiple-choice only. Never sent to the AI. |
 | `trap` | Option letters of the known wrong answer. Multiple-choice only. Never sent to the AI. |
+| `status` | draft, reviewed, retired. |
 
-## Automatic run
-- Multiple-choice cases: `benchmark/runner/run.py`. See `benchmark/runner/README.md`.
-- Methodology (score, index version, hybrid retrieval, temperature): `benchmark/runner/README.md`, section Methodology.
+## Multiple-choice scoring (automatic)
+- Runner: `benchmark/runner/run.py`. Commands and full methodology: `benchmark/runner/README.md`.
+- Options are shuffled per run. Two options are appended to every question: "Not covered by the knowledge base" and "Unsure".
+- Every question says there can be more than one correct option. The number of correct options is never revealed.
+- Each question runs 5 times per model and mode.
 
-## How to run (manual)
-1. Send only the `## Prompt` section (plus attachments) to the AI. Never send the rest of the file.
-2. Run twice with the same model and effort:
-   - `baseline`: no knowledge base.
-   - `kb`: retrieval from `knowledge/`.
-3. Score each answer against `## Expected key points`.
-4. Append one row per case per run to `results/results.csv`.
+| Answer | Points |
+|---|---|
+| Exactly the correct letters | +1 |
+| Unsure, chosen alone | 0 |
+| Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | -1 |
 
-## Scoring (per case, 0–3)
+- The model is told this scoring, so guessing does not pay.
+- Headline: **Stable correct**, the share of questions answered exactly right in all 5 runs. Target: at least 85%, aim 99% (author, 2026-11-03).
+- Also reported: Luck (right in some runs only), Net points, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
+- Reason and design: `project/design-kb-test-site.md`, sections Removing luck and Target.
+
+## Free-text and compound scoring (manual, per case, 0-3)
+
 | Score | Meaning |
 |---|---|
 | 0 | Falls into the trap, or wrong. |
@@ -53,13 +66,20 @@ benchmark/
 | 2 | Correct, with the right reason (mechanism or vantage point). |
 | 3 | Correct, right reason, and states what to check next. |
 
+How to run:
+1. Send only the `## Prompt` section (plus attachments) to the AI. Never send the rest of the file.
+2. Run with the same model and effort in each mode: `baseline` (no knowledge base), `classic` or `agentic` (knowledge base through the harness).
+3. Score each answer against `## Expected key points`.
+4. Append one row per case per mode to `results/results.csv`, with the scale in `notes`.
+
 ## results.csv columns
+
 | Column | Example |
 |---|---|
-| date | 2026-11-02 |
+| date | 2026-11-03 |
 | model | model id |
-| effort | medium / high / max |
-| mode | baseline / kb |
-| case_id | vsphere-cpu-003 |
-| score | 0–3 |
-| notes | short reason for the score |
+| effort | n/a for gateway models; medium / high / max where the model has an effort setting |
+| mode | baseline, classic, agentic (`-vision` suffix for the screenshot track) |
+| case_id | vsphere-cpu-004 |
+| score | Auto Test: exact-match mean over 5 runs, 0-1. Manual: 0-3. |
+| notes | run id and scale, e.g. "autotest 20261103-081849; score = exact-match mean 0-1 over 5 runs; temp 0.2" |

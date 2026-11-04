@@ -19,6 +19,7 @@
 ```text
 Wait = Idle + Swap Wait + Other Wait
 ```
+
 | Sub-metric | Waiting for | Guest OS sizing |
 |---|---|---|
 | Idle | Work. | Exclude. |

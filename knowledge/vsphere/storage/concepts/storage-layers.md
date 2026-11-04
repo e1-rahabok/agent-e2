@@ -2,6 +2,7 @@
 
 ## Layers
 ![Storage layers from Guest OS to storage subsystem](../images/storage-layers-guest-os-to-storage-subsystem.png)
+
 | Layer | Facts |
 |---|---|
 | Guest OS | Sees virtual disks presented by the VM motherboard. Has partitions, each with a filesystem (OS, page file, data). |

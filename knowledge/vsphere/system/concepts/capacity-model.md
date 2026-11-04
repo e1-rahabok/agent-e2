@@ -76,6 +76,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 
 ## Total vs usable after host loss (10 hosts, N+1, 0% buffer)
 ![Total vs usable capacity](../images/cluster-total-vs-usable-capacity.png)
+
 | Event | Intentional | Desired | Impacts |
 |---|---|---|---|
 | DPM | Yes | Yes | Total capacity |

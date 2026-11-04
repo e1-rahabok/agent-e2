@@ -12,6 +12,7 @@
 
 ## Three levels
 ![Measurement at vCPU, thread and core level](../images/cpu-measurement-at-vcpu-thread-core-level.png)
+
 | Level | Side | Behaviour |
 |---|---|---|
 | VM vCPU | Consumer | When it does not get the runtime it demands, the gap is accounted. Hence Ready and Co-stop. |
@@ -32,6 +33,7 @@
 
 ## Capacity vs performance
 ![Capacity and performance metrics for vCPU, core and socket](../images/cpu-capacity-vs-performance-metrics-at-vcpu-core-socket-level.png)
+
 | Level | Capacity management | Performance management |
 |---|---|---|
 | VM vCPU | Running + cannot run + idling = 100%. | Unit is GHz, not %. 100% cannot be defined: it is volatile. |

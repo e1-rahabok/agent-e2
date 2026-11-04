@@ -37,6 +37,7 @@
 
 ## RDMA device
 - RDMA gives applications direct access to the NIC, bypassing OS overhead.
+
 | Counter | Meaning |
 |---|---|
 | %PKTDTX, %PKTDRX | Dropped packets as % of sent and received. The only contention counters. |

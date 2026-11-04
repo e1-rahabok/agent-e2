@@ -142,6 +142,7 @@ def main():
             if not os.path.exists(os.path.join('benchmark', 'attachments', att)):
                 bad(f, f'attachment not found: {att}')
 
+    check_tables(bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
 
@@ -153,6 +154,20 @@ def main():
     for p in problems: print(p)
     print(f'{len(docs)} knowledge files checked, {len(problems)} problems')
     return 1 if problems else 0
+
+def check_tables(bad):
+    """A table right after a list item, image or paragraph renders as text on GitHub. A blank line must come first."""
+    for f in sorted(glob.glob('**/*.md', recursive=True)):
+        if '/raw-input/' in f or '/autotest/' in f or f.startswith('project/archive/'):
+            continue
+        lines, fence = open(f).read().split('\n'), False
+        for i, line in enumerate(lines):
+            if line.startswith('```'):
+                fence = not fence
+            if (not fence and i > 0 and line.startswith('|') and i + 1 < len(lines) and lines[i + 1].startswith('|---')
+                    and lines[i - 1].strip() and not lines[i - 1].startswith(('|', '#'))):
+                bad(f, f'line {i + 1}: table needs a blank line before it')
+
 
 CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['book', 'author', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']

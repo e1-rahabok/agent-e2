@@ -33,6 +33,7 @@
 
 ## Thin, thick and RDM in one VM
 ![Thin VMDK, thick VMDK and RDM consumption](../images/vm-disk-consumption-thin-vs-thick-vs-rdm.png)
+
 | Disk | Facts |
 |---|---|
 | RDM | Not on vSAN or VMFS data: mapped to an external LUN. Always counts as thick (configured size), whatever the guest uses. A thin LUN on the array is transparent to ESXi. |

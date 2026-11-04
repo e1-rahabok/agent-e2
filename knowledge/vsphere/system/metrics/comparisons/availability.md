@@ -19,6 +19,7 @@
 
 ## Cluster availability
 - Not the average of hosts: HA matters.
+
 | Metric | Rule |
 |---|---|
 | Operational availability (%) | Considers HA: N+1 reports 100% with 1 host unavailable (ignore the worst host, average the rest). Excludes approved planned downtime (requires authoritative start and end times). Ignores hardware issues. |

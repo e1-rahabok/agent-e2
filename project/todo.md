@@ -101,7 +101,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
-- [ ] Case vendor-neutral-general-001 (hyperscaler VM cost): author to add reasons why A, B, D are wrong, and the pricing date and source. Re-check prices before each run.
+- [x] Case vendor-neutral-general-001 (hyperscaler VM cost): removed 2026-11-04. Cost and price are out of scope (author, Q039).
 - [x] Author quiz (vSphere Metric Quiz.docx): 18 golden cases added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
 - [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
 - [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
