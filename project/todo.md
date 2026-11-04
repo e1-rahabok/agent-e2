@@ -18,6 +18,20 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Shorten `vsphere/resource-management/concepts/vcls` to the 9.1 status.
 - [x] Metric catalog (`knowledge/catalog/`) and harness tools: catalog lookup, calculator, flow executor, answer verifier (2026-11-04).
 
+## Product (from the vCommunity Ask demo, 2026-11-04; see `project/product-requirements.md`)
+- [ ] Move section "Host CPU monitoring" (esxtop load average, PCPU 80% / 90%) out of `vsphere/foundations/overhead`: it is not overhead. Place it with the host CPU metrics and state the book view next to it (host utilization is capacity; performance is read from contention).
+- [ ] Add overview files per object for broad questions: "ESXi CPU: what to monitor", then memory, storage, network, and the VM and cluster equivalents. Each links the metric files in priority order.
+- [ ] Benchmark case: "most important CPU metrics on an ESXi host" (trap: utilization and load average first).
+- [ ] App uses `harness/` for retrieval, tools, prompt and verifier (decision D4), and the benchmarked embedding model.
+- [ ] Store prompt version, settings, model and index version with every answer; mark answers from a UI-edited prompt as untested.
+- [ ] Rate and flag buttons with cause tags, feeding the review queue.
+- [ ] Draft status: badge on source cards instead of a sentence in every answer (decision D1).
+- [ ] Offline bundle import for dark sites; local viewer as the default source link.
+- [ ] Screenshot mode: recognition against the screenshot library, read-back of values for confirmation, multi-image comparison (decision D2).
+- [ ] Data file mode: parse esxtop batch CSV and vCenter chart export CSV in code (decision D3).
+- [ ] Guided troubleshooting UX: step progress and branch shown, user enters values.
+- [ ] After 1.0: connect to VCF Operations (read-only service account). Find objects, read metrics and properties, run the flows on live values, cite live data with timestamps. Needs the VCF Operations 9.1 metric reference in the catalog first.
+
 ## Catalog and tools follow-up
 - [ ] Catalog rows without a `kb` file: cluster and resource pool memory, datastore space, DPU charts. Add files or map to existing ones.
 - [ ] Counter group unclear for the per-host and per-VM-disk datastore charts (deviceLatency, maxQueueDepth, totalReadLatency, ...): confirm in the vSphere API reference (developer.broadcom.com).

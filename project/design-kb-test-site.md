@@ -6,6 +6,7 @@ Status: design only. Not built. Not indexed.
 - Measure the quality of `knowledge/` through a local LLM that answers from it.
 - Let invited visitors ask questions in natural language and judge the answers.
 - Turn every weak answer into a fix: a knowledge gap, a retrieval miss, or a model limit.
+- Product requirements for the shipped assistant (ways to ask, answer UX, dark site): `project/product-requirements.md`.
 - Same contract as `README.md`, section How a local LLM uses it. The site implements that contract; it adds no rules of its own.
 
 ## What "quality" means here
