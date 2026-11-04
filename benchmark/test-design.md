@@ -165,6 +165,7 @@ A set is more than 100 good questions. It must measure one thing (Level 400 oper
 
 ## 8. Comparison design
 - Why both classic and agentic modes are run, and why the agentic call limit is what it is: `ARCHITECTURE.md`, sections 2a and 2b.
+- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark vs deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See `benchmark/runner/README.md`.
 - Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's Stable correct exceeds it by more than the margin.
 - Paired comparison: models are compared question by question on the same set, not only by totals.

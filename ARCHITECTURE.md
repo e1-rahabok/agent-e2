@@ -50,6 +50,20 @@ Why this design and why a 32B model: `project/solution-design.md`. Folder and wr
   - show progress (what is being read) and let the user stop or ask to keep digging.
 - The test then uses the same budget as deployment, so the score predicts the product.
 
+### Benchmark vs deployment: same harness, one difference
+- Principle: the release score is measured on the deployed configuration. A different harness setting in the test would grade a system nobody ships.
+- What is the same in both: prompt, tools, retrieval settings, verifier, context window, token budget for tool output, no-progress stops.
+- What differs, and how it is handled:
+
+| Difference | Why | Handling |
+|---|---|---|
+| Time | Test time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the test would grade the provider. | The test stops on hardware-independent limits only: tokens and no-progress. A maximum number of model turns is derived from the deployment time limit: turns = time limit ÷ seconds per turn measured on the target GPU (benchmark phase 5). |
+| Context window | Gateway models often offer 128K or more; the deployed server may run 32K. | The test caps the context to the deployed window. |
+| User in the loop | In deployment the user can stop, ask to keep digging, or answer a clarifying question. A test has no user. | The test answers at the end of the budget with no help: a worst case. Clarifying questions are scored as a separate set later. |
+| Experiments | Some runs ask "what if" (16 calls, primed agentic, another embedding model). | Run as named experiment profiles. Only the deployment profile produces the release score. |
+
+- So the harness has profiles, not a second harness: one deployment profile (the release score and the product) and named experiment profiles (diagnosis only).
+
 ## 2b. Why keep classic mode
 - Classic mode costs a third of the test runs. It earns its place four ways:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
