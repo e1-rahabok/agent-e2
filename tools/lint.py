@@ -168,6 +168,10 @@ def main():
             if not os.path.exists(os.path.join('benchmark', 'attachments', att)):
                 bad(f, f'attachment not found: {att}')
 
+    for f in files + sorted(glob.glob('benchmark/cases/*.md')):
+        text = open(f).read()
+        for pat in allowed.get('injection_patterns', []):
+            if re.search(pat, text): bad(f, f'possible prompt injection or hidden text (pattern {pat})')
     check_tables(bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
