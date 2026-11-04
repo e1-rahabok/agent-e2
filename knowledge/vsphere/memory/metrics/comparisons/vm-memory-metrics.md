@@ -30,6 +30,7 @@
 
 ## Virtual view vs physical view
 ![Virtual and physical view of one VM's memory: Granted, Shared, Zero, Before Zip, Swapped, Host Cache, Ballooned, Free, Overhead](../../images/vm-memory-virtual-view-vs-physical-view.png)
+
 | Item | View | Meaning |
 |---|---|---|
 | Configured | VM | What the Guest OS sees. The guest cannot see overhead. |

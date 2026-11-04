@@ -15,6 +15,7 @@
 
 ## Thread states (Windows Internals, 7th edition)
 ![Windows thread states](../images/windows-thread-states-diagram.png)
+
 | State | Group | Meaning |
 |---|---|---|
 | Ready | CPU issue | Waiting for a processor; all are busy. Includes threads waiting to be in-swapped after a wait, and preempted threads (put at the front of the queue). Should be near 0. Many high-priority threads bumping low-priority ones keep it high. |

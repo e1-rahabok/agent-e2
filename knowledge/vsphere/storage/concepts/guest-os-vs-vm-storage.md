@@ -13,6 +13,7 @@
 
 ## VM capacity sources
 ![What a VM consumes: virtual disks, compute virtualization files, storage virtualization](../images/vm-storage-capacity-sources-disks-and-virtualization-files.png)
+
 | Source | Examples | Notes |
 |---|---|---|
 | Virtual disk | VMDK or RDM | Properties: provisioning (thin, lazy zero, eager zero), RDM type (physical or virtual). |

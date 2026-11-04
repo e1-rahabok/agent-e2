@@ -7,6 +7,7 @@
 
 ## Panels regrouped
 ![esxtop panels](../images/esxtop-panels-overview.png)
+
 | Group | Consumer view | Provider view | Panels |
 |---|---|---|---|
 | CPU | Yes | Partly: the 4-line summary | CPU, Power Management (CPU only, no socket level; thread level when HT is on), Interrupt |

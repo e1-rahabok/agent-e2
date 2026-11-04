@@ -145,13 +145,6 @@ Each entry has:
   - Test both in one run and compare.
 - Answer:
 
-### Q039 · Auto Test > Golden case vendor-neutral-general-001 · Hyperscaler cost not in the knowledge base
-- Files: `benchmark/cases/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`
-- Search: not from the book.
-- Question: add hyperscaler cost content to the knowledge base, or score this case in baseline mode only?
-- Written as now: the knowledge base has no cost content. In knowledge-base modes every model chose "Not covered" (frontier: 10 of 10 runs). Baseline frontier: correct 5 of 5.
-- Answer:
-
 ### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
 - Files: `benchmark/cases/vsphere/cpu/cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/cpu/metrics/host/core-utilization`, `vsphere/cpu/metrics/host/utilization`, `vsphere/cpu/metrics/host/usage`
 - Search 1 (quiz): "It is a balanced reporting"
@@ -214,6 +207,13 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q039 · Auto Test > Golden case vendor-neutral-general-001 · Hyperscaler cost not in the knowledge base
+- Files: `benchmark/cases/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`
+- Search: not from the book.
+- Question: add hyperscaler cost content to the knowledge base, or score this case in baseline mode only?
+- Written as now: the knowledge base has no cost content. In knowledge-base modes every model chose "Not covered" (frontier: 10 of 10 runs). Baseline frontier: correct 5 of 5.
+- Answer: remove the case. Cost and price management is out of scope: the knowledge base is about performance troubleshooting (author, 2026-11-04). Case deleted; its id is not reused.
 ### Q001 · Chapter 2 CPU > VM · Linux Steal Time
 - Files: `vsphere/cpu/metrics/virtual-motherboard/overlap`, `vsphere/cpu/metrics/virtual-motherboard/latency`
 - Search 1 (Chapter 1): "Steal Time in Linux only includes CPU Ready"
@@ -284,7 +284,6 @@ Each entry has:
 - Answer: The providers have 2 types of counters:
 •	Provider metric. This metric does not exist at consumer. For example, the physical network in ESXi.
 •	Sum of Consumer metric. This metric aggregates the metric of consumers. For example, the sum of VM network in the ESXi.
-
 
 ### Q010 · Chapter 2 CPU > ESXi · Usage cap
 - Files: `vsphere/cpu/metrics/host/usage`
@@ -384,6 +383,6 @@ Each entry has:
 - Search 1 (quiz key): "C is correct. The VM costs around US$ 2000 per year."
 - Question: the key has empty explanations for A, B and D. What is the reason each is wrong? Which pricing date and source should the case record?
 - Written as now: answer C only; no reasons for the others.
-- Answer: Author (2026-11-03): tracked as a to-do in project/todo.md.
+- Answer: Author (2026-11-03): tracked as a to-do in project/todo.md. Closed 2026-11-04: case removed (see Q039).
 
 - None yet. Earlier resolved questions are recorded in each file's `review_notes`.

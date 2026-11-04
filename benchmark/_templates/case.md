@@ -32,5 +32,5 @@ format: multiple-choice           # multiple-choice | free-text | compound
 level: l400                       # recall | l400 | multi-hop | screenshot (multiple-choice only)
 answer: [B]                       # correct letters (multiple-choice only)
 trap: [A]                         # trap letters (multiple-choice only)
-status: draft                     # draft | reviewed
+status: draft                     # draft | reviewed | retired
 ```

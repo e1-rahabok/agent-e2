@@ -17,6 +17,7 @@
 
 ## State counters
 ![How esxtop CPU state counters compose](../../images/esxtop-cpu-state-counters-composition.png)
+
 | Counter | Meaning |
 |---|---|
 | %USED | Not a state: affected by power management and Hyper-Threading. |
@@ -72,6 +73,7 @@
 ## Power
 - Power stats (per VM and kernel module): POWER = current CPU power in watts (CPU only).
 - Power panel (per PCPU): Power Usage (W) and Power Cap (hard limit, only when rack power is short). PSTATE MHZ lists the frequency per P-state.
+
 | Counter | Meaning |
 |---|---|
 | %USED | Used (%). |

@@ -2,6 +2,7 @@
 
 ## Two layers
 ![Virtual network (VM and kernel port groups) above the physical vmnics](../images/virtual-network-port-groups-vs-physical-vmnics.png)
+
 | Layer | Facts |
 |---|---|
 | Virtual | vNICs and software switches. The top-of-rack switch now lives inside each ESXi host. |

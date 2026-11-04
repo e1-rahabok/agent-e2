@@ -44,6 +44,7 @@
 
 ## Counter visibility
 ![Guest OS counters not visible to the VM; VM counters not visible to the Guest OS](../images/guest-os-vs-vm-cpu-counter-visibility.png)
+
 | Counter group | Counters | Not visible to |
 |---|---|---|
 | Guest OS level | Context Switch, Run Queue, Utilization, IO Wait | VM (ESXi) |
@@ -71,6 +72,7 @@
 
 ## State mapping for one vCPU
 ![Guest OS states mapped to VM states for one vCPU](../images/guest-os-cpu-states-mapped-to-vm-vcpu-states.png)
+
 | Guest OS state | VM state | Note |
 |---|---|---|
 | Run (productive) | Run | vCPU running. |
