@@ -147,11 +147,7 @@
   - migrate VMs to another host. DRS can do this automatically.
 
 ## Host CPU monitoring
-- Tools: vSphere Client, esxtop, resxtop.
-- esxtop CPU panel, first line (load average): a value equal to or greater than 1 means the system is overloaded.
-- esxtop PCPU line (usage of physical CPUs): 80% is a reasonable ceiling.
-- esxtop PCPU line: 90% should be a warning.
-- The source notes that organizations set their own standards for the target load percentage.
+- Moved to `vsphere/object-types/esxi/overview-what-to-monitor`, section Documentation guidance (esxtop).
 
 ## Traps
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
