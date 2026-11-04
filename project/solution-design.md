@@ -113,10 +113,10 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 |---|---|---|---|
 | Concepts and mechanisms | Markdown, one fact per bullet | The model knows the counter name but not why it behaves that way | 209 files |
 | Metric files with traps | Markdown + metadata (object, layer, same_name links) | Same name, different meaning on another object or layer | Done for vSphere CPU, memory, storage, network |
-| Metric catalog | YAML or CSV in the repo, compiled to SQLite by the harness: one row per metric per object, with counter id, unit, rollup, statistics level, layer, metric class, threshold with source | Exact lookups ("unit and rollup of Ready", "is GPU utilization stored by default?") without depending on retrieval luck | Missing. Data exists scattered in metric files |
-| Object model | YAML: managed object types, parent-child and provider-consumer relationships | Multi-hop questions (VM → host → cluster → datastore) | Missing |
-| Troubleshooting flows | Markdown numbered steps + Mermaid, plus a YAML step definition the harness can execute one step at a time | Small models skip steps or jump to conclusions; an executor keeps them on the path and asks for the next value | 12 flows in markdown; no executable form |
-| Formulas and calculators | Small functions in the harness, referenced from metric files | Arithmetic and unit errors | Missing |
+| Metric catalog | YAML or CSV in the repo, compiled to SQLite by the harness: one row per metric per object, with counter id, unit, rollup, statistics level, layer, metric class, threshold with source | Exact lookups ("unit and rollup of Ready", "is GPU utilization stored by default?") without depending on retrieval luck | Built 2026-11-04: `knowledge/catalog/vcenter-counters.yaml` (131 chart rows from the vSphere 9.1 docs), `esxtop-fields.yaml` (178 fields), `thresholds.yaml` (31 rows, each quoting its file; lint checks the quote), colour bands read from the knowledge files; `harness/catalog.py` |
+| Object model | YAML: managed object types, parent-child and provider-consumer relationships | Multi-hop questions (VM → host → cluster → datastore) | Built 2026-11-04: `knowledge/catalog/objects.yaml` (12 types, 18 relations, layers); path search in `harness/catalog.py` |
+| Troubleshooting flows | Markdown numbered steps + Mermaid, plus a YAML step definition the harness can execute one step at a time | Small models skip steps or jump to conclusions; an executor keeps them on the path and asks for the next value | 12 flows; executor built 2026-11-04 (`harness/flows.py`) reads the numbered steps from the markdown, so there is no second copy. Structured conditions only if traces show skipped steps |
+| Formulas and calculators | Small functions in the harness, referenced from metric files | Arithmetic and unit errors | Built 2026-11-04: `harness/calc.py` (summation ↔ %, units, capacity, esxtop identities) |
 | Glossary and synonyms | One glossary with synonyms and words to avoid | Query rewriting: "steal time" → Ready; "VM rightsizing" → two sizing jobs | Exists, split over 3 files |
 | Diagrams and screenshots | PNG plus a full text twin next to each image | Text-only models lose nothing; vision models and human readers get the picture | 100+ images |
 | Worked examples | Markdown question → reasoning path → answer, separate from the benchmark | Shows the model how to chain the files; never the benchmark answers | Missing |
@@ -158,4 +158,4 @@ project/             for humans: design, decisions, author questions, to-do, arc
 tools/               repository maintenance: lint.py, tags.yaml
 ```
 - Kept technology-first metric folders, and VCF Operations metrics stay in the vSphere technology folders with `product: vcf-operations` (author decisions 2 and 3: no).
-- Next components: `knowledge/catalog/` (metric catalog, object model) and the harness tools (metric lookup, calculator, flow executor). See section 6.
+- Built 2026-11-04: `knowledge/catalog/` (metric catalog, object model) and the harness tools (catalog lookup, calculator, flow executor, answer verifier). See section 6 and `harness/README.md`.

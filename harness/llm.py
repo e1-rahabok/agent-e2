@@ -88,7 +88,7 @@ def _provider(data, headers):
 
 
 class MockClient:
-    """Offline stand-in. Picks answers at random (seeded) and exercises the tool loop once."""
+    """Offline stand-in. Picks answers at random (seeded) and exercises the tool loop: search, read_file, catalog, calculate."""
 
     def __init__(self, seed=0):
         self.rng = random.Random(seed)
@@ -104,6 +104,11 @@ class MockClient:
             hit = re.search(r'"id": "([^"]+)"', messages[-1]['content'])
             if hit:
                 return self._tool('read_file', {'id': hit.group(1)})
+        names = {t['function']['name'] for t in tools or []}
+        if tools and tool_turns == 2 and 'catalog' in names:
+            return self._tool('catalog', {'name': 'cpu.ready.summation'})
+        if tools and tool_turns == 3 and 'calculate' in names:
+            return self._tool('calculate', {'expression': 'summation_to_percent(2000, 20, 1)'})
         text = json.dumps([m['content'] if isinstance(m['content'], str) else m['content'][0]['text'] for m in messages if m['role'] == 'user'])
         letters = sorted(set(re.findall(r'\\n([A-H])\. ', text)))
         pick = sorted(self.rng.sample(letters, k=1 if letters else 0)) or ['A']

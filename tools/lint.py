@@ -142,6 +142,9 @@ def main():
             if not os.path.exists(os.path.join('benchmark', 'attachments', att)):
                 bad(f, f'attachment not found: {att}')
 
+    check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
+    check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
+
     # every image file must be linked from a knowledge file, so the AI gets its context
     for img in glob.glob('knowledge/**/images/*.png', recursive=True):
         if os.path.normpath(img) not in linked_images:
@@ -150,6 +153,90 @@ def main():
     for p in problems: print(p)
     print(f'{len(docs)} knowledge files checked, {len(problems)} problems')
     return 1 if problems else 0
+
+CATALOG = 'knowledge/catalog'
+THRESHOLD_SOURCES = ['book', 'author', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
+OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
+
+
+def check_catalog(allowed, ids, bodies, bad):
+    """knowledge/catalog/*.yaml: valid tags, existing knowledge ids, thresholds still quoted in their files."""
+    objects = set(allowed['object'])
+    def kb_ok(path, where, ref):
+        if ref and ref not in ids and not ref.startswith('catalog/'):
+            bad(path, f'{where}: kb "{ref}" does not exist')
+    for path in sorted(glob.glob(f'{CATALOG}/*.yaml')):
+        try:
+            data = yaml.safe_load(open(path))
+        except yaml.YAMLError as e:
+            bad(path, f'yaml error: {e}'); continue
+        meta = data.get('meta') or {}
+        for k in ('id', 'title', 'review_notes', 'status'):
+            if k not in meta: bad(path, f'meta.{k} missing')
+        if meta.get('status') not in allowed['status']: bad(path, f'meta.status "{meta.get("status")}" not allowed')
+        if meta.get('id') != path[len('knowledge/'):-5]: bad(path, f'meta.id "{meta.get("id")}" does not match path')
+        name = os.path.basename(path)
+        rows = data.get('rows') or []
+        if name == 'vcenter-counters.yaml':
+            for n, r in enumerate(rows):
+                w = f'row {n + 1} ({r.get("counter")})'
+                for k in ('counter', 'object', 'chart', 'label', 'unit', 'stat_type', 'rollup', 'level', 'page'):
+                    if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                if r.get('object') not in objects: bad(path, f'{w}: object "{r.get("object")}" not allowed')
+                if r.get('level') not in (1, 2, 3, 4): bad(path, f'{w}: level must be 1-4')
+                if r.get('minmax_level') not in (None, 4): bad(path, f'{w}: minmax_level must be 4')
+                if r.get('stat_type') not in ('Rate', 'Absolute', 'Delta'): bad(path, f'{w}: stat_type "{r.get("stat_type")}"')
+                if r.get('rollup') not in ('Average', 'Summation', 'Latest', 'Minimum', 'Maximum'): bad(path, f'{w}: rollup "{r.get("rollup")}"')
+                kb_ok(path, w, r.get('kb'))
+        elif name == 'esxtop-fields.yaml':
+            for n, r in enumerate(rows):
+                for k in ('panel', 'field', 'description', 'page'):
+                    if r.get(k) in (None, ''): bad(path, f'row {n + 1}: {k} missing')
+        elif name == 'thresholds.yaml':
+            seen = set()
+            for n, r in enumerate(rows):
+                w = f'row {n + 1} ({r.get("id")})'
+                if r.get('id') in seen: bad(path, f'{w}: duplicate id')
+                seen.add(r.get('id'))
+                for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb', 'quote'):
+                    if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                if r.get('operator') not in OPERATORS: bad(path, f'{w}: operator "{r.get("operator")}" not allowed')
+                if r.get('operator') == 'range' and r.get('value_high') is None: bad(path, f'{w}: range needs value_high')
+                if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
+                if r.get('object') and r['object'] not in objects: bad(path, f'{w}: object "{r["object"]}" not allowed')
+                if r.get('layer') and r['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{r["layer"]}" not allowed')
+                kb_ok(path, w, r.get('kb'))
+                if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
+                    bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
+        elif name == 'objects.yaml':
+            types = set()
+            for o in data.get('objects') or []:
+                types.add(o.get('type'))
+                if o.get('type') not in objects: bad(path, f'object "{o.get("type")}" not allowed')
+                if o.get('layer') and o['layer'] not in allowed['layer']: bad(path, f'{o.get("type")}: layer "{o["layer"]}" not allowed')
+                for ref in o.get('kb') or []: kb_ok(path, o.get('type'), ref)
+            for r in data.get('relations') or []:
+                for end in ('from', 'to'):
+                    if r.get(end) not in types: bad(path, f'relation {r}: "{r.get(end)}" is not in objects')
+            for l in data.get('layers') or []:
+                if l.get('layer') not in allowed['layer']: bad(path, f'layer "{l.get("layer")}" not allowed')
+        else:
+            bad(path, 'unknown catalog file: add its checks to tools/lint.py')
+
+
+def check_flows(docs, bad):
+    """Diagnosis files must parse into steps for the flow tool (harness/flows.py); step references must exist."""
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'harness'))
+    import flows
+
+    class _Doc:
+        def __init__(self, i, fm, body):
+            self.id, self.meta, self.title = i, fm, body.lstrip().split('\n', 1)[0].lstrip('# ')
+            parts = [p.strip() for p in re.split(r'\n(?=## )', body.strip()) if p.strip()]
+            self.sections = [(p.split('\n', 1)[0].lstrip('# ').strip() if p.startswith('## ') else 'Intro', p) for p in parts]
+    for i, msg in flows.check({i: _Doc(i, fm, body) for i, (fm, body) in docs.items()}):
+        bad(f'knowledge/{i}.md', msg)
+
 
 if __name__ == '__main__':
     sys.exit(main())

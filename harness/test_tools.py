@@ -1,0 +1,155 @@
+"""Tests for the harness tools. Run: python3 -m unittest harness/test_tools.py (from the repository root)."""
+import os
+import sys
+import unittest
+
+sys.path.insert(0, os.path.dirname(__file__))
+import calc  # noqa: E402
+import catalog  # noqa: E402
+import flows  # noqa: E402
+import kb  # noqa: E402
+import modes  # noqa: E402
+import verify  # noqa: E402
+from llm import MockClient  # noqa: E402
+from retrieval import Retriever  # noqa: E402
+
+DOCS, CHUNKS = kb.load()
+CAT = catalog.get(DOCS)
+
+
+class CatalogTest(unittest.TestCase):
+    def test_counter_by_full_name(self):
+        r = CAT.lookup('cpu.ready.summation')
+        top = r['counters'][0]
+        self.assertEqual((top['counter'], top['object'], top['rollup'], top['level']), ('cpu.ready', 'VirtualMachine', 'Summation', 1))
+        self.assertEqual(top['kb'], 'vsphere/cpu/metrics/virtual-motherboard/ready')
+
+    def test_gpu_is_level_4(self):
+        r = CAT.lookup('GPU utilization')
+        self.assertTrue(r['counters'])
+        self.assertTrue(all(c['level'] == 4 for c in r['counters']))
+
+    def test_esxtop_field(self):
+        self.assertEqual(CAT.lookup('%RDY')['esxtop'][0]['field'], '%RDY')
+        self.assertTrue(CAT.lookup('DAVG')['esxtop'][0]['field'].startswith('DAVG'))
+
+    def test_object_filter(self):
+        r = CAT.lookup('balloon', object='vm')
+        self.assertTrue(r['counters'])
+        self.assertTrue(all(c['object'] == 'VirtualMachine' for c in r['counters']))
+
+    def test_thresholds_have_source(self):
+        r = CAT.lookup('KAVG')
+        self.assertTrue(any(t['value'] == 0.5 and t['source'] == 'book' for t in r['thresholds']))
+
+    def test_bands_parsed_from_knowledge(self):
+        bands = CAT.thresholds(name='Peak CPU Ready among any vCPU')['bands']
+        self.assertEqual((bands[0]['green'], bands[0]['red']), ('0-2', '8-16'))
+
+    def test_object_path(self):
+        p = CAT.path('vm', 'cluster')['path']
+        self.assertIsNotNone(p)
+        self.assertLessEqual(len(p), 3)
+        self.assertIn('many-to-many', ' '.join(CAT.path('VirtualMachine', 'Datastore')['path']))
+
+    def test_facts_for_context(self):
+        f = CAT.facts_for(['vsphere/cpu/metrics/virtual-motherboard/ready'])
+        self.assertIn('cpu.ready', f)
+        self.assertIn('statistics level 1', f)
+        self.assertIn('Threshold', f)
+
+
+class CalcTest(unittest.TestCase):
+    def r(self, e):
+        return calc.evaluate(e)['result']
+
+    def test_summation(self):
+        self.assertEqual(self.r('summation_to_percent(2000, 20, 1)'), 10)
+        self.assertAlmostEqual(self.r('summation_to_percent(2000, 300)'), 0.666667)
+        self.assertEqual(self.r('percent_to_summation(100, 20, 4)'), 80000)
+
+    def test_units(self):
+        self.assertEqual(self.r('convert(1, "GB", "MB")'), 1024)
+        self.assertEqual(self.r('convert(1, "Gbps", "Mbps")'), 1000)
+        self.assertEqual(self.r('convert(8, "Mb", "MBd")'), 1)
+        self.assertEqual(self.r('convert(3, "GHz", "MHz")'), 3000)
+        self.assertIn('ambiguous', ' '.join(calc.evaluate('convert(1, "Kbps", "KBps")')['notes']))
+
+    def test_rejects_unsafe_and_bad_input(self):
+        self.assertIn('error', calc.evaluate('__import__("os")'))
+        self.assertIn('error', calc.evaluate('2 ** 1000'))
+        self.assertIn('thousands', calc.evaluate('13,856 * 300')['error'])
+        self.assertIn('error', calc.evaluate('convert(1, "GB", "ms")'))
+
+
+class FlowTest(unittest.TestCase):
+    def test_every_flow_parses(self):
+        self.assertEqual(flows.check(DOCS), [])
+        self.assertGreaterEqual(len(flows.flow_ids(DOCS)), 12)
+
+    def test_step_and_reference(self):
+        out = flows.run(DOCS, 'vsphere/cpu/diagnosis/vm-cpu-contention-high', '4')
+        self.assertEqual((out['of'], out['next'], out['refers_to']), (6, '5', ['2']))
+
+    def test_lettered_steps(self):
+        out = flows.run(DOCS, 'vsphere/memory/diagnosis/overcommit-indicators')
+        self.assertEqual(len(out['steps']), 4)
+        self.assertTrue(out['steps'][0].startswith('a. '))
+
+    def test_unknown(self):
+        self.assertIn('flows', flows.run(DOCS, 'vsphere/cpu/metrics/virtual-motherboard/ready'))
+
+
+class VerifyTest(unittest.TestCase):
+    Q = 'Stem\n\nA. one\nB. two\nC. Not covered by the knowledge base.\nD. Unsure: the information available does not settle this question.'
+
+    def types(self, reply, context=''):
+        return [(i['type'], i['hard']) for i in verify.check(reply, self.Q, context, set(DOCS))]
+
+    def test_clean(self):
+        self.assertEqual(self.types('ANSWER: A, B\nREASON: fine.'), [])
+
+    def test_hard(self):
+        self.assertIn(('format', True), self.types('I think A'))
+        self.assertIn(('format', True), self.types('ANSWER: F\nREASON: x'))
+        self.assertIn(('hedge', True), self.types('ANSWER: A, D\nREASON: x'))
+
+    def test_soft(self):
+        self.assertIn(('ungrounded', False), self.types('ANSWER: A\nREASON: Ready above 25% is bad.', context='Ready above 50%'))
+        self.assertEqual(self.types('ANSWER: A\nREASON: Ready above 50% is bad.', context='Ready above 50%'), [])
+        self.assertIn(('citation', False), self.types('ANSWER: A\nREASON: see vsphere/cpu/metrics/nope.'))
+
+
+class ModesTest(unittest.TestCase):
+    CFG = {'temperature': 0.2, 'max_tokens': 100, 'classic_k': 4, 'context_tokens': 6000,
+           'agent_max_calls': 8, 'agent_tool_tokens': 20000}
+
+    def test_agentic_uses_new_tools(self):
+        ret = Retriever(DOCS, CHUNKS)
+        res, used, trace, fb = modes.answer('agentic', MockClient(), 'mock', VerifyTest.Q, [], self.CFG, ret)
+        actions = [s['action'] for s in trace]
+        self.assertIn('catalog', actions)
+        self.assertIn('calculate', actions)
+        self.assertFalse(fb)
+
+    def test_classic_context_has_catalog_facts(self):
+        ret = Retriever(DOCS, CHUNKS)
+        ctx, used, _ = modes.classic_context(ret, 'What is the rollup and statistics level of VM CPU Ready?', self.CFG)
+        self.assertIn('Catalog facts', ctx)
+
+    def test_repair_turn_on_hedge(self):
+        class Hedger(MockClient):
+            calls = 0
+
+            def chat(self, model, messages, tools=None, **kw):
+                Hedger.calls += 1
+                text = 'ANSWER: A, D\nREASON: x' if Hedger.calls == 1 else 'ANSWER: D\nREASON: x'
+                return {'content': text, 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+        ret = Retriever(DOCS, CHUNKS)
+        res, used, trace, fb = modes.answer('classic', Hedger(), 'mock', VerifyTest.Q, [], self.CFG, ret)
+        self.assertEqual(res['content'], 'ANSWER: D\nREASON: x')
+        self.assertIn('repair', [s['action'] for s in trace])
+
+
+if __name__ == '__main__':
+    unittest.main()

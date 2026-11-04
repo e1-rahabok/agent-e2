@@ -16,7 +16,16 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Thin files (review section 5): fill from the book or merge into the parent file.
 - [ ] Re-check `vsphere/cpu/configuration/side-channel-scheduling` against Performance Best Practices 9.1.
 - [ ] Shorten `vsphere/resource-management/concepts/vcls` to the 9.1 status.
-- [ ] Metric catalog (`knowledge/catalog/`) and harness tools: metric lookup, calculator, flow executor.
+- [x] Metric catalog (`knowledge/catalog/`) and harness tools: catalog lookup, calculator, flow executor, answer verifier (2026-11-04).
+
+## Catalog and tools follow-up
+- [ ] Catalog rows without a `kb` file: cluster and resource pool memory, datastore space, DPU charts. Add files or map to existing ones.
+- [ ] Counter group unclear for the per-host and per-VM-disk datastore charts (deviceLatency, maxQueueDepth, totalReadLatency, ...): confirm in the vSphere API reference (developer.broadcom.com).
+- [ ] Map esxtop fields to knowledge files (esxtop comparison files) so a catalog hit on %RDY also returns the file.
+- [ ] VCF Operations metrics in the catalog (needs the VCF Operations 9.1 metric reference).
+- [ ] After the next benchmark run: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
+- [ ] After the next benchmark run: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
+- [ ] Add benchmark cases that need the catalog, calculator and object paths (units, statistics levels, summation to %, multi-hop).
 - [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan.
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)

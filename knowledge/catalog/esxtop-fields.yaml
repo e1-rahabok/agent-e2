@@ -1,0 +1,766 @@
+meta:
+  id: catalog/esxtop-fields
+  title: esxtop panel fields (vSphere 9.1)
+  source:
+    document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+    path: 'vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > Interactive Mode > CPU, CPU Power, Memory, Storage Adapter, Storage Device, Virtual Machine Storage,
+      RDMA Device, Network, Interrupt panel statistics tables (pp. 2152-2166)'
+  review_notes:
+  - 'Whole file: parsed from the esxtop panel statistics tables of the vSphere 9.1 documentation. Identity columns (ID, NAME, DEVICE, PATH, ...) and the vSAN panel are omitted.'
+  - Descriptions are the documentation text, condensed to one line. The knowledge base reading of each field is in the esxtop comparison files.
+  status: draft
+formulas:
+- formula: 100% = %RUN + %RDY + %CSTP + %WAIT
+  panel: CPU
+  page: 2153
+- formula: '%USED = %RUN + %SYS - %OVRLP'
+  panel: CPU
+  page: 2152
+rows:
+- panel: CPU
+  field: PCPU USED(%)
+  description: 'A PCPU refers to a physical hardware execution context. It can be a physical CPU core if the hyperthreading is unavailable or deactivated, or a logical CPU (LCPU or SMT thread) if the hyperthreading
+    is activated. PCPU USED(%) displays the following percentages: • percentage of CPU usage per PCPU • percentage of CPU usage averaged over all PCPUs CPU Usage (%USED) is the percentage of PCPU nominal
+    frequency that was used since the last screen update. It equals the total sum of %USED for Worlds that ran on this PCPU. Note: If a PCPU is running at frequency that is higher than its nominal (rated)
+    frequency, then PCPU USED(%) can be greater than 100%. If a PCPU and its partner are busy when hyperthreading is activated, each PCPU account for half of the CPU usage.'
+  page: 2152
+- panel: CPU
+  field: PCPU UTIL(%)
+  description: 'A PCPU refers to a physical hardware execution context. It can be a physical CPU core if the hyperthreading is unavailable or deactivated, or a logical CPU (LCPU or SMT thread) if the hyperthreading
+    is activated. PCPU UTIL(%) represents the percentage of real time that the PCPU was not idle (raw PCPU utilization). It displays the percentage CPU utilization per PCPU, and the percentage CPU utilization
+    averaged over all PCPUs. Note: PCPU UTIL(%) might differ from PCPU USED(%) due to power management technologies or hyperthreading.'
+  page: 2152
+- panel: CPU
+  field: '%USED'
+  description: Percentage of physical CPU core cycles used by the resource pool, virtual machine, or world. %USED might depend on the frequency with which the CPU core is running. When running with lower
+    CPU core frequency, %USED can be smaller than %RUN. On CPUs which support the turbo mode, CPU frequency can also be higher than the nominal (rated) frequency, and %USED can be larger than %RUN. %USED
+    = %RUN + %SYS - %OVRLP
+  page: 2152
+- panel: CPU
+  field: '%SYS'
+  description: Percentage of time spent in the ESX VMkernel on behalf of the resource pool, virtual machine, or world to process interrupts and to perform other system activities. This time is part of the
+    time used to calculate %USED. %USED = %RUN + %SYS - %OVRLP
+  page: 2152
+- panel: CPU
+  field: '%WAIT'
+  description: Percentage of time the resource pool, virtual machine, or world spent in the blocked or busy wait state. This percentage includes the percentage of time the resource pool, virtual machine,
+    or world was idle. 100% = %RUN + %RDY + %CSTP + %WAIT
+  page: 2152
+- panel: CPU
+  field: '%VMWAIT'
+  description: The total percentage of time the Resource Pool/World spent in a blocked state waiting for events.
+  page: 2152
+- panel: CPU
+  field: '%IDLE'
+  description: Percentage of time the resource pool, virtual machine, or world was idle. Subtract this percentage from %WAIT to see the percentage of time the resource pool, virtual machine, or world was
+    waiting for some event. The difference, %WAIT- %IDLE, of the VCPU worlds can be used to estimate guest I/O wait time. To find the VCPU worlds, use the single-key command e to expand a virtual machine
+    and search for the world NAME starting with "vcpu". (The VCPU worlds might wait for other events in addition to I/O events, so this measurement is only an estimate.)
+  page: 2153
+- panel: CPU
+  field: '%RDY'
+  description: Percentage of time the resource pool, virtual machine, or world was ready to run, but was not provided CPU resources on which to execute. 100% = %RUN + %RDY + %CSTP + %WAIT
+  page: 2153
+- panel: CPU
+  field: '%MLMTD'
+  description: Percentage of time the ESX VMkernel deliberately did not run the resource pool, virtual machine, or world because doing so would violate the resource pool, virtual machine, or world's limit
+    setting. Because the resource pool, virtual machine, or world is ready to run when it is prevented from running in this way, the %MLMTD time is included in %RDY time.
+  page: 2153
+- panel: CPU
+  field: '%SWPWT'
+  description: Percentage of time a resource pool or world spends waiting for the ESX VMkernel to swap memory. The %SWPWT (swap wait) time is included in the %WAIT time.
+  page: 2153
+- panel: CPU
+  field: AMIN
+  description: Resource pool, virtual machine, or world attribute Reservation.
+  page: 2153
+- panel: CPU
+  field: AMAX
+  description: Resource pool, virtual machine, or world attribute Limit. A value of -1 means unlimited.
+  page: 2153
+- panel: CPU
+  field: ASHRS
+  description: Resource pool, virtual machine, or world attribute Shares.
+  page: 2153
+- panel: CPU
+  field: HTSHARING
+  description: Current hyperthreading configuration.
+  page: 2153
+- panel: CPU
+  field: HTQ
+  description: Indicates whether the world is quarantined or not. N means no and Y means yes.
+  page: 2153
+- panel: CPU
+  field: TIMER/s
+  description: Timer rate for this world.
+  page: 2153
+- panel: CPU
+  field: '%OVRLP'
+  description: Percentage of system time spent during scheduling of a resource pool, virtual machine, or world on behalf of a different resource pool, virtual machine, or world while the resource pool,
+    virtual machine, or world was scheduled. This time is not included in %SYS. For example, if virtual machine A is being scheduled and a network packet for virtual machine B is processed by the ESX VMkernel,
+    the time spent appears as %OVRLP for virtual machine A and %SYS for virtual machine B. %USED = %RUN + %SYS - %OVRLP
+  page: 2153
+- panel: CPU
+  field: '%RUN'
+  description: Percentage of total time scheduled. This time does not account for hyperthreading and system time. On a hyperthreading activated server, the %RUN can be twice as large as %USED. %USED = %RUN
+    + %SYS - %OVRLP 100% = %RUN + %RDY + %CSTP + %WAIT
+  page: 2153
+- panel: CPU
+  field: '%CSTP'
+  description: 'Percentage of time a resource pool spends in a ready, co-deschedule state. Note: You might see this statistic displayed, but it is intended for VMware use only. 100% = %RUN + %RDY + %CSTP
+    + %WAIT'
+  page: 2153
+- panel: CPU
+  field: POWER
+  description: Current CPU power consumption for a resource pool (in Watts).
+  page: 2153
+- panel: CPU
+  field: '%LAT_C'
+  description: Percentage of time the resource pool or world was ready to run but was not scheduled to run because of CPU resource contention.
+  page: 2153
+- panel: CPU
+  field: '%LAT_M'
+  description: Percentage of time the resource pool or world was ready to run but was not scheduled to run because of memory resource contention.
+  page: 2153
+- panel: CPU
+  field: '%DMD'
+  description: CPU demand in percentage. It represents the average active CPU load in the past minute.
+  page: 2153
+- panel: CPU
+  field: CORE UTIL(%)
+  description: Percentage of CPU cycles per core when at least one of the PCPUs in this core is unhalted, and its average over all cores. This statistic only appears when hyperthreading is activated. In
+    batch mode, the corresponding CORE UTIL(%) statistic is displayed for each PCPU. For example, PCPU 0 and PCPU 1 have the same the CORE UTIL(%) number, and that is the number for core 0. You can change
+    the display using single-key commands.
+  page: 2154
+- panel: CPU Power
+  field: Power Usage
+  description: Current total power usage (in Watts).
+  page: 2154
+- panel: CPU Power
+  field: Power Cap
+  description: Total power cap (in Watts).
+  page: 2154
+- panel: CPU Power
+  field: PSTATE MHZ
+  description: 'Clock frequency per state. Note: When ACPI Collaborative Processor Performance Control (CPPC) is enabled, Hardware Controlled is displayed. For more information about P-state management
+    types, see Host'
+  page: 2154
+- panel: CPU Power
+  field: Power Management Policies
+  description: Policies in ESX.
+  page: 2154
+- panel: CPU Power
+  field: '%USED'
+  description: Percentage of physical CPU nominal frequency used since the last screen update. It is the same as PCPU USED(%) shown in the CPU Screen.
+  page: 2154
+- panel: CPU Power
+  field: '%UTIL'
+  description: Raw physical CPU utilization is the percentage of time that physical CPU was not idle. It is the same as PCPU UTIL(%) shown in the CPU Screen.
+  page: 2154
+- panel: CPU Power
+  field: '%Cx'
+  description: Percentage of time the physical CPU spent in C-State 'x'.
+  page: 2155
+- panel: CPU Power
+  field: '%Px'
+  description: 'Percentage of time the physical CPU spent in P-State ''x''. On systems with Processor Clocking Control, P- states are not directly visible to ESX . The esxtop shows the percentage of time
+    spent at full speed under the heading ''P0'' and the percentage of time spent at any lower speed under ''P1''. Note: When ACPI CPPC is enabled, the hardware controls the frequency and the individual
+    P-states do not exist. In this case, %Px values are not displayed. The %A/MPERF value can be used to determine the current frequency.'
+  page: 2155
+- panel: CPU Power
+  field: '%Tx'
+  description: Percentage of time the physical CPU spent in T-State 'x'. %A/MPERF aperf and mperf are two hardware registers used to keep track of the actual frequency and nominal frequency of the processor.
+    Displays the real-time aperf to mperf ratio in the last esxtop update period. %A/MPERF *nominal frequency of the processor = current frequency of the processor
+  page: 2155
+- panel: Memory
+  field: PMEM (MB)
+  description: Displays the machine memory statistics for the server. All numbers are in megabytes. total Total amount of the machine memory in the server. vmk Amount of the machine memory being used by
+    the ESX VMkernel. other Amount of the machine memory being used by everything other than the ESX VMkernel. free Amount of the machine memory that is free.
+  page: 2155
+- panel: Memory
+  field: VMKMEM (MB)
+  description: Displays the machine memory statistics for the ESX VMkernel. All numbers are in megabytes. managed Total amount of the machine memory managed by the ESX VMkernel. min free Minimum amount
+    of the machine memory that the ESX VMkernel aims to keep free. rsvd Total amount of the machine memory currently reserved by resource pools. ursvd Total amount of the machine memory currently unreserved.
+    state Current machine memory availability state. Possible values are high, soft, hard and low. High means that the machine memory is not under any pressure and low means that it is.
+  page: 2155
+- panel: Memory
+  field: NUMA (MB)
+  description: 'Displays the ESX NUMA statistics. This line appears only if the ESX host is running on a NUMA server. All numbers are in megabytes. For each NUMA node in the server, two statistics are displayed:
+    • The total amount of machine memory in the NUMA node that is managed by ESX. • The amount of machine memory in the node that is currently free (in parentheses). Shared memory for the ESX host might
+    be larger than the total amount of memory if memory is over-committed.'
+  page: 2155
+- panel: Memory
+  field: PSHARE (MB)
+  description: Displays the ESX page-sharing statistics. All numbers are in megabytes. shared Amount of the physical memory that is being shared. common Amount of the machine memory that is common across
+    worlds. saving Amount of the machine memory that is saved because of page sharing. shared = common + saving
+  page: 2156
+- panel: Memory
+  field: SWAP (MB)
+  description: Displays the ESX swap usage statistics. All numbers are in megabytes. curr Current swap usage. rclmtgt Where the ESX system expects the reclaimed memory to be. Memory can be reclaimed by
+    swapping or compression. r/s Rate at which the memory is swapped in by the ESX system from disk. w/s Rate at which the memory is swapped to disk by the ESX system.
+  page: 2156
+- panel: Memory
+  field: ZIP (MB)
+  description: Displays the ESX memory compression statistics. All numbers are in megabytes. zipped Total compressed physical memory. saved Saved memory by compression.
+  page: 2156
+- panel: Memory
+  field: MEMCTL (MB)
+  description: Displays the memory balloon statistics. All numbers are in megabytes. curr Total amount of the physical memory reclaimed using the vmmemctl module. target Total amount of physical memory
+    the ESX host attempts to reclaim using the vmmemctl module. max Maximum amount of the physical memory the ESX host can reclaim using the vmmemctl module.
+  page: 2156
+- panel: Memory
+  field: AMIN
+  description: Memory reservation for this resource pool or virtual machine.
+  page: 2156
+- panel: Memory
+  field: AMAX
+  description: Memory limit for this resource pool or virtual machine. A value of -1 means Unlimited.
+  page: 2156
+- panel: Memory
+  field: ASHRS
+  description: Memory shares for this resource pool or virtual machine.
+  page: 2156
+- panel: Memory
+  field: NHN
+  description: Current home node for the resource pool or virtual machine. This statistic is applicable only on NUMA systems. If the virtual machine has no home node, a dash (-) appears.
+  page: 2156
+- panel: Memory
+  field: NRMEM (MB)
+  description: Current amount of remote memory allocated to the virtual machine or resource pool. This statistic is applicable only on NUMA systems.
+  page: 2156
+- panel: Memory
+  field: N% L
+  description: Current percentage of memory allocated to the virtual machine or resource pool that is local.
+  page: 2156
+- panel: Memory
+  field: MEMSZ (MB)
+  description: Amount of physical memory allocated to a resource pool or virtual machine. The values are the same for the VMM and VMX groups. MEMSZ = GRANT + MCTLSZ + SWCUR + "never touched"
+  page: 2156
+- panel: Memory
+  field: GRANT (MB)
+  description: Amount of guest physical memory mapped to a resource pool or virtual machine. The consumed host machine memory is equal to GRANT - SHRDSVD. The values are the same for the VMM and VMX groups.
+  page: 2156
+- panel: Memory
+  field: CNSM
+  description: Amount of the memory currently consumed by the virtual machine. The memory currently consumed by the virtual machine is equal to the amount of memory that the VM guest operating system currently
+    uses, excluding the amount of memory saved for sharing if memory sharing is enabled on the VM, excluding the amount of memory saved if some of the VM memory is compressed. For more information on memory
+    sharing and memory compression, see the vSphere Resource Management documentation.
+  page: 2156
+- panel: Memory
+  field: SZTGT (MB)
+  description: Amount of machine memory the ESX VMkernel wants to allocate to a resource pool or virtual machine. The values are the same for the VMM and VMX groups.
+  page: 2156
+- panel: Memory
+  field: TCHD (MB)
+  description: Working set estimate for the resource pool or virtual machine. The values are the same for the VMM and VMX groups.
+  page: 2156
+- panel: Memory
+  field: '%ACTV'
+  description: Percentage of guest physical memory that is being referenced by the guest. This is an instantaneous value.
+  page: 2156
+- panel: Memory
+  field: '%ACTVS'
+  description: Percentage of guest physical memory that is being referenced by the guest. This is a slow moving average.
+  page: 2157
+- panel: Memory
+  field: '%ACTVF'
+  description: Percentage of guest physical memory that is being referenced by the guest. This is a fast moving average.
+  page: 2157
+- panel: Memory
+  field: '%ACTVN'
+  description: Percentage of guest physical memory that is being referenced by the guest. This is an estimation. (You might see this statistic displayed, but it is intended for VMware use only.) MCTL? Memory
+    balloon driver is installed or not. N means no, Y means yes.
+  page: 2157
+- panel: Memory
+  field: MCTLSZ (MB)
+  description: Amount of physical memory reclaimed from the resource pool by way of ballooning.
+  page: 2157
+- panel: Memory
+  field: MCTLTGT (MB)
+  description: Amount of physical memory the ESX system attempts to reclaim from the resource pool or virtual machine by way of ballooning.
+  page: 2157
+- panel: Memory
+  field: MCTLMAX (MB)
+  description: Maximum amount of physical memory the ESX system can reclaim from the resource pool or virtual machine by way of ballooning. This maximum depends on the guest operating system type.
+  page: 2157
+- panel: Memory
+  field: SWCUR (MB)
+  description: Current swap usage by this resource pool or virtual machine.
+  page: 2157
+- panel: Memory
+  field: SWTGT (MB)
+  description: Target where the ESX host expects the swap usage by the resource pool or virtual machine to be.
+  page: 2157
+- panel: Memory
+  field: SWR/s (MB)
+  description: Rate at which the ESX host swaps in memory from disk for the resource pool or virtual machine.
+  page: 2157
+- panel: Memory
+  field: SWW/s (MB)
+  description: Rate at which the ESX host swaps resource pool or virtual machine memory to disk.
+  page: 2157
+- panel: Memory
+  field: LLSWR/s (MB)
+  description: Rate at which memory is read from the host cache. The reads and writes are attributed to the VMM group only, LLSWAP statistics are not displayed for the VM group.
+  page: 2157
+- panel: Memory
+  field: LLSWW/s (MB)
+  description: Rate at which memory is written to the host cache from various sources. The reads and writes are attributed to the VMM group only, LLSWAP statistics are not displayed for the VM group.
+  page: 2157
+- panel: Memory
+  field: CPTRD (MB)
+  description: Amount of data read from checkpoint file.
+  page: 2157
+- panel: Memory
+  field: CPTTGT (MB)
+  description: Size of checkpoint file.
+  page: 2157
+- panel: Memory
+  field: ZERO (MB)
+  description: Resource pool or virtual machine physical pages that are zeroed.
+  page: 2157
+- panel: Memory
+  field: SHRD (MB)
+  description: Resource pool or virtual machine physical pages that are shared.
+  page: 2157
+- panel: Memory
+  field: SHRDSVD (MB)
+  description: Machine pages that are saved because of resource pool or virtual machine shared pages.
+  page: 2157
+- panel: Memory
+  field: OVHD (MB)
+  description: Current space overhead for resource pool.
+  page: 2157
+- panel: Memory
+  field: OVHDMAX (MB)
+  description: Maximum space overhead that might be incurred by resource pool or virtual machine.
+  page: 2157
+- panel: Memory
+  field: OVHDUW (MB)
+  description: Current space overhead for a user world. (You might see this statistic displayed, but it is intended for VMware use only.)
+  page: 2157
+- panel: Memory
+  field: GST_NDx (MB)
+  description: Guest memory allocated for a resource pool on NUMA node x. This statistic is applicable on NUMA systems only.
+  page: 2157
+- panel: Memory
+  field: OVD_NDx (MB)
+  description: VMM overhead memory allocated for a resource pool on NUMA node x. This statistic is applicable on NUMA systems only.
+  page: 2157
+- panel: Memory
+  field: TCHD_W (MB)
+  description: Write working set estimate for resource pool.
+  page: 2157
+- panel: Memory
+  field: CACHESZ (MB)
+  description: Compression memory cache size.
+  page: 2157
+- panel: Memory
+  field: CACHEUSD (MB)
+  description: Used compression memory cache.
+  page: 2157
+- panel: Memory
+  field: ZIP/s (MB/s)
+  description: Compressed memory per second.
+  page: 2157
+- panel: Memory
+  field: UNZIP/s (MB/s)
+  description: Decompressed memory per second.
+  page: 2157
+- panel: Storage Adapter
+  field: NPTH
+  description: Number of paths.
+  page: 2158
+- panel: Storage Adapter
+  field: AQLEN
+  description: Current queue depth of the storage adapter.
+  page: 2158
+- panel: Storage Adapter
+  field: CMDS/s
+  description: Number of commands issued per second.
+  page: 2158
+- panel: Storage Adapter
+  field: READS/s
+  description: Number of read commands issued per second.
+  page: 2158
+- panel: Storage Adapter
+  field: WRITES/s
+  description: Number of write commands issued per second.
+  page: 2158
+- panel: Storage Adapter
+  field: MBREAD/s
+  description: Megabytes read per second.
+  page: 2158
+- panel: Storage Adapter
+  field: MBWRTN/s
+  description: Megabytes written per second.
+  page: 2158
+- panel: Storage Adapter
+  field: RESV/s
+  description: Number of SCSI reservations per second.
+  page: 2158
+- panel: Storage Adapter
+  field: CONS/s
+  description: Number of SCSI reservation conflicts per second.
+  page: 2158
+- panel: Storage Adapter
+  field: DAVG/cmd
+  description: Average device latency per command, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: KAVG/cmd
+  description: Average ESX VMkernel latency per command, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: GAVG/cmd
+  description: Average virtual machine operating system latency per command, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: QAVG/cmd
+  description: Average queue latency per command, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: DAVG/rd
+  description: Average device read latency per read operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: KAVG/rd
+  description: Average ESX VMkernel read latency per read operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: GAVG/rd
+  description: Average guest operating system read latency per read operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: QAVG/rd
+  description: Average queue latency per read operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: DAVG/wr
+  description: Average device write latency per write operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: KAVG/wr
+  description: Average ESX VMkernel write latency per write operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: GAVG/wr
+  description: Average guest operating system write latency per write operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: QAVG/wr
+  description: Average queue latency per write operation, in milliseconds.
+  page: 2158
+- panel: Storage Adapter
+  field: FCMDS/s
+  description: Number of failed commands issued per second.
+  page: 2158
+- panel: Storage Adapter
+  field: FREAD/s
+  description: Number of failed read commands issued per second.
+  page: 2158
+- panel: Storage Adapter
+  field: FWRITE/s
+  description: Number of failed write commands issued per second.
+  page: 2158
+- panel: Storage Adapter
+  field: FMBRD/s
+  description: Megabytes of failed read operations per second.
+  page: 2159
+- panel: Storage Adapter
+  field: FMBWR/s
+  description: Megabytes of failed write operations per second.
+  page: 2159
+- panel: Storage Adapter
+  field: FRESV/s
+  description: Number of failed SCSI reservations per second.
+  page: 2159
+- panel: Storage Adapter
+  field: ABRTS/s
+  description: Number of commands cancelled per second.
+  page: 2159
+- panel: Storage Adapter
+  field: RESETS/s
+  description: Number of commands reset per second.
+  page: 2159
+- panel: Storage Adapter
+  field: PAECMD/s
+  description: The number of PAE (Physical Address Extension) commands per second.
+  page: 2159
+- panel: Storage Adapter
+  field: PAECP/s
+  description: The number of PAE copies per second.
+  page: 2159
+- panel: Storage Adapter
+  field: SPLTCMD/s
+  description: The number of split commands per second.
+  page: 2159
+- panel: Storage Adapter
+  field: SPLTCP/s
+  description: The number of split copies per second.
+  page: 2159
+- panel: Storage Device
+  field: WORLD
+  description: World ID. This ID is visible only if the corresponding device is expanded to worlds. See the interactive command e in Storage Device Panel Interactive Commands. The world statistics are per
+    world per device.
+  page: 2159
+- panel: Storage Device
+  field: PARTITION
+  description: Partition ID. This ID is visible only if the corresponding device is expanded to partitions. See interactive command t in Storage Device Panel Interactive Commands.
+  page: 2159
+- panel: Storage Device
+  field: NPH
+  description: Number of paths.
+  page: 2159
+- panel: Storage Device
+  field: NWD
+  description: Number of worlds.
+  page: 2159
+- panel: Storage Device
+  field: NPN
+  description: Number of partitions.
+  page: 2159
+- panel: Storage Device
+  field: SHARES
+  description: Number of shares. This statistic is applicable only to worlds.
+  page: 2159
+- panel: Storage Device
+  field: BLKSZ
+  description: Block size in bytes.
+  page: 2159
+- panel: Storage Device
+  field: NUMBLKS
+  description: Number of blocks of the device.
+  page: 2160
+- panel: Storage Device
+  field: DQLEN
+  description: Current device queue depth of the storage device.
+  page: 2160
+- panel: Storage Device
+  field: WQLEN
+  description: World queue depth. This is the maximum number of ESX VMkernel active commands that the world is allowed to have. This is a per device maximum for the world. It is valid only if the corresponding
+    device is expanded to worlds.
+  page: 2160
+- panel: Storage Device
+  field: ACTV
+  description: Number of commands in the ESX VMkernel that are currently active. This statistic applies to only worlds and devices.
+  page: 2160
+- panel: Storage Device
+  field: QUED
+  description: Number of commands in the ESX VMkernel that are currently queued. This statistic applies to only worlds and devices.
+  page: 2160
+- panel: Storage Device
+  field: '%USD'
+  description: Percentage of the queue depth used by ESX VMkernel active commands. This statistic applies to only worlds and devices.
+  page: 2160
+- panel: Storage Device
+  field: LOAD
+  description: Ratio of ESX VMkernel active commands plus ESX VMkernel queued commands to queue depth. This statistic applies to only worlds and devices.
+  page: 2160
+- panel: Storage Device
+  field: CMDS/s
+  description: Number of commands issued per second.
+  page: 2160
+- panel: Storage Device
+  field: READS/s
+  description: Number of read commands issued per second.
+  page: 2160
+- panel: Storage Device
+  field: WRITES/s
+  description: Number of write commands issued per second.
+  page: 2160
+- panel: Storage Device
+  field: MBREAD/s
+  description: Megabytes read per second.
+  page: 2160
+- panel: Storage Device
+  field: MBWRTN/s
+  description: Megabytes written per second.
+  page: 2160
+- panel: Storage Device
+  field: DAVG/cmd
+  description: Average device latency per command in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: KAVG/cmd
+  description: Average ESX VMkernel latency per command in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: GAVG/cmd
+  description: Average guest operating system latency per command in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: QAVG/cmd
+  description: Average queue latency per command in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: DAVG/rd
+  description: Average device read latency per read operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: KAVG/rd
+  description: Average ESX VMkernel read latency per read operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: GAVG/rd
+  description: Average guest operating system read latency per read operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: QAVG/rd
+  description: Average queue read latency per read operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: DAVG/wr
+  description: Average device write latency per write operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: KAVG/wr
+  description: Average ESX VMkernel write latency per write operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: GAVG/wr
+  description: Average guest operating system write latency per write operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: QAVG/wr
+  description: Average queue write latency per write operation in milliseconds.
+  page: 2160
+- panel: Storage Device
+  field: ABRTS/s
+  description: Number of commands cancelled per second.
+  page: 2160
+- panel: Storage Device
+  field: RESETS/s
+  description: Number of commands reset per second.
+  page: 2160
+- panel: Storage Device
+  field: PAECMD/s
+  description: Number of PAE commands per second. This statistic applies to only paths.
+  page: 2160
+- panel: Storage Device
+  field: PAECP/s
+  description: Number of PAE copies per second. This statistic applies to only paths.
+  page: 2160
+- panel: Storage Device
+  field: SPLTCMD/s
+  description: Number of split commands per second. This statistic applies to only paths.
+  page: 2160
+- panel: Storage Device
+  field: SPLTCP/s
+  description: Number of split copies per second. This statistic applies to only paths.
+  page: 2160
+- panel: Virtual Machine Storage
+  field: NDK
+  description: Number of VSCSI devices
+  page: 2161
+- panel: Virtual Machine Storage
+  field: CMDS/s
+  description: Number of commands issued per second.
+  page: 2161
+- panel: Virtual Machine Storage
+  field: READS/s
+  description: Number of read commands issued per second.
+  page: 2161
+- panel: Virtual Machine Storage
+  field: WRITES/s
+  description: Number of write commands issued per second.
+  page: 2161
+- panel: Virtual Machine Storage
+  field: MBREAD/s
+  description: Megabytes read per second.
+  page: 2161
+- panel: Virtual Machine Storage
+  field: MBWRTN/s
+  description: Megabytes written per second.
+  page: 2161
+- panel: Virtual Machine Storage
+  field: LAT/rd
+  description: Average latency (in milliseconds) per read.
+  page: 2161
+- panel: Virtual Machine Storage
+  field: LAT/wr
+  description: Average latency (in milliseconds) per write.
+  page: 2161
+- panel: RDMA Device
+  field: PKTTX/s
+  description: Packet transmits/sec
+  page: 2162
+- panel: RDMA Device
+  field: MbTX/s
+  description: Bandwidth MB/s of transmits
+  page: 2162
+- panel: RDMA Device
+  field: PKTRX/s
+  description: Packet receives/sec
+  page: 2163
+- panel: RDMA Device
+  field: MbRX/s
+  description: Bandwidth MB/s of receives
+  page: 2163
+- panel: RDMA Device
+  field: QP
+  description: Number of queue pairs allocated
+  page: 2163
+- panel: RDMA Device
+  field: MR
+  description: Number of memory regions allocated
+  page: 2163
+- panel: Network
+  field: SPEED
+  description: Link speed in Megabits per second. FDUPLX Y means the corresponding link is operating at full duplex. N means it is not.
+  page: 2163
+- panel: Network
+  field: PKTTX/s
+  description: Number of packets transmitted per second.
+  page: 2163
+- panel: Network
+  field: PKTRX/s
+  description: Number of packets received per second.
+  page: 2163
+- panel: Network
+  field: MbTX/s
+  description: MegaBits transmitted per second.
+  page: 2163
+- panel: Network
+  field: MbRX/s
+  description: MegaBits received per second.
+  page: 2163
+- panel: Network
+  field: '%DRPTX'
+  description: Percentage of transmit packets dropped.
+  page: 2163
+- panel: Network
+  field: '%DRPRX'
+  description: Percentage of receive packets dropped.
+  page: 2163
+- panel: Network
+  field: PKTTXMUL/s
+  description: Number of multicast packets transmitted per second.
+  page: 2163
+- panel: Network
+  field: PKTRXMUL/s
+  description: Number of multicast packets received per second.
+  page: 2163
+- panel: Network
+  field: PKTTXBRD/s
+  description: Number of broadcast packets transmitted per second.
+  page: 2163
+- panel: Network
+  field: PKTRXBRD/s
+  description: Number of broadcast packets received per second.
+  page: 2164
+- panel: Interrupt
+  field: COUNT/s
+  description: Total number of interrupts per second. This value is cumulative of the count for every CPU.
+  page: 2164
+- panel: Interrupt
+  field: COUNT_x
+  description: Interrupts per second on CPU x.
+  page: 2164
+- panel: Interrupt
+  field: TIME/int
+  description: Average processing time per interrupt (in microseconds).
+  page: 2164
+- panel: Interrupt
+  field: TIME_x
+  description: Average processing time per interrupt on CPU x (in microseconds).
+  page: 2164

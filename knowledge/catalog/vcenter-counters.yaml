@@ -1,0 +1,1600 @@
+meta:
+  id: catalog/vcenter-counters
+  title: vCenter performance chart counters (vSphere 9.1)
+  source:
+    document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+    path: vSphere Monitoring and Performance > Overview Performance Charts > Clusters, Data centers, Datastores and Datastore Clusters, Hosts, Resource Pools, Virtual Machines > Data Counters tables (pp.
+      2032-2111)
+  fields:
+    counter: group.name. The chart tables print the name only; the group comes from the chart (see review_notes).
+    object: Managed object whose chart shows the counter.
+    shows: Child objects or instances the chart plots, when not the object itself.
+    unit: As printed, spelling normalized.
+    rollup: Rollup stored at level.
+    level: Statistics level that stores the counter.
+    minmax_level: Level that adds Minimum and Maximum rollups.
+    page: Page in the source PDF.
+    kb: Knowledge file that explains the metric.
+  review_notes:
+  - 'Whole file: parsed from the Data Counters tables of the vSphere 9.1 documentation; one row per chart row.'
+  - 'Field counter: the group prefix (cpu, mem, disk, virtualDisk, datastore, gpu, net) is inferred from the chart that shows the row. Rows without a prefix (deviceLatency, maxQueueDepth, totalReadLatency,
+    totalWriteLatency, numberReadAveraged, numberWriteAveraged on the per-VM-disk datastore charts) have an unclear group.'
+  - 'Omitted: vApp charts (the documentation describes them with the same counters as resource pools) and Fault Tolerance charts (out of scope).'
+  - 'Kept as printed: host and VM network rate labelled Kilobytes per second (Kbps); the VM Virtual Disk Rate rows labelled Read Requests and Write Requests with a KBps unit; cluster Memory Active in kilobytes
+    (kb).'
+  - 'Field kb: mapping from chart row to knowledge file made by Claude. Rows without kb have no dedicated knowledge file yet.'
+  status: draft
+rows:
+- counter: cpu.usagemhz
+  object: ClusterComputeResource
+  chart: CPU (MHz)
+  label: Usage
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the average CPU usage values, in Megahertz, of all virtual machines in the cluster.
+  page: 2032
+- counter: cpu.totalmhz
+  object: ClusterComputeResource
+  chart: CPU (MHz)
+  label: Total
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Summation
+  level: 1
+  description: Total amount of CPU resources available in the cluster. The maximum value is equal to the number of cores multiplied by the frequency of the processors. For example, a cluster has two hosts,
+    each of which has four CPUs that are 3 GHz each, and one virtual machine that has two virtual CPUs.
+  page: 2032
+- counter: cpu.usagemhz
+  object: ClusterComputeResource
+  shows: HostSystem, ResourcePool, VirtualMachine
+  chart: CPU Usage
+  label: <host>, <resource pool>, or <virtual machine>
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of CPU actively used by the host, resource pool, or virtual machine in the cluster.
+  page: 2033
+- counter: disk.usage
+  object: ClusterComputeResource
+  shows: HostSystem
+  chart: Disk (KBps)
+  label: <host>
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Average data I/O rate across all hosts in the cluster.
+  page: 2034
+- counter: mem.consumed
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of host machine memory used by all powered on virtual machines in the cluster. A cluster's consumed memory consists of virtual machine consumed memory and overhead memory. It does
+    not include host-specific overhead memory, such as memory used by the service console or VMkernel.
+  page: 2036
+  kb: vsphere/memory/metrics/cluster/consumed
+- counter: mem.totalmb
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Total
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Total amount of machine memory of all hosts in the cluster that is available for virtual machine memory (physical memory for use by the Guest OS) and virtual machine overhead memory.
+  page: 2036
+- counter: mem.active
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Active
+  unit: Kilobytes (kb)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the active guest physical memory of all powered on virtual machines on the host, plus memory used by basic VMkernel applications. Active memory is estimated by the VMkernel.
+  page: 2037
+- counter: mem.vmmemctl
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Balloon
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the guest physical memory reclaimed by the balloon driver for all powered on virtual machines on the host.
+  page: 2037
+- counter: mem.consumed
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of machine memory used on the host. Consumed memory includes virtual machine memory, service console memory, and VMkernel memory. consumed memory = total host memory - free host memory
+  page: 2037
+  kb: vsphere/memory/metrics/cluster/consumed
+- counter: mem.granted
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Granted
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the guest physical memory granted for all powered on virtual machines. Granted memory is mapped to the host's machine memory. Granted memory for a host includes the shared memory of
+    each virtual machine on the host.
+  page: 2037
+- counter: mem.swapused
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Swap Used
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the memory swapped by all powered on virtual machines on the host.
+  page: 2038
+- counter: mem.tier.consumed
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Tier memory consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  description: Amount of machine memory consumed by the host per tier.
+  page: 2038
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.totalmb
+  object: ClusterComputeResource
+  chart: Memory (MB)
+  label: Total
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Aggregate total memory available to the cluster.
+  page: 2038
+- counter: mem.consumed
+  object: ClusterComputeResource
+  shows: ResourcePool, VirtualMachine, HostSystem
+  chart: Memory Consumed
+  label: Resource Pools and Virtual Machines, or Hosts
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of machine memory used by all resource pools and virtual machines in the cluster or by all hosts in the cluster, depending on the cluster view. Consumed memory includes virtual machine
+    memory, service console memory, and VMkernel memory. consumed memory = total host memory - free host memory
+  page: 2039
+  kb: vsphere/memory/metrics/cluster/consumed
+- counter: net.usage
+  object: ClusterComputeResource
+  shows: HostSystem
+  chart: Network (Mbps)
+  label: <host>
+  unit: Megabits per second (Mbps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Average rate at which data is transmitted and received across all NIC instances on the host.
+  page: 2040
+- counter: cpu.usagemhz
+  object: Datacenter
+  shows: ClusterComputeResource
+  chart: CPU (MHz)
+  label: <cluster>
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of CPU currently in use by the cluster. The active CPU usage is approximately equal to the ratio of the used CPU cycles to the available CPU cycles. The maximum possible value is the
+    frequency of the processors multiplied by the number of cores.
+  page: 2041
+- counter: mem.consumed
+  object: Datacenter
+  shows: ClusterComputeResource
+  chart: Memory (MB)
+  label: <cluster>
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of host machine memory used by all powered on virtual machines in the cluster.
+  page: 2042
+- counter: disk.used
+  object: Datacenter
+  chart: Space Utilization
+  label: Virtual Disks
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by virtual disk files. Virtual disk files store the contents of the virtual machine's hard disk drive. It includes information that you write to a virtual machine's
+    hard disk, such as the operating system, program files, and data files.
+  page: 2043
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: Datacenter
+  chart: Space Utilization
+  label: Swap Files
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by swap files. Swap files back up the virtual machine's physical memory.
+  page: 2043
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: Datacenter
+  chart: Space Utilization
+  label: Snapshots
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by virtual machine snapshot files. Snapshot files store information about virtual machine snapshots. They include snapshot state files and delta disk files. A snapshot
+    state file stores the running state of the virtual machine at the time of the snapshot. It has the extension .vmsn.
+  page: 2043
+  kb: vsphere/storage/metrics/virtual-motherboard/snapshot-space
+- counter: disk.used
+  object: Datacenter
+  chart: Space Utilization
+  label: Other VM Files
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by all other virtual machine files, such as configuration files and log files.
+  page: 2043
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.provisioned
+  object: Datastore
+  chart: Space
+  label: Allocated
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of physical space provisioned by an administrator for the datastore. It is the storage size up to which files on the datastore can grow. Allocated space is not always in use.
+  page: 2044
+- counter: disk.used
+  object: Datastore
+  chart: Space
+  label: Used
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of physical datastore space in use.
+  page: 2044
+- counter: disk.capacity
+  object: Datastore
+  chart: Space
+  label: Capacity
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: 'Maximum capacity of the datastore. capacity = virtual machine file space + non-virtual machine file space + free space Note: Storage data is collected and updated in the overview charts
+    every 30 minutes.'
+  page: 2044
+- counter: disk.used
+  object: Datastore
+  chart: Space Utilization By File Type
+  label: Virtual Disks
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by virtual disk files. Virtual disk files store the contents of the virtual machine's hard disk drive. It includes information that you write to a virtual machine's
+    hard disk, such as the operating system, program files, and data files.
+  page: 2045
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: Datastore
+  chart: Space Utilization By File Type
+  label: Swap Files
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by swap files. Swap files back up the virtual machine's physical memory.
+  page: 2045
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: Datastore
+  chart: Space Utilization By File Type
+  label: Snapshots
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by virtual machine snapshot files. Snapshot files store information about virtual machine snapshots. They include snapshot state files and delta disk files. A snapshot
+    state file stores the running state of the virtual machine at the time of the snapshot. It has the extension .vmsn.
+  page: 2045
+  kb: vsphere/storage/metrics/virtual-motherboard/snapshot-space
+- counter: disk.used
+  object: Datastore
+  chart: Space Utilization By File Type
+  label: Other VM Files
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by all other virtual machine files, such as configuration files and log files.
+  page: 2046
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: Datastore
+  shows: Datastore
+  chart: Space used by Datastore in GB
+  label: <datastore>
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of used storage space on the 10 datastores with the most used space.
+  page: 2046
+- counter: disk.used
+  object: Datastore
+  shows: VirtualMachine
+  chart: Space Utilization by Virtual Machines
+  label: <virtual machine>
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of datastore space used by the five virtual machines with the most used datastore space.
+  page: 2047
+- counter: disk.provisioned
+  object: Datastore
+  shows: Datastore
+  chart: Space Allocated by Datastore in GB
+  label: <datastore>
+  unit: Kilobytes (KB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of provisioned storage space on the top 10 datastores with the most provisioned space.
+  page: 2047
+- counter: disk.capacity
+  object: Datastore
+  shows: Datastore
+  chart: Space Capacity by Datastore in GB
+  label: <datastore>
+  unit: Kilobytes (KB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Configured size of the datastores in the datastore cluster.
+  page: 2048
+- counter: datastore.sizeNormalizedDatastoreLatency
+  object: Datastore
+  chart: Storage I/O Control Normalized Latency
+  label: Storage I/O Control Normalized Latency
+  unit: Microseconds
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: Storage I/O Control monitors latency to detect congestion on the datastore.
+  page: 2048
+  kb: vsphere/storage/metrics/datastore/storage-io-control
+- counter: datastore.datastoreIops
+  object: Datastore
+  chart: Storage I/O Control Aggregate IOPs
+  label: Storage I/O Control Aggregate IOPs
+  unit: Number
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: Number of I/O operations per second on the datastore, aggregated across all hosts, and virtual machines accessing the datastore.
+  page: 2049
+  kb: vsphere/storage/metrics/datastore/storage-io-control
+- counter: datastore.siocActiveTimePercentage
+  object: Datastore
+  chart: Storage I/O Control Activity
+  label: Storage I/O Control Activity
+  unit: Percentage (%)
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: This is the percentage of time during which the Storage I/O Control actively controlled the I/O latency for the datastore.
+  page: 2049
+  kb: vsphere/storage/metrics/datastore/storage-io-control
+- counter: deviceLatency
+  object: Datastore
+  shows: HostSystem
+  chart: Average Device Latency per Host
+  label: Average Device Latency per Host
+  unit: Milliseconds (ms)
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: Measures the amount of time, in milliseconds, to complete a SCSI command issued from the physical device.
+  page: 2049
+  kb: vsphere/storage/metrics/host/datastore
+- counter: maxQueueDepth
+  object: Datastore
+  shows: HostSystem
+  chart: Maximum Queue Depth per Host
+  label: Max Queue Depth per Host
+  unit: Number
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: Maximum queue depth. Queue depth is the number of commands the SCSI driver queues to the HBA.
+  page: 2050
+  kb: vsphere/storage/metrics/host/datastore
+- counter: datastore.numberReadAveraged
+  object: Datastore
+  shows: HostSystem
+  chart: Read IOPs per Host
+  label: Read IOPs per Host
+  unit: Number
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of disk read commands completed on each disk on the host, per second. Read rate = blocks read per second × block size
+  page: 2050
+  kb: vsphere/storage/metrics/host/datastore
+- counter: datastore.numberWriteAveraged
+  object: Datastore
+  shows: HostSystem
+  chart: Write IOPs Per Host
+  label: Write IOPs per Host
+  unit: Number
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of disk write commands completed on each disk on the host, per second. Write rate = blocks written per second × block size
+  page: 2051
+  kb: vsphere/storage/metrics/host/datastore
+- counter: totalReadLatency
+  object: Datastore
+  shows: VirtualMachine disk
+  chart: Average Read Latency per Virtual Machine Disk
+  label: Average Read Latency per Virtual Machine Disk
+  unit: Milliseconds (ms)
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: Latency measures the time used to process a SCSI command issued by the guest OS to the virtual machine. The kernel latency is the time VMkernel takes to process an I/O request. The device
+    latency is the time it takes the hardware to handle the request. Total latency = kernelLatency + deviceLatency.
+  page: 2051
+  kb: vsphere/storage/metrics/virtual-motherboard/datastore
+- counter: totalWriteLatency
+  object: Datastore
+  shows: VirtualMachine disk
+  chart: Average Write Latency per Virtual Machine Disk
+  label: Average Write Latency per Virtual Machine Disk
+  unit: Milliseconds (ms)
+  stat_type: Absolute
+  rollup: Average
+  level: 3
+  description: Latency measures the time used to process a SCSI command issued by the guest OS to the virtual machine. The kernel latency is the time VMkernel takes to process an I/O request. The device
+    latency is the time it takes the hardware to handle the request. Total latency = kernelLatency + deviceLatency.
+  page: 2051
+  kb: vsphere/storage/metrics/virtual-motherboard/datastore
+- counter: numberReadAveraged
+  object: Datastore
+  shows: VirtualMachine disk
+  chart: Read IOPs per Virtual Machine Disk
+  label: Read IOPs per Virtual Machine Disk
+  unit: Number
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of disk read commands completed on each virtual machine disk, per second. Read rate = blocks read per second × block size
+  page: 2052
+  kb: vsphere/storage/metrics/virtual-motherboard/datastore
+- counter: numberWriteAveraged
+  object: Datastore
+  shows: VirtualMachine disk
+  chart: Write IOPs Per Virtual Machine Disk
+  label: Write IOPs per Virtual Machine Disk
+  unit: Number
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of disk write commands completed on each virtual machine disk on the host. Write rate = blocks read per second × block size
+  page: 2052
+  kb: vsphere/storage/metrics/virtual-motherboard/datastore
+- counter: datastore.datastoreVMObservedLatency
+  object: Datastore
+  chart: Virtual Machine Observed Latency per Datastore
+  label: VM observed latency
+  unit: Microseconds
+  stat_type: Absolute
+  rollup: Latest
+  level: 3
+  description: This is the average datastore latency as observed by the virtual machines in the datastore cluster.
+  page: 2052
+  kb: vsphere/storage/metrics/datastore/storage-io-control
+- counter: cpu.usage
+  object: HostSystem
+  chart: CPU usage in %
+  label: Usage
+  unit: Percentage (%)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: 'Actively used CPU, as a percentage of the total available CPU, for each physical CPU on the host. Active CPU is approximately equal to the ratio of the used CPU to the available CPU. Available
+    CPU = # of physical CPUs × clock rate. 100% represents all CPUs on the host.'
+  page: 2053
+  kb: vsphere/cpu/metrics/host/usage
+- counter: cpu.usagemhz
+  object: HostSystem
+  chart: CPU Usage in MHz
+  label: Usage
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: The sum, in megahertz, of the actively used CPU of all powered on virtual machines on a host. The maximum possible value is the frequency of the processors multiplied by the number of processors.
+  page: 2054
+  kb: vsphere/cpu/metrics/host/usage
+- counter: cpu.usage
+  object: HostSystem
+  shows: DPU
+  chart: CPU (DPU)
+  label: Usage (%)
+  unit: Percentage (%)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Get the CPU usage of a DPU.
+  page: 2055
+- counter: cpu.usage
+  object: HostSystem
+  shows: DPU
+  chart: CPU (DPU)
+  label: Usage (MHz)
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Get the sum of actively used CPUs of all powered on virtual machines of a DPU.
+  page: 2055
+- counter: disk.usage
+  object: HostSystem
+  chart: Disk (KBps)
+  label: Usage
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Average data I/O rate across all LUNs on the host.
+  page: 2056
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.read
+  object: HostSystem
+  shows: LUN
+  chart: Disk Rate (KBps)
+  label: Read
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of disk read commands completed on each disk on the host, per second. The aggregate number of all disk read commands is also displayed in the chart. Read rate = blocksRead per second
+    × blockSize
+  page: 2058
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.write
+  object: HostSystem
+  shows: LUN
+  chart: Disk Rate (KBps)
+  label: Write
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of disk write commands completed on each disk on the host, per second. The aggregate number of all disk write commands is also displayed in the chart. Write rate = blocksWritten per
+    second × blockSize
+  page: 2058
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.numberRead
+  object: HostSystem
+  shows: LUN
+  chart: Disk Requests (Number)
+  label: Read Requests
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of disk read commands completed on each LUN on the host. The aggregate number of all disk read commands is also displayed in the chart.
+  page: 2059
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.numberWrite
+  object: HostSystem
+  shows: LUN
+  chart: Disk Requests (Number)
+  label: Write Requests
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of disk write commands completed on each LUN on the host. The aggregate number of all disk write commands is also displayed in the chart.
+  page: 2059
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.maxQueueDepth
+  object: HostSystem
+  shows: LUN
+  chart: Disk (Number)
+  label: Maximum Queue Depth
+  unit: Number
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  description: Maximum queue depth. Queue depth is the number of commands the SCSI driver queues to the HBA.
+  page: 2061
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.maxTotalLatency
+  object: HostSystem
+  chart: Disk (ms)
+  label: Highest Disk Latency
+  unit: Milliseconds (ms)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Highest latency value of all disks used by the host. Latency measures the time used to process a SCSI command issued by the guest OS to the virtual machine. The kernel latency is the time
+    VMkernel takes to process an I/O request. The device latency is the time it takes the hardware to handle the request.
+  page: 2062
+  kb: vsphere/storage/metrics/host/disk
+- counter: disk.usage
+  object: HostSystem
+  shows: VirtualMachine
+  chart: Disk (KBps)
+  label: <virtual machine>
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the data read from the virtual machine.
+  page: 2063
+  kb: vsphere/storage/metrics/virtual-motherboard/disk
+- counter: gpu.utilization
+  object: HostSystem
+  chart: GPU Compute
+  label: Usage
+  unit: Percentage (%)
+  stat_type: Absolute
+  rollup: Average
+  level: 4
+  description: The utilization of a GPU in percentages.
+  page: 2065
+  kb: vsphere/system/concepts/gpu-monitoring
+- counter: gpu.utilization
+  object: HostSystem
+  shows: GPU device
+  chart: GPU Compute Usage
+  label: Usage for device_id
+  unit: Percentage (%)
+  stat_type: Absolute
+  rollup: Average
+  level: 4
+  description: The utilization of a GPU in percentages.
+  page: 2066
+  kb: vsphere/system/concepts/gpu-monitoring
+- counter: gpu.temperature
+  object: HostSystem
+  shows: GPU device
+  chart: GPU Temperature
+  label: GPU temperature for device_id
+  unit: Celsius (℃)
+  stat_type: Absolute
+  rollup: Average
+  level: 4
+  description: The temperature of a GPU in degrees Celsius.
+  page: 2067
+  kb: vsphere/system/concepts/gpu-monitoring
+- counter: mem.vmmemctl
+  object: HostSystem
+  chart: Memory (Balloon)
+  label: Balloon
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the guest physical memory reclaimed by the balloon driver for all powered on virtual machines on the host.
+  page: 2069
+  kb: vsphere/memory/metrics/host/ballooned
+- counter: mem.consumed
+  object: HostSystem
+  shows: DPU
+  chart: Memory (DPU)
+  label: Consumed (%)
+  unit: Percentage (%)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of memory consumed by a DPU.
+  page: 2070
+- counter: mem.active
+  object: HostSystem
+  chart: Memory (MB)
+  label: Active
+  unit: Kilobytes (kb)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the active guest physical memory of all powered on virtual machines on the host, plus memory used by basic VMKernel applications. Active memory is estimated by the VMkernel and is
+    based on the current workload of the host.
+  page: 2071
+  kb: vsphere/memory/metrics/comparisons/host-memory-metrics
+- counter: mem.vmmemctl
+  object: HostSystem
+  chart: Memory (MB)
+  label: Balloon
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the guest physical memory reclaimed by the balloon driver for all powered on virtual machines on the host.
+  page: 2071
+  kb: vsphere/memory/metrics/host/ballooned
+- counter: mem.vmmemctltarget
+  object: HostSystem
+  chart: Memory (MB)
+  label: Balloon Target
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the balloon target memory of all powered on virtual machines on the host. If the balloon target value is greater than the balloon value, the VMkernel inflates the balloon, causing
+    more virtual machine memory to be reclaimed.
+  page: 2072
+  kb: vsphere/memory/metrics/comparisons/host-memory-metrics
+- counter: mem.consumed
+  object: HostSystem
+  chart: Memory (MB)
+  label: Consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of machine memory used on the host. Consumed memory includes virtual machine memory, service console memory, and VMkernel memory. consumed memory = total host memory - free host memory
+  page: 2072
+  kb: vsphere/memory/metrics/host/consumed
+- counter: mem.granted
+  object: HostSystem
+  chart: Memory (MB)
+  label: Granted
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the guest physical memory granted for all powered on virtual machines. Granted memory is mapped to the host's machine memory. Granted memory for a host includes the shared memory of
+    each virtual machine on the host.
+  page: 2072
+  kb: vsphere/memory/metrics/host/granted
+- counter: mem.sharedcommon
+  object: HostSystem
+  chart: Memory (MB)
+  label: Shared Common
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Amount of machine memory shared by all powered on virtual machines. Shared common memory consists of the entire pool of memory from which sharing is possible, including the amount of physical
+    RAM required by the guest memory. memory shared - memory shared common = amount of memory saved on the host from sharing
+  page: 2072
+  kb: vsphere/memory/metrics/host/shared
+- counter: mem.swapused
+  object: HostSystem
+  chart: Memory (MB)
+  label: Swap Used
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the memory swapped by all powered on virtual machines on the host.
+  page: 2072
+  kb: vsphere/memory/metrics/host/swap-used
+- counter: mem.tier.consumed
+  object: HostSystem
+  chart: Memory (MB)
+  label: Tier memory consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  description: Amount of machine memory consumed by the host per tier.
+  page: 2072
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.totalmb
+  object: HostSystem
+  chart: Memory (MB)
+  label: Total
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Aggregate total memory available to the cluster.
+  page: 2073
+  kb: vsphere/memory/metrics/comparisons/host-memory-metrics
+- counter: mem.usage
+  object: HostSystem
+  shows: VirtualMachine
+  chart: Memory Usage
+  label: Usage
+  unit: Percentage (%)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of guest physical memory currently in use on the virtual machine.
+  page: 2074
+  kb: vsphere/memory/metrics/virtual-motherboard/usage
+- counter: mem.bandwidth.total
+  object: HostSystem
+  chart: Memory Bandwidth (MBps)
+  label: Estimated DRAM Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Total read and write bandwidth of the DRAM memory type.
+  page: 2075
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.bandwidth.total
+  object: HostSystem
+  chart: Memory Bandwidth (MBps)
+  label: Estimated PMem Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Total read and write bandwidth of the PMem memory type.
+  page: 2075
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.bandwidth.total
+  object: HostSystem
+  chart: Memory Bandwidth (MBps)
+  label: Estimated NVMe Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Total read and write bandwidth of the NVMe memory type.
+  page: 2075
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.latency.read
+  object: HostSystem
+  chart: Memory Latency (ns)
+  label: DRAM read latency
+  unit: nanosecond
+  stat_type: Absolute
+  rollup: Latest
+  level: 3
+  page: 2076
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.latency.write
+  object: HostSystem
+  chart: Memory Latency (ns)
+  label: DRAM write latency
+  unit: nanosecond
+  stat_type: Absolute
+  rollup: Latest
+  level: 3
+  page: 2076
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.latency.read
+  object: HostSystem
+  chart: Memory Latency (ns)
+  label: NVMe read latency
+  unit: nanosecond
+  stat_type: Absolute
+  rollup: Latest
+  level: 3
+  page: 2076
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.latency.write
+  object: HostSystem
+  chart: Memory Latency (ns)
+  label: NVMe write latency
+  unit: nanosecond
+  stat_type: Absolute
+  rollup: Latest
+  level: 3
+  page: 2076
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.missrate
+  object: HostSystem
+  chart: Memory Miss Rate (%)
+  label: Estimated DRAM Miss Rate
+  unit: Percentage (%)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  minmax_level: 4
+  description: Get the current miss rate of DRAM memory type.
+  page: 2077
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: net.received
+  object: HostSystem
+  shows: physical NIC
+  chart: Network Rate (Mbps)
+  label: Data Receive Rate
+  unit: Kilobytes per second (Kbps)
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  minmax_level: 4
+  description: Rate at which data is received across the top ten physical NIC instances on the host. This represents the bandwidth of the network. The chart also displays the aggregated data receive rate
+    of all physical NICs.
+  page: 2078
+  kb: vsphere/network/metrics/host/throughput
+- counter: net.transmitted
+  object: HostSystem
+  shows: physical NIC
+  chart: Network Rate (Mbps)
+  label: Data Transmit Rate
+  unit: Kilobytes per second (Kbps)
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  minmax_level: 4
+  description: Rate at which data is transmitted across the top ten physical NIC instances on the host. This represents the bandwidth of the network. The chart also displays the aggregated data transmit
+    rate of all physical NICs.
+  page: 2078
+  kb: vsphere/network/metrics/host/throughput
+- counter: net.packetRx
+  object: HostSystem
+  shows: physical NIC
+  chart: Network Packets (Number)
+  label: Packets Received
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of network packets received across the top ten physical NIC instances on the host. The chart also displays the aggregated value for all NICs.
+  page: 2080
+  kb: vsphere/network/metrics/host/throughput
+- counter: net.packetTx
+  object: HostSystem
+  shows: physical NIC
+  chart: Network Packets (Number)
+  label: Packets Transmitted
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of network packets transmitted across the top ten physical NIC instances on the host. The chart also displays the aggregated value for all NICs.
+  page: 2080
+  kb: vsphere/network/metrics/host/throughput
+- counter: net.usage
+  object: HostSystem
+  shows: VirtualMachine
+  chart: Network (Mbps)
+  label: <virtual machine>
+  unit: Megabits per second (Mbps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the data transmitted and received across all virtual NIC instances connected to the virtual machine.
+  page: 2081
+  kb: vsphere/network/metrics/virtual-motherboard/throughput
+- counter: cpu.usagemhz
+  object: ResourcePool
+  chart: CPU Usage in MHz
+  label: Usage
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: CPU usage is the sum of the average CPU usage values of the virtual machines in the resource pool or vApp. CPU usage = number of cores * CPU frequency
+  page: 2082
+- counter: cpu.usagemhz
+  object: ResourcePool
+  shows: VirtualMachine
+  chart: CPU Usage
+  label: <virtual machine>
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of CPU actively used by virtual machines.
+  page: 2083
+  kb: vsphere/cpu/metrics/virtual-motherboard/usage
+- counter: mem.used
+  object: ResourcePool
+  chart: Memory (MB)
+  label: <resource pool or vApp>
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  description: Sum of the active memory used by all virtual machines in the resource pool or vApp. Active memory is determined by the VMkernel and includes overhead memory. memory usage = active memory
+    / configured virtual machine memory size
+  page: 2084
+- counter: mem.consumed
+  object: ResourcePool
+  shows: VirtualMachine
+  chart: Memory Consumed
+  label: <virtual machine>
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of host memory used by the virtual machine for its guest operating system's physical memory. Memory overhead is not included in consumed memory.
+  page: 2085
+  kb: vsphere/memory/metrics/virtual-motherboard/consumed
+- counter: mem.active
+  object: ResourcePool
+  chart: Memory (MB)
+  label: Active
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the active guest physical memory of all powered on virtual machines in the resource pool.
+  page: 2086
+- counter: mem.vmmemctl
+  object: ResourcePool
+  chart: Memory (MB)
+  label: Balloon
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Sum of the guest physical memory reclaimed by the balloon driver for all powered on virtual machines in the resource pool.
+  page: 2086
+- counter: mem.consumed
+  object: ResourcePool
+  chart: Memory (MB)
+  label: Consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of the physical memory consumed by the virtual machine for the guest memory. Consumed memory does not include the overhead memory. It includes the shared memory and memory that might
+    be reserved, but not actually used. consumed memory = memory granted – memory saved due to memory sharing
+  page: 2087
+- counter: mem.granted
+  object: ResourcePool
+  chart: Memory (MB)
+  label: Granted
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the guest physical memory granted for all powered on virtual machines. Granted memory is mapped to the host's machine memory.
+  page: 2087
+- counter: mem.swapused
+  object: ResourcePool
+  chart: Memory (MB)
+  label: Swapped
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Sum of the memory swapped by all powered on virtual machines in the resource pool.
+  page: 2087
+- counter: cpu.usage
+  object: VirtualMachine
+  chart: CPU (%)
+  label: Usage
+  unit: Percentage (%)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of actively used virtual CPU as a percentage of total available CPU. CPU usage is the average CPU utilization over all available virtual CPUs in the virtual machine.
+  page: 2092
+  kb: vsphere/cpu/metrics/virtual-motherboard/usage
+- counter: cpu.ready
+  object: VirtualMachine
+  chart: CPU (%)
+  label: Ready
+  unit: Percentage (%)
+  stat_type: Rate
+  rollup: Summation
+  level: 1
+  description: Percentage of time that the virtual machine was ready, but could not get scheduled to run on the physical CPU. CPU ready time is dependent on the number of virtual machines on the host and
+    their CPU loads. At collection level 1, the average CPU ready time of all virtual CPUs on the virtual machine is displayed.
+  page: 2092
+  kb: vsphere/cpu/metrics/virtual-motherboard/ready
+- counter: cpu.usagemhz
+  object: VirtualMachine
+  chart: CPU Usage in MHz
+  label: Usage
+  unit: Megahertz (MHz)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: 'Amount of actively used virtual CPU. Note: The host''s view of the CPU usage, not the guest operating system view.'
+  page: 2093
+  kb: vsphere/cpu/metrics/virtual-motherboard/usage
+- counter: disk.usage
+  object: VirtualMachine
+  chart: Disk (KBps)
+  label: Usage
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Average data I/O rate across all virtual disks on the virtual machine.
+  page: 2094
+  kb: vsphere/storage/metrics/virtual-motherboard/disk
+- counter: disk.read
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Disk Rate (KBps)
+  label: Read
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 2
+  description: Number of disk read commands completed on each virtual disk on the virtual machine, per second. The aggregate number of all disk read commands per second is also displayed in the chart. Read
+    rate = blocksRead per second × blockSize
+  page: 2096
+  kb: vsphere/storage/metrics/virtual-motherboard/disk
+- counter: disk.write
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Disk Rate (KBps)
+  label: Write
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 2
+  description: Number of disk write commands completed on each virtual disk on the virtual machine, per second. The aggregate number of all disk write commands per second is also displayed in the chart.
+    Write rate = blocksWritten per second × blockSize
+  page: 2096
+  kb: vsphere/storage/metrics/virtual-motherboard/disk
+- counter: disk.numberRead
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Disk Requests (Number)
+  label: Read Requests
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of disk read commands completed on each virtual disk on the virtual machine. The aggregate number of all disk read commands is also displayed in the chart.
+  page: 2097
+  kb: vsphere/storage/metrics/virtual-motherboard/disk
+- counter: disk.numberWrite
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Disk Requests (Number)
+  label: Write Requests
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of disk write commands completed on each virtual disk on the virtual machine. The aggregate number of all disk write commands is also displayed in the chart.
+  page: 2097
+  kb: vsphere/storage/metrics/virtual-motherboard/disk
+- counter: virtualDisk.numberRead
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Virtual Disk Requests (Number)
+  label: Read Requests
+  unit: Number
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  description: Number of virtual disk read commands completed on each virtual disk on the virtual machine. The aggregate number of all virtual disk read commands is also displayed in the chart.
+  page: 2099
+  kb: vsphere/storage/metrics/virtual-motherboard/virtual-disk
+- counter: virtualDisk.numberWrite
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Virtual Disk Requests (Number)
+  label: Write Requests
+  unit: Number
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  description: Number of virtual disk write commands completed on each virtual disk on the virtual machine. The aggregate number of all virtual disk write commands is also displayed in the chart.
+  page: 2099
+  kb: vsphere/storage/metrics/virtual-motherboard/virtual-disk
+- counter: virtualDisk.read
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Virtual Disk Rate (KBps)
+  label: Read Requests
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of virtual disk read commands completed on each virtual disk on the virtual machine. The aggregate number of all virtual disk read commands per second is also displayed in the chart.
+    Read rate = blocksRead per second × blockSize
+  page: 2099
+  kb: vsphere/storage/metrics/virtual-motherboard/virtual-disk
+- counter: virtualDisk.write
+  object: VirtualMachine
+  shows: virtual disk
+  chart: Virtual Disk Rate (KBps)
+  label: Write Requests
+  unit: Kilobytes per second (KBps)
+  stat_type: Rate
+  rollup: Average
+  level: 3
+  description: Number of virtual disk write commands completed on each virtual disk on the virtual machine per second. The aggregate number of all virtual disk write commands per second is also displayed
+    in the chart. Write rate = blocksWritten per second × blockSize
+  page: 2099
+  kb: vsphere/storage/metrics/virtual-motherboard/virtual-disk
+- counter: mem.usage
+  object: VirtualMachine
+  chart: Memory (%)
+  label: Usage
+  unit: Percentage (%)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of guest physical memory currently in use on the virtual machine.
+  page: 2100
+  kb: vsphere/memory/metrics/virtual-motherboard/usage
+- counter: mem.vmmemctl
+  object: VirtualMachine
+  chart: Memory (KB)
+  label: Balloon
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of guest physical memory reclaimed from the virtual machine by the balloon driver.
+  page: 2101
+  kb: vsphere/memory/metrics/virtual-motherboard/ballooned
+- counter: mem.swapinRate
+  object: VirtualMachine
+  chart: Memory (KBps)
+  label: swapinRate
+  unit: Megabytes per second (MBps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Average rate at which memory is swapped into the virtual machine.
+  page: 2102
+  kb: vsphere/memory/metrics/virtual-motherboard/swap-in-rate
+- counter: mem.swapoutRate
+  object: VirtualMachine
+  chart: Memory (KBps)
+  label: swapoutRate
+  unit: Megabytes per second (MBps)
+  stat_type: Rate
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Average rate at which memory is swapped out of the virtual machine.
+  page: 2102
+  kb: vsphere/memory/metrics/virtual-motherboard/swap-out-rate
+- counter: mem.active
+  object: VirtualMachine
+  chart: Memory (MB)
+  label: Active
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Amount of guest physical memory in use by the virtual machine. Active memory is estimated by VMkernel statistical sampling and represents the actual amount of memory the virtual machine needs.
+    The value is based on the current workload of the virtual machine.
+  page: 2103
+  kb: vsphere/memory/metrics/virtual-motherboard/active
+- counter: mem.vmmemctl
+  object: VirtualMachine
+  chart: Memory (MB)
+  label: Balloon
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of guest physical memory reclaimed from the virtual machine by the balloon driver.
+  page: 2103
+  kb: vsphere/memory/metrics/virtual-motherboard/ballooned
+- counter: mem.vmmemctltarget
+  object: VirtualMachine
+  chart: Memory (MB)
+  label: Balloon Target
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Desired amount of virtual machine balloon memory. Balloon target memory is estimated by the VMkernel. If the balloon target amount is greater than the balloon amount, the VMkernel inflates
+    the balloon amount, which reclaims more virtual machine memory.
+  page: 2103
+  kb: vsphere/memory/metrics/virtual-motherboard/balloon-target
+- counter: mem.consumed
+  object: VirtualMachine
+  chart: Memory (MB)
+  label: Consumed
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 1
+  minmax_level: 4
+  description: Amount of guest physical memory consumed by the virtual machine for guest memory. Consumed memory does not include overhead memory. It includes shared memory and memory that might be reserved,
+    but not actually used. consumed memory = memory granted - memory saved due to memory sharing
+  page: 2103
+  kb: vsphere/memory/metrics/virtual-motherboard/consumed
+- counter: mem.shared
+  object: VirtualMachine
+  chart: Memory (MB)
+  label: Shared
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Amount of guest physical memory available for sharing. Memory sharing occurs through transparent page sharing.
+  page: 2103
+  kb: vsphere/memory/metrics/virtual-motherboard/shared
+- counter: mem.swapped
+  object: VirtualMachine
+  chart: Memory (MB)
+  label: Swapped
+  unit: Megabytes (MB)
+  stat_type: Absolute
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: 'The amount of guest physical memory swapped out to the disk by the VMkernel. This data counter measures VMkernel swapping and not to guest OS swapping. swapped = swapout – swapin Note: In
+    some cases, vMotion can skew these values and cause a virtual machine to arrive on a host with some memory already swapped out.'
+  page: 2104
+  kb: vsphere/memory/metrics/virtual-motherboard/swapped
+- counter: mem.bandwidth.read
+  object: VirtualMachine
+  chart: Memory Bandwidth (MBps)
+  label: DRAM Read Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  minmax_level: 4
+  description: Current read bandwidth of DRAM memory type.
+  page: 2105
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.bandwidth.read
+  object: VirtualMachine
+  chart: Memory Bandwidth (MBps)
+  label: PMem Read Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  minmax_level: 4
+  description: Current read bandwidth of PMem memory type.
+  page: 2105
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.bandwidth.read
+  object: VirtualMachine
+  chart: Memory Bandwidth (MBps)
+  label: NVMe Read Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  minmax_level: 4
+  description: Current read bandwidth of NVMe memory type.
+  page: 2105
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: mem.bandwidth.write
+  object: VirtualMachine
+  chart: Memory Bandwidth (MBps)
+  label: NVMe Write Bandwidth
+  unit: Megabytes per second (MBps)
+  stat_type: Absolute
+  rollup: Latest
+  level: 2
+  minmax_level: 4
+  description: Current write bandwidth of NVMe memory type.
+  page: 2105
+  kb: vsphere/memory/concepts/memory-tiering
+- counter: net.received
+  object: VirtualMachine
+  shows: virtual NIC
+  chart: Network Rate (Mbps)
+  label: Data Receive Rate
+  unit: Kilobytes per second (Kbps)
+  stat_type: Rate
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Rate at which data is received across each virtual NIC instance on the virtual machine.
+  page: 2107
+  kb: vsphere/network/metrics/virtual-motherboard/throughput
+- counter: net.transmitted
+  object: VirtualMachine
+  shows: virtual NIC
+  chart: Network Rate (Mbps)
+  label: Data Transmit Rate
+  unit: Kilobytes per second (Kbps)
+  stat_type: Rate
+  rollup: Average
+  level: 2
+  minmax_level: 4
+  description: Rate at which data is transmitted across each virtual NIC instance on the virtual machine.
+  page: 2107
+  kb: vsphere/network/metrics/virtual-motherboard/throughput
+- counter: net.packetTx
+  object: VirtualMachine
+  shows: virtual NIC
+  chart: Network Packets (Number)
+  label: Packets Transmitted
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of network packets transmitted across the top ten virtual NIC instances on the virtual machine. The chart also displays the aggregated value for each NIC.
+  page: 2108
+  kb: vsphere/network/metrics/virtual-motherboard/packets
+- counter: net.packetRx
+  object: VirtualMachine
+  shows: virtual NIC
+  chart: Network Packets (Number)
+  label: Packets Received
+  unit: Number
+  stat_type: Absolute
+  rollup: Summation
+  level: 3
+  description: Number of network packets received across the top ten virtual NIC instances on the virtual machine. The chart also displays the aggregated value for each NIC.
+  page: 2108
+  kb: vsphere/network/metrics/virtual-motherboard/packets
+- counter: disk.provisioned
+  object: VirtualMachine
+  chart: Space
+  label: Allocated
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Total amount of logical datastore space provisioned by an administrator for the virtual machine. It is the storage size up to which the virtual machine files on datastores can grow. This
+    includes log files, VMX files, and other miscellaneous files. Allocated space is not always in use.
+  page: 2110
+  kb: vsphere/storage/metrics/virtual-motherboard/provisioned-space
+- counter: disk.used
+  object: VirtualMachine
+  chart: Space
+  label: Used
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of physical datastore space in use by the virtual machine files.
+  page: 2110
+  kb: vsphere/storage/metrics/virtual-motherboard/disk-space-used
+- counter: disk.unshared
+  object: VirtualMachine
+  chart: Space
+  label: Not Shared
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of datastore space that belongs only to this virtual machine and is not shared with other virtual machines. Only unshared space is guaranteed to be reclaimed for the virtual machine
+    if, for example, it is moved to a different datastore and then back again.
+  page: 2110
+  kb: vsphere/storage/metrics/virtual-motherboard/disk-space-used
+- counter: disk.used
+  object: VirtualMachine
+  shows: Datastore
+  chart: Space Utilization by Datastores
+  label: <datastore>
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  description: Amount of disk space in the datastore currently in use by the virtual machine.
+  page: 2111
+  kb: vsphere/storage/metrics/virtual-motherboard/disk-space-used
+- counter: disk.used
+  object: VirtualMachine
+  chart: Space Utilization By File Type
+  label: Virtual Disks
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by virtual disk files. Virtual disk files store the contents of the virtual machine's hard disk drive, including information that you write to a virtual machine's
+    hard disk - the operating system, program files, and data files.
+  page: 2112
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: VirtualMachine
+  chart: Space Utilization By File Type
+  label: Swap Files
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by swap files. Swap files back up the virtual machine's physical memory.
+  page: 2112
+  kb: vsphere/storage/concepts/vm-files
+- counter: disk.used
+  object: VirtualMachine
+  chart: Space Utilization By File Type
+  label: Snapshots
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by virtual machine snapshot files. Snapshot files store information about virtual machine snapshots. They include snapshot state files and delta disk files. A snapshot
+    state file stores the running state of the virtual machine at the time of the snapshot. It has the extension .vmsn.
+  page: 2112
+  kb: vsphere/storage/metrics/virtual-motherboard/snapshot-space
+- counter: disk.used
+  object: VirtualMachine
+  chart: Space Utilization By File Type
+  label: Other VM Files
+  unit: Gigabytes (GB)
+  stat_type: Absolute
+  rollup: Latest
+  level: 1
+  minmax_level: 4
+  description: Amount of disk space used by all other virtual machine files, such as configuration files and log files.
+  page: 2112
+  kb: vsphere/storage/concepts/vm-files

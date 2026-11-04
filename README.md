@@ -4,7 +4,7 @@
 
 **How:** model + harness + knowledge.
 - **Knowledge** (`knowledge/`): Level 400 mechanisms, metrics, traps and troubleshooting flows, written to be retrieved by a small model. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
-- **Harness** (`harness/`): the software around the model: hybrid retrieval, link expansion, exact tools (metric lookup, calculator, flow executor), grounding and answer checks. Today: retrieval and the tool loop.
+- **Harness** (`harness/`): the software around the model: hybrid retrieval, link expansion, exact tools (metric catalog lookup, calculator, flow executor), and an answer verifier. See `harness/README.md`.
 - **Model**: a 27-32B open-weight model on a local GPU, chosen by benchmark.
 - **Proof** (`benchmark/`): a fixed benchmark scored against a frontier model, with luck removed (Unsure option, guessing penalty, 5 runs must agree).
 
@@ -17,6 +17,8 @@ Readers: the model reads `knowledge/`. The author reviews for QA. Everything bel
 
 ```text
 knowledge/                           # what the model reads (indexed)
+├── catalog/                         # structured data read by harness tools, not chunked as prose:
+│                                    # vCenter counters, esxtop fields, thresholds, object model (YAML)
 ├── foundations/                     # cross-product concepts: units, sampling, thresholds, naming, perspectives
 ├── glossary.md                      # one glossary: terms, synonyms, distinctions, words to avoid (all products)
 ├── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
@@ -36,7 +38,7 @@ knowledge/                           # what the model reads (indexed)
 │   └── resource-management/         # reservation, limit, shares, admission control, DRS, DPM, vCLS
 ├── _templates/                      # concept, metric, configuration, diagnosis (not indexed)
 └── raw-input/                       # source documents (not indexed)
-harness/                             # the software around the model: retrieval, tool loop, prompts (not indexed)
+harness/                             # the software around the model: retrieval, tools, verifier, prompts (not indexed)
 benchmark/                           # proof: questions with answer keys, attachments, runner, results (not indexed)
 project/                             # design, decisions, author questions, to-do, archive (not indexed)
 tools/                               # lint.py (file and tag checks), tags.yaml (allowed tag values) (not indexed)
@@ -69,7 +71,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 
 ## How a local LLM uses it
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
-- No ingest or query code is in this repository. The steps below are the contract the files are written for.
+- `harness/` implements the steps below. They are also the contract for any other RAG stack.
 
 ### Ingest
 1. Index `knowledge/**/*.md` except the folders listed in Indexing rules.
@@ -78,6 +80,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
 4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.
 5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
+7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
 
 ### Query
 1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, what-to-check.
@@ -87,6 +90,7 @@ tools/                               # lint.py (file and tag checks), tags.yaml 
    - `same_name` is the main trap guard: it brings in the other object's meaning of the same label.
 5. Add the matching foundations files when the answer depends on units, sampling, thresholds or the provider/consumer view.
 6. Fit to the context window. Priority: matching metric or diagnosis file, then its concepts, then foundations, then the rest of the links.
+7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.
 
 ### Answer
 - Answer from the retrieved text. Prefer mechanism and reason over a definition.
