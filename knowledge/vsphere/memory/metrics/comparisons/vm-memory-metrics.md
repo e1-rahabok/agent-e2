@@ -43,6 +43,7 @@
 | Overhead | ESXi | Virtualization data structures. Negligible. |
 | Entitlement | ESXi | Granted + Overhead. |
 | Consumed | ESXi | Granted - sharing savings, capped by limit. |
+
 - Targets: Zip/Swap Target covers pages before zip and swapped. Balloon Target covers ballooned pages.
 
 ## Demand

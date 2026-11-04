@@ -149,6 +149,7 @@ python3 benchmark/runner/run.py --resume benchmark/results/autotest/<run-id>
 | `answer` | Correct option letters, as in `## Prompt` |
 | `trap` | Option letters that are the known wrong answer |
 | `knowledge` | Files the answer should come from; used for retrieval recall |
+
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
 - The prompt text must stand alone without the image: the text track sends no image.
 - `tools/lint.py` checks these fields.

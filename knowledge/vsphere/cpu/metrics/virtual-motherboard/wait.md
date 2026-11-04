@@ -25,6 +25,7 @@ Wait = Idle + Swap Wait + Other Wait
 | Idle | Work. | Exclude. |
 | Swap Wait | Memory pages from ESXi swap. | Include. |
 | Other Wait | Anything else: disk IO, network IO, vMotion, snapshots. | Include. |
+
 - Wait mixes consumption (Idle) and contention (Swap Wait, Other Wait). The book groups it separately.
 - The Guest OS does not see Swap Wait or Other Wait. It experiences a freeze.
 

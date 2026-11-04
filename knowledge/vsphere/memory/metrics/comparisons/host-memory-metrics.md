@@ -14,6 +14,7 @@
 | Reservation | Total reservation, Reservation consumed, Reservation available | Reservations cannot be overcommitted. |
 | Other | Zero, Overhead, Heap (kernel heap, small and constant) | - |
 | Internal | Active (kernel memory allocation), Persistent Memory, VMFS pointer block cache | Not for operations. The cache capacity miss ratio may be of interest. |
+
 - Besides Latency, all memory metrics are capacity metrics.
 ![Virtual view (sum of VMs) vs physical view (kernel + VM pages) of an ESXi host](../../images/esxi-memory-virtual-view-vs-physical-view.png)
 
@@ -27,6 +28,7 @@
 | Machine Demand | 247.96 GB | Sum of VM Utilization. |
 | Utilization | 299.56 GB | Machine Demand + ESX System Usage. |
 | Consumed | 404.42 GB | Highest, unless sharing savings are large. |
+
 - Workload = Utilization / Usable.
 ![Host Usage, Machine Demand, Utilization, Consumed across hosts](../../images/esxi-memory-usage-demand-utilization-consumed-across-hosts.png)
 

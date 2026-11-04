@@ -25,6 +25,7 @@
 |---|---|---|
 | Two VMs share a core, each runs half the time, half of it overlapping | 50% | 40.625% |
 | Both threads busy all the time | 100% | 62.5% |
+
 - See `vsphere/cpu/concepts/hyper-threading`.
 
 ## Formula

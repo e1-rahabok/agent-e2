@@ -17,6 +17,7 @@
 | Yellow | 2-4 |
 | Orange | 4-8 |
 | Red | Above 8 |
+
 - PerfMon UI text: divide by processors; below 10 per processor is normally acceptable. MSDN: above 2 sustained indicates congestion. SQL Server documentation: 3.
 - Utilization can be 100% with a low queue: the workload runs as fast as it can. Adding vCPUs then slows it (more context switching).
 

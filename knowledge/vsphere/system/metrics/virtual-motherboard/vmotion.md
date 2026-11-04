@@ -6,6 +6,7 @@
 | Downtime | Contention | Under 200 ms | Above 1 second |
 | Stun time | Contention | Under 200 ms | Above 1 second |
 | Copy bandwidth | Consumption | Stable, matching the capacity assigned to vMotion | Too low slows vMotion |
+
 - Units for downtime and stun time: microseconds.
 - Values vary per migration: watch both outliers and averages. Alarm on high values.
 - Source: VCF Operations for logs (Log Insight) metrics vmw_esxi_vmdowntime and vmw_esxi_vmprecopystuntime. Plot the worst value: leading indicator.

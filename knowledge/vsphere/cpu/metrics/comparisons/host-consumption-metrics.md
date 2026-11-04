@@ -21,6 +21,7 @@
 | 4 | 2 on core 1 | 50% | 50% | 50% | (125% + 0%) / 2 = 62.5% |
 | 5 | 1 on core 1 | 25% | 50% | 50% | (100% + 0%) / 2 = 50% |
 | 6 | none | 0% | 0% | 0% | 0% |
+
 ![ESXi rollup of 6 scenarios, with the author's proposed value](../../images/esxi-cpu-utilization-rollup-6-scenarios-with-proposed-value.png)
 
 - 6 scenarios give fewer than 6 distinct values. The cause is Hyper-Threading.

@@ -9,6 +9,7 @@
 |---|---|
 | %DRPTX | Dropped transmit packets (%). High: the physical NIC or uplink switch cannot cope. |
 | %DRPRX | Dropped receive packets (%). High: the host or VM lacks CPU to process packets, or the ring buffer is too small. |
+
 - Expect at most 0.x%. On dedicated networks (vSAN, vMotion), 0% on every host at all times.
 - Receive drops shown at the vSwitch port happen between the virtual switch and the guest driver. More Rx buffers in the virtual NIC driver reduce them (Broadcom KB 312565).
 
@@ -21,6 +22,7 @@
 | MbTX/s, MbRX/s | Megabits per second (vSphere Client uses bytes). |
 | PSZTX, PSZRX | Average packet size. Far below 1,500: discuss with the network team. |
 | ACTN/s | Kernel actions per second. Internal. |
+
 - A 10 Gb NIC with 1,500-byte packets peaks at about 833,333 packets per second each way.
 - Check broadcast and multicast first; they should be low.
 
@@ -33,6 +35,7 @@
 | SPEED | Link speed (Mb/s). |
 | FDUPLX | Y: full duplex. N is a problem. |
 | USED-BY, DNAME | Port user; virtual device name. |
+
 - DTYP (hub or switch) is no longer shown. vSphere Client shows switches, VMkernel ports and NICs in more detail.
 
 ## RDMA device
@@ -47,6 +50,7 @@
 | SRQ | Shared receive queues allocated (the NIC can be shared). |
 | MR | Memory regions allocated. |
 | NAME, DRIVER, STATE, TEAM-PNIC | Device, driver, active or down, paired physical NIC. |
+
 - RDMA counters are not in vSphere Client.
 
 ## Traps

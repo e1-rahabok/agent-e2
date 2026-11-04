@@ -48,6 +48,7 @@
 | Utilization | Changes every second. Usable capacity cannot be volatile. |
 | Limit | Does not make sense: hypervisor features affect all VMs and must have priority. |
 | Reservation | Too low with vSAN and NSX, too high with ESXi only. Fluctuates. |
+
 - Practice: enter a static value manually.
 
 ## Metric types
@@ -72,6 +73,7 @@
 | host/user | All running VMs, including VM overhead. Only one metric; no breakdown. |
 | host/opt | Mostly vSAN (opt/vsan, for example vsanperfsvc). Since vSphere 8.0.1. |
 | host/iofilter | IO filter framework for third-party IO interception. |
+
 - vSphere Client shows no CPU or memory reservation metrics for user and iofilter groups.
 
 | Group | CPU | Memory |
@@ -112,6 +114,7 @@
 |---|---|---|
 | ESXi + vSAN + NSX | 12 threads | 64 GB |
 | ESXi only | 4 threads | about 20 GB (not backed by field data) |
+
 - NSX Enhanced Data Path adds 2-4 cores: it polls the NIC.
 - Size vSphere Replication and HCX separately.
 - vSAN File Services is a VM: 2 vCPU, set a reservation.

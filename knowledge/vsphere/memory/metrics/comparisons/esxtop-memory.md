@@ -21,6 +21,7 @@
 | MCTLSZ (MB) | Current balloon size. Above 0: the host is reclaiming memory. |
 | MCTLTGT (MB) | Balloon target. Not 0: the VM can be ballooned. |
 | MCTLMAX (MB) | Maximum reclaimable by ballooning. Depends on the Guest OS. |
+
 - First warning level. Not contention. Starts only at about 99% host use, which is high when HA is enabled.
 
 ## Compression and swap

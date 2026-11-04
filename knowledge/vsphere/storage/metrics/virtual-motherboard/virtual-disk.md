@@ -25,6 +25,7 @@
 | Encryption Status | - |
 | Is RDM | true or false (false = VMDK) |
 | Virtual Disk Sharing | Unspecified, No Sharing, Multi-Writer |
+
 - Number of VMDK excludes RDM. Number of RDMs counts only RDMs attached to the VM.
 - Unused RDM check: per physical array, sum Number of RDMs over all VMs and compare with the LUNs carved for RDM. More LUNs: unused RDMs.
 - An RDM looks like a regular VMDK when browsing the VM folder.

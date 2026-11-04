@@ -8,6 +8,7 @@
 | Saturation | Cluster memory tiering consumption (%) | 0-4 | 4-8 | 8-16 | 16-32 |
 | Saturation | Cluster-wide ESXi memory ballooned (%) | 0-1 | 1-2 | 2-4 | 4-8 |
 | Saturation | Cluster-wide ESXi swapped + zipped memory (%) | 0-0.25 | 0.25-0.5 | 0.5-1 | 1-2 |
+
 ![Cluster Consumption thresholds](../../images/cluster-consumption-thresholds-table.png)
 
 ## Meaning

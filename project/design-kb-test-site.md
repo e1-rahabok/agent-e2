@@ -152,6 +152,7 @@ Recorded for every answer, shown collapsed on the Ask page, stored in `answers.t
 | answers | question, text, cited ids, retrieval trace, index version, model, latency |
 | ratings | answer, score 0-3, flag, comment, cause tag |
 | eval_runs | case id, mode, score, retrieval hit, index version, model; also appended to `benchmark/results/results.csv` |
+
 - Golden case answer keys are read only by the runner and the author pages. Never sent to the LLM. Never shown to visitors.
 
 ## Technology choice
@@ -251,6 +252,7 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 | Questions | 100 (30 at start) |
 | Runs | 5 per question per model per mode |
 | Temperature | the value the website will use; fixed for the whole run |
+
 - Full run: 8 x 3 x 100 x 5 = 12,000 answers. At 30 questions: 3,600.
 - Cost estimate: about US$ 10-30 per full run at 100 questions, mostly agentic mode. Re-check prices.
 - Duration: 1-3 hours per full run, set by provider rate limits and agentic steps (10-30 s per agentic answer).
@@ -306,6 +308,7 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 | Parse failures | Answers not in the fixed format. |
 | Tokens, latency | Per answer. |
 | Vision gap | Vision track minus text track, screenshot questions only. |
+
 - All measures also per area and per difficulty level.
 
 ### Reading the numbers

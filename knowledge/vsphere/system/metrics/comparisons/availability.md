@@ -14,6 +14,7 @@
 | + not in maintenance mode | +25% |
 | + not in quarantine | +25% |
 | + connected to vCenter | +25% |
+
 - VCF Operations super metric: 1 point per condition met (0-4), × 25.
 ![ESXi operational availability states](../../images/esxi-operational-availability-scoring-states.png)
 
@@ -24,6 +25,7 @@
 |---|---|
 | Operational availability (%) | Considers HA: N+1 reports 100% with 1 host unavailable (ignore the worst host, average the rest). Excludes approved planned downtime (requires authoritative start and end times). Ignores hardware issues. |
 | Actual availability (%) | Reality: a down is a down. Per host: average of operational and hardware availability (not the lowest). Cluster: average of all hosts, no HA. |
+
 - Capped at 100%. Uncapped, a small N+1 cluster could exceed a large N+2 cluster (a 2-node cluster would show 200%). The cap allows averaging and needs no explanation.
 - Operational availability should be near 100%. 99.9% in a month signals operations to improve.
 - Actual availability is likely lower.
