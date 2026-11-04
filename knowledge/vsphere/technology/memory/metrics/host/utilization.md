@@ -2,9 +2,11 @@
 
 ## Formula
 ```text
-Utilization = sum of running VM Utilization + kernel reservation
+Utilization = Machine Demand + ESX System Usage
+Machine Demand = sum of running VM Utilization
 ```
-- Analysis section form: Utilization = Machine Demand + ESX System Usage. Machine Demand = sum of VM Utilization.
+- ESX System Usage is the kernel reservation. Raw vCenter counter: Memory \ ESX System Usage (KB). The name is legacy.
+- So the two forms in the book are the same: sum of running VM Utilization + kernel reservation.
 - Equals ESX System Usage on a host with no running VMs.
 
 ## Why
@@ -53,6 +55,6 @@ source:
   path: Memory > ESXi > Consumption Metrics > Utilization; Analysis
 corrections: []
 review_notes:
-- 'Section ''Formula'': the Utilization section uses kernel reservation; the Analysis section uses ESX System Usage. Open question in project/author-questions.md.'
+- 'Section ''Formula'': author answer Q021 (2026-11-04): kernel reservation and ESX System Usage are the same thing; Memory \\ ESX System Usage (KB) is a raw vCenter counter with a legacy name.'
 status: draft
 ```

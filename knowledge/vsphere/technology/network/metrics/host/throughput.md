@@ -44,6 +44,7 @@ same_name:
 - vsphere/technology/network/metrics/virtual-motherboard/throughput
 same_meaning: []
 related:
+- vsphere/technology/storage/concepts/ip-storage-network-accounting
 - vsphere/technology/network/metrics/virtual-motherboard/throughput
 - vsphere/technology/network/metrics/host/packets-dropped
 images:

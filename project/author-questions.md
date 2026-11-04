@@ -15,14 +15,6 @@ Each entry has:
 
 ## Open
 
-### Q019 · Chapter 3 Memory > ESXi · Swap Consumed formula
-- Files: `vsphere/technology/memory/metrics/host/swap-used`
-- Search 1 (ESXi): "I think this is swapped out – swapped in"
-- Search 2 (VM): "This is why Swapped is not Swapped In – Swapped Out"
-- Question: is host Swap Consumed equal to swapped out minus swapped in?
-- Written as now: both statements, flagged.
-- Answer: Search 1 is wrong. Search 2 is correct. 
-
 ### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
 - Files: `vsphere/technology/memory/metrics/host/consumed`
 - Search 1: "It only includes the resultant zipped, not the amount subjected to compression"
@@ -30,22 +22,6 @@ Each entry has:
 - Question: does host Consumed include the compressed result in DIMM?
 - Written as now: includes the result, flagged. Your diagram (physical view) also shows it inside Consumed.
 - Answer:
-
-### Q021 · Chapter 3 Memory > ESXi · Utilization formula
-- Files: `vsphere/technology/memory/metrics/host/utilization`
-- Search 1: "the sum of running VM Utilization metrics + the kernel reservation"
-- Search 2: "Utilization. Machine Demand + ESX System Usage"
-- Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
-- Written as now: both forms, flagged. Note: Provider Objects > Capacity says "Memory \\ ESX System Usage (KB)" is the kernel reservation (legacy name). If so, the two forms agree; please confirm.
-- Answer: They are the same thing. See my book for Reservation. The metric name is Memory \ ESX System Usage (KB). It is a raw counter from vCenter. Just in case you’re wondering, the name ESX System Usage is a legacy name.
-
-
-### Q022 · Chapter 4 Storage > Architecture · IP storage read and network direction
-- Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`
-- Search: "Read and Write are both mapped to Transmit counter"
-- Question: for a read, the data returns to ESXi as received traffic. Do reads show mostly as Receive (data) with only the command on Transmit?
-- Written as now: both map to Transmit, as in the book.
-- Answer: book was wrong. Answer is If you are using IP storage, take note that Read and Write in storage do not map 1:1 to Transmit (Tx) and Receive (Rx) in Networking metrics. This depends on the storage block size (normally 4K or 8K), network packet size (ideally 9000 MTU), and TCP/IP handshakes packets. Get detail from https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit?usp=sharing and add it accordingly.
 
 ### Q023 · Chapter 4 Storage > VM · Disk metric scope
 - Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk`
@@ -208,6 +184,30 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q019 · Chapter 3 Memory > ESXi · Swap Consumed formula
+- Files: `vsphere/technology/memory/metrics/host/swap-used`
+- Search 1 (ESXi): "I think this is swapped out – swapped in"
+- Search 2 (VM): "This is why Swapped is not Swapped In – Swapped Out"
+- Question: is host Swap Consumed equal to swapped out minus swapped in?
+- Written as now: both statements, flagged.
+- Answer: Search 1 is wrong. Search 2 is correct.
+
+### Q021 · Chapter 3 Memory > ESXi · Utilization formula
+- Files: `vsphere/technology/memory/metrics/host/utilization`
+- Search 1: "the sum of running VM Utilization metrics + the kernel reservation"
+- Search 2: "Utilization. Machine Demand + ESX System Usage"
+- Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
+- Written as now: both forms, flagged. Note: Provider Objects > Capacity says "Memory \\ ESX System Usage (KB)" is the kernel reservation (legacy name). If so, the two forms agree; please confirm.
+- Answer: They are the same thing. See my book for Reservation. The metric name is Memory \ ESX System Usage (KB). It is a raw counter from vCenter. Just in case you’re wondering, the name ESX System Usage is a legacy name.
+
+### Q022 · Chapter 4 Storage > Architecture · IP storage read and network direction
+- Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`
+- Search: "Read and Write are both mapped to Transmit counter"
+- Question: for a read, the data returns to ESXi as received traffic. Do reads show mostly as Receive (data) with only the command on Transmit?
+- Written as now: both map to Transmit, as in the book.
+- Answer: book was wrong. Answer is If you are using IP storage, take note that Read and Write in storage do not map 1:1 to Transmit (Tx) and Receive (Rx) in Networking metrics. This depends on the storage block size (normally 4K or 8K), network packet size (ideally 9000 MTU), and TCP/IP handshakes packets. Get detail from https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit?usp=sharing and add it accordingly.
+- Done 2026-11-04: `vsphere/technology/storage/concepts/ip-storage-network-accounting` (from the linked note); disk-latency corrected, with a `corrections` entry until the book is updated.
 
 ### Q039 · Auto Test > Golden case vendor-neutral-general-001 · Hyperscaler cost not in the knowledge base
 - Files: `benchmark/cases/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`

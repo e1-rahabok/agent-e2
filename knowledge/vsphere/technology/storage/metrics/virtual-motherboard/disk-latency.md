@@ -9,7 +9,7 @@
 - Latency can be high at low IOPS and throughput: each layer in the stack has its own queue (process, Guest OS storage subsystem, VM driver, kernel, array).
 - Total latency is not (read latency + write latency) / 2. It is the average over all commands. 100 reads and 10 writes per second: total latency follows read latency.
 - Read and write latency have different patterns. Often only one has a problem. Check both when troubleshooting.
-- IP storage: read and write both map to network Transmit, because ESXi issues the commands.
+- IP storage: storage read and write do not map 1:1 to network Receive and Transmit. A read sends a small command and its returned data arrives as Receive. See `vsphere/technology/storage/concepts/ip-storage-network-accounting`.
 
 ## Units and levels
 - Virtual disk latency is provided in ms and in microseconds.
@@ -47,6 +47,7 @@ same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 same_meaning: []
 related:
+- vsphere/technology/storage/concepts/ip-storage-network-accounting
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 - vsphere/technology/storage/diagnosis/vm-storage-performance-checks
 - vsphere/technology/storage/concepts/guest-os-vs-vm-storage
@@ -63,7 +64,8 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance; Storage > VM > Performance Metrics > Contention Metrics
-corrections: []
+corrections:
+- 'Section ''Mechanism'' (author answer Q022, 2026-11-04): the book says read and write both map to network Transmit. Wrong: they do not map 1:1 to Transmit and Receive; it depends on block size, MTU and TCP handshake packets. Keep until the book is updated.'
 review_notes:
 - 'Section ''Mechanism'': from Storage > Architecture.'
 - 'Sections Units and levels, Threshold: from Storage > VM.'

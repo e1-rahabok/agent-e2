@@ -6,7 +6,7 @@
 ## Swap counters at host level
 | Counter | Meaning |
 |---|---|
-| Swap Consumed | Memory swapped by all powered-on VMs and vSphere services. Falls when pages are swapped back in. |
+| Swap Consumed | Memory swapped by all powered-on VMs and vSphere services. Falls when pages are swapped back in. Not Swap Out minus Swap In, the same as VM Swapped. |
 | Swap In, Swap Out | Cumulative amounts swapped in or out to date. |
 | Swap In Rate, Swap Out Rate | Rates. The book suspects they include compression; unconfirmed. |
 
@@ -14,6 +14,9 @@
 - Swap Out is cumulative: it does not fall when pages are swapped in.
 - Small swap-in rates matter little: 1-2 KB/s averaged over 20 s = 20-40 KB.
 ![Cumulative swap in and swap out](../../images/esxi-memory-swap-in-vs-swap-out-cumulative.png)
+
+## Traps
+- "Swap Consumed = Swap Out - Swap In" → no. Swap Out and Swap In are cumulative totals. Swap Consumed is what sits in swap now, like VM Swapped.
 
 ## Metadata
 ```yaml
@@ -50,6 +53,6 @@ corrections: []
 review_notes:
 - metric_class set to contention. Author to confirm.
 - 'Section ''Swap counters at host level'': from Memory > ESXi.'
-- 'Section ''Swap counters at host level'': the book suggests Swap Consumed = swapped out - swapped in, which conflicts with its VM section (Swapped is not swap in - swap out). Open question in project/author-questions.md.'
+- 'Section ''Swap counters at host level'': author answer Q019 (2026-11-04): Swap Consumed is not swapped out minus swapped in, consistent with VM Swapped. The ESXi section of the book was wrong.'
 status: draft
 ```
