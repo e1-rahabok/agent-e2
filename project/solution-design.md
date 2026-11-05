@@ -65,7 +65,7 @@ Decode speed and hardware are governed by memory: every generated token reads al
 - Add the KV cache for the retrieved context (8-12K tokens per question) on top of the weights.
 - **Why not 70B:** twice the GPU memory and about half the speed of a 32B model, for a gain that is mostly memorised world knowledge. The harness replaces memorised knowledge with retrieved knowledge, so the 70B advantage shrinks to reasoning depth. The design rule: test a 70B model only if the best 32B model loses points through reasoning errors while the trace shows it read the right files (`project/design-kb-test-site.md`, Decision rules).
 - **Why not 8B-14B:** too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact (dropped); qwen-3-14b in agentic mode 19%.
-- **Why dense over MoE as the main bet:** MoE models with 3-4B active parameters are fast, but in our run they did worst at tool use (nemotron-3-nano-30b-a3b: 24-29% exact; almost no tool calls). gemma-4-26b-a4b-it (4B active, vision) stays in the test as the speed option; nemotron was removed for lack of vision (2026-11-05).
+- **Why dense over MoE as the main bet:** MoE models with 3-4B active parameters are fast, but in our run they did worst at tool use (nemotron-3-nano-30b-a3b: 24-29% exact; almost no tool calls). No MoE speed option remains in the test: nemotron was removed for lack of vision, gemma-4-26b-a4b-it as a duplicate of gemma-4-31b-it (2026-11-05, `benchmark/models.md`).
 - **Precision:** run 8-bit when the GPU allows; 4-bit costs a little accuracy on multi-step reasoning. The benchmark decides.
 - The arithmetic above is standard inference sizing (parameters × bytes per parameter; decode is memory-bandwidth bound). Exact speeds depend on GPU, runtime and batch size.
 
