@@ -1,4 +1,4 @@
-# Auto Test configuration. Runner: benchmark/runner/README.md. Models: benchmark/models.md.
+# Benchmark runner configuration. Runner: benchmark/runner/README.md. Models: benchmark/models.md.
 gateway: https://ai-gateway.vercel.sh/v1   # API key from env AI_GATEWAY_API_KEY
 
 models:                       # candidates; all must read screenshots (vision). List and reasons: benchmark/models.md

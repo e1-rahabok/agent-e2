@@ -127,7 +127,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 | Skips troubleshooting steps or jumps to a conclusion | Flow tool serves the diagnosis steps in order | Knowledge + harness |
 | Invents a threshold | Rule: quote a threshold only with its source; thresholds catalog; verifier flags numbers not in the text | Knowledge + harness |
 | Guesses when unsure | Unsure option and the rule that a wrong answer is worse than Unsure | Harness (prompt) |
-| Answers outside the knowledge base from memory | "Answer only from tool output"; Not covered option | Harness (prompt) |
+| Answers from memory where the knowledge base speaks | Prompt rule: knowledge base first, and it wins on conflict; own knowledge only where the knowledge base is silent, marked as such in the reason; override rate measured (`benchmark/models.md`) | Harness (prompt) |
 | Stale knowledge (older releases) | Knowledge written from the current release by rule (vSphere 9.1, VCF 9.1.1) | Knowledge |
 
 ## 7. Dark-site deployment
@@ -148,10 +148,10 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 | Level | Test | Needs a model | Command |
 |---|---|---|---|
 | Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_tools.py` |
-| Retrieval | For every golden case, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
-| Whole system | Model + harness + knowledge on the golden set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
+| Retrieval | For every case, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
+| Whole system | Model + harness + knowledge on the case set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
 
-- Retrieval result, 28 golden cases (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 cases. Classic mode cannot answer better than its context, so retrieval is the first thing to improve.
+- Retrieval result, 28 cases (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 cases. Classic mode cannot answer better than its context, so retrieval is the first thing to improve.
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 9. Status (2026-11-04)
@@ -190,7 +190,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.
 
 ### Answer
-- Answer from the retrieved text. Prefer mechanism and reason over a definition.
+- Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where they differ, the knowledge base wins (author, Q038, 2026-11-05). Prefer mechanism and reason over a definition.
 - Cite each file `id` used.
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
 - Use terms from `knowledge/glossary.md`. Avoid the words in its Words to avoid table.
@@ -207,4 +207,4 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 - Contention before consumption before context, unless the file states another order.
 
 ### Measurement
-- `benchmark/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.
+- `benchmark/` runs the same cases with and without the knowledge base. A structure change is kept only when scores improve.

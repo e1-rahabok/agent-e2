@@ -15,6 +15,9 @@ Hints:
 - The two hosts have different specifications, so the two answers must be different.
 - ESXi capacity can also be expressed in CPU compute cycles: the amount of processing it can do per second. That is not the same as the count of cores.
 
+## Attachments
+![Two ESXi hosts: CPU specification of each and the capacity options to choose from](vsphere-cpu-006/two-esxi-hosts-specification-and-capacity-options.png)
+
 ## Likely wrong answer
 A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo or Hyper-Threading.
 

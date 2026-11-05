@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Auto Test runner.
+"""Benchmark runner.
 
 Examples:
   python3 benchmark/runner/run.py --dry-run

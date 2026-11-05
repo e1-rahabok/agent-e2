@@ -166,6 +166,7 @@ def main():
         for pat in allowed.get('injection_patterns', []):
             if re.search(pat, text): bad(f, f'possible prompt injection or hidden text (pattern {pat})')
     check_tables(bad)
+    check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
 
@@ -177,6 +178,18 @@ def main():
     for p in problems: print(p)
     print(f'{len(docs)} knowledge files checked, {len(problems)} problems')
     return 1 if problems else 0
+
+def check_repo_terms(allowed, bad):
+    """One word per concept in the repository (project/terms.md): flag the replaced words."""
+    skip = ('project/terms.md', 'project/author-questions.md', 'project/tools/tags.yaml')
+    for f in sorted(glob.glob('**/*.md', recursive=True)):
+        if (f in skip or '/raw-input/' in f or '/autotest/' in f or f.startswith('project/archive/')):
+            continue
+        for i, line in enumerate(open(f).read().split('\n'), 1):
+            for pat, use in (allowed.get('avoid_repo_terms') or {}).items():
+                if re.search(pat, line):
+                    bad(f, f'line {i}: repository term "{re.search(pat, line).group(0)}": use "{use}" (project/terms.md)')
+
 
 def check_tables(bad):
     """Tables need a blank line before (else they render as text) and after (else the next line becomes a table row)."""

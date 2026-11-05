@@ -69,7 +69,16 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 ## Memory
 - Memory is cache. Unused memory is waste: aim high, with a narrow green band.
 - The book recommends option 2 of two range schemes: wide grey (waste) zone, then a narrow green band near the top.
-- Option 2 boundaries (author): 0-75%, 75-85%, 85-95%, 95-100%. Below 75% is waste. Windows and Linux cache memory, so a high value is normal.
+- Guest OS memory utilization ranges (option 2, author):
+
+| Metric | Green | Yellow | Orange | Red |
+|---|---|---|---|---|
+| Guest OS memory utilization, for sizing (%) | 75-85 | 85-90 | 90-95 | 95-100 |
+
+- Below 75% is grey: waste.
+
+- Grey is a fifth range, below green, and exists only in capacity management: unused capacity is waste. Performance has no grey range: there is no wasted performance.
+- Green is 10 points wide. Windows and Linux cache memory, so a high value is normal.
 - Option 1 (not recommended): waste below 50%, risk above 75%.
 - Applications touch only part of their working set; the rest becomes cache. Active + cache above 95% is fine.
 - ESXi waits until about 99% before ballooning. Windows and Linux also cache.
@@ -131,10 +140,10 @@ source:
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
 corrections:
 - 'Section ''Memory'': balloon is included, to be conservative (author answer Q028, 2026-11-05); the book text says exclude.'
-- 'Section ''Memory'': option 2 boundaries 0-75-85-95-100% (author answer Q029, 2026-11-05); the book gives no numbers for option 2.'
+- 'Section ''Memory'': option 2 ranges 0-75-85-90-95-100% (author answers Q029 and Q055, 2026-11-05); the book gives no numbers for option 2.'
 review_notes:
 - "Section 'No such thing as VM rightsizing': from the author's other book, section VM Footprint | Guest OS Sizing (screenshot provided 2026-11-03). Author: VM rightsizing is a common misconception; the full book will be provided later."
-- 'Section ''Memory'': which colour each option 2 range takes (the image shows green, yellow, orange and red above the grey zone; the author gave four ranges) is a follow-up, Q055 in project/author-questions.md.'
+- 'Section ''Memory'': ranges and the grey range rule from the author answer Q055 (2026-11-05).'
 - 'References from the book: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html (not read).'
 status: draft
 ```

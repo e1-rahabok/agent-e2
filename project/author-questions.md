@@ -30,44 +30,14 @@ Each entry has:
 - Written as now: associated with the VM, flagged as unsure.
 - Answer:
 
-### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
-- Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/technology/cpu/metrics/virtual-motherboard/run`
-- Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
-- Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
-- Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
-- Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
-- Answer: Run and Net Run not affected by hyper threading
-
-### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
-- Files: `harness/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `benchmark/results/autotest/20261103-093742/report.md`, section Analysis.
-- Search: not from the book. Finding from the frontier reference run 20261103-093742.
-- Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
-- Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
-- Finding:
-  - Frontier model: baseline (no knowledge base) 75%, classic 67%, agentic 67%.
-  - The ONLY rule cost 3 questions where the knowledge base is silent: vendor-neutral-general-001 (5 of 5 to 0 of 5), vsphere-cpu-013 (5 to 0), vsphere-general-001 (5 to 2).
-  - The knowledge base cut the trap rate: 16% to 6-9%.
-- Options:
-  - Keep ONLY: fewer invented answers; no credit where the knowledge base is silent; every gap must be filled in the knowledge base.
-  - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.
-  - Test both in one run and compare.
-- Answer: In the auto test, we're testing 3 components as 1 expert (harness + model + knowledge base). So use the knowledge base first and its own knowledge where the knowledge base is silent.
-
-### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
-- Files: `benchmark/cases/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
-- Search 1 (quiz): "It is a balanced reporting"
-- Search 2 (quiz): "Plenty of physical threads are idle"
-- Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
-- Written as now: core-utilization says Core Utilization is a capacity metric (ignores frequency). utilization says Utilization suits capacity management. No file says which one is the ESXi true utilization, or why Core Utilization overstates it.
-- Answer: I think you got triggered with the word "true". Change it to "Three metrics show three values. What is the ESXi utilization, from capacity management perspective? Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality". Review https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md and https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md and update accordingly.
-
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
 - Files: `benchmark/cases/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
 - Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
 - Search 2 (quiz): "CPU reservation only comes into play during contention"
 - Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
 - Written as now: reservation in MHz/Hertz (supports D); CPU reservation not sticky, memory reservation sticky (supports C). No file states the cap at base nominal clock speed (A) or that the reservation only matters under contention (B).
-- Answer: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/cases/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md is missing the link to the image
+- Note (2026-11-05): the text written here was about case vsphere-cpu-004 (image links missing). Done: the case and the other two cases with attachments now have an `## Attachments` section with image links. Options A and B are still open.
+- Answer:
 
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
 - Files: `benchmark/cases/vsphere-cpu-013-reclaiming-vcpus-from-an-idle-vm.md`; `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
@@ -171,6 +141,42 @@ Each entry has:
 - Written as now: the proposal above. Today: 15 multiple choice, 3 screenshot, 10 conversation.
 - Answer:
 
+## Resolved
+
+### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
+- Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/technology/cpu/metrics/virtual-motherboard/run`
+- Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
+- Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
+- Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
+- Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
+- Answer: Run and Net Run not affected by hyper threading
+- Done 2026-11-05: `guest-os/cpu/concepts/windows-cpu-scheduling` table: Run and Net Run marked not affected by Hyper-Threading; Demand marked affected (Q035).
+
+### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
+- Files: `harness/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `benchmark/results/autotest/20261103-093742/report.md`, section Analysis.
+- Search: not from the book. Finding from the frontier reference run 20261103-093742.
+- Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
+- Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
+- Finding:
+  - Frontier model: baseline (no knowledge base) 75%, classic 67%, agentic 67%.
+  - The ONLY rule cost 3 questions where the knowledge base is silent: vendor-neutral-general-001 (5 of 5 to 0 of 5), vsphere-cpu-013 (5 to 0), vsphere-general-001 (5 to 2).
+  - The knowledge base cut the trap rate: 16% to 6-9%.
+- Options:
+  - Keep ONLY: fewer invented answers; no credit where the knowledge base is silent; every gap must be filled in the knowledge base.
+  - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.
+  - Test both in one run and compare.
+- Answer: In the auto test, we're testing 3 components as 1 expert (harness + model + knowledge base). So use the knowledge base first and its own knowledge where the knowledge base is silent.
+- Done 2026-11-05: `harness/modes.py` prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated (`benchmark/test-design.md`, both benchmark READMEs, `ARCHITECTURE.md`).
+
+### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
+- Files: `benchmark/cases/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
+- Search 1 (quiz): "It is a balanced reporting"
+- Search 2 (quiz): "Plenty of physical threads are idle"
+- Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
+- Written as now: core-utilization says Core Utilization is a capacity metric (ignores frequency). utilization says Utilization suits capacity management. No file says which one is the ESXi true utilization, or why Core Utilization overstates it.
+- Answer: I think you got triggered with the word "true". Change it to "Three metrics show three values. What is the ESXi utilization, from capacity management perspective? Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality". Review https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md and https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md and update accordingly.
+- Done 2026-11-05: case vsphere-cpu-004 prompt and hint reworded as given; `vsphere/technology/cpu/metrics/host/utilization` (section The capacity reading, traps) and `core-utilization` (not the capacity reading; traps) updated.
+
 ### Q055 · Follow-ups to Q027 and Q029
 - Files: `operations-management/capacity/vm-footprint-sizing` (section CPU), `guest-os/system/concepts/guest-os-sizing` (section Memory).
 - Search: not from the book; from your answers to Q027 and Q029.
@@ -179,9 +185,7 @@ Each entry has:
 - Written as now: Q027 formula as you wrote it, with this question in review_notes. Q029 boundaries only, no colours.
 - Answer to Q1: From my book, which you missed: "The System counter is not available per vCPU. Reason is the underlying physical core that does the IO work on behalf of the VM may be doing it for more than 1 vCPU. There is no way to break it down for each vCPU.". Because of this, I need to sum all the per-vCPU counters one by one, then add CPU System. After that, we divide by 20000 x vCPU. Is it clear?
 - Answer to Q2: Grey is the 5th region. Only applicable to Capacity. It's not applicable to Performance as there is no such thing as wastage performance. Grey symbolizes wastage. It's placed below green. For Guest OS Memory, the range is 0 - 75 - 85 - 90 - 95 - 100. Yes, green is 10 point wide. Add in to do to upload Part 1 of my book to complete the capacity and performance management knowledge.
-
-
-## Resolved
+- Done 2026-11-05: `operations-management/capacity/vm-footprint-sizing` (divisor 20,000 × vCPU, System reason, example); `guest-os/system/concepts/guest-os-sizing` (ranges 75-85-90-95-100, grey below 75 for capacity only). To-do added: upload Part 1 of the book.
 
 ### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
 - Files: `operations-management/capacity/vm-footprint-sizing`

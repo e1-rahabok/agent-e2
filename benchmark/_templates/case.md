@@ -3,6 +3,9 @@
 ## Prompt
 <Exact text sent to the AI. Scenario first, question last. Must not hint at the answer.>
 
+## Attachments
+<!-- one image link per attachment, with alt text, so a reviewer sees it on GitHub. Delete the section when there are none. Never sent to the model: the runner sends the files themselves. -->
+
 ## Likely wrong answer
 <The trap a generic AI falls into.>
 

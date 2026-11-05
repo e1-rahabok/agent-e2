@@ -25,7 +25,7 @@ Conventions (layout, metadata, writing rules) are in `KNOWLEDGE-ENGINEERING.md`.
 6. **Traceable to source.**
    - Every file records the source document and heading path. Needed for QA and for updating when the source changes.
 7. **Measured, not assumed.**
-   - Golden cases in `benchmark/` test answers with and without the knowledge base.
+   - Cases in `benchmark/` test answers with and without the knowledge base.
 
 ## Structure decisions
 | Decision | Reason |
@@ -52,7 +52,7 @@ Conventions (layout, metadata, writing rules) are in `KNOWLEDGE-ENGINEERING.md`.
 
 ## Limitations
 - Converting expert knowledge into files is lossy. Some tacit knowledge is hard to codify.
-- The AI retrieves and recombines text. Structure and golden cases improve answer quality; they do not create understanding.
+- The AI retrieves and recombines text. Structure and cases improve answer quality; they do not create understanding.
 - Quality drifts without regular review. `status: draft` files are unreviewed.
 - Screenshots and diagrams must be converted to text (formulas, Mermaid, descriptions) to be retrievable.
 - Coverage is intentionally partial: depth first, breadth later.
@@ -60,6 +60,6 @@ Conventions (layout, metadata, writing rules) are in `KNOWLEDGE-ENGINEERING.md`.
 ## How to improve
 1. Depth before breadth: one complete mechanism beats twenty shallow counter definitions.
 2. Extract a source section in full. Keep every distinction.
-3. Add golden cases for each new section, especially traps a generic AI falls into.
+3. Add cases for each new section, especially traps a generic AI falls into.
 4. Run evaluation before and after a change. Keep changes that raise scores.
 5. Remove files that are generic, unsourced or contradicted by the source.
