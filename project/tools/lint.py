@@ -200,6 +200,9 @@ def main():
         text = open(f).read()
         for pat in allowed.get('injection_patterns', []):
             if re.search(pat, text): bad(f, f'possible prompt injection or hidden text (pattern {pat})')
+    import subprocess  # author-facing documents: file references must be clickable links
+    r = subprocess.run([sys.executable, 'project/tools/link_refs.py', '--check'], capture_output=True, text=True)
+    for line in r.stdout.splitlines(): bad(line.split(':')[0], line.split(': ', 1)[1])
     check_tables(bad)
     check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
