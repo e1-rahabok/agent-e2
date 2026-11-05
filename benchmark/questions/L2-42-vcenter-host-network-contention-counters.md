@@ -10,6 +10,10 @@ Which counters in the chart show contention, and what value do you expect from t
 - C. Usage: expected near 0.
 - D. Packets received: expected 0.
 
+
+## Screenshot
+![vCenter advanced chart of one ESXi host, Network: usage, packets received, receive and transmit packets dropped per vmnic](42/vcenter-esxi-network-chart.png)
+
 ## Input to supply
 - Tool: vCenter (vSphere Client 9.1).
 - Where: one ESXi host > Monitor > Performance > Advanced > Chart Options > Network, object: the host (all vmnics).

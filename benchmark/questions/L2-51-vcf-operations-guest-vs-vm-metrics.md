@@ -10,6 +10,10 @@ Which of these metrics are Guest OS metrics, not VM metrics? Choose all that app
 - C. Guest | Free Memory
 - D. CPU | Co-stop
 
+
+## Screenshot
+![VCF Operations Metrics tab of a Windows VM: Guest CPU Queue, CPU Ready, Guest Free Memory, CPU Co-stop](51/vcf-operations-vm-guest-and-cpu-metrics.png)
+
 ## Input to supply
 - Tool: VCF Operations 9.1.
 - Where: one Windows VM with VMware Tools running > Metrics tab; expand the Guest group and the CPU group.
