@@ -7,38 +7,47 @@ Settings: `benchmark/runner/config.yaml`. Why a small local model can win: `proj
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
 
 ### The model's job
-- It answers an open-book exam. Retrieval and tools supply the vSphere knowledge; the model does not need to know vSphere.
-- It must:
-  1. apply the retrieved text even when it contradicts what the model learned in training (context faithfulness);
-  2. follow the system prompt rules literally: the knowledge base is the source of truth; say Unsure when the text does not settle it;
-  3. combine 3 or more files and follow a troubleshooting flow in order (multi-document reasoning);
-  4. call tools correctly and in the right order (catalog, calculator, flow);
-  5. read dense screenshots: esxtop tables, vCenter and VCF Operations charts (OCR of small UI text, chart reading);
-  6. run on one GPU at the customer site.
-- Traits 1 and 2 matter most. A model that reasons well but trusts its own memory gives a Level 300 answer.
+- The knowledge base is written at Level 400 and assumes the reader knows vSphere basics (`CLAUDE.md`, section Level): cluster, host, VM, datastore, HA, DRS, vMotion, resource pools, shares, reservations, limits, vCPU, NUMA.
+- So the model brings Level 100-300 vSphere knowledge from training. Public text covers it well, and it is mostly correct at that level. It is not documented in the knowledge base (author, 2026-11-05).
+- The knowledge base adds the Level 400 layer: mechanisms, vantage points, and the corrections to Level 300 rules of thumb. Where the two differ, the knowledge base wins.
+- The model must:
+  1. know vSphere basics well enough to understand the question and the retrieved text without a definition;
+  2. apply the retrieved text when it contradicts a rule of thumb the model learned (context faithfulness);
+  3. follow the system prompt rules literally: the knowledge base is the source of truth; say Unsure when the text does not settle it;
+  4. combine 3 or more files and follow a troubleshooting flow in order (multi-document reasoning);
+  5. call tools correctly and in the right order (catalog, calculator, flow);
+  6. read dense screenshots: esxtop tables, vCenter and VCF Operations charts (OCR of small UI text, chart reading);
+  7. run on one GPU at the customer site.
+- Traits 1 and 2 pull against each other. Memory supplies the basics; part of the same memory holds the Level 300 rules of thumb the knowledge base corrects.
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
 - A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: trap answer on 16% of answers (run 20261103-093742).
-- Memorized knowledge grows with total parameters. Reasoning compute per token grows with active parameters.
-- So, all else equal, a bigger model brings more memorized Level 300 belief, not more Level 400 knowledge. That is the reason 70B dense was not chosen (`project/solution-design.md`, section 4).
-- A 120B MoE with 6-12B active has about 4 times the memorized knowledge of a 30B dense model and less compute per token. By the same reasoning it is a weaker bet than a 30B dense model, not a stronger one.
-- The opposite effect also exists: larger models often follow long instructions and read long contexts better. Which effect wins on this task is not known from theory or from published results. It is measured.
+- Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
+- Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
+
+### Dense or mixture-of-experts
+- Total parameters set the memory (GPU size and how much was memorized). Active parameters set the compute per token, which drives instruction following, long-context reading and multi-step reasoning.
+- For the GPU memory paid, a dense model gives the most compute per token. A 120B MoE with 6-12B active has less compute per token than a 31B dense model, on twice the GPU memory.
+- So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (`project/solution-design.md`, section 4).
+- No current-generation dense vision model of about 70B is on the gateway (checked 2026-11-05). Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
+- The 120B MoE models are kept or dropped by the author (open decision, 2026-11-05). If kept, the rule below applies.
 
 ### What we prefer
 | Prefer | Over | Reason |
 |---|---|---|
-| Strong instruction following and context faithfulness | Broad world knowledge | The knowledge base supplies the knowledge; broad memory is where Level 300 beliefs live |
-| Dense 27-32B | Large MoE | Fewer memorized priors per unit of compute; smaller GPU |
+| Strong instruction following and context faithfulness | Knowledge beyond vSphere basics | Basics come from training; past them, memory is where Level 300 rules of thumb live |
+| Dense, 27-32B now, about 70B when available | MoE of the same GPU memory | More compute per token for the memory paid |
 | Reliable tool calling | Long reasoning traces | Exact values come from tools; long traces drift and break the answer format |
 | Native vision with good OCR | Vision as an add-on | Screenshots carry the values |
 | Latest generation | Older or sibling models | Newer models follow instructions and use tools better at the same size |
 
-- General knowledge benchmarks (trivia, exams) are not a selection signal: they reward the memory this design does not want.
+- General knowledge benchmarks (trivia, exams) are not a selection signal. Basic vSphere knowledge is tested directly (below).
 
 ### How the benchmark tests it
 - Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
+- Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
 - Trap rate in knowledge base modes, and the cases where the knowledge base and the vSphere documentation disagree (`benchmark/test-design.md`, section 3.3).
 - The 120B MoE models (tier B) are challengers that test the risk above. They stay only if both hold, against the best tier A model in the same mode:
   1. final score higher by more than the margin;
@@ -47,7 +56,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ## 2. Selection criteria
 Two limits decide (author, 2026-11-05):
-- Fit for the goal: the model can become a narrow VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
+- Fit for the goal: the model knows vSphere basics and can become a narrow Level 400 VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
 - Hardware cost: it runs on one GPU at the customer site. Criterion 3.
 
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
@@ -134,6 +143,6 @@ Preferred, not required:
 | InternVL2-26B | Released 2024-06: two generations old (InternVL2.5, then InternVL3.5 in 2025-08). Not on the gateway. Its latest sibling in the size range, InternVL3.5-30B-A3B, is not on the gateway either (rule 6). |
 
 ## 8. History
-- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 7. Then the selection reasoning (section 1) and the override rate were added; tier B kept as challengers under the rule in section 1.
+- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 7. Then the selection reasoning (section 1) and the override rate were added. Then corrected (author): the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway.
 - 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
 - 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in `project/solution-design.md`, section 5, until 2026-11-05.
