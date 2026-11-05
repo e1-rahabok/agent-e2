@@ -48,5 +48,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 trap: [B]
-status: awaiting-input
+status: draft
 ```
