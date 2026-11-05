@@ -4,7 +4,7 @@
 Examples:
   python3 benchmark/runner/run.py --dry-run
   python3 benchmark/runner/run.py --mock --runs 2
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --questions cpu-004
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --questions L4-04
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
   python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>
 """
@@ -43,7 +43,7 @@ def main():
     ap.add_argument('--models', help='comma-separated model ids (default: config)')
     ap.add_argument('--modes', help='comma-separated: baseline,classic,agentic')
     ap.add_argument('--runs', type=int)
-    ap.add_argument('--questions', help='comma-separated id fragments, e.g. cpu-004,memory')
+    ap.add_argument('--questions', help='comma-separated: an id or a file-name fragment, e.g. L4-04,L1-,esxtop')
     ap.add_argument('--temperature', type=float)
     ap.add_argument('--concurrency', type=int)
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')

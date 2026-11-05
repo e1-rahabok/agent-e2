@@ -118,6 +118,6 @@ corrections:
 review_notes:
 - 'Section ''Disk Adapter'': the book lists the guest write counter as ''AVG/wr'' and the clone latency as ''AVAG''; read as GAVG/wr and an average clone latency.'
 - 'VAAI references from the book: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/ (not read).'
-- 'Section ''Panels'', NFS pseudo-devices: author, 2026-11-05 (question-0050 review, with an esxtop screenshot of an ESXi 9.1 host). Replaces the book line that NFS is not covered.'
+- 'Section ''Panels'', NFS pseudo-devices: author, 2026-11-05 (L3-50 review, with an esxtop screenshot of an ESXi 9.1 host). Replaces the book line that NFS is not covered.'
 status: draft
 ```

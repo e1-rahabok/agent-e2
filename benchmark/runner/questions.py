@@ -144,7 +144,7 @@ def load(pattern=None):
     questions = [Question(f) for f in files]
     if pattern:
         keep = [p.strip() for p in pattern.split(',')]
-        questions = [c for c in questions if any(k in c.id for k in keep)]
+        questions = [c for c in questions if any(k == c.id or k in os.path.basename(c.path) for k in keep)]
     return questions
 
 
