@@ -43,7 +43,7 @@ attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"
 answer_type: deterministic
-level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
+level: 400                      # author 2026-11-05
 answer: [E]
 trap: [C,D]
 status: draft

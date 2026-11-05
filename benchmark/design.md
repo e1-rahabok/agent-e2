@@ -83,7 +83,7 @@ Three input types: what the administrator gives the product besides the question
 |---|---|---|---|
 | Text | The prompt alone. It may hold a few values or a small table typed into the prompt | As text | 60 (text only) |
 | Table | A data file: typically a Microsoft Excel spreadsheet exported from VCF Operations or vCenter, or a CSV. Dozens of columns, hundreds of rows | The agent or harness converts it to CSV and gives the model a table tool to filter, sort and aggregate it: hundreds of rows do not fit or read reliably in the context | at least 15 |
-| Screenshot | An image of a product UI: esxtop, the vCenter UI, the VCF Operations UI; sometimes a vendor web page (`vsphere-cpu-007`) | As an image, to a vision model | at least 25 |
+| Screenshot | An image of a product UI, as the administrator sees it: esxtop, the vCenter UI, the VCF Operations UI. An image of anything else (a quiz table, a vendor web page) is not a screenshot: its content goes into the prompt as text | As an image, to a vision model | at least 25 |
 
 - Administrators upload data in bulk: a spreadsheet of every VM, or several screenshots of one problem.
 - A question can combine input types. A Level 400 question may carry several tables and screenshots. It counts for each input type it includes.
@@ -310,8 +310,8 @@ For the set:
 9. Are at least 20% of questions from sources other than the author's books?
 
 ## 12. Status (2026-11-05)
-- 28 questions, all scored automatically: 17 deterministic, 11 judged; 25 text only, 3 screenshot, 0 table. Levels (draft by Claude, author to confirm: Q056): 0 at Level 100, 0 at 200, 15 at 300, 13 at 400.
-- Gaps against the blueprint: Level 100 0 of 10, Level 200 0 of 15; table 0 of 15; screenshot 3 of 25 (vCenter and spec sheets only; no esxtop or VCF Operations; one question with 2 images), network 0 of 15, storage 1 of 20, system about 3 of 20, outside the knowledge base 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
+- 28 questions, all scored automatically: 17 deterministic, 11 judged; 27 text only, 1 screenshot, 0 table. Levels (author, Q056, 2026-11-05): 0 at Level 100, 0 at 200, 15 at 300, 13 at 400.
+- Gaps against the blueprint: Level 100 0 of 10, Level 200 0 of 15; table 0 of 15; screenshot 1 of 25 (one vCenter chart; no esxtop or VCF Operations), network 0 of 15, storage 1 of 20, system about 3 of 20, outside the knowledge base 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
 - Next: write the questions to the blueprint from the author's book quizzes; add `trap_type`; add a coverage script; set up the held-out set.
 
 ## 13. Screenshot questions
@@ -335,6 +335,13 @@ For the set:
 - Questions with `answer_type: judged` are answered without options and scored 0-3 by a judge model. Code: `benchmark/runner/judge.py`.
 - The candidate gets the same harness, modes and tools as for deterministic questions, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: `harness/modes.py`, `PROMPTS['open']`.
 - The judge gets: the prompt, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The candidate never sees the key.
+- `## Expected key points` is the answer key for the judge, not a script for the candidate:
+  - each bullet is one fact a correct answer must state, in any words, in any order;
+  - the candidate never sees it; the open-answer prompt asks for the conclusion, the mechanism and reason, and what to check next, in at most 250 words;
+  - a full answer covers every key point. Four key points take about 3-6 sentences (80-150 words), the length an expert gives a colleague;
+  - write 2-5 key points per question. The first states the conclusion; the next ones the reason; the last what to check next. More than 5 means the question asks too much at once: split it;
+  - a key point that is only nice to know is not a key point: it goes in `## Notes`.
+- Example (`vsphere-cpu-002`): a full answer reads like: No. Ready and Co-stop are flat, so the VM is not waiting for a physical CPU. CPU Latency rose because the BIOS power policy lowered the clock speed: the VM runs slower, as on an older CPU. Unlike Disk or Memory Latency, CPU Latency does not always mean a performance problem. Check the power policy and the frequency.
 - Rubric:
 
 | Score | Meaning |

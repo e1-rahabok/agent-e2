@@ -18,7 +18,7 @@ D (reservation assumed to block memory before use) or C.
 - Answer: A, B.
 - A: memory is a form of storage; CPU is running instructions.
 - B: correct.
-- C is wrong: consider setting reservation at resource pool level.
+- C is wrong: plan both reservation and share settings at resource pool level and VM level as one design.
 - D is wrong: reserved memory must be used first before it is held.
 - E is wrong: utilization can exceed reservation.
 
@@ -42,7 +42,7 @@ attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
 answer_type: deterministic
-level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
+level: 400                      # author 2026-11-05
 answer: [A,B]
 trap: [C,D]
 status: draft

@@ -125,6 +125,15 @@ Each entry has:
 - Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
 - Answer:
 
+### Q057 · Benchmark · vsphere-foundations-001: check with a vCenter CPU screenshot
+- Files: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/vsphere-foundations-001-reservation-cpu-vs-memory.md (section Expected key points, CPU bullet); `vsphere/foundations/resource-controls` (section Reservation: CPU vs memory).
+- Search: not from the book. The question comes from the book section The World of Metrics > Resource management (`source_path` of the question).
+- Question: please validate the CPU key point with a screenshot of the vCenter UI: a VM with a 4 GHz CPU reservation, powered on and sitting at the BIOS screen. Do Run, Used, Demand and Usage stay at or near 0? The screenshot can then become the question's attachment (input type screenshot).
+- Written as now: CPU reservation is on demand; the CPU counters stay at or near 0 while the VM sits at the BIOS screen.
+- Answer:
+
+## Resolved
+
 ### Q056 · Benchmark · Level of each existing question
 - Files: the 28 files in https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (metadata `level`).
 - Search: not from the book.
@@ -158,9 +167,8 @@ Each entry has:
   - vsphere-storage-001 (judged, text): 400
   - vsphere-storage-002 (judged, text): 400
   - vsphere-storage-003 (deterministic, text): 300
-- Answer:
-
-## Resolved
+- Answer: Author (2026-11-05): reviewed all. vsphere-memory-005 is Level 400, not 300; vsphere-storage-002 is Level 300, not 400. The others stand.
+- Done 2026-11-05: both levels changed; the draft marks removed from all 28 questions.
 
 ### Q054 · Benchmark · Allocation of the 100 questions
 - Files: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md, sections 3.1 (tasks), 3.2 (levels), 3.3 (answer types), 3.4 (input types), 3.6 (allocation), 3.7 (coverage).

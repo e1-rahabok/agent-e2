@@ -102,7 +102,7 @@ One tag per concept (`project/terms.md`):
 ## Judged scoring (0-3)
 - The runner sends the prompt (and images) without options, then a judge model scores the answer against `## Expected key points` and `## Likely wrong answer`.
 - Rubric, judge rules and checks: `benchmark/design.md`, section 14. Judge model: `benchmark/models.md`.
-- Write `## Expected key points` as one testable fact per bullet: the judge scores against them and nothing else.
+- `## Expected key points` is the answer key for the judge: the facts a correct answer must state, one per bullet, 2-5 bullets; not the wording the candidate must use. Meaning and an example: `benchmark/design.md`, section 14.
 - Write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 
 ## Final score
