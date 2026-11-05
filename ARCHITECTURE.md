@@ -8,7 +8,7 @@ Design reasons and model size: `project/solution-design.md`. Knowledge capture: 
 |---|---|---|---|
 | Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. The answer may use no other source. |
 | Harness | The software around the model: retrieval, tools, rules, answer checks | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
-| Model | A 27-32B open-weight LLM on a local GPU | served by vLLM, llama.cpp or Ollama | What to look up next (agentic mode), how to read the text, which options are right. |
+| Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | What to look up next (agentic mode), how to read the text, which options are right. |
 
 - The model's own memory of vSphere metrics comes from public Internet text and repeats the misconceptions the knowledge base corrects.
 - The model is told to answer only from what the harness returns.
@@ -133,7 +133,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 ## 7. Dark-site deployment
 | Component | Runs on | Notes |
 |---|---|---|
-| Chat model (27-32B) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
+| Chat model (one GPU, at most 96 GB) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
 | Embedding model (qwen3-embedding-0.6b) | CPU | For hybrid search |
 | Harness | CPU | Python: retrieval, catalog (SQLite in memory), calculator, flow executor, verifier |
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |

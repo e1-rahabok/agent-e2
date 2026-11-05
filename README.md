@@ -4,7 +4,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/vSphere-9.1-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSphere 9.1">
   <img src="https://img.shields.io/badge/VCF-9.1.1-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="VCF 9.1.1">
-  <img src="https://img.shields.io/badge/model-27--32B%20open%20weights-6e7781?labelColor=3d444d" alt="Model: 27-32B open weights">
+  <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
   <img src="https://img.shields.io/badge/runs-offline%20%28dark%20site%29-6e7781?labelColor=3d444d" alt="Runs offline">
   <img src="https://img.shields.io/badge/knowledge%20files-205-6e7781?labelColor=3d444d" alt="Knowledge files: 205">
   <img src="https://img.shields.io/badge/benchmark%20cases-28-6e7781?labelColor=3d444d" alt="Benchmark cases: 28">
@@ -20,7 +20,7 @@
 - Others can use cloud AI but must contain its cost: per-token fees grow with every question, user and automated check.
 - Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers sound expert and are often wrong at Level 400.
 
-**Goal:** a 32B-class open-weight model, running offline on one GPU (dark site, no Internet, no per-token cost), answers Level 400 private cloud operations questions better than frontier models.
+**Goal:** an open-weight model, running offline on one GPU (dark site, no Internet, no per-token cost), answers Level 400 private cloud operations questions better than frontier models.
 
 ## Repository map
 
@@ -50,7 +50,7 @@ flowchart LR
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, traps and troubleshooting flows, plus exact data in `knowledge/catalog/`. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
-  - Model: a 27-32B open-weight model, chosen by benchmark. Not stored here.
+  - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
 - Proof: shows that the product beats a frontier model.
   - `benchmark/`: exam cases with answer keys and their attachments, the candidate models and judge (`benchmark/models.md`), the runner, results. One final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. Luck removed: Unsure option, confident-wrong rate, each case scored on its worst of 5 runs. Never indexed: it holds the answer keys.
 - Project: how this repository is built and kept correct.

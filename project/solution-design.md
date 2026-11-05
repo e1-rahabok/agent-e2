@@ -3,7 +3,7 @@
 Status: proposal, 2026-11-04. For the author and for VMware professionals who ask "how can a small local model beat GPT or Claude?". Not indexed.
 
 ## 1. Mission
-- A 32B-class open-weight LLM, running locally on one GPU, answers Level 400 private cloud operations questions better than the best frontier model.
+- An open-weight LLM, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than the best frontier model.
 - Local means a dark site: no Internet, no cloud API, no data leaving the customer.
 - Cheap means one server-class GPU, not a cluster, and no per-token fees.
 - Scope:
@@ -43,7 +43,7 @@ flowchart LR
 ## 3. Why a 32B model can beat a frontier model here
 Six mechanisms, in order of weight.
 
-1. **Open-book exam.** A frontier model's advantage is breadth of memorised knowledge plus reasoning depth. For one narrow domain, retrieval supplies the knowledge. What remains is reading 5-10 retrieved files and applying their rules: reading comprehension plus a short reasoning chain. On that task, current 27-32B models are close to frontier models.
+1. **Open-book exam.** A frontier model's advantage is breadth of memorised knowledge plus reasoning depth. For one narrow domain, retrieval supplies the knowledge. What remains is reading 5-10 retrieved files and applying their rules: reading comprehension plus a short reasoning chain. On that task, current 27-32B dense models and 120B-class MoE models are close to frontier models.
 2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation. That corpus repeats the misconceptions the author's book corrects: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS", "VM rightsizing". A model trained on it answers confidently and wrongly. Measured: the frontier model without the knowledge base fell into the trap answer on 16% of answers (run 20261103-093742).
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters at statistics level 4) is newer than most training data. The knowledge base is current by rule.
 4. **Exactness from tools.** Small and large models both slip on arithmetic and unit conversion (ms summation to %, GHz × vCPU, KB vs kb). A calculator tool and a metric catalog lookup return exact values; the model only chooses which tool to call.
@@ -61,8 +61,10 @@ Decode speed and hardware are governed by memory: every generated token reads al
 | 32B dense | ~32 GB | ~18 GB | one 48 GB GPU at 8-bit with room for context; one 24 GB GPU at 4-bit | 1x |
 | 70B dense | ~70 GB | ~40 GB | 80 GB GPU, or two 48 GB GPUs | ~0.45x |
 | 30B MoE, 3B active | ~30 GB | ~17 GB | same as 32B | ~5-8x (reads only active weights) |
+| 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
 
 - Add the KV cache for the retrieved context (8-12K tokens per question) on top of the weights.
+- **The size rule (author, 2026-11-05):** only two limits count: fit for the goal, and hardware cost. Hardware cost is one GPU of at most 96 GB; parameter count itself is not a limit. A 120B MoE with 6-12B active fits at 4-bit and decodes faster than a 32B dense model, at the price of a larger GPU. Tiers and candidates: `benchmark/models.md`.
 - **Why not 70B:** twice the GPU memory and about half the speed of a 32B model, for a gain that is mostly memorised world knowledge. The harness replaces memorised knowledge with retrieved knowledge, so the 70B advantage shrinks to reasoning depth. The design rule: test a 70B model only if the best 32B model loses points through reasoning errors while the trace shows it read the right files (`project/design-kb-test-site.md`, Decision rules).
 - **Why not 8B-14B:** too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact (dropped); qwen-3-14b in agentic mode 19%.
 - **Why dense over MoE as the main bet:** MoE models with 3-4B active parameters are fast, but in our run they did worst at tool use (nemotron-3-nano-30b-a3b: 24-29% exact; almost no tool calls). No MoE speed option remains in the test: nemotron was removed for lack of vision, gemma-4-26b-a4b-it as a duplicate of gemma-4-31b-it (2026-11-05, `benchmark/models.md`).
