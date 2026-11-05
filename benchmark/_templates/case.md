@@ -27,7 +27,7 @@ input: text                       # text | screenshot | diagram | log | mixed
 tests: distinction                # concept | distinction | judgment | troubleshooting
 knowledge:                        # knowledge ids the answer should draw on (retrieval check)
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
-attachments: []                   # paths under benchmark/attachments/<id>/
+attachments: []                   # paths relative to benchmark/cases/, e.g. <id>/<file>.png
 origin: book                      # book | quiz | live-lab | real-ticket | synthetic
 source_path: "<heading path in the source document>"
 format: multiple-choice           # multiple-choice | free-text | compound

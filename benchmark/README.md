@@ -8,7 +8,7 @@ Never index this folder: it contains answer keys.
 ```text
 benchmark/
 ├── cases/<id>-<slug>.md                          # one case per file, one flat folder
-├── attachments/<case-id>/                        # screenshots, logs, diagrams for a case
+├── cases/<id>/                                   # the case's attachments: screenshots, logs, diagrams (only when it has any)
 ├── runner/                                       # Auto Test: run.py, cases.py, report.py, config.yaml
 ├── results/results.csv                           # summary: one row per case per model per mode per run set
 ├── results/autotest/<run-id>/                    # per run: answers.csv, report.md, config.json (traces.jsonl not in git)
@@ -33,7 +33,7 @@ benchmark/
 | `id` | Never reused. New cases: `case-<nnnn>`. |
 | `product` | Every product the case touches: vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. |
 | `technology` | Every area the case touches: cpu, memory, storage, network, system. |
-| `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `attachments/<id>/`. |
+| `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `cases/<id>/`, next to the case file. No `.md` files there: the runner and lint read every `.md` under `cases/` as a case. |
 | `tests` | concept, distinction, judgment, troubleshooting. |
 | `knowledge` | Knowledge ids the answer should draw on. Used to measure retrieval recall, not only the answer. |
 | `origin` | book, quiz, live-lab, real-ticket, synthetic. |

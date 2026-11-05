@@ -1,7 +1,7 @@
 # Benchmark design
 
 For human experts who check that the test is valid and complete. Not indexed.
-Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Trap definition: root `README.md`, section Traps and Level 400.
+Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 
 ## 1. Claim
 - Claim: a local 27-32B open-weight model, with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
@@ -15,7 +15,7 @@ Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/READM
 | Measured | Not measured (and where it is measured instead) |
 |---|---|
 | Correct reading of metrics: mechanism, vantage point, unit, rollup | Installation, configuration steps, UI navigation (out of scope for the product) |
-| Resistance to traps (see root `README.md`, Traps and Level 400) | Writing quality of free-text answers (0-3 rubric, `benchmark/README.md`) |
+| Resistance to traps (see `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400) | Writing quality of free-text answers (0-3 rubric, `benchmark/README.md`) |
 | Combining several facts (multi-hop), including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
 | Reading a screenshot of a chart or table | Data-file parsing (release 1.2) |

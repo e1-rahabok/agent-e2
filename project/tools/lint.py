@@ -158,7 +158,7 @@ def main():
             if fm.get('level') not in ('recall', 'l400', 'multi-hop', 'screenshot'):
                 bad(f, 'level must be recall, l400, multi-hop or screenshot')
         for att in (fm or {}).get('attachments') or []:
-            if not os.path.exists(os.path.join('benchmark', 'attachments', att)):
+            if not os.path.exists(os.path.join('benchmark', 'cases', att)):
                 bad(f, f'attachment not found: {att}')
 
     for f in files + sorted(glob.glob('benchmark/cases/*.md')):
