@@ -20,6 +20,17 @@ GAVG = KAVG + DAVG
 - High DAVG: the fabric or the array (front-end ports, CPU, cache, back-end ports, spindles). Array reports low latency: the fabric or HBA configuration.
 - The bulk of latency should come from the device.
 
+## NFS
+- An NFS datastore has no SCSI device and no HBA. In esxtop it is an {NFS} pseudo-device: `vsphere/technology/storage/metrics/comparisons/esxtop-storage`.
+
+```text
+DAVG (NFS) = network latency + remote NAS processing time
+```
+- No QAVG for NFS. QAVG is the average time an IO spends in the VMkernel storage device queue, waiting to be sent to a physical adapter (HBA, LUN).
+- Block storage enforces a hard device queue depth (DQLEN), managed by the Pluggable Storage Architecture (PSA). When commands exceed DQLEN, they queue in the VMkernel: QAVG tracks that delay, then DAVG takes over.
+- NFS bypasses PSA: no DQLEN, so no device queue for QAVG to measure.
+- High DAVG on NFS: check the storage network (drops, MTU) and the NAS, not an HBA or a fabric.
+
 ## vSphere Client names
 | Layer | Read | Write | Combined |
 |---|---|---|---|
@@ -35,6 +46,7 @@ GAVG = KAVG + DAVG
 ## Traps
 - "Guest latency is measured inside Windows" → it starts at the VMM.
 - "QAVG cannot exceed KAVG" → QAVG includes kernel IO.
+- "NFS has no DAVG" → it has; for NFS, DAVG is network latency plus NAS processing time.
 
 ## Metadata
 ```yaml
@@ -69,5 +81,6 @@ review_notes:
 - 'Diagram source cited by the book: https://frankdenneman.nl/2012/07/23/to-which-host-level-latency-statistic-is-the-sioc-congestion-threshold-related/ (third-party, not copied).'
 - 'QAVG source from the book: https://www.codyhosterman.com/2018/03/what-is-the-latency-stat-qavg/ (third-party).'
 - The book is unsure what DAVG measures for vSAN when data is local.
+- 'Section ''NFS'': author, 2026-11-05 (DAVG formula for NFS; QAVG and DQLEN under PSA).'
 status: draft
 ```
