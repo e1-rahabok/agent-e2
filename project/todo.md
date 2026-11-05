@@ -124,17 +124,17 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
-- [x] Write the long, complex question: L4-90 (2026-11-05).
-- [ ] Add a per-question answer length to the runner (the open-answer prompt caps answers at 250 words); L4-90 has 10 key points.
+- [x] Write the long, complex question: [ERP slow after the change window](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-50-erp-slow-after-change-window.md) (2026-11-05).
+- [ ] Add a per-question answer length to the runner (the open-answer prompt caps answers at 250 words); [ERP slow after the change window](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-50-erp-slow-after-change-window.md) has 10 key points.
 - [ ] Table input: a harness table tool (load Excel or CSV, list columns, filter, sort, aggregate, top-N), table attachments in the runner, and the export formats with their traps (`benchmark/design.md`, section 13.1).
-- [x] Write Level 100 and 200 questions: L1-29 to L2-53 (2026-11-05).
-- [x] Write Level 400 questions: L4-54 to L4-90 (2026-11-05).
-- [x] Author: screenshots and table for L1-34, L1-37, L2-42, L2-46, L2-51 (2026-11-05).
-- [ ] Author: supply the screenshots and tables for L4-66 to L4-89 (see each `## Input to supply`).
-- [ ] Author: Q058, synthetic share and review of L4-54 to L4-90.
+- [x] Write Level 100 and 200 questions: L1-01 to L2-14 (2026-11-05).
+- [x] Write Level 400 questions: L4-14 to L4-50 (2026-11-05).
+- [x] Author: screenshots and table for [Latency counters in a vCenter virtual disk chart](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L1-06-vcenter-virtual-disk-latency-counters.md), [Recognise the tool and the object](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L1-09-recognise-vcf-operations-vm-metrics.md), [Contention counters in a vCenter host network chart](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L2-04-vcenter-host-network-contention-counters.md), [Is the datastore full: provisioned vs used space](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L2-08-datastore-provisioned-vs-used.md), [Guest OS metrics in the VM metric tree](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L2-12-vcf-operations-guest-vs-vm-metrics.md) (2026-11-05).
+- [ ] Author: supply the screenshots and tables for L4-26 to L4-49 (see each `## Input to supply`).
+- [ ] Author: Q058, synthetic share and review of L4-14 to L4-50.
 - [ ] Remaining 10 questions to reach 100: 1 at Level 200, 9 at Level 300 (`benchmark/design.md`, section 12).
 - [ ] After the 100 questions are complete: delete the old benchmark results (`benchmark/results/`, the old rows of `benchmark/results/results.csv`). They use the old question ids (`vsphere-cpu-004`, `question-0031`); each question's Notes names its previous id (author, 2026-11-05).
-- [ ] Split `L4-06` (two hosts, letters per host) into one deterministic question per host.
+- [ ] Split [ESXi CPU capacity: threads, not hertz](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-05-esxi-cpu-capacity-threads-not-hertz.md) (two hosts, letters per host) into one deterministic question per host.
 - [ ] Check for a current-generation dense vision model of about 70B (open weights, commercial licence, tool calling, on Vercel AI Gateway). None as of 2026-11-05; expected in 2027. Add it as the first challenger under the rule in `benchmark/models.md`, section 1. Check again each quarter.
 - [ ] Before release: run the benchmark once on the chosen model from local weights, at the deployed precision, on the target GPU. That run is the release score (`benchmark/models.md`, section 2).
 - [ ] After Q048: fill `interval` and `instance` in `knowledge/catalog/thresholds.yaml`; add an Interval column to the band tables; have the catalog lookup return them.
@@ -204,4 +204,4 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] First real benchmark: needs AI_GATEWAY_API_KEY in the environment.
 - [ ] Grow the question set to 100 by the allocation in `benchmark/design.md`, section 3.6 (Levels 100-400; deterministic and judged; text, table, screenshot); at least 10 per area; about 10 out-of-scope questions.
 - [x] "Not covered" option and fixed answer format: added by the runner. Answer keys (`answer`, `trap`, `level`, `format`) added to 17 quiz questions.
-- [ ] Question L4-06 (two hosts, two answers): split into two multiple-choice questions to make it auto-scorable.
+- [ ] Question [ESXi CPU capacity: threads, not hertz](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-05-esxi-cpu-capacity-threads-not-hertz.md) (two hosts, two answers): split into two multiple-choice questions to make it auto-scorable.

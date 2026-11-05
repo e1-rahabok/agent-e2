@@ -19,10 +19,11 @@ benchmark/
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and technologies, so folders cannot hold it. The slices are metadata (section Metadata tags):
   - `product`: every product the question touches (values from `project/tools/tags.yaml`);
   - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/design.md`, section 3.5.
-- File name: `L<level>-<id>-<slug>.md`, for example `L3-07-reading-an-intel-xeon-specification-base-all-core-turbo-tdp.md`. The prefix shows the level; sorted by name, the files group by level (author, 2026-11-05).
-- The id is a 2-digit number (`07`), stable: it never changes and is never reused. A new question takes the next free number; above 99 it grows to 3 digits. A question that changes level is renamed (`L2-07` → `L3-07`); its id, results and attachment folder stay.
-- Attachments live in a folder named by the id: `benchmark/questions/07/`.
-- In prose, refer to a question by its file prefix (`L3-07`).
+- File name: `L<level>-<nn>-<slug>.md`, numbered from 01 within each level, in id order. The last number of a level is its count (author, 2026-11-05).
+- The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id.
+- A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 01 without gaps, and updates the links in `benchmark/design.md`, `project/author-questions.md` and `project/todo.md`. The id, the results and the attachments stay.
+- Attachments live in a folder named by the id: `benchmark/questions/0007/`.
+- In documents, link a question by its title: `[title](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/<file>)`.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
 - Ids never change and are never reused. Retired questions get `status: retired`. A question is deleted only when the author asks.
@@ -42,7 +43,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 
 | Tag | Meaning | Values |
 |---|---|---|
-| `id` | Internal key for the runner and the results. 2-digit number, quoted. Never changed, never reused | `"07"` |
+| `id` | Internal key for the runner and the results. 4-digit number, quoted. Never changed, never reused. Not in the file name | `"0007"` |
 | `title` | Short name for a human reviewer | Free text |
 | `status` | Review state | `draft` (written, not reviewed), `awaiting-input` (the screenshot or table is not supplied yet: the `## Input to supply` section describes it; not run), `reviewed` (author approved), `retired` (kept for history, not run) |
 
@@ -120,6 +121,6 @@ One tag per concept (`project/terms.md`):
 | model | model id |
 | effort | n/a for gateway models; medium / high / max where the model has an effort setting |
 | mode | baseline, classic, agentic (`-vision` suffix for the screenshot track) |
-| question_id | 04 |
+| question_id | 0004 |
 | score | Benchmark runner: mean credit over the runs, 0-1 (exact letters 1 or 0; free text: judge score / 3). Older rows: exact-match mean, or manual 0-3. |
 | notes | benchmark id and scale, e.g. "benchmark 20261105-090000; score = mean credit 0-1 (exact letters, or judge score / 3) over 5 runs; temp 0.2" |
