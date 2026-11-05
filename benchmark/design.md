@@ -311,13 +311,13 @@ For the set:
 9. Are at least 20% of questions from sources other than the author's books?
 
 ## 12. Status (2026-11-05)
-- 90 questions: 10 at Level 100, 15 at Level 200, 15 at Level 300, 50 at Level 400. 59 deterministic, 31 judged. 59 text only, 19 screenshot, 7 table, 5 table + screenshot.
+- 90 questions: 10 at Level 100, 14 at Level 200, 16 at Level 300, 50 at Level 400 (question-0050 moved to Level 300 by the author). 59 deterministic, 31 judged. 59 text only, 19 screenshot, 7 table, 5 table + screenshot.
 - Level 400 (50): the 37 new ones (question-0054 to question-0090) are 20 deterministic and 17 judged; 13 text, 13 screenshot (esxtop 5, vCenter 4, VCF Operations 4), 6 table, 5 table + screenshot. question-0090 is the long, complex question.
 - 24 are `awaiting-input`: the author supplies the screenshot or table described in each question's `## Input to supply` (question-0066 to 0089). Supplied 2026-11-05: question-0034, 0037, 0042, 0046, 0050, 0051.
 - Tasks: read-metric 32, troubleshoot 23, decide-capacity 15, explain-mechanism 12, judge-setting 8.
 - Technology (a question can carry several): cpu 26, system 26, storage 22, memory 21, network 15.
 - Origin: 63 synthetic (drafted by Claude), 17 quiz, 10 book. Above the synthetic cap (section 10: about 30%): author question Q058.
-- Remaining: 10 questions at Level 300. Fill the tasks below allocation first: decide-capacity, troubleshoot, judge-setting, explain-mechanism; no more read-metric.
+- Remaining: 1 question at Level 200 and 9 at Level 300. Fill the tasks below allocation first: decide-capacity, troubleshoot, judge-setting, explain-mechanism; no more read-metric.
 - Next: `trap_type` per question; a coverage script that prints these counts; the held-out set.
 
 ## 13. Screenshot questions

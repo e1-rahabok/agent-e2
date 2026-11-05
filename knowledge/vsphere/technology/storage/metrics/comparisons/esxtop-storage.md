@@ -3,7 +3,11 @@
 ## Panels
 - Three panels: Disk VM (consumer), Disk Adapter and Disk Device (provider).
 - No path panel: it would show dead or inactive paths (all zeros) and lopsided active/active paths.
-- No datastore panel: VMFS is covered by Device with 1:1 mapping and no extents; NFS is not covered.
+- No datastore panel: VMFS is covered by Device with 1:1 mapping and no extents.
+- NFS datastores do appear in the Disk Device panel, as pseudo-devices prefixed {NFS} (for example {NFS}datastore1). esxtop abstracts storage at the File System Switch (FSS) layer; the VMkernel NFS client registers the pseudo-device for real-time IO tracking. It is not a physical device.
+- An {NFS} row has IOPS, throughput, DAVG, KAVG and GAVG. Queue columns (DQLEN, QUED, %USD, LOAD) and QAVG show -: NFS has no SCSI device queue.
+- For an {NFS} row, DAVG is the time beyond the host NFS client: the network and the NFS server.
+- The vSphere Client lists only block devices managed by the Pluggable Storage Architecture (PSA). NFS is file-level: it bypasses PSA and NMP and has no naa., eui. or t10. identifier, so vCenter shows no device for an NFS mount.
 - Adapter and Device share most contention and utilization groups.
 ![Disk Adapter vs Disk Device metric groups](../../images/esxtop-disk-adapter-vs-disk-device-metric-groups.png)
 
@@ -109,9 +113,11 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > Storage
-corrections: []
+corrections:
+- 'Section ''Panels'': the book says esxtop does not cover NFS. Author, 2026-11-05: NFS datastores show in the Disk Device panel as {NFS} pseudo-devices with DAVG, KAVG and GAVG.'
 review_notes:
 - 'Section ''Disk Adapter'': the book lists the guest write counter as ''AVG/wr'' and the clone latency as ''AVAG''; read as GAVG/wr and an average clone latency.'
 - 'VAAI references from the book: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/ (not read).'
+- 'Section ''Panels'', NFS pseudo-devices: author, 2026-11-05 (question-0050 review, with an esxtop screenshot of an ESXi 9.1 host). Replaces the book line that NFS is not covered.'
 status: draft
 ```
