@@ -16,7 +16,7 @@ Each entry has:
 ## Open
 
 ### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
-- Files: `vsphere/technology/memory/metrics/host/consumed`
+- Files: [ESXi Memory Consumed](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md)
 - Search 1: "It only includes the resultant zipped, not the amount subjected to compression"
 - Search 2: "Consumed does not include compressed"
 - Question: does host Consumed include the compressed result in DIMM?
@@ -24,21 +24,21 @@ Each entry has:
 - Answer:
 
 ### Q023 · Chapter 4 Storage > VM · Disk metric scope
-- Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk`
+- Files: [VM Disk (device level)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk.md)
 - Search: "if the value is per VM or per disk"
 - Question: is the VM Disk (device-level) metric value for this VM only, or for the whole device shared by many VMs?
 - Written as now: associated with the VM, flagged as unsure.
 - Answer:
 
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
-- Files: [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md); `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
+- Files: [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md); [Why rightsizing matters for VMs](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/rightsizing.md), [Unused and idle vCPUs](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/idle-and-unused-vcpus.md), [Large VM with low utilization: build the case to downsize](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/diagnosis/oversized-vm-downsizing.md)
 - Search (quiz): "Power off the VM, as this also frees the VM memory"
 - Question: key is C,D. Frontier baseline chose C,D in 5 of 5; frontier classic chose C only in 5 of 5, citing that the knowledge base does not make the claim. Should the knowledge base state that powering off an idle VM frees its memory, as part of reclamation?
 - Written as now: no file states that powering off an idle VM frees its memory. idle-and-unused-vcpus covers the CPU cost of idle vCPUs only.
 - Answer:
 
 ### Q043 · Quiz > Memory > Q2 VM vs Guest OS · Options A and D
-- Files: [Relationship between VM and Guest OS memory metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md); `vsphere/technology/memory/concepts/guest-os-vs-vm-memory`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/metrics/virtual-motherboard/usage`
+- Files: [Relationship between VM and Guest OS memory metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md); [Guest OS memory vs VM memory](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/guest-os-vs-vm-memory.md), [Ballooning](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md), [VM Memory Usage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/usage.md)
 - Search 1 (quiz): "Neither layer considers the other"
 - Search 2 (quiz): "the hypervisor cannot balloon the VM"
 - Question: key is A,B,D,E. Frontier dropped A or D in every run (baseline and agentic B,D,E; classic A,B,E). Are A and D both correct? If yes, which statements should the knowledge base add?
@@ -46,7 +46,7 @@ Each entry has:
 - Answer:
 
 ### Q044 · Chapter 4 Storage > ESXi · Latency thresholds vs vSphere 9.1 documentation
-- Files: `vsphere/technology/storage/diagnosis/host-storage-latency`, `vsphere/foundations/vsphere-client-performance-guidance`
+- Files: [ESXi storage latency is high](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/diagnosis/host-storage-latency.md), [vSphere documentation performance guidance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vsphere-client-performance-guidance.md)
 - Search 1: "the value should be within 0.5 ms"
 - Search 2: "In a healthy environment, it should be well within 5 ms"
 - Question: the vSphere 9.1 documentation (vSphere Monitoring and Performance > Solutions for Disk Performance Problems, p. 2121) says kernelLatency best 0-1 ms and a problem above 4 ms; deviceLatency above 15 ms indicates an array problem; queueLatency must be 0. Keep the book values as the knowledge-base thresholds, and the documentation values only as the vendor's published guidance?
@@ -54,14 +54,14 @@ Each entry has:
 - Answer:
 
 ### Q045 · Chapter 3 Memory > VM · Swapped formula in the vSphere 9.1 documentation
-- Files: `vsphere/technology/memory/metrics/virtual-motherboard/swapped`
+- Files: [VM Memory Swapped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/swapped.md)
 - Search: "This is why Swapped is not Swapped In – Swapped Out"
 - Question: the vSphere 9.1 documentation (Virtual Machines > Memory (MB), p. 2103) defines VM Swapped = swapout – swapin, and adds that vMotion can make Swapped larger than swapout – swapin. Is the documentation wrong, or does its formula hold for cumulative counters (total swapped out minus total swapped in) while the book means the rates?
 - Written as now: Swapped is not Swap in - Swap out: both run in parallel on different pages. Related to Q019 (host Swap Consumed).
 - Answer:
 
 ### Q046 · Provider Objects > esxtop · HTQ and DTYP still in the 9.1 documentation
-- Files: `vsphere/technology/cpu/metrics/comparisons/esxtop-cpu`, `vsphere/technology/network/metrics/comparisons/esxtop-network`
+- Files: [esxtop CPU, power and interrupt counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/comparisons/esxtop-cpu.md), [esxtop network counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/comparisons/esxtop-network.md)
 - Search 1: "The column HTQ is no longer shown in ESXi 7.0"
 - Search 2: "does not seem to be available anymore"
 - Question: the vSphere 9.1 documentation still lists HTQ (CPU panel) and DTYP (network panel). Do they show on an ESXi 9.1 host?
@@ -69,49 +69,49 @@ Each entry has:
 - Answer:
 
 ### Q047 · The World of Metrics > Resource management · Untouched memory reservation
-- Files: `vsphere/foundations/resource-controls`
+- Files: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md)
 - Search: "since ESXi has reserved the space, it is not available to other VMs"
 - Question: the vSphere 9.1 documentation (vSphere Resource Management > Virtual Machine Memory, pp. 1833-1834) says that until a VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; only touched reserved memory is kept, even when idle. Does the book statement mean admission control (the reservation cannot be promised to another VM), while the physical pages can still be used by others until touched?
 - Written as now: Consumed jumps to the reservation at power-on; the reserved space is not available to other VMs. The existing correction says RAM is backed on first use, then stays locked.
 - Answer:
 
 ### Q048 · Thresholds · Interval and instance reading of every band
-- Files: band tables in `vsphere/object-types/vm/metrics/vm-performance`, `vsphere/object-types/cluster/metrics/cluster-performance`, `cluster-consumption`, `cluster-risk`, `cluster-sla-sli`, `guest-os/system/metrics/guest-os-performance`; rows in `knowledge/catalog/thresholds.yaml` (fields `interval`, `instance`).
-- Search: not from the book. Follows the rule added to `foundations/thresholds` (Interval rule, Instance rule).
+- Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/vm/metrics/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), [Cluster SLA and SLI](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds.yaml) (fields `interval`, `instance`).
+- Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/foundations/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
 - Answer:
 
 ### Q049 · vCenter API counters · clusterServices.cpufairness and memfairness (low priority)
-- Files: `knowledge/catalog/vcenter-api-counters.yaml` (HostSystem rows); no knowledge file yet.
+- Files: [knowledge/catalog/vcenter-api-counters.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/vcenter-api-counters.yaml) (HostSystem rows); no knowledge file yet.
 - Search: not from the book. vCenter 9.1.0 API summaries: cpufairness "Fairness of distributed CPU resource allocation"; memfairness "Aggregate available memory resources of all the hosts within a cluster" (looks copied from another counter).
 - Question: what do the two host counters measure, and are they worth documenting for operations?
 - Written as now: listed in the catalog only, no knowledge file.
 - Answer:
 
 ### Q050 · vCenter API counters · clusterServices.effectivecpu and effectivemem vs totalmhz and totalmb (low priority)
-- Files: `knowledge/catalog/vcenter-api-counters.yaml` (ClusterComputeResource rows); candidate: `operations-management/capacity/capacity-model`.
+- Files: [knowledge/catalog/vcenter-api-counters.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/vcenter-api-counters.yaml) (ClusterComputeResource rows); candidate: [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/capacity-model.md).
 - Search: not from the book. vCenter 9.1.0 API summaries: effectivecpu "Total available CPU resources of all hosts within a cluster"; effectivemem "Total amount of machine memory of all hosts in the cluster that is available for use for virtual machine memory and overhead".
 - Question: Claude's own knowledge (the API's cluster summary) says effective capacity excludes hosts in maintenance mode or not responding, and virtualization overhead. Is that right, and should the knowledge base prefer it over totalmhz and totalmb for usable capacity?
 - Written as now: listed in the catalog only.
 - Answer:
 
 ### Q051 · vCenter API counters · clusterServices.failover
-- Files: `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`.
+- Files: [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
 - Search: not from the book. vCenter 9.1.0 API summary: "vSphere HA number of failures that can be tolerated".
 - Question: how does the value behave under each HA admission control policy (slot, percentage of cluster resources, dedicated failover hosts, disabled)? Any trap in reading it?
 - Written as now: the counter, its level and its summary; behaviour per policy left open.
 - Answer:
 
 ### Q052 · vCenter API counters · vmop counters: cumulative or per interval (low priority)
-- Files: `vsphere/object-types/cluster/metrics/vm-operations`.
+- Files: [Cluster VM operations event counts](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/vm-operations.md).
 - Search: "Cumulative since the cluster was created"
 - Question: vCenter stores the 20 vmop counters with rollup latest and stat type absolute, on the cluster and the datacenter. Your hypothesis: vCenter accumulates them while VCF Operations shows a rate. Confirm? Do the vCenter counts ever reset (vCenter restart, cluster re-creation)?
 - Written as now: cumulative since cluster creation (book); VCF Operations converts them to rates (book).
 - Answer:
 
 ### Q053 · vCenter API counters · gpu.mem.reserved vs gpu.mem.used
-- Files: `vsphere/technology/gpu/concepts/gpu-monitoring` (sections Counters, Reading the counters, vGPU capacity).
+- Files: [GPU monitoring](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md) (sections Counters, Reading the counters, vGPU capacity).
 - Search: not from the book. Counters and vCenter 9.1.0 API summaries, on ClusterComputeResource and ResourcePool, level 1:
   - `gpu.mem.reserved` (latest, KB): "The amount of GPU memory consumed by virtual GPUs in kilobytes".
   - `gpu.mem.used` (average, KB): "The amount of GPU memory used by workloads in kilobytes".
@@ -126,14 +126,14 @@ Each entry has:
 - Answer:
 
 ### Q057 · Benchmark · [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md): check with a vCenter CPU screenshot
-- Files: [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md) (section Expected key points, CPU bullet); `vsphere/foundations/resource-controls` (section Reservation: CPU vs memory).
+- Files: [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md) (section Expected key points, CPU bullet); [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Reservation: CPU vs memory).
 - Search: not from the book. The question comes from the book section The World of Metrics > Resource management (`source_path` of the question).
 - Question: please validate the CPU key point with a screenshot of the vCenter UI: a VM with a 4 GHz CPU reservation, powered on and sitting at the BIOS screen. Do Run, Used, Demand and Usage stay at or near 0? The screenshot can then become the question's attachment (input type screenshot).
 - Written as now: CPU reservation is on demand; the CPU counters stay at or near 0 while the VM sits at the BIOS screen.
 - Answer:
 
 ### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-50
-- Files: https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (L4-14 to L4-50); `benchmark/design.md` (section 10, synthetic cap; section 12, status).
+- Files: https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (L4-14 to L4-50); [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
 - Search: not from the book.
 - Context: the Level 400 allocation (37 questions) is now drafted by Claude from the knowledge base. Synthetic questions are 63 of 90 (70%), against the cap of about 30% in section 10.
 - Question:
@@ -148,7 +148,7 @@ Each entry has:
 ### Q056 · Benchmark · Level of each existing question
 - Files: the 28 files in https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (metadata `level`).
 - Search: not from the book.
-- Question: Claude assigned a draft level to each question (definitions: `benchmark/design.md`, section 3.2). Which are wrong? None is at Level 100 or 200.
+- Question: Claude assigned a draft level to each question (definitions: [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.2). Which are wrong? None is at Level 100 or 200.
 - Written as now:
   - [High CPU Wait](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md) (judged, text): 300
   - [CPU Latency without contention](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-01-cpu-latency-frequency.md) (judged, text): 400
@@ -191,10 +191,10 @@ Each entry has:
   - Input types (questions that include them): text only 60, table at least 15, screenshot at least 25; at least 5 Level 400 questions with a table and a screenshot.
 - Written as now: the shares above, as a proposal. Replaces the earlier 60 multiple choice, 20 screenshot, 20 conversation.
 - Answer: Author (2026-11-05): agreed; replaces the old proposal.
-- Done 2026-11-05: `benchmark/design.md`, section 3.6 marked decided.
+- Done 2026-11-05: [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.6 marked decided.
 
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
-- Files: [CPU reservation behaviour](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md); `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
+- Files: [CPU reservation behaviour](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md); [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md), [ESXi CPU Reserved Capacity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/reserved-capacity.md), [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/overhead.md)
 - Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
 - Search 2 (quiz): "CPU reservation only comes into play during contention"
 - Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
@@ -203,19 +203,19 @@ Each entry has:
 - Answer: A and B are correct.
 - The justification for A was already in the key itself. ESXi CPU has 3 frequency (base or nominal, all core turbo, and single core turbo). Only the base frequency is used by ESXi logic to guarantee a reservation. This is a conservative design.
 - The justification for A was already in the key itself. It's written "if there is enough for everyone, reservation is irrelevant. Think of a restaurant. If there is enough seat, does your reservation matter if you do not reserve a specific table?"
-- Done 2026-11-05: `vsphere/foundations/resource-controls` (section Reservation: CPU vs memory) and `vsphere/technology/cpu/metrics/host/reserved-capacity` (Meaning, Traps). The second justification line is read as being about B.
+- Done 2026-11-05: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Reservation: CPU vs memory) and [ESXi CPU Reserved Capacity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/reserved-capacity.md) (Meaning, Traps). The second justification line is read as being about B.
 
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
-- Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/technology/cpu/metrics/virtual-motherboard/run`
+- Files: [Windows CPU scheduling and thread states](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/cpu/concepts/windows-cpu-scheduling.md), [VM CPU Run](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/run.md)
 - Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
 - Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
 - Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
 - Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
 - Answer: Run and Net Run not affected by hyper threading
-- Done 2026-11-05: `guest-os/cpu/concepts/windows-cpu-scheduling` table: Run and Net Run marked not affected by Hyper-Threading; Demand marked affected (Q035).
+- Done 2026-11-05: [Windows CPU scheduling and thread states](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/cpu/concepts/windows-cpu-scheduling.md) table: Run and Net Run marked not affected by Hyper-Threading; Demand marked affected (Q035).
 
 ### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
-- Files: `harness/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `benchmark/results/20261103-093742/report.md`, section Analysis.
+- Files: [harness/modes.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/modes.py) (SYSTEM_KB, SYSTEM_AGENT); evidence in [benchmark/results/20261103-093742/report.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/results/20261103-093742/report.md), section Analysis.
 - Search: not from the book. Finding from the frontier reference run 20261103-093742.
 - Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
 - Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
@@ -228,38 +228,38 @@ Each entry has:
   - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.
   - Test both in one run and compare.
 - Answer: In the auto test, we're testing 3 components as 1 expert (harness + model + knowledge base). So use the knowledge base first and its own knowledge where the knowledge base is silent.
-- Done 2026-11-05: `harness/modes.py` prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated (`benchmark/design.md`, both benchmark READMEs, `ARCHITECTURE.md`).
+- Done 2026-11-05: [harness/modes.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/modes.py) prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), both benchmark READMEs, `ARCHITECTURE.md`).
 
 ### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
-- Files: [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md); `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
+- Files: [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md); [ESXi CPU Core Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md), [ESXi CPU Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md), [ESXi CPU Usage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md)
 - Search 1 (quiz): "It is a balanced reporting"
 - Search 2 (quiz): "Plenty of physical threads are idle"
 - Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
 - Written as now: core-utilization says Core Utilization is a capacity metric (ignores frequency). utilization says Utilization suits capacity management. No file says which one is the ESXi true utilization, or why Core Utilization overstates it.
 - Answer: I think you got triggered with the word "true". Change it to "Three metrics show three values. What is the ESXi utilization, from capacity management perspective? Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality". Review https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md and https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md and update accordingly.
-- Done 2026-11-05: case [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md) prompt and hint reworded as given; `vsphere/technology/cpu/metrics/host/utilization` (section The capacity reading, traps) and `core-utilization` (not the capacity reading; traps) updated.
+- Done 2026-11-05: case [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md) prompt and hint reworded as given; [ESXi CPU Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md) (section The capacity reading, traps) and [ESXi CPU Core Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md) (not the capacity reading; traps) updated.
 
 ### Q055 · Follow-ups to Q027 and Q029
-- Files: `operations-management/capacity/vm-footprint-sizing` (section CPU), `guest-os/system/concepts/guest-os-sizing` (section Memory).
+- Files: [VM footprint sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/vm-footprint-sizing.md) (section CPU), [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Memory).
 - Search: not from the book; from your answers to Q027 and Q029.
 - Question 1 (Q027): the formula ends with "/ 20000 * vCPU". The sum over all vCPUs divided by 20,000 already gives the footprint in vCPUs (2 vCPUs each fully busy: 40,000 / 20,000 = 2). Is the result meant in vCPUs, so "× vCPU" is not needed, or in % of the VM, so the division is by (20,000 × vCPU)?
 - Question 2 (Q029): option 2 has four ranges, 0-75, 75-85, 85-95, 95-100%. The image shows grey, green, yellow, orange and red. Is it grey (waste) below 75, green 75-85, yellow 85-95, red 95-100?
 - Written as now: Q027 formula as you wrote it, with this question in review_notes. Q029 boundaries only, no colours.
 - Answer to Q1: From my book, which you missed: "The System counter is not available per vCPU. Reason is the underlying physical core that does the IO work on behalf of the VM may be doing it for more than 1 vCPU. There is no way to break it down for each vCPU.". Because of this, I need to sum all the per-vCPU counters one by one, then add CPU System. After that, we divide by 20000 x vCPU. Is it clear?
 - Answer to Q2: Grey is the 5th region. Only applicable to Capacity. It's not applicable to Performance as there is no such thing as wastage performance. Grey symbolizes wastage. It's placed below green. For Guest OS Memory, the range is 0 - 75 - 85 - 90 - 95 - 100. Yes, green is 10 point wide. Add in to do to upload Part 1 of my book to complete the capacity and performance management knowledge.
-- Done 2026-11-05: `operations-management/capacity/vm-footprint-sizing` (divisor 20,000 × vCPU, System reason, example); `guest-os/system/concepts/guest-os-sizing` (ranges 75-85-90-95-100, grey below 75 for capacity only). To-do added: upload Part 1 of the book.
+- Done 2026-11-05: [VM footprint sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/vm-footprint-sizing.md) (divisor 20,000 × vCPU, System reason, example); [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (ranges 75-85-90-95-100, grey below 75 for capacity only). To-do added: upload Part 1 of the book.
 
 ### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
-- Files: `operations-management/capacity/vm-footprint-sizing`
+- Files: [VM footprint sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/vm-footprint-sizing.md)
 - Search: "VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System"
 - Question: is the whole sum divided by 20,000, or only System? VM-level Used already includes System (Chapter 2 VM, Used formula). Is System counted twice?
 - Written as now: formula copied as is, flagged.
 - Answer: VM CPU Needed = (Sum of all vCPU (Used + Overlap + Co-stop + Ready + Other Wait) + System ) / 20000 * vCPU
 Emphasize that this is a narrow use case, as it's about the footprint of the VM on the underlying ESXi. This is only useful in VM migration to a different ESXi. What's more relevant in the Guest OS (Windows or Linux) capacity sizing.
-- Done 2026-11-05: `operations-management/capacity/vm-footprint-sizing` (formula grouping, narrow use case, pointer to Guest OS sizing). Follow-up on the unit of the result: Q055.
+- Done 2026-11-05: [VM footprint sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/vm-footprint-sizing.md) (formula grouping, narrow use case, pointer to Guest OS sizing). Follow-up on the unit of the result: Q055.
 
 ### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
-- Files: `guest-os/system/concepts/guest-os-sizing`
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md)
 - Search: "Exclude balloon"
 - Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
 - Written as now: exclude, flagged.
@@ -267,27 +267,27 @@ Emphasize that this is a narrow use case, as it's about the footprint of the VM 
 If it’s from free page, then exclude. 
 If it’s from non-free page, then include. 
 To be conservative, I recommend include.
-- Done 2026-11-05: `guest-os/system/concepts/guest-os-sizing`, rule changed to Include balloon, with the reason.
+- Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md), rule changed to Include balloon, with the reason.
 
 ### Q029 · Consumer Objects > Capacity · Memory utilization ranges
-- Files: `guest-os/system/concepts/guest-os-sizing`
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md)
 - Search: "The company is wasting money if the utilization falls below 50%"
 - Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
 - Written as now: bar 2 recommended, no numbers stated.
 - Answer: I’d recommend 0 - 75% - 85% – 95% - 100% as Windows and Linux tend to cache memory.
-- Done 2026-11-05: `guest-os/system/concepts/guest-os-sizing`, option 2 boundaries added. Follow-up on the colour of each range: Q055.
+- Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md), option 2 boundaries added. Follow-up on the colour of each range: Q055.
 
 ### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
-- Files: `vsphere/object-types/cluster/metrics/cluster-performance`
+- Files: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md)
 - Search 1: "vMotion is not included as it only becomes an issue"
 - Search 2: "vMotion is included as it does impact the VM performance"
 - Question: is vMotion part of the cluster KPI or not? The threshold table has no vMotion row.
 - Written as now: vMotion described as a leading indicator, flagged.
 - Answer: vMotion should not be included in actual performance as the metric counts the number of vmotion, not the length of the actual downtime. In a healthy environment, each vMotion down time is below 0.2 second and does not impact the Guest OS. Broadbase infrastructure capabilities like vMotion, NSX Edge, vSAN resync and general infrastructure (e.g. network) should be monitored separately. For example, track the maximum downtime for all vMotion across entire environment as a high downtime is a leading indicator of performance degradation.
-- Done 2026-11-05: `vsphere/object-types/cluster/metrics/cluster-performance`, section vMotion is not part of the KPI; `cluster-risk`, section Not used.
+- Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md), section vMotion is not part of the KPI; [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), section Not used.
 
 ### Q031 · Provider Objects > Performance · Cluster KPI table vs text
-- Files: `vsphere/object-types/cluster/metrics/cluster-performance`
+- Files: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md)
 - Search 1: "Storage troubleshooting differs to compute troubleshooting" (disk latency listed as not used)
 - Search 2: "That’s why it’s given 4x the threshold of zipped + swapped" (balloon thresholds)
 - Search 3: "I did not set green = 0"
@@ -295,10 +295,10 @@ To be conservative, I recommend include.
 - Written as now: the table, with text reasons listed and the conflict flagged.
 - Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly.
 Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
-- Done 2026-11-05: `vsphere/object-types/cluster/metrics/cluster-performance` and `cluster-risk` rewritten from the adapter documentation (thresholds, calculation, DRAM-only memory, scoring, Excluded rows, known limitation, missing data); both threshold images replaced with the current tables; shared scoring rule updated in `operations-management/performance/performance-kpi-design`.
+- Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md) and [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md) rewritten from the adapter documentation (thresholds, calculation, DRAM-only memory, scoring, Excluded rows, known limitation, missing data); both threshold images replaced with the current tables; shared scoring rule updated in [Performance KPI design: VM Performance (%) and Guest OS Performance (%)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md).
 
 ### Q032 · Provider Objects > Other Metrics · Monster VM threshold
-- Files: `vsphere/object-types/cluster/metrics/cluster-risk`, `vsphere/object-types/cluster/concepts/cluster-operations`
+- Files: [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), [vSphere cluster: operations complexity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md)
 - Search 1 (Overview): "If a VM vCPU > 45% of the ESXi count of threads"
 - Search 2 (Monster VM): "if a VM vCPU size is > 40% of the ESXi count of threads"
 - Search 3 (Cluster Risk): "the VM size needs to be at least half the ESXi"
@@ -306,10 +306,10 @@ Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahab
 - Question: which CPU threshold defines a monster VM?
 - Written as now: the recommendation (above 50% of physical cores); the others flagged.
 - Answer: The final and up to date answer at https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md#when-a-vm-is-a-monster  Update the
-- Done 2026-11-05: `vsphere/object-types/cluster/metrics/cluster-risk`, section Monster VM; `cluster-operations` Monster VM row; `knowledge/catalog/thresholds.yaml` rows monster-vm-cpu and monster-vm-memory.
+- Done 2026-11-05: [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), section Monster VM; [vSphere cluster: operations complexity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md) Monster VM row; [knowledge/catalog/thresholds.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds.yaml) rows monster-vm-cpu and monster-vm-memory.
 
 ### Q024 · Chapter 5 Network > Architecture · VM and ingress
-- Files: `vsphere/technology/network/concepts/network-observability`
+- Files: [Network layers and observability](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/concepts/network-observability.md)
 - Search: "That’s why a VM does not have ingress traffic"
 - Question: if moving further inside is ingress, traffic arriving at a VM looks like ingress. What does "a VM does not have ingress traffic" mean? That VM metrics use receive/transmit instead?
 - Written as now: definitions only; the VM statement is flagged.
@@ -332,21 +332,21 @@ flowchart LR
     L2 --> L3
 
 ### Q025 · Chapter 5 Network > VM · Dropped packet volume
-- Files: `vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`
+- Files: [VM Network Packets Dropped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md)
 - Search: "1 thousand packets dropped = 1500 MB worth of packets within 300 seconds"
 - Question: 1,000 × 1.5 KB = 1.5 MB. Should it be 1 million packets = 1,500 MB, or 1,000 packets = 1.5 MB?
 - Written as now: flagged, no number stated.
 - Answer: 1.5 MB. Book was wrong.
 
 ### Q026 · Consumer Objects > Performance · Compressed + Swapped threshold
-- Files: `vsphere/object-types/vm/metrics/vm-performance`
+- Files: [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/vm/metrics/vm-performance.md)
 - Search: "their threshold is 2x of memory contention"
 - Question: the table gives Compressed + Swapped green at 0-0.25%, half of Memory Contention (0-0.5%), not 2x. Which is intended?
 - Written as now: the table values, with the conflict flagged.
 - Answer: Swapped and Compressed are combined as they are the result of the same action. Together they tell the complete picture. As they may not indicate actual problem, their threshold is higher. However, since we measure at 5 minute sample, while memory contention is measured at 20 second, I adjust the threshold.
 
 ### Q019 · Chapter 3 Memory > ESXi · Swap Consumed formula
-- Files: `vsphere/technology/memory/metrics/host/swap-used`
+- Files: [ESXi Memory Swap Used](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/host/swap-used.md)
 - Search 1 (ESXi): "I think this is swapped out – swapped in"
 - Search 2 (VM): "This is why Swapped is not Swapped In – Swapped Out"
 - Question: is host Swap Consumed equal to swapped out minus swapped in?
@@ -354,7 +354,7 @@ flowchart LR
 - Answer: Search 1 is wrong. Search 2 is correct.
 
 ### Q021 · Chapter 3 Memory > ESXi · Utilization formula
-- Files: `vsphere/technology/memory/metrics/host/utilization`
+- Files: [ESXi Memory Utilization (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md)
 - Search 1: "the sum of running VM Utilization metrics + the kernel reservation"
 - Search 2: "Utilization. Machine Demand + ESX System Usage"
 - Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
@@ -362,12 +362,12 @@ flowchart LR
 - Answer: They are the same thing. See my book for Reservation. The metric name is Memory \ ESX System Usage (KB). It is a raw counter from vCenter. Just in case you’re wondering, the name ESX System Usage is a legacy name.
 
 ### Q022 · Chapter 4 Storage > Architecture · IP storage read and network direction
-- Files: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`
+- Files: [VM Disk Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md)
 - Search: "Read and Write are both mapped to Transmit counter"
 - Question: for a read, the data returns to ESXi as received traffic. Do reads show mostly as Receive (data) with only the command on Transmit?
 - Written as now: both map to Transmit, as in the book.
 - Answer: book was wrong. Answer is If you are using IP storage, take note that Read and Write in storage do not map 1:1 to Transmit (Tx) and Receive (Rx) in Networking metrics. This depends on the storage block size (normally 4K or 8K), network packet size (ideally 9000 MTU), and TCP/IP handshakes packets. Get detail from https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit?usp=sharing and add it accordingly.
-- Done 2026-11-04: `vsphere/technology/storage/concepts/ip-storage-network-accounting` (from the linked note); disk-latency corrected, with a `corrections` entry until the book is updated.
+- Done 2026-11-04: [IP storage: storage counters vs network counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/concepts/ip-storage-network-accounting.md) (from the linked note); disk-latency corrected, with a `corrections` entry until the book is updated.
 
 ### Q039 · Auto Test > Golden case vendor-neutral-general-001 · Hyperscaler cost not in the knowledge base
 - Files: `benchmark/questions/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`
@@ -376,7 +376,7 @@ flowchart LR
 - Written as now: the knowledge base has no cost content. In knowledge-base modes every model chose "Not covered" (frontier: 10 of 10 runs). Baseline frontier: correct 5 of 5.
 - Answer: remove the case. Cost and price management is out of scope: the knowledge base is about performance troubleshooting (author, 2026-11-04). Case deleted; its id is not reused.
 ### Q001 · Chapter 2 CPU > VM · Linux Steal Time
-- Files: `vsphere/technology/cpu/metrics/virtual-motherboard/overlap`, `vsphere/technology/cpu/metrics/virtual-motherboard/latency`
+- Files: [VM CPU Overlap](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/overlap.md), [VM CPU Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md)
 - Search 1 (Chapter 1): "Steal Time in Linux only includes CPU Ready"
 - Search 2 (CPU > VM > Overlap): "Linux Guest OS tracks this as Stolen time"
 - Question: does Linux Steal Time include Ready only, Overlap only, or both?
@@ -384,7 +384,7 @@ flowchart LR
 - Answer: CPU Ready only. Because ESXi accounts for Overlap as active CPU Run time rather than wait time, it bypasses the hypervisor steal-time accumulator. The hypervisor does not report this interrupted time to the guest OS as stolen. The Linux OS Steal Time metric remains completely blind to vCPU Overlap. This ESXi accounting behavior necessitates the VCF Operations Net Run = Run - Overlap metric to determine actual execution time.
 
 ### Q002 · Chapter 2 CPU > VM · System charged to vCPU 0
-- Files: `vsphere/technology/cpu/metrics/virtual-motherboard/system`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`
+- Files: [VM CPU System](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/system.md), [VM CPU Used](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md)
 - Search 1: "this is charged to the VM CPU 0"
 - Search 2 (diagram text): "Charged at VM level, not at vCPU 1"
 - Question: is System charged to vCPU 0 or to the VM level only? Chapter 1 says per-vCPU Used excludes System.
@@ -392,7 +392,7 @@ flowchart LR
 - Answer: Charged at VM level, not vCPU 0 or 1. This results in Total VM cost > sum of all vCPU. This is not a problem for CPU scheduling. It’s just the way the kernel does the CPU accounting. 
 
 ### Q003 · Chapter 2 CPU > VM · Run for sizing
-- Files: `vsphere/technology/cpu/metrics/virtual-motherboard/run`, `vsphere/technology/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test`
+- Files: [VM CPU Run](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/run.md), [Controlled test: VM and ESXi CPU metrics under Hyper-Threading](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test.md)
 - Search 1: "suitable as input to size the Guest OS and not the VM"
 - Search 2: "This counter is suitable for VM Capacity sizing"
 - Question: is Run for Guest OS sizing, VM sizing, or both?
@@ -400,14 +400,14 @@ flowchart LR
 - Answer: Guest OS. I've updated my document.
 
 ### Q004 · Chapter 2 CPU > VM · Contention formula condition
-- Files: `vsphere/technology/cpu/metrics/virtual-motherboard/contention`
+- Files: [VM CPU Contention (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/contention.md)
 - Search: "Other Wait (if less than 1%)"
 - Question: what does the condition mean?
 - Written as now: formula copied as is.
 - Answer: The condition of < 1% is added to ensure no false positive. See https://knowledge.broadcom.com/external/article/338438/increased-vmwait-for-idle-vms-after-upgr.html
 
 ### Q005 · Chapter 2 CPU > VM · Contention and limit
-- Files: `vsphere/technology/cpu/metrics/virtual-motherboard/contention`, `vsphere/technology/cpu/metrics/virtual-motherboard/latency`
+- Files: [VM CPU Contention (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/contention.md), [VM CPU Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md)
 - Search 1: "Unlike CPU Ready, it does not account for Limit"
 - Search 2: "Why does the counter include Ready by Limit?"
 - Question: is the first statement about the pre-July-2024 Contention, which mapped to Latency?
@@ -415,14 +415,14 @@ flowchart LR
 - Answer: This is VCF Operations counter, not vSphere. vSphere does not have counter. vSphere has CPU Latency, also known as %LAT_C in esxtop. The formula for CPU Contention changed in VCF Operations 8.18
 
 ### Q006 · Chapter 2 CPU > VM · Used above Run
-- Files: `vsphere/technology/cpu/diagnosis/run-vs-used-gap`
+- Files: [VM CPU Run and Used differ](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/diagnosis/run-vs-used-gap.md)
 - Search: "Why is Used consistently 41% higher than Run?"
 - Question: how does Ready make Used higher than Run?
 - Written as now: the book's answer (Ready), without explanation.
 - Answer: Book was wrong. Answer is CPU frequency. The VM run at a higher clock speed due to turbo boost.
 
 ### Q007 · Chapter 2 CPU > VM · Ready and VM size
-- Files: `vsphere/technology/cpu/metrics/virtual-motherboard/ready`, `vsphere/technology/cpu/concepts/vcpu-states`
+- Files: [VM CPU Ready](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md), [States of a VM vCPU](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/vcpu-states.md)
 - Search 1 (VM): "CPU Ready tends to be higher, ceteris paribus, in larger VMs"
 - Search 2 (Architecture): "You can reduce Co-stop by reducing the VM size"
 - Question: does downsizing reduce Ready too, or only Co-stop?
@@ -430,14 +430,14 @@ flowchart LR
 - Answer: It should reduce both, as the VM can be slot more easily. On the other than, having smaller share can increase CPU Ready.
 
 ### Q008 · Chapter 2 CPU > VM · Ramp test
-- Files: `vsphere/technology/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test`
+- Files: [Controlled test: VM and ESXi CPU metrics under Hyper-Threading](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test.md)
 - Search: "ESXi CPU Core Utilization (%) matches VM Run. Both went 2x."
 - Question: Core Utilization stayed at 100%. Should this read Utilization (%)?
 - Written as now: Utilization (%).
 - Answer: Correct. Make it clearer by using Thread Utilization instead of just Utilization.
 
 ### Q009 · Chapter 2 CPU > ESXi · Demand: provider or consumer
-- Files: `vsphere/technology/cpu/metrics/host/demand`
+- Files: [ESXi CPU Demand](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md)
 - Search 1: "Demand is consumer-view, while Usage is provider view"
 - Search 2: "The value you see at ESXi is the summation of all the VMs"
 - Question: your correction (2026-11-02) says ESXi Demand is a provider metric. Which holds?
@@ -447,28 +447,28 @@ flowchart LR
 •	Sum of Consumer metric. This metric aggregates the metric of consumers. For example, the sum of VM network in the ESXi.
 
 ### Q010 · Chapter 2 CPU > ESXi · Usage cap
-- Files: `vsphere/technology/cpu/metrics/host/usage`
+- Files: [ESXi CPU Usage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md)
 - Search: "Usage no longer capped at 100% of total capacity at the nominal frequency"
 - Question: your correction says capped at 100% (KB pending). Is the cap only in vCenter, removed in VCF Operations since Aria Operations 8.18?
 - Written as now: vCenter capped; VCF Operations not capped since 8.18.
 - Answer: Cap have been removed in both. Add the KBs https://knowledge.broadcom.com/external/article/417702/esxi-host-reporting-over-100-cpu-usage.html and https://knowledge.broadcom.com/external/article/431027/esxi-host-cpu-usage-appears-high-in-vcen.html
 
 ### Q011 · Chapter 2 CPU > ESXi · CPU Imbalance
-- Files: `vsphere/technology/cpu/metrics/host/imbalance`
+- Files: [ESXi CPU Imbalance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/imbalance.md)
 - Search: "ESXi CPU Imbalance = Count of Running Threads / Count of Running Cores"
 - Question: built-in VCF Operations metric, or your own?
 - Written as now: product tagged vsphere and vcf-operations, flagged.
 - Answer: my own metric, not built-in. Add reference to https://github.com/e1-rahabok/VCF-vCommunity-Adapter/tree/main/docs/reference/metrics
 
 ### Q012 · Chapter 3 Memory > Architecture · 3 levels
-- Files: `vsphere/technology/memory/concepts/memory-layers`
+- Files: [Memory layers and page mapping](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md)
 - Search: "ESXi uses 3 levels to manage memory"
 - Question: the list after it has 4 items (TPS, Tiered Memory, Balloon, Compress/Swap). Which are the 3 levels?
 - Written as now: 4 mechanisms listed, no level count.
 - Answer: 4 level. Book corrected.
 
 ### Q013 · Chapter 3 Memory > Architecture · Balloon and unmet demand
-- Files: `vsphere/technology/memory/concepts/memory-layers`, `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`
+- Files: [Memory layers and page mapping](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md), [VM Memory Ballooned](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md)
 - Search: "The first sign of unmet demand"
 - Question: the next sentences say ballooning does not mean ESXi is unable to meet demand. Is balloon a sign of memory pressure rather than unmet demand?
 - Written as now: proactive, not unmet demand.
@@ -476,7 +476,7 @@ flowchart LR
 - Applied 2026-11-03.
 
 ### Q014 · Chapter 3 Memory > VM · Limit and balloon
-- Files: `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`, `vsphere/technology/memory/concepts/ballooning`
+- Files: [VM Memory Ballooned](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md), [Ballooning](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md)
 - Search 1: "Does limit result in Balloon?" (the book answers no)
 - Search 2: "heavily ballooned as limit was imposed on it"
 - Search 3: "Since the VM needed more, it experienced heavy ballooning"
@@ -487,7 +487,7 @@ flowchart LR
 - Answer: The answer is not directly. Why an in-between answer? Go back to the 4 layers of memory. They are at different level on memory management. Limit results in swapped or compressed is Consumed tries to grow beyond. Consumed grows because Guest OS uses more. These uses can come from balloon driver or other processes.
 
 ### Q015 · Chapter 3 Memory > VM · Memory Latency: space or time
-- Files: `vsphere/technology/memory/metrics/virtual-motherboard/latency`, `vsphere/technology/memory/concepts/memory-as-storage`
+- Files: [VM Memory Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md), [Memory as storage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-as-storage.md)
 - Search 1 (Architecture): "percentage of memory space"
 - Search 2 (VM): "the amount of time a vCPU spends waiting on the completion of a page fault"
 - Question: is Memory Latency a share of space or a share of time?
@@ -495,7 +495,7 @@ flowchart LR
 - Answer: Search 1 is wrong. Book updated. The correct answer is Search 2. Memory Latency, aka "Page-fault latency" is tracking the amount of time a vCPU spends waiting on the completion of a page fault. Its value is mostly swap wait, with a bit of page decompression / copy-on-write-break. The counter is called %LAT_M in esxtop. The latency metric is highly corelated with the swap-in rate.
 
 ### Q016 · Chapter 3 Memory > VM · Meaning of Compressed and Swapped
-- Files: `vsphere/technology/memory/metrics/virtual-motherboard/swapped`, `vsphere/technology/memory/concepts/memory-layers`
+- Files: [VM Memory Swapped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/swapped.md), [Memory layers and page mapping](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md)
 - Search 1 (VM): "indicates that the host is unable to satisfy the VM memory requirement"
 - Search 2 (Architecture): "It does not mean VMs were contending for RAM"
 - Question: which holds?
@@ -503,34 +503,34 @@ flowchart LR
 - Answer: VM compressed happens when ESXi Consumed is very high or a particular VM hit its limit. That Consumed page of a VM can contain a lot of cache, so it does not always translate to VM hitting latency.
 
 ### Q017 · Chapter 3 Memory > VM · Sharing savings
-- Files: `vsphere/technology/memory/metrics/virtual-motherboard/shared`, `vsphere/technology/memory/metrics/virtual-motherboard/consumed`
+- Files: [VM Memory Shared](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/shared.md), [VM Memory Consumed](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/consumed.md)
 - Search: "Savings = 29.83 TB"
 - Question: Consumed = Granted - Savings gives 23.7 TB of savings, not 6.13 TB. Which is right?
 - Written as now: the book's calculation, flagged.
 - Answer:
 
 ### Q018 · Chapter 3 Memory > VM · Utilization 5%
-- Files: `vsphere/technology/memory/metrics/virtual-motherboard/utilization`
+- Files: [VM Memory Utilization (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/utilization.md)
 - Search: "We add 5% of Total, not Used"
 - Question: where does the 5% enter the formula?
 - Written as now: formula and the 5% statement, flagged.
 - Answer:
 
 ### Q034 · Quiz > CPU > Q2 VM CPU Speed · 80% vs 62.5% Hyper-Threading charge
-- Files: [Likely vCPU speed on a busy Hyper-Threaded cluster](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-04-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md), `vsphere/technology/cpu/metrics/virtual-motherboard/usage`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`
+- Files: [Likely vCPU speed on a busy Hyper-Threaded cluster](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-04-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md), [VM CPU Usage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/usage.md), [VM CPU Used](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md)
 - Search 1 (quiz key): "3.0 (All Cores Turbo) x 80% (as HT delivers 1.25x total)"
 - Search 2 (book): "37.5%"
 - Question: the quiz key gives 3.0 GHz x 80% = 2.4 GHz. The knowledge base charges each thread 62.5% when both threads run, which gives 1.875 GHz. Which factor does VM CPU Usage apply?
 - Written as now: case uses the key (2.4 GHz), flagged in Notes. KB unchanged.
-- Answer: Author (2026-11-03): the key is correct (2.4 GHz). Added All-Core Turbo knowledge to `vsphere/technology/cpu/concepts/cpu-frequency`.
+- Answer: Author (2026-11-03): the key is correct (2.4 GHz). Added All-Core Turbo knowledge to [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md).
 
 ### Q035 · Quiz > CPU > Q6 VM CPU Contention · Demand and Hyper-Threading
-- Files: [Counters where a vCPU cannot run at all](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-03-counters-where-a-vcpu-cannot-run-at-all.md), `vsphere/technology/cpu/metrics/virtual-motherboard/demand`
+- Files: [Counters where a vCPU cannot run at all](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-03-counters-where-a-vcpu-cannot-run-at-all.md), [VM CPU Demand](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md)
 - Search 1 (quiz key): "G is wrong as Demand is affected by hyper threading"
 - Search 2 (book, MS Windows table): "| VM CPU Demand   | Yes               | No             | Yes           |"
 - Question: the key says Demand is affected by Hyper-Threading. The MS Windows table marks Demand as not affected. Which is right?
 - Written as now: case keeps the key's answer (G wrong); reason flagged.
-- Answer: Author (2026-11-03): the key is correct. Guest OS and VM are 2 realms; the Guest OS does not see physical threads. Added to `vsphere/foundations/vm-vs-guest-os`, `vsphere/technology/cpu/metrics/virtual-motherboard/demand`, `vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`.
+- Answer: Author (2026-11-03): the key is correct. Guest OS and VM are 2 realms; the Guest OS does not see physical threads. Added to [VM vs Guest OS: two realms and their visibility layers](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md), [VM CPU Demand](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md), [Guest OS CPU vs VM CPU](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md).
 
 ### Q036 · Quiz > CPU > Q7 Guest OS CPU · Is F correct?
 - Files: [Guest OS run queue, context switch, Windows thread states](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-04-guest-os-run-queue-context-switch-windows-thread-states.md)
