@@ -3,10 +3,9 @@ gateway: https://ai-gateway.vercel.sh/v1   # API key from env AI_GATEWAY_API_KEY
 
 models:                       # candidates; all must read screenshots (vision). List and reasons: benchmark/models.md
   - google/gemma-4-31b-it
-  - google/gemma-4-26b-a4b-it
   - mistral/mistral-small
   - alibaba/qwen3.8-27b
-  - alibaba/qwen3.6-27b
+  - meta/muse-glimmer-30b       # added 2026-11-05: 29.8B, vision, Apache 2.0 (Hugging Face meta-models/Muse-Glimmer-30B)
 
 # Grades free-text and compound answers 0-3 (benchmark/runner/judge.py). Never a candidate.
 # Other vendor than the frontier reference (anthropic/claude-opus-5.5), so no model grades its own family.
