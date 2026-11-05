@@ -26,12 +26,10 @@ B (equal values read as one thread per core).
 ```yaml
 id: vsphere-cpu-012
 title: "Utilization 50% and Core Utilization 50%"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/technology/cpu/metrics/host/utilization
   - vsphere/technology/cpu/metrics/host/core-utilization

@@ -29,12 +29,10 @@ A (reclamation order read as a current-state rule) or D.
 ```yaml
 id: vsphere-memory-006
 title: "Balloon 0 while Swapped and Compressed are not 0"
-scope: vsphere
 product: [vsphere]
 technology: [memory]
-area: memory
 input: [text]
-tests: troubleshooting
+task: troubleshoot
 knowledge:
   - vsphere/technology/memory/metrics/host/ballooned
   - vsphere/technology/memory/metrics/host/swap-used

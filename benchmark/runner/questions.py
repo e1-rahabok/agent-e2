@@ -36,7 +36,8 @@ class Question:
         self.path = path
         self.meta = yaml.safe_load(fm)
         self.id = self.meta['id']
-        self.area = self.meta.get('area', '')
+        self.technology = list(self.meta.get('technology') or [])
+        self.task = self.meta.get('task', '')
         self.level = self.meta.get('level', '')
         self.answer_type = self.meta.get('answer_type', 'judged')
         self.answer = [str(a) for a in (self.meta.get('answer') or [])]

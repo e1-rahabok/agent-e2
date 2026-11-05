@@ -26,24 +26,20 @@
 
 ## Metadata
 ```yaml
-id: question-<nnnn>                    # e.g. question-0031. Never reuse an id.
+id: question-<nnnn>               # never reused; tag meanings and values: benchmark/README.md, section Question fields
 title: <short title>
-scope: vsphere                    # vendor-neutral | vsphere | nsx | vsan
-product: [vsphere]                # every product touched: vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
-technology: [cpu]                 # every area touched: cpu | memory | storage | network | system
-pillar: [performance]             # optional: performance | capacity | availability | security | value
-area: cpu                         # main area for the report: cpu | memory | storage | network | system | operations-management
-input: text                       # text | screenshot | diagram | log | mixed
-tests: distinction                # concept | distinction | judgment | troubleshooting
-knowledge:                        # knowledge ids the answer should draw on (retrieval check)
+product: [vsphere]                # vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
+technology: [cpu]                 # cpu | memory | storage | network | system
+task: read-metric                 # read-metric | troubleshoot | decide-capacity | explain-mechanism | judge-setting
+level: 400                        # 100 | 200 | 300 | 400
+answer_type: deterministic        # deterministic | judged
+input: [text]                     # text | table | screenshot; from the attachments
+knowledge:                        # knowledge ids the answer depends on
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments: []                   # paths relative to benchmark/questions/, e.g. <id>/<file>.png
-origin: book                      # book | quiz | live-lab | real-ticket | synthetic
+origin: book                      # book | quiz | real-ticket | synthetic
 source_path: "<heading path in the source document>"
-answer_type: deterministic        # deterministic (option letters) | judged (free text, scored by the judge)
-level: 400                        # 100 | 200 | 300 | 400 (benchmark/design.md, section 3.2)
-input: [text]                     # text | table | screenshot; from the attachments (lint checks)
-answer: [B]                       # correct letters (multiple-choice only)
-trap: [A]                         # trap letters (multiple-choice only)
+answer: [B]                       # deterministic only
+trap: [A]                         # deterministic only
 status: draft                     # draft | reviewed | retired
 ```

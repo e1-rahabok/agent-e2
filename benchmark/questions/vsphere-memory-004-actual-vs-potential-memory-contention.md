@@ -26,12 +26,10 @@ A or B (balloon, swap or compression read as slowness).
 ```yaml
 id: vsphere-memory-004
 title: "Actual vs potential memory contention"
-scope: vsphere
 product: [vsphere]
 technology: [memory]
-area: memory
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
   - vsphere/technology/memory/metrics/virtual-motherboard/ballooned

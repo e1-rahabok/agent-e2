@@ -24,12 +24,10 @@ Is the host running out of memory?
 ```yaml
 id: vsphere-memory-001
 title: "Memory usage: VM vs ESXi"
-scope: vsphere
 product: [vsphere]
 technology: [memory]
-area: memory
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/technology/memory/metrics/host/usage

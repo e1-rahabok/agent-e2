@@ -23,12 +23,10 @@ For each, is it a provider metric or a sum of the VMs' metrics? Can a physical c
 ```yaml
 id: vsphere-foundations-003
 title: "Provider vs consumer metrics"
-scope: vsphere
 product: [vsphere]
 technology: [system]
-area: foundations
 input: [text]
-tests: concept
+task: read-metric
 knowledge:
   - vsphere/foundations/provider-consumer
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready

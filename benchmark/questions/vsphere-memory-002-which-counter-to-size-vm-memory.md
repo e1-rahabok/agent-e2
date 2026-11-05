@@ -28,12 +28,10 @@ A or B (VM-level counters), or D (mixing VM and Guest OS realms).
 ```yaml
 id: vsphere-memory-002
 title: "Which counter to size VM memory"
-scope: vsphere
 product: [vsphere, windows]
 technology: [memory]
-area: memory
 input: [text]
-tests: distinction
+task: decide-capacity
 knowledge:
   - guest-os/system/concepts/guest-os-sizing
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory

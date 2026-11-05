@@ -22,12 +22,10 @@ Is each VM only getting 62.5% of what it demands? What does the host report for 
 ```yaml
 id: vsphere-cpu-003
 title: "Hyper-Threading and two vantage points"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
   - vsphere/technology/cpu/metrics/host/usage

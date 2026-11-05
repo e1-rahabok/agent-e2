@@ -145,6 +145,16 @@ def main():
                 for x in v:
                     if x not in allowed[k]: bad(f, f'{k} "{x}" not allowed')
         if os.path.dirname(f) != 'benchmark/questions': bad(f, 'questions live in one flat folder: benchmark/questions/')
+        for k in ('scope', 'area', 'tests', 'pillar', 'format', 'input_type'):
+            if k in (fm or {}): bad(f, f'tag "{k}" is no longer used (benchmark/README.md, section Tags removed)')
+        if (fm or {}).get('task') not in ('read-metric', 'troubleshoot', 'decide-capacity', 'explain-mechanism', 'judge-setting'):
+            bad(f, 'task must be read-metric, troubleshoot, decide-capacity, explain-mechanism or judge-setting (benchmark/design.md, section 3.1)')
+        if (fm or {}).get('origin') not in ('book', 'quiz', 'real-ticket', 'synthetic'):
+            bad(f, 'origin must be book, quiz, real-ticket or synthetic')
+        if (fm or {}).get('status') not in ('draft', 'reviewed', 'retired'):
+            bad(f, 'status must be draft, reviewed or retired')
+        if not (fm or {}).get('knowledge'):
+            bad(f, 'knowledge must list at least one knowledge id')
         at = (fm or {}).get('answer_type')
         if at not in ('deterministic', 'judged'):
             bad(f, f'answer_type "{at}" must be deterministic or judged (benchmark/design.md, section 3.3)')

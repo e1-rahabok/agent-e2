@@ -29,13 +29,10 @@ Rejecting A (100% utilization seen as a performance problem) or C.
 ```yaml
 id: vsphere-general-001
 title: "Performance vs capacity view of utilization"
-scope: vsphere
 product: [vsphere]
 technology: [system]
-pillar: [performance, capacity]
-area: operations-management
 input: [text]
-tests: concept
+task: explain-mechanism
 knowledge:
   - operations-management/capacity/capacity-model
   - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention

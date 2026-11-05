@@ -29,12 +29,10 @@ B (vCPU x GHz counted as freed capacity) or E (IO assumed to cost no CPU).
 ```yaml
 id: vsphere-cpu-013
 title: "Reclaiming vCPUs from an idle VM"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [text]
-tests: judgment
+task: decide-capacity
 knowledge:
   - operations-management/capacity/rightsizing
   - vsphere/technology/cpu/diagnosis/oversized-vm-downsizing

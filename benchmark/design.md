@@ -135,7 +135,7 @@ Level against input type (questions that include it):
 - Judged questions sit mostly at Level 400: that is where troubleshooting is open-ended, as it is for a real administrator.
 - Tables and screenshots sit mostly at Level 400: reading evidence and combining it is the expert's work. At least 5 Level 400 questions combine a table and a screenshot.
 - The 5 tasks (section 3.1) and 5 areas (section 3.5) are spread across every row.
-- Proposal for author review: Q054 in `project/author-questions.md`.
+- Decided by the author (Q054, 2026-11-05).
 
 ### 3.7 Coverage constraints
 | Constraint | Minimum |
@@ -150,7 +150,7 @@ Level against input type (questions that include it):
 | Screenshot questions per source: esxtop, vCenter UI, VCF Operations UI | 5 each |
 | Table questions with at least 100 rows | 5 |
 
-- Every question records what it covers in its metadata (`level`, `answer_type`, `input`, `technology`, `tests`, `knowledge`; `trap_type` to be added), so coverage is counted by a script, not by eye.
+- Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `trap_type` to be added; tags: `benchmark/README.md`, section Metadata tags), so coverage is counted by a script, not by eye.
 
 ### 3.8 Answer-key shape (deterministic)
 - Options: 4-8 written options, plus Unsure appended to every question. No Not covered option since 2026-11-05 (Q038).
@@ -319,7 +319,7 @@ For the set:
 - Reading screenshots is a basic requirement. A model without vision is not a candidate (`benchmark/models.md`). There is no text-only track.
 - A screenshot question can be deterministic or judged. It carries all its images in `attachments`; every image is sent with the same prompt.
 - Coverage: section 3.7 (5 questions per source).
-- Sample size: the sub-score margin at 85% is about ±22 points with 10 questions, ±16 with 20, ±13 with 30. 25 is the proposal (section 3.6); 30 is needed before the sub-score alone decides between two models.
+- Sample size: the sub-score margin at 85% is about ±22 points with 10 questions, ±16 with 20, ±13 with 30. 25 is the allocation (section 3.6); 30 is needed before the sub-score alone decides between two models.
 - The prompt states the problem in words. The images supply the values.
 - Images: author screenshots with host and customer names masked before commit.
 

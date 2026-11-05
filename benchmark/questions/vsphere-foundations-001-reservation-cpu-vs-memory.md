@@ -20,12 +20,10 @@ What do its Memory Consumed and CPU usage metrics show?
 ```yaml
 id: vsphere-foundations-001
 title: "Memory reservation vs CPU reservation"
-scope: vsphere
 product: [vsphere]
 technology: [system]
-area: foundations
 input: [text]
-tests: concept
+task: judge-setting
 knowledge:
   - vsphere/foundations/resource-controls
 attachments: []

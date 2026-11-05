@@ -23,12 +23,10 @@ Is the VM now suffering CPU contention?
 ```yaml
 id: vsphere-cpu-002
 title: "CPU Latency without contention"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/latency
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
