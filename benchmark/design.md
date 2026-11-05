@@ -149,6 +149,7 @@ Level against input type (questions that include it):
 | Questions that follow a troubleshooting flow (a `diagnosis/` file) in order | 10 |
 | Screenshot questions per source: esxtop, vCenter UI, VCF Operations UI | 5 each |
 | Table questions with at least 100 rows | 5 |
+| Long, complex questions: many screenshots and tables, many key points, as close as one prompt gets to a long troubleshooting discussion (author, 2026-11-05) | 1 |
 
 - Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `trap_type` to be added; tags: `benchmark/README.md`, section Metadata tags), so coverage is counted by a script, not by eye.
 
@@ -339,7 +340,8 @@ For the set:
   - each bullet is one fact a correct answer must state, in any words, in any order;
   - the candidate never sees it; the open-answer prompt asks for the conclusion, the mechanism and reason, and what to check next, in at most 250 words;
   - a full answer covers every key point. Four key points take about 3-6 sentences (80-150 words), the length an expert gives a colleague;
-  - write 2-5 key points per question. The first states the conclusion; the next ones the reason; the last what to check next. More than 5 means the question asks too much at once: split it;
+  - order: the conclusion first, then the reason, then what to check next;
+  - as many key points as the question takes. Most questions take 2-5. A long, complex question can take many more (author, 2026-11-05: real troubleshooting runs long, over a dozen screenshots). The 250-word limit of the open-answer prompt is too short for it: a per-question answer length is a to-do;
   - a key point that is only nice to know is not a key point: it goes in `## Notes`.
 - Example (`vsphere-cpu-002`): a full answer reads like: No. Ready and Co-stop are flat, so the VM is not waiting for a physical CPU. CPU Latency rose because the BIOS power policy lowered the clock speed: the VM runs slower, as on an older CPU. Unlike Disk or Memory Latency, CPU Latency does not always mean a performance problem. Check the power policy and the frequency.
 - Rubric:

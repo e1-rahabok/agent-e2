@@ -124,6 +124,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Write the long, complex question (`benchmark/design.md`, section 3.7): many screenshots and tables, many key points. Add a per-question answer length to the runner (the open-answer prompt caps answers at 250 words).
 - [ ] Table input: a harness table tool (load Excel or CSV, list columns, filter, sort, aggregate, top-N), table attachments in the runner, and the export formats with their traps (`benchmark/design.md`, section 13.1).
 - [ ] Write Level 100 and 200 questions (0 of 10 and 0 of 15 today) and table questions (0 of 15).
 - [ ] Split `vsphere-cpu-006` (two hosts, letters per host) into one deterministic question per host.
