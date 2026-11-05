@@ -10,6 +10,10 @@ Which of the counters in the chart measure latency? Choose all that apply.
 - C. Read rate
 - D. Write rate
 
+
+## Screenshot
+![vCenter advanced chart of one VM, Virtual disk: read and write latency (ms), read and write rate (KBps)](34/vcenter-vm-virtual-disk-chart.png)
+
 ## Input to supply
 - Tool: vCenter (vSphere Client 9.1).
 - Where: one VM > Monitor > Performance > Advanced > Chart Options > Virtual disk.

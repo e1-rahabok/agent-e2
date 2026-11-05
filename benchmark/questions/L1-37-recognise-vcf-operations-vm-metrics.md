@@ -10,6 +10,10 @@ Which tool shows it, and for which object type?
 - C. esxtop, an ESXi host
 - D. VCF Operations, an ESXi host
 
+
+## Screenshot
+![VCF Operations Metrics tab of a VM: metric tree with CPU, Guest, Memory, Virtual Disk groups](37/vcf-operations-vm-metrics-tab.png)
+
 ## Input to supply
 - Tool: VCF Operations 9.1.
 - Where: one VM > Metrics tab, metric tree expanded at the top level.

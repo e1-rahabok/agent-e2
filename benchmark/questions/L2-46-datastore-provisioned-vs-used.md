@@ -11,6 +11,10 @@ Is DS01 out of space already, meaning you cannot provision new VM? Choose all th
 - C. Provisioned space counts thin disks at their configured size, so DS01 is overcommitted: it fills if the thin disks grow.
 - D. Provisioned space is the right capacity metric for a datastore.
 
+
+## Attachments
+- Table: [datastore-ds01-vm-disk-space.csv](46/datastore-ds01-vm-disk-space.csv)
+
 ## Input to supply
 - Tool: VCF Operations 9.1, a list view or report of the VMs on one datastore, exported to CSV or Excel.
 - Rows: every VM on one datastore named DS01 (rename it if needed; mask the VM names). Supplied: 29 VMs and a Summary row.
