@@ -132,6 +132,17 @@ Each entry has:
 - Written as now: CPU reservation is on demand; the CPU counters stay at or near 0 while the VM sits at the BIOS screen.
 - Answer:
 
+### Q058 · Benchmark · Synthetic share and review of question-0054 to question-0090
+- Files: https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (question-0054 to question-0090); `benchmark/design.md` (section 10, synthetic cap; section 12, status).
+- Search: not from the book.
+- Context: the Level 400 allocation (37 questions) is now drafted by Claude from the knowledge base. Synthetic questions are 63 of 90 (70%), against the cap of about 30% in section 10.
+- Question:
+  1. Keep the cap? If yes, which synthetic questions should be replaced by book, quiz or real-ticket questions, or should the cap rise?
+  2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
+  3. question-0079, 0080, 0088, 0089: the key names rows of the table you supply. Record the names in each question's Notes.
+- Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
+- Answer:
+
 ## Resolved
 
 ### Q056 · Benchmark · Level of each existing question
