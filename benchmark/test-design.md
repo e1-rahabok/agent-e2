@@ -268,7 +268,7 @@ For the set:
 - Judge rules (in its prompt): judge facts, not style or length; a contradiction of a key point caps the score at 0; the key points are the truth even where general IT practice differs; reward nothing the key points do not contain.
 - Reply: one JSON object (`score`, `trap`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
 - Each run of a case is judged separately. The case credit is the lowest score / 3 (section 7.4).
-- Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See `benchmark/models.md`, section 4.
+- Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See `benchmark/models.md`, section 5.
 - Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `trap`, `unsure`, and the answer text.
 - Checks on the judge:
   - the author reviews every score 0 and every case where runs disagree by 2 or more points;
@@ -296,6 +296,7 @@ For the set:
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
 - Screenshot upload is part of the product. A model whose screenshot sub-score is far below its multiple-choice sub-score (more than the margin) is a vision problem: check the image, then the model.
 - 70B test: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
+- Tier B (about 120B MoE, 96 GB GPU) is kept only if it beats the best tier A model by more than the margin and its override rate is not higher. Reason: `benchmark/models.md`, section 1.
 
 ## 17. Outputs
 - `benchmark/results/results.csv`: one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).

@@ -64,13 +64,25 @@ def final(rows):
                 cw.append(int(v) if v not in ('', None) else int(not int(r['exact']) and not int(r.get('unsure') or 0)))
         n = len(credit)
         f = sum(credit.values()) / n
-        s = {'final': f, 'margin': _margin(f, n), 'cases': n, 'luck': sum(luck) / n, 'confident_wrong': _mean(cw)}
+        s = {'final': f, 'margin': _margin(f, n), 'cases': n, 'luck': sum(luck) / n, 'confident_wrong': _mean(cw),
+             'override': override([r for crs in by_case.values() for r in crs])}
         for k in KINDS:
             xs = [credit[c] for c in credit if kinds[c] == k]
             s[k] = sum(xs) / len(xs) if xs else float('nan')
             s[k + '_n'] = len(xs)
         out[key] = s
     return out
+
+
+def override(rows):
+    """Share of answers that state the trap although every needed knowledge file was in the context.
+
+    The knowledge base gave the correct reading, and the model answered from its own (Level 300) belief instead.
+    Knowledge base modes only; nan when no answer had full retrieval recall.
+    """
+    full = [r for r in rows if r['mode'] != 'baseline' and r.get('retrieval_recall') not in ('', None)
+            and float(r['retrieval_recall']) >= 1]
+    return _mean(int(r.get('trap') or 0) for r in full) if full else float('nan')
 
 
 def aggregate(rows):
@@ -128,15 +140,16 @@ def write(run_dir):
          f' Skipped: {", ".join(cfg["skipped_cases"]) or "none"}. Judge: {cfg.get("judge_model") or "none"}.',
          f'- Answers: {len(all_scored)} scored, {len(all_rows) - len(all_scored)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
          '', '## Final score', '',
-         '| Model | Mode | Final | ± margin | Multiple choice | Screenshot | Conversation | Luck | Confident wrong |',
-         '|---|---|---|---|---|---|---|---|---|']
+         '| Model | Mode | Final | ± margin | Multiple choice | Screenshot | Conversation | Luck | Confident wrong | Override |',
+         '|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
         L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["multiple-choice"])} | '
-                 f'{_pct(s["screenshot"])} | {_pct(s["conversation"])} | {_pct(s["luck"])} | {_pct(s["confident_wrong"])} |')
+                 f'{_pct(s["screenshot"])} | {_pct(s["conversation"])} | {_pct(s["luck"])} | {_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
     L += ['', '- Final: mean case credit over all cases, 0-100%. Every case weighs the same.',
           '- Case credit = the worst of its runs. Multiple choice: 1 if exact in every run, else 0. Free text: lowest judge score / 3.',
           '- Sub-scores: the same mean within one kind. Screenshot = every case with an image, whatever its format. Conversation = free-text and compound cases without images.',
           '- Luck: share of cases whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (free text: judge score 0, not unsure).',
+          '- Override: share of answers in knowledge base modes that state the trap although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
           '- Method: `benchmark/test-design.md`, section 7.4.', '']
     conv = [r for r in all_scored if not _choice(r)]
     if conv:

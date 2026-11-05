@@ -47,6 +47,15 @@ class FinalScoreTest(unittest.TestCase):
         self.assertEqual(report.final(rows)[('m', 'classic')]['final'], 1)
 
 
+class OverrideTest(unittest.TestCase):
+    def test_trap_with_full_recall_counts(self):
+        rows = [{'mode': 'classic', 'retrieval_recall': '1.0', 'trap': '1'},
+                {'mode': 'classic', 'retrieval_recall': '1.0', 'trap': '0'},
+                {'mode': 'classic', 'retrieval_recall': '0.5', 'trap': '1'},   # file missing: not an override
+                {'mode': 'baseline', 'retrieval_recall': '', 'trap': '1'}]     # no knowledge base: not an override
+        self.assertEqual(report.override(rows), 0.5)
+
+
 class CaseKindTest(unittest.TestCase):
     def test_every_case_has_a_kind_and_free_text_has_a_key(self):
         for c in C.load():
