@@ -95,7 +95,7 @@ Related: `solution-design.md` (system design), `design-kb-test-site.md` (test si
 | Area | Requirement |
 |---|---|
 | Dark site | No call outside the customer network to answer, index or update. Offline bundle for updates. |
-| Model | 27-32B open weights, Apache 2.0 or MIT, at least 16K context, runs on one customer GPU VM. Chosen by the benchmark. |
+| Model | Open weights with a commercial licence, vision, at least 32K context, runs on one customer GPU VM (one GPU, at most 96 GB). Chosen by the benchmark (`benchmark/models.md`). |
 | Reproducibility | Every answer stores: question, answer, cited ids, tool trace, index version, prompt version, model, settings. |
 | Accuracy | Release gate: Stable correct at or above the target in `benchmark/test-design.md`, section 1, on the shipped configuration. |
 | Speed | Demo baseline: 6.8 s for a full answer at 81.5 tokens/s (classic mode, local Mac). Agentic mode makes several model calls; measure before setting a target. |

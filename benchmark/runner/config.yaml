@@ -3,9 +3,11 @@ gateway: https://ai-gateway.vercel.sh/v1   # API key from env AI_GATEWAY_API_KEY
 
 models:                       # candidates; all must read screenshots (vision). List and reasons: benchmark/models.md
   - google/gemma-4-31b-it
-  - mistral/mistral-small
+  - mistral/mistral-small         # serves Mistral Small 4: 119B MoE, 6.5B active; tier B
   - alibaba/qwen3.8-27b
   - meta/muse-glimmer-30b       # added 2026-11-05: 29.8B, vision, Apache 2.0 (Hugging Face meta-models/Muse-Glimmer-30B)
+  - inclusionai/ling-3.0-flash-vl # added 2026-11-05: 125B MoE, MIT; tier B (96 GB GPU)
+  - nvidia/nemotron-3.5-super-vl  # added 2026-11-05: 120B MoE, 12B active, OpenMDW 1.1; tier B
 
 # Grades free-text and compound answers 0-3 (benchmark/runner/judge.py). Never a candidate.
 # Other vendor than the frontier reference (anthropic/claude-opus-5.5), so no model grades its own family.

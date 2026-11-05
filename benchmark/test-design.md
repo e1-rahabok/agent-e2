@@ -4,7 +4,7 @@ For human experts who check that the test is valid and complete. Not indexed.
 Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Models and judge: `benchmark/models.md`. Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 
 ## 1. Claim
-- Claim: a local 27-32B open-weight model, with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
+- Claim: a local open-weight model on one GPU (`benchmark/models.md`), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - Release gate: final score at least 85%. Target: 99% (author, 2026-11-03). Final score: section 7.4.
 - The test must:
   1. rank candidate models and answer modes against each other;
