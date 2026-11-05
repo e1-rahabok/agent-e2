@@ -18,7 +18,7 @@ benchmark/
 - One flat folder: a case often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and areas, so folders cannot hold it. The slices are metadata:
   - `product`: every product the case touches (values from `project/tools/tags.yaml`);
   - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/test-design.md`, section 3.1.
-- Existing ids keep their old form (`vsphere-cpu-004`); new cases get neutral ids (`case-0031`).
+- Existing ids keep their old form (`vsphere-cpu-004`); new cases get neutral ids (`case-0031`). An id is an internal key for the runner: the words in an old id (`general`, `foundations`) are not a classification. `area`, `technology` and `pillar` classify the case (author, 2026-11-05).
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per case: scales to hundreds of cases, one diff per case, attachments per case.
 - Ids never change and are never reused. Retired cases get `status: retired`. A case is deleted only when the author asks.
@@ -33,6 +33,8 @@ benchmark/
 | `id` | Never reused. New cases: `case-<nnnn>`. |
 | `product` | Every product the case touches: vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. |
 | `technology` | Every area the case touches: cpu, memory, storage, network, system. |
+| `pillar` | Optional. Pillars of operations the case tests, values from `project/tools/tags.yaml`. |
+| `area` | Main area, for the per-area report: cpu, memory, storage, network, system, operations-management. `operations-management` when the topic is performance troubleshooting, capacity planning or rightsizing (author, 2026-11-05). |
 | `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `cases/<id>/`, next to the case file. No `.md` files there: the runner and lint read every `.md` under `cases/` as a case. |
 | `tests` | concept, distinction, judgment, troubleshooting. |
 | `knowledge` | Knowledge ids the answer should draw on. Used to measure retrieval recall, not only the answer. |
