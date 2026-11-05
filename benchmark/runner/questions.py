@@ -79,6 +79,8 @@ class Question:
 
     @property
     def scorable(self):
+        if self.meta.get('status') in ('awaiting-input', 'retired'):
+            return False  # the author has not supplied the screenshot or table yet, or the question is retired
         if self.choice:
             return bool(self.options) and bool(self.answer)
         return bool(self.prompt) and bool(self.key_points)

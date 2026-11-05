@@ -28,6 +28,7 @@ benchmark/
 ## Question fields
 - Each question file: `# Title`, then `## Prompt`, `## Attachments` (when the question has any), `## Likely wrong answer`, `## Expected key points`, and a `## Metadata` section at the end with one yaml block. No front matter at the top.
 - `## Prompt` layout, for the human reviewer: context facts as bullets, one fact per bullet; the question or instruction as its own paragraph; options as a bullet list, `- A. text`. The candidate gets the same text: the runner rebuilds the option list (shuffled, `A. text` per line), and a model reads bullets as well as prose. Consecutive `A. text` lines without bullets render on GitHub as one paragraph.
+- `## Input to supply` (only while `status: awaiting-input`): what the author captures or exports, exactly enough for the answer key to hold. Removed when the file is added.
 - `## Attachments` links every attachment as an image with alt text, so a reviewer sees it on GitHub. It is never sent to the model: the runner sends the files listed in `attachments`.
 - Only `## Prompt` (plus attachments) is ever sent to the AI.
 
@@ -40,7 +41,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 |---|---|---|
 | `id` | Internal key for the runner and the results. Never changed, never reused. The words in an old id (`vsphere-cpu-004`) are not a classification | New questions: `question-<nnnn>` |
 | `title` | Short name for a human reviewer | Free text |
-| `status` | Review state | `draft` (written, not reviewed), `reviewed` (author approved), `retired` (kept for history, not run) |
+| `status` | Review state | `draft` (written, not reviewed), `awaiting-input` (the screenshot or table is not supplied yet: the `## Input to supply` section describes it; not run), `reviewed` (author approved), `retired` (kept for history, not run) |
 
 **What the question is about**
 
