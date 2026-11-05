@@ -37,7 +37,7 @@ python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py
 ```
-- Scoring tests: judge reply parsing, final score, question kinds. No API calls.
+- Scoring tests: judge reply parsing, final score, sub-score groups, question tags. No API calls.
 
 ## Retrieval check (no model)
 ```bash

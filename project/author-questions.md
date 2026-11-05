@@ -125,17 +125,6 @@ Each entry has:
 - Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
 - Answer:
 
-### Q054 · Benchmark · Allocation of the 100 questions
-- Files: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md, sections 3.1 (tasks), 3.2 (levels), 3.3 (answer types), 3.4 (input types), 3.6 (allocation), 3.7 (coverage).
-- Search: not from the book.
-- Question: the blueprint is now top down. Are these shares right?
-  - Tasks: read a metric 30, troubleshoot 25, decide capacity 20, explain a mechanism 15, judge a setting 10.
-  - Levels: 100: 10, 200: 15, 300: 25, 400: 50.
-  - Answer types: deterministic 70, judged 30.
-  - Input types (questions that include them): text only 60, table at least 15, screenshot at least 25; at least 5 Level 400 questions with a table and a screenshot.
-- Written as now: the shares above, as a proposal. Replaces the earlier 60 multiple choice, 20 screenshot, 20 conversation.
-- Answer:
-
 ### Q056 · Benchmark · Level of each existing question
 - Files: the 28 files in https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (metadata `level`).
 - Search: not from the book.
@@ -172,6 +161,18 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q054 · Benchmark · Allocation of the 100 questions
+- Files: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md, sections 3.1 (tasks), 3.2 (levels), 3.3 (answer types), 3.4 (input types), 3.6 (allocation), 3.7 (coverage).
+- Search: not from the book.
+- Question: the blueprint is now top down. Are these shares right?
+  - Tasks: read a metric 30, troubleshoot 25, decide capacity 20, explain a mechanism 15, judge a setting 10.
+  - Levels: 100: 10, 200: 15, 300: 25, 400: 50.
+  - Answer types: deterministic 70, judged 30.
+  - Input types (questions that include them): text only 60, table at least 15, screenshot at least 25; at least 5 Level 400 questions with a table and a screenshot.
+- Written as now: the shares above, as a proposal. Replaces the earlier 60 multiple choice, 20 screenshot, 20 conversation.
+- Answer: Author (2026-11-05): agreed; replaces the old proposal.
+- Done 2026-11-05: `benchmark/design.md`, section 3.6 marked decided.
 
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
 - Files: `benchmark/questions/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`

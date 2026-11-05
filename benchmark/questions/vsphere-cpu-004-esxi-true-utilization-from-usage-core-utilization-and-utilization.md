@@ -43,12 +43,10 @@ A (100%): reading CPU Usage as utilization. Or B (70%): treating Core Utilizatio
 ```yaml
 id: vsphere-cpu-004
 title: "ESXi true utilization from Usage, Core Utilization and Utilization"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [screenshot]
-tests: judgment
+task: read-metric
 knowledge:
   - vsphere/technology/cpu/metrics/host/usage
   - vsphere/technology/cpu/metrics/host/core-utilization

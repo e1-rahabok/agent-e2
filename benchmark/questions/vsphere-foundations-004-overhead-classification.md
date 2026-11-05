@@ -23,12 +23,10 @@ Is this classification correct?
 ```yaml
 id: vsphere-foundations-004
 title: "What counts as overhead"
-scope: vsphere
 product: [vsphere]
 technology: [system]
-area: foundations
 input: [text]
-tests: concept
+task: decide-capacity
 knowledge:
   - vsphere/foundations/overhead
 attachments: []

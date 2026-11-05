@@ -21,12 +21,10 @@ Should we set a vSphere VM disk latency alert at 15 ms averaged over 5 minutes?
 ```yaml
 id: vsphere-storage-002
 title: "Setting a disk latency threshold"
-scope: vsphere
 product: [vsphere]
 technology: [storage]
-area: storage
 input: [text]
-tests: judgment
+task: judge-setting
 knowledge:
   - foundations/thresholds
 attachments: []

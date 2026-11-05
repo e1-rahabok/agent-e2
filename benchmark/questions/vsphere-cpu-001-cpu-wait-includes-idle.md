@@ -22,12 +22,10 @@ Are they right?
 ```yaml
 id: vsphere-cpu-001
 title: "High CPU Wait"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 attachments: []

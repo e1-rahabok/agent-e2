@@ -29,12 +29,10 @@ D (reservation assumed to block memory before use) or C.
 ```yaml
 id: vsphere-memory-005
 title: "Memory reservation behaviour"
-scope: vsphere
 product: [vsphere]
 technology: [memory]
-area: memory
 input: [text]
-tests: concept
+task: judge-setting
 knowledge:
   - vsphere/foundations/resource-controls
   - vsphere/technology/memory/metrics/host/reservation

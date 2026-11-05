@@ -29,12 +29,10 @@ Omitting Overlap or Other Wait; including Demand as a contention counter.
 ```yaml
 id: vsphere-cpu-009
 title: "Counters where a vCPU cannot run at all"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [text]
-tests: distinction
+task: read-metric
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
   - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics

@@ -28,12 +28,10 @@ C (a guest free assumed to propagate to ESXi).
 ```yaml
 id: vsphere-memory-003
 title: "Relationship between VM and Guest OS memory metrics"
-scope: vsphere
 product: [vsphere]
 technology: [memory]
-area: memory
 input: [text]
-tests: concept
+task: read-metric
 knowledge:
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/concepts/ballooning

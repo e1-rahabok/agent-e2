@@ -24,12 +24,10 @@ Is that conclusion valid?
 ```yaml
 id: vsphere-storage-001
 title: "Guest queue invisible to the hypervisor"
-scope: vsphere
 product: [vsphere]
 technology: [storage]
-area: storage
 input: [text]
-tests: concept
+task: troubleshoot
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
   - vsphere/technology/storage/metrics/virtual-motherboard/iops

@@ -202,15 +202,16 @@ def write(run_dir):
     L += ['', '- Exact and Partial: mean over all runs. Majority: most common answer per question. Margin: 95% interval on Majority from the number of questions.',
           '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids the mode retrieved or read.', '']
 
-    # per area and level, kb modes
-    for dim in ('area', 'level'):
-        vals = sorted({r[dim] for r in rows if r[dim]})
+    # per technology and task (a question counts for every technology it lists), deterministic answers
+    for dim in ('technology', 'task'):
+        vals = sorted({v for r in rows for v in (r.get(dim) or '').split()})
         if not vals:
             continue
         L += [f'## Deterministic answers: exact score by {dim}', '', '| Model | Mode | ' + ' | '.join(vals) + ' |', '|---|---|' + '---|' * len(vals)]
         g = defaultdict(list)
         for r in rows:
-            g[(r['model'], r['mode'], r[dim])].append(r['exact'])
+            for v in (r.get(dim) or '').split():
+                g[(r['model'], r['mode'], v)].append(r['exact'])
         for m, mode in sorted({(r['model'], r['mode']) for r in rows}):
             L.append(f'| {m} | {mode} | ' + ' | '.join(_pct(_mean(g[(m, mode, v)])) for v in vals) + ' |')
         L.append('')

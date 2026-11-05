@@ -22,12 +22,10 @@ Is the VM available? How would you measure VM availability vs Guest OS availabil
 ```yaml
 id: vsphere-foundations-002
 title: "VM availability"
-scope: vsphere
 product: [vsphere]
 technology: [system]
-area: foundations
 input: [text]
-tests: concept
+task: explain-mechanism
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
 attachments: []

@@ -34,12 +34,10 @@ B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance)
 ```yaml
 id: vsphere-cpu-007
 title: "Reading an Intel Xeon specification: base, all-core Turbo, TDP"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [screenshot]
-tests: concept
+task: explain-mechanism
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-frequency
   - vsphere/technology/cpu/concepts/power-states

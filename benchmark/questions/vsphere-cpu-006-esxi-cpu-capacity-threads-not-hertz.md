@@ -47,12 +47,10 @@ A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo o
 ```yaml
 id: vsphere-cpu-006
 title: "ESXi CPU capacity: threads, not hertz"
-scope: vsphere
 product: [vsphere]
 technology: [cpu]
-area: cpu
 input: [screenshot]
-tests: concept
+task: decide-capacity
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-measurement-levels
   - operations-management/capacity/capacity-model

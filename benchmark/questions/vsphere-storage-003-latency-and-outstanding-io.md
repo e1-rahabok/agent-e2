@@ -23,12 +23,10 @@ A, or D (throughput instead of commands).
 ```yaml
 id: vsphere-storage-003
 title: "Latency and outstanding IO"
-scope: vsphere
 product: [vsphere]
 technology: [storage]
-area: storage
 input: [text]
-tests: concept
+task: explain-mechanism
 knowledge:
   - vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
