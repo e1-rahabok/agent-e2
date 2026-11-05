@@ -75,7 +75,7 @@ Design reasons and model size: `project/solution-design.md`. Knowledge capture: 
 ## 4. Classic mode
 - Classic mode costs a third of the test runs. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is the better mode for some models today. Run 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/test-design.md`.
+  2. It is the better mode for some models today. Benchmark 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/test-design.md`.
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
 - After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
@@ -148,10 +148,10 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 | Level | Test | Needs a model | Command |
 |---|---|---|---|
 | Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_tools.py` |
-| Retrieval | For every case, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
-| Whole system | Model + harness + knowledge on the case set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
+| Retrieval | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
+| Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
 
-- Retrieval result, 28 cases (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 cases. Classic mode cannot answer better than its context, so retrieval is the first thing to improve.
+- Retrieval result, 28 questions (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 questions. Classic mode cannot answer better than its context, so retrieval is the first thing to improve.
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 9. Status (2026-11-04)
@@ -207,4 +207,4 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 - Contention before consumption before context, unless the file states another order.
 
 ### Measurement
-- `benchmark/` runs the same cases with and without the knowledge base. A structure change is kept only when scores improve.
+- `benchmark/` runs the same questions with and without the knowledge base. A structure change is kept only when scores improve.

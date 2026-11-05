@@ -1,10 +1,10 @@
-"""Cases: load, shuffle options, render, parse and score answers.
+"""Questions: load, shuffle options, render, parse and score answers.
 
 Only `## Prompt` and attachments are ever shown to the model under test. The answer key
 (metadata `answer`, `trap`; sections `## Expected key points`, `## Likely wrong answer`) is read here
 for scoring only: letters by the runner, key points by the judge (judge.py).
 
-Kind (one per case, for the sub-scores): screenshot (has image attachments, any format),
+Kind (one per question, for the sub-scores): screenshot (has image attachments, any format),
 multiple-choice (letters, no images), conversation (free-text or compound, no images).
 """
 import base64
@@ -25,7 +25,7 @@ OPTION = re.compile(r'^([A-H])\.\s+(.*)$')
 ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 
 
-class Case:
+class Question:
     def __init__(self, path):
         text = open(path).read()
         i = text.rfind(META)
@@ -41,7 +41,7 @@ class Case:
         self.answer = [str(a) for a in (self.meta.get('answer') or [])]
         self.trap = [str(a) for a in (self.meta.get('trap') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
-        self.attachments = [os.path.join(ROOT, 'benchmark', 'cases', a) for a in (self.meta.get('attachments') or [])]
+        self.attachments = [os.path.join(ROOT, 'benchmark', 'questions', a) for a in (self.meta.get('attachments') or [])]
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
         self.prompt = m.group(1).strip() if m else ''
         self.stem, self.options, self.footer = self._split_prompt(self.prompt)
@@ -123,12 +123,12 @@ def _section(body, name):
 
 
 def load(pattern=None):
-    files = sorted(glob.glob(os.path.join(ROOT, 'benchmark', 'cases', '**', '*.md'), recursive=True))
-    cases = [Case(f) for f in files]
+    files = sorted(glob.glob(os.path.join(ROOT, 'benchmark', 'questions', '**', '*.md'), recursive=True))
+    questions = [Question(f) for f in files]
     if pattern:
         keep = [p.strip() for p in pattern.split(',')]
-        cases = [c for c in cases if any(k in c.id for k in keep)]
-    return cases
+        questions = [c for c in questions if any(k in c.id for k in keep)]
+    return questions
 
 
 def parse(text, mapping):
@@ -144,7 +144,7 @@ def parse(text, mapping):
     return sorted(mapping[s] for s in shown)
 
 
-def score(case, picked):
+def score(question, picked):
     """Exact match, partial credit, trap hit, and points: +1 exact, 0 Unsure, -1 anything else.
 
     Unsure counts only when chosen alone; Unsure mixed with other letters is a hedge and scores as wrong.
@@ -152,14 +152,14 @@ def score(case, picked):
     """
     if picked is None:
         return {'exact': 0, 'partial': 0.0, 'trap': 0, 'not_covered': 0, 'unsure': 0, 'points': POINTS['wrong'], 'parse_ok': 0}
-    correct, chosen = set(case.answer), set(picked)
+    correct, chosen = set(question.answer), set(picked)
     unsure = int(chosen == {'UN'})
     exact = int(chosen == correct)
     hits, wrong = len(correct & chosen), len(chosen - correct)
     return {
         'exact': exact,
         'partial': round(max(0, hits - wrong) / len(correct), 3),
-        'trap': int(bool(chosen & set(case.trap))),
+        'trap': int(bool(chosen & set(question.trap))),
         'not_covered': int('NC' in chosen),
         'unsure': unsure,
         'points': POINTS['exact'] if exact else POINTS['unsure'] if unsure else POINTS['wrong'],

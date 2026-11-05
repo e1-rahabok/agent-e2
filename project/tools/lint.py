@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lint knowledge-base files and benchmark cases. Run before every merge: python3 project/tools/lint.py
+"""Lint knowledge-base files and benchmark questions. Run before every merge: python3 project/tools/lint.py
 Exit code 0 = pass, 1 = problems found. Allowed values come from
 project/tools/tags.yaml."""
 import glob, os, re, sys, yaml
@@ -131,8 +131,8 @@ def main():
                     if re.search(pat, checked, re.I):
                         bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
 
-    for f in sorted(glob.glob('benchmark/cases/**/*.md', recursive=True)):
-        t = open(f).read()  # benchmark cases: metadata at the end, like knowledge files
+    for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
+        t = open(f).read()  # benchmark questions: metadata at the end, like knowledge files
         if t.startswith('---\n'): bad(f, 'front matter at the top: move it to a ## Metadata section at the end')
         fm, _ = split(f)
         if fm is None: bad(f, 'missing ## Metadata section with one yaml block at the end'); fm = {}
@@ -144,7 +144,7 @@ def main():
             else:
                 for x in v:
                     if x not in allowed[k]: bad(f, f'{k} "{x}" not allowed')
-        if os.path.dirname(f) != 'benchmark/cases': bad(f, 'cases live in one flat folder: benchmark/cases/')
+        if os.path.dirname(f) != 'benchmark/questions': bad(f, 'questions live in one flat folder: benchmark/questions/')
         fmt = (fm or {}).get('format')
         if fmt not in ('multiple-choice', 'free-text', 'compound'):
             bad(f, f'format "{fmt}" must be multiple-choice, free-text or compound')
@@ -154,14 +154,14 @@ def main():
             for k in ('answer', 'trap'):
                 for x in fm.get(k) or []:
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
-            if not fm.get('answer'): bad(f, 'multiple-choice case has no answer')
+            if not fm.get('answer'): bad(f, 'multiple-choice question has no answer')
             if fm.get('level') not in ('recall', 'l400', 'multi-hop', 'screenshot'):
                 bad(f, 'level must be recall, l400, multi-hop or screenshot')
         for att in (fm or {}).get('attachments') or []:
-            if not os.path.exists(os.path.join('benchmark', 'cases', att)):
+            if not os.path.exists(os.path.join('benchmark', 'questions', att)):
                 bad(f, f'attachment not found: {att}')
 
-    for f in files + sorted(glob.glob('benchmark/cases/*.md')):
+    for f in files + sorted(glob.glob('benchmark/questions/*.md')):
         text = open(f).read()
         for pat in allowed.get('injection_patterns', []):
             if re.search(pat, text): bad(f, f'possible prompt injection or hidden text (pattern {pat})')
@@ -182,8 +182,9 @@ def main():
 def check_repo_terms(allowed, bad):
     """One word per concept in the repository (project/terms.md): flag the replaced words."""
     skip = ('project/terms.md', 'project/author-questions.md', 'project/tools/tags.yaml')
+    records = ('project/archive/', 'project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):
-        if (f in skip or '/raw-input/' in f or '/autotest/' in f or f.startswith('project/archive/')):
+        if f in skip or '/raw-input/' in f or f.startswith(records):
             continue
         for i, line in enumerate(open(f).read().split('\n'), 1):
             for pat, use in (allowed.get('avoid_repo_terms') or {}).items():
@@ -194,7 +195,7 @@ def check_repo_terms(allowed, bad):
 def check_tables(bad):
     """Tables need a blank line before (else they render as text) and after (else the next line becomes a table row)."""
     for f in sorted(glob.glob('**/*.md', recursive=True)):
-        if '/raw-input/' in f or '/autotest/' in f or f.startswith('project/archive/'):
+        if '/raw-input/' in f or f.startswith('benchmark/results/') or f.startswith('project/archive/'):
             continue
         lines, fence = open(f).read().split('\n'), False
         for i, line in enumerate(lines):

@@ -16,7 +16,7 @@ modes: [baseline, classic, agentic]
 runs: 5                       # repeats per question per model per mode
 temperature: 0.2              # use the value the website will use; fixed for a whole run
 max_tokens: 4000              # reasoning models spend tokens before the ANSWER line
-concurrency: 12               # parallel requests; 12 tested OK (run 20261103-081849); lower it on HTTP 429
+concurrency: 12               # parallel requests; 12 tested OK (benchmark 20261103-081849); lower it on HTTP 429
 
 embedding_model: alibaba/qwen3-embedding-0.6b   # null = BM25 only
 classic_k: 6                  # files from the search before link expansion

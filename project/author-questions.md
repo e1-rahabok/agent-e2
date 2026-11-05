@@ -31,7 +31,7 @@ Each entry has:
 - Answer:
 
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
-- Files: `benchmark/cases/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
+- Files: `benchmark/questions/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
 - Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
 - Search 2 (quiz): "CPU reservation only comes into play during contention"
 - Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
@@ -40,14 +40,14 @@ Each entry has:
 - Answer:
 
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
-- Files: `benchmark/cases/vsphere-cpu-013-reclaiming-vcpus-from-an-idle-vm.md`; `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
+- Files: `benchmark/questions/vsphere-cpu-013-reclaiming-vcpus-from-an-idle-vm.md`; `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
 - Search (quiz): "Power off the VM, as this also frees the VM memory"
 - Question: key is C,D. Frontier baseline chose C,D in 5 of 5; frontier classic chose C only in 5 of 5, citing that the knowledge base does not make the claim. Should the knowledge base state that powering off an idle VM frees its memory, as part of reclamation?
 - Written as now: no file states that powering off an idle VM frees its memory. idle-and-unused-vcpus covers the CPU cost of idle vCPUs only.
 - Answer:
 
 ### Q043 · Quiz > Memory > Q2 VM vs Guest OS · Options A and D
-- Files: `benchmark/cases/vsphere-memory-003-relationship-between-vm-and-guest-os-memory-metrics.md`; `vsphere/technology/memory/concepts/guest-os-vs-vm-memory`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/metrics/virtual-motherboard/usage`
+- Files: `benchmark/questions/vsphere-memory-003-relationship-between-vm-and-guest-os-memory-metrics.md`; `vsphere/technology/memory/concepts/guest-os-vs-vm-memory`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/metrics/virtual-motherboard/usage`
 - Search 1 (quiz): "Neither layer considers the other"
 - Search 2 (quiz): "the hypervisor cannot balloon the VM"
 - Question: key is A,B,D,E. Frontier dropped A or D in every run (baseline and agentic B,D,E; classic A,B,E). Are A and D both correct? If yes, which statements should the knowledge base add?
@@ -153,7 +153,7 @@ Each entry has:
 - Done 2026-11-05: `guest-os/cpu/concepts/windows-cpu-scheduling` table: Run and Net Run marked not affected by Hyper-Threading; Demand marked affected (Q035).
 
 ### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
-- Files: `harness/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `benchmark/results/autotest/20261103-093742/report.md`, section Analysis.
+- Files: `harness/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `benchmark/results/20261103-093742/report.md`, section Analysis.
 - Search: not from the book. Finding from the frontier reference run 20261103-093742.
 - Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
 - Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
@@ -169,7 +169,7 @@ Each entry has:
 - Done 2026-11-05: `harness/modes.py` prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated (`benchmark/test-design.md`, both benchmark READMEs, `ARCHITECTURE.md`).
 
 ### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
-- Files: `benchmark/cases/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
+- Files: `benchmark/questions/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
 - Search 1 (quiz): "It is a balanced reporting"
 - Search 2 (quiz): "Plenty of physical threads are idle"
 - Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
@@ -308,7 +308,7 @@ flowchart LR
 - Done 2026-11-04: `vsphere/technology/storage/concepts/ip-storage-network-accounting` (from the linked note); disk-latency corrected, with a `corrections` entry until the book is updated.
 
 ### Q039 · Auto Test > Golden case vendor-neutral-general-001 · Hyperscaler cost not in the knowledge base
-- Files: `benchmark/cases/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`
+- Files: `benchmark/questions/vendor-neutral/general/general-001-hyperscaler-cost-of-1000-vms.md`
 - Search: not from the book.
 - Question: add hyperscaler cost content to the knowledge base, or score this case in baseline mode only?
 - Written as now: the knowledge base has no cost content. In knowledge-base modes every model chose "Not covered" (frontier: 10 of 10 runs). Baseline frontier: correct 5 of 5.
@@ -455,7 +455,7 @@ flowchart LR
 - Answer:
 
 ### Q034 · Quiz > CPU > Q2 VM CPU Speed · 80% vs 62.5% Hyper-Threading charge
-- Files: `benchmark/cases/vsphere-cpu-005-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md`, `vsphere/technology/cpu/metrics/virtual-motherboard/usage`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`
+- Files: `benchmark/questions/vsphere-cpu-005-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md`, `vsphere/technology/cpu/metrics/virtual-motherboard/usage`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`
 - Search 1 (quiz key): "3.0 (All Cores Turbo) x 80% (as HT delivers 1.25x total)"
 - Search 2 (book): "37.5%"
 - Question: the quiz key gives 3.0 GHz x 80% = 2.4 GHz. The knowledge base charges each thread 62.5% when both threads run, which gives 1.875 GHz. Which factor does VM CPU Usage apply?
@@ -463,7 +463,7 @@ flowchart LR
 - Answer: Author (2026-11-03): the key is correct (2.4 GHz). Added All-Core Turbo knowledge to `vsphere/technology/cpu/concepts/cpu-frequency`.
 
 ### Q035 · Quiz > CPU > Q6 VM CPU Contention · Demand and Hyper-Threading
-- Files: `benchmark/cases/vsphere-cpu-009-counters-where-a-vcpu-cannot-run-at-all.md`, `vsphere/technology/cpu/metrics/virtual-motherboard/demand`
+- Files: `benchmark/questions/vsphere-cpu-009-counters-where-a-vcpu-cannot-run-at-all.md`, `vsphere/technology/cpu/metrics/virtual-motherboard/demand`
 - Search 1 (quiz key): "G is wrong as Demand is affected by hyper threading"
 - Search 2 (book, MS Windows table): "| VM CPU Demand   | Yes               | No             | Yes           |"
 - Question: the key says Demand is affected by Hyper-Threading. The MS Windows table marks Demand as not affected. Which is right?
@@ -471,14 +471,14 @@ flowchart LR
 - Answer: Author (2026-11-03): the key is correct. Guest OS and VM are 2 realms; the Guest OS does not see physical threads. Added to `vsphere/foundations/vm-vs-guest-os`, `vsphere/technology/cpu/metrics/virtual-motherboard/demand`, `vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`.
 
 ### Q036 · Quiz > CPU > Q7 Guest OS CPU · Is F correct?
-- Files: `benchmark/cases/vsphere-cpu-010-guest-os-run-queue-context-switch-windows-thread-states.md`
+- Files: `benchmark/questions/vsphere-cpu-010-guest-os-run-queue-context-switch-windows-thread-states.md`
 - Search 1 (quiz key): "F is correct. Windows has 8 states."
 - Question: the answer column says D, E. The explanation says F is correct. Is the answer D, E, F?
 - Written as now: scored as D, E, F until answered.
 - Answer: Author (2026-11-03): F is correct. Answer D, E, F.
 
 ### Q037 · Quiz > Cost and Price > Q1 VM Cost · Missing explanations
-- Files: `benchmark/cases/vendor-neutral/general/general-001-...`
+- Files: `benchmark/questions/vendor-neutral/general/general-001-...`
 - Search 1 (quiz key): "C is correct. The VM costs around US$ 2000 per year."
 - Question: the key has empty explanations for A, B and D. What is the reason each is wrong? Which pricing date and source should the case record?
 - Written as now: answer C only; no reasons for the others.

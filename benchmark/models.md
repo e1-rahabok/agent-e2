@@ -22,7 +22,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
-- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: trap answer on 16% of answers (run 20261103-093742).
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: trap answer on 16% of answers (benchmark 20261103-093742).
 - Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
 - Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
 
@@ -48,7 +48,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
 - Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
-- Trap rate in knowledge base modes, and the cases where the knowledge base and the vSphere documentation disagree (`benchmark/test-design.md`, section 3.3).
+- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree (`benchmark/test-design.md`, section 3.3).
 - A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
   1. final score higher by more than the margin;
   2. override rate not higher.
@@ -83,7 +83,7 @@ Two limits decide (author, 2026-11-05):
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
 
 All are required. A model that fails one is not a candidate.
-1. Vision: reads screenshots. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI (author, 2026-11-05). Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot cases are in the run.
+1. Vision: reads screenshots. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI (author, 2026-11-05). Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
 2. Open weights, with a licence that allows commercial on-premises use. Checked per model before deployment.
 3. Fits one GPU with at most 96 GB of memory: all weights at 4-bit or better, plus the KV cache for a 32K context.
    - Memory is set by total parameters, also for a mixture-of-experts (MoE) model: every expert must be loaded. Speed is set by active parameters.
@@ -119,7 +119,7 @@ Preferred, not required:
 - Licences checked on Hugging Face 2026-11-05. The Gemma licence allows commercial use; read it before deployment.
 
 ## 5. Frontier reference
-- One frontier model, scored the same way with and without the knowledge base, in every run: anthropic/claude-opus-5.5 so far.
+- One frontier model, scored the same way with and without the knowledge base, in every benchmark: anthropic/claude-opus-5.5 so far.
 - The claim (`benchmark/test-design.md`, section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
@@ -127,9 +127,9 @@ Preferred, not required:
 - Grades free-text and compound answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/test-design.md`, section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
 - Rules:
-  - never a candidate (the runner refuses the run);
+  - never a candidate (the runner refuses the benchmark);
   - a different vendor from the frontier reference, so no model family grades its own answers;
-  - vision, because screenshot cases can be free text;
+  - vision, because screenshot questions can be free text;
   - temperature 0.
 - The judge is a frontier model on the test gateway only. It is never deployed: at a customer site nothing is graded.
 
@@ -146,7 +146,7 @@ Preferred, not required:
 | mistral/mistral-small | 2026-11-05 | Serves Mistral Small 4: 119B MoE, 6.5B active. Less compute per token than the dense candidates on twice the GPU memory (section 1). 51% on 17 questions (old scoring; served version then not recorded). |
 | inclusionai/ling-3.0-flash-vl | 2026-11-05 | 125B MoE, MIT. Same reason. Added and removed the same day, never run. |
 | nvidia/nemotron-3.5-super-vl | 2026-11-05 | 120B MoE, 12B active, OpenMDW 1.1. Same reason. Added and removed the same day, never run. |
-| mistral/ministral-8b | 2026-11-03 | 29-40% exact in run 20261103-081849. |
+| mistral/ministral-8b | 2026-11-03 | 29-40% exact in benchmark 20261103-081849. |
 
 ## 8. Not chosen
 | Model | Reason |

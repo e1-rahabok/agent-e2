@@ -21,9 +21,10 @@ injection_patterns: ['<!--', '[\u200b-\u200f\u2060\ufeff]', '(?i)ignore (all |an
 # Phrases rejected in body text of every knowledge file.
 avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
 # Repository terms: one word per concept (project/terms.md). Checked in every markdown file except
-# project/terms.md, project/author-questions.md (the author's own words), project/archive/ and benchmark results.
+# project/terms.md, project/author-questions.md (the author's own words), project/archive/ and benchmark/results/.
 avoid_repo_terms:
-  '(?i)\bgolden (case|cases|set|question)': 'case'
-  '\bAuto Test\b': 'benchmark, or benchmark run'
-  '(?i)\btest cases?\b': 'case'
-  '(?i)\bexam questions?\b': 'case'
+  '(?i)\bgolden (cases?|set|questions?)': 'question, or question set'
+  '\bAuto Test\b': 'benchmark'
+  '(?i)\b(test|benchmark) cases?\b': 'question'
+  '(?i)\bexam questions?\b': 'question'
+  'benchmark/cases\b': 'benchmark/questions'

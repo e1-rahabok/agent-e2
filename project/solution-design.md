@@ -9,7 +9,7 @@ Status: proposal, 2026-11-04. For the author and for VMware professionals who as
 - Scope:
   - version 1.0: vSphere 9.1 metrics, plus the Guest OS layer (Windows first);
   - later: vSAN, NSX, VCF Operations, VMware Kubernetes, Linux. The end scope is the whole private cloud stack.
-- Target, measured on the benchmark: final score minimum 85%, target 99% (each case scored on its worst of 5 runs), with the confident-wrong rate near 0.
+- Target, measured on the benchmark: final score minimum 85%, target 99% (each question scored on its worst of 5 runs), with the confident-wrong rate near 0.
 
 ## 2. The system: model + harness + knowledge
 - The product is not "a model". It is a compound AI system: three parts, each doing what it is best at.
@@ -44,7 +44,7 @@ flowchart LR
 Six mechanisms, in order of weight.
 
 1. **Open-book exam.** A frontier model's advantage is breadth of memorised knowledge plus reasoning depth. For one narrow domain, retrieval supplies the knowledge. What remains is reading 5-10 retrieved files and applying their rules: reading comprehension plus a short reasoning chain. On that task, current 27-32B dense models and 120B-class MoE models are close to frontier models.
-2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation. That corpus repeats the misconceptions the author's book corrects: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS", "VM rightsizing". A model trained on it answers confidently and wrongly. Measured: the frontier model without the knowledge base fell into the trap answer on 16% of answers (run 20261103-093742).
+2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation. That corpus repeats the misconceptions the author's book corrects: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS", "VM rightsizing". A model trained on it answers confidently and wrongly. Measured: the frontier model without the knowledge base fell into the trap answer on 16% of answers (benchmark 20261103-093742).
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters at statistics level 4) is newer than most training data. The knowledge base is current by rule.
 4. **Exactness from tools.** Small and large models both slip on arithmetic and unit conversion (ms summation to %, GHz × vCPU, KB vs kb). A calculator tool and a metric catalog lookup return exact values; the model only chooses which tool to call.
 5. **Structure built for a small model.** One fact per bullet, one object per metric file, same-name traps linked, layers separated in folders and tags, metadata for filtering. Enterprise RAG usually fails on messy chunking; this corpus is written to be chunked.
@@ -130,9 +130,9 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 - Broadcom's VMware Private AI Foundation with NVIDIA is the natural platform for this VM (to verify against current product documentation).
 
 ## 8. How we prove it
-- Benchmark: 100 cases written from the author's books and quizzes: multiple choice, screenshots and free-text conversation, 50% Level 400 traps. Answer keys are never indexed.
+- Benchmark: 100 questions written from the author's books and quizzes: multiple choice, screenshots and free-text conversation, 50% Level 400 traps. Answer keys are never indexed.
 - Every model runs in three modes: no knowledge base, one lookup, model-driven lookups.
-- Headline: one final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. A case earns what its worst of 5 runs earns. Also reported: confident-wrong rate. Unsure is allowed and preferred over a guess.
+- Headline: one final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. A question earns what its worst of 5 runs earns. Also reported: confident-wrong rate. Unsure is allowed and preferred over a guess.
 - The frontier model is scored the same way, with and without the knowledge base.
 - Detail: `benchmark/test-design.md`; runner `benchmark/runner/`.
 

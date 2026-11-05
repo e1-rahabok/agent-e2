@@ -14,7 +14,7 @@ The software around the model. It turns a question into a grounded answer. Not i
 | `llm.py` | Model client: Vercel AI Gateway for testing (OpenAI-compatible API); a local OpenAI-compatible server (vLLM, llama.cpp) for deployment. `MockClient` exercises the tool loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
 
-- Retrieval test without a model: `python3 benchmark/runner/retrieval_eval.py` (recall of the files each case needs).
+- Retrieval test without a model: `python3 benchmark/runner/retrieval_eval.py` (recall of the files each question needs).
 
 ## Agentic tools
 | Tool | Returns | Use |

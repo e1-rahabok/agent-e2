@@ -14,7 +14,7 @@ How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
 ## Ways to contribute
 - **Answer an author question.** Write after `Answer:` in `project/author-questions.md`. The answer is applied to the knowledge files and the entry moves to Resolved.
 - **Review a knowledge file.** Check every fact against its source in the metadata (`source`, `review_notes`, `corrections`). Report a wrong fact, a missing trap or a missing link.
-- **Add a benchmark case.** Use `benchmark/_templates/case.md`. A realistic situation with values, 4-8 options, a trap option, the knowledge ids that answer it, and `product` and `technology` tags. New ids: `case-<nnnn>`. Never send `## Expected key points` or `## Likely wrong answer` to a model.
+- **Add a benchmark question.** Use `benchmark/_templates/question.md`. A realistic situation with values, 4-8 options, a trap option, the knowledge ids that answer it, and `product` and `technology` tags. New ids: `question-<nnnn>`. Never send `## Expected key points` or `## Likely wrong answer` to a model.
 - **Report a wrong answer.** Give the question, the answer, and the run or trace. It is classified as a knowledge gap, a retrieval miss or a model error.
 - **Improve the harness.** Code in `harness/`, tests in `harness/test_tools.py`.
 
