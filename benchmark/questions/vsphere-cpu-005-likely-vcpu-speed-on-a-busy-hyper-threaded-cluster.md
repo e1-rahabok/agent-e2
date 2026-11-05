@@ -42,7 +42,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: judgment
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-frequency
@@ -53,8 +53,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"
-format: multiple-choice
-level: multi-hop
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [C]
 trap: [B,D]
 status: draft

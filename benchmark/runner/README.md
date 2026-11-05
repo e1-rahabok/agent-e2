@@ -48,12 +48,12 @@ python3 benchmark/runner/retrieval_eval.py
 ## Methodology
 
 ### Final score
-- One number, 0-100%, per model and mode: the mean question credit over all questions. Sub-scores: multiple choice, screenshot, conversation. Report table `Final score`.
+- One number, 0-100%, per model and mode: the mean question credit over all questions. Sub-scores: by answer type (deterministic, judged), by input type (text, table, screenshot), by level (100-400). Report table `Final score`.
 - Question credit = the worst of its runs: multiple choice 1 or 0 (Stable correct); free text the lowest judge score / 3.
 - Full method: `benchmark/design.md`, section 7.4.
 
 ### Free text and the judge
-- `format: free-text` and `compound` questions are sent without options, with an open-answer prompt (`harness/modes.py`, `PROMPTS['open']`). The verifier does not run on them: it checks letters only.
+- `answer_type: judged` questions are sent without options, with an open-answer prompt (`harness/modes.py`, `PROMPTS['open']`). The verifier does not run on them: it checks letters only.
 - `judge.py` sends the prompt, images, `## Expected key points`, `## Likely wrong answer` and the answer to `judge_model`, and reads back a JSON score 0-3.
 - The runner refuses a benchmark where the judge is also a candidate.
 - Rubric and checks: `benchmark/design.md`, section 14. Report table `Free-text answers (judge)`.
@@ -164,15 +164,16 @@ python3 benchmark/runner/retrieval_eval.py
 | File | Content | In git |
 |---|---|---|
 | `config.json` | Index version (git SHA), models with tags and prices, settings | Yes |
-| `answers.csv` | One row per answer: model, provider, mode, track, question, kind, format, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
+| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
 | `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, trap, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
 
 ## Question fields used
 | Field | Meaning |
 |---|---|
-| `format` | `multiple-choice` (letters), `free-text` and `compound` (judge) |
-| `level` | `recall`, `l400`, `multi-hop`, `screenshot` |
+| `answer_type` | `deterministic` (letters) or `judged` (judge) |
+| `level` | `100`, `200`, `300`, `400` |
+| `input` | `text`, `table`, `screenshot`; checked against the attachments by lint |
 | `answer` | Correct option letters, as in `## Prompt` |
 | `trap` | Option letters that are the known wrong answer |
 | `knowledge` | Files the answer should come from; used for retrieval recall |

@@ -51,7 +51,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: mixed
+input: [screenshot]
 tests: concept
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-measurement-levels
@@ -61,7 +61,7 @@ attachments:
   - vsphere-cpu-006/two-esxi-hosts-specification-and-capacity-options.png
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESXi Total Capacity"
-format: compound            # two answers (one per host); scored by the judge
-level: l400
+answer_type: judged
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 status: draft
 ```

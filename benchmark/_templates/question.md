@@ -40,8 +40,9 @@ knowledge:                        # knowledge ids the answer should draw on (ret
 attachments: []                   # paths relative to benchmark/questions/, e.g. <id>/<file>.png
 origin: book                      # book | quiz | live-lab | real-ticket | synthetic
 source_path: "<heading path in the source document>"
-format: multiple-choice           # multiple-choice | free-text | compound
-level: l400                       # recall | l400 | multi-hop | screenshot (multiple-choice only)
+answer_type: deterministic        # deterministic (option letters) | judged (free text, scored by the judge)
+level: 400                        # 100 | 200 | 300 | 400 (benchmark/design.md, section 3.2)
+input: [text]                     # text | table | screenshot; from the attachments (lint checks)
 answer: [B]                       # correct letters (multiple-choice only)
 trap: [A]                         # trap letters (multiple-choice only)
 status: draft                     # draft | reviewed | retired

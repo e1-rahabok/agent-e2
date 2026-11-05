@@ -23,11 +23,19 @@ def _margin(p, n):
     return 1.96 * math.sqrt(p * (1 - p) / n) if n and not math.isnan(p) else float('nan')
 
 
-KINDS = ['multiple-choice', 'screenshot', 'conversation']
+# Sub-score groups (benchmark/design.md, section 3). A question counts once per group; for input type it counts
+# for every input it includes (a level 400 question with a table and a screenshot counts for both).
+ANSWER_TYPES = ['deterministic', 'judged']
+INPUT_TYPES = ['text', 'table', 'screenshot']
+LEVELS = ['100', '200', '300', '400']
 
 
-def _kind(r):
-    return r.get('kind') or ('screenshot' if r['track'] == 'vision' else 'multiple-choice')
+def _groups(r):
+    """Sub-score keys of one answer row: answer type, input types, level."""
+    at = r.get('answer_type') or ('deterministic' if (r.get('format') or 'multiple-choice') == 'multiple-choice' else 'judged')
+    inputs = [x for x in (r.get('input') or '').split(' ') if x] or (['screenshot'] if r['track'] == 'vision' else ['text'])
+    lv = str(r.get('level') or '')
+    return [f'answer:{at}'] + [f'input:{x}' for x in inputs] + ([f'level:{lv}'] if lv in LEVELS else [])
 
 
 def _credit(r):
@@ -37,14 +45,16 @@ def _credit(r):
 
 
 def _choice(r):
-    return (r.get('format') or 'multiple-choice') == 'multiple-choice'
+    at = r.get('answer_type')
+    return at == 'deterministic' if at else (r.get('format') or 'multiple-choice') == 'multiple-choice'
 
 
 def final(rows):
     """Per (model, mode): final score and sub-scores, 0-1.
 
     Question credit = the lowest credit over its runs (the worst run counts, as Stable correct does for letters).
-    Final = mean question credit over all questions; each question weighs the same. Sub-score = the same mean within one kind.
+    Final = mean question credit over all questions; each question weighs the same.
+    Sub-score = the same mean within one group: answer type, input type, level.
     A question with a vision track is scored on that track only.
     """
     g = defaultdict(lambda: defaultdict(list))
@@ -52,12 +62,12 @@ def final(rows):
         g[(r['model'], r['mode'])][r['question_id']].append(r)
     out = {}
     for key, by_question in g.items():
-        credit, kinds, luck, cw = {}, {}, [], []
+        credit, groups, luck, cw = {}, {}, [], []
         for cid, crs in by_question.items():
             if any(r['track'] == 'vision' for r in crs):
                 crs = [r for r in crs if r['track'] == 'vision']
             cs = [_credit(r) for r in crs]
-            credit[cid], kinds[cid] = min(cs), _kind(crs[0])
+            credit[cid], groups[cid] = min(cs), _groups(crs[0])
             luck.append(int(max(cs) > min(cs)))
             for r in crs:
                 v = r.get('confident_wrong')
@@ -66,8 +76,8 @@ def final(rows):
         f = sum(credit.values()) / n
         s = {'final': f, 'margin': _margin(f, n), 'questions': n, 'luck': sum(luck) / n, 'confident_wrong': _mean(cw),
              'override': override([r for crs in by_question.values() for r in crs])}
-        for k in KINDS:
-            xs = [credit[c] for c in credit if kinds[c] == k]
+        for k in [f'answer:{x}' for x in ANSWER_TYPES] + [f'input:{x}' for x in INPUT_TYPES] + [f'level:{x}' for x in LEVELS]:
+            xs = [credit[c] for c in credit if k in groups[c]]
             s[k] = sum(xs) / len(xs) if xs else float('nan')
             s[k + '_n'] = len(xs)
         out[key] = s
@@ -136,24 +146,32 @@ def write(run_dir):
     sample = next(iter(fin.values()), {})
     L = [f'# Benchmark report: {cfg["benchmark_id"]}', '',
          f'- Index version: `{cfg["index_version"][:12]}`. Retrieval: {cfg["retrieval"]}. Temperature: {cfg["temperature"]}. Runs: {cfg["runs"]}.',
-         f'- Questions: {len(cfg["questions"])} (' + ', '.join(f'{k} {sample.get(k + "_n", 0)}' for k in KINDS) + ').'
+         f'- Questions: {len(cfg["questions"])} (' + ', '.join(f'{k} {sample.get("answer:" + k + "_n", 0)}' for k in ANSWER_TYPES) + '; '
+         + ', '.join(f'{k} {sample.get("input:" + k + "_n", 0)}' for k in INPUT_TYPES) + '; '
+         + ', '.join(f'level {k}: {sample.get("level:" + k + "_n", 0)}' for k in LEVELS) + ').'
          f' Skipped: {", ".join(cfg["skipped_questions"]) or "none"}. Judge: {cfg.get("judge_model") or "none"}.',
          f'- Answers: {len(all_scored)} scored, {len(all_rows) - len(all_scored)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
          '', '## Final score', '',
-         '| Model | Mode | Final | ± margin | Multiple choice | Screenshot | Conversation | Luck | Confident wrong | Override |',
-         '|---|---|---|---|---|---|---|---|---|---|']
+         '| Model | Mode | Final | ± margin | Luck | Confident wrong | Override |',
+         '|---|---|---|---|---|---|---|']
     for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
-        L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["multiple-choice"])} | '
-                 f'{_pct(s["screenshot"])} | {_pct(s["conversation"])} | {_pct(s["luck"])} | {_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
+        L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["luck"])} | '
+                 f'{_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
+    L += ['', '## Sub-scores', '',
+          '| Model | Mode | Deterministic | Judged | Text | Table | Screenshot | Level 100 | Level 200 | Level 300 | Level 400 |',
+          '|---|---|---|---|---|---|---|---|---|---|---|']
+    for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
+        keys = [f'answer:{x}' for x in ANSWER_TYPES] + [f'input:{x}' for x in INPUT_TYPES] + [f'level:{x}' for x in LEVELS]
+        L.append(f'| {m} | {mode} | ' + ' | '.join(_pct(s[k]) for k in keys) + ' |')
     L += ['', '- Final: mean question credit over all questions, 0-100%. Every question weighs the same.',
-          '- Question credit = the worst of its runs. Multiple choice: 1 if exact in every run, else 0. Free text: lowest judge score / 3.',
-          '- Sub-scores: the same mean within one kind. Screenshot = every question with an image, whatever its format. Conversation = free-text and compound questions without images.',
-          '- Luck: share of questions whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (free text: judge score 0, not unsure).',
+          '- Question credit = the worst of its runs. Deterministic: 1 if the letters are exact in every run, else 0. Judged: lowest judge score / 3.',
+          '- Sub-scores: the same mean within one group. By answer type, by input type (a question counts for every input it includes), by level.',
+          '- Luck: share of questions whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (judged: score 0, not unsure).',
           '- Override: share of answers in knowledge base modes that state the trap although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
-          '- Method: `benchmark/design.md`, section 7.4.', '']
+          '- Method: `benchmark/design.md`, sections 3 and 7.4.', '']
     conv = [r for r in all_scored if not _choice(r)]
     if conv:
-        L += ['## Free-text answers (judge)', '', '| Model | Mode | Mean score 0-3 | Score 3 | Score 0 | Trap | Unsure |', '|---|---|---|---|---|---|---|']
+        L += ['## Judged answers', '', '| Model | Mode | Mean score 0-3 | Score 3 | Score 0 | Trap | Unsure |', '|---|---|---|---|---|---|---|']
         g = defaultdict(list)
         for r in conv:
             g[(r['model'], r['mode'])].append(r)
@@ -162,7 +180,7 @@ def write(run_dir):
             L.append(f'| {m} | {mode} | {sum(sc) / len(sc):.2f} | {_pct(_mean(int(x == 3) for x in sc))} | '
                      f'{_pct(_mean(int(x == 0) for x in sc))} | {_pct(_mean(r["trap"] for r in rs))} | {_pct(_mean(r["unsure"] for r in rs))} |')
         L.append('')
-    L += ['## Multiple choice: luck-free scores', '',
+    L += ['## Deterministic answers: luck-free scores', '',
          '| Model | Mode | Track | Stable correct | ± margin | Luck | Stable unsure | Confident wrong | Unsure | Accuracy when answered |',
          '|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['stable'])):
@@ -173,7 +191,7 @@ def write(run_dir):
           '- Stable unsure: share of questions where the model chose Unsure in every run.',
           '- Confident wrong: share of answers that are wrong and not Unsure (wrong letters, partly right, Unsure mixed with other letters, unparseable). The answers that mislead an operator. Target: near 0.',
           '- Accuracy when answered: exact share among answers that were not Unsure.', '',
-         '## Multiple choice: scores', '',
+         '## Deterministic answers: scores', '',
          '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Trap | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',
          '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['majority'])):
@@ -189,7 +207,7 @@ def write(run_dir):
         vals = sorted({r[dim] for r in rows if r[dim]})
         if not vals:
             continue
-        L += [f'## Multiple choice: exact score by {dim}', '', '| Model | Mode | ' + ' | '.join(vals) + ' |', '|---|---|' + '---|' * len(vals)]
+        L += [f'## Deterministic answers: exact score by {dim}', '', '| Model | Mode | ' + ' | '.join(vals) + ' |', '|---|---|' + '---|' * len(vals)]
         g = defaultdict(list)
         for r in rows:
             g[(r['model'], r['mode'], r[dim])].append(r['exact'])

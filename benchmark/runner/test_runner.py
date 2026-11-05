@@ -12,8 +12,9 @@ import judge as J  # noqa: E402
 import report  # noqa: E402
 
 
-def row(question, kind, credit, run, track='text', fmt='multiple-choice', exact=None, unsure=0, cw=''):
-    return {'model': 'm', 'mode': 'classic', 'question_id': question, 'kind': kind, 'format': fmt, 'track': track, 'run': str(run),
+def row(question, answer_type, inp, level, credit, run, track='text', exact=None, unsure=0, cw=''):
+    return {'model': 'm', 'mode': 'classic', 'question_id': question, 'answer_type': answer_type, 'input': inp,
+            'level': str(level), 'track': track, 'run': str(run),
             'credit': str(credit), 'exact': str(int(credit == 1) if exact is None else exact), 'unsure': str(unsure),
             'confident_wrong': cw}
 
@@ -30,20 +31,26 @@ class JudgeParseTest(unittest.TestCase):
 
 
 class FinalScoreTest(unittest.TestCase):
-    def test_worst_run_counts_and_kinds_average(self):
-        rows = [row('a', 'multiple-choice', 1, 1), row('a', 'multiple-choice', 1, 2),       # stable: 1
-                row('b', 'multiple-choice', 1, 1), row('b', 'multiple-choice', 0, 2),       # luck: 0
-                row('c', 'conversation', 1, 1, fmt='free-text'), row('c', 'conversation', 0.667, 2, fmt='free-text'),
-                row('d', 'screenshot', 1, 1, track='vision'), row('d', 'screenshot', 1, 2, track='vision')]
+    def test_worst_run_counts_and_groups_average(self):
+        rows = [row('a', 'deterministic', 'text', 100, 1, 1), row('a', 'deterministic', 'text', 100, 1, 2),        # stable: 1
+                row('b', 'deterministic', 'text', 400, 1, 1), row('b', 'deterministic', 'text', 400, 0, 2),        # luck: 0
+                row('c', 'judged', 'text', 400, 1, 1), row('c', 'judged', 'text', 400, 0.667, 2),
+                row('d', 'deterministic', 'table screenshot', 400, 1, 1, track='vision'),
+                row('d', 'deterministic', 'table screenshot', 400, 1, 2, track='vision')]
         s = report.final(rows)[('m', 'classic')]
         self.assertAlmostEqual(s['final'], (1 + 0 + 0.667 + 1) / 4, places=3)
-        self.assertEqual(s['multiple-choice'], 0.5)
-        self.assertAlmostEqual(s['conversation'], 0.667, places=3)
-        self.assertEqual(s['screenshot'], 1)
+        self.assertAlmostEqual(s['answer:deterministic'], 2 / 3, places=3)
+        self.assertAlmostEqual(s['answer:judged'], 0.667, places=3)
+        self.assertEqual(s['input:table'], 1)
+        self.assertEqual(s['input:screenshot'], 1)
+        self.assertEqual(s['input:table_n'], 1)
+        self.assertEqual(s['level:100'], 1)
+        self.assertAlmostEqual(s['level:400'], (0 + 0.667 + 1) / 3, places=3)
         self.assertEqual(s['luck'], 0.5)
 
     def test_old_text_track_ignored_when_vision_exists(self):
-        rows = [row('d', 'screenshot', 0, 1, track='text'), row('d', 'screenshot', 1, 1, track='vision')]
+        rows = [row('d', 'deterministic', 'screenshot', 400, 0, 1, track='text'),
+                row('d', 'deterministic', 'screenshot', 400, 1, 1, track='vision')]
         self.assertEqual(report.final(rows)[('m', 'classic')]['final'], 1)
 
 
@@ -68,10 +75,12 @@ class OverrideTest(unittest.TestCase):
         self.assertEqual(report.override(rows), 0.5)
 
 
-class CaseKindTest(unittest.TestCase):
-    def test_every_question_has_a_kind_and_free_text_has_a_key(self):
+class QuestionFieldsTest(unittest.TestCase):
+    def test_every_question_has_groups_and_judged_has_a_key(self):
         for c in C.load():
-            self.assertIn(c.kind, report.KINDS)
+            self.assertIn(c.answer_type, report.ANSWER_TYPES)
+            self.assertTrue(set(c.input_types) <= set(report.INPUT_TYPES), c.id)
+            self.assertIn(str(c.level), report.LEVELS, c.id)
             if not c.choice:
                 self.assertTrue(c.key_points, c.id)
 

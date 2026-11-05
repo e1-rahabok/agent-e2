@@ -33,7 +33,7 @@ scope: vsphere
 product: [vsphere, windows]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - operations-management/capacity/rightsizing
@@ -44,8 +44,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [E]
 trap: [C,D]
 status: draft

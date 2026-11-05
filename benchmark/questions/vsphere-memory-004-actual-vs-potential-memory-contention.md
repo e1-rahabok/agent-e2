@@ -30,7 +30,7 @@ scope: vsphere
 product: [vsphere]
 technology: [memory]
 area: memory
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
@@ -40,8 +40,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q3 VM Memory Contention"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [C]
 trap: [A,B]
 status: draft

@@ -30,7 +30,7 @@ import report  # noqa: E402
 from llm import GatewayClient, LLMError, MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
-FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'kind', 'format', 'area', 'level', 'run', 'temperature',
+FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'answer_type', 'input', 'area', 'level', 'run', 'temperature',
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
@@ -74,7 +74,7 @@ def main():
     if needs_judge and judge_model in models_:
         sys.exit(f'The judge {judge_model} is also a candidate. The judge must never grade its own answers.')
     if needs_judge and not (judge_model or a.mock):
-        sys.exit('Free-text questions need a judge: set judge_model in config.yaml or pass --judge.')
+        sys.exit('Judged questions need a judge: set judge_model in config.yaml or pass --judge.')
     judge = J.MockJudge() if a.mock else J.Judge(client, judge_model, cfg) if needs_judge else None
     meta = _model_meta(client, models_ + ([judge_model] if needs_judge and not a.mock else []), a.mock)
     # Reading screenshots is a basic requirement (benchmark/models.md): a model without vision is not a candidate.
@@ -90,8 +90,8 @@ def main():
                 for r in range(1, cfg['runs'] + 1):
                     tasks.append((m, mode, c, tr, r))
 
-    kinds = ', '.join(f'{k} {sum(1 for c in questions_ if c.kind == k)}' for k in ('multiple-choice', 'screenshot', 'conversation'))
-    print(f'Questions: {len(questions_)} ({kinds}). Skipped (no key): {", ".join(skipped) or "none"}')
+    answer_types = ', '.join(f'{k} {sum(1 for c in questions_ if c.answer_type == k)}' for k in ('deterministic', 'judged'))
+    print(f'Questions: {len(questions_)} ({answer_types}). Skipped (no key): {", ".join(skipped) or "none"}')
     if needs_judge:
         print(f'Judge: {judge.model}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')
@@ -123,7 +123,7 @@ def main():
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
                'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
-               'kinds': {c.id: c.kind for c in questions_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
+               'groups': {c.id: {'answer_type': c.answer_type, 'input': c.input_types, 'level': c.level} for c in questions_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
     lock = threading.Lock()
@@ -146,7 +146,7 @@ def main():
             question, mapping = c.prompt, {}
         images = c.image_parts() if track == 'vision' else []
         row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
-               'track': track, 'question_id': c.id, 'kind': c.kind, 'format': c.format, 'area': c.area, 'level': c.level, 'run': r,
+               'track': track, 'question_id': c.id, 'answer_type': c.answer_type, 'input': ' '.join(c.input_types), 'area': c.area, 'level': c.level, 'run': r,
                'temperature': cfg['temperature'], 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:

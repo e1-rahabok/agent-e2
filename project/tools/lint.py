@@ -145,18 +145,23 @@ def main():
                 for x in v:
                     if x not in allowed[k]: bad(f, f'{k} "{x}" not allowed')
         if os.path.dirname(f) != 'benchmark/questions': bad(f, 'questions live in one flat folder: benchmark/questions/')
-        fmt = (fm or {}).get('format')
-        if fmt not in ('multiple-choice', 'free-text', 'compound'):
-            bad(f, f'format "{fmt}" must be multiple-choice, free-text or compound')
-        if fmt == 'multiple-choice':
+        at = (fm or {}).get('answer_type')
+        if at not in ('deterministic', 'judged'):
+            bad(f, f'answer_type "{at}" must be deterministic or judged (benchmark/design.md, section 3.3)')
+        if (fm or {}).get('level') not in (100, 200, 300, 400):
+            bad(f, 'level must be 100, 200, 300 or 400 (benchmark/design.md, section 3.2)')
+        atts = (fm or {}).get('attachments') or []
+        derived = ([ 'table'] if any(a.lower().endswith(('.csv', '.xlsx', '.xls')) for a in atts) else []) + \
+                  (['screenshot'] if any(a.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')) for a in atts) else [])
+        if sorted((fm or {}).get('input') or []) != sorted(derived or ['text']):
+            bad(f, f'input must be {derived or ["text"]}, from the attachments (benchmark/design.md, section 3.4)')
+        if at == 'deterministic':
             prompt = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
             letters = set(re.findall(r'^(?:[-*]\s+)?([A-H])\.\s', prompt.group(1), re.M)) if prompt else set()
             for k in ('answer', 'trap'):
                 for x in fm.get(k) or []:
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
-            if not fm.get('answer'): bad(f, 'multiple-choice question has no answer')
-            if fm.get('level') not in ('recall', 'l400', 'multi-hop', 'screenshot'):
-                bad(f, 'level must be recall, l400, multi-hop or screenshot')
+            if not fm.get('answer'): bad(f, 'deterministic question has no answer')
         for att in (fm or {}).get('attachments') or []:
             if not os.path.exists(os.path.join('benchmark', 'questions', att)):
                 bad(f, f'attachment not found: {att}')

@@ -130,9 +130,9 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 - Broadcom's VMware Private AI Foundation with NVIDIA is the natural platform for this VM (to verify against current product documentation).
 
 ## 8. How we prove it
-- Benchmark: 100 questions written from the author's books and quizzes: multiple choice, screenshots and free-text conversation, 50% Level 400 traps. Answer keys are never indexed.
+- Benchmark: 100 questions written from the author's books and quizzes: deterministic and judged answers; text, tables and screenshots; Levels 100-400, 50% Level 400 traps. Answer keys are never indexed.
 - Every model runs in three modes: no knowledge base, one lookup, model-driven lookups.
-- Headline: one final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. A question earns what its worst of 5 runs earns. Also reported: confident-wrong rate. Unsure is allowed and preferred over a guess.
+- Headline: one final score, 0-100%, with sub-scores by answer type, input type and level. A question earns what its worst of 5 runs earns. Also reported: confident-wrong rate. Unsure is allowed and preferred over a guess.
 - The frontier model is scored the same way, with and without the knowledge base.
 - Detail: `benchmark/design.md`; runner `benchmark/runner/`.
 

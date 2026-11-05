@@ -34,7 +34,7 @@ product: [vsphere]
 technology: [system]
 pillar: [performance, capacity]
 area: operations-management
-input: text
+input: [text]
 tests: concept
 knowledge:
   - operations-management/capacity/capacity-model
@@ -43,8 +43,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Performance vs Capacity"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A,B,C,D,E]
 trap: []
 status: draft

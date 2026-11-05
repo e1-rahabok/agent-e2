@@ -47,7 +47,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: screenshot
+input: [screenshot]
 tests: judgment
 knowledge:
   - vsphere/technology/cpu/metrics/host/usage
@@ -60,8 +60,8 @@ attachments:
   - vsphere-cpu-004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q1 ESXi CPU Utilisation"
-format: multiple-choice
-level: screenshot
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [C]
 trap: [A,B]
 status: draft

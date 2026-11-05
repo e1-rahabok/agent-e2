@@ -4,8 +4,8 @@ Only `## Prompt` and attachments are ever shown to the model under test. The ans
 (metadata `answer`, `trap`; sections `## Expected key points`, `## Likely wrong answer`) is read here
 for scoring only: letters by the runner, key points by the judge (judge.py).
 
-Kind (one per question, for the sub-scores): screenshot (has image attachments, any format),
-multiple-choice (letters, no images), conversation (free-text or compound, no images).
+Sub-scores (benchmark/design.md, section 3): answer type (deterministic: letters; judged: free text),
+input type (text, table, screenshot: from the attachments), level (100, 200, 300, 400).
 """
 import base64
 import glob
@@ -21,6 +21,7 @@ META = '\n## Metadata\n```yaml\n'
 UNSURE = 'Unsure: the information available does not settle this question.'
 # Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
 POINTS = {'exact': 1, 'unsure': 0, 'wrong': -1}
+TABLE_EXT = ('.csv', '.xlsx', '.xls')
 OPTION = re.compile(r'^(?:[-*]\s+)?([A-H])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
 ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 
@@ -37,7 +38,7 @@ class Question:
         self.id = self.meta['id']
         self.area = self.meta.get('area', '')
         self.level = self.meta.get('level', '')
-        self.format = self.meta.get('format', 'free-text')
+        self.answer_type = self.meta.get('answer_type', 'judged')
         self.answer = [str(a) for a in (self.meta.get('answer') or [])]
         self.trap = [str(a) for a in (self.meta.get('trap') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
@@ -72,8 +73,8 @@ class Question:
 
     @property
     def choice(self):
-        """Scored by letters (True) or by the judge (False)."""
-        return self.format == 'multiple-choice'
+        """Scored by letters (deterministic) or by the judge (judged)."""
+        return self.answer_type == 'deterministic'
 
     @property
     def scorable(self):
@@ -82,10 +83,18 @@ class Question:
         return bool(self.prompt) and bool(self.key_points)
 
     @property
-    def kind(self):
+    def input_types(self):
+        """Input types from the attachments: screenshot (images), table (spreadsheet or CSV), or text alone."""
+        types = []
+        if self.has_tables:
+            types.append('table')
         if self.has_images:
-            return 'screenshot'
-        return 'multiple-choice' if self.choice else 'conversation'
+            types.append('screenshot')
+        return types or ['text']
+
+    @property
+    def has_tables(self):
+        return any(a.lower().endswith(TABLE_EXT) for a in self.attachments)
 
     @property
     def has_images(self):

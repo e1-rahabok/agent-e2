@@ -32,7 +32,7 @@ scope: vsphere
 product: [vsphere, windows]
 technology: [memory]
 area: memory
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - guest-os/system/concepts/guest-os-sizing
@@ -42,8 +42,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [E]
 trap: [A,B,D]
 status: draft

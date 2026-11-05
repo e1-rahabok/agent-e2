@@ -36,7 +36,7 @@ scope: vsphere
 product: [vsphere, windows]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: concept
 knowledge:
   - guest-os/cpu/concepts/windows-cpu-scheduling
@@ -46,8 +46,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q7 Guest OS CPU"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [D,E,F]
 trap: [A,B,C]
 status: draft

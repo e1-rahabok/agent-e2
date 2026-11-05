@@ -28,7 +28,7 @@ scope: vsphere
 product: [vsphere]
 technology: [storage]
 area: storage
-input: text
+input: [text]
 tests: concept
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
@@ -36,6 +36,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."
-format: free-text
+answer_type: judged
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 status: draft
 ```

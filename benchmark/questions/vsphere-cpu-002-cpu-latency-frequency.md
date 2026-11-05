@@ -27,7 +27,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/latency
@@ -36,6 +36,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."
-format: free-text
+answer_type: judged
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 status: draft
 ```

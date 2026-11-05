@@ -38,7 +38,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: mixed
+input: [screenshot]
 tests: concept
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-frequency
@@ -49,8 +49,8 @@ attachments:
   - vsphere-cpu-007/intel-xeon-6520p-specification.png
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q4 ESXi CPU Frequency"
-format: multiple-choice
-level: screenshot
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A]
 trap: [B,C,D]
 status: draft

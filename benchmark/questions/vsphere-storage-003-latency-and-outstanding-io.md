@@ -27,7 +27,7 @@ scope: vsphere
 product: [vsphere]
 technology: [storage]
 area: storage
-input: text
+input: [text]
 tests: concept
 knowledge:
   - vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
@@ -36,8 +36,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1 Latency vs OIO"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [B]
 trap: [A,D]
 status: draft
