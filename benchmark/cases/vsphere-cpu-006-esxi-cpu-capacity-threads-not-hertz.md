@@ -45,7 +45,7 @@ attachments:
   - vsphere-cpu-006/two-esxi-hosts-specification-and-capacity-options.png
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESXi Total Capacity"
-format: compound            # two answers (one per host); scored by hand
+format: compound            # two answers (one per host); scored by the judge
 level: l400
 status: draft
 ```

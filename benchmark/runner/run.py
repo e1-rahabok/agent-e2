@@ -23,16 +23,18 @@ import yaml
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
 import cases as C  # noqa: E402
+import judge as J  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
 import report  # noqa: E402
 from llm import GatewayClient, LLMError, MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
-FIELDS = ['run_id', 'time', 'model', 'provider', 'mode', 'track', 'case_id', 'area', 'level', 'run', 'temperature',
+FIELDS = ['run_id', 'time', 'model', 'provider', 'mode', 'track', 'case_id', 'kind', 'format', 'area', 'level', 'run', 'temperature',
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
-          'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired']
+          'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
+          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text']
 
 
 def main():
@@ -46,6 +48,7 @@ def main():
     ap.add_argument('--concurrency', type=int)
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')
     ap.add_argument('--mock', action='store_true', help='offline: random answers, no API calls')
+    ap.add_argument('--judge', help='judge model id (default: config judge_model)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
     ap.add_argument('--resume', help='existing run folder to continue')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results', 'autotest'))
@@ -63,23 +66,36 @@ def main():
     skipped = [c.id for c in all_cases if not c.scorable]
     cases_ = [c for c in all_cases if c.scorable]
     if not cases_:
-        sys.exit('No multiple-choice cases matched.')
+        sys.exit('No scorable cases matched.')
 
     client = MockClient() if a.mock else GatewayClient(cfg['gateway'])
-    meta = _model_meta(client, models_, a.mock)
+    judge_model = a.judge or cfg.get('judge_model')
+    needs_judge = any(not c.choice for c in cases_)
+    if needs_judge and judge_model in models_:
+        sys.exit(f'The judge {judge_model} is also a candidate. The judge must never grade its own answers.')
+    if needs_judge and not (judge_model or a.mock):
+        sys.exit('Free-text cases need a judge: set judge_model in config.yaml or pass --judge.')
+    judge = J.MockJudge() if a.mock else J.Judge(client, judge_model, cfg) if needs_judge else None
+    meta = _model_meta(client, models_ + ([judge_model] if needs_judge and not a.mock else []), a.mock)
+    # Reading screenshots is a basic requirement (benchmark/models.md): a model without vision is not a candidate.
+    blind = [m for m in models_ if 'vision' not in meta.get(m, {}).get('tags', [])]
+    if meta and blind and any(c.has_images for c in cases_):
+        sys.exit(f'Models without vision cannot take the screenshot cases: {", ".join(blind)}. '
+                 'Remove them (benchmark/models.md) or pass --cases without screenshot cases.')
     tasks = []
     for m in models_:
-        vision = 'vision' in meta.get(m, {}).get('tags', [])
         for mode in modes_:
             for c in cases_:
-                tracks = ['text'] + (['vision'] if c.has_images and vision else [])
-                for tr in tracks:
-                    for r in range(1, cfg['runs'] + 1):
-                        tasks.append((m, mode, c, tr, r))
+                tr = 'vision' if c.has_images else 'text'
+                for r in range(1, cfg['runs'] + 1):
+                    tasks.append((m, mode, c, tr, r))
 
-    print(f'Cases: {len(cases_)} multiple-choice (skipped {len(skipped)} not multiple-choice: {", ".join(skipped)})')
+    kinds = ', '.join(f'{k} {sum(1 for c in cases_ if c.kind == k)}' for k in ('multiple-choice', 'screenshot', 'conversation'))
+    print(f'Cases: {len(cases_)} ({kinds}). Skipped (no key): {", ".join(skipped) or "none"}')
+    if needs_judge:
+        print(f'Judge: {judge.model}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')
-    est = _estimate(tasks, meta)
+    est = _estimate(tasks, meta, judge_model if needs_judge else None)
     print(f'Estimated cost: US$ {est:.2f} (rough; agentic counted at 3x classic tokens)')
     if a.dry_run:
         return
@@ -106,7 +122,8 @@ def main():
     json.dump({'run_id': run_id, 'started': dt.datetime.now().isoformat(timespec='seconds'), 'index_version': sha,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'cases': [c.id for c in cases_],
-               'skipped_cases': skipped, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
+               'skipped_cases': skipped, 'judge_model': judge.model if judge else None,
+               'kinds': {c.id: c.kind for c in cases_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
     lock = threading.Lock()
@@ -123,21 +140,37 @@ def main():
     def one(task):
         m, mode, c, track, r = task
         rng = random.Random(f'{c.id}-{r}')  # same option order for every model and mode in run r
-        question, mapping = c.render(rng)
+        if c.choice:
+            question, mapping = c.render(rng)
+        else:
+            question, mapping = c.prompt, {}
         images = c.image_parts() if track == 'vision' else []
         row = {'run_id': run_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
-               'track': track, 'case_id': c.id, 'area': c.area, 'level': c.level, 'run': r,
+               'track': track, 'case_id': c.id, 'kind': c.kind, 'format': c.format, 'area': c.area, 'level': c.level, 'run': r,
                'temperature': cfg['temperature'], 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
-            res, used, trace, fb = modes.answer(mode, client, m, question, images, cfg, retriever)
-            picked = C.parse(res['content'], mapping)
-            row.update(C.score(c, picked))
-            row['answer_letters'] = ','.join(picked) if picked else ''
-            row['reason'] = _reason(res['content'])
+            res, used, trace, fb = modes.answer(mode, client, m, question, images, cfg, retriever,
+                                                'choice' if c.choice else 'open')
+            if c.choice:
+                picked = C.parse(res['content'], mapping)
+                row.update(C.score(c, picked))
+                row['answer_letters'] = ','.join(picked) if picked else ''
+                row['reason'] = _reason(res['content'])
+                row['credit'] = row['exact']
+                row['confident_wrong'] = int(not row['exact'] and not row['unsure'])
+            else:
+                v, jres = judge.grade(c, res['content'], images)
+                trace.append({'step': len(trace) + 1, 'action': 'judge', 'input': judge.model, 'output': v,
+                              'prompt_tokens': jres.get('prompt_tokens'), 'completion_tokens': jres.get('completion_tokens')})
+                row.update({'judge_model': judge.model, 'judge_score': v['score'], 'judge_missed': v['missed'],
+                            'reason': v['reason'], 'trap': int(v['trap']), 'unsure': int(v['unsure']),
+                            'exact': int(v['score'] == 3), 'credit': round(v['score'] / 3, 3),
+                            'confident_wrong': int(v['score'] == 0 and not v['unsure']), 'parse_ok': 1,
+                            'answer_text': (res['content'] or '')[:2000]})
             row['provider'] = res.get('provider', '')
-            row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace)
-            row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace)
+            row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace if s['action'] != 'judge')
+            row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace if s['action'] != 'judge')
             row['latency'] = round(sum(s.get('latency') or 0 for s in trace), 2)
             row['steps'] = sum(1 for s in trace if s['action'] in modes.TOOL_NAMES)
             row['tools_used'] = ' '.join(sorted({s['action'] for s in trace if s['action'] in modes.TOOL_NAMES}))
@@ -187,7 +220,7 @@ def _reason(text):
 
 def _model_meta(client, models_, mock):
     if mock:
-        return {m: {'tags': ['tool-use', 'vision'] if 'gemma' in m or 'mistral' in m else ['tool-use'], 'pricing': {}} for m in models_}
+        return {m: {'tags': ['tool-use', 'vision'], 'pricing': {}} for m in models_}
     try:
         allm = client.models()
     except Exception as e:  # listing is public; failure is not fatal
@@ -207,11 +240,15 @@ def _cost(m, pin, pout):
         return ''
 
 
-def _estimate(tasks, meta):
+def _estimate(tasks, meta, judge_model=None):
     total = 0.0
     for m, mode, c, tr, r in tasks:
         pin, pout = {'baseline': (600, 300), 'classic': (8000, 300), 'agentic': (24000, 900)}[mode]
+        if not c.choice:
+            pout *= 2  # a free-text answer is longer than two lines
         total += _cost(meta.get(m, {}), pin, pout) or 0
+        if not c.choice and judge_model:
+            total += _cost(meta.get(judge_model, {}), 1500, 300) or 0
     return total
 
 

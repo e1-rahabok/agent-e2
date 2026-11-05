@@ -1,11 +1,11 @@
 # Benchmark design
 
 For human experts who check that the test is valid and complete. Not indexed.
-Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
+Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/README.md`. Models and judge: `benchmark/models.md`. Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 
 ## 1. Claim
 - Claim: a local 27-32B open-weight model, with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
-- Release gate: at least 85% Stable correct. Target: 99% (author, 2026-11-03).
+- Release gate: final score at least 85%. Target: 99% (author, 2026-11-03). Final score: section 7.4.
 - The test must:
   1. rank candidate models and answer modes against each other;
   2. show whether a configuration clears 85%;
@@ -15,14 +15,16 @@ Runner and commands: `benchmark/runner/README.md`. Case format: `benchmark/READM
 | Measured | Not measured (and where it is measured instead) |
 |---|---|
 | Correct reading of metrics: mechanism, vantage point, unit, rollup | Installation, configuration steps, UI navigation (out of scope for the product) |
-| Resistance to traps (see `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400) | Writing quality of free-text answers (0-3 rubric, `benchmark/README.md`) |
+| Resistance to traps (see `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400) | Writing style of free-text answers (the judge scores facts only, section 14) |
 | Combining several facts (multi-hop), including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
-| Reading a screenshot of a chart or table | Data-file parsing (release 1.2) |
+| Reading one or more screenshots (esxtop, vCenter UI, VCF Operations UI) | Data-file parsing (release 1.2) |
 | Knowing the limits: choosing Not covered or Unsure instead of guessing | Cost and price (out of scope, author 2026-11-04) |
 | Consistency: the same answer on every run | |
+| Answering in conversation, without options (free text, judged) | |
 
-- Multiple choice is used because it can be scored without a judge, on thousands of answers, with no scorer bias. Guessing is handled by the scoring in section 7.
+- Multiple choice is the bulk because it can be scored without a judge, on thousands of answers, with no scorer bias. Guessing is handled by the scoring in section 7.
+- Free text is kept because a real user asks without options. A model can pick the right option yet fail to raise the point unprompted. A judge scores it (section 14).
 
 ## 3. Blueprint
 The blueprint defines the domain and how the 100 questions sample it. A reviewer can check coverage question by question.
@@ -53,6 +55,18 @@ The blueprint defines the domain and how the 100 questions sample it. A reviewer
 
 - At least 10 of the Level 400 and multi-hop questions require a troubleshooting flow (a `diagnosis/` file) to be followed in order.
 
+### 3.2.1 By kind (proposal 2026-11-05, author to confirm: Q054)
+Each case has one kind. The kinds give the sub-scores (section 7.4).
+
+| Kind | Proposed share of 100 | Scored by |
+|---|---|---|
+| Multiple choice (text only) | 60 | Exact letters |
+| Screenshot (one or more images, any format) | 20 | Exact letters, or the judge for free text |
+| Conversation (free text or compound, no image) | 20 | The judge |
+
+- Screenshot rises from 10 to 20: vision is now a basic requirement and a sub-score needs enough cases to read (section 13).
+- The level shares above still apply across all kinds.
+
 ### 3.3 Coverage constraints
 | Constraint | Minimum |
 |---|---|
@@ -62,6 +76,8 @@ The blueprint defines the domain and how the 100 questions sample it. A reviewer
 | Questions outside the knowledge base (Not covered) | 5 |
 | Questions where the knowledge base and the vSphere documentation disagree | 3 |
 | Questions needing the calculator (summation to %, units, capacity) | 5 |
+| Screenshot cases per source: esxtop, vCenter UI, VCF Operations UI | 5 each |
+| Screenshot cases with 2 or more images (for example a chart and its esxtop view) | 5 |
 
 - Every case records what it covers in its metadata (`level`, `tests`, `knowledge`; `trap_type` to be added), so coverage is counted by a script, not by eye.
 
@@ -125,7 +141,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Unsure, chosen alone | Unsure | Not correct; not counted as wrong |
 | Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong | Confident-wrong rate |
 
-- Two numbers are reported: **Stable correct** (headline, absolute, against the fixed set) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
+- Two numbers are reported for multiple choice: **Stable correct** (absolute, against the fixed set; it is the multiple-choice case credit in the final score, section 7.4) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
 - The model is told: a wrong answer is worse than Unsure, because an operator would act on it; if it cannot decide every option, choose Unsure.
 
 ### 7.1 No points, no -1 (author, 2026-11-04)
@@ -164,11 +180,27 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Tools used, verifier flags | Whether the harness tools were used (agentic mode). |
 | Per area, per level | Diagnosis only (small counts). |
 
+### 7.4 Final score (author, 2026-11-05)
+- One number, 0-100%, for each model and mode. Sub-scores support it: multiple choice, screenshot, conversation.
+- Case credit, 0 to 1, taken from the worst of the 5 runs:
+  - multiple choice: 1 if the letters are exactly right in every run, else 0 (Stable correct);
+  - free text and compound: the lowest judge score over the runs, divided by 3 (0, 0.33, 0.67, 1).
+- Final score = sum of case credits / number of cases. Every case weighs the same, whatever its kind.
+- Sub-score = the same mean within one kind. Final = the sub-scores weighted by their case counts, so the set mix (section 3.2.1) sets the weights.
+- Screenshot cases are scored with their images. There is no text-only track: every candidate reads images (`benchmark/models.md`).
+- Reasons:
+  - worst run, not mean: the same rule as Stable correct. An answer right in 4 runs of 5 is luck, and an operator gets one run;
+  - one weight per case: no kind can carry the score by a formula choice; the blueprint decides the mix;
+  - judge score / 3: a partly right free-text answer (right conclusion, missing reason) earns part credit, as a human examiner would give. Multiple choice has no part credit, because a partly right set of letters is a wrong answer an operator would act on.
+- Confident-wrong rate covers both: wrong letters that are not Unsure, and free-text answers scored 0 that do not say the question is unsettled.
+- Margin: 95% interval on the final score from the number of cases (section 4). Sub-scores have wider margins (20 cases: about ±16 points) and are diagnostic.
+- Runner: `benchmark/runner/report.py`, function `final`. Report table `Final score`.
+
 ## 8. Comparison design
 - Reasons for running both modes and for the call limit: `ARCHITECTURE.md`, sections 3 and 4.
 - The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See `benchmark/runner/README.md`.
-- Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's Stable correct exceeds it by more than the margin.
+- Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's final score exceeds it by more than the margin.
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - A gap smaller than the margin is a tie; the smaller model wins a tie.
 - Run matrix at 100 questions: 10 models x 3 modes x 100 questions x 5 runs = 15,000 answers, about US$ 25-40 and 2-4 hours (re-check prices and rate limits before each run).
@@ -206,27 +238,48 @@ For the set:
 8. Is every trap type covered at least 3 times?
 9. Are at least 20% of questions from sources other than the author's books?
 
-## 12. Status (2026-11-04)
-- 17 multiple-choice questions (cpu 9, memory 5, storage 1, foundations 1, general 1) and 11 free-text or compound cases.
-- Gaps against the blueprint: network 0 of 15, storage 1 of 20, system about 3 of 20, recall 0 of 20, Not covered 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
+## 12. Status (2026-11-05)
+- 28 cases, all scored automatically: 15 multiple choice, 3 screenshot (2 multiple choice, 1 compound), 10 conversation (free text). Before 2026-11-05 the runner skipped the 11 free-text and compound cases.
+- Gaps against the blueprint: screenshot 3 of 20 (vCenter and spec sheets only; no esxtop or VCF Operations; one case with 2 images), network 0 of 15, storage 1 of 20, system about 3 of 20, recall 0 of 20, Not covered 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
 - Next: write the questions to the blueprint from the author's book quizzes; add `trap_type`; add a coverage script; set up the held-out set.
 
 ## 13. Screenshot questions
-- Purpose: prepare for users who upload screenshots and ask the agent to explain the problem.
-- Two tracks, scored separately:
-  - Vision track: the image is sent to vision-capable models only.
-  - Text track: the same question with the image replaced by a written description (values, axes, legend). Every model takes it.
-- The gap between the two tracks shows how much reading the image itself costs.
+- Purpose: administrators upload screenshots and ask the agent to explain the problem. Often several at once, from different tools: esxtop, the vCenter UI, the VCF Operations UI (author, 2026-11-05).
+- Reading screenshots is a basic requirement. A model without vision is not a candidate (`benchmark/models.md`). There is no text-only track.
+- A screenshot case can be multiple choice or free text. It carries all its images in `attachments`; every image is sent in the same question.
+- Coverage: section 3.3 (5 cases per source, 5 cases with 2 or more images).
+- Sample size: the sub-score margin at 85% is about ±22 points with 10 cases, ±16 with 20, ±13 with 30. 20 is the proposal (section 3.2.1); 30 is needed before the sub-score alone decides between two models.
+- The prompt still states the question in words. The image supplies the values.
 - Images: author screenshots with host and customer names masked before commit.
 
-## 14. Free-text questions
-- Golden cases without options keep the 0-3 rubric. A judge model scores first; the author checks every 0 and every disagreement between runs.
-- The judge is never one of the candidates. A frontier model is fine: it is not deployed to customers. It sees the answer key; the model under test never does. Author scores override and are logged.
+## 14. Free-text questions and the judge
+- Cases with `format: free-text` or `compound` are answered without options and scored 0-3 by a judge model. Code: `benchmark/runner/judge.py`.
+- The model under test gets the same harness, modes and tools as for multiple choice, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: `harness/modes.py`, `PROMPTS['open']`.
+- The judge gets: the prompt, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The model under test never sees the key.
+- Rubric:
+
+| Score | Meaning |
+|---|---|
+| 0 | Wrong, falls into the likely wrong answer, or contradicts a key point. Also: says the question cannot be settled (marked unsure). |
+| 1 | Avoids the likely wrong answer, but the reason is missing or wrong. |
+| 2 | Correct conclusion with the right reason (mechanism or vantage point from the key points). |
+| 3 | As 2, and states what to check next, or covers every key point. |
+
+- Judge rules (in its prompt): judge facts, not style or length; a contradiction of a key point caps the score at 0; the key points are the truth even where general IT practice differs; reward nothing the key points do not contain.
+- Reply: one JSON object (`score`, `trap`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
+- Each run of a case is judged separately. The case credit is the lowest score / 3 (section 7.4).
+- Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See `benchmark/models.md`, section 4.
+- Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `trap`, `unsure`, and the answer text.
+- Checks on the judge:
+  - the author reviews every score 0 and every case where runs disagree by 2 or more points;
+  - an author score overrides the judge: correct the key points, then re-score;
+  - a key point the judge misreads is rewritten as one testable fact per bullet.
+- Cost: one judge call per free-text answer, about 1,500 input tokens.
 
 ## 15. Target history (author, 2026-11-03)
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
-- Target: 99% Stable correct on the golden multiple-choice set (chosen mode). See section 7.
-- Minimum: 85% Stable correct. A model below 85% is not usable.
+- Target: 99% final score on the golden set (chosen mode). See section 7.4. (Before 2026-11-05: Stable correct on multiple choice only.)
+- Minimum: 85% final score. A model below 85% is not usable.
 - mistral/ministral-8b dropped from future runs (author, 2026-11-03): 29-40% exact in run 20261103-081849.
 - The other candidates stay until the question set reaches 100 (author, 2026-11-03); 3 were added on 2026-11-04 (10 in total). No model is dropped on the 17-question results: the margin (about ±20-24 points) is too wide.
 - Reference point: the best frontier model in baseline mode (no knowledge base). Measured each run.
@@ -238,10 +291,10 @@ For the set:
 
 ## 16. Decision rules
 - Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
-- Pick the model: highest Stable correct in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
+- Pick the model: highest final score in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
 - Agentic is dropped for a model with more than 10% fallbacks.
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
-- Screenshot upload on isvara.io only if the chosen model passes the vision track.
+- Screenshot upload is part of the product. A model whose screenshot sub-score is far below its multiple-choice sub-score (more than the margin) is a vision problem: check the image, then the model.
 - 70B test: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
 
 ## 17. Outputs

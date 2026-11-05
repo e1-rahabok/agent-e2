@@ -218,6 +218,13 @@ To be conservative, I recommend include.
 - Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
 - Answer:
 
+### Q054 · Benchmark · Mix of the 100 cases by kind
+- Files: `benchmark/test-design.md`, sections 3.2.1, 3.3, 7.4, 13 (https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/test-design.md).
+- Search: not from the book.
+- Question: the final score weighs every case the same, so the mix of kinds sets the weight of each sub-score. Is 60 multiple choice, 20 screenshot, 20 conversation the right mix for the 100 cases? Are the screenshot minimums right (5 each from esxtop, vCenter UI, VCF Operations UI; 5 with 2 or more images)?
+- Written as now: the proposal above. Today: 15 multiple choice, 3 screenshot, 10 conversation.
+- Answer:
+
 ## Resolved
 
 ### Q024 · Chapter 5 Network > Architecture · VM and ingress

@@ -36,7 +36,7 @@ flowchart LR
     H -->|prompts, checks| M
   end
   subgraph Proof["Proof: not deployed"]
-    B["benchmark/<br/>exam cases, runner, results"]
+    B["benchmark/<br/>cases, models, judge,<br/>runner, results"]
   end
   subgraph Project["Project: not deployed"]
     P["project/<br/>design, decisions,<br/>author questions, to-do"]
@@ -52,7 +52,7 @@ flowchart LR
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
   - Model: a 27-32B open-weight model, chosen by benchmark. Not stored here.
 - Proof: shows that the product beats a frontier model.
-  - `benchmark/`: exam cases with answer keys, attachments, the runner, results. Luck removed: Unsure option, confident-wrong rate, 5 runs must agree. Never indexed: it holds the answer keys.
+  - `benchmark/`: exam cases with answer keys and their attachments, the candidate models and judge (`benchmark/models.md`), the runner, results. One final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. Luck removed: Unsure option, confident-wrong rate, each case scored on its worst of 5 runs. Never indexed: it holds the answer keys.
 - Project: how this repository is built and kept correct.
   - `project/`: design, decisions, reviews, author questions, to-do, archive.
   - `project/tools/`: `lint.py` (file, tag and folder checks, run before every merge) and `tags.yaml` (allowed tag values, avoided phrases).
@@ -63,9 +63,10 @@ flowchart LR
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How model, harness and knowledge run together; ingest, query and answer steps |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | Forms of codified knowledge; folder, metadata, trap, flow, image and writing rules |
-| [benchmark/test-design.md](benchmark/test-design.md) | How the benchmark proves the gain |
+| [benchmark/test-design.md](benchmark/test-design.md) | How the benchmark proves the gain; final score |
+| [benchmark/models.md](benchmark/models.md) | Candidate models, frontier reference, judge |
 | [harness/README.md](harness/README.md) | Harness modules and commands |
-| [project/solution-design.md](project/solution-design.md) | Why it can work, why 32B, which models |
+| [project/solution-design.md](project/solution-design.md) | Why it can work, why 32B |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 
 ## Status
