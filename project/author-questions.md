@@ -31,14 +31,14 @@ Each entry has:
 - Answer:
 
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
-- Files: `benchmark/questions/L3-13-reclaiming-vcpus-from-an-idle-vm.md`; `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
+- Files: [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md); `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
 - Search (quiz): "Power off the VM, as this also frees the VM memory"
 - Question: key is C,D. Frontier baseline chose C,D in 5 of 5; frontier classic chose C only in 5 of 5, citing that the knowledge base does not make the claim. Should the knowledge base state that powering off an idle VM frees its memory, as part of reclamation?
 - Written as now: no file states that powering off an idle VM frees its memory. idle-and-unused-vcpus covers the CPU cost of idle vCPUs only.
 - Answer:
 
 ### Q043 · Quiz > Memory > Q2 VM vs Guest OS · Options A and D
-- Files: `benchmark/questions/L3-22-relationship-between-vm-and-guest-os-memory-metrics.md`; `vsphere/technology/memory/concepts/guest-os-vs-vm-memory`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/metrics/virtual-motherboard/usage`
+- Files: [Relationship between VM and Guest OS memory metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md); `vsphere/technology/memory/concepts/guest-os-vs-vm-memory`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/metrics/virtual-motherboard/usage`
 - Search 1 (quiz): "Neither layer considers the other"
 - Search 2 (quiz): "the hypervisor cannot balloon the VM"
 - Question: key is A,B,D,E. Frontier dropped A or D in every run (baseline and agentic B,D,E; classic A,B,E). Are A and D both correct? If yes, which statements should the knowledge base add?
@@ -125,21 +125,21 @@ Each entry has:
 - Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
 - Answer:
 
-### Q057 · Benchmark · L3-14: check with a vCenter CPU screenshot
-- Files: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-14-reservation-cpu-vs-memory.md (section Expected key points, CPU bullet); `vsphere/foundations/resource-controls` (section Reservation: CPU vs memory).
+### Q057 · Benchmark · [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md): check with a vCenter CPU screenshot
+- Files: [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md) (section Expected key points, CPU bullet); `vsphere/foundations/resource-controls` (section Reservation: CPU vs memory).
 - Search: not from the book. The question comes from the book section The World of Metrics > Resource management (`source_path` of the question).
 - Question: please validate the CPU key point with a screenshot of the vCenter UI: a VM with a 4 GHz CPU reservation, powered on and sitting at the BIOS screen. Do Run, Used, Demand and Usage stay at or near 0? The screenshot can then become the question's attachment (input type screenshot).
 - Written as now: CPU reservation is on demand; the CPU counters stay at or near 0 while the VM sits at the BIOS screen.
 - Answer:
 
-### Q058 · Benchmark · Synthetic share and review of L4-54 to L4-90
-- Files: https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (L4-54 to L4-90); `benchmark/design.md` (section 10, synthetic cap; section 12, status).
+### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-50
+- Files: https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (L4-14 to L4-50); `benchmark/design.md` (section 10, synthetic cap; section 12, status).
 - Search: not from the book.
 - Context: the Level 400 allocation (37 questions) is now drafted by Claude from the knowledge base. Synthetic questions are 63 of 90 (70%), against the cap of about 30% in section 10.
 - Question:
   1. Keep the cap? If yes, which synthetic questions should be replaced by book, quiz or real-ticket questions, or should the cap rise?
   2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
-  3. L4-79, L4-80, L4-88, L4-89: the key names rows of the table you supply. Record the names in each question's Notes.
+  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-48-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-49-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
 - Answer:
 
@@ -150,35 +150,35 @@ Each entry has:
 - Search: not from the book.
 - Question: Claude assigned a draft level to each question (definitions: `benchmark/design.md`, section 3.2). Which are wrong? None is at Level 100 or 200.
 - Written as now:
-  - L3-01 (judged, text): 300
-  - L4-02 (judged, text): 400
-  - L4-03 (judged, text): 400
-  - L4-04 (deterministic, screenshot): 400
-  - L4-05 (deterministic, text): 400
-  - L4-06 (judged, screenshot): 400
-  - L3-07 (deterministic, screenshot): 300
-  - L4-08 (deterministic, text): 400
-  - L3-09 (deterministic, text): 300
-  - L3-10 (deterministic, text): 300
-  - L3-11 (deterministic, text): 300
-  - L4-12 (deterministic, text): 400
-  - L3-13 (deterministic, text): 300
-  - L3-14 (judged, text): 300
-  - L3-15 (judged, text): 300
-  - L3-16 (judged, text): 300
-  - L3-17 (judged, text): 300
-  - L4-18 (deterministic, text): 400
-  - L3-19 (deterministic, text): 300
-  - L4-20 (judged, text): 400
-  - L3-21 (deterministic, text): 300
-  - L3-22 (deterministic, text): 300
-  - L4-23 (deterministic, text): 400
-  - L4-24 (deterministic, text): 300
-  - L4-25 (deterministic, text): 400
-  - L4-26 (judged, text): 400
-  - L3-27 (judged, text): 400
-  - L3-28 (deterministic, text): 300
-- Answer: Author (2026-11-05): reviewed all. L4-24 is Level 400, not 300; L3-27 is Level 300, not 400. The others stand.
+  - [High CPU Wait](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md) (judged, text): 300
+  - [CPU Latency without contention](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-01-cpu-latency-frequency.md) (judged, text): 400
+  - [Hyper-Threading and two vantage points](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-02-hyperthreading-vm-vs-esxi.md) (judged, text): 400
+  - [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md) (deterministic, screenshot): 400
+  - [Likely vCPU speed on a busy Hyper-Threaded cluster](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-04-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md) (deterministic, text): 400
+  - [ESXi CPU capacity: threads, not hertz](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-05-esxi-cpu-capacity-threads-not-hertz.md) (judged, screenshot): 400
+  - [Reading an Intel Xeon specification: base, all-core Turbo, TDP](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-02-reading-an-intel-xeon-specification-base-all-core-turbo-tdp.md) (deterministic, screenshot): 300
+  - [Which counter to size VM CPU](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-06-which-counter-to-size-vm-cpu.md) (deterministic, text): 400
+  - [Counters where a vCPU cannot run at all](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-03-counters-where-a-vcpu-cannot-run-at-all.md) (deterministic, text): 300
+  - [Guest OS run queue, context switch, Windows thread states](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-04-guest-os-run-queue-context-switch-windows-thread-states.md) (deterministic, text): 300
+  - [CPU reservation behaviour](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md) (deterministic, text): 300
+  - [Utilization 50% and Core Utilization 50%](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-07-utilization-50-and-core-utilization-50.md) (deterministic, text): 400
+  - [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md) (deterministic, text): 300
+  - [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md) (judged, text): 300
+  - [VM availability](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-08-vm-availability.md) (judged, text): 300
+  - [Provider vs consumer metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-09-provider-consumer-ready-demand.md) (judged, text): 300
+  - [What counts as overhead](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-10-overhead-classification.md) (judged, text): 300
+  - [VM (virtual motherboard) vs Guest OS metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-08-vm-is-a-virtual-motherboard.md) (deterministic, text): 400
+  - [Performance vs capacity view of utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-11-performance-vs-capacity-view-of-utilization.md) (deterministic, text): 300
+  - [Memory usage: VM vs ESXi](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-09-usage-vm-vs-esxi.md) (judged, text): 400
+  - [Which counter to size VM memory](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-12-which-counter-to-size-vm-memory.md) (deterministic, text): 300
+  - [Relationship between VM and Guest OS memory metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md) (deterministic, text): 300
+  - [Actual vs potential memory contention](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-10-actual-vs-potential-memory-contention.md) (deterministic, text): 400
+  - [Memory reservation behaviour](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-11-memory-reservation-behaviour.md) (deterministic, text): 300
+  - [Balloon 0 while Swapped and Compressed are not 0](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-12-balloon-0-while-swapped-and-compressed-are-not-0.md) (deterministic, text): 400
+  - [Guest queue invisible to the hypervisor](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-13-guest-queue-invisible.md) (judged, text): 400
+  - [Setting a disk latency threshold](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-14-disk-latency-threshold.md) (judged, text): 400
+  - [Latency and outstanding IO](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-15-latency-and-outstanding-io.md) (deterministic, text): 300
+- Answer: Author (2026-11-05): reviewed all. [Memory reservation behaviour](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-11-memory-reservation-behaviour.md) is Level 400, not 300; [Setting a disk latency threshold](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-14-disk-latency-threshold.md) is Level 300, not 400. The others stand.
 - Done 2026-11-05: both levels changed; the draft marks removed from all 28 questions.
 
 ### Q054 · Benchmark · Allocation of the 100 questions
@@ -194,12 +194,12 @@ Each entry has:
 - Done 2026-11-05: `benchmark/design.md`, section 3.6 marked decided.
 
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
-- Files: `benchmark/questions/L3-11-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
+- Files: [CPU reservation behaviour](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md); `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
 - Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
 - Search 2 (quiz): "CPU reservation only comes into play during contention"
 - Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
 - Written as now: reservation in MHz/Hertz (supports D); CPU reservation not sticky, memory reservation sticky (supports C). No file states the cap at base nominal clock speed (A) or that the reservation only matters under contention (B).
-- Note (2026-11-05): the text written here was about case L4-04 (image links missing). Done: the case and the other two cases with attachments now have an `## Attachments` section with image links. Options A and B are still open.
+- Note (2026-11-05): the text written here was about case [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md) (image links missing). Done: the case and the other two cases with attachments now have an `## Attachments` section with image links. Options A and B are still open.
 - Answer: A and B are correct.
 - The justification for A was already in the key itself. ESXi CPU has 3 frequency (base or nominal, all core turbo, and single core turbo). Only the base frequency is used by ESXi logic to guarantee a reservation. This is a conservative design.
 - The justification for A was already in the key itself. It's written "if there is enough for everyone, reservation is irrelevant. Think of a restaurant. If there is enough seat, does your reservation matter if you do not reserve a specific table?"
@@ -221,7 +221,7 @@ Each entry has:
 - Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
 - Finding:
   - Frontier model: baseline (no knowledge base) 75%, classic 67%, agentic 67%.
-  - The ONLY rule cost 3 questions where the knowledge base is silent: vendor-neutral-general-001 (5 of 5 to 0 of 5), L3-13 (5 to 0), L3-19 (5 to 2).
+  - The ONLY rule cost 3 questions where the knowledge base is silent: vendor-neutral-general-001 (5 of 5 to 0 of 5), [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md) (5 to 0), [Performance vs capacity view of utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-11-performance-vs-capacity-view-of-utilization.md) (5 to 2).
   - The knowledge base cut the trap rate: 16% to 6-9%.
 - Options:
   - Keep ONLY: fewer invented answers; no credit where the knowledge base is silent; every gap must be filled in the knowledge base.
@@ -231,13 +231,13 @@ Each entry has:
 - Done 2026-11-05: `harness/modes.py` prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated (`benchmark/design.md`, both benchmark READMEs, `ARCHITECTURE.md`).
 
 ### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
-- Files: `benchmark/questions/L4-04-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
+- Files: [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md); `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
 - Search 1 (quiz): "It is a balanced reporting"
 - Search 2 (quiz): "Plenty of physical threads are idle"
 - Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
 - Written as now: core-utilization says Core Utilization is a capacity metric (ignores frequency). utilization says Utilization suits capacity management. No file says which one is the ESXi true utilization, or why Core Utilization overstates it.
 - Answer: I think you got triggered with the word "true". Change it to "Three metrics show three values. What is the ESXi utilization, from capacity management perspective? Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality". Review https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md and https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md and update accordingly.
-- Done 2026-11-05: case L4-04 prompt and hint reworded as given; `vsphere/technology/cpu/metrics/host/utilization` (section The capacity reading, traps) and `core-utilization` (not the capacity reading; traps) updated.
+- Done 2026-11-05: case [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md) prompt and hint reworded as given; `vsphere/technology/cpu/metrics/host/utilization` (section The capacity reading, traps) and `core-utilization` (not the capacity reading; traps) updated.
 
 ### Q055 · Follow-ups to Q027 and Q029
 - Files: `operations-management/capacity/vm-footprint-sizing` (section CPU), `guest-os/system/concepts/guest-os-sizing` (section Memory).
@@ -517,7 +517,7 @@ flowchart LR
 - Answer:
 
 ### Q034 · Quiz > CPU > Q2 VM CPU Speed · 80% vs 62.5% Hyper-Threading charge
-- Files: `benchmark/questions/L4-05-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md`, `vsphere/technology/cpu/metrics/virtual-motherboard/usage`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`
+- Files: [Likely vCPU speed on a busy Hyper-Threaded cluster](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-04-likely-vcpu-speed-on-a-busy-hyper-threaded-cluster.md), `vsphere/technology/cpu/metrics/virtual-motherboard/usage`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`
 - Search 1 (quiz key): "3.0 (All Cores Turbo) x 80% (as HT delivers 1.25x total)"
 - Search 2 (book): "37.5%"
 - Question: the quiz key gives 3.0 GHz x 80% = 2.4 GHz. The knowledge base charges each thread 62.5% when both threads run, which gives 1.875 GHz. Which factor does VM CPU Usage apply?
@@ -525,7 +525,7 @@ flowchart LR
 - Answer: Author (2026-11-03): the key is correct (2.4 GHz). Added All-Core Turbo knowledge to `vsphere/technology/cpu/concepts/cpu-frequency`.
 
 ### Q035 · Quiz > CPU > Q6 VM CPU Contention · Demand and Hyper-Threading
-- Files: `benchmark/questions/L3-09-counters-where-a-vcpu-cannot-run-at-all.md`, `vsphere/technology/cpu/metrics/virtual-motherboard/demand`
+- Files: [Counters where a vCPU cannot run at all](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-03-counters-where-a-vcpu-cannot-run-at-all.md), `vsphere/technology/cpu/metrics/virtual-motherboard/demand`
 - Search 1 (quiz key): "G is wrong as Demand is affected by hyper threading"
 - Search 2 (book, MS Windows table): "| VM CPU Demand   | Yes               | No             | Yes           |"
 - Question: the key says Demand is affected by Hyper-Threading. The MS Windows table marks Demand as not affected. Which is right?
@@ -533,7 +533,7 @@ flowchart LR
 - Answer: Author (2026-11-03): the key is correct. Guest OS and VM are 2 realms; the Guest OS does not see physical threads. Added to `vsphere/foundations/vm-vs-guest-os`, `vsphere/technology/cpu/metrics/virtual-motherboard/demand`, `vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`.
 
 ### Q036 · Quiz > CPU > Q7 Guest OS CPU · Is F correct?
-- Files: `benchmark/questions/L3-10-guest-os-run-queue-context-switch-windows-thread-states.md`
+- Files: [Guest OS run queue, context switch, Windows thread states](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-04-guest-os-run-queue-context-switch-windows-thread-states.md)
 - Search 1 (quiz key): "F is correct. Windows has 8 states."
 - Question: the answer column says D, E. The explanation says F is correct. Is the answer D, E, F?
 - Written as now: scored as D, E, F until answered.

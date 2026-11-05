@@ -21,7 +21,7 @@ Are they right?
 
 ## Metadata
 ```yaml
-id: "01"
+id: "0001"
 title: "High CPU Wait"
 product: [vsphere]
 technology: [cpu]

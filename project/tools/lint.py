@@ -131,7 +131,7 @@ def main():
                     if re.search(pat, checked, re.I):
                         bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
 
-    seen_ids = {}
+    seen_ids, level_numbers = {}, {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
         t = open(f).read()  # benchmark questions: metadata at the end, like knowledge files
         if t.startswith('---\n'): bad(f, 'front matter at the top: move it to a ## Metadata section at the end')
@@ -147,12 +147,14 @@ def main():
                     if x not in allowed[k]: bad(f, f'{k} "{x}" not allowed')
         if os.path.dirname(f) != 'benchmark/questions': bad(f, 'questions live in one flat folder: benchmark/questions/')
         qid = str((fm or {}).get('id') or '')
-        if not re.fullmatch(r'\d{2,3}', qid): bad(f, 'id must be a stable 2-digit number, quoted, e.g. "07" (benchmark/README.md)')
+        if not re.fullmatch(r'\d{4}', qid): bad(f, 'id must be a stable 4-digit number, quoted, e.g. "0007" (benchmark/README.md)')
         elif qid in seen_ids: bad(f, f'id {qid} is also used by {seen_ids[qid]}')
         else: seen_ids[qid] = f
         lv = (fm or {}).get('level')
-        if isinstance(lv, int) and not os.path.basename(f).startswith(f'L{lv // 100}-{qid}-'):
-            bad(f, f'file name must start with L{lv // 100}-{qid}- (level and id)')
+        mm = re.match(r'L(\d)-(\d{2,3})-', os.path.basename(f))
+        if not mm or not isinstance(lv, int) or int(mm.group(1)) != lv // 100:
+            bad(f, f'file name must start with L{(lv or 0) // 100}-<nn>- (benchmark/README.md); run project/tools/renumber_questions.py')
+        else: level_numbers.setdefault(lv, []).append(int(mm.group(2)))
         for a in (fm or {}).get('attachments') or []:
             if not str(a).startswith(f'{qid}/'): bad(f, f'attachment {a} must live in the folder {qid}/')
         for k in ('scope', 'area', 'tests', 'pillar', 'format', 'input_type'):
@@ -188,6 +190,12 @@ def main():
             if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') != 'awaiting-input':
                 bad(f, f'attachment not found: {att}')
 
+    for lv, ns in level_numbers.items():
+        if sorted(ns) != list(range(1, len(ns) + 1)):
+            bad('benchmark/questions', f'level {lv} file numbers must run 01..{len(ns):02d} without gaps; run project/tools/renumber_questions.py')
+    for d in ('benchmark/design.md', 'project/author-questions.md', 'project/todo.md'):
+        for ref in re.findall(r'benchmark/questions/(L\d-\d+-[\w-]+\.md)', open(d).read()):
+            if not os.path.exists(os.path.join('benchmark', 'questions', ref)): bad(d, f'link to a question that does not exist: {ref}')
     for f in files + sorted(glob.glob('benchmark/questions/*.md')):
         text = open(f).read()
         for pat in allowed.get('injection_patterns', []):
