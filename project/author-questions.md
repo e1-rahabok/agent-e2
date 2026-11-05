@@ -72,7 +72,8 @@ To be conservative, I recommend include.
 - Search 3: "I did not set green = 0"
 - Question: the table includes disk latency rows, has no balloon or swapped rows, and sets packet green to 0%. Is the table or the text current?
 - Written as now: the table, with text reasons listed and the conflict flagged.
-- Answer:
+- Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly.
+Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
 
 ### Q032 · Provider Objects > Other Metrics · Monster VM threshold
 - Files: `vsphere/object-types/cluster/metrics/cluster-risk`, `vsphere/object-types/cluster/concepts/cluster-operations`
@@ -82,7 +83,7 @@ To be conservative, I recommend include.
 - Search 4 (recommendation): "Monster VM > 50% of physical core, not thread"
 - Question: which CPU threshold defines a monster VM?
 - Written as now: the recommendation (above 50% of physical cores); the others flagged.
-- Answer:
+- Answer: The final and up to date answer at https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md#when-a-vm-is-a-monster  Update the 
 
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
 - Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/technology/cpu/metrics/virtual-motherboard/run`
