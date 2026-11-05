@@ -3,6 +3,7 @@
 ## Meaning
 - The only CPU reservation metric for ESXi. Unit: MHz.
 - Memory has 3 reservation counters. CPU has 1.
+- The reservable total is capped at base (nominal) clock speed × cores, not Turbo: ESXi guarantees only the frequency it can always deliver.
 
 ## Why only one
 - CPU reservation is transient. When a VM is not running, its reserved CPU can be used by other VMs.
@@ -13,6 +14,8 @@
 
 ## Traps
 - "Reserved CPU is unavailable to other VMs" → unused reserved CPU is used by other VMs.
+- "A CPU reservation speeds up the VM" → it only matters under contention. With enough CPU for every VM it changes nothing.
+- "The host can reserve up to its Turbo capacity" → reservation is capped at base clock speed × cores.
 
 ## Metadata
 ```yaml
@@ -37,7 +40,8 @@ related:
 source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Reservation
-corrections: []
+corrections:
+- 'Sections Meaning, Traps: CPU reservation capped at base clock speed × cores, and applies only under contention (author answer Q041, 2026-11-05; quiz CPU Q8 key options A and B).'
 review_notes: []
 status: draft
 ```

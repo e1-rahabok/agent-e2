@@ -1,7 +1,10 @@
 # High CPU Wait
 
 ## Prompt
-A VM shows CPU Wait at 90%. The application owner says the VM must be stuck waiting on disk or memory. Are they right?
+- A VM shows CPU Wait at 90%.
+- The application owner says the VM must be stuck waiting on disk or memory.
+
+Are they right?
 
 ## Likely wrong answer
 "Yes, high wait means IO or memory bottleneck."

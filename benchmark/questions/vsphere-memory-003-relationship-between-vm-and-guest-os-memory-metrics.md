@@ -1,13 +1,15 @@
 # Relationship between VM and Guest OS memory metrics
 
 ## Prompt
-These sentences cover the relationship between VM metrics and Guest OS metrics. Choose all the correct ones:
+- These sentences cover the relationship between VM metrics and Guest OS metrics.
 
-A. VM and Guest OS metrics are managed independently. The hypervisor manages the VM; Windows or Linux manages the Guest OS. Neither layer considers the other.
-B. VM memory utilization and Guest OS memory utilization can have significantly different values. Their patterns over time also do not match.
-C. When Windows or Linux frees a page, ESXi automatically frees the same block for the VM within a few minutes.
-D. If VMware Tools is not running, the hypervisor cannot balloon the VM: it cannot make the memory request to Windows or Linux.
-E. If VMware Tools is not running, VCF Operations rightsizing is less accurate. It falls back to Consumed memory, which tends to show higher utilization.
+Choose all the correct ones:
+
+- A. VM and Guest OS metrics are managed independently. The hypervisor manages the VM; Windows or Linux manages the Guest OS. Neither layer considers the other.
+- B. VM memory utilization and Guest OS memory utilization can have significantly different values. Their patterns over time also do not match.
+- C. When Windows or Linux frees a page, ESXi automatically frees the same block for the VM within a few minutes.
+- D. If VMware Tools is not running, the hypervisor cannot balloon the VM: it cannot make the memory request to Windows or Linux.
+- E. If VMware Tools is not running, VCF Operations rightsizing is less accurate. It falls back to Consumed memory, which tends to show higher utilization.
 
 ## Likely wrong answer
 C (a guest free assumed to propagate to ESXi).

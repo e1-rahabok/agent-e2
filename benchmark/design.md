@@ -1,12 +1,12 @@
 # Benchmark design
 
-For human experts who check that the test is valid and complete. Not indexed.
+For human experts who check that the benchmark is valid and complete. Not indexed.
 Runner and commands: `benchmark/runner/README.md`. Question format: `benchmark/README.md`. Models and judge: `benchmark/models.md`. Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 
 ## 1. Claim
 - Claim: a local open-weight model on one GPU (`benchmark/models.md`), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - Release gate: final score at least 85%. Target: 99% (author, 2026-11-03). Final score: section 7.4.
-- The test must:
+- The benchmark must:
   1. rank candidate models and answer modes against each other;
   2. show whether a configuration clears 85%;
   3. show how close it is to 99%, and state what the number proves.
@@ -126,7 +126,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
   - no "all of the above", no double negatives;
   - every wrong option is wrong for a reason the knowledge base states;
   - one option is the trap: the conclusion a Level 300 reader would draw. It is named in `## Likely wrong answer`.
-- Wording: paraphrased, never copied from the knowledge base. The test checks reasoning, not string matching.
+- Wording: paraphrased, never copied from the knowledge base. The benchmark checks reasoning, not string matching.
 - Key: `answer` letters, and `## Expected key points` with the reason for every option and the knowledge file ids.
 - Sources: the author's books and quizzes first; then real tickets and field questions; then synthetic questions drafted by Claude. A synthetic question needs the author's approval before it counts.
 
@@ -146,7 +146,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 
 ### 7.1 No points, no -1 (author, 2026-11-04)
 - An earlier version scored +1 / 0 / -1 and reported "Net points". It was dropped:
-  - The test is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
+  - The benchmark is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
   - Net points mixed two things an operator cares about separately: how often the system is right, and how often it is confidently wrong. Two plain shares say both without arithmetic.
 - In practice the -1 changed the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
 - Unsure applies to an AI too. On a dark site nobody checks the answer against the Internet, so "the knowledge base does not settle this" is the safe answer.
@@ -205,8 +205,8 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 - A gap smaller than the margin is a tie; the smaller model wins a tie.
 - Run matrix at 100 questions: 10 models x 3 modes x 100 questions x 5 runs = 15,000 answers, about US$ 25-40 and 2-4 hours (re-check prices and rate limits before each run).
 
-## 9. Harness-only test
-- The final score mixes harness and model. A harness-only test separates them: `benchmark/runner/retrieval_eval.py` checks, without a model, whether each question's `knowledge` files are found and placed in the classic context.
+## 9. Retrieval check
+- The final score mixes harness and model. The retrieval check separates them: `benchmark/runner/retrieval_eval.py` checks, without a model, whether each question's `knowledge` files are found and placed in the classic context.
 - Result 2026-11-04 (28 questions, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 questions. This caps classic mode. Improve it before judging the model.
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 8.
 
@@ -214,7 +214,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Threat | Guard |
 |---|---|
 | Wrong answer key | Every wrong answer from the best model is checked by the author: model error, knowledge gap, or key error. Keys cite knowledge ids. |
-| Knowledge base fitted to the test (Claude edits the knowledge base and can read the questions) | A held-out set of about 20% of the questions, kept by the author outside the repository and run only before releases. Fixes to the knowledge base must be general (a fact or a trap), never a question-specific answer. |
+| Knowledge base fitted to the benchmark (Claude edits the knowledge base and can read the questions) | A held-out set of about 20% of the questions, kept by the author outside the repository and run only before releases. Fixes to the knowledge base must be general (a fact or a trap), never a question-specific answer. |
 | Questions written by the knowledge base's own author favour its wording | Paraphrased stems; questions from real tickets and field forums; frontier baseline as an outside reference. |
 | Synthetic questions drafted by Claude mirror Claude's view | Author approval required; share capped at about 30% of the set. |
 | Ambiguous options | A question with a disputed option is fixed or removed, and the benchmark is re-scored. |
@@ -254,8 +254,8 @@ For the set:
 
 ## 14. Free-text questions and the judge
 - Questions with `format: free-text` or `compound` are answered without options and scored 0-3 by a judge model. Code: `benchmark/runner/judge.py`.
-- The model under test gets the same harness, modes and tools as for multiple choice, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: `harness/modes.py`, `PROMPTS['open']`.
-- The judge gets: the prompt, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The model under test never sees the key.
+- The candidate gets the same harness, modes and tools as for multiple choice, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: `harness/modes.py`, `PROMPTS['open']`.
+- The judge gets: the prompt, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The candidate never sees the key.
 - Rubric:
 
 | Score | Meaning |
@@ -295,7 +295,7 @@ For the set:
 - Agentic is dropped for a model with more than 10% fallbacks.
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
 - Screenshot upload is part of the product. A model whose screenshot sub-score is far below its multiple-choice sub-score (more than the margin) is a vision problem: check the image, then the model.
-- 70B test: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
+- 70B challenger: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
 - A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: `benchmark/models.md`, section 1.
 
 ## 17. Outputs

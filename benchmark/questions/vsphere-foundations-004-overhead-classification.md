@@ -1,7 +1,9 @@
 # What counts as overhead
 
 ## Prompt
-A capacity report lists the following as "virtualization overhead": VM snapshots, the spare host kept for vSphere HA, vSAN FTT=1 storage, ESXi kernel memory, and VM log files. Is this classification correct?
+- A capacity report lists the following as "virtualization overhead": VM snapshots, the spare host kept for vSphere HA, vSAN FTT=1 storage, ESXi kernel memory, and VM log files.
+
+Is this classification correct?
 
 ## Likely wrong answer
 "Yes, all of these are overhead."

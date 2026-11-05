@@ -10,13 +10,16 @@ Cluster 007 runs ESXi 9.1 hosts with identical specifications:
 - ESXi power management set to Balanced, not High Performance, so frequency fluctuates.
 - All other host settings are consistent and follow vSphere best practices.
 
-What CPU speed do you tell tenants their VMs will likely get during actual run? This is not the configured speed. It is the real throughput most likely when the cluster CPUs are fairly busy serving many demanding VMs: many cores are busy and most run two threads. Which number is most realistic for one vCPU, as reported by VM CPU Usage in the vCenter real-time chart?
+- What CPU speed do you tell tenants their VMs will likely get during actual run? This is not the configured speed.
+- It is the real throughput most likely when the cluster CPUs are fairly busy serving many demanding VMs: many cores are busy and most run two threads.
 
-A. 1.6 GHz. Lower than the 2.0 GHz nominal because Hyper-Threading has a penalty.
-B. 2.0 GHz. That is what is stated on the box.
-C. 2.4 GHz. All Cores Turbo goes to 3.0 GHz, but Hyper-Threading reduces throughput to 2.4 GHz.
-D. 3.0 GHz. Hyper-Threading does not apply to a vCPU, only to the ESXi physical core.
-E. 4.0 GHz. The CPUs are only fairly busy, not very busy.
+Which number is most realistic for one vCPU, as reported by VM CPU Usage in the vCenter real-time chart?
+
+- A. 1.6 GHz. Lower than the 2.0 GHz nominal because Hyper-Threading has a penalty.
+- B. 2.0 GHz. That is what is stated on the box.
+- C. 2.4 GHz. All Cores Turbo goes to 3.0 GHz, but Hyper-Threading reduces throughput to 2.4 GHz.
+- D. 3.0 GHz. Hyper-Threading does not apply to a vCPU, only to the ESXi physical core.
+- E. 4.0 GHz. The CPUs are only fairly busy, not very busy.
 
 ## Likely wrong answer
 B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charge on VM Usage).

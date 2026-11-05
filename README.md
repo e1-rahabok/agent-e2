@@ -20,7 +20,7 @@
 
 # Isvara: private cloud operations management expertise
 
-**🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🧪 [Test design](benchmark/test-design.md) · ⚙️ [Harness](harness/README.md)**
+**🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🧪 [Benchmark design](benchmark/design.md) · ⚙️ [Harness](harness/README.md)**
 
 **Business problem:**
 - Many private cloud customers cannot send operational data to a cloud AI service: regulated industries, government and defence, and dark sites with no Internet at all.
@@ -70,7 +70,7 @@ flowchart LR
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How model, harness and knowledge run together; ingest, query and answer steps |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | Forms of codified knowledge; folder, metadata, trap, flow, image and writing rules |
-| [benchmark/test-design.md](benchmark/test-design.md) | How the benchmark proves the gain; final score |
+| [benchmark/design.md](benchmark/design.md) | How the benchmark proves the gain; final score |
 | [benchmark/models.md](benchmark/models.md) | Candidate models, frontier reference, judge |
 | [harness/README.md](harness/README.md) | Harness modules and commands |
 | [project/solution-design.md](project/solution-design.md) | Why it can work, why 32B |

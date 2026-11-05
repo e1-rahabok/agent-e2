@@ -1,7 +1,9 @@
 # ESXi utilization for capacity, from Usage, Core Utilization and Utilization
 
 ## Prompt
-Study the attached vCenter chart (not VCF Operations) of a single ESXi host. Hyper-Threading is enabled: each core runs 2 hardware threads. The second attachment zooms into the start of the chart.
+- Study the attached vCenter chart (not VCF Operations) of a single ESXi host.
+- Hyper-Threading is enabled: each core runs 2 hardware threads.
+- The second attachment zooms into the start of the chart.
 
 At the end, where the counters spike:
 - ESXi CPU Usage is flat at 100%. (The host was ESXi 7. In ESXi 9 this counter is no longer capped and would exceed 100%.)
@@ -10,11 +12,11 @@ At the end, where the counters spike:
 
 Three metrics show three values. What is the ESXi utilization, from capacity management perspective?
 
-A. 100%. The blue line. No more physical cores or threads are available.
-B. 70%. The green line. It is a balanced reporting.
-C. 40%. The black line. Plenty of physical threads are idle.
-D. Not shown. It is the average of the green line and the black line, as Hyper-Threading is enabled.
-E. Not shown. To get the utilization, sum the running VMs and the kernel.
+- A. 100%. The blue line. No more physical cores or threads are available.
+- B. 70%. The green line. It is a balanced reporting.
+- C. 40%. The black line. Plenty of physical threads are idle.
+- D. Not shown. It is the average of the green line and the black line, as Hyper-Threading is enabled.
+- E. Not shown. To get the utilization, sum the running VMs and the kernel.
 
 Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality.
 

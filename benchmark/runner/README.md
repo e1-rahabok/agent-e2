@@ -1,7 +1,7 @@
 # Benchmark runner
 
 Runs every question (multiple choice, screenshot, free text) against the candidate open-weight models through Vercel AI Gateway, scores them automatically (letters, or a judge model for free text), and writes a report with one final score.
-Design: `benchmark/test-design.md`. Models and judge: `benchmark/models.md`. Not indexed.
+Design: `benchmark/design.md`. Models and judge: `benchmark/models.md`. Not indexed.
 
 ## Setup
 - Python 3.10+ with `pyyaml` and `requests`.
@@ -22,7 +22,7 @@ python3 benchmark/runner/run.py --mock --runs 2
 ```bash
 python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes classic --runs 1 --questions cpu-004
 ```
-- Smallest real test: one model, one mode, one question.
+- Smallest real benchmark: one model, one mode, one question.
 
 ```bash
 python3 benchmark/runner/run.py
@@ -39,7 +39,7 @@ python3 -m unittest benchmark/runner/test_runner.py
 ```
 - Scoring tests: judge reply parsing, final score, question kinds. No API calls.
 
-## Retrieval test (no model)
+## Retrieval check (no model)
 ```bash
 python3 benchmark/runner/retrieval_eval.py
 ```
@@ -50,13 +50,13 @@ python3 benchmark/runner/retrieval_eval.py
 ### Final score
 - One number, 0-100%, per model and mode: the mean question credit over all questions. Sub-scores: multiple choice, screenshot, conversation. Report table `Final score`.
 - Question credit = the worst of its runs: multiple choice 1 or 0 (Stable correct); free text the lowest judge score / 3.
-- Full method: `benchmark/test-design.md`, section 7.4.
+- Full method: `benchmark/design.md`, section 7.4.
 
 ### Free text and the judge
 - `format: free-text` and `compound` questions are sent without options, with an open-answer prompt (`harness/modes.py`, `PROMPTS['open']`). The verifier does not run on them: it checks letters only.
 - `judge.py` sends the prompt, images, `## Expected key points`, `## Likely wrong answer` and the answer to `judge_model`, and reads back a JSON score 0-3.
 - The runner refuses a benchmark where the judge is also a candidate.
-- Rubric and checks: `benchmark/test-design.md`, section 14. Report table `Free-text answers (judge)`.
+- Rubric and checks: `benchmark/design.md`, section 14. Report table `Free-text answers (judge)`.
 
 ### Screenshots
 - Questions with image attachments are sent with all their images (track `vision`). There is no text-only track.
@@ -65,16 +65,16 @@ python3 benchmark/runner/retrieval_eval.py
 ### Multiple choice: question and score
 - A multiple-choice question has one or more correct options.
 - A run asks every question once, per model and mode.
-- 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/test-design.md`, section 7.2.
+- 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/design.md`, section 7.2.
 - Every question says: "Choose all the correct options. There can be more than one." One option is appended: "Unsure". There is no "Not covered" option: the system answers from the knowledge base first and from the model's own knowledge where it is silent (author, Q038, 2026-11-05).
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
-- Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/test-design.md`, section 7.1.
+- Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/design.md`, section 7.1.
 - Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. It is the multiple-choice credit in the final score.
 - Luck: share of questions right in some runs only. Counted as not known.
 - Override (table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. Prior override, not a retrieval miss.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
 - Exact (mean over runs) is still reported in table `Scores`.
-- Reason and design: `benchmark/test-design.md`, section 7.
+- Reason and design: `benchmark/design.md`, section 7.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
 - Margin: 95% interval on Majority. Set by the number of questions: 17 questions gives about ±20-24 points.
@@ -90,11 +90,11 @@ python3 benchmark/runner/retrieval_eval.py
 | Can it go back for more | - | No | Yes |
 | What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
 
-- Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this test's label, not an industry term.
+- Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this benchmark's label, not an industry term.
 - Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), traps and diagnosis files exist so a model can follow a chain across files.
 - Classic and agentic answers pass the answer verifier (`harness/verify.py`): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
 - Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well.
-- The agentic limits (8 calls, 12K tokens) are cost caps for the test, not a design choice.
+- The agentic limits (8 calls, 12K tokens) are cost caps for the benchmark, not a design choice.
 - Benchmark 20261103-081849: agentic scored below classic for 7 of 8 small models. Cause: weak tool use (recall 0-50% vs 63% for classic; some models made almost no calls; one broke the answer format). A model problem, not a knowledge-base problem.
 
 ### Index version
@@ -106,7 +106,7 @@ python3 benchmark/runner/retrieval_eval.py
 
 ### Hybrid retrieval
 - No internet access in any mode. Retrieval searches only the `knowledge/` files.
-- In this test the models and the embedding model run in the cloud through Vercel AI Gateway, to compare candidates cheaply. In production the chosen model runs locally; the knowledge base lookup is the same.
+- In the benchmark the models and the embedding model run in the cloud through Vercel AI Gateway, to compare candidates cheaply. In production the chosen model runs locally; the knowledge base lookup is the same.
 - Retrieval = finding the knowledge-base sections to give the model. Used in classic and agentic modes.
 - The knowledge files are cut into chunks, one per `##` heading.
 - Two searches run on the same prompt:
@@ -129,9 +129,9 @@ python3 benchmark/runner/retrieval_eval.py
 
 - At 12, the full matrix (2160 answers) took about 38 minutes.
 - Limit: a Claude Code cloud background command stops after 2 hours. `--resume` continues a stopped run; saved answers are kept.
-- Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; find it by test.
+- Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; find it by trial.
 - Above the ceiling, providers return HTTP 429. The runner retries 429, 408 and 5xx. Answers still failing are listed; `--resume` retries them.
-- To test a higher value: `--concurrency 16` (or 20) on one benchmark. Keep it if errors stay at 0 and answers per minute rise.
+- To try a higher value: `--concurrency 16` (or 20) on one benchmark. Keep it if errors stay at 0 and answers per minute rise.
 - Limits differ per model. anthropic/claude-opus-5.5 failed at 12 (HTTP 429 "No access to this model at this time"); 3 ran with 0 errors. Use `--concurrency 3` for frontier models.
 
 ### Temperature
@@ -141,7 +141,7 @@ python3 benchmark/runner/retrieval_eval.py
   - Factual multiple-choice questions need stable answers, so temperature stays low.
   - 0 does not make hosted models deterministic (see Why 5 runs). The 5 runs measure the remaining variation either way.
   - Some reasoning models loop or repeat at 0. Their vendors advise against greedy decoding. A small value avoids this.
-  - The test should match production: `config.yaml` says to use the value the website will use. The website value is not fixed yet; 0.2 is the working assumption.
+  - The benchmark should match production: `config.yaml` says to use the value the website will use. The website value is not fixed yet; 0.2 is the working assumption.
 - Fixed for a whole run. Comparing runs at different temperatures mixes two effects.
 - The 0.2 choice is a design default, not a measured optimum. A temperature sweep (0, 0.2, 0.7) on the best model would test it.
 
@@ -179,11 +179,11 @@ python3 benchmark/runner/retrieval_eval.py
 
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
 - The prompt states the problem in words; the images supply the values.
-- Free text: `## Expected key points` and `## Likely wrong answer` go to the judge, never to the model under test.
+- Free text: `## Expected key points` and `## Likely wrong answer` go to the judge, never to the candidate.
 - `project/tools/lint.py` checks these fields.
 
 ## Limits
 - Provider name is recorded when the gateway returns it; the field is not documented as stable.
 - Cost is estimated from gateway list prices in `/models`; check the Vercel invoice.
 - Mock runs prove the pipeline only. Their scores are random, including the mock judge.
-- The judge is a model: its scores carry its errors. The author checks every 0 and every split between runs (`benchmark/test-design.md`, section 14).
+- The judge is a model: its scores carry its errors. The author checks every 0 and every split between runs (`benchmark/design.md`, section 14).

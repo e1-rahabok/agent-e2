@@ -29,12 +29,14 @@
 - ESXi CPU therefore uses 3 different units: thread, Hertz, vCPU.
 
 ## Reservation: CPU vs memory
+- CPU reservation matters only under contention. When the host has enough CPU for every VM, each VM gets its runtime with or without a reservation. Like a restaurant with free seats: a booking without a named table changes nothing.
+- The total CPU reservation on an ESXi host is capped at the host's base (nominal) clock speed × cores. A CPU has 3 frequencies: base, All-Core Turbo, single-core Turbo. ESXi guarantees a reservation only from the base frequency, because Turbo is not guaranteed. A conservative design.
 - Reservation is a guarantee. It takes effect at the provider (ESXi), where the reservation is held.
 - It behaves differently for CPU and memory.
 
 | Aspect | CPU reservation | Memory reservation |
 |---|---|---|
-| When it applies | On demand. If the VM does not use CPU, the reservation does not come into play. | Permanent once memory has been used. |
+| When it applies | On demand, and only under contention. If the VM does not use CPU, or the host has enough CPU for every VM, the reservation does not come into play. | Permanent once memory has been used. |
 | Effect on utilization metrics | None. Run, Used, Demand, Usage do not include it. They are 0 or near 0 if the Guest OS is not running. | Included. Memory Consumed counts reserved memory even if the pages are not actually consumed yet. |
 | Example: 16 GB VM, powered on, sitting at BIOS | CPU metrics ≈ 0. | 10 GB reservation → VM Memory Consumed jumps to 10 GB. The reserved space is not available to other VMs. |
 | After use | — | Once the VM asks for memory and is served, the physical RAM stays reserved, even if the VM is idle for days. The page is effectively locked. |
@@ -108,6 +110,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
 corrections:
+- 'Sections Reservation: CPU vs memory: CPU reservation capped at base clock speed × cores, and applies only under contention (author answer Q041, 2026-11-05; quiz CPU Q8 key options A and B).'
 - '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
 - '2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author.'
 - '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'

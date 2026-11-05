@@ -3,10 +3,10 @@
 ## Prompt
 Which metric best indicates a VM has an actual memory performance problem? Do not select counters that indicate risk but not actual slowness.
 
-A. VM Memory Ballooned
-B. VM Memory Swapped + Zipped
-C. VM Memory Latency
-D. When Ballooned = Configured.
+- A. VM Memory Ballooned
+- B. VM Memory Swapped + Zipped
+- C. VM Memory Latency
+- D. When Ballooned = Configured.
 
 Hint: separate actual from potential, risk from reality.
 

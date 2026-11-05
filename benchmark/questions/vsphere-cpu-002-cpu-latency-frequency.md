@@ -1,7 +1,10 @@
 # CPU Latency without contention
 
 ## Prompt
-After a host BIOS power policy change, VM CPU Latency went up by about 15%. CPU Ready and Co-Stop are unchanged. Is the VM now suffering CPU contention?
+- After a host BIOS power policy change, VM CPU Latency went up by about 15%.
+- CPU Ready and Co-Stop are unchanged.
+
+Is the VM now suffering CPU contention?
 
 ## Likely wrong answer
 "Yes, latency means the VM is waiting for CPU."

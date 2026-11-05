@@ -1,15 +1,16 @@
 # Reclaiming vCPUs from an idle VM
 
 ## Prompt
-A 32-vCPU VM has been idle for weeks. You want to reclaim it to free capacity.
+- A 32-vCPU VM has been idle for weeks.
+- You want to reclaim it to free capacity.
 
 Choose all the correct statements:
 
-A. Reclaim at most 16 vCPU, because idle in VCF Operations means using less than half.
-B. Reclaiming 20 vCPU frees 20 vCPU. On a 2 GHz ESXi host, that frees 40 GHz of capacity.
-C. You are basically reclaiming blank air, because the reclaimed CPU is idle. You cannot assume you can safely deploy an active VM. Idle CPU is not the same as active CPU.
-D. Power off the VM, as this also frees the VM memory.
-E. Do not check only CPU. Make sure network packet processing and disk command execution are also low: high IO processing can happen with near 0 CPU cycles.
+- A. Reclaim at most 16 vCPU, because idle in VCF Operations means using less than half.
+- B. Reclaiming 20 vCPU frees 20 vCPU. On a 2 GHz ESXi host, that frees 40 GHz of capacity.
+- C. You are basically reclaiming blank air, because the reclaimed CPU is idle. You cannot assume you can safely deploy an active VM. Idle CPU is not the same as active CPU.
+- D. Power off the VM, as this also frees the VM memory.
+- E. Do not check only CPU. Make sure network packet processing and disk command execution are also low: high IO processing can happen with near 0 CPU cycles.
 
 ## Likely wrong answer
 B (vCPU x GHz counted as freed capacity) or E (IO assumed to cost no CPU).

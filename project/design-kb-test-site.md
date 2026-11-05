@@ -242,7 +242,7 @@ The project has 2 stages. Phases 1 and 5 are the benchmark; phases 2-4 are the H
 | 5 | Benchmark | 4-bit re-test of the chosen model and mode on customer-like hardware. Re-run after each major knowledge update. |
 
 ## Benchmark plan
-- Moved 2026-11-04 to `benchmark/test-design.md`: claim, blueprint, why 100 questions, scoring, why 5 runs, validity threats, review checklist, target, decision rules.
+- Moved 2026-11-04 to `benchmark/design.md`: claim, blueprint, why 100 questions, scoring, why 5 runs, validity threats, review checklist, target, decision rules.
 - Runner: `benchmark/runner/` (README there).
 
 ## Decisions for the author

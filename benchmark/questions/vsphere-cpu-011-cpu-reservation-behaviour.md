@@ -1,17 +1,18 @@
 # CPU reservation behaviour
 
 ## Prompt
-Reservation, shares and limit are the 3 resource management controls. Sometimes you need a reservation on a VM or a resource pool.
+- Reservation, shares and limit are the 3 resource management controls.
+- Sometimes you need a reservation on a VM or a resource pool.
 
 Choose all the correct statements:
 
-A. Total reservation at ESXi level is capped at the base nominal clock speed. Because of Turbo Boost, you cannot fully reserve the total possible capacity.
-B. CPU reservation only comes into play during contention. Without contention, the reservation is not used.
-C. VM CPU reservation is not sticky. The moment the vCPU stops using it, it is immediately available to other VMs.
-D. CPU reservation is set in Hertz, not vCPU, because what is reserved is CPU cycles, not a core or thread.
-E. You can overcommit CPU reservation because it is not sticky. Total reservation of all VMs can exceed ESXi capacity.
-F. CPU reservation applies only to VMs. The ESXi kernel has no reservation because kernel processes have higher priority.
-G. With vSAN, NSX and ESXi, total kernel reservation is likely much higher than kernel actual utilization, even when ESXi is highly utilized, to protect the kernel.
+- A. Total reservation at ESXi level is capped at the base nominal clock speed. Because of Turbo Boost, you cannot fully reserve the total possible capacity.
+- B. CPU reservation only comes into play during contention. Without contention, the reservation is not used.
+- C. VM CPU reservation is not sticky. The moment the vCPU stops using it, it is immediately available to other VMs.
+- D. CPU reservation is set in Hertz, not vCPU, because what is reserved is CPU cycles, not a core or thread.
+- E. You can overcommit CPU reservation because it is not sticky. Total reservation of all VMs can exceed ESXi capacity.
+- F. CPU reservation applies only to VMs. The ESXi kernel has no reservation because kernel processes have higher priority.
+- G. With vSAN, NSX and ESXi, total kernel reservation is likely much higher than kernel actual utilization, even when ESXi is highly utilized, to protect the kernel.
 
 ## Likely wrong answer
 E (non-sticky read as overcommittable), F (kernel assumed to need no reservation), G.

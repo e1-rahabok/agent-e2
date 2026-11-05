@@ -11,10 +11,10 @@ The software around the model. It turns a question into a grounded answer. Not i
 | `flows.py` | Flow executor: diagnosis files served as ordered steps, one step at a time, with the next step and the steps a step refers to. Reads the markdown directly; no second copy of the flow. |
 | `verify.py` | Answer verifier. Hard issues (no ANSWER line, letters that are not options, Unsure or Not covered mixed with other letters) get one repair turn. Soft issues (no REASON, unknown file id, a number with a unit that the model was never shown) are recorded only. |
 | `modes.py` | Answer modes: baseline (no knowledge base, no verifier), classic (one lookup; context starts with catalog facts for the files it holds), agentic (tool loop: search, read_file, follow_links, get_images, catalog, calculate, flow). Prompts and answer format. |
-| `llm.py` | Model client: Vercel AI Gateway for testing (OpenAI-compatible API); a local OpenAI-compatible server (vLLM, llama.cpp) for deployment. `MockClient` exercises the tool loop offline. |
+| `llm.py` | Model client: Vercel AI Gateway for the benchmark (OpenAI-compatible API); a local OpenAI-compatible server (vLLM, llama.cpp) for deployment. `MockClient` exercises the tool loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
 
-- Retrieval test without a model: `python3 benchmark/runner/retrieval_eval.py` (recall of the files each question needs).
+- Retrieval check without a model: `python3 benchmark/runner/retrieval_eval.py` (recall of the files each question needs).
 
 ## Agentic tools
 | Tool | Returns | Use |
@@ -33,5 +33,5 @@ The software around the model. It turns a question into a grounded answer. Not i
 
 ## Notes
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
-- Used by `benchmark/runner/run.py`, so the tested system is the shipped system. The runner records `tools_used`, `verify_flags` and `repaired` per answer.
+- Used by `benchmark/runner/run.py`, so the benchmarked system is the shipped system. The runner records `tools_used`, `verify_flags` and `repaired` per answer.
 - Soft verifier issues do not change answers yet. Promote one to a repair trigger only when results show it predicts wrong answers.

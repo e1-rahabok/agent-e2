@@ -1,26 +1,29 @@
 # Architecture
 
 How the model, harness and knowledge work together at run time. Not indexed.
-Design reasons and model size: `project/solution-design.md`. Knowledge capture: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `KNOWLEDGE-ENGINEERING.md`. Test design: `benchmark/test-design.md`.
+Design reasons and model size: `project/solution-design.md`. Knowledge capture: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `KNOWLEDGE-ENGINEERING.md`. Benchmark design: `benchmark/design.md`.
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
-| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. The answer may use no other source. |
-| Harness | The software around the model: retrieval, tools, rules, answer checks | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
-| Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | What to look up next (agentic mode), how to read the text, which options are right. |
+| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
+| Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only | the loop in `harness/modes.py` (`agentic`), the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
+| Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, the loop's rules, the answer verifier | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
+| Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
 
+- Agent and harness split the agentic loop: the agent chooses, the harness executes and constrains. The harness hosts the agent; the agent is not a separate program.
+- Classic mode has no agent: the harness runs a fixed pipeline (one search, then one answer). Baseline mode is the model alone.
 - The model's own memory of vSphere metrics comes from public Internet text and repeats the misconceptions the knowledge base corrects.
-- The model is told to answer only from what the harness returns.
+- The model is told to use the knowledge base first; where the knowledge base speaks, it wins; where it is silent, the model may use its own knowledge and must say so (author, Q038, 2026-11-05).
 - The knowledge base does not answer by itself. It must be found, read and applied to the question.
 - The harness does not understand language. It searches, computes, enforces rules and checks answers.
 
 ## 2. Control by mode
 | Mode | Who decides what to read | Model calls per question | Role of the model | Role of the harness |
 |---|---|---|---|---|
-| Baseline | Nobody: no knowledge base | 1 | Answers from memory | Formats the question. Reference point for the test only. |
+| Baseline | Nobody: no knowledge base | 1 | Answers from memory | Formats the question. Reference point for the benchmark only. |
 | Classic | The harness | 1 (+1 repair if needed) | Reads what it is given and answers | Driver: one search, link expansion, catalog facts, context budget, verifier. |
-| Agentic | The model, within the harness's rules | up to 9 (+1 repair) | Driver of the lookups: chooses tools, queries, files, steps | Referee and toolbox: runs the tools, enforces the rules, checks the answer, falls back to classic. |
+| Agentic | The agent (the model, within the harness's rules) | up to 9 (+1 repair) | Driver of the lookups: chooses tools, queries, files, steps | Referee and toolbox: runs the tools, enforces the rules, checks the answer, falls back to classic. |
 
 - Agentic mode splits the work:
   - the model decides what it needs next ("search Ready", "read this file", "convert 8,000 ms");
@@ -29,7 +32,7 @@ Design reasons and model size: `project/solution-design.md`. Knowledge capture: 
 - Agentic mode is the target design. Level 400 questions often need a chain across files (metric → same-name metric on another object → concept → flow). One search cannot predict that chain.
 
 ## 3. Tool-call limit
-- The test limit (8 tool calls, 12K tokens of tool output) caps the cost of 15,000 answers. It is not a design value. No knowledge-base need sets it at 8.
+- The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of 15,000 answers. It is not a design value. No knowledge-base need sets it at 8.
 - Run results (2026-11-03, agentic mode, exact answers by number of calls):
 
 | Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
@@ -40,32 +43,32 @@ Design reasons and model size: `project/solution-design.md`. Knowledge capture: 
 | alibaba/qwen-3-32b | 36 of 82 | 2 of 3 | never reached |
 
 - Answers that hit the limit are mostly wrong. In most traces the model searches in circles; one more call would not have helped.
-- Hard questions also take more calls, so the table does not prove that more calls are useless. Test: re-run the limit-hit answers with 16 calls.
+- Hard questions also take more calls, so the table does not prove that more calls are useless. Next check: re-run the limit-hit answers with 16 calls.
 - Some models make few tool calls (qwen-3-32b averages 1.8). The limit does not affect them.
 - Deployment has no per-token fee. Its limits are:
   - the context window: every tool result stays in the conversation; with a 32K window, about 12-16K tokens of tool output leaves room for the prompt and the answer;
   - waiting time: each call is a model turn on the local GPU (seconds each).
 - Deployment rule, replacing a fixed count:
-  - stop on a token budget (tool output that still fits the context) or a time budget (set from user tests), whichever comes first;
+  - stop on a token budget (tool output that still fits the context) or a time budget (set from trials with users), whichever comes first;
   - stop early on no progress: repeated searches, re-reading the same file, two calls returning nothing new;
   - at the stop, answer with what was read and say what is missing, or answer Unsure;
   - show progress (what is being read) and let the user stop or ask to keep digging.
-- The test uses the same budget as deployment, so the score predicts the product.
+- The benchmark uses the same budget as deployment, so the score predicts the product.
 
 ### Benchmark and deployment
-- The release score is measured on the deployed configuration. A different test setting would grade a system that is not shipped.
+- The release score is measured on the deployed configuration. A different benchmark setting would grade a system that is not shipped.
 - Same in both: prompt, tools, retrieval settings, verifier, context window, token budget for tool output, no-progress stops.
 - Different:
 
 - **Time**
-  - Why: Test time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the test would grade the provider.
-  - Handling: The test stops on hardware-independent limits only: tokens and no-progress. A maximum number of model turns is derived from the deployment time limit: turns = time limit ÷ seconds per turn measured on the target GPU (benchmark phase 5).
+  - Why: Benchmark time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the benchmark would grade the provider.
+  - Handling: The benchmark stops on hardware-independent limits only: tokens and no-progress. A maximum number of model turns is derived from the deployment time limit: turns = time limit ÷ seconds per turn measured on the target GPU (benchmark phase 5).
 - **Context window**
   - Why: Gateway models often offer 128K or more; the deployed server may run 32K.
-  - Handling: The test caps the context to the deployed window.
+  - Handling: The benchmark caps the context to the deployed window.
 - **User in the loop**
-  - Why: In deployment the user can stop, ask to keep digging, or answer a clarifying question. A test has no user.
-  - Handling: The test answers at the end of the budget with no help: a worst case. Clarifying questions are scored as a separate set later.
+  - Why: In deployment the user can stop, ask to keep digging, or answer a clarifying question. A benchmark has no user.
+  - Handling: The benchmark answers at the end of the budget with no help: a worst case. Clarifying questions are scored as a separate set later.
 - **Experiments**
   - Why: Some runs ask "what if" (16 calls, primed agentic, another embedding model).
   - Handling: Run as named experiment profiles. Only the deployment profile produces the release score.
@@ -73,13 +76,13 @@ Design reasons and model size: `project/solution-design.md`. Knowledge capture: 
 - One harness, several profiles: the deployment profile (release score and product) and named experiment profiles (diagnosis only).
 
 ## 4. Classic mode
-- Classic mode costs a third of the test runs. Reasons to keep it:
+- Classic mode costs a third of the benchmark. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is the better mode for some models today. Benchmark 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/test-design.md`.
+  2. It is the better mode for some models today. Benchmark 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/design.md`.
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
 - After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
-- To test: agentic mode that starts from the classic context (first search done, catalog facts included). This skips the first search, the weakest step for small models, and keeps further lookups.
+- To try: agentic mode that starts from the classic context (first search done, catalog facts included). This skips the first search, the weakest step for small models, and keeps further lookups.
 
 ## 5. Agentic mode walkthrough
 Real trace (2026-11-04, alibaba/qwen-3-32b): "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?" Options include the rollup and statistics level, 10% Ready and 40% Ready.
@@ -107,7 +110,7 @@ sequenceDiagram
   H-->>U: answer with cited files
 ```
 
-1. The harness sends the question with the rules: answer only from tool output; search or catalog first; check same-name metrics; use the catalog for units and levels, the calculator for arithmetic, the flow tool for troubleshooting.
+1. The harness sends the question with the rules: knowledge base first, and it wins on conflict; search or catalog first; check same-name metrics; use the catalog for units and levels, the calculator for arithmetic, the flow tool for troubleshooting.
 2. The model searches. The harness runs hybrid search (keyword BM25 plus a local embedding model, fused by rank) and returns ids and snippets, not answers.
 3. The model asks the catalog for the counter. The harness answers from SQLite built from `knowledge/catalog/`: rollup Summation, statistics level 1, the knowledge file, and the thresholds with their source.
 4. The model asks for the conversion. The calculator returns 10% (8,000 ms ÷ (20 s × 1,000 ms × 4 vCPUs)) and names the rule's source file. The model never does the arithmetic itself.
@@ -139,16 +142,16 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |
 
 - Updates arrive as an offline bundle: knowledge, catalog, index, and optionally new weights. Nothing calls out.
-- The test site uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
+- The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 
-## 8. Harness testing
-- The harness is tested on its own. In the final score, a retrieval miss and a reasoning error look the same.
+## 8. Harness checks
+- The harness is checked on its own. In the final score, a retrieval miss and a reasoning error look the same.
 - Three levels:
 
-| Level | Test | Needs a model | Command |
+| Level | What it checks | Needs a model | Command |
 |---|---|---|---|
 | Tools | Catalog, calculator, flows, verifier give exact, expected results | No | `python3 -m unittest harness/test_tools.py` |
-| Retrieval | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
+| Retrieval check | For every question, are the files it needs found and put in the context? | No | `python3 benchmark/runner/retrieval_eval.py` (add `--embeddings` for hybrid) |
 | Whole system | Model + harness + knowledge on the question set; recall per answer shows whether the files were found or read | Yes | `python3 benchmark/runner/run.py` |
 
 - Retrieval result, 28 questions (2026-11-04, hybrid): 67% of needed files reach the classic context; every needed file in only 12 of 28 questions. Classic mode cannot answer better than its context, so retrieval is the first thing to improve.
@@ -159,7 +162,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 |---|---|
 | Hybrid search, link expansion, classic and agentic modes | Built |
 | Catalog, calculator, flow executor, verifier | Built 2026-11-04 |
-| Retrieval test without a model | Built 2026-11-04 |
+| Retrieval check without a model | Built 2026-11-04 |
 | Question understanding before search (question type, object, layer as filters) | Not built: filters are used only when the model passes them in agentic mode |
 | Query rewriting with glossary synonyms ("steal time" → Ready) | Not built |
 | Screenshot reading | Release 1.1 |

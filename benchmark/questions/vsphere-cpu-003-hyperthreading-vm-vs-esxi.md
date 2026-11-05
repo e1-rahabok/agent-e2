@@ -1,7 +1,10 @@
 # Hyper-Threading and two vantage points
 
 ## Prompt
-Two single-vCPU VMs are both fully busy, running on the two hardware threads of the same physical core. Each VM shows CPU Usage around 62.5%, not 100%. Is each VM only getting 62.5% of what it demands? What does the host report for that core?
+- Two single-vCPU VMs are both fully busy, running on the two hardware threads of the same physical core.
+- Each VM shows CPU Usage around 62.5%, not 100%.
+
+Is each VM only getting 62.5% of what it demands? What does the host report for that core?
 
 ## Likely wrong answer
 "The VMs are under-utilised" — or "it's a reporting bug".

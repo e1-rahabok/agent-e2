@@ -1,15 +1,16 @@
 # Performance vs capacity view of utilization
 
 ## Prompt
-Performance management and capacity management are highly related. Related is not identical: two things that are related are, by that fact, two different things.
+- Performance management and capacity management are highly related.
+- Related is not identical: two things that are related are, by that fact, two different things.
 
 In a private cloud (finite hardware), choose all the correct statements:
 
-A. For performance, 100% utilization is not only good, it is perfect. As long as there is no queue, higher utilization means more throughput.
-B. For capacity, 100% utilization is bad news, especially if it breaches Usable Capacity. Capacity is low: add capacity or reclaim.
-C. For performance, low utilization may be bad news: no work is being done. Check for a bottleneck elsewhere causing it.
-D. ESXi capacity looks at ESXi utilization; ESXi performance looks at how it serves its running VMs. Two perspectives.
-E. The time horizon of performance is short (seconds to minutes); capacity management considers longer trends.
+- A. For performance, 100% utilization is not only good, it is perfect. As long as there is no queue, higher utilization means more throughput.
+- B. For capacity, 100% utilization is bad news, especially if it breaches Usable Capacity. Capacity is low: add capacity or reclaim.
+- C. For performance, low utilization may be bad news: no work is being done. Check for a bottleneck elsewhere causing it.
+- D. ESXi capacity looks at ESXi utilization; ESXi performance looks at how it serves its running VMs. Two perspectives.
+- E. The time horizon of performance is short (seconds to minutes); capacity management considers longer trends.
 
 ## Likely wrong answer
 Rejecting A (100% utilization seen as a performance problem) or C.

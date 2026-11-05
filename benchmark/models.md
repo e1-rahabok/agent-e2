@@ -48,15 +48,15 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
 - Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
-- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree (`benchmark/test-design.md`, section 3.3).
+- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree (`benchmark/design.md`, section 3.3).
 - A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
   1. final score higher by more than the margin;
   2. override rate not higher.
 - Otherwise it is dropped, and a tie goes to the cheaper model.
 
-## 2. Gateway in the test, local server at the site
+## 2. Gateway in the benchmark, local server at the site
 ### Two ways to reach a model
-| | Test (this benchmark) | Customer site |
+| | Benchmark | Customer site |
 |---|---|---|
 | Where the model runs | A hosting provider's GPUs, reached through Vercel AI Gateway (`https://ai-gateway.vercel.sh/v1`, `gateway` in `config.yaml`) | The customer's own GPU VM, on its own VCF |
 | Who serves it | The provider the gateway routes to (for example Baseten, Fireworks, Groq); the runner records it per answer when the gateway returns it | vLLM, llama.cpp or Ollama, installed by the VMware administrator at initial setup |
@@ -98,14 +98,14 @@ All are required. A model that fails one is not a candidate.
    - More than one GPU is out: the cost doubles for one model.
 4. Tool calling, for agentic retrieval and the calculator, catalog and flow tools.
 5. Context window of at least 32K tokens: system prompt + 8-12K retrieved text + images + answer.
-6. Available both on the test gateway and as downloadable weights, so the tested model is the deployed model.
+6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
 7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate (author, 2026-11-05).
 
 Preferred, not required:
 - Vendor diversity: different training data fails on different questions. A mix shows whether a failure is a knowledge gap (all fail) or a model gap (one fails).
 
 ## 4. Candidates
-| Model | Tier | Size, licence | Why in the test | Result so far |
+| Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
 | google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Best: 58% exact with one lookup (17 questions, old scoring) |
 | alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Added 2026-11-04 |
@@ -120,18 +120,18 @@ Preferred, not required:
 
 ## 5. Frontier reference
 - One frontier model, scored the same way with and without the knowledge base, in every benchmark: anthropic/claude-opus-5.5 so far.
-- The claim (`benchmark/test-design.md`, section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
+- The claim (`benchmark/design.md`, section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
 ## 6. Judge
-- Grades free-text and compound answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/test-design.md`, section 14.
+- Grades free-text and compound answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/design.md`, section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
 - Rules:
   - never a candidate (the runner refuses the benchmark);
   - a different vendor from the frontier reference, so no model family grades its own answers;
   - vision, because screenshot questions can be free text;
   - temperature 0.
-- The judge is a frontier model on the test gateway only. It is never deployed: at a customer site nothing is graded.
+- The judge is a frontier model on the benchmark gateway only. It is never deployed: at a customer site nothing is graded.
 
 ## 7. Removed
 | Model | Date | Reason |

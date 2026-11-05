@@ -8,8 +8,21 @@ ESXi 02: 10 cores, 20 threads, speed 2.0 GHz, All Cores Turbo 2.4 GHz, Single Co
 
 What is the capacity of each host? Choose one answer per host.
 
-ESXi 01: A. 20 GHz  B. 25 GHz  C. 30 GHz  D. 40 GHz  E. 40 threads  F. It depends
-ESXi 02: A. 20 GHz  B. 25 GHz  C. 30 GHz  D. 40 GHz  E. 20 threads  F. It depends
+- ESXi 01: A.
+- 20 GHz  B.
+- 25 GHz  C.
+- 30 GHz  D.
+- 40 GHz  E.
+- 40 threads  F.
+- It depends
+
+- ESXi 02: A.
+- 20 GHz  B.
+- 25 GHz  C.
+- 30 GHz  D.
+- 40 GHz  E.
+- 20 threads  F.
+- It depends
 
 Hints:
 - The two hosts have different specifications, so the two answers must be different.

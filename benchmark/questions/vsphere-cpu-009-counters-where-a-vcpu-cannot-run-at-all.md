@@ -5,13 +5,13 @@ In a shared environment, a VM vCPU may not get the resource it asks for: because
 
 Choose all the counters that measure a VM vCPU being unable to run: it completely stops, not just runs slower.
 
-A. CPU Ready
-B. CPU Co-stop
-C. CPU Overlap
-D. CPU Other Wait
-E. CPU Usage
-F. CPU Net Run
-G. CPU Demand
+- A. CPU Ready
+- B. CPU Co-stop
+- C. CPU Overlap
+- D. CPU Other Wait
+- E. CPU Usage
+- F. CPU Net Run
+- G. CPU Demand
 
 ## Likely wrong answer
 Omitting Overlap or Other Wait; including Demand as a contention counter.

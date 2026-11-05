@@ -3,10 +3,10 @@
 ## Prompt
 What is the relationship between the disk latency metric and disk outstanding IO?
 
-A. None. The correlation is weak: one is before processing, the other after.
-B. Outstanding IO = IO commands per second x Latency
-C. Outstanding IO = IO commands per second / Latency
-D. Outstanding IO = Throughput x Latency
+- A. None. The correlation is weak: one is before processing, the other after.
+- B. Outstanding IO = IO commands per second x Latency
+- C. Outstanding IO = IO commands per second / Latency
+- D. Outstanding IO = Throughput x Latency
 
 ## Likely wrong answer
 A, or D (throughput instead of commands).

@@ -38,7 +38,7 @@ flowchart LR
 
 - Name for the wrapper: **harness**. It is the common term in agent engineering for the code around a model that supplies context, tools, control flow and checks. Other names in use: orchestration layer, RAG pipeline (narrower: retrieval only).
 - Run-time walkthrough (who drives, one question step by step): `ARCHITECTURE.md`.
-- The harness lives in `harness/`: `retrieval.py` (hybrid search, link expansion), `modes.py` (classic and agentic tool loop), `kb.py` (loads and chunks `knowledge/`), `llm.py` (model client). The benchmark runner (`benchmark/runner/`) drives the same harness, so the tested system is the shipped system.
+- The harness lives in `harness/`: `retrieval.py` (hybrid search, link expansion), `modes.py` (classic and agentic tool loop), `kb.py` (loads and chunks `knowledge/`), `llm.py` (model client). The benchmark runner (`benchmark/runner/`) drives the same harness, so the benchmarked system is the shipped system.
 
 ## 3. Why a 32B model can beat a frontier model here
 Six mechanisms, in order of weight.
@@ -134,7 +134,7 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 - Every model runs in three modes: no knowledge base, one lookup, model-driven lookups.
 - Headline: one final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. A question earns what its worst of 5 runs earns. Also reported: confident-wrong rate. Unsure is allowed and preferred over a guess.
 - The frontier model is scored the same way, with and without the knowledge base.
-- Detail: `benchmark/test-design.md`; runner `benchmark/runner/`.
+- Detail: `benchmark/design.md`; runner `benchmark/runner/`.
 
 ## 9. Repository structure (revised 2026-11-04, second author review)
 ```text

@@ -1,13 +1,15 @@
 # Memory reservation behaviour
 
 ## Prompt
-Reservation, shares and limit are the 3 resource management controls. Choose the correct statements:
+- Reservation, shares and limit are the 3 resource management controls.
 
-A. Memory reservation differs from CPU reservation because it is sticky. Once used, the consumed page can stay for days. It does not immediately become available to other VMs.
-B. Use reservation at VM level sparingly: it directly limits your ability to overcommit. It also affects DRS.
-C. Only VMs have reservation. A resource pool has no setting of its own and aggregates its member VMs.
-D. Kernel reservation means the amount is not available to VMs, whether or not the kernel actually uses it.
-E. With vSAN, NSX and ESXi, total kernel reservation is likely much higher than kernel actual utilization, even when ESXi is highly utilized, to protect the kernel.
+Choose the correct statements:
+
+- A. Memory reservation differs from CPU reservation because it is sticky. Once used, the consumed page can stay for days. It does not immediately become available to other VMs.
+- B. Use reservation at VM level sparingly: it directly limits your ability to overcommit. It also affects DRS.
+- C. Only VMs have reservation. A resource pool has no setting of its own and aggregates its member VMs.
+- D. Kernel reservation means the amount is not available to VMs, whether or not the kernel actually uses it.
+- E. With vSAN, NSX and ESXi, total kernel reservation is likely much higher than kernel actual utilization, even when ESXi is highly utilized, to protect the kernel.
 
 ## Likely wrong answer
 D (reservation assumed to block memory before use) or C.

@@ -1,7 +1,9 @@
 # Memory reservation vs CPU reservation
 
 ## Prompt
-A 16 GB VM with a 10 GB memory reservation and a 4 GHz CPU reservation is powered on and sits at the BIOS screen (no OS booted). What do its Memory Consumed and CPU usage metrics show?
+- A 16 GB VM with a 10 GB memory reservation and a 4 GHz CPU reservation is powered on and sits at the BIOS screen (no OS booted).
+
+What do its Memory Consumed and CPU usage metrics show?
 
 ## Likely wrong answer
 "Both near 0, nothing is running" — or "both show the reserved amounts".
