@@ -129,7 +129,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Table input: a harness table tool (load Excel or CSV, list columns, filter, sort, aggregate, top-N), table attachments in the runner, and the export formats with their traps (`benchmark/design.md`, section 13.1).
 - [x] Write Level 100 and 200 questions: question-0029 to question-0053 (2026-11-05).
 - [x] Write Level 400 questions: question-0054 to question-0090 (2026-11-05).
-- [ ] Author: supply the screenshots and tables for question-0034, 0037, 0042, 0046, 0050, 0051, 0066 to 0089 (see each `## Input to supply`).
+- [x] Author: screenshots and table for question-0034, 0037, 0042, 0046, 0051 (2026-11-05).
+- [ ] Author: supply the screenshots and tables for question-0050, 0066 to 0089 (see each `## Input to supply`).
 - [ ] Author: Q058, synthetic share and review of question-0054 to 0090.
 - [ ] Remaining 10 questions to reach 100: all at Level 300 (`benchmark/design.md`, section 12).
 - [ ] Split `vsphere-cpu-006` (two hosts, letters per host) into one deterministic question per host.
