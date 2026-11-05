@@ -123,6 +123,8 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Check for a current-generation dense vision model of about 70B (open weights, commercial licence, tool calling, on Vercel AI Gateway). None as of 2026-11-05; expected in 2027. Add it as the first challenger under the rule in `benchmark/models.md`, section 1. Check again each quarter.
+- [ ] Before release: run the benchmark once on the chosen model from local weights, at the deployed precision, on the target GPU. That run is the release score (`benchmark/models.md`, section 2).
 - [ ] After Q048: fill `interval` and `instance` in `knowledge/catalog/thresholds.yaml`; add an Interval column to the band tables; have the catalog lookup return them.
 - [ ] Harness profiles in `benchmark/runner/config.yaml`: `deployment` (context window capped to the deployed size, tool-output token budget, no-progress stop, turn limit from the target GPU) and named experiment profiles; record the profile per answer; only `deployment` feeds the release score.
 - [ ] Measure seconds per model turn on the target GPU (phase 5) to set the turn limit; set the time limit from user tests.
