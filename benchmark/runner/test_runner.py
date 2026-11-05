@@ -7,13 +7,13 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import cases as C  # noqa: E402
+import questions as C  # noqa: E402
 import judge as J  # noqa: E402
 import report  # noqa: E402
 
 
-def row(case, kind, credit, run, track='text', fmt='multiple-choice', exact=None, unsure=0, cw=''):
-    return {'model': 'm', 'mode': 'classic', 'case_id': case, 'kind': kind, 'format': fmt, 'track': track, 'run': str(run),
+def row(question, kind, credit, run, track='text', fmt='multiple-choice', exact=None, unsure=0, cw=''):
+    return {'model': 'm', 'mode': 'classic', 'question_id': question, 'kind': kind, 'format': fmt, 'track': track, 'run': str(run),
             'credit': str(credit), 'exact': str(int(credit == 1) if exact is None else exact), 'unsure': str(unsure),
             'confident_wrong': cw}
 
@@ -57,7 +57,7 @@ class OverrideTest(unittest.TestCase):
 
 
 class CaseKindTest(unittest.TestCase):
-    def test_every_case_has_a_kind_and_free_text_has_a_key(self):
+    def test_every_question_has_a_kind_and_free_text_has_a_key(self):
         for c in C.load():
             self.assertIn(c.kind, report.KINDS)
             if not c.choice:

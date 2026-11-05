@@ -20,7 +20,7 @@
 
 ## Metadata
 ```yaml
-id: case-<nnnn>                    # e.g. case-0031. Never reuse an id.
+id: question-<nnnn>                    # e.g. question-0031. Never reuse an id.
 title: <short title>
 scope: vsphere                    # vendor-neutral | vsphere | nsx | vsan
 product: [vsphere]                # every product touched: vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
@@ -31,7 +31,7 @@ input: text                       # text | screenshot | diagram | log | mixed
 tests: distinction                # concept | distinction | judgment | troubleshooting
 knowledge:                        # knowledge ids the answer should draw on (retrieval check)
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
-attachments: []                   # paths relative to benchmark/cases/, e.g. <id>/<file>.png
+attachments: []                   # paths relative to benchmark/questions/, e.g. <id>/<file>.png
 origin: book                      # book | quiz | live-lab | real-ticket | synthetic
 source_path: "<heading path in the source document>"
 format: multiple-choice           # multiple-choice | free-text | compound

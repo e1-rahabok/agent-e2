@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Harness-only test: does retrieval find the files a question needs? No model is called.
 
-For every case with `knowledge` ids, run the classic-mode retrieval on the prompt text
+For every question with `knowledge` ids, run the classic-mode retrieval on the prompt text
 (the same `## Prompt` the model sees, options included) and report:
   - recall@k of plain search (top k files),
   - recall of the classic context (search + same_name/related expansion, within the token budget),
@@ -21,7 +21,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import cases as C  # noqa: E402
+import questions as C  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
 from retrieval import Retriever  # noqa: E402
@@ -32,7 +32,7 @@ def main():
     ap.add_argument('--config', default=os.path.join(os.path.dirname(__file__), 'config.yaml'))
     ap.add_argument('--embeddings', action='store_true', help='hybrid search with the configured embedding model (needs AI_GATEWAY_API_KEY)')
     ap.add_argument('--k', type=int, default=6)
-    ap.add_argument('--cases', help='comma-separated id fragments')
+    ap.add_argument('--questions', help='comma-separated id fragments')
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
     docs, chunks = kb.load()
@@ -43,7 +43,7 @@ def main():
     else:
         ret = Retriever(docs, chunks)
     rows = []
-    for c in C.load(a.cases):
+    for c in C.load(a.questions):
         need = [i for i in c.knowledge if i in docs]
         if not need:
             continue
@@ -51,7 +51,7 @@ def main():
         top = [h['id'] for h in ret.search(question, k=a.k)]
         _, ctx, _ = modes.classic_context(ret, question, cfg)
         rows.append((c.id, need, top, ctx))
-    print(f"| Case | Needed | Search top {a.k} | Classic context | Missed in context |")
+    print(f"| Question | Needed | Search top {a.k} | Classic context | Missed in context |")
     print('|---|---|---|---|---|')
     s_hit = c_hit = n = 0
     for cid, need, top, ctx in rows:
@@ -63,8 +63,8 @@ def main():
         miss = ', '.join(f'`{i}`' for i in need if i not in ctx) or '-'
         print(f'| {cid} | {len(need)} | {sh}/{len(need)} | {ch}/{len(need)} | {miss} |')
     full = sum(all(i in ctx for i in need) for _, need, _, ctx in rows)
-    print(f'\nCases: {len(rows)}. Recall@{a.k} search: {s_hit / n:.0%}. Recall classic context: {c_hit / n:.0%}. '
-          f'Cases with every needed file in context: {full}/{len(rows)}. Mode: {"hybrid" if a.embeddings else "BM25 only"}.')
+    print(f'\nQuestions: {len(rows)}. Recall@{a.k} search: {s_hit / n:.0%}. Recall classic context: {c_hit / n:.0%}. '
+          f'Questions with every needed file in context: {full}/{len(rows)}. Mode: {"hybrid" if a.embeddings else "BM25 only"}.')
 
 
 if __name__ == '__main__':

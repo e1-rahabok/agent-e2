@@ -1,4 +1,4 @@
-"""Judge: scores free-text and compound answers 0-3 against the case's answer key.
+"""Judge: scores free-text and compound answers 0-3 against the question's answer key.
 
 The judge is a frontier model that is never a candidate. It sees the question (and its images),
 `## Expected key points`, `## Likely wrong answer` and the answer under test. The model under test never
@@ -31,9 +31,9 @@ SYSTEM = ('You grade answers to VMware vSphere and VCF operations questions agai
           'trap = the answer states the likely wrong answer.')
 
 
-def _user(case, answer, images):
-    text = (f'Question:\n{case.prompt}\n\nExpected key points (the answer key):\n{case.key_points}\n\n'
-            f'Likely wrong answer:\n{case.likely_wrong or "(none given)"}\n\nAnswer to grade:\n{answer or "(empty)"}')
+def _user(question, answer, images):
+    text = (f'Question:\n{question.prompt}\n\nExpected key points (the answer key):\n{question.key_points}\n\n'
+            f'Likely wrong answer:\n{question.likely_wrong or "(none given)"}\n\nAnswer to grade:\n{answer or "(empty)"}')
     if not images:
         return {'role': 'user', 'content': text}
     return {'role': 'user', 'content': [{'type': 'text', 'text': text}] + images}
@@ -62,9 +62,9 @@ class Judge:
         self.max_tokens = cfg.get('judge_max_tokens', 1500)
         self.provider_order = cfg.get('provider_order', {}).get(model)
 
-    def grade(self, case, answer, images=None):
+    def grade(self, question, answer, images=None):
         """Returns (verdict, result). One retry when the reply is not valid JSON; then LLMError."""
-        msgs = [{'role': 'system', 'content': SYSTEM}, _user(case, answer, images or [])]
+        msgs = [{'role': 'system', 'content': SYSTEM}, _user(question, answer, images or [])]
         for _ in range(2):
             res = self.client.chat(self.model, msgs, temperature=self.temperature, max_tokens=self.max_tokens,
                                    provider_order=self.provider_order)
@@ -83,7 +83,7 @@ class MockJudge:
     def __init__(self, seed=0):
         self.rng = random.Random(seed)
 
-    def grade(self, case, answer, images=None):
+    def grade(self, question, answer, images=None):
         s = self.rng.randint(0, 3)
         return ({'score': s, 'trap': s == 0, 'unsure': False, 'missed': '', 'reason': 'mock'},
                 {'prompt_tokens': 0, 'completion_tokens': 0, 'latency': 0})

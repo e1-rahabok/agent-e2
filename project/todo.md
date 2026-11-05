@@ -29,7 +29,7 @@ Open work for this repository. Not indexed. Update when items close.
 ## Product (from the vCommunity Ask demo, 2026-11-04; see `project/product-requirements.md`)
 - [x] Section "Host CPU monitoring" moved from `vsphere/foundations/overhead` to `vsphere/object-types/esxi/overview-what-to-monitor`, with the knowledge base reading next to it.
 - [x] Overview files for VM, ESXi and cluster. Next: datastore and resource pool when their content grows.
-- [ ] Benchmark case: "most important CPU metrics on an ESXi host" (trap: utilization and load average first).
+- [ ] Benchmark question: "most important CPU metrics on an ESXi host" (trap: utilization and load average first).
 - [ ] The shipped app uses `harness/` for retrieval, tools, prompt and verifier, and the benchmarked embedding model.
 - [ ] Store prompt version, settings, model and index version with every answer; mark answers from a UI-edited prompt as untested.
 - [ ] Rate and flag buttons with cause tags, feeding the review queue.
@@ -45,9 +45,9 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Counter group unclear for the per-host and per-VM-disk datastore charts (deviceLatency, maxQueueDepth, totalReadLatency, ...): confirm in the vSphere API reference (developer.broadcom.com).
 - [ ] Map esxtop fields to knowledge files (esxtop comparison files) so a catalog hit on %RDY also returns the file.
 - [ ] VCF Operations metrics in the catalog (needs the VCF Operations 9.1 metric reference).
-- [ ] After the next benchmark run: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
-- [ ] After the next benchmark run: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
-- [ ] Add benchmark cases that need the catalog, calculator and object paths (units, statistics levels, summation to %, multi-hop).
+- [ ] After the next benchmark: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
+- [ ] After the next benchmark: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
+- [ ] Add benchmark questions that need the catalog, calculator and object paths (units, statistics levels, summation to %, multi-hop).
 - [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan (benchmark plan done 2026-11-04: `benchmark/test-design.md`).
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
@@ -80,7 +80,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Questions for the author: `project/author-questions.md` (25 open).
 - [ ] Author to update the book: Use P States off vs Turbo. Strings: "When deactivated, the ESX configures to use the highest available frequency"; "Rigid Base / Sleep Only"; "Turbo can still kick in despite the BIOS setting". Then update `cpu/concepts/power-states`.
 - [ ] Author to elaborate in the book: idle CPU lowers frequency below base (string: "Frequency will go lower than base clock speed"). Then update `cpu/concepts/power-states`.
-- [ ] Author to correct the book: wait sub-cases are IO wait, memory wait, other wait (string: "There are 3 sub cases here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
+- [ ] Author to correct the book: wait sub-questions are IO wait, memory wait, other wait (string: "There are 3 sub questions here (Co-stop, VM Wait and memory wait)"). Knowledge base already updated.
 - [ ] Later: add the author's "My Recommendation" column (single-counter recommendation) from the Impacts on ESXi table to `cpu/concepts/cpu-frequency`.
 
 ## Book extraction
@@ -132,29 +132,29 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Budget test: re-run the agentic answers that hit the 8-call limit with 16 calls; replace the fixed count with token, time and no-progress stops (see `ARCHITECTURE.md`, section 3).
 - [ ] Test agentic mode primed with the classic context (first search done, catalog facts included).
 - [ ] After the 100-question run picks model and mode: routine runs use the chosen mode plus baseline only.
-- [ ] Raise retrieval recall (67% hybrid, 12 of 28 cases complete): question understanding and filters, query rewriting with glossary synonyms, smarter link expansion. Measure with `benchmark/runner/retrieval_eval.py`.
+- [ ] Raise retrieval recall (67% hybrid, 12 of 28 questions complete): question understanding and filters, query rewriting with glossary synonyms, smarter link expansion. Measure with `benchmark/runner/retrieval_eval.py`.
 - [ ] Write questions to the blueprint in `benchmark/test-design.md` (areas CPU 25%, memory 25%, storage 20%, network 15%, system 20%; a question may count for several; gaps: network, storage, system, recall, Not covered).
-- [ ] Add `technology` (list of areas) and `trap_type` to case metadata and a coverage script that checks the blueprint counts.
-- [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read cases from another folder.
+- [ ] Add `technology` (list of areas) and `trap_type` to question metadata and a coverage script that checks the blueprint counts.
+- [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read questions from another folder.
 - [ ] Add `## Traps` to the 7 metric files that lack it; then make lint require it.
-- [x] Case vendor-neutral-general-001 (hyperscaler VM cost): removed 2026-11-04. Cost and price are out of scope (author, Q039).
-- [x] Author quiz (vSphere Metric Quiz.docx): 18 cases added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
-- [ ] Convert book quizzes (Chapter 2 has five) into cases.
-- [ ] Add cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
-- [ ] Add cases for MS Windows traps: Windows 100% on a shared core vs VM CPU Usage 62.5%, queue excludes running threads on Windows but includes them on Linux, 100% utilization with a low queue, Available = Standby + Free, guest disk queue invisible to VM latency.
-- [ ] Add cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
-- [ ] Add cases for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
-- [ ] Add cases for Chapter 3 Memory traps: Active stuck at 100%, Windows In Use 7.2 GB on an idle VM, Granted above limit, Swapped is not swap in - swap out, balloon 63% flat for weeks, only Latency measures memory performance.
+- [x] Question vendor-neutral-general-001 (hyperscaler VM cost): removed 2026-11-04. Cost and price are out of scope (author, Q039).
+- [x] Author quiz (vSphere Metric Quiz.docx): 18 questions added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
+- [ ] Convert book quizzes (Chapter 2 has five) into questions.
+- [ ] Add questions for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
+- [ ] Add questions for MS Windows traps: Windows 100% on a shared core vs VM CPU Usage 62.5%, queue excludes running threads on Windows but includes them on Linux, 100% utilization with a low queue, Available = Standby + Free, guest disk queue invisible to VM latency.
+- [ ] Add questions for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
+- [ ] Add questions for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
+- [ ] Add questions for Chapter 3 Memory traps: Active stuck at 100%, Windows In Use 7.2 GB on an idle VM, Granted above limit, Swapped is not swap in - swap out, balloon 63% flat for weeks, only Latency measures memory performance.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `benchmark/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
-- [ ] Next benchmark run, after more questions are added: try `--concurrency 16`. Keep 16 if errors stay at 0 and answers per minute rise. At 100 questions (about 12,700 answers, about US$ 11) the run takes about 4 hours at 12 and about 3 hours at 16 if speed scales: above the 2-hour command limit either way. Plan `--resume` once, or split by model.
-- [ ] Close the agentic gap (run 20261103-081849: agentic below classic for 7 of 8 models):
+- [ ] Next benchmark, after more questions are added: try `--concurrency 16`. Keep 16 if errors stay at 0 and answers per minute rise. At 100 questions (about 12,700 answers, about US$ 11) the run takes about 4 hours at 12 and about 3 hours at 16 if speed scales: above the 2-hour command limit either way. Plan `--resume` once, or split by model.
+- [ ] Close the agentic gap (benchmark 20261103-081849: agentic below classic for 7 of 8 models):
   - [ ] Better agentic prompt: example lookups; keep going until linked files (`same_name`, `related`) are read.
   - [ ] Hybrid mode: start from the classic results, then let the model follow links.
   - [ ] Test a larger local model if hardware allows; tool use improves with size.
   - [ ] Raise `agent_max_calls` and `agent_tool_tokens` once models use the calls they have.
-  - [x] Frontier model as a reference ceiling: run 20261103-093742 (claude-opus-5.5). Baseline 75%, classic 67%, agentic 67%.
-- [ ] Frontier run findings for the author: Q038-Q043 in `project/author-questions.md` (prompt rule, cost case, 4 cases wrong for all models). Re-run the frontier model after the answers are applied.
+  - [x] Frontier model as a reference ceiling: benchmark 20261103-093742 (claude-opus-5.5). Baseline 75%, classic 67%, agentic 67%.
+- [ ] Frontier run findings for the author: Q038-Q043 in `project/author-questions.md` (prompt rule, cost question, 4 questions wrong for all models). Re-run the frontier model after the answers are applied.
 
 ## Structure (after the re-organization of 2026-11-02)
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.
@@ -190,7 +190,7 @@ Open work for this repository. Not indexed. Update when items close.
 ## Test site
 - [ ] Author decisions: audience, scoring (hosting and model decided 2026-11-03). See `project/design-kb-test-site.md`, section Decisions for the author.
 - [x] Build phase 1 (Benchmark) runner: `benchmark/runner/` (2026-11-03). Tested offline with --mock.
-- [ ] First real benchmark run: needs AI_GATEWAY_API_KEY in the environment.
-- [ ] Grow the case set from 30 to 100 multiple-choice questions: 20% recall, 50% Level 400, 20% multi-hop, 10% screenshot; at least 10 per area; about 10 out-of-scope questions.
-- [x] "Not covered" option and fixed answer format: added by the runner. Answer keys (`answer`, `trap`, `level`, `format`) added to 17 quiz cases.
-- [ ] Case vsphere-cpu-006 (two hosts, two answers): split into two multiple-choice cases to make it auto-scorable.
+- [ ] First real benchmark: needs AI_GATEWAY_API_KEY in the environment.
+- [ ] Grow the question set from 30 to 100 multiple-choice questions: 20% recall, 50% Level 400, 20% multi-hop, 10% screenshot; at least 10 per area; about 10 out-of-scope questions.
+- [x] "Not covered" option and fixed answer format: added by the runner. Answer keys (`answer`, `trap`, `level`, `format`) added to 17 quiz questions.
+- [ ] Question vsphere-cpu-006 (two hosts, two answers): split into two multiple-choice questions to make it auto-scorable.

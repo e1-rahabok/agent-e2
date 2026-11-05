@@ -27,7 +27,7 @@ How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: section
 | Glossary | Controlled vocabulary, synonyms, words to avoid | `knowledge/glossary.md` | 76 entries |
 | Provenance | Source, review notes, corrections, author answers | metadata, `project/author-questions.md` | 48 author questions |
 | Rules as code | Architecture and writing rules | `project/tools/lint.py`, `project/tools/tags.yaml` | runs before every merge |
-| Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/cases/` | 28 cases |
+| Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` | 28 questions |
 
 Reason for each form, and its readers:
 
@@ -86,14 +86,14 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 2. Structure: write each fact in the form that fits it (section 2); add tags, links and traps.
 3. Ask: every conflict or gap becomes an author question with a verbatim search string. The author's answer is applied, marked in the file's review notes, and kept as a correction until the book is updated.
 4. Check: lint enforces the rules (folders, tags, layers, links, images, quotes, tables). Unit tests check the tools.
-5. Prove: the benchmark runs the cases against the whole system, the harness-only retrieval test checks that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
+5. Prove: the benchmark runs the questions against the whole system, the harness-only retrieval test checks that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
 6. Review: the author reviews every file before release; release content is final and curated.
 
 ## 7. Gaps
 | Gap | Plan |
 |---|---|
 | Interval and instance reading of each threshold band | Author question Q048; catalog fields ready |
-| Field heuristics not written in the books | Author questions; real tickets as benchmark cases |
+| Field heuristics not written in the books | Author questions; real tickets as benchmark questions |
 | VCF Operations mechanisms (capacity engine, policies, alerts, super metrics) | Author's VCF Operations chapters; VCF Operations 9.1 metric reference |
 | Screenshot library (what each screen shows and how to read it) | Release 1.1; template `knowledge/_templates/screen.md` |
 | Export formats and their traps | Release 1.2 |
@@ -304,4 +304,4 @@ knowledge/                           # what the model reads (indexed)
 2. Author reviews, answers `review_notes`, fixes errors.
 3. Author sets `status: reviewed`.
 4. When the source document is updated, move `corrections` into the normal text and clear them.
-5. Run `benchmark/` cases with and without the knowledge base; record results in `benchmark/results/results.csv`.
+5. Run `benchmark/` questions with and without the knowledge base; record results in `benchmark/results/results.csv`.

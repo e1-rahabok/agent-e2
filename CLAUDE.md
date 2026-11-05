@@ -70,15 +70,15 @@ Standing rules for this repository. Read at the start of every session.
 - vCenter is the administrative tool; VCF Operations is the operations tool. Never use the names interchangeably.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation. Troubleshooting flows: rule in `KNOWLEDGE-ENGINEERING.md`, section Troubleshooting flow diagrams.
-- Every knowledge file and every evaluation case ends with a `## Metadata` section holding one yaml block (see `KNOWLEDGE-ENGINEERING.md`, section Metadata). No front matter at the top.
+- Every knowledge file and every evaluation question ends with a `## Metadata` section holding one yaml block (see `KNOWLEDGE-ENGINEERING.md`, section Metadata). No front matter at the top.
 - Keep the author's own diagrams from the book in the `images/` folder of the technology folder that uses them (for example `knowledge/vsphere/technology/<tech>/images/`, `knowledge/guest-os/<technology>/images/`), linked under the section they explain, with alt text. Name each file by what it shows (pattern in `KNOWLEDGE-ENGINEERING.md`, section Images). Tag each image in the metadata `images` list.
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 - Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
 - When asking the author about the book, give a verbatim search string.
-- When asking the author to check a file, give its full GitHub URL on `main`, so it is clickable. Name the item to check (case id, option letters, section).
+- When asking the author to check a file, give its full GitHub URL on `main`, so it is clickable. Name the item to check (question id, option letters, section).
 - Questions for the author go in `project/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - Extract the book one Heading 3 at a time. Add that section's questions to `project/author-questions.md` and continue; do not wait for answers.
-- One English word per concept, everywhere in the repository. Two words for one thing: pick one and replace the other. One word for two things: split it. Knowledge terms: `knowledge/glossary.md`. Repository terms (case, prompt, quiz, benchmark run, ...): `project/terms.md`. Lint flags the replaced words.
+- One English word per concept, everywhere in the repository. Two words for one thing: pick one and replace the other. One word for two things: split it. Knowledge terms: `knowledge/glossary.md`. Repository terms (benchmark, run, question, quiz, prompt, ...): `project/terms.md`. Mind the two contexts of a word: general English and VMware operations jargon (in operations, a case is an issue to solve). Lint flags the replaced words.
 - Use terms from `knowledge/glossary.md`. Tag values must match `project/tools/tags.yaml`. A new term is added there as a proposal and flagged for the author before use.
 - When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
 
@@ -86,7 +86,7 @@ Standing rules for this repository. Read at the start of every session.
 - Never send `## Expected key points` or `## Likely wrong answer` to the AI under test. Only the judge (`benchmark/runner/judge.py`) reads them.
 - Every candidate model must read screenshots (vision). Models and judge: `benchmark/models.md`.
 - Baseline runs use no knowledge base. Record model and effort in `benchmark/results/results.csv`.
-- During a benchmark run, send the author a short progress report every 15 minutes: answers done, errors, time left.
+- While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Repository layout
 - Three groups. Map: `README.md`, section Repository map.

@@ -4,9 +4,9 @@
 Examples:
   python3 benchmark/runner/run.py --dry-run
   python3 benchmark/runner/run.py --mock --runs 2
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --cases cpu-004
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --questions cpu-004
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
-  python3 benchmark/runner/run.py --resume benchmark/results/autotest/<run-id>
+  python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>
 """
 import argparse
 import csv
@@ -22,7 +22,7 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-import cases as C  # noqa: E402
+import questions as C  # noqa: E402
 import judge as J  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
@@ -30,7 +30,7 @@ import report  # noqa: E402
 from llm import GatewayClient, LLMError, MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
-FIELDS = ['run_id', 'time', 'model', 'provider', 'mode', 'track', 'case_id', 'kind', 'format', 'area', 'level', 'run', 'temperature',
+FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'kind', 'format', 'area', 'level', 'run', 'temperature',
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
@@ -43,7 +43,7 @@ def main():
     ap.add_argument('--models', help='comma-separated model ids (default: config)')
     ap.add_argument('--modes', help='comma-separated: baseline,classic,agentic')
     ap.add_argument('--runs', type=int)
-    ap.add_argument('--cases', help='comma-separated id fragments, e.g. cpu-004,memory')
+    ap.add_argument('--questions', help='comma-separated id fragments, e.g. cpu-004,memory')
     ap.add_argument('--temperature', type=float)
     ap.add_argument('--concurrency', type=int)
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')
@@ -51,7 +51,7 @@ def main():
     ap.add_argument('--judge', help='judge model id (default: config judge_model)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
     ap.add_argument('--resume', help='existing run folder to continue')
-    ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results', 'autotest'))
+    ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
     ap.add_argument('--no-summary-csv', action='store_true', help='do not append to benchmark/results/results.csv')
     a = ap.parse_args()
 
@@ -62,36 +62,36 @@ def main():
     models_ = a.models.split(',') if a.models else cfg['models']
     modes_ = a.modes.split(',') if a.modes else cfg['modes']
 
-    all_cases = C.load(a.cases)
-    skipped = [c.id for c in all_cases if not c.scorable]
-    cases_ = [c for c in all_cases if c.scorable]
-    if not cases_:
-        sys.exit('No scorable cases matched.')
+    all_questions = C.load(a.questions)
+    skipped = [c.id for c in all_questions if not c.scorable]
+    questions_ = [c for c in all_questions if c.scorable]
+    if not questions_:
+        sys.exit('No scorable questions matched.')
 
     client = MockClient() if a.mock else GatewayClient(cfg['gateway'])
     judge_model = a.judge or cfg.get('judge_model')
-    needs_judge = any(not c.choice for c in cases_)
+    needs_judge = any(not c.choice for c in questions_)
     if needs_judge and judge_model in models_:
         sys.exit(f'The judge {judge_model} is also a candidate. The judge must never grade its own answers.')
     if needs_judge and not (judge_model or a.mock):
-        sys.exit('Free-text cases need a judge: set judge_model in config.yaml or pass --judge.')
+        sys.exit('Free-text questions need a judge: set judge_model in config.yaml or pass --judge.')
     judge = J.MockJudge() if a.mock else J.Judge(client, judge_model, cfg) if needs_judge else None
     meta = _model_meta(client, models_ + ([judge_model] if needs_judge and not a.mock else []), a.mock)
     # Reading screenshots is a basic requirement (benchmark/models.md): a model without vision is not a candidate.
     blind = [m for m in models_ if 'vision' not in meta.get(m, {}).get('tags', [])]
-    if meta and blind and any(c.has_images for c in cases_):
-        sys.exit(f'Models without vision cannot take the screenshot cases: {", ".join(blind)}. '
-                 'Remove them (benchmark/models.md) or pass --cases without screenshot cases.')
+    if meta and blind and any(c.has_images for c in questions_):
+        sys.exit(f'Models without vision cannot take the screenshot questions: {", ".join(blind)}. '
+                 'Remove them (benchmark/models.md) or pass --questions without screenshot questions.')
     tasks = []
     for m in models_:
         for mode in modes_:
-            for c in cases_:
+            for c in questions_:
                 tr = 'vision' if c.has_images else 'text'
                 for r in range(1, cfg['runs'] + 1):
                     tasks.append((m, mode, c, tr, r))
 
-    kinds = ', '.join(f'{k} {sum(1 for c in cases_ if c.kind == k)}' for k in ('multiple-choice', 'screenshot', 'conversation'))
-    print(f'Cases: {len(cases_)} ({kinds}). Skipped (no key): {", ".join(skipped) or "none"}')
+    kinds = ', '.join(f'{k} {sum(1 for c in questions_ if c.kind == k)}' for k in ('multiple-choice', 'screenshot', 'conversation'))
+    print(f'Questions: {len(questions_)} ({kinds}). Skipped (no key): {", ".join(skipped) or "none"}')
     if needs_judge:
         print(f'Judge: {judge.model}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')
@@ -102,13 +102,13 @@ def main():
 
     run_dir = a.resume or os.path.join(a.out, dt.datetime.now().strftime('%Y%m%d-%H%M%S') + ('-mock' if a.mock else ''))
     os.makedirs(run_dir, exist_ok=True)
-    run_id = os.path.basename(run_dir)
+    benchmark_id = os.path.basename(run_dir)
     answers_path = os.path.join(run_dir, 'answers.csv')
     done = set()
     if os.path.exists(answers_path):
         for row in csv.DictReader(open(answers_path)):
             if not row['error']:
-                done.add((row['model'], row['mode'], row['case_id'], row['track'], int(row['run'])))
+                done.add((row['model'], row['mode'], row['question_id'], row['track'], int(row['run'])))
     tasks = [t for t in tasks if (t[0], t[1], t[2].id, t[3], t[4]) not in done]
 
     docs, chunks = kb.load()
@@ -119,11 +119,11 @@ def main():
         print(f'Embeddings unavailable ({e}); using BM25 only.')
         embed, retriever = None, Retriever(docs, chunks)
     sha = kb.git_sha()
-    json.dump({'run_id': run_id, 'started': dt.datetime.now().isoformat(timespec='seconds'), 'index_version': sha,
+    json.dump({'benchmark_id': benchmark_id, 'started': dt.datetime.now().isoformat(timespec='seconds'), 'index_version': sha,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
-               'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'cases': [c.id for c in cases_],
-               'skipped_cases': skipped, 'judge_model': judge.model if judge else None,
-               'kinds': {c.id: c.kind for c in cases_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
+               'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
+               'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
+               'kinds': {c.id: c.kind for c in questions_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
     lock = threading.Lock()
@@ -135,7 +135,7 @@ def main():
     if new:
         w.writeheader()
     ft = open(os.path.join(run_dir, 'traces.jsonl'), 'a')
-    print(f'Run folder: {run_dir}  ({len(tasks)} answers to go)')
+    print(f'Benchmark folder: {run_dir}  ({len(tasks)} answers to go)')
 
     def one(task):
         m, mode, c, track, r = task
@@ -145,8 +145,8 @@ def main():
         else:
             question, mapping = c.prompt, {}
         images = c.image_parts() if track == 'vision' else []
-        row = {'run_id': run_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
-               'track': track, 'case_id': c.id, 'kind': c.kind, 'format': c.format, 'area': c.area, 'level': c.level, 'run': r,
+        row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
+               'track': track, 'question_id': c.id, 'kind': c.kind, 'format': c.format, 'area': c.area, 'level': c.level, 'run': r,
                'temperature': cfg['temperature'], 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
@@ -187,7 +187,7 @@ def main():
         with lock:
             w.writerow(row)
             fa.flush()
-            ft.write(json.dumps({'case_id': c.id, 'model': m, 'mode': mode, 'track': track, 'run': r,
+            ft.write(json.dumps({'question_id': c.id, 'model': m, 'mode': mode, 'track': track, 'run': r,
                                  'question': question, 'trace': trace}, default=str) + '\n')
             ft.flush()
         return row
