@@ -38,7 +38,7 @@ class Case:
         self.answer = [str(a) for a in (self.meta.get('answer') or [])]
         self.trap = [str(a) for a in (self.meta.get('trap') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
-        self.attachments = [os.path.join(ROOT, 'benchmark', 'attachments', a) for a in (self.meta.get('attachments') or [])]
+        self.attachments = [os.path.join(ROOT, 'benchmark', 'cases', a) for a in (self.meta.get('attachments') or [])]
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
         self.prompt = m.group(1).strip() if m else ''
         self.stem, self.options, self.footer = self._split_prompt(self.prompt)
