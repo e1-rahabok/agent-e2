@@ -151,8 +151,10 @@ def main():
             bad(f, 'task must be read-metric, troubleshoot, decide-capacity, explain-mechanism or judge-setting (benchmark/design.md, section 3.1)')
         if (fm or {}).get('origin') not in ('book', 'quiz', 'real-ticket', 'synthetic'):
             bad(f, 'origin must be book, quiz, real-ticket or synthetic')
-        if (fm or {}).get('status') not in ('draft', 'reviewed', 'retired'):
-            bad(f, 'status must be draft, reviewed or retired')
+        if (fm or {}).get('status') not in ('draft', 'awaiting-input', 'reviewed', 'retired'):
+            bad(f, 'status must be draft, awaiting-input, reviewed or retired')
+        if (fm or {}).get('status') == 'awaiting-input' and '\n## Input to supply\n' not in t:
+            bad(f, 'awaiting-input question needs a ## Input to supply section describing the screenshot or table')
         if not (fm or {}).get('knowledge'):
             bad(f, 'knowledge must list at least one knowledge id')
         at = (fm or {}).get('answer_type')
@@ -173,7 +175,7 @@ def main():
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
             if not fm.get('answer'): bad(f, 'deterministic question has no answer')
         for att in (fm or {}).get('attachments') or []:
-            if not os.path.exists(os.path.join('benchmark', 'questions', att)):
+            if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') != 'awaiting-input':
                 bad(f, f'attachment not found: {att}')
 
     for f in files + sorted(glob.glob('benchmark/questions/*.md')):

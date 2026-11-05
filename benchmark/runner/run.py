@@ -91,7 +91,7 @@ def main():
                     tasks.append((m, mode, c, tr, r))
 
     answer_types = ', '.join(f'{k} {sum(1 for c in questions_ if c.answer_type == k)}' for k in ('deterministic', 'judged'))
-    print(f'Questions: {len(questions_)} ({answer_types}). Skipped (no key): {", ".join(skipped) or "none"}')
+    print(f'Questions: {len(questions_)} ({answer_types}). Skipped (no key, awaiting input or retired): {", ".join(skipped) or "none"}')
     if needs_judge:
         print(f'Judge: {judge.model}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')

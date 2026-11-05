@@ -311,9 +311,11 @@ For the set:
 9. Are at least 20% of questions from sources other than the author's books?
 
 ## 12. Status (2026-11-05)
-- 28 questions, all scored automatically: 17 deterministic, 11 judged; 27 text only, 1 screenshot, 0 table. Levels (author, Q056, 2026-11-05): 0 at Level 100, 0 at 200, 15 at 300, 13 at 400.
-- Gaps against the blueprint: Level 100 0 of 10, Level 200 0 of 15; table 0 of 15; screenshot 1 of 25 (one vCenter chart; no esxtop or VCF Operations), network 0 of 15, storage 1 of 20, system about 3 of 20, outside the knowledge base 0 of 5; multi-area tagging (`technology`) and `trap_type` not yet recorded.
-- Next: write the questions to the blueprint from the author's book quizzes; add `trap_type`; add a coverage script; set up the held-out set.
+- 53 questions: 10 at Level 100, 15 at Level 200, 15 at Level 300, 13 at Level 400. 39 deterministic, 14 judged. 46 text only, 6 screenshot, 1 table.
+- 6 are `awaiting-input`: the author supplies the screenshot or table described in each question's `## Input to supply` (question-0034, 0037, 0042, 0046, 0050, 0051).
+- Origin: 26 synthetic (drafted by Claude), 17 quiz, 10 book. The synthetic cap (section 10: about 30% of 100) leaves room for about 4 more: the remaining questions come from the book, the quizzes and real tickets.
+- Gaps against the allocation (section 3.6) and coverage (section 3.7): `project/todo.md`, section Evaluation, and the gap list of 2026-11-05.
+- Next: `trap_type` per question; a coverage script that prints these counts; the held-out set.
 
 ## 13. Screenshot questions
 - Purpose: administrators upload screenshots and ask the agent to explain the problem. Often several at once, from different tools: esxtop, the vCenter UI, the VCF Operations UI (author, 2026-11-05).

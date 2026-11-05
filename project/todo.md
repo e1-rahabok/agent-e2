@@ -126,7 +126,9 @@ Open work for this repository. Not indexed. Update when items close.
 ## Evaluation
 - [ ] Write the long, complex question (`benchmark/design.md`, section 3.7): many screenshots and tables, many key points. Add a per-question answer length to the runner (the open-answer prompt caps answers at 250 words).
 - [ ] Table input: a harness table tool (load Excel or CSV, list columns, filter, sort, aggregate, top-N), table attachments in the runner, and the export formats with their traps (`benchmark/design.md`, section 13.1).
-- [ ] Write Level 100 and 200 questions (0 of 10 and 0 of 15 today) and table questions (0 of 15).
+- [x] Write Level 100 and 200 questions: question-0029 to question-0053 (2026-11-05).
+- [ ] Author: supply the screenshots and table for question-0034, 0037, 0042, 0046, 0050, 0051 (see each `## Input to supply`).
+- [ ] Remaining 47 questions to reach 100: 10 at Level 300, 37 at Level 400 (gap list in `benchmark/design.md`, section 12).
 - [ ] Split `vsphere-cpu-006` (two hosts, letters per host) into one deterministic question per host.
 - [ ] Check for a current-generation dense vision model of about 70B (open weights, commercial licence, tool calling, on Vercel AI Gateway). None as of 2026-11-05; expected in 2027. Add it as the first challenger under the rule in `benchmark/models.md`, section 1. Check again each quarter.
 - [ ] Before release: run the benchmark once on the chosen model from local weights, at the deployed precision, on the target GPU. That run is the release score (`benchmark/models.md`, section 2).
