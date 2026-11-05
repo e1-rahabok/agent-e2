@@ -20,7 +20,7 @@ python3 benchmark/runner/run.py --mock --runs 2
 - Offline pipeline check: random answers, real retrieval, no API calls.
 
 ```bash
-python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes classic --runs 1 --questions cpu-004
+python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes classic --runs 1 --questions L4-04
 ```
 - Smallest real benchmark: one model, one mode, one question.
 

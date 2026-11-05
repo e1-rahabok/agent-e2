@@ -131,6 +131,7 @@ def main():
                     if re.search(pat, checked, re.I):
                         bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
 
+    seen_ids = {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
         t = open(f).read()  # benchmark questions: metadata at the end, like knowledge files
         if t.startswith('---\n'): bad(f, 'front matter at the top: move it to a ## Metadata section at the end')
@@ -145,6 +146,15 @@ def main():
                 for x in v:
                     if x not in allowed[k]: bad(f, f'{k} "{x}" not allowed')
         if os.path.dirname(f) != 'benchmark/questions': bad(f, 'questions live in one flat folder: benchmark/questions/')
+        qid = str((fm or {}).get('id') or '')
+        if not re.fullmatch(r'\d{2,3}', qid): bad(f, 'id must be a stable 2-digit number, quoted, e.g. "07" (benchmark/README.md)')
+        elif qid in seen_ids: bad(f, f'id {qid} is also used by {seen_ids[qid]}')
+        else: seen_ids[qid] = f
+        lv = (fm or {}).get('level')
+        if isinstance(lv, int) and not os.path.basename(f).startswith(f'L{lv // 100}-{qid}-'):
+            bad(f, f'file name must start with L{lv // 100}-{qid}- (level and id)')
+        for a in (fm or {}).get('attachments') or []:
+            if not str(a).startswith(f'{qid}/'): bad(f, f'attachment {a} must live in the folder {qid}/')
         for k in ('scope', 'area', 'tests', 'pillar', 'format', 'input_type'):
             if k in (fm or {}): bad(f, f'tag "{k}" is no longer used (benchmark/README.md, section Tags removed)')
         if (fm or {}).get('task') not in ('read-metric', 'troubleshoot', 'decide-capacity', 'explain-mechanism', 'judge-setting'):

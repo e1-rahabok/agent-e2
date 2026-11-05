@@ -1,0 +1,38 @@
+# High CPU Wait
+
+## Prompt
+- A VM shows CPU Wait at 90%.
+- The application owner says the VM must be stuck waiting on disk or memory.
+
+Are they right?
+
+## Likely wrong answer
+"Yes, high wait means IO or memory bottleneck."
+
+## Expected key points
+- VM CPU Wait **includes idle time**.
+- Most VMs do not run at 100%, so Wait is naturally high.
+- The name is correct from the kernel scheduler's viewpoint: the vCPU is waiting to be used.
+- High Wait alone does not indicate a bottleneck. Requires other evidence (e.g. disk latency, memory contention).
+
+## Notes
+- Previous id: vsphere-cpu-001 (renamed 2026-11-05).
+- Tests: Confusing name (distinction).
+
+## Metadata
+```yaml
+id: "01"
+title: "High CPU Wait"
+product: [vsphere]
+technology: [cpu]
+input: [text]
+task: read-metric
+knowledge:
+  - vsphere/technology/cpu/metrics/virtual-motherboard/wait
+attachments: []
+origin: book
+source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Confusing name)."
+answer_type: judged
+level: 300                      # author 2026-11-05
+status: draft
+```

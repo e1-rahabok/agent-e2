@@ -50,7 +50,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 | 100 | Name and recognise: which counter, which object, which tool | 10 | Which vCenter counter shows the time a vCPU was ready to run but waited for a physical CPU? A. Ready B. Co-stop C. Wait D. Latency |
 | 200 | Define and explain one item in isolation | 15 | What does VM CPU Co-stop measure, and why does it apply only to VMs with more than one vCPU? |
 | 300 | Apply common practice correctly: read a value, convert a unit, apply a published threshold | 25 | A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one 20-second real-time sample. What is its Ready per vCPU, in %? |
-| 400 | Explain the mechanism, know when a reading misleads, and combine several facts, tables or screenshots to a conclusion | 50 | `vsphere-foundations-005`: a slow Windows VM, six Guest OS and VM counters from VCF Operations; which statements hold, and why the two layers disagree |
+| 400 | Explain the mechanism, know when a reading misleads, and combine several facts, tables or screenshots to a conclusion | 50 | `L4-18`: a slow Windows VM, six Guest OS and VM counters from VCF Operations; which statements hold, and why the two layers disagree |
 
 - Level 400 is hard and complex, not tricky. It tests knowledge of the system, not reading of English. To stay unambiguous it is often long: the situation, the values, the tool, the time window, and one clear question.
 - Level 400 combines facts inside one answer: several knowledge files, a calculation, a flow, several inputs. There is no back-and-forth with the user; the agent does the chaining with its tool calls. (This replaces the earlier "multi-hop" level.)
@@ -71,9 +71,9 @@ Two answer types, by how the answer is scored.
 
 - Deterministic is the bulk: it is exact, cheap, and free of scorer bias.
 - Judged is kept because a real administrator asks without options. A model can pick the right option yet fail to raise the point unprompted.
-- Example, deterministic (`vsphere-cpu-011`): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
-- Example, judged (`vsphere-cpu-001`): "A VM shows CPU Wait at 90%. The application owner says the VM must be stuck waiting on disk or memory. Are they right?" Key points: Wait includes idle time; 90% Wait on a quiet VM is normal; check Ready, Co-stop and the Guest OS before blaming storage. The judge scores 3 when the answer says all of that, 0 when it agrees with the owner.
-- A question with several parts, each with letters (`vsphere-cpu-006`: one answer per host), is judged today. Proposal: split it into one deterministic question per part.
+- Example, deterministic (`L3-11`): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
+- Example, judged (`L3-01`): "A VM shows CPU Wait at 90%. The application owner says the VM must be stuck waiting on disk or memory. Are they right?" Key points: Wait includes idle time; 90% Wait on a quiet VM is normal; check Ready, Co-stop and the Guest OS before blaming storage. The judge scores 3 when the answer says all of that, 0 when it agrees with the owner.
+- A question with several parts, each with letters (`L4-06`: one answer per host), is judged today. Proposal: split it into one deterministic question per part.
 - Metadata: `answer_type: deterministic | judged`.
 
 ### 3.4 By input type
@@ -91,9 +91,9 @@ Three input types: what the administrator gives the product besides the question
 - Metadata: `input: [text]`, `[table]`, `[screenshot]` or `[table, screenshot]`, derived from `attachments` and checked by lint.
 - Not built yet: the table tool in the harness and table attachments in the runner (section 13.1).
 - Examples:
-  - Text: `vsphere-memory-001`: every VM shows Memory Usage below 25% and the host shows 95%; the customer wants more RAM.
+  - Text: `L4-20`: every VM shows Memory Usage below 25% and the host shows 95%; the customer wants more RAM.
   - Table (to write): a VCF Operations export of 400 VMs with CPU Ready, Co-stop, Run, vCPU count and host; "which VMs suffer contention, and is it the host or the VM size?".
-  - Screenshot: `vsphere-cpu-004`: a vCenter chart of Usage, Core Utilization and Utilization.
+  - Screenshot: `L4-04`: a vCenter chart of Usage, Core Utilization and Utilization.
   - Table and screenshot (to write): an esxtop screenshot of one host and a spreadsheet of its VMs; "which VM causes the Co-stop on the others?".
 
 ### 3.5 By area (author, 2026-11-04)
@@ -311,9 +311,9 @@ For the set:
 9. Are at least 20% of questions from sources other than the author's books?
 
 ## 12. Status (2026-11-05)
-- 90 questions: 10 at Level 100, 14 at Level 200, 16 at Level 300, 50 at Level 400 (question-0050 moved to Level 300 by the author). 59 deterministic, 31 judged. 59 text only, 19 screenshot, 7 table, 5 table + screenshot.
-- Level 400 (50): the 37 new ones (question-0054 to question-0090) are 20 deterministic and 17 judged; 13 text, 13 screenshot (esxtop 5, vCenter 4, VCF Operations 4), 6 table, 5 table + screenshot. question-0090 is the long, complex question.
-- 24 are `awaiting-input`: the author supplies the screenshot or table described in each question's `## Input to supply` (question-0066 to 0089). Supplied 2026-11-05: question-0034, 0037, 0042, 0046, 0050, 0051.
+- 90 questions: 10 at Level 100, 14 at Level 200, 16 at Level 300, 50 at Level 400 (L3-50 moved to Level 300 by the author). 59 deterministic, 31 judged. 59 text only, 19 screenshot, 7 table, 5 table + screenshot.
+- Level 400 (50): the 37 new ones (L4-54 to L4-90) are 20 deterministic and 17 judged; 13 text, 13 screenshot (esxtop 5, vCenter 4, VCF Operations 4), 6 table, 5 table + screenshot. L4-90 is the long, complex question.
+- 24 are `awaiting-input`: the author supplies the screenshot or table described in each question's `## Input to supply` (L4-66 to L4-89). Supplied 2026-11-05: L1-34, L1-37, L2-42, L2-46, L3-50, L2-51.
 - Tasks: read-metric 32, troubleshoot 23, decide-capacity 15, explain-mechanism 12, judge-setting 8.
 - Technology (a question can carry several): cpu 26, system 26, storage 22, memory 21, network 15.
 - Origin: 63 synthetic (drafted by Claude), 17 quiz, 10 book. Above the synthetic cap (section 10: about 30%): author question Q058.
@@ -348,7 +348,7 @@ For the set:
   - order: the conclusion first, then the reason, then what to check next;
   - as many key points as the question takes. Most questions take 2-5. A long, complex question can take many more (author, 2026-11-05: real troubleshooting runs long, over a dozen screenshots). The 250-word limit of the open-answer prompt is too short for it: a per-question answer length is a to-do;
   - a key point that is only nice to know is not a key point: it goes in `## Notes`.
-- Example (`vsphere-cpu-002`): a full answer reads like: No. Ready and Co-stop are flat, so the VM is not waiting for a physical CPU. CPU Latency rose because the BIOS power policy lowered the clock speed: the VM runs slower, as on an older CPU. Unlike Disk or Memory Latency, CPU Latency does not always mean a performance problem. Check the power policy and the frequency.
+- Example (`L4-02`): a full answer reads like: No. Ready and Co-stop are flat, so the VM is not waiting for a physical CPU. CPU Latency rose because the BIOS power policy lowered the clock speed: the VM runs slower, as on an older CPU. Unlike Disk or Memory Latency, CPU Latency does not always mean a performance problem. Check the power policy and the frequency.
 - Rubric:
 
 | Score | Meaning |
