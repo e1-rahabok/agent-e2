@@ -1,17 +1,24 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Isvara-Level%20400%20private%20cloud%20expertise-6e7781?style=for-the-badge&labelColor=3d444d" alt="Isvara: Level 400 private cloud expertise">
+  <img src="https://img.shields.io/badge/Isvara-Level%20400%20private%20cloud%20operations%20management%20expertise-6e7781?style=for-the-badge&labelColor=3d444d" alt="Isvara: Level 400 private cloud operations management expertise">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/vSphere-9.1-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSphere 9.1">
-  <img src="https://img.shields.io/badge/VCF-9.1.1-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="VCF 9.1.1">
+  <img src="https://img.shields.io/badge/-vSphere-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSphere">
+  <img src="https://img.shields.io/badge/-VCF-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="VCF">
+  <img src="https://img.shields.io/badge/-vSAN-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSAN">
+  <img src="https://img.shields.io/badge/-NSX-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="NSX">
+  <img src="https://img.shields.io/badge/-Kubernetes-6e7781?logo=kubernetes&logoColor=white&labelColor=3d444d" alt="Kubernetes">
+  <img src="https://img.shields.io/badge/-Windows-6e7781?labelColor=3d444d" alt="Windows">
+  <img src="https://img.shields.io/badge/-Linux-6e7781?logo=linux&logoColor=white&labelColor=3d444d" alt="Linux">
+</p>
+<p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
   <img src="https://img.shields.io/badge/runs-offline%20%28dark%20site%29-6e7781?labelColor=3d444d" alt="Runs offline">
   <img src="https://img.shields.io/badge/knowledge%20files-205-6e7781?labelColor=3d444d" alt="Knowledge files: 205">
   <img src="https://img.shields.io/badge/benchmark%20cases-28-6e7781?labelColor=3d444d" alt="Benchmark cases: 28">
-  <img src="https://img.shields.io/badge/target-99%25%20stable%20correct-6e7781?labelColor=3d444d" alt="Target: 99% stable correct">
+  <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
-# Isvara: private cloud expertise
+# Isvara: private cloud operations management expertise
 
 **🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🧪 [Test design](benchmark/test-design.md) · ⚙️ [Harness](harness/README.md)**
 

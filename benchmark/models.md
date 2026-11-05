@@ -3,7 +3,49 @@
 Candidate models, the frontier reference and the judge for the benchmark. Not indexed.
 Settings: `benchmark/runner/config.yaml`. Why a small local model can win: `project/solution-design.md`, sections 3 and 4.
 
-## 1. Selection criteria
+## 1. What kind of model the goal needs
+The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
+
+### The model's job
+- It answers an open-book exam. Retrieval and tools supply the vSphere knowledge; the model does not need to know vSphere.
+- It must:
+  1. apply the retrieved text even when it contradicts what the model learned in training (context faithfulness);
+  2. follow the system prompt rules literally: the knowledge base is the source of truth; say Unsure when the text does not settle it;
+  3. combine 3 or more files and follow a troubleshooting flow in order (multi-document reasoning);
+  4. call tools correctly and in the right order (catalog, calculator, flow);
+  5. read dense screenshots: esxtop tables, vCenter and VCF Operations charts (OCR of small UI text, chart reading);
+  6. run on one GPU at the customer site.
+- Traits 1 and 2 matter most. A model that reasons well but trusts its own memory gives a Level 300 answer.
+
+### The risk: prior override
+- Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: trap answer on 16% of answers (run 20261103-093742).
+- Memorized knowledge grows with total parameters. Reasoning compute per token grows with active parameters.
+- So, all else equal, a bigger model brings more memorized Level 300 belief, not more Level 400 knowledge. That is the reason 70B dense was not chosen (`project/solution-design.md`, section 4).
+- A 120B MoE with 6-12B active has about 4 times the memorized knowledge of a 30B dense model and less compute per token. By the same reasoning it is a weaker bet than a 30B dense model, not a stronger one.
+- The opposite effect also exists: larger models often follow long instructions and read long contexts better. Which effect wins on this task is not known from theory or from published results. It is measured.
+
+### What we prefer
+| Prefer | Over | Reason |
+|---|---|---|
+| Strong instruction following and context faithfulness | Broad world knowledge | The knowledge base supplies the knowledge; broad memory is where Level 300 beliefs live |
+| Dense 27-32B | Large MoE | Fewer memorized priors per unit of compute; smaller GPU |
+| Reliable tool calling | Long reasoning traces | Exact values come from tools; long traces drift and break the answer format |
+| Native vision with good OCR | Vision as an add-on | Screenshots carry the values |
+| Latest generation | Older or sibling models | Newer models follow instructions and use tools better at the same size |
+
+- General knowledge benchmarks (trivia, exams) are not a selection signal: they reward the memory this design does not want.
+
+### How the benchmark tests it
+- Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
+- Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
+- Trap rate in knowledge base modes, and the cases where the knowledge base and the vSphere documentation disagree (`benchmark/test-design.md`, section 3.3).
+- The 120B MoE models (tier B) are challengers that test the risk above. They stay only if both hold, against the best tier A model in the same mode:
+  1. final score higher by more than the margin;
+  2. override rate not higher.
+- Otherwise tier B is dropped, and a tie goes to tier A: cheaper, and fewer priors.
+
+## 2. Selection criteria
 Two limits decide (author, 2026-11-05):
 - Fit for the goal: the model can become a narrow VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
 - Hardware cost: it runs on one GPU at the customer site. Criterion 3.
@@ -32,15 +74,15 @@ All are required. A model that fails one is not a candidate.
 Preferred, not required:
 - Vendor diversity: different training data fails on different questions. A mix shows whether a failure is a knowledge gap (all fail) or a model gap (one fails).
 
-## 2. Candidates
+## 3. Candidates
 | Model | Tier | Size, licence | Why in the test | Result so far |
 |---|---|---|---|---|
 | google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Best: 58% exact with one lookup (17 questions, old scoring) |
 | alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Added 2026-11-04 |
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
-| mistral/mistral-small | B | Mistral Small 4: 119B MoE, 6.5B active, Apache 2.0 | Latest Mistral Small (2026-03); fast for its size | 51% (17 questions, old scoring; served version then not recorded) |
-| inclusionai/ling-3.0-flash-vl | B | 125B MoE, MIT | Ant Group; vision and visual agent use (weights 2026-09) | Added 2026-11-05 |
-| nvidia/nemotron-3.5-super-vl | B | 120B MoE, 12B active, OpenMDW 1.1 | NVIDIA; document understanding; official NVFP4 weights (66 GB) | Added 2026-11-05 |
+| mistral/mistral-small | B (challenger) | Mistral Small 4: 119B MoE, 6.5B active, Apache 2.0 | Latest Mistral Small (2026-03); fast for its size | 51% (17 questions, old scoring; served version then not recorded) |
+| inclusionai/ling-3.0-flash-vl | B (challenger) | 125B MoE, MIT | Ant Group; vision and visual agent use (weights 2026-09) | Added 2026-11-05 |
+| nvidia/nemotron-3.5-super-vl | B (challenger) | 120B MoE, 12B active, OpenMDW 1.1 | NVIDIA; document understanding; official NVFP4 weights (66 GB) | Added 2026-11-05 |
 
 - 6 candidates from 6 vendors (Google, Alibaba, Meta, Mistral, Ant Group, NVIDIA): 3 in tier A, 3 in tier B.
 - Vision tags checked in the gateway model list on 2026-11-05.
@@ -48,12 +90,12 @@ Preferred, not required:
 - mistral-small: the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
 - Licences checked on Hugging Face 2026-11-05. OpenMDW 1.1 (NVIDIA) and the Gemma licence allow commercial use; read them before deployment.
 
-## 3. Frontier reference
+## 4. Frontier reference
 - One frontier model, scored the same way with and without the knowledge base, in every run: anthropic/claude-opus-5.5 so far.
 - The claim (`benchmark/test-design.md`, section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
-## 4. Judge
+## 5. Judge
 - Grades free-text and compound answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/test-design.md`, section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
 - Rules:
@@ -63,7 +105,7 @@ Preferred, not required:
   - temperature 0.
 - The judge is a frontier model on the test gateway only. It is never deployed: at a customer site nothing is graded.
 
-## 5. Removed
+## 6. Removed
 | Model | Date | Reason |
 |---|---|---|
 | alibaba/qwen-3-32b | 2026-11-05 | No vision. Was the reference dense model of the class (48%). |
@@ -75,7 +117,7 @@ Preferred, not required:
 | google/gemma-4-26b-a4b-it | 2026-11-05 | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active; 45%). |
 | mistral/ministral-8b | 2026-11-03 | 29-40% exact in run 20261103-081849. |
 
-## 6. Not chosen
+## 7. Not chosen
 | Model | Reason |
 |---|---|
 | Llama 3.3 70B | 70B: twice the hardware; older generation; no vision. |
@@ -91,7 +133,7 @@ Preferred, not required:
 | Devstral Small, Qwen3 Coder 30B | Tuned for code, not for technical reading comprehension. |
 | InternVL2-26B | Released 2024-06: two generations old (InternVL2.5, then InternVL3.5 in 2025-08). Not on the gateway. Its latest sibling in the size range, InternVL3.5-30B-A3B, is not on the gateway either (rule 6). |
 
-## 7. History
-- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 6.
+## 8. History
+- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 7. Then the selection reasoning (section 1) and the override rate were added; tier B kept as challengers under the rule in section 1.
 - 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
 - 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in `project/solution-design.md`, section 5, until 2026-11-05.

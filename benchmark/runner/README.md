@@ -71,6 +71,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/test-design.md`, section 7.1.
 - Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. It is the multiple-choice credit in the final score.
 - Luck: share of questions right in some runs only. Counted as not known.
+- Override (table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. Prior override, not a retrieval miss.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
 - Exact (mean over runs) is still reported in table `Scores`.
 - Reason and design: `benchmark/test-design.md`, section 7.
