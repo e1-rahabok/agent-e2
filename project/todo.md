@@ -165,7 +165,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Add a script that generates per-tag index files and checks front matter and links.
 
 ## Troubleshooting flows
-- Rule: README, section Troubleshooting flow diagrams. Each file gets: Symptom, Flow (Mermaid), numbered Checks with metric, object, threshold with source, next step per outcome; Why this order.
+- Rule: KNOWLEDGE-ENGINEERING.md, section Troubleshooting flow diagrams. Each file gets: Symptom, Flow (Mermaid), numbered Checks with metric, object, threshold with source, next step per outcome; Why this order.
 - Source: the author's draw.io flows when available; otherwise derive from the file's current checks and flag in `review_notes`.
 - [ ] `vsphere/technology/cpu/diagnosis/vm-cpu-contention-high`: add flow.
 - [ ] `vsphere/technology/cpu/diagnosis/vm-other-wait-high`: add flow.
@@ -182,7 +182,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] New flows for symptoms with no diagnosis file yet: list to be agreed with the author.
 
 ## Diagrams
-- [ ] Convert the author's draw.io troubleshooting flows to Mermaid plus numbered steps in `diagnosis/` files. Keep the `.drawio` source and an exported `.png` next to them. Rule: README, section Troubleshooting flow diagrams.
+- [ ] Convert the author's draw.io troubleshooting flows to Mermaid plus numbered steps in `diagnosis/` files. Keep the `.drawio` source and an exported `.png` next to them. Rule: KNOWLEDGE-ENGINEERING.md, section Troubleshooting flow diagrams.
 
 ## Test site
 - [ ] Author decisions: audience, scoring (hosting and model decided 2026-11-03). See `project/design-kb-test-site.md`, section Decisions for the author.

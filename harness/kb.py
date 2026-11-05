@@ -1,4 +1,4 @@
-"""Load the knowledge base the way README "Local LLM use" describes.
+"""Load the knowledge base the way ARCHITECTURE.md, section Local LLM use, describes.
 
 - Index knowledge/**/*.md except _templates and raw-input.
 - Split each file at '## Metadata'; the yaml block becomes filter fields, never text.
@@ -7,11 +7,22 @@
 import glob
 import os
 import re
-import sys
+
+import yaml
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, os.path.join(ROOT, 'tools'))
-from lint import split  # noqa: E402  (same parser as the linter)
+META = '\n## Metadata\n```yaml\n'
+
+
+def split(path):
+    """Metadata is the last section of the file: '## Metadata' and one yaml block.
+    Returns (meta, body); meta is None when the block is missing. project/tools/lint.py uses this parser too."""
+    s = open(path).read()
+    i = s.rfind(META)
+    if i < 0 or not s.rstrip().endswith('```'):
+        return None, s
+    head = s[i + len(META):].rstrip().removesuffix('```')
+    return yaml.safe_load(head) or {}, s[:i]
 
 LINK_TYPES = ['related', 'internal_derive', 'same_name', 'same_meaning']
 FILTER_FIELDS = ['product', 'object', 'technology', 'pillar', 'retriever_guide']

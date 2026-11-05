@@ -14,7 +14,7 @@ How Isvara handles the risks of an AI application, and how to report a problem. 
 ## AI risks
 | Risk | Applies? | How it is handled |
 |---|---|---|
-| Prompt injection hidden in the knowledge base | Guarded | Every knowledge file is plain markdown, reviewed by the author before release, and versioned in git. Lint rejects instruction-like text, hidden HTML comments and invisible Unicode characters in `knowledge/` and in benchmark prompts (patterns in `tools/tags.yaml`, `injection_patterns`). |
+| Prompt injection hidden in the knowledge base | Guarded | Every knowledge file is plain markdown, reviewed by the author before release, and versioned in git. Lint rejects instruction-like text, hidden HTML comments and invisible Unicode characters in `knowledge/` and in benchmark prompts (patterns in `project/tools/tags.yaml`, `injection_patterns`). |
 | Prompt injection in the user's question | Guarded | The system prompt tells the model to answer only from the knowledge base and to treat the question as data. Tools are read-only, so an injected instruction cannot cause an action. The answer verifier checks the format and the cited files. |
 | Prompt injection in an uploaded screenshot or file | Not applicable in 1.0 | Screenshot upload is release 1.1, data files 1.2. Both will be treated as untrusted data; extracted values are shown to the user for confirmation. |
 | Data leaving the customer site | Not applicable | The model, the embedding model and the harness run locally. Nothing calls out. Updates arrive as an offline bundle. The test site uses a model gateway only for benchmarking with public questions. |
@@ -32,6 +32,6 @@ How Isvara handles the risks of an AI application, and how to report a problem. 
 
 ## Review checks
 - `knowledge/` holds only markdown and YAML: no executable content.
-- `python3 tools/lint.py` reports 0 problems, including the injection pattern scan.
+- `python3 project/tools/lint.py` reports 0 problems, including the injection pattern scan.
 - `harness/calc.py` (whitelist expression parser) and `harness/modes.py` (tool list) show that no tool executes code or changes a system.
 - `harness/llm.py` is the only network client; at a customer site it points at the local model server.

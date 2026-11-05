@@ -2,9 +2,9 @@ meta:
   id: catalog/objects
   title: vSphere object model for multi-hop questions
   fields:
-    type: Managed object type, as in tools/tags.yaml.
+    type: Managed object type, as in project/tools/tags.yaml.
     role: provider (supplies a resource), consumer (uses one), or both. container objects only group others.
-    layer: Layer that produces the object's own metrics, as in tools/tags.yaml.
+    layer: Layer that produces the object's own metrics, as in project/tools/tags.yaml.
     supplies: Resources the object provides to the objects below it.
     charts: Whether vCenter keeps performance charts for the object.
     kb: Knowledge files that explain the object's metrics or behaviour.

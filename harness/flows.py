@@ -62,7 +62,7 @@ def run(docs, flow_id, step=None):
 
 
 def check(docs):
-    """Problems for tools/lint.py: diagnosis files without steps, or step references that do not exist."""
+    """Problems for project/tools/lint.py: diagnosis files without steps, or step references that do not exist."""
     problems = []
     for i in flow_ids(docs):
         steps = steps_of(docs[i])

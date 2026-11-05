@@ -170,7 +170,7 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 
 ## 9. Repository structure (revised 2026-11-04, second author review)
 ```text
-README.md            mission, how it works, status, where things are
+README.md            mission, repository map, status, where things are
 knowledge/           what the model reads (indexed)
   catalog/           structured data for the harness tools (YAML)
   foundations/       vendor-neutral concepts (units, sampling, naming, perspectives)
@@ -186,9 +186,9 @@ knowledge/           what the model reads (indexed)
 harness/             the software around the model: retrieval, tool loop, prompts
 benchmark/           proof: questions with answer keys, attachments, runner, results
 project/             for humans: design, decisions, author questions, to-do, archive
-tools/               repository maintenance: lint.py, tags.yaml
+project/tools/       repository maintenance: lint.py, tags.yaml
 ```
-- Follows the book's three perspectives (technology, pillar, product): raw metrics by technology, derived metrics by object, cross-product pillars in `operations-management/` (author, 2026-11-04). Rules: `README.md`, section Layout.
+- Follows the book's three perspectives (technology, pillar, product): raw metrics by technology, derived metrics by object, cross-product pillars in `operations-management/` (author, 2026-11-04). Rules: `KNOWLEDGE-ENGINEERING.md`, section Layout.
 - VCF Operations is a thin derived layer: a metric about a source object is written once, at the source; `vcf-operations/` holds only what VCF Operations computes or adds (author, 2026-11-04; replaces decision 3).
 - `storage`, not `disk`, for folder, tag and glossary (author, 2026-11-04).
 - Built 2026-11-04: `knowledge/catalog/` (metric catalog, object model) and the harness tools (catalog lookup, calculator, flow executor, answer verifier). See section 6 and `harness/README.md`.

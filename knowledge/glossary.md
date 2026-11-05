@@ -1,7 +1,7 @@
 # Terminology
 
 Single source of truth for terms, synonyms, distinctions and words to avoid, across all products.
-Allowed tag values (machine settings for the linter) are in `tools/tags.yaml`.
+Allowed tag values (machine settings for the linter) are in `project/tools/tags.yaml`.
 
 ## Book terminology
 - Placeholder. To be provided by the author.
@@ -65,7 +65,7 @@ Allowed tag values (machine settings for the linter) are in `tools/tags.yaml`.
   - Meaning: contention, consumption, context.
   - Is not: A pillar.
 - **Trap**
-  - Meaning: A wrong conclusion drawn from a true observation: the number is right, the reading is wrong. Written in each file's `## Traps` section as "wrong conclusion" → correct reading. Types and format: `README.md`, section Traps and Level 400.
+  - Meaning: A wrong conclusion drawn from a true observation: the number is right, the reading is wrong. Written in each file's `## Traps` section as "wrong conclusion" → correct reading. Types and format: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
   - Is not: A wrong number or a data error.
 - **Level 400**
   - Meaning: Knowledge that explains the mechanism behind a metric, predicts where its reading misleads (the trap), and says what to check instead.

@@ -17,7 +17,7 @@
 ## Metadata
 ```yaml
 id: vsphere/technology/<technology>/concepts/<slug>     # path without knowledge/ and .md
-retriever_guide: how-it-works                # see README: how-it-works | metric-meaning | term-meaning | what-to-set | what-to-check
+retriever_guide: how-it-works                # see KNOWLEDGE-ENGINEERING.md, retriever_guide: how-it-works | metric-meaning | term-meaning | what-to-set | what-to-check
 scope: vsphere                               # vendor-neutral | vsphere
 technology: [cpu]                            # cpu | memory | storage | network | system
 pillar: [performance]                        # availability | performance | security | capacity | value

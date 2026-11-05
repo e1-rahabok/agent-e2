@@ -38,7 +38,7 @@ The blueprint defines the domain and how the 100 questions sample it. A reviewer
 | System | 20% | the object as a whole: KPIs, capacity, availability, DRS, admission control, provider/consumer, statistics and rollups, GPU, Guest OS vs VM boundary |
 
 - The shares add up to more than 100% because a question can span several areas. A question on VM CPU Ready caused by host memory swapping counts for CPU and Memory.
-- Each case lists every area it touches (`technology` in its metadata, values from `tools/tags.yaml`). The share is the minimum number of questions that touch the area.
+- Each case lists every area it touches (`technology` in its metadata, values from `project/tools/tags.yaml`). The share is the minimum number of questions that touch the area.
 - About 5 questions sit outside the knowledge base (correct answer: Not covered). They are spread across the areas.
 - Per-area scores (15-25 questions) are diagnostic only (margin about ±15-20 points). Decisions use the total.
 
@@ -56,7 +56,7 @@ The blueprint defines the domain and how the 100 questions sample it. A reviewer
 ### 3.3 Coverage constraints
 | Constraint | Minimum |
 |---|---|
-| Each trap type in root `README.md` (12 types) | 3 questions each |
+| Each trap type in `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400 (12 types) | 3 questions each |
 | Same-name pairs: one label asked on two objects (VM vs ESXi, ESXi vs cluster) | 5 pairs |
 | Questions about the VM / ESXi / cluster / datastore | 30 / 20 / 10 / 5 |
 | Questions outside the knowledge base (Not covered) | 5 |

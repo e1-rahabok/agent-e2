@@ -16,7 +16,7 @@ benchmark/
 ```
 
 - One flat folder: a case often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and areas, so folders cannot hold it. The slices are metadata:
-  - `product`: every product the case touches (values from `tools/tags.yaml`);
+  - `product`: every product the case touches (values from `project/tools/tags.yaml`);
   - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/test-design.md`, section 3.1.
 - Existing ids keep their old form (`vsphere-cpu-004`); new cases get neutral ids (`case-0031`).
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).

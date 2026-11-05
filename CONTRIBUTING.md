@@ -23,12 +23,12 @@ How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
 - One fact per bullet. One managed object type per metric file.
 - A threshold only with its source. No invented numbers.
 - Facts not from the author's book are recorded in `review_notes` until the author confirms them.
-- Folder, tag and writing rules: [README.md](README.md), sections Layout and Writing rules. Terms: [knowledge/glossary.md](knowledge/glossary.md).
+- Folder, tag and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), sections Layout and Writing rules. Terms: [knowledge/glossary.md](knowledge/glossary.md).
 - `knowledge/raw-input/` is read-only.
 
 ## Before a pull request
 ```bash
-python3 tools/lint.py
+python3 project/tools/lint.py
 ```
 ```bash
 python3 -m unittest harness/test_tools.py
