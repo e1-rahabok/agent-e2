@@ -41,7 +41,7 @@ attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"
 answer_type: deterministic
-level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
+level: 300                      # author 2026-11-05
 answer: [E]
 trap: [A,B,D]
 status: draft

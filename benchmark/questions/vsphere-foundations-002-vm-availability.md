@@ -32,6 +32,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"
 answer_type: judged
-level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
+level: 300                      # author 2026-11-05
 status: draft
 ```

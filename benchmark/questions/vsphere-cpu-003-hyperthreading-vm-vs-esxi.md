@@ -34,6 +34,6 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
 answer_type: judged
-level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
+level: 400                      # author 2026-11-05
 status: draft
 ```
