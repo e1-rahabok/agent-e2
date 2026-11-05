@@ -31,7 +31,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - For the GPU memory paid, a dense model gives the most compute per token. A 120B MoE with 6-12B active has less compute per token than a 31B dense model, on twice the GPU memory.
 - So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (`project/solution-design.md`, section 4).
 - No current-generation dense vision model of about 70B is on the gateway (checked 2026-11-05). Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
-- The 120B MoE models are kept or dropped by the author (open decision, 2026-11-05). If kept, the rule below applies.
+- The 120B MoE models were dropped (author, 2026-11-05): less compute per token than the dense candidates, on twice the GPU memory. A later MoE candidate must pass the rule below.
 
 ### What we prefer
 | Prefer | Over | Reason |
@@ -49,12 +49,33 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
 - Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
 - Trap rate in knowledge base modes, and the cases where the knowledge base and the vSphere documentation disagree (`benchmark/test-design.md`, section 3.3).
-- The 120B MoE models (tier B) are challengers that test the risk above. They stay only if both hold, against the best tier A model in the same mode:
+- A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
   1. final score higher by more than the margin;
   2. override rate not higher.
-- Otherwise tier B is dropped, and a tie goes to tier A: cheaper, and fewer priors.
+- Otherwise it is dropped, and a tie goes to the cheaper model.
 
-## 2. Selection criteria
+## 2. Gateway in the test, local server at the site
+### Two ways to reach a model
+| | Test (this benchmark) | Customer site |
+|---|---|---|
+| Where the model runs | A hosting provider's GPUs, reached through Vercel AI Gateway (`https://ai-gateway.vercel.sh/v1`, `gateway` in `config.yaml`) | The customer's own GPU VM, on its own VCF |
+| Who serves it | The provider the gateway routes to (for example Baseten, Fireworks, Groq); the runner records it per answer when the gateway returns it | vLLM, llama.cpp or Ollama, installed by the VMware administrator at initial setup |
+| Weights | The provider's copy and precision | Downloaded from Hugging Face, at the precision the GPU allows |
+| Internet | Yes | None (dark site) |
+| Cost | Per token | GPU only, no per-token cost |
+
+- One gateway: Vercel AI Gateway. It is an OpenAI-compatible front door to many providers and many models, so the runner tests 3 or 10 models with one API key and one code path. It is a test convenience only.
+- Hugging Face is not a gateway here. It is where the open weights are published; this file uses it to check size, licence and release date, and the site downloads the weights from it.
+- Both speak the same OpenAI-compatible API. The harness changes one setting (`harness/llm.py`: base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 7).
+- So the gateway is not part of the product and is not relevant at the customer site. It is the reason for criterion 6: a model that is not on the gateway cannot be benchmarked cheaply, and a model without downloadable weights cannot be deployed.
+
+### What the gateway does not prove
+- Precision: a provider may serve 16-bit or 8-bit weights; the site may run 4-bit on a 48 GB GPU. 4-bit costs some accuracy on multi-step reasoning.
+- Version: the provider serves what it chose to load under the id (mistral-small changed from 24B dense to Mistral Small 4 without a new id).
+- Speed: gateway latency measures the provider and the network, not the customer GPU.
+- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (to-do in `project/todo.md`, section Evaluation).
+
+## 3. Selection criteria
 Two limits decide (author, 2026-11-05):
 - Fit for the goal: the model knows vSphere basics and can become a narrow Level 400 VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
 - Hardware cost: it runs on one GPU at the customer site. Criterion 3.
@@ -83,28 +104,26 @@ All are required. A model that fails one is not a candidate.
 Preferred, not required:
 - Vendor diversity: different training data fails on different questions. A mix shows whether a failure is a knowledge gap (all fail) or a model gap (one fails).
 
-## 3. Candidates
+## 4. Candidates
 | Model | Tier | Size, licence | Why in the test | Result so far |
 |---|---|---|---|---|
 | google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Best: 58% exact with one lookup (17 questions, old scoring) |
 | alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Added 2026-11-04 |
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
-| mistral/mistral-small | B (challenger) | Mistral Small 4: 119B MoE, 6.5B active, Apache 2.0 | Latest Mistral Small (2026-03); fast for its size | 51% (17 questions, old scoring; served version then not recorded) |
-| inclusionai/ling-3.0-flash-vl | B (challenger) | 125B MoE, MIT | Ant Group; vision and visual agent use (weights 2026-09) | Added 2026-11-05 |
-| nvidia/nemotron-3.5-super-vl | B (challenger) | 120B MoE, 12B active, OpenMDW 1.1 | NVIDIA; document understanding; official NVFP4 weights (66 GB) | Added 2026-11-05 |
 
-- 6 candidates from 6 vendors (Google, Alibaba, Meta, Mistral, Ant Group, NVIDIA): 3 in tier A, 3 in tier B.
+- 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
+- Next challenger: a current-generation dense vision model of about 70B, when one is published and on the gateway (to-do in `project/todo.md`, section Evaluation).
 - Vision tags checked in the gateway model list on 2026-11-05.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
-- mistral-small: the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
-- Licences checked on Hugging Face 2026-11-05. OpenMDW 1.1 (NVIDIA) and the Gemma licence allow commercial use; read them before deployment.
+- mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
+- Licences checked on Hugging Face 2026-11-05. The Gemma licence allows commercial use; read it before deployment.
 
-## 4. Frontier reference
+## 5. Frontier reference
 - One frontier model, scored the same way with and without the knowledge base, in every run: anthropic/claude-opus-5.5 so far.
 - The claim (`benchmark/test-design.md`, section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
-## 5. Judge
+## 6. Judge
 - Grades free-text and compound answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/test-design.md`, section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
 - Rules:
@@ -114,7 +133,7 @@ Preferred, not required:
   - temperature 0.
 - The judge is a frontier model on the test gateway only. It is never deployed: at a customer site nothing is graded.
 
-## 6. Removed
+## 7. Removed
 | Model | Date | Reason |
 |---|---|---|
 | alibaba/qwen-3-32b | 2026-11-05 | No vision. Was the reference dense model of the class (48%). |
@@ -124,9 +143,12 @@ Preferred, not required:
 | zai/glm-4.7-flash | 2026-11-05 | No vision. Added 2026-11-04, never run. |
 | alibaba/qwen3.6-27b | 2026-11-05 | Previous generation of qwen3.8-27b: duplicate (rule 7). Added 2026-11-04, never run. |
 | google/gemma-4-26b-a4b-it | 2026-11-05 | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active; 45%). |
+| mistral/mistral-small | 2026-11-05 | Serves Mistral Small 4: 119B MoE, 6.5B active. Less compute per token than the dense candidates on twice the GPU memory (section 1). 51% on 17 questions (old scoring; served version then not recorded). |
+| inclusionai/ling-3.0-flash-vl | 2026-11-05 | 125B MoE, MIT. Same reason. Added and removed the same day, never run. |
+| nvidia/nemotron-3.5-super-vl | 2026-11-05 | 120B MoE, 12B active, OpenMDW 1.1. Same reason. Added and removed the same day, never run. |
 | mistral/ministral-8b | 2026-11-03 | 29-40% exact in run 20261103-081849. |
 
-## 7. Not chosen
+## 8. Not chosen
 | Model | Reason |
 |---|---|
 | Llama 3.3 70B | 70B: twice the hardware; older generation; no vision. |
@@ -142,7 +164,7 @@ Preferred, not required:
 | Devstral Small, Qwen3 Coder 30B | Tuned for code, not for technical reading comprehension. |
 | InternVL2-26B | Released 2024-06: two generations old (InternVL2.5, then InternVL3.5 in 2025-08). Not on the gateway. Its latest sibling in the size range, InternVL3.5-30B-A3B, is not on the gateway either (rule 6). |
 
-## 8. History
-- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 7. Then the selection reasoning (section 1) and the override rate were added. Then corrected (author): the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway.
+## 9. History
+- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected (author): the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped (author); 3 dense candidates remain. Section 2 (gateway vs site) added.
 - 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
 - 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in `project/solution-design.md`, section 5, until 2026-11-05.
