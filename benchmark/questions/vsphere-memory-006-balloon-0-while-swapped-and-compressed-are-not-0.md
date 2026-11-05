@@ -33,7 +33,7 @@ scope: vsphere
 product: [vsphere]
 technology: [memory]
 area: memory
-input: text
+input: [text]
 tests: troubleshooting
 knowledge:
   - vsphere/technology/memory/metrics/host/ballooned
@@ -44,8 +44,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [B,C]
 trap: [A,D]
 status: draft

@@ -18,7 +18,7 @@ benchmark/
 
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and areas, so folders cannot hold it. The slices are metadata:
   - `product`: every product the question touches (values from `project/tools/tags.yaml`);
-  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/design.md`, section 3.1.
+  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/design.md`, section 3.5.
 - Existing ids keep their old form (`vsphere-cpu-004`); new questions get neutral ids (`question-0031`). An id is an internal key for the runner: the words in an old id (`general`, `foundations`) are not a classification. `area`, `technology` and `pillar` classify the question (author, 2026-11-05).
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
@@ -38,13 +38,13 @@ benchmark/
 | `technology` | Every area the question touches: cpu, memory, storage, network, system. |
 | `pillar` | Optional. Pillars of operations the question tests, values from `project/tools/tags.yaml`. |
 | `area` | Main area, for the per-area report: cpu, memory, storage, network, system, operations-management. `operations-management` when the topic is performance troubleshooting, capacity planning or rightsizing (author, 2026-11-05). |
-| `input` | text, screenshot, diagram, log, mixed. Non-text inputs live in `questions/<id>/`, next to the question file. No `.md` files there: the runner and lint read every `.md` under `questions/` as a question. |
+| `input` | text, table, screenshot: a list, from the attachments (`[text]` when there are none). `benchmark/design.md`, section 3.4. Attachments live in `questions/<id>/`, next to the question file. No `.md` files there: the runner and lint read every `.md` under `questions/` as a question. |
 | `tests` | concept, distinction, judgment, troubleshooting. |
 | `knowledge` | Knowledge ids the answer should draw on. Used to measure retrieval recall, not only the answer. |
 | `origin` | book, quiz, live-lab, real-ticket, synthetic. |
 | `source_path` | Heading path in the source document, for QA. |
-| `format` | multiple-choice (scored by letters), free-text or compound (scored 0-3 by the judge). All scored automatically by `benchmark/runner`. |
-| `level` | recall, l400, multi-hop, screenshot. Multiple-choice only. |
+| `answer_type` | deterministic (option letters, scored by the runner) or judged (free text, scored 0-3 by the judge). `benchmark/design.md`, section 3.3. |
+| `level` | 100, 200, 300 or 400. `benchmark/design.md`, section 3.2. |
 | `answer` | Correct option letters as written in `## Prompt`. Multiple-choice only. Never sent to the AI. |
 | `trap` | Option letters of the known wrong answer. Multiple-choice only. Never sent to the AI. |
 | `status` | draft, reviewed, retired. |
@@ -73,7 +73,7 @@ benchmark/
 - Write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 
 ## Final score
-- One score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. Method: `benchmark/design.md`, section 7.4.
+- One score, 0-100%, with sub-scores by answer type, input type and level. Method: `benchmark/design.md`, section 7.4.
 
 ## results.csv columns
 

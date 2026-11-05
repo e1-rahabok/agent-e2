@@ -26,7 +26,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
@@ -35,6 +35,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
-format: free-text
+answer_type: judged
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 status: draft
 ```

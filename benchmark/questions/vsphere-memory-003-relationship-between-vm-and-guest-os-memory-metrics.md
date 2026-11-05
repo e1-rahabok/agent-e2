@@ -32,7 +32,7 @@ scope: vsphere
 product: [vsphere]
 technology: [memory]
 area: memory
-input: text
+input: [text]
 tests: concept
 knowledge:
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
@@ -42,8 +42,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 VM vs Guest OS"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A,B,D,E]
 trap: [C]
 status: draft

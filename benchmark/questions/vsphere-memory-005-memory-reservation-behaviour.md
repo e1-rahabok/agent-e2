@@ -33,7 +33,7 @@ scope: vsphere
 product: [vsphere]
 technology: [memory]
 area: memory
-input: text
+input: [text]
 tests: concept
 knowledge:
   - vsphere/foundations/resource-controls
@@ -43,8 +43,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A,B]
 trap: [C,D]
 status: draft

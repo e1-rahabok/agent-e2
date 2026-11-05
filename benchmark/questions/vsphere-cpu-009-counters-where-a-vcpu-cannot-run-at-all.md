@@ -33,7 +33,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
@@ -46,8 +46,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A,B,C,D]
 trap: [G]
 status: draft

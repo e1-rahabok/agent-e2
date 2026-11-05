@@ -11,7 +11,7 @@ One English word per concept in this repository (author, 2026-11-05). Not indexe
 English words carry a general meaning and a VMware operations meaning. A word is chosen so that both readers take it the same way.
 - General: the meaning in daily life, between people.
 - VMware operations: the jargon of a VMware administrator. In operations, a case is an issue to investigate and solve (a support case, a ticket). A use case is a scenario.
-- So the benchmark does not use case. Its items are questions: they are answered, not investigated. A question can have several parts (`format: compound`).
+- So the benchmark does not use case. Its items are questions: they are answered, not investigated. A question can have several parts.
 - Quiz is the author's word for his source documents: it checks what the reader knows (it is not a request for something unknown), and it reads lighter than an exam.
 
 ## Terms
@@ -34,8 +34,9 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | retrieval check | `benchmark/runner/retrieval_eval.py`: are the files each question needs found, without a model | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
 | answer key | `answer` and `trap` letters, `## Expected key points`, `## Likely wrong answer` | key (alone) |
-| kind | The sub-score a question counts for: multiple choice, screenshot, conversation | type |
-| format | How a question is answered: multiple-choice, free-text, compound | - |
+| answer type | How a question is scored: deterministic (option letters) or judged (free text, by the judge) | kind, format, multiple choice vs conversation |
+| input type | What the administrator gives besides the prompt: text, table, screenshot | input kind |
+| level | 100, 200, 300 or 400 (`benchmark/design.md`, section 3.2) | recall, multi-hop |
 | attachment | A file listed in a question's `attachments` | - |
 | screenshot | An image of a product UI or tool (esxtop, vCenter, VCF Operations) | - |
 | author | Iwan Rahabok, who owns the knowledge and reviews it | - |

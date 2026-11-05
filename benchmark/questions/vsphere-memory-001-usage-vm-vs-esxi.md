@@ -28,7 +28,7 @@ scope: vsphere
 product: [vsphere]
 technology: [memory]
 area: memory
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
@@ -37,6 +37,7 @@ knowledge:
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Architecture Complexity (Memory)."
-format: free-text
+answer_type: judged
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 status: draft
 ```

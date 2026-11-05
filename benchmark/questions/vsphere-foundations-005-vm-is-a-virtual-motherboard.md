@@ -44,7 +44,7 @@ scope: vsphere
 product: [vsphere, windows]
 technology: [system]
 area: foundations
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/foundations/vm-vs-guest-os
@@ -55,8 +55,8 @@ knowledge:
 attachments: []
 origin: synthetic
 source_path: "Author's book, opening chapter: Think virtual motherboard, not virtual machine. Author instruction 2026-11-03."
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A, C, E]
 trap: [B, D]
 status: reviewed

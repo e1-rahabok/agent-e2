@@ -27,13 +27,14 @@ scope: vsphere
 product: [vsphere]
 technology: [system]
 area: foundations
-input: text
+input: [text]
 tests: concept
 knowledge:
   - vsphere/foundations/overhead
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Overhead vs Not Overhead."
-format: free-text
+answer_type: judged
+level: 300                      # draft by Claude 2026-11-05; author to confirm (Q056)
 status: draft
 ```

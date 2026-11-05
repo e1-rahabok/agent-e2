@@ -3,7 +3,7 @@
 Candidate models, the frontier reference and the judge for the benchmark. Not indexed.
 Settings: `benchmark/runner/config.yaml`. Why a small local model can win: `project/solution-design.md`, sections 3 and 4.
 
-## 1. What kind of model the goal needs
+## 1. What model the goal needs
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
 
 ### The model's job
@@ -48,7 +48,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
 - Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
-- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree (`benchmark/design.md`, section 3.3).
+- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree (`benchmark/design.md`, section 3.7).
 - A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
   1. final score higher by more than the margin;
   2. override rate not higher.
@@ -124,7 +124,7 @@ Preferred, not required:
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
 ## 6. Judge
-- Grades free-text and compound answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/design.md`, section 14.
+- Grades judged answers 0-3: `benchmark/runner/judge.py`. Method: `benchmark/design.md`, section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
 - Rules:
   - never a candidate (the runner refuses the benchmark);

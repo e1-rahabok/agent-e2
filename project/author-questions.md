@@ -125,11 +125,50 @@ Each entry has:
 - Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
 - Answer:
 
-### Q054 · Benchmark · Mix of the 100 cases by kind
-- Files: `benchmark/design.md`, sections 3.2.1, 3.3, 7.4, 13 (https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md).
+### Q054 · Benchmark · Allocation of the 100 questions
+- Files: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md, sections 3.1 (tasks), 3.2 (levels), 3.3 (answer types), 3.4 (input types), 3.6 (allocation), 3.7 (coverage).
 - Search: not from the book.
-- Question: the final score weighs every case the same, so the mix of kinds sets the weight of each sub-score. Is 60 multiple choice, 20 screenshot, 20 conversation the right mix for the 100 cases? Are the screenshot minimums right (5 each from esxtop, vCenter UI, VCF Operations UI; 5 with 2 or more images)?
-- Written as now: the proposal above. Today: 15 multiple choice, 3 screenshot, 10 conversation.
+- Question: the blueprint is now top down. Are these shares right?
+  - Tasks: read a metric 30, troubleshoot 25, decide capacity 20, explain a mechanism 15, judge a setting 10.
+  - Levels: 100: 10, 200: 15, 300: 25, 400: 50.
+  - Answer types: deterministic 70, judged 30.
+  - Input types (questions that include them): text only 60, table at least 15, screenshot at least 25; at least 5 Level 400 questions with a table and a screenshot.
+- Written as now: the shares above, as a proposal. Replaces the earlier 60 multiple choice, 20 screenshot, 20 conversation.
+- Answer:
+
+### Q056 · Benchmark · Level of each existing question
+- Files: the 28 files in https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (metadata `level`).
+- Search: not from the book.
+- Question: Claude assigned a draft level to each question (definitions: `benchmark/design.md`, section 3.2). Which are wrong? None is at Level 100 or 200.
+- Written as now:
+  - vsphere-cpu-001 (judged, text): 300
+  - vsphere-cpu-002 (judged, text): 400
+  - vsphere-cpu-003 (judged, text): 400
+  - vsphere-cpu-004 (deterministic, screenshot): 400
+  - vsphere-cpu-005 (deterministic, text): 400
+  - vsphere-cpu-006 (judged, screenshot): 400
+  - vsphere-cpu-007 (deterministic, screenshot): 300
+  - vsphere-cpu-008 (deterministic, text): 400
+  - vsphere-cpu-009 (deterministic, text): 300
+  - vsphere-cpu-010 (deterministic, text): 300
+  - vsphere-cpu-011 (deterministic, text): 300
+  - vsphere-cpu-012 (deterministic, text): 400
+  - vsphere-cpu-013 (deterministic, text): 300
+  - vsphere-foundations-001 (judged, text): 300
+  - vsphere-foundations-002 (judged, text): 300
+  - vsphere-foundations-003 (judged, text): 300
+  - vsphere-foundations-004 (judged, text): 300
+  - vsphere-foundations-005 (deterministic, text): 400
+  - vsphere-general-001 (deterministic, text): 300
+  - vsphere-memory-001 (judged, text): 400
+  - vsphere-memory-002 (deterministic, text): 300
+  - vsphere-memory-003 (deterministic, text): 300
+  - vsphere-memory-004 (deterministic, text): 400
+  - vsphere-memory-005 (deterministic, text): 300
+  - vsphere-memory-006 (deterministic, text): 400
+  - vsphere-storage-001 (judged, text): 400
+  - vsphere-storage-002 (judged, text): 400
+  - vsphere-storage-003 (deterministic, text): 300
 - Answer:
 
 ## Resolved

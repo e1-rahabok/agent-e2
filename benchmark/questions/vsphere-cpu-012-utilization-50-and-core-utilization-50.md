@@ -30,7 +30,7 @@ scope: vsphere
 product: [vsphere]
 technology: [cpu]
 area: cpu
-input: text
+input: [text]
 tests: distinction
 knowledge:
   - vsphere/technology/cpu/metrics/host/utilization
@@ -40,8 +40,8 @@ knowledge:
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q9 ESXi CPU Utilisation"
-format: multiple-choice
-level: l400
+answer_type: deterministic
+level: 400                      # draft by Claude 2026-11-05; author to confirm (Q056)
 answer: [A]
 trap: [B]
 status: draft

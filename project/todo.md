@@ -47,7 +47,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] VCF Operations metrics in the catalog (needs the VCF Operations 9.1 metric reference).
 - [ ] After the next benchmark: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
 - [ ] After the next benchmark: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
-- [ ] Add benchmark questions that need the catalog, calculator and object paths (units, statistics levels, summation to %, multi-hop).
+- [ ] Add benchmark questions that need the catalog, calculator and object paths (units, statistics levels, summation to %, chains across objects).
 - [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan (benchmark plan done 2026-11-04: `benchmark/design.md`).
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
@@ -124,6 +124,9 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Evaluation
+- [ ] Table input: a harness table tool (load Excel or CSV, list columns, filter, sort, aggregate, top-N), table attachments in the runner, and the export formats with their traps (`benchmark/design.md`, section 13.1).
+- [ ] Write Level 100 and 200 questions (0 of 10 and 0 of 15 today) and table questions (0 of 15).
+- [ ] Split `vsphere-cpu-006` (two hosts, letters per host) into one deterministic question per host.
 - [ ] Check for a current-generation dense vision model of about 70B (open weights, commercial licence, tool calling, on Vercel AI Gateway). None as of 2026-11-05; expected in 2027. Add it as the first challenger under the rule in `benchmark/models.md`, section 1. Check again each quarter.
 - [ ] Before release: run the benchmark once on the chosen model from local weights, at the deployed precision, on the target GPU. That run is the release score (`benchmark/models.md`, section 2).
 - [ ] After Q048: fill `interval` and `instance` in `knowledge/catalog/thresholds.yaml`; add an Interval column to the band tables; have the catalog lookup return them.
@@ -191,6 +194,6 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Author decisions: audience, scoring (hosting and model decided 2026-11-03). See `project/design-kb-test-site.md`, section Decisions for the author.
 - [x] Build phase 1 (Benchmark) runner: `benchmark/runner/` (2026-11-03). Tested offline with --mock.
 - [ ] First real benchmark: needs AI_GATEWAY_API_KEY in the environment.
-- [ ] Grow the question set from 30 to 100 multiple-choice questions: 20% recall, 50% Level 400, 20% multi-hop, 10% screenshot; at least 10 per area; about 10 out-of-scope questions.
+- [ ] Grow the question set to 100 by the allocation in `benchmark/design.md`, section 3.6 (Levels 100-400; deterministic and judged; text, table, screenshot); at least 10 per area; about 10 out-of-scope questions.
 - [x] "Not covered" option and fixed answer format: added by the runner. Answer keys (`answer`, `trap`, `level`, `format`) added to 17 quiz questions.
 - [ ] Question vsphere-cpu-006 (two hosts, two answers): split into two multiple-choice questions to make it auto-scorable.
