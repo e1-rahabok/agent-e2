@@ -1,7 +1,7 @@
 # Performance vs capacity view of utilization
 
 ## Prompt
-Performance management and capacity management are highly related, so they are not the same thing.
+Performance management and capacity management are highly related. Related is not identical: two things that are related are, by that fact, two different things.
 
 In a private cloud (finite hardware), choose all the correct statements:
 
@@ -31,7 +31,8 @@ title: "Performance vs capacity view of utilization"
 scope: vsphere
 product: [vsphere]
 technology: [system]
-area: general
+pillar: [performance, capacity]
+area: operations-management
 input: text
 tests: concept
 knowledge:

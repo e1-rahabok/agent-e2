@@ -22,7 +22,8 @@ title: <short title>
 scope: vsphere                    # vendor-neutral | vsphere | nsx | vsan
 product: [vsphere]                # every product touched: vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
 technology: [cpu]                 # every area touched: cpu | memory | storage | network | system
-area: cpu                         # optional, legacy: main area
+pillar: [performance]             # optional: performance | capacity | availability | security | value
+area: cpu                         # main area for the report: cpu | memory | storage | network | system | operations-management
 input: text                       # text | screenshot | diagram | log | mixed
 tests: distinction                # concept | distinction | judgment | troubleshooting
 knowledge:                        # knowledge ids the answer should draw on (retrieval check)
