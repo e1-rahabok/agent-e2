@@ -23,6 +23,56 @@ def _margin(p, n):
     return 1.96 * math.sqrt(p * (1 - p) / n) if n and not math.isnan(p) else float('nan')
 
 
+KINDS = ['multiple-choice', 'screenshot', 'conversation']
+
+
+def _kind(r):
+    return r.get('kind') or ('screenshot' if r['track'] == 'vision' else 'multiple-choice')
+
+
+def _credit(r):
+    """Credit of one answer, 0-1: exact letters (1 or 0), or judge score / 3."""
+    v = r.get('credit')
+    return float(v) if v not in ('', None) else float(r['exact'])
+
+
+def _choice(r):
+    return (r.get('format') or 'multiple-choice') == 'multiple-choice'
+
+
+def final(rows):
+    """Per (model, mode): final score and sub-scores, 0-1.
+
+    Case credit = the lowest credit over its runs (the worst run counts, as Stable correct does for letters).
+    Final = mean case credit over all cases; each case weighs the same. Sub-score = the same mean within one kind.
+    A case with a vision track is scored on that track only.
+    """
+    g = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        g[(r['model'], r['mode'])][r['case_id']].append(r)
+    out = {}
+    for key, by_case in g.items():
+        credit, kinds, luck, cw = {}, {}, [], []
+        for cid, crs in by_case.items():
+            if any(r['track'] == 'vision' for r in crs):
+                crs = [r for r in crs if r['track'] == 'vision']
+            cs = [_credit(r) for r in crs]
+            credit[cid], kinds[cid] = min(cs), _kind(crs[0])
+            luck.append(int(max(cs) > min(cs)))
+            for r in crs:
+                v = r.get('confident_wrong')
+                cw.append(int(v) if v not in ('', None) else int(not int(r['exact']) and not int(r.get('unsure') or 0)))
+        n = len(credit)
+        f = sum(credit.values()) / n
+        s = {'final': f, 'margin': _margin(f, n), 'cases': n, 'luck': sum(luck) / n, 'confident_wrong': _mean(cw)}
+        for k in KINDS:
+            xs = [credit[c] for c in credit if kinds[c] == k]
+            s[k] = sum(xs) / len(xs) if xs else float('nan')
+            s[k + '_n'] = len(xs)
+        out[key] = s
+    return out
+
+
 def aggregate(rows):
     """Per (model, mode, track): measures from the design doc."""
     groups = defaultdict(list)
@@ -65,15 +115,41 @@ def aggregate(rows):
 
 
 def write(run_dir):
-    rows = _rows(run_dir)
+    all_scored = _rows(run_dir)
     all_rows = list(csv.DictReader(open(os.path.join(run_dir, 'answers.csv'))))
     cfg = json.load(open(os.path.join(run_dir, 'config.json')))
+    fin = final(all_scored)
+    rows = [r for r in all_scored if _choice(r)]  # letter-scored answers, for the multiple-choice tables
     agg = aggregate(rows)
+    sample = next(iter(fin.values()), {})
     L = [f'# Auto Test report: {cfg["run_id"]}', '',
          f'- Index version: `{cfg["index_version"][:12]}`. Retrieval: {cfg["retrieval"]}. Temperature: {cfg["temperature"]}. Runs: {cfg["runs"]}.',
-         f'- Cases: {len(cfg["cases"])} multiple-choice. Skipped (not multiple-choice): {", ".join(cfg["skipped_cases"]) or "none"}.',
-         f'- Answers: {len(rows)} scored, {len(all_rows) - len(rows)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
-         '', '## Luck-free scores', '',
+         f'- Cases: {len(cfg["cases"])} (' + ', '.join(f'{k} {sample.get(k + "_n", 0)}' for k in KINDS) + ').'
+         f' Skipped: {", ".join(cfg["skipped_cases"]) or "none"}. Judge: {cfg.get("judge_model") or "none"}.',
+         f'- Answers: {len(all_scored)} scored, {len(all_rows) - len(all_scored)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
+         '', '## Final score', '',
+         '| Model | Mode | Final | ± margin | Multiple choice | Screenshot | Conversation | Luck | Confident wrong |',
+         '|---|---|---|---|---|---|---|---|---|']
+    for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
+        L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["multiple-choice"])} | '
+                 f'{_pct(s["screenshot"])} | {_pct(s["conversation"])} | {_pct(s["luck"])} | {_pct(s["confident_wrong"])} |')
+    L += ['', '- Final: mean case credit over all cases, 0-100%. Every case weighs the same.',
+          '- Case credit = the worst of its runs. Multiple choice: 1 if exact in every run, else 0. Free text: lowest judge score / 3.',
+          '- Sub-scores: the same mean within one kind. Screenshot = every case with an image, whatever its format. Conversation = free-text and compound cases without images.',
+          '- Luck: share of cases whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (free text: judge score 0, not unsure).',
+          '- Method: `benchmark/test-design.md`, section 7.4.', '']
+    conv = [r for r in all_scored if not _choice(r)]
+    if conv:
+        L += ['## Free-text answers (judge)', '', '| Model | Mode | Mean score 0-3 | Score 3 | Score 0 | Trap | Unsure |', '|---|---|---|---|---|---|---|']
+        g = defaultdict(list)
+        for r in conv:
+            g[(r['model'], r['mode'])].append(r)
+        for (m, mode), rs in sorted(g.items()):
+            sc = [int(r['judge_score']) for r in rs]
+            L.append(f'| {m} | {mode} | {sum(sc) / len(sc):.2f} | {_pct(_mean(int(x == 3) for x in sc))} | '
+                     f'{_pct(_mean(int(x == 0) for x in sc))} | {_pct(_mean(r["trap"] for r in rs))} | {_pct(_mean(r["unsure"] for r in rs))} |')
+        L.append('')
+    L += ['## Multiple choice: luck-free scores', '',
          '| Model | Mode | Track | Stable correct | ± margin | Luck | Stable unsure | Confident wrong | Unsure | Accuracy when answered |',
          '|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['stable'])):
@@ -84,7 +160,7 @@ def write(run_dir):
           '- Stable unsure: share of questions where the model chose Unsure in every run.',
           '- Confident wrong: share of answers that are wrong and not Unsure (wrong letters, partly right, Unsure mixed with other letters, unparseable). The answers that mislead an operator. Target: near 0.',
           '- Accuracy when answered: exact share among answers that were not Unsure.', '',
-         '## Scores', '',
+         '## Multiple choice: scores', '',
          '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Trap | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',
          '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['majority'])):
@@ -100,25 +176,25 @@ def write(run_dir):
         vals = sorted({r[dim] for r in rows if r[dim]})
         if not vals:
             continue
-        L += [f'## Exact score by {dim}', '', '| Model | Mode | ' + ' | '.join(vals) + ' |', '|---|---|' + '---|' * len(vals)]
+        L += [f'## Multiple choice: exact score by {dim}', '', '| Model | Mode | ' + ' | '.join(vals) + ' |', '|---|---|' + '---|' * len(vals)]
         g = defaultdict(list)
         for r in rows:
-            if r['track'] == 'text':
-                g[(r['model'], r['mode'], r[dim])].append(r['exact'])
+            g[(r['model'], r['mode'], r[dim])].append(r['exact'])
         for m, mode in sorted({(r['model'], r['mode']) for r in rows}):
             L.append(f'| {m} | {mode} | ' + ' | '.join(_pct(_mean(g[(m, mode, v)])) for v in vals) + ' |')
         L.append('')
 
     # worst questions
     per_case = defaultdict(list)
-    for r in rows:
+    for r in all_scored:
         if r['mode'] != 'baseline':
-            per_case[r['case_id']].append(int(r['exact']))
+            per_case[r['case_id']].append(_credit(r))
     worst = sorted(per_case.items(), key=lambda x: _mean(x[1]))[:10]
-    L += ['## Hardest questions (knowledge base modes)', '', '| Case | Exact | Common wrong answers |', '|---|---|---|']
+    L += ['## Hardest questions (knowledge base modes)', '', '| Case | Mean credit | Common wrong answers or missed points |', '|---|---|---|']
     for cid, xs in worst:
-        wrong = Counter(r['answer_letters'] or '(unparsed)' for r in rows if r['case_id'] == cid and r['mode'] != 'baseline' and r['exact'] == '0')
-        L.append(f'| {cid} | {_pct(_mean(xs))} | ' + ', '.join(f'{k} ×{v}' for k, v in wrong.most_common(3)) + ' |')
+        wrong = Counter((r['answer_letters'] or '(unparsed)') if _choice(r) else (r.get('judge_missed') or f'score {r.get("judge_score")}')
+                        for r in all_scored if r['case_id'] == cid and r['mode'] != 'baseline' and _credit(r) < 1)
+        L.append(f'| {cid} | {_pct(_mean(xs))} | ' + ', '.join(f'{k} ×{v}' for k, v in wrong.most_common(3)).replace('|', '/') + ' |')
     L += ['', 'Traces: `traces.jsonl` in this folder (one line per answer).', '']
     path = os.path.join(run_dir, 'report.md')
     open(path, 'w').write('\n'.join(L))
@@ -139,7 +215,7 @@ def append_summary(run_dir, results_csv):
         if not exists:
             w.writerow(header)
         for (m, mode, tr, cid), rs in sorted(g.items()):
-            score = _mean(r['exact'] for r in rs)
+            score = _mean(_credit(r) for r in rs)
             d = cfg['run_id'][:8]
             w.writerow([f'{d[:4]}-{d[4:6]}-{d[6:8]}', m, 'n/a', f'{mode}-{tr}' if tr != 'text' else mode, cid, f'{score:.2f}',
-                        f'autotest {cfg["run_id"]}; score = exact-match mean 0-1 over {len(rs)} runs; temp {cfg["temperature"]}'])
+                        f'autotest {cfg["run_id"]}; score = mean credit 0-1 (exact letters, or judge score / 3) over {len(rs)} runs; temp {cfg["temperature"]}'])

@@ -9,7 +9,7 @@ Status: proposal, 2026-11-04. For the author and for VMware professionals who as
 - Scope:
   - version 1.0: vSphere 9.1 metrics, plus the Guest OS layer (Windows first);
   - later: vSAN, NSX, VCF Operations, VMware Kubernetes, Linux. The end scope is the whole private cloud stack.
-- Target, measured on the benchmark: minimum 85%, target 99% Stable correct (correct in all 5 runs), with the confident-wrong rate near 0.
+- Target, measured on the benchmark: final score minimum 85%, target 99% (each case scored on its worst of 5 runs), with the confident-wrong rate near 0.
 
 ## 2. The system: model + harness + knowledge
 - The product is not "a model". It is a compound AI system: three parts, each doing what it is best at.
@@ -65,47 +65,13 @@ Decode speed and hardware are governed by memory: every generated token reads al
 - Add the KV cache for the retrieved context (8-12K tokens per question) on top of the weights.
 - **Why not 70B:** twice the GPU memory and about half the speed of a 32B model, for a gain that is mostly memorised world knowledge. The harness replaces memorised knowledge with retrieved knowledge, so the 70B advantage shrinks to reasoning depth. The design rule: test a 70B model only if the best 32B model loses points through reasoning errors while the trace shows it read the right files (`project/design-kb-test-site.md`, Decision rules).
 - **Why not 8B-14B:** too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact (dropped); qwen-3-14b in agentic mode 19%.
-- **Why dense over MoE as the main bet:** MoE models with 3-4B active parameters are fast, but in our run they did worst at tool use (nemotron-3-nano-30b-a3b: 24-29% exact; almost no tool calls). They stay in the test as the speed option.
+- **Why dense over MoE as the main bet:** MoE models with 3-4B active parameters are fast, but in our run they did worst at tool use (nemotron-3-nano-30b-a3b: 24-29% exact; almost no tool calls). gemma-4-26b-a4b-it (4B active, vision) stays in the test as the speed option; nemotron was removed for lack of vision (2026-11-05).
 - **Precision:** run 8-bit when the GPU allows; 4-bit costs a little accuracy on multi-step reasoning. The benchmark decides.
 - The arithmetic above is standard inference sizing (parameters × bytes per parameter; decode is memory-bandwidth bound). Exact speeds depend on GPU, runtime and batch size.
 
 ## 5. Model selection
-### Selection criteria
-1. Open weights, with a licence that allows commercial on-premises use. Checked per model before deployment.
-2. Size 24-35B total parameters: fits one data-center GPU (section 4).
-3. Tool calling, for agentic retrieval and the calculator and catalog tools.
-4. Context window of at least 32K tokens: system prompt + 8-12K retrieved text + answer.
-5. Available both on the test gateway and as downloadable weights, so the tested model is the deployed model.
-6. Vendor diversity: different training data fails on different questions. A mix shows whether a failure is a knowledge gap (all fail) or a model gap (one fails).
-7. Vision for screenshot questions (a share of the benchmark).
-
-### Candidates (in `benchmark/runner/config.yaml`)
-| Model | Type | Why in the test | Result so far (17 questions, old scoring) |
-|---|---|---|---|
-| google/gemma-4-31b-it | 31B dense, vision | Strong instruction following; vision; long context | Best: 58% exact with one lookup |
-| google/gemma-4-26b-a4b-it | 26B MoE, 4B active, vision | Same family, much faster: speed option | 45% |
-| alibaba/qwen-3-32b | 32B dense | Reference dense model of the class | 48% |
-| mistral/mistral-small | 24B dense, vision | Different vendor; vision | 51% |
-| openai/gpt-oss-20b | 21B MoE | Fast reasoning model; Apache 2.0 | 48%; often broke the answer format in agentic mode |
-| nvidia/nemotron-3-nano-30b-a3b | 30B MoE, 3B active | Fastest; tests the lower bound | 25% |
-| alibaba/qwen-3-14b | 14B dense | Lower bound for size | 42% |
-| alibaba/qwen3.8-27b | 27.8B dense, vision, Apache 2.0 | Newest Qwen dense model in the class (weights published 2026-08) | Added 2026-11-04 |
-| alibaba/qwen3.6-27b | 27.8B dense, vision, Apache 2.0 | Previous Qwen dense generation (2026-04): shows the gain between generations | Added 2026-11-04 |
-| zai/glm-4.7-flash | 31.2B MoE (30B-A3B), MIT | Fourth vendor; fast MoE with tool use | Added 2026-11-04 |
-
-### Changes for the 100-question run (author decisions)
-- 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
-- 2026-11-03: keep the 7 earlier models until 100 questions; ministral-8b dropped.
-- **Frontier references:** one frontier model with and without the knowledge base each run (claude-opus-5.5 used so far).
-
-### Not chosen, and why
-| Model | Reason |
-|---|---|
-| Llama 3.3 70B | 70B: twice the hardware (section 4); older generation. |
-| gpt-oss-120b, Nemotron 3 Super 120B, Qwen3 Next 80B | Over 80B total weights: multi-GPU or 80 GB GPU. MoE speed does not remove the memory need. |
-| DeepSeek-R1-Distill-Qwen-32B | Early-2025 reasoning distill, superseded by newer 27-32B models with native tool use; long reasoning output raises latency. Not on the gateway. |
-| Devstral Small, Qwen3 Coder 30B | Tuned for code, not for technical reading comprehension. |
-| ministral-8b | Dropped after scoring 29-40%. |
+- Candidates, selection criteria, removals and the judge: `benchmark/models.md`. The benchmark chooses the model, so the list lives with the benchmark.
+- Vision is a basic requirement: VMware administrators upload screenshots of esxtop, vCenter and VCF Operations (author, 2026-11-05).
 
 ## 6. Knowledge: what the harness needs, beyond markdown
 Markdown prose is the core, but not enough. Each knowledge type matches a failure mode of small models.
@@ -162,9 +128,9 @@ Markdown prose is the core, but not enough. Each knowledge type matches a failur
 - Broadcom's VMware Private AI Foundation with NVIDIA is the natural platform for this VM (to verify against current product documentation).
 
 ## 8. How we prove it
-- Benchmark: 100 multiple-choice questions written from the author's books and quizzes, 50% Level 400 traps, plus screenshot questions. Answer keys are never indexed.
+- Benchmark: 100 cases written from the author's books and quizzes: multiple choice, screenshots and free-text conversation, 50% Level 400 traps. Answer keys are never indexed.
 - Every model runs in three modes: no knowledge base, one lookup, model-driven lookups.
-- Headline score: Stable correct (exactly right in all 5 runs). Also reported: confident-wrong rate (wrong and not Unsure). Unsure is allowed and preferred over a guess.
+- Headline: one final score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. A case earns what its worst of 5 runs earns. Also reported: confident-wrong rate. Unsure is allowed and preferred over a guess.
 - The frontier model is scored the same way, with and without the knowledge base.
 - Detail: `benchmark/test-design.md`; runner `benchmark/runner/`.
 

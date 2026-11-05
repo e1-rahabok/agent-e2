@@ -1,7 +1,11 @@
 """Golden cases: load, shuffle options, render, parse and score answers.
 
-Only `## Prompt` and attachments are ever shown to the model. The answer key
-(metadata `answer`, `trap` in the `## Metadata` section at the end) is read here for scoring only.
+Only `## Prompt` and attachments are ever shown to the model under test. The answer key
+(metadata `answer`, `trap`; sections `## Expected key points`, `## Likely wrong answer`) is read here
+for scoring only: letters by the runner, key points by the judge (judge.py).
+
+Kind (one per case, for the sub-scores): screenshot (has image attachments, any format),
+multiple-choice (letters, no images), conversation (free-text or compound, no images).
 """
 import base64
 import glob
@@ -42,6 +46,8 @@ class Case:
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
         self.prompt = m.group(1).strip() if m else ''
         self.stem, self.options, self.footer = self._split_prompt(self.prompt)
+        self.key_points = _section(body, 'Expected key points')
+        self.likely_wrong = _section(body, 'Likely wrong answer')
 
     @staticmethod
     def _split_prompt(prompt):
@@ -61,8 +67,21 @@ class Case:
         return '\n'.join(stem).strip(), options, '\n'.join(footer).strip()
 
     @property
+    def choice(self):
+        """Scored by letters (True) or by the judge (False)."""
+        return self.format == 'multiple-choice'
+
+    @property
     def scorable(self):
-        return self.format == 'multiple-choice' and bool(self.options) and bool(self.answer)
+        if self.choice:
+            return bool(self.options) and bool(self.answer)
+        return bool(self.prompt) and bool(self.key_points)
+
+    @property
+    def kind(self):
+        if self.has_images:
+            return 'screenshot'
+        return 'multiple-choice' if self.choice else 'conversation'
 
     @property
     def has_images(self):
@@ -96,6 +115,11 @@ class Case:
             data = base64.b64encode(open(a, 'rb').read()).decode()
             out.append({'type': 'image_url', 'image_url': {'url': f'data:{mime};base64,{data}'}})
         return out
+
+
+def _section(body, name):
+    m = re.search(rf'^## {re.escape(name)}\n(.*?)(?=^## |\Z)', body, re.S | re.M)
+    return m.group(1).strip() if m else ''
 
 
 def load(pattern=None):

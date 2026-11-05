@@ -1,12 +1,12 @@
 # Auto Test runner
 
-Runs the golden multiple-choice questions against candidate open-weight models through Vercel AI Gateway, scores them automatically, and writes a report.
-Design: `benchmark/test-design.md`. Not indexed.
+Runs every golden case (multiple choice, screenshot, free text) against the candidate open-weight models through Vercel AI Gateway, scores them automatically (letters, or a judge model for free text), and writes a report with one final score.
+Design: `benchmark/test-design.md`. Models and judge: `benchmark/models.md`. Not indexed.
 
 ## Setup
 - Python 3.10+ with `pyyaml` and `requests`.
 - Environment variable `AI_GATEWAY_API_KEY` (Vercel AI Gateway API key). Never commit it.
-- Settings: `config.yaml` (models, modes, runs, temperature, budgets, provider pinning).
+- Settings: `config.yaml` (models, judge, modes, runs, temperature, budgets, provider pinning).
 
 ## Commands
 ```bash
@@ -20,7 +20,7 @@ python3 benchmark/runner/run.py --mock --runs 2
 - Offline pipeline check: random answers, real retrieval, no API calls.
 
 ```bash
-python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --cases cpu-004
+python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes classic --runs 1 --cases cpu-004
 ```
 - Smallest real test: one model, one mode, one question.
 
@@ -34,6 +34,11 @@ python3 benchmark/runner/run.py --resume benchmark/results/autotest/<run-id>
 ```
 - Continue a run; failed answers are retried.
 
+```bash
+python3 -m unittest benchmark/runner/test_runner.py
+```
+- Scoring tests: judge reply parsing, final score, case kinds. No API calls.
+
 ## Retrieval test (no model)
 ```bash
 python3 benchmark/runner/retrieval_eval.py
@@ -42,14 +47,29 @@ python3 benchmark/runner/retrieval_eval.py
 
 ## Methodology
 
-### Question and score
-- Each golden case is a multiple-choice question with one or more correct options.
+### Final score
+- One number, 0-100%, per model and mode: the mean case credit over all cases. Sub-scores: multiple choice, screenshot, conversation. Report table `Final score`.
+- Case credit = the worst of its runs: multiple choice 1 or 0 (Stable correct); free text the lowest judge score / 3.
+- Full method: `benchmark/test-design.md`, section 7.4.
+
+### Free text and the judge
+- `format: free-text` and `compound` cases are sent without options, with an open-answer prompt (`harness/modes.py`, `PROMPTS['open']`). The verifier does not run on them: it checks letters only.
+- `judge.py` sends the prompt, images, `## Expected key points`, `## Likely wrong answer` and the answer to `judge_model`, and reads back a JSON score 0-3.
+- The runner refuses a run where the judge is also a candidate.
+- Rubric and checks: `benchmark/test-design.md`, section 14. Report table `Free-text answers (judge)`.
+
+### Screenshots
+- Cases with image attachments are sent with all their images (track `vision`). There is no text-only track.
+- The runner refuses a candidate without the gateway `vision` tag when screenshot cases are in the run: reading screenshots is a basic requirement (`benchmark/models.md`).
+
+### Multiple choice: question and score
+- A multiple-choice case has one or more correct options.
 - A run asks every question once, per model and mode.
 - 5 runs per question, because hosted models do not answer the same way twice. Reason: `benchmark/test-design.md`, section 7.2.
 - Every question says: "Choose all the correct options. There can be more than one." Two options are appended: "Not covered by the knowledge base" and "Unsure".
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
 - Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see `benchmark/test-design.md`, section 7.1.
-- Stable correct (headline): share of questions answered exactly right in all 5 runs. Report table `Luck-free scores`.
+- Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. It is the multiple-choice credit in the final score.
 - Luck: share of questions right in some runs only. Counted as not known.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
 - Exact (mean over runs) is still reported in table `Scores`.
@@ -125,42 +145,44 @@ python3 benchmark/runner/retrieval_eval.py
 - The 0.2 choice is a design default, not a measured optimum. A temperature sweep (0, 0.2, 0.7) on the best model would test it.
 
 ## What it does
-1. Loads `knowledge/` exactly as README, section Local LLM use: metadata split off, body chunked by `##` heading.
+1. Loads `knowledge/` exactly as `ARCHITECTURE.md`, section Local LLM use: metadata split off, body chunked by `##` heading.
 2. Builds the index: BM25, plus embeddings (`embedding_model`) when the API key is set. Embeddings are cached in `harness/.cache/`.
-3. Loads golden cases with `format: multiple-choice`. Other formats are listed as skipped.
+3. Loads every golden case with an answer key (`answer` letters, or `## Expected key points`). Cases without one are listed as skipped.
 4. For each model, mode, case and run:
-   - shuffles the options (same order for every model and mode within a run) and appends "Not covered by the knowledge base" and "Unsure";
+   - multiple choice: shuffles the options (same order for every model and mode within a run) and appends "Not covered by the knowledge base" and "Unsure"; free text: sends the prompt as written;
    - answers in the mode:
      - `baseline`: no knowledge base;
      - `classic`: one search, link expansion (`same_name`, `related`), 8K-token context;
      - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. Falls back to classic after 2 tool-format errors;
-   - parses `ANSWER:` and maps letters back;
-   - scores exact match, partial credit, trap hit, Not-covered pick, Unsure pick and points (+1 / 0 / -1).
-5. Questions with image attachments get a second `vision` track on models tagged `vision` on the gateway.
+   - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, trap hit, Not-covered pick, Unsure pick;
+   - free text: the judge scores 0-3; credit = score / 3;
+5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
 6. Writes the run folder and appends one summary row per model, mode and case to `benchmark/results/results.csv`.
 
 ## Output: `benchmark/results/autotest/<run-id>/`
 | File | Content | In git |
 |---|---|---|
 | `config.json` | Index version (git SHA), models with tags and prices, settings | Yes |
-| `answers.csv` | One row per answer: model, provider, mode, track, case, run, option order, letters, scores (exact, partial, points, unsure), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
-| `report.md` | Score matrix (exact, partial, majority, margin, consistency, trap, parse failures, recall, fallback, cost), by area and level, hardest questions | Yes |
+| `answers.csv` | One row per answer: model, provider, mode, track, case, kind, format, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
+| `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, trap, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
 | `traces.jsonl` | Full question and retrieval trace per answer | No (large); keep locally |
 
 ## Golden case fields used
 | Field | Meaning |
 |---|---|
-| `format` | `multiple-choice` (auto-scored), `free-text` (judge or author), `compound` (scored by hand) |
+| `format` | `multiple-choice` (letters), `free-text` and `compound` (judge) |
 | `level` | `recall`, `l400`, `multi-hop`, `screenshot` |
 | `answer` | Correct option letters, as in `## Prompt` |
 | `trap` | Option letters that are the known wrong answer |
 | `knowledge` | Files the answer should come from; used for retrieval recall |
 
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
-- The prompt text must stand alone without the image: the text track sends no image.
+- The prompt states the question in words; the images supply the values.
+- Free text: `## Expected key points` and `## Likely wrong answer` go to the judge, never to the model under test.
 - `project/tools/lint.py` checks these fields.
 
 ## Limits
 - Provider name is recorded when the gateway returns it; the field is not documented as stable.
 - Cost is estimated from gateway list prices in `/models`; check the Vercel invoice.
-- Mock runs prove the pipeline only. Their scores are random.
+- Mock runs prove the pipeline only. Their scores are random, including the mock judge.
+- The judge is a model: its scores carry its errors. The author checks every 0 and every split between runs (`benchmark/test-design.md`, section 14).

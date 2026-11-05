@@ -9,7 +9,8 @@ Never index this folder: it contains answer keys.
 benchmark/
 ├── cases/<id>-<slug>.md                          # one case per file, one flat folder
 ├── cases/<id>/                                   # the case's attachments: screenshots, logs, diagrams (only when it has any)
-├── runner/                                       # Auto Test: run.py, cases.py, report.py, config.yaml
+├── runner/                                       # Auto Test: run.py, cases.py, judge.py, report.py, config.yaml
+├── models.md                                     # candidate models, frontier reference, judge
 ├── results/results.csv                           # summary: one row per case per model per mode per run set
 ├── results/autotest/<run-id>/                    # per run: answers.csv, report.md, config.json (traces.jsonl not in git)
 └── _templates/case.md
@@ -40,7 +41,7 @@ benchmark/
 | `knowledge` | Knowledge ids the answer should draw on. Used to measure retrieval recall, not only the answer. |
 | `origin` | book, quiz, live-lab, real-ticket, synthetic. |
 | `source_path` | Heading path in the source document, for QA. |
-| `format` | multiple-choice (auto-scored by `benchmark/runner`), free-text (rubric, judge or author), compound (scored by hand). |
+| `format` | multiple-choice (scored by letters), free-text or compound (scored 0-3 by the judge). All scored automatically by `benchmark/runner`. |
 | `level` | recall, l400, multi-hop, screenshot. Multiple-choice only. |
 | `answer` | Correct option letters as written in `## Prompt`. Multiple-choice only. Never sent to the AI. |
 | `trap` | Option letters of the known wrong answer. Multiple-choice only. Never sent to the AI. |
@@ -63,20 +64,14 @@ benchmark/
 - Also reported: Luck (right in some runs only), confident-wrong rate, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
 - Reason and design: `benchmark/test-design.md` (blueprint, why 100 questions, scoring, validity threats).
 
-## Free-text and compound scoring (manual, per case, 0-3)
+## Free-text and compound scoring (judge, 0-3)
+- The runner sends the prompt (and images) without options, then a judge model scores the answer against `## Expected key points` and `## Likely wrong answer`.
+- Rubric, judge rules and checks: `benchmark/test-design.md`, section 14. Judge model: `benchmark/models.md`.
+- Write `## Expected key points` as one testable fact per bullet: the judge scores against them and nothing else.
+- Write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 
-| Score | Meaning |
-|---|---|
-| 0 | Falls into the trap, or wrong. |
-| 1 | Avoids the trap, but cannot explain why. |
-| 2 | Correct, with the right reason (mechanism or vantage point). |
-| 3 | Correct, right reason, and states what to check next. |
-
-How to run:
-1. Send only the `## Prompt` section (plus attachments) to the AI. Never send the rest of the file.
-2. Run with the same model and effort in each mode: `baseline` (no knowledge base), `classic` or `agentic` (knowledge base through the harness).
-3. Score each answer against `## Expected key points`.
-4. Append one row per case per mode to `results/results.csv`, with the scale in `notes`.
+## Final score
+- One score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. Method: `benchmark/test-design.md`, section 7.4.
 
 ## results.csv columns
 
@@ -87,5 +82,5 @@ How to run:
 | effort | n/a for gateway models; medium / high / max where the model has an effort setting |
 | mode | baseline, classic, agentic (`-vision` suffix for the screenshot track) |
 | case_id | vsphere-cpu-004 |
-| score | Auto Test: exact-match mean over 5 runs, 0-1. Manual: 0-3. |
-| notes | run id and scale, e.g. "autotest 20261103-081849; score = exact-match mean 0-1 over 5 runs; temp 0.2" |
+| score | Auto Test: mean credit over the runs, 0-1 (exact letters 1 or 0; free text: judge score / 3). Older rows: exact-match mean, or manual 0-3. |
+| notes | run id and scale, e.g. "autotest 20261105-090000; score = mean credit 0-1 (exact letters, or judge score / 3) over 5 runs; temp 0.2" |

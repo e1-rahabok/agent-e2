@@ -2,6 +2,8 @@
 
 Classic and agentic replies pass the answer verifier (verify.py); a hard issue gets one repair turn.
 Classic context carries catalog facts for the files it holds; agentic mode adds the catalog, calculate and flow tools.
+Two answer kinds: choice (multiple-choice letters, verified) and open (free-text conversation answer, not verified:
+the verifier checks letter format only). The retrieval and tools are the same for both.
 """
 import json
 
@@ -42,6 +44,25 @@ SYSTEM_AGENT = SYSTEM_KB.replace(
     '- For any arithmetic or unit conversion, call calculate. Do not compute in your head.\n'
     '- For a troubleshooting question, call flow on the matching diagnosis file and follow its steps in order.\n'
     '- You have at most {max_calls} tool calls. Then answer.')
+
+OPEN_FORMAT = ('Answer in plain text, at most 250 words. Give the conclusion first, then the mechanism and the reason, '
+               'then what to check next. If the information available does not settle the question, say so instead of guessing.')
+
+OPEN_RULE = 'A wrong answer is worse than saying the question is not settled: an operator would act on it. Do not guess.\n'
+
+
+def _open(system):
+    """Turn a multiple-choice system prompt into the open-answer one: same rules, no options."""
+    return (system.replace('Answer the multiple-choice question.\n', 'Answer the question.\n')
+            .replace('choose the option "Not covered by the knowledge base."', 'say that the knowledge base does not cover it.')
+            .replace('does not settle every option, choose only the Unsure option.', 'does not settle the question, say so.')
+            .replace(UNSURE_RULE, OPEN_RULE).replace(FORMAT, OPEN_FORMAT))
+
+
+PROMPTS = {
+    'choice': {'base': SYSTEM_BASE, 'kb': SYSTEM_KB, 'agent': SYSTEM_AGENT, 'format': FORMAT},
+    'open': {'base': _open(SYSTEM_BASE), 'kb': _open(SYSTEM_KB), 'agent': _open(SYSTEM_AGENT), 'format': OPEN_FORMAT},
+}
 
 TOOLS = [
     {'type': 'function', 'function': {
@@ -113,8 +134,8 @@ def _step(trace, action, inp, out, res=None):
     trace.append(s)
 
 
-def baseline(client, model, question, images, cfg, trace):
-    res = client.chat(model, [{'role': 'system', 'content': SYSTEM_BASE}, _user(question, images)],
+def baseline(client, model, question, images, cfg, trace, kind='choice'):
+    res = client.chat(model, [{'role': 'system', 'content': PROMPTS[kind]['base']}, _user(question, images)],
                       temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=cfg.get('provider_order', {}).get(model))
     _step(trace, 'answer', '', res['content'][:400], res)
     return res, []
@@ -146,16 +167,17 @@ def classic_context(retriever, question, cfg):
     return '\n\n'.join(parts), used, hits
 
 
-def classic(client, model, question, images, cfg, trace, retriever):
+def classic(client, model, question, images, cfg, trace, retriever, kind='choice'):
     context, used, hits = classic_context(retriever, question, cfg)
     _step(trace, 'search', question[:200], [h['id'] for h in hits])
     _step(trace, 'context', '', used)
-    msgs = [{'role': 'system', 'content': SYSTEM_KB},
+    msgs = [{'role': 'system', 'content': PROMPTS[kind]['kb']},
             _user(f'Knowledge base:\n{context}\n\nQuestion:\n{question}', images)]
     po = cfg.get('provider_order', {}).get(model)
     res = client.chat(model, msgs, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
     _step(trace, 'answer', '', res['content'][:400], res)
-    res = _verified(client, model, msgs, res, question, context, set(retriever.docs), cfg, trace, po)
+    if kind == 'choice':
+        res = _verified(client, model, msgs, res, question, context, set(retriever.docs), cfg, trace, po)
     return res, used
 
 
@@ -222,17 +244,17 @@ def _run_tool(retriever, name, args, state):
     return json.dumps({'error': f'unknown tool {name}'})
 
 
-def agentic(client, model, question, images, cfg, trace, retriever):
+def agentic(client, model, question, images, cfg, trace, retriever, kind='choice'):
     """Tool loop. Returns (final result, ids read). Raises FallbackNeeded on repeated format errors."""
     max_calls, budget = cfg['agent_max_calls'], cfg['agent_tool_tokens']
-    msgs = [{'role': 'system', 'content': SYSTEM_AGENT.format(max_calls=max_calls)}, _user(question, images)]
+    msgs = [{'role': 'system', 'content': PROMPTS[kind]['agent'].format(max_calls=max_calls)}, _user(question, images)]
     state = {'read': [], 'same_name_checked': set(), 'searched': False}
     seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
     po = cfg.get('provider_order', {}).get(model)
     while True:
         tools = TOOLS if calls < max_calls and tokens_used < budget else None
         if tools is None:
-            msgs.append({'role': 'user', 'content': 'Tool budget used. Answer now from what you have read.\n' + FORMAT})
+            msgs.append({'role': 'user', 'content': 'Tool budget used. Answer now from what you have read.\n' + PROMPTS[kind]['format']})
         res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
         tcs = res['tool_calls'] if tools else []
         if not tcs:
@@ -246,7 +268,8 @@ def agentic(client, model, question, images, cfg, trace, retriever):
                 continue
             _step(trace, 'answer', '', (res['content'] or '')[:400], res)
             seen_text = '\n'.join(m['content'] for m in msgs if m['role'] == 'tool' and isinstance(m.get('content'), str))
-            res = _verified(client, model, msgs, res, question, seen_text, set(retriever.docs), cfg, trace, po)
+            if kind == 'choice':
+                res = _verified(client, model, msgs, res, question, seen_text, set(retriever.docs), cfg, trace, po)
             return res, state['read']
         msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
         for n, tc in enumerate(tcs):
@@ -297,21 +320,22 @@ class FallbackNeeded(Exception):
     pass
 
 
-def answer(mode, client, model, question, images, cfg, retriever):
-    """Run one question in one mode. Returns (result, ids used, trace, fallback flag)."""
+def answer(mode, client, model, question, images, cfg, retriever, kind='choice'):
+    """Run one question in one mode. kind: choice (letters) or open (free text).
+    Returns (result, ids used, trace, fallback flag)."""
     trace = []
     if mode == 'baseline':
-        res, used = baseline(client, model, question, images, cfg, trace)
+        res, used = baseline(client, model, question, images, cfg, trace, kind)
         return res, used, trace, False
     if mode == 'classic':
-        res, used = classic(client, model, question, images, cfg, trace, retriever)
+        res, used = classic(client, model, question, images, cfg, trace, retriever, kind)
         return res, used, trace, False
     try:
-        res, used = agentic(client, model, question, images, cfg, trace, retriever)
+        res, used = agentic(client, model, question, images, cfg, trace, retriever, kind)
         return res, used, trace, False
     except (FallbackNeeded, LLMError) as e:
         if isinstance(e, LLMError) and 'tool' not in str(e).lower():
             raise
         _step(trace, 'fallback', str(e)[:200], 'classic')
-        res, used = classic(client, model, question, images, cfg, trace, retriever)
+        res, used = classic(client, model, question, images, cfg, trace, retriever, kind)
         return res, used, trace, True

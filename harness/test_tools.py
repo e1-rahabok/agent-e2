@@ -155,6 +155,22 @@ class ModesTest(unittest.TestCase):
         self.assertEqual(res['content'], 'ANSWER: D\nREASON: x')
         self.assertIn('repair', [s['action'] for s in trace])
 
+    def test_open_answer_has_no_options_and_no_letter_repair(self):
+        class Recorder(MockClient):
+            systems = []
+
+            def chat(self, model, messages, tools=None, **kw):
+                Recorder.systems.append(messages[0]['content'])
+                return {'content': 'Ready includes limit time, so check Max Limited.', 'tool_calls': [],
+                        'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+        ret = Retriever(DOCS, CHUNKS)
+        res, used, trace, fb = modes.answer('classic', Recorder(), 'mock', 'Why is Ready high?', [], self.CFG, ret, 'open')
+        self.assertNotIn('repair', [s['action'] for s in trace])
+        self.assertNotIn('ANSWER:', Recorder.systems[0])
+        self.assertNotIn('Unsure option', Recorder.systems[0])
+        for p in modes.PROMPTS['open'].values():
+            self.assertNotIn('option', p.lower())
+
 
 if __name__ == '__main__':
     unittest.main()
