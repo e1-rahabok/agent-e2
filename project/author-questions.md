@@ -36,7 +36,7 @@ Each entry has:
 - Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
 - Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
 - Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
-- Answer:
+- Answer: Run and Net Run not affected by hyper threading
 
 ### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
 - Files: `harness/modes.py` (SYSTEM_KB, SYSTEM_AGENT); evidence in `benchmark/results/autotest/20261103-093742/report.md`, section Analysis.
@@ -51,7 +51,7 @@ Each entry has:
   - Keep ONLY: fewer invented answers; no credit where the knowledge base is silent; every gap must be filled in the knowledge base.
   - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.
   - Test both in one run and compare.
-- Answer:
+- Answer: In the auto test, we're testing 3 components as 1 expert (harness + model + knowledge base). So use the knowledge base first and its own knowledge where the knowledge base is silent.
 
 ### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
 - Files: `benchmark/cases/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`
@@ -59,7 +59,7 @@ Each entry has:
 - Search 2 (quiz): "Plenty of physical threads are idle"
 - Question: key is C (Utilization, 40%). All models, frontier included, chose B (Core Utilization, 70%), with and without the knowledge base. Is C right? If yes, which statement should the knowledge base add?
 - Written as now: core-utilization says Core Utilization is a capacity metric (ignores frequency). utilization says Utilization suits capacity management. No file says which one is the ESXi true utilization, or why Core Utilization overstates it.
-- Answer:
+- Answer: I think you got triggered with the word "true". Change it to "Three metrics show three values. What is the ESXi utilization, from capacity management perspective? Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality". Review https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md and https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md and update accordingly.
 
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
 - Files: `benchmark/cases/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
@@ -67,7 +67,7 @@ Each entry has:
 - Search 2 (quiz): "CPU reservation only comes into play during contention"
 - Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
 - Written as now: reservation in MHz/Hertz (supports D); CPU reservation not sticky, memory reservation sticky (supports C). No file states the cap at base nominal clock speed (A) or that the reservation only matters under contention (B).
-- Answer:
+- Answer: https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/cases/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md is missing the link to the image
 
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
 - Files: `benchmark/cases/vsphere-cpu-013-reclaiming-vcpus-from-an-idle-vm.md`; `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
@@ -177,7 +177,9 @@ Each entry has:
 - Question 1 (Q027): the formula ends with "/ 20000 * vCPU". The sum over all vCPUs divided by 20,000 already gives the footprint in vCPUs (2 vCPUs each fully busy: 40,000 / 20,000 = 2). Is the result meant in vCPUs, so "× vCPU" is not needed, or in % of the VM, so the division is by (20,000 × vCPU)?
 - Question 2 (Q029): option 2 has four ranges, 0-75, 75-85, 85-95, 95-100%. The image shows grey, green, yellow, orange and red. Is it grey (waste) below 75, green 75-85, yellow 85-95, red 95-100?
 - Written as now: Q027 formula as you wrote it, with this question in review_notes. Q029 boundaries only, no colours.
-- Answer:
+- Answer to Q1: From my book, which you missed: "The System counter is not available per vCPU. Reason is the underlying physical core that does the IO work on behalf of the VM may be doing it for more than 1 vCPU. There is no way to break it down for each vCPU.". Because of this, I need to sum all the per-vCPU counters one by one, then add CPU System. After that, we divide by 20000 x vCPU. Is it clear?
+- Answer to Q2: Grey is the 5th region. Only applicable to Capacity. It's not applicable to Performance as there is no such thing as wastage performance. Grey symbolizes wastage. It's placed below green. For Guest OS Memory, the range is 0 - 75 - 85 - 90 - 95 - 100. Yes, green is 10 point wide. Add in to do to upload Part 1 of my book to complete the capacity and performance management knowledge.
+
 
 ## Resolved
 
