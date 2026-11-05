@@ -49,7 +49,7 @@ flowchart LR
     P["project/<br/>design, decisions,<br/>author questions, to-do"]
     T["project/tools/<br/>lint.py, tags.yaml"]
   end
-  B -->|runs exam questions through| H
+  B -->|runs cases through| H
   T -->|checks| K
   T -->|checks| B
 ```

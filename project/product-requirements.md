@@ -1,7 +1,7 @@
 # Product requirements: the assistant (1.0 and after)
 
 What the shipped system must do for its users. Not indexed.
-Inputs: the author's demo video of vCommunity Ask (2026-11-04, 56 s, no audio), the solution design, and the Auto Test results.
+Inputs: the author's demo video of vCommunity Ask (2026-11-04, 56 s, no audio), the solution design, and the benchmark results.
 Related: `solution-design.md` (system design), `design-kb-test-site.md` (test site and benchmark), `harness/README.md` (tools).
 
 ## 1. What the demo shows

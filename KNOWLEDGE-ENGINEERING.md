@@ -86,7 +86,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 2. Structure: write each fact in the form that fits it (section 2); add tags, links and traps.
 3. Ask: every conflict or gap becomes an author question with a verbatim search string. The author's answer is applied, marked in the file's review notes, and kept as a correction until the book is updated.
 4. Check: lint enforces the rules (folders, tags, layers, links, images, quotes, tables). Unit tests check the tools.
-5. Prove: the benchmark runs the golden cases against the whole system, the harness-only retrieval test checks that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
+5. Prove: the benchmark runs the cases against the whole system, the harness-only retrieval test checks that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
 6. Review: the author reviews every file before release; release content is final and curated.
 
 ## 7. Gaps
@@ -277,6 +277,7 @@ knowledge/                           # what the model reads (indexed)
 
 ## 15. Writing rules
 - One fact per bullet or table row. A mistake should sit on one line.
+- One English word per concept. Knowledge terms: `knowledge/glossary.md`. Repository terms: `project/terms.md`.
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, the author, official docs, or Claude's own knowledge. Record any fact not in the source document in `review_notes` with its section. No generic filler. No invented thresholds.
 - No text aimed at human motivation.
@@ -303,4 +304,4 @@ knowledge/                           # what the model reads (indexed)
 2. Author reviews, answers `review_notes`, fixes errors.
 3. Author sets `status: reviewed`.
 4. When the source document is updated, move `corrections` into the normal text and clear them.
-5. Run `benchmark/` golden cases with and without the knowledge base; record results in `benchmark/results/results.csv`.
+5. Run `benchmark/` cases with and without the knowledge base; record results in `benchmark/results/results.csv`.

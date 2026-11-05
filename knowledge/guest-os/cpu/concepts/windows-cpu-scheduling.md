@@ -50,9 +50,10 @@
 | Metric | Frequency scaling | Hyper-Threading | VM contention |
 |---|---|---|---|
 | Guest CPU Usage | Yes | No | No |
-| VM CPU Run | No | Yes (book) | No |
+| VM CPU Run | No | No | No |
+| VM CPU Net Run | No | No | No |
 | VM CPU Usage | Yes | Yes | No |
-| VM CPU Demand | Yes | No | Yes |
+| VM CPU Demand | Yes | Yes | Yes |
 
 - Slowness with low utilization: check whether the CPU runs in a lower power state. Matters for frequency-sensitive applications.
 - C1 + C2 + C3 time below 100% is time in C0. The idle loop typically runs in C3: Idle Time and C3 Time track each other.
@@ -105,9 +106,10 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
-corrections: []
+corrections:
+- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading (author answer Q033, 2026-11-05); the book table marks Run as Yes.'
+- 'Same table: VM CPU Demand is affected by Hyper-Threading (author answer Q035, 2026-11-03); the book table marks it No.'
 review_notes:
-- 'Section ''Usage, utilization, time'': the book''s table marks VM CPU Run as Hyper-Threading aware. Chapter 2 says Run ignores Hyper-Threading. Open question in project/author-questions.md.'
 - 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
 - "Section 'Thread states': author (2026-11-03), quiz CPU Q7 F confirmed correct (Q036)."
 status: draft

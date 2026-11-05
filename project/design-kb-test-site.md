@@ -12,19 +12,19 @@ Status: design only. Not built. Not indexed.
 ## What "quality" means here
 | Signal | Question it answers | Source |
 |---|---|---|
-| Retrieval hit | Did the right files come back? | Golden case `knowledge` ids vs retrieved ids |
+| Retrieval hit | Did the right files come back? | Case `knowledge` ids vs retrieved ids |
 | Answer score | Is the answer right, with the right reason? | 0-3 rubric from `benchmark/README.md` |
 | KB lift | Does the knowledge base beat no knowledge base? | Same question, baseline vs kb mode |
 | Draft dependence | How much of the answer rests on `status: draft` files? | Cited file status |
 | Gap rate | Which questions find no relevant file? | Low retrieval score, visitor flag |
-| Trap rate | Does the answer fall into a known trap? | Golden case `Likely wrong answer` |
+| Trap rate | Does the answer fall into a known trap? | Case `Likely wrong answer` |
 
 ## Users
 | Role | Can do |
 |---|---|
 | Visitor (invited) | Ask, rate, flag an answer as wrong with a comment. |
-| Author | Everything a visitor can, plus: review flags, score answers, run golden cases, see the dashboard. |
-| System | Rebuild the index on each merge to `main`; run golden cases on each rebuild. |
+| Author | Everything a visitor can, plus: review flags, score answers, run cases, see the dashboard. |
+| System | Rebuild the index on each merge to `main`; run cases on each rebuild. |
 
 ## Architecture
 ```mermaid
@@ -38,14 +38,14 @@ flowchart LR
   API --> EMB[Embedding model via AI Gateway]
   RET --> EMB
   API --> LOG[(SQLite: questions, answers, ratings, flags)]
-  EVAL[Golden case runner] --> API
+  EVAL[Case runner] --> API
   EVAL --> LOG
 ```
 - Indexer: reads `knowledge/**/*.md` except the excluded folders. Uses the repo's own `project/tools/lint.py` split logic for metadata. Refuses to index if the validator fails.
 - Retriever: hybrid search (keyword BM25 + vector), filtered by metadata, then link expansion.
 - API service: query pipeline, prompt assembly, streaming answer, logging.
 - LLM: open-weight model via Vercel AI Gateway for the test site. At a customer, the same weights run on their own VM, so no data leaves their environment.
-- Golden case runner: sends only `## Prompt` of each case, never the answer key.
+- Case runner: sends only `## Prompt` of each case, never the answer key.
 - Every answer stores the index version (git commit SHA). A score is always tied to the knowledge that produced it.
 
 ## Retrieval approach
@@ -161,7 +161,7 @@ Recorded for every answer, shown collapsed on the Ask page, stored in `answers.t
 |---|---|
 | Ask | Chat. Each answer shows cited files (id, title, draft badge), images that match, and a collapsible retrieval trace. Buttons: rate 0-3, flag wrong. |
 | Compare | Same question answered twice: kb and baseline. Shown blind as A and B. Visitor picks the better one, then sees which was which. |
-| Golden cases (author) | Latest run per case: score, retrieval hit, trap hit. Trend per index version. Runs on demand or after each rebuild. |
+| Cases (author) | Latest run per case: score, retrieval hit, trap hit. Trend per index version. Runs on demand or after each rebuild. |
 | Review queue (author) | Flagged answers. Author tags the cause: knowledge gap, wrong fact, retrieval miss, model error. One click creates an entry in `project/todo.md` or `project/author-questions.md` via a pull request. |
 | Dashboard (author) | Signals table above, per technology and per retriever_guide. Top unanswered questions. Most-cited draft files (review first). |
 | Corpus | Read-only browser of indexed files and image records, as the LLM sees them. |
@@ -176,14 +176,14 @@ Recorded for every answer, shown collapsed on the Ask page, stored in `answers.t
 | ratings | answer, score 0-3, flag, comment, cause tag |
 | eval_runs | case id, mode, score, retrieval hit, index version, model; also appended to `benchmark/results/results.csv` |
 
-- Golden case answer keys are read only by the runner and the author pages. Never sent to the LLM. Never shown to visitors.
+- Case answer keys are read only by the runner and the author pages. Never sent to the LLM. Never shown to visitors.
 
 ## Technology choice
 | Part | Choice | Reason |
 |---|---|---|
 | LLM serving (test) | Vercel AI Gateway, open-weight models only | No hardware to buy. One API for all candidate models. Pay per token. The author already has a Vercel account. |
 | LLM serving (customer) | Ollama or vLLM on the customer's own VM | Same open weights the test site scores. vLLM when several users query at once. |
-| Model | Open-weight, Apache 2.0, 8B-32B, at least 16K context. Candidates below. | Must be downloadable and runnable by VMware customers. Pick by golden case score, not by benchmark. |
+| Model | Open-weight, Apache 2.0, 8B-32B, at least 16K context. Candidates below. | Must be downloadable and runnable by VMware customers. Pick by case score, not by benchmark. |
 | Embeddings | `alibaba/qwen3-embedding-0.6b` via Vercel for the test; same model on CPU at the customer | Small, open, runs without a GPU. |
 | Index and logs | SQLite with a vector extension | About 200 files: no separate vector database needed. One file to back up. |
 | API | Python (FastAPI) | Reuses `project/tools/lint.py`. Same language as the repo tooling. |
@@ -228,20 +228,20 @@ Source: Vercel AI Gateway model list, checked 2026-11-03. Prices per 1M input / 
 
 ## Score transfer to customers
 - Providers may serve higher precision than a customer's 4-bit build. Hosted scores are an upper bound.
-- Before recommending a model: re-run the golden cases on the 4-bit build (for example, one hour on a rented GPU).
+- Before recommending a model: re-run the cases on the 4-bit build (for example, one hour on a rented GPU).
 
 ## Build phases
-The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the Human Test.
+The project has 2 stages. Phases 1 and 5 are the benchmark; phases 2-4 are the Human Test.
 
 | Phase | Stage | Content |
 |---|---|---|
-| 1 | Auto Test | Claude runs the question set on all candidate models and modes; scoring is automatic. Picks the default model and mode. See Auto Test plan. |
+| 1 | Benchmark | Claude runs the question set on all candidate models and modes; scoring is automatic. Picks the default model and mode. See Benchmark plan. |
 | 2 | Human Test | Ask page on isvara.io with citations and retrieval trace. Author only. Uses the phase 1 winner. Replaces the current basic agent on isvara.io. |
 | 3 | Human Test | Ratings, flags, review queue. Invite visitors. |
 | 4 | Human Test | Compare page (blind A/B) and dashboard. Screenshot upload when a vision-capable model is chosen. |
-| 5 | Auto Test | 4-bit re-test of the chosen model and mode on customer-like hardware. Re-run after each major knowledge update. |
+| 5 | Benchmark | 4-bit re-test of the chosen model and mode on customer-like hardware. Re-run after each major knowledge update. |
 
-## Auto Test plan
+## Benchmark plan
 - Moved 2026-11-04 to `benchmark/test-design.md`: claim, blueprint, why 100 questions, scoring, why 5 runs, validity threats, review checklist, target, decision rules.
 - Runner: `benchmark/runner/` (README there).
 
@@ -249,5 +249,5 @@ The project has 2 stages. Phases 1 and 5 are the Auto Test; phases 2-4 are the H
 - Hosting: decided 2026-11-03: Vercel AI Gateway for the test site.
 - Audience: author only, invited experts, or public?
 - Who scores: author only, or visitor ratings count too?
-- Model: decided 2026-11-03: compare the 8 candidates in the Auto Test; 5 runs; 100-question target.
+- Model: decided 2026-11-03: compare the 8 candidates in the benchmark; 5 runs; 100-question target.
 - Domain name and branding.

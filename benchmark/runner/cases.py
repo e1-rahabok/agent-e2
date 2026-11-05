@@ -1,4 +1,4 @@
-"""Golden cases: load, shuffle options, render, parse and score answers.
+"""Cases: load, shuffle options, render, parse and score answers.
 
 Only `## Prompt` and attachments are ever shown to the model under test. The answer key
 (metadata `answer`, `trap`; sections `## Expected key points`, `## Likely wrong answer`) is read here
@@ -18,7 +18,6 @@ import yaml
 from kb import ROOT
 
 META = '\n## Metadata\n```yaml\n'
-NOT_COVERED = 'Not covered by the knowledge base.'
 UNSURE = 'Unsure: the information available does not settle this question.'
 # Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
 POINTS = {'exact': 1, 'unsure': 0, 'wrong': -1}
@@ -88,7 +87,10 @@ class Case:
         return any(a.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')) for a in self.attachments)
 
     def render(self, rng):
-        """Shuffle options, append Not covered and Unsure, return (text, map shown_letter -> original)."""
+        """Shuffle options, append Unsure, return (text, map shown_letter -> original).
+
+        No "Not covered" option (author, Q038, 2026-11-05): the system answers from the knowledge base first
+        and from the model's own knowledge where the knowledge base is silent."""
         opts = self.options[:]
         rng.shuffle(opts)
         letters = 'ABCDEFGHIJ'
@@ -96,9 +98,7 @@ class Case:
         for i, (orig, text) in enumerate(opts):
             mapping[letters[i]] = orig
             lines.append(f'{letters[i]}. {text}')
-        nc, un = letters[len(opts)], letters[len(opts) + 1]
-        mapping[nc] = 'NC'
-        lines.append(f'{nc}. {NOT_COVERED}')
+        un = letters[len(opts)]
         mapping[un] = 'UN'
         lines.append(f'{un}. {UNSURE}')
         parts = [self.stem, '', '\n'.join(lines)]

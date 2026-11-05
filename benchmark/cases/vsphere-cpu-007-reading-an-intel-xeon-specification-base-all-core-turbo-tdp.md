@@ -11,6 +11,9 @@ C. The Max Turbo Frequency can only be reached with the High Performance setting
 D. With BIOS power management set to OS Controlled and ESXi power management set to Balanced, you sacrifice performance to save energy. This applies to all types of workload.
 E. The 3 speeds (2.4, 3.4, 4.0 GHz) require different power: 4 GHz needs more than 210 W, 2.4 GHz less than 210 W.
 
+## Attachments
+![Intel website specification of the Xeon 6 6520P: cores, threads, base, All Core Turbo and Max Turbo frequency, cache, TDP](vsphere-cpu-007/intel-xeon-6520p-specification.png)
+
 ## Likely wrong answer
 B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance).
 

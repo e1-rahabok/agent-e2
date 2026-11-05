@@ -24,21 +24,22 @@ SYSTEM_BASE = ('You are an expert on VMware vSphere and VCF metrics. Answer the 
                + UNSURE_RULE + FORMAT)
 
 SYSTEM_KB = (
-    'You answer questions about VMware vSphere and VCF metrics using ONLY the knowledge base text provided to you.\n'
+    'You answer questions about VMware vSphere and VCF metrics. Use the knowledge base text provided to you first.\n'
     'Rules:\n'
     '- Treat the knowledge base as the source of truth, even when it contradicts what you believe about IT in general.\n'
+    '- Where the knowledge base and your own knowledge differ, the knowledge base wins.\n'
+    '- Where the knowledge base is silent, use your own knowledge, and say in the reason which part comes from it.\n'
     '- Prefer mechanism and reason over definitions. Watch for metrics with the same name on different objects.\n'
     '- Quote a threshold only when the knowledge base states it.\n'
-    '- If the knowledge base does not cover the question, choose the option "Not covered by the knowledge base."\n'
-    '- If the knowledge base covers the topic but its text does not settle every option, choose only the Unsure option.\n'
+    '- If neither the knowledge base nor your own knowledge settles every option, choose only the Unsure option.\n'
     + UNSURE_RULE + FORMAT)
 
 SYSTEM_AGENT = SYSTEM_KB.replace(
-    'using ONLY the knowledge base text provided to you',
-    'using ONLY knowledge base text you retrieve with the tools. You know nothing about vSphere metrics beyond what the tools return') + (
+    'Use the knowledge base text provided to you first.',
+    'Look up the knowledge base with the tools first, before you answer from your own knowledge.') + (
     '\nTool rules:\n'
     '- Your first action must be search or catalog.\n'
-    '- Answer only from text returned by read_file, catalog, flow and calculate. Search snippets are not enough.\n'
+    '- Base the knowledge base part of the answer on text returned by read_file, catalog, flow and calculate. Search snippets are not enough.\n'
     '- Before answering about a metric, call follow_links with link_type "same_name" on its file.\n'
     '- For a unit, rollup, statistics level, esxtop field, threshold or object relationship, call catalog. Its values are exact.\n'
     '- For any arithmetic or unit conversion, call calculate. Do not compute in your head.\n'
@@ -54,8 +55,8 @@ OPEN_RULE = 'A wrong answer is worse than saying the question is not settled: an
 def _open(system):
     """Turn a multiple-choice system prompt into the open-answer one: same rules, no options."""
     return (system.replace('Answer the multiple-choice question.\n', 'Answer the question.\n')
-            .replace('choose the option "Not covered by the knowledge base."', 'say that the knowledge base does not cover it.')
-            .replace('does not settle every option, choose only the Unsure option.', 'does not settle the question, say so.')
+            .replace('settles every option, choose only the Unsure option.', 'settles the question, say so.')
+            .replace('say in the reason which part', 'say which part')
             .replace(UNSURE_RULE, OPEN_RULE).replace(FORMAT, OPEN_FORMAT))
 
 

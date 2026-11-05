@@ -84,6 +84,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Later: add the author's "My Recommendation" column (single-counter recommendation) from the Impacts on ESXi table to `cpu/concepts/cpu-frequency`.
 
 ## Book extraction
+- [ ] Author to upload Part 1 of the book (capacity and performance management) to complete `operations-management/` (author, Q055, 2026-11-05).
 - [x] Metrics Nuances (Chapter 1): re-extracted.
 - [x] Chapter 2 (CPU) > Architecture (pp. 52-78): extracted 2026-11-02.
   - New: `cpu/concepts/` guest-os-vs-vm-cpu, cpu-measurement-levels, cpu-topology, vcpu-states, run-time-vs-run-quality, cpu-efficiency, cpu-frequency, power-states, frequency-and-ht-impact-on-vm.
@@ -137,23 +138,23 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read cases from another folder.
 - [ ] Add `## Traps` to the 7 metric files that lack it; then make lint require it.
 - [x] Case vendor-neutral-general-001 (hyperscaler VM cost): removed 2026-11-04. Cost and price are out of scope (author, Q039).
-- [x] Author quiz (vSphere Metric Quiz.docx): 18 golden cases added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
-- [ ] Convert book quizzes (Chapter 2 has five) into golden cases.
-- [ ] Add golden cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
-- [ ] Add golden cases for MS Windows traps: Windows 100% on a shared core vs VM CPU Usage 62.5%, queue excludes running threads on Windows but includes them on Linux, 100% utilization with a low queue, Available = Standby + Free, guest disk queue invisible to VM latency.
-- [ ] Add golden cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
-- [ ] Add golden cases for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
-- [ ] Add golden cases for Chapter 3 Memory traps: Active stuck at 100%, Windows In Use 7.2 GB on an idle VM, Granted above limit, Swapped is not swap in - swap out, balloon 63% flat for weeks, only Latency measures memory performance.
+- [x] Author quiz (vSphere Metric Quiz.docx): 18 cases added 2026-11-03 (vsphere cpu-004 to cpu-013, vsphere general-001, vendor-neutral general-001, memory-002 to 006, storage-003). Q034-Q037 raised.
+- [ ] Convert book quizzes (Chapter 2 has five) into cases.
+- [ ] Add cases for Chapter 2 Architecture traps: Ready vs Run context, ms vs % normalization, Demand 170% and adding vCPUs, Windows vs vSphere 100% vs 50%, Balanced vs High Performance Turbo.
+- [ ] Add cases for MS Windows traps: Windows 100% on a shared core vs VM CPU Usage 62.5%, queue excludes running threads on Windows but includes them on Linux, 100% utilization with a low queue, Available = Standby + Free, guest disk queue invisible to VM latency.
+- [ ] Add cases for Chapter 2 VM traps: Demand equals Usage under a limit, Latency excludes limit, Co-stop chain from one vCPU in Ready, System on vCPU 0, Usage 39 GHz vs 57.6 GHz, 20-second vs 5-minute Ready.
+- [ ] Add cases for Chapter 2 ESXi traps: Usage 100% vs Thread Utilization 47%, Core Utilization duplicated per thread, Demand 315% on a host, host with no VMs showing Demand, Thread Utilization 50% with all cores busy.
+- [ ] Add cases for Chapter 3 Memory traps: Active stuck at 100%, Windows In Use 7.2 GB on an idle VM, Granted above limit, Swapped is not swap in - swap out, balloon 63% flat for weeks, only Latency measures memory performance.
 - [ ] Run baseline (no knowledge base) and knowledge-base runs. Record in `benchmark/results/results.csv`.
 - [ ] Add `status: reviewed` only after author review.
-- [ ] Next Auto Test run, after more questions are added: try `--concurrency 16`. Keep 16 if errors stay at 0 and answers per minute rise. At 100 questions (about 12,700 answers, about US$ 11) the run takes about 4 hours at 12 and about 3 hours at 16 if speed scales: above the 2-hour command limit either way. Plan `--resume` once, or split by model.
+- [ ] Next benchmark run, after more questions are added: try `--concurrency 16`. Keep 16 if errors stay at 0 and answers per minute rise. At 100 questions (about 12,700 answers, about US$ 11) the run takes about 4 hours at 12 and about 3 hours at 16 if speed scales: above the 2-hour command limit either way. Plan `--resume` once, or split by model.
 - [ ] Close the agentic gap (run 20261103-081849: agentic below classic for 7 of 8 models):
   - [ ] Better agentic prompt: example lookups; keep going until linked files (`same_name`, `related`) are read.
   - [ ] Hybrid mode: start from the classic results, then let the model follow links.
   - [ ] Test a larger local model if hardware allows; tool use improves with size.
   - [ ] Raise `agent_max_calls` and `agent_tool_tokens` once models use the calls they have.
   - [x] Frontier model as a reference ceiling: run 20261103-093742 (claude-opus-5.5). Baseline 75%, classic 67%, agentic 67%.
-- [ ] Frontier run findings for the author: Q038-Q043 in `project/author-questions.md` (prompt rule, cost case, 4 golden cases wrong for all models). Re-run the frontier model after the answers are applied.
+- [ ] Frontier run findings for the author: Q038-Q043 in `project/author-questions.md` (prompt rule, cost case, 4 cases wrong for all models). Re-run the frontier model after the answers are applied.
 
 ## Structure (after the re-organization of 2026-11-02)
 - [ ] Review the tags assigned during migration (pillar, object, metric_class). Pillar values were assigned by Claude.
@@ -188,8 +189,8 @@ Open work for this repository. Not indexed. Update when items close.
 
 ## Test site
 - [ ] Author decisions: audience, scoring (hosting and model decided 2026-11-03). See `project/design-kb-test-site.md`, section Decisions for the author.
-- [x] Build phase 1 (Auto Test) runner: `benchmark/runner/` (2026-11-03). Tested offline with --mock.
-- [ ] First real Auto Test run: needs AI_GATEWAY_API_KEY in the environment.
-- [ ] Grow the golden question set from 30 to 100 multiple-choice questions: 20% recall, 50% Level 400, 20% multi-hop, 10% screenshot; at least 10 per area; about 10 out-of-scope questions.
+- [x] Build phase 1 (Benchmark) runner: `benchmark/runner/` (2026-11-03). Tested offline with --mock.
+- [ ] First real benchmark run: needs AI_GATEWAY_API_KEY in the environment.
+- [ ] Grow the case set from 30 to 100 multiple-choice questions: 20% recall, 50% Level 400, 20% multi-hop, 10% screenshot; at least 10 per area; about 10 out-of-scope questions.
 - [x] "Not covered" option and fixed answer format: added by the runner. Answer keys (`answer`, `trap`, `level`, `format`) added to 17 quiz cases.
 - [ ] Case vsphere-cpu-006 (two hosts, two answers): split into two multiple-choice cases to make it auto-scorable.

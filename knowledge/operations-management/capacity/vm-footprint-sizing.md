@@ -18,10 +18,12 @@
 | Exclude Guest OS queue | Transparent to the VM. |
 
 ```text
-VM CPU Needed = (Sum over all vCPUs of (Used + Overlap + Co-stop + Ready + Other Wait) + System) / 20,000 × vCPU
+VM CPU Needed = (Sum over all vCPUs of (Used + Overlap + Co-stop + Ready + Other Wait) + System) / (20,000 × vCPU)
 ```
-- The per-vCPU states are summed first; System is added once, at VM level. System is charged to the VM, not to any vCPU, so it is not counted twice.
+- System has no per-vCPU value: the physical core that does IO for the VM can do it for more than one vCPU, so it cannot be split per vCPU. So the per-vCPU states are summed one by one, and System is added once, at VM level.
 - 20,000 is the 20-second real-time sample in milliseconds: the summation counters are in ms per sample.
+- Dividing by 20,000 × vCPU gives the share of the VM's vCPU capacity, 0-1. Above 1 is possible: System and Overlap are on top of the vCPUs.
+- Example: 4 vCPUs, each with 10,000 ms of Used + Overlap + Co-stop + Ready + Other Wait, and 2,000 ms System: (40,000 + 2,000) / 80,000 = 0.525, so 52.5% of 4 vCPUs.
 - Express in GHz (utilization model) and vCPU (allocation model).
 - GHz: multiply by the nominal (static) clock speed. Required when migrating to hosts with a different clock speed.
 - CPU generation and speed (for example SPEC CPU 2017) can refine sizing. Risk: an application that prefers many slow threads may perform worse with fewer, faster vCPUs.
@@ -66,6 +68,6 @@ source:
 corrections:
 - 'Sections ''Purpose'' and ''CPU'': formula grouping and the narrow use case from the author answer Q027 (2026-11-05). The book prints System / 20,000 without the grouping.'
 review_notes:
-- 'Section ''CPU'': whether the result is in vCPUs or in % of the VM is open: dividing the sum of all vCPUs by 20,000 already gives vCPUs, and × vCPU would multiply again. Follow-up question Q055 in project/author-questions.md.'
+- 'Section ''CPU'': divisor 20,000 × vCPU and the System reason from the author answer Q055 (2026-11-05), quoting the book.'
 status: draft
 ```

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Harness-only test: does retrieval find the files a question needs? No model is called.
 
-For every golden case with `knowledge` ids, run the classic-mode retrieval on the question text
+For every case with `knowledge` ids, run the classic-mode retrieval on the prompt text
 (the same `## Prompt` the model sees, options included) and report:
   - recall@k of plain search (top k files),
   - recall of the classic context (search + same_name/related expansion, within the token budget),

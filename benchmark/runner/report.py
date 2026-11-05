@@ -134,7 +134,7 @@ def write(run_dir):
     rows = [r for r in all_scored if _choice(r)]  # letter-scored answers, for the multiple-choice tables
     agg = aggregate(rows)
     sample = next(iter(fin.values()), {})
-    L = [f'# Auto Test report: {cfg["run_id"]}', '',
+    L = [f'# Benchmark report: {cfg["run_id"]}', '',
          f'- Index version: `{cfg["index_version"][:12]}`. Retrieval: {cfg["retrieval"]}. Temperature: {cfg["temperature"]}. Runs: {cfg["runs"]}.',
          f'- Cases: {len(cfg["cases"])} (' + ', '.join(f'{k} {sample.get(k + "_n", 0)}' for k in KINDS) + ').'
          f' Skipped: {", ".join(cfg["skipped_cases"]) or "none"}. Judge: {cfg.get("judge_model") or "none"}.',
