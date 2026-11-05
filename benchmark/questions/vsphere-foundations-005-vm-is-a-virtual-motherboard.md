@@ -1,8 +1,12 @@
 # VM (virtual motherboard) vs Guest OS metrics
 
 ## Prompt
-The application team complains that their Windows Server 2025 VM (8 vCPUs) was slow at 10:15 this morning. Users waited several seconds for each screen.
-You open VCF Operations on the VM object. Each value below is the data point at 10:15, which covers 10:10-10:15. The 20-second peak counters show the same picture as these values.
+- The application team complains that their Windows Server 2025 VM (8 vCPUs) was slow at 10:15 this morning.
+- Users waited several seconds for each screen.
+
+- You open VCF Operations on the VM object.
+- Each value below is the data point at 10:15, which covers 10:10-10:15.
+- The 20-second peak counters show the same picture as these values.
 
 | Counter | Value |
 |---|---|
@@ -15,12 +19,12 @@ You open VCF Operations on the VM object. Each value below is the data point at 
 
 Choose all the correct statements. There can be more than one.
 
-A. Guest OS Disk Queue can be high while VM disk latency is good: IO waiting inside Windows has not reached the hypervisor yet.
-B. Because VCF Operations shows Guest OS CPU Run Queue on the VM object, it is a VM metric measured by ESXi.
-C. VM CPU Ready is invisible to Windows: the Guest OS cannot see time when no physical thread runs its vCPU.
-D. If VMware Tools is not running, ESXi still reports Guest OS Run Queue from the VM's vCPU activity.
-E. Guest OS Processor Time (70%) and VM CPU Usage (35%) can differ, because two kernels calculate them independently: Windows and the VMkernel.
-F. VM CPU Ready and Guest OS Run Queue measure the same queue from two angles.
+- A. Guest OS Disk Queue can be high while VM disk latency is good: IO waiting inside Windows has not reached the hypervisor yet.
+- B. Because VCF Operations shows Guest OS CPU Run Queue on the VM object, it is a VM metric measured by ESXi.
+- C. VM CPU Ready is invisible to Windows: the Guest OS cannot see time when no physical thread runs its vCPU.
+- D. If VMware Tools is not running, ESXi still reports Guest OS Run Queue from the VM's vCPU activity.
+- E. Guest OS Processor Time (70%) and VM CPU Usage (35%) can differ, because two kernels calculate them independently: Windows and the VMkernel.
+- F. VM CPU Ready and Guest OS Run Queue measure the same queue from two angles.
 
 ## Likely wrong answer
 B (data stored on the VM object read as a VM metric) or D (Guest OS counters assumed to come from the hypervisor).

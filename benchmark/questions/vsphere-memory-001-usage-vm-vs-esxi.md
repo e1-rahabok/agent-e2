@@ -1,7 +1,11 @@
 # Memory usage: VM vs ESXi
 
 ## Prompt
-Every VM on an ESXi host shows Memory Usage below 25% in vCenter. The host itself shows Memory Usage at 95%. The customer wants to buy more RAM. Is the host running out of memory?
+- Every VM on an ESXi host shows Memory Usage below 25% in vCenter.
+- The host itself shows Memory Usage at 95%.
+- The customer wants to buy more RAM.
+
+Is the host running out of memory?
 
 ## Likely wrong answer
 "Yes, the host is nearly full, buy RAM" — or "the numbers are inconsistent, something is broken".

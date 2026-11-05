@@ -1,7 +1,13 @@
 # <short title>
 
 ## Prompt
-<Exact text sent to the AI. Scenario first, question last. Must not hint at the answer.>
+- <Context fact, one per bullet. Exact text sent to the candidate. Must not hint at the answer.>
+- <Another fact.>
+
+<The question or instruction, as its own paragraph.>
+
+- A. <Option, one per bullet (multiple choice only).>
+- B. <Option.>
 
 ## Attachments
 <!-- one image link per attachment, with alt text, so a reviewer sees it on GitHub. Delete the section when there are none. Never sent to the model: the runner sends the files themselves. -->

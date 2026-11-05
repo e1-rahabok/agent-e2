@@ -1,16 +1,17 @@
 # Guest OS run queue, context switch, Windows thread states
 
 ## Prompt
-Windows or Linux performance affects application performance. Some of these issues are not visible to the VM.
+- Windows or Linux performance affects application performance.
+- Some of these issues are not visible to the VM.
 
 Choose all the correct sentences:
 
-A. The Guest OS is aware of Hyper-Threading and schedules its processes accordingly.
-B. CPU Run Queue has nothing to do with performance, as it is common for Windows and Linux to form a queue.
-C. CPU Context Switch does not affect application performance at all. The CPU does it all the time.
-D. All else being equal, a longer Windows or Linux CPU queue can affect application performance, as more processes are waiting.
-E. Guest OS CPU Context Switch does affect performance: the CPU could complete other tasks instead of switching between processes.
-F. In Windows, the processor queue length counter includes thread states such as Ready, Standby and Deferred Ready (Unknown).
+- A. The Guest OS is aware of Hyper-Threading and schedules its processes accordingly.
+- B. CPU Run Queue has nothing to do with performance, as it is common for Windows and Linux to form a queue.
+- C. CPU Context Switch does not affect application performance at all. The CPU does it all the time.
+- D. All else being equal, a longer Windows or Linux CPU queue can affect application performance, as more processes are waiting.
+- E. Guest OS CPU Context Switch does affect performance: the CPU could complete other tasks instead of switching between processes.
+- F. In Windows, the processor queue length counter includes thread states such as Ready, Standby and Deferred Ready (Unknown).
 
 ## Likely wrong answer
 A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dismissed as normal).

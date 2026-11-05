@@ -9,7 +9,7 @@ How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
 | Open work | [project/todo.md](project/todo.md) |
 | How the system works | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | How knowledge is captured | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) |
-| How the system is tested | [benchmark/test-design.md](benchmark/test-design.md) |
+| How the benchmark proves the system | [benchmark/design.md](benchmark/design.md) |
 
 ## Ways to contribute
 - **Answer an author question.** Write after `Answer:` in `project/author-questions.md`. The answer is applied to the knowledge files and the entry moves to Resolved.

@@ -1,7 +1,7 @@
 # Knowledge engineering
 
 How much expert knowledge this repository holds, and in what form. For human reviewers. Not indexed.
-How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: sections 8 to 17 below. Test design: `benchmark/test-design.md`.
+How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: sections 8 to 17 below. Benchmark design: `benchmark/design.md`.
 
 ## 1. The problem
 - Source: the author's books, quizzes, field answers and 20+ years of operating vSphere.
@@ -86,7 +86,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 2. Structure: write each fact in the form that fits it (section 2); add tags, links and traps.
 3. Ask: every conflict or gap becomes an author question with a verbatim search string. The author's answer is applied, marked in the file's review notes, and kept as a correction until the book is updated.
 4. Check: lint enforces the rules (folders, tags, layers, links, images, quotes, tables). Unit tests check the tools.
-5. Prove: the benchmark runs the questions against the whole system, the harness-only retrieval test checks that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
+5. Prove: the benchmark runs the questions against the whole system, the retrieval check confirms that the right files are found, and every wrong answer is traced to knowledge, retrieval or model.
 6. Review: the author reviews every file before release; release content is final and curated.
 
 ## 7. Gaps
@@ -216,7 +216,7 @@ knowledge/                           # what the model reads (indexed)
 - Retrieval: a trap line holds the wrong conclusion in the user's own words, so a question that carries the misconception retrieves the file that corrects it.
 - `same_name` links bring in the other object's meaning of the same label. They are the main guard against the first trap type.
 - The model is told to watch for same-name metrics and to answer with the mechanism, not the definition.
-- Benchmark: every multiple-choice question has a trap option named in `## Likely wrong answer`; the trap rate is reported per model. See `benchmark/test-design.md`.
+- Benchmark: every multiple-choice question has a trap option named in `## Likely wrong answer`; the trap rate is reported per model. See `benchmark/design.md`.
 - A trap needs a mechanism and a source, like any other fact.
 
 ## 11. Troubleshooting flow diagrams

@@ -2,7 +2,7 @@
 
 The judge is a frontier model that is never a candidate. It sees the question (and its images),
 `## Expected key points`, `## Likely wrong answer` and the answer under test. The model under test never
-sees the key. Rubric and reasons: benchmark/test-design.md, section 14.
+sees the key. Rubric and reasons: benchmark/design.md, section 14.
 """
 import json
 import random

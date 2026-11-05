@@ -1,7 +1,9 @@
 # VM availability
 
 ## Prompt
-A VM is powered on, but Windows inside it has crashed and is stuck on a blue screen. Is the VM available? How would you measure VM availability vs Guest OS availability?
+- A VM is powered on, but Windows inside it has crashed and is stuck on a blue screen.
+
+Is the VM available? How would you measure VM availability vs Guest OS availability?
 
 ## Likely wrong answer
 "No, the VM is down."

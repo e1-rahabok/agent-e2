@@ -28,3 +28,7 @@ avoid_repo_terms:
   '(?i)\b(test|benchmark) cases?\b': 'question'
   '(?i)\bexam questions?\b': 'question'
   'benchmark/cases\b': 'benchmark/questions'
+  '(?i)\b(retrieval|harness-only) test\b': 'retrieval check'
+  '(?i)\b(model|AI) under test\b': 'candidate'
+  '\bTest design\b': 'Benchmark design'
+  'test-design\.md': 'benchmark/design.md'

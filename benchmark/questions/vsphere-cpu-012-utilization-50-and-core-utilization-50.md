@@ -5,10 +5,10 @@ On an ESXi host, CPU Utilization shows 50% and CPU Core Utilization also shows 5
 
 What does it tell you?
 
-A. Severe imbalance. Half the cores run 2 threads; the other half is completely idle.
-B. Ideal scenario. Each core runs 1 thread, so every running vCPU gets a dedicated core.
-C. Nothing. Not enough information to derive any meaningful insight.
-D. This combination is not possible. CPU Utilization is always lower than CPU Core Utilization.
+- A. Severe imbalance. Half the cores run 2 threads; the other half is completely idle.
+- B. Ideal scenario. Each core runs 1 thread, so every running vCPU gets a dedicated core.
+- C. Nothing. Not enough information to derive any meaningful insight.
+- D. This combination is not possible. CPU Utilization is always lower than CPU Core Utilization.
 
 ## Likely wrong answer
 B (equal values read as one thread per core).

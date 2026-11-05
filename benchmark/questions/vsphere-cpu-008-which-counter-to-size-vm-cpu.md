@@ -1,13 +1,16 @@
 # Which counter to size VM CPU
 
 ## Prompt
-A correctly sized VM balances performance, capacity and cost. Choose the most accurate counter from the list. The context is sizing, not performance troubleshooting.
+- A correctly sized VM balances performance, capacity and cost.
+- The context is sizing, not performance troubleshooting.
 
-A. VM CPU Usage (MHz)
-B. VM CPU Usage (%)
-C. VM CPU Demand (MHz)
-D. VM CPU Demand (%)
-E. VM CPU Run - Overlap. In VCF Operations this is CPU Net Run (%).
+Choose the most accurate counter from the list.
+
+- A. VM CPU Usage (MHz)
+- B. VM CPU Usage (%)
+- C. VM CPU Demand (MHz)
+- D. VM CPU Demand (%)
+- E. VM CPU Run - Overlap. In VCF Operations this is CPU Net Run (%).
 
 Hint: since a VM is a motherboard, what you size is the Guest OS, not the VM. You size Windows or Linux, not a piece of hardware.
 

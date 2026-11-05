@@ -1,7 +1,9 @@
 # Provider vs consumer metrics
 
 ## Prompt
-An ESXi host dashboard shows "CPU Ready" and "CPU Demand". For each, is it a provider metric or a sum of the VMs' metrics? Can a physical core itself have Ready time?
+- An ESXi host dashboard shows "CPU Ready" and "CPU Demand".
+
+For each, is it a provider metric or a sum of the VMs' metrics? Can a physical core itself have Ready time?
 
 ## Likely wrong answer
 "Both are the host's own values" — or "Demand comes from the VMs, so ESXi Demand is the sum of VM Demand".

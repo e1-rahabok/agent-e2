@@ -3,11 +3,11 @@
 ## Prompt
 Choose the most accurate counter to rightsize a VM.
 
-A. VM Memory Consumed
-B. VM Memory Active
-C. (VM Memory Consumed + VM Memory Active) / 2
-D. VM Memory Active + Balloon + Swapped + Zipped
-E. Guest OS Memory Used. In some cases, add the cache.
+- A. VM Memory Consumed
+- B. VM Memory Active
+- C. (VM Memory Consumed + VM Memory Active) / 2
+- D. VM Memory Active + Balloon + Swapped + Zipped
+- E. Guest OS Memory Used. In some cases, add the cache.
 
 Hint: think of the VM as a virtual motherboard: a printed circuit board with hardware mounted on it. What you size is the OS running on it.
 

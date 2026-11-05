@@ -21,7 +21,7 @@ META = '\n## Metadata\n```yaml\n'
 UNSURE = 'Unsure: the information available does not settle this question.'
 # Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
 POINTS = {'exact': 1, 'unsure': 0, 'wrong': -1}
-OPTION = re.compile(r'^([A-H])\.\s+(.*)$')
+OPTION = re.compile(r'^(?:[-*]\s+)?([A-H])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
 ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 
 
@@ -50,13 +50,18 @@ class Question:
 
     @staticmethod
     def _split_prompt(prompt):
-        stem, options, footer, state = [], [], [], 'stem'
+        """Stem, options, footer. Options may be bullets and may be separated by blank lines.
+        A line right after an option continues it; after a blank line, a line that is not an option starts the footer."""
+        stem, options, footer, state, blank = [], [], [], 'stem', False
         for line in prompt.split('\n'):
             m = OPTION.match(line.strip())
             if m and state in ('stem', 'opts'):
                 options.append([m.group(1), m.group(2)])
-                state = 'opts'
-            elif state == 'opts' and line.strip() and not line.strip().endswith(':') and not line.lower().startswith('hint'):
+                state, blank = 'opts', False
+            elif state == 'opts' and not line.strip():
+                blank = True
+            elif (state == 'opts' and not blank and not line.strip().endswith(':')
+                  and not line.strip().lower().startswith('hint')):
                 options[-1][1] += ' ' + line.strip()
             elif state == 'stem':
                 stem.append(line)

@@ -30,17 +30,6 @@ Each entry has:
 - Written as now: associated with the VM, flagged as unsure.
 - Answer:
 
-### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
-- Files: `benchmark/questions/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
-- Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
-- Search 2 (quiz): "CPU reservation only comes into play during contention"
-- Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
-- Written as now: reservation in MHz/Hertz (supports D); CPU reservation not sticky, memory reservation sticky (supports C). No file states the cap at base nominal clock speed (A) or that the reservation only matters under contention (B).
-- Note (2026-11-05): the text written here was about case vsphere-cpu-004 (image links missing). Done: the case and the other two cases with attachments now have an `## Attachments` section with image links. Options A and B are still open.
-- Answer: A and B are correct.
-- The justification for A was already in the key itself. ESXi CPU has 3 frequency (base or nominal, all core turbo, and single core turbo). Only the base frequency is used by ESXi logic to guarantee a reservation. This is a conservative design.
-- The justification for A was already in the key itself. It's written "if there is enough for everyone, reservation is irrelevant. Think of a restaurant. If there is enough seat, does your reservation matter if you do not reserve a specific table?"
-
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
 - Files: `benchmark/questions/vsphere-cpu-013-reclaiming-vcpus-from-an-idle-vm.md`; `operations-management/capacity/rightsizing`, `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, `vsphere/technology/cpu/diagnosis/oversized-vm-downsizing`
 - Search (quiz): "Power off the VM, as this also frees the VM memory"
@@ -137,13 +126,25 @@ Each entry has:
 - Answer:
 
 ### Q054 · Benchmark · Mix of the 100 cases by kind
-- Files: `benchmark/test-design.md`, sections 3.2.1, 3.3, 7.4, 13 (https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/test-design.md).
+- Files: `benchmark/design.md`, sections 3.2.1, 3.3, 7.4, 13 (https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md).
 - Search: not from the book.
 - Question: the final score weighs every case the same, so the mix of kinds sets the weight of each sub-score. Is 60 multiple choice, 20 screenshot, 20 conversation the right mix for the 100 cases? Are the screenshot minimums right (5 each from esxtop, vCenter UI, VCF Operations UI; 5 with 2 or more images)?
 - Written as now: the proposal above. Today: 15 multiple choice, 3 screenshot, 10 conversation.
 - Answer:
 
 ## Resolved
+
+### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
+- Files: `benchmark/questions/vsphere-cpu-011-cpu-reservation-behaviour.md`; `vsphere/foundations/resource-controls`, `vsphere/technology/cpu/metrics/host/reserved-capacity`, `vsphere/foundations/overhead`
+- Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
+- Search 2 (quiz): "CPU reservation only comes into play during contention"
+- Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
+- Written as now: reservation in MHz/Hertz (supports D); CPU reservation not sticky, memory reservation sticky (supports C). No file states the cap at base nominal clock speed (A) or that the reservation only matters under contention (B).
+- Note (2026-11-05): the text written here was about case vsphere-cpu-004 (image links missing). Done: the case and the other two cases with attachments now have an `## Attachments` section with image links. Options A and B are still open.
+- Answer: A and B are correct.
+- The justification for A was already in the key itself. ESXi CPU has 3 frequency (base or nominal, all core turbo, and single core turbo). Only the base frequency is used by ESXi logic to guarantee a reservation. This is a conservative design.
+- The justification for A was already in the key itself. It's written "if there is enough for everyone, reservation is irrelevant. Think of a restaurant. If there is enough seat, does your reservation matter if you do not reserve a specific table?"
+- Done 2026-11-05: `vsphere/foundations/resource-controls` (section Reservation: CPU vs memory) and `vsphere/technology/cpu/metrics/host/reserved-capacity` (Meaning, Traps). The second justification line is read as being about B.
 
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
 - Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/technology/cpu/metrics/virtual-motherboard/run`
@@ -168,7 +169,7 @@ Each entry has:
   - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.
   - Test both in one run and compare.
 - Answer: In the auto test, we're testing 3 components as 1 expert (harness + model + knowledge base). So use the knowledge base first and its own knowledge where the knowledge base is silent.
-- Done 2026-11-05: `harness/modes.py` prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated (`benchmark/test-design.md`, both benchmark READMEs, `ARCHITECTURE.md`).
+- Done 2026-11-05: `harness/modes.py` prompts: knowledge base first, it wins on conflict, own knowledge where it is silent and marked in the reason. The Not covered option is removed from the benchmark; docs updated (`benchmark/design.md`, both benchmark READMEs, `ARCHITECTURE.md`).
 
 ### Q040 · Quiz > CPU > Q1 ESXi CPU Utilisation · Which counter is ESXi true utilization
 - Files: `benchmark/questions/vsphere-cpu-004-esxi-true-utilization-from-usage-core-utilization-and-utilization.md`; `vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/usage`

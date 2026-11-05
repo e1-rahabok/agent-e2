@@ -1,7 +1,9 @@
 # Setting a disk latency threshold
 
 ## Prompt
-Microsoft says SQL Server disk latency should consistently stay below 10–15 ms. Should we set a vSphere VM disk latency alert at 15 ms averaged over 5 minutes?
+- Microsoft says SQL Server disk latency should consistently stay below 10–15 ms.
+
+Should we set a vSphere VM disk latency alert at 15 ms averaged over 5 minutes?
 
 ## Likely wrong answer
 "Yes, use 15 ms as the threshold."

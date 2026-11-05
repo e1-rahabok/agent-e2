@@ -48,7 +48,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] After the next benchmark: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
 - [ ] After the next benchmark: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
 - [ ] Add benchmark questions that need the catalog, calculator and object paths (units, statistics levels, summation to %, multi-hop).
-- [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan (benchmark plan done 2026-11-04: `benchmark/test-design.md`).
+- [ ] Merge `project/philosophy-and-structure.md` into `project/solution-design.md`; split `project/design-kb-test-site.md` into harness design and benchmark plan (benchmark plan done 2026-11-04: `benchmark/design.md`).
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
 - [x] vSphere Monitoring and Performance, pp. 2025-2184: extracted 2026-11-03.
@@ -133,7 +133,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Test agentic mode primed with the classic context (first search done, catalog facts included).
 - [ ] After the 100-question run picks model and mode: routine runs use the chosen mode plus baseline only.
 - [ ] Raise retrieval recall (67% hybrid, 12 of 28 questions complete): question understanding and filters, query rewriting with glossary synonyms, smarter link expansion. Measure with `benchmark/runner/retrieval_eval.py`.
-- [ ] Write questions to the blueprint in `benchmark/test-design.md` (areas CPU 25%, memory 25%, storage 20%, network 15%, system 20%; a question may count for several; gaps: network, storage, system, recall, Not covered).
+- [ ] Write questions to the blueprint in `benchmark/design.md` (areas CPU 25%, memory 25%, storage 20%, network 15%, system 20%; a question may count for several; gaps: network, storage, system, recall, Not covered).
 - [ ] Add `technology` (list of areas) and `trap_type` to question metadata and a coverage script that checks the blueprint counts.
 - [ ] Held-out set (about 20%) kept by the author outside the repository; runner option to read questions from another folder.
 - [ ] Add `## Traps` to the 7 metric files that lack it; then make lint require it.

@@ -18,7 +18,7 @@ benchmark/
 
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and areas, so folders cannot hold it. The slices are metadata:
   - `product`: every product the question touches (values from `project/tools/tags.yaml`);
-  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/test-design.md`, section 3.1.
+  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/design.md`, section 3.1.
 - Existing ids keep their old form (`vsphere-cpu-004`); new questions get neutral ids (`question-0031`). An id is an internal key for the runner: the words in an old id (`general`, `foundations`) are not a classification. `area`, `technology` and `pillar` classify the question (author, 2026-11-05).
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
@@ -27,6 +27,7 @@ benchmark/
 
 ## Question fields
 - Each question file: `# Title`, then `## Prompt`, `## Attachments` (when the question has any), `## Likely wrong answer`, `## Expected key points`, and a `## Metadata` section at the end with one yaml block. No front matter at the top.
+- `## Prompt` layout, for the human reviewer: context facts as bullets, one fact per bullet; the question or instruction as its own paragraph; options as a bullet list, `- A. text`. The candidate gets the same text: the runner rebuilds the option list (shuffled, `A. text` per line), and a model reads bullets as well as prose. Consecutive `A. text` lines without bullets render on GitHub as one paragraph.
 - `## Attachments` links every attachment as an image with alt text, so a reviewer sees it on GitHub. It is never sent to the model: the runner sends the files listed in `attachments`.
 - Only `## Prompt` (plus attachments) is ever sent to the AI.
 
@@ -60,19 +61,19 @@ benchmark/
 | Unsure, chosen alone | Unsure (not correct, not wrong) |
 | Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong |
 
-- The model is told that a wrong answer is worse than Unsure. No points and no -1: see `benchmark/test-design.md`, section 7.1.
+- The model is told that a wrong answer is worse than Unsure. No points and no -1: see `benchmark/design.md`, section 7.1.
 - Headline: **Stable correct**, the share of questions answered exactly right in all 5 runs. Target: at least 85%, aim 99% (author, 2026-11-03).
 - Also reported: Luck (right in some runs only), confident-wrong rate, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
-- Reason and design: `benchmark/test-design.md` (blueprint, why 100 questions, scoring, validity threats).
+- Reason and design: `benchmark/design.md` (blueprint, why 100 questions, scoring, validity threats).
 
 ## Free-text and compound scoring (judge, 0-3)
 - The runner sends the prompt (and images) without options, then a judge model scores the answer against `## Expected key points` and `## Likely wrong answer`.
-- Rubric, judge rules and checks: `benchmark/test-design.md`, section 14. Judge model: `benchmark/models.md`.
+- Rubric, judge rules and checks: `benchmark/design.md`, section 14. Judge model: `benchmark/models.md`.
 - Write `## Expected key points` as one testable fact per bullet: the judge scores against them and nothing else.
 - Write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 
 ## Final score
-- One score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. Method: `benchmark/test-design.md`, section 7.4.
+- One score, 0-100%, with sub-scores for multiple choice, screenshot and conversation. Method: `benchmark/design.md`, section 7.4.
 
 ## results.csv columns
 

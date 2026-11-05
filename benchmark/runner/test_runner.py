@@ -47,6 +47,18 @@ class FinalScoreTest(unittest.TestCase):
         self.assertEqual(report.final(rows)[('m', 'classic')]['final'], 1)
 
 
+class PromptSplitTest(unittest.TestCase):
+    def test_bullet_options_and_blank_lines(self):
+        stem, opts, footer = C.Question._split_prompt('- Fact one.\n- Fact two.\n\nChoose:\n\n- A. one\n- B. two\n\n- C. three\n\nHint: x')
+        self.assertEqual([o[0] for o in opts], ['A', 'B', 'C'])
+        self.assertTrue(stem.startswith('- Fact one.'))
+        self.assertEqual(footer, 'Hint: x')
+
+    def test_plain_options_still_parse(self):
+        stem, opts, footer = C.Question._split_prompt('Stem\n\nA. one\nB. two')
+        self.assertEqual([o[1] for o in opts], ['one', 'two'])
+
+
 class OverrideTest(unittest.TestCase):
     def test_trap_with_full_recall_counts(self):
         rows = [{'mode': 'classic', 'retrieval_recall': '1.0', 'trap': '1'},

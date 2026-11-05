@@ -1,7 +1,12 @@
 # Guest queue invisible to the hypervisor
 
 ## Prompt
-Oracle on a Windows VM is slow. Windows shows a high Disk Queue Length. In vCenter, the VM's disk IOPS and disk latency look normal. The storage team says storage is fine, so it is not an infrastructure problem. Is that conclusion valid?
+- Oracle on a Windows VM is slow.
+- Windows shows a high Disk Queue Length.
+- In vCenter, the VM's disk IOPS and disk latency look normal.
+- The storage team says storage is fine, so it is not an infrastructure problem.
+
+Is that conclusion valid?
 
 ## Likely wrong answer
 "Yes, vSphere metrics are normal so the storage path is healthy."

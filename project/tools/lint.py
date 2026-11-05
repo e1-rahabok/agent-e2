@@ -150,7 +150,7 @@ def main():
             bad(f, f'format "{fmt}" must be multiple-choice, free-text or compound')
         if fmt == 'multiple-choice':
             prompt = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
-            letters = set(re.findall(r'^([A-H])\.\s', prompt.group(1), re.M)) if prompt else set()
+            letters = set(re.findall(r'^(?:[-*]\s+)?([A-H])\.\s', prompt.group(1), re.M)) if prompt else set()
             for k in ('answer', 'trap'):
                 for x in fm.get(k) or []:
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')

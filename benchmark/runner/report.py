@@ -150,7 +150,7 @@ def write(run_dir):
           '- Sub-scores: the same mean within one kind. Screenshot = every question with an image, whatever its format. Conversation = free-text and compound questions without images.',
           '- Luck: share of questions whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (free text: judge score 0, not unsure).',
           '- Override: share of answers in knowledge base modes that state the trap although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
-          '- Method: `benchmark/test-design.md`, section 7.4.', '']
+          '- Method: `benchmark/design.md`, section 7.4.', '']
     conv = [r for r in all_scored if not _choice(r)]
     if conv:
         L += ['## Free-text answers (judge)', '', '| Model | Mode | Mean score 0-3 | Score 3 | Score 0 | Trap | Unsure |', '|---|---|---|---|---|---|---|']

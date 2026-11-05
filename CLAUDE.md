@@ -83,7 +83,7 @@ Standing rules for this repository. Read at the start of every session.
 - When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
 
 ## Evaluation
-- Never send `## Expected key points` or `## Likely wrong answer` to the AI under test. Only the judge (`benchmark/runner/judge.py`) reads them.
+- Never send `## Expected key points` or `## Likely wrong answer` to a candidate (the model in the benchmark). Only the judge (`benchmark/runner/judge.py`) reads them.
 - Every candidate model must read screenshots (vision). Models and judge: `benchmark/models.md`.
 - Baseline runs use no knowledge base. Record model and effort in `benchmark/results/results.csv`.
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.

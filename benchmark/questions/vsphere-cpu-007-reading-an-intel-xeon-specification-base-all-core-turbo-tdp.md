@@ -1,15 +1,18 @@
 # Reading an Intel Xeon specification: base, all-core Turbo, TDP
 
 ## Prompt
-Review the attached CPU specification, taken unchanged from the Intel website: Intel Xeon 6 6520P (Granite Rapids). 24 cores, 48 threads, Max Turbo Frequency 4 GHz, All Core Turbo Frequency 3.4 GHz, Processor Base Frequency 2.4 GHz, cache 144 MB, TDP 210 W.
+- Review the attached CPU specification, taken unchanged from the Intel website: Intel Xeon 6 6520P (Granite Rapids).
+- 24 cores, 48 threads, Max Turbo Frequency 4 GHz, All Core Turbo Frequency 3.4 GHz, Processor Base Frequency 2.4 GHz, cache 144 MB, TDP 210 W.
 
-Be aware of the architectural difference between AMD EPYC and Intel Xeon. Choose all the correct statements about the Xeon 6520P:
+- Be aware of the architectural difference between AMD EPYC and Intel Xeon.
 
-A. The nominal clock speed is 2.4 GHz. However, the CPU can run all cores simultaneously at 3.4 GHz.
-B. TDP stands for Total Drawn Power, so the maximum power consumption is 210 W.
-C. The Max Turbo Frequency can only be reached with the High Performance setting. Balanced will not boost to this level.
-D. With BIOS power management set to OS Controlled and ESXi power management set to Balanced, you sacrifice performance to save energy. This applies to all types of workload.
-E. The 3 speeds (2.4, 3.4, 4.0 GHz) require different power: 4 GHz needs more than 210 W, 2.4 GHz less than 210 W.
+Choose all the correct statements about the Xeon 6520P:
+
+- A. The nominal clock speed is 2.4 GHz. However, the CPU can run all cores simultaneously at 3.4 GHz.
+- B. TDP stands for Total Drawn Power, so the maximum power consumption is 210 W.
+- C. The Max Turbo Frequency can only be reached with the High Performance setting. Balanced will not boost to this level.
+- D. With BIOS power management set to OS Controlled and ESXi power management set to Balanced, you sacrifice performance to save energy. This applies to all types of workload.
+- E. The 3 speeds (2.4, 3.4, 4.0 GHz) require different power: 4 GHz needs more than 210 W, 2.4 GHz less than 210 W.
 
 ## Attachments
 ![Intel website specification of the Xeon 6 6520P: cores, threads, base, All Core Turbo and Max Turbo frequency, cache, TDP](vsphere-cpu-007/intel-xeon-6520p-specification.png)
