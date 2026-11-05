@@ -158,7 +158,7 @@ python3 benchmark/runner/retrieval_eval.py
 
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
 - The prompt text must stand alone without the image: the text track sends no image.
-- `tools/lint.py` checks these fields.
+- `project/tools/lint.py` checks these fields.
 
 ## Limits
 - Provider name is recorded when the gateway returns it; the field is not documented as stable.

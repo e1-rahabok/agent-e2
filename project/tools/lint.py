@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Lint knowledge-base files and benchmark cases. Run before every merge: python3 tools/lint.py
+"""Lint knowledge-base files and benchmark cases. Run before every merge: python3 project/tools/lint.py
 Exit code 0 = pass, 1 = problems found. Allowed values come from
-tools/tags.yaml."""
+project/tools/tags.yaml."""
 import glob, os, re, sys, yaml
 
-TERMS = 'tools/tags.yaml'
+HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
+sys.path.insert(0, HARNESS)
+from kb import split  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
+
+TERMS = 'project/tools/tags.yaml'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
             'source', 'corrections', 'review_notes', 'status']
 LIST_FIELDS = ['technology', 'pillar', 'product', 'object', 'instance', 'layer']
@@ -13,17 +17,6 @@ OLD_FIELDS = ['type', 'resources', 'objects', 'derived_from', 'same_name_as', 'k
 
 def load_allowed():
     return yaml.safe_load(open(TERMS))
-
-META = '\n## Metadata\n```yaml\n'
-
-def split(path):
-    """Metadata is the last section of the file: '## Metadata' and one yaml block."""
-    s = open(path).read()
-    i = s.rfind(META)
-    if i < 0 or not s.rstrip().endswith('```'):
-        return None, s
-    head = s[i + len(META):].rstrip().removesuffix('```')
-    return yaml.safe_load(head) or {}, s[:i]
 
 def main():
     allowed = load_allowed()
@@ -282,12 +275,11 @@ def check_catalog(allowed, ids, bodies, bad):
             for l in data.get('layers') or []:
                 if l.get('layer') not in allowed['layer']: bad(path, f'layer "{l.get("layer")}" not allowed')
         else:
-            bad(path, 'unknown catalog file: add its checks to tools/lint.py')
+            bad(path, 'unknown catalog file: add its checks to project/tools/lint.py')
 
 
 def check_flows(docs, bad):
     """Diagnosis files must parse into steps for the flow tool (harness/flows.py); step references must exist."""
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'harness'))
     import flows
 
     class _Doc:

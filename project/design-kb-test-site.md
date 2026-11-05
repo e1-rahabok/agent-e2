@@ -7,7 +7,7 @@ Status: design only. Not built. Not indexed.
 - Let invited visitors ask questions in natural language and judge the answers.
 - Turn every weak answer into a fix: a knowledge gap, a retrieval miss, or a model limit.
 - Product requirements for the shipped assistant (ways to ask, answer UX, dark site): `project/product-requirements.md`.
-- Same contract as `README.md`, section Local LLM use. The site implements that contract; it adds no rules of its own.
+- Same contract as `ARCHITECTURE.md`, section Local LLM use. The site implements that contract; it adds no rules of its own.
 
 ## What "quality" means here
 | Signal | Question it answers | Source |
@@ -41,7 +41,7 @@ flowchart LR
   EVAL[Golden case runner] --> API
   EVAL --> LOG
 ```
-- Indexer: reads `knowledge/**/*.md` except the excluded folders. Uses the repo's own `tools/lint.py` split logic for metadata. Refuses to index if the validator fails.
+- Indexer: reads `knowledge/**/*.md` except the excluded folders. Uses the repo's own `project/tools/lint.py` split logic for metadata. Refuses to index if the validator fails.
 - Retriever: hybrid search (keyword BM25 + vector), filtered by metadata, then link expansion.
 - API service: query pipeline, prompt assembly, streaming answer, logging.
 - LLM: open-weight model via Vercel AI Gateway for the test site. At a customer, the same weights run on their own VM, so no data leaves their environment.
@@ -58,13 +58,13 @@ flowchart LR
 
 ## Query pipeline: classic RAG
 1. Classify the question into one `retriever_guide` value. Small prompt to the same LLM, or keyword rules first.
-2. Extract filters: `product`, `object`, `technology`, `pillar`. Values must match `tools/tags.yaml`.
+2. Extract filters: `product`, `object`, `technology`, `pillar`. Values must match `project/tools/tags.yaml`.
 3. Hybrid search within filters. Fall back to no filter if fewer than N hits.
 4. Expand: `related`, `internal_derive`, `same_name`, `same_meaning`. `same_name` always included (trap guard).
 5. Add matching foundations files when units, sampling, thresholds or provider/consumer apply.
-6. `what-to-check`: retrieve the diagnosis file first; follow README, section Troubleshooting questions.
+6. `what-to-check`: retrieve the diagnosis file first; follow `ARCHITECTURE.md`, section Local LLM use, Troubleshooting questions.
 7. Fit to the context budget. Priority: diagnosis or metric file, its concepts, foundations, other links.
-8. Generate. System prompt = the Answer rules in README. Chunks carry `id` and `status`.
+8. Generate. System prompt = the Answer rules in `ARCHITECTURE.md`, section Local LLM use. Chunks carry `id` and `status`.
 9. Post-check (below).
 10. Return: answer, cited files, images, retrieval trace.
 
@@ -93,7 +93,7 @@ flowchart TD
 - **`search`**
   - Input: query text; optional filters (product, object, technology, pillar, retriever_guide)
   - Output: Top 8 hits: id, title, heading, 2-line snippet, status, score
-  - Rules: Filters must use `tools/tags.yaml` values. Hybrid BM25 + vector.
+  - Rules: Filters must use `project/tools/tags.yaml` values. Hybrid BM25 + vector.
 - **`read_file`**
   - Input: file id; optional heading
   - Output: Body text of the file or one section. No metadata block.
@@ -124,7 +124,7 @@ flowchart TD
   - Rules: For flows or layers that no stored image shows.
 
 ### Loop rules
-- System prompt: the README Answer and Troubleshooting rules, plus the tool list. The model is told it knows nothing about vSphere metrics beyond what tools return.
+- System prompt: the Answer and Troubleshooting rules in `ARCHITECTURE.md`, section Local LLM use, plus the tool list. The model is told it knows nothing about vSphere metrics beyond what tools return.
 - First action is `search` or `catalog`. The answer may use only text returned by `read_file`, `catalog`, `flow` and `calculate`.
 - Units, rollups, statistics levels, thresholds, object relations: `catalog`. Arithmetic and unit conversion: `calculate`.
 - Before answering a metric question, the model must call `follow_links` with `same_name` on the metric file (trap guard).
@@ -186,7 +186,7 @@ Recorded for every answer, shown collapsed on the Ask page, stored in `answers.t
 | Model | Open-weight, Apache 2.0, 8B-32B, at least 16K context. Candidates below. | Must be downloadable and runnable by VMware customers. Pick by golden case score, not by benchmark. |
 | Embeddings | `alibaba/qwen3-embedding-0.6b` via Vercel for the test; same model on CPU at the customer | Small, open, runs without a GPU. |
 | Index and logs | SQLite with a vector extension | About 200 files: no separate vector database needed. One file to back up. |
-| API | Python (FastAPI) | Reuses `tools/lint.py`. Same language as the repo tooling. |
+| API | Python (FastAPI) | Reuses `project/tools/lint.py`. Same language as the repo tooling. |
 | UI | Server-rendered pages with light JavaScript; streaming answers | Few pages, low maintenance. |
 | Hosting (test site) | Vercel: web app, API routes, AI Gateway | No server to run. Index and logs in a hosted database. |
 | Hosting (customer) | One VM with a GPU, or CPU only for the smallest model | The deployment target the scores must predict. |

@@ -1,7 +1,7 @@
 # Architecture
 
 How the model, harness and knowledge work together at run time. Not indexed.
-Design reasons and model size: `project/solution-design.md`. Knowledge capture: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `README.md`. Test design: `benchmark/test-design.md`.
+Design reasons and model size: `project/solution-design.md`. Knowledge capture: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `KNOWLEDGE-ENGINEERING.md`. Test design: `benchmark/test-design.md`.
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
@@ -165,3 +165,46 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 | Screenshot reading | Release 1.1 |
 | Data file parsing | Release 1.2 |
 | Live VCF Operations connection | After 1.0 |
+
+## 10. Local LLM use
+- Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
+- `harness/` implements the steps below (`harness/kb.py`, `harness/retrieval.py`, `harness/modes.py`). They are also the contract for any other RAG stack.
+
+### Ingest
+1. Index `knowledge/**/*.md` except the folders listed in `KNOWLEDGE-ENGINEERING.md`, section Indexing rules.
+2. Split each file at `## Metadata`. Parse the yaml block into filter fields. Do not embed it.
+3. Chunk the body by `##` heading. Files are short, so one file is often one chunk.
+4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.
+5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
+6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
+7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
+
+### Query
+1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, what-to-check.
+2. Extract filters from the question: `product`, `object`, `technology`, `pillar`.
+3. Retrieve by similarity within those filters.
+4. Expand: add files named in `related`, `internal_derive`, `same_name`, `same_meaning`.
+   - `same_name` is the main trap guard: it brings in the other object's meaning of the same label.
+5. Add the matching foundations files when the answer depends on units, sampling, thresholds or the provider/consumer view.
+6. Fit to the context window. Priority: matching metric or diagnosis file, then its concepts, then foundations, then the rest of the links.
+7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.
+
+### Answer
+- Answer from the retrieved text. Prefer mechanism and reason over a definition.
+- Cite each file `id` used.
+- Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
+- Use terms from `knowledge/glossary.md`. Avoid the words in its Words to avoid table.
+- Quote a threshold only when a file states it with its source.
+
+### Troubleshooting questions (`what-to-check`)
+- Retrieve the matching `diagnosis/` file first. Retrieve its `internal_derive` metric files with it.
+- Follow the numbered steps in `## Checks, in order`, from step 1. Do not skip to a later step.
+- At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives.
+- Use the Mermaid flow only to confirm the branch. The numbered steps win if they differ.
+- When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
+- Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
+- No diagnosis file matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
+- Contention before consumption before context, unless the file states another order.
+
+### Measurement
+- `benchmark/` runs the same golden cases with and without the knowledge base. A structure change is kept only when scores improve.

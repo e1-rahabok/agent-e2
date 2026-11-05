@@ -1,7 +1,7 @@
 # Philosophy and structure
 
 Not indexed. Explains design decisions for whoever (AI or human) maintains the repository.
-Conventions (layout, metadata, writing rules) are in the root `README.md`.
+Conventions (layout, metadata, writing rules) are in `KNOWLEDGE-ENGINEERING.md`.
 
 ## Purpose
 - Give an AI assistant Level 400 understanding of vSphere metrics.
@@ -36,7 +36,7 @@ Conventions (layout, metadata, writing rules) are in the root `README.md`.
 | `metrics/<object-folder>/` | One vSphere object type per file. Same label on another object is a different file, linked via `same_name`. Different labels with the same meaning are linked via `same_meaning`. |
 | No `distinctions.md` | Same-name traps live in the metric files they belong to. Groups of metrics live in `metrics/comparisons/`. |
 | Tags for pillar, product, object | Folders give one hierarchy. Tags let the AI slice by the other two angles of the book. |
-| `knowledge/glossary.md` at top level | One glossary for all products. Allowed tag values are machine settings and live in `tools/tags.yaml`. |
+| `knowledge/glossary.md` at top level | One glossary for all products. Allowed tag values are machine settings and live in `project/tools/tags.yaml`. |
 | `vsphere/object-types/` (was `resource-management/`, split 2026-11-04) | Reservation, limit and shares in `vsphere/foundations/`; DRS, admission control, DPM, vCLS in `object-types/cluster/`. |
 | Metadata block at the end of each file | Retrievers filter on it. Reviewers see source, corrections and status in one place. At the end, so the content reads first on GitHub. |
 | `raw-input/` not indexed | Source documents are binary and unstructured. Derived files are what the AI reads. |
@@ -48,7 +48,7 @@ Conventions (layout, metadata, writing rules) are in the root `README.md`.
   - Small files and one fact per line keep each chunk on topic.
   - Links in metadata let the retriever expand from one hit to its traps and mechanisms.
   - Diagrams carry text equivalents, because the model may not read images.
-- Ingest, query and answer steps: root `README.md`, section Local LLM use.
+- Ingest, query and answer steps: `ARCHITECTURE.md`, section Local LLM use.
 
 ## Limitations
 - Converting expert knowledge into files is lossy. Some tacit knowledge is hard to codify.
