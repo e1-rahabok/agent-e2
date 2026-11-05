@@ -1,13 +1,23 @@
-# Cluster Performance (%) (VCF Operations KPI)
+# Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)
+
+## What it is
+- One score per vSphere cluster, 0-100%. 100 is perfect.
+- It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
+- Not built into VCF Operations: it is a metric of the author's vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
+- Use: watch many clusters at once; when the score drops, open the 9 sub-metrics of that cluster.
+- Leading indicator of how close the cluster is to contention: `vsphere/object-types/cluster/metrics/cluster-risk`. Ballooning and swapping are scored there, not here.
 
 ## Design
 - Not the average of VM KPIs. A cluster serves VMs: guest contention matters little to it; ESXi physical network matters to it but not to a VM.
-- Two dimensions: depth (worst VM) and breadth (90th percentile of VMs).
-- Uses 20-second peaks to catch short bursts. Limitation: outliers, for example one VM with a limit in a large cluster. Higher thresholds reduce false positives.
-- Breadth uses the 90th percentile: the average reacts too late; the 95th percentile suffers from host imbalance.
+- Two questions about the powered-on VMs of the cluster:
+  - How deep? The worst VM. Shows a problem that hits one VM hard.
+  - How broad? The 90th percentile across the VMs. Shows a problem that many VMs have.
 - Aggregate directly from VMs, not from hosts first: two-level aggregation misrepresents the VM population. Drill to hosts only when troubleshooting.
+- Breadth uses the 90th percentile: the average reacts too late; the 95th percentile suffers from host imbalance.
+- VM stats are 20-second peaks, not 5-minute averages, to catch short bursts. That makes the KPI a leading indicator. Limitation: outliers, for example one VM with a limit in a large cluster; the worst-VM rows have higher limits than the 90th-percentile rows for that reason.
+- One ESXi row: the physical network matters to the cluster, not to a VM.
 
-## Thresholds (book)
+## Thresholds
 | Dimension | Metric | Green | Yellow | Orange | Red |
 |---|---|---|---|---|---|
 | Depth | Worst peak vCPU Ready among all VMs (%) | 0-4 | 4-8 | 8-16 | 16-32 |
@@ -18,37 +28,61 @@
 | Breadth | 90th percentile peak vCPU Co-stop among VMs (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
 | Breadth | 90th percentile memory latency among VMs (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
 | Breadth | 90th percentile read/write latency among VM virtual disks (ms) | 0-20 | 20-40 | 40-60 | 60-80 |
-| ESXi | Highest ESXi (error + dropped) network packets (%) | 0 | below 0.2 | 0.2-0.4 | 0.4-0.8 |
+| ESXi | Highest ESXi (error + dropped) network packets (%) | Excluded | 0-0.2 | 0.2-0.4 | 0.4-0.8 |
 
-![Cluster Performance thresholds](../images/cluster-performance-thresholds-table.png)
+![Cluster Performance thresholds: 9 sub-metrics in How Deep, How Broad and ESXi groups, with green, yellow, orange and red ranges](../images/cluster-performance-thresholds-table.png)
+
+- The red range ends where the sub-metric scores 0.
+- Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100 that hides the other rows. Any bad packet is yellow and counts.
+
+## How each sub-metric is calculated
+| Sub-metric | Source (VCF Operations) |
+|---|---|
+| Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` |
+| Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` |
+| Memory latency (worst, 90th percentile) | VM `mem\|20_sec_peak_host_contentionPct` |
+| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` |
+| Bad network packets | Per host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle; the highest host |
+
+- VMs counted: powered-on VMs on the cluster's hosts. A powered-off VM is left out: its last stats are old.
+- 90th percentile: sort the VMs; take the one at position 90% of the count, rounded up. With fewer than 10 VMs it equals the worst VM.
+- Bad packets are never averaged or summed over a longer time: that hides a spike. Packets Received and Transmitted totals are deactivated by default in VCF Operations; activate them in the policy first.
+- One VM with 200 ms disk latency and the others at 0: the worst-VM row is orange to red; the 90th percentile stays 0. One VM is not a broad problem.
+
+## Scoring
+- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `operations-management/performance/performance-kpi-design`, section Scoring.
+- Worked example: 8 sub-metrics at 0 (bad packets excluded), except 90th percentile Ready = 5% (a quarter into red). That row scores 18.75 with weight about 9.51. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2. A plain average gives about 89.8 and hides the problem.
+- Missing data: a sub-metric with no data, or data older than 10 minutes, is left out. It is never counted as 0, because 0 means perfect. With no sub-metric data, the KPI is not published.
 
 ## Threshold reasons (book text)
 - Co-stop, Overlap and Other Wait have the same VM impact as Ready, but practically lower values. The same range would inflate the score.
 - Dropped and error packets are rare. Take the worst host, not a sum (a sum becomes an average). Low threshold, as many hosts have 25 Gb NICs.
-- Ballooning does not impact performance: 4x the threshold of zipped + swapped (possibly 6x). Large clusters matter: 4% ballooned of 20 TB is 800 GB.
-- Ballooned, swapped and zipped are sticky (can be historical) and get higher thresholds.
-- vMotion is a leading indicator that the cluster struggles: example 26 of 488 VMs (5.3%) moved, and Ready and Co-stop rose slightly.
+
+## vMotion is not part of the KPI
+- The vMotion counter counts migrations. It does not measure the downtime of each one.
+- In a healthy environment each vMotion stuns the VM for less than 0.2 seconds, which the Guest OS does not notice.
+- Monitor vMotion separately, with the other broad infrastructure capabilities: NSX Edge, vSAN resync, the physical network.
+- For vMotion, track the maximum stun time across all vMotions in the whole environment. A rising maximum is a leading indicator of performance degradation.
 
 ## Not used
 | Metric | Reason |
 |---|---|
 | % VMs with CPU Ready > 1%, % VMs with memory contention > 0% | Same purpose as the percentile. |
 | VM utilization | Irrelevant. Use host metrics. |
-| ESXi Consumed | Higher consumed is better. Use balloon, swapped, compressed as secondary KPI. |
-| ESXi CPU utilization | Does not impact performance. If used, take the highest host, not the average. |
+| ESXi Consumed | Higher consumed is better. Ballooned and swapped + compressed are in Cluster Risk. |
+| ESXi CPU utilization | Does not impact performance. Highest host thread utilization is in Cluster Risk. |
 | VM DRS Score | About demand, not contention. Example: 23 VMs on a host; 15 low-memory VMs scored 68, 8 high-memory VMs scored below 25, at 117% memory over-provisioning. Cluster DRS score is a weighted average of VM DRS scores. |
-| Disk latency | Storage troubleshooting differs from compute (exception: HCI). |
 | % VMs facing disk latency | Belongs to the datastore KPI. |
 | CPU Other Wait | False positives seen. |
 | CPU Overlap | Values so low they could mask other problems. |
 | Storage bus resets and aborts | - |
-
-## Implementation
-- Super metrics: average or maximum over the cluster's hosts or VMs.
-- Future: esxtop-only metrics (for example VM local:remote memory ratio) are not in the vCenter API; two-level roll-up under evaluation.
+| vMotion count | Counts migrations, not downtime. See section vMotion is not part of the KPI. |
 
 ## Traps
-- "Cluster KPI = average VM KPI" → different purpose and metrics.
+- "Cluster KPI = average VM KPI" → different purpose and metrics: depth and breadth across VMs, plus the host network.
+- "Cluster Performance is green, so no VM suffers" → the worst-VM rows tolerate more than the percentile rows; open the sub-metrics.
+- "Many vMotions lowered Cluster Performance" → vMotion is not in the KPI; check the maximum stun time instead.
+- "No bad packets scores 100 and lifts the KPI" → while exactly 0 the row is excluded.
 
 ## Metadata
 ```yaml
@@ -83,10 +117,12 @@ images:
     metric: ['Cluster Performance']
     image_type: table
 source:
-  document: PART 3 - Counters.docx
-  path: Provider Objects > Performance > Cluster Performance (%)
-corrections: []
+  document: VCF-vCommunity-Adapter documentation, Cluster Performance KPI (author, 2026-11-05); PART 3 - Counters.docx for the design and threshold reasons
+  path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md; formula/cluster-performance.png; Provider Objects > Performance > Cluster Performance (%)
+corrections:
+- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated (author, Q031, 2026-11-05). Current source is the adapter documentation: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
+- 'Section ''vMotion is not part of the KPI'': author answer Q030 (2026-11-05); the book text says both included and not included.'
 review_notes:
-- 'Sections ''Thresholds'' and ''Not used'': the table includes disk latency, which the text lists as not used; the text describes balloon and vMotion thresholds that are not in the table; the text says green is not set to 0 for packets, the table shows 0%. Open questions in project/author-questions.md.'
+- 'Sections ''Design'', ''Threshold reasons'' and ''Not used'' still come from the book; the author said the book text is outdated (Q031). Rows that conflict with the adapter documentation were removed (disk latency, balloon reason).'
 status: draft
 ```

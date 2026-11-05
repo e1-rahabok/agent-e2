@@ -45,9 +45,21 @@ VM DRS score = Performance Goodness × 0.8 / CPU Demand
 
 ## Scoring
 - Each metric maps to a score: green 100-75, yellow 75-50, orange 50-25, red 25-0.
-- Within a range the value is prorated: value / range size × 25, subtracted from the range's starting score.
-- Weights: green 1x, yellow 2x, orange 4x, red 8x. The weighted values are normalized afterwards. Worse ranges count more.
-- Red uses min() so very large values score 0, not negative. Example: CPU Ready above 16% scores 0.
+- Five limits per metric: the values where the score is 100, 75, 50, 25 and 0. Inside a range the score falls in a straight line. Past the 0 limit it stays 0; before the best limit it stays 100.
+- Combine as a weighted average where a worse score weighs more:
+
+```text
+KPI = sum(score × weight) / sum(weight)
+weight = 2 ^ ((100 - score) / 25)
+```
+
+- The weight is 1 at score 100, 2 at 75, 4 at 50, 8 at 25 and 16 at 0, and changes smoothly in between, so the KPI does not jump when a value crosses a range limit. The earlier weights were one step per range (1x, 2x, 4x, 8x).
+- Reason: with a plain average one red metric among nine healthy ones is hidden. Nine at 100 and one at 18.75: plain average about 91.9; weighted (9 × 100 + 18.75 × 9.51) / (9 + 9.51) ≈ 58.3.
+- Values are rounded to two decimals before scoring, so the KPI matches the numbers the user sees.
+- Green given as a single value (for example 0%): only that value scores 100; any other value starts in yellow at 75.
+- Excluded green: a metric whose green range says nothing about health (rare dropped packets, low utilization) is left out of the KPI while green, so it does not add a free 100. Once it leaves green it counts. If every metric with data is excluded, the KPI is 100.
+- Missing data: a metric with no data is left out, never counted as 0, because 0 usually means perfect. With no data at all, the KPI is not published.
+- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: `vsphere/object-types/cluster/metrics/cluster-risk`, section Known limitation.
 - CPU Net Run is special: green is 60-95%. Below 60% scores 100: max(Run - 60, 0).
 - Guest OS Free Memory is descending: more is better. Above 512 MB scores 100. KB is converted to MB.
 - Free Memory uses the 5-minute average, not the lowest 20-second value: it measures space, and the latest value matters.
@@ -90,7 +102,8 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > Approach; Metrics Not Used; Implementation'
-corrections: []
+corrections:
+- 'Section ''Scoring'': weights and the Excluded, single-value green, rounding and missing-data rules from the author''s vCommunity adapter documentation (https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/concepts/kpi-scoring-models.md, 2026-11-05). The book gives step weights 1x, 2x, 4x, 8x.'
 review_notes:
 - 'VM DRS Score blog from the book: https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html (vSphere 7; not read).'
 status: draft

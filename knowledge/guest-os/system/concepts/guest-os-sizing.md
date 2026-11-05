@@ -69,6 +69,8 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 ## Memory
 - Memory is cache. Unused memory is waste: aim high, with a narrow green band.
 - The book recommends option 2 of two range schemes: wide grey (waste) zone, then a narrow green band near the top.
+- Option 2 boundaries (author): 0-75%, 75-85%, 85-95%, 95-100%. Below 75% is waste. Windows and Linux cache memory, so a high value is normal.
+- Option 1 (not recommended): waste below 50%, risk above 75%.
 - Applications touch only part of their working set; the rest becomes cache. Active + cache above 95% is fine.
 - ESXi waits until about 99% before ballooning. Windows and Linux also cache.
 ![Two memory utilization range schemes](../images/memory-utilization-range-two-schemes.png)
@@ -77,7 +79,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 |---|---|
 | Include cache | Sizing on in-use only leaves no cache or free memory: the guest pages out. Name the result Needed Memory, not Demand. How much cache to include is open. |
 | Exclude page file | Too conservative: In Use already contains cache. Proactive page-in (memory-mapped files) makes unmet demand impossible to isolate. |
-| Exclude balloon | It inflates In Use when taken from free pages. |
+| Include balloon | Conservative. A ballooned page taken from a free guest page is not demand; one taken from a used page is. The two cannot be told apart, so include it. |
 | No fallback to VM metrics | Inaccurate for the guest. |
 | Exclude latency | Memory contention measures speed; sizing measures space. |
 
@@ -127,11 +129,12 @@ images:
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
-corrections: []
+corrections:
+- 'Section ''Memory'': balloon is included, to be conservative (author answer Q028, 2026-11-05); the book text says exclude.'
+- 'Section ''Memory'': option 2 boundaries 0-75-85-95-100% (author answer Q029, 2026-11-05); the book gives no numbers for option 2.'
 review_notes:
 - "Section 'No such thing as VM rightsizing': from the author's other book, section VM Footprint | Guest OS Sizing (screenshot provided 2026-11-03). Author: VM rightsizing is a common misconception; the full book will be provided later."
-- 'Section ''Memory'': the book''s text describes waste below 50% and risk above 75%, while its recommended option 2 shows green starting near 75%. Open question in project/author-questions.md.'
-- 'Section ''Memory'': the book''s sizing table marks Ballooned as included, while the text says exclude balloon. Open question in project/author-questions.md.'
+- 'Section ''Memory'': which colour each option 2 range takes (the image shows green, yellow, orange and red above the grey zone; the author gave four ranges) is a follow-up, Q055 in project/author-questions.md.'
 - 'References from the book: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html (not read).'
 status: draft
 ```

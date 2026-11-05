@@ -318,20 +318,20 @@ rows:
   operator: '>'
   value: 50
   unit: '% of physical cores (not threads)'
-  meaning: Monster VM (book recommendation).
-  source: book
+  meaning: Monster VM (vCommunity adapter default, author 2026-11-05). Cores, not threads.
+  source: author
   kb: vsphere/object-types/cluster/metrics/cluster-risk
-  quote: '| CPU | More than 50% of physical cores (not threads) |'
+  quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
 - id: monster-vm-memory
   metric: VM memory relative to host physical RAM
   object: VirtualMachine
   operator: '>'
   value: 40
-  unit: '% of physical RAM, or 256 GB'
-  meaning: Monster VM (book recommendation). DIMM only, excluding memory tiering.
-  source: book
+  unit: '% of host DRAM, or 256 GB, whichever is smaller'
+  meaning: Monster VM (vCommunity adapter default, author 2026-11-05). DRAM only; NVMe tiering does not count.
+  source: author
   kb: vsphere/object-types/cluster/metrics/cluster-risk
-  quote: '| Memory | More than 40% of physical RAM, or 256 GB.'
+  quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
 - id: windows-committed
   metric: Windows % Committed
   layer: guest-os

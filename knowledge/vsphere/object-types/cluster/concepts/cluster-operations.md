@@ -35,7 +35,7 @@
 | Utilization, inter-host | See `vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`. |
 | Utilization, intra-host | Report at cluster level as the highest among hosts. |
 | Overcommit | Running VM vCPU : ESXi usable threads differs between hosts. High overcommit is fine at low utilization. CPU is riskier than memory: more volatile. |
-| Monster VM | Concentration of monster VMs on one host raises contention risk. Threshold depends on NUMA and hypervisor overhead. A VM with vCPU above 45% of the host's threads: two such VMs rarely run at once, since vSAN, NSX and VMkernel also demand CPU time. |
+| Monster VM | Concentration of monster VMs on one host raises contention risk. A monster VM has more than 50% of the host's physical cores (not threads), or more than 40% of its DRAM or 256 GB, whichever is smaller. Two such VMs rarely get runtime at once, since vSAN, NSX and VMkernel also demand CPU time. Definition: `vsphere/object-types/cluster/metrics/cluster-risk`, section Monster VM. |
 
 ## Traps
 - "Cluster utilization = average of hosts tells the story" → imbalance hides behind the average.
@@ -67,7 +67,8 @@ related:
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Overview > vSphere Cluster; Imbalance
-corrections: []
+corrections:
+- 'Monster VM row: the book said above 45% of the host''s threads. Superseded by the adapter definition (author, Q032, 2026-11-05).'
 review_notes: []
 status: draft
 ```

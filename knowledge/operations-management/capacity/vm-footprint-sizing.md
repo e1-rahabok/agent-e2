@@ -1,7 +1,9 @@
 # VM footprint sizing
 
 ## Purpose
-- Size what the VM costs the underlying platform, for example to place or migrate it.
+- Size what the VM costs the underlying ESXi: its footprint.
+- A narrow use case: useful mainly when the VM migrates to a different ESXi host or cluster.
+- For the usual sizing question (how many vCPU and how much memory the workload demands), size the Guest OS (Windows or Linux) instead: `guest-os/system/concepts/guest-os-sizing`.
 
 - One of two sizing jobs. The other is Guest OS sizing (Windows or Linux demand). There is no single "VM rightsizing": see `guest-os/system/concepts/guest-os-sizing`, section No such thing as VM rightsizing.
 - Examples: migration to faster or slower CPUs, VMFS to vSAN (FTT policy), thin to thick disks.
@@ -16,8 +18,10 @@
 | Exclude Guest OS queue | Transparent to the VM. |
 
 ```text
-VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System / 20,000
+VM CPU Needed = (Sum over all vCPUs of (Used + Overlap + Co-stop + Ready + Other Wait) + System) / 20,000 × vCPU
 ```
+- The per-vCPU states are summed first; System is added once, at VM level. System is charged to the VM, not to any vCPU, so it is not counted twice.
+- 20,000 is the 20-second real-time sample in milliseconds: the summation counters are in ms per sample.
 - Express in GHz (utilization model) and vCPU (allocation model).
 - GHz: multiply by the nominal (static) clock speed. Required when migrating to hosts with a different clock speed.
 - CPU generation and speed (for example SPEC CPU 2017) can refine sizing. Risk: an application that prefers many slow threads may perform worse with fewer, faster vCPUs.
@@ -59,8 +63,9 @@ related:
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > VM Footprint'
-corrections: []
+corrections:
+- 'Sections ''Purpose'' and ''CPU'': formula grouping and the narrow use case from the author answer Q027 (2026-11-05). The book prints System / 20,000 without the grouping.'
 review_notes:
-- 'Section ''CPU'': the formula''s grouping is unclear (System / 20,000 or the whole sum / 20,000), and VM-level Used already includes System. Open question in project/author-questions.md.'
+- 'Section ''CPU'': whether the result is in vCPUs or in % of the VM is open: dividing the sum of all vCPUs by 20,000 already gives vCPUs, and × vCPU would multiply again. Follow-up question Q055 in project/author-questions.md.'
 status: draft
 ```

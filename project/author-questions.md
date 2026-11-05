@@ -30,61 +30,6 @@ Each entry has:
 - Written as now: associated with the VM, flagged as unsure.
 - Answer:
 
-### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
-- Files: `operations-management/capacity/vm-footprint-sizing`
-- Search: "VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System"
-- Question: is the whole sum divided by 20,000, or only System? VM-level Used already includes System (Chapter 2 VM, Used formula). Is System counted twice?
-- Written as now: formula copied as is, flagged.
-- Answer: VM CPU Needed = (Sum of all vCPU (Used + Overlap + Co-stop + Ready + Other Wait) + System ) / 20000 * vCPU
-Emphasize that this is a narrow use case, as it's about the footprint of the VM on the underlying ESXi. This is only useful in VM migration to a different ESXi. What's more relevant in the Guest OS (Windows or Linux) capacity sizing. 
-
-
-### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
-- Files: `guest-os/system/concepts/guest-os-sizing`
-- Search: "Exclude balloon"
-- Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
-- Written as now: exclude, flagged.
-- Answer: include. It is hard to know if the page used by balloon was a free page or not. 
-If it’s from free page, then exclude. 
-If it’s from non-free page, then include. 
-To be conservative, I recommend include.
-
-
-### Q029 · Consumer Objects > Capacity · Memory utilization ranges
-- Files: `guest-os/system/concepts/guest-os-sizing`
-- Search: "The company is wasting money if the utilization falls below 50%"
-- Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
-- Written as now: bar 2 recommended, no numbers stated.
-- Answer: I’d recommend 0 - 75% - 85% – 95% - 100% as Windows and Linux tend to cache memory.
-
-### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
-- Files: `vsphere/object-types/cluster/metrics/cluster-performance`
-- Search 1: "vMotion is not included as it only becomes an issue"
-- Search 2: "vMotion is included as it does impact the VM performance"
-- Question: is vMotion part of the cluster KPI or not? The threshold table has no vMotion row.
-- Written as now: vMotion described as a leading indicator, flagged.
-- Answer: vMotion should not be included in actual performance as the metric counts the number of vmotion, not the length of the actual downtime. In a healthy environment, each vMotion down time is below 0.2 second and does not impact the Guest OS. Broadbase infrastructure capabilities like vMotion, NSX Edge, vSAN resync and general infrastructure (e.g. network) should be monitored separately. For example, track the maximum downtime for all vMotion across entire environment as a high downtime is a leading indicator of performance degradation.
-
-### Q031 · Provider Objects > Performance · Cluster KPI table vs text
-- Files: `vsphere/object-types/cluster/metrics/cluster-performance`
-- Search 1: "Storage troubleshooting differs to compute troubleshooting" (disk latency listed as not used)
-- Search 2: "That’s why it’s given 4x the threshold of zipped + swapped" (balloon thresholds)
-- Search 3: "I did not set green = 0"
-- Question: the table includes disk latency rows, has no balloon or swapped rows, and sets packet green to 0%. Is the table or the text current?
-- Written as now: the table, with text reasons listed and the conflict flagged.
-- Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly.
-Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
-
-### Q032 · Provider Objects > Other Metrics · Monster VM threshold
-- Files: `vsphere/object-types/cluster/metrics/cluster-risk`, `vsphere/object-types/cluster/concepts/cluster-operations`
-- Search 1 (Overview): "If a VM vCPU > 45% of the ESXi count of threads"
-- Search 2 (Monster VM): "if a VM vCPU size is > 40% of the ESXi count of threads"
-- Search 3 (Cluster Risk): "the VM size needs to be at least half the ESXi"
-- Search 4 (recommendation): "Monster VM > 50% of physical core, not thread"
-- Question: which CPU threshold defines a monster VM?
-- Written as now: the recommendation (above 50% of physical cores); the others flagged.
-- Answer: The final and up to date answer at https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md#when-a-vm-is-a-monster  Update the 
-
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
 - Files: `guest-os/cpu/concepts/windows-cpu-scheduling`, `vsphere/technology/cpu/metrics/virtual-motherboard/run`
 - Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
@@ -226,7 +171,74 @@ Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahab
 - Written as now: the proposal above. Today: 15 multiple choice, 3 screenshot, 10 conversation.
 - Answer:
 
+### Q055 · Follow-ups to Q027 and Q029
+- Files: `operations-management/capacity/vm-footprint-sizing` (section CPU), `guest-os/system/concepts/guest-os-sizing` (section Memory).
+- Search: not from the book; from your answers to Q027 and Q029.
+- Question 1 (Q027): the formula ends with "/ 20000 * vCPU". The sum over all vCPUs divided by 20,000 already gives the footprint in vCPUs (2 vCPUs each fully busy: 40,000 / 20,000 = 2). Is the result meant in vCPUs, so "× vCPU" is not needed, or in % of the VM, so the division is by (20,000 × vCPU)?
+- Question 2 (Q029): option 2 has four ranges, 0-75, 75-85, 85-95, 95-100%. The image shows grey, green, yellow, orange and red. Is it grey (waste) below 75, green 75-85, yellow 85-95, red 95-100?
+- Written as now: Q027 formula as you wrote it, with this question in review_notes. Q029 boundaries only, no colours.
+- Answer:
+
 ## Resolved
+
+### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
+- Files: `operations-management/capacity/vm-footprint-sizing`
+- Search: "VM CPU Needed = (Used + Overlap + Co-stop + Ready + Other Wait) + System"
+- Question: is the whole sum divided by 20,000, or only System? VM-level Used already includes System (Chapter 2 VM, Used formula). Is System counted twice?
+- Written as now: formula copied as is, flagged.
+- Answer: VM CPU Needed = (Sum of all vCPU (Used + Overlap + Co-stop + Ready + Other Wait) + System ) / 20000 * vCPU
+Emphasize that this is a narrow use case, as it's about the footprint of the VM on the underlying ESXi. This is only useful in VM migration to a different ESXi. What's more relevant in the Guest OS (Windows or Linux) capacity sizing.
+- Done 2026-11-05: `operations-management/capacity/vm-footprint-sizing` (formula grouping, narrow use case, pointer to Guest OS sizing). Follow-up on the unit of the result: Q055.
+
+### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
+- Files: `guest-os/system/concepts/guest-os-sizing`
+- Search: "Exclude balloon"
+- Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
+- Written as now: exclude, flagged.
+- Answer: include. It is hard to know if the page used by balloon was a free page or not. 
+If it’s from free page, then exclude. 
+If it’s from non-free page, then include. 
+To be conservative, I recommend include.
+- Done 2026-11-05: `guest-os/system/concepts/guest-os-sizing`, rule changed to Include balloon, with the reason.
+
+### Q029 · Consumer Objects > Capacity · Memory utilization ranges
+- Files: `guest-os/system/concepts/guest-os-sizing`
+- Search: "The company is wasting money if the utilization falls below 50%"
+- Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
+- Written as now: bar 2 recommended, no numbers stated.
+- Answer: I’d recommend 0 - 75% - 85% – 95% - 100% as Windows and Linux tend to cache memory.
+- Done 2026-11-05: `guest-os/system/concepts/guest-os-sizing`, option 2 boundaries added. Follow-up on the colour of each range: Q055.
+
+### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
+- Files: `vsphere/object-types/cluster/metrics/cluster-performance`
+- Search 1: "vMotion is not included as it only becomes an issue"
+- Search 2: "vMotion is included as it does impact the VM performance"
+- Question: is vMotion part of the cluster KPI or not? The threshold table has no vMotion row.
+- Written as now: vMotion described as a leading indicator, flagged.
+- Answer: vMotion should not be included in actual performance as the metric counts the number of vmotion, not the length of the actual downtime. In a healthy environment, each vMotion down time is below 0.2 second and does not impact the Guest OS. Broadbase infrastructure capabilities like vMotion, NSX Edge, vSAN resync and general infrastructure (e.g. network) should be monitored separately. For example, track the maximum downtime for all vMotion across entire environment as a high downtime is a leading indicator of performance degradation.
+- Done 2026-11-05: `vsphere/object-types/cluster/metrics/cluster-performance`, section vMotion is not part of the KPI; `cluster-risk`, section Not used.
+
+### Q031 · Provider Objects > Performance · Cluster KPI table vs text
+- Files: `vsphere/object-types/cluster/metrics/cluster-performance`
+- Search 1: "Storage troubleshooting differs to compute troubleshooting" (disk latency listed as not used)
+- Search 2: "That’s why it’s given 4x the threshold of zipped + swapped" (balloon thresholds)
+- Search 3: "I did not set green = 0"
+- Question: the table includes disk latency rows, has no balloon or swapped rows, and sets packet green to 0%. Is the table or the text current?
+- Written as now: the table, with text reasons listed and the conflict flagged.
+- Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly.
+Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
+- Done 2026-11-05: `vsphere/object-types/cluster/metrics/cluster-performance` and `cluster-risk` rewritten from the adapter documentation (thresholds, calculation, DRAM-only memory, scoring, Excluded rows, known limitation, missing data); both threshold images replaced with the current tables; shared scoring rule updated in `operations-management/performance/performance-kpi-design`.
+
+### Q032 · Provider Objects > Other Metrics · Monster VM threshold
+- Files: `vsphere/object-types/cluster/metrics/cluster-risk`, `vsphere/object-types/cluster/concepts/cluster-operations`
+- Search 1 (Overview): "If a VM vCPU > 45% of the ESXi count of threads"
+- Search 2 (Monster VM): "if a VM vCPU size is > 40% of the ESXi count of threads"
+- Search 3 (Cluster Risk): "the VM size needs to be at least half the ESXi"
+- Search 4 (recommendation): "Monster VM > 50% of physical core, not thread"
+- Question: which CPU threshold defines a monster VM?
+- Written as now: the recommendation (above 50% of physical cores); the others flagged.
+- Answer: The final and up to date answer at https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md#when-a-vm-is-a-monster  Update the
+- Done 2026-11-05: `vsphere/object-types/cluster/metrics/cluster-risk`, section Monster VM; `cluster-operations` Monster VM row; `knowledge/catalog/thresholds.yaml` rows monster-vm-cpu and monster-vm-memory.
 
 ### Q024 · Chapter 5 Network > Architecture · VM and ingress
 - Files: `vsphere/technology/network/concepts/network-observability`
