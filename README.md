@@ -25,17 +25,17 @@
 **Business problem:**
 - Many private cloud customers cannot send operational data to a cloud AI service: regulated industries, government and defence, and dark sites with no Internet at all.
 - Others can use cloud AI but must contain its cost: per-token fees grow with every question, user and automated check.
-- Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers sound expert and are often wrong at Level 400.
+- Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers $\color{red}{\text{sound expert}}$ and are often wrong at Level 400. 
 
 **Mission:**
 - An open-weight model, running offline on one GPU (dark site, no Internet), answersing Level 400 private cloud management questions better than frontier models.
 
 ## Why it is possible
-- A frontier model wins on memorised breadth. In one narrow domain, retrieval supplies the knowledge, and what remains is reading a few files and applying their rules. Current 27-32B open models are close to frontier models at that.
-- The frontier model memorised the Internet's misconceptions ("Ready above 5% is bad", "the VM is the Guest OS"). The knowledge base holds the author's corrections. Measured: the frontier model without it gave the trap answer on 16% of answers.
+- A frontier model wins on memorised breadth. In one *narrow* domain, retrieval supplies the knowledge, and what remains is reading a few files and applying their rules. Current 27-32B open models are close to frontier models at that.
+- The frontier model memorised the Internet's misconceptions ("Ready above 5% is bad", "the VM is the Guest OS"). The knowledge base holds the author's corrections. Measured: the frontier model without it gave the trap answer on 16% of answers. 
 - The knowledge base is current (vSphere 9.1, VCF 9.1.1); training data lags.
 - Exact work moves out of the model: a catalog returns units, rollups and thresholds; a calculator does the arithmetic; a flow executor keeps the order of checks.
-- The knowledge is written for a small reader: one fact per bullet, one object per file, traps linked to the metric they belong to.
+- The knowledge is written for VMware Administrators and Architects: one fact per bullet, one object per file, traps linked to the metric they belong to.
 - Argument, risks and what would prove it wrong: [DESIGN.md](DESIGN.md).
 
 ## The system
