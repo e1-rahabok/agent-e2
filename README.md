@@ -99,11 +99,13 @@ flowchart LR
 | [harness/README.md](harness/README.md) | What each harness part does for an expert answer; modules |
 | [benchmark/design.md](benchmark/design.md) | How the benchmark proves the claim; final score |
 | [benchmark/models.md](benchmark/models.md) | Which frozen model to ship; frontier reference; judge |
+| [benchmark/live-test.md](benchmark/live-test.md) | The system deployed on an offline model: setup, steps, pass criteria |
+| [project/plan.md](project/plan.md) | Milestones, decisions, open work |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 
 ## Status
 - Goal not achieved yet: best small model 58% vs frontier 75% on the first 17 questions.
-- Findings and decisions: `project/review-2026-11-04.md`.
+- Plan, milestones and decisions: `project/plan.md`. Latest review: `project/review-2026-11-06.md`.
 
 ## Checks
 

@@ -145,9 +145,13 @@ class ModesTest(unittest.TestCase):
         self.assertFalse(fb)
 
     def test_classic_context_has_catalog_facts(self):
+        # The mechanism, not the ranking: when the Ready file is retrieved, its catalog facts lead the context.
         ret = Retriever(DOCS, CHUNKS)
+        ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
+        ret.search = lambda q, k=8, filters=None: [{'id': ready, 'title': DOCS[ready].title, 'score': 1.0}]
         ctx, used, _ = modes.classic_context(ret, 'What is the rollup and statistics level of VM CPU Ready?', self.CFG)
-        self.assertIn('Catalog facts', ctx)
+        self.assertIn(ready, used)
+        self.assertTrue(ctx.startswith('Catalog facts'))
 
     def test_repair_turn_on_hedge(self):
         class Hedger(MockClient):

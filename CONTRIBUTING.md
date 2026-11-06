@@ -6,7 +6,7 @@ How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
 | What | Where |
 |---|---|
 | Questions waiting for the author | [project/author-questions.md](project/author-questions.md) |
-| Open work | [project/todo.md](project/todo.md) |
+| Open work | [project/plan.md](project/plan.md) |
 | How the system works | [ARCHITECTURE.md](ARCHITECTURE.md) |
 | How knowledge is captured | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) |
 | How the benchmark proves the system | [benchmark/design.md](benchmark/design.md) |

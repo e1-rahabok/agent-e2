@@ -206,7 +206,7 @@ source:
   path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture (pp. 77-78) > Impacts on VM (from former vsphere/technology/cpu/concepts/cpu-frequency)
 corrections: []
 review_notes:
-- 'Section ''Impacts on ESXi'': author (2026-11-02): the table shows actual values. The Usage (%) metric is capped at 100%. The book''s ''My Recommendation'' column (a single-counter recommendation) is left out until later; see project/todo.md.'
+- 'Section ''Impacts on ESXi'': author (2026-11-02): the table shows actual values. The Usage (%) metric is capped at 100%. The book''s ''My Recommendation'' column (a single-counter recommendation) is left out until later; see project/plan.md.'
 - 'Section ''Turbo'': whitepaper ''Host Power Management in VMware vSphere 7.0'' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices.'
 - 'Section ''Turbo'': %A/MPERF is the esxtop ratio of actual to nominal frequency (APERF/MPERF registers). From Claude''s own knowledge.'
 - 'Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q are from the book. Not checked against vendor pages.'

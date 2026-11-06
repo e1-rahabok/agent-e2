@@ -1,5 +1,7 @@
 # Design: knowledge base test site
 
+> Archived on 2026-11-06 (architecture review 2026-11-06, section 4): no test site is being built. Kept as a record; not maintained.
+
 Status: design only. Not built. Not indexed. Scope: the website only (pages, users, data, hosting, security, phases). Split 2026-11-06: the harness parts moved to `ARCHITECTURE.md` and `harness/`, the benchmark parts to `benchmark/`.
 
 ## Purpose

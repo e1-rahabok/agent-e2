@@ -296,7 +296,7 @@ review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - This source gives no Hyper-Threading penalty percentages. The book's 37.5% (VM Usage) and 50% (ESXi Used) figures are not confirmed by this source. Author to confirm.
 - '[from former vsphere/technology/cpu/concepts/hyper-threading] Section ''Worked example'': the book gives the result (40.625%). The formula line is Claude''s reconstruction from the book''s description: VM A runs 50% of the time, half of it with VM B running.'
-- '[from former vsphere/technology/cpu/concepts/hyper-threading] Hyper-Threading figures (1.25x, 62.5%) are not in Performance Best Practices for vSphere 9.1. Open item in project/todo.md.'
+- '[from former vsphere/technology/cpu/concepts/hyper-threading] Hyper-Threading figures (1.25x, 62.5%) are not in Performance Best Practices for vSphere 9.1. Open item in project/plan.md.'
 - '[from former vsphere/technology/cpu/concepts/hyper-threading] Section ''Time base'': the book states a thread running alone can reach 20,000 ms Used and that the author has not tested what the sibling thread then shows.'
 - '2026-11-04: merged vsphere/technology/cpu/concepts/hyper-threading, vsphere/technology/cpu/concepts/hyper-threading into this file (author decision 5, holistic review).'
 status: draft

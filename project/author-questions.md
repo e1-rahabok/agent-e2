@@ -152,6 +152,76 @@ Each entry has:
 - Written as now: drafted by Claude 2026-11-06, status draft. The agent receives them only when the switches are on (all off by default).
 - Answer:
 
+### Q060 · Operations flows · Users say the VM is slow: your order of checks
+- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/diagnosis/vm-slow-triage.md) (sections Checks, in order; Why this order). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Search: not from the book. Drafted from the VM overview file and the per-resource flows.
+- Question:
+  1. Is this the order you follow in the field: time window, breadth (many VMs?), VM contention per resource, Guest OS queues, then context (limits, snapshots, vMotion)?
+  2. What do you check that is missing, for example the application team's own evidence, or a recent change?
+  3. Is the SLI bar (Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped 0%) the right first bar for one VM, or do you use other values?
+- Written as now: 5 steps, status draft. It hands over to the existing CPU, memory, storage, network and cluster flows.
+- Answer:
+
+### Q061 · Operations flows · Can this cluster take more VMs: your order of checks
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/diagnosis/can-cluster-take-more-vms.md) (sections Checks, in order; Why this order).
+- Search: not from the book. Drafted from the capacity model, Cluster Performance, Cluster Risk, Cluster Consumption, admission control and host memory states.
+- Question:
+  1. Is this your order: cluster state and HA, contention today, Cluster Risk, room after HA and buffer, fit of the new VMs (reservations, overcommit, monster size), balance?
+  2. Which resource do you find fills first in practice, and does that change the order?
+  3. How do you state the answer to the requester: a yes/no, a number of VMs, or a date?
+- Written as now: 6 steps, status draft.
+- Answer:
+
+### Q062 · Operations flows · Is this host or cluster healthy right now
+- Files: [ESXi: what to monitor, in priority order](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/esxi/overview-what-to-monitor.md); [vSphere cluster: what to monitor, in priority order](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/overview-what-to-monitor.md).
+- Search: not from the book.
+- Question: what is your daily health check of an ESXi host and of a cluster, in order? The overview files list what to monitor, but not the order of checks with a stop at each step. With your order, a health-check flow can be written for each.
+- Written as now: overview files only; no flow.
+- Answer:
+
+### Q063 · Sources · Book Part 1 and the VCF Operations chapters
+- Files: [operations-management/](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management) (4 files and 2 new flows); [vcf-operations/](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations) (1 concept, 12 metrics, 5 KPIs). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Search: not applicable.
+- Question: please upload Part 1 of the book (capacity and performance management) and your VCF Operations chapters to `knowledge/raw-input/`. Today 159 of 206 files come from Part 3, and operators work in VCF Operations, which a third of the screenshot questions show. Claude will fetch the VCF Operations 9.1 metric reference from TechDocs for the catalog.
+- Written as now: Part 3 extracted; operations-management and vcf-operations hold only what Part 3 and the vCommunity adapter documentation give.
+- Answer:
+
+### Q064 · Review · Which files to review first
+- Files: the 25 most-cited knowledge files below (119 files are cited by at least one benchmark question). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md), section 3.4.
+- Search: not applicable.
+- Question: 0 of 208 files are `status: reviewed`. Reviewing them in this order puts your review where the benchmark scores. After the first benchmark run, the files behind wrong answers come first. Please confirm the order, or name your own.
+
+| # | Cited by | File |
+|---|---|---|
+| 1 | 9 | [VM vs Guest OS: two realms and their visibility layers](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) |
+| 2 | 6 | [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md) |
+| 3 | 6 | [VM CPU Ready](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) |
+| 4 | 6 | [VM Network Packets Dropped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) |
+| 5 | 5 | [VM Disk Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md) |
+| 6 | 4 | [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/overhead.md) |
+| 7 | 4 | [esxtop storage counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/esxtop/storage.md) |
+| 8 | 4 | [Cluster SLA and SLI](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md) |
+| 9 | 4 | [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/capacity-model.md) |
+| 10 | 4 | [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md) |
+| 11 | 4 | [Snapshot impact on metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/concepts/snapshot-impact.md) |
+| 12 | 4 | [Ballooning](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md) |
+| 13 | 4 | [VM Memory Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md) |
+| 14 | 4 | [Hyper-Threading: scheduling and accounting](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md) |
+| 15 | 4 | [ESXi CPU Core Utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md) |
+| 16 | 3 | [ESXi Storage adapter and storage path metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md) |
+| 17 | 3 | [Guest OS memory vs VM memory](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/guest-os-vs-vm-memory.md) |
+| 18 | 3 | [VM Memory Active](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/active.md) |
+| 19 | 3 | [vNIC receive drops: find the reason with vsish](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/diagnosis/vnic-rx-drops.md) |
+| 20 | 3 | [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md) |
+| 21 | 3 | [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md) |
+| 22 | 3 | [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md) |
+| 23 | 3 | [Why rightsizing matters for VMs](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/rightsizing.md) |
+| 24 | 3 | [ESXi storage latency is high](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/diagnosis/host-storage-latency.md) |
+| 25 | 3 | [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md) |
+
+- Written as now: all files draft.
+- Answer:
+
 ## Resolved
 
 ### Q056 · Benchmark · Level of each existing question
