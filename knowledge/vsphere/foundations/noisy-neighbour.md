@@ -1,0 +1,167 @@
+# Noisy neighbour: limit, reservation and share per resource
+
+## Definition
+- Enough total capacity, yet some consumers (VM, Kubernetes pod) do not get what they demand: imbalance in a shared environment. A main cause is a noisy neighbour.
+- Without limits or controls on consumers, a few villains hurt the victims:
+  - simple: one constant villain, the same few victims;
+  - complex: transient, no pattern; villains and victims change and can swap roles;
+  - self-harm: the victim is its own villain.
+- The real source can be outside the VM: Windows or Linux executes what a central system tells it.
+- The cause can be unrelated to the symptom.
+
+### Example: the antivirus update
+- Symptom: random VMs across clusters, datastores and data centres froze, some not answering ping, always recovering within 15 minutes. Windows and Linux, all sizes, no time pattern.
+- Cause: the antivirus signature update was not spread over time. Hundreds of VMs updated at once; the combined IOPS saturated the WAN link that carried synchronous replication of mission-critical datastores. Replication slowed, IO commands paused, and the VMs froze.
+- Lesson: no villain VM existed. The villain was a schedule, and the path was the replication link.
+
+## The three controls
+- Limit, reservation, share. Details: `vsphere/foundations/resource-controls`.
+- Priority is not a control: it gives 0% to the lower priority. Shares still give every consumer some.
+- Resource pools add a management layer and make the settings harder.
+
+## CPU
+- CPU is where the problem usually is.
+- Limit:
+  - the default limit is the configured size; it is usually too high because the price is low. A VM that runs on 8 vCPU is given 32 because the buyer can afford it;
+  - a limit set on the VM gives unpredictable performance: Windows or Linux does not know it can use only part of its vCPUs;
+  - the limit is in GHz, not vCPU, so its effect changes every second as the frequency changes.
+- Example cluster: 10 hosts × 40 cores × 2.5 GHz = 1,000 GHz (HT not counted). Overcommit 4:1: 400 VMs × 4 vCPU = 1,600 vCPU on 400 cores. A core runs 2 vCPU at once with HT, at a 37.5% penalty each.
+  - A few 32-vCPU VMs cause the problem: 10 of them can each fill one host. So overcommit ratio and maximum VM size both belong in the pricing policy.
+- Reservation:
+  - at 4:1, at most 25% of each VM's configured capacity can be reserved: a 2-vCPU VM gets 1.25 GHz, about 0.5 vCPU;
+  - reserving the first vCPU of each VM: 400 × 2.5 GHz = 1,000 GHz, the whole cluster, beyond usable capacity once HA is counted. HT adds about 25% throughput;
+  - the higher the overcommit, the less a reservation can guarantee.
+- Share:
+  - shares are per VM, not per vCPU. A larger VM has more shares in total, divided among its vCPUs;
+  - the busy vCPU of a 2-vCPU VM does not gain from its idle sibling;
+  - shares are charged against CPU Used, not CPU Run. Used includes System time, the hypervisor's work for the VM (network packets, disk commands). A VM with heavy IO uses up its shares and can see CPU Ready.
+  - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): `vsphere/tools/esxtop/cpu`.
+![VM 1 has one busy vCPU; VM 2 has a busy vCPU 1 and an idle vCPU 2](images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png)
+
+## Memory
+- Memory is a very fast disk: space matters more than speed. Its utilization is flat over time, at VM and ESXi level.
+- Exception: transient VMs and containers. ESXi clears a VM's consumed memory at power-off, so Horizon instant clones fluctuate more.
+- Flat utilization keeps the overcommit ratio low, so contention is rarer. The cost: much of the memory paid for is cache.
+- Limit: Guest OS and VM memory are mostly cache. A VM limit risks contention, because the two layers are independent. Avoid it; rightsize the Guest OS instead.
+- Reservation:
+  - sticky: once the VM touches a page it stays reserved, whatever its later use. The VMkernel cannot tell a useful page from an idle one. Avoid it;
+  - memory is seldom overcommitted beyond 2:1 (CPU often is). When overcommitting, watch VM ballooning as the early warning of contention;
+  - the highest class of service guarantees memory with no overcommit. Then a per-VM reservation adds nothing.
+- Share: behaves as for CPU; the default values differ.
+
+## Disk
+- Two dimensions: space (GB) and speed (IOPS, throughput). Speed is the harder one: the ceiling is high and spikes are unpredictable.
+- No upper limit by default: one VM can generate unlimited IOPS. One developer running IOMeter can saturate shared storage.
+- More layers than compute: the storage provider is often outside the hypervisor. vSAN has its own kernel stack and network; a central array has a fabric.
+- Points of control: non-vSAN: VM, datastore, array, and the fabric if it can throttle. vSAN: VM and vSAN.
+- Limit:
+  - IOPS limit per virtual disk. The cost of 1,000 IOPS varies with block size, read/write ratio and random vs sequential. Application teams seldom know these;
+  - too low → VM latency rises; too high → no protection. If each of 2,000 VMs may take 1% of the array, 100 VMs (5%) at their limit saturate it, even with IO spread evenly over the disks; hot spots make it worse;
+  - a limit on the OS disk is reasonable when the applications do not use it: it stops rogue agents and system services.
+- Reservation: none in the VM disk settings.
+- Share: applies only when latency passes a threshold. It ignores disk size. The control wanted is IOPS per GB: storage sold by GB should carry IOPS and throughput at a latency, which justifies a higher Gold price per GB.
+- Disk space under thin provisioning cannot be controlled. Monitor snapshot age and remove snapshots within a few days.
+
+### Storage I/O Control
+- Datastore-wide throttling, a different purpose from the per-disk controls. Share and limit, no reservation.
+- Can be enabled per datastore, local datastores included. Two choices of congestion threshold, each with trade-offs.
+- Does not apply to vSAN, which has its own mechanism.
+
+## Network
+- The hardest: the network is an interconnect.
+- Example host: 2 × 25 Gb/s NICs = 50 Gb, counted as 40 Gb (20% headroom). VMkernel traffic (vSAN, vMotion, vSphere Replication) takes about 20 Gb; 20 Gb remains for 25 VMs.
+- One villain at 10 Gb (a Hadoop worker receiving data; sustained 5 Gb over 300 seconds) leaves 10 Gb for 24 VMs: about 400 Mb/s each. VMs that are not network-heavy may not notice.
+- With 2 × 10 Gb the risk is far higher: it is the overcommit ratio again.
+- Configured on the distributed switch, not in the cluster resource allocation. Each VM network adapter has share, reservation and limit.
+- Limit: high enough for the VM, low enough for the physical NIC. Author's value: 8 Gb/s per VM on 2 × 25 Gb hosts. The settings are spread over many places, so it may not be practical.
+- Reservation: with plenty of bandwidth, about 100 Mb/s per VM. Derive the local number by metric profiling.
+- Share: the main split is VM vs VMkernel traffic, and production VM traffic above development. Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
+
+## Avoiding it
+- With overcommit it cannot be avoided, only reduced: like a highway with more cars than lanes at peak hour. Capacity planning reduces the impact.
+- Pricing policy:
+  - a function of the overcommit ratio: half price means twice as many tenants to break even;
+  - progressive tiers: a 64-vCPU VM costs more than 64 × a 1-vCPU VM.
+- Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size.
+- Tell customers the quality of each class. Memory example:
+
+| Class | Overcommit | Performance threshold |
+|---|---|---|
+| Gold | 1:1 | VM contention 0% for 100% of the month |
+| Silver | 1.5:1 | VM contention below 1% for 99.99% of the month |
+| Bronze | 2:1 | Not given |
+
+### Maximum VM size
+| Overcommit | Maximum VM size |
+|---|---|
+| 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
+| 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
+| 4:1 | 0.25 × logical CPUs |
+| 8:1 | 0.125 × logical CPUs; lab, dev, simple VDI |
+
+- 1:1: mind the HT throughput penalty and NUMA.
+- 2:1: two large VMs on one host each demand whole cores and both get the 37.5% penalty.
+- 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
+- 8:1: for 2-vCPU desktops, not for VMs of 25% of the cores. On 48 cores, keep VMs at 4-6 vCPU, not 12, so they fit across the cluster.
+- The problem is not specific to vSphere: it follows from overcommit on shared resources (Microsoft Azure noisy neighbour antipattern).
+
+## Traps
+- "Find the villain VM" → the villain can be a schedule or an external system, and the damage can travel through a shared path (replication link). Look for a common time and path, not a VM.
+- "Reserve CPU for every VM to stop noisy neighbours" → at 4:1 overcommit a reservation covers at most 25% of each VM; reserving the first vCPU of 400 VMs uses the whole cluster.
+- "A CPU limit on the VM is a safe cap" → the Guest OS cannot see it, and it is in GHz, so its effect changes with frequency. Rightsize instead.
+- "A VM with low CPU Run cannot run out of CPU shares" → shares are charged on Used, which includes System time from IO. An IO-heavy VM can see Ready.
+- "Memory reservation protects the VM's working set" → it is sticky and blind to page use; it pins idle pages too.
+- "A disk IOPS limit of 1,000 gives the same protection on every VM" → the cost of an IO varies with block size, read/write mix and pattern.
+- "Set network priority between VMs" → priority starves the lower class; shares give every VM a part.
+- "The host has 40 Gb usable, so one VM at 10 Gb is harmless" → after VMkernel traffic, 24 VMs share 10 Gb, about 400 Mb/s each.
+
+## Metadata
+```yaml
+id: vsphere/foundations/noisy-neighbour
+retriever_guide: how-it-works
+scope: vsphere
+technology:
+- cpu
+- memory
+- storage
+- network
+pillar:
+- performance
+- capacity
+product:
+- vsphere
+- vsan
+object:
+- VirtualMachine
+- HostSystem
+- ClusterComputeResource
+- Datastore
+- VmwareDistributedVirtualSwitch
+internal_derive:
+- vsphere/foundations/resource-controls
+related:
+- vsphere/foundations/scalable-shares
+- operations-management/capacity/capacity-model
+- operations-management/performance/performance-vs-capacity
+- vsphere/technology/cpu/metrics/virtual-motherboard/ready
+- vsphere/tools/esxtop/cpu
+images:
+  - path: images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png
+    product: [vsphere]
+    object: [VirtualMachine]
+    topic: 'CPU shares per VM: busy vs idle vCPU'
+    image_type: diagram
+source:
+  document: PART 1 - Concepts of Operations Management.docx
+  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size (pp. 80-90)'
+corrections: []
+review_notes:
+- 'Section ''CPU'', Share: the book says vCPU 1 of VM 2 does get 2x the share as it does not benefit from idleness of vCPU 2. Written here as does not gain. Q077.'
+- 'Section ''CPU'', Reservation: the book says at 8:1 overcommit against physical thread no more than 0.25 thread can be guaranteed; 8:1 per thread gives 0.125. Left out until answered. Q078.'
+- 'Section ''Maximum VM size'': overcommit is per core elsewhere, size is per logical CPU here; the 8:1 row gives 12 vCPU on 96 threads, then says avoid 12 vCPU on 48 cores. Q079.'
+- 'Section ''Storage I/O Control'': vSphere 9.1 documentation, Manage Storage I/O Resources with vSphere (p. 1886): With VCF 9.0, vSphere Storage I/O Control Components are deprecated. Q080.'
+- 'Section ''Network'': computed per host; with route based on originating virtual port each vNIC uses one uplink. The villain is 10 Gb in the calculation and 5 Gb sustained in the example. Q081.'
+- 'Section ''Avoiding it'', memory class table: 99.99% of a month at 5-minute samples. Gold 1:1 with vSphere 9 memory tiering. Q076, Q082.'
+- 'Section ''Disk'', Limit: the book says 5% of the VM population (40 VM in this case); 5% of 2,000 is 100. Q078.'
+status: draft
+```
