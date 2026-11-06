@@ -36,9 +36,9 @@
 
 | Aspect | CPU reservation | Memory reservation |
 |---|---|---|
-| When it applies | On demand, and only under contention. If the VM does not use CPU, or the host has enough CPU for every VM, the reservation does not come into play. | Permanent once memory has been used. |
-| Effect on utilization metrics | None. Run, Used, Demand, Usage do not include it. They are 0 or near 0 if the Guest OS is not running. | Included. Memory Consumed counts reserved memory even if the pages are not actually consumed yet. |
-| Example: 16 GB VM, powered on, sitting at BIOS | CPU metrics ≈ 0. | 10 GB reservation → VM Memory Consumed jumps to 10 GB. The reserved space is not available to other VMs. |
+| When it applies | On demand, and only under contention. If the VM does not use CPU, or the host has enough CPU for every VM, the reservation does not come into play. | Also on demand: only memory the VM has touched is held. Once touched, it stays held. |
+| Effect on utilization metrics | None. Run, Used, Demand, Usage do not include it. They are 0 or near 0 if the Guest OS is not running. | None at power-on. Consumed grows as the VM touches memory; it does not jump to the reservation. |
+| Example: 16 GB VM, powered on, sitting at BIOS | CPU metrics ≈ 0. | 10 GB reservation → VM Memory Consumed stays low. Until the VM has touched all memory within its reservation, the VMkernel can give the untouched part to other VMs. |
 | After use | — | Once the VM asks for memory and is served, the physical RAM stays reserved, even if the VM is idle for days. The page is effectively locked. |
 
 - Before the VM asks for memory, ESXi does not back the reservation with physical RAM.
@@ -112,12 +112,11 @@ source:
 corrections:
 - 'Sections Reservation: CPU vs memory: CPU reservation capped at base clock speed × cores, and applies only under contention (author answer Q041, 2026-11-05; quiz CPU Q8 key options A and B).'
 - '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
-- '2026-11-02: Memory reservation: Consumed counts the reservation; physical RAM is backed on first use, then stays locked. Confirmed by author.'
+- 'Section ''Reservation: CPU vs memory'': memory reservation is also on demand. Consumed does not jump to the reservation at power-on; until the VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; touched reserved memory is kept, even when idle. Author (Q047, Q057, 2026-11-06), verified on a live vCenter; corrects the book and the 2026-11-02 entry.'
 - '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
 review_notes:
 - '2026-11-04: moved from vsphere/foundations/resource-management into the resource-management topic folder (author decision 5).'
 - 'Sections ''How memory entitlement is set under overcommit'', ''Default CPU shares'': from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839). Shares per vCPU (Normal = 1,000 per vCPU) is Claude''s own knowledge; the documentation states equal share per vCPU and the 1:2:4 ratio.'
-- 'Section ''Reservation: CPU vs memory'': the vSphere 9.1 documentation (Virtual Machine Memory, pp. 1833-1834) says that until the VM touches all memory within its reservation, the VMkernel can give the untouched part to other VMs. The table says the reserved space is not available to other VMs. Open question Q047.'
 - Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge (section: Two scheduler levels, Cluster row). Confirm.
 status: draft
 ```

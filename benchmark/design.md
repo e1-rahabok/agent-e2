@@ -293,7 +293,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Wrong answer key | Every wrong answer from the best model is checked by the author: model error, knowledge gap, or key error. Keys cite knowledge ids. |
 | Knowledge base fitted to the benchmark (Claude edits the knowledge base and can read the questions) | A held-out set of about 20% of the questions, kept by the author outside the repository and run only before releases. Fixes to the knowledge base must be general (a fact or a trap), never a question-specific answer. |
 | Questions written by the knowledge base's own author favour its wording | Paraphrased stems; questions from real tickets and field forums; frontier baseline as an outside reference. |
-| Synthetic questions drafted by Claude mirror Claude's view | Author approval required; share capped at about 30% of the set. |
+| Synthetic questions drafted by Claude mirror Claude's view | The author reviews every question one by one; no cap on the share. What matters is the allocation and distribution (author, Q058, 2026-11-06). |
 | Ambiguous options | A question with a disputed option is fixed or removed, and the benchmark is re-scored. |
 | Position, length and count bias | Shuffled options; similar option length; varied number of correct options. |
 | Guessing | Unsure option, the prompt rule that a wrong answer is worse than Unsure, confident-wrong rate, 5-run stability. |
@@ -321,7 +321,7 @@ For the set:
 - 24 are `awaiting-input`: the author supplies the screenshot or table described in each question's `## Input to supply` (L4-26 to L4-49). Supplied 2026-11-05: [Latency counters in a vCenter virtual disk chart](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L1-06-vcenter-virtual-disk-latency-counters.md), [Recognise the tool and the object](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L1-09-recognise-vcf-operations-vm-metrics.md), [Contention counters in a vCenter host network chart](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L2-04-vcenter-host-network-contention-counters.md), [Is the datastore full: provisioned vs used space](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L2-08-datastore-provisioned-vs-used.md), [Where the storage latency sits in esxtop](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-16-esxtop-disk-device-where-is-latency.md), [Guest OS metrics in the VM metric tree](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L2-12-vcf-operations-guest-vs-vm-metrics.md).
 - Tasks: read-metric 32, troubleshoot 23, decide-capacity 15, explain-mechanism 12, judge-setting 8.
 - Technology (a question can carry several): cpu 26, system 26, storage 22, memory 21, network 15.
-- Origin: 63 synthetic (drafted by Claude), 17 quiz, 10 book. Above the synthetic cap (section 10: about 30%): author question Q058.
+- Origin: 63 synthetic (drafted by Claude), 17 quiz, 10 book. No cap on the synthetic share: the author reviews every question (Q058).
 - Remaining: 1 question at Level 200 and 9 at Level 300. Fill the tasks below allocation first: decide-capacity, troubleshoot, judge-setting, explain-mechanism; no more read-metric.
 - Next: `trap_type` per question; a coverage script that prints these counts; the held-out set.
 

@@ -6,12 +6,12 @@
 What do its Memory Consumed and CPU usage metrics show?
 
 ## Likely wrong answer
-"Both near 0, nothing is running" — or "both show the reserved amounts".
+"Memory Consumed jumps to the 10 GB reservation" — or "both show the reserved amounts".
 
 ## Expected key points
-- **Memory:** Consumed jumps to ~10 GB. Reservation is counted even though the pages are not actually used, because ESXi has set the space aside.
-- Once a reserved page has been used, ESXi keeps it locked to the VM, even if the VM is idle for days.
-- **CPU:** reservation is on-demand. Run, Used, Demand and Usage stay at 0 or near 0. CPU reservation does not affect utilization metrics.
+- **Memory:** Consumed stays low. Memory reservation is also on demand: untouched reserved memory is not counted and the VMkernel can give it to other VMs.
+- Once a reserved page has been touched, ESXi keeps it held for the VM, even if the VM is idle for days.
+- **CPU:** reservation is on demand too. Run, Used, Demand and Usage stay at 0 or near 0. CPU reservation does not affect utilization metrics.
 
 ## Notes
 - Previous id: vsphere-foundations-001 (renamed 2026-11-05).
