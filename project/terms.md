@@ -26,7 +26,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | quiz | The author's quiz documents (vSphere Metric Quiz.docx, the book's chapter quizzes): a source of questions, `origin: quiz` | - |
 | author question | One entry in `project/author-questions.md` | - |
 | knowledge base | The content in `knowledge/` | KB (in prose) |
-| Agent E2 | Proposal (author, 2026-11-06), not yet in use: the product name for the whole system, model, harness, agent and knowledge base as shipped. The author is E1; E2 is the second version of the expert | Isvara (until the author decides); the agent (one component) |
+| Agent E2 | The product: model, harness, agent and knowledge base as shipped. Always both words, like Agent 007 (author, 2026-11-06). Will run on isvara.io, replacing AskIO | Isvara (the website, not the product); E2 alone |
 | agent | The model plus the tool loop, in agentic mode only: it chooses the next tool, query and file, and when to answer. The loop code is in the harness; the decisions are the model's | - |
 | harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, the loop's rules, the verifier. It hosts the agent and constrains it | wrapper, pipeline |
 | runner | The benchmark code (`benchmark/runner/`) | - |

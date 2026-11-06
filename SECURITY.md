@@ -1,6 +1,6 @@
 # Security
 
-How Isvara handles the risks of an AI application, and how to report a problem. Not indexed.
+How Agent E2 handles the risks of an AI application, and how to report a problem. Not indexed.
 
 ## Reporting a vulnerability
 - Use GitHub private vulnerability reporting on this repository (Security tab, Report a vulnerability), or contact the repository owner directly.
