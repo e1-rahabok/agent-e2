@@ -38,10 +38,10 @@ def target(ref):
     if '/' in ref and os.path.isfile(k):
         m = re.search(r'^# (.+)$', open(k).read(), re.M)
         return (m.group(1).strip() if m else ref), BASE + k
-    if '/' in ref and tracked(ref) and not ref.startswith('knowledge/raw-input'):
+    if '/' in ref and tracked(ref):
         return ref, BASE + ref
     if '/' not in ref and '-' in ref:  # short knowledge name, e.g. `cluster-risk`, when unique
-        hits = [h for h in glob.glob(f'knowledge/**/{ref}.md', recursive=True) if '/raw-input/' not in h and '/_templates/' not in h]
+        hits = [h for h in glob.glob(f'knowledge/**/{ref}.md', recursive=True)]
         if len(hits) == 1:
             return target(hits[0][len('knowledge/'):-3])
     return None

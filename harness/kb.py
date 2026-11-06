@@ -1,6 +1,6 @@
 """Load the knowledge base the way ARCHITECTURE.md, section Local LLM use, describes.
 
-- Index knowledge/**/*.md except _templates and raw-input.
+- Index knowledge/**/*.md.
 - Split each file at '## Metadata'; the yaml block becomes filter fields, never text.
 - Chunk the body by '## ' heading; prefix each chunk with title and id.
 """
@@ -69,8 +69,6 @@ class Chunk:
 def load(root=ROOT):
     docs = {}
     for f in sorted(glob.glob(os.path.join(root, 'knowledge', '**', '*.md'), recursive=True)):
-        if '/_templates/' in f or '/raw-input/' in f:
-            continue
         meta, body = split(f)
         if meta is None:
             continue

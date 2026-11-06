@@ -24,8 +24,6 @@ def main():
         quotes += [r['quote'] for r in yaml.safe_load(open(f))['rows'] if r.get('quote')]
     found = []
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
-        if '/raw-input/' in f or '/_templates/' in f:
-            continue
         body = open(f).read().split('\n## Metadata')[0]
         for n, line in enumerate(body.split('\n'), 1):
             if line.lstrip().startswith('|') or line.lstrip().startswith('- "'):  # tables (bands) and trap lines

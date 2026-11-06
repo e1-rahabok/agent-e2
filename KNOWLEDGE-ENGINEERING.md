@@ -209,10 +209,8 @@ knowledge/                           # what the model reads (indexed)
 │   ├── kpis/                        # KPIs with sub-metrics and colour bands (VCF Operations, vCommunity management pack)
 │   ├── metrics/<object>/            # derived metrics: vm/, esxi/, cluster/
 │   └── ui/                          # screen library for VCF Operations (release 1.1)
-├── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
-│   └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
-├── _templates/                      # concept, metric, configuration, diagnosis, screen (not indexed)
-└── raw-input/                       # source documents (not indexed)
+└── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
+    └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
 ```
 
 - The author's book sees metrics from 3 perspectives: technology, pillar of operations, product. A folder tree holds one hierarchy; tags (`technology`, `pillar`, `product`, `object`) hold the others, and retrieval and the website browse by any of them.
@@ -237,8 +235,8 @@ knowledge/                           # what the model reads (indexed)
 - `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; `vm`, `esxi`, `cluster` under `vcf-operations/metrics/`. The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
 - Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. A VCF Operations KPI over Guest OS counters (Guest OS Performance) stays in `guest-os/` by this rule.
-- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/` or `vcf-operations/ui/screens/`, with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `knowledge/_templates/screen.md`.
-- Indexed: `knowledge/**/*.md`, except `_templates/` and `raw-input/`. How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
+- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/` or `vcf-operations/ui/screens/`, with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
+- Indexed: every `knowledge/**/*.md`. Writing templates live in `project/templates/`; source documents in `project/sources/` (read-only). How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
 - `project/tools/lint.py` enforces the folder and tag rules.
 
 ## 6. Structure rationale
@@ -377,7 +375,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - Write from the current release: vSphere 9.1, VCF 9.1.1 (the Versions section of `CLAUDE.md` holds the current list).
 - Before writing from a vendor document, check that it is the current version and read its revision date; record version and revision in `source.document`.
 - A file written from an older version gets a `review_notes` line naming the newer version, and is re-checked before `status: reviewed`.
-- `knowledge/raw-input/` is read-only.
+- `project/sources/` is read-only.
 
 # Part C. Workflow
 

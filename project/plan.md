@@ -29,6 +29,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
   - The author writes the real-ticket questions, picked to complement the existing ones.
   - Context budget: 16K, 20K and 24K all give 76% (57 of 90); the misses are files never retrieved, not files cut by the budget.
   - Context budget set to 16K (author, 2026-11-06).
+  - Source documents moved to [project/sources](https://github.com/e1-rahabok/isvara-2/blob/main/project/sources), writing templates to [project/templates](https://github.com/e1-rahabok/isvara-2/blob/main/project/templates): `knowledge/` holds only what the model reads (author, 2026-11-06).
   - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md)).
 - Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md), section Resolved.
 
@@ -55,7 +56,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - Capacity model: split the vSphere cluster part out of [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/capacity-model.md) if it is not cross-product.
 - Catalog: rows without a knowledge file (cluster and resource pool memory, datastore space, DPU charts); counter group of the per-host and per-VM-disk datastore charts (vSphere API reference); esxtop fields mapped to the `vsphere/tools/esxtop/` files; `interval` and `instance` of each band after Q048.
 - Tags assigned during migration (pillar, object, metric_class) to be reviewed by the author; `metric_class` of Wait, Idle, Swapped, Swap Used, Ballooned to confirm.
-- Book corrections for the author's next edition (P-states vs Turbo; idle frequency below base; wait sub-questions): strings in [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md), section Open points from book extraction. Re-check the extracted chapters when the corrected `.docx` arrives.
+- Book corrections for the author's next edition (P-states vs Turbo; idle frequency below base; wait sub-questions): strings in [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md), section Open points from book extraction.
 - Field heuristics not written in the books: through author questions and real tickets (M2).
 - Later: the author's "My Recommendation" column in [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md); book terminology for the glossary.
 

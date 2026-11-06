@@ -24,7 +24,7 @@ How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
 - A threshold only with its source. No invented numbers.
 - Facts not from the author's book are recorded in `review_notes` until the author confirms them.
 - Folder, tag and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), sections 5 (Layout) and 11 (Writing rules). Terms: [knowledge/glossary.md](knowledge/glossary.md).
-- `knowledge/raw-input/` is read-only.
+- `project/sources/` is read-only.
 
 ## Before a pull request
 ```bash

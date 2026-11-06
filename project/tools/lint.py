@@ -24,8 +24,7 @@ def main():
     def bad(path, msg): problems.append(f'{path}: {msg}')
     linked_images = set()
 
-    files = [f for f in sorted(glob.glob('knowledge/**/*.md', recursive=True))
-             if '/_templates/' not in f and '/raw-input/' not in f]
+    files = [f for f in sorted(glob.glob('knowledge/**/*.md', recursive=True))]
     docs = {}
     for f in files:
         fm, body = split(f)
@@ -233,7 +232,7 @@ def check_repo_terms(allowed, bad):
     skip = ('project/terms.md', 'project/author-questions.md', 'project/tools/tags.yaml')
     records = ('project/archive/', 'project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):
-        if f in skip or '/raw-input/' in f or f.startswith(records):
+        if f in skip or f.startswith(records):
             continue
         for i, line in enumerate(open(f).read().split('\n'), 1):
             for pat, use in (allowed.get('avoid_repo_terms') or {}).items():
@@ -247,7 +246,7 @@ def check_repo_terms(allowed, bad):
 def check_tables(bad):
     """Tables need a blank line before (else they render as text) and after (else the next line becomes a table row)."""
     for f in sorted(glob.glob('**/*.md', recursive=True)):
-        if '/raw-input/' in f or f.startswith('benchmark/results/') or f.startswith('project/archive/'):
+        if f.startswith('benchmark/results/') or f.startswith('project/archive/'):
             continue
         lines, fence = open(f).read().split('\n'), False
         for i, line in enumerate(lines):

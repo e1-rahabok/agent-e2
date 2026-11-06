@@ -98,7 +98,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Not used: long-context stuffing (the whole knowledge base is about 125K tokens: too much for a small model and too slow per question); a separate graph database (the metadata links already form the graph).
 
 ### Ingest
-1. Index `knowledge/**/*.md`. Do not index `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/` (it holds answer keys; indexing it invalidates the evaluation), `project/`, `harness/`, or the root documents (`README.md`, `CLAUDE.md`, `MISSION.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`).
+1. Index `knowledge/**/*.md`. Do not index `benchmark/` (it holds answer keys; indexing it invalidates the evaluation), `project/`, `harness/`, or the root documents (`README.md`, `CLAUDE.md`, `MISSION.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`).
 2. Split each file at `## Metadata`. Parse the yaml block into filter fields. Do not embed it.
 3. Chunk the body by `##` heading. Files are short, so one file is often one chunk.
 4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.
