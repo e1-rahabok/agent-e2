@@ -1,5 +1,7 @@
 # Philosophy and structure
 
+> Merged on 2026-11-06 into `KNOWLEDGE-ENGINEERING.md` (sections Principles, Limits, Structure rationale). Kept as a record; not maintained.
+
 Not indexed. Explains design decisions for whoever (AI or human) maintains the repository.
 Conventions (layout, metadata, writing rules) are in `KNOWLEDGE-ENGINEERING.md`.
 

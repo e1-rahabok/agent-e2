@@ -1,7 +1,7 @@
 # Knowledge engineering
 
 How much expert knowledge this repository holds, and in what form. For human reviewers. Not indexed.
-How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: sections 8 to 17 below. Benchmark design: `benchmark/design.md`.
+Why the system can win: [DESIGN.md](DESIGN.md). How the parts run together: [ARCHITECTURE.md](ARCHITECTURE.md). What the agent is told: [harness/AGENT.md](harness/AGENT.md). Folder and writing rules: sections 8 to 17 below. Benchmark design: [benchmark/design.md](benchmark/design.md).
 
 ## 1. The problem
 - Source: the author's books, quizzes, field answers and 20+ years of operating vSphere.
@@ -11,6 +11,20 @@ How the parts run together: `ARCHITECTURE.md`. Folder and writing rules: section
   - the harness, which needs exact, structured values it can look up and compute with;
   - a human expert, who must be able to review every fact and trace it to its source.
 - No single format serves all three. Each kind of knowledge gets its own form. All forms live in one git repository, reviewed and versioned together.
+
+### Principles
+1. The AI is the reader; humans review. Content is facts, mechanisms, formulas and reasons; no text aimed at human motivation or narrative.
+2. Mechanism before counter. A metric is a byproduct of the architecture; a metric file points back to the concepts it follows from.
+3. Nuance is explicit. Same name with a different meaning, and the reverse, is stored as links and traps, not buried in prose.
+4. Vantage points are never mixed. One object type and one layer per metric file; Guest OS is its own layer and folder.
+5. Traceable to source. Every file records its source document and heading path.
+6. Depth before breadth. One complete mechanism beats twenty shallow counter definitions.
+7. Measured, not assumed. A structure change is kept only when the benchmark improves.
+
+### Limits
+- Turning expert judgment into files is lossy; some tacit knowledge resists codifying.
+- The model retrieves and recombines text. Structure improves its answers; it does not create understanding.
+- Quality drifts without review. Coverage is partial on purpose: depth first.
 
 ## 2. Knowledge forms
 | Form | Holds | Where | Size (2026-11-04) |
@@ -155,7 +169,6 @@ knowledge/                           # what the model reads (indexed)
 - `project/tools/lint.py` enforces the folder and tag rules.
 
 ## 9. Structure rationale
-- Full reasoning: `project/philosophy-and-structure.md`.
 - A generic AI fails on vSphere metrics in a known way: it knows the general meaning of a label and applies it where vSphere differs.
 - Each structural choice blocks one failure:
 
@@ -235,7 +248,7 @@ knowledge/                           # what the model reads (indexed)
 
 ## 12. Indexing rules
 - Index: `knowledge/**/*.md`.
-- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `README.md`, `CLAUDE.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`.
+- Do not index: `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `README.md`, `CLAUDE.md`, `DESIGN.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`.
   - `benchmark/` holds answer keys. Indexing it invalidates the evaluation.
 - Metadata is the last section of each file: `## Metadata` followed by one yaml block. Parse it as metadata, not as text to embed.
 - Images live in the `images/` folder of the folder that uses them: `vsphere/technology/<tech>/images/`, `vsphere/object-types/<object>/images/`, `vsphere/foundations/images/`, `operations-management/<pillar>/images/`, `guest-os/<technology>/images/`. Each image link carries alt text; the body text states the same facts. Return the image link when a diagram answers the question.
@@ -249,6 +262,21 @@ knowledge/                           # what the model reads (indexed)
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
 | what-to-check | Something is wrong. What do I check, in what order? | `diagnosis/` | `diagnosis.md` |
+
+### How the agent finds knowledge
+The knowledge base is shaped so that a model that knows nothing about it can still reach the right file.
+
+| Path to a file | Built from | Used by |
+|---|---|---|
+| Words in the question | Body text, trap lines in the user's words, glossary synonyms | Search (BM25 and embeddings) |
+| Kind of question | `retriever_guide` and the folder (`concepts/`, `metrics/`, `configuration/`, `diagnosis/`) | Search filters; the map (below) |
+| Object, layer, product | Metadata tags | Search filters |
+| From one file to the next | `same_name`, `same_meaning`, `internal_derive`, `related` | Link expansion; `follow_links` |
+| Exact values | `knowledge/catalog/*.yaml`, KPI colour-band tables | `catalog` tool |
+| Order of checks | Numbered steps in `diagnosis/` files | `flow` tool |
+
+- Planned: a map given to the agent up front, generated from this structure: what each folder covers, what each file type answers, the core rules, the confusable terms and the symptom → flow index. Design: `harness/AGENT.md`, section 3.
+- Consequence for writers: a file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason.
 
 ## 14. Metadata (end of file)
 | Field | Meaning |

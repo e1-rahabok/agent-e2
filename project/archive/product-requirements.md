@@ -1,5 +1,7 @@
 # Product requirements: the assistant (1.0 and after)
 
+> Requirements merged on 2026-11-06 into `DESIGN.md`, section 5. The demo findings (section 1) stay here as a record; not maintained.
+
 What the shipped system must do for its users. Not indexed.
 Inputs: the author's demo video of vCommunity Ask (2026-11-04, 56 s, no audio), the solution design, and the benchmark results.
 Related: `solution-design.md` (system design), `design-kb-test-site.md` (test site and benchmark), `harness/README.md` (tools).

@@ -1,22 +1,49 @@
 # Harness
 
-The software around the model. It turns a question into a grounded answer. Not indexed. How harness, model and knowledge work together: `ARCHITECTURE.md`. Design reasons: `project/solution-design.md`.
+The software around the model. It turns a question into a grounded, checked answer. Not indexed.
+Why the system can win: [DESIGN.md](../DESIGN.md). How one question flows through it: [ARCHITECTURE.md](../ARCHITECTURE.md). The agent it hosts: [AGENT.md](AGENT.md).
 
+## 1. What it is for
+A small model alone fails at Level 400 in predictable ways. Each part of the harness takes one of those jobs away from the model, so the model only has to read and reason.
+
+| Failure of a model alone | Harness part | What it does instead |
+|---|---|---|
+| Does not know the Level 400 fact | Retrieval (`retrieval.py`, `kb.py`) | Finds the knowledge file, then its linked traps and mechanisms |
+| Reads one meaning of a label that has two | Link expansion (`retrieval.py`) | Brings the `same_name` file on the other object with the first |
+| Gets a unit, rollup, statistics level or threshold wrong | Catalog (`catalog.py`) | Returns the exact value from the vSphere 9.1 tables, with its source |
+| Slips on arithmetic | Calculator (`calc.py`) | Computes the conversion and names the rule's source file |
+| Skips troubleshooting steps | Flow executor (`flows.py`) | Serves the diagnosis steps in order, one at a time |
+| Answers in a broken format or guesses | Verifier (`verify.py`) | Rejects letters that are not options, Unsure mixed with others; one repair turn |
+| Answers from memory, or loops | Agent rules and budgets (`modes.py`, `AGENT.md`) | Lookup first, no repeats, same-name check, call and token budgets |
+
+## 2. Design rules
+- Code does what can be exact: search, lookup, arithmetic, step order, format checks. The model does only what needs language.
+- The knowledge base is the source of truth; the harness never adds facts of its own.
+- One harness for benchmark and deployment, so the benchmarked system is the shipped system. Only the model endpoint differs (`llm.py`).
+- Every tool returns its source, so the answer can cite it and a reviewer can check it.
+- The harness depends on `knowledge/` only. Nothing in `benchmark/` or `project/` is read at run time.
+
+## 3. How it knows the knowledge base
+- At start, `kb.py` loads every indexed file: the metadata block becomes filter fields and links; the body is chunked by `##` heading, each chunk prefixed with the file title and id.
+- `retrieval.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
+- `catalog.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
+- `flows.py` reads the numbered steps of each `diagnosis/` file directly; there is no second copy.
+- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the knowledge is shaped for this: `KNOWLEDGE-ENGINEERING.md`, section How the agent finds knowledge. Full ingest, query and answer contract: `ARCHITECTURE.md`, section Local LLM use.
+
+## 4. Modules
 | File | Job |
 |---|---|
 | `kb.py` | Load `knowledge/`: metadata split off, body chunked by `##` heading, chunks prefixed with title and id. |
 | `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, link expansion (`same_name`, `related`). |
-| `catalog.py` | Metric catalog: `knowledge/catalog/*.yaml` plus metric-file metadata, compiled to an in-memory SQLite database. Lookups by counter, chart label, esxtop field or title, returning chart units and API units (`vcenter-api-counters.yaml`); thresholds; colour bands read from the knowledge files; object relations and paths. |
-| `calc.py` | Calculator: safe arithmetic plus domain functions (summation ms ↔ %, unit conversion with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each function returns a note naming its source. |
-| `flows.py` | Flow executor: diagnosis files served as ordered steps, one step at a time, with the next step and the steps a step refers to. Reads the markdown directly; no second copy of the flow. |
-| `verify.py` | Answer verifier. Hard issues (no ANSWER line, letters that are not options, Unsure or Not covered mixed with other letters) get one repair turn. Soft issues (no REASON, unknown file id, a number with a unit that the model was never shown) are recorded only. |
-| `modes.py` | Answer modes: baseline (no knowledge base, no verifier), classic (one lookup; context starts with catalog facts for the files it holds), agentic (tool loop: search, read_file, follow_links, get_images, catalog, calculate, flow). Prompts and answer format. |
-| `llm.py` | Model client: Vercel AI Gateway for the benchmark (OpenAI-compatible API); a local OpenAI-compatible server (vLLM, llama.cpp) for deployment. `MockClient` exercises the tool loop offline. |
+| `catalog.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; colour bands; object relations and paths. |
+| `calc.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
+| `flows.py` | Flow executor: a diagnosis file as ordered steps, one at a time, with the next step and the steps it refers to. |
+| `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
+| `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup), agentic (the agent loop, `AGENT.md`). |
+| `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
 
-- Retrieval check without a model: `python3 benchmark/runner/retrieval_eval.py` (recall of the files each question needs).
-
-## Agentic tools
+## 5. Agentic tools
 | Tool | Returns | Use |
 |---|---|---|
 | search | File ids, titles, snippets | Always first (or catalog). |
@@ -27,11 +54,8 @@ The software around the model. It turns a question into a grounded answer. Not i
 | calculate | Result plus source notes | Any arithmetic or unit conversion. |
 | flow | Steps of a diagnosis file, or one step with next and references | Troubleshooting questions. |
 
-## Config keys (`benchmark/runner/config.yaml`)
-- `verify` (default true): run the verifier in classic and agentic modes.
-- `catalog_facts` (default true): put catalog facts at the top of the classic context.
-
-## Notes
+## 6. Settings and checks
+- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `agent_max_calls`, `agent_tool_tokens`.
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
-- Used by `benchmark/runner/run.py`, so the benchmarked system is the shipped system. The runner records `tools_used`, `verify_flags` and `repaired` per answer.
-- Soft verifier issues do not change answers yet. Promote one to a repair trigger only when results show it predicts wrong answers.
+- Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: `benchmark/runner/README.md`.
+- The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.

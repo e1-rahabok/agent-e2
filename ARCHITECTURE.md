@@ -1,13 +1,13 @@
 # Architecture
 
-How the model, harness and knowledge work together at run time. Not indexed.
-Design reasons and model size: `project/solution-design.md`. Knowledge capture: `KNOWLEDGE-ENGINEERING.md`. Folder and writing rules: `KNOWLEDGE-ENGINEERING.md`. Benchmark design: `benchmark/design.md`.
+How the model, agent, harness and knowledge work together at run time. Not indexed.
+Why it can work, and model size: [DESIGN.md](DESIGN.md). The agent: [harness/AGENT.md](harness/AGENT.md). Harness parts: [harness/README.md](harness/README.md). Knowledge, folders and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). Benchmark: [benchmark/design.md](benchmark/design.md).
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
 | Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
-| Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only | the loop in `harness/modes.py` (`agentic`), the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
+| Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only (`harness/AGENT.md`) | the loop in `harness/modes.py` (`agentic`), the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, the loop's rules, the answer verifier | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
 | Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
 
@@ -118,19 +118,18 @@ sequenceDiagram
 6. The answer goes out with the files it used.
 
 ## 6. Level 400 offline
-Each mechanism blocks one failure of a small model. None needs the Internet.
+Each mechanism blocks one failure of a small model. None needs the Internet. Harness parts in detail: `harness/README.md`, section 1.
 
 | Failure of a model alone | Mechanism | Part |
 |---|---|---|
 | Repeats a common misconception ("Ready above 5% is bad") | Trap lines in every metric file, in the user's own words, so the misconception retrieves its correction | Knowledge |
 | Mixes the VM and ESXi meaning of one label | One object per metric file; `same_name` links; a reminder before answering | Knowledge + harness |
 | Calls a Guest OS metric a VM metric | Separate `guest-os/` layer; `layer` tag; lint rule | Knowledge |
-| Gets a unit, rollup or statistics level wrong | Catalog lookup returns the exact value from the vSphere 9.1 tables | Harness |
-| Slips on arithmetic (ms to %, KB vs kb) | Calculator with source notes | Harness |
+| Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
 | Skips troubleshooting steps or jumps to a conclusion | Flow tool serves the diagnosis steps in order | Knowledge + harness |
 | Invents a threshold | Rule: quote a threshold only with its source; thresholds catalog; verifier flags numbers not in the text | Knowledge + harness |
-| Guesses when unsure | Unsure option and the rule that a wrong answer is worse than Unsure | Harness (prompt) |
-| Answers from memory where the knowledge base speaks | Prompt rule: knowledge base first, and it wins on conflict; own knowledge only where the knowledge base is silent, marked as such in the reason; override rate measured (`benchmark/models.md`) | Harness (prompt) |
+| Guesses when unsure | Unsure option and the rule that a wrong answer is worse than Unsure | Agent (prompt) |
+| Answers from memory where the knowledge base speaks | Prompt rule: knowledge base first, and it wins on conflict; override rate measured (`benchmark/models.md`) | Agent (prompt) |
 | Stale knowledge (older releases) | Knowledge written from the current release by rule (vSphere 9.1, VCF 9.1.1) | Knowledge |
 
 ## 7. Dark-site deployment
@@ -143,6 +142,8 @@ Each mechanism blocks one failure of a small model. None needs the Internet.
 
 - Updates arrive as an offline bundle: knowledge, catalog, index, and optionally new weights. Nothing calls out.
 - The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
+- One VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
+- The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.
 
 ## 8. Harness checks
 - The harness is checked on its own. In the final score, a retrieval miss and a reasoning error look the same.

@@ -1,6 +1,6 @@
-# Evaluation
+# Benchmark
 
-Questions that measure whether the knowledge base and harness improve AI answers.
+Question format and tags. Questions measure whether the knowledge base, harness and agent improve answers. Design and scoring: [design.md](design.md). Running it: [runner/README.md](runner/README.md).
 Never index this folder: it contains answer keys.
 
 ## Layout
@@ -87,31 +87,11 @@ One tag per concept (`project/terms.md`):
 - `pillar`: on one question only. Performance against capacity is now in `task` (decide-capacity) and in the knowledge files the question links.
 - `format`, old `level` values, old `input` values: replaced on 2026-11-05 by `answer_type`, levels 100-400 and `input` [text, table, screenshot].
 
-## Deterministic scoring
-- Runner: `benchmark/runner/run.py`. Commands and full methodology: `benchmark/runner/README.md`.
-- Options are shuffled per run. One option is appended to every question: "Unsure". No "Not covered" option: knowledge base first, own knowledge where it is silent (author, Q038, 2026-11-05).
-- Every question says there can be more than one correct option. The number of correct options is never revealed.
-- Each question runs 5 times per model and mode.
-
-| Answer | Class |
-|---|---|
-| Exactly the correct letters | Correct |
-| Unsure, chosen alone | Unsure (not correct, not wrong) |
-| Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong |
-
-- The model is told that a wrong answer is worse than Unsure. No points and no -1: see `benchmark/design.md`, section 7.1.
-- Headline: **Stable correct**, the share of questions answered exactly right in all 5 runs. Target: at least 85%, aim 99% (author, 2026-11-03).
-- Also reported: Luck (right in some runs only), confident-wrong rate, Unsure rate, accuracy when answered, trap rate, retrieval recall, tools used, verifier flags.
-- Reason and design: `benchmark/design.md` (blueprint, why 100 questions, scoring, validity threats).
-
-## Judged scoring (0-3)
-- The runner sends the prompt (and images) without options, then a judge model scores the answer against `## Expected key points` and `## Likely wrong answer`.
-- Rubric, judge rules and checks: `benchmark/design.md`, section 14. Judge model: `benchmark/models.md`.
-- `## Expected key points` is the answer key for the judge: the facts a correct answer must state, one per bullet, as many as the question takes (most take 2-5); not the wording the candidate must use. Meaning and an example: `benchmark/design.md`, section 14.
-- Write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
-
-## Final score
-- One score, 0-100%, with sub-scores by answer type, input type and level. Method: `benchmark/design.md`, section 7.4.
+## Scoring
+- Classes, Stable correct, the 0-3 judge rubric and the final score: `design.md`, sections 7 and 14. Runner details: `runner/README.md`, section Methodology.
+- Writing the answer key of a judged question:
+  - `## Expected key points` is the judge's answer key: the facts a correct answer must state, one per bullet, as many as the question takes; not the wording the candidate must use;
+  - write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 
 ## results.csv columns
 

@@ -5,7 +5,7 @@ Standing rules for this repository. Read at the start of every session.
 ## Purpose
 - Knowledge base for an AI assistant on vSphere and VCF metrics.
 - Primary reader: the AI. The author reviews for QA only.
-- No text aimed at human motivation or narrative. See `project/philosophy-and-structure.md`.
+- No text aimed at human motivation or narrative. See `KNOWLEDGE-ENGINEERING.md`, section Principles.
 
 ## Level
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases.
@@ -96,7 +96,7 @@ Standing rules for this repository. Read at the start of every session.
 - `harness/` depends on no folder outside the product. `project/tools/lint.py` imports the file parser from `harness/kb.py`, never the reverse.
 
 ## Do not index
-- `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `README.md`, `CLAUDE.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`.
+- `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `README.md`, `CLAUDE.md`, `DESIGN.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`.
 
 ## Validation
 - Run `python3 project/tools/lint.py` before every merge. Do not merge if it fails.

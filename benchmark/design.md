@@ -5,6 +5,11 @@ Runner and commands: `benchmark/runner/README.md`. Question format: `benchmark/R
 
 ## 1. Claim
 - Claim: a local open-weight model on one GPU (`benchmark/models.md`), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
+- System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`DESIGN.md`, section 2). It measures:
+  - which frozen model to ship;
+  - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
+  - the gap to the frontier model.
+- Baseline mode (the model alone) is the zero point: system minus baseline is what our work adds.
 - Release gate: final score at least 85%. Target: 99% (author, 2026-11-03). Final score: section 7.4.
 - The benchmark must:
   1. rank candidate models and answer modes against each other;

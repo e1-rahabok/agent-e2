@@ -48,9 +48,7 @@ python3 benchmark/runner/retrieval_eval.py
 ## Methodology
 
 ### Final score
-- One number, 0-100%, per model and mode: the mean question credit over all questions. Sub-scores: by answer type (deterministic, judged), by input type (text, table, screenshot), by level (100-400). Report table `Final score`.
-- Question credit = the worst of its runs: multiple choice 1 or 0 (Stable correct); free text the lowest judge score / 3.
-- Full method: `benchmark/design.md`, section 7.4.
+- Method: `benchmark/design.md`, section 7.4. Report table `Final score`; code `report.py`, function `final`.
 
 ### Free text and the judge
 - `answer_type: judged` questions are sent without options, with an open-answer prompt (`harness/modes.py`, `PROMPTS['open']`). The verifier does not run on them: it checks letters only.
