@@ -41,12 +41,16 @@ def main():
         k, v = kv.split('=', 1)
         cfg[k] = yaml.safe_load(v)
     docs, chunks = kb.load()
+    rr = {}
+    if cfg.get('rerank'):
+        from rerank import Reranker
+        rr = {'reranker': Reranker(cfg.get('rerank_model', 'bge-reranker-v2-m3')), 'rerank_n': cfg.get('rerank_n', 30), 'rerank_mode': cfg.get('rerank_mode', 'replace'), 'rerank_stem': cfg.get('rerank_stem', False)}
     if a.embeddings:
         from llm import GatewayClient
         client = GatewayClient(cfg['gateway'], os.environ['AI_GATEWAY_API_KEY'])
-        ret = Retriever(docs, chunks, client, cfg['embedding_model'], expand=cfg.get('query_expansion', False))
+        ret = Retriever(docs, chunks, client, cfg['embedding_model'], expand=cfg.get('query_expansion', False), **rr)
     else:
-        ret = Retriever(docs, chunks, expand=cfg.get('query_expansion', False))
+        ret = Retriever(docs, chunks, expand=cfg.get('query_expansion', False), **rr)
     rows = []
     for c in C.load(a.questions):
         need = [i for i in c.knowledge if i in docs]
@@ -69,7 +73,7 @@ def main():
         print(f'| {cid} | {len(need)} | {sh}/{len(need)} | {ch}/{len(need)} | {miss} |')
     full = sum(all(i in ctx for i in need) for _, need, _, ctx in rows)
     print(f'\nQuestions: {len(rows)}. Recall@{a.k} search: {s_hit / n:.0%}. Recall classic context: {c_hit / n:.0%}. '
-          f'Questions with every needed file in context: {full}/{len(rows)}. Mode: {"hybrid" if a.embeddings else "BM25 only"}.')
+          f'Questions with every needed file in context: {full}/{len(rows)}. Mode: {"hybrid" if a.embeddings else "BM25 only"}{" + rerank" if cfg.get("rerank") else ""}.')
 
 
 if __name__ == '__main__':

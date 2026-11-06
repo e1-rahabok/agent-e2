@@ -74,8 +74,10 @@ def expand_query(query, terms):
 
 
 class Retriever:
-    def __init__(self, docs, chunks, client=None, embed_model=None, cache_dir=None, expand=False):
+    def __init__(self, docs, chunks, client=None, embed_model=None, cache_dir=None, expand=False,
+                 reranker=None, rerank_n=30, rerank_mode='replace', rerank_stem=False):
         self.docs, self.chunks = docs, chunks
+        self.reranker, self.rerank_n, self.rerank_mode, self.rerank_stem = reranker, rerank_n, rerank_mode, rerank_stem  # optional cross-encoder (harness/rerank.py)
         self.expand = expand
         self.synonyms = glossary_terms(docs)
         self.bm25 = BM25([c.text for c in chunks])
@@ -139,11 +141,20 @@ class Retriever:
             for r, i in enumerate(order[:200]):
                 if scores[i] > 0:
                     fused[i] += 1.0 / (60 + r)
+        order = [(i, s) for i, s in sorted(fused.items(), key=lambda x: -x[1]) if self._allowed(self.chunks[i].doc, filters)]
+        if self.reranker and order:
+            head = order[:self.rerank_n]
+            q = re.sub(r'(?m)^\s*-\s*[A-H]\.\s.*$', '', query).strip() if self.rerank_stem else query  # options out
+            rs = self.reranker.scores(q, [self.chunks[i].text for i, _ in head])
+            if self.rerank_mode == 'fuse':  # add the re-ranker's rank as a third list in the fusion
+                pos = {h[0]: p for h, p in zip([x[0] for x in sorted(zip(head, rs), key=lambda x: -x[1])], range(len(head)))}
+                head = sorted(((i, s + 1.0 / (60 + pos[i])) for i, s in head), key=lambda x: -x[1])
+            else:  # replace: the re-ranker's order alone
+                head = [(i, r) for (i, _), r in sorted(zip(head, rs), key=lambda x: -x[1])]
+            order = head + order[self.rerank_n:]
         best = {}
-        for i, s in sorted(fused.items(), key=lambda x: -x[1]):
+        for i, s in order:
             c = self.chunks[i]
-            if not self._allowed(c.doc, filters):
-                continue
             if c.doc.id not in best:
                 best[c.doc.id] = (s, c)
         return [{'id': d, 'score': round(s, 4), 'title': c.doc.title, 'heading': c.heading,
