@@ -17,12 +17,12 @@ benchmark/
 ```
 
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and technologies, so folders cannot hold it. The slices are metadata (section Metadata tags):
-  - `product`: every product the question touches (values from `project/tools/tags.yaml`);
-  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: `benchmark/design.md`, section 3.5.
+  - `product`: every product the question touches (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/project/tools/tags.yaml));
+  - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.5.
 - File name: `L<level>-<nn>-<slug>.md`, numbered from 01 within each level, in id order. The last number of a level is its count (author, 2026-11-05).
 - The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id.
-- A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 01 without gaps, and updates the links in `benchmark/design.md`, `project/author-questions.md` and `project/todo.md`. The id, the results and the attachments stay.
-- Attachments live in a folder named by the id: `benchmark/questions/0007/`.
+- A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 01 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_refs.py](https://github.com/e1-rahabok/isvara-2/blob/main/project/tools/link_refs.py). The id, the results and the attachments stay.
+- Attachments live in a folder named by the id: [benchmark/questions/0007](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/0007).
 - In documents, link a question by its title: `[title](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/<file>)`.
 - Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
@@ -53,14 +53,14 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 |---|---|---|
 | `product` | Every product the question touches. A list | `vsphere`, `vsan`, `nsx`, `vcf-operations`, `windows`, `linux`, `kubernetes` |
 | `technology` | Every technology area the question touches. A list. The per-area report counts each one | `cpu`, `memory`, `storage`, `network`, `system` (the object as a whole: KPIs, capacity, availability, DRS, provider/consumer, rollups) |
-| `task` | What the administrator is trying to do: one of the five tasks of the blueprint (`benchmark/design.md`, section 3.1) | `read-metric`, `troubleshoot`, `decide-capacity`, `explain-mechanism`, `judge-setting` |
-| `knowledge` | The knowledge files the correct answer depends on. A list of knowledge ids. The retrieval check measures whether the harness finds them; every id must exist | Knowledge ids, e.g. `vsphere/technology/cpu/metrics/virtual-motherboard/wait` |
+| `task` | What the administrator is trying to do: one of the five tasks of the blueprint ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.1) | `read-metric`, `troubleshoot`, `decide-capacity`, `explain-mechanism`, `judge-setting` |
+| `knowledge` | The knowledge files the correct answer depends on. A list of knowledge ids. The retrieval check measures whether the harness finds them; every id must exist | Knowledge ids, e.g. [VM CPU Wait](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/wait.md) |
 
 **How hard it is and how it is scored**
 
 | Tag | Meaning | Values |
 |---|---|---|
-| `level` | Expertise level (`benchmark/design.md`, section 3.2) | `100`, `200`, `300`, `400` |
+| `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
 | `answer_type` | How the answer is scored (section 3.3) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
 | `answer` | The correct letters, as written in `## Prompt`. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
 | `trap` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
@@ -70,7 +70,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | Tag | Meaning | Values |
 |---|---|---|
 | `input` | Input types (section 3.4). A list, derived from `attachments`; lint checks they agree | `text` (no attachment), `table`, `screenshot` |
-| `attachments` | Files sent with the prompt, relative to `benchmark/questions/`. They live in `questions/<id>/`, next to the question file. No `.md` files there: the runner and lint read every `.md` under `questions/` as a question | Paths; `.png`, `.jpg`, `.webp` are screenshots; `.csv`, `.xlsx` are tables |
+| `attachments` | Files sent with the prompt, relative to [benchmark/questions](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions). They live in `questions/<id>/`, next to the question file. No `.md` files there: the runner and lint read every `.md` under `questions/` as a question | Paths; `.png`, `.jpg`, `.webp` are screenshots; `.csv`, `.xlsx` are tables |
 
 **Where it comes from**
 
@@ -80,10 +80,10 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `source_path` | Where in the source, for QA: a heading path or the quiz question | Free text |
 
 ### Tags removed (2026-11-05)
-One tag per concept (`project/terms.md`):
+One tag per concept ([project/terms.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/terms.md)):
 - `scope`: every question had `vsphere`. It is a knowledge-file tag (how general a fact is: vendor-neutral, vsphere, guest-os); for a question, `product` says the same and more.
 - `area`: the main item of `technology`. Two tags for one concept; `technology` stays, as a list. The author's rule for `area: operations-management` (performance troubleshooting, capacity planning, rightsizing) is now `task`: troubleshoot or decide-capacity.
-- `tests` (concept, distinction, judgment, troubleshooting): replaced by `task`, which matches the blueprint and avoids the word test (`project/terms.md`).
+- `tests` (concept, distinction, judgment, troubleshooting): replaced by `task`, which matches the blueprint and avoids the word test ([project/terms.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/terms.md)).
 - `pillar`: on one question only. Performance against capacity is now in `task` (decide-capacity) and in the knowledge files the question links.
 - `format`, old `level` values, old `input` values: replaced on 2026-11-05 by `answer_type`, levels 100-400 and `input` [text, table, screenshot].
 

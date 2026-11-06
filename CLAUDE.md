@@ -5,7 +5,8 @@ Standing rules for this repository. Read at the start of every session.
 ## Purpose
 - Knowledge base for an AI assistant on vSphere and VCF metrics.
 - Primary reader: the AI. The author reviews for QA only.
-- No text aimed at human motivation or narrative. See `KNOWLEDGE-ENGINEERING.md`, section Principles.
+- No text aimed at human motivation or narrative.
+- No AI-speak: plain words, short sentences, no filler or stock phrases. Rule and list: `KNOWLEDGE-ENGINEERING.md`, section 15; lint flags `avoid_ai_speak` in `project/tools/tags.yaml`. See `KNOWLEDGE-ENGINEERING.md`, section Principles.
 
 ## Level
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases.

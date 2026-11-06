@@ -7,7 +7,7 @@ Why the system can win: [DESIGN.md](../DESIGN.md). Run-time flow and modes: [ARC
 - The agent is the model plus the tool loop, in agentic mode only. It is not a separate program.
 - The model makes the decisions: which tool next, with which query, which file to read, when to stop and answer.
 - The harness hosts the loop and constrains it: it runs the tools, enforces the rules and the budgets, and checks the answer.
-- Code: `harness/modes.py`, function `agentic`, with the prompts `SYSTEM_AGENT` and `PROMPTS`. The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `flows.py`); the verifier in `verify.py`.
+- Code: `harness/agent.py` (the loop, the tools, the rules), `harness/primer.py` (the up-front blocks), prompts `SYSTEM_AGENT` and `PROMPTS` in `harness/modes.py`. The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `flows.py`); the verifier in `verify.py`.
 - The model is frozen. What we change is what the agent is told, which tools it has, and the rules around them.
 
 ## 2. Why an agent
@@ -27,16 +27,16 @@ Why the system can win: [DESIGN.md](../DESIGN.md). Run-time flow and modes: [ARC
 - Searching helps only when the model knows it does not know. Its worst errors are Internet rules of thumb it believes, so it never searches for them.
 - Without a map, the agent searches blind: it does not know that a diagnosis file answers "what do I check" or that a comparison file sets two tools side by side.
 
-### Planned: five up-front blocks
-Each is small (together about 1-3K tokens), needed on most questions, and changes behaviour. Each is generated from the repository, so it cannot drift, and each has its own on/off switch for the benchmark.
+### Five up-front blocks (built 2026-11-06, off until measured)
+Each is small (all five: about 1,800 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All are off by default until the benchmark shows a gain (section 7). When one is on, the trace records a `primer` step.
 
 | # | Block | Content | Built from |
 |---|---|---|---|
-| 1 | Map of the knowledge base | What each folder covers, what each file type answers, which tool serves which question | Folder layout, `retriever_guide`, file counts |
-| 2 | Core rules | 10-15 short rules, each with its reason, that undo Internet priors: VM is not Guest OS; utilization is not contention; provider and consumer views differ; a counter means what its layer measures | The trap types (`KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400) and the architecture rules |
-| 3 | Confusable terms | Only the pairs public text mixes up: Usage, Utilization and Demand; Ready and Latency; Consumed and Active; Ballooned and Swapped | `knowledge/glossary.md` |
+| 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids (folders) |
+| 2 | Core rules | 12 short rules, each with its reason and file, that undo Internet priors: VM is not Guest OS; utilization is not contention; provider and consumer views differ; a counter means what its layer measures | `knowledge/vsphere/foundations/core-rules.md`, section Rules |
+| 3 | Confusable terms | Only the pairs public text mixes up: Usage, Utilization and Demand; Ready and Latency; Run and Used; Consumed and Active; Ballooned and Swapped | `knowledge/glossary.md`, section Confusable pairs |
 | 4 | Symptom → flow index | One line per diagnosis file: its name and when to use it | `diagnosis/` files |
-| 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | The tool rules |
+| 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |
 
 ### Kept behind tools
 | Content | Why not up front |
@@ -81,4 +81,4 @@ Each is small (together about 1-3K tokens), needed on most questions, and change
   3. tool descriptions and tool rules;
   4. the budgets, re-run on the answers that hit the limit with 16 calls.
 - Kept: a change that raises the final score or lowers the confident-wrong or override rate by more than the margin. Otherwise dropped.
-- Planned code split: the loop moves from `modes.py` to `harness/agent.py`, so the code matches this document.
+- Code split done 2026-11-06: the loop moved from `modes.py` to `agent.py`.

@@ -1,10 +1,10 @@
 # Benchmark design
 
 For human experts who check that the benchmark is valid and complete. Not indexed.
-Runner and commands: `benchmark/runner/README.md`. Question format: `benchmark/README.md`. Models and judge: `benchmark/models.md`. Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
+Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/README.md). Question format: [benchmark/README.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/README.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md). Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 
 ## 1. Claim
-- Claim: a local open-weight model on one GPU (`benchmark/models.md`), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
+- Claim: a local open-weight model on one GPU ([benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md)), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`DESIGN.md`, section 2). It measures:
   - which frozen model to ship;
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
@@ -60,7 +60,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
 - Level 400 is hard and complex, not tricky. It tests knowledge of the system, not reading of English. To stay unambiguous it is often long: the situation, the values, the tool, the time window, and one clear question.
 - Level 400 combines facts inside one answer: several knowledge files, a calculation, a flow, several inputs. There is no back-and-forth with the user; the agent does the chaining with its tool calls. (This replaces the earlier "multi-hop" level.)
 - Why Level 100-300 are in the benchmark, when the claim is about Level 400:
-  1. The knowledge base assumes the basics and does not teach them (`benchmark/models.md`, section 1). A candidate that fails Level 100-200 cannot read the knowledge base. A Level 400 failure is then a model failure, not a knowledge gap.
+  1. The knowledge base assumes the basics and does not teach them ([benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md), section 1). A candidate that fails Level 100-200 cannot read the knowledge base. A Level 400 failure is then a model failure, not a knowledge gap.
   2. Administrators ask basic questions too. One wrong basic answer costs the product its credibility.
   3. Non-regression: the knowledge base corrects Level 300 rules of thumb. The candidate must not over-correct a practice that is right (a correct unit conversion, a published threshold that does apply).
   4. Diagnosis: the frontier model is expected to be near perfect at Level 100-300 and to lose points at Level 400. The per-level sub-score shows where a candidate stands, and whether the knowledge base helps at Level 400 without hurting below it.
@@ -112,7 +112,7 @@ Three input types: what the administrator gives the product besides the question
 | System | 20% | the object as a whole: KPIs, capacity, availability, DRS, admission control, provider/consumer, statistics and rollups, GPU, Guest OS vs VM boundary |
 
 - The shares add up to more than 100% because a question can span several areas. A question on VM CPU Ready caused by host memory swapping counts for CPU and Memory.
-- Each question lists every area it touches (`technology` in its metadata, values from `project/tools/tags.yaml`). The share is the minimum number of questions that touch the area.
+- Each question lists every area it touches (`technology` in its metadata, values from [project/tools/tags.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/project/tools/tags.yaml)). The share is the minimum number of questions that touch the area.
 - About 5 questions sit outside the knowledge base. The system answers them from the model's own knowledge (knowledge base first, own knowledge where it is silent: author, Q038, 2026-11-05). They check that a gap does not turn into a wrong answer.
 - Per-area scores (15-25 questions) are diagnostic only (margin about ±15-20 points). Decisions use the total.
 
@@ -156,7 +156,7 @@ Level against input type (questions that include it):
 | Table questions with at least 100 rows | 5 |
 | Long, complex questions: many screenshots and tables, many key points, as close as one prompt gets to a long troubleshooting discussion (author, 2026-11-05) | 1 |
 
-- Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `trap_type` to be added; tags: `benchmark/README.md`, section Metadata tags), so coverage is counted by a script, not by eye.
+- Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `trap_type` to be added; tags: [benchmark/README.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/README.md), section Metadata tags), so coverage is counted by a script, not by eye.
 
 ### 3.8 Answer-key shape (deterministic)
 - Options: 4-8 written options, plus Unsure appended to every question. No Not covered option since 2026-11-05 (Q038).
@@ -264,26 +264,26 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
   - judged: the lowest judge score over the runs, divided by 3 (0, 0.33, 0.67, 1).
 - Final score = sum of question credits / number of questions. Every question weighs the same, whatever its level, answer type or input type.
 - Sub-score = the same mean within one group. A question counts for every input type it includes. The allocation (section 3.6) sets how much each group weighs in the final score.
-- Screenshot questions are scored with their images. There is no text-only track: every candidate reads images (`benchmark/models.md`).
+- Screenshot questions are scored with their images. There is no text-only track: every candidate reads images ([benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md)).
 - Reasons:
   - worst run, not mean: the same rule as Stable correct. An answer right in 4 runs of 5 is luck, and an operator gets one run;
   - one weight per question: no group can carry the score by a formula choice; the blueprint decides the mix;
   - judge score / 3: a partly right judged answer (right conclusion, missing reason) earns part credit, as a human examiner would give. A deterministic answer has no part credit, because a partly right set of letters is a wrong answer an operator would act on.
 - Confident-wrong rate covers both: wrong letters that are not Unsure, and judged answers scored 0 that do not say the information does not settle it.
 - Margin: 95% interval on the final score from the number of questions (section 4). Sub-scores have wider margins (20 questions: about ±16 points) and are diagnostic.
-- Runner: `benchmark/runner/report.py`, function `final`. Report table `Final score`.
+- Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/report.py), function `final`. Report table `Final score`.
 
 ## 8. Comparison design
 - Reasons for running both modes and for the call limit: `ARCHITECTURE.md`, sections 3 and 4.
 - The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
-- Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See `benchmark/runner/README.md`.
+- Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See [benchmark/runner/README.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/README.md).
 - Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's final score exceeds it by more than the margin.
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - A gap smaller than the margin is a tie; the smaller model wins a tie.
 - Run matrix at 100 questions: 10 models x 3 modes x 100 questions x 5 runs = 15,000 answers, about US$ 25-40 and 2-4 hours (re-check prices and rate limits before each run).
 
 ## 9. Retrieval check
-- The final score mixes harness and model. The retrieval check separates them: `benchmark/runner/retrieval_eval.py` checks, without a model, whether each question's `knowledge` files are found and placed in the classic context.
+- The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in the classic context.
 - Result 2026-11-04 (28 questions, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 questions. This caps classic mode. Improve it before judging the model.
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 8.
 
@@ -327,7 +327,7 @@ For the set:
 
 ## 13. Screenshot questions
 - Purpose: administrators upload screenshots and ask the agent to explain the problem. Often several at once, from different tools: esxtop, the vCenter UI, the VCF Operations UI (author, 2026-11-05).
-- Reading screenshots is a basic requirement. A model without vision is not a candidate (`benchmark/models.md`). There is no text-only track.
+- Reading screenshots is a basic requirement. A model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md)). There is no text-only track.
 - A screenshot question can be deterministic or judged. It carries all its images in `attachments`; every image is sent with the same prompt.
 - Coverage: section 3.7 (5 questions per source).
 - Sample size: the sub-score margin at 85% is about ±22 points with 10 questions, ±16 with 20, ±13 with 30. 25 is the allocation (section 3.6); 30 is needed before the sub-score alone decides between two models.
@@ -343,8 +343,8 @@ For the set:
 - Images and tables can be combined in one question (section 3.4).
 
 ## 14. Judged questions and the judge
-- Questions with `answer_type: judged` are answered without options and scored 0-3 by a judge model. Code: `benchmark/runner/judge.py`.
-- The candidate gets the same harness, modes and tools as for deterministic questions, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: `harness/modes.py`, `PROMPTS['open']`.
+- Questions with `answer_type: judged` are answered without options and scored 0-3 by a judge model. Code: [benchmark/runner/judge.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/judge.py).
+- The candidate gets the same harness, modes and tools as for deterministic questions, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: [harness/modes.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/modes.py), `PROMPTS['open']`.
 - The judge gets: the prompt, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The candidate never sees the key.
 - `## Expected key points` is the answer key for the judge, not a script for the candidate:
   - each bullet is one fact a correct answer must state, in any words, in any order;
@@ -366,7 +366,7 @@ For the set:
 - Judge rules (in its prompt): judge facts, not style or length; a contradiction of a key point caps the score at 0; the key points are the truth even where general IT practice differs; reward nothing the key points do not contain.
 - Reply: one JSON object (`score`, `trap`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
 - Each run of a question is judged separately. The question credit is the lowest score / 3 (section 7.4).
-- Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See `benchmark/models.md`, section 6.
+- Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See [benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md), section 6.
 - Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `trap`, `unsure`, and the answer text.
 - Checks on the judge:
   - the author reviews every score 0 and every question where runs disagree by 2 or more points;
@@ -394,9 +394,9 @@ For the set:
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
 - Screenshot upload is part of the product. A model whose screenshot sub-score is far below its text-only sub-score (more than the margin) is a vision problem: check the image, then the model.
 - 70B challenger: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
-- A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: `benchmark/models.md`, section 1.
+- A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: [benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md), section 1.
 
 ## 17. Outputs
-- `benchmark/results/results.csv`: one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).
-- A short report per run in `benchmark/results/`: score matrix, consistency, worst cases, trace links.
+- [benchmark/results/results.csv](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/results/results.csv): one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).
+- A short report per run in [benchmark/results](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/results): score matrix, consistency, worst cases, trace links.
 - Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a to-do or author question.

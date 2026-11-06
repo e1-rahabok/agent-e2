@@ -143,6 +143,15 @@ Each entry has:
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
 - Answer:
 
+### Q059 · Agent · Core rules and confusable pairs given to the agent up front
+- Files: [Core rules of vSphere metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/core-rules.md) (section Rules); [Terminology](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md), section 3.
+- Search: not from the book. Each rule and pair summarises the knowledge file it points to.
+- Question:
+  1. Are these the 12 rules an expert would give a new colleague first? Which would you drop, add or reword?
+  2. Are the 8 confusable pairs right, and is any pair missing?
+- Written as now: drafted by Claude 2026-11-06, status draft. The agent receives them only when the switches are on (all off by default).
+- Answer:
+
 ## Resolved
 
 ### Q056 · Benchmark · Level of each existing question

@@ -193,7 +193,9 @@ def main():
     for lv, ns in level_numbers.items():
         if sorted(ns) != list(range(1, len(ns) + 1)):
             bad('benchmark/questions', f'level {lv} file numbers must run 01..{len(ns):02d} without gaps; run project/tools/renumber_questions.py')
-    for d in ('benchmark/design.md', 'project/author-questions.md', 'project/todo.md'):
+    sys.path.insert(0, 'project/tools')
+    from link_refs import DOCS as LINKED_DOCS
+    for d in LINKED_DOCS:
         for ref in re.findall(r'benchmark/questions/(L\d-\d+-[\w-]+\.md)', open(d).read()):
             if not os.path.exists(os.path.join('benchmark', 'questions', ref)): bad(d, f'link to a question that does not exist: {ref}')
     for f in files + sorted(glob.glob('benchmark/questions/*.md')):
@@ -203,6 +205,12 @@ def main():
     import subprocess  # author-facing documents: file references must be clickable links
     r = subprocess.run([sys.executable, 'project/tools/link_refs.py', '--check'], capture_output=True, text=True)
     for line in r.stdout.splitlines(): bad(line.split(':')[0], line.split(': ', 1)[1])
+    import kb as _kb, primer  # agent up-front blocks: sources present, size within budget (harness/AGENT.md, section 3)
+    pdocs, _ = _kb.load()
+    for b in primer.BLOCKS:
+        if not primer.build(pdocs, {b: True}): bad('harness/primer.py', f'up-front block "{b}" is empty: its source section is missing')
+    n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
+    if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
     check_tables(bad)
     check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
@@ -228,6 +236,9 @@ def check_repo_terms(allowed, bad):
             for pat, use in (allowed.get('avoid_repo_terms') or {}).items():
                 if re.search(pat, line):
                     bad(f, f'line {i}: repository term "{re.search(pat, line).group(0)}": use "{use}" (project/terms.md)')
+            for pat, use in (allowed.get('avoid_ai_speak') or {}).items():
+                if re.search(pat, line):
+                    bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (KNOWLEDGE-ENGINEERING.md, section 15)')
 
 
 def check_tables(bad):

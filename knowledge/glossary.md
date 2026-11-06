@@ -106,6 +106,20 @@ reservation is guaranteed; utilization may be < reservation
 - Utilization: fraction of usage out of its limit.
 - vSphere does not follow this convention. See `foundations/naming-patterns`.
 
+## Confusable pairs
+Pairs that public text mixes up. Each row points to the file that holds the mechanism.
+
+| Pair | Difference | File |
+|---|---|---|
+| ESXi CPU Usage vs Utilization | Usage counts frequency and Hyper-Threading (both threads busy = core 100%); Utilization is static-frequency busy time, per thread | `vsphere/technology/cpu/metrics/host/utilization` |
+| ESXi CPU Demand vs Usage | Demand is the sum over the VMs of what they would use with no contention; an internal scheduler metric | `vsphere/technology/cpu/metrics/host/demand` |
+| VM CPU Ready vs Latency | Ready is time waiting for a physical CPU; Latency also rises with lower frequency, with no wait | `vsphere/technology/cpu/metrics/virtual-motherboard/latency` |
+| VM CPU Run vs Used | Run is time only; Used is scaled by frequency and Hyper-Threading, plus System, minus Overlap | `vsphere/technology/cpu/diagnosis/run-vs-used-gap` |
+| VM Memory Consumed vs Active | Consumed is the ESXi pages of the VM, kept once touched; Active is an estimate of pages touched recently, with no operational use | `vsphere/technology/memory/metrics/virtual-motherboard/active` |
+| VM Memory Ballooned vs Swapped | Ballooned is reclaimed through the Guest OS, past tense; Swapped is paged out by ESXi at random, as it cannot see guest free memory | `vsphere/technology/memory/metrics/virtual-motherboard/swapped` |
+| Compression ZIP/s vs UNZIP/s | ZIP/s is a capacity signal of the host; UNZIP/s means the VM waits | `vsphere/technology/memory/metrics/comparisons/esxtop-memory` |
+| Reservation vs usage | Admission control checks reservations; usage plays no part | `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state` |
+
 ## Object types
 ### vSphere (API type names)
 - VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, StoragePod (datastore cluster), Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup.
@@ -191,6 +205,7 @@ corrections: []
 review_notes:
   - "Section 'Book terminology' is a placeholder. The author will provide the book's terminology."
   - "Section 'Core words' is drafted by Claude to prevent mixing dimensions. Author to correct."
+  - "Section 'Confusable pairs': drafted by Claude 2026-11-06 from the files in its File column, as block 3 of the agent up-front knowledge (harness/AGENT.md). Author to confirm (Q059)."
   - "Section 'VCF Operations object types': names other than vSphere World are from Claude's own knowledge. Verify against current VCF Operations documentation."
   - "Section 'Proposed terms': added 2026-11-02 from the book, CPU > Architecture. Not yet in use as tag values. Author to confirm each term and its preferred name."
   - "Moved 2026-11-02 from knowledge/vsphere/glossary/ to knowledge/glossary/: applies to all products. Scope set to vendor-neutral."

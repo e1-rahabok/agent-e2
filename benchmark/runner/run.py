@@ -49,6 +49,7 @@ def main():
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')
     ap.add_argument('--mock', action='store_true', help='offline: random answers, no API calls')
     ap.add_argument('--judge', help='judge model id (default: config judge_model)')
+    ap.add_argument('--primer', help='agent up-front blocks to switch on, comma-separated: map,rules,terms,flows,procedure, or all (default: config agent_primer)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
     ap.add_argument('--resume', help='existing run folder to continue')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
@@ -69,6 +70,9 @@ def main():
         sys.exit('No scorable questions matched.')
 
     client = MockClient() if a.mock else GatewayClient(cfg['gateway'])
+    if a.primer:
+        on = {'map', 'rules', 'terms', 'flows', 'procedure'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
+        cfg['agent_primer'] = {b: b in on for b in ('map', 'rules', 'terms', 'flows', 'procedure')}
     judge_model = a.judge or cfg.get('judge_model')
     needs_judge = any(not c.choice for c in questions_)
     if needs_judge and judge_model in models_:
@@ -120,6 +124,7 @@ def main():
         embed, retriever = None, Retriever(docs, chunks)
     sha = kb.git_sha()
     json.dump({'benchmark_id': benchmark_id, 'started': dt.datetime.now().isoformat(timespec='seconds'), 'index_version': sha,
+               'agent_primer': cfg.get('agent_primer'),
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
                'skipped_questions': skipped, 'judge_model': judge.model if judge else None,

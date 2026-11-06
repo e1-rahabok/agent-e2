@@ -7,7 +7,7 @@ Why it can work, and model size: [DESIGN.md](DESIGN.md). The agent: [harness/AGE
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
 | Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
-| Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only (`harness/AGENT.md`) | the loop in `harness/modes.py` (`agentic`), the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
+| Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only (`harness/AGENT.md`) | the loop in `harness/agent.py` (`agentic`), up-front blocks in `harness/primer.py`, the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, the loop's rules, the answer verifier | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
 | Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
 
@@ -172,7 +172,12 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 
 ## 10. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
-- `harness/` implements the steps below (`harness/kb.py`, `harness/retrieval.py`, `harness/modes.py`). They are also the contract for any other RAG stack.
+- `harness/` implements the steps below (`harness/kb.py`, `harness/retrieval.py`, `harness/modes.py`, `harness/agent.py`). They are also the contract for any other RAG stack.
+
+### Retrieval approach
+- Retrieval, not fine-tuning, supplies the facts: the knowledge is not on the Internet; it changes often (author answers); answers must cite files; small models memorise facts poorly.
+- Optional later: a light fine-tune (LoRA) for style and terminology only. Facts stay in retrieval.
+- Not used: long-context stuffing (the whole knowledge base is about 125K tokens: too much for a small model and too slow per question); a separate graph database (the metadata links already form the graph).
 
 ### Ingest
 1. Index `knowledge/**/*.md` except the folders listed in `KNOWLEDGE-ENGINEERING.md`, section Indexing rules.
@@ -209,6 +214,19 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
 - No diagnosis file matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
 - Contention before consumption before context, unless the file states another order.
+
+### Trace
+Recorded for every answer (`traces.jsonl` in the benchmark; the answer log at the site).
+
+| Field | Content |
+|---|---|
+| step, action | 1, 2, 3, ...; search, read_file, follow_links, get_images, catalog, calculate, flow, primer, reminder, refused, verify, repair, answer, fallback |
+| input | tool arguments |
+| output summary | ids returned, tokens returned |
+| tokens, latency, provider | per model turn |
+| index version | git SHA of `knowledge/` |
+
+- The trace explains each failure: right file never searched → retrieval or filter problem; file read but fact ignored → model problem; fact missing → knowledge gap.
 
 ### Measurement
 - `benchmark/` runs the same questions with and without the knowledge base. A structure change is kept only when scores improve.

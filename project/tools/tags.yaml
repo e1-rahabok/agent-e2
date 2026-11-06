@@ -20,6 +20,36 @@ allow_in_cpu_files: ['Guest OS (CPU )?Needed( Memory)?', 'VM (CPU|Memory) Needed
 injection_patterns: ['<!--', '[\u200b-\u200f\u2060\ufeff]', '(?i)ignore (all |any )?(previous|prior|above) instructions', '(?i)disregard (the )?(above|previous|prior)', '(?i)you are now (a|an|the)\b', '(?i)new instructions:', '(?i)system prompt']
 # Phrases rejected in body text of every knowledge file.
 avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
+# AI-speak: filler words and stock phrases of generated text. Plain words instead (KNOWLEDGE-ENGINEERING.md, section 15).
+# Checked where the repository terms are checked. Domain words stay allowed: utilization/utilized, realm (the author's word).
+avoid_ai_speak:
+  '(?i)\bdelv(e|es|ed|ing)\b': 'look at, read'
+  '(?i)\bleverag(e|es|ed|ing)\b': 'use'
+  '(?i)\bseamless(ly)?\b': 'drop it'
+  '(?i)\brobust(ly|ness)?\b': 'name the property: tested, stable, exact'
+  '(?i)\bfacilitat(e|es|ed|ing)\b': 'help, allow'
+  '(?i)\bempower(s|ed|ing)?\b': 'let, allow'
+  '(?i)\bunlock(s|ed|ing)?\b': 'allow, give'
+  '(?i)\bstreamlin(e|es|ed|ing)\b': 'simplify, shorten'
+  '(?i)\b(cutting-edge|state-of-the-art|game[- ]chang(er|ing))\b': 'say what it does'
+  '(?i)\b(paradigm|synerg(y|ies|istic)|tapestry|landscape)\b': 'name the thing'
+  '(?i)\bembark(s|ed|ing)?\b': 'start'
+  '(?i)\bnavigat(e|ing) the\b': 'drop it'
+  '(?i)\bplays? an? (crucial|key|vital|pivotal) role\b': 'say what it does'
+  '(?i)\b(crucial|pivotal|paramount)\b': 'drop it, or give the reason'
+  '(?i)\bit(''s| is) (important|worth) (to note|noting)\b': 'drop it; state the fact'
+  '(?i)\b(furthermore|moreover|additionally)\b': 'drop it; one fact per bullet'
+  '(?i)\bin (conclusion|today''s)\b': 'drop it'
+  '(^|[.:-]\s*)(?i:in summary)[,:]': 'drop it'
+  '(?i)\bin order to\b': 'to'
+  '(?i)\bensure that\b': 'check that, so that'
+  '(?i)\b(meticulous(ly)?|nuanced)\b': 'drop it'
+  '(?i)\bfoster(s|ed|ing)?\b': 'build, keep'
+  '(?i)\bharness(es|ed|ing)? the power\b': 'use'
+  '(?i)\bat its core\b': 'drop it'
+  '(?i)\bdive (deep )?into\b': 'read, explain'
+  '(?i)\bkey takeaways?\b': 'drop it'
+  '(?i)\b(rest assured|I hope this helps|great question)\b': 'drop it'
 # Repository terms: one word per concept (project/terms.md). Checked in every markdown file except
 # project/terms.md, project/author-questions.md (the author's own words), project/archive/ and benchmark/results/.
 avoid_repo_terms:

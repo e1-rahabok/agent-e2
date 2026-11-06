@@ -11,7 +11,8 @@ import subprocess
 import sys
 
 Q = 'benchmark/questions'
-DOCS = ['benchmark/design.md', 'project/author-questions.md', 'project/todo.md']
+sys.path.insert(0, os.path.dirname(__file__))
+from link_refs import DOCS  # noqa: E402  (the documents that link questions)
 NAME = re.compile(r'^L\d-\d{2,3}-(.+)\.md$')
 
 
