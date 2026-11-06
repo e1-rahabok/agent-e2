@@ -28,14 +28,14 @@ Each entry has:
 - Search: "if the value is per VM or per disk"
 - Question: is the VM Disk (device-level) metric value for this VM only, or for the whole device shared by many VMs?
 - Written as now: associated with the VM, flagged as unsure.
-- Answer:
+- Answer: it is for the VM, not the whole device or datastore.
 
 ### Q042 · Quiz > CPU > Q11 Reclamation · Option D, power off frees memory
 - Files: [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md); [Why rightsizing matters for VMs](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/rightsizing.md), [Unused and idle vCPUs](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/idle-and-unused-vcpus.md), [Large VM with low utilization: build the case to downsize](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/diagnosis/oversized-vm-downsizing.md)
 - Search (quiz): "Power off the VM, as this also frees the VM memory"
 - Question: key is C,D. Frontier baseline chose C,D in 5 of 5; frontier classic chose C only in 5 of 5, citing that the knowledge base does not make the claim. Should the knowledge base state that powering off an idle VM frees its memory, as part of reclamation?
 - Written as now: no file states that powering off an idle VM frees its memory. idle-and-unused-vcpus covers the CPU cost of idle vCPUs only.
-- Answer:
+- Answer: Yes, the knowledge base should state that powering off an idle VM frees its memory, as the consumed page tends to linger long after the VM has gone idle. The main reason is Windows and Linux tends to hold on to the memory. Powering off is a good best practice to claim this unused memory.
 
 ### Q043 · Quiz > Memory > Q2 VM vs Guest OS · Options A and D
 - Files: [Relationship between VM and Guest OS memory metrics](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md); [Guest OS memory vs VM memory](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/guest-os-vs-vm-memory.md), [Ballooning](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md), [VM Memory Usage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/usage.md)
@@ -43,7 +43,7 @@ Each entry has:
 - Search 2 (quiz): "the hypervisor cannot balloon the VM"
 - Question: key is A,B,D,E. Frontier dropped A or D in every run (baseline and agentic B,D,E; classic A,B,E). Are A and D both correct? If yes, which statements should the knowledge base add?
 - Written as now: guest-os-vs-vm-memory says neither the VMkernel nor the Guest OS has full visibility into the other (close to A, but not "managed independently"). No file states that ballooning requires VMware Tools running (D).
-- Answer:
+- Answer: Yes, A and D are correct. The architecture of virtualization in ESXi means Guest OS cannot see the underlying memory. As a result, Windows and Linux completely operate its given memory as if they are on physical server hardware. Unlike a Type 2 hypervisor, which executes as software applications on top of a conventional host operating system, ESXi access the Guest OS via VMware Tools. This is the only channel for ESXi to issue a malloc() request to Windows or Linux. Without this request, ESXi is blind and can swap used memory.
 
 ### Q044 · Chapter 4 Storage > ESXi · Latency thresholds vs vSphere 9.1 documentation
 - Files: [ESXi storage latency is high](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/diagnosis/host-storage-latency.md), [vSphere documentation performance guidance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/vsphere-client/performance-guidance.md)
@@ -51,7 +51,7 @@ Each entry has:
 - Search 2: "In a healthy environment, it should be well within 5 ms"
 - Question: the vSphere 9.1 documentation (vSphere Monitoring and Performance > Solutions for Disk Performance Problems, p. 2121) says kernelLatency best 0-1 ms and a problem above 4 ms; deviceLatency above 15 ms indicates an array problem; queueLatency must be 0. Keep the book values as the knowledge-base thresholds, and the documentation values only as the vendor's published guidance?
 - Written as now: diagnosis file uses the book values (KAVG 0.5 ms, DAVG well within 5 ms). The guidance file lists the documentation values, says the 15 ms value comes from spinning-disk arrays, and points to the book values.
-- Answer:
+- Answer: move all these threshold guidance from scattered over many files into a single small database, so it's quick for the Agent or Harness to check, and easy for human expert to review. You did create the database before. Where is it? 
 
 ### Q045 · Chapter 3 Memory > VM · Swapped formula in the vSphere 9.1 documentation
 - Files: [VM Memory Swapped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/swapped.md)
