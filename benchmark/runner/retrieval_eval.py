@@ -44,7 +44,7 @@ def main():
     rr = {}
     if cfg.get('rerank'):
         from rerank import Reranker
-        rr = {'reranker': Reranker(cfg.get('rerank_model', 'bge-reranker-v2-m3')), 'rerank_n': cfg.get('rerank_n', 30)}
+        rr = {'reranker': Reranker(cfg.get('rerank_model', 'bge-reranker-v2-m3')), 'rerank_n': cfg.get('rerank_n', 30), 'rerank_mode': cfg.get('rerank_mode', 'replace'), 'rerank_stem': cfg.get('rerank_stem', False)}
     if a.embeddings:
         from llm import GatewayClient
         client = GatewayClient(cfg['gateway'], os.environ['AI_GATEWAY_API_KEY'])
