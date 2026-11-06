@@ -20,8 +20,9 @@
 ![Performance management spans 0-100% of total capacity; capacity management spans 0-100% of usable capacity, which sits between the hypervisor overhead below and the buffer above, beside High Availability](images/performance-vs-capacity-total-vs-usable-range-diagram.png)
 
 ## Absolute vs relative
-- Performance is absolute: the real value against total capacity.
-- Capacity is relative: it depends on settings (HA, buffer, overcommit), against usable capacity.
+- Performance is read against total capacity, but its meaning is relative: compare a cluster with other clusters, and with itself over time. Like a stock index: the number itself means little; the movement does.
+- By class of service, a Gold cluster should score higher Performance (%), lower consumption (%) and lower Risk (%) than a Bronze cluster.
+- Capacity is relative to usable capacity, not total capacity. The real utilization is lower; divided by the smaller usable capacity, the capacity score reads higher.
 - Utilization is not managed for its own sake. Alone it means nothing: 0% can be bad, 100% can be good. It is an input to both pillars, read differently by each.
 - Capacity reads demand, not utilization: demand is the higher of utilization and reservation. Model: `operations-management/capacity/capacity-model`.
 
@@ -63,7 +64,7 @@
 - ESXi ballooning, compression or swapping does not mean a VM has a memory performance problem. Read the VM's own contention.
 
 ### Four points on the utilization scale
-- A, demand above physical capacity: rarely reached, because the HA buffer keeps utilization below 100%. Not where most performance problems happen.
+- A, demand above physical capacity: utilization measures what happens and cannot pass 100%; demand can, since it includes unmet demand. Rarely reached, because the HA buffer keeps utilization below 100%. Not where most performance problems happen.
 - B, 100% of physical capacity: the most work done. Best overall performance.
 - C, 0% while there is demand: nothing gets done. Worst performance.
 - D, the usable capacity threshold: a capacity limit only. Performance above it is better, not worse.
@@ -153,8 +154,8 @@ corrections:
 - 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good (author, Q066, 2026-11-06).'
 - 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance (author, Q068, 2026-11-06).'
 - 'Section ''Pattern difference'': the drop starts where the allocation ratio passes 1, on the hottest host first; only allocation can be overcommitted (author, Q069, 2026-11-06).'
-review_notes:
-- 'Section ''Absolute vs relative'': the book says performance is absolute; the author said in chat (2026-11-06) that relative cluster performance is more meaningful than absolute. Q065.'
-- 'Section ''Four points on the utilization scale'', points A and B: wording ''demand above physical capacity'' for A added by Claude. Q067.'
+- 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity (author, Q065, 2026-11-06). Corrects the book (performance is absolute).'
+- 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can (author, Q067, 2026-11-06).'
+review_notes: []
 status: draft
 ```

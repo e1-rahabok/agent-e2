@@ -7,7 +7,7 @@ Allowed tag values (machine settings for the linter) are in `project/tools/tags.
 - From Part 1, Performance Management. Proposals until the author confirms.
 - KPI: key performance indicator; performance only. One metric that quantifies the performance of a logical entity. See `operations-management/performance/kpi-vs-sla`.
 - KAI: key availability indicator. KCI: key compliance indicator. Not called KPI.
-- SLI: service level indicator; the 5-minute tracking value behind an SLA. The SLA is its monthly result.
+- SLI: SLA leading indicator, not service level indicator. A pass or fail every 5 minutes; the SLA is its mean over the calendar month (author, Q076).
 - Noisy neighbour: a consumer whose demand degrades other consumers on shared capacity (villain and victims). Used instead of resource management. See `vsphere/foundations/noisy-neighbour`.
 - Class of service: Gold, Silver, Bronze; each with its own overcommit ratio, maximum VM size and performance threshold.
 - Usable capacity: total capacity minus HA, buffer and hypervisor overhead. A capacity term only; there is no usable performance.
@@ -178,6 +178,9 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 ## Words to avoid
 | Avoid | Use instead | Why |
 |---|---|---|
+| utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand (author, Q067). |
+| compliance SLA | security SLA | Security covers activity as well as settings (author, Q074). |
+| KPI target | KPI baseline (standard expectation) | A target is not reached yet; a KPI is what is maintained as standard (author, Q067). |
 | demand overcommit | overcommit (of allocation) | Only allocation can be overcommitted. Demand, usage and utilization are results, not settings (author, Q069, 2026-11-06). |
 | VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
 | VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
