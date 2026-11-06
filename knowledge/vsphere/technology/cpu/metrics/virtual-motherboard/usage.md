@@ -84,9 +84,9 @@ related:
 - vsphere/technology/cpu/concepts/cpu-frequency
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/technology/cpu/metrics/virtual-motherboard/net-run
+- vcf-operations/metrics/vm/cpu-net-run
 - vsphere/technology/cpu/metrics/virtual-motherboard/demand
-- vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
+- vcf-operations/metrics/vm/cpu-usage-disparity
 - vsphere/technology/cpu/diagnosis/oversized-vm-downsizing
 images:
   - path: ../../images/vm-cpu-usage-vs-run-scatter-across-vms.png

@@ -46,8 +46,8 @@ level: 200
 answer_type: deterministic
 input: [table]
 knowledge:
-  - vsphere/technology/storage/metrics/virtual-motherboard/provisioned-space
-  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  - vcf-operations/metrics/vm/disk-space-provisioned
+  - vcf-operations/metrics/vm/disk-space-used
 attachments:
   - 0046/datastore-ds01-vm-disk-space.csv
 origin: synthetic

@@ -41,8 +41,8 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/technology/network/metrics/comparisons/esxtop-network
-  - vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+  - vsphere/tools/esxtop/network
+  - vsphere/tools/esxtop/units-vs-vsphere-client
 attachments:
   - 0069/esxtop-network-panel.png
 origin: synthetic

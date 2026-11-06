@@ -60,7 +60,7 @@ related:
 - vsphere/technology/storage/metrics/host/datastore
 - vsphere/technology/storage/metrics/virtual-motherboard/datastore
 - vsphere/technology/storage/diagnosis/host-storage-latency
-- vsphere/foundations/vcenter-statistics
+- vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
   path: vSphere Monitoring and Performance > Overview Performance Charts > Datastores and Datastore Clusters > Storage I/O Control Normalized Latency, Aggregate IOPs, Activity, Maximum Queue Depth per Host, Virtual Machine Observed Latency per Datastore (pp. 2048-2052)

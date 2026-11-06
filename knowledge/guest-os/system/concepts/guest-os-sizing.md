@@ -123,7 +123,7 @@ internal_derive:
 related:
 - operations-management/capacity/rightsizing
 - operations-management/capacity/vm-footprint-sizing
-- vsphere/technology/memory/metrics/virtual-motherboard/utilization
+- vcf-operations/metrics/vm/memory-utilization
 images:
   - path: ../images/guest-os-sizing-what-to-include-and-exclude.png
     product: [vcf-operations]

@@ -76,7 +76,7 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/technology/cpu/concepts/cpu-frequency
-- vsphere/technology/cpu/metrics/virtual-motherboard/net-run
+- vcf-operations/metrics/vm/cpu-net-run
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 - vsphere/technology/cpu/diagnosis/run-vs-used-gap
 source:

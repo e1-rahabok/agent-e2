@@ -45,7 +45,7 @@ input: [table]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
   - vsphere/technology/network/diagnosis/vnic-rx-drops
-  - vsphere/object-types/cluster/metrics/cluster-sla-sli
+  - vcf-operations/kpis/cluster-sla-sli
 attachments:
   - 0082/vm-network-400-vms.xlsx
 origin: synthetic

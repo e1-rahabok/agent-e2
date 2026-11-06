@@ -13,7 +13,7 @@
 
 ## Same metric, different unit per tool
 - Tools can show the same metric in different units.
-- vSphere example: esxtop shows network in megabits; vSphere Client shows kilobytes. See `vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units`.
+- vSphere example: esxtop shows network in megabits; vSphere Client shows kilobytes. See `vsphere/tools/esxtop/units-vs-vsphere-client`.
 
 ## Values above 100%
 - A metric computed by summation (not average) can exceed 100%.
@@ -35,7 +35,7 @@ pillar:
 product: []
 internal_derive: []
 related:
-- vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+- vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx

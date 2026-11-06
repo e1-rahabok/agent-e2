@@ -21,6 +21,8 @@ KINDS = {  # folder kind -> what it answers and which tool serves it
     'metrics': ('what a counter means on one object', 'catalog, read_file, follow_links(same_name)'),
     'configuration': ('what a setting does', 'search, read_file'),
     'diagnosis': ('what to check, in what order', 'flow'),
+    'kpis': ('a VCF Operations KPI: sub-metrics, bands, scoring', 'catalog, read_file'),
+    'tools': ('how esxtop or the vSphere Client shows the counters', 'read_file'),
 }
 
 PROCEDURE = """## Procedure
@@ -33,7 +35,7 @@ PROCEDURE = """## Procedure
 
 def _area(doc_id):
     parts = doc_id.split('/')
-    if parts[:2] in (['vsphere', 'technology'], ['vsphere', 'object-types']) and len(parts) > 2:
+    if parts[:2] in (['vsphere', 'technology'], ['vsphere', 'object-types'], ['vsphere', 'tools']) and len(parts) > 3:
         return '/'.join(parts[:3])
     if parts[0] in ('guest-os', 'vsphere', 'operations-management') and len(parts) > 2:
         return '/'.join(parts[:2])
@@ -54,7 +56,7 @@ def map_block(docs):
     lines = ['## Map of the knowledge base',
              'File kinds (folder name in the id):']
     lines += [f'- {k}/: {q}. Tool: {t}.' for k, (q, t) in KINDS.items()]
-    lines += ['- other: overviews, comparisons, foundations, KPIs.', 'Areas (files by kind):']
+    lines += ['- other: overviews, comparisons, foundations.', 'Areas (files by kind):']
     for a in sorted(areas):
         c = areas[a]
         lines.append(f'- {a}: ' + ', '.join(f'{c[k]} {k}' for k in list(KINDS) + ['other'] if c[k]))

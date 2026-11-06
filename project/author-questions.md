@@ -46,7 +46,7 @@ Each entry has:
 - Answer:
 
 ### Q044 · Chapter 4 Storage > ESXi · Latency thresholds vs vSphere 9.1 documentation
-- Files: [ESXi storage latency is high](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/diagnosis/host-storage-latency.md), [vSphere documentation performance guidance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vsphere-client-performance-guidance.md)
+- Files: [ESXi storage latency is high](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/diagnosis/host-storage-latency.md), [vSphere documentation performance guidance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/vsphere-client/performance-guidance.md)
 - Search 1: "the value should be within 0.5 ms"
 - Search 2: "In a healthy environment, it should be well within 5 ms"
 - Question: the vSphere 9.1 documentation (vSphere Monitoring and Performance > Solutions for Disk Performance Problems, p. 2121) says kernelLatency best 0-1 ms and a problem above 4 ms; deviceLatency above 15 ms indicates an array problem; queueLatency must be 0. Keep the book values as the knowledge-base thresholds, and the documentation values only as the vendor's published guidance?
@@ -61,7 +61,7 @@ Each entry has:
 - Answer:
 
 ### Q046 · Provider Objects > esxtop · HTQ and DTYP still in the 9.1 documentation
-- Files: [esxtop CPU, power and interrupt counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/comparisons/esxtop-cpu.md), [esxtop network counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/comparisons/esxtop-network.md)
+- Files: [esxtop CPU, power and interrupt counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md), [esxtop network counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/esxtop/network.md)
 - Search 1: "The column HTQ is no longer shown in ESXi 7.0"
 - Search 2: "does not seem to be available anymore"
 - Question: the vSphere 9.1 documentation still lists HTQ (CPU panel) and DTYP (network panel). Do they show on an ESXi 9.1 host?
@@ -76,7 +76,7 @@ Each entry has:
 - Answer:
 
 ### Q048 · Thresholds · Interval and instance reading of every band
-- Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/vm/metrics/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), [Cluster SLA and SLI](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds.yaml) (fields `interval`, `instance`).
+- Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md), [Cluster SLA and SLI](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds.yaml) (fields `interval`, `instance`).
 - Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/foundations/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
@@ -287,16 +287,16 @@ To be conservative, I recommend include.
 - Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md), option 2 boundaries added. Follow-up on the colour of each range: Q055.
 
 ### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
-- Files: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md)
+- Files: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md)
 - Search 1: "vMotion is not included as it only becomes an issue"
 - Search 2: "vMotion is included as it does impact the VM performance"
 - Question: is vMotion part of the cluster KPI or not? The threshold table has no vMotion row.
 - Written as now: vMotion described as a leading indicator, flagged.
 - Answer: vMotion should not be included in actual performance as the metric counts the number of vmotion, not the length of the actual downtime. In a healthy environment, each vMotion down time is below 0.2 second and does not impact the Guest OS. Broadbase infrastructure capabilities like vMotion, NSX Edge, vSAN resync and general infrastructure (e.g. network) should be monitored separately. For example, track the maximum downtime for all vMotion across entire environment as a high downtime is a leading indicator of performance degradation.
-- Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md), section vMotion is not part of the KPI; [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), section Not used.
+- Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md), section vMotion is not part of the KPI; [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md), section Not used.
 
 ### Q031 · Provider Objects > Performance · Cluster KPI table vs text
-- Files: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md)
+- Files: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md)
 - Search 1: "Storage troubleshooting differs to compute troubleshooting" (disk latency listed as not used)
 - Search 2: "That’s why it’s given 4x the threshold of zipped + swapped" (balloon thresholds)
 - Search 3: "I did not set green = 0"
@@ -304,10 +304,10 @@ To be conservative, I recommend include.
 - Written as now: the table, with text reasons listed and the conflict flagged.
 - Answer: both are outdated. The updated information is here https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-performance.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md Update the knowledge accordingly.
 Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md
-- Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-performance.md) and [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md) rewritten from the adapter documentation (thresholds, calculation, DRAM-only memory, scoring, Excluded rows, known limitation, missing data); both threshold images replaced with the current tables; shared scoring rule updated in [Performance KPI design: VM Performance (%) and Guest OS Performance (%)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md).
+- Done 2026-11-05: [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md) and [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md) rewritten from the adapter documentation (thresholds, calculation, DRAM-only memory, scoring, Excluded rows, known limitation, missing data); both threshold images replaced with the current tables; shared scoring rule updated in [Performance KPI design: VM Performance (%) and Guest OS Performance (%)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md).
 
 ### Q032 · Provider Objects > Other Metrics · Monster VM threshold
-- Files: [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), [vSphere cluster: operations complexity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md)
+- Files: [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md), [vSphere cluster: operations complexity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md)
 - Search 1 (Overview): "If a VM vCPU > 45% of the ESXi count of threads"
 - Search 2 (Monster VM): "if a VM vCPU size is > 40% of the ESXi count of threads"
 - Search 3 (Cluster Risk): "the VM size needs to be at least half the ESXi"
@@ -315,7 +315,7 @@ Also, update Cluster Risk in the knowledge base from https://github.com/e1-rahab
 - Question: which CPU threshold defines a monster VM?
 - Written as now: the recommendation (above 50% of physical cores); the others flagged.
 - Answer: The final and up to date answer at https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md#when-a-vm-is-a-monster  Update the
-- Done 2026-11-05: [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/cluster-risk.md), section Monster VM; [vSphere cluster: operations complexity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md) Monster VM row; [knowledge/catalog/thresholds.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds.yaml) rows monster-vm-cpu and monster-vm-memory.
+- Done 2026-11-05: [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md), section Monster VM; [vSphere cluster: operations complexity](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/cluster-operations.md) Monster VM row; [knowledge/catalog/thresholds.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds.yaml) rows monster-vm-cpu and monster-vm-memory.
 
 ### Q024 · Chapter 5 Network > Architecture · VM and ingress
 - Files: [Network layers and observability](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/concepts/network-observability.md)
@@ -348,7 +348,7 @@ flowchart LR
 - Answer: 1.5 MB. Book was wrong.
 
 ### Q026 · Consumer Objects > Performance · Compressed + Swapped threshold
-- Files: [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/vm/metrics/vm-performance.md)
+- Files: [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/vm-performance.md)
 - Search: "their threshold is 2x of memory contention"
 - Question: the table gives Compressed + Swapped green at 0-0.25%, half of Memory Contention (0-0.5%), not 2x. Which is intended?
 - Written as now: the table values, with the conflict flagged.
@@ -363,7 +363,7 @@ flowchart LR
 - Answer: Search 1 is wrong. Search 2 is correct.
 
 ### Q021 · Chapter 3 Memory > ESXi · Utilization formula
-- Files: [ESXi Memory Utilization (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md)
+- Files: [ESXi Memory Utilization (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/metrics/esxi/memory-utilization.md)
 - Search 1: "the sum of running VM Utilization metrics + the kernel reservation"
 - Search 2: "Utilization. Machine Demand + ESX System Usage"
 - Question: is the kernel part the kernel reservation or ESX System Usage? Are they the same thing?
@@ -409,14 +409,14 @@ flowchart LR
 - Answer: Guest OS. I've updated my document.
 
 ### Q004 · Chapter 2 CPU > VM · Contention formula condition
-- Files: [VM CPU Contention (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/contention.md)
+- Files: [VM CPU Contention (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/metrics/vm/cpu-contention.md)
 - Search: "Other Wait (if less than 1%)"
 - Question: what does the condition mean?
 - Written as now: formula copied as is.
 - Answer: The condition of < 1% is added to ensure no false positive. See https://knowledge.broadcom.com/external/article/338438/increased-vmwait-for-idle-vms-after-upgr.html
 
 ### Q005 · Chapter 2 CPU > VM · Contention and limit
-- Files: [VM CPU Contention (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/contention.md), [VM CPU Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md)
+- Files: [VM CPU Contention (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/metrics/vm/cpu-contention.md), [VM CPU Latency](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md)
 - Search 1: "Unlike CPU Ready, it does not account for Limit"
 - Search 2: "Why does the counter include Ready by Limit?"
 - Question: is the first statement about the pre-July-2024 Contention, which mapped to Latency?
@@ -519,7 +519,7 @@ flowchart LR
 - Answer:
 
 ### Q018 · Chapter 3 Memory > VM · Utilization 5%
-- Files: [VM Memory Utilization (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/utilization.md)
+- Files: [VM Memory Utilization (VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/metrics/vm/memory-utilization.md)
 - Search: "We add 5% of Total, not Used"
 - Question: where does the 5% enter the formula?
 - Written as now: formula and the 5% statement, flagged.

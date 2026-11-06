@@ -34,7 +34,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/technology/network/metrics/virtual-motherboard/packets
-- vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+- vsphere/tools/esxtop/units-vs-vsphere-client
 source:
   document: PART 3 - Counters.docx
   path: Network > VM > Overview; Consumption Metrics

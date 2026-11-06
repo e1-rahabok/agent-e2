@@ -33,5 +33,5 @@ How Isvara handles the risks of an AI application, and how to report a problem. 
 ## Review checks
 - `knowledge/` holds only markdown and YAML: no executable content.
 - `python3 project/tools/lint.py` reports 0 problems, including the injection pattern scan.
-- `harness/calc.py` (whitelist expression parser) and `harness/modes.py` (tool list) show that no tool executes code or changes a system.
+- `harness/calc.py` (whitelist expression parser) and `harness/agent.py` (tool list) show that no tool executes code or changes a system.
 - `harness/llm.py` is the only network client; at a customer site it points at the local model server.

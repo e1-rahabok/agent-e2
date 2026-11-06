@@ -43,7 +43,7 @@ same_name:
 same_meaning: []
 related:
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
-- vsphere/technology/memory/metrics/virtual-motherboard/utilization
+- vcf-operations/metrics/vm/memory-utilization
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 images:
   - path: ../../images/vcf-operations-vm-memory-usage-falls-back-to-active.png

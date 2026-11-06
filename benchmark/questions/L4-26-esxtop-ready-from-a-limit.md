@@ -45,9 +45,9 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/technology/cpu/metrics/comparisons/esxtop-cpu
+  - vsphere/tools/esxtop/cpu
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
-  - vsphere/foundations/esxtop
+  - vsphere/tools/esxtop/overview
 attachments:
   - 0066/esxtop-cpu-panel-max-limited.png
 origin: synthetic

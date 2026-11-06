@@ -44,7 +44,7 @@ level: 400
 answer_type: deterministic
 input: [table, screenshot]
 knowledge:
-  - vsphere/object-types/cluster/metrics/cluster-sla-sli
+  - vcf-operations/kpis/cluster-sla-sli
 attachments:
   - 0087/sli-breaches-per-object.xlsx
   - 0087/vcf-operations-cluster-summary.png

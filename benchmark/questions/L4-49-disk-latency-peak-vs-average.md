@@ -38,9 +38,9 @@ level: 400
 answer_type: judged
 input: [table, screenshot]
 knowledge:
-  - vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics
+  - vcf-operations/metrics/vm/peak-20-second-metrics
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
-  - vsphere/object-types/cluster/metrics/cluster-sla-sli
+  - vcf-operations/kpis/cluster-sla-sli
 attachments:
   - 0089/vm-virtual-disk-latency-one-day.xlsx
   - 0089/vcf-operations-vm-peak-disk-latency.png

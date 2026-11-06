@@ -38,7 +38,7 @@ level: 400
 answer_type: judged
 input: [screenshot]
 knowledge:
-  - vsphere/technology/storage/metrics/comparisons/esxtop-storage
+  - vsphere/tools/esxtop/storage
   - vsphere/technology/storage/metrics/host/adapter-and-path
 attachments:
   - 0070/esxtop-disk-adapter-errors.png

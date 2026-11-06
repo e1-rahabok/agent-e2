@@ -44,8 +44,8 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/object-types/cluster/metrics/cluster-performance
-  - vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics
+  - vcf-operations/kpis/cluster-performance
+  - vcf-operations/metrics/vm/peak-20-second-metrics
 attachments:
   - 0075/vcf-operations-cluster-performance-submetrics.png
 origin: synthetic

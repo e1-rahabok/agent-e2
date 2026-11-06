@@ -9,7 +9,7 @@ meta:
     object: Managed object type the counter was available on.
     rollup: Rollup type as the API returns it.
     stat_type: rate, absolute or delta, as the API returns it.
-    unit: 'Unit as the API returns it. Charts often convert (KB shown as MB, KBps as Mbps): see vsphere/foundations/vcenter-statistics, Units.'
+    unit: 'Unit as the API returns it. Charts often convert (KB shown as MB, KBps as Mbps): see vsphere/tools/vsphere-client/vcenter-statistics, Units.'
     level: Collection level of the counter definition.
     summary: Counter summary from the vCenter counter definition, verbatim.
     kb: Knowledge file that explains the metric, where one exists.
@@ -139,7 +139,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: used
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vcf-operations/metrics/vm/disk-space-used
 - counter: disk.provisioned
   object: VirtualMachine
   rollup: latest
@@ -147,7 +147,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: provisioned
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/provisioned-space
+  kb: vcf-operations/metrics/vm/disk-space-provisioned
 - counter: disk.unshared
   object: VirtualMachine
   rollup: latest
@@ -155,7 +155,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: unshared
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vcf-operations/metrics/vm/disk-space-used
 - counter: cpu.usage
   object: HostSystem
   rollup: average

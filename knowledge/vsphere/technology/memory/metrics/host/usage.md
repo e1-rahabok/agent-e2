@@ -34,7 +34,7 @@ same_name:
 same_meaning: []
 related:
 - vsphere/technology/memory/metrics/host/consumed
-- vsphere/foundations/vsphere-client-performance-guidance
+- vsphere/tools/vsphere-client/performance-guidance
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Consumed

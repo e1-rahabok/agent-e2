@@ -119,7 +119,7 @@ class Catalog:
             c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?)',
                       (b['kb'], b['group'], b['metric'], b['object'], b['green'], b['yellow'], b['orange'], b['red'], b['source']))
         for d in self.docs.values():
-            if '/metrics/' not in d.id:
+            if '/metrics/' not in d.id and '/kpis/' not in d.id:  # metric files and VCF Operations KPIs
                 continue
             m = d.meta
             c.execute('INSERT INTO metrics VALUES (?,?,?,?,?,?,?,?,?,?)',

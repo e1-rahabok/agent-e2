@@ -64,6 +64,13 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('Threshold', f)
 
 
+class KpiLookupTest(unittest.TestCase):
+    def test_kpi_found_by_title_with_bands(self):
+        r = CAT.lookup('Cluster Risk')
+        self.assertTrue(r['metric_files'])
+        self.assertTrue(r['bands'])
+
+
 class CalcTest(unittest.TestCase):
     def r(self, e):
         return calc.evaluate(e)['result']
@@ -205,3 +212,14 @@ class PrimerTest(unittest.TestCase):
         res, used, trace, fb = modes.answer('agentic', rec, 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertIn('## Core rules', rec.system)
         self.assertIn('primer', [s['action'] for s in trace])
+
+
+class WindowTest(unittest.TestCase):
+    def test_estimate_counts_text_and_images(self):
+        msgs = [{'role': 'user', 'content': [{'type': 'text', 'text': 'x' * 400}, {'type': 'image_url'}]}]
+        self.assertEqual(modes.msgs_tokens(msgs, {'image_tokens': 1500}), 100 + 1500)
+
+    def test_agent_stops_tools_when_window_is_full(self):
+        cfg = dict(ModesTest.CFG, context_window=2000, max_tokens=100)
+        res, used, trace, fb = modes.answer('agentic', MockClient(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertIn('context_full', [s['action'] for s in trace])

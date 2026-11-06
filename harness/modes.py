@@ -5,6 +5,8 @@ Classic context carries catalog facts for the files it holds; agentic mode adds 
 Two answer kinds: choice (multiple-choice letters, verified) and open (free-text conversation answer, not verified:
 the verifier checks letter format only). The retrieval and tools are the same for both.
 """
+import json
+
 import catalog
 import verify
 from llm import LLMError
@@ -73,6 +75,27 @@ def _tok(text):
     return len(text) // 4
 
 
+def msgs_tokens(msgs, cfg):
+    """Estimated prompt size of a conversation: text at 4 characters per token, each image at cfg image_tokens."""
+    n = 0
+    for m in msgs:
+        c = m.get('content')
+        if isinstance(c, str):
+            n += _tok(c)
+        elif isinstance(c, list):
+            for part in c:
+                n += _tok(part.get('text', '')) if part.get('type') == 'text' else cfg.get('image_tokens', 1500)
+        for tc in m.get('tool_calls') or []:
+            n += _tok(json.dumps(tc))
+    return n
+
+
+def over_window(msgs, cfg):
+    """True when the prompt plus the answer budget would not fit the deployed context window (cfg context_window)."""
+    window = cfg.get('context_window')
+    return bool(window) and msgs_tokens(msgs, cfg) + cfg['max_tokens'] > window
+
+
 def _step(trace, action, inp, out, res=None):
     s = {'step': len(trace) + 1, 'action': action, 'input': inp, 'output': out}
     if res:
@@ -119,6 +142,8 @@ def classic(client, model, question, images, cfg, trace, retriever, kind='choice
     _step(trace, 'context', '', used)
     msgs = [{'role': 'system', 'content': PROMPTS[kind]['kb']},
             _user(f'Knowledge base:\n{context}\n\nQuestion:\n{question}', images)]
+    if over_window(msgs, cfg):
+        _step(trace, 'context_over', cfg.get('context_window'), 'prompt larger than the deployed window')
     po = cfg.get('provider_order', {}).get(model)
     res = client.chat(model, msgs, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
     _step(trace, 'answer', '', res['content'][:400], res)

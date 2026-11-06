@@ -83,7 +83,7 @@ The author's books describe metrics from three perspectives: technology, object,
 
 ## 5. Thresholds
 - Two sources today:
-  - colour bands (green, yellow, orange, red) in the KPI files: `vsphere/object-types/vm/metrics/vm-performance`, `vsphere/object-types/cluster/metrics/cluster-performance`, `cluster-consumption`, `cluster-risk`, `cluster-sla-sli`, `guest-os/system/metrics/guest-os-performance`. The harness catalog reads these tables at start-up (38 bands);
+  - colour bands (green, yellow, orange, red) in the KPI files: `vcf-operations/kpis/vm-performance`, `vcf-operations/kpis/cluster-performance`, `cluster-consumption`, `cluster-risk`, `cluster-sla-sli`, `guest-os/system/metrics/guest-os-performance`. The harness catalog reads these tables at start-up (38 bands);
   - single thresholds (above X means Y) in `knowledge/catalog/thresholds.yaml` (31 rows), each quoting its knowledge file so the two cannot drift (lint checks the quote).
 - A threshold has more parts than a number:
 

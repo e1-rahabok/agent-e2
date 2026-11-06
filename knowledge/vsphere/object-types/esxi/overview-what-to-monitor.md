@@ -18,7 +18,7 @@
 ## 2. CPU capacity
 - Primary: Core Utilization and Thread Utilization. Complement with Usage (MHz). See `vsphere/technology/cpu/metrics/host/core-utilization` and `vsphere/technology/cpu/metrics/host/utilization`.
 - Usage and Demand can exceed 100% (Turbo; Demand sums VM demand). Not an overload signal on their own. See `vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`.
-- Hot cores and NUMA nodes: Peak Core Usage and Imbalance. See `vsphere/technology/cpu/metrics/host/peak-core-usage`.
+- Hot cores and NUMA nodes: Peak Core Usage and Imbalance. See `vcf-operations/metrics/esxi/cpu-peak-core-usage`.
 - Flow: `vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom`.
 
 ## 3. Memory capacity
@@ -43,7 +43,7 @@
   - esxtop PCPU line (usage of physical CPUs): 80% is a reasonable ceiling.
   - esxtop PCPU line: 90% should be a warning.
   - The source notes that organizations set their own standards for the target load percentage.
-- Knowledge base reading: these are utilization levels, so they are capacity signals. Confirm a performance problem with the contention of the host's VMs (section 1). Load average 1.00 means all PCPUs fully used. See `vsphere/technology/cpu/metrics/comparisons/esxtop-cpu`.
+- Knowledge base reading: these are utilization levels, so they are capacity signals. Confirm a performance problem with the contention of the host's VMs (section 1). Load average 1.00 means all PCPUs fully used. See `vsphere/tools/esxtop/cpu`.
 
 ## Traps
 - "Host CPU at 90%, so VMs are slow" → check worst VM Ready and Co-stop.
@@ -79,8 +79,8 @@ related:
 - vsphere/object-types/vm/overview-what-to-monitor
 - vsphere/object-types/cluster/overview-what-to-monitor
 - vsphere/foundations/provider-consumer
-- vsphere/foundations/vsphere-client-performance-guidance
-- vsphere/technology/cpu/metrics/comparisons/esxtop-cpu
+- vsphere/tools/vsphere-client/performance-guidance
+- vsphere/tools/esxtop/cpu
 source:
   document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation) + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Linked files in each section; section 'Documentation guidance (esxtop)' from ESX CPU Considerations (pp. 27-28)

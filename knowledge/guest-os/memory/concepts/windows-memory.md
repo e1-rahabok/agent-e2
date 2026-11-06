@@ -99,7 +99,7 @@ layer:
 internal_derive:
 - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 related:
-- vsphere/technology/memory/metrics/virtual-motherboard/utilization
+- vcf-operations/metrics/vm/memory-utilization
 - guest-os/system/concepts/guest-os-sizing
 - guest-os/system/metrics/guest-os-performance
 images:

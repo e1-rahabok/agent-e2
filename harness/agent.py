@@ -11,7 +11,7 @@ import calc
 import catalog
 import flows
 import primer
-from modes import PROMPTS, _step, _tok, _user, _verified
+from modes import PROMPTS, _step, _tok, _user, _verified, over_window
 
 
 TOOLS = [
@@ -130,8 +130,11 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
     po = cfg.get('provider_order', {}).get(model)
     while True:
-        tools = TOOLS if calls < max_calls and tokens_used < budget else None
+        full = over_window(msgs, cfg)
+        tools = TOOLS if calls < max_calls and tokens_used < budget and not full else None
         if tools is None:
+            if full:
+                _step(trace, 'context_full', cfg.get('context_window'), 'answer now')
             msgs.append({'role': 'user', 'content': 'Tool budget used. Answer now from what you have read.\n' + PROMPTS[kind]['format']})
         res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
         tcs = res['tool_calls'] if tools else []

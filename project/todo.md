@@ -52,7 +52,7 @@ Open work for this repository. Not indexed. Update when items close.
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
 - [x] vSphere Monitoring and Performance, pp. 2025-2184: extracted 2026-11-03.
-  - New: [vCenter statistics: sampling, rollup and levels](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vcenter-statistics.md), [vSphere documentation performance guidance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vsphere-client-performance-guidance.md), [Datastore Storage I/O Control metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/metrics/datastore/storage-io-control.md).
+  - New: [vCenter statistics: sampling, rollup and levels](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/vsphere-client/vcenter-statistics.md), [vSphere documentation performance guidance](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/vsphere-client/performance-guidance.md), [Datastore Storage I/O Control metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/storage/metrics/datastore/storage-io-control.md).
   - Updated: esxtop-cpu, esxtop-memory, system/concepts/esxtop, memory-tiering, storage host datastore; links in ready, host memory usage, host-storage-latency, metric-sources.
   - Left out as not relevant to performance monitoring: UI click steps, alarm and event configuration, preconfigured alarm list, SNMP, log files, vimtop, Solutions Manager, host hardware health, Configuration Maximums checker, Fault Tolerance charts, DPU charts, PMem Memory Mode, GPU chart details beyond their statistics level.
   - Questions: Q044-Q046.

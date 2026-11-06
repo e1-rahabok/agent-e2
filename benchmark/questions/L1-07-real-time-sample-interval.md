@@ -30,7 +30,7 @@ level: 100
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/foundations/vcenter-statistics
+  - vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"

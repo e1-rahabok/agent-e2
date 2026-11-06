@@ -117,7 +117,7 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | VM CPU Run vs Used | Run is time only; Used is scaled by frequency and Hyper-Threading, plus System, minus Overlap | `vsphere/technology/cpu/diagnosis/run-vs-used-gap` |
 | VM Memory Consumed vs Active | Consumed is the ESXi pages of the VM, kept once touched; Active is an estimate of pages touched recently, with no operational use | `vsphere/technology/memory/metrics/virtual-motherboard/active` |
 | VM Memory Ballooned vs Swapped | Ballooned is reclaimed through the Guest OS, past tense; Swapped is paged out by ESXi at random, as it cannot see guest free memory | `vsphere/technology/memory/metrics/virtual-motherboard/swapped` |
-| Compression ZIP/s vs UNZIP/s | ZIP/s is a capacity signal of the host; UNZIP/s means the VM waits | `vsphere/technology/memory/metrics/comparisons/esxtop-memory` |
+| Compression ZIP/s vs UNZIP/s | ZIP/s is a capacity signal of the host; UNZIP/s means the VM waits | `vsphere/tools/esxtop/memory` |
 | Reservation vs usage | Admission control checks reservations; usage plays no part | `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state` |
 
 ## Object types

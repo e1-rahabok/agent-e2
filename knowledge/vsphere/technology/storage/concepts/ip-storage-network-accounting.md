@@ -65,10 +65,10 @@ internal_derive:
 related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/network/metrics/host/throughput
-- vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+- vsphere/tools/esxtop/units-vs-vsphere-client
 source:
   document: 'Author''s technical note: Storage and Network Accounting for iSCSI over 10 GbE (Google Doc, read 2026-11-04)'
-  path: https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
+  path: https:/docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
 corrections: []
 review_notes:
 - 'Whole file: from the author''s answer to Q022 (2026-11-04) and the author''s technical note linked in source.path. Replaces the book statement that read and write both map to network Transmit.'

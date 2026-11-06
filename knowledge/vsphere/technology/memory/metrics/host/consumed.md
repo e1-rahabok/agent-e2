@@ -58,7 +58,7 @@ same_meaning: []
 related:
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/metrics/host/granted
-- vsphere/technology/memory/metrics/host/utilization
+- vcf-operations/metrics/esxi/memory-utilization
 - vsphere/technology/memory/concepts/host-memory-states
 images:
   - path: ../../images/esxi-memory-consumed-above-vm-allocated.png

@@ -30,7 +30,7 @@ level: 100
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/technology/network/metrics/comparisons/esxtop-vs-vsphere-client-units
+  - vsphere/tools/esxtop/units-vs-vsphere-client
   - vsphere/technology/network/metrics/virtual-motherboard/throughput
 attachments: []
 origin: synthetic
