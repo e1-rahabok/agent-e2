@@ -1,6 +1,6 @@
 # Design: why a small local model can beat a frontier model
 
-The argument that the mission is possible, the parts we control, the risks, and what the product must do. Not indexed.
+Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
