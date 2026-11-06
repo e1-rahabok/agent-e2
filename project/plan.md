@@ -25,6 +25,9 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
   - Folders stay technology first: a technology works across Guest OS, VM, ESXi and cluster; master how it works, then apply it to the object.
   - VCF Operations content moved to [knowledge/vcf-operations](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations); tool references to [knowledge/vsphere/tools](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools); operations flows under [knowledge/operations-management](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management).
   - The three retrieval fixes go ahead (done; M3); knowledge depth and the review order go to the author (Q060-Q064); a live test plan is added.
+  - Screenshots are read in 1.0; the screen library is 1.1.
+  - The author writes the real-ticket questions, picked to complement the existing ones.
+  - Context budget: 16K, 20K and 24K all give 76% (57 of 90); the misses are files never retrieved, not files cut by the budget.
   - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md)).
 - Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md), section Resolved.
 
@@ -56,7 +59,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
 
 ### M2 Questions
 - 10 more questions: 1 at Level 200, 9 at Level 300, in the tasks below allocation (decide-capacity, troubleshoot, judge-setting, explain-mechanism).
-- Author: files for L4-26 to L4-49; Q058 (synthetic share, review of L4-14 to L4-50); 10-20 masked field tickets as questions, the held-out set cut from them (review, section 3.8).
+- Author: files for L4-26 to L4-49; Q058 (synthetic share, review of L4-14 to L4-50); real-ticket questions written by the author, the held-out set cut from them.
 - `trap_type` in question metadata and a coverage script for the blueprint counts.
 - Split `L4-05` (two hosts, letters per host) into one deterministic question per host.
 - Question ideas from the book chapters (CPU, Windows, memory traps): [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md), section Evaluation.
