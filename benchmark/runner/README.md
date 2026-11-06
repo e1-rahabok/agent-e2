@@ -86,7 +86,7 @@ python3 benchmark/runner/retrieval_eval.py
 | Knowledge base | None | Yes | Yes |
 | Who looks up | Nobody | The runner | The model |
 | Lookups | 0 | 1, before the model starts | Up to `agent_max_calls` (8), chosen by the model |
-| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (8K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`, within `agent_tool_tokens` (12K) |
+| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (16K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`, within `agent_tool_tokens` (12K) |
 | Can it go back for more | - | No | Yes |
 | What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
 

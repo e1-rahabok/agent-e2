@@ -20,7 +20,7 @@ concurrency: 12               # parallel requests; 12 tested OK (benchmark 20261
 
 embedding_model: alibaba/qwen3-embedding-0.6b   # null = BM25 only
 classic_k: 6                  # files from the search before link expansion
-context_tokens: 8000          # classic mode context budget
+context_tokens: 16000         # classic mode context budget (author, 2026-11-06: 16K reaches 76%; 20K and 24K add nothing)
 expand_derive: true           # classic: add up to 3 internal_derive files of the top 2 hits (retrieval check 2026-11-06: 70% -> 71%, 50 -> 52 of 90 complete)
 route_diagnosis: true         # classic: a troubleshooting question puts its best diagnosis file first (71%, 51 of 90; both together with the above: 73%, 53 of 90)
 query_expansion: false        # add glossary preferred words to the query; no gain measured (the glossary has 2 synonym rows), off
