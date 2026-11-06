@@ -1,7 +1,7 @@
 # Harness
 
 The software around the model. It turns a question into a grounded, checked answer. Not indexed.
-Why the system can win: [DESIGN.md](../DESIGN.md). How one question flows through it: [ARCHITECTURE.md](../ARCHITECTURE.md). The agent it hosts: [AGENT.md](AGENT.md).
+Why the system can win: [MISSION.md](../MISSION.md). How one question flows through it: [ARCHITECTURE.md](../ARCHITECTURE.md). The agent it hosts: [AGENT.md](AGENT.md).
 
 ## 1. What it is for
 A small model alone fails at Level 400 in predictable ways. Each part of the harness takes one of those jobs away from the model, so the model only has to read and reason.

@@ -1,7 +1,16 @@
 # Architecture
 
 How the model, agent, harness and knowledge work together at run time. Not indexed.
-Why it can work, and model size: [DESIGN.md](DESIGN.md). The agent: [harness/AGENT.md](harness/AGENT.md). Harness parts: [harness/README.md](harness/README.md). Knowledge, folders and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). Benchmark: [benchmark/design.md](benchmark/design.md).
+Why it can work: [MISSION.md](MISSION.md). The agent: [harness/AGENT.md](harness/AGENT.md). Harness parts: [harness/README.md](harness/README.md). Knowledge, folders and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). Benchmark: [benchmark/design.md](benchmark/design.md).
+
+## Components
+| Component | Design document |
+|---|---|
+| Model | [benchmark/models.md](benchmark/models.md): which frozen model to ship, size and hardware |
+| Harness and agent | [harness/README.md](harness/README.md) (the software around the model) and [harness/AGENT.md](harness/AGENT.md) (the agent it hosts) |
+| Knowledge | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md): what the knowledge is and how to write it |
+
+- Why the system can win, and what it must do: [MISSION.md](MISSION.md).
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |
@@ -89,7 +98,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Not used: long-context stuffing (the whole knowledge base is about 125K tokens: too much for a small model and too slow per question); a separate graph database (the metadata links already form the graph).
 
 ### Ingest
-1. Index `knowledge/**/*.md`. Do not index `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/` (it holds answer keys; indexing it invalidates the evaluation), `project/`, `harness/`, or the root documents (`README.md`, `CLAUDE.md`, `DESIGN.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`).
+1. Index `knowledge/**/*.md`. Do not index `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/` (it holds answer keys; indexing it invalidates the evaluation), `project/`, `harness/`, or the root documents (`README.md`, `CLAUDE.md`, `MISSION.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`).
 2. Split each file at `## Metadata`. Parse the yaml block into filter fields. Do not embed it.
 3. Chunk the body by `##` heading. Files are short, so one file is often one chunk.
 4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.

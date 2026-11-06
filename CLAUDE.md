@@ -8,7 +8,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 - Update `project/plan.md` with every change set.
 
 ## Purpose
-- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running offline on one GPU. Why it can work: `DESIGN.md`.
+- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running offline on one GPU. Why it can work: `MISSION.md`.
 - Primary reader of `knowledge/`: the AI. The author reviews for QA.
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 

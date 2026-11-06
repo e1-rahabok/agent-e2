@@ -1,7 +1,7 @@
 # Knowledge engineering
 
 What the knowledge base holds, in what form, and how to write it. For human reviewers and writers. Not indexed.
-Why the system can win: [DESIGN.md](DESIGN.md). How the parts run, including ingest and indexing: [ARCHITECTURE.md](ARCHITECTURE.md). What the agent is told about the knowledge base: [harness/AGENT.md](harness/AGENT.md). Plan and open gaps: [project/plan.md](project/plan.md).
+Why the system can win: [MISSION.md](MISSION.md). How the parts run, including ingest and indexing: [ARCHITECTURE.md](ARCHITECTURE.md). What the agent is told about the knowledge base: [harness/AGENT.md](harness/AGENT.md). Plan and open gaps: [project/plan.md](project/plan.md).
 
 Part A says what the knowledge is (sections 1-4). Part B gives the rules for writing it (sections 5-13). Part C is the workflow (section 14).
 

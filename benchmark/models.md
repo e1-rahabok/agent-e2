@@ -1,7 +1,7 @@
 # Models
 
 Candidate models, the frontier reference and the judge for the benchmark. Not indexed.
-Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/config.yaml). Why a small local model can win, and model size: [DESIGN.md](../DESIGN.md), sections 3 and 4.
+Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/config.yaml). Why a small local model can win: [MISSION.md](../MISSION.md), section 3. Model size: section Model size and speed below.
 
 ## 1. What model the goal needs
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
@@ -29,7 +29,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 ### Dense or mixture-of-experts
 - Total parameters set the memory (GPU size and how much was memorized). Active parameters set the compute per token, which drives instruction following, long-context reading and multi-step reasoning.
 - For the GPU memory paid, a dense model gives the most compute per token. A 120B MoE with 6-12B active has less compute per token than a 31B dense model, on twice the GPU memory.
-- So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (`DESIGN.md`, section 4).
+- So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (section Model size and speed).
 - No current-generation dense vision model of about 70B is on the gateway (checked 2026-11-05). Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
 - The 120B MoE models were dropped (author, 2026-11-05): less compute per token than the dense candidates, on twice the GPU memory. A later MoE candidate must pass the rule below.
 
@@ -53,6 +53,23 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
   1. final score higher by more than the margin;
   2. override rate not higher.
 - Otherwise it is dropped, and a tie goes to the cheaper model.
+
+
+## Model size and speed
+- Decode speed and GPU memory are set by the weights: every generated token reads all active weights once.
+
+| Size | Weights at 8-bit | Weights at 4-bit | Fits on | Relative decode speed (same GPU, same precision) |
+|---|---|---|---|---|
+| 8B dense | ~8 GB | ~5 GB | any 16 GB GPU | ~4x |
+| 32B dense | ~32 GB | ~18 GB | one 48 GB GPU at 8-bit; one 24 GB GPU at 4-bit | 1x |
+| 70B dense | ~70 GB | ~40 GB | 80 GB GPU, or one 48 GB GPU at 4-bit | ~0.45x |
+| 30B MoE, 3B active | ~30 GB | ~17 GB | same as 32B | ~5-8x |
+| 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
+
+- Add the KV cache for the retrieved context (8-12K tokens per question).
+- Only two limits count (author, 2026-11-05): fit for the goal, and hardware cost (one GPU, at most 96 GB). Parameter count is not a limit.
+- 8B-14B: too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact; qwen-3-14b agentic 19%.
+- 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs (nemotron-3-nano-30b-a3b: 24-29% exact, almost no tool calls).
 
 ## 2. Gateway in the benchmark, local server at the site
 ### Two ways to reach a model
