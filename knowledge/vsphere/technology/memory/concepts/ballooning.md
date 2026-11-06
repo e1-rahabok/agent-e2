@@ -37,8 +37,10 @@
 - The `vmmemctl` module (VMware Tools) makes the guest OS give up the pages it considers least valuable.
 - Performance closely matches a native system under similar memory constraints.
 - The guest OS must have enough swap space configured.
+- Ballooning needs VMware Tools running: without the driver, ESXi cannot ask the guest for memory and can only compress or swap, blind to which pages the guest uses.
 
 ## Traps
+- "ESXi can balloon any VM" → only a VM with VMware Tools running; without it, the host swaps instead.
 - "Ballooned 10 GB, so the guest is slow" → only requested pages cause a hit. Check Latency.
 - "Balloon frees exactly its size in ESXi" → shared pages free less.
 - "Include ballooned memory in Guest OS sizing" → exclude it.
@@ -78,5 +80,6 @@ corrections: []
 review_notes:
 - '2026-11-04: content from former vsphere/technology/memory/concepts/host-memory-states folded in (author decision 5). Source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''Mechanism'': Idle Memory Tax is the Mem.IdleTax setting (Claude''s own knowledge).'
+- 'Section ''Trigger and requirement'': ballooning requires VMware Tools running (author, Q043, 2026-11-06).'
 status: draft
 ```

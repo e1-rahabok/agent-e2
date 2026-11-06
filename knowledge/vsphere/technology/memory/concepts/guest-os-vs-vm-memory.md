@@ -3,6 +3,9 @@
 ## No mapping
 - Guest OS and VM memory metrics do not map to each other.
 - Neither the VMkernel nor the Guest OS has full visibility into the other.
+- The two layers manage memory independently. The Guest OS cannot see the underlying host memory, so Windows and Linux run their given memory as if on a physical server.
+- ESXi reaches into the Guest OS only through VMware Tools: it is the only channel to ask Windows or Linux for memory (the balloon driver's allocation). Without it, ESXi cannot tell used from free guest pages and can swap pages the guest uses. See `vsphere/technology/memory/concepts/ballooning`.
+- Unlike a Type 2 hypervisor, which runs as an application on top of a host operating system, ESXi reaches the Guest OS through VMware Tools.
 - Consumed, Shared and Reservation do not exist in Windows.
 ![What the hypervisor sees vs what the Guest OS sees, for an 8 GB VM](../images/vm-memory-hypervisor-view-vs-guest-os-view.png)
 
@@ -99,5 +102,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Example: VM more accurate'': the java.exe example comes from a blog by Manny Sidhu that is no longer available. Image not copied.'
+- 'Section ''No mapping'': independent management and VMware Tools as the only channel: author (Q043, 2026-11-06).'
 status: draft
 ```
