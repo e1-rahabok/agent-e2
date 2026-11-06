@@ -7,7 +7,7 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  curated thresholds (knowledge/catalog/thresholds.yaml) + colour bands parsed from knowledge files
+  thresholds  rules and colour bands from knowledge/catalog/thresholds-performance.yaml and thresholds-capacity.yaml
   metrics     one row per knowledge metric file, from its metadata
   objects, relations   object model (knowledge/catalog/objects.yaml)
 """
@@ -86,7 +86,7 @@ class Catalog:
           CREATE TABLE esxtop (panel TEXT, field TEXT, key TEXT, description TEXT, page INT);
           CREATE TABLE thresholds (id TEXT, metric TEXT, object TEXT, layer TEXT, operator TEXT, value REAL, value_high REAL, unit TEXT,
                                    condition TEXT, meaning TEXT, source TEXT, kb TEXT);
-          CREATE TABLE bands (kb TEXT, grp TEXT, metric TEXT, object TEXT, green TEXT, yellow TEXT, orange TEXT, red TEXT, source TEXT);
+          CREATE TABLE bands (kb TEXT, grp TEXT, metric TEXT, object TEXT, grey TEXT, green TEXT, yellow TEXT, orange TEXT, red TEXT, source TEXT, pillar TEXT, interval TEXT);
           CREATE TABLE metrics (id TEXT, title TEXT, object TEXT, layer TEXT, technology TEXT, metric_class TEXT, instance TEXT,
                                 same_name TEXT, same_meaning TEXT, status TEXT);
           CREATE TABLE objects (type TEXT, role TEXT, layer TEXT, supplies TEXT, charts INT, note TEXT, kb TEXT);
@@ -111,13 +111,17 @@ class Catalog:
             c.execute('INSERT INTO esxtop VALUES (?,?,?,?,?)', (r['panel'], r['field'], _esx_key(r['field']), r['description'], r.get('page')))
         for f in es.get('formulas') or []:
             c.execute('INSERT INTO formulas VALUES (?,?)', (f['formula'], f'esxtop {f["panel"]} panel, {doc}, p. {f["page"]}'))
-        for r in load_yaml('thresholds.yaml')['rows']:
-            c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                      (r['id'], r['metric'], r.get('object'), r.get('layer'), r['operator'], r['value'], r.get('value_high'), r.get('unit'),
-                       r.get('condition'), r.get('meaning'), r['source'], r['kb']))
-        for b in bands_from_docs(self.docs):
-            c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?)',
-                      (b['kb'], b['group'], b['metric'], b['object'], b['green'], b['yellow'], b['orange'], b['red'], b['source']))
+        for pillar in ('performance', 'capacity'):
+            for r in load_yaml(f'thresholds-{pillar}.yaml')['rows']:
+                if r['kind'] == 'rule':
+                    c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+                              (r['id'], r['metric'], r.get('object'), r.get('layer'), r['operator'], r['value'], r.get('value_high'),
+                               r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb']))
+                else:
+                    b = r['bands']
+                    c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+                              (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
+                               b['orange'], b['red'], r['source'], pillar, r.get('interval')))
         for d in self.docs.values():
             if '/metrics/' not in d.id and '/kpis/' not in d.id:  # metric files and VCF Operations KPIs
                 continue
@@ -212,7 +216,7 @@ class Catalog:
                 bd.append((s, r))
         th, bd = _best(th, limit), _best(bd, limit)
         return {'thresholds': [_compact(r, ('metric', 'object', 'operator', 'value', 'value_high', 'unit', 'condition', 'meaning', 'source', 'kb')) for r in th],
-                'bands': [_compact(r, ('metric', 'grp', 'green', 'yellow', 'orange', 'red', 'kb')) for r in bd]}
+                'bands': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd]}
 
     def object_info(self, type_):
         t = norm_object(type_)
