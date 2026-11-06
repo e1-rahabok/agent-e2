@@ -1,6 +1,6 @@
-# Raw Input Materials
+# Sources
 
-Place original source documents here.
+Source documents the knowledge is written from: the author's book, vendor PDFs. Read-only. Not indexed, not shipped, not read at run time.
 
 Examples:
 - Microsoft Word documents (.docx)

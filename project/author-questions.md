@@ -77,7 +77,7 @@ Each entry has:
 ### Q063 · Sources · Book Part 1 and the VCF Operations chapters
 - Files: [operations-management/](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management) (4 files and 2 new flows); [vcf-operations/](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations) (1 concept, 12 metrics, 5 KPIs). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md), section 3.3.
 - Search: not applicable.
-- Question: please upload Part 1 of the book (capacity and performance management) and your VCF Operations chapters to `knowledge/raw-input/`. Today 159 of 206 files come from Part 3, and operators work in VCF Operations, which a third of the screenshot questions show. Claude will fetch the VCF Operations 9.1 metric reference from TechDocs for the catalog.
+- Question: please upload Part 1 of the book (capacity and performance management) and your VCF Operations chapters to [project/sources](https://github.com/e1-rahabok/isvara-2/blob/main/project/sources). Today 159 of 206 files come from Part 3, and operators work in VCF Operations, which a third of the screenshot questions show. Claude will fetch the VCF Operations 9.1 metric reference from TechDocs for the catalog.
 - Written as now: Part 3 extracted; operations-management and vcf-operations hold only what Part 3 and the vCommunity adapter documentation give.
 - Answer:
 

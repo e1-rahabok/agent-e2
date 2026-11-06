@@ -17,6 +17,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 ## Terms
 | Use | Means | Do not use for it |
 |---|---|---|
+| sources | Source documents the knowledge is written from (`project/sources/`): book chapters, vendor PDFs. Read-only. Proposal, for the author | raw input |
 | benchmark | The proof of the product: question set, runner, judge, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder `benchmark/results/<benchmark-id>/` | Auto Test, test, evaluation, benchmark run |
 | run | One pass through all the questions, by one model in one mode. A benchmark has 5 runs (`runs: 5`, column `run`). Each run is a repeat of the same questions; the answers differ | repeat, iteration |
 | question | One benchmark item: one file in `benchmark/questions/` with prompt, answer key and metadata. A benchmark question plays a question a VMware administrator asks the product | case, test case, golden case, exam question |
