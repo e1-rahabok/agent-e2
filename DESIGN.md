@@ -80,7 +80,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | # | Mode | Input | What the system does | Release |
 |---|---|---|---|---|
 | 1 | Text | A typed question | Retrieve, use tools, answer with citations | 1.0 |
-| 2 | Screenshots | One or more images: vCenter charts, esxtop, VCF Operations | Recognise the screen; read metric names, values, units, time range and interval; show what was read for confirmation; answer from the knowledge base | 1.1 (knowledge structure prepared in 1.0) |
+| 2 | Screenshots | One or more images: vCenter charts, esxtop, VCF Operations | Recognise the screen; read metric names, values, units, time range and interval; show what was read for confirmation; answer from the knowledge base | 1.0 (author, 2026-11-06); the screen library is 1.1 |
 | 3 | Data files | esxtop batch CSV, vCenter chart export, VCF Operations export | Parse with code, not the model: peak, 95th percentile, time of peak, per object; feed exact values to the answer | 1.2 |
 | 4 | Guided troubleshooting | A symptom ("VM is slow") | Run the matching flow one step at a time; ask for the next value; show the step and the branch taken | 1.0 (flow tool exists) |
 | 5 | Live instance | Read-only connection to VCF Operations | Read metrics of a named object; fill the flow steps from live values | After 1.0 |
@@ -111,5 +111,5 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 
 ### Decisions (author, 2026-11-04)
 - D1: no draft status in the product. Release content is reviewed; answers never mention review status.
-- D2: screenshot upload is version 1.1. The knowledge structure is prepared for it now.
+- D2: screenshot upload is version 1.0 (changed by the author, 2026-11-06; was 1.1). The screen library follows in 1.1.
 - D3: data file upload is version 1.2. Each export format needs its own documented reading first.
