@@ -27,7 +27,8 @@
 - Others can use cloud AI but must contain its cost: per-token fees grow with every question, user and automated check.
 - Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers sound expert and are often wrong at Level 400.
 
-**Goal:** an open-weight model, running offline on one GPU (dark site, no Internet, no per-token cost), answers Level 400 private cloud operations questions better than frontier models.
+**Mission:**
+- An open-weight model, running offline on one GPU (dark site, no Internet), answersing Level 400 private cloud management questions better than frontier models.
 
 ## Why it is possible
 - A frontier model wins on memorised breadth. In one narrow domain, retrieval supplies the knowledge, and what remains is reading a few files and applying their rules. Current 27-32B open models are close to frontier models at that.
