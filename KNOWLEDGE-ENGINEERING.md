@@ -268,9 +268,13 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 
 - Sample interval: the same workload reads higher at 2 seconds (esxtop) than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on 20-second peaks cannot be applied to a 5-minute chart. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks) although it is the less serious signal.
 - Instance reading: for a metric with instances (per vCPU, per disk), the worst instance is always at least the object value. The worst vCPU of a 64-vCPU VM can be far above the VM's normalized Ready. A band must say which reading it applies to, as "Peak CPU Ready among any vCPU" does.
-- Where thresholds live:
-  - colour bands (green, yellow, orange, red) in the tables of the KPI files (`vcf-operations/kpis/`, `guest-os/system/metrics/guest-os-performance`); the harness catalog reads them at start-up;
-  - single thresholds (above X means Y) in `knowledge/catalog/thresholds.yaml`, each quoting its knowledge file so the two cannot drift (lint checks the quote).
+- Where thresholds live: two files, one place (author, 2026-11-06).
+  - `knowledge/catalog/thresholds-performance.yaml`: contention and health. Bands green, yellow, orange, red. Two readings: 20-second peak (`20s`) and 5-minute average (`5m`). Author rule: a 20-second threshold is generally about 4x the 5-minute one, because a spike does not sustain for 300 seconds. The rule is stated, not used to fill a missing value.
+  - `knowledge/catalog/thresholds-capacity.yaml`: utilization, saturation, reservation, allocation, rightsizing. Five bands: grey (below green: wastage), green, yellow, orange, red.
+  - Each row is a rule (above X means Y, with a quote from its file) or a band set. Ids are unique across both files.
+  - A KPI file keeps its colour-band table for the reader. Lint checks that the table and the band rows match, both ways.
+  - The harness loads both files into its catalog at start-up (YAML is the source; the in-memory SQLite is a copy).
+  - Thresholds still written only in prose: `python3 project/tools/threshold_inventory.py` lists them. Each gets a row with its source, or the number goes.
 - No invented thresholds: a threshold goes in only with a source (book, author, official documentation), quoted.
 - The rule for the model is in `foundations/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 

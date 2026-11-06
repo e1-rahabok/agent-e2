@@ -43,6 +43,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 
 ## Open work
 ### M1 Knowledge base
+- Thresholds: one place since 2026-11-06 (`knowledge/catalog/thresholds-performance.yaml`, `thresholds-capacity.yaml`). Open: 31 prose statements in 24 files without a row (`python3 project/tools/threshold_inventory.py`); grey (wastage) values for the capacity bands; 5-minute readings where only 20-second ones exist.
 - Author input: Q060 (VM slow triage order), Q061 (capacity decision order), Q062 (health check), Q063 (Book Part 1, VCF Operations chapters), Q064 (review order); all other open author questions.
 - VCF Operations: map its objects, engines and metric groups; fetch the VCF Operations 9.1 metric reference from TechDocs into the catalog.
 - Stubs: fill from the book, or fold into the family file, the 8 files under 60 words (review, section 2), then the rest under 120 words.

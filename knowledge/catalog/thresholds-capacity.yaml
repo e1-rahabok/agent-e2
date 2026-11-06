@@ -1,0 +1,374 @@
+meta:
+  id: catalog/thresholds-capacity
+  title: 'Capacity thresholds: utilization, saturation, reservation, allocation, rightsizing'
+  fields:
+    id: Stable key.
+    kind: 'rule (one value: above X means Y) or bands (colour bands).'
+    metric: Metric as the knowledge file names it.
+    object: Managed object type.
+    layer: Layer that produces the metric (rules).
+    instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
+    operator: 'rules: >, >=, <, <=, =, range.'
+    value: 'rules: the number compared against; range: low end, value_high the high end.'
+    unit: Unit of value.
+    condition: 'rules: another condition that must hold at the same time.'
+    meaning: 'rules: what the knowledge file says the value means.'
+    group: 'bands: the group column of the source table (for example Utilization, Depth).'
+    source: book, author, vsphere-9.1-docs, performance-best-practices-9.1, microsoft.
+    kb: Knowledge file that states and explains the threshold.
+    quote: 'rules: text copied from the kb file; lint checks it is still there.'
+    interval: 'Usually empty: capacity reads sustained values.'
+    bands: 'grey (below green: wastage), green, yellow, orange, red (author, 2026-11-06). Grey is empty until a source gives it.'
+  review_notes:
+  - 'Capacity has 5 bands: grey sits below green and marks wastage, used for rightsizing (author, 2026-11-06).'
+  - Every row restates a threshold written in its kb file. Band rows must match the colour-band table of the kb file; lint checks both ways.
+  - Merged 2026-11-06 from catalog/thresholds.yaml and the KPI band tables (one place for thresholds).
+  status: draft
+rows:
+- kind: rule
+  id: tiering-active-ideal
+  metric: Active memory on a memory tiering host
+  object: HostSystem
+  layer: hypervisor
+  operator: <=
+  value: 50
+  unit: '% of host DRAM'
+  meaning: Ideal.
+  source: performance-best-practices-9.1
+  kb: vsphere/technology/memory/concepts/memory-tiering
+  quote: 'ideal: no more than 50% of the host DRAM capacity'
+- kind: rule
+  id: tiering-active-suffer
+  metric: Active memory on a memory tiering host
+  object: HostSystem
+  layer: hypervisor
+  operator: '>='
+  value: 75
+  unit: '% of host DRAM'
+  meaning: Some workloads begin to suffer.
+  source: performance-best-practices-9.1
+  kb: vsphere/technology/memory/concepts/memory-tiering
+  quote: some workloads do not begin to suffer until active memory approaches 75%
+- kind: rule
+  id: tiering-nvme-latency-ideal
+  metric: NVMe read latency (memory tiering)
+  object: HostSystem
+  layer: physical
+  operator: <
+  value: 200
+  unit: µs
+  meaning: Ideal.
+  source: performance-best-practices-9.1
+  kb: vsphere/technology/memory/concepts/memory-tiering
+  quote: 'ideal: below 200 microseconds'
+- kind: rule
+  id: tiering-nvme-latency-suffer
+  metric: NVMe read latency (memory tiering)
+  object: HostSystem
+  layer: physical
+  operator: '>='
+  value: 400
+  unit: µs
+  meaning: Some workloads begin to suffer.
+  source: performance-best-practices-9.1
+  kb: vsphere/technology/memory/concepts/memory-tiering
+  quote: some workloads do not begin to suffer until latency approaches 400 microseconds
+- kind: rule
+  id: tiering-nvme-bandwidth-watch
+  metric: NVMe read bandwidth (memory tiering)
+  object: HostSystem
+  layer: physical
+  operator: '>'
+  value: 200
+  unit: MB/s
+  meaning: Start watching NVMe device latency.
+  source: performance-best-practices-9.1
+  kb: vsphere/technology/memory/concepts/memory-tiering
+  quote: 'NVMe read bandwidth above 200 MB/s: start watching NVMe device latency'
+- kind: rule
+  id: tiering-large-vm
+  metric: VM memory size on a tiered host
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>'
+  value: 512
+  unit: GB
+  condition: and 64 vCPUs
+  meaning: Can degrade on a tiered host. Disable tiering for the VM, with a full memory reservation.
+  source: performance-best-practices-9.1
+  kb: vsphere/technology/memory/concepts/memory-tiering
+  quote: VMs with more than 512 GB of memory and 64 vCPUs can degrade on a tiered host.
+- kind: rule
+  id: monster-vm-cpu
+  metric: VM vCPU count relative to host physical cores
+  object: VirtualMachine
+  operator: '>'
+  value: 50
+  unit: '% of physical cores (not threads)'
+  meaning: Monster VM (vCommunity adapter default, author 2026-11-05). Cores, not threads.
+  source: author
+  kb: vcf-operations/kpis/cluster-risk
+  quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
+- kind: rule
+  id: monster-vm-memory
+  metric: VM memory relative to host physical RAM
+  object: VirtualMachine
+  operator: '>'
+  value: 40
+  unit: '% of host DRAM, or 256 GB, whichever is smaller'
+  meaning: Monster VM (vCommunity adapter default, author 2026-11-05). DRAM only; NVMe tiering does not count.
+  source: author
+  kb: vcf-operations/kpis/cluster-risk
+  quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
+- kind: bands
+  id: guest-os-sizing-guest-os-memory-utilization-for-sizing
+  metric: Guest OS memory utilization, for sizing (%)
+  group: null
+  object: null
+  interval: null
+  bands:
+    grey: null
+    green: 75-85
+    yellow: 85-90
+    orange: 90-95
+    red: 95-100
+  source: book
+  kb: guest-os/system/concepts/guest-os-sizing
+- kind: bands
+  id: cluster-consumption-cluster-wide-esxi-cpu-thread-utilization
+  metric: Cluster-wide ESXi CPU thread utilization (%)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-55
+    yellow: 55-70
+    orange: 70-85
+    red: 85-100
+  source: book
+  kb: vcf-operations/kpis/cluster-consumption
+- kind: bands
+  id: cluster-consumption-cluster-wide-esxi-memory-consumed
+  metric: Cluster-wide ESXi memory consumed (%)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-70
+    yellow: 70-80
+    orange: 80-90
+    red: 90-100
+  source: book
+  kb: vcf-operations/kpis/cluster-consumption
+- kind: bands
+  id: cluster-consumption-cluster-memory-tiering-consumption
+  metric: Cluster memory tiering consumption (%)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-4
+    yellow: 4-8
+    orange: 8-16
+    red: 16-32
+  source: book
+  kb: vcf-operations/kpis/cluster-consumption
+- kind: bands
+  id: cluster-consumption-cluster-wide-esxi-memory-ballooned
+  metric: Cluster-wide ESXi memory ballooned (%)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-1
+    yellow: 1-2
+    orange: 2-4
+    red: 4-8
+  source: book
+  kb: vcf-operations/kpis/cluster-consumption
+- kind: bands
+  id: cluster-consumption-cluster-wide-esxi-swapped-zipped-memory
+  metric: Cluster-wide ESXi swapped + zipped memory (%)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-0.25
+    yellow: 0.25-0.5
+    orange: 0.5-1
+    red: 1-2
+  source: book
+  kb: vcf-operations/kpis/cluster-consumption
+- kind: bands
+  id: cluster-risk-highest-esxi-cpu-thread-utilization
+  metric: Highest ESXi CPU thread utilization (%)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 60-80
+    orange: 80-90
+    red: 90-95
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-worst-esxi-cpu-imbalance-ratio
+  metric: Worst ESXi CPU imbalance (ratio)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: '1'
+    yellow: 1-1.3
+    orange: 1.3-1.6
+    red: 1.6-2
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-esxi-memory-consumed
+  metric: Highest ESXi memory consumed (%)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 80-90
+    orange: 90-95
+    red: 95-100
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-worst-esxi-memory-ballooned
+  metric: Worst ESXi memory ballooned (%)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-1
+    yellow: 1-2
+    orange: 2-4
+    red: 4-8
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-worst-esxi-swapped-zipped-memory
+  metric: Worst ESXi swapped + zipped memory (%)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-0.25
+    yellow: 0.25-0.5
+    orange: 0.5-1
+    red: 1-2
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-worst-esxi-memory-tiering-latency-s
+  metric: Worst ESXi memory tiering latency (µs)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-150
+    yellow: 150-300
+    orange: 300-450
+    red: 450-600
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-esxi-cpu-reservation
+  metric: Highest ESXi CPU reservation (%)
+  group: Reservation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 10-40
+    orange: 40-60
+    red: 60-80
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-esxi-memory-reservation
+  metric: Highest ESXi memory reservation (%)
+  group: Reservation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 10-40
+    orange: 40-60
+    red: 60-80
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-esxi-cpu-overcommit-ratio
+  metric: Highest ESXi CPU overcommit ratio
+  group: Allocation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 1-2
+    orange: 2-3
+    red: 3-4
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-esxi-memory-overcommit-ratio
+  metric: Highest ESXi memory overcommit ratio
+  group: Allocation
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 1-1.4
+    orange: 1.4-1.8
+    red: 1.8-2.2
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-cpu-monster-vm-host-ratio
+  metric: 'Highest CPU monster VM : host ratio'
+  group: Monster VM
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-1
+    yellow: 1-2
+    orange: 2-3
+    red: 3-4
+  source: book
+  kb: vcf-operations/kpis/cluster-risk
+- kind: bands
+  id: cluster-risk-highest-memory-monster-vm-host-ratio
+  metric: 'Highest memory monster VM : host ratio'
+  group: Monster VM
+  object: ClusterComputeResource
+  interval: null
+  bands:
+    grey: null
+    green: 0-1
+    yellow: 1-2
+    orange: 2-3
+    red: 3-4
+  source: book
+  kb: vcf-operations/kpis/cluster-risk

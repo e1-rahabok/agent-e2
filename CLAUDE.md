@@ -29,7 +29,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 - Record any fact not from the book in `review_notes`, naming the section, until the author confirms.
 - Before asking the author, look up official sources: Broadcom TechDocs (techdocs.broadcom.com), VMware docs (docs.vmware.com, www.vmware.com/docs), Broadcom KB (knowledge.broadcom.com), Broadcom developer API reference (developer.broadcom.com). PDFs: fetch them, then read the saved file with page ranges. Put the source URL in `review_notes`.
 - Ask the author only when the source text is ambiguous, contradicts official docs or the knowledge base, or the answer needs field experience. Do not ask the author to confirm virtualization basics.
-- No invented thresholds. Keep every `corrections` entry until the source document is updated. A row in `knowledge/catalog/thresholds.yaml` quotes its knowledge file: when that text changes, update the row.
+- No invented thresholds. Keep every `corrections` entry until the source document is updated. A rule row in `knowledge/catalog/thresholds-performance.yaml` or `thresholds-capacity.yaml` quotes its knowledge file: when that text changes, update the row.
 - `knowledge/raw-input/` is read-only.
 
 ## Working with the author

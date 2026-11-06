@@ -270,9 +270,10 @@ THRESHOLD_SOURCES = ['book', 'author', 'vsphere-9.1-docs', 'performance-best-pra
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 
 
-def check_catalog(allowed, ids, bodies, bad):
-    """knowledge/catalog/*.yaml: valid tags, existing knowledge ids, thresholds still quoted in their files."""
+def check_catalog(allowed, ids, bodies, bad, docs=None):
+    """knowledge/catalog/*.yaml: valid tags, existing knowledge ids, thresholds still quoted in their files, band tables matched."""
     objects = set(allowed['object'])
+    seen_thresholds, yaml_bands = set(), set()
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')
@@ -312,12 +313,23 @@ def check_catalog(allowed, ids, bodies, bad):
             for n, r in enumerate(rows):
                 for k in ('panel', 'field', 'description', 'page'):
                     if r.get(k) in (None, ''): bad(path, f'row {n + 1}: {k} missing')
-        elif name == 'thresholds.yaml':
-            seen = set()
+        elif name in ('thresholds-performance.yaml', 'thresholds-capacity.yaml'):
             for n, r in enumerate(rows):
                 w = f'row {n + 1} ({r.get("id")})'
-                if r.get('id') in seen: bad(path, f'{w}: duplicate id')
-                seen.add(r.get('id'))
+                if r.get('id') in seen_thresholds: bad(path, f'{w}: duplicate id (ids are unique across both threshold files)')
+                seen_thresholds.add(r.get('id'))
+                if r.get('kind') == 'bands':
+                    for k in ('id', 'metric', 'bands', 'source', 'kb'):
+                        if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                    bd = r.get('bands') or {}
+                    if any(bd.get(k) in (None, '') for k in ('green', 'yellow', 'orange', 'red')): bad(path, f'{w}: bands need green, yellow, orange, red')
+                    if bd.get('grey') and name == 'thresholds-performance.yaml': bad(path, f'{w}: grey (wastage) is a capacity band only')
+                    if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
+                    if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
+                    kb_ok(path, w, r.get('kb'))
+                    yaml_bands.add((r.get('kb'), r.get('metric'), r.get('group') or '', bd.get('green'), bd.get('yellow'), bd.get('orange'), bd.get('red')))
+                    continue
+                if r.get('kind') != 'rule': bad(path, f'{w}: kind must be rule or bands')
                 for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb', 'quote'):
                     if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
                 if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
@@ -343,6 +355,14 @@ def check_catalog(allowed, ids, bodies, bad):
                 if l.get('layer') not in allowed['layer']: bad(path, f'layer "{l.get("layer")}" not allowed')
         else:
             bad(path, 'unknown catalog file: add its checks to project/tools/lint.py')
+
+    # Band tables in knowledge files and band rows in the threshold files must match, both ways.
+    import kb as _kb, catalog as _cat
+    table = {(b['kb'], b['metric'], b['group'], b['green'], b['yellow'], b['orange'], b['red']) for b in _cat.bands_from_docs(_kb.load()[0])}
+    for t in sorted(table - yaml_bands):
+        bad(f'knowledge/{t[0]}.md', f'band row "{t[1]}" has no matching row in a threshold file (knowledge/catalog/thresholds-*.yaml)')
+    for t in sorted(yaml_bands - table):
+        bad('knowledge/catalog', f'band row "{t[1]}" ({t[0]}) does not match the table in its kb file')
 
 
 def check_flows(docs, bad):
