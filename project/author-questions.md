@@ -117,6 +117,163 @@ Each entry has:
 - Written as now: all files draft.
 - Answer:
 
+### Q065 · Part 1 > Performance Management > Utilization vs Demand · Absolute or relative performance
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Absolute vs relative); [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Reference).
+- Search 1: "Performance will be absolute (real value), Capacity will be relative"
+- Search 2: "It tends to be absolute, as it’s reporting raw metrics"
+- Question: the book says performance is absolute. In chat you said relative cluster performance is more meaningful than absolute, because no perfect formula exists. Relative to what: (a) other clusters and the same cluster last week, (b) the class-of-service threshold (a score in %), (c) the share of VMs served well (a count, not milliseconds)? Which sentence should the knowledge base hold?
+- Written as now: performance absolute, against total capacity; capacity relative, against usable capacity. The paradigm in your chat message is not written yet.
+- Answer:
+
+### Q066 · Part 1 > Contention vs Consumption · Point C: worst performance at 0% utilization
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Four points on the utilization scale).
+- Search: "Worst performance actually happens when utilization = 0% as nothing gets done"
+- Question: 0% utilization with 0 demand is an idle VM: no contention, nothing to serve. Only 0% with demand above 0 is bad: a VM frozen by a storage pause, as in your antivirus story. Is the rule "performance = demand served / demand", so that utilization alone cannot tell good from bad at either end?
+- Written as now: "C, 0% while there is demand" (Claude's wording).
+- Answer:
+
+### Q067 · Part 1 > Contention vs Consumption · Points A and B: 100% and queues
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (sections Contention vs consumption, Four points on the utilization scale).
+- Search 1: "rarely happens here as utilization rarely exceeds 100% in real world"
+- Search 2: "High utilization does not compromise performance, so long as there is no queue or contention"
+- Question: (a) Point A: utilization cannot pass 100% of physical capacity; demand can. Write A as "demand above physical capacity", and add "utilization above physical capacity" to the Words to avoid table? (b) Point B: demand arrives in bursts. At 20-second resolution, a host at 100% CPU Usage almost always shows some VM Ready. Is 100% with 0 contention the best point for throughput (provider view), and acceptable for the VMs only while measured contention stays in the KPI? Or do you hold it as a target?
+- Written as now: A worded as demand above physical capacity; B as the most work done.
+- Answer:
+
+### Q068 · Part 1 > Utilization vs Demand · Highest host utilization in cluster performance
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Cluster: performance vs capacity); [knowledge/vcf-operations/kpis/cluster-performance.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md).
+- Search 1: "you want to take the highest among the host as your primary counter for cluster utilization"
+- Search 2: "Utilization is for troubleshooting, not monitoring." (table image, Cluster Performance column)
+- Question: for cluster performance, the same chapter says utilization is for troubleshooting only, and the cluster KPI holds only the contention of running VMs. Where does the highest-host utilization belong: (a) a performance monitoring metric, (b) the first troubleshooting drill-down after the cluster KPI drops, (c) a capacity-risk early warning?
+- Written as now: both statements, unreconciled.
+- Answer:
+
+### Q069 · Part 1 > Pattern Difference · Where the cliff starts
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Pattern difference).
+- Search: "You can’t forecast performance using capacity"
+- Question: the chart marks the drop at "Overcommit >1". The noisy-neighbour example runs 4:1 vCPU to core with no cliff. Is the cliff where demand passes supply on a host (demand overcommit), not where the allocation ratio passes 1? And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%?
+- Written as now: "falls steeply once demand passes what the hosts supply".
+- Answer:
+
+### Q070 · Part 1 > IaaS Metric Types · Layer of the driver metrics
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (section Consumer and provider metric types); [knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (VMXNET3 buffer drops).
+- Search: "One at the Windows/Linux layer, and one at the driver layer (e.g. PVSCSI, vmxnet)"
+- Question: the book puts PVSCSI and vmxnet metrics in the Guest OS. The repository rule places a metric by the layer that produces it. The driver runs in the guest kernel, but it is VMware's virtual device. Is a VMXNET3 ring-buffer drop (a) guest-os layer, outside the IaaS SLA, or (b) virtual-motherboard layer, inside it? This decides the folder and who fixes it.
+- Written as now: VMXNET3 drops sit in the VM (virtual-motherboard) file.
+- Answer:
+
+### Q071 · Part 1 > The 3 Realms · One word, two meanings: realm
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
+- Search: "In the big picture, there are 3 realms of IT in business"
+- Question: Part 1 uses realm for business, application and IaaS. Part 3 and the knowledge base use realm for VM and Guest OS. One word per concept. Keep realm for the 3 of Part 1 and call VM and Guest OS layers? Or the reverse?
+- Written as now: both meanings.
+- Answer:
+
+### Q072 · Part 1 > The Layers in IT Systems · Book corrections and Apdex
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
+- Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
+- Search 2: "I like the principle behind apdex, but not its implementation"
+- Question: (a) GetBankDetail 5.2 s plus the other 7 functions 15.1 s = 20.3 s, not 20.1 s. (b) Image text: "None of the counters are AWS shows any signs of performance counters". (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
+- Written as now: no number from the image in the text; no Apdex.
+- Answer:
+
+### Q073 · Part 1 > KPI | SLA > Differences · One KPI or two for VM and Guest OS
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Scope); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) (section Two KPIs, not one).
+- Search 1: "they are 1 logical entity due to 1:1 permanent relationship, hence they are combined in 1 KPI number"
+- Search 2 (Part 3): "VM Performance (%) and Guest OS Performance (%)"
+- Question: Part 1 combines VM and Guest OS in one KPI. Part 3, the KPIs in VCF Operations and the Part 1 diagram (Guest OS KPI, VM KPI) keep two. Is Part 1's sentence older? The knowledge base would then state: two KPIs, one logical entity, read together.
+- Written as now: both, flagged.
+- Answer:
+
+### Q074 · Part 1 > KPIs in IaaS · How many SLAs per service; is there a Guest OS SLA
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPIs in VM as a Service).
+- Search 1: "There is only 1 SLA per service."
+- Search 2: "What happens inside the Guest OS is not even relevant to the VM SLA."
+- Search 3: heading "The 4 SLAs of IaaS"
+- Question: (a) One SLA per service, while the earlier section gives 4 SLAs of IaaS and the layer table gives availability, performance and compliance per SLA. Read as one SLA contract per service, holding several SLA metrics? (b) The VM as a Service diagram shows a Guest OS SLA. The table says Guest OS metrics stay out of the IaaS SLA. Does a Guest OS SLA exist only when IT owns Guest OS sizing, and then as a separate SLA?
+- Written as now: one SLA per service; Guest OS outside the IaaS SLA.
+- Answer:
+
+### Q075 · Part 1 > KPI | SLA > Differences · KPI timing words
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (sections Three steps of maturity, KPI vs SLA).
+- Search 1: "5-minute window. They are used as the starting point to troubleshoot"
+- Search 2: "Based on day (e.g. last 1 hour), which is moving as time passes."
+- Search 3: "Customers can track the SLA via self-service portal."
+- Question: (a) The KPI is a 5-minute window with 20-second accuracy: computed every 5 minutes from 20-second peaks (Q048)? (b) "Based on day" means a moving window and "based on date" a calendar period? (c) The portal line is in the KPI step, where no SLA exists yet. Is it the KPI the customers track?
+- Written as now: (a) and (b) as read; (c) written as "follow the numbers".
+- Answer:
+
+### Q076 · Part 1 > KPI step and Noisy Neighbour > Solution · How the SLA is computed; 99.99% at 5 minutes
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (memory class table); [knowledge/vcf-operations/kpis/cluster-sla-sli.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md).
+- Search 1: "SLA = 1 month average of SLI of that specific month."
+- Search 2: "VM contention is <1% for 99.99% of the time in the entire month"
+- Question: (a) Is the SLA the mean of the SLI values, or the share of 5-minute intervals that pass the threshold? They differ: one bad hour at 50% contention averages out in a mean, but fails 12 intervals. (b) A 30-day month has 8,640 five-minute intervals. One failed interval gives 99.988%. So 99.99% allows 0 failures, the same count as Gold's 100%; only the threshold differs (0% vs below 1%). Did you mean 99.9% (8 intervals, 40 minutes)? (c) Bronze has no threshold. Give one?
+- Written as now: the table as the book gives it.
+- Answer:
+
+### Q077 · Part 1 > Noisy Neighbour > CPU · Shares of a busy vCPU beside an idle one
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section CPU, Share); [knowledge/vsphere/foundations/resource-controls.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Default CPU shares).
+- Search: "the vCPU 1 of VM 2 does get 2x the share as it does not benefit from idleness of vCPU 2 of VM 2"
+- Question: the sentence says both "does get 2x" and "does not benefit". As Claude reads the scheduler: default shares are set per vCPU (1,000 per vCPU at Normal; your screenshot shows 2,000 for a 2-vCPU VM). Under contention each vCPU is charged against its own part, and an idle sibling's part is not handed to the busy vCPU. So vCPU 1 of VM 2 gets the same as vCPU 1 of VM 1, not 2x. Is "does get" a typo for "does not get"? And "shares are per VM, not per vCPU": per VM in configuration, per vCPU in effect?
+- Written as now: "the busy vCPU of a 2-vCPU VM does not gain from its idle sibling".
+- Answer:
+
+### Q078 · Part 1 > Noisy Neighbour > CPU and Disk · Two calculations
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections CPU, Reservation; Disk, Limit).
+- Search 1: "At 8:1 overcommit against physical thread, you cannot guarantee more than 0.25 CPU thread worth of resource"
+- Search 2: "then it only takes 5% of the VM population (40 VM in this case) to saturate your storage"
+- Question: (a) 8 vCPU per thread gives 0.125 thread per vCPU. 0.25 is right for 8:1 per core (4:1 per thread). Which basis? (b) 5% of 2,000 VMs is 100, not 40; at 1% each, 100 VMs reach 100% of the array. Was it meant as 40 VMs at 2.5% each, or 100?
+- Written as now: (a) left out; (b) 100 VMs.
+- Answer:
+
+### Q079 · Part 1 > Solution > Maximum VM Size · Core or thread as the basis
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Maximum VM size).
+- Search 1: "Maximum size = ESXi logical CPU."
+- Search 2: "if your ESXi has 48 cores total, then avoid doing 12 vCPU VM"
+- Question: the example states overcommit per core ("1 core is assigned to 4 vCPU"); the size table per logical CPU (thread). Mixed: (a) 1:1 allows 96 vCPU on 48 cores and 96 threads, which alone is 2:1 per core; (b) 8:1 gives 0.125 × 96 = 12 vCPU, and the same row says avoid 12 on 48 cores, keep 4-6; (c) 4:1 gives 24 vCPU, called a whole socket, which is one socket's cores, not its threads. Should the table state overcommit and size per physical core? Then 1:1 → 48, 2:1 → 24 (19 with headroom), 4:1 → 12, 8:1 → 6.
+- Written as now: the table as the book gives it, flagged.
+- Answer:
+
+### Q080 · Part 1 > Noisy Neighbour > Storage I/O Control · Deprecated in VCF 9
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Disk, Storage I/O Control).
+- Search: "SIOC provides 2 choices for congestion threshold"
+- Source: vSphere 9.1 documentation, Manage Storage I/O Resources with vSphere (p. 1886): "With VCF 9.0, vSphere Storage I/O Control Components are deprecated." The datastore performance charts still list SIOC Normalized Latency and Aggregate IOPs.
+- Question: (a) In 9.1, should the knowledge base mark SIOC as deprecated and keep only the per-disk limit and shares? Or does your field practice still enable it? (b) "There is no reservation for VM Disk." From vSphere 6.5, SIOC policy components also had an IOPS reservation, now deprecated with them (Claude's own knowledge). Keep the sentence as "none in the VM disk settings"?
+- Written as now: SIOC as the book gives it; the deprecation in review notes only.
+- Answer:
+
+### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Search 1: "Now, a single villain VM can hit 10 Gb."
+- Search 2: "sustaining 5 Gb over 300 seconds period"
+- Search 3: "The share should be larger for production VM network and development VM network."
+- Question: (a) The calculation pools 2 × 25 Gb per host. With the default teaming (route based on originating virtual port) each vNIC uses one uplink. A 10 Gb villain fills 10 of one 25 Gb uplink and hurts only the VMs on that uplink. Compute per uplink? (b) The villain is 10 Gb in the calculation, 5 Gb sustained in the example: the 5-minute average hides the 10 Gb 20-second peak (the Interval rule)? (c) Read the share sentence as "larger for production VM traffic than development"?
+- Written as now: per host, both figures, (c) as read.
+- Answer:
+
+### Q082 · Part 1 > Noisy Neighbour > Memory and Solution · Gold 1:1 with memory tiering
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Search 1: "Per-VM reservation becomes irrelevant when the entire cluster does not overcommit."
+- Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
+- Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
+- Written as now: the book's table; no tiering note.
+- Answer:
+
+### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Search 1: "I think it should be 8 Gb/s."
+- Search 2: "consider setting 100 Mb/s per VM"
+- Question: these are the only network numbers per VM. 8 Gb/s × 25 VMs = 200 Gb on a 40 Gb host: the limit stops one villain, not many at once. Is 8 Gb/s a cap for one VM's peak and 100 Mb/s a floor? Should they go in the capacity threshold file as rules?
+- Written as now: in the text, not in the threshold files.
+- Answer:
+
+### Q084 · Knowledge base · ESXi CPU Demand: sum of VMs or not
+- Files: [knowledge/vsphere/foundations/provider-consumer.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/provider-consumer.md) (sections ESXi CPU Demand, Provider metric types); [knowledge/glossary.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/glossary.md) (Confusable pairs, ESXi CPU Demand vs Usage).
+- Search (Part 3): "Not the sum of all VM worlds + VMkernel worlds"
+- Question: found while checking this chapter. One file says ESXi CPU Demand is not a sum of consumers, with a trap. The same file, in Provider metric types, gives it as a sum-of-consumer example. The glossary says it is the sum over the VMs. Which is right? Claude will make the three agree.
+- Written as now: contradictory.
+- Answer:
+
 ## Resolved
 
 ### Q045 · Chapter 3 Memory > VM · Swapped formula in the vSphere 9.1 documentation

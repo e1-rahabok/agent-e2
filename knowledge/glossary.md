@@ -4,7 +4,13 @@ Single source of truth for terms, synonyms, distinctions and words to avoid, acr
 Allowed tag values (machine settings for the linter) are in `project/tools/tags.yaml`.
 
 ## Book terminology
-- Placeholder. To be provided by the author.
+- From Part 1, Performance Management. Proposals until the author confirms.
+- KPI: key performance indicator; performance only. One metric that quantifies the performance of a logical entity. See `operations-management/performance/kpi-vs-sla`.
+- KAI: key availability indicator. KCI: key compliance indicator. Not called KPI.
+- SLI: service level indicator; the 5-minute tracking value behind an SLA. The SLA is its monthly result.
+- Noisy neighbour: a consumer whose demand degrades other consumers on shared capacity (villain and victims). Used instead of resource management. See `vsphere/foundations/noisy-neighbour`.
+- Class of service: Gold, Silver, Bronze; each with its own overcommit ratio, maximum VM size and performance threshold.
+- Usable capacity: total capacity minus HA, buffer and hypervisor overhead. A capacity term only; there is no usable performance.
 
 ## Synonyms (same thing, several names)
 | Preferred term | Also called | Note |

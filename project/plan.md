@@ -45,7 +45,8 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 ## Open work
 ### M1 Knowledge base
 - Thresholds: one place since 2026-11-06 ([knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds-performance.yaml), `thresholds-capacity.yaml`). Open: 31 prose statements in 24 files without a row (`python3 project/tools/threshold_inventory.py`); grey (wastage) values for the capacity bands; 5-minute readings where only 20-second ones exist.
-- Author input: Q060 (VM slow triage order), Q061 (capacity decision order), Q062 (health check), Q063 (Book Part 1, VCF Operations chapters), Q064 (review order); all other open author questions.
+- Book Part 1: Performance Management extracted 2026-11-06 into 4 files ([operations-management/performance/](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance) performance-vs-capacity, realms-and-layers, kpi-vs-sla; [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md)); 20 challenges to the author, Q065-Q084. Next: Capacity Management, then Your Private Cloud (SLA, SP5 framework), then Configuration Management.
+- Author input: Q060 (VM slow triage order), Q061 (capacity decision order), Q062 (health check), Q063 (Book Part 1, VCF Operations chapters), Q064 (review order); Q065-Q084 (Part 1, Performance Management); all other open author questions.
 - VCF Operations: map its objects, engines and metric groups; fetch the VCF Operations 9.1 metric reference from TechDocs into the catalog.
 - Stubs: fill from the book, or fold into the family file, the 8 files under 60 words (review, section 2), then the rest under 120 words.
 - Flows: a Mermaid diagram for each of the 11 flows without one; the author's draw.io flows converted where they exist. New flows after Q060-Q062.
@@ -75,6 +76,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
   - `route_diagnosis` (troubleshooting question gets its flow first): 71%, 51 of 90. On.
   - `query_expansion` (glossary synonyms): no change; the glossary has 2 synonym rows. Implemented, off.
   - Together: 73%, 53 of 90. With hybrid search (embeddings): 72% to 75%, 51 to 57 of 90.
+- 2026-11-06, Part 1 Performance Management added (4 files): classic context 76%, 57 to 56 of 90 complete. Gained 0019 and 0024; lost 0023 (ballooned file pushed out by performance-vs-capacity) and 0080 (capacity-model pushed out by noisy-neighbour, which covers thin provisioning). Kept: the new files hold the right ideas for both.
 - Next, measured the same way:
   - Context budget: 12K gives 75% (55 of 90), 16K gives 76% (57 of 90). 16K still fits the 32K window with images and the answer; decide with the author, because it changes every classic run.
   - The query "VM CPU Ready: rollup, unit and statistics level" does not return the VM CPU Ready file in the top 6; vcenter-statistics and distributed-switch files rank first, and ranking shifts when files are added. Look at chunk scoring and the file-level aggregation.
