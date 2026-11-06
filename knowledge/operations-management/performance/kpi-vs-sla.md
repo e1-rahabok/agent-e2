@@ -60,7 +60,7 @@
 ## KPIs in VM as a Service
 - One SLA contract per service, holding several SLA metrics (availability, performance, security); several KPIs.
 - Guest OS SLA: when central IT owns the Guest OS, it provides a Guest OS SLA with its own availability, performance and security SLA. Its values can be combined with the VM SLA for reporting.
-- Security SLA, not compliance SLA: compliance compares settings against a secured configuration; security also covers activity, such as undesirable activity that is a potential risk.
+- Security SLA is preferred over compliance SLA, which is correct but narrower: compliance compares settings against a secured configuration; security also covers activity, such as undesirable activity that is a potential risk.
 - VM KPI: stops at Windows or Linux. The application or service inside the Guest OS is excluded: the infrastructure team stops at the OS.
 - Business application KPI: three levels. The business transaction first (user login). Below expectation → the application software KPI (Apache web server) and the infrastructure KPI (the VM KPI).
 - vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: `vcf-operations/kpis/cluster-performance`.
