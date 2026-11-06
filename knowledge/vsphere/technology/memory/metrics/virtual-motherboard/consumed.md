@@ -2,7 +2,7 @@
 
 ## Meaning
 - Excludes overhead.
-- Includes reserved memory, even if the Guest OS has not used it yet. See `vsphere/foundations/resource-controls`.
+- Includes reserved memory only once the VM has touched it: a reservation alone does not raise Consumed. See `vsphere/foundations/resource-controls`.
 
 ## vMotion effect
 - After vMotion, Consumed on the destination can increase. Swapped or compressed pages can become regular pages. See `vsphere/foundations/overhead`.
@@ -22,7 +22,7 @@ Consumed = Granted - savings (sharing)
 - ESXi backs VM memory with 2 MB pages whenever possible, even if the guest does not request them. Fewer TLB misses, but the VM consumes more than the guest uses.
 - Excludes overhead (transparent to the guest) and swapped memory (not readily usable).
 - Compressed: the freed part of a compressed page (for example 0.75 KB of a 4 KB page compressed to 1 KB) is excluded.
-- Includes reserved memory.
+- Includes touched reserved memory; untouched reserved memory is not counted.
 - Capped by a limit. Can reach, not exceed, configured memory.
 - vCenter Guest | Memory Usage is the same as Consumed. Do not use it.
 
@@ -67,6 +67,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed
 corrections: []
 review_notes:
+- 'Section ''Meaning'': Consumed does not jump to the reservation (author, Q047 and Q057, 2026-11-06).'
 - 'Section ''View'': from Memory > Architecture.'
 - 'Sections Formula, Why Consumed stays high: from Memory > VM.'
 - 'Section ''Formula'': the book is unsure whether Consumed includes the compressed remainder that stays in DIMM.'

@@ -36,7 +36,7 @@
 | FDUPLX | Y: full duplex. N is a problem. |
 | USED-BY, DNAME | Port user; virtual device name. |
 
-- DTYP (hub or switch) is no longer shown. vSphere Client shows switches, VMkernel ports and NICs in more detail.
+- DTYP (hub or switch) is no longer shown; the vSphere 9.1 documentation still lists it, a documentation error. vSphere Client shows switches, VMkernel ports and NICs in more detail.
 
 ## RDMA device
 - RDMA gives applications direct access to the NIC, bypassing OS overhead.
@@ -86,7 +86,7 @@ source:
   path: Provider Objects > esxtop > Network
 corrections: []
 review_notes:
-- 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the book says DTYP is no longer shown. Open question Q046.'
+- 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the book says DTYP is no longer shown. The author confirms the book: the field is not shown on ESXi 9.1; the documentation is out of date (Q046, 2026-11-06).'
 - 'KB from the book: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html (not read).'
 - 'Moved 2026-11-06 from vsphere/tools/esxtop/network (architecture review 2026-11-06, section 5).'
 status: draft

@@ -1,7 +1,7 @@
 # Cluster VM operations event counts
 
 ## Meaning
-- Counts of VM events in the cluster. Cumulative since the cluster was created.
+- Counts of VM events in the cluster. Cumulative since the object was created; a vCenter restart does not reset them.
 - VCF Operations converts them to rates and rolls them up to Datacenter, vCenter and vSphere World.
 
 ## Counters
@@ -62,6 +62,7 @@ source:
   path: Provider Objects > Overview > vSphere Cluster > VM Operations
 corrections: []
 review_notes:
+- 'Section ''Meaning'': cumulative since object creation; not reset by a vCenter restart (author, Q052, 2026-11-06).'
 - 'Section ''Counters'': the book lists ''VM host and datastore change count'' twice. The vCenter API confirms two counters: numXVMotion (powered-on and suspended) and numChangeHostDS (powered-off and suspended). Counter names, the location definitions and the datacenter copy from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 status: draft
 ```

@@ -60,7 +60,7 @@
 | CPU | PCPU the world ran on (often blank). |
 | EXC_AF | Yes: exclusive affinity (Latency Sensitivity). |
 
-- HTQ (quarantine) is no longer shown since ESXi 7.0.
+- HTQ (quarantine) is no longer shown since ESXi 7.0. The vSphere 9.1 documentation still lists it: a documentation error.
 - Only EMIN to EXC_AF are absent from vSphere Client and VCF Operations.
 
 ## Allocation
@@ -154,7 +154,7 @@ source:
 corrections: []
 review_notes:
 - 'Sections ''Summary lines'', ''State counters'', ''Power'': load average meaning, CORE UTIL batch behaviour, %MLMTD inside %RDY, the two formulas, %RUN vs %USED with Hyper-Threading, %WAIT - %IDLE as guest IO wait estimate, per-core percentages, %A/MPERF formula and CPPC from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > CPU Panel, CPU Power Panel (pp. 2150-2155).'
-- 'The 9.1 documentation still lists HTQ in the CPU panel; the book says HTQ is no longer shown since ESXi 7.0. Open question Q046.'
+- 'The 9.1 documentation still lists HTQ in the CPU panel; the book says HTQ is no longer shown since ESXi 7.0. The author confirms the book: the field is not shown on ESXi 9.1; the documentation is out of date (Q046, 2026-11-06).'
 - 'Section ''Summary stats'': the book is unsure what the CPU column shows (always blank for the author) and whether AMLMT shows when a limit is applied.'
 - 'Moved 2026-11-06 from vsphere/tools/esxtop/cpu (architecture review 2026-11-06, section 5).'
 status: draft

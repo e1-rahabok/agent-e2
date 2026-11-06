@@ -23,6 +23,8 @@ meta:
   - 'Capacity has 5 bands: grey sits below green and marks wastage, used for rightsizing (author, 2026-11-06).'
   - Every row restates a threshold written in its kb file. Band rows must match the colour-band table of the kb file; lint checks both ways.
   - Merged 2026-11-06 from catalog/thresholds.yaml and the KPI band tables (one place for thresholds).
+  - 'Intervals of KPI and SLI rows (author, Q048, 2026-11-06): a VCF Operations metric named ''peak'' is the highest of the 15 20-second averages in the 5-minute
+    cycle (20s); every KPI and SLI is reported every 5 minutes (5m). The SLA is a lagging, monthly indicator.'
   status: draft
 rows:
 - kind: rule
@@ -109,6 +111,7 @@ rows:
   source: author
   kb: vcf-operations/kpis/cluster-risk
   quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
+  interval: 5m
 - kind: rule
   id: monster-vm-memory
   metric: VM memory relative to host physical RAM
@@ -120,6 +123,7 @@ rows:
   source: author
   kb: vcf-operations/kpis/cluster-risk
   quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
+  interval: 5m
 - kind: bands
   id: guest-os-sizing-guest-os-memory-utilization-for-sizing
   metric: Guest OS memory utilization, for sizing (%)
@@ -139,7 +143,7 @@ rows:
   metric: Cluster-wide ESXi CPU thread utilization (%)
   group: Utilization
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-55
@@ -153,7 +157,7 @@ rows:
   metric: Cluster-wide ESXi memory consumed (%)
   group: Utilization
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-70
@@ -167,7 +171,7 @@ rows:
   metric: Cluster memory tiering consumption (%)
   group: Saturation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-4
@@ -181,7 +185,7 @@ rows:
   metric: Cluster-wide ESXi memory ballooned (%)
   group: Saturation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-1
@@ -195,7 +199,7 @@ rows:
   metric: Cluster-wide ESXi swapped + zipped memory (%)
   group: Saturation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-0.25
@@ -209,7 +213,7 @@ rows:
   metric: Highest ESXi CPU thread utilization (%)
   group: Utilization
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: Excluded
@@ -223,7 +227,7 @@ rows:
   metric: Worst ESXi CPU imbalance (ratio)
   group: Utilization
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: '1'
@@ -237,7 +241,7 @@ rows:
   metric: Highest ESXi memory consumed (%)
   group: Utilization
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: Excluded
@@ -251,7 +255,7 @@ rows:
   metric: Worst ESXi memory ballooned (%)
   group: Saturation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-1
@@ -265,7 +269,7 @@ rows:
   metric: Worst ESXi swapped + zipped memory (%)
   group: Saturation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-0.25
@@ -279,7 +283,7 @@ rows:
   metric: Worst ESXi memory tiering latency (µs)
   group: Saturation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-150
@@ -293,7 +297,7 @@ rows:
   metric: Highest ESXi CPU reservation (%)
   group: Reservation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: Excluded
@@ -307,7 +311,7 @@ rows:
   metric: Highest ESXi memory reservation (%)
   group: Reservation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: Excluded
@@ -321,7 +325,7 @@ rows:
   metric: Highest ESXi CPU overcommit ratio
   group: Allocation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: Excluded
@@ -335,7 +339,7 @@ rows:
   metric: Highest ESXi memory overcommit ratio
   group: Allocation
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: Excluded
@@ -349,7 +353,7 @@ rows:
   metric: 'Highest CPU monster VM : host ratio'
   group: Monster VM
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-1
@@ -363,7 +367,7 @@ rows:
   metric: 'Highest memory monster VM : host ratio'
   group: Monster VM
   object: ClusterComputeResource
-  interval: null
+  interval: 5m
   bands:
     grey: null
     green: 0-1
