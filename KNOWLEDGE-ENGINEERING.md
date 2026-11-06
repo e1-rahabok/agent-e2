@@ -3,6 +3,57 @@
 What the knowledge base holds, in what form, and how to write it. For human reviewers and writers. Not indexed.
 Why the system can win: [MISSION.md](MISSION.md). How the parts run, including ingest and indexing: [ARCHITECTURE.md](ARCHITECTURE.md). What the agent is told about the knowledge base: [harness/AGENT.md](harness/AGENT.md). Plan and open gaps: [project/plan.md](project/plan.md).
 
+## From expertise to knowledge the model reads
+
+```mermaid
+flowchart LR
+  subgraph Sources["1. Sources: human expertise"]
+    B[Author's books and quizzes]
+    F[Field answers, 20+ years of operations]
+    D[Official docs, current release]
+  end
+  subgraph Structure["2. Structure: split by kind"]
+    M[Mechanisms and reasons]
+    T[Traps: wrong reading, correct reading]
+    N[Numbers: units, rollups, thresholds]
+    O[Order of checks]
+  end
+  subgraph Codify["3. Codify: one form per kind"]
+    P[Markdown files: one fact per bullet, one object per metric file]
+    Y[Catalog YAML: counters, thresholds, object model]
+    W[Flows: numbered steps plus Mermaid]
+    L[Tags and links: same_name, internal_derive, related]
+  end
+  subgraph Check["4. Check"]
+    LI[Lint: folders, tags, links, quotes, phrases]
+    AQ[Author questions and review]
+    BM[Retrieval check and benchmark]
+  end
+  subgraph Use["5. Used by the AI"]
+    R[Harness: search, catalog, calculator, flow tool]
+    A[Agent and model: read, apply, answer with citations]
+  end
+  B --> Structure
+  F --> Structure
+  D --> Structure
+  M --> P
+  T --> P
+  N --> Y
+  O --> W
+  P --> L
+  P --> Check
+  Y --> Check
+  W --> Check
+  Check -->|reviewed| R
+  R --> A
+  A -->|wrong answers traced to knowledge, retrieval or model| Sources
+```
+
+- Experts hold judgment, not definitions. Each kind of judgment gets its own form: prose for reasons, trap lines for misreadings, YAML for exact numbers, numbered steps for the order of checks.
+- Tags and links carry the expert's mental map: which files must be read together.
+- Nothing reaches the model unchecked: lint, the author's review, and the benchmark.
+- The loop closes: every wrong answer is traced back to a missing fact, a retrieval miss or a model error.
+
 Part A says what the knowledge is (sections 1-4). Part B gives the rules for writing it (sections 5-13). Part C is the workflow (section 14).
 
 # Part A. The knowledge
