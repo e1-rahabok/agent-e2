@@ -155,6 +155,9 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Question: (a) One SLA per service, while the earlier section gives 4 SLAs of IaaS and the layer table gives availability, performance and compliance per SLA. Read as one SLA contract per service, holding several SLA metrics? (b) The VM as a Service diagram shows a Guest OS SLA. The table says Guest OS metrics stay out of the IaaS SLA. Does a Guest OS SLA exist only when IT owns Guest OS sizing, and then as a separate SLA?
 - Written as now: one SLA per service; Guest OS outside the IaaS SLA.
 - Answer:
+- (a): Read as one SLA contract per service, holding several SLA metrics
+- (b): When central IT Department owns Guest OS, they should provide Guest OS SLA. It should have its own Availability SLA, Performance SLA and Security SLA. These values can be combined with the VM SLA to ease reporting and aggregation.
+- Use the word Security SLA, not Compliance SLA. Security is more than Compliance. Compliance management is mostly about comparing settings against secured configuration. Security management covers activity, such as undesirable activity which is potentially a security risk.
 
 ### Q075 · Part 1 > KPI | SLA > Differences · KPI timing words
 - Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (sections Three steps of maturity, KPI vs SLA).
@@ -164,6 +167,9 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Question: (a) The KPI is a 5-minute window with 20-second accuracy: computed every 5 minutes from 20-second peaks (Q048)? (b) "Based on day" means a moving window and "based on date" a calendar period? (c) The portal line is in the KPI step, where no SLA exists yet. Is it the KPI the customers track?
 - Written as now: (a) and (b) as read; (c) written as "follow the numbers".
 - Answer:
+- (a) The KPI is a 5-minute window with 20-second accuracy: computed every 5 minutes from 20-second peaks? Yes.
+- (b) KPI is based on day, not date. It's rolling continuously, like live operations. SLA is based on calendar date.
+- (c) In the absence of SLA, yes, both application team and infrastructure team tracks KPI. SLA requires far more advanced cloud maturity model.
 
 ### Q076 · Part 1 > KPI step and Noisy Neighbour > Solution · How the SLA is computed; 99.99% at 5 minutes
 - Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (memory class table); [knowledge/vcf-operations/kpis/cluster-sla-sli.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md).
@@ -172,13 +178,16 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Question: (a) Is the SLA the mean of the SLI values, or the share of 5-minute intervals that pass the threshold? They differ: one bad hour at 50% contention averages out in a mean, but fails 12 intervals. (b) A 30-day month has 8,640 five-minute intervals. One failed interval gives 99.988%. So 99.99% allows 0 failures, the same count as Gold's 100%; only the threshold differs (0% vs below 1%). Did you mean 99.9% (8 intervals, 40 minutes)? (c) Bronze has no threshold. Give one?
 - Written as now: the table as the book gives it.
 - Answer:
+- (a) the mean value. The SLI itself is already computed based on pass or fail. So each 5 minute a micro SLA is computed, leading to the final SLA number at the end of the calendar month. SLI = SLA Leading Indicator. It is not Service Level Indicator. That's a trap as people think SLI and SLA are peers as they sound similar.
+- (b) the table was wrong. 100% is unrealistic practically. Cost will escalate.
+- (c) Recommended threshold for Performance SLA: 99.9% gold, 99.8% silver and 99.6% bronze
 
 ### Q077 · Part 1 > Noisy Neighbour > CPU · Shares of a busy vCPU beside an idle one
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section CPU, Share); [knowledge/vsphere/foundations/resource-controls.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Default CPU shares).
 - Search: "the vCPU 1 of VM 2 does get 2x the share as it does not benefit from idleness of vCPU 2 of VM 2"
 - Question: the sentence says both "does get 2x" and "does not benefit". As Claude reads the scheduler: default shares are set per vCPU (1,000 per vCPU at Normal; your screenshot shows 2,000 for a 2-vCPU VM). Under contention each vCPU is charged against its own part, and an idle sibling's part is not handed to the busy vCPU. So vCPU 1 of VM 2 gets the same as vCPU 1 of VM 1, not 2x. Is "does get" a typo for "does not get"? And "shares are per VM, not per vCPU": per VM in configuration, per vCPU in effect?
 - Written as now: "the busy vCPU of a 2-vCPU VM does not gain from its idle sibling".
-- Answer:
+- Answer: that's a Level 400 trap. I think even VMware VCDX will fail for it. A larger VM has more overall CPU shares, the share is shareable among its vCPU. In the following example, the vCPU 1 of VM 2 does get 2x the share as it benefits from idleness of vCPU 2 of VM 2.
 
 ### Q078 · Part 1 > Noisy Neighbour > CPU and Disk · Two calculations
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections CPU, Reservation; Disk, Limit).
@@ -187,6 +196,8 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Question: (a) 8 vCPU per thread gives 0.125 thread per vCPU. 0.25 is right for 8:1 per core (4:1 per thread). Which basis? (b) 5% of 2,000 VMs is 100, not 40; at 1% each, 100 VMs reach 100% of the array. Was it meant as 40 VMs at 2.5% each, or 100?
 - Written as now: (a) left out; (b) 100 VMs.
 - Answer:
+- (a) a core typically has dual threads due to Hyper Threading. I meant to say a 4:1 overcommit against physical thread.
+- (b) 2.5% limit per VM, not 1%. 
 
 ### Q079 · Part 1 > Solution > Maximum VM Size · Core or thread as the basis
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Maximum VM size).
@@ -194,7 +205,7 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Search 2: "if your ESXi has 48 cores total, then avoid doing 12 vCPU VM"
 - Question: the example states overcommit per core ("1 core is assigned to 4 vCPU"); the size table per logical CPU (thread). Mixed: (a) 1:1 allows 96 vCPU on 48 cores and 96 threads, which alone is 2:1 per core; (b) 8:1 gives 0.125 × 96 = 12 vCPU, and the same row says avoid 12 on 48 cores, keep 4-6; (c) 4:1 gives 24 vCPU, called a whole socket, which is one socket's cores, not its threads. Should the table state overcommit and size per physical core? Then 1:1 → 48, 2:1 → 24 (19 with headroom), 4:1 → 12, 8:1 → 6.
 - Written as now: the table as the book gives it, flagged.
-- Answer:
+- Answer: the book is wrong as the overcommit was based on core, not thread. It should be based on CPU physical thread. So 8:1 on a thread means 4:1 on the core if the core has dual threads. 
 
 ### Q080 · Part 1 > Noisy Neighbour > Storage I/O Control · Deprecated in VCF 9
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Disk, Storage I/O Control).
@@ -203,6 +214,8 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Question: (a) In 9.1, should the knowledge base mark SIOC as deprecated and keep only the per-disk limit and shares? Or does your field practice still enable it? (b) "There is no reservation for VM Disk." From vSphere 6.5, SIOC policy components also had an IOPS reservation, now deprecated with them (Claude's own knowledge). Keep the sentence as "none in the VM disk settings"?
 - Written as now: SIOC as the book gives it; the deprecation in review notes only.
 - Answer:
+- (a) for product deprecation, follows the official manual as the book gets outdated. We can't practice what is officially deprecated.
+- (b) Yes, keep as none. Do not include deprecated feature.
 
 ### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
