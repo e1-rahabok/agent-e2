@@ -28,7 +28,8 @@ Each entry has:
 - Search: "This is why Swapped is not Swapped In – Swapped Out"
 - Question: the vSphere 9.1 documentation (Virtual Machines > Memory (MB), p. 2103) defines VM Swapped = swapout – swapin, and adds that vMotion can make Swapped larger than swapout – swapin. Is the documentation wrong, or does its formula hold for cumulative counters (total swapped out minus total swapped in) while the book means the rates?
 - Written as now: Swapped is not Swap in - Swap out: both run in parallel on different pages. Related to Q019 (host Swap Consumed).
-- Answer:
+- Answer: The vSphere 9.1 documentation is wrong. My book is correct. However, add  that vMotion can make Swapped larger than swapout – swapin if the VM comes with its memory already swapped.
+BTW, the page is 2105, not 2103. 
 
 ### Q046 · Provider Objects > esxtop · HTQ and DTYP still in the 9.1 documentation
 - Files: [esxtop CPU, power and interrupt counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md), [esxtop network counters](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools/esxtop/network.md)
@@ -36,49 +37,61 @@ Each entry has:
 - Search 2: "does not seem to be available anymore"
 - Question: the vSphere 9.1 documentation still lists HTQ (CPU panel) and DTYP (network panel). Do they show on an ESXi 9.1 host?
 - Written as now: both described as no longer shown, per the book.
-- Answer:
+- Answer: both no longer shown. My book is correct. Add this as a mistake in the manual.
 
 ### Q047 · The World of Metrics > Resource management · Untouched memory reservation
 - Files: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/resource-controls.md)
 - Search: "since ESXi has reserved the space, it is not available to other VMs"
 - Question: the vSphere 9.1 documentation (vSphere Resource Management > Virtual Machine Memory, pp. 1833-1834) says that until a VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; only touched reserved memory is kept, even when idle. Does the book statement mean admission control (the reservation cannot be promised to another VM), while the physical pages can still be used by others until touched?
 - Written as now: Consumed jumps to the reservation at power-on; the reserved space is not available to other VMs. The existing correction says RAM is backed on first use, then stays locked.
-- Answer:
+- Answer: Consumed does not jump to the reservation at power-on. Until a VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; only touched reserved memory is kept, even when idle. Correct my book. 
 
 ### Q048 · Thresholds · Interval and instance reading of every band
 - Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md), [Cluster SLA and SLI](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds-performance.yaml) and [thresholds-capacity.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (fields `interval`, `instance`).
 - Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/foundations/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
-- Answer:
+- Answer: In VCF Operations, when the metric name has the word peak, that means it's reporting the highest 20-second-average within the 300-second reporting period. There are 15 data points within each 5 minute, each is a 20-second average. It's taking the highest among these 15 instance. The metrics at VM level are:
+Peak CPU Queue within collection cycle
+Peak CPU Context Switch within collection cycle
+Peak Guest OS Page-out Rate within collection cycle
+Peak Disk Queue within collection cycle
+Peak vCPU Ready within collection cycle
+Peak vCPU Co-Stop within collection cycle
+Peak Memory Contention within collection cycle
+Peak Latency within collection cycle
+Peak Usage Rate within collection cycle
+Peak Network Packets/sec within collection cycle
+Peak Transmitted Packet Dropped within collection cycle
+All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported at the end of the month for the whole month. KPI, SLA, SLI are covered in Part 1 of my book. These are not vSphere metrics. They are VCF Operations metrics.
 
 ### Q049 · vCenter API counters · clusterServices.cpufairness and memfairness (low priority)
 - Files: [knowledge/catalog/vcenter-api-counters.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/vcenter-api-counters.yaml) (HostSystem rows); no knowledge file yet.
 - Search: not from the book. vCenter 9.1.0 API summaries: cpufairness "Fairness of distributed CPU resource allocation"; memfairness "Aggregate available memory resources of all the hosts within a cluster" (looks copied from another counter).
 - Question: what do the two host counters measure, and are they worth documenting for operations?
 - Written as now: listed in the catalog only, no knowledge file.
-- Answer:
+- Answer: not worth documenting. They are internal counter. The Cluster Risk (%) metric in https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/c1c954d0fb284bb813fded0aeb4ebd299897edd2/docs/reference/metrics/cluster-risk.md is more applicable to VMware admin.
 
 ### Q050 · vCenter API counters · clusterServices.effectivecpu and effectivemem vs totalmhz and totalmb (low priority)
 - Files: [knowledge/catalog/vcenter-api-counters.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/vcenter-api-counters.yaml) (ClusterComputeResource rows); candidate: [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/capacity-model.md).
 - Search: not from the book. vCenter 9.1.0 API summaries: effectivecpu "Total available CPU resources of all hosts within a cluster"; effectivemem "Total amount of machine memory of all hosts in the cluster that is available for use for virtual machine memory and overhead".
 - Question: Claude's own knowledge (the API's cluster summary) says effective capacity excludes hosts in maintenance mode or not responding, and virtualization overhead. Is that right, and should the knowledge base prefer it over totalmhz and totalmb for usable capacity?
 - Written as now: listed in the catalog only.
-- Answer:
+- Answer: This is a good example of why jargon confuses people. In capacity, we have Total and Usable. Total is the raw and physical capacity. It typically does not change and remain static. Usable capacity  = Total - availability buffer - capacity buffer - overhead. I'm unsure if effective maps to total or usable. Anyway, this is low priority as there is no such word as Effective in the vCenter UI. The API is not fully documented, so focus on what the UI shows.
 
 ### Q051 · vCenter API counters · clusterServices.failover
 - Files: [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
 - Search: not from the book. vCenter 9.1.0 API summary: "vSphere HA number of failures that can be tolerated".
 - Question: how does the value behave under each HA admission control policy (slot, percentage of cluster resources, dedicated failover hosts, disabled)? Any trap in reading it?
 - Written as now: the counter, its level and its summary; behaviour per policy left open.
-- Answer:
+- Answer: The trap comes when the hosts in the cluster is not identical. Regarding the counter, ignore it for now as it's low priority item.
 
 ### Q052 · vCenter API counters · vmop counters: cumulative or per interval (low priority)
 - Files: [Cluster VM operations event counts](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/metrics/vm-operations.md).
 - Search: "Cumulative since the cluster was created"
 - Question: vCenter stores the 20 vmop counters with rollup latest and stat type absolute, on the cluster and the datacenter. Your hypothesis: vCenter accumulates them while VCF Operations shows a rate. Confirm? Do the vCenter counts ever reset (vCenter restart, cluster re-creation)?
 - Written as now: cumulative since cluster creation (book); VCF Operations converts them to rates (book).
-- Answer:
+- Answer: the counter is cumulative since the object creation. vCenter reset does not impact it. I'm unsure of re-creation but ignore it as we don't re-create cluster.
 
 ### Q053 · vCenter API counters · gpu.mem.reserved vs gpu.mem.used
 - Files: [GPU monitoring](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md) (sections Counters, Reading the counters, vGPU capacity).
@@ -100,7 +113,7 @@ Each entry has:
 - Search: not from the book. The question comes from the book section The World of Metrics > Resource management (`source_path` of the question).
 - Question: please validate the CPU key point with a screenshot of the vCenter UI: a VM with a 4 GHz CPU reservation, powered on and sitting at the BIOS screen. Do Run, Used, Demand and Usage stay at or near 0? The screenshot can then become the question's attachment (input type screenshot).
 - Written as now: CPU reservation is on demand; the CPU counters stay at or near 0 while the VM sits at the BIOS screen.
-- Answer:
+- Answer: I was wrong. Memory is also on demand. So both are. I verified on a live vCenter.
 
 ### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-50
 - Files: https://github.com/e1-rahabok/isvara-2/tree/main/benchmark/questions (L4-14 to L4-50); [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
@@ -111,7 +124,7 @@ Each entry has:
   2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
   3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-48-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-49-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
-- Answer:
+- Answer: no need to keep cap as I'm reviewing every question one by one. What is important is the allocation and distribution. The source (book versus Claude) is less important.
 
 ### Q059 · Agent · Core rules and confusable pairs given to the agent up front
 - Files: [Core rules of vSphere metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/core-rules.md) (section Rules); [Terminology](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md), section 3.
@@ -120,7 +133,7 @@ Each entry has:
   1. Are these the 12 rules an expert would give a new colleague first? Which would you drop, add or reword?
   2. Are the 8 confusable pairs right, and is any pair missing?
 - Written as now: drafted by Claude 2026-11-06, status draft. The agent receives them only when the switches are on (all off by default).
-- Answer:
+- Answer: 
 
 ### Q060 · Operations flows · Users say the VM is slow: your order of checks
 - Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/diagnosis/vm-slow-triage.md) (sections Checks, in order; Why this order). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md), section 3.3.
