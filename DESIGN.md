@@ -113,3 +113,20 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - D1: no draft status in the product. Release content is reviewed; answers never mention review status.
 - D2: screenshot upload is version 1.0 (changed by the author, 2026-11-06; was 1.1). The screen library follows in 1.1.
 - D3: data file upload is version 1.2. Each export format needs its own documented reading first.
+
+## 6. Design considerations
+
+### Screenshots of the product UI in the knowledge base (2026-11-06)
+- Question: does adding every screenshot of vSphere and VCF Operations, with an explanation, improve the system's product knowledge?
+- The model is frozen: screenshots in the knowledge base do not train it.
+- Retrieval matches text, not pixels. An image without a written explanation is never found.
+- So the value is the text twin of each screen: which tool and screen, which object, which counters with unit, interval and rollup, how to read it, and its traps.
+- Where it helps:
+  - an uploaded screenshot (release 1.0) is matched to its screen file, which says what the screen shows and how to read it;
+  - tool confusion, one of the 12 trap types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
+- The image itself helps only when the agent fetches it for a vision model at answer time; each costs about 1,500 prompt tokens.
+- Why not every screen:
+  - most of the hundreds of screens are configuration, not performance or capacity;
+  - extra files compete in retrieval and push out the files that matter (ranking shifted when 2 files were added);
+  - each file needs the author's review.
+- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [knowledge/_templates/screen.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/_templates/screen.md); location: `KNOWLEDGE-ENGINEERING.md`, section 5. Kept only if the retrieval check on screenshot questions improves. Not started (author, 2026-11-06).
