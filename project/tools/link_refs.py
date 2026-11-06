@@ -11,7 +11,8 @@ import re
 import sys
 
 BASE = 'https://github.com/e1-rahabok/isvara-2/blob/main/'
-DOCS = ['project/author-questions.md', 'project/todo.md']
+DOCS = ['project/author-questions.md', 'project/todo.md', 'DESIGN.md', 'benchmark/design.md', 'benchmark/README.md',
+        'benchmark/runner/README.md', 'benchmark/models.md']
 TICK = re.compile(r'`([\w./-]+)`')
 
 
@@ -30,12 +31,22 @@ def target(ref):
     return None
 
 
+FENCE = re.compile(r'(^```.*?^```)', re.M | re.S)  # code blocks are left as they are
+
+
+def _prose(text, fn):
+    parts = FENCE.split(text)
+    return ''.join(p if i % 2 else fn(p) for i, p in enumerate(parts))
+
+
 def rewrite(text):
-    return TICK.sub(lambda m: (lambda t: f'[{t[0]}]({t[1]})' if t else m.group(0))(target(m.group(1))), text)
+    return _prose(text, lambda t: TICK.sub(lambda m: (lambda x: f'[{x[0]}]({x[1]})' if x else m.group(0))(target(m.group(1))), t))
 
 
 def unlinked(path):
-    return [m.group(1) for m in TICK.finditer(open(path).read()) if target(m.group(1))]
+    found = []
+    _prose(open(path).read(), lambda t: found.extend(m.group(1) for m in TICK.finditer(t) if target(m.group(1))) or t)
+    return found
 
 
 if __name__ == '__main__':

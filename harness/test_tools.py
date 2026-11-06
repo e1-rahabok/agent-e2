@@ -174,3 +174,34 @@ class ModesTest(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class PrimerTest(unittest.TestCase):
+    import primer as P  # noqa: E402
+
+    def test_all_blocks_present_and_within_budget(self):
+        t = self.P.build(DOCS, {b: True for b in self.P.BLOCKS})
+        for head in ('## Map of the knowledge base', '## Core rules', '## Confusable terms',
+                     '## Troubleshooting flows', '## Procedure'):
+            self.assertIn(head, t)
+        self.assertLessEqual(self.P.tokens(t), self.P.BUDGET_TOKENS)
+
+    def test_off_by_default(self):
+        self.assertEqual(self.P.build(DOCS, {}), '')
+
+    def test_flow_index_lists_every_diagnosis_file(self):
+        t = self.P.flows_block(DOCS)
+        for i in DOCS:
+            if '/diagnosis/' in i:
+                self.assertIn(i, t)
+
+    def test_agentic_adds_primer_to_system_prompt(self):
+        class Recorder(MockClient):
+            def chat(self, model, msgs, **kw):
+                self.system = msgs[0]['content']
+                return super().chat(model, msgs, **kw)
+        cfg = dict(ModesTest.CFG, agent_primer={'rules': True})
+        rec = Recorder()
+        res, used, trace, fb = modes.answer('agentic', rec, 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertIn('## Core rules', rec.system)
+        self.assertIn('primer', [s['action'] for s in trace])

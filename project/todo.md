@@ -48,7 +48,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] After the next benchmark: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
 - [ ] After the next benchmark: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
 - [ ] Add benchmark questions that need the catalog, calculator and object paths (units, statistics levels, summation to %, chains across objects).
-- [x] Documentation redesign (2026-11-06): [DESIGN.md](https://github.com/e1-rahabok/isvara-2/blob/main/DESIGN.md) and [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md) added; solution design, philosophy and product requirements merged and archived. Still open: split [project/design-kb-test-site.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/design-kb-test-site.md) into harness design and benchmark design.
+- [x] Documentation redesign (2026-11-06): [DESIGN.md](https://github.com/e1-rahabok/isvara-2/blob/main/DESIGN.md) and [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md) added; solution design, philosophy and product requirements merged and archived. [project/design-kb-test-site.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/design-kb-test-site.md) split 2026-11-06: website only; harness parts to ARCHITECTURE.md and harness/, benchmark parts to benchmark/.
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
 - [x] vSphere Monitoring and Performance, pp. 2025-2184: extracted 2026-11-03.
@@ -124,10 +124,11 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
 
 ## Agent (design: [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md), section 3)
-- [ ] Build the up-front blocks, generated from the repository: 1 map of the knowledge base, 2 core rules, 3 confusable terms, 4 symptom → flow index, 5 procedure rules. Budget about 1-3K tokens together; lint checks the size.
-- [ ] One switch per block in [benchmark/runner/config.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/config.yaml); benchmark each alone, then together; keep a block only if it raises the final score or lowers the confident-wrong or override rate by more than the margin.
+- [x] Up-front blocks built 2026-11-06 ([harness/primer.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/primer.py); sources [Core rules of vSphere metrics](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/core-rules.md) and the glossary section Confusable pairs; lint checks the 3,000-token budget).
+- [x] One switch per block: `agent_primer` in the runner config, all off.
+- [ ] Benchmark each block alone, then all five; keep a block only if it raises the final score or lowers the confident-wrong or override rate by more than the margin.
 - [ ] Try a primed start: agentic mode that starts from the classic context.
-- [ ] Move the agent loop from [harness/modes.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/modes.py) to `harness/agent.py`.
+- [x] Agent loop moved to [harness/agent.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/agent.py) (2026-11-06).
 
 ## Evaluation
 - [x] Write the long, complex question: [ERP slow after the change window](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-50-erp-slow-after-change-window.md) (2026-11-05).

@@ -309,6 +309,11 @@ The knowledge base is shaped so that a model that knows nothing about it can sti
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, the author, official docs, or Claude's own knowledge. Record any fact not in the source document in `review_notes` with its section. No generic filler. No invented thresholds.
 - No text aimed at human motivation.
+- No AI-speak. Plain words, short sentences, the fact itself:
+  - no filler words or stock phrases of generated text;
+  - no praise, hedging or summary lines;
+  - no adjective where a number or a mechanism can stand; name the thing.
+  - The list of flagged phrases, each with its plain replacement: `project/tools/tags.yaml`, `avoid_ai_speak`. Lint flags them. The same rule applies to documents, commit messages and pull request text.
 - One vSphere object type per metric file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.

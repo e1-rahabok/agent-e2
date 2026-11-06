@@ -14,7 +14,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | Slips on arithmetic | Calculator (`calc.py`) | Computes the conversion and names the rule's source file |
 | Skips troubleshooting steps | Flow executor (`flows.py`) | Serves the diagnosis steps in order, one at a time |
 | Answers in a broken format or guesses | Verifier (`verify.py`) | Rejects letters that are not options, Unsure mixed with others; one repair turn |
-| Answers from memory, or loops | Agent rules and budgets (`modes.py`, `AGENT.md`) | Lookup first, no repeats, same-name check, call and token budgets |
+| Answers from memory, or loops | Agent rules and budgets (`agent.py`, `AGENT.md`) | Lookup first, no repeats, same-name check, call and token budgets |
 
 ## 2. Design rules
 - Code does what can be exact: search, lookup, arithmetic, step order, format checks. The model does only what needs language.
@@ -39,7 +39,9 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `calc.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
 | `flows.py` | Flow executor: a diagnosis file as ordered steps, one at a time, with the next step and the steps it refers to. |
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
-| `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup), agentic (the agent loop, `AGENT.md`). |
+| `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
+| `agent.py` | The agent loop: tools, rules (lookup first, no repeats, same-name check), budgets, fallback, verifier. Design: `AGENT.md`. |
+| `primer.py` | The agent's five up-front blocks, generated from the knowledge base; switches `agent_primer` in the config. |
 | `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
 
@@ -55,7 +57,12 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | flow | Steps of a diagnosis file, or one step with next and references | Troubleshooting questions. |
 
 ## 6. Settings and checks
-- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `agent_max_calls`, `agent_tool_tokens`.
+- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `agent_max_calls`, `agent_tool_tokens`, `agent_primer` (one switch per up-front block).
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
 - Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: `benchmark/runner/README.md`.
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.
+
+## 7. Planned
+- `draw_mermaid` tool: render a flow or layer diagram that no stored image shows.
+- Verifier: every metric name in an answer exists as a metric file title or is a quoted user term.
+- Question understanding before search (question type, object, layer as filters) and query rewriting with glossary synonyms: `ARCHITECTURE.md`, section Status.
