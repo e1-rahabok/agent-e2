@@ -83,7 +83,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
   - The query "VM CPU Ready: rollup, unit and statistics level" does not return the VM CPU Ready file in the top 6; vcenter-statistics and distributed-switch files rank first, and ranking shifts when files are added. Look at chunk scoring and the file-level aggregation.
   - Query understanding: map counter names, chart labels and esxtop fields in the question to their files through the catalog.
   - A larger local embedding model (hybrid adds 1 point over keyword search).
-  - Re-ranker: a local cross-encoder re-scores the top chunks after fusion (from the review of an external best-practice note, author, 2026-11-06). Targets the ranking misses above. Started 2026-11-06.
+  - Re-ranker: a local cross-encoder re-scores the top chunks after fusion (from the review of an external best-practice note, author, 2026-11-06). Targets the ranking misses above. Measured 2026-11-06 (bge-reranker-v2-m3, BM25 base 56 of 90 complete): replace top 30: 44; replace top 10: 52; fuse top 30: 51; fuse top 10: 56; question without options, top 20: 50 (replace), 52 (fuse). No gain: a general re-ranker does not know which file an expert needs (traps, mechanisms behind a metric). Off; code kept. Next: retry with hybrid search, or a re-ranker tuned on the synthetic set.
   - Synthetic retrieval-only set: about 5 questions per knowledge file, the key is the source file; no model, no judge, no author review. Catches ranking drift when files are added.
 
 ### M4 Gateway benchmark
