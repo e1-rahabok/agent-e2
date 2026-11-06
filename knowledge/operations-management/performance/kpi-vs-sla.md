@@ -26,7 +26,7 @@
 
 ## KPI vs SLA
 - Scope:
-  - KPI: one metric for a logical entity. VM and Guest OS are two objects but one logical entity (permanent 1:1), so one KPI number.
+  - KPI: one metric for one object. VM and Guest OS each have a KPI. For the application team they are one entity (permanent 1:1), so operations can report the average of the two as a VM GOS KPI (`operations-management/performance/performance-kpi-design`).
   - SLA: a set of metrics in the contract between provider (infrastructure team) and consumer (application team or business unit). What happens inside the Guest OS is not part of the VM SLA.
 - Coverage:
   - KPI: comprehensive. The SLA metrics plus metrics that warn before an SLA metric is breached. Many KPIs per SLA: most performance metrics are monitored, few belong in a contract.
@@ -117,9 +117,9 @@ images:
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS (pp. 76-80)'
-corrections: []
+corrections:
+- 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team (author, Q073, 2026-11-06).'
 review_notes:
-- 'Section ''KPI vs SLA'', Scope: one KPI for VM and Guest OS contradicts operations-management/performance/performance-kpi-design (two KPIs, VM Performance and Guest OS Performance). Q073.'
 - 'Section ''KPIs in VM as a Service'': one SLA per service vs the four SLAs of IaaS (Service Level Agreement section) and the Guest OS SLA in the diagram. Q074.'
 - 'Section ''KPI vs SLA'', Timing and Period; the KPI step lists customers tracking the SLA in a portal. Q075.'
 - 'Section ''Three steps of maturity'': SLA = 1-month average of SLI vs ''for 99.99% of the time'' in the class-of-service table. Q076.'

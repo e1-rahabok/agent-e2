@@ -178,6 +178,7 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 ## Words to avoid
 | Avoid | Use instead | Why |
 |---|---|---|
+| demand overcommit | overcommit (of allocation) | Only allocation can be overcommitted. Demand, usage and utilization are results, not settings (author, Q069, 2026-11-06). |
 | VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
 | VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
 | virtual machine, thought of as a complete machine | virtual motherboard (VM) | A VM has no OS of its own; Guest OS and VM are not interchangeable. Author's book. |

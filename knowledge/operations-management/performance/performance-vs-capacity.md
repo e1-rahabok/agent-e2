@@ -22,7 +22,7 @@
 ## Absolute vs relative
 - Performance is absolute: the real value against total capacity.
 - Capacity is relative: it depends on settings (HA, buffer, overcommit), against usable capacity.
-- Utilization is not managed for its own sake. It is an input to both pillars, read differently by each.
+- Utilization is not managed for its own sake. Alone it means nothing: 0% can be bad, 100% can be good. It is an input to both pillars, read differently by each.
 - Capacity reads demand, not utilization: demand is the higher of utilization and reservation. Model: `operations-management/capacity/capacity-model`.
 
 | Reading | Performance | Capacity |
@@ -49,7 +49,7 @@
 - Provider objects (vSphere cluster, vSAN cluster): performance is bottom up, from the VMs inside, aggregated. Capacity is top down: the cluster first, then the hosts.
 - Consumer objects (VM, Kubernetes pod) relate the two pillars differently from provider objects.
 - 16-host cluster, utilization:
-  - performance: the average of 16 hosts reacts too late; a problem on one host is already a problem. Take the highest host. If it shows no issue, the other 15 hosts are fine too.
+  - risk: the average of 16 hosts reacts too late; a problem on one host is already a problem. Take the highest host. If it shows no issue, the other 15 hosts are lower. This reading belongs to Cluster Risk (%), a leading indicator (`vcf-operations/kpis/cluster-risk`), not to cluster performance, which reads VM contention.
   - capacity: the average is right, because capacity is planned per cluster. Add workload until usable capacity runs out or contention appears.
 
 ## Contention vs consumption
@@ -72,7 +72,9 @@
 ## Pattern difference
 - Performance cannot be forecast from capacity: the two metrics move differently.
 - Cluster utilization rises with demand, roughly in a line. Aim: as high as possible, since the hardware is paid for.
-- Cluster performance stays flat near 100% and then falls steeply once demand passes what the hosts supply.
+- Cluster performance stays flat near 100% while allocation is at or below 1:1. Once the allocation ratio passes 1, contention becomes possible and performance starts to fall.
+- It falls first on the hottest host, before the cluster average reaches 100%: each host is its own pool, and DRS balances the hosts only approximately.
+- Only allocation can be overcommitted. Demand, usage and utilization are results, not settings.
 - So a utilization trend line says nothing about when performance will drop.
 - The performance target depends on the class of service: Gold must perform better than the free tier. Two metrics carry it: SLA and KPI (`operations-management/performance/kpi-vs-sla`).
 ![Cluster Utilization (%) rising from 0% toward 100%; Cluster Performance (%) flat near 100% until overcommit above 1, then falling below 95%](images/cluster-utilization-vs-cluster-performance-pattern-timeline.png)
@@ -82,7 +84,7 @@
 - "Utilization is low, so performance is fine" → unmet demand at low utilization is common: imbalance, limits, wrong cluster configuration. Check contention.
 - "The host is ballooning and swapping, so its VMs have a memory problem" → host reclamation is not VM contention. Read each VM's memory contention.
 - "Cluster utilization trends up slowly, so performance will degrade slowly" → performance is flat, then drops steeply. Forecast capacity from utilization; watch performance through contention.
-- "Average host utilization of a 16-host cluster is 60%, so no host is hot" → for performance take the highest host; the average is the capacity reading.
+- "Average host utilization of a 16-host cluster is 60%, so no host is hot" → the average is the capacity reading; the highest host is the risk reading (Cluster Risk %).
 - "Performance is measured against usable capacity" → usable capacity is a capacity concept. Performance is measured against total capacity and ignores HA, buffer and reservation.
 
 ## Metadata
@@ -147,11 +149,12 @@ images:
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management (intro); Performance | Capacity > Utilization vs Demand; Contention vs Consumption; Pattern Difference (pp. 67-70)'
-corrections: []
+corrections:
+- 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good (author, Q066, 2026-11-06).'
+- 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance (author, Q068, 2026-11-06).'
+- 'Section ''Pattern difference'': the drop starts where the allocation ratio passes 1, on the hottest host first; only allocation can be overcommitted (author, Q069, 2026-11-06).'
 review_notes:
 - 'Section ''Absolute vs relative'': the book says performance is absolute; the author said in chat (2026-11-06) that relative cluster performance is more meaningful than absolute. Q065.'
-- 'Section ''Four points on the utilization scale'', points A, B and C: wording ''demand above physical capacity'' for A and ''while there is demand'' for C added by Claude. Q066, Q067.'
-- 'Section ''Cluster: performance vs capacity'', highest host utilization for performance vs utilization used only for troubleshooting. Q068.'
-- 'Section ''Pattern difference'': the chart marks the drop at ''Overcommit >1''; the text here says demand passes supply. Q069.'
+- 'Section ''Four points on the utilization scale'', points A and B: wording ''demand above physical capacity'' for A added by Claude. Q067.'
 status: draft
 ```

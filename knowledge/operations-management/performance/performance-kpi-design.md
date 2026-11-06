@@ -7,6 +7,7 @@
 - VM Performance (%) and Guest OS Performance (%): one per realm.
 - Pros: the direction of troubleshooting is clear; each score is higher (a single number dilutes less).
 - Cons: twice the metrics; application teams see both as infrastructure and ask for one number.
+- For the application team the two are one entity: report the VM GOS KPI, the average of VM Performance (%) and Guest OS Performance (%).
 ![Guest OS and VM metrics used in the KPIs](images/guest-os-and-vm-performance-kpi-metrics.png)
 
 ## Which metrics qualify
@@ -103,6 +104,7 @@ source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > Approach; Metrics Not Used; Implementation'
 corrections:
+- 'Section ''Two KPIs, not one'': VM GOS KPI = average of the two, for the application team (author, Q073, 2026-11-06). Part 1 of the book, which combines them in one KPI, is outdated.'
 - 'Section ''Scoring'': weights and the Excluded, single-value green, rounding and missing-data rules from the author''s vCommunity adapter documentation (https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/concepts/kpi-scoring-models.md, 2026-11-05). The book gives step weights 1x, 2x, 4x, 8x.'
 review_notes:
 - 'VM DRS Score blog from the book: https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html (vSphere 7; not read).'
