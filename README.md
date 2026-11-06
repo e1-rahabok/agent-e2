@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Isvara-Level%20400%20private%20cloud%20operations%20management%20expertise-6e7781?style=for-the-badge&labelColor=3d444d" alt="Isvara: Level 400 private cloud operations management expertise">
+  <img src="https://img.shields.io/badge/Agent%20E2-Level%20400%20private%20cloud%20operations%20management%20expertise-6e7781?style=for-the-badge&labelColor=3d444d" alt="Agent E2: Level 400 private cloud operations management expertise">
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/-vSphere-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSphere">
@@ -18,7 +18,10 @@
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
-# Isvara: private cloud operations management expertise
+# Agent E2: private cloud operations management expertise
+
+- What it is: an LLM-based expert system, built as agentic RAG on a local LLM.
+- Name: the author is E1; Agent E2 is the second version of that expertise, available all day. It will replace AskIO on isvara.io.
 
 **💡 [Mission](MISSION.md) · 🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🤖 [Agent](harness/AGENT.md) · ⚙️ [Harness](harness/README.md) · 🧪 [Benchmark](benchmark/design.md)**
 
@@ -28,7 +31,7 @@
 - Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers $\color{red}{\text{sound expert}}$ and are often wrong at Level 400. 
 
 **Mission:**
-- An open-weight model, running offline on one GPU (dark site, no Internet), answersing Level 400 private cloud management questions better than frontier models.
+- An open-weight model, running offline on one GPU (dark site, no Internet), answering Level 400 private cloud management questions better than frontier models.
 
 ## Why it is possible
 - A frontier model wins on memorised breadth. In one *narrow* domain, retrieval supplies the knowledge, and what remains is reading a few files and applying their rules. Current 27-32B open models are close to frontier models at that.
