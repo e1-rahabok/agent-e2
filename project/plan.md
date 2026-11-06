@@ -28,6 +28,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
   - Screenshots are read in 1.0; the screen library is 1.1.
   - The author writes the real-ticket questions, picked to complement the existing ones.
   - Context budget: 16K, 20K and 24K all give 76% (57 of 90); the misses are files never retrieved, not files cut by the budget.
+  - Context budget set to 16K (author, 2026-11-06).
   - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md)).
 - Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md), section Resolved.
 
