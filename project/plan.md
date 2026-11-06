@@ -1,7 +1,7 @@
 # Plan
 
 Read first, every session. One page: mission, milestones with exit criteria, decisions, what we are not doing, and the open work under each milestone. Update it with every change set. Not indexed.
-Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md).
+Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md).
 
 ## Mission
 - An open-weight model on one GPU, offline, answers Level 400 private cloud operations questions better than a frontier model.

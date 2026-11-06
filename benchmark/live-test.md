@@ -1,7 +1,7 @@
 # Live test: the system on an offline model
 
 The plan to deploy the system as a customer would, on one GPU with no Internet, and prove that it works there. Not indexed.
-Why it matters: the benchmark reaches models through a gateway; the mission is an offline model. The gaps the gateway leaves open are in [models.md](models.md), section What the gateway does not prove. Design: [../DESIGN.md](../DESIGN.md), section 5. Architecture: [../ARCHITECTURE.md](../ARCHITECTURE.md), section Dark-site deployment.
+Why it matters: the benchmark reaches models through a gateway; the mission is an offline model. The gaps the gateway leaves open are in [models.md](models.md), section What the gateway does not prove. Design: [../MISSION.md](../MISSION.md), section 5. Architecture: [../ARCHITECTURE.md](../ARCHITECTURE.md), section Dark-site deployment.
 
 ## 1. What it proves
 | Claim | Proof |

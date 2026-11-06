@@ -1,4 +1,4 @@
-# Design: why a small local model can beat a frontier model
+# Mission: why a small local model can beat a frontier model
 
 Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
@@ -57,21 +57,7 @@ Six mechanisms, in order of weight.
 - Known causes, each tracked: knowledge gaps, answer-key errors, an old prompt rule (knowledge base only, since changed), weak agentic tool use, retrieval reaching 67% of needed files.
 
 ## 4. Model size
-- Decode speed and GPU memory are set by the weights: every generated token reads all active weights once.
-
-| Size | Weights at 8-bit | Weights at 4-bit | Fits on | Relative decode speed (same GPU, same precision) |
-|---|---|---|---|---|
-| 8B dense | ~8 GB | ~5 GB | any 16 GB GPU | ~4x |
-| 32B dense | ~32 GB | ~18 GB | one 48 GB GPU at 8-bit; one 24 GB GPU at 4-bit | 1x |
-| 70B dense | ~70 GB | ~40 GB | 80 GB GPU, or one 48 GB GPU at 4-bit | ~0.45x |
-| 30B MoE, 3B active | ~30 GB | ~17 GB | same as 32B | ~5-8x |
-| 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
-
-- Add the KV cache for the retrieved context (8-12K tokens per question).
-- Only two limits count (author, 2026-11-05): fit for the goal, and hardware cost (one GPU, at most 96 GB). Parameter count is not a limit.
-- 8B-14B: too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact; qwen-3-14b agentic 19%.
-- 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs (nemotron-3-nano-30b-a3b: 24-29% exact, almost no tool calls).
-- Candidates, criteria and decision rules: [benchmark/models.md](benchmark/models.md).
+- Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md), section Model size and speed.
 
 ## 5. What the product must do
 Requirements for the shipped assistant. Findings from the author's demo app (2026-11-04) are archived in [project/archive/product-requirements.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/product-requirements.md).

@@ -20,7 +20,7 @@
 
 # Isvara: private cloud operations management expertise
 
-**💡 [Design](DESIGN.md) · 🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🤖 [Agent](harness/AGENT.md) · ⚙️ [Harness](harness/README.md) · 🧪 [Benchmark](benchmark/design.md)**
+**💡 [Mission](MISSION.md) · 🏛️ [Architecture](ARCHITECTURE.md) · 🧠 [Knowledge engineering](KNOWLEDGE-ENGINEERING.md) · 🤖 [Agent](harness/AGENT.md) · ⚙️ [Harness](harness/README.md) · 🧪 [Benchmark](benchmark/design.md)**
 
 **Business problem:**
 - Many private cloud customers cannot send operational data to a cloud AI service: regulated industries, government and defence, and dark sites with no Internet at all.
@@ -36,7 +36,7 @@
 - The knowledge base is current (vSphere 9.1, VCF 9.1.1); training data lags.
 - Exact work moves out of the model: a catalog returns units, rollups and thresholds; a calculator does the arithmetic; a flow executor keeps the order of checks.
 - The knowledge is written for VMware Administrators and Architects: one fact per bullet, one object per file, traps linked to the metric they belong to.
-- Argument, risks and what would prove it wrong: [DESIGN.md](DESIGN.md).
+- Argument, risks and what would prove it wrong: [MISSION.md](MISSION.md).
 
 ## The system
 The model is frozen; we do not train it. We improve the three parts around it, and choose which frozen model to ship.
@@ -92,13 +92,13 @@ flowchart LR
 
 | Read | For |
 |---|---|
-| [DESIGN.md](DESIGN.md) | Why the mission is possible; what we can change; risks; model size; what the product must do |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | How model, agent, harness and knowledge run together; modes; dark-site deployment |
+| [MISSION.md](MISSION.md) | The mission; why it is possible; what we can change; risks; what the product must do; design considerations |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | The whole system: parts, modes, dark site, checks, query flow; links the component designs |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How expertise is codified and found; folder, metadata, trap, flow, image and writing rules |
 | [harness/AGENT.md](harness/AGENT.md) | What the agent knows up front, what it decides, its rules, how it is improved |
 | [harness/README.md](harness/README.md) | What each harness part does for an expert answer; modules |
 | [benchmark/design.md](benchmark/design.md) | How the benchmark proves the claim; final score |
-| [benchmark/models.md](benchmark/models.md) | Which frozen model to ship; frontier reference; judge |
+| [benchmark/models.md](benchmark/models.md) | Model design: which frozen model to ship, size and hardware; frontier reference; judge |
 | [benchmark/live-test.md](benchmark/live-test.md) | The system deployed on an offline model: setup, steps, pass criteria |
 | [project/plan.md](project/plan.md) | Milestones, decisions, open work |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |

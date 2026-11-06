@@ -1,7 +1,7 @@
 # Agent
 
 What the agent is, what it knows when a question arrives, what it decides, and how it is improved. Not indexed.
-Why the system can win: [DESIGN.md](../DESIGN.md). Run-time flow and modes: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md), Part B.
+Why the system can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md), Part B.
 
 ## 1. What it is
 - The agent is the model plus the tool loop, in agentic mode only. It is not a separate program.
