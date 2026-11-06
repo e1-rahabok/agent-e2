@@ -284,7 +284,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in the classic context.
-- Result 2026-11-06 (90 questions): keyword search 71% of needed files reach the classic context, hybrid 72%; all needed files in 51 of 90 questions. This caps classic mode. Improve it before judging the model ([project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), M3). Earlier: 2026-11-04, 28 questions, hybrid 67%, 12 of 28 complete.
+- Result 2026-11-06 (90 questions), before the retrieval fixes: keyword search 70-71% of needed files reach the classic context, hybrid 72%; all needed files in 51 of 90 questions. After `expand_derive` and `route_diagnosis`: keyword 73% (53 of 90), hybrid 75% (57 of 90). This caps classic mode. Improve it before judging the model ([project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), M3). Earlier: 2026-11-04, 28 questions, hybrid 67%, 12 of 28 complete.
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats

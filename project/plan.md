@@ -12,7 +12,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
 |---|---|---|---|
 | M1 | Knowledge base complete for 1.0 | Book Parts 1 and 3 and the VCF Operations chapters extracted; operations flows confirmed by the author; stubs filled or merged; every flow has a diagram; the most-cited files reviewed | In progress |
 | M2 | 100 questions | 100 questions at the allocation ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.6); every attachment supplied; synthetic share decided; held-out set kept by the author | 90 written, 66 scorable |
-| M3 | Retrieval | Retrieval check: every needed file in the context for most questions (target to set with the author); the three experiments of the review scored | 3 fixes done: 70% to 73%, 53 of 90 complete |
+| M3 | Retrieval | Retrieval check: every needed file in the context for most questions (target to set with the author); the three experiments of the review scored | 3 fixes done: hybrid 72% to 75%, 57 of 90 complete |
 | M4 | Gateway benchmark | The 100 questions run on the candidates and the frontier reference; model and mode chosen; up-front blocks measured | Waits for M1 and M2 (author, 2026-11-06) |
 | M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/live-test.md) passed on the chosen model, offline | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
@@ -68,7 +68,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
   - `expand_derive` (internal_derive of the top hits): 71%, 52 of 90. On.
   - `route_diagnosis` (troubleshooting question gets its flow first): 71%, 51 of 90. On.
   - `query_expansion` (glossary synonyms): no change; the glossary has 2 synonym rows. Implemented, off.
-  - Together: 73%, 53 of 90.
+  - Together: 73%, 53 of 90. With hybrid search (embeddings): 72% to 75%, 51 to 57 of 90.
 - Next, measured the same way:
   - Context budget: 12K gives 75% (55 of 90), 16K gives 76% (57 of 90). 16K still fits the 32K window with images and the answer; decide with the author, because it changes every classic run.
   - The query "VM CPU Ready: rollup, unit and statistics level" does not return the VM CPU Ready file in the top 6; vcenter-statistics and distributed-switch files rank first, and ranking shifts when files are added. Look at chunk scoring and the file-level aggregation.
