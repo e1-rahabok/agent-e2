@@ -42,9 +42,42 @@ class BM25:
         return out
 
 
+def glossary_terms(docs):
+    """(term found in a question, words to add) from the glossary tables Synonyms and Words to avoid."""
+    g = docs.get('glossary')
+    out = []
+    if not g:
+        return out
+    for head, text in g.sections:
+        if head.startswith('Synonyms') or head.startswith('Words to avoid'):
+            for line in text.split('\n'):
+                cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                if len(cells) < 2 or set(cells[0]) <= set('-: ') or cells[0] in ('Preferred term', 'Avoid'):
+                    continue
+                if head.startswith('Synonyms'):
+                    preferred, aliases = cells[0], cells[1].split(',')
+                else:
+                    preferred, aliases = cells[1], [cells[0]]
+                preferred = re.sub(r'\(.*?\)', '', preferred).strip()
+                for a in aliases:
+                    a = re.sub(r'\(.*?\)', '', a).strip()
+                    if len(a) > 2:
+                        out.append((a, preferred))
+    return out
+
+
+def expand_query(query, terms):
+    """Add the glossary's preferred words when the question uses another name for the same thing."""
+    extra = [pref for alias, pref in terms
+             if re.search(r'(?<![\w-])' + re.escape(alias) + r'(?![\w-])', query, re.I) and pref.lower() not in query.lower()]
+    return query + ('\n' + ' '.join(dict.fromkeys(extra)) if extra else '')
+
+
 class Retriever:
-    def __init__(self, docs, chunks, client=None, embed_model=None, cache_dir=None):
+    def __init__(self, docs, chunks, client=None, embed_model=None, cache_dir=None, expand=False):
         self.docs, self.chunks = docs, chunks
+        self.expand = expand
+        self.synonyms = glossary_terms(docs)
         self.bm25 = BM25([c.text for c in chunks])
         self.vectors = None
         self.client, self.embed_model = client, embed_model
@@ -89,6 +122,8 @@ class Retriever:
 
     def search(self, query, filters=None, k=8, min_hits=3):
         """Return the top k documents (best chunk per document)."""
+        if self.expand:
+            query = expand_query(query, self.synonyms)
         ranked = self._rank(query, filters)
         if filters and len(ranked) < min_hits:
             ranked = self._rank(query, None)

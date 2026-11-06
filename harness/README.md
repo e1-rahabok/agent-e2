@@ -28,7 +28,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 - `retrieval.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
 - `catalog.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
 - `flows.py` reads the numbered steps of each `diagnosis/` file directly; there is no second copy.
-- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the knowledge is shaped for this: `KNOWLEDGE-ENGINEERING.md`, section How the agent finds knowledge. Full ingest, query and answer contract: `ARCHITECTURE.md`, section Local LLM use.
+- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the agent finds files: `AGENT.md`, section 3. How the knowledge is shaped for this: `KNOWLEDGE-ENGINEERING.md`, Part B. Full ingest, query and answer contract: `ARCHITECTURE.md`, section Local LLM use.
 
 ## 4. Modules
 | File | Job |
@@ -57,7 +57,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | flow | Steps of a diagnosis file, or one step with next and references | Troubleshooting questions. |
 
 ## 6. Settings and checks
-- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `agent_max_calls`, `agent_tool_tokens`, `agent_primer` (one switch per up-front block).
+- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_diagnosis`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
 - Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: `benchmark/runner/README.md`.
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.

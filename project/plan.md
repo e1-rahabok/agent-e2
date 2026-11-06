@@ -12,7 +12,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
 |---|---|---|---|
 | M1 | Knowledge base complete for 1.0 | Book Parts 1 and 3 and the VCF Operations chapters extracted; operations flows confirmed by the author; stubs filled or merged; every flow has a diagram; the most-cited files reviewed | In progress |
 | M2 | 100 questions | 100 questions at the allocation ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.6); every attachment supplied; synthetic share decided; held-out set kept by the author | 90 written, 66 scorable |
-| M3 | Retrieval | Retrieval check: every needed file in the context for most questions (target to set with the first experiments); the three experiments of the review, section 3.2, scored | Not started |
+| M3 | Retrieval | Retrieval check: every needed file in the context for most questions (target to set with the author); the three experiments of the review scored | 3 fixes done: 70% to 73%, 53 of 90 complete |
 | M4 | Gateway benchmark | The 100 questions run on the candidates and the frontier reference; model and mode chosen; up-front blocks measured | Waits for M1 and M2 (author, 2026-11-06) |
 | M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/live-test.md) passed on the chosen model, offline | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
@@ -24,7 +24,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
   - No benchmark run until the 100 questions and the knowledge base are complete.
   - Folders stay technology first: a technology works across Guest OS, VM, ESXi and cluster; master how it works, then apply it to the object.
   - VCF Operations content moved to [knowledge/vcf-operations](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations); tool references to [knowledge/vsphere/tools](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools); operations flows under [knowledge/operations-management](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management).
-  - Retrieval fixes go ahead; knowledge depth and the review order go to the author (Q060-Q064); a live test plan is added.
+  - The three retrieval fixes go ahead (done; M3); knowledge depth and the review order go to the author (Q060-Q064); a live test plan is added.
   - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md)).
 - Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md), section Resolved.
 
@@ -51,6 +51,7 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
 - Catalog: rows without a knowledge file (cluster and resource pool memory, datastore space, DPU charts); counter group of the per-host and per-VM-disk datastore charts (vSphere API reference); esxtop fields mapped to the `vsphere/tools/esxtop/` files; `interval` and `instance` of each band after Q048.
 - Tags assigned during migration (pillar, object, metric_class) to be reviewed by the author; `metric_class` of Wait, Idle, Swapped, Swap Used, Ballooned to confirm.
 - Book corrections for the author's next edition (P-states vs Turbo; idle frequency below base; wait sub-questions): strings in [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md), section Open points from book extraction. Re-check the extracted chapters when the corrected `.docx` arrives.
+- Field heuristics not written in the books: through author questions and real tickets (M2).
 - Later: the author's "My Recommendation" column in [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md); book terminology for the glossary.
 
 ### M2 Questions
@@ -63,11 +64,16 @@ Why the mission is possible: `DESIGN.md`. Last review: [project/review-2026-11-0
 - Table input: a harness table tool (load Excel or CSV, filter, sort, aggregate, top-N) and table attachments in the runner.
 
 ### M3 Retrieval
-- Found 2026-11-06: the query "VM CPU Ready: rollup, unit and statistics level" does not return the VM CPU Ready file in the top 6; vcenter-statistics and distributed-switch files rank first. Ranking also shifts when files are added. Investigate chunk scoring and the file-level aggregation first.
-- Classic context: also expand `internal_derive` of the top hits.
-- Query expansion from the glossary synonyms and confusable pairs.
-- Route troubleshooting questions to the matching diagnosis file first.
-- Try a larger local embedding model (hybrid adds 1 point over keyword search today).
+- Done 2026-11-06 (the three fixes of the review, section 3.2), keyword search, 90 questions: baseline 70% of needed files in the classic context, 50 of 90 complete.
+  - `expand_derive` (internal_derive of the top hits): 71%, 52 of 90. On.
+  - `route_diagnosis` (troubleshooting question gets its flow first): 71%, 51 of 90. On.
+  - `query_expansion` (glossary synonyms): no change; the glossary has 2 synonym rows. Implemented, off.
+  - Together: 73%, 53 of 90.
+- Next, measured the same way:
+  - Context budget: 12K gives 75% (55 of 90), 16K gives 76% (57 of 90). 16K still fits the 32K window with images and the answer; decide with the author, because it changes every classic run.
+  - The query "VM CPU Ready: rollup, unit and statistics level" does not return the VM CPU Ready file in the top 6; vcenter-statistics and distributed-switch files rank first, and ranking shifts when files are added. Look at chunk scoring and the file-level aggregation.
+  - Query understanding: map counter names, chart labels and esxtop fields in the question to their files through the catalog.
+  - A larger local embedding model (hybrid adds 1 point over keyword search).
 
 ### M4 Gateway benchmark
 - Run: 100 questions, 3 candidates and the frontier reference, baseline, classic and agentic, 5 runs; then the up-front blocks for the best candidate (`--primer`).

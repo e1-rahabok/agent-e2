@@ -69,7 +69,7 @@ flowchart LR
     B["benchmark/<br/>questions, models, judge,<br/>runner, results"]
   end
   subgraph Project["Project: not deployed"]
-    P["project/<br/>design, decisions,<br/>author questions, to-do"]
+    P["project/<br/>plan, decisions,<br/>author questions, reviews"]
     T["project/tools/<br/>lint.py, tags.yaml"]
   end
   B -->|runs questions through| H
@@ -85,7 +85,7 @@ flowchart LR
 - Proof: shows that the product beats a frontier model.
   - `benchmark/`: questions with answer keys and their attachments, the candidate models and judge (`benchmark/models.md`), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on its worst of 5 runs. Never indexed: it holds the answer keys.
 - Project: how this repository is built and kept correct.
-  - `project/`: design, decisions, reviews, author questions, to-do, archive.
+  - `project/`: plan (milestones, decisions, open work), author questions, reviews, archive.
   - `project/tools/`: `lint.py` (file, tag and folder checks, run before every merge) and `tags.yaml` (allowed tag values, avoided phrases).
 
 ## Documents

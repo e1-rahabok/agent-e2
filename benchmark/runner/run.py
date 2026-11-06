@@ -118,10 +118,10 @@ def main():
     docs, chunks = kb.load()
     embed = None if (a.no_embeddings or a.mock or not cfg.get('embedding_model')) else cfg['embedding_model']
     try:
-        retriever = Retriever(docs, chunks, client if embed else None, embed)
+        retriever = Retriever(docs, chunks, client if embed else None, embed, expand=cfg.get('query_expansion', False))
     except LLMError as e:
         print(f'Embeddings unavailable ({e}); using BM25 only.')
-        embed, retriever = None, Retriever(docs, chunks)
+        embed, retriever = None, Retriever(docs, chunks, expand=cfg.get('query_expansion', False))
     sha = kb.git_sha()
     json.dump({'benchmark_id': benchmark_id, 'started': dt.datetime.now().isoformat(timespec='seconds'), 'index_version': sha,
                'agent_primer': cfg.get('agent_primer'),

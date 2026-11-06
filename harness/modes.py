@@ -6,6 +6,7 @@ Two answer kinds: choice (multiple-choice letters, verified) and open (free-text
 the verifier checks letter format only). The retrieval and tools are the same for both.
 """
 import json
+import re
 
 import catalog
 import verify
@@ -110,12 +111,26 @@ def baseline(client, model, question, images, cfg, trace, kind='choice'):
     return res, []
 
 
+TROUBLESHOOT = re.compile(r'\b(slow|troubleshoot\w*|what (do|should|would) (you|i|we) check|root cause|cause[sd]?|why (is|are|does|do)|'
+                          r'complain\w*|drops?|dropped|fail\w*|spike\w*|high|degrad\w*)\b', re.I)
+
+
 def classic_context(retriever, question, cfg):
     """One fixed retrieval pass: search, expand same_name and related, fit to budget."""
     hits = retriever.search(question, k=cfg['classic_k'])
     ids = [h['id'] for h in hits]
+    if cfg.get('route_diagnosis') and TROUBLESHOOT.search(question):
+        flows = [h for h in retriever.search(question, filters={'retriever_guide': 'what-to-check'}, k=2, min_hits=1)
+                 if '/diagnosis/' in h['id']]
+        for h in reversed(flows[:1]):
+            if h['id'] in ids:
+                ids.remove(h['id'])
+            ids.insert(0, h['id'])
     for h in hits[:2]:
-        for link in retriever.links(h['id'], 'same_name') + retriever.links(h['id'], 'related')[:2]:
+        links = retriever.links(h['id'], 'same_name') + retriever.links(h['id'], 'related')[:2]
+        if cfg.get('expand_derive'):
+            links += retriever.links(h['id'], 'internal_derive')[:cfg.get('expand_derive_n', 3)]
+        for link in links:
             if link['id'] in retriever.docs and link['id'] not in ids:
                 ids.append(link['id'])
     budget, parts, used = cfg['context_tokens'], [], []
