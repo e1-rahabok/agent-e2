@@ -129,13 +129,6 @@ Each entry has:
 
 Capacity is relative because it's relative to Usable Capacity, not Total Capacity. The real, actual, cluster utilization is lower in reality. But since it's divided over Usable Capacity instead of Total Capacity, the score becomes artificially higher. 
 
-### Q066 · Part 1 > Contention vs Consumption · Point C: worst performance at 0% utilization
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Four points on the utilization scale).
-- Search: "Worst performance actually happens when utilization = 0% as nothing gets done"
-- Question: 0% utilization with 0 demand is an idle VM: no contention, nothing to serve. Only 0% with demand above 0 is bad: a VM frozen by a storage pause, as in your antivirus story. Is the rule "performance = demand served / demand", so that utilization alone cannot tell good from bad at either end?
-- Written as now: "C, 0% while there is demand" (Claude's wording).
-- Answer: Yes, utilization alone does not mean anything. 0% can be bad, 100% can be good. Hence my book said utilization is not something you manage. It's just an input, and one of the inputs to 2 things you care, which is performance and capacity. Utilization is used differently in capacity and performance. 
-
 ### Q067 · Part 1 > Contention vs Consumption · Points A and B: 100% and queues
 - Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (sections Contention vs consumption, Four points on the utilization scale).
 - Search 1: "rarely happens here as utilization rarely exceeds 100% in real world"
@@ -146,40 +139,6 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 (a) Point A is above the physical capacity. Utilization cannot pass 100% of physical capacity as utilization measures reality; demand can exceed, as demand includes unmet demand. So there is no such thing as utilization above physical capacity as that's not possible.
 (b) The English word "target" implies something you have yet to achieve. You aim at a target before you hit it. Once the arrow hits the mark, you have achieved or hit the target. KPI is closer to Baseline / Standard Expectation: What you currently or consistently maintain as standard performance, albeit with great effort. In the ideal world, which is not realistic, your ESXi reaches 100% utilization while non VM experience contention. Provider and Consumer have their own KPI metrics. 
 
-### Q068 · Part 1 > Utilization vs Demand · Highest host utilization in cluster performance
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Cluster: performance vs capacity); [knowledge/vcf-operations/kpis/cluster-performance.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md).
-- Search 1: "you want to take the highest among the host as your primary counter for cluster utilization"
-- Search 2: "Utilization is for troubleshooting, not monitoring." (table image, Cluster Performance column)
-- Question: for cluster performance, the same chapter says utilization is for troubleshooting only, and the cluster KPI holds only the contention of running VMs. Where does the highest-host utilization belong: (a) a performance monitoring metric, (b) the first troubleshooting drill-down after the cluster KPI drops, (c) a capacity-risk early warning?
-- Written as now: both statements, unreconciled.
-- Answer: highest-host utilization belong cluster risk score. See https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png. I thought I gave you these 2 already?
-- BTW, typically risk hits both capacity and performance, as capacity and performance are 2 sides of the same coin. 
-- I think you hallucinated here. I'm not able to find anything around "you want to take the highest among the host as your primary counter for cluster utilization" in the 2 files you refer. In future, cite something I can search.
-
-On the file https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md. Why does vCommunity have to be part of the page title? What's the relevant to the local LLM? 
-  
-
-### Q069 · Part 1 > Pattern Difference · Where the cliff starts
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Pattern difference).
-- Search: "You can’t forecast performance using capacity"
-- Question: the chart marks the drop at "Overcommit >1". The noisy-neighbour example runs 4:1 vCPU to core with no cliff. Is the cliff where demand passes supply on a host (demand overcommit), not where the allocation ratio passes 1? And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%?
-- Written as now: "falls steeply once demand passes what the hosts supply".
-- Answer: Is the cliff where the allocation ratio passes 1. And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%? Yes, although in theory DRS is supposed to balance all the hosts. There is no such thing demand overcommit as you can only overcommit the allocation. Demand, Usage, Utilization, are not something you can control. 
-
-### Q070 · Part 1 > IaaS Metric Types · Layer of the driver metrics
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (section Consumer and provider metric types); [knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (VMXNET3 buffer drops).
-- Search: "One at the Windows/Linux layer, and one at the driver layer (e.g. PVSCSI, vmxnet)"
-- Question: the book puts PVSCSI and vmxnet metrics in the Guest OS. The repository rule places a metric by the layer that produces it. The driver runs in the guest kernel, but it is VMware's virtual device. Is a VMXNET3 ring-buffer drop (a) guest-os layer, outside the IaaS SLA, or (b) virtual-motherboard layer, inside it? This decides the folder and who fixes it.
-- Written as now: VMXNET3 drops sit in the VM (virtual-motherboard) file.
-- Answer: VMXNET3 ring-buffer drop is a guest-os layer, outside the IaaS SLA as it's not visible to the hypervisor. You don't put SLA on something you cannot see, let alone control. The one covered by SLA is the vNIC as seen by the hypervisor. 
-
-### Q071 · Part 1 > The 3 Realms · One word, two meanings: realm
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
-- Search: "In the big picture, there are 3 realms of IT in business"
-- Question: Part 1 uses realm for business, application and IaaS. Part 3 and the knowledge base use realm for VM and Guest OS. One word per concept. Keep realm for the 3 of Part 1 and call VM and Guest OS layers? Or the reverse?
-- Written as now: both meanings.
-- Answer: realm in this case means world with a boundary. It's not an IT operations management jargon. So use for both.
-
 ### Q072 · Part 1 > The Layers in IT Systems · Book corrections and Apdex
 - Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
 - Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
@@ -187,14 +146,6 @@ On the file https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-opera
 - Question: (a) GetBankDetail 5.2 s plus the other 7 functions 15.1 s = 20.3 s, not 20.1 s. (b) Image text: "None of the counters are AWS shows any signs of performance counters". (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
 - Written as now: no number from the image in the text; no Apdex.
 - Answer:
-
-### Q073 · Part 1 > KPI | SLA > Differences · One KPI or two for VM and Guest OS
-- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Scope); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) (section Two KPIs, not one).
-- Search 1: "they are 1 logical entity due to 1:1 permanent relationship, hence they are combined in 1 KPI number"
-- Search 2 (Part 3): "VM Performance (%) and Guest OS Performance (%)"
-- Question: Part 1 combines VM and Guest OS in one KPI. Part 3, the KPIs in VCF Operations and the Part 1 diagram (Guest OS KPI, VM KPI) keep two. Is Part 1's sentence older? The knowledge base would then state: two KPIs, one logical entity, read together.
-- Written as now: both, flagged.
-- Answer: Yes, Part 1 is outdated. In operations, we may refer to it at VM GOS KPI, using average of the 2 as from the perspective of application team, these 2 objects are the same thing.
 
 ### Q074 · Part 1 > KPIs in IaaS · How many SLAs per service; is there a Guest OS SLA
 - Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPIs in VM as a Service).
@@ -285,7 +236,63 @@ On the file https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-opera
 - Written as now: contradictory.
 - Answer:
 
+### Q085 · Follow-up to Q070 · Does the hypervisor count a full VMXNET3 receive ring
+- Files: [VM Network Packets Dropped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (sections Known causes, Traps).
+- Search: not from the book. Broadcom KB 1010071 (Claude's own knowledge, not fetched): esxtop shows dropped receive packets at the virtual switch port when the guest does not empty its receive ring fast enough; the fix is a larger ring in the Guest OS.
+- Question: your answer says the ring-buffer drop is not visible to the hypervisor. As Claude reads it, the guest never receives the packet, so the drop is counted at the VM's port: VM Network Receive Packets Dropped in vCenter, %DRPRX in esxtop. Visible to the hypervisor, but caused and fixed in the guest. Your conclusion holds either way: outside the IaaS SLA, and receive drops are already left out of it. Which is right for the reason: (a) not visible, or (b) visible but not controllable?
+- Written as now: guest-os layer, outside the IaaS SLA; the visibility claim left out.
+- Answer:
+
 ## Resolved
+
+### Q066 · Part 1 > Contention vs Consumption · Point C: worst performance at 0% utilization
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Four points on the utilization scale).
+- Search: "Worst performance actually happens when utilization = 0% as nothing gets done"
+- Question: 0% utilization with 0 demand is an idle VM: no contention, nothing to serve. Only 0% with demand above 0 is bad: a VM frozen by a storage pause, as in your antivirus story. Is the rule "performance = demand served / demand", so that utilization alone cannot tell good from bad at either end?
+- Written as now: "C, 0% while there is demand" (Claude's wording).
+- Answer: Yes, utilization alone does not mean anything. 0% can be bad, 100% can be good. Hence my book said utilization is not something you manage. It's just an input, and one of the inputs to 2 things you care, which is performance and capacity. Utilization is used differently in capacity and performance. 
+
+### Q068 · Part 1 > Utilization vs Demand · Highest host utilization in cluster performance
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Cluster: performance vs capacity); [knowledge/vcf-operations/kpis/cluster-performance.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md).
+- Search 1: "you want to take the highest among the host as your primary counter for cluster utilization"
+- Search 2: "Utilization is for troubleshooting, not monitoring." (table image, Cluster Performance column)
+- Question: for cluster performance, the same chapter says utilization is for troubleshooting only, and the cluster KPI holds only the contention of running VMs. Where does the highest-host utilization belong: (a) a performance monitoring metric, (b) the first troubleshooting drill-down after the cluster KPI drops, (c) a capacity-risk early warning?
+- Written as now: both statements, unreconciled.
+- Answer: highest-host utilization belong cluster risk score. See https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md and https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/formula/cluster-risk.png. I thought I gave you these 2 already?
+- BTW, typically risk hits both capacity and performance, as capacity and performance are 2 sides of the same coin. 
+- I think you hallucinated here. I'm not able to find anything around "you want to take the highest among the host as your primary counter for cluster utilization" in the 2 files you refer. In future, cite something I can search.
+
+On the file https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md. Why does vCommunity have to be part of the page title? What's the relevant to the local LLM? 
+  
+
+### Q069 · Part 1 > Pattern Difference · Where the cliff starts
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Pattern difference).
+- Search: "You can’t forecast performance using capacity"
+- Question: the chart marks the drop at "Overcommit >1". The noisy-neighbour example runs 4:1 vCPU to core with no cliff. Is the cliff where demand passes supply on a host (demand overcommit), not where the allocation ratio passes 1? And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%?
+- Written as now: "falls steeply once demand passes what the hosts supply".
+- Answer: Is the cliff where the allocation ratio passes 1. And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%? Yes, although in theory DRS is supposed to balance all the hosts. There is no such thing demand overcommit as you can only overcommit the allocation. Demand, Usage, Utilization, are not something you can control. 
+
+### Q070 · Part 1 > IaaS Metric Types · Layer of the driver metrics
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (section Consumer and provider metric types); [knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (VMXNET3 buffer drops).
+- Search: "One at the Windows/Linux layer, and one at the driver layer (e.g. PVSCSI, vmxnet)"
+- Question: the book puts PVSCSI and vmxnet metrics in the Guest OS. The repository rule places a metric by the layer that produces it. The driver runs in the guest kernel, but it is VMware's virtual device. Is a VMXNET3 ring-buffer drop (a) guest-os layer, outside the IaaS SLA, or (b) virtual-motherboard layer, inside it? This decides the folder and who fixes it.
+- Written as now: VMXNET3 drops sit in the VM (virtual-motherboard) file.
+- Answer: VMXNET3 ring-buffer drop is a guest-os layer, outside the IaaS SLA as it's not visible to the hypervisor. You don't put SLA on something you cannot see, let alone control. The one covered by SLA is the vNIC as seen by the hypervisor. 
+
+### Q071 · Part 1 > The 3 Realms · One word, two meanings: realm
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
+- Search: "In the big picture, there are 3 realms of IT in business"
+- Question: Part 1 uses realm for business, application and IaaS. Part 3 and the knowledge base use realm for VM and Guest OS. One word per concept. Keep realm for the 3 of Part 1 and call VM and Guest OS layers? Or the reverse?
+- Written as now: both meanings.
+- Answer: realm in this case means world with a boundary. It's not an IT operations management jargon. So use for both.
+
+### Q073 · Part 1 > KPI | SLA > Differences · One KPI or two for VM and Guest OS
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Scope); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) (section Two KPIs, not one).
+- Search 1: "they are 1 logical entity due to 1:1 permanent relationship, hence they are combined in 1 KPI number"
+- Search 2 (Part 3): "VM Performance (%) and Guest OS Performance (%)"
+- Question: Part 1 combines VM and Guest OS in one KPI. Part 3, the KPIs in VCF Operations and the Part 1 diagram (Guest OS KPI, VM KPI) keep two. Is Part 1's sentence older? The knowledge base would then state: two KPIs, one logical entity, read together.
+- Written as now: both, flagged.
+- Answer: Yes, Part 1 is outdated. In operations, we may refer to it at VM GOS KPI, using average of the 2 as from the perspective of application team, these 2 objects are the same thing.
 
 ### Q045 · Chapter 3 Memory > VM · Swapped formula in the vSphere 9.1 documentation
 - Files: [VM Memory Swapped](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/swapped.md)

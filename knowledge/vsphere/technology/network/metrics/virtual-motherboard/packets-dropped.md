@@ -32,7 +32,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 
 ## Known causes
 - False positive transmit drops: NSX firewall rejects outgoing packets (Broadcom KB 322462).
-- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495).
+- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495). The ring buffer belongs to the guest driver: guest-os layer, outside the IaaS SLA; the fix (a larger ring) is in the Guest OS.
 
 ## Traps
 - "Packets Dropped (%) at 95% means an outage" → short spikes at low throughput, driven by receive drops.
@@ -93,6 +93,7 @@ source:
   document: PART 3 - Counters.docx
   path: Network > VM > Contention Metrics
 corrections:
+- 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, outside the IaaS SLA (author, Q070, 2026-11-06).'
 - 'Section ''Profile transmit drops'': the book says 1 thousand dropped packets = 1,500 MB within 300 seconds. Correct: 1.5 MB (author answer Q025, 2026-11-04). Keep until the book is updated.'
 review_notes:
 - 'Section ''Profile transmit drops'': author answer Q025 (2026-11-04): 1,000 packets = 1.5 MB; the book''s 1,500 MB is wrong.'
