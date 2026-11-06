@@ -262,7 +262,7 @@ rows:
   description: Amount of disk space used by virtual machine snapshot files. Snapshot files store information about virtual machine snapshots. They include snapshot state files and delta disk files. A snapshot
     state file stores the running state of the virtual machine at the time of the snapshot. It has the extension .vmsn.
   page: 2043
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/snapshot-space
+  kb: vcf-operations/metrics/vm/disk-space-snapshot
 - counter: disk.used
   object: Datacenter
   chart: Space Utilization
@@ -343,7 +343,7 @@ rows:
   description: Amount of disk space used by virtual machine snapshot files. Snapshot files store information about virtual machine snapshots. They include snapshot state files and delta disk files. A snapshot
     state file stores the running state of the virtual machine at the time of the snapshot. It has the extension .vmsn.
   page: 2045
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/snapshot-space
+  kb: vcf-operations/metrics/vm/disk-space-snapshot
 - counter: disk.used
   object: Datastore
   chart: Space Utilization By File Type
@@ -1512,7 +1512,7 @@ rows:
   description: Total amount of logical datastore space provisioned by an administrator for the virtual machine. It is the storage size up to which the virtual machine files on datastores can grow. This
     includes log files, VMX files, and other miscellaneous files. Allocated space is not always in use.
   page: 2110
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/provisioned-space
+  kb: vcf-operations/metrics/vm/disk-space-provisioned
 - counter: disk.used
   object: VirtualMachine
   chart: Space
@@ -1523,7 +1523,7 @@ rows:
   level: 1
   description: Amount of physical datastore space in use by the virtual machine files.
   page: 2110
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vcf-operations/metrics/vm/disk-space-used
 - counter: disk.unshared
   object: VirtualMachine
   chart: Space
@@ -1535,7 +1535,7 @@ rows:
   description: Amount of datastore space that belongs only to this virtual machine and is not shared with other virtual machines. Only unshared space is guaranteed to be reclaimed for the virtual machine
     if, for example, it is moved to a different datastore and then back again.
   page: 2110
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vcf-operations/metrics/vm/disk-space-used
 - counter: disk.used
   object: VirtualMachine
   shows: Datastore
@@ -1547,7 +1547,7 @@ rows:
   level: 1
   description: Amount of disk space in the datastore currently in use by the virtual machine.
   page: 2111
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vcf-operations/metrics/vm/disk-space-used
 - counter: disk.used
   object: VirtualMachine
   chart: Space Utilization By File Type
@@ -1585,7 +1585,7 @@ rows:
   description: Amount of disk space used by virtual machine snapshot files. Snapshot files store information about virtual machine snapshots. They include snapshot state files and delta disk files. A snapshot
     state file stores the running state of the virtual machine at the time of the snapshot. It has the extension .vmsn.
   page: 2112
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/snapshot-space
+  kb: vcf-operations/metrics/vm/disk-space-snapshot
 - counter: disk.used
   object: VirtualMachine
   chart: Space Utilization By File Type

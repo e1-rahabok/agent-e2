@@ -1,10 +1,11 @@
 # Project
 
-For humans: design, decisions, author questions, to-do. Not indexed. The model reads `knowledge/`.
+How this repository is built and kept correct. Not indexed. The model reads `knowledge/`.
 
-- `review-2026-11-04.md`: holistic review of the repository and proposed restructure.
-- `design-kb-test-site.md`: test website design. The benchmark design moved to `benchmark/design.md`.
+- `plan.md`: mission, milestones, decisions, what we are not doing, open work. Read first.
 - `author-questions.md`: open and resolved questions for the author.
-- `todo.md`: open work.
-- `archive/`: files moved out of the active tree (legacy counter files, host-not-responding, and the solution design, philosophy and product requirements merged into the root documents on 2026-11-06).
-- Design, architecture, knowledge rules: the root documents listed in `README.md`, section Documents.
+- `review-2026-11-06.md`: the latest architecture review and its decisions.
+- `terms.md`: one English word per concept for the repository's own parts.
+- `tools/`: lint, link and renumber scripts; allowed tag values (`tags.yaml`).
+- `archive/`: records no longer maintained: earlier reviews and designs, the old to-do list, legacy files.
+- Design, architecture and knowledge rules: the root documents listed in `README.md`, section Documents.

@@ -77,7 +77,7 @@
 - NVMe device wear: `esxcli nvme device log smart get -A <adapter>` shows remaining life and wear rate.
 - NVMe read latency against the thresholds above uses latency.read of the NVMe tier, in nanoseconds: 200 µs = 200,000 ns.
 - The NVMe charts appear only on hosts with memory tiering configured.
-- latency.read and latency.write are level 3: not stored at the default statistics level. See `vsphere/foundations/vcenter-statistics`.
+- latency.read and latency.write are level 3: not stored at the default statistics level. See `vsphere/tools/vsphere-client/vcenter-statistics`.
 - The vSphere Client lists each tier device with its details on the host's Memory Tiering pane.
 
 ## Operations (book)
@@ -114,7 +114,7 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/memory/concepts/host-memory-states
-- vsphere/foundations/vcenter-statistics
+- vsphere/tools/vsphere-client/vcenter-statistics
 - vsphere/technology/memory/configuration/host-level-swapping
 - vsphere/technology/storage/metrics/host/disk
 source:

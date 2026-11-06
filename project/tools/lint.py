@@ -78,7 +78,7 @@ def main():
                 bad(f, f'image not found: {img}')
         for r in re.findall(r'`((?:vsphere|foundations|guest-os|operations-management|vcf-operations)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
-        # vSphere folders: foundations/, technology/<tech>/, object-types/<object>/, screens/<ui>/.
+        # vSphere folders: foundations/, technology/<tech>/, object-types/<object>/, tools/<ui>/ (esxtop, vsphere-client; screens/ inside).
         if f.startswith('knowledge/vsphere/'):
             parts = f.split('/')
             if parts[2] not in VSPHERE_TOP:
@@ -87,6 +87,8 @@ def main():
                 bad(f, f'technology folder "{parts[3]}" is not a technology tag value')
             elif parts[2] == 'object-types' and parts[3] not in OBJECT_FOLDERS:
                 bad(f, f'object-types folder "{parts[3]}" not allowed. Allowed: {", ".join(OBJECT_FOLDERS)}')
+            elif parts[2] == 'tools' and parts[3] not in allowed['ui']:
+                bad(f, f'tools folder "{parts[3]}" is not a ui tag value ({", ".join(allowed["ui"])})')
         if f.startswith('knowledge/operations-management/'):
             if fm.get('scope') != 'operations-management': bad(f, 'file in knowledge/operations-management/ must have scope: operations-management')
             if f.split('/')[2] not in PILLAR_FOLDERS: bad(f, f'pillar folder not allowed. Allowed: {", ".join(PILLAR_FOLDERS)}')
@@ -95,8 +97,9 @@ def main():
             if not fm.get('ui_version'): bad(f, 'screen file needs ui_version')
             for r in fm.get('metrics_shown') or []:
                 if r not in ids: bad(f, f'metrics_shown link "{r}" does not exist')
-        if f.startswith('knowledge/vcf-operations/') and fm.get('scope') != 'vcf-operations':
-            bad(f, 'file in knowledge/vcf-operations/ must have scope: vcf-operations')
+        if f.startswith('knowledge/vcf-operations/'):
+            if fm.get('scope') != 'vcf-operations': bad(f, 'file in knowledge/vcf-operations/ must have scope: vcf-operations')
+            if f.split('/')[2] not in VCF_OPERATIONS_TOP: bad(f, f'knowledge/vcf-operations/ holds only {", ".join(VCF_OPERATIONS_TOP)}/')
         # A VM is a virtual motherboard. The Guest OS (Windows, Linux) is not a Broadcom product and not part of the VM:
         # its knowledge lives in knowledge/guest-os/, outside knowledge/vsphere/.
         layer = fm.get('layer') or []
@@ -238,7 +241,7 @@ def check_repo_terms(allowed, bad):
                     bad(f, f'line {i}: repository term "{re.search(pat, line).group(0)}": use "{use}" (project/terms.md)')
             for pat, use in (allowed.get('avoid_ai_speak') or {}).items():
                 if re.search(pat, line):
-                    bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (KNOWLEDGE-ENGINEERING.md, section 15)')
+                    bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (KNOWLEDGE-ENGINEERING.md, section 11)')
 
 
 def check_tables(bad):
@@ -258,7 +261,8 @@ def check_tables(bad):
                 bad(f, f'line {i + 2}: blank line needed after a table (an image or text right after it becomes a table row)')
 
 
-VSPHERE_TOP = ['foundations', 'technology', 'object-types', 'screens']
+VSPHERE_TOP = ['foundations', 'technology', 'object-types', 'tools']
+VCF_OPERATIONS_TOP = ['concepts', 'kpis', 'metrics', 'diagnosis', 'ui']
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
 PILLAR_FOLDERS = ['performance', 'capacity']
 CATALOG = 'knowledge/catalog'

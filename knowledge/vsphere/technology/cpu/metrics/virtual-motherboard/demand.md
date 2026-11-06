@@ -62,7 +62,7 @@ same_name:
 same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage
-- vsphere/technology/cpu/metrics/virtual-motherboard/contention
+- vcf-operations/metrics/vm/cpu-contention
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:
   document: PART 3 - Counters.docx

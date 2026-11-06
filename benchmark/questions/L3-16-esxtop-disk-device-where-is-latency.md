@@ -49,8 +49,8 @@ answer_type: deterministic
 input: [screenshot]
 knowledge:
   - vsphere/technology/storage/concepts/esxi-storage-latency-stack
-  - vsphere/technology/storage/metrics/comparisons/esxtop-storage
-  - vsphere/foundations/esxtop
+  - vsphere/tools/esxtop/storage
+  - vsphere/tools/esxtop/overview
 attachments:
   - 0050/esxtop-disk-device-panel.png
 origin: synthetic

@@ -46,10 +46,10 @@ same_meaning: []
 related:
 - vsphere/technology/network/metrics/distributed-switch/packets
 - vsphere/technology/network/diagnosis/vnic-rx-drops
-- vsphere/foundations/vcenter-statistics
+- vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
-  path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
+  path: https:/github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
 corrections: []
 review_notes:
 - 'Whole file: counter names, scopes, level and rollup from the author''s vCenter 9.1.0 API export. The author asked for the distributed switch to be documented (2026-11-04).'

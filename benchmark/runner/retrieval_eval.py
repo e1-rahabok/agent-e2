@@ -33,15 +33,20 @@ def main():
     ap.add_argument('--embeddings', action='store_true', help='hybrid search with the configured embedding model (needs AI_GATEWAY_API_KEY)')
     ap.add_argument('--k', type=int, default=6)
     ap.add_argument('--questions', help='comma-separated id fragments')
+    ap.add_argument('--set', action='append', default=[], metavar='KEY=VALUE',
+                    help='override a config value for this check, e.g. --set expand_derive=true (repeatable)')
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
+    for kv in a.set:
+        k, v = kv.split('=', 1)
+        cfg[k] = yaml.safe_load(v)
     docs, chunks = kb.load()
     if a.embeddings:
         from llm import GatewayClient
         client = GatewayClient(cfg['gateway'], os.environ['AI_GATEWAY_API_KEY'])
-        ret = Retriever(docs, chunks, client, cfg['embedding_model'])
+        ret = Retriever(docs, chunks, client, cfg['embedding_model'], expand=cfg.get('query_expansion', False))
     else:
-        ret = Retriever(docs, chunks)
+        ret = Retriever(docs, chunks, expand=cfg.get('query_expansion', False))
     rows = []
     for c in C.load(a.questions):
         need = [i for i in c.knowledge if i in docs]

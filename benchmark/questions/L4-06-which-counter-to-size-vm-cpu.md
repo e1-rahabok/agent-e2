@@ -37,7 +37,7 @@ task: decide-capacity
 knowledge:
   - operations-management/capacity/rightsizing
   - guest-os/system/concepts/guest-os-sizing
-  - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
+  - vcf-operations/metrics/vm/cpu-net-run
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
 attachments: []

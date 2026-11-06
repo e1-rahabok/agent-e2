@@ -9,21 +9,21 @@
 - Two dimensions of performance: depth (the worst VM) and breadth (how many VMs).
 
 ## 1. Performance
-- Cluster Performance (%): depth from the worst VM, breadth from the 90th percentile, aggregated directly from VMs. See `vsphere/object-types/cluster/metrics/cluster-performance`.
+- Cluster Performance (%): depth from the worst VM, breadth from the 90th percentile, aggregated directly from VMs. See `vcf-operations/kpis/cluster-performance`.
 - Flow: `vsphere/object-types/cluster/diagnosis/cluster-vm-contention`.
 - VMs short of CPU or memory in a DRS cluster: `vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster`.
 
 ## 2. Capacity
-- Cluster Consumption (%): utilization and saturation. See `vsphere/object-types/cluster/metrics/cluster-consumption`.
-- Cluster Risk (%): highest host, reservation, overcommit, monster VMs. See `vsphere/object-types/cluster/metrics/cluster-risk`.
-- Imbalance between hosts: a hot host causes contention while cluster totals stay low. See `vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`.
+- Cluster Consumption (%): utilization and saturation. See `vcf-operations/kpis/cluster-consumption`.
+- Cluster Risk (%): highest host, reservation, overcommit, monster VMs. See `vcf-operations/kpis/cluster-risk`.
+- Imbalance between hosts: a hot host causes contention while cluster totals stay low. See `vcf-operations/metrics/cluster/cpu-inter-host-imbalance`.
 - Memory: `vsphere/technology/memory/metrics/cluster/consumed`.
 - HA and admission control reserve capacity that utilization does not show. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`.
 - Capacity model across products: `operations-management/capacity/capacity-model`.
 
 ## 3. Availability and service level
 - Cluster and ESXi availability: `vsphere/object-types/cluster/metrics/comparisons/availability`.
-- SLA and SLI (30-day, lagging): `vsphere/object-types/cluster/metrics/cluster-sla-sli`.
+- SLA and SLI (30-day, lagging): `vcf-operations/kpis/cluster-sla-sli`.
 
 ## 4. Context
 - DRS Score is about demand met, not contention. See `vsphere/object-types/cluster/configuration/drs-migration-levels`.
@@ -57,9 +57,9 @@ object:
 - ClusterComputeResource
 internal_derive:
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
-- vsphere/object-types/cluster/metrics/cluster-performance
-- vsphere/object-types/cluster/metrics/cluster-consumption
-- vsphere/object-types/cluster/metrics/cluster-risk
+- vcf-operations/kpis/cluster-performance
+- vcf-operations/kpis/cluster-consumption
+- vcf-operations/kpis/cluster-risk
 related:
 - vsphere/object-types/vm/overview-what-to-monitor
 - vsphere/object-types/esxi/overview-what-to-monitor

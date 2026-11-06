@@ -64,6 +64,13 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('Threshold', f)
 
 
+class KpiLookupTest(unittest.TestCase):
+    def test_kpi_found_by_title_with_bands(self):
+        r = CAT.lookup('Cluster Risk')
+        self.assertTrue(r['metric_files'])
+        self.assertTrue(r['bands'])
+
+
 class CalcTest(unittest.TestCase):
     def r(self, e):
         return calc.evaluate(e)['result']
@@ -138,9 +145,13 @@ class ModesTest(unittest.TestCase):
         self.assertFalse(fb)
 
     def test_classic_context_has_catalog_facts(self):
+        # The mechanism, not the ranking: when the Ready file is retrieved, its catalog facts lead the context.
         ret = Retriever(DOCS, CHUNKS)
+        ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
+        ret.search = lambda q, k=8, filters=None: [{'id': ready, 'title': DOCS[ready].title, 'score': 1.0}]
         ctx, used, _ = modes.classic_context(ret, 'What is the rollup and statistics level of VM CPU Ready?', self.CFG)
-        self.assertIn('Catalog facts', ctx)
+        self.assertIn(ready, used)
+        self.assertTrue(ctx.startswith('Catalog facts'))
 
     def test_repair_turn_on_hedge(self):
         class Hedger(MockClient):
@@ -205,3 +216,37 @@ class PrimerTest(unittest.TestCase):
         res, used, trace, fb = modes.answer('agentic', rec, 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertIn('## Core rules', rec.system)
         self.assertIn('primer', [s['action'] for s in trace])
+
+
+class WindowTest(unittest.TestCase):
+    def test_estimate_counts_text_and_images(self):
+        msgs = [{'role': 'user', 'content': [{'type': 'text', 'text': 'x' * 400}, {'type': 'image_url'}]}]
+        self.assertEqual(modes.msgs_tokens(msgs, {'image_tokens': 1500}), 100 + 1500)
+
+    def test_agent_stops_tools_when_window_is_full(self):
+        cfg = dict(ModesTest.CFG, context_window=2000, max_tokens=100)
+        res, used, trace, fb = modes.answer('agentic', MockClient(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertIn('context_full', [s['action'] for s in trace])
+
+
+class RetrievalFixTest(unittest.TestCase):
+    def test_query_expansion_adds_preferred_term(self):
+        import retrieval
+        terms = retrieval.glossary_terms(DOCS)
+        self.assertIn('ESXi', retrieval.expand_query('Is this ESX host overloaded?', terms))
+
+    def test_route_puts_a_diagnosis_file_first(self):
+        cfg = dict(ModesTest.CFG, route_diagnosis=True)
+        ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'Users say the VM is slow. What do you check first?', cfg)
+        self.assertIn('/diagnosis/', used[0])
+
+    def test_expand_derive_adds_linked_files(self):
+        ret = Retriever(DOCS, CHUNKS)
+        ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
+        ret.search = lambda q, k=8, filters=None, min_hits=3: [{'id': ready, 'title': DOCS[ready].title, 'score': 1.0}]
+        derive = [l['id'] for l in ret.links(ready, 'internal_derive')][:3]
+        cfg = dict(ModesTest.CFG, expand_derive=True, context_tokens=50000)
+        ctx, used, _ = modes.classic_context(ret, 'Ready', cfg)
+        for d in derive:
+            if d in DOCS:
+                self.assertIn(d, used)

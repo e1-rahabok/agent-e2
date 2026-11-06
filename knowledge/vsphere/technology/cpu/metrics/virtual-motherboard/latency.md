@@ -77,7 +77,7 @@ same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/technology/cpu/metrics/virtual-motherboard/contention
+- vcf-operations/metrics/vm/cpu-contention
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/technology/cpu/diagnosis/vm-cpu-contention-high
 images:

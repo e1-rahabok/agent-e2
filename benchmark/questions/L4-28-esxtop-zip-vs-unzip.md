@@ -43,7 +43,7 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/technology/memory/metrics/comparisons/esxtop-memory
+  - vsphere/tools/esxtop/memory
   - vsphere/technology/memory/concepts/swap-and-compression
 attachments:
   - 0068/esxtop-memory-compression-swap.png

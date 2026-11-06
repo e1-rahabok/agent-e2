@@ -37,7 +37,7 @@ internal_derive: []
 related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vsphere/foundations/provider-consumer
-- vsphere/foundations/vcenter-statistics
+- vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity

@@ -39,7 +39,7 @@ level: 400
 answer_type: judged
 input: [screenshot]
 knowledge:
-  - vsphere/technology/memory/metrics/comparisons/esxtop-memory
+  - vsphere/tools/esxtop/memory
   - vsphere/technology/cpu/concepts/numa
   - vsphere/technology/cpu/concepts/virtual-numa
 attachments:

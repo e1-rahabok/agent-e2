@@ -52,7 +52,7 @@ same_meaning: []
 related:
 - vsphere/technology/network/metrics/distributed-switch/packets-dropped
 - vsphere/technology/network/metrics/host/throughput
-- vsphere/foundations/vcenter-statistics
+- vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
   path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv; README section Object types without metrics

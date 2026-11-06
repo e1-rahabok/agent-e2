@@ -25,7 +25,7 @@ BYTE = {'B': 1, 'KB': 1024, 'MB': 1024 ** 2, 'GB': 1024 ** 3, 'TB': 1024 ** 4,
 BIT = {'b': 1 / 8, 'bit': 1 / 8, 'kb': 1e3 / 8, 'Kb': 1e3 / 8, 'Mb': 1e6 / 8, 'Gb': 1e9 / 8, 'Tb': 1e12 / 8}
 TIME = {'NS': 1e-9, 'US': 1e-6, 'µS': 1e-6, 'MS': 1e-3, 'S': 1, 'SEC': 1, 'SECONDS': 1, 'MIN': 60, 'MINUTES': 60, 'H': 3600, 'HOURS': 3600}
 FREQ = {'HZ': 1, 'KHZ': 1e3, 'MHZ': 1e6, 'GHZ': 1e9}
-SRC_STATS = 'vsphere/foundations/vcenter-statistics'
+SRC_STATS = 'vsphere/tools/vsphere-client/vcenter-statistics'
 
 
 class CalcError(ValueError):

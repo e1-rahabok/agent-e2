@@ -44,7 +44,7 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
+  - vcf-operations/metrics/cluster/cpu-inter-host-imbalance
 attachments:
   - 0078/vcf-operations-cluster-imbalance-list.png
 origin: synthetic

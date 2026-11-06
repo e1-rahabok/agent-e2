@@ -12,7 +12,7 @@ The rules that most often decide a Level 400 answer. Each rule undoes a reading 
 - Ballooned is past tense. Above 0 does not mean pressure now; memory contention decides. See `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`.
 - Consumed stays high once pages are touched; it is not demand. Size a Guest OS from Guest OS counters. See `operations-management/capacity/rightsizing`.
 - A summation counter is milliseconds per sample. Convert it with the sample interval and the vCPU count. See `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
-- A threshold holds only for its object, its source and its sample interval. A 5-minute average hides 20-second peaks. See `vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics`.
+- A threshold holds only for its object, its source and its sample interval. A 5-minute average hides 20-second peaks. See `vcf-operations/metrics/vm/peak-20-second-metrics`.
 - Admission control counts reservations, not usage. A host at low usage can refuse a power-on. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`.
 - Contention on one host while the others are idle points to a DRS blocker; on every host, to cluster capacity or shares. See `vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster`.
 
@@ -50,7 +50,7 @@ internal_derive:
 - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
 - operations-management/capacity/rightsizing
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
-- vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics
+- vcf-operations/metrics/vm/peak-20-second-metrics
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster
 related:

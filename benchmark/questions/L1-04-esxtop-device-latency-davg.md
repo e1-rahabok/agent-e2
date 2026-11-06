@@ -31,7 +31,7 @@ answer_type: deterministic
 input: [text]
 knowledge:
   - vsphere/technology/storage/concepts/esxi-storage-latency-stack
-  - vsphere/technology/storage/metrics/comparisons/esxtop-storage
+  - vsphere/tools/esxtop/storage
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"

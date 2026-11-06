@@ -31,7 +31,7 @@ level: 400
 answer_type: judged
 input: [text]
 knowledge:
-  - vsphere/object-types/cluster/metrics/cluster-risk
+  - vcf-operations/kpis/cluster-risk
   - operations-management/performance/performance-kpi-design
 attachments: []
 origin: synthetic

@@ -23,7 +23,7 @@
 - Wide VMs are split into NUMA clients, each managed as a normal single-node client. ESXi measures inter-node latency at boot and places a wide VM's clients on nodes close to each other.
 - Every 2 seconds (default) the rebalancer checks node loads. It can move a VM to a less loaded node, preferring a VM that already has memory there, or swap VMs between nodes to improve locality.
 - After a move, ESXi migrates the VM's memory to the new home node page by page (4 KB), at a controlled rate. Memory is not moved if the VM stays only briefly.
-- Until migration completes, the VM runs with remote memory: esxtop N%L below 100%, NRMEM above 0. NMIG counts the moves. See `vsphere/technology/memory/metrics/comparisons/esxtop-memory`.
+- Until migration completes, the VM runs with remote memory: esxtop N%L below 100%, NRMEM above 0. NMIG counts the moves. See `vsphere/tools/esxtop/memory`.
 - After a large workload change (many VMs started) placement settles within seconds to minutes.
 - Page sharing is per node: each node keeps its own copy of a shared page, so shared pages never force remote access.
 - A VM with manual CPU affinity or memory affinity is no longer managed by the NUMA scheduler: no rebalancing, no memory migration. NUMA node affinity (numa.nodeAffinity) keeps NUMA management but limits the nodes.

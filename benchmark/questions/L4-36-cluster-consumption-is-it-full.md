@@ -40,7 +40,7 @@ level: 400
 answer_type: judged
 input: [screenshot]
 knowledge:
-  - vsphere/object-types/cluster/metrics/cluster-consumption
+  - vcf-operations/kpis/cluster-consumption
   - vsphere/technology/memory/concepts/host-memory-states
   - operations-management/capacity/capacity-model
 attachments:

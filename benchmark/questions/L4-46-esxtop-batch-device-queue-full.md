@@ -45,7 +45,7 @@ level: 400
 answer_type: deterministic
 input: [table, screenshot]
 knowledge:
-  - vsphere/technology/storage/metrics/comparisons/esxtop-storage
+  - vsphere/tools/esxtop/storage
   - vsphere/technology/storage/diagnosis/host-storage-latency
   - vsphere/technology/storage/metrics/datastore/storage-io-control
 attachments:

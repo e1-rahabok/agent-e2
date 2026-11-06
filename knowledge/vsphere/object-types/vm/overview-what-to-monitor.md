@@ -7,17 +7,17 @@
 ## Principle
 - A VM is a consumer. Its performance is the runtime, memory, IO and network it demanded and did not get: contention.
 - Order: contention first, then consumption, then context. Consumption sizes the VM; it does not show whether the VM suffers.
-- Read contention at the 20-second peak, not the 5-minute average: short waits disappear in averages. See `vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics`.
+- Read contention at the 20-second peak, not the 5-minute average: short waits disappear in averages. See `vcf-operations/metrics/vm/peak-20-second-metrics`.
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## 1. One score
-- VM Performance (%) combines the VM contention metrics into one KPI with colour bands. Start here at scale. See `vsphere/object-types/vm/metrics/vm-performance`.
+- VM Performance (%) combines the VM contention metrics into one KPI with colour bands. Start here at scale. See `vcf-operations/kpis/vm-performance`.
 
 ## 2. CPU contention
 - Ready and Co-stop are the main counters. Overlap and Other Wait usually read much lower. See `vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`.
 - Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine. See `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
 - Co-stop: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`.
-- Contention (VCF Operations) for troubleshooting CPU-sensitive VMs; it includes limit time. See `vsphere/technology/cpu/metrics/virtual-motherboard/contention`.
+- Contention (VCF Operations) for troubleshooting CPU-sensitive VMs; it includes limit time. See `vcf-operations/metrics/vm/cpu-contention`.
 - Latency includes Hyper-Threading and frequency effects: not a pure wait. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`.
 - Flow: `vsphere/technology/cpu/diagnosis/vm-cpu-contention-high`.
 
@@ -75,11 +75,11 @@ internal_derive:
 - vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/storage/diagnosis/vm-storage-performance-checks
 - vsphere/technology/network/metrics/comparisons/vm-network-metrics
-- vsphere/object-types/vm/metrics/vm-performance
+- vcf-operations/kpis/vm-performance
 related:
 - vsphere/object-types/esxi/overview-what-to-monitor
 - vsphere/object-types/cluster/overview-what-to-monitor
-- vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics
+- vcf-operations/metrics/vm/peak-20-second-metrics
 - guest-os/system/metrics/guest-os-performance
 source:
   document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation)

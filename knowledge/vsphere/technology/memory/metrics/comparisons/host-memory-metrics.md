@@ -60,7 +60,7 @@ related:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/memory/metrics/host/granted
 - vsphere/technology/memory/metrics/host/shared
-- vsphere/technology/memory/metrics/host/utilization
+- vcf-operations/metrics/esxi/memory-utilization
 - vsphere/technology/memory/metrics/host/ballooned
 - vsphere/technology/memory/metrics/host/state
 - vsphere/technology/memory/metrics/host/reservation

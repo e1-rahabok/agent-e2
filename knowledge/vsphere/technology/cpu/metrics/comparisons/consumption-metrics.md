@@ -57,9 +57,9 @@ related:
 - vsphere/technology/cpu/concepts/run-time-vs-run-quality
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 - vsphere/technology/cpu/metrics/virtual-motherboard/demand
-- vsphere/technology/cpu/metrics/virtual-motherboard/net-run
+- vcf-operations/metrics/vm/cpu-net-run
 - vsphere/technology/cpu/metrics/virtual-motherboard/system
-- vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
+- vcf-operations/metrics/vm/cpu-usage-disparity
 - vsphere/technology/cpu/metrics/comparisons/vm-vs-esxi-ht-ramp-test
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/technology/cpu/concepts/hyper-threading

@@ -93,10 +93,10 @@ related:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/technology/cpu/metrics/virtual-motherboard/run
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
-- vsphere/technology/cpu/metrics/virtual-motherboard/contention
+- vcf-operations/metrics/vm/cpu-contention
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
-- vsphere/foundations/vsphere-client-performance-guidance
-- vsphere/foundations/vcenter-statistics
+- vsphere/tools/vsphere-client/performance-guidance
+- vsphere/tools/vsphere-client/vcenter-statistics
 images:
   - path: ../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png
     product: [vsphere]

@@ -43,7 +43,7 @@ rows:
   condition: VM CPU Usage above 90%
   meaning: Performance is impacted (documentation reading; the knowledge base reads Ready against Run).
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: '| VM CPU Usage above 90% and VM CPU Ready above 20% | Performance is impacted. |'
 - id: vm-cpu-costop-high-performing
   metric: VM CPU Co-stop
@@ -126,7 +126,7 @@ rows:
   condition: consistently; and balloon or swap high
   meaning: Host probably short of memory. Without high balloon and swap, performance is probably not affected.
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: '| Host memory usage consistently 94% or higher |'
 - id: memory-usage-low-docs
   metric: Memory Usage
@@ -136,7 +136,7 @@ rows:
   condition: consistently
   meaning: Memory size probably too large.
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: '| Memory usage consistently 24% or lower | Memory size probably too large. |'
 - id: host-free-memory-docs
   metric: ESXi Free Memory
@@ -148,7 +148,7 @@ rows:
   condition: with frequent swapping
   meaning: Host cannot meet the combined active memory of its VMs. Reclamation degrades performance.
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: '| Host free memory 6% or less, with frequent swapping |'
 - id: tiering-active-ideal
   metric: Active memory on a memory tiering host
@@ -248,7 +248,7 @@ rows:
   unit: ms
   meaning: VMs send more throughput than the configuration supports. Best is 0-1 ms.
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: Best 0-1 ms. Above 4 ms
 - id: device-latency-docs
   metric: deviceLatency (DAVG)
@@ -259,7 +259,7 @@ rows:
   unit: ms
   meaning: Probable array problem, depending on the hardware. The value comes from spinning-disk arrays.
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: 'Above 15 ms, depending on the hardware: probable array problem.'
 - id: queue-latency-docs
   metric: queueLatency (QAVG)
@@ -270,7 +270,7 @@ rows:
   unit: ms
   meaning: Workload too high; the array cannot process data fast enough. Must always be 0.
   source: vsphere-9.1-docs
-  kb: vsphere/foundations/vsphere-client-performance-guidance
+  kb: vsphere/tools/vsphere-client/performance-guidance
   quote: Must always be 0.
 - id: sql-server-disk-latency
   metric: SQL Server disk latency (application layer)
@@ -320,7 +320,7 @@ rows:
   unit: '% of physical cores (not threads)'
   meaning: Monster VM (vCommunity adapter default, author 2026-11-05). Cores, not threads.
   source: author
-  kb: vsphere/object-types/cluster/metrics/cluster-risk
+  kb: vcf-operations/kpis/cluster-risk
   quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
 - id: monster-vm-memory
   metric: VM memory relative to host physical RAM
@@ -330,7 +330,7 @@ rows:
   unit: '% of host DRAM, or 256 GB, whichever is smaller'
   meaning: Monster VM (vCommunity adapter default, author 2026-11-05). DRAM only; NVMe tiering does not count.
   source: author
-  kb: vsphere/object-types/cluster/metrics/cluster-risk
+  kb: vcf-operations/kpis/cluster-risk
   quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
 - id: windows-committed
   metric: Windows % Committed

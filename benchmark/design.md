@@ -274,8 +274,8 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/report.py), function `final`. Report table `Final score`.
 
 ## 8. Comparison design
-- Reasons for running both modes and for the call limit: `ARCHITECTURE.md`, sections 3 and 4.
-- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See `ARCHITECTURE.md`, section Benchmark and deployment.
+- Reasons for running both modes and for the call limit: [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md), sections 8 and 9.
+- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md), section 8, Benchmark and deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See [benchmark/runner/README.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/README.md).
 - Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's final score exceeds it by more than the margin.
 - Paired comparison: models are compared question by question on the same set, not only by totals.
@@ -284,8 +284,8 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in the classic context.
-- Result 2026-11-04 (28 questions, hybrid search): 67% of needed files reach the context; all needed files in 12 of 28 questions. This caps classic mode. Improve it before judging the model.
-- Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 8.
+- Result 2026-11-06 (90 questions), before the retrieval fixes: keyword search 70-71% of needed files reach the classic context, hybrid 72%; all needed files in 51 of 90 questions. After `expand_derive` and `route_diagnosis`: keyword 73% (53 of 90), hybrid 75% (57 of 90). This caps classic mode. Improve it before judging the model ([project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), M3). Earlier: 2026-11-04, 28 questions, hybrid 67%, 12 of 28 complete.
+- Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats
 | Threat | Guard |
@@ -339,7 +339,7 @@ For the set:
 - Typical size: dozens of columns, hundreds of rows. Excel or CSV.
 - The model does not read the whole table. The harness converts it to CSV and gives the agent a table tool: list the columns, filter, sort, aggregate, top-N. The model reasons over the results. Reason: hundreds of rows do not fit a 32K context, and models misread long tables.
 - Every column name must map to a metric the knowledge base defines (catalog lookup), so the reading follows the knowledge base, not the column header's English.
-- Not built yet: the table tool, the export formats and their traps (to-do), table attachments in the runner. Table questions are written now and scored once the tool exists.
+- Not built yet: the table tool, the export formats and their traps (plan, M2), table attachments in the runner. Table questions are written now and scored once the tool exists.
 - Images and tables can be combined in one question (section 3.4).
 
 ## 14. Judged questions and the judge
@@ -399,4 +399,4 @@ For the set:
 ## 17. Outputs
 - [benchmark/results/results.csv](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/results/results.csv): one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).
 - A short report per run in [benchmark/results](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/results): score matrix, consistency, worst cases, trace links.
-- Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a to-do or author question.
+- Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a plan item or an author question.

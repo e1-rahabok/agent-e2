@@ -73,7 +73,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Precision: a provider may serve 16-bit or 8-bit weights; the site may run 4-bit on a 48 GB GPU. 4-bit costs some accuracy on multi-step reasoning.
 - Version: the provider serves what it chose to load under the id (mistral-small changed from 24B dense to Mistral Small 4 without a new id).
 - Speed: gateway latency measures the provider and the network, not the customer GPU.
-- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (to-do in [project/todo.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/todo.md), section Evaluation).
+- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (open work in [project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), section Evaluation).
 
 ## 3. Selection criteria
 Two limits decide (author, 2026-11-05):
@@ -112,7 +112,7 @@ Preferred, not required:
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
-- Next challenger: a current-generation dense vision model of about 70B, when one is published and on the gateway (to-do in [project/todo.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/todo.md), section Evaluation).
+- Next challenger: a current-generation dense vision model of about 70B, when one is published and on the gateway (open work in [project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), section Evaluation).
 - Vision tags checked in the gateway model list on 2026-11-05.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.

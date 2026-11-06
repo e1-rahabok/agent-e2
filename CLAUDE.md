@@ -1,112 +1,62 @@
 # CLAUDE.md
 
-Standing rules for this repository. Read at the start of every session.
+How Claude works in this repository. Read at the start of every session. The rules for the knowledge itself are in `KNOWLEDGE-ENGINEERING.md`; this file does not repeat them.
+
+## Start of every session
+- Read `project/plan.md` first: mission, milestones, decisions, what we are not doing, open work.
+- Check every change against the plan. Say so when a request conflicts with an earlier decision, or when a change adds to a duplicate instead of removing it.
+- Update `project/plan.md` with every change set.
 
 ## Purpose
-- Knowledge base for an AI assistant on vSphere and VCF metrics.
-- Primary reader: the AI. The author reviews for QA only.
-- No text aimed at human motivation or narrative.
-- No AI-speak: plain words, short sentences, no filler or stock phrases. Rule and list: `KNOWLEDGE-ENGINEERING.md`, section 15; lint flags `avoid_ai_speak` in `project/tools/tags.yaml`. See `KNOWLEDGE-ENGINEERING.md`, section Principles.
+- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running offline on one GPU. Why it can work: `DESIGN.md`.
+- Primary reader of `knowledge/`: the AI. The author reviews for QA.
+- Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 
-## Level
-- Write at Level 400: mechanisms, reasons, trade-offs, edge cases.
-- No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
-- Target: the current release in the Versions section. Never write from an older release when a newer one exists.
+## Rules for knowledge files
+- All in `KNOWLEDGE-ENGINEERING.md`, Part B: layout and placement (section 5), metadata (section 8), thresholds (section 9), flows (section 10), writing rules including no AI-speak (section 11), images (section 12), versions and sources (section 13).
+- Architecture rule to keep in mind: a VM is a virtual motherboard; the Guest OS is a separate layer. Decide a metric's home by the layer that produces it, not by the object that stores it.
+- When a repository rule conflicts with the author's architecture, raise it in `project/author-questions.md`; do not resolve it silently.
 
 ## Versions
 - Current releases (update when Broadcom ships a new one):
   - vSphere: 9.1. Performance Best Practices for vSphere 9.1, revision 20260624.
   - VCF: 9.1.1 (GA Sep 2026). 9.1.2 is coming.
-- Before writing from any vendor document:
-  - search for the current version of that document, e.g. "Performance Best Practices for VMware vSphere 9.1",
-  - fetch it and read the revision date on the copyright page,
-  - if a newer version exists than the one you have, use the newer one.
-- Do not treat a search result, an older PDF, or a TechDocs hub page as the current version. Check the version each time.
+- Before writing from any vendor document: search for its current version, fetch it, read the revision date on the copyright page, and use the newest. A search result, an older PDF or a TechDocs hub page is not proof of the current version.
 - Record the version and revision in `source.document`, e.g. "Performance Best Practices for VMware vSphere 9.1 (revision 20260624)".
-- If a file was written from an older version, add a `review_notes` line naming the newer version, and re-check the file before setting `status: reviewed`.
-
-## Check the docs before asking the author
-- Before asking the author a question, look up official sources:
-  - Broadcom TechDocs: techdocs.broadcom.com
-  - VMware docs: docs.vmware.com, www.vmware.com/docs
-  - Broadcom KB: knowledge.broadcom.com
-  - Broadcom developer API reference: developer.broadcom.com
-- Use WebSearch and WebFetch.
-- PDFs: fetch them, then read the saved file with Read, using page ranges.
-- Put the source URL in `review_notes` for any fact taken from official docs.
-- Ask the author only when:
-  - the source text is ambiguous,
-  - the source contradicts official docs or the knowledge base,
-  - the answer needs field experience (tribal knowledge).
 
 ## Facts and sources
 - Allowed fact sources: the author's book, the author's answers, official docs, Claude's own knowledge.
 - Record any fact not from the book in `review_notes`, naming the section, until the author confirms.
-- Audit information lives only in the metadata block. Never put markers such as author corrections or Claude-knowledge tags in headings or body text.
-- No invented thresholds. A threshold goes in only if the book, the author or an official source gives it. Quote the source.
-- Keep every `corrections` entry, naming the section it affects. Clear it only when the source document is updated.
-- A row in `knowledge/catalog/thresholds.yaml` quotes the text of its knowledge file. When you change that text, update the row; lint fails otherwise.
+- Before asking the author, look up official sources: Broadcom TechDocs (techdocs.broadcom.com), VMware docs (docs.vmware.com, www.vmware.com/docs), Broadcom KB (knowledge.broadcom.com), Broadcom developer API reference (developer.broadcom.com). PDFs: fetch them, then read the saved file with page ranges. Put the source URL in `review_notes`.
+- Ask the author only when the source text is ambiguous, contradicts official docs or the knowledge base, or the answer needs field experience. Do not ask the author to confirm virtualization basics.
+- No invented thresholds. Keep every `corrections` entry until the source document is updated. A row in `knowledge/catalog/thresholds.yaml` quotes its knowledge file: when that text changes, update the row.
 - `knowledge/raw-input/` is read-only.
 
-## Architecture: VM vs Guest OS
-- A VM is a virtual motherboard, not a complete machine. The Guest OS (Windows, Linux) is a separate layer that runs on it.
-- Never file, tag or describe a Guest OS metric as a VM metric.
-- Windows and Linux are not Broadcom products. Guest OS knowledge lives in `knowledge/guest-os/<technology>/`, a peer of `knowledge/vsphere/`, with `scope: guest-os`, `layer: [guest-os]` and no `object: VirtualMachine`.
-- Boundary files that compare the two layers from the vSphere side (Guest OS vs VM CPU, memory, storage; Guest OS sizing from VM data) stay in `knowledge/vsphere/` and link to the Guest OS files.
-- VM raw metrics go in `vsphere/technology/<tech>/metrics/virtual-motherboard/` with `layer: [virtual-motherboard]` and `object: [VirtualMachine]`.
-- That vCenter or VCF Operations store a counter on the VM object does not make it a VM metric. Decide by the layer that produces it.
-- When a repository rule conflicts with the author's architecture, raise it in `project/author-questions.md`; do not resolve it silently.
-- `project/tools/lint.py` enforces the folder and tag rules.
-
-## Writing
-- One fact per bullet or table row.
-- Explain the mechanism and the reason before the metric name.
-- One vSphere managed object type per metric file (VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ...). Instance levels such as per-vCPU go in the `instance` tag.
-- Folder rules (author, 2026-11-04; full rules in `KNOWLEDGE-ENGINEERING.md`, section Layout):
-  - raw metrics by technology: `vsphere/technology/<cpu|gpu|memory|storage|network>/`;
-  - derived and multi-technology content by object: `vsphere/object-types/<vm|esxi|cluster|...>/`;
-  - pillars across products: `operations-management/<performance|capacity>/`;
-  - VCF Operations is a derived layer: `vcf-operations/` holds only what it computes or adds, linking the source files; a metric about a source object is written once, at the source.
-- Storage, not disk: one word for folder, tag and glossary.
-- vCenter is the administrative tool; VCF Operations is the operations tool. Never use the names interchangeably.
-- CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Do not write "need", "want", "wish", or "uses only X% of what it needs".
-- Formulas as plain text. Diagrams as Mermaid plus a text explanation. Troubleshooting flows: rule in `KNOWLEDGE-ENGINEERING.md`, section Troubleshooting flow diagrams.
-- Every knowledge file and every evaluation question ends with a `## Metadata` section holding one yaml block (see `KNOWLEDGE-ENGINEERING.md`, section Metadata). No front matter at the top.
-- Keep the author's own diagrams from the book in the `images/` folder of the technology folder that uses them (for example `knowledge/vsphere/technology/<tech>/images/`, `knowledge/guest-os/<technology>/images/`), linked under the section they explain, with alt text. Name each file by what it shows (pattern in `KNOWLEDGE-ENGINEERING.md`, section Images). Tag each image in the metadata `images` list.
-- Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
-- Do not ask the author to confirm virtualization basics (for example: Steal Time exists only in a VM). Resolve them from own knowledge.
-- When asking the author about the book, give a verbatim search string.
-- When asking the author to check a file, give its full GitHub URL on `main`, so it is clickable. Name the item to check (question id, option letters, section).
+## Working with the author
 - Questions for the author go in `project/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
-- Extract the book one Heading 3 at a time. Add that section's questions to `project/author-questions.md` and continue; do not wait for answers.
-- One English word per concept, everywhere in the repository. Two words for one thing: pick one and replace the other. One word for two things: split it. Knowledge terms: `knowledge/glossary.md`. Repository terms (benchmark, run, question, quiz, prompt, ...): `project/terms.md`. Mind the two contexts of a word: general English and VMware operations jargon (in operations, a case is an issue to solve). Lint flags the replaced words.
-- Use terms from `knowledge/glossary.md`. Tag values must match `project/tools/tags.yaml`. A new term is added there as a proposal and flagged for the author before use.
-- When the author corrects a wording mistake, add it to the Words to avoid table in the terminology file.
+- About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
+- Extract the book one Heading 3 at a time. Add that section's questions and continue; do not wait for answers.
+- When the author corrects a wording mistake, add it to the Words to avoid table in `knowledge/glossary.md`.
+- One English word per concept: knowledge terms in `knowledge/glossary.md`, repository terms in `project/terms.md`. A new term is added there as a proposal and flagged for the author before use.
 
 ## Evaluation
-- Never send `## Expected key points` or `## Likely wrong answer` to a candidate (the model in the benchmark). Only the judge (`benchmark/runner/judge.py`) reads them.
+- Never send `## Expected key points` or `## Likely wrong answer` to a candidate. Only the judge (`benchmark/runner/judge.py`) reads them.
 - Every candidate model must read screenshots (vision). Models and judge: `benchmark/models.md`.
 - Baseline runs use no knowledge base. Record model and effort in `benchmark/results/results.csv`.
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Repository layout
-- Three groups. Map: `README.md`, section Repository map.
-  - Product (deployed): `knowledge/` (what the model reads; `knowledge/catalog/`: structured data (YAML) the harness tools query: vCenter chart counters, vCenter API counters, esxtop fields, thresholds, object model) and `harness/` (the software around the model: retrieval, tools, verifier, prompts).
-  - Proof (not deployed): `benchmark/` (questions with answer keys, runner, results).
-  - Project (not deployed): `project/` (design, decisions, author questions, to-do) and `project/tools/` (repository maintenance: lint, tag values).
+- Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and `project/tools/`. Map: `README.md`, section Repository map.
 - `harness/` depends on no folder outside the product. `project/tools/lint.py` imports the file parser from `harness/kb.py`, never the reverse.
-
-## Do not index
-- `knowledge/_templates/`, `knowledge/raw-input/`, `benchmark/`, `project/`, `harness/`, `README.md`, `CLAUDE.md`, `DESIGN.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`.
+- What is indexed and what is not: `ARCHITECTURE.md`, section Local LLM use, Ingest.
 
 ## Validation
-- Run `python3 project/tools/lint.py` before every merge. Do not merge if it fails.
-- After changing `harness/` or `knowledge/catalog/`, run `python3 -m unittest harness/test_tools.py`.
-- After changing `benchmark/runner/`, run `python3 -m unittest benchmark/runner/test_runner.py`.
-- Allowed tag values and avoided phrases live in `project/tools/tags.yaml`. Change them there, not in the script. Term meanings live in `knowledge/glossary.md`.
+- Before every commit: `python3 project/tools/lint.py` reports 0 problems, `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
+- Allowed tag values and avoided phrases live in `project/tools/tags.yaml`. Change them there, not in the script.
+- A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark.
 
 ## Git
 - Work on the branch named for the session.
-- Early development: merge the session branch to `main` through a pull request, automatically, after each change set. Use a merge commit so each change stays visible.
-- Commit messages and PR text describe the change. No model names.
-- Do not delete files unless the author asks. Git history keeps them.
+- Merge the session branch to `main` through a pull request after each change set, with a merge commit so each change stays visible.
+- Commit messages and PR text describe the change, in plain words. No model names.
+- Do not delete files unless the author asks. Archive them in `project/archive/`; git history keeps the rest.

@@ -40,8 +40,8 @@ object:
 internal_derive:
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
 related:
-- vsphere/object-types/cluster/metrics/cluster-performance
-- vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
+- vcf-operations/kpis/cluster-performance
+- vcf-operations/metrics/cluster/cpu-inter-host-imbalance
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Performance > Cluster Performance (%) > Troubleshooting

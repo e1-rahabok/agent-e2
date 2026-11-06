@@ -48,7 +48,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/object-types/vm/metrics/vm-performance
+- vcf-operations/kpis/vm-performance
 images:
   - path: ../images/guest-os-performance-thresholds-table.png
     product: [vcf-operations]
