@@ -1,7 +1,7 @@
 # Models
 
 Candidate models, the frontier reference and the judge for the benchmark. Not indexed.
-Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/config.yaml). Why a small local model can win: [MISSION.md](../MISSION.md), section 3. Model size: section Model size and speed below.
+Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml). Why a small local model can win: [MISSION.md](../MISSION.md), section 3. Model size: section Model size and speed below.
 
 ## 1. What model the goal needs
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
@@ -48,7 +48,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
 - Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
-- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.7).
+- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.7).
 - A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
   1. final score higher by more than the margin;
   2. override rate not higher.
@@ -83,14 +83,14 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 - One gateway: Vercel AI Gateway. It is an OpenAI-compatible front door to many providers and many models, so the runner tests 3 or 10 models with one API key and one code path. It is a test convenience only.
 - Hugging Face is not a gateway here. It is where the open weights are published; this file uses it to check size, licence and release date, and the site downloads the weights from it.
-- Both speak the same OpenAI-compatible API. The harness changes one setting ([harness/llm.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/llm.py): base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 7).
+- Both speak the same OpenAI-compatible API. The harness changes one setting ([harness/llm.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/llm.py): base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 7).
 - So the gateway is not part of the product and is not relevant at the customer site. It is the reason for criterion 6: a model that is not on the gateway cannot be benchmarked cheaply, and a model without downloadable weights cannot be deployed.
 
 ### What the gateway does not prove
 - Precision: a provider may serve 16-bit or 8-bit weights; the site may run 4-bit on a 48 GB GPU. 4-bit costs some accuracy on multi-step reasoning.
 - Version: the provider serves what it chose to load under the id (mistral-small changed from 24B dense to Mistral Small 4 without a new id).
 - Speed: gateway latency measures the provider and the network, not the customer GPU.
-- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (open work in [project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), section Evaluation).
+- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (open work in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Evaluation).
 
 ## 3. Selection criteria
 Two limits decide (author, 2026-11-05):
@@ -129,7 +129,7 @@ Preferred, not required:
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
-- Next challenger: a current-generation dense vision model of about 70B, when one is published and on the gateway (open work in [project/plan.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/plan.md), section Evaluation).
+- Next challenger: a current-generation dense vision model of about 70B, when one is published and on the gateway (open work in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Evaluation).
 - Vision tags checked in the gateway model list on 2026-11-05.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
@@ -137,11 +137,11 @@ Preferred, not required:
 
 ## 5. Frontier reference
 - One frontier model, scored the same way with and without the knowledge base, in every benchmark: anthropic/claude-opus-5.5 so far.
-- The claim ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
+- The claim ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
 ## 6. Judge
-- Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 14.
+- Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
 - Rules:
   - never a candidate (the runner refuses the benchmark);
@@ -184,4 +184,4 @@ Preferred, not required:
 ## 9. History
 - 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected (author): the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped (author); 3 dense candidates remain. Section 2 (gateway vs site) added.
 - 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
-- 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in [project/archive/solution-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/solution-design.md), section 5, until 2026-11-05.
+- 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in [project/archive/solution-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/solution-design.md), section 5, until 2026-11-05.

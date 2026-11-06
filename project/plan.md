@@ -1,7 +1,7 @@
 # Plan
 
 Read first, every session. One page: mission, milestones with exit criteria, decisions, what we are not doing, and the open work under each milestone. Update it with every change set. Not indexed.
-Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md).
+Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md).
 
 ## Mission
 - An open-weight model on one GPU, offline, answers Level 400 private cloud operations questions better than a frontier model.
@@ -11,28 +11,28 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | # | Milestone | Exit criteria | Status |
 |---|---|---|---|
 | M1 | Knowledge base complete for 1.0 | Book Parts 1 and 3 and the VCF Operations chapters extracted; operations flows confirmed by the author; stubs filled or merged; every flow has a diagram; the most-cited files reviewed | In progress |
-| M2 | 100 questions | 100 questions at the allocation ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 3.6); every attachment supplied; synthetic share decided; held-out set kept by the author | 90 written, 66 scorable |
+| M2 | 100 questions | 100 questions at the allocation ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.6); every attachment supplied; synthetic share decided; held-out set kept by the author | 90 written, 66 scorable |
 | M3 | Retrieval | Retrieval check: every needed file in the context for most questions (target to set with the author); the three experiments of the review scored | 3 fixes done: hybrid 72% to 75%, 57 of 90 complete |
 | M4 | Gateway benchmark | The 100 questions run on the candidates and the frontier reference; model and mode chosen; up-front blocks measured | Waits for M1 and M2 (author, 2026-11-06) |
-| M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/live-test.md) passed on the chosen model, offline | Planned |
+| M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) passed on the chosen model, offline | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
 
 - After 1.0: screen library and screenshot read-back (1.1); data files (1.2); read-only VCF Operations connection; vSAN, NSX, Kubernetes, Linux content.
 
 ## Decisions (latest first)
 - 2026-11-06, author: the product is named Agent E2 (two words); an LLM-based expert system, built as agentic RAG on a local LLM. It will replace AskIO on isvara.io. Repository rename to agent-e2 waits on the author (GitHub settings).
-- 2026-11-06, author, on [project/review-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/review-2026-11-06.md):
+- 2026-11-06, author, on [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md):
   - No benchmark run until the 100 questions and the knowledge base are complete.
   - Folders stay technology first: a technology works across Guest OS, VM, ESXi and cluster; master how it works, then apply it to the object.
-  - VCF Operations content moved to [knowledge/vcf-operations](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vcf-operations); tool references to [knowledge/vsphere/tools](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/tools); operations flows under [knowledge/operations-management](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management).
+  - VCF Operations content moved to [knowledge/vcf-operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations); tool references to [knowledge/vsphere/tools](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools); operations flows under [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management).
   - The three retrieval fixes go ahead (done; M3); knowledge depth and the review order go to the author (Q060-Q064); a live test plan is added.
   - Screenshots are read in 1.0; the screen library is 1.1.
   - The author writes the real-ticket questions, picked to complement the existing ones.
   - Context budget: 16K, 20K and 24K all give 76% (57 of 90); the misses are files never retrieved, not files cut by the budget.
   - Context budget set to 16K (author, 2026-11-06).
-  - Source documents moved to [project/sources](https://github.com/e1-rahabok/isvara-2/blob/main/project/sources), writing templates to [project/templates](https://github.com/e1-rahabok/isvara-2/blob/main/project/templates): `knowledge/` holds only what the model reads (author, 2026-11-06).
-  - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md)).
-- Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/author-questions.md), section Resolved.
+  - Source documents moved to [project/sources](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources), writing templates to [project/templates](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates): `knowledge/` holds only what the model reads (author, 2026-11-06).
+  - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/todo-2026-11-06.md)).
+- Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), section Resolved.
 
 ## Not doing
 | What | Why |
@@ -40,34 +40,34 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | Object-first folders | Declined twice (2026-11-04, 2026-11-06) |
 | Fine-tuning the model | Facts change and must be cited; retrieval supplies them (`ARCHITECTURE.md`, section Local LLM use) |
 | A benchmark run before M1 and M2 | Author, 2026-11-06 |
-| MoE models of 120B | Less compute per token than the dense candidates on twice the memory ([benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md)) |
-| The test website | Not started; design archived ([project/archive/design-kb-test-site.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/design-kb-test-site.md)) |
+| MoE models of 120B | Less compute per token than the dense candidates on twice the memory ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)) |
+| The test website | Not started; design archived ([project/archive/design-kb-test-site.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/design-kb-test-site.md)) |
 
 ## Open work
 ### M1 Knowledge base
-- Thresholds: one place since 2026-11-06 ([knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/catalog/thresholds-performance.yaml), `thresholds-capacity.yaml`). Open: 31 prose statements in 24 files without a row (`python3 project/tools/threshold_inventory.py`); grey (wastage) values for the capacity bands; 5-minute readings where only 20-second ones exist.
-- Book Part 1: Performance Management extracted 2026-11-06 into 4 files ([operations-management/performance/](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/performance) performance-vs-capacity, realms-and-layers, kpi-vs-sla; [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md)); 20 challenges to the author, Q065-Q084; Q066, Q068-Q071 and Q073 answered and applied; follow-up Q085. Next: Capacity Management, then Your Private Cloud (SLA, SP5 framework), then Configuration Management.
+- Thresholds: one place since 2026-11-06 ([knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), `thresholds-capacity.yaml`). Open: 31 prose statements in 24 files without a row (`python3 project/tools/threshold_inventory.py`); grey (wastage) values for the capacity bands; 5-minute readings where only 20-second ones exist.
+- Book Part 1: Performance Management extracted 2026-11-06 into 4 files ([operations-management/performance/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance) performance-vs-capacity, realms-and-layers, kpi-vs-sla; [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md)); 20 challenges to the author, Q065-Q084; Q066, Q068-Q071 and Q073 answered and applied; follow-up Q085. Next: Capacity Management, then Your Private Cloud (SLA, SP5 framework), then Configuration Management.
 - Author input: Q060 (VM slow triage order), Q061 (capacity decision order), Q062 (health check), Q063 (Book Part 1, VCF Operations chapters), Q064 (review order); Q065-Q084 (Part 1, Performance Management); all other open author questions.
 - VCF Operations: map its objects, engines and metric groups; fetch the VCF Operations 9.1 metric reference from TechDocs into the catalog.
 - Stubs: fill from the book, or fold into the family file, the 8 files under 60 words (review, section 2), then the rest under 120 words.
 - Flows: a Mermaid diagram for each of the 11 flows without one; the author's draw.io flows converted where they exist. New flows after Q060-Q062.
 - `## Traps` in the 6 metric files that lack it; then lint requires it.
 - Performance Best Practices 9.1 (revision 20260624), still to read: p. 19 network hardware; p. 46 Enhanced Data Path and traffic shaping; pp. 39-45 storage; pp. 66-75 vCenter, vMotion, Storage vMotion; pp. 82-95 Storage DRS, HA, FT, vSAN, Lifecycle Manager, content library, Kubernetes (only what the knowledge base needs); p. 59 guest memory (2 MB pages). KB 316514 (Retreat Mode), KB 55806 (scheduler options).
-- Re-check against 9.1: [Side-channel vulnerabilities and the ESX scheduler](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/configuration/side-channel-scheduling.md) (written from 9.0); shorten [vSphere Cluster Services (vCLS)](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/cluster/concepts/vcls.md) to the 9.1 status (official release notes, not third-party).
+- Re-check against 9.1: [Side-channel vulnerabilities and the ESX scheduler](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/side-channel-scheduling.md) (written from 9.0); shorten [vSphere Cluster Services (vCLS)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/vcls.md) to the 9.1 status (official release notes, not third-party).
 - Open points to verify: power policy name ("Maximum performance" vs "High Performance"); Hyper-Threading penalties (37.5% VM, 50% ESXi) need author confirmation; `numPCPUs` in the dense-mode trigger; KB number for the ESXi CPU Usage 100% cap; memory reservation headroom percentage; Predictive DRS and DPM requirements in VCF Operations terms.
-- Capacity model: split the vSphere cluster part out of [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/capacity-model.md) if it is not cross-product.
+- Capacity model: split the vSphere cluster part out of [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-model.md) if it is not cross-product.
 - Catalog: rows without a knowledge file (cluster and resource pool memory, datastore space, DPU charts); counter group of the per-host and per-VM-disk datastore charts (vSphere API reference); esxtop fields mapped to the `vsphere/tools/esxtop/` files; `interval` and `instance` of each band after Q048.
 - Tags assigned during migration (pillar, object, metric_class) to be reviewed by the author; `metric_class` of Wait, Idle, Swapped, Swap Used, Ballooned to confirm.
-- Book corrections for the author's next edition (P-states vs Turbo; idle frequency below base; wait sub-questions): strings in [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md), section Open points from book extraction.
+- Book corrections for the author's next edition (P-states vs Turbo; idle frequency below base; wait sub-questions): strings in [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/todo-2026-11-06.md), section Open points from book extraction.
 - Field heuristics not written in the books: through author questions and real tickets (M2).
-- Later: the author's "My Recommendation" column in [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md); book terminology for the glossary.
+- Later: the author's "My Recommendation" column in [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md); book terminology for the glossary.
 
 ### M2 Questions
 - 10 more questions: 1 at Level 200, 9 at Level 300, in the tasks below allocation (decide-capacity, troubleshoot, judge-setting, explain-mechanism).
 - Author: files for L4-26 to L4-49; Q058 (synthetic share, review of L4-14 to L4-50); real-ticket questions written by the author, the held-out set cut from them.
 - `trap_type` in question metadata and a coverage script for the blueprint counts.
 - Split `L4-05` (two hosts, letters per host) into one deterministic question per host.
-- Question ideas from the book chapters (CPU, Windows, memory traps): [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/todo-2026-11-06.md), section Evaluation.
+- Question ideas from the book chapters (CPU, Windows, memory traps): [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/todo-2026-11-06.md), section Evaluation.
 - Per-question answer length in the runner (the long question L4-50 has 10 key points; the open-answer prompt caps at 250 words).
 - Table input: a harness table tool (load Excel or CSV, filter, sort, aggregate, top-N) and table attachments in the runner.
 
@@ -91,7 +91,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - Watch for a current-generation dense vision model of about 70B: first challenger when it exists.
 
 ### M5 Live test
-- The code changes in [benchmark/live-test.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/live-test.md), section 4: `--local` server, vision and context from config, judge later, timings per turn.
+- The code changes in [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), section 4: `--local` server, vision and context from config, judge later, timings per turn.
 - Measure seconds per model turn on the target GPU; set the time limit from the operator session.
 
 ### M6 Release 1.0

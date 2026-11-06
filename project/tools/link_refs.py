@@ -11,7 +11,7 @@ import re
 import subprocess
 import sys
 
-BASE = 'https://github.com/e1-rahabok/isvara-2/blob/main/'
+BASE = 'https://github.com/e1-rahabok/agent-e2/blob/main/'
 DOCS = ['project/author-questions.md', 'project/plan.md', 'MISSION.md', 'benchmark/design.md', 'benchmark/README.md',
         'benchmark/runner/README.md', 'benchmark/models.md']
 TICK = re.compile(r'`([\w./-]+)`')

@@ -18,7 +18,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 | Knowledge base | Level 400 facts, mechanisms, traps, flows, exact data | Content, structure, links, catalog | `knowledge/` |
 | Harness | The software around the model: retrieval, tools, verifier, rules, budgets | Code, tool design, retrieval settings | `harness/` |
 | Agent | The model plus the tool loop: what it is told up front, its rules for choosing tools | System prompt, up-front knowledge, tool rules | `harness/` (`AGENT.md`) |
-| Model choice | Which frozen model we ship | Swap in a better open model when one appears | [benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md) |
+| Model choice | Which frozen model we ship | Swap in a better open model when one appears | [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) |
 
 - The benchmark tests the whole system, not the model. It answers three questions:
   - which frozen model to ship (model choice is the fourth lever);
@@ -43,24 +43,24 @@ Six mechanisms, in order of weight.
 ### Risks
 | Risk | Why it matters | Guard |
 |---|---|---|
-| Prior override | The model reads the right file and still answers from an Internet rule of thumb | Prompt rule: knowledge base wins; override rate measured; core rules given up front ([harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md)) |
+| Prior override | The model reads the right file and still answers from an Internet rule of thumb | Prompt rule: knowledge base wins; override rate measured; core rules given up front ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)) |
 | Retrieval miss | The right file exists but is not found; the model cannot use what it does not see | Retrieval check without a model; link expansion; a map of the knowledge base given up front |
 | Weak tool use | Small models search in circles or make no calls | Classic mode as fallback; tool rules; no-progress stops |
 | Knowledge gap | The fact is not in the knowledge base | Every wrong answer classified; the author fills the gap |
-| Benchmark fitted to the knowledge base | Claude edits the knowledge base and can read the questions | Held-out set kept by the author; general fixes only ([benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md), section 10) |
+| Benchmark fitted to the knowledge base | Claude edits the knowledge base and can read the questions | Held-out set kept by the author; general fixes only ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) |
 
 ### What would prove it wrong
-- The best local configuration stays below the frontier baseline by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md), section 1).
+- The best local configuration stays below the frontier baseline by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
 
 ### Status
 - Not achieved yet. On the first 17 questions (old scoring), the best local model with the knowledge base scored 58%; the frontier model without it, 75%.
 - Known causes, each tracked: knowledge gaps, answer-key errors, an old prompt rule (knowledge base only, since changed), weak agentic tool use, retrieval reaching 67% of needed files.
 
 ## 4. Model size
-- Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/models.md), section Model size and speed.
+- Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.
 
 ## 5. What the product must do
-Requirements for the shipped assistant. Findings from the author's demo app (2026-11-04) are archived in [project/archive/product-requirements.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/archive/product-requirements.md).
+Requirements for the shipped assistant. Findings from the author's demo app (2026-11-04) are archived in [project/archive/product-requirements.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/product-requirements.md).
 
 ### Ways to ask
 | # | Mode | Input | What the system does | Release |
@@ -115,4 +115,4 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - most of the hundreds of screens are configuration, not performance or capacity;
   - extra files compete in retrieval and push out the files that matter (ranking shifted when 2 files were added);
   - each file needs the author's review.
-- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/templates/screen.md); location: `KNOWLEDGE-ENGINEERING.md`, section 5. Kept only if the retrieval check on screenshot questions improves. Not started (author, 2026-11-06).
+- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: `KNOWLEDGE-ENGINEERING.md`, section 5. Kept only if the retrieval check on screenshot questions improves. Not started (author, 2026-11-06).
