@@ -1,5 +1,7 @@
 # Solution design: a local 32B model that beats frontier models on private cloud operations
 
+> Merged on 2026-11-06 into `DESIGN.md` (mission, levers, why it is possible, model size), `ARCHITECTURE.md` (parts, dark site) and `KNOWLEDGE-ENGINEERING.md` (knowledge forms). Kept as a record; not maintained.
+
 Status: proposal, 2026-11-04. For the author and for VMware professionals who ask "how can a small local model beat GPT or Claude?". Not indexed.
 
 ## 1. Mission

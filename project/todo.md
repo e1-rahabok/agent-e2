@@ -26,7 +26,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Review [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/operations-management/capacity/capacity-model.md): it holds vSphere cluster capacity. Split the vSphere-specific part into `vsphere/object-types/cluster/` if it is not cross-product.
 - [ ] VCF Operations knowledge: map its objects, engines and metric groups; fetch the VCF Operations 9.1 metric reference; ask the author for the VCF Operations book chapters.
 
-## Product (from the vCommunity Ask demo, 2026-11-04; see [project/product-requirements.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/product-requirements.md))
+## Product (from the vCommunity Ask demo, 2026-11-04; requirements in [DESIGN.md](https://github.com/e1-rahabok/isvara-2/blob/main/DESIGN.md), section 5)
 - [x] Section "Host CPU monitoring" moved from [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/foundations/overhead.md) to [ESXi: what to monitor, in priority order](https://github.com/e1-rahabok/isvara-2/blob/main/knowledge/vsphere/object-types/esxi/overview-what-to-monitor.md), with the knowledge base reading next to it.
 - [x] Overview files for VM, ESXi and cluster. Next: datastore and resource pool when their content grows.
 - [ ] Benchmark question: "most important CPU metrics on an ESXi host" (trap: utilization and load average first).
@@ -48,7 +48,7 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] After the next benchmark: check `verify_flags` against wrong answers. Promote a soft check to a repair trigger only if it predicts errors.
 - [ ] After the next benchmark: check `tools_used`. If models skip catalog and calculate on unit questions, strengthen the prompt rule or add a router.
 - [ ] Add benchmark questions that need the catalog, calculator and object paths (units, statistics levels, summation to %, chains across objects).
-- [ ] Merge [project/philosophy-and-structure.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/philosophy-and-structure.md) into [project/solution-design.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/solution-design.md); split [project/design-kb-test-site.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/design-kb-test-site.md) into harness design and benchmark plan (benchmark plan done 2026-11-04: [benchmark/design.md](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/design.md)).
+- [x] Documentation redesign (2026-11-06): [DESIGN.md](https://github.com/e1-rahabok/isvara-2/blob/main/DESIGN.md) and [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md) added; solution design, philosophy and product requirements merged and archived. Still open: split [project/design-kb-test-site.md](https://github.com/e1-rahabok/isvara-2/blob/main/project/design-kb-test-site.md) into harness design and benchmark design.
 
 ## Source reading (VMware vSphere 9.1 product documentation, PDF built 2026-11-02)
 - [x] vSphere Monitoring and Performance, pp. 2025-2184: extracted 2026-11-03.
@@ -122,6 +122,12 @@ Open work for this repository. Not indexed. Update when items close.
 - [ ] Create VM metric files for Co-stop, Demand, Overlap, System, VMX, Idle when the book's VM section is extracted.
 - [x] 24 unlinked book images linked under the sections they explain. Validator now fails on any unlinked image.
 - [ ] Clear `[author-correction]` markers once the corrected book is uploaded.
+
+## Agent (design: [harness/AGENT.md](https://github.com/e1-rahabok/isvara-2/blob/main/harness/AGENT.md), section 3)
+- [ ] Build the up-front blocks, generated from the repository: 1 map of the knowledge base, 2 core rules, 3 confusable terms, 4 symptom → flow index, 5 procedure rules. Budget about 1-3K tokens together; lint checks the size.
+- [ ] One switch per block in [benchmark/runner/config.yaml](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/runner/config.yaml); benchmark each alone, then together; keep a block only if it raises the final score or lowers the confident-wrong or override rate by more than the margin.
+- [ ] Try a primed start: agentic mode that starts from the classic context.
+- [ ] Move the agent loop from [harness/modes.py](https://github.com/e1-rahabok/isvara-2/blob/main/harness/modes.py) to `harness/agent.py`.
 
 ## Evaluation
 - [x] Write the long, complex question: [ERP slow after the change window](https://github.com/e1-rahabok/isvara-2/blob/main/benchmark/questions/L4-50-erp-slow-after-change-window.md) (2026-11-05).

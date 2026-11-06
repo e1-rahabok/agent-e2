@@ -1,7 +1,7 @@
 # Models
 
 Candidate models, the frontier reference and the judge for the benchmark. Not indexed.
-Settings: `benchmark/runner/config.yaml`. Why a small local model can win: `project/solution-design.md`, sections 3 and 4.
+Settings: `benchmark/runner/config.yaml`. Why a small local model can win, and model size: [DESIGN.md](../DESIGN.md), sections 3 and 4.
 
 ## 1. What model the goal needs
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
@@ -29,7 +29,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 ### Dense or mixture-of-experts
 - Total parameters set the memory (GPU size and how much was memorized). Active parameters set the compute per token, which drives instruction following, long-context reading and multi-step reasoning.
 - For the GPU memory paid, a dense model gives the most compute per token. A 120B MoE with 6-12B active has less compute per token than a 31B dense model, on twice the GPU memory.
-- So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (`project/solution-design.md`, section 4).
+- So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (`DESIGN.md`, section 4).
 - No current-generation dense vision model of about 70B is on the gateway (checked 2026-11-05). Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
 - The 120B MoE models were dropped (author, 2026-11-05): less compute per token than the dense candidates, on twice the GPU memory. A later MoE candidate must pass the rule below.
 
@@ -167,4 +167,4 @@ Preferred, not required:
 ## 9. History
 - 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected (author): the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped (author); 3 dense candidates remain. Section 2 (gateway vs site) added.
 - 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
-- 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in `project/solution-design.md`, section 5, until 2026-11-05.
+- 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in `project/archive/solution-design.md`, section 5, until 2026-11-05.
