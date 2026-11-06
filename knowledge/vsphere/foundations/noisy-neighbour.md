@@ -25,15 +25,15 @@
   - the default limit is the configured size; it is usually too high because the price is low. A VM that runs on 8 vCPU is given 32 because the buyer can afford it;
   - a limit set on the VM gives unpredictable performance: Windows or Linux does not know it can use only part of its vCPUs;
   - the limit is in GHz, not vCPU, so its effect changes every second as the frequency changes.
-- Example cluster: 10 hosts × 40 cores × 2.5 GHz = 1,000 GHz (HT not counted). Overcommit 4:1: 400 VMs × 4 vCPU = 1,600 vCPU on 400 cores. A core runs 2 vCPU at once with HT, at a 37.5% penalty each.
+- Example cluster: 10 hosts × 40 cores × 2.5 GHz = 1,000 GHz (HT not counted). Overcommit 4:1 per core (2:1 per thread): 400 VMs × 4 vCPU = 1,600 vCPU on 400 cores, 800 threads. Overcommit is stated per physical thread from here on. A core runs 2 vCPU at once with HT, at a 37.5% penalty each.
   - A few 32-vCPU VMs cause the problem: 10 of them can each fill one host. So overcommit ratio and maximum VM size both belong in the pricing policy.
 - Reservation:
   - at 4:1, at most 25% of each VM's configured capacity can be reserved: a 2-vCPU VM gets 1.25 GHz, about 0.5 vCPU;
   - reserving the first vCPU of each VM: 400 × 2.5 GHz = 1,000 GHz, the whole cluster, beyond usable capacity once HA is counted. HT adds about 25% throughput;
-  - the higher the overcommit, the less a reservation can guarantee.
+  - the higher the overcommit, the less a reservation can guarantee: at 4:1 per physical thread, at most 0.25 thread per vCPU across the environment, on average.
 - Share:
-  - shares are per VM, not per vCPU. A larger VM has more shares in total, divided among its vCPUs;
-  - the busy vCPU of a 2-vCPU VM does not gain from its idle sibling;
+  - shares are per VM, not per vCPU. A larger VM has more shares in total, shared among its vCPUs;
+  - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 trap;
   - shares are charged against CPU Used, not CPU Run. Used includes System time, the hypervisor's work for the VM (network packets, disk commands). A VM with heavy IO uses up its shares and can see CPU Ready.
   - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): `vsphere/tools/esxtop/cpu`.
 ![VM 1 has one busy vCPU; VM 2 has a busy vCPU 1 and an idle vCPU 2](images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png)
@@ -56,16 +56,15 @@
 - Points of control: non-vSAN: VM, datastore, array, and the fabric if it can throttle. vSAN: VM and vSAN.
 - Limit:
   - IOPS limit per virtual disk. The cost of 1,000 IOPS varies with block size, read/write ratio and random vs sequential. Application teams seldom know these;
-  - too low → VM latency rises; too high → no protection. If each of 2,000 VMs may take 1% of the array, 100 VMs (5%) at their limit saturate it, even with IO spread evenly over the disks; hot spots make it worse;
+  - too low → VM latency rises; too high → no protection. If each of 2,000 VMs may take 2.5% of the array, 40 VMs (2% of the population) at their limit saturate it, even with IO spread evenly over the disks; hot spots make it worse;
   - a limit on the OS disk is reasonable when the applications do not use it: it stops rogue agents and system services.
 - Reservation: none in the VM disk settings.
 - Share: applies only when latency passes a threshold. It ignores disk size. The control wanted is IOPS per GB: storage sold by GB should carry IOPS and throughput at a latency, which justifies a higher Gold price per GB.
 - Disk space under thin provisioning cannot be controlled. Monitor snapshot age and remove snapshots within a few days.
 
 ### Storage I/O Control
-- Datastore-wide throttling, a different purpose from the per-disk controls. Share and limit, no reservation.
-- Can be enabled per datastore, local datastores included. Two choices of congestion threshold, each with trade-offs.
-- Does not apply to vSAN, which has its own mechanism.
+- Deprecated: with VCF 9.0, vSphere Storage I/O Control components are deprecated (vSphere 9.1 documentation). Do not design with it; the knowledge base follows the official deprecation, not the book.
+- It was datastore-wide throttling, separate from the per-disk controls, and never applied to vSAN, which has its own mechanism.
 
 ## Network
 - The hardest: the network is an interconnect.
@@ -83,18 +82,20 @@
   - a function of the overcommit ratio: half price means twice as many tenants to break even;
   - progressive tiers: a 64-vCPU VM costs more than 64 × a 1-vCPU VM.
 - Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size.
-- Tell customers the quality of each class. Memory example:
+- Tell customers the quality of each class. Memory overcommit and the Performance SLA per class:
 
-| Class | Overcommit | Performance threshold |
+| Class | Memory overcommit | Performance SLA |
 |---|---|---|
-| Gold | 1:1 | VM contention 0% for 100% of the month |
-| Silver | 1.5:1 | VM contention below 1% for 99.99% of the month |
-| Bronze | 2:1 | Not given |
+| Gold | 1:1 | 99.9% |
+| Silver | 1.5:1 | 99.8% |
+| Bronze | 2:1 | 99.6% |
+
+- 100% is not realistic: the cost escalates. Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.
 
 ### Maximum VM size
 | Overcommit | Maximum VM size |
 |---|---|
-| 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
+| 1:1 per physical thread | ESXi logical CPUs (48 cores, 96 threads → 96) |
 | 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
 | 4:1 | 0.25 × logical CPUs |
 | 8:1 | 0.125 × logical CPUs; lab, dev, simple VDI |
@@ -102,7 +103,7 @@
 - 1:1: mind the HT throughput penalty and NUMA.
 - 2:1: two large VMs on one host each demand whole cores and both get the 37.5% penalty.
 - 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
-- 8:1: for 2-vCPU desktops, not for VMs of 25% of the cores. On 48 cores, keep VMs at 4-6 vCPU, not 12, so they fit across the cluster.
+- 8:1 per thread (4:1 per core with HT): for 2-vCPU desktops. On 96 threads the maximum is 12 vCPU; keep most VMs at 4-6 vCPU so they fit across the cluster.
 - The problem is not specific to vSphere: it follows from overcommit on shared resources (Microsoft Azure noisy neighbour antipattern).
 
 ## Traps
@@ -154,14 +155,15 @@ images:
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size (pp. 80-90)'
-corrections: []
+corrections:
+- 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x (author, Q077, 2026-11-06).'
+- 'Section ''CPU'', Reservation: 4:1 against physical thread gives 0.25 thread; the book says 8:1 (author, Q078, 2026-11-06).'
+- 'Section ''Disk'', Limit: 2.5% per VM, not 1%; 40 VMs saturate the array (author, Q078, 2026-11-06). The book says 5% of the population; 40 of 2,000 is 2%.'
+- 'Section ''Maximum VM size'': overcommit is per physical thread, not per core; the book''s example is per core (author, Q079, 2026-11-06).'
+- 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation (author, Q080, 2026-11-06).'
+- 'Section ''Avoiding it'': the book''s memory table was wrong; 100% is unrealistic; Performance SLA 99.9% Gold, 99.8% Silver, 99.6% Bronze (author, Q076, 2026-11-06).'
 review_notes:
-- 'Section ''CPU'', Share: the book says vCPU 1 of VM 2 does get 2x the share as it does not benefit from idleness of vCPU 2. Written here as does not gain. Q077.'
-- 'Section ''CPU'', Reservation: the book says at 8:1 overcommit against physical thread no more than 0.25 thread can be guaranteed; 8:1 per thread gives 0.125. Left out until answered. Q078.'
-- 'Section ''Maximum VM size'': overcommit is per core elsewhere, size is per logical CPU here; the 8:1 row gives 12 vCPU on 96 threads, then says avoid 12 vCPU on 48 cores. Q079.'
-- 'Section ''Storage I/O Control'': vSphere 9.1 documentation, Manage Storage I/O Resources with vSphere (p. 1886): With VCF 9.0, vSphere Storage I/O Control Components are deprecated. Q080.'
 - 'Section ''Network'': computed per host; with route based on originating virtual port each vNIC uses one uplink. The villain is 10 Gb in the calculation and 5 Gb sustained in the example. Q081.'
-- 'Section ''Avoiding it'', memory class table: 99.99% of a month at 5-minute samples. Gold 1:1 with vSphere 9 memory tiering. Q076, Q082.'
-- 'Section ''Disk'', Limit: the book says 5% of the VM population (40 VM in this case); 5% of 2,000 is 100. Q078.'
+- 'Section ''Avoiding it'': Gold 1:1 with vSphere 9 memory tiering. Q082.'
 status: draft
 ```

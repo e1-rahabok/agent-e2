@@ -29,6 +29,42 @@ meta:
   status: draft
 rows:
 - kind: rule
+  id: performance-sla-gold
+  metric: Performance SLA (Gold class)
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>='
+  value: 99.9
+  unit: '% (monthly mean of SLI)'
+  meaning: Performance SLA threshold for the Gold class of service.
+  source: author
+  kb: vsphere/foundations/noisy-neighbour
+  quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
+- kind: rule
+  id: performance-sla-silver
+  metric: Performance SLA (Silver class)
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>='
+  value: 99.8
+  unit: '% (monthly mean of SLI)'
+  meaning: Performance SLA threshold for the Silver class of service.
+  source: author
+  kb: vsphere/foundations/noisy-neighbour
+  quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
+- kind: rule
+  id: performance-sla-bronze
+  metric: Performance SLA (Bronze class)
+  object: VirtualMachine
+  layer: virtual-motherboard
+  operator: '>='
+  value: 99.6
+  unit: '% (monthly mean of SLI)'
+  meaning: Performance SLA threshold for the Bronze class of service.
+  source: author
+  kb: vsphere/foundations/noisy-neighbour
+  quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
+- kind: rule
   id: vm-cpu-ready-poor
   metric: VM CPU Ready
   object: VirtualMachine

@@ -71,6 +71,7 @@ Usage <= Entitlement   (at any point in time)
 ### Default CPU shares
 - Default CPU shares are per vCPU: Low, Normal and High are in the ratio 1:2:4 per vCPU.
 - With default settings, a 1-vCPU VM gets half the CPU share of a 2-vCPU VM under contention.
+- The VM's shares are shared among its vCPUs: a busy vCPU beside an idle sibling gets the idle sibling's part too (author, Q077). See `vsphere/foundations/noisy-neighbour`.
 
 ### Why Usage can appear slightly above Entitlement
 - Reporting technique, not a real violation.

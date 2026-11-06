@@ -4,6 +4,7 @@
 - In this knowledge base KPI is strictly about performance: "performance" has a specific meaning in enterprise IT.
 - Key indicators for availability are KAI; for compliance, KCI. One name per pillar keeps implementation unambiguous.
 - A KPI is one metric that quantifies the true performance of a logical entity.
+- A KPI is a baseline, the standard expectation maintained with effort, not a target still to reach. Provider and consumer each have their own KPI. The ideal, an ESXi host at 100% while no VM sees contention, is not realistic.
 - A performance SLA is rarely defined in public sources: the phrase is used without a number. Without a number it is subjective, and a dispute with a paying customer is lost.
 
 ## Three steps of maturity
@@ -18,8 +19,9 @@
   - quantifies consumer and provider objects;
   - includes the Guest OS when IT owns VM sizing;
   - has no formal class of service; the expectation is set by production;
-  - lets customers follow the numbers through a self-service portal.
-- The SLA step: measured on the 5-minute average; SLA = the 1-month average of the SLI for that month.
+  - both the application team and the infrastructure team track the KPI, through a self-service portal. An SLA needs a far higher cloud maturity.
+- The SLA step: measured on the 5-minute average. Every 5 minutes the SLI computes a pass or fail: a micro SLA. SLA = the mean of the SLI over the calendar month.
+- SLI means SLA leading indicator, not service level indicator. The two sound like peers; they are not.
 - Start with KPIs: they need no class of service. With different expectations for production and non-production, make one group per environment and a super metric that averages each group's KPI. Production should score better.
 - A KPI is the step that leads to operations with formal business SLAs.
 ![Three steps: Complaint (reactive, blamestorming, alert-driven, tickets passing), KPI (modelled, measured, agreed; insight-based SOP; RCA closed when alert set up), SLA (business contract; 1-month average of SLI; pricing and QoS per class)](images/complaint-kpi-sla-maturity-steps-diagram.png)
@@ -44,7 +46,7 @@
   - KPI: leading indicator, 5-minute window, 20-second accuracy, more metrics and events. The start of troubleshooting, before a complaint.
   - SLA: lagging indicator, 30 days back, 5-minute accuracy. The SLI tracks it every 5 minutes. A breach means a penalty, usually a credit on the next bill, not a refund.
 - Period:
-  - KPI: a moving window (last 1 hour).
+  - KPI: based on day, not date: a rolling window (last 1 hour), like live operations.
   - SLA: a fixed calendar period (June 1972).
 - KPIs fit when the infrastructure team owns VM sizing. Sizing the VM is sizing the Guest OS, so the team answers for Windows and Linux metrics too.
 - A KPI is colour coded (green, yellow, orange, red) so the reader reacts before the situation degrades. Scoring: `operations-management/performance/performance-kpi-design`.
@@ -56,7 +58,9 @@
 ![Layer, owner, SLA and KPI: business (LOB), application (IT developers) and infrastructure (IT administrators); App SLA and IaaS SLA each with availability, performance, compliance](images/layer-owner-sla-kpi-table.png)
 
 ## KPIs in VM as a Service
-- One SLA per service; several KPIs.
+- One SLA contract per service, holding several SLA metrics (availability, performance, security); several KPIs.
+- Guest OS SLA: when central IT owns the Guest OS, it provides a Guest OS SLA with its own availability, performance and security SLA. Its values can be combined with the VM SLA for reporting.
+- Security SLA, not compliance SLA: compliance compares settings against a secured configuration; security also covers activity, such as undesirable activity that is a potential risk.
 - VM KPI: stops at Windows or Linux. The application or service inside the Guest OS is excluded: the infrastructure team stops at the OS.
 - Business application KPI: three levels. The business transaction first (user login). Below expectation → the application software KPI (Apache web server) and the infrastructure KPI (the VM KPI).
 - vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: `vcf-operations/kpis/cluster-performance`.
@@ -119,10 +123,11 @@ source:
   path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS (pp. 76-80)'
 corrections:
 - 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team (author, Q073, 2026-11-06).'
+- 'Section ''KPI means performance'': a KPI is a baseline, not a target (author, Q067, 2026-11-06).'
+- 'Section ''KPIs in VM as a Service'': one SLA contract per service; Guest OS SLA when IT owns the Guest OS; security, not compliance (author, Q074, 2026-11-06).'
+- 'Sections ''Three steps of maturity'', ''KPI vs SLA'': KPI timing confirmed; both teams track the KPI (author, Q075, 2026-11-06).'
+- 'Section ''Three steps of maturity'': SLA = mean of SLI; SLI = SLA leading indicator (author, Q076, 2026-11-06).'
 review_notes:
-- 'Section ''KPIs in VM as a Service'': one SLA per service vs the four SLAs of IaaS (Service Level Agreement section) and the Guest OS SLA in the diagram. Q074.'
-- 'Section ''KPI vs SLA'', Timing and Period; the KPI step lists customers tracking the SLA in a portal. Q075.'
-- 'Section ''Three steps of maturity'': SLA = 1-month average of SLI vs ''for 99.99% of the time'' in the class-of-service table. Q076.'
 - 'Source of the search for performance SLA articles (Google screenshot) not copied.'
 status: draft
 ```

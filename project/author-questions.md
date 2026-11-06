@@ -117,6 +117,55 @@ Each entry has:
 - Written as now: all files draft.
 - Answer:
 
+### Q072 · Part 1 > The Layers in IT Systems · Book corrections and Apdex
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
+- Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
+- Search 2: "I like the principle behind apdex, but not its implementation"
+- Question: (a) GetBankDetail 5.2 s plus the other 7 functions 15.1 s = 20.3 s, not 20.1 s. (b) Image text: "None of the counters are AWS shows any signs of performance counters". (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
+- Written as now: no number from the image in the text; no Apdex.
+- Answer:
+
+### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Search 1: "Now, a single villain VM can hit 10 Gb."
+- Search 2: "sustaining 5 Gb over 300 seconds period"
+- Search 3: "The share should be larger for production VM network and development VM network."
+- Question: (a) The calculation pools 2 × 25 Gb per host. With the default teaming (route based on originating virtual port) each vNIC uses one uplink. A 10 Gb villain fills 10 of one 25 Gb uplink and hurts only the VMs on that uplink. Compute per uplink? (b) The villain is 10 Gb in the calculation, 5 Gb sustained in the example: the 5-minute average hides the 10 Gb 20-second peak (the Interval rule)? (c) Read the share sentence as "larger for production VM traffic than development"?
+- Written as now: per host, both figures, (c) as read.
+- Answer:
+
+### Q082 · Part 1 > Noisy Neighbour > Memory and Solution · Gold 1:1 with memory tiering
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Search 1: "Per-VM reservation becomes irrelevant when the entire cluster does not overcommit."
+- Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
+- Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
+- Written as now: the book's table; no tiering note.
+- Answer:
+
+### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Search 1: "I think it should be 8 Gb/s."
+- Search 2: "consider setting 100 Mb/s per VM"
+- Question: these are the only network numbers per VM. 8 Gb/s × 25 VMs = 200 Gb on a 40 Gb host: the limit stops one villain, not many at once. Is 8 Gb/s a cap for one VM's peak and 100 Mb/s a floor? Should they go in the capacity threshold file as rules?
+- Written as now: in the text, not in the threshold files.
+- Answer:
+
+### Q084 · Knowledge base · ESXi CPU Demand: sum of VMs or not
+- Files: [knowledge/vsphere/foundations/provider-consumer.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/provider-consumer.md) (sections ESXi CPU Demand, Provider metric types); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Confusable pairs, ESXi CPU Demand vs Usage).
+- Search (Part 3): "Not the sum of all VM worlds + VMkernel worlds"
+- Question: found while checking this chapter. One file says ESXi CPU Demand is not a sum of consumers, with a trap. The same file, in Provider metric types, gives it as a sum-of-consumer example. The glossary says it is the sum over the VMs. Which is right? Claude will make the three agree.
+- Written as now: contradictory.
+- Answer:
+
+### Q085 · Follow-up to Q070 · Does the hypervisor count a full VMXNET3 receive ring
+- Files: [VM Network Packets Dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (sections Known causes, Traps).
+- Search: not from the book. Broadcom KB 1010071 (Claude's own knowledge, not fetched): esxtop shows dropped receive packets at the virtual switch port when the guest does not empty its receive ring fast enough; the fix is a larger ring in the Guest OS.
+- Question: your answer says the ring-buffer drop is not visible to the hypervisor. As Claude reads it, the guest never receives the packet, so the drop is counted at the VM's port: VM Network Receive Packets Dropped in vCenter, %DRPRX in esxtop. Visible to the hypervisor, but caused and fixed in the guest. Your conclusion holds either way: outside the IaaS SLA, and receive drops are already left out of it. Which is right for the reason: (a) not visible, or (b) visible but not controllable?
+- Written as now: guest-os layer, outside the IaaS SLA; the visibility claim left out.
+- Answer:
+
+## Resolved
+
 ### Q065 · Part 1 > Performance Management > Utilization vs Demand · Absolute or relative performance
 - Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Absolute vs relative); [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Reference).
 - Search 1: "Performance will be absolute (real value), Capacity will be relative"
@@ -138,14 +187,6 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Answer: 
 (a) Point A is above the physical capacity. Utilization cannot pass 100% of physical capacity as utilization measures reality; demand can exceed, as demand includes unmet demand. So there is no such thing as utilization above physical capacity as that's not possible.
 (b) The English word "target" implies something you have yet to achieve. You aim at a target before you hit it. Once the arrow hits the mark, you have achieved or hit the target. KPI is closer to Baseline / Standard Expectation: What you currently or consistently maintain as standard performance, albeit with great effort. In the ideal world, which is not realistic, your ESXi reaches 100% utilization while non VM experience contention. Provider and Consumer have their own KPI metrics. 
-
-### Q072 · Part 1 > The Layers in IT Systems · Book corrections and Apdex
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
-- Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
-- Search 2: "I like the principle behind apdex, but not its implementation"
-- Question: (a) GetBankDetail 5.2 s plus the other 7 functions 15.1 s = 20.3 s, not 20.1 s. (b) Image text: "None of the counters are AWS shows any signs of performance counters". (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
-- Written as now: no number from the image in the text; no Apdex.
-- Answer:
 
 ### Q074 · Part 1 > KPIs in IaaS · How many SLAs per service; is there a Guest OS SLA
 - Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPIs in VM as a Service).
@@ -216,47 +257,6 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Answer:
 - (a) for product deprecation, follows the official manual as the book gets outdated. We can't practice what is officially deprecated.
 - (b) Yes, keep as none. Do not include deprecated feature.
-
-### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
-- Search 1: "Now, a single villain VM can hit 10 Gb."
-- Search 2: "sustaining 5 Gb over 300 seconds period"
-- Search 3: "The share should be larger for production VM network and development VM network."
-- Question: (a) The calculation pools 2 × 25 Gb per host. With the default teaming (route based on originating virtual port) each vNIC uses one uplink. A 10 Gb villain fills 10 of one 25 Gb uplink and hurts only the VMs on that uplink. Compute per uplink? (b) The villain is 10 Gb in the calculation, 5 Gb sustained in the example: the 5-minute average hides the 10 Gb 20-second peak (the Interval rule)? (c) Read the share sentence as "larger for production VM traffic than development"?
-- Written as now: per host, both figures, (c) as read.
-- Answer:
-
-### Q082 · Part 1 > Noisy Neighbour > Memory and Solution · Gold 1:1 with memory tiering
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
-- Search 1: "Per-VM reservation becomes irrelevant when the entire cluster does not overcommit."
-- Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
-- Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
-- Written as now: the book's table; no tiering note.
-- Answer:
-
-### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
-- Search 1: "I think it should be 8 Gb/s."
-- Search 2: "consider setting 100 Mb/s per VM"
-- Question: these are the only network numbers per VM. 8 Gb/s × 25 VMs = 200 Gb on a 40 Gb host: the limit stops one villain, not many at once. Is 8 Gb/s a cap for one VM's peak and 100 Mb/s a floor? Should they go in the capacity threshold file as rules?
-- Written as now: in the text, not in the threshold files.
-- Answer:
-
-### Q084 · Knowledge base · ESXi CPU Demand: sum of VMs or not
-- Files: [knowledge/vsphere/foundations/provider-consumer.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/provider-consumer.md) (sections ESXi CPU Demand, Provider metric types); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Confusable pairs, ESXi CPU Demand vs Usage).
-- Search (Part 3): "Not the sum of all VM worlds + VMkernel worlds"
-- Question: found while checking this chapter. One file says ESXi CPU Demand is not a sum of consumers, with a trap. The same file, in Provider metric types, gives it as a sum-of-consumer example. The glossary says it is the sum over the VMs. Which is right? Claude will make the three agree.
-- Written as now: contradictory.
-- Answer:
-
-### Q085 · Follow-up to Q070 · Does the hypervisor count a full VMXNET3 receive ring
-- Files: [VM Network Packets Dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (sections Known causes, Traps).
-- Search: not from the book. Broadcom KB 1010071 (Claude's own knowledge, not fetched): esxtop shows dropped receive packets at the virtual switch port when the guest does not empty its receive ring fast enough; the fix is a larger ring in the Guest OS.
-- Question: your answer says the ring-buffer drop is not visible to the hypervisor. As Claude reads it, the guest never receives the packet, so the drop is counted at the VM's port: VM Network Receive Packets Dropped in vCenter, %DRPRX in esxtop. Visible to the hypervisor, but caused and fixed in the guest. Your conclusion holds either way: outside the IaaS SLA, and receive drops are already left out of it. Which is right for the reason: (a) not visible, or (b) visible but not controllable?
-- Written as now: guest-os layer, outside the IaaS SLA; the visibility claim left out.
-- Answer:
-
-## Resolved
 
 ### Q066 · Part 1 > Contention vs Consumption · Point C: worst performance at 0% utilization
 - Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Four points on the utilization scale).
