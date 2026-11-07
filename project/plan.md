@@ -20,6 +20,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - After 1.0: screen library and screenshot read-back (1.1); data files (1.2); read-only VCF Operations connection; vSAN, NSX, Kubernetes, Linux content.
 
 ## Decisions (latest first)
+- 2026-11-07, author: `knowledge/` is for Agent E2 only. Proof screenshots from the book are not added; the book stays the human reference. No audit of the 476 Part 3 images not copied.
 - 2026-11-06, author: the product is named Agent E2 (two words); an LLM-based expert system, built as agentic RAG on a local LLM. It will replace AskIO on isvara.io. Repository rename to agent-e2 waits on the author (GitHub settings).
 - 2026-11-06, author, on [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md):
   - No benchmark run until the 100 questions and the knowledge base are complete.
