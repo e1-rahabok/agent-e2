@@ -362,6 +362,133 @@ Each entry has:
 - Search 9: "Since storage IO control configuration is not based on latency" (Storage I/O Control deprecated in VCF 9, Q080).
 - Question: confirm each for the next edition.
 - Written as now: corrected wording in the knowledge base.
+
+### Q108 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
+- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-management-process.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md).
+- Search 1: "e first place, by using progressive pricing"
+- Search 2: "They need to be reviewed as complimentary"
+- Search 3: "measured againsts usable"
+- Question: (a) Search 1 is a sentence fragment after the four-phase table; text seems lost before it. What was meant? (b) "complimentary" should be "complementary". (c) "againsts" should be "against". Confirm (b) and (c) for your next edition.
+- Written as now: fragment left out; the knowledge base uses the corrected words.
+- Answer:
+
+### Q109 · Part 1 > Capacity Management > "Good" Advice · Why each statement is wrong
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-management-process.md) (section Traps).
+- Search 1: "Memory Active should not exceed 50-60%"
+- Search 2: "Memory should be running at high state"
+- Question: the book lists 9 statements as wrong but does not say why. Claude wrote one reason per statement as a trap. Confirm or correct each:
+  - (a) 2:1 RAM overcommit is risky → a ratio ignores utilization, VM size and class; Bronze can run 2:1.
+  - (b) 90% memory, aim for 80% because of HA → usable capacity already excludes the HA host; subtracting HA again counts it twice.
+  - (c) Active below 50-60% → Active is a sampled estimate; capacity reads demand against usable capacity.
+  - (d) Each host in the high memory state → High means much free memory: wastage.
+  - (e) 5:1 CPU on an important cluster → important clusters take a lower ratio.
+  - (f) 3:1 gives buffer for spikes and HA → allocation ignores utilization and VM size; buffer and HA belong in usable capacity.
+  - (g) 4:1 for Tier 3 → not used as a trap; what is wrong with it?
+  - (h) UAT at 70%, worry at 85% → utilization alone does not close a cluster; read contention and risk.
+  - (i) 25% CPU is good, plenty left → below 40% of usable is wastage.
+- Written as now: (a)-(f), (h), (i) as traps.
+- Answer:
+
+### Q110 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
+- Search: "I divide the capacity into 10 equal chunks"
+- Question: the book puts 40-80% of usable capacity in green and 80% as best. Cluster Consumption (%) has CPU green 0-55, yellow 55-70, orange 70-85, red 85-100, and memory green 0-70. A 10-host N+1 cluster at the best 80% of usable is 72% of total: orange on CPU in Cluster Consumption. (a) Is Cluster Consumption measured against total or usable capacity? (b) Which governs? (c) Give values for yellow, orange and red above 80%. (d) Should Cluster Consumption get a grey band (0-40%) for wastage? The plan lists grey values for capacity bands as open.
+- Written as now: zones as rules (grey below 40%, best 80%); Cluster Consumption bands unchanged.
+- Answer:
+
+### Q111 · Part 1 > 4 Dimensions of Capacity > Allocation · Memory tiering version
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Allocation), [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Search: "a new feature in vSphere 8"
+- Question: memory tiering was a tech preview in vSphere 8.0 Update 3 and is supported from vSphere 9.0. The knowledge base says introduced in 9.0. Change the book to vSphere 9?
+- Written as now: no version in the capacity file; memory-tiering says 9.0.
+- Answer:
+
+### Q112 · Part 1 > 4 Dimensions of Capacity > Reservation | Share · Unit of CPU reservation
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Reservation and share).
+- Search: "That’s why the unit is Hertz, milliseconds"
+- Question: CPU reservation is set in MHz. What does "milliseconds" refer to? Share is the runtime one (time slices). Remove "milliseconds" from the reservation column?
+- Written as now: reservation in Hz; share in time slices.
+- Answer:
+
+### Q113 · Part 1 > Capacity Model > Planning Phase · Is the gap 2x everywhere
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/class-of-service-planning.md) (section Example implementation), [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Avoiding it).
+- Search: "Notice the consistent 2x gap"
+- Question: the implementation table keeps 2x for reservation (50/25/12.5% CPU, 100/50/25% RAM), CPU allocation (1:1, 2:1, 4:1) and contention (0.5/1/2% unmet). Memory allocation is 1:1, 1.5:1, 2:1, and utilization (50/70/90% CPU) is not 2x. Is memory deliberately less than 2x (risk of swapping), and should the text say so?
+- Written as now: the values as in the table, with a note that memory and utilization do not follow 2x.
+- Answer:
+
+### Q114 · Part 1 > Planning Phase vs Cluster Risk · Bronze plan scores red
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/class-of-service-planning.md), [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md) (Allocation rows).
+- Search: "Notice the consistent 2x gap"
+- Question: Bronze CPU 4:1 per thread is 8 vCPUs per core with Hyper-Threading. Cluster Risk counts vCPUs per physical core and marks 3-4 as red; Silver 2:1 per thread (4 per core) is red too. Bronze memory 2:1 sits in the Cluster Risk red range 1.8-2.2. So a cluster built to your plan always shows red overcommit rows, and with the production closure limit (Risk above 50%) it may close. (a) Should the Cluster Risk overcommit bands depend on the class of service? (b) Or is Cluster Risk meant only for Gold and Silver clusters?
+- Written as now: both files unchanged; the conflict is noted in review_notes.
+- Answer:
+
+### Q115 · Part 1 > Capacity Model > Cluster Closure > Logic · Non-production capacity and the orange case
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/diagnosis/can-cluster-take-more-vms.md) (steps 4 and 5), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows closure-*).
+- Search 1: "If both capacity and performance are orange"
+- Search 2: book table after "Implementing the above with actual threshold"
+- Question: (a) Non-production closes on performance and risk later than production (red below 20% vs 40%; risk above 75% vs 50%), but on Capacity Remaining earlier (red below 15% vs 10%; orange below 30% vs 20%). Intended (smaller buffer in non-production), or swapped? (b) One orange and one green: open without a risk check? (c) The flow now follows your closure logic for steps 2-5; Q061 stays open for the full order (state, fit, balance).
+- Written as now: as in the book table; (b) read as open.
+- Answer:
+
+### Q116 · Part 1 > Cluster Closure vs Planning Phase · Performance (%) closure values
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/diagnosis/can-cluster-take-more-vms.md) (step 4), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/class-of-service-planning.md) (section Example implementation), [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md).
+- Search: book table after "Implementing the above with actual threshold"
+- Question: production closes when Performance (%) at the 95th percentile of 24 hours drops below 40% (red) or 60% (orange). The class minimum for VM Performance (%) is 98-99.5%. The knowledge base reads the first as the cluster KPI (Cluster Performance, worst VM and 90th percentile rows) and the second as the VM KPI. Correct? With the weighted scoring, one row a quarter into red already gives about 53%; is 40% the value you want?
+- Written as now: both, as different metrics.
+- Answer:
+
+### Q117 · Part 1 > Capacity Management > Reclamation · Benefit table and scope
+- Files: [Reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/reclamation.md) (sections When reclamation is the provider's job, What each area frees).
+- Search 1: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"
+- Search 2: "It is only applicable when VMs are free"
+- Question: (a) In the benefit table, cells seem shifted: Idle VM, Storage holds "Cluster RAM as idle RAM pages tend to occupy ESXi memory"; Oversized VM, Memory holds the context-switch text (a CPU benefit). Claude rewrote the table from the chapter text: unused VM frees real CPU and memory; oversized VM frees memory and performance, CPU in allocation only; idle VM frees memory, CPU in allocation only; storage only on delete. Correct? (b) The chapter starts with reclamation applying only when VMs are free, then applies the stocktake to internal IT with chargeback. Which scope is right?
+- Written as now: the rewritten table; both scope statements.
+- Answer:
+
+### Q118 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
+- Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap).
+- Search: "but you can’t aggregate them per datastore"
+- Question: the knowledge base reads this as: the metrics are on the ESXi host with one instance per datastore, and no datastore-wide total across hosts exists. Correct?
+- Written as now: as above; sum the hosts that mount the datastore.
+- Answer:
+
+### Q119 · Part 1 > Rightsizing > Best Practices · 8-core block, 8 and 16 vCPU
+- Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/rightsizing.md) (section Practices), [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-risk.md) (section Monster VM).
+- Search: "AMD EPYC and Intel Xeon use an 8-core block"
+- Question: AMD EPYC uses 8-core CCDs (16 cores on Zen 4c and Zen 5c). Intel Xeon has no 8-core block: Sapphire Rapids and Emerald Rapids use up to 4 tiles, Granite Rapids compute dies of over 40 cores, each a shared-LLC mesh. (a) Limit the 8-core block to AMD? (b) Why does a VM above 8 vCPU risk the Hyper-Threading effect? HT sharing depends on host load, not on VM size against a CCD. (c) A NUMA node on current hosts holds 32-128 cores; is above 16 vCPU about the CCD (L3) effect inside a socket, not NUMA? Cluster Risk repeats "most Xeon and EPYC use 8-core CCDs".
+- Written as now: the book rule, attributed, with a review note.
+- Answer:
+
+### Q120 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
+- Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/rightsizing.md) (sections What to optimize, Big picture).
+- Search 1: "utilization should be 100% to minimize ping pong"
+- Search 2: "You expect this number to hover around 40%"
+- Question: per VM, CPU utilization should be near 100%; across hundreds of large right-sized VMs, the average is about 40% and the max about 80%. The knowledge base reads the first as the aim per VM at its busy time, the second as the fleet average over every 5 minutes. Correct?
+- Written as now: as above.
+- Answer:
+
+### Q121 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
+- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Demand).
+- Search 1: "Demand = Max (Utilization, Reservation)"
+- Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
+- Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
+- Written as now: both files as they are.
+- Answer:
+
+### Q122 · Glossary · Proposed terms from Capacity Management
+- Files: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Defined terms, Confusable pairs).
+- Search: "Stop Provisioning (Yes/No)"
+- Question: three proposals, in use as drafts: (a) defined term "Closed cluster" (also called stop provisioning); (b) pair "Demand (capacity) vs ESXi CPU Demand"; (c) pair "Idle vs oversized vs unused VM". Keep, rename or drop?
+- Written as now: all three in the glossary.
+- Answer:
+
+### Q123 · VCF Operations 9.1 · Prometheus access for scripts
+- Files: [Real-time metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/real-time-metrics.md).
+- Search: not from the book. TechDocs "Real-time Data in the Workbench": "Use the Add Query input field to enter and run your PromQL query."
+- Question: you say 2-second metrics are for programmatic use, with native Prometheus compatibility. The 9.1 docs show PromQL only in the Workbench Custom Query sub-tab; no Prometheus endpoint or API is described. How do scripts reach it (endpoint, auth, doc link)?
+- Written as now: PromQL in Custom Query; programmatic use stated from you.
 - Answer:
 
 ## Resolved

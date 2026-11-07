@@ -23,6 +23,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `vsphere/foundations/noisy-neighbour` | Resource management |
 | Class of service | Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA. | Tier |
 | Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. A capacity term only. | - |
+| Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `operations-management/capacity/diagnosis/can-cluster-take-more-vms` | Stop provisioning |
 | vSphere World | VCF Operations object above all vCenter Server instances. | - |
 | Run Time | How long a CPU or vCPU runs. Binary per moment. Used for capacity. | Run (VM), Utilization (ESXi) |
 | Run Quality | Cycles completed while running. Varies with frequency and Hyper-Threading. Used for performance. | - |
@@ -100,6 +101,8 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/performance/pillars-of-operations` |
 | Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/performance/pillars-of-operations` |
 | Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/performance/pillars-of-operations` |
+| Demand (capacity) vs ESXi CPU Demand | Capacity demand is the higher of utilization and reservation, per powered-on VM; ESXi CPU Demand is a counter of runtime demanded | `operations-management/capacity/capacity-dimensions` |
+| Idle vs oversized vs unused VM | Idle: below an absolute MHz every day; oversized: relative to its size; unused: busy but of no business value | `operations-management/capacity/reclamation` |
 
 
 ## Metadata

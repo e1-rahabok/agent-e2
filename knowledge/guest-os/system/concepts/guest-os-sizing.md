@@ -94,9 +94,28 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 - Windows and Linux differ more for memory than for CPU.
 
+## Sizing rules
+| Rule | Reason |
+|---|---|
+| Not only utilization | Add unmet demand: CPU runtime demanded but not given (run queue); Guest OS page faults for memory |
+| Not only current demand | Size for performing well. Memory: the Guest OS runs poorly without cache, so In Use alone is too small |
+| Include the peak | The busy period is when the VM works hardest |
+| Long-term pattern | One 5-minute burst does not size the next 3 months |
+| Exclude IT load | Guest OS reboot, updates, antivirus full scan, agent-based full backup, unless the VM must also serve work in those hours |
+
+- Memory reason: only the CPU is faster than memory. Cache as much as possible so the CPU does not wait for data; which data the program reads next cannot be predicted.
+- Excluding IT load requires knowing its footprint: process names.
+- Upsizing and downsizing use the same rules with different boundaries:
+  - downsizing: the Guest OS requires a minimum amount of RAM;
+  - upsizing: the NUMA boundary; and never more vCPUs than the host's logical processors (the VM does not power on), in practice fewer, to leave room for VMkernel overhead.
+- Two parts: the value at each point in time (wrong input, wrong result), then thousands of values projected forward. The projection leans conservative for the peak cycle and covers the business cycle: annual sales require annual data.
+- These rules size the Guest OS only. Containers and business applications have their own sizing.
+
 ## Traps
 - "Size the guest with VM CPU Usage" → includes HT, frequency and System.
 - "Free memory is safe headroom" → for memory, unused is waste.
+- "Size memory on In Use: that is the demand" → without cache the Guest OS pages and runs slower; size for performance, not only demand.
+- "Size on the average day" → include the peak period and the business cycle; exclude IT load such as backups and scans.
 
 ## Metadata
 ```yaml
@@ -144,6 +163,7 @@ corrections:
 review_notes:
 - "Section 'No such thing as VM rightsizing': from the author's other book, section VM Footprint | Guest OS Sizing (screenshot provided 2026-11-03). Author: VM rightsizing is a common misconception; the full book will be provided later."
 - 'Section ''Memory'': ranges and the grey range rule from the author answer Q055 (2026-11-05).'
+- 'Section ''Sizing rules'': PART 1 - Concepts of Operations Management.docx, Capacity Management > Rightsizing > Sizing Logic (pp. 127-128).'
 - 'References from the book: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html (not read).'
 status: draft
 ```
