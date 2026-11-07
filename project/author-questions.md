@@ -246,6 +246,13 @@ Each entry has:
 - Written as now: all three in the glossary.
 - Answer:
 
+### Q101 · VCF Operations 9.1 · Prometheus access for scripts
+- Files: [Real-time metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/real-time-metrics.md).
+- Search: not from the book. TechDocs "Real-time Data in the Workbench": "Use the Add Query input field to enter and run your PromQL query."
+- Question: you say 2-second metrics are for programmatic use, with native Prometheus compatibility. The 9.1 docs show PromQL only in the Workbench Custom Query sub-tab; no Prometheus endpoint or API is described. How do scripts reach it (endpoint, auth, doc link)?
+- Written as now: PromQL in Custom Query; programmatic use stated from you.
+- Answer:
+
 ## Resolved
 
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
