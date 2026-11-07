@@ -79,6 +79,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
   - `query_expansion` (glossary synonyms): no change; the glossary has 2 synonym rows. Implemented, off.
   - Together: 73%, 53 of 90. With hybrid search (embeddings): 72% to 75%, 51 to 57 of 90.
 - 2026-11-06, Part 1 Performance Management added (4 files): classic context 76%, 57 to 56 of 90 complete. Gained 0019 and 0024; lost 0023 (ballooned file pushed out by performance-vs-capacity) and 0080 (capacity-model pushed out by noisy-neighbour, which covers thin provisioning). Kept: the new files hold the right ideas for both.
+- 2026-11-07, Q081 network text added to noisy-neighbour (VMkernel, vSAN, uplinks): 56 to 55 of 90. Question 0069 (esxtop network panel) loses [Network units: esxtop vs vSphere Client](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/units-vs-vsphere-client.md) from the context budget; it stays rank 4 in search. Kept: the added facts are correct.
 - Next, measured the same way:
   - Context budget: 12K gives 75% (55 of 90), 16K gives 76% (57 of 90). 16K still fits the 32K window with images and the answer; decide with the author, because it changes every classic run.
   - The query "VM CPU Ready: rollup, unit and statistics level" does not return the VM CPU Ready file in the top 6; vcenter-statistics and distributed-switch files rank first, and ranking shifts when files are added. Look at chunk scoring and the file-level aggregation.
