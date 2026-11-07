@@ -47,6 +47,7 @@
   - sticky: once the VM touches a page it stays reserved, whatever its later use. The VMkernel cannot tell a useful page from an idle one. Avoid it;
   - memory is seldom overcommitted beyond 2:1 (CPU often is). When overcommitting, watch VM ballooning as the early warning of contention;
   - the highest class of service guarantees memory with no overcommit. Then a per-VM reservation adds nothing.
+  - with memory tiering, the memory overcommit ratio counts DRAM only: the NVMe tier exists to avoid overcommit.
 - Share: behaves as for CPU; the default values differ.
 
 ## Disk
@@ -69,13 +70,16 @@
 ## Network
 - The hardest: the network is an interconnect.
 - Example host: 2 × 25 Gb/s NICs = 50 Gb, counted as 40 Gb (20% headroom). VMkernel traffic (vSAN, vMotion, vSphere Replication) takes about 20 Gb; 20 Gb remains for 25 VMs.
-- One villain at 10 Gb (a Hadoop worker receiving data; sustained 5 Gb over 300 seconds) leaves 10 Gb for 24 VMs: about 400 Mb/s each. VMs that are not network-heavy may not notice.
+- One villain at 10 Gb (a Hadoop worker receiving data, sustained 10 Gb over 300 seconds) leaves 10 Gb for 24 VMs: about 400 Mb/s each. VMs that are not network-heavy may not notice.
 - With 2 × 10 Gb the risk is far higher: it is the overcommit ratio again.
+- The pool is the group of uplinks assigned to the switch, not one uplink. With Load Based Teaming the distributed switch checks the uplinks every 30 seconds; above 75% load it moves the port (VM or VMkernel) with the highest I/O to another uplink.
 - Configured on the distributed switch, not in the cluster resource allocation. Each VM network adapter has share, reservation and limit.
 - Limit: high enough for the VM, low enough for the physical NIC. Author's value: 8 Gb/s per VM on 2 × 25 Gb hosts. The settings are spread over many places, so it may not be practical.
 - Reservation: with plenty of bandwidth, about 100 Mb/s per VM. Derive the local number by metric profiling.
-- Share: the main split is VM vs VMkernel traffic, and production VM traffic above development. Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
-- Example of the share allocation per traffic type on a distributed switch: virtual machine and NFS traffic High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25); no reservation, no limit.
+- Share: the main issue is VM vs VMkernel traffic. All VM traffic gets one share as a group, while each VMkernel traffic type gets its own share, so VM traffic is outnumbered.
+- Example, a distributed switch (not the defaults): virtual machine traffic High (100) as one group; NFS High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50 each); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25 each). VMkernel traffic totals 475 shares against 100 for all VMs.
+- Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
+- Pro tip: customize the share allocation per traffic type for your environment; do not leave it as found. Give VM traffic enough weight against the sum of the VMkernel types, and set shares only for the traffic types the hosts carry.
 ![Distributed switch share allocation by traffic type: shares, shares value, reservation and limit for 12 traffic types](../technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png)
 
 ## Avoiding it
@@ -116,6 +120,7 @@
 - "Memory reservation protects the VM's working set" → it is sticky and blind to page use; it pins idle pages too.
 - "A disk IOPS limit of 1,000 gives the same protection on every VM" → the cost of an IO varies with block size, read/write mix and pattern.
 - "Set network priority between VMs" → priority starves the lower class; shares give every VM a part.
+- "VM traffic has High shares, so VMs win under contention" → VM traffic is one group; each VMkernel type has its own share and together they outnumber it (475 vs 100 in the example).
 - "The host has 40 Gb usable, so one VM at 10 Gb is harmless" → after VMkernel traffic, 24 VMs share 10 Gb, about 400 Mb/s each.
 
 ## Metadata
@@ -163,6 +168,8 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size (pp. 80-90)'
 corrections:
+- 'Section ''Network'': the pool is the uplink group, Load Based Teaming every 30 s above 75%; the villain sustains 10 Gb over 300 s (book said 5); VM traffic outnumbered by per-type VMkernel shares; the screenshot values are not defaults, customize them (author, Q081, 2026-11-07).'
+- 'Section ''Memory'': overcommit ratio against DRAM only with tiering (author, Q082, 2026-11-07).'
 - 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x (author, Q077, 2026-11-06).'
 - 'Section ''CPU'', Reservation: 4:1 against physical thread gives 0.25 thread; the book says 8:1 (author, Q078, 2026-11-06).'
 - 'Section ''Disk'', Limit: 2.5% per VM, not 1%; 40 VMs saturate the array (author, Q078, 2026-11-06). The book says 5% of the population; 40 of 2,000 is 2%.'
@@ -170,8 +177,5 @@ corrections:
 - 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation (author, Q080, 2026-11-06).'
 - 'Section ''Avoiding it'': the book''s memory table was wrong; 100% is unrealistic; Performance SLA 99.9% Gold, 99.8% Silver, 99.6% Bronze (author, Q076, 2026-11-06).'
 review_notes:
-- 'Section ''Network'': share allocation screenshot uploaded by the author (2026-11-07). Whether these values are the defaults is not stated.'
-- 'Section ''Network'': computed per host; with route based on originating virtual port each vNIC uses one uplink. The villain is 10 Gb in the calculation and 5 Gb sustained in the example. Q081.'
-- 'Section ''Avoiding it'': Gold 1:1 with vSphere 9 memory tiering. Q082.'
 status: draft
 ```

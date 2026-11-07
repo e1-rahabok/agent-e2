@@ -25,7 +25,9 @@
 - Effective host memory = DRAM (tier 0) + NVMe (tier 1). At the default 1:1 ratio, capacity doubles; at most 4 TB of NVMe per host.
 - The capacity constraint moves from Consumed to Active memory. Consumed can exceed DRAM by design; Active must stay within DRAM, ideally below 50% of it.
 - An NVMe device used for tiering is not available to vSAN. Count the lost vSAN capacity when sizing the cluster.
-- Do not overcommit memory on top of tiering (see Interactions).
+- Do not overcommit memory on top of tiering (see Interactions). The overcommit ratio counts DRAM only: the NVMe tier exists to avoid overcommit.
+- Consumed covers both tiers; once cold pages move to tier 1, consumed can exceed DRAM.
+- Unknown: whether VM memory contention (esxtop %LAT_M) counts time spent on pages in the NVMe tier. NVMe is about 1,000x slower than DRAM, so read the NVMe tier counters (read bandwidth and latency) directly. Linux KVM has no such per-VM signal either.
 
 ## Sizing (documentation)
 - Default DRAM:NVMe ratio 1:1: doubles host memory. NVMe used = the smaller of the ratio and the tier partition, at most 4 TB.
@@ -144,6 +146,7 @@ source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38); Storage > ESXi > Disk or Device > Memory Tiering
 corrections:
+- 'Section ''Capacity management'': overcommit against DRAM only; consumed covers both tiers; whether %LAT_M includes NVMe page faults is unknown to the author (Q082, 2026-11-07).'
 - 'Sections ''Definition'' (tier numbering), ''Mechanism'' (swap comparison), ''Capacity management'', ''Interactions'' (DRAM on arrival, DRS), ''Monitoring counters'' (chart path, memstats, zero tier 1): author (2026-11-07). Tier numbering corrected: DRAM = tier 0, NVMe = tier 1, as in the counters.'
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 14 and 38 read. Setup changes and CPU headroom bullet added (p. 38).

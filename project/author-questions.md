@@ -125,28 +125,6 @@ Each entry has:
 - Written as now: no number from the image in the text; no Apdex.
 - Answer:
 
-### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
-- Search 1: "Now, a single villain VM can hit 10 Gb."
-- Search 2: "sustaining 5 Gb over 300 seconds period"
-- Search 3: "The share should be larger for production VM network and development VM network."
-- Question: (a) The calculation pools 2 × 25 Gb per host. With the default teaming (route based on originating virtual port) each vNIC uses one uplink. A 10 Gb villain fills 10 of one 25 Gb uplink and hurts only the VMs on that uplink. Compute per uplink? (b) The villain is 10 Gb in the calculation, 5 Gb sustained in the example: the 5-minute average hides the 10 Gb 20-second peak (the Interval rule)? (c) Read the share sentence as "larger for production VM traffic than development"?
-- Written as now: per host, both figures, (c) as read.
-- Answer: (a) Not per uplink, per group of uplinks assigned to the switch. With Load Based Teaming, the distributed switch tests the uplinks every 30 seconds, and if their load exceeds 75 percent of usage, the port ID of the virtual machine or vmkernel port with the highest I/O is moved to a different uplink. (b) my book was wrong. It should be sustaining 10 Gbps over 300 seconds period. (c) No. The main issue is the VM traffic is given a default share of 100 as a group, but each VMkernel traffic is given their own share. So the VM traffic is outnumbered. See the shares in this image https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png showing VM is 100 while VMkernel is up to 475 shares.
-
-### Q082 · Part 1 > Noisy Neighbour > Memory and Solution · Gold 1:1 with memory tiering
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
-- Search 1: "Per-VM reservation becomes irrelevant when the entire cluster does not overcommit."
-- Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
-- Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
-- Written as now: the book's table; no tiering note.
-- Answer: (a) overcommit ratio for memory is only against DRAM portion only, because the whole point of adding an NVMe disk is to avoid overcommit. (b) I'm unsure if the memory latency or memory contention metric is modified to ignore it. I hope it should as NVMe is around 1000x slower, but logically the code that increments LAT_M may not be aware. I cannot confirm if the LAT_M polling logic was explicitly rewritten to inject tiering page faults into the latency aggregate. As a comparison, Linux and KVM do not explicitly report when a VM reads a page from NVMe instead of DIMM. No new KVM-specific counter was added, and existing KVM counters were not modified. vSphere introduces new counters in the vCenter UI for the NVMe tier:
-•	Memory type read bandwidth 
-•	Memory type read latency 
-•	Memory type write bandwidth 
-•	Memory type write latency
-The consumed metric reflects the combined usage of both the DRAM and NVMe tiers. Because the VMkernel tiering algorithm explicitly tracks physical DRAM (Tier 0) and initiates migration to Tier 1 when Tier 0 consumption crosses the 80% threshold, total consumed memory can exceed the physical DRAM capacity once cold pages are migrated.
-
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
 - Search 1: "I think it should be 8 Gb/s."
@@ -170,6 +148,28 @@ The consumed metric reflects the combined usage of both the DRAM and NVMe tiers.
 - Answer:
 
 ## Resolved
+
+### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Search 1: "Now, a single villain VM can hit 10 Gb."
+- Search 2: "sustaining 5 Gb over 300 seconds period"
+- Search 3: "The share should be larger for production VM network and development VM network."
+- Question: (a) The calculation pools 2 × 25 Gb per host. With the default teaming (route based on originating virtual port) each vNIC uses one uplink. A 10 Gb villain fills 10 of one 25 Gb uplink and hurts only the VMs on that uplink. Compute per uplink? (b) The villain is 10 Gb in the calculation, 5 Gb sustained in the example: the 5-minute average hides the 10 Gb 20-second peak (the Interval rule)? (c) Read the share sentence as "larger for production VM traffic than development"?
+- Written as now: per host, both figures, (c) as read.
+- Answer: (a) Not per uplink, per group of uplinks assigned to the switch. With Load Based Teaming, the distributed switch tests the uplinks every 30 seconds, and if their load exceeds 75 percent of usage, the port ID of the virtual machine or vmkernel port with the highest I/O is moved to a different uplink. (b) my book was wrong. It should be sustaining 10 Gbps over 300 seconds period. (c) No. The main issue is the VM traffic is given a default share of 100 as a group, but each VMkernel traffic is given their own share. So the VM traffic is outnumbered. See the shares in this image https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png showing VM is 100 while VMkernel is up to 475 shares.
+
+### Q082 · Part 1 > Noisy Neighbour > Memory and Solution · Gold 1:1 with memory tiering
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Search 1: "Per-VM reservation becomes irrelevant when the entire cluster does not overcommit."
+- Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
+- Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
+- Written as now: the book's table; no tiering note.
+- Answer: (a) overcommit ratio for memory is only against DRAM portion only, because the whole point of adding an NVMe disk is to avoid overcommit. (b) I'm unsure if the memory latency or memory contention metric is modified to ignore it. I hope it should as NVMe is around 1000x slower, but logically the code that increments LAT_M may not be aware. I cannot confirm if the LAT_M polling logic was explicitly rewritten to inject tiering page faults into the latency aggregate. As a comparison, Linux and KVM do not explicitly report when a VM reads a page from NVMe instead of DIMM. No new KVM-specific counter was added, and existing KVM counters were not modified. vSphere introduces new counters in the vCenter UI for the NVMe tier:
+•	Memory type read bandwidth 
+•	Memory type read latency 
+•	Memory type write bandwidth 
+•	Memory type write latency
+The consumed metric reflects the combined usage of both the DRAM and NVMe tiers. Because the VMkernel tiering algorithm explicitly tracks physical DRAM (Tier 0) and initiates migration to Tier 1 when Tier 0 consumption crosses the 80% threshold, total consumed memory can exceed the physical DRAM capacity once cold pages are migrated.
 
 ### Q065 · Part 1 > Performance Management > Utilization vs Demand · Absolute or relative performance
 - Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Absolute vs relative); [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Reference).
