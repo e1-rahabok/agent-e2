@@ -125,6 +125,104 @@ Each entry has:
 - Written as now: no number from the image in the text; no Apdex.
 - Answer:
 
+### Q086 · Part 1 > Your Private Cloud > Overview > Key Metrics · Operational Availability and green zone
+- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/iaas-business.md) (section Metrics per pillar).
+- Search: "Relative Availability, against your availability architecture and green zone."
+- Question: what is the green zone here? (a) the planned availability band of the architecture (for example the HA design target), or (b) something else. The formula comes later, in the Service Level Agreement section; this asks only for the term.
+- Written as now: Operational Availability is relative to the availability architecture; green zone left out.
+- Answer:
+
+### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
+- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
+- Search 1: "If 1 CPU typically uses 4 GB RAM, then a 64-core ESXi host will only need 256 GB."
+- Search 2: "If you buy a 64-core ESXi, you have 56 cores left and you will be able to sell 224 vCPU."
+- Search 3: "For Silver, you plan to overcommit 4:1 for CPU and 2:1 for memory."
+- Search 4: "I’ve seen multiple customers having 32-node production clusters running 1K – 2K VMs."
+- Question:
+  - (a) Basis. Your Q079 answer: overcommit is per physical thread. Silver here is 4:1 per core (56 cores × 4 = 224 vCPU), which is 2:1 per thread. If Silver is meant as 4:1 per thread: 112 threads × 4 = 448 vCPU, 448 × 4 GB / 2 + 64 = 960 GB. Which is meant?
+  - (b) Gold keeps no cores or RAM for vSAN, NSX and replication; Silver keeps 8 cores and 64 GB. With the same share, Gold is 56 vCPU and 224 + 64 = 288 GB. Should Gold keep the share too? And is Gold 1 vCPU per core (as here) or per thread?
+  - (c) Silver memory overcommit is 2:1 here and 1.5:1 in the Noisy Neighbour table. Keep both as examples, or align them?
+  - (d) The 32-node clusters with 1,000-2,000 VMs: a counter-example to the cap of 300 VMs per cluster failure?
+- Written as now: the book's numbers, with the basis stated (4:1 per core = 2:1 per thread); Gold with the share shown as Claude's arithmetic; both memory ratios kept as examples; (d) stated without a verdict.
+- Answer:
+
+### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (section Prevention window); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
+- Search 1: "In the following example, the alerts use the SLA metrics and threshold."
+- Search 2: "Correct means the SLA is measured on each paying VM, and not at the infrastructure level."
+- Image text (not searchable): "SLA: VM CPU Ready > 5%", "SLA: VM Disk Latency > 10 ms", "Cluster average CPU Ready.", "VM CPU Co-Stop > 2.5%", "VM CPU IO Wait > 1%", "ESXi VMkernel queue > 1 ms", "vMotion stun time > 0.2 second".
+- Question:
+  - (a) SLA VM CPU Ready above 5%; the SLI table says 2.5%. Which is the SLA threshold?
+  - (b) Co-stop 2.5% as an insight threshold; the Co-stop file says below 1% in a high-performing environment. The insight should fire before the alert, yet 2.5% Co-stop is above the 2.5% Ready SLI. Is 2.5% right?
+  - (c) VMkernel queue above 1 ms: QAVG or KAVG? The knowledge base says KAVG above 0.5 ms: check QAVG.
+  - (d) Cluster average CPU Ready and memory contention listed as SLA alerts. The litmus test says an SLA is measured on each paying VM, not at the infrastructure level. Should the image say cluster worst VM, or are cluster averages meant as provider-side alerts outside the SLA?
+  - (e) VM CPU IO Wait: is this VM Other Wait (vCenter), or a Guest OS IO wait?
+- Written as now: metric names only, no numbers; nothing added to the threshold catalog until answered.
+- Answer:
+
+### Q089 · Part 1 > Observability > Alert · Importance of alerts and the colours
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (sections Alert vs insight, Criticality).
+- Search 1: "Hopefully not important issue"
+- Search 2: "Urgent and important. However, it does not always mean you must drop everything you do and start firefighting in seconds."
+- Search 3: "Symptom. Non urgent. Leading Indicators. Symptoms. Could be important, could also be false positive"
+- Question:
+  - (a) The alert vs insight table says alerts are hopefully not important and insights are important. The colour table says red alerts are urgent and important, and the diagram calls yellow low importance while the table says it could be important. Which wording should the knowledge base keep?
+  - (b) Red: attend within 1-2 hours (table) vs review it today, the sooner the better (legend image). Keep 1-2 hours?
+  - (c) Do the KPI colour bands (green, yellow, orange, red in the VCF Operations KPIs) carry the same response times: yellow next business day, orange today, red within 1-2 hours?
+- Written as now: alerts urgent; red urgent and important, 1-2 hours; yellow possibly important or a false positive; (c) not stated.
+- Answer:
+
+### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
+- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/input-types.md) (sections Property, Event).
+- Search 1: "There are 3 types of properties:"
+- Search 2: "It can be a setting change, a state change, or a label change."
+- Search 3: "Cluster 007 DRS automation level was changed from 2 to 5."
+- Search 4: "That’s why state is a metric, not a property."
+- Question:
+  - (a) The three property types are announced but not listed. Which are they?
+  - (b) The table has two rows named Event. Is the second (setting, state, label change) meant as Property? If so, state is listed both as a metric and as a property type.
+  - (c) DRS automation level is Manual, Partially Automated or Fully Automated; the 1-5 scale is the migration threshold. Change the example to migration threshold?
+- Written as now: setting, state and label change as change events; the example written as migration threshold, flagged.
+- Answer:
+
+### Q091 · Part 1 > Purpose-Driven Architecture > The 2 Sides of VCF · Workload and the pillar list
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
+- Search 1: "Workload means the customers VM, not your infrastructure software."
+- Search 2: diagram label "IT (VCF & Non-VCF Appliances )"
+- Question:
+  - (a) The text excludes infrastructure software from workload; the diagram lists IT appliances under Workloads. Are VCF appliances (vCenter, NSX Edge) workloads?
+  - (b) Pillars differ across the book: this diagram has seven (availability, performance, security, compliance, capacity, configuration, inventory); Key Metrics has availability, performance, capacity, compliance; the `pillar` tag has availability, performance, security, capacity, value. Options: (A) keep the tag list; (B) add compliance, configuration and inventory to the tag; (C) another list.
+- Written as now: workload = customer VMs, appliances also run as VMs; pillar tag unchanged.
+- Answer:
+
+### Q092 · Part 1 > Begin with The End in Mind > The Crown Jewel · Health across tiers
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Health of an application tier).
+- Search: "The health of a tier is the average health of its members."
+- Question:
+  - (a) Inside a tier, the average. Across tiers (web → application → database) work runs in sequence, like a convoy. Is the application's health the minimum of its tiers?
+  - (b) A database tier with active and passive nodes: the passive node serves no requests. Average both, or count the active node only for performance?
+- Written as now: tier = average of members; nothing on across tiers or active/passive.
+- Answer:
+
+### Q093 · Part 1 > Your Private Cloud · Book corrections for the next edition
+- Files: none; the knowledge base already uses current names.
+- Search 1: "something you can implement with the current version of Aria products" (now VCF Operations).
+- Search 2: "Salesforce, VMware Skyline, Microsoft Office 365" (Skyline status under Broadcom to check).
+- Search 3: "Typically, Windows 10 + End-User applications" (Windows 10 support ended October 2025).
+- Search 4: "VMware Horizon Cloud, Microsoft Windows Cloud are cloud examples" (Horizon is now Omnissa; Microsoft's product is Windows 365).
+- Search 5: "This is not so obvious as it’s the only product in this category." (Nutanix Cloud Platform and Azure Local are in the same category.)
+- Search 6: "The creates a bigger problem" (typo: This).
+- Question: confirm each for the next edition; (5) is a claim the knowledge base does not repeat.
+- Written as now: not in the knowledge base.
+- Answer:
+
+### Q094 · Repository · Where cross-pillar operations files go
+- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/iaas-business.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md); [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md).
+- Search: not applicable. Rule: [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) allows only pillar folders (performance, capacity) under [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management).
+- Question: these three files cover several pillars (availability, performance, capacity, security) and the platform itself. They are in `operations-management/performance/` to pass lint. Options: (A) keep them in performance/; (B) allow files at the root of `operations-management/`; (C) a new folder such as `operations-management/service/`.
+- Written as now: option A, pillars in the tags.
+- Answer:
+
 ## Resolved
 
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
