@@ -75,6 +75,8 @@
 - Limit: high enough for the VM, low enough for the physical NIC. Author's value: 8 Gb/s per VM on 2 × 25 Gb hosts. The settings are spread over many places, so it may not be practical.
 - Reservation: with plenty of bandwidth, about 100 Mb/s per VM. Derive the local number by metric profiling.
 - Share: the main split is VM vs VMkernel traffic, and production VM traffic above development. Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
+- Example of the share allocation per traffic type on a distributed switch: virtual machine and NFS traffic High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25); no reservation, no limit.
+![Distributed switch share allocation by traffic type: shares, shares value, reservation and limit for 12 traffic types](../technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png)
 
 ## Avoiding it
 - With overcommit it cannot be avoided, only reduced: like a highway with more cars than lanes at peak hour. Capacity planning reduces the impact.
@@ -147,6 +149,11 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/cpu
 images:
+  - path: ../technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png
+    product: [vsphere]
+    object: [VmwareDistributedVirtualSwitch]
+    topic: 'Network shares by traffic type'
+    image_type: screenshot
   - path: images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png
     product: [vsphere]
     object: [VirtualMachine]
@@ -163,6 +170,7 @@ corrections:
 - 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation (author, Q080, 2026-11-06).'
 - 'Section ''Avoiding it'': the book''s memory table was wrong; 100% is unrealistic; Performance SLA 99.9% Gold, 99.8% Silver, 99.6% Bronze (author, Q076, 2026-11-06).'
 review_notes:
+- 'Section ''Network'': share allocation screenshot uploaded by the author (2026-11-07). Whether these values are the defaults is not stated.'
 - 'Section ''Network'': computed per host; with route based on originating virtual port each vNIC uses one uplink. The villain is 10 Gb in the calculation and 5 Gb sustained in the example. Q081.'
 - 'Section ''Avoiding it'': Gold 1:1 with vSphere 9 memory tiering. Q082.'
 status: draft
