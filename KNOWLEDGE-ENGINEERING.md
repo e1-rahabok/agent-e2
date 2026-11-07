@@ -360,7 +360,9 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 
 ## 12. Images
-- Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains.
+- `knowledge/` is for Agent E2 only (author, 2026-11-07). An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
+- The agent reads the text twin and the alt text, not the pixels: `get_images` returns image records, never the image itself.
+- Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains. The facts an image proves go in the text.
 - Images live in the `images/` folder of the folder that uses them (for example `vsphere/technology/<tech>/images/`, `vcf-operations/kpis/images/`, `guest-os/<technology>/images/`).
 - Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
 - Every image has its own tags in the file's metadata `images` list (section 8). The validator fails on a missing or invalid entry.
