@@ -17,6 +17,16 @@ DOCS, CHUNKS = kb.load()
 CAT = catalog.get(DOCS)
 
 
+class MovedTest(unittest.TestCase):
+    def test_old_id_resolves_to_current_file(self):
+        import kb
+        self.assertTrue(kb.MOVED, 'knowledge/moved.yaml is empty')
+        for old, new in kb.MOVED.items():
+            self.assertEqual(kb.resolve(old), new)
+            self.assertIn(new, DOCS)
+        self.assertEqual(kb.resolve('vsphere/foundations/resource-controls'), 'vsphere/foundations/resource-controls')
+
+
 class CatalogTest(unittest.TestCase):
     def test_counter_by_full_name(self):
         r = CAT.lookup('cpu.ready.summation')

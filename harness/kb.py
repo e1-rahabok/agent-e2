@@ -66,6 +66,20 @@ class Chunk:
         self.text = f'{doc.title} ({doc.id}) > {heading}\n{text}'
 
 
+def load_moved(root=ROOT):
+    """knowledge/moved.yaml: old id -> current id, for files that moved. Kept forever."""
+    p = os.path.join(root, 'knowledge', 'moved.yaml')
+    return (yaml.safe_load(open(p)) or {}) if os.path.exists(p) else {}
+
+
+MOVED = load_moved()
+
+
+def resolve(doc_id):
+    """Current id of a knowledge file, following knowledge/moved.yaml for an old id."""
+    return MOVED.get(doc_id, doc_id)
+
+
 def load(root=ROOT):
     docs = {}
     for f in sorted(glob.glob(os.path.join(root, 'knowledge', '**', '*.md'), recursive=True)):

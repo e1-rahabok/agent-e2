@@ -11,6 +11,9 @@ import re
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
+from kb import MOVED  # noqa: E402
+
 BASE = 'https://github.com/e1-rahabok/agent-e2/blob/main/'
 DOCS = ['project/author-questions.md', 'project/plan.md', 'MISSION.md', 'benchmark/design.md', 'benchmark/README.md',
         'benchmark/runner/README.md', 'benchmark/models.md']
@@ -34,6 +37,7 @@ def tracked(path):
 
 def target(ref):
     ref = ref.rstrip('/')
+    ref = MOVED.get(ref, ref)
     k = f'knowledge/{ref}.md'
     if '/' in ref and os.path.isfile(k):
         m = re.search(r'^# (.+)$', open(k).read(), re.M)
@@ -55,7 +59,11 @@ def _prose(text, fn):
     return ''.join(p if i % 2 else fn(p) for i, p in enumerate(parts))
 
 
+MOVED_URL = re.compile(r'blob/main/knowledge/([\w./-]+)\.md')
+
+
 def rewrite(text):
+    text = MOVED_URL.sub(lambda m: f'blob/main/knowledge/{MOVED.get(m.group(1), m.group(1))}.md', text)
     return _prose(text, lambda t: TICK.sub(lambda m: (lambda x: f'[{x[0]}]({x[1]})' if x else m.group(0))(target(m.group(1))), t))
 
 

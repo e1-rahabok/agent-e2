@@ -6,7 +6,7 @@ import glob, os, re, sys, yaml
 
 HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
 sys.path.insert(0, HARNESS)
-from kb import split  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
+from kb import split, MOVED  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
 
 TERMS = 'project/tools/tags.yaml'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
@@ -140,7 +140,8 @@ def main():
         fm, _ = split(f)
         if fm is None: bad(f, 'missing ## Metadata section with one yaml block at the end'); fm = {}
         for r in (fm or {}).get('knowledge') or []:
-            if r not in ids: bad(f, f'knowledge link "{r}" does not exist')
+            if r in MOVED: bad(f, f'knowledge link "{r}" moved: use "{MOVED[r]}" (knowledge/moved.yaml)')
+            elif r not in ids: bad(f, f'knowledge link "{r}" does not exist')
         for k in ('product', 'technology'):
             v = (fm or {}).get(k)
             if not isinstance(v, list) or not v: bad(f, f'{k} must be a non-empty list')
@@ -214,6 +215,7 @@ def main():
     n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
     check_tables(bad)
+    check_moved(ids, bad)
     check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
@@ -241,6 +243,25 @@ def check_repo_terms(allowed, bad):
             for pat, use in (allowed.get('avoid_ai_speak') or {}).items():
                 if re.search(pat, line):
                     bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (KNOWLEDGE-ENGINEERING.md, section 11)')
+
+
+def check_moved(ids, bad):
+    """knowledge/moved.yaml points to files that exist; active files use current ids, not moved ones."""
+    for old, new in MOVED.items():
+        if new not in ids: bad('knowledge/moved.yaml', f'"{old}" points to "{new}", which does not exist')
+        if old in ids: bad('knowledge/moved.yaml', f'"{old}" is moved but a file with that id exists')
+    if not MOVED:
+        return
+    old_ids = '|'.join(re.escape(o) for o in sorted(MOVED, key=len, reverse=True))
+    pat = re.compile(r'(?:`(' + old_ids + r')`|blob/main/knowledge/(' + old_ids + r')\.md)')
+    records = ('project/archive/', 'project/review-', 'benchmark/results/')
+    for f in sorted(glob.glob('**/*.md', recursive=True)):
+        if f.startswith(records):
+            continue
+        for i, line in enumerate(open(f).read().split('\n'), 1):
+            for m in pat.finditer(line):
+                o = m.group(1) or m.group(2)
+                bad(f, f'line {i}: moved id "{o}": use "{MOVED[o]}" (run project/tools/link_refs.py for links)')
 
 
 def check_tables(bad):
