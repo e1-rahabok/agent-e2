@@ -2,7 +2,7 @@
 
 ## Supply and demand
 - Supply: total capacity and usable capacity.
-- Demand: utilization, reservation, allocation, unmet demand.
+- Demand: utilization, reservation, allocation, unmet demand. How each is used, and which model applies: `operations-management/capacity/capacity-dimensions`.
 - The hypervisor affects both supply and demand: avoid double counting.
 - CPU, memory, storage and network differ in nature.
 - Total and usable capacity should be constants: a stable 100% anchors capacity management and cost accounting.
@@ -126,6 +126,8 @@ object:
 - HostSystem
 internal_derive: []
 related:
+- operations-management/capacity/capacity-dimensions
+- operations-management/capacity/capacity-management-process
 - vsphere/foundations/overhead
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 - vsphere/technology/memory/concepts/memory-capacity
