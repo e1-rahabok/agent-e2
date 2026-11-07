@@ -35,6 +35,18 @@
 - An insight is useless to someone who does not know the environment. Example: total IOPS is low. Meaningless unless high throughput is expected that day, such as the day before Christmas at a retailer; then sales are not happening.
 - Limits of proactive work: false positives, and the daily discipline it takes.
 
+## Finding, issue, alert, notification
+- Finding: the result of a diagnosis or analysis, from logs, events, metrics and tasks. Good or bad. The sources report the negative, so an empty result is usually a good day (example: no login to a confidential cluster).
+- Positive findings feed insight. Deriving an insight from findings takes someone who knows the technology and the environment.
+- Negative findings are issues. An issue is identified by one or more symptoms; no symptom, no issue.
+- Issue types: availability (hard failure, soft failure), configuration (drift, insecure), performance, capacity, security.
+- Every issue also feeds insight, which is read in the daily check at the start and end of the day. Insight is not urgent and needs a subject matter expert.
+- Alert: an issue whose symptom crossed a threshold. The NOC team watches alerts several times a day.
+- Notification: the way VCF Operations pushes an insight or alert to a person: email, messages, on screen at login. Only an urgent alert is pushed to mobile or email at once; a non-urgent one waits for the daily check.
+- Admins want urgent issues fast; important but not urgent issues are analysed after the time-sensitive ones.
+![Finding (sources: logs, events, metrics, tasks): positive findings → Insight (not urgent, requires SME) → Daily Check (start of day + end of day). Negative findings → Issue (symptom) → all issues → Insight; important issues → Alert (NOC team watch multiple times daily) → urgent issue → Notification (pushed to mobile or email); non-important issue → Daily Check](images/finding-issue-alert-insight-notification-flow-diagram.png)
+- Monitoring and troubleshooting with these terms: `operations-management/performance/monitoring-vs-troubleshooting`.
+
 ## Alert vs insight
 | Item | Alert | Insight |
 |---|---|---|
@@ -104,6 +116,8 @@
 - "Alert on every inventory change" → inventory is an account, not a fault: an alert must be real.
 - "Alert on capacity running low months ahead" → not urgent; long-term actions such as capacity belong on a dashboard.
 - "The cluster average is fine, so no VM needs attention" → alerts on averages miss individual objects. Insights read per instance: each VM, each virtual disk.
+- "An empty findings report means the check did not run" → the sources report the negative; no finding is usually a good day.
+- "Every alert must reach someone's phone" → only urgent alerts are notified at once; others go to the daily check.
 - "Observability tooling replaces monitoring and troubleshooting" → observability is a property of the system; monitoring and troubleshooting are actions on it.
 
 ## Metadata
@@ -146,6 +160,11 @@ images:
     metric: [VM CPU Co-stop, VM CPU IO Wait, Virtual Disk Read Latency, vMotion stun time, VMkernel queue, VM CPU Ready, VM Disk Latency]
     topic: 'Insight, prevention window and alert on one timeline, with example metrics'
     image_type: diagram
+  - path: images/finding-issue-alert-insight-notification-flow-diagram.png
+    product: [vcf-operations]
+    object: [VirtualMachine, ClusterComputeResource]
+    topic: 'Finding, issue, insight, alert, daily check and notification flow'
+    image_type: diagram
   - path: images/alert-criticality-urgency-importance-diagram.png
     product: [vcf-operations]
     object: [VirtualMachine, HostSystem, ClusterComputeResource]
@@ -153,12 +172,13 @@ images:
     image_type: diagram
 source:
   document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert) (pp. 2, 16-21)'
+  path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert) (pp. 2, 16-21); SP5 Framework > Basic Terminology (pp. 45-46)'
 corrections: []
 review_notes:
 - 'Section ''Prevention window'': the image gives a threshold for each example. Not copied into the text or the threshold catalog until the author answers Q088: SLA VM CPU Ready above 5% vs the SLI value 2.5% (vcf-operations/kpis/cluster-sla-sli); Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as SLA alerts vs SLAs measured on each paying VM.'
 - 'Section ''Prevention window'', last bullet before the image: instance-rule example added by Claude.'
 - 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important. Q089. Whether KPI colour bands carry the same response times: Q089.'
+- 'Section ''Finding, issue, alert, notification'': the terminology table defines an alert as an urgent issue; the diagram sends important issues to alerts and urgent alerts to notification. Symptom here is part of an issue; in section Symptom, alert, insight it is a minor issue. Q103.'
 - 'Not copied: the iceberg picture (decorative) and the colour legend (red: review today, the sooner the better; orange: review today; yellow: review tomorrow, could be a false positive; green: great), whose content is in the text.'
 status: draft
 ```

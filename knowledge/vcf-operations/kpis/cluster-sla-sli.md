@@ -54,6 +54,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
+- operations-management/performance/sla-metrics
 - vcf-operations/kpis/cluster-performance
 - foundations/thresholds
 images:
@@ -67,6 +68,7 @@ source:
   path: Provider Objects > Performance > Service Level Metrics
 corrections: []
 review_notes:
+- 'Section ''Cluster SLI'': ''A VM must pass all four'' vs the book''s VM SLI as the average of four pass/fail values (0-100% in steps of 25%), and the normalized formula below, which counts breaches. Q095.'
 - 'Moved 2026-11-06 from vcf-operations/kpis/cluster-sla-sli (architecture review 2026-11-06, section 5).'
 status: draft
 ```
