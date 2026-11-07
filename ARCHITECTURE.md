@@ -121,7 +121,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where they differ, the knowledge base wins (author, Q038, 2026-11-05). Prefer mechanism and reason over a definition.
 - Cite each file `id` used.
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
-- Use terms from `knowledge/glossary.md`. Avoid the words in its Words to avoid table.
+- Use terms from `knowledge/glossary.md`: preferred names, defined terms, confusable pairs.
 - Quote a threshold only when a file states it with its source.
 
 ### Troubleshooting questions (`what-to-check`)

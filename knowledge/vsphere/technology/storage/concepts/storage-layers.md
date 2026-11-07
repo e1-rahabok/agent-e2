@@ -15,6 +15,7 @@
 
 - Each layer controls only itself and may use its own terms. Disk, LUN and device can mean the same thing. A device is typically physical; a LUN is typically virtual, striped across physical devices.
 - vSphere Client uses device and disk interchangeably: a physical disk or LUN presented to ESXi.
+- Device is generic: not necessarily storage (a network or security device). Disk is physical, typically in a RAID group. LUN is a logical volume created by the array, which can span RAID groups; ESXi formats it with VMFS.
 - The storage protocol (FC, iSCSI, vSAN, vVOL) is not exposed to the guest. The guest needs no support for it.
 - VM-level visibility is lost at the physical adapter and path: the IOPS on vmhba2 cannot be attributed to a VM.
 - A datastore is normally backed 1:1 by a LUN, so datastore and LUN values match.

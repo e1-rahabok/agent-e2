@@ -45,7 +45,7 @@ Each is small (all five: about 1,800 tokens; budget 3,000, checked by lint), nee
 | # | Block | Content | Built from |
 |---|---|---|---|
 | 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids (folders) |
-| 2 | Core rules | 12 short rules, each with its reason and file, that undo Internet priors: VM is not Guest OS; utilization is not contention; provider and consumer views differ; a counter means what its layer measures | `knowledge/vsphere/foundations/core-rules.md`, section Rules |
+| 2 | Level 300 misreadings (`harness/misreadings.md`) | 12 short lines, each with its reason and file, that undo Internet priors: VM is not Guest OS; utilization is not contention; provider and consumer views differ; a counter means what its layer measures | `harness/misreadings.md`, section Misreadings |
 | 3 | Confusable terms | Only the pairs public text mixes up: Usage, Utilization and Demand; Ready and Latency; Run and Used; Consumed and Active; Ballooned and Swapped | `knowledge/glossary.md`, section Confusable pairs |
 | 4 | Symptom → flow index | One line per diagnosis file: its name and when to use it | `diagnosis/` files |
 | 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |

@@ -12,6 +12,16 @@
 - Windows or Linux does not know these settings exist.
 - Minimise use of limit and reservation. They make operations more complex.
 
+## Allocation vs reservation
+- Allocation: what a consumer is given (configured vCPU, memory). Not guaranteed. A maximum: utilization cannot exceed it.
+- Reservation: a guarantee. A minimum. Utilization can stay below it.
+```text
+utilization <= allocation
+reservation is guaranteed; utilization may be < reservation
+```
+- Allocation can be overcommitted, because it is not a guarantee. Reservation cannot, because it is one.
+- Mixed names are invalid: "Allocation Reservation" is meaningless; "Maximum Reservation" means allocation; "Minimum Allocation" means reservation.
+
 ## Two scheduler levels
 | Level | Shares are relative to |
 |---|---|
