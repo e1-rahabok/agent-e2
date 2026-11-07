@@ -97,6 +97,7 @@ object:
 internal_derive:
 - operations-management/performance/performance-kpi-design
 related:
+- operations-management/performance/sla-metrics
 - vcf-operations/kpis/cluster-sla-sli
 - vcf-operations/kpis/cluster-performance
 - vcf-operations/kpis/vm-performance

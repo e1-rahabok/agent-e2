@@ -51,6 +51,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 | Compliance | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
 
 - SLI means SLA leading indicator (`operations-management/performance/kpi-vs-sla`).
+- Definitions, formulas and the time window of each SLA: `operations-management/performance/sla-metrics`. Numbers per class: `operations-management/performance/class-of-service`.
 - Usable capacity: `operations-management/capacity/capacity-model`.
 
 ## A complete, correct and accurate SLA
@@ -128,6 +129,8 @@ internal_derive:
 - operations-management/performance/kpi-vs-sla
 - vsphere/foundations/noisy-neighbour
 related:
+- operations-management/performance/sla-metrics
+- operations-management/performance/class-of-service
 - operations-management/performance/purpose-driven-architecture
 - operations-management/performance/alerts-and-insights
 - operations-management/capacity/host-spec-from-class-of-service
@@ -149,7 +152,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Three variants of IaaS'', last bullet (contention from the pool limit or tenant overcommit is the tenant''s; Ready includes limit time): Claude, from the book''s resource pool row and the VM CPU Ready file.'
-- 'Section ''Metrics per pillar'': the book reads Operational Availability as relative to the availability architecture and green zone. Green zone not defined in this section (Q086). Formulas are in the Service Level Agreement section, not yet extracted.'
+- 'Section ''Metrics per pillar'': the book reads Operational Availability as relative to the availability architecture and green zone. Green zone not defined in this section (Q086). The Service Level Agreement section (extracted 2026-11-07 into sla-metrics) does not define it either.'
 - 'Section ''A complete, correct and accurate SLA'', last bullet: reason added by Claude from foundations/thresholds.'
 - 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
 - 'Book naming is older (Aria products); the knowledge base uses VCF Operations. Book corrections: Q093.'

@@ -65,6 +65,62 @@ rows:
   kb: vsphere/foundations/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
+  id: vm-sli-cpu-ready
+  metric: VM CPU Ready
+  object: VirtualMachine
+  layer: virtual-motherboard
+  instance: aggregate (VM level, not per vCPU or per virtual disk)
+  interval: 5m
+  operator: '>'
+  value: 2.5
+  unit: '%'
+  meaning: CPU SLI fails for this 5-minute interval (Performance SLA counter).
+  source: book
+  kb: operations-management/performance/sla-metrics
+  quote: '| CPU | Ready | above 2.5% |'
+- kind: rule
+  id: vm-sli-memory-contention
+  metric: VM Memory Contention
+  object: VirtualMachine
+  layer: virtual-motherboard
+  instance: aggregate (VM level, not per vCPU or per virtual disk)
+  interval: 5m
+  operator: '>'
+  value: 1
+  unit: '%'
+  meaning: Memory SLI fails for this 5-minute interval (Performance SLA counter).
+  source: book
+  kb: operations-management/performance/sla-metrics
+  quote: '| Memory | Contention | above 1% |'
+- kind: rule
+  id: vm-sli-disk-latency
+  metric: VM Disk Latency
+  object: VirtualMachine
+  layer: virtual-motherboard
+  instance: aggregate (VM level, not per vCPU or per virtual disk)
+  interval: 5m
+  operator: '>'
+  value: 10
+  unit: 'ms'
+  meaning: Disk SLI fails for this 5-minute interval (Performance SLA counter). Average of read and write.
+  source: book
+  kb: operations-management/performance/sla-metrics
+  quote: '| Disk | Latency | above 10 ms |'
+- kind: rule
+  id: vm-sli-network-tx-dropped
+  metric: VM Network Transmit Dropped Packets
+  object: VirtualMachine
+  layer: virtual-motherboard
+  instance: aggregate (VM level, not per vCPU or per virtual disk)
+  interval: 5m
+  operator: '>'
+  value: 0
+  unit: '%'
+  meaning: Network SLI fails for this 5-minute interval (Performance SLA counter). Received drops are excluded.
+  source: book
+  kb: operations-management/performance/sla-metrics
+  quote: '| Network | Transmit dropped packets | above 0% |'
+- kind: rule
   id: vm-cpu-ready-poor
   metric: VM CPU Ready
   object: VirtualMachine

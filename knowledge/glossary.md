@@ -68,6 +68,13 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Operational Availability (%) | Availability relative to the availability architecture. | - |
 | Actual Availability (%) | Availability as it happened. Usually lower than Operational Availability. | - |
 | Crown jewels | Mission-critical business applications: few VMs, essential to revenue, profit or image. | Mission-critical applications |
+| Slow time | Time a VM spends above the Performance SLA threshold; the performance counterpart of downtime. `operations-management/performance/sla-metrics` | - |
+| Finding | Result of a diagnosis or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue. | - |
+| Issue | A negative finding, identified by one or more symptoms. | - |
+| Notification | How VCF Operations pushes an insight or alert to a person: email, message, on screen at login. | - |
+| Present health | Real problems now: availability, performance, security incidents. `operations-management/performance/health-risk-efficiency` | Health |
+| Future health | Risk: no problem yet; security exposure, compliance, configuration, capacity. | Risk |
+| Primary metric, secondary metric | Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why). | - |
 
 ## Confusable pairs
 Pairs that public text mixes up. Each row points to the file that holds the mechanism.
@@ -89,6 +96,10 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `operations-management/performance/alerts-and-insights` |
 | Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `foundations/input-types` |
 | Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/foundations/resource-controls` |
+| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, no logs. Troubleshooting: why, reactive, many metrics and logs | `operations-management/performance/monitoring-vs-troubleshooting` |
+| Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/performance/pillars-of-operations` |
+| Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/performance/pillars-of-operations` |
+| Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/performance/pillars-of-operations` |
 
 
 ## Metadata
@@ -108,6 +119,7 @@ source:
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
 corrections: []
 review_notes:
+  - "2026-11-07: Defined terms Slow time to Primary metric and the pairs Monitoring vs troubleshooting, Inventory vs configuration, Security vs compliance, Short-term vs long-term capacity added from Part 1, Your Private Cloud (Service Level Agreement to SP5 Framework: Process). Proposals; author to confirm. Present and future health grouping: Q102."
   - "2026-11-07: Defined terms Symptom to Crown jewels and the pairs Alert vs insight, Metric vs property added from Part 1, Your Private Cloud (Overview, Purpose-Driven Architecture). Proposals; author to confirm."
   - "2026-11-07 (author decision): knowledge/ is for Agent E2 only. Kept here: synonyms, defined terms, confusable pairs. Moved out: Core words and Words to avoid to project/vocabulary.md; Term distinctions to vsphere/foundations/resource-controls and vsphere/technology/storage/concepts/storage-layers (the OpenTelemetry note was already in foundations/naming-patterns); Object types to catalog/objects.yaml. 'Book terminology' and 'Proposed terms' merged as 'Defined terms'."
   - "Section 'Confusable pairs': drafted by Claude 2026-11-06 from the files in its File column, as block 3 of the agent up-front knowledge (harness/AGENT.md). Author to confirm (Q059)."
