@@ -220,6 +220,7 @@ Each entry has:
 - Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/iaas-business.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md); [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md).
 - Search: not applicable. Rule: [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) allows only pillar folders (performance, capacity) under [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management).
 - Also (2026-11-07, Service Level Agreement to SP5 Framework: Process): [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md), [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md), [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/pillars-of-operations.md), [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/health-risk-efficiency.md), [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md), [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md): same placement, same question.
+- Also (2026-11-07, Configuration Management): [Configuration management: standards, review dimensions and the four types of check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/configuration-management.md). There is no configuration pillar; it sits in performance/ for now.
 - Question: these three files cover several pillars (availability, performance, capacity, security) and the platform itself. They are in `operations-management/performance/` to pass lint. Options: (A) keep them in performance/; (B) allow files at the root of `operations-management/`; (C) a new folder such as `operations-management/service/`.
 - Written as now: option A, pillars in the tags.
 - Answer:
@@ -362,6 +363,74 @@ Each entry has:
 - Search 9: "Since storage IO control configuration is not based on latency" (Storage I/O Control deprecated in VCF 9, Q080).
 - Question: confirm each for the next edition.
 - Written as now: corrected wording in the knowledge base.
+- Answer:
+
+### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
+- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
+- Search 1: "10 per GB" (default VM memory shares table)
+- Search 2: "per VM GB of RAM = 10240"
+- Search 3: "Both VMs want to consume 10 GHz"
+- Search 4: "In this case, VM 1 gets 5 GHz and VM 1 gets 5 GHz"
+- Image text (not searchable): "A 2000 worth of reservation depends on the value of other VMs reservation" (VM Share row).
+- Question:
+  - (a) The table gives memory shares per GB (5, 10, 20); the text and the vSphere defaults are per MB (10,240 per GB at Normal). Correct the table to per MB?
+  - (b) A 1-vCPU VM cannot consume 10 GHz on a host whose cores run at about 2-3 GHz; it is capped at one core. Change the example (for example, two 2-vCPU and 4-vCPU VMs on a 10 GHz host), or keep it and say the cap?
+  - (c) Second VM 1 should read VM 2; the image says reservation where it means share. Confirm both.
+  - (d) You were unsure why a resource pool is 4x a VM for CPU and 16x for memory. The knowledge base explains it as a Normal pool weighing as much as a Normal 4-vCPU, 16-GB VM. Agree?
+- Written as now: per MB; the 1:2 split with the one-core cap stated; (d) as Claude's explanation.
+- Answer:
+
+### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
+- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Review: how each control affects operations, Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Search: "There is no network limit"
+- Question: with Network I/O Control each VM network adapter has share, reservation and limit, and port groups have traffic shaping. Noisy Neighbour says so (and your Q083 withdrew the 8 Gb/s limit as a recommendation, not as a feature). Change to: a network limit exists per vNIC but is not recommended?
+- Written as now: VM limits for CPU, memory and disk IOPS; the network sentence left out.
+- Answer:
+
+### Q110 · Part 1 > Configuration Management > Reservation, Cluster, Resource Pool · Admission control, slot size and siblings
+- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Scalable Shares and resource pool siblings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/scalable-shares.md).
+- Search 1: "Reservation is respected only when Admission Control is enabled"
+- Search 2: "this will impact the HA Slot Size"
+- Search 3: "Resource Pool with VM as sibling is a common mistake"
+- Question:
+  - (a) Host and DRS admission control enforce reservations at power-on whether or not HA admission control is on; HA admission control only keeps failover capacity for them. Reword to: with HA admission control off, reservations are not protected after a host failure?
+  - (b) Reservations change the slot size only under the slot policy; the default policy is cluster resource percentage. Add that condition?
+  - (c) With Scalable Shares (vSphere 7 and later) a pool and VMs as siblings no longer dilute. Is the sibling rule still a mistake, or only without Scalable Shares?
+- Written as now: (a) and (b) worded with the condition; (c) both kept, flagged.
+- Answer:
+
+### Q111 · Part 1 > Configuration Management > Compute-related, ESXi · Cores or threads, and 48 or 64 cores
+- Files: [VM configuration review: VMware Tools, hardware, compute and storage settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (section Compute); [ESXi configuration review: hardware, versions, availability, security, capacity, consistency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/configuration/esxi-configuration-review.md) (sections Memory, Capacity). Related: Q079, Q099, Q100.
+- Search 1: "do not count the logical processors"
+- Search 2: "So a machine with 64 cores 128 threads get 512 GB of RAM"
+- Search 3: "Aim for 48 to maximise software license"
+- Question:
+  - (a) Relative VM size counts physical cores, not logical processors; Noisy Neighbour sizes by logical CPUs (Q079: overcommit per thread). Which basis for the maximum VM size?
+  - (b) 512 GB for 64 cores and 128 threads at 4 GB per vCPU is 1 vCPU per thread; the Price & SLA example (768 GB) is per core. Which?
+  - (c) 48 cores here, 64 cores in Price & SLA, both to maximize the licence. Under per-core licensing (16-core minimum per CPU) neither holds. Drop both?
+- Written as now: physical cores for VM size; the 512 GB rule as given; licence reason dropped.
+- Answer:
+
+### Q112 · Part 1 > Configuration Management > Review List · Facts to update for VCF 9.1
+- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section DRS); [Storage configuration review: datastores, LUNs, NFS, arrays, queue depth](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-configuration-review.md); [VM configuration review: VMware Tools, hardware, compute and storage settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (sections Storage, VMware Tools).
+- Search 1: "Since DRS calculates every five minutes" (DRS runs every minute since vSphere 7; [DRS migration levels](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/drs-migration-levels.md)).
+- Search 2: "Is the usage following design best practice?" (vVols; deprecated in VCF 9.0, Broadcom KB 401070; Protection and Recovery 9.1 is its last release with vVols).
+- Search 3: "Ensure that the snapshot is removed within one day" (the SP5 Process daily SOP says older than about 3 days).
+- Search 4: "refer to KB 340" (VMware Tools benefits; KB number under Broadcom to confirm).
+- Question: confirm (1) every minute; (2) keep vVol checks for existing estates, with the deprecation stated; (3) one day or three days; (4) the KB number.
+- Written as now: every minute; vVols deprecated; one day in the VM review; KB 340 as cited.
+- Answer:
+
+### Q113 · Part 1 > Configuration Management · Book corrections for the next edition
+- Files: none beyond those named; the knowledge base uses the corrected wording.
+- Search 1: "You can categorizes check into 4" (two bullets follow; the four are value, consistency, compatibility, variance).
+- Search 2: "You have 1 ESXi host while providing higher redundancy" (you save 1 host: 21 vs 20).
+- Search 3: "Is the HBA configured for high availability?" under Network Related (NIC, not HBA).
+- Search 4: "both NSX Controller and Manager" (the controller is part of the NSX Manager cluster since NSX-T).
+- Search 5: "Use Log Insight to parse Windows events" (now VCF Operations for logs).
+- Search 6: "addiitonal", "combile", "issueing", "imaging both VMs" (typos).
+- Question: confirm each for the next edition.
+- Written as now: corrected wording.
 - Answer:
 
 ## Resolved
