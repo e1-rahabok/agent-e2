@@ -119,7 +119,7 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Pair | Difference | File |
 |---|---|---|
 | ESXi CPU Usage vs Utilization | Usage counts frequency and Hyper-Threading (both threads busy = core 100%); Utilization is static-frequency busy time, per thread | `vsphere/technology/cpu/metrics/host/utilization` |
-| ESXi CPU Demand vs Usage | Demand is the sum over the VMs of what they would use with no contention; an internal scheduler metric | `vsphere/technology/cpu/metrics/host/demand` |
+| ESXi CPU Demand vs Usage | Demand is the sum over the VMs of what they would use with no contention; kernel work is in Usage only, so a host with no VMs shows Demand 0 | `vsphere/technology/cpu/metrics/host/demand` |
 | VM CPU Ready vs Latency | Ready is time waiting for a physical CPU; Latency also rises with lower frequency, with no wait | `vsphere/technology/cpu/metrics/virtual-motherboard/latency` |
 | VM CPU Run vs Used | Run is time only; Used is scaled by frequency and Hyper-Threading, plus System, minus Overlap | `vsphere/technology/cpu/diagnosis/run-vs-used-gap` |
 | VM Memory Consumed vs Active | Consumed is the ESXi pages of the VM, kept once touched; Active is an estimate of pages touched recently, with no operational use | `vsphere/technology/memory/metrics/virtual-motherboard/active` |
