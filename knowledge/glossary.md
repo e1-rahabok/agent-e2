@@ -61,6 +61,13 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Balloon Target | Memory ESXi asks the balloon driver to reclaim. | - |
 | Active (memory) | Sampled estimate of recently touched VM memory. | Touch (ESXi), Non Zero Active (VCF Operations) |
 | Guest OS Needed Memory | VCF Operations guest metric behind VM Memory Usage (%). | - |
+| Symptom | A minor, non-urgent issue, read in the daily health check. A symptom that persists becomes an alert. `operations-management/performance/alerts-and-insights` | - |
+| Insight | A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close. | - |
+| Prevention window | Time between the operations team knowing of a problem (insight) and customers noticing it (alert). | - |
+| Leading indicator, lagging indicator | Leading: underlying metric read in insights. Lagging: customer-facing metric used in alerts. | - |
+| Operational Availability (%) | Availability relative to the availability architecture. | - |
+| Actual Availability (%) | Availability as it happened. Usually lower than Operational Availability. | - |
+| Crown jewels | Mission-critical business applications: few VMs, essential to revenue, profit or image. | Mission-critical applications |
 
 ## Confusable pairs
 Pairs that public text mixes up. Each row points to the file that holds the mechanism.
@@ -79,6 +86,8 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Storage vs disk | Storage is the whole IO path; disk is one layer of it, and each vCenter counter group has its own scope | `vsphere/technology/storage/concepts/storage-layers` |
 | Device vs disk vs LUN | Device is generic; disk is physical; LUN is a logical volume on the array | `vsphere/technology/storage/concepts/storage-layers` |
 | vCenter vs VCF Operations | vCenter administers; VCF Operations monitors and plans, and every metric it shows derives from a source | `vcf-operations/concepts/vcf-operations-role` |
+| Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `operations-management/performance/alerts-and-insights` |
+| Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `foundations/input-types` |
 | Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/foundations/resource-controls` |
 
 
@@ -99,6 +108,7 @@ source:
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
 corrections: []
 review_notes:
+  - "2026-11-07: Defined terms Symptom to Crown jewels and the pairs Alert vs insight, Metric vs property added from Part 1, Your Private Cloud (Overview, Purpose-Driven Architecture). Proposals; author to confirm."
   - "2026-11-07 (author decision): knowledge/ is for Agent E2 only. Kept here: synonyms, defined terms, confusable pairs. Moved out: Core words and Words to avoid to project/vocabulary.md; Term distinctions to vsphere/foundations/resource-controls and vsphere/technology/storage/concepts/storage-layers (the OpenTelemetry note was already in foundations/naming-patterns); Object types to catalog/objects.yaml. 'Book terminology' and 'Proposed terms' merged as 'Defined terms'."
   - "Section 'Confusable pairs': drafted by Claude 2026-11-06 from the files in its File column, as block 3 of the agent up-front knowledge (harness/AGENT.md). Author to confirm (Q059)."
   - "Section 'Defined terms': rows from Run Time onward were added 2026-11-02 from the book (CPU and Memory chapters) as proposals. Author to confirm each term and its preferred name. Class of service 'also called Tier' and the new Synonyms rows from Words to avoid are Claude's."

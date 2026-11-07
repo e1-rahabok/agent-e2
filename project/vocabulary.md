@@ -12,7 +12,7 @@ How the knowledge files are written: the dimensions not to mix, and the words to
 - Technology: cpu, gpu, memory, storage, network, system (the box as a whole). Not a product.
 - Pillar: availability, performance, security, capacity, value. Not a technology.
 - Metric class: contention, consumption, context. Not a pillar.
-- Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: a configuration or inventory attribute, not measured over time.
+- Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
 - Trap: a wrong conclusion from a true observation. Format: `KNOWLEDGE-ENGINEERING.md`, section 4.
 - Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
 - Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.
