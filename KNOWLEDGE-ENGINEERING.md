@@ -94,7 +94,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Troubleshooting flows | The expert's order of checks and the branch at each step | `diagnosis/` files |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
 | Images with text twins | The author's diagrams and charts | `images/` folders |
-| Glossary | Controlled vocabulary, synonyms, confusable pairs, words to avoid | `knowledge/glossary.md` |
+| Glossary | The agent's vocabulary: synonyms, defined terms, confusable pairs. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
 | Provenance | Source, review notes, corrections, author answers | metadata, `project/author-questions.md` |
 | Rules as code | Architecture and writing rules | `project/tools/lint.py`, `project/tools/tags.yaml` |
 | Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` |
@@ -183,7 +183,7 @@ knowledge/                           # what the model reads (indexed)
 ├── catalog/                         # structured data read by harness tools, not chunked as prose:
 │                                    # vCenter counters, esxtop fields, thresholds, object model (YAML)
 ├── foundations/                     # vendor-neutral: units, sampling, accounting, perspectives, naming
-├── glossary.md                      # one glossary: terms, synonyms, confusable pairs, words to avoid (all products)
+├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
 ├── operations-management/           # pillars of operations that cut across products and technologies
 │   ├── performance/                 # KPI design; diagnosis/ for cross-technology flows (VM slow triage)
 │   └── capacity/                    # capacity model, sizing; diagnosis/ for capacity decisions
@@ -343,7 +343,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 
 ## 11. Writing rules
 - One fact per bullet or table row. A mistake should sit on one line.
-- One English word per concept. Knowledge terms: `knowledge/glossary.md`. Repository terms: `project/terms.md`.
+- One English word per concept. The agent's vocabulary: `knowledge/glossary.md`. Writing vocabulary and words to avoid: `project/vocabulary.md`. Repository terms: `project/terms.md`.
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, the author, official docs, or Claude's own knowledge. Record any fact not in the source document in `review_notes` with its section. No generic filler.
 - No text aimed at human motivation.

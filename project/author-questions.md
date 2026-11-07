@@ -39,7 +39,7 @@ Each entry has:
 - Answer:
 
 ### Q059 · Agent · Core rules and confusable pairs given to the agent up front
-- Files: [Core rules of vSphere metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/core-rules.md) (section Rules); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
+- Files: [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md) (Level 300 misreadings; moved out of the knowledge base 2026-11-07); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
 - Search: not from the book. Each rule and pair summarises the knowledge file it points to.
 - Question:
   1. Are these the 12 rules an expert would give a new colleague first? Which would you drop, add or reword?

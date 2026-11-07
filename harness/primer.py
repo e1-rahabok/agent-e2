@@ -2,19 +2,21 @@
 
 Each block is generated from the knowledge base at start, so it cannot drift from it:
   map        what each area holds, what each file kind answers, which tool serves it (from ids and retriever_guide)
-  rules      core rules that undo Internet priors (knowledge/vsphere/foundations/core-rules.md, section Rules)
+  rules      Level 300 misreadings and their corrections (harness/misreadings.md)
   terms      confusable pairs (knowledge/glossary.md, section Confusable pairs)
   flows      symptom -> flow index (every diagnosis file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
 Each block has a switch in benchmark/runner/config.yaml, key agent_primer. All off by default until the benchmark
 shows a gain (harness/AGENT.md, section 7).
 """
+import os
 import re
 from collections import Counter, defaultdict
 
 BLOCKS = ('map', 'rules', 'terms', 'flows', 'procedure')
 BUDGET_TOKENS = 3000          # all five blocks together; lint checks it
-RULES_ID, TERMS_ID = 'vsphere/foundations/core-rules', 'glossary'
+TERMS_ID = 'glossary'
+MISREADINGS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'misreadings.md')
 
 KINDS = {  # folder kind -> what it answers and which tool serves it
     'concepts': ('how it works, why a value behaves so', 'search, read_file'),
@@ -71,8 +73,10 @@ def _section(docs, doc_id, heading):
 
 
 def rules_block(docs):
-    t = _section(docs, RULES_ID, 'Rules')
-    return t.replace('## Rules', '## Core rules', 1) if t else ''
+    if not os.path.exists(MISREADINGS):
+        return ''
+    t = open(MISREADINGS).read()
+    return t[t.index('## Misreadings'):].replace('## Misreadings', '## Level 300 misreadings', 1).strip()
 
 
 def terms_block(docs):
