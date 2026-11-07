@@ -185,8 +185,8 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Idle VM: power it off'' (author, Q042, 2026-11-06) moved to operations-management/capacity/reclamation, section Idle VM, 2026-11-07: one place for idle VM reclamation.'
-- 'Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q097).'
-- 'Section ''What to optimize'': the book says CPU utilization should be 100%; the Big Picture section expects about 40% average and 80% max across large VMs. Read as per-VM aim vs fleet average (Q098).'
+- 'Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q119).'
+- 'Section ''What to optimize'': the book says CPU utilization should be 100%; the Big Picture section expects about 40% average and 80% max across large VMs. Read as per-VM aim vs fleet average (Q120).'
 - 'Section ''Micro burst'': 2-second metrics checked against the VCF Operations 9.1 documentation (2026-11-07).'
 - 'Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") is Claude''s explanation of the book image.'
 - 'Section ''Prevent oversizing'': the CPU Hot Add and vNUMA link is from Performance Best Practices (idle-and-unused-vcpus), not this chapter.'

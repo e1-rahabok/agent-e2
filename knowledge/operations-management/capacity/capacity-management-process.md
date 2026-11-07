@@ -149,7 +149,7 @@ corrections: []
 review_notes:
 - 'Section ''Planning inputs'': the cluster-splitting list is the text of the book image after Architecture Plan; the example estate (18 clusters) is the book image after Example. Neither image is copied: the text holds the facts.'
 - 'Section ''Cluster is the unit of capacity'': the three-cluster example is the book table image after The Planning Stage, restated as text.'
-- 'Section ''Four phases'': the book has an orphan sentence fragment after the phase table ("e first place, by using progressive pricing"). Left out; see Q086.'
-- 'Section ''Traps'': the book lists the "Good" Advice statements as wrong without saying why. The reasons in the traps of this file and of capacity-dimensions are Claude''s reading of the rest of the chapter (Q087).'
+- 'Section ''Four phases'': the book has an orphan sentence fragment after the phase table ("e first place, by using progressive pricing"). Left out; see Q108.'
+- 'Section ''Traps'': the book lists the "Good" Advice statements as wrong without saying why. The reasons in the traps of this file and of capacity-dimensions are Claude''s reading of the rest of the chapter (Q109).'
 status: draft
 ```

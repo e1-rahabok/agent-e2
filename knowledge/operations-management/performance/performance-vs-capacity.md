@@ -157,6 +157,6 @@ corrections:
 - 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity (author, Q065, 2026-11-06). Corrects the book (performance is absolute).'
 - 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can (author, Q067, 2026-11-06).'
 review_notes:
-- 'Section ''Usable capacity exists only in capacity'': reservation is subtracted from supply here, while Part 1 Capacity Model puts it on the demand side (Demand = Max (Utilization, Reservation)); see operations-management/capacity/capacity-dimensions and Q099.'
+- 'Section ''Usable capacity exists only in capacity'': reservation is subtracted from supply here, while Part 1 Capacity Model puts it on the demand side (Demand = Max (Utilization, Reservation)); see operations-management/capacity/capacity-dimensions and Q121.'
 status: draft
 ```

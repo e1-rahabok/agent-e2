@@ -149,8 +149,8 @@ source:
   path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap). Pages 110-118.'
 corrections: []
 review_notes:
-- 'Section ''What each area frees'': the book table has cells that do not line up with their area (for example Idle VM, Storage: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"). Rewritten from the chapter text and the five-area image; to confirm (Q095).'
-- 'Section ''When reclamation is the provider''s job'': the book opens with "It is only applicable when VMs are free" and later applies stocktake to internal IT with chargeback. Both kept; see Q095.'
+- 'Section ''What each area frees'': the book table has cells that do not line up with their area (for example Idle VM, Storage: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"). Rewritten from the chapter text and the five-area image; to confirm (Q117).'
+- 'Section ''When reclamation is the provider''s job'': the book opens with "It is only applicable when VMs are free" and later applies stocktake to internal IT with chargeback. Both kept; see Q117.'
 - 'Section ''Idle VM'': power-off frees memory, consumed pages linger (author, Q042, 2026-11-06); moved here from operations-management/capacity/rightsizing 2026-11-07.'
 - 'Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming is Claude''s knowledge.'
 status: draft

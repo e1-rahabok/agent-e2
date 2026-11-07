@@ -203,12 +203,12 @@ source:
   path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation, Overcommit). Pages 97-107.'
 corrections: []
 review_notes:
-- 'Section ''Utilization'': the 80-100% zone has no numbers in the book. Cluster Consumption (%) uses different bands (CPU green 0-55); see Q088.'
-- 'Section ''Allocation'': the book says memory tiering is new in vSphere 8. It was a tech preview in 8.0 Update 3 and is supported from vSphere 9.0 (vsphere/technology/memory/concepts/memory-tiering). Text written as 9.x; Q089.'
-- 'Section ''Reservation and share'': the book gives the reservation unit as Hertz and milliseconds; CPU reservation is set in MHz. Written as Hz (Q090).'
+- 'Section ''Utilization'': the 80-100% zone has no numbers in the book. Cluster Consumption (%) uses different bands (CPU green 0-55); see Q110.'
+- 'Section ''Allocation'': the book says memory tiering is new in vSphere 8. It was a tech preview in 8.0 Update 3 and is supported from vSphere 9.0 (vsphere/technology/memory/concepts/memory-tiering). Text written as 9.x; Q111.'
+- 'Section ''Reservation and share'': the book gives the reservation unit as Hertz and milliseconds; CPU reservation is set in MHz. Written as Hz (Q112).'
 - 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
 - 'Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" is Claude''s explanation of why the book computes per VM first.'
-- 'Section ''Traps'': the "Good" Advice statements come from the book without reasons; the reasons are Claude''s reading of the chapter (Q087).'
+- 'Section ''Traps'': the "Good" Advice statements come from the book without reasons; the reasons are Claude''s reading of the chapter (Q109).'
 - 'Section ''Overcommit'': public cloud CPU at 1:1 per thread is the book''s statement. Burstable instance families (for example AWS T series) share CPU by credits; not in the book (Claude''s knowledge).'
 status: draft
 ```

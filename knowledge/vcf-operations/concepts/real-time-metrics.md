@@ -72,7 +72,7 @@ source:
 corrections:
 - 'Section ''What it adds'': designed for programmatic consumption, Prometheus compatibility for scripts (author, 2026-11-07).'
 review_notes:
-- 'Section ''What it adds'': the docs show PromQL only in the Custom Query sub-tab; no Prometheus endpoint or API route for external scripts is described. To confirm with the author (Q101).'
+- 'Section ''What it adds'': the docs show PromQL only in the Custom Query sub-tab; no Prometheus endpoint or API route for external scripts is described. To confirm with the author (Q123).'
 - 'Docs conflict: the policy page says ESX Top view is for Virtual Machine types; the Workbench page says Host System and VM.'
 - 'The list of the ~21 2-second metrics is in VODAP-9.1-Metrics-List-Per-Provider.xlsx (not read).'
 - 'Section ''Cost'': 1,000 data points from the book; 10x volume is arithmetic.'

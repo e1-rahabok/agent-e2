@@ -117,8 +117,8 @@ source:
 corrections: []
 review_notes:
 - 'Steps 2 to 5 and the closure thresholds follow the book (Cluster Closure, Logic) from 2026-11-07. Steps 1, 6 and 7 were drafted by Claude 2026-11-06 from the files in internal_derive (architecture review 2026-11-06, section 3.3); the full order is still to be confirmed by the author (Q061).'
-- 'Step 4: non-production closes at a higher Capacity Remaining (15%, 30%) than production (10%, 20%), while it closes later on performance and risk (Q093).'
-- 'Step 4: the Performance (%) closure values (production red below 40%) are far below the class-of-service minimum VM Performance (%) of 98-99.5% (operations-management/capacity/class-of-service-planning). Different metrics (cluster KPI vs VM KPI); confirm (Q094).'
-- 'Step 5: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open (Q093).'
+- 'Step 4: non-production closes at a higher Capacity Remaining (15%, 30%) than production (10%, 20%), while it closes later on performance and risk (Q115).'
+- 'Step 4: the Performance (%) closure values (production red below 40%) are far below the class-of-service minimum VM Performance (%) of 98-99.5% (operations-management/capacity/class-of-service-planning). Different metrics (cluster KPI vs VM KPI); confirm (Q116).'
+- 'Step 5: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open (Q115).'
 status: draft
 ```
