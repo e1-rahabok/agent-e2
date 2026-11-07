@@ -14,6 +14,8 @@
 - Can exceed 500%. Example: a host running flat out with Usage (%) above 100%; Demand 4.7x higher.
 - Includes reservations of running VMs and of the kernel. Usage includes actual use by running VMs and the kernel.
 - Host with no VMs: Demand near 0, or flat at the kernel reservation. Example: flat 10.21% for weeks, equal to Overhead (MHz). Usage is not 0: it includes kernel work such as vSAN and NSX.
+- Example, real-time chart of a host without VMs: Usage about 3,000 MHz on average (peak 6,727 MHz), Demand 0 throughout.
+![ESXi with no running VM: CPU Usage in MHz averages about 2,946 MHz with peaks near 6,700 MHz while CPU Demand stays at 0](../../images/esxi-cpu-demand-usage-without-vm.png)
 - Kernel reservation below kernel use: Demand below Usage.
 - Once VMs share cores, Demand is higher than Usage.
 - Not capped at 100%.
@@ -22,7 +24,7 @@
 ## Traps
 - "ESXi Demand = VM usage + kernel usage" → wrong. Demand counts VM demand and reservations, not usage.
 - "Demand above 300% means the host is 3x overloaded" → Demand sums VM demand and reservations. Check contention.
-- "Host with no VMs has 0 Demand" → kernel reservation shows as Demand.
+- "Host with no VMs has 0 Demand" → it can be 0, or flat at the kernel reservation. Either way Usage is not 0: kernel work is in Usage, not in Demand.
 
 ## Metadata
 ```yaml
@@ -49,6 +51,11 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/technology/cpu/metrics/host/reserved-capacity
 images:
+  - path: ../../images/esxi-cpu-demand-usage-without-vm.png
+    product: [vsphere]
+    object: [HostSystem]
+    metric: ['ESXi CPU Usage', 'ESXi CPU Demand']
+    image_type: timeline
   - path: ../../images/esxi-cpu-demand-chart.png
     product: [vsphere]
     object: [HostSystem]
@@ -60,6 +67,7 @@ source:
 corrections:
 - "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
 review_notes:
+- 'Section ''Behaviour'': screenshot of a host without VMs uploaded by the author (2026-11-07): Demand 0, Usage about 3 GHz.'
 - 'Section Behaviour: from CPU > ESXi.'
 - "Section 'Meaning': author (2026-11-03), Q009: providers have provider metrics and sum-of-consumer metrics. ESXi Demand is a sum of VM Demand."
 status: draft
