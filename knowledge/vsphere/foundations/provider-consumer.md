@@ -15,10 +15,9 @@
 - The metric name does not say which kind it is.
 
 ## ESXi CPU Demand
-- kind: provider metric.
-- Not the sum of all VM worlds + VMkernel worlds.
-- It is an internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.
-- trap: "Demand comes from consumers, so ESXi CPU Demand must be a sum of consumer demand" → wrong.
+- kind: sum-of-consumers metric: the sum over the VMs of what they would use with no contention, an internal metric of the CPU scheduler.
+- Not the sum of all VM worlds + VMkernel worlds: kernel work is in Usage, not in Demand. A host with no VMs shows Demand flat at 0 while Usage is not 0.
+- trap: "ESXi CPU Demand = VM usage + kernel usage" → wrong. It is VM demand only; see `vsphere/technology/cpu/metrics/host/demand`.
 
 ## CPU Ready does not apply to ESXi
 - A VM is a consumer. Multiple VMs can share the same physical core, at a performance cost.
@@ -76,7 +75,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact
 corrections:
-- '2026-11-02: ESXi CPU Demand is a provider metric. Not answered in uploaded document.'
+- 'Section ''ESXi CPU Demand'': sum of VM demand, kernel not included; a host with no VMs shows 0 (author, Q084, 2026-11-07; Part 1). Replaces the 2026-11-02 reading as a provider metric.'
 review_notes:
 - "Section 'Provider metric types': author (2026-11-03), Q009."
 status: draft

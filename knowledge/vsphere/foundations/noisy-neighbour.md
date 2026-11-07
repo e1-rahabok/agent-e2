@@ -74,8 +74,7 @@
 - With 2 × 10 Gb the risk is far higher: it is the overcommit ratio again.
 - The pool is the group of uplinks assigned to the switch, not one uplink. With Load Based Teaming the distributed switch checks the uplinks every 30 seconds; above 75% load it moves the port (VM or VMkernel) with the highest I/O to another uplink.
 - Configured on the distributed switch, not in the cluster resource allocation. Each VM network adapter has share, reservation and limit.
-- Limit: high enough for the VM, low enough for the physical NIC. Author's value: 8 Gb/s per VM on 2 × 25 Gb hosts. The settings are spread over many places, so it may not be practical.
-- Reservation: with plenty of bandwidth, about 100 Mb/s per VM. Derive the local number by metric profiling.
+- Limit and reservation per VM: not recommended. They complicate operations, more so in a dynamic, large environment. The book's 8 Gb/s limit and 100 Mb/s reservation are withdrawn.
 - Share: the main issue is VM vs VMkernel traffic. All VM traffic gets one share as a group, while each VMkernel traffic type gets its own share, so VM traffic is outnumbered.
 - Example, a distributed switch (not the defaults): virtual machine traffic High (100) as one group; NFS High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50 each); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25 each). VMkernel traffic totals 475 shares against 100 for all VMs.
 - Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
@@ -168,6 +167,7 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size (pp. 80-90)'
 corrections:
+- 'Section ''Network'': no per-VM network limit or reservation; the book''s 8 Gb/s and 100 Mb/s are withdrawn (author, Q083, 2026-11-07).'
 - 'Section ''Network'': the pool is the uplink group, Load Based Teaming every 30 s above 75%; the villain sustains 10 Gb over 300 s (book said 5); VM traffic outnumbered by per-type VMkernel shares; the screenshot values are not defaults, customize them (author, Q081, 2026-11-07).'
 - 'Section ''Memory'': overcommit ratio against DRAM only with tiering (author, Q082, 2026-11-07).'
 - 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x (author, Q077, 2026-11-06).'

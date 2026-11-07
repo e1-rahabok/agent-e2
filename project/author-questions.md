@@ -125,6 +125,8 @@ Each entry has:
 - Written as now: no number from the image in the text; no Apdex.
 - Answer:
 
+## Resolved
+
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
 - Search 1: "I think it should be 8 Gb/s."
@@ -145,9 +147,7 @@ Each entry has:
 - Search: not from the book. Broadcom KB 1010071 (Claude's own knowledge, not fetched): esxtop shows dropped receive packets at the virtual switch port when the guest does not empty its receive ring fast enough; the fix is a larger ring in the Guest OS.
 - Question: your answer says the ring-buffer drop is not visible to the hypervisor. As Claude reads it, the guest never receives the packet, so the drop is counted at the VM's port: VM Network Receive Packets Dropped in vCenter, %DRPRX in esxtop. Visible to the hypervisor, but caused and fixed in the guest. Your conclusion holds either way: outside the IaaS SLA, and receive drops are already left out of it. Which is right for the reason: (a) not visible, or (b) visible but not controllable?
 - Written as now: guest-os layer, outside the IaaS SLA; the visibility claim left out.
-- Answer:
-
-## Resolved
+- Answer: (b), visible but not controllable. The author's document Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07): ESXi counts the drop at the dvPort and the VM (%DRPRX, net.droppedRx); VMXNET3 also shares it with the guest. Applied in [Packet drop accounting: which layer counts a dropped packet](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/packet-drop-accounting.md).
 
 ### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).

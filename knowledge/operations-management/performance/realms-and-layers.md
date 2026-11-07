@@ -51,7 +51,7 @@
 - Consumer:
   - business application: business metrics, spanning VMs, containers and functions; best at showing that the application performs, unable to say why not;
   - service: a process in Windows or Linux, usually called the application (a database server);
-  - Guest OS: two kinds, the Windows or Linux layer and the driver layer (PVSCSI, vmxnet). Driver metrics such as a VMXNET3 ring-buffer drop are guest-os layer and outside the IaaS SLA; the SLA covers the vNIC as the hypervisor sees it;
+  - Guest OS: two kinds, the Windows or Linux layer and the driver layer (PVSCSI, vmxnet). A VMXNET3 ring-buffer drop is caused and fixed in the guest, so it is outside the IaaS SLA, although the hypervisor counts it too; the SLA covers the vNIC as the hypervisor sees it;
   - container: usually inside a VM; more than one container per VM makes operations harder;
   - VM.
 - Provider:
@@ -140,7 +140,6 @@ corrections:
 - 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, outside the IaaS SLA; the SLA covers the vNIC as the hypervisor sees it (author, Q070, 2026-11-06).'
 - 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS (author, Q071, 2026-11-06).'
 review_notes:
-- 'Whether the hypervisor counts a drop caused by a full VMXNET3 receive ring. Q085.'
 - 'Image troubleshooting-layers-loss-of-context-example-table.png: 5.2 s + 15.1 s = 20.3 s, but the transaction is given as 20.1 s. Q072.'
 - 'The book offers an improved Apdex formula. Q072.'
 status: draft
