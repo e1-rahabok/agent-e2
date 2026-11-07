@@ -286,7 +286,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 
 | Field | Meaning |
 |---|---|
-| `id` | Path without `knowledge/` and `.md`. |
+| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `knowledge/moved.yaml` (old id → new id, kept forever): old references still resolve, and lint flags an old id still used in an active file. |
 | `retriever_guide` | See section 7. |
 | `scope` | vendor-neutral (applies across VCF 9 components), operations-management, vsphere, vcf-operations or guest-os; matches the top folder. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
