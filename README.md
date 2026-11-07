@@ -23,6 +23,7 @@
 # Agent E2
 
 - What it is: an LLM-based expert system, built as agentic RAG on a local LLM.
+- Scope for Phase 1: vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name: the author is Iwan 'E1' Rahabok; Agent E2 is the second version of that expertise, available all day. Designed to replace AskIO on isvara.io.
 
 **Business problem:**
