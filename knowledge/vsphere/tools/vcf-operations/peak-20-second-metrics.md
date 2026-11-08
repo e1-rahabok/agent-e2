@@ -60,7 +60,7 @@ object:
 - VirtualMachine
 metric_class: contention
 internal_derive:
-- foundations/measurement-precision
+- observability/measurement-precision
 same_name: []
 same_meaning: []
 related:

@@ -25,7 +25,7 @@ From the kernel's viewpoint, a VM is a group of user worlds. Three main types:
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/kernel-worlds
+id: vsphere/architecture/kernel-worlds
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -39,7 +39,7 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx

@@ -13,7 +13,7 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 ```
 - RAM per vCPU (4 GB in the examples) is a planning guideline. Customers may buy more or less memory per vCPU.
 - Infrastructure share: non-business work on every host, such as vSAN with deduplication, NSX, vSphere Replication, and kernel processing for IO-heavy VMs. Book example: 8 cores and 64 GB per host.
-- The basis of the CPU overcommit ratio changes the answer by 2x with Hyper-Threading: 4:1 per core is 2:1 per physical thread. The knowledge base states overcommit per physical thread (`vsphere/foundations/noisy-neighbour`); the book's examples here state it per core.
+- The basis of the CPU overcommit ratio changes the answer by 2x with Hyper-Threading: 4:1 per core is 2:1 per physical thread. The knowledge base states overcommit per physical thread (`operations-management/performance/noisy-neighbour`); the book's examples here state it per core.
 
 ## Silver: cost optimized (book example)
 - Host: 64 cores. Kept for infrastructure: 8 cores, 64 GB. Left: 56 cores.
@@ -39,7 +39,7 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 ## Reading the examples
 - On the same 64-core host, Gold takes less RAM than Silver (256 GB vs 512 GB): Gold sells fewer vCPUs per host, and RAM follows the vCPUs sold.
 - Each class gets its own host specification, or its own cluster with a matching specification. Mixing classes on one host specification leaves RAM unsold in one of them.
-- Silver ratios differ between the book's examples: CPU 4:1 with memory 2:1 here; CPU 3:1 with memory 1:1 in the planning example; memory 1.5:1 in the class of service table of `vsphere/foundations/noisy-neighbour`. Each is a business choice per provider.
+- Silver ratios differ between the book's examples: CPU 4:1 with memory 2:1 here; CPU 3:1 with memory 1:1 in the planning example; memory 1.5:1 in the class of service table of `operations-management/performance/noisy-neighbour`. Each is a business choice per provider.
 
 ## Traps
 - "Buy as much RAM as the host takes; memory is cheap" → RAM is sold with vCPU. Beyond (sellable vCPU × GB per vCPU / memory overcommit) + infrastructure share, it cannot be sold.
@@ -65,12 +65,12 @@ object:
 - HostSystem
 internal_derive:
 - operations-management/sp5-framework/purpose-driven-architecture
-- vsphere/foundations/noisy-neighbour
+- operations-management/performance/noisy-neighbour
 related:
 - operations-management/sp5-framework/class-of-service
 - operations-management/capacity/capacity-model
 - operations-management/sp5-framework/iaas-business
-- vsphere/foundations/overhead
+- vsphere/architecture/overhead
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2 (pp. 14-15); Service Level Agreement > Price & SLA (p. 37)'

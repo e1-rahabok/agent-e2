@@ -32,7 +32,7 @@ flowchart TD
    - The SLI thresholds give a first bar: Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped packets 0% (`vsphere/object-types/cluster/kpis/cluster-sla-sli`).
    - Contention found → that resource's flow, then step 5. No contention on any resource → step 4.
 4. Guest OS (Guest OS layer, through VMware Tools). CPU run queue, memory page-out rate, disk queue. High while the VM shows no contention → the VM gets what it demands; the Guest OS or the application waits on its own queues. Size the Guest OS from Guest OS counters (`guest-os/system/concepts/guest-os-sizing`). Either way → step 5.
-5. Configuration (VirtualMachine). Always checked, also when step 3 found contention: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations (`vsphere/foundations/resource-controls`); VMware Tools, virtual hardware and Guest OS versions, and settings that are outdated or incompatible (`vsphere/object-types/vm/configuration/vm-configuration-review`). Known bugs are mostly configuration: an older version or incompatible settings. → step 6.
+5. Configuration (VirtualMachine). Always checked, also when step 3 found contention: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations (`vsphere/architecture/resource-controls`); VMware Tools, virtual hardware and Guest OS versions, and settings that are outdated or incompatible (`vsphere/object-types/vm/configuration/vm-configuration-review`). Known bugs are mostly configuration: an older version or incompatible settings. → step 6.
 6. Context in the window (VirtualMachine). A snapshot (`vsphere/technology/storage/concepts/snapshot-impact`), a vMotion stun (`vsphere/object-types/vm/metrics/vmotion`). Nothing in steps 3-6 → the cause is outside the VM and its host: the application, a dependency, or the network beyond the host. Say so; vSphere has no counter for it.
 
 ## Why this order
@@ -86,12 +86,12 @@ internal_derive:
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
 - vsphere/object-types/cluster/kpis/cluster-sla-sli
 - guest-os/system/concepts/guest-os-sizing
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 - vsphere/technology/storage/concepts/snapshot-impact
 - vsphere/object-types/vm/metrics/vmotion
 related:
 - vsphere/object-types/vm/health-check/vm-health-check
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 source:
   document: Knowledge base synthesis of the files in internal_derive
   path: n/a

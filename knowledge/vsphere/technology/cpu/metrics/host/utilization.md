@@ -51,7 +51,7 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 same_name: []
 same_meaning:

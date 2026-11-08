@@ -36,7 +36,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - The VM profile is unknown at design time: size (vCPU, RAM, disk), intensity (CPU and RAM utilization, disk IOPS, network throughput) and pattern (daily, weekly, monthly, none). Application teams and their vendors do not know it either; some applications are not written yet.
 - So the platform cannot promise to serve every VM well in absolute terms. It promises price/performance per class of service: cheap is not fast, fast is not cheap.
 - Each class of service has its own availability, performance, security and service SLA, written in the contract with numbers.
-- Class of service parameters (overcommit ratio, maximum VM size, Performance SLA): `vsphere/foundations/noisy-neighbour`. Host specification per class: `operations-management/capacity/host-spec-from-class-of-service`.
+- Class of service parameters (overcommit ratio, maximum VM size, Performance SLA): `operations-management/performance/noisy-neighbour`. Host specification per class: `operations-management/capacity/host-spec-from-class-of-service`.
 - Provisioning has an SLA too, delivered through self-service with workflows and electronic approval.
 
 ## Metrics per pillar
@@ -58,7 +58,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - Complete: performance and compliance SLAs as well as availability.
 - Correct: measured on each paying VM, not at the infrastructure level, with the right metrics.
 - Accurate: measured every 5 minutes. A longer interval averages a breach away.
-- Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in `foundations/thresholds`.
+- Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in `observability/thresholds`.
 
 ## Signs of complaint-based operations
 - Customers blame the IaaS. Complaints are the only signal because performance is not defined or measured.
@@ -127,7 +127,7 @@ object:
 - HostSystem
 internal_derive:
 - operations-management/performance/kpi-vs-sla
-- vsphere/foundations/noisy-neighbour
+- operations-management/performance/noisy-neighbour
 related:
 - operations-management/sp5-framework/sla-metrics
 - operations-management/sp5-framework/class-of-service
@@ -139,7 +139,7 @@ related:
 - operations-management/sp5-framework/performance-vs-capacity
 - operations-management/sp5-framework/realms-and-layers
 - vsphere/object-types/cluster/kpis/cluster-sla-sli
-- foundations/thresholds
+- observability/thresholds
 images:
   - path: images/consumer-provider-layer-what-each-checks-diagram.png
     product: [vsphere]
@@ -153,7 +153,7 @@ corrections: []
 review_notes:
 - 'Section ''Three variants of IaaS'', last bullet (contention from the pool limit or tenant overcommit is the tenant''s; Ready includes limit time): Claude, from the book''s resource pool row and the VM CPU Ready file.'
 - 'Section ''Metrics per pillar'': the book reads Operational Availability as relative to the availability architecture and green zone. Green zone not defined in this section (Q086). The Service Level Agreement section (extracted 2026-11-07 into sla-metrics) does not define it either.'
-- 'Section ''A complete, correct and accurate SLA'', last bullet: reason added by Claude from foundations/thresholds.'
+- 'Section ''A complete, correct and accurate SLA'', last bullet: reason added by Claude from observability/thresholds.'
 - 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
 - 'Book naming is older (Aria products); the knowledge base uses VCF Operations. Book corrections: Q093.'
 status: draft

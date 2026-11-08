@@ -14,7 +14,7 @@
   - system calls per second.
 - A VM introduces its own metrics and properties.
 - Resources consumed by the Guest OS ≠ resources consumed by the VM. Power management and CPU SMT add to the difference.
-- See `vsphere/foundations/vm-vs-guest-os` for what each layer can and cannot see.
+- See `vsphere/architecture/vm-vs-guest-os` for what each layer can and cannot see.
 
 ## Two realms
 - VM (virtual motherboard) and Guest OS are 2 different realms. Each has its own kernel and its own metrics.
@@ -113,7 +113,7 @@ flowchart TB
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/vm-vs-guest-os
+id: vsphere/architecture/vm-vs-guest-os
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -134,17 +134,17 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/foundations/kernel-worlds
+- vsphere/architecture/kernel-worlds
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
-- vsphere/foundations/overhead
-- foundations/thresholds
+- vsphere/architecture/overhead
+- observability/thresholds
 source:
   document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?; The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility (from former vsphere/foundations/vm-vs-guest-os)
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?; The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility (from former vsphere/architecture/vm-vs-guest-os)
 corrections:
-- '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/foundations/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
+- '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/architecture/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
 review_notes:
 - 'Section ''Two realms'': author (2026-11-03), answer to Q035.'
-- '2026-11-04: merged vsphere/foundations/vm-vs-guest-os into this file (author decision 5, holistic review).'
+- '2026-11-04: merged vsphere/architecture/vm-vs-guest-os into this file (author decision 5, holistic review).'
 status: draft
 ```

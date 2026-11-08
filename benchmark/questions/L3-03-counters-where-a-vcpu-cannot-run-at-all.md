@@ -23,7 +23,7 @@ Omitting Overlap or Other Wait; including Demand as a contention counter.
 
 ## Notes
 - Previous id: vsphere-cpu-009 (renamed 2026-11-05).
-- Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: `vsphere/foundations/vm-vs-guest-os`, section Two realms.
+- Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: `vsphere/architecture/vm-vs-guest-os`, section Two realms.
 - Trap: applying a Guest OS-realm statement to a VM-realm counter.
 
 ## Metadata
@@ -35,7 +35,7 @@ technology: [cpu]
 input: [text]
 task: read-metric
 knowledge:
-  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/architecture/vm-vs-guest-os
   - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop

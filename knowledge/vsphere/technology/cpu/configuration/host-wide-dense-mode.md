@@ -58,7 +58,7 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/foundations/overhead
+- vsphere/architecture/overhead
 - vsphere/technology/network/configuration/rss-and-interrupt-coalescing
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)

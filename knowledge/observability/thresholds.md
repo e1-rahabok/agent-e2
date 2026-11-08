@@ -62,7 +62,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 
 ## Metadata
 ```yaml
-id: foundations/thresholds
+id: observability/thresholds
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -75,8 +75,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/metrics-as-accounting
-- vsphere/foundations/vm-vs-guest-os
+- observability/metrics-as-accounting
+- vsphere/architecture/vm-vs-guest-os
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge

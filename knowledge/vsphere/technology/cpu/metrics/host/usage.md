@@ -65,7 +65,7 @@ object:
 metric_class: consumption
 internal_derive:
 - vsphere/technology/cpu/concepts/hyper-threading
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage
 same_meaning: []

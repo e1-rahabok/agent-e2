@@ -36,7 +36,7 @@ answer_type: deterministic
 input: [text]
 knowledge:
   - vsphere/technology/memory/metrics/host/consumed
-  - vsphere/foundations/overhead
+  - vsphere/architecture/overhead
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"

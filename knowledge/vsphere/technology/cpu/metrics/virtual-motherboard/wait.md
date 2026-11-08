@@ -50,7 +50,7 @@ layer:
 - virtual-motherboard
 metric_class: context
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/technology/cpu/concepts/vcpu-states
 same_name: []
 same_meaning: []

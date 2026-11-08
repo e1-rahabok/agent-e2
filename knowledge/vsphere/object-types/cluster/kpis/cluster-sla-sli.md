@@ -56,7 +56,7 @@ same_meaning: []
 related:
 - operations-management/sp5-framework/sla-metrics
 - vsphere/object-types/cluster/kpis/cluster-performance
-- foundations/thresholds
+- observability/thresholds
 images:
   - path: ../images/sli-thresholds-table.png
     product: [vcf-operations]

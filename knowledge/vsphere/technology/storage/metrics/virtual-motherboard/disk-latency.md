@@ -3,7 +3,7 @@
 ## Meaning
 - Indicates a performance problem. A primary counter for how well the VM is served.
 - Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`.
-- Threshold setting by layer: see `foundations/thresholds`.
+- Threshold setting by layer: see `observability/thresholds`.
 
 ## Mechanism
 - Latency can be high at low IOPS and throughput: each layer in the stack has its own queue (process, Guest OS storage subsystem, VM driver, kernel, array).
@@ -41,7 +41,7 @@ layer:
 - virtual-motherboard
 metric_class: contention
 internal_derive:
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/metrics/virtual-motherboard/latency

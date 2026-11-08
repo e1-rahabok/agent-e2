@@ -42,7 +42,7 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 same_name: []
 same_meaning: []
 related:

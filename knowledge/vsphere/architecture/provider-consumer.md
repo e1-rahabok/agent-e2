@@ -49,7 +49,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/provider-consumer
+id: vsphere/architecture/provider-consumer
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -67,9 +67,9 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/foundations/metric-sources
-- vsphere/foundations/object-relationships
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/metric-sources
+- vsphere/architecture/object-relationships
+- vsphere/architecture/vm-vs-guest-os
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
   document: PART 3 - Counters.docx

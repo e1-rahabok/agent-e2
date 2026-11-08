@@ -24,7 +24,7 @@ D (reservation assumed to block memory before use) or C.
 
 ## Notes
 - Previous id: vsphere-memory-005 (renamed 2026-11-05).
-- The knowledge base (`vsphere/foundations/overhead`) says kernel memory reservation stays steady even when kernel use drops 90%. Check E's key against it during review.
+- The knowledge base (`vsphere/architecture/overhead`) says kernel memory reservation stays steady even when kernel use drops 90%. Check E's key against it during review.
 
 ## Metadata
 ```yaml
@@ -35,10 +35,10 @@ technology: [memory]
 input: [text]
 task: judge-setting
 knowledge:
-  - vsphere/foundations/resource-controls
+  - vsphere/architecture/resource-controls
   - vsphere/technology/memory/metrics/host/reservation
   - vsphere/technology/memory/concepts/memory-as-storage
-  - vsphere/foundations/overhead
+  - vsphere/architecture/overhead
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"

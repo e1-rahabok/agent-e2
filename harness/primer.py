@@ -60,7 +60,7 @@ def map_block(docs):
     lines = ['## Map of the knowledge base',
              'File kinds (folder name in the id):']
     lines += [f'- {k}/: {q}. Tool: {t}.' for k, (q, t) in KINDS.items()]
-    lines += ['- other: overviews, comparisons, foundations.', 'Areas (files by kind):']
+    lines += ['- other: overviews, comparisons, observability rules.', 'Areas (files by kind):']
     for a in sorted(areas):
         c = areas[a]
         lines.append(f'- {a}: ' + ', '.join(f'{c[k]} {k}' for k in list(KINDS) + ['other'] if c[k]))

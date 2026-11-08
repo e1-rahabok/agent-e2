@@ -50,7 +50,7 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 same_name:
 - vsphere/technology/memory/metrics/cluster/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed

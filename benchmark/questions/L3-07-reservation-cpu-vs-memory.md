@@ -26,7 +26,7 @@ technology: [system]
 input: [text]
 task: judge-setting
 knowledge:
-  - vsphere/foundations/resource-controls
+  - vsphere/architecture/resource-controls
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Resource Management."

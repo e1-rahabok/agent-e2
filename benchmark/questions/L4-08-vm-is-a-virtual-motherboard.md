@@ -48,7 +48,7 @@ technology: [system]
 input: [text]
 task: troubleshoot
 knowledge:
-  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/architecture/vm-vs-guest-os
   - guest-os/storage/metrics/disk-queue
   - guest-os/cpu/metrics/run-queue
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready

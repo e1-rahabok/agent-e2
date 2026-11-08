@@ -2,10 +2,10 @@
 
 ## Meaning
 - Excludes overhead.
-- Includes reserved memory only once the VM has touched it: a reservation alone does not raise Consumed. See `vsphere/foundations/resource-controls`.
+- Includes reserved memory only once the VM has touched it: a reservation alone does not raise Consumed. See `vsphere/architecture/resource-controls`.
 
 ## vMotion effect
-- After vMotion, Consumed on the destination can increase. Swapped or compressed pages can become regular pages. See `vsphere/foundations/overhead`.
+- After vMotion, Consumed on the destination can increase. Swapped or compressed pages can become regular pages. See `vsphere/architecture/overhead`.
 
 ## View
 - ESXi view (ESXi pages) of the VM: memory that has been active.
@@ -49,8 +49,8 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/resource-controls
-- vsphere/foundations/overhead
+- vsphere/architecture/resource-controls
+- vsphere/architecture/overhead
 same_name:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/memory/metrics/cluster/consumed

@@ -150,7 +150,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 related:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/technology/cpu/concepts/cpu-measurement-levels

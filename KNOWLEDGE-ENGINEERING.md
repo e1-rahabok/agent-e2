@@ -182,16 +182,17 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 knowledge/                           # what the model reads (indexed)
 ├── catalog/                         # structured data read by harness tools, not chunked as prose:
 │                                    # vCenter counters, esxtop fields, thresholds, object model (YAML)
-├── foundations/                     # vendor-neutral: units, sampling, accounting, perspectives, naming
+├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
+│                                    # aggregation, units, thresholds, naming, accounting
 ├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
 ├── operations-management/           # operations across products and technologies
 │   ├── sp5-framework/               # the framework across pillars: overview, why not ITIL, Triple See Method,
 │   │                                # SLAs, class of service, health, alerts, monitoring vs troubleshooting
-│   ├── performance/                 # KPI design; health-check/ and troubleshooting/ for cross-technology flows (VM slow triage)
+│   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for cross-technology flows (VM slow triage)
 │   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
 ├── vsphere/
-│   ├── foundations/                 # vSphere-wide: provider/consumer, VM vs Guest OS, overhead,
-│   │                                # resource controls (reservation, limit, shares), core rules
+│   ├── architecture/                # vSphere-wide design that every metric depends on: provider/consumer,
+│   │                                # VM vs Guest OS, kernel worlds, overhead, resource controls, metric sources
 │   ├── technology/                  # raw metrics, by technology (book route: contention first, then consumption)
 │   │   └── cpu/ gpu/ memory/ storage/ network/
 │   │       ├── concepts/            # how it works
@@ -235,10 +236,12 @@ knowledge/                           # what the model reads (indexed)
   - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (triage, capacity decisions) → `operations-management/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
-- Three foundations levels, different scope:
-  - `knowledge/foundations/`: true across VCF 9 components and Guest OS.
+- Three levels of general content, different scope (author, 2026-11-08: names say what the content is, not that it is basic):
+  - `knowledge/observability/`: how to read any metric: true across VCF 9 components and the Guest OS.
   - `knowledge/operations-management/`: how a pillar uses metrics, across products.
-  - `knowledge/vsphere/foundations/`: true only in vSphere.
+  - `knowledge/vsphere/architecture/`: vSphere design that its metrics follow from; true only in vSphere.
+- A setting of one object goes to that object: Scalable Shares is in `vsphere/object-types/resource-pool/configuration/`. A pillar problem across technologies goes to its pillar: noisy neighbour is in `operations-management/performance/`.
+- A top-level folder is never named `metrics`: lint and the harness read `/metrics/` in a path as a metric file.
 - `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; the same names wherever a metric of that object lives. The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
 - Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. A VCF Operations KPI over Guest OS counters (Guest OS Performance) stays in `guest-os/` by this rule.
@@ -261,7 +264,7 @@ knowledge/                           # what the model reads (indexed)
 | `retriever_guide` | Retrieving a definition when the question asks what to check or what to set. |
 | Small files, one fact per line | A retrieved chunk carrying unrelated facts; an error spreading beyond one line. |
 | Metadata at the end, parsed separately | Audit text (status, corrections) polluting the embedded content. |
-| Foundations at three levels | vSphere-only rules applied to other products, or general rules duplicated per product. |
+| General content at three levels (observability, operations management, vSphere architecture) | vSphere-only rules applied to other products, or general rules duplicated per product. |
 | A `## Traps` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
 - Each format choice serves both readers:
@@ -282,7 +285,7 @@ knowledge/                           # what the model reads (indexed)
 ## 7. retriever_guide
 | Value | Question it answers | Folder | Template |
 |---|---|---|---|
-| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `foundations/` | `concept.md` |
+| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `observability/`, `vsphere/architecture/` | `concept.md` |
 | metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `models/`, `tools/` | `metric.md` |
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
@@ -333,7 +336,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
   - The harness loads both files into its catalog at start-up (YAML is the source; the in-memory SQLite is a copy).
   - Thresholds still written only in prose: `python3 project/tools/threshold_inventory.py` lists them. Each gets a row with its source, or the number goes.
 - No invented thresholds: a threshold goes in only with a source (book, author, official documentation), quoted.
-- The rule for the model is in `foundations/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
+- The rule for the model is in `observability/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 
 ## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.

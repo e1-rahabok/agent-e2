@@ -29,7 +29,7 @@ technology: [system]
 input: [text]
 task: decide-capacity
 knowledge:
-  - vsphere/foundations/overhead
+  - vsphere/architecture/overhead
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Overhead vs Not Overhead."

@@ -72,7 +72,7 @@ layer:
 metric_class: consumption
 internal_derive:
 - vsphere/technology/cpu/concepts/hyper-threading
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/technology/cpu/concepts/run-time-vs-run-quality
 - vsphere/technology/cpu/concepts/cpu-frequency
 same_name:

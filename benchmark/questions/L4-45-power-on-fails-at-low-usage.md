@@ -39,7 +39,7 @@ answer_type: judged
 input: [table, screenshot]
 knowledge:
   - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
-  - vsphere/foundations/resource-controls
+  - vsphere/architecture/resource-controls
 attachments:
   - 0085/resource-pool-tree.xlsx
   - 0085/vcenter-insufficient-resources.png

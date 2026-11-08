@@ -128,7 +128,7 @@ internal_derive: []
 related:
 - operations-management/capacity/capacity-dimensions
 - operations-management/capacity/capacity-management-process
-- vsphere/foundations/overhead
+- vsphere/architecture/overhead
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 - vsphere/technology/memory/concepts/memory-capacity
 images:

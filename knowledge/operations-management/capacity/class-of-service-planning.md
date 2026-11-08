@@ -86,7 +86,7 @@ internal_derive:
 - operations-management/capacity/capacity-dimensions
 related:
 - operations-management/sp5-framework/class-of-service
-- vsphere/foundations/noisy-neighbour
+- operations-management/performance/noisy-neighbour
 - operations-management/sp5-framework/class-of-service
 - operations-management/capacity/host-spec-from-class-of-service
 - operations-management/performance/kpi-vs-sla

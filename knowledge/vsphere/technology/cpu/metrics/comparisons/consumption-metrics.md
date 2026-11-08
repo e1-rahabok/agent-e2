@@ -43,8 +43,8 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/metric-sources
-- foundations/metric-volume
+- vsphere/architecture/metric-sources
+- observability/metric-volume
 same_name: []
 same_meaning: []
 related:

@@ -78,11 +78,11 @@ product:
 internal_derive:
 - operations-management/sp5-framework/overview
 related:
-- foundations/collection-interval
-- foundations/aggregation
+- observability/collection-interval
+- observability/aggregation
 - operations-management/sp5-framework/modelling
-- foundations/input-types
-- foundations/metric-perspectives
+- observability/input-types
+- observability/metric-perspectives
 - operations-management/sp5-framework/monitoring-vs-troubleshooting
 - operations-management/sp5-framework/performance-vs-capacity
 source:

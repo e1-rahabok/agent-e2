@@ -53,7 +53,7 @@
 
 ## Metadata
 ```yaml
-id: foundations/resource-nature
+id: observability/resource-nature
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -67,8 +67,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/measurement-precision
-- vsphere/foundations/resource-controls
+- observability/measurement-precision
+- vsphere/architecture/resource-controls
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 source:

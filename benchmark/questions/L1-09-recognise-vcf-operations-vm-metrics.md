@@ -43,8 +43,8 @@ level: 100
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/foundations/metric-sources
-  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/architecture/metric-sources
+  - vsphere/architecture/vm-vs-guest-os
 attachments:
   - 0037/vcf-operations-vm-metrics-tab.png
 origin: synthetic

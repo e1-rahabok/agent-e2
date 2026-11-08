@@ -51,7 +51,7 @@ object:
 - ClusterComputeResource
 - HostSystem
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 related:
 - vsphere/object-types/cluster/kpis/cluster-performance
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention

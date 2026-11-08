@@ -107,7 +107,7 @@ related:
 - operations-management/performance/troubleshooting/vm-slow-triage
 - operations-management/sp5-framework/proactive-operations
 - operations-management/sp5-framework/health-risk-efficiency
-- foundations/input-types
+- observability/input-types
 - vsphere/object-types/vm/metrics/vmotion
 images:
   - path: images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png

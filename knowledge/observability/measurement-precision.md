@@ -21,7 +21,7 @@
 
 ## Metadata
 ```yaml
-id: foundations/measurement-precision
+id: observability/measurement-precision
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -34,8 +34,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/resource-nature
-- foundations/units
+- observability/resource-nature
+- observability/units
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances

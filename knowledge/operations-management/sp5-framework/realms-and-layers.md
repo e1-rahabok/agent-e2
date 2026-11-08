@@ -21,6 +21,22 @@
 - The same transaction type varies with the data volume (a report over more records takes longer). Expected times per transaction must be set by the application architect; this does not scale to hundreds of applications.
 - The only universal business-application metrics: page response time and error returns.
 
+## Apdex: not used
+- Apdex (2004) turns response times into one index from 0 to 1, against one target time T:
+
+```text
+Apdex(T) = (satisfied + tolerating / 2) / total
+satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
+```
+
+- Step function: T scores 1.0, T + 1 ms scores 0.5; 4T + 1 ms scores 0, the same as 120 seconds or a failed request.
+- The 4T limit assumes the same tolerance for a button click and a batch export; it has no basis in human-computer interaction research.
+- Buckets hide severity: 50 satisfied + 50 tolerating and 75 satisfied + 25 frustrated both give 0.75, yet in the second case a quarter of users fail completely.
+- Everything above 4T is one bucket, so a tail at 4T + 100 ms and a tail at 60 seconds score the same.
+- It times one server response; client-rendered applications are judged by Core Web Vitals (Largest Contentful Paint, Interaction to Next Paint, Cumulative Layout Shift).
+- Used instead: percentiles (p95, p99), SLOs with error budgets, Core Web Vitals.
+- Business-transaction monitoring is outside the IaaS scope of the knowledge base. IaaS performance is read from contention per VM (`operations-management/performance/kpi-vs-sla`).
+
 ## Troubleshooting by elimination
 - Performance troubleshooting eliminates layers: slice each layer and decide whether it causes the problem.
 - That takes one metric per layer that says whether the layer performs: the KPI.
@@ -42,7 +58,7 @@
 | 3 | VM contention | IaaS performance: does the platform serve the VM? |
 | 4 | IaaS utilization | IaaS capacity; not the VM owner's concern |
 
-- Level 2 can be read in the Guest OS or at the VM. The right one depends on the use case: each layer lacks visibility into the other (`vsphere/foundations/vm-vs-guest-os`).
+- Level 2 can be read in the Guest OS or at the VM. The right one depends on the use case: each layer lacks visibility into the other (`vsphere/architecture/vm-vs-guest-os`).
 - Level 3 is where the VM meets the provider. It is the IaaS performance measure.
 - Level 4 belongs to capacity planners and troubleshooting specialists.
 ![IaaS levels: guest contention → guest performance, VM utilization → VM capacity, VM contention → IaaS performance, IaaS utilization → IaaS capacity](images/iaas-four-levels-contention-and-utilization-diagram.png)
@@ -78,6 +94,7 @@
   - version: drivers and firmware outside the interoperability matrix can show up as a performance problem.
 
 ## Traps
+- "Apdex 0.75 means a mild slowdown" → the same 0.75 can hide a quarter of requests failing; read percentiles and errors.
 - "The application is slow, so find the slow infrastructure metric" → infrastructure metrics have no transaction or user context. Prove the layer with its KPI, then eliminate it.
 - "Guest OS disk latency is high, so storage is slow" → a paused or stopped vCPU inflates Guest OS latency for disk and memory, because the guest clock keeps running. Check VM CPU contention first.
 - "ESXi CPU utilization is the host's performance metric" → the host's performance is the contention of its VMs. Utilization is its capacity metric.
@@ -106,8 +123,8 @@ object:
 - HostSystem
 - ClusterComputeResource
 internal_derive:
-- vsphere/foundations/vm-vs-guest-os
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/vm-vs-guest-os
+- vsphere/architecture/provider-consumer
 related:
 - operations-management/sp5-framework/performance-vs-capacity
 - operations-management/performance/kpi-vs-sla
@@ -141,6 +158,6 @@ corrections:
 - 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS (author, Q071, 2026-11-06).'
 review_notes:
 - 'Image troubleshooting-layers-loss-of-context-example-table.png: 5.2 s + 15.1 s = 20.3 s, but the transaction is given as 20.1 s. Q072.'
-- 'The book offers an improved Apdex formula. Q072.'
+- 'Section ''Apdex: not used'': flaws and alternatives from the author''s note (Q072, 2026-11-08). The book''s improved Apdex formula is left out: business transaction monitoring is not the focus.'
 status: draft
 ```

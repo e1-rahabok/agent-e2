@@ -75,12 +75,6 @@ Each entry has:
 - Partial answer (author, in session, 2026-11-08): "what to monitor" is a health check; troubleshooting is part of the health check and comes only after an object fails it (monitor is the what, troubleshoot is the why); availability flows, security and compliance are future, after 1.0. Still open: your order inside each pillar, and Q133.
 - Answer:
 
-### Q063 · Sources · Book Part 1 and the VCF Operations chapters
-- Files: [operations-management/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management) (4 files and 2 new flows); [vcf-operations/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations) (1 concept, 12 metrics, 5 KPIs). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
-- Search: not applicable.
-- Question: please upload Part 1 of the book (capacity and performance management) and your VCF Operations chapters to [project/sources](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources). Today 159 of 206 files come from Part 3, and operators work in VCF Operations, which a third of the screenshot questions show. Claude will fetch the VCF Operations 9.1 metric reference from TechDocs for the catalog.
-- Written as now: Part 3 extracted; operations-management and vcf-operations hold only what Part 3 and the vCommunity adapter documentation give.
-- Answer:
 
 ### Q064 · Review · Which files to review first
 - Files: the 25 most-cited knowledge files below (119 files are cited by at least one benchmark question). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.4.
@@ -89,12 +83,12 @@ Each entry has:
 
 | # | Cited by | File |
 |---|---|---|
-| 1 | 9 | [VM vs Guest OS: two realms and their visibility layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) |
-| 2 | 6 | [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md) |
+| 1 | 9 | [VM vs Guest OS: two realms and their visibility layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/vm-vs-guest-os.md) |
+| 2 | 6 | [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) |
 | 3 | 6 | [VM CPU Ready](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) |
 | 4 | 6 | [VM Network Packets Dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) |
 | 5 | 5 | [VM Disk Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md) |
-| 6 | 4 | [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/overhead.md) |
+| 6 | 4 | [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) |
 | 7 | 4 | [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md) |
 | 8 | 4 | [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md) |
 | 9 | 4 | [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-model.md) |
@@ -118,13 +112,6 @@ Each entry has:
 - Written as now: all files draft.
 - Answer:
 
-### Q072 · Part 1 > The Layers in IT Systems · Apdex
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
-- Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
-- Search 2: "I like the principle behind apdex, but not its implementation"
-- Question: (a) and (b), book typos, closed 2026-11-08 (book edition does not matter to Agent E2, author on Q107). (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
-- Written as now: no number from the image in the text; no Apdex.
-- Answer:
 
 ### Q086 · Part 1 > Your Private Cloud > Overview > Key Metrics · Operational Availability and green zone
 - Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/iaas-business.md) (section Metrics per pillar).
@@ -134,7 +121,7 @@ Each entry has:
 - Answer:
 
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
-- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
+- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
 - Search 1: "If 1 CPU typically uses 4 GB RAM, then a 64-core ESXi host will only need 256 GB."
 - Search 2: "If you buy a 64-core ESXi, you have 56 cores left and you will be able to sell 224 vCPU."
 - Search 3: "For Silver, you plan to overcommit 4:1 for CPU and 2:1 for memory."
@@ -162,7 +149,7 @@ Each entry has:
 - Answer:
 
 ### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
-- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/input-types.md) (sections Property, Event).
+- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/input-types.md) (sections Property, Event).
 - Search 1: "There are 3 types of properties:"
 - Search 2: "It can be a setting change, a state change, or a label change."
 - Search 3: "Cluster 007 DRS automation level was changed from 2 to 5."
@@ -240,7 +227,7 @@ Each entry has:
 - Answer:
 
 ### Q100 · Part 1 > Service Level Agreement > Size Limit · Socket or logical CPUs
-- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/class-of-service.md) (section Size limit per class); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Maximum VM size).
+- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/class-of-service.md) (section Size limit per class); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section Maximum VM size).
 - Search 1: "Capping the size at each tier"
 - Search 2: "If you allow a single VM to be the same size as the ESXi host"
 - Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
@@ -322,14 +309,14 @@ Each entry has:
 - Answer:
 
 ### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
-- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Review: how each control affects operations, Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Review: how each control affects operations, Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section Network).
 - Search: "There is no network limit"
 - Question: with Network I/O Control each VM network adapter has share, reservation and limit, and port groups have traffic shaping. Noisy Neighbour says so (and your Q083 withdrew the 8 Gb/s limit as a recommendation, not as a feature). Change to: a network limit exists per vNIC but is not recommended?
 - Written as now: VM limits for CPU, memory and disk IOPS; the network sentence left out.
 - Answer:
 
 ### Q110 · Part 1 > Configuration Management > Reservation, Cluster, Resource Pool · Admission control, slot size and siblings
-- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Scalable Shares and resource pool siblings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/scalable-shares.md).
+- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Scalable Shares and resource pool siblings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/configuration/scalable-shares.md).
 - Search 1: "Reservation is respected only when Admission Control is enabled"
 - Search 2: "this will impact the HA Slot Size"
 - Search 3: "Resource Pool with VM as sibling is a common mistake"
@@ -401,7 +388,7 @@ Each entry has:
 - Answer:
 
 ### Q119 · Part 1 > Capacity Model > Planning Phase · Is the gap 2x everywhere
-- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/class-of-service-planning.md) (section Example implementation), [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Avoiding it).
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/class-of-service-planning.md) (section Example implementation), [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section Avoiding it).
 - Search: "Notice the consistent 2x gap"
 - Question: the implementation table keeps 2x for reservation (50/25/12.5% CPU, 100/50/25% RAM), CPU allocation (1:1, 2:1, 4:1) and contention (0.5/1/2% unmet). Memory allocation is 1:1, 1.5:1, 2:1, and utilization (50/70/90% CPU) is not 2x. Is memory deliberately less than 2x (risk of swapping), and should the text say so?
 - Written as now: the values as in the table, with a note that memory and utilization do not follow 2x.
@@ -532,13 +519,28 @@ Each entry has:
 - Answer:
 
 ### Q137 · Metric Mastery > Aggregation > The Problem with Average · ESXi CPU Ready (%)
-- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/aggregation.md) (section Divide summed counters correctly).
+- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/aggregation.md) (section Divide summed counters correctly).
 - Search: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs)"
 - Question: the formula divides milliseconds by a vCPU count, which gives ms per vCPU, not %. The knowledge base writes ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs). Correct?
 - Written as now: with 20,000 ms.
 - Answer:
 
 ## Resolved
+
+### Q072 · Part 1 > The Layers in IT Systems · Apdex
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
+- Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
+- Search 2: "I like the principle behind apdex, but not its implementation"
+- Question: (a) and (b), book typos, closed 2026-11-08 (book edition does not matter to Agent E2, author on Q107). (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
+- Written as now: no number from the image in the text; no Apdex.
+- Answer: Author note on Apdex flaws (2026-11-08); close, as the focus is not business transaction monitoring. Applied: realms-and-layers, section Apdex: not used; the book's improved formula left out.
+
+### Q063 · Sources · Book Part 1 and the VCF Operations chapters
+- Files: [operations-management/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management) (4 files and 2 new flows); [vcf-operations/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations) (1 concept, 12 metrics, 5 KPIs). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Search: not applicable.
+- Question: please upload Part 1 of the book (capacity and performance management) and your VCF Operations chapters to [project/sources](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources). Today 159 of 206 files come from Part 3, and operators work in VCF Operations, which a third of the screenshot questions show. Claude will fetch the VCF Operations 9.1 metric reference from TechDocs for the catalog.
+- Written as now: Part 3 extracted; operations-management and vcf-operations hold only what Part 3 and the vCommunity adapter documentation give.
+- Answer: Uploaded and digested already (author, 2026-11-08). Part 1 is extracted; the VCF Operations knowledge now sits with the objects it describes (pull request 164).
 
 ### Q094 · Repository · Where cross-pillar operations files go
 - Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/iaas-business.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md); [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/alerts-and-insights.md).
@@ -550,7 +552,7 @@ Each entry has:
 - Answer: (B). C is wrong as the jargon service is incorrect here. Applied 2026-11-08: 12 cross-pillar files and their images moved to [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management); lint allows files at its root; every reference updated.
 
 ### Q091 · Part 1 > Purpose-Driven Architecture > The 2 Sides of VCF · Workload and the pillar list
-- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
 - Search 1: "Workload means the customers VM, not your infrastructure software."
 - Search 2: diagram label "IT (VCF & Non-VCF Appliances )"
 - Question:
@@ -641,7 +643,7 @@ Each entry has:
 - Applied 2026-11-08: monitoring-vs-troubleshooting (section Troubleshooting), proactive-operations (Dual track, Day-to-day order), vm-slow-triage (new step 5, Configuration), the three health checks (configuration step as drill-down), KNOWLEDGE-ENGINEERING.md section 10, both flow templates.
 
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section Network).
 - Search 1: "I think it should be 8 Gb/s."
 - Search 2: "consider setting 100 Mb/s per VM"
 - Question: these are the only network numbers per VM. 8 Gb/s × 25 VMs = 200 Gb on a 40 Gb host: the limit stops one villain, not many at once. Is 8 Gb/s a cap for one VM's peak and 100 Mb/s a floor? Should they go in the capacity threshold file as rules?
@@ -649,7 +651,7 @@ Each entry has:
 - Answer: book was wrong. I do not encourage both VM limit and VM reservation as it complicates operations, especially in dynamic and large scale environment.
 
 ### Q084 · Knowledge base · ESXi CPU Demand: sum of VMs or not
-- Files: [knowledge/vsphere/foundations/provider-consumer.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/provider-consumer.md) (sections ESXi CPU Demand, Provider metric types); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Confusable pairs, ESXi CPU Demand vs Usage).
+- Files: [knowledge/vsphere/foundations/provider-consumer.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/provider-consumer.md) (sections ESXi CPU Demand, Provider metric types); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Confusable pairs, ESXi CPU Demand vs Usage).
 - Search (Part 3): "Not the sum of all VM worlds + VMkernel worlds"
 - Question: found while checking this chapter. One file says ESXi CPU Demand is not a sum of consumers, with a trap. The same file, in Provider metric types, gives it as a sum-of-consumer example. The glossary says it is the sum over the VMs. Which is right? Claude will make the three agree.
 - Written as now: contradictory.
@@ -663,7 +665,7 @@ Each entry has:
 - Answer: (b), visible but not controllable. The author's document Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07): ESXi counts the drop at the dvPort and the VM (%DRPRX, net.droppedRx); VMXNET3 also shares it with the guest. Applied in [Packet drop accounting: which layer counts a dropped packet](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/packet-drop-accounting.md).
 
 ### Q081 · Part 1 > Noisy Neighbour > Network · Host pool or uplink pool
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section Network).
 - Search 1: "Now, a single villain VM can hit 10 Gb."
 - Search 2: "sustaining 5 Gb over 300 seconds period"
 - Search 3: "The share should be larger for production VM network and development VM network."
@@ -672,7 +674,7 @@ Each entry has:
 - Answer: (a) Not per uplink, per group of uplinks assigned to the switch. With Load Based Teaming, the distributed switch tests the uplinks every 30 seconds, and if their load exceeds 75 percent of usage, the port ID of the virtual machine or vmkernel port with the highest I/O is moved to a different uplink. (b) my book was wrong. It should be sustaining 10 Gbps over 300 seconds period. (c) No. The main issue is the VM traffic is given a default share of 100 as a group, but each VMkernel traffic is given their own share. So the VM traffic is outnumbered. See the shares in this image https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png showing VM is 100 while VMkernel is up to 475 shares.
 
 ### Q082 · Part 1 > Noisy Neighbour > Memory and Solution · Gold 1:1 with memory tiering
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (sections Memory, Avoiding it); [knowledge/vsphere/technology/memory/concepts/memory-tiering.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
 - Search 1: "Per-VM reservation becomes irrelevant when the entire cluster does not overcommit."
 - Search 2: the table row Gold, overcommit "1 : 1", under "the following shows the SLA for memory"
 - Question: vSphere 9 memory tiering adds NVMe memory beyond DRAM. For Gold 1:1: (a) is the ratio against DRAM only, so a Gold host has no tier, or against DRAM plus tier? (b) Does VM memory contention count time on pages in the NVMe tier? If not, Gold can read 0% while pages are in NVMe.
@@ -731,7 +733,7 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - (c) In the absence of SLA, yes, both application team and infrastructure team tracks KPI. SLA requires far more advanced cloud maturity model.
 
 ### Q076 · Part 1 > KPI step and Noisy Neighbour > Solution · How the SLA is computed; 99.99% at 5 minutes
-- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (memory class table); [knowledge/vcf-operations/kpis/cluster-sla-sli.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md).
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (memory class table); [knowledge/vcf-operations/kpis/cluster-sla-sli.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md).
 - Search 1: "SLA = 1 month average of SLI of that specific month."
 - Search 2: "VM contention is <1% for 99.99% of the time in the entire month"
 - Question: (a) Is the SLA the mean of the SLI values, or the share of 5-minute intervals that pass the threshold? They differ: one bad hour at 50% contention averages out in a mean, but fails 12 intervals. (b) A 30-day month has 8,640 five-minute intervals. One failed interval gives 99.988%. So 99.99% allows 0 failures, the same count as Gold's 100%; only the threshold differs (0% vs below 1%). Did you mean 99.9% (8 intervals, 40 minutes)? (c) Bronze has no threshold. Give one?
@@ -742,14 +744,14 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - (c) Recommended threshold for Performance SLA: 99.9% gold, 99.8% silver and 99.6% bronze
 
 ### Q077 · Part 1 > Noisy Neighbour > CPU · Shares of a busy vCPU beside an idle one
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section CPU, Share); [knowledge/vsphere/foundations/resource-controls.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Default CPU shares).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section CPU, Share); [knowledge/vsphere/foundations/resource-controls.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (section Default CPU shares).
 - Search: "the vCPU 1 of VM 2 does get 2x the share as it does not benefit from idleness of vCPU 2 of VM 2"
 - Question: the sentence says both "does get 2x" and "does not benefit". As Claude reads the scheduler: default shares are set per vCPU (1,000 per vCPU at Normal; your screenshot shows 2,000 for a 2-vCPU VM). Under contention each vCPU is charged against its own part, and an idle sibling's part is not handed to the busy vCPU. So vCPU 1 of VM 2 gets the same as vCPU 1 of VM 1, not 2x. Is "does get" a typo for "does not get"? And "shares are per VM, not per vCPU": per VM in configuration, per vCPU in effect?
 - Written as now: "the busy vCPU of a 2-vCPU VM does not gain from its idle sibling".
 - Answer: that's a Level 400 trap. I think even VMware VCDX will fail for it. A larger VM has more overall CPU shares, the share is shareable among its vCPU. In the following example, the vCPU 1 of VM 2 does get 2x the share as it benefits from idleness of vCPU 2 of VM 2.
 
 ### Q078 · Part 1 > Noisy Neighbour > CPU and Disk · Two calculations
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections CPU, Reservation; Disk, Limit).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (sections CPU, Reservation; Disk, Limit).
 - Search 1: "At 8:1 overcommit against physical thread, you cannot guarantee more than 0.25 CPU thread worth of resource"
 - Search 2: "then it only takes 5% of the VM population (40 VM in this case) to saturate your storage"
 - Question: (a) 8 vCPU per thread gives 0.125 thread per vCPU. 0.25 is right for 8:1 per core (4:1 per thread). Which basis? (b) 5% of 2,000 VMs is 100, not 40; at 1% each, 100 VMs reach 100% of the array. Was it meant as 40 VMs at 2.5% each, or 100?
@@ -759,7 +761,7 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - (b) 2.5% limit per VM, not 1%. 
 
 ### Q079 · Part 1 > Solution > Maximum VM Size · Core or thread as the basis
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Maximum VM size).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (section Maximum VM size).
 - Search 1: "Maximum size = ESXi logical CPU."
 - Search 2: "if your ESXi has 48 cores total, then avoid doing 12 vCPU VM"
 - Question: the example states overcommit per core ("1 core is assigned to 4 vCPU"); the size table per logical CPU (thread). Mixed: (a) 1:1 allows 96 vCPU on 48 cores and 96 threads, which alone is 2:1 per core; (b) 8:1 gives 0.125 × 96 = 12 vCPU, and the same row says avoid 12 on 48 cores, keep 4-6; (c) 4:1 gives 24 vCPU, called a whole socket, which is one socket's cores, not its threads. Should the table state overcommit and size per physical core? Then 1:1 → 48, 2:1 → 24 (19 with headroom), 4:1 → 12, 8:1 → 6.
@@ -767,7 +769,7 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - Answer: the book is wrong as the overcommit was based on core, not thread. It should be based on CPU physical thread. So 8:1 on a thread means 4:1 on the core if the core has dual threads. 
 
 ### Q080 · Part 1 > Noisy Neighbour > Storage I/O Control · Deprecated in VCF 9
-- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Disk, Storage I/O Control).
+- Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (sections Disk, Storage I/O Control).
 - Search: "SIOC provides 2 choices for congestion threshold"
 - Source: vSphere 9.1 documentation, Manage Storage I/O Resources with vSphere (p. 1886): "With VCF 9.0, vSphere Storage I/O Control Components are deprecated." The datastore performance charts still list SIOC Normalized Latency and Aggregate IOPs.
 - Question: (a) In 9.1, should the knowledge base mark SIOC as deprecated and keep only the per-disk limit and shares? Or does your field practice still enable it? (b) "There is no reservation for VM Disk." From vSphere 6.5, SIOC policy components also had an IOPS reservation, now deprecated with them (Claude's own knowledge). Keep the sentence as "none in the VM disk settings"?
@@ -811,7 +813,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Answer: VMXNET3 ring-buffer drop is a guest-os layer, outside the IaaS SLA as it's not visible to the hypervisor. You don't put SLA on something you cannot see, let alone control. The one covered by SLA is the vNIC as seen by the hypervisor. 
 
 ### Q071 · Part 1 > The 3 Realms · One word, two meanings: realm
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
 - Search: "In the big picture, there are 3 realms of IT in business"
 - Question: Part 1 uses realm for business, application and IaaS. Part 3 and the knowledge base use realm for VM and Guest OS. One word per concept. Keep realm for the 3 of Part 1 and call VM and Guest OS layers? Or the reverse?
 - Written as now: both meanings.
@@ -844,7 +846,7 @@ BTW, the page is 2105, not 2103.
 - Done 2026-11-06: esxtop CPU and network files state HTQ and DTYP are not shown on ESXi 9.1 and the documentation is out of date.
 
 ### Q047 · The World of Metrics > Resource management · Untouched memory reservation
-- Files: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md)
+- Files: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md)
 - Search: "since ESXi has reserved the space, it is not available to other VMs"
 - Question: the vSphere 9.1 documentation (vSphere Resource Management > Virtual Machine Memory, pp. 1833-1834) says that until a VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; only touched reserved memory is kept, even when idle. Does the book statement mean admission control (the reservation cannot be promised to another VM), while the physical pages can still be used by others until touched?
 - Written as now: Consumed jumps to the reservation at power-on; the reserved space is not available to other VMs. The existing correction says RAM is backed on first use, then stays locked.
@@ -853,7 +855,7 @@ BTW, the page is 2105, not 2103.
 
 ### Q048 · Thresholds · Interval and instance reading of every band
 - Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/kpis/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) and [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (fields `interval`, `instance`).
-- Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/thresholds.md) (Interval rule, Instance rule).
+- Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
 - Answer: In VCF Operations, when the metric name has the word peak, that means it's reporting the highest 20-second-average within the 300-second reporting period. There are 15 data points within each 5 minute, each is a 20-second average. It's taking the highest among these 15 instance. The metrics at VM level are:
@@ -904,7 +906,7 @@ All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported
 - Done 2026-11-06: VM operations counts are cumulative since object creation, not reset by a vCenter restart.
 
 ### Q057 · Benchmark · [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md): check with a vCenter CPU screenshot
-- Files: [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md) (section Expected key points, CPU bullet); [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Reservation: CPU vs memory).
+- Files: [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md) (section Expected key points, CPU bullet); [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (section Reservation: CPU vs memory).
 - Search: not from the book. The question comes from the book section The World of Metrics > Resource management (`source_path` of the question).
 - Question: please validate the CPU key point with a screenshot of the vCenter UI: a VM with a 4 GHz CPU reservation, powered on and sitting at the BIOS screen. Do Run, Used, Demand and Usage stay at or near 0? The screenshot can then become the question's attachment (input type screenshot).
 - Written as now: CPU reservation is on demand; the CPU counters stay at or near 0 while the VM sits at the BIOS screen.
@@ -1008,7 +1010,7 @@ All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported
 - Done 2026-11-05: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.6 marked decided.
 
 ### Q041 · Quiz > CPU > Q8 Reservation · Options A and B
-- Files: [CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md); [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md), [ESXi CPU Reserved Capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/reserved-capacity.md), [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/overhead.md)
+- Files: [CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md); [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md), [ESXi CPU Reserved Capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/reserved-capacity.md), [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md)
 - Search 1 (quiz): "Total reservation at ESXi level is capped at the base nominal clock speed"
 - Search 2 (quiz): "CPU reservation only comes into play during contention"
 - Question: key is A,B,C,D. Frontier classic chose C,D in 5 of 5 runs and rejected A and B. Are A and B correct? If yes, which statements should the knowledge base add?
@@ -1017,7 +1019,7 @@ All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported
 - Answer: A and B are correct.
 - The justification for A was already in the key itself. ESXi CPU has 3 frequency (base or nominal, all core turbo, and single core turbo). Only the base frequency is used by ESXi logic to guarantee a reservation. This is a conservative design.
 - The justification for A was already in the key itself. It's written "if there is enough for everyone, reservation is irrelevant. Think of a restaurant. If there is enough seat, does your reservation matter if you do not reserve a specific table?"
-- Done 2026-11-05: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/resource-controls.md) (section Reservation: CPU vs memory) and [ESXi CPU Reserved Capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/reserved-capacity.md) (Meaning, Traps). The second justification line is read as being about B.
+- Done 2026-11-05: [Resource controls: reservation, limit, shares, entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (section Reservation: CPU vs memory) and [ESXi CPU Reserved Capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/reserved-capacity.md) (Meaning, Traps). The second justification line is read as being about B.
 
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
 - Files: [Windows CPU scheduling and thread states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/concepts/windows-cpu-scheduling.md), [VM CPU Run](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/run.md)
@@ -1344,7 +1346,7 @@ flowchart LR
 - Search 2 (book, MS Windows table): "| VM CPU Demand   | Yes               | No             | Yes           |"
 - Question: the key says Demand is affected by Hyper-Threading. The MS Windows table marks Demand as not affected. Which is right?
 - Written as now: case keeps the key's answer (G wrong); reason flagged.
-- Answer: Author (2026-11-03): the key is correct. Guest OS and VM are 2 realms; the Guest OS does not see physical threads. Added to [VM vs Guest OS: two realms and their visibility layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md), [VM CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md), [Guest OS CPU vs VM CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md).
+- Answer: Author (2026-11-03): the key is correct. Guest OS and VM are 2 realms; the Guest OS does not see physical threads. Added to [VM vs Guest OS: two realms and their visibility layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/vm-vs-guest-os.md), [VM CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md), [Guest OS CPU vs VM CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md).
 
 ### Q036 · Quiz > CPU > Q7 Guest OS CPU · Is F correct?
 - Files: [Guest OS run queue, context switch, Windows thread states](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-04-guest-os-run-queue-context-switch-windows-thread-states.md)

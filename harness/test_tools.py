@@ -24,7 +24,7 @@ class MovedTest(unittest.TestCase):
         for old, new in kb.MOVED.items():
             self.assertEqual(kb.resolve(old), new)
             self.assertIn(new, DOCS)
-        self.assertEqual(kb.resolve('vsphere/foundations/resource-controls'), 'vsphere/foundations/resource-controls')
+        self.assertEqual(kb.resolve('vsphere/foundations/resource-controls'), 'vsphere/architecture/resource-controls')
 
 
 class CatalogTest(unittest.TestCase):

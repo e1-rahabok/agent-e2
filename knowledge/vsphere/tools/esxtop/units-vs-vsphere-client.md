@@ -24,7 +24,7 @@ object:
 - VirtualMachine
 metric_class: consumption
 internal_derive:
-- foundations/units
+- observability/units
 same_name: []
 same_meaning: []
 related: []

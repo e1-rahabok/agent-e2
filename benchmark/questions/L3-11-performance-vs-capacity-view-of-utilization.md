@@ -37,7 +37,7 @@ task: explain-mechanism
 knowledge:
   - operations-management/capacity/capacity-model
   - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
-  - foundations/metric-perspectives
+  - observability/metric-perspectives
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q10 Performance vs Capacity"

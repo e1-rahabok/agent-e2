@@ -3,7 +3,7 @@
 ## What it is
 - One score per ESXi host, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
-- ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See `vsphere/foundations/provider-consumer`.
+- ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See `vsphere/architecture/provider-consumer`.
 - Not built into VCF Operations: a metric of the author's vCommunity management pack, published on the host object under `vCommunity|ESXi Performance|ESXi Performance Score`, with its 9 sub-metrics beside it.
 - Use: the first step of the ESXi health check (`vsphere/object-types/esxi/health-check/esxi-health-check`). When the score drops, open the 9 sub-metrics of that host.
 
@@ -84,7 +84,7 @@ same_meaning: []
 related:
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - vsphere/object-types/vm/kpis/vm-performance
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 images:
   - path: ../images/esxi-performance-thresholds-table.png
     product: [vcf-operations]

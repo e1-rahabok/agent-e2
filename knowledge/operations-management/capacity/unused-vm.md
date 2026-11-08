@@ -110,7 +110,7 @@ internal_derive: []
 related:
 - operations-management/capacity/reclamation
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Capacity Management > Reclamation > Unused VM (Configuration; Utilization; Other Signs; Annual Stocktake). Pages 118-121.'

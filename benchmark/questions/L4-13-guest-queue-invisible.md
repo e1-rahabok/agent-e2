@@ -30,7 +30,7 @@ technology: [storage]
 input: [text]
 task: troubleshoot
 knowledge:
-  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/architecture/vm-vs-guest-os
   - vsphere/technology/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: book

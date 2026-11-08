@@ -112,7 +112,7 @@ object:
 - HostSystem
 - ClusterComputeResource
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/technology/cpu/concepts/hyper-threading
 related:
 - vsphere/technology/cpu/concepts/vcpu-states
@@ -125,7 +125,7 @@ related:
 - vsphere/technology/cpu/metrics/host/demand
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - operations-management/capacity/capacity-model
-- vsphere/foundations/overhead
+- vsphere/architecture/overhead
 images:
 - path: ../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png
   product:

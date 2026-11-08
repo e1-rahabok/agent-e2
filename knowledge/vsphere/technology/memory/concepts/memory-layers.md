@@ -83,7 +83,7 @@ object:
 - VirtualMachine
 - HostSystem
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 related:
 - vsphere/technology/memory/concepts/page-sharing
 - vsphere/technology/memory/concepts/host-memory-states

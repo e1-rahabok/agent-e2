@@ -12,7 +12,7 @@
 
 ## Metadata
 ```yaml
-id: foundations/metrics-as-accounting
+id: observability/metrics-as-accounting
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -26,8 +26,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/naming-patterns
-- foundations/thresholds
+- observability/naming-patterns
+- observability/thresholds
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances

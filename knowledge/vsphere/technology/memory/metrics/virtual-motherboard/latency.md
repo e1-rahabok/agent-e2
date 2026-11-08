@@ -50,7 +50,7 @@ layer:
 - virtual-motherboard
 metric_class: contention
 internal_derive:
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/latency
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency

@@ -153,8 +153,8 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 4. Expand: add files named in `related`, `internal_derive`, `same_name`, `same_meaning`.
    - Classic mode today: `same_name` and two `related` of the top 2 hits; with `expand_derive`, up to 3 `internal_derive` files of each. With `route_troubleshooting`, a troubleshooting question puts its best diagnosis file first.
    - `same_name` is the main trap guard: it brings in the other object's meaning of the same label.
-5. Add the matching foundations files when the answer depends on units, sampling, thresholds or the provider/consumer view.
-6. Fit to the context window. Priority: matching metric or flow file, then its concepts, then foundations, then the rest of the links.
+5. Add the matching observability and vSphere architecture files when the answer depends on units, sampling, thresholds or the provider/consumer view.
+6. Fit to the context window. Priority: matching metric or flow file, then its concepts, then observability and architecture, then the rest of the links.
 7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.
 
 ### Answer

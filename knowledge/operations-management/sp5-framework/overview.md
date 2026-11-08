@@ -171,8 +171,8 @@ related:
 - operations-management/sp5-framework/health-risk-efficiency
 - operations-management/sp5-framework/proactive-operations
 - operations-management/sp5-framework/class-of-service
-- foundations/input-types
-- vsphere/foundations/resource-controls
+- observability/input-types
+- vsphere/architecture/resource-controls
 images:
   - path: images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png
     product: [vsphere, vcf-operations]

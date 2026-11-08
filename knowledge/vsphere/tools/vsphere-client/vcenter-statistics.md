@@ -122,9 +122,9 @@ object:
 - VirtualMachine
 - HostSystem
 internal_derive:
-- vsphere/foundations/metric-sources
+- vsphere/architecture/metric-sources
 related:
-- vsphere/foundations/metric-sources
+- vsphere/architecture/metric-sources
 - vsphere/tools/vcf-operations/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/units-vs-vsphere-client

@@ -59,7 +59,7 @@
 
 ## Metadata
 ```yaml
-id: foundations/collection-interval
+id: observability/collection-interval
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -73,8 +73,8 @@ internal_derive: []
 related:
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vsphere/tools/vcf-operations/peak-20-second-metrics
-- foundations/aggregation
-- foundations/measurement-precision
+- observability/aggregation
+- observability/measurement-precision
 - vcf-operations/concepts/real-time-metrics
 source:
   document: 'PART 3 - Counters.docx, Metric Mastery (author update, 2026-11-08)'

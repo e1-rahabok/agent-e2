@@ -31,7 +31,7 @@ task: read-metric
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/latency
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
-  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/architecture/vm-vs-guest-os
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."

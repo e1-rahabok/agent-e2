@@ -2,7 +2,7 @@
 
 ## Principle
 - Use Reservation, Shares and Limits only where the environment requires them.
-- Each setting has its own job. Set each for its purpose. See `vsphere/foundations/resource-controls`.
+- Each setting has its own job. Set each for its purpose. See `vsphere/architecture/resource-controls`.
 
 ## Shares vs reservation
 - Use Shares, not Reservation, to allocate resources fairly when total available resources change often.
@@ -26,7 +26,7 @@
 - Use resource pools for delegated resource management.
 - To isolate a resource pool fully, set its resource pool type to Fixed, and use Reservation and Limit.
 - Group the VMs of a multi-tier service into one resource pool. Resources are then assigned to the service as a whole.
-- For resource pool and sibling design, see `vsphere/foundations/scalable-shares`.
+- For resource pool and sibling design, see `vsphere/object-types/resource-pool/configuration/scalable-shares`.
 
 ## Review: how each control affects operations
 - Shares, reservation and limit sit in one dialog and are learned together, but they affect operations differently. Over years in a large environment they drift out of consistency.
@@ -74,7 +74,7 @@
 
 ## Review: resource pools
 - Use them sparingly: when selling resource pools as a service. Read pool and VM shares and reservations together, more so with Scalable Shares.
-- Children: without Scalable Shares, the pool's shares are divided among its VMs; the more VMs, the less each gets. Scalable Shares fixes this (`vsphere/foundations/scalable-shares`).
+- Children: without Scalable Shares, the pool's shares are divided among its VMs; the more VMs, the less each gets. Scalable Shares fixes this (`vsphere/object-types/resource-pool/configuration/scalable-shares`).
 - Pool settings are cluster-wide while a VM runs on one host: in a large cluster, a pool limit or share setting can hurt its VMs in ways hard to see.
 - Siblings:
   - a pool with VMs as siblings is a common mistake; one pool alone makes no operational sense (it is not a folder). Create at least two;
@@ -110,8 +110,8 @@ internal_derive: []
 related:
 - operations-management/sp5-framework/configuration-management
 - operations-management/sp5-framework/class-of-service
-- vsphere/foundations/resource-controls
-- vsphere/foundations/scalable-shares
+- vsphere/architecture/resource-controls
+- vsphere/object-types/resource-pool/configuration/scalable-shares
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/object-types/cluster/concepts/dpm
 images:
@@ -139,8 +139,8 @@ review_notes:
 - 'Share example: the book has both VMs demanding 10 GHz; a 1-vCPU VM cannot exceed one physical core. The book''s last line says VM 1 twice. Q108.'
 - 'The impact table image says a share of 2,000 depends on other VMs'' reservations; meant as shares. Q108.'
 - 'Resource pool weighing as a 4-vCPU, 16-GB VM: Claude''s explanation of the book''s 4x and 16x (the book says it is unsure why).'
-- 'Limit: the book says there is no network limit; vSphere has per-vNIC limits under Network I/O Control (vsphere/foundations/noisy-neighbour). Q109.'
+- 'Limit: the book says there is no network limit; vSphere has per-vNIC limits under Network I/O Control (operations-management/performance/noisy-neighbour). Q109.'
 - 'HA slot size: only under the slot policy admission control. Q110.'
-- 'Siblings: the book calls VM and pool siblings a mistake; with Scalable Shares the dilution is solved (vsphere/foundations/scalable-shares). Both kept. Q110.'
+- 'Siblings: the book calls VM and pool siblings a mistake; with Scalable Shares the dilution is solved (vsphere/object-types/resource-pool/configuration/scalable-shares). Both kept. Q110.'
 status: draft
 ```

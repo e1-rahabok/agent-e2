@@ -41,7 +41,7 @@ answer_type: judged
 input: [screenshot]
 knowledge:
   - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
-  - vsphere/foundations/resource-controls
+  - vsphere/architecture/resource-controls
 attachments:
   - 0073/vcenter-cluster-resource-allocation.png
 origin: synthetic

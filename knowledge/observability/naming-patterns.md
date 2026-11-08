@@ -54,7 +54,7 @@ The patterns below classify the ways names mislead.
 
 ## Metadata
 ```yaml
-id: foundations/naming-patterns
+id: observability/naming-patterns
 retriever_guide: metric-meaning
 scope: vendor-neutral
 technology:

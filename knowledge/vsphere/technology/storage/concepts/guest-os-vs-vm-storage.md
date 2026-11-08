@@ -45,7 +45,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 related:
 - vsphere/technology/storage/concepts/storage-layers
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency

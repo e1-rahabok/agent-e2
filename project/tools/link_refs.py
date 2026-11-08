@@ -1,6 +1,6 @@
 """Turn file references in the author-facing documents into clickable GitHub links.
 
-A backticked knowledge id (`vsphere/foundations/resource-controls`) becomes [<its # title>](URL).
+A backticked knowledge id (`vsphere/architecture/resource-controls`) becomes [<its # title>](URL).
 A backticked repository path that exists (`benchmark/design.md`) becomes [path](URL).
     python3 project/tools/link_refs.py          # rewrite DOCS
     python3 project/tools/link_refs.py --check  # list unlinked references; exit 1 if any (used by lint)

@@ -18,7 +18,7 @@ object:
 - ClusterComputeResource
 metric_class: consumption
 internal_derive:
-- foundations/resource-nature
+- observability/resource-nature
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/memory/metrics/host/usage

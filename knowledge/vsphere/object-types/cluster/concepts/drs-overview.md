@@ -84,11 +84,11 @@ object:
 internal_derive: []
 related:
 - vsphere/object-types/cluster/configuration/drs-migration-levels
-- vsphere/foundations/scalable-shares
+- vsphere/object-types/resource-pool/configuration/scalable-shares
 - vsphere/object-types/cluster/concepts/vcls
 - vsphere/object-types/cluster/concepts/dpm
 - vsphere/object-types/vm/configuration/resource-settings-guidance
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77)
