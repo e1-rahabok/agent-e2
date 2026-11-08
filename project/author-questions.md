@@ -383,16 +383,6 @@ Each entry has:
 - Related: Q099, Q100, Q120 (per thread in the capacity plan) and Q125.
 - Answer:
 
-### Q112 · Part 1 > Configuration Management > Review List · Facts to update for VCF 9.1
-- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section DRS); [Storage configuration review: datastores, LUNs, NFS, arrays, queue depth](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-configuration-review.md); [VM configuration review: VMware Tools, hardware, compute and storage settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (sections Storage, VMware Tools).
-- Search 1: "Since DRS calculates every five minutes" (DRS runs every minute since vSphere 7; [DRS migration levels](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/drs-migration-levels.md)).
-- Search 2: "Is the usage following design best practice?" (vVols; deprecated in VCF 9.0, Broadcom KB 401070; Protection and Recovery 9.1 is its last release with vVols).
-- Search 3: "Ensure that the snapshot is removed within one day" (the SP5 Process daily SOP says older than about 3 days).
-- Search 4: "refer to KB 340" (VMware Tools benefits; KB number under Broadcom to confirm).
-- Question: confirm (1) every minute; (2) keep vVol checks for existing estates, with the deprecation stated; (3) one day or three days; (4) the KB number.
-- Written as now: every minute; vVols deprecated; one day in the VM review; KB 340 as cited.
-- Answer:
-
 ### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
 - Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-management-process.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md).
 - Search 1: "e first place, by using progressive pricing"
@@ -551,6 +541,17 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q112 · Part 1 > Configuration Management > Review List · Facts to update for VCF 9.1
+- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section DRS); [Storage configuration review: datastores, LUNs, NFS, arrays, queue depth](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-configuration-review.md); [VM configuration review: VMware Tools, hardware, compute and storage settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (sections Storage, VMware Tools).
+- Search 1: "Since DRS calculates every five minutes" (DRS runs every minute since vSphere 7; [DRS migration levels](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/drs-migration-levels.md)).
+- Search 2: "Is the usage following design best practice?" (vVols; deprecated in VCF 9.0, Broadcom KB 401070; Protection and Recovery 9.1 is its last release with vVols).
+- Search 3: "Ensure that the snapshot is removed within one day" (the SP5 Process daily SOP says older than about 3 days).
+- Search 4: "refer to KB 340" (VMware Tools benefits; KB number under Broadcom to confirm).
+- Question: confirm (1) every minute; (2) keep vVol checks for existing estates, with the deprecation stated; (3) one day or three days; (4) the KB number.
+- Written as now: every minute; vVols deprecated; one day in the VM review; KB 340 as cited.
+- Answer: 1. Every minute 2. Yes 3. One day 4. Article 315382
+- Applied 2026-11-08: vm-configuration-review (KB 315382, snapshot one day), proactive-operations (daily SOP: one day), review notes in the cluster and storage reviews.
 
 ### Q093 · Part 1 > Your Private Cloud · Book corrections for the next edition
 - Files: none; the knowledge base already uses current names.
