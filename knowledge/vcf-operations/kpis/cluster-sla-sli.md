@@ -54,7 +54,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- operations-management/performance/sla-metrics
+- operations-management/sla-metrics
 - vcf-operations/kpis/cluster-performance
 - foundations/thresholds
 images:

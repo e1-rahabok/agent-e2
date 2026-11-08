@@ -74,7 +74,7 @@ internal_derive:
 related:
 - vsphere/technology/network/metrics/host/packets-dropped
 - vsphere/tools/esxtop/network
-- operations-management/performance/realms-and-layers
+- operations-management/realms-and-layers
 source:
   document: Author's document, Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07)
   path: Scenario 1 (RX, guest buffer exhaustion); Scenario 2 (TX, top-of-rack congestion)

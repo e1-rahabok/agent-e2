@@ -144,7 +144,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 
 ## Metadata
 ```yaml
-id: operations-management/performance/class-of-service
+id: operations-management/class-of-service
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -168,12 +168,12 @@ object:
 - ResourcePool
 - VirtualMachine
 internal_derive:
-- operations-management/performance/sla-metrics
+- operations-management/sla-metrics
 - operations-management/capacity/class-of-service-planning
 - vsphere/foundations/noisy-neighbour
 - operations-management/capacity/host-spec-from-class-of-service
 related:
-- operations-management/performance/iaas-business
+- operations-management/iaas-business
 - vcf-operations/kpis/cluster-sla-sli
 - operations-management/capacity/rightsizing
 - vsphere/foundations/resource-controls

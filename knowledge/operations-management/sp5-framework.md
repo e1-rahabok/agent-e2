@@ -7,7 +7,7 @@
 - Pillars: the disciplines a CIO cares about. People are organized around them; policies and processes balance governance and agility. A full set of policies and SOPs answers who does what, when, where and how.
 - Platform: the system architecture (compute, storage, network, security, management and portal), implemented with a product such as VCF.
 ![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
-- Day 2 → Day 0 → Day 1: `operations-management/performance/purpose-driven-architecture`, section Plan from Day 2.
+- Day 2 → Day 0 → Day 1: `operations-management/purpose-driven-architecture`, section Plan from Day 2.
 
 ## What a private cloud manages
 - Consumer side: tenants consume and pay for IaaS through a self-service portal and API: SLA monitoring, inventory, projects, troubleshooting, security, team, bill.
@@ -44,13 +44,13 @@
 ## Availability
 - Solutions span snapshots, backup, redundancy, fault tolerance, clustering and site recovery. Most consume resources (load balancers, replication), so they go into capacity planning; then they do not hurt performance.
 - Include the load of a DR event in capacity planning.
-- Two metrics: Actual Availability (%) ignores HA design and scheduled downtime; Operational Availability (%) accounts for them, is higher, and is the SLA number (`operations-management/performance/sla-metrics`).
+- Two metrics: Actual Availability (%) ignores HA design and scheduled downtime; Operational Availability (%) accounts for them, is higher, and is the SLA number (`operations-management/sla-metrics`).
 - Each extra nine shrinks the margin of error 10x. The book puts five nines at 10x the cost of four nines.
 
 ## Performance
 - The most important pillar in day-to-day operations. With HA designed in, part of the system can be down with no impact on performance or capacity.
 - Often confused with capacity: more work done is read as good performance. That reading makes idle look like poor performance.
-- The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: `operations-management/performance/performance-vs-capacity`.
+- The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: `operations-management/performance-vs-capacity`.
 
 ## Capacity
 - Two kinds:
@@ -135,7 +135,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/sp5-framework
+id: operations-management/sp5-framework
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -156,14 +156,14 @@ object:
 - VirtualMachine
 - HostSystem
 internal_derive:
-- operations-management/performance/sla-metrics
-- operations-management/performance/performance-vs-capacity
+- operations-management/sla-metrics
+- operations-management/performance-vs-capacity
 - operations-management/capacity/capacity-model
 related:
-- operations-management/performance/purpose-driven-architecture
-- operations-management/performance/health-risk-efficiency
-- operations-management/performance/proactive-operations
-- operations-management/performance/class-of-service
+- operations-management/purpose-driven-architecture
+- operations-management/health-risk-efficiency
+- operations-management/proactive-operations
+- operations-management/class-of-service
 - foundations/input-types
 - vsphere/foundations/resource-controls
 images:

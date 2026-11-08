@@ -86,7 +86,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/realms-and-layers
+id: operations-management/realms-and-layers
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -109,7 +109,7 @@ internal_derive:
 - vsphere/foundations/vm-vs-guest-os
 - vsphere/foundations/provider-consumer
 related:
-- operations-management/performance/performance-vs-capacity
+- operations-management/performance-vs-capacity
 - operations-management/performance/kpi-vs-sla
 - operations-management/performance/troubleshooting/vm-slow-triage
 images:

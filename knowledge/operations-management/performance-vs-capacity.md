@@ -90,7 +90,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/performance-vs-capacity
+id: operations-management/performance-vs-capacity
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -113,7 +113,7 @@ internal_derive:
 - operations-management/capacity/capacity-model
 related:
 - operations-management/performance/kpi-vs-sla
-- operations-management/performance/realms-and-layers
+- operations-management/realms-and-layers
 - vcf-operations/kpis/cluster-performance
 - vsphere/foundations/provider-consumer
 images:

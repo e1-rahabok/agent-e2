@@ -19,7 +19,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/` | What Agent E2 reads. The only indexed folder |
 | `knowledge/catalog/` | Exact data in YAML: vCenter counters, esxtop fields, thresholds, object model |
 | `knowledge/foundations/` | True across VCF components and the Guest OS: units, accounting, thresholds |
-| `knowledge/operations-management/` | Pillars across products: `performance/`, `capacity/` |
+| `knowledge/operations-management/` | Operations across products. Root: across pillars (SP5, SLAs, class of service, health, alerts). `performance/`, `capacity/`: one pillar |
 | `knowledge/vsphere/` | `foundations/`, `technology/<cpu, memory, storage, network, gpu>/`, `object-types/<vm, esxi, cluster>/`, `tools/` |
 | `knowledge/vcf-operations/` | What VCF Operations computes: `concepts/`, `kpis/`, `models/`, `metrics/` |
 | `knowledge/guest-os/` | Windows and Linux, a separate layer |

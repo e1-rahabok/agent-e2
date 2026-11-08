@@ -28,7 +28,7 @@
 - **Multi-cluster**: clusters balanced as one; each keeps its own capacity remaining.
 - **Stretched cluster**: more complex. It gives disaster avoidance, not disaster recovery; DR is still required.
 - **Site Recovery cluster**: protected VMs from the other site must be counted in capacity.
-- Cluster size cap from business continuity: `operations-management/performance/purpose-driven-architecture`.
+- Cluster size cap from business continuity: `operations-management/purpose-driven-architecture`.
 
 ## Traps
 - "HA is off but every host runs, so availability is fine" → availability today is fine; the risk is in future health. Each application must now protect itself.
@@ -56,14 +56,14 @@ product:
 object:
 - ClusterComputeResource
 internal_derive:
-- operations-management/performance/configuration-management
+- operations-management/configuration-management
 related:
 - vsphere/object-types/cluster/configuration/drs-migration-levels
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/object-types/cluster/concepts/dpm
 - operations-management/capacity/capacity-model
-- operations-management/performance/health-risk-efficiency
+- operations-management/health-risk-efficiency
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Configuration Management > Review List > Cluster; vSphere Cluster Variation (pp. 144-145)'

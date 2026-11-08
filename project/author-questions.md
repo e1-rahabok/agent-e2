@@ -119,7 +119,7 @@ Each entry has:
 - Answer:
 
 ### Q072 · Part 1 > The Layers in IT Systems · Apdex
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
 - Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
 - Search 2: "I like the principle behind apdex, but not its implementation"
 - Question: (a) and (b), book typos, closed 2026-11-08 (book edition does not matter to Agent E2, author on Q107). (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
@@ -127,14 +127,14 @@ Each entry has:
 - Answer:
 
 ### Q086 · Part 1 > Your Private Cloud > Overview > Key Metrics · Operational Availability and green zone
-- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/iaas-business.md) (section Metrics per pillar).
+- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/iaas-business.md) (section Metrics per pillar).
 - Search: "Relative Availability, against your availability architecture and green zone."
 - Question: what is the green zone here? (a) the planned availability band of the architecture (for example the HA design target), or (b) something else. The formula comes later, in the Service Level Agreement section; this asks only for the term.
 - Written as now: Operational Availability is relative to the availability architecture; green zone left out.
 - Answer:
 
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
-- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
+- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
 - Search 1: "If 1 CPU typically uses 4 GB RAM, then a 64-core ESXi host will only need 256 GB."
 - Search 2: "If you buy a 64-core ESXi, you have 56 cores left and you will be able to sell 224 vCPU."
 - Search 3: "For Silver, you plan to overcommit 4:1 for CPU and 2:1 for memory."
@@ -148,7 +148,7 @@ Each entry has:
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
-- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (section Prevention window); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/alerts-and-insights.md) (section Prevention window); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
 - Search 1: "In the following example, the alerts use the SLA metrics and threshold."
 - Search 2: "Correct means the SLA is measured on each paying VM, and not at the infrastructure level."
 - Image text (not searchable): "SLA: VM CPU Ready > 5%", "SLA: VM Disk Latency > 10 ms", "Cluster average CPU Ready.", "VM CPU Co-Stop > 2.5%", "VM CPU IO Wait > 1%", "ESXi VMkernel queue > 1 ms", "vMotion stun time > 0.2 second".
@@ -175,7 +175,7 @@ Each entry has:
 - Answer:
 
 ### Q092 · Part 1 > Begin with The End in Mind > The Crown Jewel · Health across tiers
-- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Health of an application tier).
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/purpose-driven-architecture.md) (section Health of an application tier).
 - Search: "The health of a tier is the average health of its members."
 - Question:
   - (a) Inside a tier, the average. Across tiers (web → application → database) work runs in sequence, like a convoy. Is the application's health the minimum of its tiers?
@@ -183,17 +183,9 @@ Each entry has:
 - Written as now: tier = average of members; nothing on across tiers or active/passive.
 - Answer:
 
-### Q094 · Repository · Where cross-pillar operations files go
-- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/iaas-business.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md); [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md).
-- Search: not applicable. Rule: [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) allows only pillar folders (performance, capacity) under [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management).
-- Also (2026-11-07, Service Level Agreement to SP5 Framework: Process): [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md), [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md), [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sp5-framework.md), [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/health-risk-efficiency.md), [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md), [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md): same placement, same question.
-- Also (2026-11-07, Configuration Management): [Configuration management: standards, review dimensions and the four types of check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/configuration-management.md). There is no configuration pillar; it sits in performance/ for now.
-- Question: these three files cover several pillars (availability, performance, capacity, security) and the platform itself. They are in `operations-management/performance/` to pass lint. Options: (A) keep them in performance/; (B) allow files at the root of `operations-management/`; (C) a new folder such as `operations-management/service/`.
-- Written as now: option A, pillars in the tags.
-- Answer:
 
 ### Q095 · Part 1 > Service Level Agreement > SLA Calculation · Pass scored as 0%, and partial VM scores
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md) (section SLA calculation); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md) (section Cluster SLI).
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sla-metrics.md) (section SLA calculation); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-sla-sli.md) (section Cluster SLI).
 - Search 1: "If VM CPU Ready > 2.5% then 100% else 0%"
 - Search 2: "So, every 5 minutes, a VM gets a score of 100% or 75%"
 - Search 3: "Since SLA is binary, this is simply counted as failure"
@@ -205,7 +197,7 @@ Each entry has:
 - Answer:
 
 ### Q096 · Part 1 > Service Level Agreement > Availability SLA · The database restore in Actual Availability
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md) (section Availability SLA, example).
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sla-metrics.md) (section Availability SLA, example).
 - Search 1: "the large database took 45 minutes to fully restore"
 - Search 2: "Actual Availability (%) = 717 / 720 = 99.58%"
 - Search 3: "If it takes the application 15 minutes to become fully operational"
@@ -214,7 +206,7 @@ Each entry has:
 - Answer:
 
 ### Q097 · Part 1 > Service Level Agreement > Performance SLA · Co-stop exclusion and Memory Contention unit
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md) (sections Performance SLA, What the numbers mean); [VM Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md).
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sla-metrics.md) (sections Performance SLA, What the numbers mean); [VM Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md).
 - Search 1: "exclude CPU Co-Stop and CPU Contention from the Performance SLA"
 - Search 2: "Memory Contention is relative to the amount of memory being used"
 - Search 3: "Unlike CPU, it is not measured across time"
@@ -225,7 +217,7 @@ Each entry has:
 - Answer:
 
 ### Q098 · Part 1 > Service Level Agreement > Recommended SLA · Compliance 99.95% or 100%
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md) (section Compliance SLA); [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md) (sections Recommended SLA per class, Sample offering).
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sla-metrics.md) (section Compliance SLA); [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/class-of-service.md) (sections Recommended SLA per class, Sample offering).
 - Search 1: "I did not put 99.99% as that"
 - Search 2: "You should maintain perfect compliance with your compliance requirements for all classes of service"
 - Search 3: "you should guarantee to your customers that you will be perfectly (100%) compliant"
@@ -234,7 +226,7 @@ Each entry has:
 - Answer:
 
 ### Q099 · Part 1 > Service Level Agreement > Price & SLA · Silver ratios, notation and the 64-core licence
-- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md) (section Planning example); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md) (section Silver at 3:1 CPU).
+- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/class-of-service.md) (section Planning example); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md) (section Silver at 3:1 CPU).
 - Search 1: "For Silver, you decide on 3:1 CPU overcommit and no RAM overcommit"
 - Search 2: "(67% of Gold)" and the cells "CPU 1:2", "RAM 1:1.5" in the same table
 - Search 3: "Buying 64 cores maximizes your vSphere license"
@@ -248,7 +240,7 @@ Each entry has:
 - Answer:
 
 ### Q100 · Part 1 > Service Level Agreement > Size Limit · Socket or logical CPUs
-- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md) (section Size limit per class); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Maximum VM size).
+- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/class-of-service.md) (section Size limit per class); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Maximum VM size).
 - Search 1: "Capping the size at each tier"
 - Search 2: "If you allow a single VM to be the same size as the ESXi host"
 - Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
@@ -258,7 +250,7 @@ Each entry has:
 - Answer:
 
 ### Q101 · Part 1 > SP5 Framework: Pillars · Relationship lines and what is troubleshot
-- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sp5-framework.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Who does which day).
+- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/proactive-operations.md) (section Who does which day).
 - Search 1: "Lines without arrowheads means there is relationship but not impact"
 - Search 2: "Availability and Capacity should not overlap"
 - Search 3: "Why isn’t there a line to Performance?"
@@ -272,7 +264,7 @@ Each entry has:
 - Answer:
 
 ### Q102 · Part 1 > SP5 Framework > Health · Where compliance and inventory sit
-- Files: [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/health-risk-efficiency.md).
+- Files: [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/health-risk-efficiency.md).
 - Search 1: "There are 4 problems that create risk in operations"
 - Image text (not searchable): present/future health image, "Is it safe? Security Compliance" under Present Health and "Inventory" under Future Health.
 - Question: the table and the grouping image put compliance under risk (future health) and inventory outside health (environment). The present/future health image puts compliance with security in present health and inventory in future health. Which grouping should the agent use?
@@ -280,7 +272,7 @@ Each entry has:
 - Answer:
 
 ### Q103 · Part 1 > SP5 Framework > Basic Terminology · Alert: urgent or important; symptom
-- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (sections Symptom, alert, insight; Finding, issue, alert, notification). Related: Q089.
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/alerts-and-insights.md) (sections Symptom, alert, insight; Finding, issue, alert, notification). Related: Q089.
 - Search 1: "It’s an urgent Issue with Symptom crossing threshold"
 - Search 2: "An issue is identified by its 1 or more Symptom"
 - Image text (not searchable): "Important issues" (Issue → Alert), "Urgent issue" (Alert → Notification), "Non-important issue" (Alert → Daily Check).
@@ -291,7 +283,7 @@ Each entry has:
 - Answer:
 
 ### Q105 · Part 1 > Monitor | Troubleshoot; SP5 Framework: Process · Logs in monitoring and the length of the daily check
-- Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md).
+- Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/proactive-operations.md).
 - Search 1: "Not required. Metrics, properties, and Event suffice."
 - Search 2: "Should take just 5 minutes"
 - Search 3: "The check must be quick, ~1 minute"
@@ -308,7 +300,7 @@ Each entry has:
 - Still open: (c).
 
 ### Q106 · Part 1 > Service Level Agreement > Performance SLA · SLA counters vs the prevention window alerts
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).
 - Search: "Use the above threshold as they are."
 - Question: the four SLI thresholds are now catalog rows at 5-minute VM level (CPU Ready 2.5%, Memory Contention 1%, Disk Latency 10 ms, Transmit Dropped 0%). Q088 (a) asks about the 5% Ready in the prevention window image. Confirm the rows, and that the SLA reading is the 5-minute VM average, never the 20-second peak?
 - Written as now: four rows, interval 5m, instance aggregate.
@@ -469,7 +461,7 @@ Each entry has:
 - Answer:
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
-- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Demand).
+- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-dimensions.md) (section Demand).
 - Search 1: "Demand = Max (Utilization, Reservation)"
 - Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
 - Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
@@ -520,8 +512,17 @@ Each entry has:
 
 ## Resolved
 
+### Q094 · Repository · Where cross-pillar operations files go
+- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/iaas-business.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/purpose-driven-architecture.md); [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/alerts-and-insights.md).
+- Search: not applicable. Rule: [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) allows only pillar folders (performance, capacity) under [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management).
+- Also (2026-11-07, Service Level Agreement to SP5 Framework: Process): [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sla-metrics.md), [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/class-of-service.md), [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework.md), [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/health-risk-efficiency.md), [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/monitoring-vs-troubleshooting.md), [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/proactive-operations.md): same placement, same question.
+- Also (2026-11-07, Configuration Management): [Configuration management: standards, review dimensions and the four types of check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/configuration-management.md). There is no configuration pillar; it sits in performance/ for now.
+- Question: these three files cover several pillars (availability, performance, capacity, security) and the platform itself. They are in `operations-management/performance/` to pass lint. Options: (A) keep them in performance/; (B) allow files at the root of `operations-management/`; (C) a new folder such as `operations-management/service/`.
+- Written as now: option A, pillars in the tags.
+- Answer: (B). C is wrong as the jargon service is incorrect here. Applied 2026-11-08: 12 cross-pillar files and their images moved to [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management); lint allows files at its root; every reference updated.
+
 ### Q091 · Part 1 > Purpose-Driven Architecture > The 2 Sides of VCF · Workload and the pillar list
-- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
 - Search 1: "Workload means the customers VM, not your infrastructure software."
 - Search 2: diagram label "IT (VCF & Non-VCF Appliances )"
 - Question:
@@ -535,7 +536,7 @@ Each entry has:
   Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework.
 
 ### Q089 · Part 1 > Observability > Alert · Importance of alerts and the colours
-- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (sections Alert vs insight, Criticality).
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/alerts-and-insights.md) (sections Alert vs insight, Criticality).
 - Search 1: "Hopefully not important issue"
 - Search 2: "Urgent and important. However, it does not always mean you must drop everything you do and start firefighting in seconds."
 - Search 3: "Symptom. Non urgent. Leading Indicators. Symptoms. Could be important, could also be false positive"
@@ -603,7 +604,7 @@ Each entry has:
 - Answer (author, 2026-11-08, on Q107): the book edition does not matter to Agent E2; what matters is the knowledge. Closed without review: the knowledge base already holds the corrected facts and current names.
 
 ### Q104 · Part 1 > SP5 Framework > Troubleshoot; SP5 Framework: Process · Three orders of checks
-- Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md) (section Troubleshooting); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Dual track); [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/troubleshooting/vm-slow-triage.md). Related: Q060.
+- Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/monitoring-vs-troubleshooting.md) (section Troubleshooting); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/proactive-operations.md) (section Dual track); [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/troubleshooting/vm-slow-triage.md). Related: Q060.
 - Search: image text only (not searchable): "4 possible areas. Check in this order: Contention, Configuration, Availability, Utilization"; reactive track "Configuration Issue? Availability Issue? Known Bugs? Consumption Issue?".
 - Question: the Not Healthy diagram starts with contention; the reactive track starts with configuration and adds known bugs; the VM slow triage flow (draft) has no configuration or known-bug step. (a) Is the reactive track the order after a complaint, and Not Healthy the order after a health check? (b) Should vm-slow-triage add configuration (version incompatibility) and known bugs after contention?
 - Written as now: each order in its file; vm-slow-triage unchanged.
@@ -656,7 +657,7 @@ Each entry has:
 The consumed metric reflects the combined usage of both the DRAM and NVMe tiers. Because the VMkernel tiering algorithm explicitly tracks physical DRAM (Tier 0) and initiates migration to Tier 1 when Tier 0 consumption crosses the 80% threshold, total consumed memory can exceed the physical DRAM capacity once cold pages are migrated.
 
 ### Q065 · Part 1 > Performance Management > Utilization vs Demand · Absolute or relative performance
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Absolute vs relative); [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Reference).
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance-vs-capacity.md) (section Absolute vs relative); [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/kpi-vs-sla.md) (section KPI vs SLA, Reference).
 - Search 1: "Performance will be absolute (real value), Capacity will be relative"
 - Search 2: "It tends to be absolute, as it’s reporting raw metrics"
 - Question: the book says performance is absolute. In chat you said relative cluster performance is more meaningful than absolute, because no perfect formula exists. Relative to what: (a) other clusters and the same cluster last week, (b) the class-of-service threshold (a score in %), (c) the share of VMs served well (a count, not milliseconds)? Which sentence should the knowledge base hold?
@@ -668,7 +669,7 @@ The consumed metric reflects the combined usage of both the DRAM and NVMe tiers.
 Capacity is relative because it's relative to Usable Capacity, not Total Capacity. The real, actual, cluster utilization is lower in reality. But since it's divided over Usable Capacity instead of Total Capacity, the score becomes artificially higher. 
 
 ### Q067 · Part 1 > Contention vs Consumption · Points A and B: 100% and queues
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (sections Contention vs consumption, Four points on the utilization scale).
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance-vs-capacity.md) (sections Contention vs consumption, Four points on the utilization scale).
 - Search 1: "rarely happens here as utilization rarely exceeds 100% in real world"
 - Search 2: "High utilization does not compromise performance, so long as there is no queue or contention"
 - Question: (a) Point A: utilization cannot pass 100% of physical capacity; demand can. Write A as "demand above physical capacity", and add "utilization above physical capacity" to the Words to avoid table? (b) Point B: demand arrives in bursts. At 20-second resolution, a host at 100% CPU Usage almost always shows some VM Ready. Is 100% with 0 contention the best point for throughput (provider view), and acceptable for the VMs only while measured contention stays in the KPI? Or do you hold it as a target?
@@ -748,14 +749,14 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - (b) Yes, keep as none. Do not include deprecated feature.
 
 ### Q066 · Part 1 > Contention vs Consumption · Point C: worst performance at 0% utilization
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Four points on the utilization scale).
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance-vs-capacity.md) (section Four points on the utilization scale).
 - Search: "Worst performance actually happens when utilization = 0% as nothing gets done"
 - Question: 0% utilization with 0 demand is an idle VM: no contention, nothing to serve. Only 0% with demand above 0 is bad: a VM frozen by a storage pause, as in your antivirus story. Is the rule "performance = demand served / demand", so that utilization alone cannot tell good from bad at either end?
 - Written as now: "C, 0% while there is demand" (Claude's wording).
 - Answer: Yes, utilization alone does not mean anything. 0% can be bad, 100% can be good. Hence my book said utilization is not something you manage. It's just an input, and one of the inputs to 2 things you care, which is performance and capacity. Utilization is used differently in capacity and performance. 
 
 ### Q068 · Part 1 > Utilization vs Demand · Highest host utilization in cluster performance
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Cluster: performance vs capacity); [knowledge/vcf-operations/kpis/cluster-performance.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md).
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance-vs-capacity.md) (section Cluster: performance vs capacity); [knowledge/vcf-operations/kpis/cluster-performance.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/kpis/cluster-performance.md).
 - Search 1: "you want to take the highest among the host as your primary counter for cluster utilization"
 - Search 2: "Utilization is for troubleshooting, not monitoring." (table image, Cluster Performance column)
 - Question: for cluster performance, the same chapter says utilization is for troubleshooting only, and the cluster KPI holds only the contention of running VMs. Where does the highest-host utilization belong: (a) a performance monitoring metric, (b) the first troubleshooting drill-down after the cluster KPI drops, (c) a capacity-risk early warning?
@@ -768,21 +769,21 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-opera
   
 
 ### Q069 · Part 1 > Pattern Difference · Where the cliff starts
-- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-vs-capacity.md) (section Pattern difference).
+- Files: [Performance vs capacity: two readings of the same utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance-vs-capacity.md) (section Pattern difference).
 - Search: "You can’t forecast performance using capacity"
 - Question: the chart marks the drop at "Overcommit >1". The noisy-neighbour example runs 4:1 vCPU to core with no cliff. Is the cliff where demand passes supply on a host (demand overcommit), not where the allocation ratio passes 1? And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%?
 - Written as now: "falls steeply once demand passes what the hosts supply".
 - Answer: Is the cliff where the allocation ratio passes 1. And since each host is its own pool, does it start on the hottest host, before the cluster average reaches 100%? Yes, although in theory DRS is supposed to balance all the hosts. There is no such thing demand overcommit as you can only overcommit the allocation. Demand, Usage, Utilization, are not something you can control. 
 
 ### Q070 · Part 1 > IaaS Metric Types · Layer of the driver metrics
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (section Consumer and provider metric types); [knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (VMXNET3 buffer drops).
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/realms-and-layers.md) (section Consumer and provider metric types); [knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) (VMXNET3 buffer drops).
 - Search: "One at the Windows/Linux layer, and one at the driver layer (e.g. PVSCSI, vmxnet)"
 - Question: the book puts PVSCSI and vmxnet metrics in the Guest OS. The repository rule places a metric by the layer that produces it. The driver runs in the guest kernel, but it is VMware's virtual device. Is a VMXNET3 ring-buffer drop (a) guest-os layer, outside the IaaS SLA, or (b) virtual-motherboard layer, inside it? This decides the folder and who fixes it.
 - Written as now: VMXNET3 drops sit in the VM (virtual-motherboard) file.
 - Answer: VMXNET3 ring-buffer drop is a guest-os layer, outside the IaaS SLA as it's not visible to the hypervisor. You don't put SLA on something you cannot see, let alone control. The one covered by SLA is the vNIC as seen by the hypervisor. 
 
 ### Q071 · Part 1 > The 3 Realms · One word, two meanings: realm
-- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
+- Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/realms-and-layers.md); [knowledge/vsphere/foundations/vm-vs-guest-os.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/vm-vs-guest-os.md) (VM vs Guest OS: two realms); [knowledge/operations-management/performance/performance-kpi-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/performance-kpi-design.md) ("one per realm").
 - Search: "In the big picture, there are 3 realms of IT in business"
 - Question: Part 1 uses realm for business, application and IaaS. Part 3 and the knowledge base use realm for VM and Guest OS. One word per concept. Keep realm for the 3 of Part 1 and call VM and Guest OS layers? Or the reverse?
 - Written as now: both meanings.

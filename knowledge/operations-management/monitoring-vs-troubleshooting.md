@@ -81,7 +81,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/monitoring-vs-troubleshooting
+id: operations-management/monitoring-vs-troubleshooting
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -101,12 +101,12 @@ object:
 - ClusterComputeResource
 - VmwareDistributedVirtualSwitch
 internal_derive:
-- operations-management/performance/alerts-and-insights
+- operations-management/alerts-and-insights
 - operations-management/performance/kpi-vs-sla
 related:
 - operations-management/performance/troubleshooting/vm-slow-triage
-- operations-management/performance/proactive-operations
-- operations-management/performance/health-risk-efficiency
+- operations-management/proactive-operations
+- operations-management/health-risk-efficiency
 - foundations/input-types
 - vsphere/object-types/vm/metrics/vmotion
 images:

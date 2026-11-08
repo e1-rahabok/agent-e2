@@ -184,7 +184,7 @@ VM Performance SLA (%) = average of the VM SLI over the calendar month
 - Different thresholds per class fail in two ways. Example: Gold memory contention 0.5%, Silver 1.5%.
   - The gap cannot be explained: Silver gets a 3x looser threshold at half the price, not a proportional one.
   - Silver can score better than Gold, because its standard is lower.
-- Production should score higher than development on the same threshold. How much higher is set by the nines per class: `operations-management/performance/class-of-service`.
+- Production should score higher than development on the same threshold. How much higher is set by the nines per class: `operations-management/class-of-service`.
 
 ## Traps
 - "Our availability SLA is 99.999%, so users had 5 minutes of downtime a year" → the SLA excludes scheduled and customer-caused downtime. Actual Availability counts everything and is lower.
@@ -204,7 +204,7 @@ VM Performance SLA (%) = average of the VM SLI over the calendar month
 
 ## Metadata
 ```yaml
-id: operations-management/performance/sla-metrics
+id: operations-management/sla-metrics
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -230,8 +230,8 @@ internal_derive:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
 related:
-- operations-management/performance/class-of-service
-- operations-management/performance/iaas-business
+- operations-management/class-of-service
+- operations-management/iaas-business
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/foundations/vm-vs-guest-os
