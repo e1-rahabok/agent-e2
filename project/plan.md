@@ -12,7 +12,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 |---|---|---|---|
 | M1 | Knowledge base complete for 1.0 | Book Parts 1 and 3 and the VCF Operations chapters extracted; operations flows confirmed by the author; stubs filled or merged; every flow has a diagram; the most-cited files reviewed | In progress |
 | M2 | 100 questions | 100 questions at the allocation ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.6); every attachment supplied; synthetic share decided; held-out set kept by the author | 90 written, 66 scorable |
-| M3 | Retrieval | Retrieval check: every needed file in the context for most questions (target to set with the author); the three experiments of the review scored | 3 fixes done: hybrid 72% to 75%, 57 of 90 complete |
+| M3 | Retrieval | Retrieval check: every needed file in the context for at least 90% of questions and context recall at least 95% (proposal, Q130); the three experiments of the review scored | 3 fixes done: hybrid 72% to 75%, 57 of 90 complete |
 | M4 | Gateway benchmark | The 100 questions run on the candidates and the frontier reference; model and mode chosen; up-front blocks measured | Waits for M1 and M2 (author, 2026-11-06) |
 | M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) passed on the chosen model, offline | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |

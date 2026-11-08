@@ -564,6 +564,13 @@ Each entry has:
 - Written as now: PromQL in Custom Query; programmatic use stated from you.
 - Answer:
 
+### Q130 · Benchmark · Retrieval check: what number is good enough to release
+- Files: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (M3 exit criteria: target to set with the author).
+- Search: not from the book.
+- Question: proposed gate for classic mode: release at least 90% of questions with every needed file in context (81 of 90) and context recall at least 95%; target 97% (87 of 90) and 98%; perfect (100%) not a goal, except that no question may miss its main file. Today: 54-57 of 90. (a) Accept these levels? (b) Should each question mark its main file in `knowledge`, so the check can report main-file misses separately?
+- Written as now: the proposal, marked as not agreed.
+- Answer:
+
 ## Resolved
 
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
