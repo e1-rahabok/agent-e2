@@ -35,7 +35,7 @@ technology: [cpu]
 input: [text]
 task: decide-capacity
 knowledge:
-  - operations-management/capacity/rightsizing
+  - operations-management/capacity/reclamation
   - vsphere/technology/cpu/diagnosis/oversized-vm-downsizing
   - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
   - vsphere/technology/memory/concepts/memory-as-storage
