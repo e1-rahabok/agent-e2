@@ -376,3 +376,230 @@ rows:
     red: 3-4
   source: book
   kb: vcf-operations/kpis/cluster-risk
+- kind: rule
+  id: cluster-utilization-usable-wastage
+  metric: Cluster utilization against usable capacity
+  object: ClusterComputeResource
+  operator: <
+  value: 40
+  unit: '% of usable capacity'
+  meaning: Grey (wastage). Capacity given, and likely paid for, is not used.
+  source: book
+  kb: operations-management/capacity/capacity-dimensions
+  quote: '| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |'
+- kind: rule
+  id: cluster-utilization-usable-best
+  metric: Cluster utilization against usable capacity
+  object: ClusterComputeResource
+  operator: '='
+  value: 80
+  unit: '% of usable capacity'
+  meaning: Best (target). 40-80% is green.
+  source: book
+  kb: operations-management/capacity/capacity-dimensions
+  quote: '| 80% | Best | Target |'
+- kind: rule
+  id: closure-capacity-remaining-prod-red
+  metric: Capacity Remaining (%), projected 3 days ahead
+  object: ClusterComputeResource
+  operator: <
+  value: 10
+  unit: '%'
+  condition: production cluster
+  meaning: Red. Cluster closed for new VMs and VM upsize.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Production: red below 10%, orange below 20%.'
+- kind: rule
+  id: closure-capacity-remaining-prod-orange
+  metric: Capacity Remaining (%), projected 3 days ahead
+  object: ClusterComputeResource
+  operator: <
+  value: 20
+  unit: '%'
+  condition: production cluster
+  meaning: Orange. With Performance (%) also orange, the risk check decides.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Production: red below 10%, orange below 20%.'
+- kind: rule
+  id: closure-capacity-remaining-nonprod-red
+  metric: Capacity Remaining (%), projected 3 days ahead
+  object: ClusterComputeResource
+  operator: <
+  value: 15
+  unit: '%'
+  condition: non-production cluster
+  meaning: Red. Cluster closed for new VMs and VM upsize.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Non-production: red below 15%, orange below 30%.'
+- kind: rule
+  id: closure-capacity-remaining-nonprod-orange
+  metric: Capacity Remaining (%), projected 3 days ahead
+  object: ClusterComputeResource
+  operator: <
+  value: 30
+  unit: '%'
+  condition: non-production cluster
+  meaning: Orange. With Performance (%) also orange, the risk check decides.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Non-production: red below 15%, orange below 30%.'
+- kind: rule
+  id: closure-cluster-performance-prod-red
+  metric: Cluster Performance (%), 95th percentile of the last 24 hours
+  object: ClusterComputeResource
+  operator: <
+  value: 40
+  unit: '%'
+  condition: production cluster
+  meaning: Red. Cluster closed for new VMs and VM upsize.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Production: red below 40%, orange below 60%.'
+- kind: rule
+  id: closure-cluster-performance-prod-orange
+  metric: Cluster Performance (%), 95th percentile of the last 24 hours
+  object: ClusterComputeResource
+  operator: <
+  value: 60
+  unit: '%'
+  condition: production cluster
+  meaning: Orange. With Capacity Remaining also orange, the risk check decides.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Production: red below 40%, orange below 60%.'
+- kind: rule
+  id: closure-cluster-performance-nonprod-red
+  metric: Cluster Performance (%), 95th percentile of the last 24 hours
+  object: ClusterComputeResource
+  operator: <
+  value: 20
+  unit: '%'
+  condition: non-production cluster
+  meaning: Red. Cluster closed for new VMs and VM upsize.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Non-production: red below 20%, orange below 40%.'
+- kind: rule
+  id: closure-cluster-performance-nonprod-orange
+  metric: Cluster Performance (%), 95th percentile of the last 24 hours
+  object: ClusterComputeResource
+  operator: <
+  value: 40
+  unit: '%'
+  condition: non-production cluster
+  meaning: Orange. With Capacity Remaining also orange, the risk check decides.
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'Non-production: red below 20%, orange below 40%.'
+- kind: rule
+  id: closure-cluster-risk-prod
+  metric: Cluster Risk (%), 95th percentile of the last 12 hours
+  object: ClusterComputeResource
+  operator: '>'
+  value: 50
+  unit: '%'
+  condition: production cluster; Capacity Remaining and Cluster Performance both orange
+  meaning: Cluster closed (Risk orange or red).
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'production: above 50% (orange or red) → no: closed;'
+- kind: rule
+  id: closure-cluster-risk-nonprod
+  metric: Cluster Risk (%), 95th percentile of the last 12 hours
+  object: ClusterComputeResource
+  operator: '>'
+  value: 75
+  unit: '%'
+  condition: non-production cluster; Capacity Remaining and Cluster Performance both orange
+  meaning: Cluster closed (Risk red).
+  source: book
+  kb: operations-management/capacity/diagnosis/can-cluster-take-more-vms
+  quote: 'non-production: above 75% (red) → no: closed.'
+- kind: rule
+  id: class-gold-min-vm-performance
+  metric: VM Performance (%), minimum for the class
+  object: VirtualMachine
+  operator: '>='
+  value: 99.5
+  unit: '%'
+  condition: Gold class of service
+  meaning: Minimum VM Performance (%) KPI for Gold. A KPI threshold, not an SLA.
+  source: book
+  kb: operations-management/capacity/class-of-service-planning
+  quote: '- Gold: ≥ 99.5%'
+- kind: rule
+  id: class-silver-min-vm-performance
+  metric: VM Performance (%), minimum for the class
+  object: VirtualMachine
+  operator: '>='
+  value: 99
+  unit: '%'
+  condition: Silver class of service
+  meaning: Minimum VM Performance (%) KPI for Silver. A KPI threshold, not an SLA.
+  source: book
+  kb: operations-management/capacity/class-of-service-planning
+  quote: '- Silver: ≥ 99%'
+- kind: rule
+  id: class-bronze-min-vm-performance
+  metric: VM Performance (%), minimum for the class
+  object: VirtualMachine
+  operator: '>='
+  value: 98
+  unit: '%'
+  condition: Bronze class of service
+  meaning: Minimum VM Performance (%) KPI for Bronze. A KPI threshold, not an SLA.
+  source: book
+  kb: operations-management/capacity/class-of-service-planning
+  quote: '- Bronze: ≥ 98%'
+- kind: rule
+  id: idle-vm-cpu
+  metric: VM CPU consumption per day (Idle VM policy)
+  object: VirtualMachine
+  operator: <=
+  value: 100
+  unit: MHz
+  condition: 100% of the time, every day for 7 days; VM older than 30 days
+  meaning: Idle VM (VCF Operations policy default).
+  source: book
+  kb: vcf-operations/metrics/vm/idle-vm
+  quote: '| Within each day it consumes no more than | 100 MHz CPU |'
+  interval: 5m
+- kind: rule
+  id: datastore-mission-critical-vm-concentration
+  metric: Mission-critical VMs per datastore
+  object: Datastore
+  operator: <
+  value: 250
+  unit: VMs
+  meaning: Concentration risk cap (example policy).
+  source: book
+  kb: operations-management/capacity/capacity-management-process
+  quote: 'concentration risk: fewer than 250 mission-critical VMs per datastore'
+- kind: rule
+  id: large-vm-fleet-average-cpu-oversized
+  metric: Average CPU workload among large VMs (super metric)
+  object: VirtualMachine
+  operator: <
+  value: 20
+  unit: '%'
+  condition: all month, 5-minute values, group of hundreds of large VMs
+  meaning: All large VMs oversized. About 40% indicates correct sizing.
+  source: book
+  kb: operations-management/capacity/rightsizing
+  quote: '| Average CPU workload among the VMs | About 40% | Below 20% all month: all large VMs oversized |'
+  interval: 5m
+- kind: rule
+  id: vmfs6-unmap-rate-low-default
+  metric: VMFS6 automatic unmap rate, priority Low (default)
+  object: Datastore
+  operator: range
+  value: 25
+  value_high: 50
+  unit: MB/s
+  meaning: Default background unmap rate. Medium 50-100 MB/s; High above 100 MB/s; None deactivates unmap.
+  source: vsphere-9.1-docs
+  kb: vsphere/technology/storage/metrics/host/datastore
+  quote: 'Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s'

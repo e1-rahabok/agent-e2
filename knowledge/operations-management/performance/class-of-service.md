@@ -11,6 +11,7 @@
   - Performance: utilization does not exist before the VM runs, so the overcommit ratio stands in. Twice the vCPUs on a cluster, each pays half: the cost is shared by all.
   - Compliance: the same for every class. A weak class is a jump box into the rest.
 - The class sets four things: price (overcommit ratio and quality of service), capacity (overcommit ratio), and the Availability, Performance and Compliance SLAs.
+- Capacity settings per class (reservation, allocation per thread, minimum VM Performance (%), expected utilization): `operations-management/capacity/class-of-service-planning`. This file holds price and SLA numbers.
 - Overcommit ratios here are vCPU : physical CPU and VM memory : physical memory (N:1). The basis for CPU (core or thread) changes the number by 2x with Hyper-Threading: `operations-management/capacity/host-spec-from-class-of-service`.
 
 ## Generic guideline
@@ -168,6 +169,7 @@ object:
 - VirtualMachine
 internal_derive:
 - operations-management/performance/sla-metrics
+- operations-management/capacity/class-of-service-planning
 - vsphere/foundations/noisy-neighbour
 - operations-management/capacity/host-spec-from-class-of-service
 related:

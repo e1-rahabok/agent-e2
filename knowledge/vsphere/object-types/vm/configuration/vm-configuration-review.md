@@ -18,7 +18,7 @@
 - **Relative size**: the VM must not exceed its ESXi host. With Hyper-Threading, count physical cores, not logical processors.
 - **NUMA**:
   - more vCPUs than cores per socket → the VM spans NUMA nodes; on a multi-socket host remote memory access lowers performance. Keep it within a socket;
-  - chiplet CPUs: a 64-core CPU of 8 chiplets of 8 cores, each with its own cache. A VM above 8 vCPUs spans chiplets;
+  - chiplet CPUs (AMD EPYC): a 64-core CPU of 8 chiplets of 8 cores, each with its own L3 cache. A VM above 8 vCPUs spans chiplets;
   - vSocket and vCore configured per vNUMA practice: `vsphere/technology/cpu/concepts/virtual-numa`.
 - **Large VMs**:
   - vMotion, Storage vMotion and backup take longer;
@@ -42,7 +42,7 @@
 
 ## Traps
 - "The VM has 48 vCPUs and the host has 48 logical processors, so it fits" → count physical cores. 48 vCPUs on 24 cores with Hyper-Threading competes for cores.
-- "16 vCPUs on a 32-core single-socket host stays in one NUMA node" → a chiplet CPU has several cache domains; 16 vCPUs span two 8-core chiplets.
+- "16 vCPUs on a 32-core AMD EPYC socket stay in one NUMA node" → the socket has several L3 cache domains; 16 vCPUs span two 8-core chiplets.
 - "Enable CPU hot add on every VM for flexibility" → it deactivates vNUMA; large VMs lose memory locality.
 - "Guest OS run queue is missing, so the Guest OS is fine" → an old VMware Tools version does not report it. Check the Tools version.
 - "One vNIC, so the VM is on one network" → one vNIC can carry several interfaces on several networks.
@@ -87,6 +87,7 @@ review_notes:
 - 'Section ''Compute'', relative size: physical cores here; vsphere/foundations/noisy-neighbour sizes by logical CPUs. Q111 (with Q100).'
 - 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols. Q112.'
 - 'Snapshot within one day here; the SP5 Process daily SOP says older than about 3 days. Q112.'
+- 'Section ''Compute'', chiplets: 8-core blocks hold for AMD EPYC, not Intel Xeon (Q125).'
 - 'Traps 1 and 2: examples by Claude from the book''s rules.'
 status: draft
 ```

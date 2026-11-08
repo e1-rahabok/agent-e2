@@ -51,6 +51,7 @@ source:
   path: Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections: []
 review_notes:
+- 'Section ''Thresholds (book)'': Part 1 puts 40-80% of usable capacity in green and 80% as best, with 0-40% grey (operations-management/capacity/capacity-dimensions). Which governs, and whether a grey band applies here: Q116.'
 - 'Moved 2026-11-06 from vcf-operations/kpis/cluster-consumption (architecture review 2026-11-06, section 5).'
 status: draft
 ```
