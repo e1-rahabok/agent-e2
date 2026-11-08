@@ -1,4 +1,4 @@
-# Guest OS configuration review: type, version, drivers, agents, drives, applications
+# Guest OS configuration review
 
 ## Why separate from the VM
 - The Guest OS and the VM have their own requirements, and in large organizations two teams own them. The VM review (virtual motherboard and VMware Tools): `vsphere/object-types/vm/configuration/vm-configuration-review`.

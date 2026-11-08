@@ -1,4 +1,4 @@
-# Network configuration review: distributed switch, port groups, NSX, top-of-rack, encryption
+# Network configuration review
 
 ## Scope
 - Every network component of VCF: distributed switches and port groups, NSX, physical switches and general settings. One list, for the discussion with the network team.

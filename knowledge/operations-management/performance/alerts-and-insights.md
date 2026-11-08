@@ -1,4 +1,4 @@
-# Alerts, symptoms and insights: why alert-driven operations stay reactive
+# Alerts, symptoms and insights
 
 ## Why alert storms happen
 - Operations that start from alerts are reactive by construction.

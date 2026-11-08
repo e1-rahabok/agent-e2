@@ -1,4 +1,4 @@
-# Capacity management: demand, supply, phases and planning inputs
+# Capacity management process
 
 ## Goal
 - Balance demand and supply: meet demand at the lowest cost while staying compliant with security and availability practice.

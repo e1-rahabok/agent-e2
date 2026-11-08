@@ -1,4 +1,4 @@
-# IaaS as a service: variants, class of service and what each layer checks
+# IaaS as a service
 
 ## System vs service
 - VCF is the system the infrastructure team designs and buys (SDDC). IaaS is the service it sells to application teams.

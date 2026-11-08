@@ -1,4 +1,4 @@
-# VM configuration review: VMware Tools, hardware, compute and storage settings
+# VM configuration review
 
 ## VMware Tools
 - Essential for workloads on VCF: drivers and observability. Benefits list: Broadcom KB 340 (as cited in the book).

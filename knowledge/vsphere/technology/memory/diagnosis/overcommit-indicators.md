@@ -1,4 +1,4 @@
-# Overcommit indicators: is overcommitment affecting this VM?
+# Overcommit indicators
 
 ## Principle
 - The point where overcommitment starts to affect a workload depends on the workload.

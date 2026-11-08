@@ -1,4 +1,4 @@
-# Overhead: classification, hypervisor overhead and CPU virtualization overhead
+# Overhead
 
 ## Definition
 - Overhead: mandatory (cannot be avoided) AND has negative impact (slower performance or more resource required).

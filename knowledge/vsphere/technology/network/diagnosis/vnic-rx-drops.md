@@ -1,4 +1,4 @@
-# vNIC receive drops: find the reason with vsish
+# vNIC receive drops
 
 ## Checks, in order
 1. Port statistics for the vNIC port:

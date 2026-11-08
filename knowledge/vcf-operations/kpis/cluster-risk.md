@@ -1,4 +1,4 @@
-# Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)
+# Cluster Risk (%) (vCommunity KPI)
 
 ## Purpose
 - A leading indicator: it warns before the VMs feel contention. It covers capacity and performance.
@@ -71,7 +71,7 @@ Per host, then the worst host is kept.
 - Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
 
-## Known limitation: a worse sub-metric can lower Cluster Risk
+## A worse sub-metric can lower Cluster Risk
 - The weight of a sub-metric rises as its score falls. When the KPI is already high, a sub-metric that gets worse but is still better than the ones driving the KPI pulls the weighted average up, so Cluster Risk goes down.
 - An Excluded row that leaves green enters at weight 2 at once: the same effect.
 - Example: Cluster Risk 67.9; new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow and Cluster Risk falls to 64.5. Only from about 2.7 does it raise Cluster Risk above 67.9.

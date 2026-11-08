@@ -1,4 +1,4 @@
-# Controlled test: VM and ESXi CPU metrics under Hyper-Threading
+# Hyper-Threading ramp test: VM vs ESXi
 
 ## Setup
 - One 24-vCPU VM on an ESXi host with 12 cores, Hyper-Threading on (24 threads).

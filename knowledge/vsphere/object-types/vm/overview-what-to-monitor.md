@@ -1,4 +1,4 @@
-# VM: what to monitor, in priority order
+# VM: what to monitor
 
 ## Answers
 - Which metrics are most important to monitor on a VM (virtual machine): CPU, memory, storage, network.

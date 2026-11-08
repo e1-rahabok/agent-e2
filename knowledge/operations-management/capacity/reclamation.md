@@ -1,4 +1,4 @@
-# Reclamation: what to take back, in what order, and what it frees
+# Reclamation
 
 ## When reclamation is the provider's job
 - When VMs are free, the infrastructure team reclaims.

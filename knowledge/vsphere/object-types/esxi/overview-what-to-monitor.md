@@ -1,4 +1,4 @@
-# ESXi: what to monitor, in priority order
+# ESXi: what to monitor
 
 ## Answers
 - Which metrics are most important to monitor on an ESXi (ESX) host: CPU, memory, storage, network, GPU.

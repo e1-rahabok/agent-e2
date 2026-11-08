@@ -1,4 +1,4 @@
-# KPI vs SLA: from complaint-based operations to a contract
+# KPI vs SLA
 
 ## KPI means performance
 - In this knowledge base KPI is strictly about performance: "performance" has a specific meaning in enterprise IT.

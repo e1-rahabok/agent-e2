@@ -1,39 +1,39 @@
-# Health: present health, risk and efficiency, not one score
+# Health, risk and efficiency
 
-## Why one health score fails
-- Health depends on context and object. A score that tries to cover everything ends low while everything runs well.
-- So health is mapped to the pillars of operations, and split three ways: present health, future health (risk), efficiency. Three sides, three metrics.
-- Inventory sits apart: it describes the environment, not its health.
+## Why one score fails
+- What counts as healthy depends on the object and its context. A score that covers everything drops when anything is imperfect, so it reads low while the environment runs well.
+- The book maps health to the pillars of operations and splits it into three metrics: present health, risk (future health) and efficiency.
+- Inventory is left out: it describes the environment, not its health.
 ![Environment: inventory. Health: performance, availability, security. Risk: capacity, configuration, compliance. Efficiency: cost, sustainability](images/health-risk-efficiency-pillar-grouping-diagram.png)
 
 ## Present health
-- Real problems that happened or are still going on. Only reality, not possibility: a security risk is not a breach.
+- Problems that happened or are still going on. A possible problem is risk: a security exposure is not a breach.
 - Three problem types, checked in this order:
   - Availability (is it up?): workloads (VMs, Kubernetes) and infrastructure (VCF appliances, ESXi). Crashes and unscheduled downtime. The data comes mostly from logs, not metrics.
   - Performance (is it fast?): actual slowness (contention) and its main cause (very high consumption), as a trend over time. Read both the KPI and the SLA.
   - Security, present part (is it safe?): actual incidents. Example: the environment runs well, but unauthorized access and suspicious commands appear on ESXi consoles. Data from logs, events and metrics.
-- Availability and performance are related, not the same: an environment can be 100% up and slow.
+- An environment can be 100% available and still slow: availability and performance are measured separately.
 
 ## Future health: risk
-- No problem now, but the risk of one grows if nothing is done. The applications and the business are not affected yet.
+- No problem yet, but one becomes likely if nothing is done. Applications and the business are not affected yet.
 - Four problem types:
   - Security, future part.
   - Compliance.
-  - Configuration: four kinds of setting issue: incorrect, outdated, complex, suboptimal. Work on the most urgent first. Technical debt: keep versions current to stay supported.
-  - Capacity: rightsizing, reclamation, capacity planning (what-if, commitment), as a trend. Questions: what is the overall capacity; should workloads be rebalanced?
-- Example: a vSphere cluster without HA. With all hosts running, availability is 100% and performance is unaffected; the availability risk is real.
+  - Configuration: settings that are incorrect, outdated, complex or suboptimal. Fix the most urgent first. Keep versions current to stay supported (technical debt).
+  - Capacity: rightsizing, reclamation and capacity planning (what-if, commitments), read as a trend: how much capacity is left, and should workloads be rebalanced?
+- Example: a vSphere cluster without HA. While all hosts run, availability is 100% and performance is fine, but one host failure takes VMs down.
 
 ## Efficiency
-- No present problem and no risk. Efficiency is optimization: lower cost, less complexity, a smaller capacity footprint, better application performance.
-- Effectiveness is doing the right things; efficiency is doing things right. A wrong architecture can be operated correctly.
-- Ways to raise it, which differ by object:
+- No problem and no risk; the same service could cost less. Efficiency covers cost, complexity, capacity footprint and application performance.
+- Efficiency is about running the current design well. A wrong architecture can still be run efficiently; fixing it is a design question.
+- Ways to raise it, by object:
   - hardware refresh: more performance and capacity at the same price;
   - removing waste: oversized VMs, idle VMs, unused instances, unmapped disk space, orphaned files;
   - cost: compare with other cloud providers; IaaS is a commodity.
-- Green operations belong here: sustainable operations are lean operations.
+- Sustainability (green operations) belongs here: less waste means less power.
 
 ## Inventory over time
-- Not a health dimension, but read with health: movement over time, not only the present count. Do the environment's dynamics match expectation?
+- Not part of health, but read next to it. Watch how the counts change over time and whether that matches the plan.
 
 ## Traps
 - "The health score is low, so something is broken" → a broad score drops on risk and inefficiency too. Read present health, risk and efficiency separately.

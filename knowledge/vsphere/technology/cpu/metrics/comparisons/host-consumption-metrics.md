@@ -12,7 +12,7 @@
 - Core Utilization sits in the middle: it counts a core as busy with 1 or 2 threads.
 - High load: Thread Utilization 80% → 90%; Core Utilization approaches 100%, the absolute limit; Usage (%) above 100% (Turbo vs base frequency).
 
-## Rollup over 6 scenarios (2 cores, 2 threads each, static frequency)
+## Rollup over 6 scenarios
 | Scenario | Threads running | Utilization | Core Utilization | Usage | Author's proposed value |
 |---|---|---|---|---|---|
 | 1 | all 4 | 100% | 100% | 100% | (125% + 125%) / 2 = 125% |

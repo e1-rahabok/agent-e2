@@ -1,4 +1,4 @@
-# Noisy neighbour: limit, reservation and share per resource
+# Noisy neighbour
 
 ## Definition
 - Enough total capacity, yet some consumers (VM, Kubernetes pod) do not get what they demand: imbalance in a shared environment. A main cause is a noisy neighbour.

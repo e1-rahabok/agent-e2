@@ -1,4 +1,4 @@
-# vSphere cluster: what to monitor, in priority order
+# vSphere cluster: what to monitor
 
 ## Answers
 - Which metrics are most important to monitor on a vSphere cluster: performance, capacity, availability.

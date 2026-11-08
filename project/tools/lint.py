@@ -215,6 +215,7 @@ def main():
     n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
     check_tables(bad)
+    check_titles(bad)
     check_moved(ids, bad)
     check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
@@ -262,6 +263,20 @@ def check_moved(ids, bad):
             for m in pat.finditer(line):
                 o = m.group(1) or m.group(2)
                 bad(f, f'line {i}: moved id "{o}": use "{MOVED[o]}" (run project/tools/link_refs.py for links)')
+
+
+def check_titles(bad):
+    """Short titles and headings: the title is prefixed to every chunk (harness/kb.py), so a list of contents in it repeats in every chunk."""
+    for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
+        for i, line in enumerate(open(f).read().split('\n'), 1):
+            m = re.match(r'(#{1,3}) (.*)', line)
+            if not m:
+                continue
+            words, limit = len([w for w in re.sub(r'\([^)]*\)', '', m.group(2)).split() if w != '|']), (8 if m.group(1) == '#' else 9)
+            if words > limit:
+                bad(f, f'line {i}: heading of {words} words; at most {limit}: name the topic, put details in the body')
+            if m.group(1) == '#' and ': ' in m.group(2) and m.group(2).split(': ', 1)[1].count(',') >= 2:
+                bad(f, f'line {i}: title lists its contents after a colon; name the topic only')
 
 
 def check_tables(bad):

@@ -1,4 +1,4 @@
-# Class of service: price, overcommit, SLA numbers, size limit and cluster design
+# Class of service
 
 ## Why several classes
 - With one class and a promise of good service, every customer expects first-class service.

@@ -1,4 +1,4 @@
-# Performance vs capacity: two readings of the same utilization
+# Performance vs capacity
 
 ## Goal of performance management
 - Find the problem before the customer complains. A process that waits for an alert or a complaint is troubleshooting, not performance management.

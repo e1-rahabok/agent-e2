@@ -1,4 +1,4 @@
-# ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG
+# ESXi storage latency stack (GAVG, KAVG, QAVG, DAVG)
 
 ## Layers
 - VM → kernel → device. The kernel is measured by KAVG and QAVG.

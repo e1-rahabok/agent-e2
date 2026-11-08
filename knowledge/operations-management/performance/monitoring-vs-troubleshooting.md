@@ -1,4 +1,4 @@
-# Monitoring vs troubleshooting, root cause analysis and validating a log alert
+# Monitoring vs troubleshooting
 
 ## Monitor: what; troubleshoot: why
 - Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.

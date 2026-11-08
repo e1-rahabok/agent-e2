@@ -5,7 +5,7 @@
 - The State counter reports one of 5 states. Each is a multiple of Free Memory Minimum (minFree).
 - Contention happens at hypervisor level. VMs feel its side effects. The degree per VM depends on shares, reservation and utilization.
 
-## States (example: ESXi with 1 TB RAM, minFree 10.8 GB)
+## States
 | State | Threshold (% of minFree) | Free memory (1 TB host) | Action |
 |---|---|---|---|
 | High | 300% | 32.4 GB | None. |

@@ -1,4 +1,4 @@
-# CPU frequency, Turbo and their impact on a VM
+# CPU frequency and Turbo
 
 ## Three speeds
 | Speed | Meaning | Facts |

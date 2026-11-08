@@ -1,4 +1,4 @@
-# ESXi configuration review: hardware, versions, availability, security, capacity, consistency
+# ESXi configuration review
 
 ## Hardware and versions
 - Server hardware: few vendors, models and generations; within one model and generation, few specification differences. Flag models nearing end of support.

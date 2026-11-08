@@ -1,4 +1,4 @@
-# VM vs Guest OS: two realms and their visibility layers
+# VM vs Guest OS
 
 ## Definition
 - A VM is a virtual motherboard: a circuit board with electronics mounted on it.

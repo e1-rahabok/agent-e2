@@ -1,4 +1,4 @@
-# Storage configuration review: datastores, LUNs, NFS, arrays, queue depth
+# Storage configuration review
 
 ## Scope
 - Every storage component of VCF: datastores, datastore clusters, RDM, vVols, vSAN, the physical array and general settings. One list, for the discussion with the storage team.

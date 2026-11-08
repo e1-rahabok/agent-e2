@@ -1,4 +1,4 @@
-# Rightsizing VMs: why, how to win the argument, and how to prove it
+# Rightsizing VMs
 
 ## What is rightsized
 - VMs and Kubernetes. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
@@ -88,7 +88,7 @@
 
 - Hardware sizes from the book: a VM above 8 vCPU risks the Hyper-Threading effect; above 16 vCPU risks the NUMA effect. Both depend on the host CPU (see review notes).
 
-## Big picture: Max and Average of large VMs
+## Max and Average of large VMs
 - To show management that large VMs do not use their CPU: a dynamic group of all large VMs (example: more than 16 vCPU), one for CPU and one for memory, plotted every 5 minutes for 3 months so short peaks stay in.
 - Two super metrics on the group:
 

@@ -1,4 +1,4 @@
-# Packet drop accounting: which layer counts a dropped packet
+# Packet drop accounting
 
 ## Receive drop: the guest's receive ring is full
 - Causes:

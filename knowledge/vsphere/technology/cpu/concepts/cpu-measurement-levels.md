@@ -1,4 +1,4 @@
-# CPU measurement levels and capacity: vCPU, thread, core
+# CPU measurement levels
 
 ## ESXi is not VM + kernel
 ![VM sees 2 vCPUs; ESXi sees 1 core with 2 threads](../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png)

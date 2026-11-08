@@ -19,7 +19,7 @@
 Control frame with no payload = 14 + 20 + 20 + 48 + 4 = 106 bytes
 ```
 
-## Worked example: one 8 KB iSCSI read, 10 GbE, MTU 9,000
+## Example: one 8 KB iSCSI read
 1. The host sends the read command: 1 Transmit packet, 106 bytes.
 2. The array acknowledges it with a TCP ACK: 1 Receive packet, 64 bytes (minimum Ethernet frame with padding).
 3. The array returns the data. MTU 9,000 allows a TCP segment of up to 8,960 bytes, so 8 KB fits in one frame: 1 Receive packet, 14 + 20 + 20 + 48 + 8,192 + 4 = 8,298 bytes.

@@ -1,4 +1,4 @@
-# VM gets too little CPU or memory in a DRS cluster
+# VM starved of resources in a DRS cluster
 
 ## Symptom
 - A VM in a DRS cluster shows contention: CPU Ready or Co-stop, or Memory Latency or swap-in.
