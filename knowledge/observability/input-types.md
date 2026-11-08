@@ -23,7 +23,11 @@
 - A daily trend across hundreds of clusters can show a problem before it happens, so no alert is raised at all.
 
 ## Property
-- Changes when something is configured, not at a predictable interval.
+- Changes when something is configured, not at a predictable interval: the opposite of a metric.
+- Three types:
+  - label or tag: always external, attached to the object. VM owner name, cluster class of service, cost centre;
+  - setting (configuration): an inherent part of the object that defines it. VM configured vCPU, ESXi power management, DRS level;
+  - non-setting: context only; does not define or affect the object. Date created, parent folder, parent ESXi host.
 - Number of VMs in a cluster: a metric, even if it does not change for years. It is the result of activity, not a setting.
 - Maximum number of VMs in a cluster: a property; it is part of the cluster's capability.
 - Number of ESXi hosts in a cluster: a property; the cluster is configured with them. Number of running ESXi hosts: a metric.
@@ -86,9 +90,9 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture > Observability > Input | Output (pp. 17-18)'
 corrections: []
 review_notes:
-- 'Section ''Property'': the book says there are 3 types of properties but lists none (Q090).'
-- 'Section ''Event'', setting change: the book says the DRS automation level changed from 2 to 5. In vSphere the automation level is Manual, Partially Automated or Fully Automated; the 1-5 scale is the DRS migration threshold (Claude, vSphere 9.1 resource management documentation). Written as migration threshold; author to confirm (Q090).'
-- 'Section ''Event'': the book has two rows named Event; the second (setting, state, label change) may be meant as the property types (Q090).'
+- 'Section ''Property'': the three types (label, setting, non-setting) from the author (Q090, 2026-11-08); they sit in a nested table the extraction missed.'
+- 'Section ''Event'', setting change: migration threshold 2 to 5, not automation level (author, Q090, 2026-11-08).'
+- 'Section ''Event'': the second Event row is an event, not the property types: an event can be a setting, state or label change (author, Q090, 2026-11-08). State itself is a metric; its change is an event.'
 - 'Section ''Property'', reason for VMs in a cluster being a metric (result of activity, collected every interval): Claude.'
 status: draft
 ```

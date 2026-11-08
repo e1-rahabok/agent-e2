@@ -113,12 +113,6 @@ Each entry has:
 - Answer:
 
 
-### Q086 · Part 1 > Your Private Cloud > Overview > Key Metrics · Operational Availability and green zone
-- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/iaas-business.md) (section Metrics per pillar).
-- Search: "Relative Availability, against your availability architecture and green zone."
-- Question: what is the green zone here? (a) the planned availability band of the architecture (for example the HA design target), or (b) something else. The formula comes later, in the Service Level Agreement section; this asks only for the term.
-- Written as now: Operational Availability is relative to the availability architecture; green zone left out.
-- Answer:
 
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
 - Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
@@ -148,18 +142,6 @@ Each entry has:
 - Written as now: metric names only, no numbers; nothing added to the threshold catalog until answered.
 - Answer:
 
-### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
-- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/input-types.md) (sections Property, Event).
-- Search 1: "There are 3 types of properties:"
-- Search 2: "It can be a setting change, a state change, or a label change."
-- Search 3: "Cluster 007 DRS automation level was changed from 2 to 5."
-- Search 4: "That’s why state is a metric, not a property."
-- Question:
-  - (a) The three property types are announced but not listed. Which are they?
-  - (b) The table has two rows named Event. Is the second (setting, state, label change) meant as Property? If so, state is listed both as a metric and as a property type.
-  - (c) DRS automation level is Manual, Partially Automated or Fully Automated; the 1-5 scale is the migration threshold. Change the example to migration threshold?
-- Written as now: setting, state and label change as change events; the example written as migration threshold, flagged.
-- Answer:
 
 ### Q092 · Part 1 > Begin with The End in Mind > The Crown Jewel · Health across tiers
 - Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/purpose-driven-architecture.md) (section Health of an application tier).
@@ -526,6 +508,26 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
+- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/input-types.md) (sections Property, Event).
+- Search 1: "There are 3 types of properties:"
+- Search 2: "It can be a setting change, a state change, or a label change."
+- Search 3: "Cluster 007 DRS automation level was changed from 2 to 5."
+- Search 4: "That’s why state is a metric, not a property."
+- Question:
+  - (a) The three property types are announced but not listed. Which are they?
+  - (b) The table has two rows named Event. Is the second (setting, state, label change) meant as Property? If so, state is listed both as a metric and as a property type.
+  - (c) DRS automation level is Manual, Partially Automated or Fully Automated; the 1-5 scale is the migration threshold. Change the example to migration threshold?
+- Written as now: setting, state and label change as change events; the example written as migration threshold, flagged.
+- Answer: (a), (b) In the attached document: three property types (label or tag; setting; non-setting); the second Event row is an event (setting, state or label change), in a nested table the extraction missed. (c) Yes. Applied 2026-11-08: observability/input-types.
+
+### Q086 · Part 1 > Your Private Cloud > Overview > Key Metrics · Operational Availability and green zone
+- Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/iaas-business.md) (section Metrics per pillar).
+- Search: "Relative Availability, against your availability architecture and green zone."
+- Question: what is the green zone here? (a) the planned availability band of the architecture (for example the HA design target), or (b) something else. The formula comes later, in the Service Level Agreement section; this asks only for the term.
+- Written as now: Operational Availability is relative to the availability architecture; green zone left out.
+- Answer: Neither. Green zone = change window (maintenance window, authorized execution window): the predefined time when approved changes, deployments, patches and infrastructure changes may enter production. Applied 2026-11-08: sla-metrics, iaas-business, glossary.
 
 ### Q072 · Part 1 > The Layers in IT Systems · Apdex
 - Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
