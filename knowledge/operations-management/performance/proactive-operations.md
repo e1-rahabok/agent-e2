@@ -130,9 +130,9 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vcf-operations
@@ -147,7 +147,7 @@ internal_derive:
 - operations-management/performance/monitoring-vs-troubleshooting
 - operations-management/performance/purpose-driven-architecture
 related:
-- operations-management/performance/pillars-of-operations
+- operations-management/performance/sp5-framework
 - operations-management/performance/health-risk-efficiency
 - operations-management/capacity/rightsizing
 - vsphere/technology/storage/concepts/snapshot-impact

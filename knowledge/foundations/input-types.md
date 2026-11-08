@@ -67,7 +67,7 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 - capacity
 product: []
 internal_derive: []

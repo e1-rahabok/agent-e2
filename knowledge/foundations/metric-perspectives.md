@@ -50,9 +50,9 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 - capacity
-- value
+- cost
 product: []
 internal_derive: []
 related:

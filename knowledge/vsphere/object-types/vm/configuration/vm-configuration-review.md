@@ -63,7 +63,7 @@ technology:
 pillar:
 - performance
 - availability
-- security
+- compliance
 - capacity
 product:
 - vsphere

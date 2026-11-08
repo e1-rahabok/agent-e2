@@ -63,7 +63,7 @@ technology:
 - storage
 pillar:
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vsan

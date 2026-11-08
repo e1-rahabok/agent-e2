@@ -54,7 +54,7 @@
 | Record | Formal event with a ticket; may have an incident | Not a formal event; no incident |
 | Impact | Business or operations may be impacted | None |
 | Problem | Known; root cause may be unknown | None known |
-| Urgency | Look at it today | Next business day, or next week |
+| Urgency | Today: red as soon as possible (at most 1-2 hours), orange by the end of the day | Not urgent: read as a group in the daily health check |
 | Nature | Reactive, unpredictable; the system tells you | Proactive, regular (daily, weekly, monthly); you start it |
 | Response | Mandatory | Not applicable: you initiate it |
 | Person | Low expertise; follows an SOP | Deep expertise; no steps to follow |
@@ -94,20 +94,24 @@
 ## Criticality: yellow, orange, red
 - Something happened to an object: a metric crossed a threshold, its configuration changed, or its state changed.
 - First question: urgent? Must it be acted on today?
-  - No → low importance, yellow. Next business day. No notification: it is read with others as a group in the daily health check.
+  - No → not an alert. It becomes an insight, read with others as a group in the proactive health check at the start of the day or shift. Seen as a group, it shows the big picture.
   - Yes → acknowledge, then: when to act?
-    - Sometime today → medium importance, orange.
-    - As soon as possible → high importance, red.
+    - By the end of the day → orange: urgent, not important.
+    - As soon as possible, at most 1-2 hours → red: urgent and important.
 - The wider the impact, the higher the importance.
+- Alerts are reactive: when one fires, time has already started. Define as few as possible: only issues that cannot be prevented.
+- Alert storms and alert fatigue in enterprise IT come from alerts that were never defined properly.
 - In daily operations:
-  - Yellow: symptom; non-urgent; leading indicator. Could matter, could be a false positive. Review tomorrow.
-  - Orange: alert; urgent, importance not high. Attend by the end of the day; not tomorrow.
-  - Red: alert; urgent and important. Attend within 1-2 hours; not drop-everything.
+  - Red: urgent and important. As soon as possible, at most 1-2 hours; not drop-everything.
+  - Orange: urgent, not important. By the end of the day; do not defer to tomorrow.
+  - Yellow: not urgent, so not an alert. An issue that can wait until tomorrow is not urgent: handle it as an insight in the health check.
   - Emergency: a small subset of red. Act that minute, even at 02:00, because each minute matters. Rare. VCF has no alert defined for it yet.
   - Green: nothing to do.
 ![Decision flow: something happened or changed on an object → urgent (act today)? No → low importance (yellow), next business day, seen as a group in the daily health check. Yes → acknowledge, when to act? As soon as possible → high importance (red); sometime today → medium importance (orange). The wider the impact, the higher the importance](images/alert-criticality-urgency-importance-diagram.png)
 
 ## Traps
+- "Yellow alert: deal with it tomorrow" → yellow is not an alert. Not urgent means it belongs in the daily health check as an insight.
+- "Alert colours and KPI colours mean the same" → an alert colour is a deadline, because time has started. A KPI colour band is proactive and carries no deadline. They are not related.
 - "We have proactive alerts" → reacting to an alert is reactive, even before business impact. Proactive work is insight from the daily health check.
 - "No open alerts, so no problem" → alerts close themselves when the symptom fades, and a threshold sees only objects above it. Many objects sit just below.
 - "Lower the thresholds to catch problems earlier" → conservative thresholds cause alert storms. Early warning comes from leading indicators read as insights.
@@ -130,7 +134,7 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 - capacity
 product:
 - vsphere
@@ -175,6 +179,7 @@ source:
   path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert) (pp. 2, 16-21); SP5 Framework > Basic Terminology (pp. 45-46)'
 corrections: []
 review_notes:
+- 'Section ''Criticality'': alerts minimized; yellow removed from alerts and handled as insight; red at most 1-2 hours, orange by end of day; alert colours unrelated to KPI colours (author, Q089, 2026-11-08).'
 - 'Section ''Prevention window'': the image gives a threshold for each example. Not copied into the text or the threshold catalog until the author answers Q088: SLA VM CPU Ready above 5% vs the SLI value 2.5% (vcf-operations/kpis/cluster-sla-sli); Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as SLA alerts vs SLAs measured on each paying VM.'
 - 'Section ''Prevention window'', last bullet before the image: instance-rule example added by Claude.'
 - 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important. Q089. Whether KPI colour bands carry the same response times: Q089.'

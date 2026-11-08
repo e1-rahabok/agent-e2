@@ -58,7 +58,8 @@
 - Product side: VCF as a Broadcom software product. The infrastructure team cares about it. Two forms:
   - virtual appliances: vCenter, NSX Edge;
   - kernel software: ESXi VMkernel, vSAN and NSX kernel modules.
-- Workload means the customers' VMs. VCF appliances and other infrastructure appliances also run as VMs on the platform.
+- VCF appliances (vCenter, NSX Edge) and other infrastructure appliances are workload in the technical sense: VMs on a vSphere cluster.
+- Operationally they are not workload: no business user owns them; the infrastructure team does. They are internal, so they have a KPI and no SLA. An SLA is always between two parties.
 - Product-side work: compatibility, patch and upgrade; configuration maximums; templates; users and roles; certificates; licenses; log analysis.
 - Pillars across both sides: availability, performance, security, compliance, capacity, configuration, inventory.
 - The two sides depend on each other and are managed together. Example: an expired vCenter certificate (product) stops vCenter; DRS stops balancing while vCenter is down, so VM contention can rise (platform). vSphere HA keeps working without vCenter.
@@ -75,6 +76,7 @@
 - "Tier performance can leave out the spare node, since N+1 covers it" → the spare counts for availability only. For performance every member serves requests and is averaged.
 - "A larger cluster is always more efficient" → a cap on VMs affected by one cluster failure caps the cluster size.
 - "The application team needs the latest VCF version" → the VCF version is a product-side decision. The application team sees the platform side: its VMs and their service level.
+- "vCenter and NSX Edge VMs get the same SLA as customer VMs" → they are internal: KPI only. An SLA needs two parties.
 - "VCF is responsible for the Guest OS" → VCF scope ends at the VM and VMware Tools.
 - "vCenter certificates are an infrastructure matter with no effect on VMs" → product-side failures reach the platform side: without vCenter, DRS stops balancing.
 
@@ -89,7 +91,7 @@ pillar:
 - availability
 - performance
 - capacity
-- security
+- compliance
 product:
 - vsphere
 - vsan
@@ -123,6 +125,7 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF) (pp. 11-22)'
 corrections: []
 review_notes:
+- 'Section ''Two sides of VCF'': appliances are workload technically, internal operationally: KPI, no SLA (author, Q091, 2026-11-08).'
 - 'Section ''Goals come from what is sold'', DaaS: reason (same software on every desktop moves together) added by Claude.'
 - 'Section ''Day 2 → Day 0 → Day 1'', Example 2: the book does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
 - 'Section ''Health of an application tier'': the reason in the performance bullet (each member serves its share of requests) is Claude''s. Health across tiers (in sequence) and of an active/passive database tier: Q092.'

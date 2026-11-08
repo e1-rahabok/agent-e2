@@ -97,8 +97,8 @@ technology:
 - system
 pillar:
 - capacity
-- value
-- security
+- cost
+- compliance
 product:
 - vsphere
 - vcf-operations

@@ -110,7 +110,7 @@ technology:
 - system
 pillar:
 - performance
-- value
+- cost
 product:
 - vsphere
 object:

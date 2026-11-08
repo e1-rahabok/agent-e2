@@ -75,7 +75,7 @@ pillar:
 - availability
 - performance
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vcf-operations

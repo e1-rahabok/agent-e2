@@ -156,7 +156,7 @@ pillar:
 - performance
 - availability
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vsan

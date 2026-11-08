@@ -37,7 +37,7 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 product:
 - vsphere
 - nsx

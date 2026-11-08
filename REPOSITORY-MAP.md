@@ -27,11 +27,28 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/moved.yaml` | Old file ids → current ids |
 | `harness/` | Retrieval, catalog, calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
-- Flows (order of checks) sit next to their technology or object, in folders named `troubleshooting/` and `health-check/`. The harness finds them by folder name and gives the agent one index of all flows. List them:
+## Flows
+Order of checks, run step by step by the `flow` tool. Each sits next to its technology or object, in a folder named `troubleshooting/` or `health-check/`; the harness finds them by that folder name and gives the agent one index of all flows. Start a performance complaint at VM slow triage. Lint checks that this table lists every flow.
 
-```bash
-find knowledge -path '*/troubleshooting/*.md' -o -path '*/health-check/*.md' | sort
-```
+| Kind | Flow | File |
+|---|---|---|
+| Health check | Can this cluster take more VMs? | [`operations-management/capacity/health-check/can-cluster-take-more-vms`](knowledge/operations-management/capacity/health-check/can-cluster-take-more-vms.md) |
+| Health check | Does this ESXi host have CPU headroom? | [`vsphere/technology/cpu/health-check/host-cpu-capacity-headroom`](knowledge/vsphere/technology/cpu/health-check/host-cpu-capacity-headroom.md) |
+| Health check | Downsizing a large, idle VM | [`vsphere/technology/cpu/health-check/oversized-vm-downsizing`](knowledge/vsphere/technology/cpu/health-check/oversized-vm-downsizing.md) |
+| Health check | ESXi: health check | [`vsphere/object-types/esxi/health-check/esxi-health-check`](knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md) |
+| Health check | VM: health check | [`vsphere/object-types/vm/health-check/vm-health-check`](knowledge/vsphere/object-types/vm/health-check/vm-health-check.md) |
+| Health check | vSphere cluster: health check | [`vsphere/object-types/cluster/health-check/cluster-health-check`](knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md) |
+| Troubleshooting | ESXi storage latency is high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
+| Troubleshooting | Overcommit indicators | [`vsphere/technology/memory/troubleshooting/overcommit-indicators`](knowledge/vsphere/technology/memory/troubleshooting/overcommit-indicators.md) |
+| Troubleshooting | Users say the VM is slow: triage | [`operations-management/performance/troubleshooting/vm-slow-triage`](knowledge/operations-management/performance/troubleshooting/vm-slow-triage.md) |
+| Troubleshooting | VM CPU Contention or Latency is high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
+| Troubleshooting | VM CPU Other Wait is high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
+| Troubleshooting | VM CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](knowledge/vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |
+| Troubleshooting | VM memory latency (contention) is high | [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](knowledge/vsphere/technology/memory/troubleshooting/vm-memory-latency-high.md) |
+| Troubleshooting | VM starved of resources in a DRS cluster | [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](knowledge/vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
+| Troubleshooting | VM storage performance: what to check | [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](knowledge/vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md) |
+| Troubleshooting | VMs in a cluster face contention | [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](knowledge/vsphere/object-types/cluster/troubleshooting/cluster-vm-contention.md) |
+| Troubleshooting | vNIC receive drops | [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](knowledge/vsphere/technology/network/troubleshooting/vnic-rx-drops.md) |
 
 ## Proof: not deployed
 | Folder | Holds |

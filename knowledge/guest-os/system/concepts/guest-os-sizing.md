@@ -129,7 +129,7 @@ technology:
 pillar:
 - capacity
 - performance
-- value
+- cost
 product:
 - windows
 - linux
