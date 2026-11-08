@@ -31,7 +31,7 @@
 - The checks must cover every manual check done today: automate the whole checklist.
 - The rules are finite and known: the logic experts use to troubleshoot performance can be automated. Most remediation is moving VMs out of a cluster, which needs no AI and can be automated too.
 - Daily check plus remediation, verified by a human, leaves the team free for corner cases.
-- The check is short, so it runs twice a day: start and end of the day.
+- The check is short, a few minutes when there is no problem, so it runs twice a day: start and end of the day. A problem it finds turns into troubleshooting, which takes as long as the problem needs.
 
 ## Day-to-day order
 1. Availability: a system that is down has no performance problem.
@@ -44,10 +44,10 @@
 - Alerts arrive at random times, day and night: reactive.
 - Proactive work:
   - NOC live screen: always on;
-  - daily check: about 10 minutes at 09:00;
+  - daily check at 09:00: about 5 minutes when there is no problem; a problem found makes it longer, as long as that problem needs;
   - weekly check: about 1 hour;
   - monthly review: about 1 day.
-![00:00-24:00 timeline. Reactive: alerts at random times. Proactive: NOC live screen always on; daily check (10 minutes) at 09:00; weekly check (1 hour); monthly review (1 day)](images/operations-24-hour-reactive-vs-proactive-timeline.png)
+![00:00-24:00 timeline. Reactive: alerts at random times. Proactive: NOC live screen always on; daily check at 09:00 (the image says 10 minutes; the author's length is about 5 minutes when there is no problem); weekly check (1 hour); monthly review (1 day)](images/operations-24-hour-reactive-vs-proactive-timeline.png)
 - Morning sequence:
   - 08:00-09:00: an automatic health optimization script runs and flags VCF components it cannot remediate.
   - 09:00-09:30: a human expert reviews the script outcome and the daily dashboard, including the alert trend.
@@ -112,6 +112,7 @@
 - "An anomaly is a problem" → anomaly detection lacks business context: what looks abnormal can be normal, and the reverse.
 - "Troubleshooting automation needs AI" → the rules are finite and the usual remediation is moving VMs out of a cluster; rules and automation do it.
 - "The morning check covers the whole day" → the NOC live screen covers the rest of the day; the weekly review catches what both missed.
+- "The daily check takes 10 minutes" → about 5 minutes when there is no problem; a problem found makes it longer, as long as the problem needs.
 - "The daily check shows every problem" → it covers at most a day; quarterly patterns need monthly baselining.
 - "Security comes first in daily operations" → availability, then performance, then security.
 - "A snapshot count that differs from the VM count is cosmetic" → snapshots taken but not removed point to failed backup consolidation.
@@ -165,10 +166,11 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle) (pp. 58-65); SP5 Framework: Pillars (pillar per phase table)'
 corrections:
+- 'Daily check length: author answer Q105 (b), 2026-11-08: about 5 minutes when there is no problem; a problem makes it longer.'
 - 'Sections ''Dual track'' and ''Day-to-day order'': author answer Q104 (2026-11-08): reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is Claude''s.'
 review_notes:
 - 'Section ''Dual track'': the book says 3 techniques and lists 4 (daily optimization, insight review, performance quantification, monthly baselining); the diagram names them automated process, insight, modelling, monthly performance baselining. Written from the diagram. Q105, Q107.'
-- 'Daily check length: about 1 minute (text), 10 minutes (timeline), 5 minutes (monitoring table). Written as 10 minutes from the timeline, short so it can run twice a day. Q105.'
+- 'Daily check length: the book gives about 1 minute (text), 10 minutes (timeline image), 5 minutes (monitoring table). Author answer Q105 (b), 2026-11-08: a few minutes, about 5, when there is no problem; longer when there is a problem, depending on the problem.'
 - 'Section ''Who does which day'', table: the troubleshooting row marks compliance not applicable, while the Troubleshoot text says availability, performance and security are troubleshot. Q101.'
 - 'Section ''NOC live screen and daily check'': the book says insight and alerts were covered in Part 1; this is Part 1 (Q107).'
 - 'Section ''Daily SOP per pillar'', 31 backups: Claude''s subtraction (1,549 - 1,518).'
