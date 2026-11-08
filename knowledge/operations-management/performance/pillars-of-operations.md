@@ -1,4 +1,4 @@
-# SP5 framework and the five pillars of operations: scope, relationships, non-pillars
+# SP5 framework: pillars of operations
 
 ## SP5 framework
 - A private cloud on VCF needs its own IT operations management framework. SP5: the IT business strategy plus five components: policy, pillars, process, people, platform.
@@ -7,7 +7,7 @@
 - Pillars: the disciplines a CIO cares about. People are organized around them; policies and processes balance governance and agility. A full set of policies and SOPs answers who does what, when, where and how.
 - Platform: the system architecture (compute, storage, network, security, management and portal), implemented with a product such as VCF.
 ![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
-- Day 2 → Day 0 → Day 1: `operations-management/performance/purpose-driven-architecture`.
+- Day 2 → Day 0 → Day 1: `operations-management/performance/purpose-driven-architecture`, section Plan from Day 2.
 
 ## What a private cloud manages
 - Consumer side: tenants consume and pay for IaaS through a self-service portal and API: SLA monitoring, inventory, projects, troubleshooting, security, team, bill.

@@ -1,4 +1,4 @@
-# Capacity model: total, usable, buffer, projection
+# Capacity model
 
 ## Supply and demand
 - Supply: total capacity and usable capacity.
@@ -74,7 +74,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | Resource pool | Each pool has its own capacity. |
 | DR | Use buffer to reserve for rare DR workload. |
 
-## Total vs usable after host loss (10 hosts, N+1, 0% buffer)
+## Total vs usable after host loss
 ![Total vs usable capacity](images/cluster-total-vs-usable-capacity.png)
 
 | Event | Intentional | Desired | Impacts |

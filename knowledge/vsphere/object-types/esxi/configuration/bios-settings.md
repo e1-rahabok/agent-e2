@@ -48,7 +48,7 @@
 ### AMD processors
 - AMD EPYC NUMA settings: see `vsphere/technology/cpu/concepts/numa`.
 
-## C-states for Intel Granite Rapids (9.1 pp. 22-23)
+## C-states for Intel Granite Rapids
 - Disable deep C-states (C6) for latency-sensitive workloads.
 - Recommendations by workload (source Table 1-1):
 

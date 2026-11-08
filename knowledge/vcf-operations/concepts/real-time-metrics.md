@@ -1,4 +1,4 @@
-# Real-time metrics: 2-second and 20-second data in VCF Operations 9.1
+# Real-time metrics (VCF Operations 9.1)
 
 ## What it adds
 - New in VCF Operations 9.1: live performance data, streamed from vCenter, ESX, NSX and vSAN into a real-time metrics store.

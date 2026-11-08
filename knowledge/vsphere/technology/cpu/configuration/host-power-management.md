@@ -31,7 +31,7 @@
 - For the best power savings: one P-state technology (ACPI P-states or ACPI CPPC) plus ACPI C-states.
 - Missing technologies do not cause problems. The system can use more power than necessary.
 
-## Intel Hardware P-States (HWP) (9.1 p. 12)
+## Intel Hardware P-States (HWP)
 - ESX 9.0 and later support HWP on fourth-generation and later Intel Xeon Scalable processors, starting with Sapphire Rapids. This is also called ACPI CPPC.
 - Before ESX 9.0, ESX managed P-states directly. ESX 9.0 and later still manage P-states directly on Intel Xeon processors before fourth generation, and on AMD processors.
 - ESX attempts to enable HWP at boot. ESX gives hints to the processor based on the power policy. The CPU microcode tracks load and sets frequencies at core and package level.

@@ -1,4 +1,4 @@
-# Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle
+# Proactive operations
 
 ## Who does which day
 - Day 0 (plan) and Day 1 (design and build) belong to the architecture team; Day 2 (operate) to the operations team.

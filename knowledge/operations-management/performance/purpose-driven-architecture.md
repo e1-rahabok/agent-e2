@@ -1,59 +1,59 @@
-# Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF
+# Purpose-driven architecture
 
 ## Goals come from what is sold
-- Architecture goals are business results seen by those who pay for the system and those who pay for the service. Design considerations (availability and performance practice) come after.
+- Architecture goals are business results, as seen by whoever pays for the platform and whoever pays for the service. Availability and performance practice come after.
 - The goals depend on what is sold: an application or infrastructure.
-- **SaaS**: software as a service; no on-premises install. ISVs use it to avoid outdated installs.
+- **SaaS**: no on-premises install. ISVs use it so customers do not run outdated versions.
 - **DBaaS**: two variants.
   - Shared binary: one patch updates every instance; all share one maintenance window.
   - Dedicated binary: each customer has its own version, patch level and downtime schedule.
-- **PaaS**: a set of common services used by business applications (login, payment).
-- **DaaS**: desktops as a service. Goal: desktop experience at a low price per user.
-  - Desktops run the same software, so a change in it moves every desktop at once. A 10% CPU increase in the browser, on a heavily overcommitted host, can breach the Performance SLA. Application teams must be involved.
-- **K8aaS**: Kubernetes as a service; dedicated cluster or shared cluster.
+- **PaaS**: common services for business applications (login, payment).
+- **DaaS**: desktops at a low price per user.
+  - All desktops run the same software, so one software change hits every desktop at once. A 10% CPU increase in the browser, on a heavily overcommitted host, can breach the Performance SLA. Application teams must be involved.
+- **K8aaS**: Kubernetes, on a dedicated or a shared cluster.
 - **IaaS**: three variants (VM, resource pool, hardware): `operations-management/performance/iaas-business`.
 
-## Day 2 → Day 0 → Day 1
+## Plan from Day 2
 - Day 0: plan. Business plan, high-level architecture, operations model.
 - Day 1: design and build. Low-level architecture, deployment, commissioning.
 - Day 2: operate. It starts at go-live and lasts the life of the platform.
-- The order of thinking is 2 → 0 → 1, not 0 → 1 → 2. The end state (how the platform is sold and operated) drives the plan; the plan drives the architecture.
+- Think in the order Day 2, Day 0, Day 1. How the platform will be sold and operated decides the plan, and the plan decides the architecture.
 - A major upgrade or migration starts the cycle again from Day 2.
 ![Day 2 Operate → Day 0 Plan (high-level architecture and operations model) → Day 1 Design (low-level architecture and deployment); a major upgrade or migration loops back to Day 2](images/day2-day0-day1-sequence-diagram.png)
 - Example 1: the class of service and the average VM profile fix the ESXi host specification (`operations-management/capacity/host-spec-from-class-of-service`).
 - Example 2: business continuity caps cluster size.
   - Policy: one cluster failure may affect at most N production VMs. Book example: 300.
-  - Then the cluster is sized so that its VMs stay under N. A cluster built larger cannot be filled without breaking the policy.
+  - Size the cluster so its VMs stay under N. A larger cluster cannot be filled without breaking the policy.
   - Seen in the field: 32-node production clusters running 1,000-2,000 VMs.
-  - Gold offers availability zones because it hosts mission-critical services.
+  - Gold adds availability zones, because it hosts mission-critical services.
 
 ## Reflect the business in the platform
-- The infrastructure team works business-application-centric: it must know the business context and impact of each object.
+- The infrastructure team must know which business application each object serves, and what its failure costs.
 - CIO view: live information on how IT serves each business unit and its critical applications. The platform must map business units and applications to their VMs.
 - Tenant view: customers check their own VM health and how the platform serves their VMs. The platform must associate each tenant with its VMs; at least a structure to browse or find applications and VMs.
-- One model fits every business application, because the infrastructure metrics are the same for all (IaaS metrics are horizontal: `operations-management/performance/realms-and-layers`).
+- One model fits every application: the infrastructure metrics are the same for all of them (`operations-management/performance/realms-and-layers`).
 
 ## Crown jewels
 - Mission-critical business applications: a small share of the VMs, essential to revenue, profit or image. Bank: internet banking. E-commerce: the online portal.
-- Monitor them several times a day, not once each morning. The application team watches its system all day.
-- The question to answer: is the infrastructure causing the application's problem? Usually performance; sometimes availability or security.
+- Check them several times a day. The application team watches its system all day; a morning check is too late.
+- The question to answer is whether the infrastructure causes the application's problem. Usually performance; sometimes availability or security.
 
 ## Health of an application tier
 - A tier scales out: web and application servers behind load balancers; microservices as pods per function (payments, shipping).
-- Tier health is the average health of its members, not the minimum. Work inside a tier runs in parallel, not in sequence: a tier is not a convoy. A good load balancer balances both performance and availability.
+- Tier health is the average of its members, not the worst one. Members serve requests in parallel, so one slow member slows only its share. A good load balancer spreads both load and failures.
 - Spare members (4 or 5 web servers where 3 carry the load):
   - Availability: count the spare. One member down does not reduce tier availability while the remaining members carry the load.
   - Performance: average all members, spare included. Every member serves requests, so a slow one slows its share of them.
 
 ## Automation after operations
-- Do not architect what you are not willing to troubleshoot. Real problems happen on Day 2, when business workloads run revenue transactions.
-- Plan the roles and skills to operate the architecture. Give visibility into each component, and define what health means for it.
-- Automation is a feature of the architecture, as fly-by-wire is a feature of a plane. Operations is getting passengers to the destination safely and on time.
-- Do not automate what you cannot operate. Automation on ungoverned operations makes the problem happen faster. In the transformation, automation comes last.
+- Design only what the team can troubleshoot. Problems show on Day 2, under revenue workload.
+- Plan the roles and skills that will run the platform. Each component needs monitoring and a definition of healthy.
+- Automation is a feature of the design, like fly-by-wire in a plane; operations is flying the passengers safely and on time.
+- Automate only what is already operated well. Automating an ungoverned process repeats its mistakes faster. Automation comes last.
 - Maturity: reactive and manual (remediating issues not seen coming) → predictive and proactive (the system warns, fewer alerts, more insights) → intelligent and automated (the system is trusted to fix; the team works on improvement).
 
 ## Two sides of VCF
-- VCF is an SDDC: software on commodity hardware that builds a private cloud on premises.
+- VCF is a software-defined data center: software on commodity hardware that builds an on-premises private cloud.
 - Platform side: VCF as the customer's IaaS. The application team cares about it.
 - Product side: VCF as a Broadcom software product. The infrastructure team cares about it. Two forms:
   - virtual appliances: vCenter, NSX Edge;
@@ -61,7 +61,7 @@
 - Workload means the customers' VMs. VCF appliances and other infrastructure appliances also run as VMs on the platform.
 - Product-side work: compatibility, patch and upgrade; configuration maximums; templates; users and roles; certificates; licenses; log analysis.
 - Pillars across both sides: availability, performance, security, compliance, capacity, configuration, inventory.
-- The two sides depend on each other, so they are managed as one. Example: an expired vCenter certificate (product) stops vCenter; DRS stops balancing while vCenter is down, so VM contention can rise (platform). vSphere HA keeps working without vCenter.
+- The two sides depend on each other and are managed together. Example: an expired vCenter certificate (product) stops vCenter; DRS stops balancing while vCenter is down, so VM contention can rise (platform). vSphere HA keeps working without vCenter.
 ![Platform (VCF as an IaaS platform of the customer): workloads (business; IT, VCF and non-VCF appliances) above the virtual infrastructure. Product (VCF as a software product of Broadcom): compatibility, patch, upgrade, configuration maximums, template, users and roles, certificate, license, log analysis. A dependency arrow joins them; pillars across: availability, performance, security, compliance, capacity, configuration, inventory](images/vcf-platform-vs-product-pillars-diagram.png)
 - Two layers: consumer and provider.
   - Consumer: where VMs and containers run. Three sublayers: application, Guest OS, VM.

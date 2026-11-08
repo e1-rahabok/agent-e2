@@ -1,4 +1,4 @@
-# Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)
+# Cluster Performance (%) (vCommunity KPI)
 
 ## What it is
 - One score per vSphere cluster, 0-100%. 100 is perfect.

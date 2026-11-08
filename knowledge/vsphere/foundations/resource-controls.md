@@ -1,4 +1,4 @@
-# Resource controls: reservation, limit, shares, entitlement
+# Resource controls
 
 ## Controls
 | Control | Nature |

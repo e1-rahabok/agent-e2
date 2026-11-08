@@ -1,4 +1,4 @@
-# IaaS SLAs: what each measures and how it is computed
+# IaaS SLAs
 
 ## SLA in the contract
 - An SLA is one section of a business contract between a consuming entity (pays) and a providing entity (supplies). The contract also holds clauses, context and other agreements (confidentiality, payment terms, non-compete, marketing).

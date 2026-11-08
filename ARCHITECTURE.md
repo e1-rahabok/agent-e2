@@ -1,6 +1,6 @@
 # Architecture
 
-How the model, agent, harness and knowledge work together at run time. Not indexed.
+The whole system: how the repository is organized, and how the model, agent, harness and knowledge work together at run time. Not indexed.
 Why it can work: [MISSION.md](MISSION.md). The agent: [harness/AGENT.md](harness/AGENT.md). Harness parts: [harness/README.md](harness/README.md). Knowledge, folders and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). Benchmark: [benchmark/design.md](benchmark/design.md).
 
 ## Components
@@ -11,6 +11,46 @@ Why it can work: [MISSION.md](MISSION.md). The agent: [harness/AGENT.md](harness
 | Knowledge | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md): what the knowledge is and how to write it |
 
 - Why the system can win, and what it must do: [MISSION.md](MISSION.md).
+
+## Repository
+
+One repository, three groups. Only the product is deployed. Folder by folder: [REPOSITORY-MAP.md](REPOSITORY-MAP.md).
+
+```mermaid
+flowchart LR
+  subgraph Product["Product: deployed to the site"]
+    K["knowledge/<br/>codified expertise<br/>(the only indexed folder)"]
+    H["harness/<br/>retrieval, tools,<br/>verifier, rules"]
+    A["agent<br/>model + tool loop<br/>(hosted by the harness)"]
+    M(["open-weight model<br/>on a local GPU"])
+    H -->|retrieves| K
+    H -->|hosts, constrains| A
+    A -->|decides with| M
+  end
+  subgraph Proof["Proof: not deployed"]
+    B["benchmark/<br/>questions, models, judge,<br/>runner, results"]
+  end
+  subgraph Project["Project: not deployed"]
+    P["project/<br/>plan, decisions,<br/>author questions, reviews"]
+    T["project/tools/<br/>lint.py, tags.yaml"]
+  end
+  B -->|runs questions through| H
+  T -->|checks| K
+  T -->|checks| B
+```
+
+- Product: what runs at the customer site.
+  - `knowledge/`: Level 400 mechanisms, metrics, traps and troubleshooting flows, plus exact data in `knowledge/catalog/`. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
+  - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
+  - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code (`harness/agent.py`, up-front blocks in `harness/primer.py`); what it is told and how it decides: `harness/AGENT.md`.
+  - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
+- Proof: shows that the product beats a frontier model.
+  - `benchmark/`: questions with answer keys and their attachments, the candidate models and judge (`benchmark/models.md`), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on its worst of 5 runs. Never indexed: it holds the answer keys.
+- Project: how this repository is built and kept correct.
+  - `project/`: plan (milestones, decisions, open work), author questions, reviews, archive.
+  - `project/tools/`: `lint.py` (file, tag and folder checks, run before every merge) and `tags.yaml` (allowed tag values, avoided phrases).
+
+- One repository, not two: the benchmark runs the harness and the knowledge base at the same commit, so a score always belongs to one exact version of the product. `lint.py` imports the parser from `harness/kb.py`; the dependency points only from project to product.
 
 ## 1. Parts
 | Part | What it is | Where | What it decides |

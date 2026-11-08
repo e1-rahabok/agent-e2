@@ -1,4 +1,4 @@
-# ESXi host specification from class of service and VM profile
+# ESXi host specification from class of service
 
 ## Why Day 2 sets the hardware
 - The host specification cannot be chosen without two Day 2 inputs: the average VM profile (RAM per vCPU) and the overcommit ratio planned for each class of service.
@@ -28,7 +28,7 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 - A host with 1 TB would leave 768 GB unsold.
 - The book's Gold example keeps no cores or RAM for infrastructure. With the Silver share (8 cores, 64 GB) it becomes 56 vCPU, 224 + 64 = 288 GB.
 
-## Silver at 3:1 CPU, no memory overcommit (book example, class of service planning)
+## Silver at 3:1 CPU, no memory overcommit
 - Average VM: 1 vCPU, 4 GB. CPU overcommit 3:1 per core, memory 1:1.
 - Each core sells 3 vCPU × 4 GB = 12 GB of RAM.
 - 64 cores: 64 × 12 = 768 GB.

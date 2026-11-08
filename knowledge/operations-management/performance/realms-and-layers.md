@@ -1,4 +1,4 @@
-# Business, application and IaaS: layers, lost context and metric types
+# Business, application and IaaS layers
 
 ## Three realms of IT
 - Business, application and IaaS. Each has its own teams, responsibilities and skills.

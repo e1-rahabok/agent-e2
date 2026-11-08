@@ -1,4 +1,4 @@
-# Unused VM: signs, safe actions, annual stocktake
+# Unused VM
 
 ## Definition
 - An unused VM is not idle: it still runs CPU work. It no longer gives business value.

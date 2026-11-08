@@ -42,12 +42,7 @@
 
 ## Why it is possible
 
-- A frontier model wins on memorised breadth. In one *narrow* domain, retrieval supplies the knowledge, and what remains is reading a few files and applying their rules. Current 27-32B open models are close to frontier models at that.
-- The frontier model memorised the Internet's misconceptions ("Ready above 5% is bad", "the VM is the Guest OS"). The knowledge base holds the author's corrections. Measured: the frontier model without it gave the trap answer on 16% of answers.
-- The knowledge base is current (vSphere 9.1, VCF 9.1.1); training data lags.
-- Exact work moves out of the model: a catalog returns units, rollups and thresholds; a calculator does the arithmetic; a flow executor keeps the order of checks.
-- The knowledge is written for VMware Administrators and Architects: one fact per bullet, one object per file, traps linked to the metric they belong to.
-- Argument, risks and what would prove it wrong: [MISSION.md](MISSION.md).
+- See [MISSION.md](MISSION.md), section 3.
 
 ## The system
 
@@ -65,41 +60,8 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 
 ## Repository map
 
-Three groups. Only the product is deployed.
-
-```mermaid
-flowchart LR
-  subgraph Product["Product: deployed to the site"]
-    K["knowledge/<br/>codified expertise<br/>(the only indexed folder)"]
-    H["harness/<br/>retrieval, tools,<br/>verifier, rules"]
-    A["agent<br/>model + tool loop<br/>(hosted by the harness)"]
-    M(["open-weight model<br/>on a local GPU"])
-    H -->|retrieves| K
-    H -->|hosts, constrains| A
-    A -->|decides with| M
-  end
-  subgraph Proof["Proof: not deployed"]
-    B["benchmark/<br/>questions, models, judge,<br/>runner, results"]
-  end
-  subgraph Project["Project: not deployed"]
-    P["project/<br/>plan, decisions,<br/>author questions, reviews"]
-    T["project/tools/<br/>lint.py, tags.yaml"]
-  end
-  B -->|runs questions through| H
-  T -->|checks| K
-  T -->|checks| B
-```
-
-- Product: what runs at the customer site.
-  - `knowledge/`: Level 400 mechanisms, metrics, traps and troubleshooting flows, plus exact data in `knowledge/catalog/`. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
-  - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
-  - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code (`harness/agent.py`, up-front blocks in `harness/primer.py`); what it is told and how it decides: `harness/AGENT.md`.
-  - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
-- Proof: shows that the product beats a frontier model.
-  - `benchmark/`: questions with answer keys and their attachments, the candidate models and judge (`benchmark/models.md`), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on its worst of 5 runs. Never indexed: it holds the answer keys.
-- Project: how this repository is built and kept correct.
-  - `project/`: plan (milestones, decisions, open work), author questions, reviews, archive.
-  - `project/tools/`: `lint.py` (file, tag and folder checks, run before every merge) and `tags.yaml` (allowed tag values, avoided phrases).
+- Where each file lives: [REPOSITORY-MAP.md](REPOSITORY-MAP.md).
+- How the parts fit: [ARCHITECTURE.md](ARCHITECTURE.md), section Repository.
 
 ## Documents
 
@@ -107,7 +69,8 @@ flowchart LR
 | Read                                                 | For                                                                                                         |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | [MISSION.md](MISSION.md)                             | The mission; why it is possible; what we can change; risks; what the product must do; design considerations |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: parts, modes, dark site, checks, query flow; links the component designs                  |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: repository, parts, modes, dark site, checks, query flow                                   |
+| [REPOSITORY-MAP.md](REPOSITORY-MAP.md)               | Where each folder and file lives                                                                            |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How expertise is codified and found; folder, metadata, trap, flow, image and writing rules                  |
 | [harness/AGENT.md](harness/AGENT.md)                 | What the agent knows up front, what it decides, its rules, how it is improved                               |
 | [harness/README.md](harness/README.md)               | What each harness part does for an expert answer; modules                                                   |

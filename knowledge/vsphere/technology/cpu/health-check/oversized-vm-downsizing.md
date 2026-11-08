@@ -1,4 +1,4 @@
-# Large VM with low utilization: build the case to downsize
+# Downsizing a large, idle VM
 
 ## Checks, in order
 1. Utilization over a long window (example: 90 days): Usage (%), Demand, Idle (%).

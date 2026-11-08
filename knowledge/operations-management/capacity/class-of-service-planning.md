@@ -1,4 +1,4 @@
-# Class of service in capacity planning: the 2x gap
+# Class of service in capacity planning
 
 ## Why a fixed gap
 - Gold, Silver and Bronze require a relative value that tenants understand.

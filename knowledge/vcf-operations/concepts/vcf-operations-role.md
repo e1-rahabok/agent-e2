@@ -1,4 +1,4 @@
-# VCF Operations: a derived layer above the source systems
+# Role of VCF Operations
 
 ## Role
 - VCF Operations is monitoring and operations management software. It does not run workloads.

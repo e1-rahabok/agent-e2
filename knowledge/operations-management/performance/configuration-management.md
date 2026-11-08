@@ -1,4 +1,4 @@
-# Configuration management: standards, review dimensions and the four types of check
+# Configuration management
 
 ## Purpose
 - Configuration management prevents issues caused by wrong settings: the actual value must match the intended value, and the hardware and software configuration must match the documented architecture.

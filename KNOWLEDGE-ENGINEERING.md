@@ -365,6 +365,8 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
   - no praise, hedging or summary lines;
   - no adjective where a number or a mechanism can stand; name the thing.
   - The list of flagged phrases, each with its plain replacement: `project/tools/tags.yaml`, `avoid_ai_speak`. Lint flags them. The same rule applies to documents, commit messages and pull request text.
+- Titles name the topic: at most 8 words, no list of contents after a colon. Section headings at most 9 words. Words in parentheses (an alias, a counter name) do not count. Reason: `harness/kb.py` prefixes the title and the heading to every chunk, so a long title repeats in every chunk of the file and spends the context budget. Lint checks both.
+- Write full sentences. No slogans ("Three sides, three metrics."), no aphorisms in place of the mechanism, no "X, not Y" where a plain statement says it.
 - One vSphere object type per metric file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.

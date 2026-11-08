@@ -1,4 +1,4 @@
-# Capacity dimensions: utilization, contention, reservation, allocation
+# Capacity dimensions
 
 ## Which model applies
 ![Planning stage: Overcommit? No → buffer, then allocation in operation, closed when allocation equals usable capacity. Yes → workload type Mono (one class) or Mix (Gold, Silver, Bronze); planning parameters buffer, utilization (expected concurrent peak), allocation (via VM price), reservation (mixed class). Operating stage: buffer, utilization against usable, contention as the brake, risk from imbalance and overcommit ratio, share as the QoS setting](images/capacity-model-planning-vs-operating-stage-diagram.png)

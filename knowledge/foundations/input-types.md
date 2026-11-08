@@ -1,4 +1,4 @@
-# Input types: metric, property, event, log, trace, NetFlow
+# Input types
 
 ## Inputs and outputs
 - Six input types feed alerts, dashboards and reports: metric, property, event (with task), log, trace, NetFlow. Each has its own purpose and format, and they overlap.

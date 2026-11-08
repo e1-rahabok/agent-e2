@@ -1,4 +1,4 @@
-# Cluster configuration review: HA, DRS, DPM and cluster variants
+# Cluster configuration review
 
 ## The cluster as one computer
 - A cluster is the smallest logical building block of compute: one computer made of physically independent parts for availability.
