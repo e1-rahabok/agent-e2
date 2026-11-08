@@ -12,7 +12,7 @@
 | Nature | Proactive | Reactive |
 | Expertise | Low: repetitive, with dashboards and alerts | High: varied steps, needs the environment's context |
 | Metrics | Usually one, the SLA metric: primary, checked by SOP | Many, in layers: secondary, read when the primary nears its threshold |
-| Duration | About 5 minutes | Can take days across teams |
+| Duration | A few minutes, about 5, when there is no problem | Can take days across teams |
 | Frequency | Daily; Gold more often than Bronze | On demand |
 | Timeline | Now and future: anticipate load | Now: put out the fire |
 | Logs | Required: logs stream continuously, not in 5-minute samples | Almost always; NetFlow for network |
@@ -124,7 +124,7 @@ corrections:
 review_notes:
 - 'Section ''Troubleshooting'', earlier order: contention, configuration, availability, utilization (book diagram). The reactive track diagram in SP5 Framework: Process uses configuration, availability, known bugs, consumption; vm-slow-triage has its own order (Q060). Q104.'
 - 'Section ''Troubleshooting'': the diagram says Aria Operations for Logs; written as VCF Operations for logs (current name, Q107).'
-- 'Monitoring table: logs not required for monitoring, while availability data comes mostly from logs (health section) and the daily SOP reads logs for soft errors. Duration 5 minutes vs the daily check of about 1 minute and 10 minutes elsewhere. Q105.'
+- 'Monitoring table: logs not required for monitoring, while availability data comes mostly from logs (health section) and the daily SOP reads logs for soft errors. Duration: author answer Q105 (b), about 5 minutes when there is no problem.'
 - 'Section ''Validating a log message'': log lines from the book image (2016 example); the Log Insight screenshot is not copied. ''0.4 s earlier'' computed by Claude from the timestamps (23:42:14.842 vs 23:42:15.266).'
 - 'Section ''Validating a log message'', rule: Claude''s generalization of the example.'
 status: draft

@@ -335,9 +335,11 @@ Each entry has:
   - (a) Monitoring needs no logs, yet availability data comes mostly from logs and the daily SOP reads logs for soft errors. Is log analysis (daily, in the cadence image) part of monitoring?
   - (b) Monitoring 5 minutes, daily check about 1 minute, timeline 10 minutes. One number?
   - (c) 3 techniques announced, 4 listed (text) and 4 in the diagram with other names. Use the diagram names?
-- Written as now: (a) and the interval applied 2026-11-08 (monitoring-vs-troubleshooting: Logs row required, 20-second peak within the 5-minute interval, 20-second visibility for mission-critical systems); (b) daily check still 10 minutes, the table's "Duration: about 5 minutes" unchanged; (c) the diagram's four techniques.
+- Written as now: (a) and the interval applied 2026-11-08 (monitoring-vs-troubleshooting: Logs row required, 20-second peak within the 5-minute interval, 20-second visibility for mission-critical systems); (b) applied: about 5 minutes when there is no problem; (c) the diagram's four techniques.
 - Answer: Monitoring needs log. Monitoring depends on what is being monitored. Log is streaming continuously not discrete every 5 minutes or 1 minute. Performance monitoring reports peak of 20 seconds within 5 minutes reporting interval. An exception is mission critical system where 20 seconds visibility is worth the cost of monitoring. I'll review item 105(c).
-- Still open: (b) the length of the daily check (5, 1 or 10 minutes); (c).
+- Answer (b), 2026-11-08: A daily check, if there is no problem, it should take a few minutes. That's why I put 5 minutes. Now, if there is a problem, logically, it can take a lot longer than that, depending on the problem.
+- Applied (b): proactive-operations (A 24-hour day, Dual track, Traps), monitoring-vs-troubleshooting (Duration row).
+- Still open: (c).
 
 ### Q106 · Part 1 > Service Level Agreement > Performance SLA · SLA counters vs the prevention window alerts
 - Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).
