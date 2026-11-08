@@ -23,7 +23,7 @@ every minute, per day ≈ 134 million metrics
 
 ## Metadata
 ```yaml
-id: foundations/metric-volume
+id: observability/metric-volume
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:

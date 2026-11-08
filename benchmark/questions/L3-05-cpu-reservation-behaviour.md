@@ -39,9 +39,9 @@ technology: [cpu]
 input: [text]
 task: judge-setting
 knowledge:
-  - vsphere/foundations/resource-controls
+  - vsphere/architecture/resource-controls
   - vsphere/technology/cpu/metrics/host/reserved-capacity
-  - vsphere/foundations/overhead
+  - vsphere/architecture/overhead
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"

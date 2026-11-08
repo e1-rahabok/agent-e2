@@ -6,7 +6,7 @@
 - The % form is affected by CPU frequency and can exceed 100%.
 
 ## Why
-- ESXi is the metric source. vCenter converts or adds metrics, and formulas do not match in every case. See `vsphere/foundations/metric-sources`.
+- ESXi is the metric source. vCenter converts or adds metrics, and formulas do not match in every case. See `vsphere/architecture/metric-sources`.
 
 ## Notes
 - The author states CPU Used is buggy. Do not build conclusions on it alone.
@@ -36,7 +36,7 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/metric-sources
+- vsphere/architecture/metric-sources
 same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/used
 same_meaning: []

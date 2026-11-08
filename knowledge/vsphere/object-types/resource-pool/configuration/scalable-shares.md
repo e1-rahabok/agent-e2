@@ -27,8 +27,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/scalable-shares
-retriever_guide: how-it-works
+id: vsphere/object-types/resource-pool/configuration/scalable-shares
+retriever_guide: what-to-set
 scope: vsphere
 technology:
 - cpu
@@ -42,7 +42,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/cluster/concepts/drs-overview
 source:

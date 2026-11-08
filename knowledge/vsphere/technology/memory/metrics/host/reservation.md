@@ -34,7 +34,7 @@ same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/host/reserved-capacity
 - vsphere/technology/memory/metrics/host/consumed
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Overview; Consumption Metrics > Reservation

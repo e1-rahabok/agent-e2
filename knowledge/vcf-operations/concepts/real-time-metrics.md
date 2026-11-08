@@ -40,7 +40,7 @@ cpu.ready.HOST{feature='TROUBLESHOOTING'} 20-second
 - "Top N lists the 2-second spikes" → Top N uses 20-second data only.
 - "No 2-second data, so no burst happened" → ESX Top must be activated in the policy, and the ESX Top view selected.
 - "Query cpu.ready.HOST and read one line" → both tiers return; filter feature='ESX_TOP'.
-- "2-second Ready compares with 20-second thresholds" → shorter samples read higher; bands set on 20-second peaks do not apply (`foundations/thresholds`).
+- "2-second Ready compares with 20-second thresholds" → shorter samples read higher; bands set on 20-second peaks do not apply (`observability/thresholds`).
 
 ## Metadata
 ```yaml
@@ -64,7 +64,7 @@ internal_derive: []
 related:
 - operations-management/capacity/rightsizing
 - vsphere/tools/vcf-operations/peak-20-second-metrics
-- foundations/thresholds
+- observability/thresholds
 - vsphere/tools/esxtop/overview
 source:
   document: VCF Operations 9.1 documentation (TechDocs, VCF 9.1.x), Real-time Data in the Workbench (updated 2026-10-29); Real-Time Metrics Details and Deploy Real-Time Metrics (updated 2026-11-05)

@@ -75,9 +75,9 @@ def main():
             linked_images.add(full)
             if not os.path.exists(full):
                 bad(f, f'image not found: {img}')
-        for r in re.findall(r'`((?:vsphere|foundations|guest-os|operations-management|vcf-operations)/[a-z0-9\-/]+)`', body):
+        for r in re.findall(r'`((?:vsphere|observability|guest-os|operations-management|vcf-operations)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
-        # vSphere folders: foundations/, technology/<tech>/, object-types/<object>/, tools/<ui>/ (esxtop, vsphere-client; screens/ inside).
+        # vSphere folders: architecture/, technology/<tech>/, object-types/<object>/, tools/<ui>/ (esxtop, vsphere-client; screens/ inside).
         if f.startswith('knowledge/vsphere/'):
             parts = f.split('/')
             if parts[2] not in VSPHERE_TOP:
@@ -306,7 +306,7 @@ def check_tables(bad):
                 bad(f, f'line {i + 2}: blank line needed after a table (an image or text right after it becomes a table row)')
 
 
-VSPHERE_TOP = ['foundations', 'technology', 'object-types', 'tools']
+VSPHERE_TOP = ['architecture', 'technology', 'object-types', 'tools']
 VCF_OPERATIONS_TOP = ['concepts', 'troubleshooting', 'health-check']  # VCF Operations itself only (author, 2026-11-08)
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
 PILLAR_FOLDERS = ['sp5-framework', 'performance', 'capacity']

@@ -11,15 +11,15 @@ meta:
     relations: Edges. kind is contains (inventory), resource-parent (resource hierarchy), runs-on, mounts, stores-files-on, connects-to. cardinality reads from -> to.
   review_notes:
   - 'Whole file: object types and relationships are vSphere basics (Claude''s own knowledge), except where a kb file is named.'
-  - Many-to-many relationships between VM, datastore, host and cluster follow vsphere/foundations/object-relationships.
-  - Provider and consumer roles follow vsphere/foundations/provider-consumer.
+  - Many-to-many relationships between VM, datastore, host and cluster follow vsphere/architecture/object-relationships.
+  - Provider and consumer roles follow vsphere/architecture/provider-consumer.
   - No performance charts for distributed switches and port groups follows vsphere/tools/vsphere-client/vcenter-statistics, section Chart behaviour.
   - Datacenter, Datastore and StoragePod chart notes follow the vSphere 9.1 chart tables (catalog/vcenter-counters).
   status: draft
 layers:
 - layer: guest-os
   runs_on: virtual-motherboard
-  note: Windows or Linux. Not a managed object. Its metrics come from inside the guest. See vsphere/foundations/vm-vs-guest-os.
+  note: Windows or Linux. Not a managed object. Its metrics come from inside the guest. See vsphere/architecture/vm-vs-guest-os.
 - layer: virtual-motherboard
   runs_on: hypervisor
   note: The VM. A consumer of the host and the provider of virtual hardware to the Guest OS.
@@ -57,27 +57,27 @@ objects:
   supplies: [cpu, memory]
   charts: true
   note: Consumer of the cluster or host, provider to its child pools and VMs. Can apply limits unintentionally.
-  kb: [vsphere/foundations/resource-controls]
+  kb: [vsphere/architecture/resource-controls]
 - type: HostSystem
   role: provider
   layer: hypervisor
   supplies: [cpu, memory, storage-path, network]
   charts: true
   note: ESXi metrics are not the sum of VM metrics plus kernel. Ready does not apply to ESXi.
-  kb: [vsphere/foundations/provider-consumer, vsphere/foundations/overhead]
+  kb: [vsphere/architecture/provider-consumer, vsphere/architecture/overhead]
 - type: VirtualMachine
   role: both
   layer: virtual-motherboard
   supplies: [vcpu, guest-physical-memory, virtual-disk, vnic]
   charts: true
   note: Consumer of its host, resource pool and datastores. Provider of the virtual motherboard to the Guest OS.
-  kb: [vsphere/foundations/vm-vs-guest-os, vsphere/foundations/provider-consumer]
+  kb: [vsphere/architecture/vm-vs-guest-os, vsphere/architecture/provider-consumer]
 - type: Datastore
   role: provider
   supplies: [storage]
   charts: true
   note: Space charts show the latest value only; space is refreshed every 30 minutes.
-  kb: [vsphere/technology/storage/metrics/datastore/storage-io-control, vsphere/foundations/object-relationships]
+  kb: [vsphere/technology/storage/metrics/datastore/storage-io-control, vsphere/architecture/object-relationships]
 - type: StoragePod
   role: container
   charts: true

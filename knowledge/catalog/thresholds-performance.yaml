@@ -38,7 +38,7 @@ rows:
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Gold class of service.
   source: author
-  kb: vsphere/foundations/noisy-neighbour
+  kb: operations-management/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
   id: performance-sla-silver
@@ -50,7 +50,7 @@ rows:
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Silver class of service.
   source: author
-  kb: vsphere/foundations/noisy-neighbour
+  kb: operations-management/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
   id: performance-sla-bronze
@@ -62,7 +62,7 @@ rows:
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Bronze class of service.
   source: author
-  kb: vsphere/foundations/noisy-neighbour
+  kb: operations-management/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
   id: vm-sli-cpu-ready
@@ -329,7 +329,7 @@ rows:
   unit: ms
   meaning: Microsoft guidance at the SQL Server layer. Lower at the Windows layer, lower still at the VM layer.
   source: microsoft
-  kb: foundations/thresholds
+  kb: observability/thresholds
   quote: 'Microsoft guidance for SQL Server: disk latency should consistently stay within 10–15 ms.'
 - kind: rule
   id: drs-score-healthy

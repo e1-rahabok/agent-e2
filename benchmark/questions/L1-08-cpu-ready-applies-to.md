@@ -30,7 +30,7 @@ level: 100
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/foundations/provider-consumer
+  - vsphere/architecture/provider-consumer
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments: []
 origin: synthetic

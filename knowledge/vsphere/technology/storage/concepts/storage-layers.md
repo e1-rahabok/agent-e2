@@ -80,7 +80,7 @@ object:
 - HostSystem
 - Datastore
 internal_derive:
-- vsphere/foundations/object-relationships
+- vsphere/architecture/object-relationships
 related:
 - vsphere/technology/storage/concepts/storage-dimensions
 - vsphere/technology/storage/concepts/guest-os-vs-vm-storage

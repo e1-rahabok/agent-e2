@@ -151,7 +151,7 @@
 
 ## Traps
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
-- Area C in `vsphere/foundations/vm-vs-guest-os` (work invisible to the guest) is not the same as overhead.
+- Area C in `vsphere/architecture/vm-vs-guest-os` (work invisible to the guest) is not the same as overhead.
 - "Use kernel reservation as overhead" → unstable, and too low or too high depending on the stack.
 - "Memory | VMkernel consumed = all hypervisor memory" → system group only.
 - "Overcommit is never safe" → overcommit is allowed in most environments. The risk is saturation, which happens when VMs use their full allocations at the same time.
@@ -159,7 +159,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/overhead
+id: vsphere/architecture/overhead
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -180,9 +180,9 @@ object:
 - HostSystem
 - ClusterComputeResource
 internal_derive:
-- vsphere/foundations/kernel-worlds
+- vsphere/architecture/kernel-worlds
 related:
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - operations-management/capacity/capacity-model
 - vsphere/technology/memory/metrics/host/utilization
@@ -245,17 +245,17 @@ images:
   sample: 607 hosts
 source:
   document: PART 3 - Counters.docx + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead; Provider Objects > Capacity > Hypervisor; CPU > Hypervisor; Memory > Hypervisor Metrics (from former vsphere/foundations/overhead); ESX CPU Considerations (pp. 27-28) (from former vsphere/foundations/overhead)
+  path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead; Provider Objects > Capacity > Hypervisor; CPU > Hypervisor; Memory > Hypervisor Metrics (from former vsphere/architecture/overhead); ESX CPU Considerations (pp. 27-28) (from former vsphere/architecture/overhead)
 corrections:
 - '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
 - '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
 review_notes:
-- '[from former vsphere/foundations/overhead] Section ''Resource groups'': the book lists 5 groups but says to plot only iofilters, system and vim for kernel consumption; host/opt (vSAN) is not in that list. Kept as written.'
-- '[from former vsphere/foundations/overhead] Section ''Why the size is unpredictable'': based on Host Resources Deep Dive (Denneman, Hagoort), p. 258, cited by the book.'
-- '[from former vsphere/foundations/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation. This is relevant to Q021.'
-- '[from former vsphere/foundations/overhead] Checked against 9.1 (revision 20260624). Pages 27-28 unchanged. Page references updated.'
-- '[from former vsphere/foundations/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- '[from former vsphere/foundations/overhead] Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Author to decide whether to replace the old threshold.'
-- '2026-11-04: merged vsphere/foundations/overhead, vsphere/foundations/overhead into this file (author decision 5, holistic review).'
+- '[from former vsphere/architecture/overhead] Section ''Resource groups'': the book lists 5 groups but says to plot only iofilters, system and vim for kernel consumption; host/opt (vSAN) is not in that list. Kept as written.'
+- '[from former vsphere/architecture/overhead] Section ''Why the size is unpredictable'': based on Host Resources Deep Dive (Denneman, Hagoort), p. 258, cited by the book.'
+- '[from former vsphere/architecture/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation. This is relevant to Q021.'
+- '[from former vsphere/architecture/overhead] Checked against 9.1 (revision 20260624). Pages 27-28 unchanged. Page references updated.'
+- '[from former vsphere/architecture/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- '[from former vsphere/architecture/overhead] Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Author to decide whether to replace the old threshold.'
+- '2026-11-04: merged vsphere/architecture/overhead, vsphere/architecture/overhead into this file (author decision 5, holistic review).'
 status: draft
 ```

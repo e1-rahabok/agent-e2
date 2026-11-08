@@ -71,10 +71,10 @@ object:
 - HostSystem
 - VirtualMachine
 internal_derive:
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
-- vsphere/foundations/scalable-shares
+- vsphere/object-types/resource-pool/configuration/scalable-shares
 - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 - vsphere/technology/memory/concepts/memory-overhead
 source:

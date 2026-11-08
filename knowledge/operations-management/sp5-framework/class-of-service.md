@@ -90,7 +90,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 | 4 Free | n/a | 1 vCPU, 4 GB, 100 GB disk |
 
 - Public cloud free tiers are smaller: 1-2 vCPU and 1 GB RAM.
-- Size limit by overcommit ratio and logical CPUs: `vsphere/foundations/noisy-neighbour`.
+- Size limit by overcommit ratio and logical CPUs: `operations-management/performance/noisy-neighbour`.
 
 ## Soft products
 - Support (Gold vs Silver):
@@ -114,7 +114,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
   - they add operations complexity.
 - Storage has the same limit. A VMFS datastore cannot deliver differentiated service levels by latency, which is what customers buy. vSAN storage policies do not either.
   - Example: Gold promised 10 ms worst case, Silver 20 ms (half the price). Controls that are not based on latency can give 9 ms for Gold and 21 ms for Silver, where 10 ms and 20 ms were possible.
-  - Storage I/O Control is deprecated in VCF 9: `vsphere/foundations/noisy-neighbour`.
+  - Storage I/O Control is deprecated in VCF 9: `operations-management/performance/noisy-neighbour`.
 - Layout: one compute pool and one storage pool per tier. Management and NSX Edge clusters, with their own storage, carry no SLA, only a KPI.
 ![Service Tier 1 (Gold, highest SLA), Tier 2 (Silver), Tier 3 (Bronze, lowest SLA), each with its own compute pools and storage pools. Below: management compute and storage pools, NSX compute and storage pools: no SLA, only KPI](images/class-of-service-tier-compute-and-storage-pools-diagram.png)
 - Name clusters and datastores after their class.
@@ -170,13 +170,13 @@ object:
 internal_derive:
 - operations-management/sp5-framework/sla-metrics
 - operations-management/capacity/class-of-service-planning
-- vsphere/foundations/noisy-neighbour
+- operations-management/performance/noisy-neighbour
 - operations-management/capacity/host-spec-from-class-of-service
 related:
 - operations-management/sp5-framework/iaas-business
 - vsphere/object-types/cluster/kpis/cluster-sla-sli
 - operations-management/capacity/rightsizing
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 images:
   - path: images/class-of-service-tier-compute-and-storage-pools-diagram.png
     product: [vsphere, vsan, nsx]
@@ -192,7 +192,7 @@ review_notes:
 - 'Section ''Planning example'': the book''s table gives Silver CPU 1:2 and RAM 1:1.5; its text gives Silver 3:1 CPU, no RAM overcommit, 67% of Gold. Only the text matches 67% (the table gives 58%). Written from the text; Bronze table values (6:1, 2:1) match 33%. Q099.'
 - 'Section ''Planning example'', price formula: written by Claude from the book''s 67% and 33% figures.'
 - 'Section ''Recommended SLA per class'', Compliance 99.95% vs 100% in the sample offering: Q098.'
-- 'Section ''Size limit per class'': socket-based limits; vsphere/foundations/noisy-neighbour gives a logical-CPU basis (Gold 1:1 up to all logical CPUs). Q100.'
+- 'Section ''Size limit per class'': socket-based limits; operations-management/performance/noisy-neighbour gives a logical-CPU basis (Gold 1:1 up to all logical CPUs). Q100.'
 - 'Section ''Mixing compute and storage classes'', 28 pairs: Claude''s count of the book''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Section ''Compute and storage design'': the book says Gold is charged 200% more for 2x; written as twice the price (Q107). Storage I/O Control: deprecated in VCF 9 (Q080).'
 - 'Section ''Soft products'': the book''s Service SLA text says Gold tickets go to Level 3; its service table says Level 2, bypassing Level 1. Written as bypassing the first level. Q107.'

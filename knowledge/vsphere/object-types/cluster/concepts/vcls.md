@@ -76,7 +76,7 @@ object:
 internal_derive: []
 related:
 - vsphere/object-types/cluster/concepts/drs-overview
-- vsphere/foundations/scalable-shares
+- vsphere/object-types/resource-pool/configuration/scalable-shares
 source:
   document: vSphere Cluster Services (vCLS) in vSphere 7.0 Update 1 and newer versions (Broadcom KB 312147)
   path: Status (vCenter 9.0 section); Context (pre-9.0). Footprint section from Performance Best Practices for VMware vSphere 9.0 (revision 20250731), pp. 76 and 79.

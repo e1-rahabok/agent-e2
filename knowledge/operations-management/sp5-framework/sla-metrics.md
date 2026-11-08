@@ -234,8 +234,8 @@ related:
 - operations-management/sp5-framework/iaas-business
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
-- vsphere/foundations/vm-vs-guest-os
-- foundations/thresholds
+- vsphere/architecture/vm-vs-guest-os
+- observability/thresholds
 images:
   - path: images/sla-availability-performance-compliance-what-each-measures-diagram.png
     product: [vsphere]

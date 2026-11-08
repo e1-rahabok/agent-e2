@@ -75,7 +75,7 @@ Disparity (%) = (highest - lowest) / total capacity
 
 ## Metadata
 ```yaml
-id: foundations/aggregation
+id: observability/aggregation
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -87,8 +87,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/collection-interval
-- foundations/thresholds
+- observability/collection-interval
+- observability/thresholds
 - vsphere/object-types/cluster/kpis/cluster-performance
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready

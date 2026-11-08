@@ -44,8 +44,8 @@ level: 200
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/foundations/vm-vs-guest-os
-  - vsphere/foundations/metric-sources
+  - vsphere/architecture/vm-vs-guest-os
+  - vsphere/architecture/metric-sources
 attachments:
   - 0051/vcf-operations-vm-guest-and-cpu-metrics.png
 origin: synthetic

@@ -89,7 +89,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- foundations/thresholds
+- observability/thresholds
 related:
 - vsphere/object-types/vm/kpis/vm-performance
 - guest-os/system/metrics/guest-os-performance

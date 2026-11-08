@@ -28,7 +28,7 @@ technology: [system]
 input: [text]
 task: explain-mechanism
 knowledge:
-  - vsphere/foundations/vm-vs-guest-os
+  - vsphere/architecture/vm-vs-guest-os
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"

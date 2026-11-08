@@ -42,10 +42,10 @@ product:
 - vcf-operations
 - vsphere
 internal_derive:
-- vsphere/foundations/metric-sources
+- vsphere/architecture/metric-sources
 related:
 - vsphere/tools/vsphere-client/vcenter-statistics
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/tools/vcf-operations/peak-20-second-metrics
 source:
   document: Author's answer (2026-11-04)

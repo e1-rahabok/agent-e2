@@ -115,7 +115,7 @@ related:
 - operations-management/performance/kpi-vs-sla
 - operations-management/sp5-framework/realms-and-layers
 - vsphere/object-types/cluster/kpis/cluster-performance
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 images:
   - path: images/performance-vs-capacity-total-vs-usable-range-diagram.png
     product: [vsphere]

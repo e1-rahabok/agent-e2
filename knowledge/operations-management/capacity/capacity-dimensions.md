@@ -88,7 +88,7 @@ Reviewed together: each covers what the other lacks.
 - A reservation set on the VM changes HA admission control and HA restart: unreserved capacity left after host failures decides placement. Set it on a resource pool instead (Frank Denneman's recommendation, cited by the book).
 - VM-level reservation leads to lower provider utilization and higher consumer contention: placement becomes unbalanced.
 - Through a resource pool, a Gold VM may not get its reserved share on time: the DRS scheduler lags the ESXi scheduler.
-- Turbo gives spare CPU at ESXi level above the reservable base clock (`vsphere/foundations/resource-controls`, section Reservation: CPU vs memory).
+- Turbo gives spare CPU at ESXi level above the reservable base clock (`vsphere/architecture/resource-controls`, section Reservation: CPU vs memory).
 - Both add operational work: over time nobody knows which VM or pool has which reservation or share, or since when.
 - No deterministic link to performance: doubling a VM's CPU reservation or shares does not halve its CPU Ready.
 - Reservation adds complexity because it has two parts (allocated and used), and a resource pool and its child VMs carry independent settings.
@@ -109,7 +109,7 @@ Demand = Max (Utilization, Reservation)
 ## Allocation
 - The metric used to sell capacity. Half price against full price → overcommit no higher than 2:1.
 - Leading indicator: total demand can exceed visible demand, because part of the demand has no utilization yet.
-- Not in-line: ESXi and vCenter do not schedule by allocation. So allocation can be overcommitted (`vsphere/foundations/resource-controls`, section Allocation vs reservation).
+- Not in-line: ESXi and vCenter do not schedule by allocation. So allocation can be overcommitted (`vsphere/architecture/resource-controls`, section Allocation vs reservation).
 - Usable capacity applies here too: deduct the hypervisor (VMkernel, vSAN, NSX, vSphere Replication) from total capacity.
 - Counted only for powered-on VMs.
 - CPU: per thread, not per core. Mind the Hyper-Threading penalty; do not promise a GHz speed (`operations-management/capacity/capacity-model`, section Overcommit).
@@ -180,7 +180,7 @@ object:
 - VirtualMachine
 internal_derive:
 - operations-management/capacity/capacity-model
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 related:
 - operations-management/capacity/class-of-service-planning
 - operations-management/capacity/health-check/can-cluster-take-more-vms

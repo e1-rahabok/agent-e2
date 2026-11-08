@@ -9,7 +9,7 @@
 - Network I/O Control configured.
 - Unused port groups: a security risk. They tend not to be monitored, yet anyone can use the path.
 - Traffic shaping used where it fits.
-- Shares per traffic type set correctly: `vsphere/foundations/noisy-neighbour`.
+- Shares per traffic type set correctly: `operations-management/performance/noisy-neighbour`.
 - Limits: can shares replace them? Shares are more flexible for contention.
 - MTU mismatch hurts performance.
 - Jumbo frames: on the right networks, end to end. For segments outside your control, detect changes with a discovery protocol (CDP or LLDP).
@@ -49,7 +49,7 @@ internal_derive:
 - operations-management/sp5-framework/configuration-management
 related:
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
-- vsphere/foundations/noisy-neighbour
+- operations-management/performance/noisy-neighbour
 - vsphere/object-types/esxi/configuration/bios-settings
 source:
   document: PART 1 - Concepts of Operations Management.docx

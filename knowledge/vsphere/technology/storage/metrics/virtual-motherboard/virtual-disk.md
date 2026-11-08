@@ -37,7 +37,7 @@
 ![Passive VM in a multi-writer pair shows 0 IOPS](../../images/vm-disk-multi-writer-passive-vm-shows-zero-iops.png)
 
 ## Traps
-- "VM disk totals should match datastore totals" → RDM and many-to-many relationships break that. See `vsphere/foundations/object-relationships`.
+- "VM disk totals should match datastore totals" → RDM and many-to-many relationships break that. See `vsphere/architecture/object-relationships`.
 
 ## Metadata
 ```yaml
@@ -57,7 +57,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/object-relationships
+- vsphere/architecture/object-relationships
 same_name:
 - vsphere/technology/storage/metrics/datastore/virtual-disk
 same_meaning: []

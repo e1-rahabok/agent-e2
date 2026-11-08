@@ -60,7 +60,7 @@
 ![Worst and 99th percentile 20-second Ready across 3,937 VMs](../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png)
 
 ## Traps
-- "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See `vsphere/foundations/provider-consumer`.
+- "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See `vsphere/architecture/provider-consumer`.
 - "Ready 2% is always low" → read it against Run.
 - "Ready is always caused by ESXi" → shares, vMotion and limits are VM-side causes.
 - "5-minute Ready is low, so no problem" → Ready lasts seconds. Check the 20-second peak.
@@ -83,8 +83,8 @@ layer:
 - virtual-motherboard
 metric_class: contention
 internal_derive:
-- vsphere/foundations/provider-consumer
-- vsphere/foundations/resource-controls
+- vsphere/architecture/provider-consumer
+- vsphere/architecture/resource-controls
 - vsphere/technology/cpu/concepts/vcpu-states
 same_name: []
 same_meaning: []

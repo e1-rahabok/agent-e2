@@ -74,7 +74,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 related:
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed

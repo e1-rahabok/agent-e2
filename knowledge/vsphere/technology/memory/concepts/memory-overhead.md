@@ -79,7 +79,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- vsphere/foundations/overhead
+- vsphere/architecture/overhead
 - vsphere/technology/memory/configuration/host-level-swapping
 - vsphere/technology/memory/configuration/memory-sizing
 source:

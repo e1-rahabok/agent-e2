@@ -54,7 +54,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/kernel-worlds
+- vsphere/architecture/kernel-worlds
 same_name: []
 same_meaning: []
 related:

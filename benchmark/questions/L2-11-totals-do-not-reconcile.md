@@ -34,7 +34,7 @@ level: 200
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/foundations/object-relationships
+  - vsphere/architecture/object-relationships
   - vsphere/technology/storage/concepts/snapshot-impact
 attachments: []
 origin: synthetic

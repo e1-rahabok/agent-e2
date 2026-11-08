@@ -71,7 +71,7 @@ object:
 - ResourcePool
 internal_derive:
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 - vsphere/object-types/cluster/configuration/drs-migration-levels
 related:
 - vsphere/object-types/cluster/concepts/drs-overview

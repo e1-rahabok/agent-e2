@@ -38,7 +38,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 
 ## Metadata
 ```yaml
-id: foundations/metric-perspectives
+id: observability/metric-perspectives
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -56,7 +56,7 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/resource-nature
+- observability/resource-nature
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Documentation Challenge

@@ -19,7 +19,7 @@ object:
 - Datastore
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/object-relationships
+- vsphere/architecture/object-relationships
 same_name:
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 same_meaning: []

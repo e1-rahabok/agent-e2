@@ -99,7 +99,7 @@ related:
 - vsphere/technology/memory/troubleshooting/vm-memory-latency-high
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
-- foundations/thresholds
+- observability/thresholds
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
   path: vSphere Monitoring and Performance > Overview Performance Charts > Chart Analysis sections (Clusters, Hosts, Resource Pools, Virtual Machines); Troubleshoot and Enhance Performance (pp. 2033-2123)

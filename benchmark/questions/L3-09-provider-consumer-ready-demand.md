@@ -29,7 +29,7 @@ technology: [system]
 input: [text]
 task: read-metric
 knowledge:
-  - vsphere/foundations/provider-consumer
+  - vsphere/architecture/provider-consumer
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/technology/cpu/metrics/host/demand
 attachments: []

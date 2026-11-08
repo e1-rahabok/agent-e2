@@ -67,7 +67,7 @@
 - Two layers: consumer and provider.
   - Consumer: where VMs and containers run. Three sublayers: application, Guest OS, VM.
   - Provider: the virtualized platform: compute, storage, network.
-- VCF scope ends at the VM (virtual motherboard and BIOS) and VMware Tools. The Guest OS is largely outside VCF's influence (`vsphere/foundations/vm-vs-guest-os`).
+- VCF scope ends at the VM (virtual motherboard and BIOS) and VMware Tools. The Guest OS is largely outside VCF's influence (`vsphere/architecture/vm-vs-guest-os`).
 
 ## Traps
 - "Plan first, then design, then work out how to operate it" → Day 2 drives Day 0, which drives Day 1. The class of service and the operations model fix the hardware and cluster design.
@@ -107,7 +107,7 @@ related:
 - operations-management/capacity/host-spec-from-class-of-service
 - operations-management/sp5-framework/alerts-and-insights
 - operations-management/sp5-framework/realms-and-layers
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 - vsphere/object-types/cluster/concepts/drs-overview
 images:
   - path: images/day2-day0-day1-sequence-diagram.png

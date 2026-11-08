@@ -22,7 +22,7 @@
 - Converting a VCF Operations network rate: 30.81 MBps × 1024 = 31,549 KBps, not 30,810, because VCF Operations uses 1024.
 
 ## Storage throughput
-- Measured in bytes/second, not bits/second. See `foundations/resource-nature`.
+- Measured in bytes/second, not bits/second. See `observability/resource-nature`.
 
 ## Same metric, different unit per tool
 - Tools can show the same metric in different units.
@@ -39,7 +39,7 @@
 
 ## Metadata
 ```yaml
-id: foundations/units
+id: observability/units
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:

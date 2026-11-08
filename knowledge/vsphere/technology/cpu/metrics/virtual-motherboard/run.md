@@ -65,7 +65,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/technology/cpu/concepts/vcpu-states
 - vsphere/technology/cpu/concepts/run-time-vs-run-quality
 same_name: []

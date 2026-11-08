@@ -21,7 +21,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/metric-sources
+id: vsphere/architecture/metric-sources
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -36,7 +36,7 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: PART 3 - Counters.docx

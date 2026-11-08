@@ -15,7 +15,7 @@
 - Lesson: no villain VM existed. The villain was a schedule, and the path was the replication link.
 
 ## The three controls
-- Limit, reservation, share. Details: `vsphere/foundations/resource-controls`.
+- Limit, reservation, share. Details: `vsphere/architecture/resource-controls`.
 - Priority is not a control: it gives 0% to the lower priority. Shares still give every consumer some.
 - Resource pools add a management layer and make the settings harder.
 
@@ -79,7 +79,7 @@
 - Example, a distributed switch (not the defaults): virtual machine traffic High (100) as one group; NFS High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50 each); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25 each). VMkernel traffic totals 475 shares against 100 for all VMs.
 - Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.
 - Pro tip: customize the share allocation per traffic type for your environment; do not leave it as found. Give VM traffic enough weight against the sum of the VMkernel types, and set shares only for the traffic types the hosts carry.
-![Distributed switch share allocation by traffic type: shares, shares value, reservation and limit for 12 traffic types](../technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png)
+![Distributed switch share allocation by traffic type: shares, shares value, reservation and limit for 12 traffic types](../../vsphere/technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png)
 
 ## Avoiding it
 - With overcommit it cannot be avoided, only reduced: like a highway with more cars than lanes at peak hour. Capacity planning reduces the impact.
@@ -124,9 +124,9 @@
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/noisy-neighbour
+id: operations-management/performance/noisy-neighbour
 retriever_guide: how-it-works
-scope: vsphere
+scope: operations-management
 technology:
 - cpu
 - memory
@@ -145,15 +145,15 @@ object:
 - Datastore
 - VmwareDistributedVirtualSwitch
 internal_derive:
-- vsphere/foundations/resource-controls
+- vsphere/architecture/resource-controls
 related:
-- vsphere/foundations/scalable-shares
+- vsphere/object-types/resource-pool/configuration/scalable-shares
 - operations-management/capacity/capacity-model
 - operations-management/sp5-framework/performance-vs-capacity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/cpu
 images:
-  - path: ../technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png
+  - path: ../../vsphere/technology/network/images/distributed-switch-network-share-allocation-by-traffic-type.png
     product: [vsphere]
     object: [VmwareDistributedVirtualSwitch]
     topic: 'Network shares by traffic type'

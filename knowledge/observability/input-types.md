@@ -59,7 +59,7 @@
 
 ## Metadata
 ```yaml
-id: foundations/input-types
+id: observability/input-types
 retriever_guide: how-it-works
 scope: vendor-neutral
 technology:
@@ -72,8 +72,8 @@ pillar:
 product: []
 internal_derive: []
 related:
-- foundations/metrics-as-accounting
-- foundations/metric-perspectives
+- observability/metrics-as-accounting
+- observability/metric-perspectives
 - operations-management/sp5-framework/alerts-and-insights
 images:
   - path: images/input-types-to-outputs-diagram.png

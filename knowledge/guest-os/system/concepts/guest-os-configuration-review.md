@@ -57,7 +57,7 @@ internal_derive:
 related:
 - vsphere/object-types/vm/configuration/vm-configuration-review
 - guest-os/system/concepts/guest-os-sizing
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Configuration Management > Review List > Consumer Objects > Guest OS (pp. 134-135)'

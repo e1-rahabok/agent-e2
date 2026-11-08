@@ -15,7 +15,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/foundations/object-relationships
+id: vsphere/architecture/object-relationships
 retriever_guide: how-it-works
 scope: vsphere
 technology:
@@ -35,7 +35,7 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
-- vsphere/foundations/provider-consumer
+- vsphere/architecture/provider-consumer
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity

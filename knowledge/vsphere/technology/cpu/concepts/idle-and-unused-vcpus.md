@@ -70,9 +70,9 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- vsphere/foundations/overhead
+- vsphere/architecture/overhead
 - vsphere/technology/cpu/concepts/virtual-numa
-- vsphere/foundations/vm-vs-guest-os
+- vsphere/architecture/vm-vs-guest-os
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX CPU Considerations (pp. 27-28); Guest Operating System CPU Considerations (p. 57); Virtual NUMA (p. 57)

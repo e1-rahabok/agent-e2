@@ -7,7 +7,7 @@
 
 ## Why
 - System time is charged at VM level. It does not exist at vCPU level.
-- See `vsphere/foundations/kernel-worlds` for work charged to the VM rather than to a vCPU.
+- See `vsphere/architecture/kernel-worlds` for work charged to the VM rather than to a vCPU.
 
 ## Notes
 - The author states CPU Used is buggy. Do not build conclusions on it alone.
@@ -82,7 +82,7 @@ instance:
 - per-vcpu
 metric_class: consumption
 internal_derive:
-- vsphere/foundations/kernel-worlds
+- vsphere/architecture/kernel-worlds
 - vsphere/technology/cpu/concepts/run-time-vs-run-quality
 - vsphere/technology/cpu/concepts/hyper-threading
 same_name:

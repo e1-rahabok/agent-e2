@@ -16,7 +16,7 @@
   - An administrator who can monitor a system cannot necessarily fix it.
 - Debuggability is the property that matters for fixing. Modern debugging can include in-line analytics while the code runs; the system must be built for it.
 - Experts should explore data (metrics, logs, events, traces, NetFlow) on a regular cadence. Low-level metrics often behave differently from their documentation, which is rarely deep; metric bugs from several vendors were found this way.
-- Input types: `foundations/input-types`.
+- Input types: `observability/input-types`.
 
 ## Symptom, alert, insight
 - Symptom: a minor, non-urgent issue. Caught in the proactive daily health check.
@@ -66,7 +66,7 @@
 - Two points in time: when the operations team knows there is a problem (insight), and when customers would know if nothing were done (alert). The time between is the prevention window.
 - Alert examples: SLA metrics such as VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention.
 - Insight examples: anomaly metrics; VM CPU Co-stop; VM CPU IO wait; read latency of an individual virtual disk; vMotion stun time; ESXi VMkernel queue time.
-- Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, `foundations/thresholds`).
+- Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, `observability/thresholds`).
 ![Timeline: Insight (green) → prevention window (yellow to red) → Alert (red). Insight starts when you know it is a problem; alert starts when customers would know. Insight examples: anomaly metrics, VM CPU Co-stop, VM CPU IO wait, individual virtual disk read latency, vMotion stun time, ESXi VMkernel queue. Alert examples: SLA VM CPU Ready, SLA VM disk latency, cluster average CPU Ready, cluster average memory contention; each example with a threshold](images/insight-prevention-window-alert-timeline-diagram.png)
 - Metric files: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`, `vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`, `vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk`, `vsphere/object-types/vm/metrics/vmotion`, `vsphere/technology/storage/concepts/esxi-storage-latency-stack`.
 
@@ -145,8 +145,8 @@ object:
 - ClusterComputeResource
 - HostSystem
 internal_derive:
-- foundations/input-types
-- foundations/thresholds
+- observability/input-types
+- observability/thresholds
 related:
 - operations-management/performance/kpi-vs-sla
 - operations-management/sp5-framework/iaas-business

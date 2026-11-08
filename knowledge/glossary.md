@@ -22,7 +22,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | KAI, KCI | Key availability indicator, key compliance indicator. Not called KPI. | - |
 | SLI | SLA leading indicator: pass or fail every 5 minutes; the SLA is its mean over the calendar month. Not service level indicator. | - |
 | Security SLA | Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings. | Compliance SLA |
-| Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `vsphere/foundations/noisy-neighbour` | Resource management |
+| Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `operations-management/performance/noisy-neighbour` | Resource management |
 | Class of service | Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA. | Tier |
 | Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. A capacity term only. | - |
 | Value (pillar) | One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management. `operations-management/sp5-framework/overview` | Cost and price |
@@ -99,13 +99,13 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | VM Memory Ballooned vs Swapped | Ballooned is reclaimed through the Guest OS, past tense; Swapped is paged out by ESXi at random, as it cannot see guest free memory | `vsphere/technology/memory/metrics/virtual-motherboard/swapped` |
 | Compression ZIP/s vs UNZIP/s | ZIP/s is a capacity signal of the host; UNZIP/s means the VM waits | `vsphere/tools/esxtop/memory` |
 | Reservation vs usage | Admission control checks reservations; usage plays no part | `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state` |
-| VM vs Guest OS | The VM is a virtual motherboard; the Guest OS is a separate layer with its own counters | `vsphere/foundations/vm-vs-guest-os` |
+| VM vs Guest OS | The VM is a virtual motherboard; the Guest OS is a separate layer with its own counters | `vsphere/architecture/vm-vs-guest-os` |
 | Storage vs disk | Storage is the whole IO path; disk is one layer of it, and each vCenter counter group has its own scope | `vsphere/technology/storage/concepts/storage-layers` |
 | Device vs disk vs LUN | Device is generic; disk is physical; LUN is a logical volume on the array | `vsphere/technology/storage/concepts/storage-layers` |
 | vCenter vs VCF Operations | vCenter administers; VCF Operations monitors and plans, and every metric it shows derives from a source | `vcf-operations/concepts/vcf-operations-role` |
 | Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `operations-management/sp5-framework/alerts-and-insights` |
-| Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `foundations/input-types` |
-| Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/foundations/resource-controls` |
+| Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `observability/input-types` |
+| Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/architecture/resource-controls` |
 | Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, logs included. Troubleshooting: why, reactive (after an alert, an incident or a complaint), many metrics and logs | `operations-management/sp5-framework/monitoring-vs-troubleshooting` |
 | Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/sp5-framework/overview` |
 | Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/sp5-framework/overview` |
@@ -127,8 +127,8 @@ pillar: [availability, performance, compliance, capacity, value]
 product: [vsphere, vcf-operations]
 internal_derive: []
 related:
-  - foundations/naming-patterns
-  - vsphere/foundations/resource-controls
+  - observability/naming-patterns
+  - vsphere/architecture/resource-controls
 source:
   document: Author statements (2026-11-02); vSphere API type names; VCF Operations object types
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
@@ -138,7 +138,7 @@ review_notes:
   - "2026-11-07: Confusable pair Consistency vs compatibility check added from Part 1, Configuration Management. Proposal."
   - "2026-11-07: Defined terms Slow time to Primary metric and the pairs Monitoring vs troubleshooting, Inventory vs configuration, Security vs compliance, Short-term vs long-term capacity added from Part 1, Your Private Cloud (Service Level Agreement to SP5 Framework: Process). Proposals; author to confirm. Present and future health grouping: Q102."
   - "2026-11-07: Defined terms Symptom to Crown jewels and the pairs Alert vs insight, Metric vs property added from Part 1, Your Private Cloud (Overview, Purpose-Driven Architecture). Proposals; author to confirm."
-  - "2026-11-07 (author decision): knowledge/ is for Agent E2 only. Kept here: synonyms, defined terms, confusable pairs. Moved out: Core words and Words to avoid to project/vocabulary.md; Term distinctions to vsphere/foundations/resource-controls and vsphere/technology/storage/concepts/storage-layers (the OpenTelemetry note was already in foundations/naming-patterns); Object types to catalog/objects.yaml. 'Book terminology' and 'Proposed terms' merged as 'Defined terms'."
+  - "2026-11-07 (author decision): knowledge/ is for Agent E2 only. Kept here: synonyms, defined terms, confusable pairs. Moved out: Core words and Words to avoid to project/vocabulary.md; Term distinctions to vsphere/architecture/resource-controls and vsphere/technology/storage/concepts/storage-layers (the OpenTelemetry note was already in observability/naming-patterns); Object types to catalog/objects.yaml. 'Book terminology' and 'Proposed terms' merged as 'Defined terms'."
   - "Section 'Confusable pairs': drafted by Claude 2026-11-06 from the files in its File column, as block 3 of the agent up-front knowledge (harness/AGENT.md). Author to confirm (Q059)."
   - "Section 'Defined terms': rows from Run Time onward were added 2026-11-02 from the book (CPU and Memory chapters) as proposals. Author to confirm each term and its preferred name. Class of service 'also called Tier' and the new Synonyms rows from Words to avoid are Claude's."
   - "Moved 2026-11-02 from knowledge/vsphere/glossary/ to knowledge/glossary/: applies to all products. Scope set to vendor-neutral."
