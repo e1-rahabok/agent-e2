@@ -65,7 +65,7 @@ weight = 2 ^ ((100 - score) / 25)
 - Guest OS Free Memory is descending: more is better. Above 512 MB scores 100. KB is converted to MB.
 - Free Memory uses the 5-minute average, not the lowest 20-second value: it measures space, and the latest value matters.
 - Swapped + Compressed has no built-in metric: a super metric sums them.
-- The 4-range concept: Chapter 1, Performance Modelling.
+- Why four equal ranges, thresholds and validation: `operations-management/sp5-framework/modelling`.
 
 ## Traps
 - "Add IOPS to the KPI" → no universal range; it masks real problems.

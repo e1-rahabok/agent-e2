@@ -9,6 +9,7 @@
 ![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
 - Why a new framework instead of ITIL or COBIT: `operations-management/sp5-framework/why-a-new-framework`.
 - Metric types per pillar (contention, consumption, context): `operations-management/sp5-framework/triple-see-method`.
+- Modelling a pillar into one number (KPI, risk): `operations-management/sp5-framework/modelling`.
 - Day 2 → Day 0 → Day 1: `operations-management/sp5-framework/purpose-driven-architecture`, section Plan from Day 2.
 
 ## What a private cloud manages
@@ -162,6 +163,7 @@ internal_derive:
 - operations-management/sp5-framework/performance-vs-capacity
 - operations-management/capacity/capacity-model
 related:
+- operations-management/sp5-framework/modelling
 - operations-management/sp5-framework/why-a-new-framework
 - operations-management/sp5-framework/triple-see-method
 - operations-management/sp5-framework/purpose-driven-architecture

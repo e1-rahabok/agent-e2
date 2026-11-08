@@ -524,6 +524,20 @@ Each entry has:
 - Written as now: ITIL 4.
 - Answer:
 
+### Q136 · Part 3 > Modelling > Calculation · KPI colours and a timeline
+- Files: [Modelling a pillar into one number](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/modelling.md) (section Setting thresholds).
+- Search: "The threshold maps to a timeline."
+- Question: the Modelling section maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow). Your Q089 answer says alert colours have a timeline and KPI colours do not, as they are proactive. Remove the timeline from Modelling, or keep it for KPIs?
+- Written as now: red means look within hours; no timeline for orange and yellow.
+- Answer:
+
+### Q137 · Metric Mastery > Aggregation > The Problem with Average · ESXi CPU Ready (%)
+- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/aggregation.md) (section Divide summed counters correctly).
+- Search: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs)"
+- Question: the formula divides milliseconds by a vCPU count, which gives ms per vCPU, not %. The knowledge base writes ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs). Correct?
+- Written as now: with 20,000 ms.
+- Answer:
+
 ## Resolved
 
 ### Q094 · Repository · Where cross-pillar operations files go
