@@ -293,7 +293,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `retriever_guide` | See section 7. |
 | `scope` | vendor-neutral (applies across VCF 9 components), operations-management, vsphere, vcf-operations or guest-os; matches the top folder. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
-| `pillar` | availability, performance, security, capacity, value. |
+| `pillar` | availability, performance, compliance, capacity, cost: the five pillars of the SP5 framework (author, Q091, 2026-11-08). Security is part of the platform; inventory and configuration sit under all five pillars. |
 | `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
 | `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
 | `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
@@ -333,7 +333,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 ## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.
 - Vocabulary (author, 2026-11-08):
-  - Framework: how IT operations are managed (SP5). `operations-management/performance/pillars-of-operations`.
+  - Framework: how IT operations are managed (SP5). `operations-management/performance/sp5-framework`.
   - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vcf-operations/models/` and `operations-management/capacity/`.
   - KPI: a model of performance only (the P in KPI). Files in `vcf-operations/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
   - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/performance/health-risk-efficiency`. Monitoring belongs here.

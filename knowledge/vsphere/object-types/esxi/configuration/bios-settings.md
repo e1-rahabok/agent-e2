@@ -76,7 +76,7 @@ technology:
 - memory
 pillar:
 - performance
-- security
+- compliance
 product:
 - vsphere
 object:

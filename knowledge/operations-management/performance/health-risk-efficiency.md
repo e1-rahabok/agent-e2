@@ -54,9 +54,9 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vcf-operations
@@ -66,7 +66,7 @@ object:
 - VirtualMachine
 - HostSystem
 internal_derive:
-- operations-management/performance/pillars-of-operations
+- operations-management/performance/sp5-framework
 related:
 - operations-management/performance/alerts-and-insights
 - operations-management/performance/monitoring-vs-troubleshooting

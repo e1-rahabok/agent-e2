@@ -320,3 +320,4 @@ vsphere/object-types/esxi/overview-what-to-monitor: vsphere/object-types/esxi/he
 vsphere/object-types/vm/overview-what-to-monitor: vsphere/object-types/vm/health-check/vm-health-check
 vcf-operations/kpis/cluster-consumption: vcf-operations/models/cluster-consumption
 vcf-operations/kpis/cluster-risk: vcf-operations/models/cluster-risk
+operations-management/performance/pillars-of-operations: operations-management/performance/sp5-framework

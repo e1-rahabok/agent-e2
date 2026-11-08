@@ -4,7 +4,7 @@
 - Configuration management prevents issues caused by wrong settings: the actual value must match the intended value, and the hardware and software configuration must match the documented architecture.
 - Quantify it to track it over time: 100% when every configuration rule is met, 0% when none is.
 - Wrong configuration hits six areas: availability, performance, capacity, cost, security, compliance. Choose each trade-off with all six in mind.
-- Configuration is a means to an end, not a pillar: `operations-management/performance/pillars-of-operations`.
+- Configuration is a means to an end, not a pillar: `operations-management/performance/sp5-framework`.
 
 ## Approach
 - Start with a plan: which settings suit which objects, documented as corporate standards. The standards follow the architecture and security policy and change over the years; keep them documented.
@@ -101,9 +101,9 @@ technology:
 pillar:
 - availability
 - performance
-- security
+- compliance
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vsan
@@ -116,7 +116,7 @@ object:
 - ClusterComputeResource
 - Datastore
 internal_derive:
-- operations-management/performance/pillars-of-operations
+- operations-management/performance/sp5-framework
 related:
 - operations-management/performance/health-risk-efficiency
 - guest-os/system/concepts/guest-os-configuration-review

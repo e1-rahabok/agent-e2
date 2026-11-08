@@ -216,6 +216,7 @@ def main():
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
     check_tables(bad)
     check_titles(bad)
+    check_flow_map(bad)
     check_moved(ids, bad)
     check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
@@ -263,6 +264,15 @@ def check_moved(ids, bad):
             for m in pat.finditer(line):
                 o = m.group(1) or m.group(2)
                 bad(f, f'line {i}: moved id "{o}": use "{MOVED[o]}" (run project/tools/link_refs.py for links)')
+
+
+def check_flow_map(bad):
+    """REPOSITORY-MAP.md, section Flows, lists every flow file."""
+    text = open('REPOSITORY-MAP.md').read() if os.path.exists('REPOSITORY-MAP.md') else ''
+    for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
+        if '/troubleshooting/' in f or '/health-check/' in f:
+            if f'({f})' not in text:
+                bad('REPOSITORY-MAP.md', f'flow {f} not listed in section Flows')
 
 
 def check_titles(bad):

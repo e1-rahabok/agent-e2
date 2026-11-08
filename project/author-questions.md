@@ -161,18 +161,6 @@ Each entry has:
 - Written as now: metric names only, no numbers; nothing added to the threshold catalog until answered.
 - Answer:
 
-### Q089 · Part 1 > Observability > Alert · Importance of alerts and the colours
-- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (sections Alert vs insight, Criticality).
-- Search 1: "Hopefully not important issue"
-- Search 2: "Urgent and important. However, it does not always mean you must drop everything you do and start firefighting in seconds."
-- Search 3: "Symptom. Non urgent. Leading Indicators. Symptoms. Could be important, could also be false positive"
-- Question:
-  - (a) The alert vs insight table says alerts are hopefully not important and insights are important. The colour table says red alerts are urgent and important, and the diagram calls yellow low importance while the table says it could be important. Which wording should the knowledge base keep?
-  - (b) Red: attend within 1-2 hours (table) vs review it today, the sooner the better (legend image). Keep 1-2 hours?
-  - (c) Do the KPI colour bands (green, yellow, orange, red in the VCF Operations KPIs) carry the same response times: yellow next business day, orange today, red within 1-2 hours?
-- Written as now: alerts urgent; red urgent and important, 1-2 hours; yellow possibly important or a false positive; (c) not stated.
-- Answer:
-
 ### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
 - Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/input-types.md) (sections Property, Event).
 - Search 1: "There are 3 types of properties:"
@@ -184,16 +172,6 @@ Each entry has:
   - (b) The table has two rows named Event. Is the second (setting, state, label change) meant as Property? If so, state is listed both as a metric and as a property type.
   - (c) DRS automation level is Manual, Partially Automated or Fully Automated; the 1-5 scale is the migration threshold. Change the example to migration threshold?
 - Written as now: setting, state and label change as change events; the example written as migration threshold, flagged.
-- Answer:
-
-### Q091 · Part 1 > Purpose-Driven Architecture > The 2 Sides of VCF · Workload and the pillar list
-- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
-- Search 1: "Workload means the customers VM, not your infrastructure software."
-- Search 2: diagram label "IT (VCF & Non-VCF Appliances )"
-- Question:
-  - (a) The text excludes infrastructure software from workload; the diagram lists IT appliances under Workloads. Are VCF appliances (vCenter, NSX Edge) workloads?
-  - (b) Pillars differ across the book: this diagram has seven (availability, performance, security, compliance, capacity, configuration, inventory); Key Metrics has availability, performance, capacity, compliance; the `pillar` tag has availability, performance, security, capacity, value. Options: (A) keep the tag list; (B) add compliance, configuration and inventory to the tag; (C) another list.
-- Written as now: workload = customer VMs, appliances also run as VMs; pillar tag unchanged.
 - Answer:
 
 ### Q092 · Part 1 > Begin with The End in Mind > The Crown Jewel · Health across tiers
@@ -208,7 +186,7 @@ Each entry has:
 ### Q094 · Repository · Where cross-pillar operations files go
 - Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/iaas-business.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md); [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md).
 - Search: not applicable. Rule: [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) allows only pillar folders (performance, capacity) under [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management).
-- Also (2026-11-07, Service Level Agreement to SP5 Framework: Process): [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md), [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md), [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/pillars-of-operations.md), [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/health-risk-efficiency.md), [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md), [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md): same placement, same question.
+- Also (2026-11-07, Service Level Agreement to SP5 Framework: Process): [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md), [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/class-of-service.md), [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sp5-framework.md), [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/health-risk-efficiency.md), [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md), [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md): same placement, same question.
 - Also (2026-11-07, Configuration Management): [Configuration management: standards, review dimensions and the four types of check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/configuration-management.md). There is no configuration pillar; it sits in performance/ for now.
 - Question: these three files cover several pillars (availability, performance, capacity, security) and the platform itself. They are in `operations-management/performance/` to pass lint. Options: (A) keep them in performance/; (B) allow files at the root of `operations-management/`; (C) a new folder such as `operations-management/service/`.
 - Written as now: option A, pillars in the tags.
@@ -280,7 +258,7 @@ Each entry has:
 - Answer:
 
 ### Q101 · Part 1 > SP5 Framework: Pillars · Relationship lines and what is troubleshot
-- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/pillars-of-operations.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Who does which day).
+- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sp5-framework.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Who does which day).
 - Search 1: "Lines without arrowheads means there is relationship but not impact"
 - Search 2: "Availability and Capacity should not overlap"
 - Search 3: "Why isn’t there a line to Performance?"
@@ -541,6 +519,38 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q091 · Part 1 > Purpose-Driven Architecture > The 2 Sides of VCF · Workload and the pillar list
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/foundations/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
+- Search 1: "Workload means the customers VM, not your infrastructure software."
+- Search 2: diagram label "IT (VCF & Non-VCF Appliances )"
+- Question:
+  - (a) The text excludes infrastructure software from workload; the diagram lists IT appliances under Workloads. Are VCF appliances (vCenter, NSX Edge) workloads?
+  - (b) Pillars differ across the book: this diagram has seven (availability, performance, security, compliance, capacity, configuration, inventory); Key Metrics has availability, performance, capacity, compliance; the `pillar` tag has availability, performance, security, capacity, value. Options: (A) keep the tag list; (B) add compliance, configuration and inventory to the tag; (C) another list.
+- Written as now: workload = customer VMs, appliances also run as VMs; pillar tag unchanged.
+- Answer: (a) Yes and No. They are technically workload, as they are VM that runs on vSphere Cluster. Operationally they are not owned by the business users. They are yours, so they are internal and hence have 0 SLA. They only have KPI. SLA is always between 2 parties.
+  (b) Pillars follow the SP5 Framework diagram in Part 1 of the book.
+  Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework. (a) Yes and No. They are technically workload, as they are VM that runs on vSphere Cluster. Operationally they are not owned by the business users. They are yours, so they are internal and hence have 0 SLA. They only have KPI. SLA is always between 2 parties.
+  (b) Pillars follow the SP5 Framework diagram in Part 1 of the book.
+  Applied 2026-11-08: purpose-driven-architecture (Two sides of VCF); pillar tag now availability, performance, compliance, capacity, cost (tags.yaml, 44 files); pillars-of-operations renamed sp5-framework.
+
+### Q089 · Part 1 > Observability > Alert · Importance of alerts and the colours
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/alerts-and-insights.md) (sections Alert vs insight, Criticality).
+- Search 1: "Hopefully not important issue"
+- Search 2: "Urgent and important. However, it does not always mean you must drop everything you do and start firefighting in seconds."
+- Search 3: "Symptom. Non urgent. Leading Indicators. Symptoms. Could be important, could also be false positive"
+- Question:
+  - (a) The alert vs insight table says alerts are hopefully not important and insights are important. The colour table says red alerts are urgent and important, and the diagram calls yellow low importance while the table says it could be important. Which wording should the knowledge base keep?
+  - (b) Red: attend within 1-2 hours (table) vs review it today, the sooner the better (legend image). Keep 1-2 hours?
+  - (c) Do the KPI colour bands (green, yellow, orange, red in the VCF Operations KPIs) carry the same response times: yellow next business day, orange today, red within 1-2 hours?
+- Written as now: alerts urgent; red urgent and important, 1-2 hours; yellow possibly important or a false positive; (c) not stated.
+- Answer: (a) Alerts should be minimized to issues that you cannot avoid, as each alert is reactive. When you react, you lose as time has started. So you hope that the alerts are not important. It's common for Enterprise IT to experience alerts storm and alerts fatigue. The root cause is the alerts are never defined properly. Red = urgent + important. Orange = urgent + not important. Yellow = not urgent, hence removed from the alerts definition and dealt as insights as part of proactive Health Check. Do this at the start of the day, or the start of your shift.
+  (b) Red = ASAP, max within 1-2 hours. Orange = by end of day, do not differ until tomorrow. Any issue that can be deferred until tomorrow is not urgent. They are best dealt as a group as insight, so you can see the big picture.
+  (c) No. The color in alert has a timeline as alert is reactive by nature. Time has started. The color in KPI is for proactive. They are not related.
+  Applied 2026-11-08: alerts-and-insights (Alert vs insight, Criticality, Traps). (a) Alerts should be minimized to issues that you cannot avoid, as each alert is reactive. When you react, you lose as time has started. So you hope that the alerts are not important. It's common for Enterprise IT to experience alerts storm and alerts fatigue. The root cause is the alerts are never defined properly. Red = urgent + important. Orange = urgent + not important. Yellow = not urgent, hence removed from the alerts definition and dealt as insights as part of proactive Health Check. Do this at the start of the day, or the start of your shift.
+  (b) Red = ASAP, max within 1-2 hours. Orange = by end of day, do not differ until tomorrow. Any issue that can be deferred until tomorrow is not urgent. They are best dealt as a group as insight, so you can see the big picture.
+  (c) No. The color in alert has a timeline as alert is reactive by nature. Time has started. The color in KPI is for proactive. They are not related.
+  Applied 2026-11-08: alerts-and-insights (Alert vs insight, Criticality, Traps).
 
 ### Q112 · Part 1 > Configuration Management > Review List · Facts to update for VCF 9.1
 - Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section DRS); [Storage configuration review: datastores, LUNs, NFS, arrays, queue depth](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-configuration-review.md); [VM configuration review: VMware Tools, hardware, compute and storage settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (sections Storage, VMware Tools).

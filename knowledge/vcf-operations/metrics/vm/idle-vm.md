@@ -39,7 +39,7 @@ technology:
 - cpu
 pillar:
 - capacity
-- value
+- cost
 product:
 - vcf-operations
 object:

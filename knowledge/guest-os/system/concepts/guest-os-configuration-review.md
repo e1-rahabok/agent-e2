@@ -45,7 +45,7 @@ technology:
 - network
 pillar:
 - performance
-- security
+- compliance
 - capacity
 product:
 - windows

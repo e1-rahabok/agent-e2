@@ -78,7 +78,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Present health | Real problems now: availability, performance, security incidents. `operations-management/performance/health-risk-efficiency` | Health |
 | Future health | Risk: no problem yet; security exposure, compliance, configuration, capacity. | Risk |
 | Primary metric, secondary metric | Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why). | - |
-| Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks. `operations-management/performance/pillars-of-operations` | - |
+| Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks. `operations-management/performance/sp5-framework` | - |
 | Model | How one pillar of one object is quantified into a number and a decision. Capacity model, availability model, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed. `vcf-operations/models/cluster-consumption` | - |
 | KPI | A model of performance only: the P in KPI. One 0-100% score per object. VM, Guest OS, ESXi and Cluster Performance. `vcf-operations/kpis/esxi-performance` | Key Performance Indicator |
 | Health check | Check of one object, in the order present health, risk, efficiency. The what. A failed step opens a troubleshooting flow. `vsphere/object-types/cluster/health-check/cluster-health-check` | - |
@@ -105,9 +105,9 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `foundations/input-types` |
 | Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/foundations/resource-controls` |
 | Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, logs included. Troubleshooting: why, reactive (after an alert, an incident or a complaint), many metrics and logs | `operations-management/performance/monitoring-vs-troubleshooting` |
-| Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/performance/pillars-of-operations` |
-| Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/performance/pillars-of-operations` |
-| Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/performance/pillars-of-operations` |
+| Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/performance/sp5-framework` |
+| Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/performance/sp5-framework` |
+| Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/performance/sp5-framework` |
 | Consistency vs compatibility check | Consistency: values identical across peers or partners (hosts in a cluster, ESXi and switch MTU). Compatibility: values differ but must work together (versions) | `operations-management/performance/configuration-management` |
 | Demand (capacity) vs ESXi CPU Demand | Capacity demand is the higher of utilization and reservation, per powered-on VM; ESXi CPU Demand is a counter of runtime demanded | `operations-management/capacity/capacity-dimensions` |
 | KPI vs model | A KPI scores performance only; capacity, risk, availability and security are scored by models. Cluster Risk is a model, not a KPI | `vcf-operations/models/cluster-risk` |
@@ -121,7 +121,7 @@ id: glossary
 retriever_guide: term-meaning
 scope: vendor-neutral
 technology: [cpu, memory, storage, network, system]
-pillar: [availability, performance, security, capacity, value]
+pillar: [availability, performance, compliance, capacity, cost]
 product: [vsphere, vcf-operations]
 internal_derive: []
 related:

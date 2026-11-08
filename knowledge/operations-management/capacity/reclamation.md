@@ -117,7 +117,7 @@ technology:
 - system
 pillar:
 - capacity
-- value
+- cost
 product:
 - vsphere
 - vcf-operations
