@@ -53,7 +53,7 @@ product:
 layer:
 - guest-os
 internal_derive:
-- operations-management/performance/configuration-management
+- operations-management/configuration-management
 related:
 - vsphere/object-types/vm/configuration/vm-configuration-review
 - guest-os/system/concepts/guest-os-sizing

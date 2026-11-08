@@ -108,8 +108,8 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- operations-management/performance/configuration-management
-- operations-management/performance/class-of-service
+- operations-management/configuration-management
+- operations-management/class-of-service
 - vsphere/foundations/resource-controls
 - vsphere/foundations/scalable-shares
 - vsphere/object-types/cluster/concepts/drs-overview

@@ -76,7 +76,7 @@ rows:
   unit: '%'
   meaning: CPU SLI fails for this 5-minute interval (Performance SLA counter).
   source: book
-  kb: operations-management/performance/sla-metrics
+  kb: operations-management/sla-metrics
   quote: '| CPU | Ready | above 2.5% |'
 - kind: rule
   id: vm-sli-memory-contention
@@ -90,7 +90,7 @@ rows:
   unit: '%'
   meaning: Memory SLI fails for this 5-minute interval (Performance SLA counter).
   source: book
-  kb: operations-management/performance/sla-metrics
+  kb: operations-management/sla-metrics
   quote: '| Memory | Contention | above 1% |'
 - kind: rule
   id: vm-sli-disk-latency
@@ -104,7 +104,7 @@ rows:
   unit: 'ms'
   meaning: Disk SLI fails for this 5-minute interval (Performance SLA counter). Average of read and write.
   source: book
-  kb: operations-management/performance/sla-metrics
+  kb: operations-management/sla-metrics
   quote: '| Disk | Latency | above 10 ms |'
 - kind: rule
   id: vm-sli-network-tx-dropped
@@ -118,7 +118,7 @@ rows:
   unit: '%'
   meaning: Network SLI fails for this 5-minute interval (Performance SLA counter). Received drops are excluded.
   source: book
-  kb: operations-management/performance/sla-metrics
+  kb: operations-management/sla-metrics
   quote: '| Network | Transmit dropped packets | above 0% |'
 - kind: rule
   id: vm-cpu-ready-poor

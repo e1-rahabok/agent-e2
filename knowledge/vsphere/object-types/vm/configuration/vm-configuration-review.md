@@ -70,7 +70,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- operations-management/performance/configuration-management
+- operations-management/configuration-management
 related:
 - guest-os/system/concepts/guest-os-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance

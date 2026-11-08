@@ -27,7 +27,7 @@ flowchart TD
 - One KPI and two models: Cluster Performance (KPI), Cluster Consumption (capacity model), Cluster Risk (risk model). Read them separately.
 
 ## Checks, in order
-Order of `operations-management/performance/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
+Order of `operations-management/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
 1. Availability (ClusterComputeResource). Cluster state green or yellow or red, and HA failover capacity met (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`). Cluster and ESXi availability: `vsphere/object-types/cluster/metrics/comparisons/availability`. Flows for an availability failure (host down, HA did not restart VMs) are future, after 1.0: state what failed and stop. Otherwise → step 2.
 2. Performance: Cluster Performance (%) (ClusterComputeResource). Depth from the worst VM, breadth from the 90th percentile, aggregated directly from VMs (`vcf-operations/kpis/cluster-performance`). Green → step 3. Yellow or worse → `vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`; VMs short of CPU or memory in a DRS cluster → `vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`. Then → step 3.
 3. Service level (ClusterComputeResource). SLA and SLI, 30-day and lagging (`vcf-operations/kpis/cluster-sla-sli`). A breach is history: it confirms step 2, it does not replace it. → step 4.
@@ -81,7 +81,7 @@ product:
 object:
 - ClusterComputeResource
 internal_derive:
-- operations-management/performance/health-risk-efficiency
+- operations-management/health-risk-efficiency
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
 - vcf-operations/kpis/cluster-performance
 - vcf-operations/models/cluster-consumption

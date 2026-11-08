@@ -46,7 +46,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/health-risk-efficiency
+id: operations-management/health-risk-efficiency
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -66,11 +66,11 @@ object:
 - VirtualMachine
 - HostSystem
 internal_derive:
-- operations-management/performance/sp5-framework
+- operations-management/sp5-framework
 related:
-- operations-management/performance/alerts-and-insights
-- operations-management/performance/monitoring-vs-troubleshooting
-- operations-management/performance/proactive-operations
+- operations-management/alerts-and-insights
+- operations-management/monitoring-vs-troubleshooting
+- operations-management/proactive-operations
 - operations-management/capacity/rightsizing
 images:
   - path: images/health-risk-efficiency-pillar-grouping-diagram.png

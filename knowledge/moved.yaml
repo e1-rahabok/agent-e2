@@ -320,4 +320,16 @@ vsphere/object-types/esxi/overview-what-to-monitor: vsphere/object-types/esxi/he
 vsphere/object-types/vm/overview-what-to-monitor: vsphere/object-types/vm/health-check/vm-health-check
 vcf-operations/kpis/cluster-consumption: vcf-operations/models/cluster-consumption
 vcf-operations/kpis/cluster-risk: vcf-operations/models/cluster-risk
-operations-management/performance/pillars-of-operations: operations-management/performance/sp5-framework
+operations-management/performance/pillars-of-operations: operations-management/sp5-framework
+operations-management/performance/sp5-framework: operations-management/sp5-framework
+operations-management/performance/iaas-business: operations-management/iaas-business
+operations-management/performance/purpose-driven-architecture: operations-management/purpose-driven-architecture
+operations-management/performance/alerts-and-insights: operations-management/alerts-and-insights
+operations-management/performance/sla-metrics: operations-management/sla-metrics
+operations-management/performance/class-of-service: operations-management/class-of-service
+operations-management/performance/health-risk-efficiency: operations-management/health-risk-efficiency
+operations-management/performance/monitoring-vs-troubleshooting: operations-management/monitoring-vs-troubleshooting
+operations-management/performance/proactive-operations: operations-management/proactive-operations
+operations-management/performance/configuration-management: operations-management/configuration-management
+operations-management/performance/performance-vs-capacity: operations-management/performance-vs-capacity
+operations-management/performance/realms-and-layers: operations-management/realms-and-layers

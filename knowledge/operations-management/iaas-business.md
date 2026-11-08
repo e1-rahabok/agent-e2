@@ -5,7 +5,7 @@
 - A system is judged by its architecture. A service is judged by its service level.
 - It is a service with or without chargeback. VM owners no longer own the hardware, so they judge only the service level, not the architecture.
 - The architecture is judged by its result in production: firefighting and blame between teams, or alerts that are meaningful and actionable.
-- Moving from SDDC to IaaS is an operations change: complaint-based to SLA-based, alert-driven to insight-driven. The maturity steps: `operations-management/performance/kpi-vs-sla`. Alerts and insights: `operations-management/performance/alerts-and-insights`.
+- Moving from SDDC to IaaS is an operations change: complaint-based to SLA-based, alert-driven to insight-driven. The maturity steps: `operations-management/performance/kpi-vs-sla`. Alerts and insights: `operations-management/alerts-and-insights`.
 
 ## Three variants of IaaS
 The variants differ in what is sold, how it is priced, and which SLA is offered.
@@ -51,7 +51,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 | Compliance | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
 
 - SLI means SLA leading indicator (`operations-management/performance/kpi-vs-sla`).
-- Definitions, formulas and the time window of each SLA: `operations-management/performance/sla-metrics`. Numbers per class: `operations-management/performance/class-of-service`.
+- Definitions, formulas and the time window of each SLA: `operations-management/sla-metrics`. Numbers per class: `operations-management/class-of-service`.
 - Usable capacity: `operations-management/capacity/capacity-model`.
 
 ## A complete, correct and accurate SLA
@@ -66,7 +66,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - An RCA closes only when an alert is set up that detects the same issue earlier next time.
 - Many oversized VMs. The team works as a system builder: it sizes each application and argues with its owners, who are its customers.
 - A service provider does not block a purchase. It prices so that the right behaviour pays. A public cloud sells a 40-vCPU instance to a team whose job runs on 2. Why rightsizing still matters: `operations-management/capacity/rightsizing`.
-- New hardware cannot be justified while utilization is low. Capacity is measured on utilization and performance: a cluster is full when it cannot serve its VMs well. Hardware takes time to buy, so contention must give early warning (`operations-management/performance/performance-vs-capacity`).
+- New hardware cannot be justified while utilization is low. Capacity is measured on utilization and performance: a cluster is full when it cannot serve its VMs well. Hardware takes time to buy, so contention must give early warning (`operations-management/performance-vs-capacity`).
 
 ## Common mistakes
 - Private cloud run as an automation project. Automation, workflow and the self-service portal support it. Its core is SLAs and class of service: it is operations-centric.
@@ -107,7 +107,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 
 ## Metadata
 ```yaml
-id: operations-management/performance/iaas-business
+id: operations-management/iaas-business
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -129,15 +129,15 @@ internal_derive:
 - operations-management/performance/kpi-vs-sla
 - vsphere/foundations/noisy-neighbour
 related:
-- operations-management/performance/sla-metrics
-- operations-management/performance/class-of-service
-- operations-management/performance/purpose-driven-architecture
-- operations-management/performance/alerts-and-insights
+- operations-management/sla-metrics
+- operations-management/class-of-service
+- operations-management/purpose-driven-architecture
+- operations-management/alerts-and-insights
 - operations-management/capacity/host-spec-from-class-of-service
 - operations-management/capacity/capacity-model
 - operations-management/capacity/rightsizing
-- operations-management/performance/performance-vs-capacity
-- operations-management/performance/realms-and-layers
+- operations-management/performance-vs-capacity
+- operations-management/realms-and-layers
 - vcf-operations/kpis/cluster-sla-sli
 - foundations/thresholds
 images:

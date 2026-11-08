@@ -26,7 +26,7 @@ flowchart TD
 - Host utilization is capacity, not performance. A host can run at high utilization with no VM waiting, and VMs can wait on a lightly used host.
 
 ## Checks, in order
-Order of `operations-management/performance/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
+Order of `operations-management/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
 1. Availability (HostSystem). Future, after 1.0: host not responding, disconnected, PSOD and soft errors come mostly from logs and events. State what was not checked. → step 2.
 2. Performance: ESXi Performance (%) (HostSystem). One score from the 8 VM contention sub-metrics (worst VM and 90th percentile of Ready, Co-stop, memory latency, disk latency) and the host's bad network packets. See `vcf-operations/kpis/esxi-performance`. Green → step 4. Yellow or worse → step 3.
 3. Which sub-metric fails (HostSystem, VirtualMachine). Open the sub-metric that drives the score down:
@@ -88,7 +88,7 @@ object:
 - HostSystem
 internal_derive:
 - vcf-operations/kpis/esxi-performance
-- operations-management/performance/health-risk-efficiency
+- operations-management/health-risk-efficiency
 - vsphere/technology/cpu/metrics/comparisons/host-contention-metrics
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/technology/cpu/health-check/host-cpu-capacity-headroom

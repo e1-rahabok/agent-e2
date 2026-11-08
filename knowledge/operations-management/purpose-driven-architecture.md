@@ -11,7 +11,7 @@
 - **DaaS**: desktops at a low price per user.
   - All desktops run the same software, so one software change hits every desktop at once. A 10% CPU increase in the browser, on a heavily overcommitted host, can breach the Performance SLA. Application teams must be involved.
 - **K8aaS**: Kubernetes, on a dedicated or a shared cluster.
-- **IaaS**: three variants (VM, resource pool, hardware): `operations-management/performance/iaas-business`.
+- **IaaS**: three variants (VM, resource pool, hardware): `operations-management/iaas-business`.
 
 ## Plan from Day 2
 - Day 0: plan. Business plan, high-level architecture, operations model.
@@ -31,7 +31,7 @@
 - The infrastructure team must know which business application each object serves, and what its failure costs.
 - CIO view: live information on how IT serves each business unit and its critical applications. The platform must map business units and applications to their VMs.
 - Tenant view: customers check their own VM health and how the platform serves their VMs. The platform must associate each tenant with its VMs; at least a structure to browse or find applications and VMs.
-- One model fits every application: the infrastructure metrics are the same for all of them (`operations-management/performance/realms-and-layers`).
+- One model fits every application: the infrastructure metrics are the same for all of them (`operations-management/realms-and-layers`).
 
 ## Crown jewels
 - Mission-critical business applications: a small share of the VMs, essential to revenue, profit or image. Bank: internet banking. E-commerce: the online portal.
@@ -82,7 +82,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/purpose-driven-architecture
+id: operations-management/purpose-driven-architecture
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -102,11 +102,11 @@ object:
 - VirtualMachine
 - ClusterComputeResource
 internal_derive:
-- operations-management/performance/iaas-business
+- operations-management/iaas-business
 related:
 - operations-management/capacity/host-spec-from-class-of-service
-- operations-management/performance/alerts-and-insights
-- operations-management/performance/realms-and-layers
+- operations-management/alerts-and-insights
+- operations-management/realms-and-layers
 - vsphere/foundations/vm-vs-guest-os
 - vsphere/object-types/cluster/concepts/drs-overview
 images:

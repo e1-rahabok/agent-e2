@@ -5,7 +5,7 @@
 - Recommendation: a 2x gap. Gold is 2x better than Silver; Silver is 2x better than Bronze.
 - A 2x gap is easier to explain to senior leadership and application teams than 1.5x or 3x, and easier to run at scale.
 - Price follows the same gap: Gold price = 2x Silver = 4x Bronze.
-- Price, SLA numbers per class, size limits and soft products: `operations-management/performance/class-of-service`. This file holds the capacity settings.
+- Price, SLA numbers per class, size limits and soft products: `operations-management/class-of-service`. This file holds the capacity settings.
 
 ## Promise vs technique
 ![Gold, Silver, Bronze: relative contention 1x, 2x, 4x; VM size (configured) 4x, 2x, 1x; VM reservation rights 4x, 2x, 1x; VM to ESXi overcommit ratio 1x, 2x, 4x; likely cluster headroom 4x, 2x, 1x](images/class-of-service-2x-gap-gold-silver-bronze-table.png)
@@ -85,9 +85,9 @@ object:
 internal_derive:
 - operations-management/capacity/capacity-dimensions
 related:
-- operations-management/performance/class-of-service
+- operations-management/class-of-service
 - vsphere/foundations/noisy-neighbour
-- operations-management/performance/class-of-service
+- operations-management/class-of-service
 - operations-management/capacity/host-spec-from-class-of-service
 - operations-management/performance/kpi-vs-sla
 - vcf-operations/models/cluster-risk

@@ -184,7 +184,8 @@ knowledge/                           # what the model reads (indexed)
 │                                    # vCenter counters, esxtop fields, thresholds, object model (YAML)
 ├── foundations/                     # vendor-neutral: units, sampling, accounting, perspectives, naming
 ├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
-├── operations-management/           # pillars of operations that cut across products and technologies
+├── operations-management/           # operations across products and technologies
+│   ├── *.md                         # across pillars: SP5 framework, SLAs, class of service, health, alerts (author, Q094)
 │   ├── performance/                 # KPI design; health-check/ and troubleshooting/ for cross-technology flows (VM slow triage)
 │   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
 ├── vsphere/
@@ -220,10 +221,10 @@ knowledge/                           # what the model reads (indexed)
   - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
   - multi-technology content follows the object route: `vsphere/object-types/<object>/`;
   - what VCF Operations computes: `vcf-operations/`;
-  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`.
+  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`; content across pillars: `operations-management/` itself (author, Q094, 2026-11-08).
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `operations-management/performance/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
+  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `operations-management/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
   - VCF Operations is a thin derived layer. A metric about a source object is documented once, at the source. `vcf-operations/` holds only what VCF Operations computes or adds (KPIs, derived metrics such as CPU Contention, 20-second peaks, disk space metrics), with `internal_derive` links to the source files. See `vcf-operations/concepts/vcf-operations-role`.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `operations-management/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
@@ -333,10 +334,10 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 ## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.
 - Vocabulary (author, 2026-11-08):
-  - Framework: how IT operations are managed (SP5). `operations-management/performance/sp5-framework`.
+  - Framework: how IT operations are managed (SP5). `operations-management/sp5-framework`.
   - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vcf-operations/models/` and `operations-management/capacity/`.
   - KPI: a model of performance only (the P in KPI). Files in `vcf-operations/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
-  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/performance/health-risk-efficiency`. Monitoring belongs here.
+  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/health-risk-efficiency`. Monitoring belongs here.
   - Troubleshooting: the why. Done only after an object fails a health check; a user complaint counts as a failed health check. Troubleshooting is part of the health check, always after it.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.

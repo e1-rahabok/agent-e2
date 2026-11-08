@@ -97,12 +97,12 @@ object:
 internal_derive:
 - operations-management/performance/performance-kpi-design
 related:
-- operations-management/performance/sla-metrics
+- operations-management/sla-metrics
 - vcf-operations/kpis/cluster-sla-sli
 - vcf-operations/kpis/cluster-performance
 - vcf-operations/kpis/vm-performance
-- operations-management/performance/performance-vs-capacity
-- operations-management/performance/realms-and-layers
+- operations-management/performance-vs-capacity
+- operations-management/realms-and-layers
 images:
   - path: images/complaint-kpi-sla-maturity-steps-diagram.png
     product: [vcf-operations]

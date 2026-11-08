@@ -3,7 +3,7 @@
 ## Why Day 2 sets the hardware
 - The host specification cannot be chosen without two Day 2 inputs: the average VM profile (RAM per vCPU) and the overcommit ratio planned for each class of service.
 - RAM is sold together with vCPU. RAM beyond what the sellable vCPUs bring stays unsold: there is no vCPU left to sell with it.
-- Day 2 → Day 0 → Day 1: `operations-management/performance/purpose-driven-architecture`.
+- Day 2 → Day 0 → Day 1: `operations-management/purpose-driven-architecture`.
 
 ## Method
 ```text
@@ -34,7 +34,7 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 - 64 cores: 64 × 12 = 768 GB.
 - The book picks 64 cores to make full use of the vSphere license. That held under per-CPU licensing (up to 32 cores per CPU license, so 2 × 32). VCF 9 is licensed per core, with a minimum of 16 cores per CPU: core count no longer has a license sweet spot above 16 per CPU.
 - No infrastructure share in this example. vSAN and NSX overhead is added on top.
-- Price at 67% of Gold: `operations-management/performance/class-of-service`.
+- Price at 67% of Gold: `operations-management/class-of-service`.
 
 ## Reading the examples
 - On the same 64-core host, Gold takes less RAM than Silver (256 GB vs 512 GB): Gold sells fewer vCPUs per host, and RAM follows the vCPUs sold.
@@ -64,12 +64,12 @@ product:
 object:
 - HostSystem
 internal_derive:
-- operations-management/performance/purpose-driven-architecture
+- operations-management/purpose-driven-architecture
 - vsphere/foundations/noisy-neighbour
 related:
-- operations-management/performance/class-of-service
+- operations-management/class-of-service
 - operations-management/capacity/capacity-model
-- operations-management/performance/iaas-business
+- operations-management/iaas-business
 - vsphere/foundations/overhead
 source:
   document: PART 1 - Concepts of Operations Management.docx

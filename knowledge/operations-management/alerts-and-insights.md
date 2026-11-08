@@ -45,7 +45,7 @@
 - Notification: the way VCF Operations pushes an insight or alert to a person: email, messages, on screen at login. Only an urgent alert is pushed to mobile or email at once; a non-urgent one waits for the daily check.
 - Admins want urgent issues fast; important but not urgent issues are analysed after the time-sensitive ones.
 ![Finding (sources: logs, events, metrics, tasks): positive findings → Insight (not urgent, requires SME) → Daily Check (start of day + end of day). Negative findings → Issue (symptom) → all issues → Insight; important issues → Alert (NOC team watch multiple times daily) → urgent issue → Notification (pushed to mobile or email); non-important issue → Daily Check](images/finding-issue-alert-insight-notification-flow-diagram.png)
-- Monitoring and troubleshooting with these terms: `operations-management/performance/monitoring-vs-troubleshooting`.
+- Monitoring and troubleshooting with these terms: `operations-management/monitoring-vs-troubleshooting`.
 
 ## Alert vs insight
 | Item | Alert | Insight |
@@ -126,7 +126,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/alerts-and-insights
+id: operations-management/alerts-and-insights
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -149,8 +149,8 @@ internal_derive:
 - foundations/thresholds
 related:
 - operations-management/performance/kpi-vs-sla
-- operations-management/performance/iaas-business
-- operations-management/performance/purpose-driven-architecture
+- operations-management/iaas-business
+- operations-management/purpose-driven-architecture
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk

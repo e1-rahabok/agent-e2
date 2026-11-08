@@ -38,7 +38,7 @@
 2. Performance: a system so slow it is as good as down.
 3. Security: third, not first, in day-to-day operations.
 - Configuration is checked as a drill-down under each of the three: a configuration issue can cause any of them.
-- Assess all three on both sides of VCF, platform and product (`operations-management/performance/purpose-driven-architecture`).
+- Assess all three on both sides of VCF, platform and product (`operations-management/purpose-driven-architecture`).
 
 ## A 24-hour day
 - Alerts arrive at random times, day and night: reactive.
@@ -71,7 +71,7 @@
 - Too many alerts overwhelm; too few give no early warning. Insight leads; alerts play a secondary role.
 - Proactive operations reduce alerts in count and intensity. Most alerts are yellow (lower threshold); insight from the daily health check replaces them.
 - Weekly, review the alerts that slipped through the daily check and NOC screens, and improve the dashboards. Repeated over months, fewer alerts slip through.
-- Colours and urgency: `operations-management/performance/alerts-and-insights`.
+- Colours and urgency: `operations-management/alerts-and-insights`.
 
 ## Deeper analysis
 - Daily check and NOC screens cover at most one day. A quarterly workload pattern is invisible to them.
@@ -122,7 +122,7 @@
 
 ## Metadata
 ```yaml
-id: operations-management/performance/proactive-operations
+id: operations-management/proactive-operations
 retriever_guide: how-it-works
 scope: operations-management
 technology:
@@ -143,12 +143,12 @@ object:
 - ClusterComputeResource
 - HostSystem
 internal_derive:
-- operations-management/performance/alerts-and-insights
-- operations-management/performance/monitoring-vs-troubleshooting
-- operations-management/performance/purpose-driven-architecture
+- operations-management/alerts-and-insights
+- operations-management/monitoring-vs-troubleshooting
+- operations-management/purpose-driven-architecture
 related:
-- operations-management/performance/sp5-framework
-- operations-management/performance/health-risk-efficiency
+- operations-management/sp5-framework
+- operations-management/health-risk-efficiency
 - operations-management/capacity/rightsizing
 - vsphere/technology/storage/concepts/snapshot-impact
 images:

@@ -184,7 +184,7 @@ internal_derive:
 related:
 - operations-management/capacity/class-of-service-planning
 - operations-management/capacity/health-check/can-cluster-take-more-vms
-- operations-management/performance/performance-vs-capacity
+- operations-management/performance-vs-capacity
 - vsphere/technology/memory/concepts/host-memory-states
 - vsphere/technology/memory/concepts/memory-tiering
 images:
