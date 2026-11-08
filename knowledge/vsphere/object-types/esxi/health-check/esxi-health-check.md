@@ -34,7 +34,7 @@ Order of `operations-management/performance/health-risk-efficiency`: present hea
    - Memory latency → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`. Host memory Latency is an average of VMs: use the worst VM (`vsphere/technology/memory/metrics/host/latency`).
    - Disk latency → `vsphere/technology/storage/troubleshooting/host-storage-latency`: split KAVG (kernel), DAVG (device), QAVG (queue) (`vsphere/technology/storage/concepts/esxi-storage-latency-stack`).
    - Bad network packets → `vsphere/technology/network/metrics/host/packets-dropped` and `vsphere/technology/network/metrics/host/errors`.
-   - Without VCF Operations: read the same counters per VM in vCenter, worst VM first. → step 4.
+   - → step 4.
 4. Capacity, CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) (`vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own (`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`). Hot cores and NUMA nodes: Peak Core Usage and Imbalance (`vcf-operations/metrics/esxi/cpu-peak-core-usage`). Headroom: `vsphere/technology/cpu/health-check/host-cpu-capacity-headroom`. → step 5.
 5. Capacity, memory (HostSystem). Consumed is the main capacity counter; it holds guest cache, so high Consumed alone is not a problem (`vsphere/technology/memory/metrics/host/consumed`). Leading warnings: Balloon and State. Past contention: Swap and Compressed (`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`). Memory tiering hosts: active memory against DRAM, NVMe latency (`vsphere/technology/memory/concepts/memory-tiering`). → step 6.
 6. Capacity, storage, network and GPU consumption (HostSystem). Device, adapter and path throughput and IOPS (`vsphere/technology/storage/metrics/host/disk`, `vsphere/technology/storage/metrics/host/adapter-and-path`). Network throughput per vmnic (`vsphere/technology/network/metrics/host/throughput`). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level (`vsphere/technology/gpu/concepts/gpu-monitoring`). → step 7.
@@ -108,7 +108,7 @@ source:
   document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation) + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Linked files in each step; section 'Documentation guidance (esxtop)' from ESX CPU Considerations (pp. 27-28)
 corrections:
-- 'Whole file: author decisions 2026-11-08: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0.'
+- 'Whole file: author decisions 2026-11-08: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback (author, Q133a).'
 review_notes:
 - 'Section ''Checks, in order'': step order follows health-risk-efficiency (book). The order inside capacity (CPU, memory, storage, network, GPU) is Claude''s synthesis of the linked files. Author to confirm (Q062).'
 - 'Step 8: no host-level efficiency source; Claude''s reading that hosts are sized with their cluster.'
