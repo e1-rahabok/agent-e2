@@ -33,7 +33,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | judge | The model that scores free-text and compound answers 0-3 | grader |
 | candidate | A model in the benchmark | model under test, AI under test |
 | test | A code test only: `harness/test_tools.py`, `benchmark/runner/test_runner.py` (author, 2026-11-05) | the benchmark |
-| retrieval check | `benchmark/runner/retrieval_eval.py`: are the files each question needs found, without a model | retrieval test, harness-only test |
+| retrieval check | `benchmark/runner/retrieval_eval.py`: are the files each question needs found, without a model. Guide: `benchmark/retrieval-check.md` | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
 | answer key | `answer` and `trap` letters, `## Expected key points`, `## Likely wrong answer` | key (alone) |
 | answer type | How a question is scored: deterministic (option letters) or judged (free text, by the judge) | kind, format, multiple choice vs conversation |
