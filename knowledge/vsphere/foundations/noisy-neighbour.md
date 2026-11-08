@@ -149,7 +149,7 @@ internal_derive:
 related:
 - vsphere/foundations/scalable-shares
 - operations-management/capacity/capacity-model
-- operations-management/performance-vs-capacity
+- operations-management/sp5-framework/performance-vs-capacity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/cpu
 images:

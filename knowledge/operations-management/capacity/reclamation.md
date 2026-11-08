@@ -66,10 +66,10 @@
 - Threshold is absolute, in MHz, not relative to VM size: idle is absolute; oversized is relative.
 - Default: 100 MHz. On a 2 GHz host that is 5% of a 1-vCPU VM and 0.25% of a 20-vCPU VM.
 - Evaluate every day, not over the whole window. A VM used 2 hours a week is 98.8% idle over the week (166 of 168 hours) but is not idle.
-- The VM must be idle every day for N days. VCF Operations implements it with two metrics (`vcf-operations/metrics/vm/idle-vm`).
+- The VM must be idle every day for N days. VCF Operations implements it with two metrics (`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`).
 - Window: a short window catches a decommissioned VM fast; a long window protects a month-end VM (payroll can be idle 29 days). With a 1-month window, a retired VM waits a month to be flagged.
 - Check the creation date before powering off: a new VM can stay unused for a long time before go-live.
-- Corner case: a runaway process keeps CPU high with no memory, network or disk work. The idle definition misses it. Use CPU Usage Disparity (%): a runaway process is usually single-threaded (`vcf-operations/metrics/vm/cpu-usage-disparity`).
+- Corner case: a runaway process keeps CPU high with no memory, network or disk work. The idle definition misses it. Use CPU Usage Disparity (%): a runaway process is usually single-threaded (`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`).
 - Declare the definition as a formal policy: measurable, so customers cannot dispute it.
 - Reclaiming an idle 10-vCPU VM that runs 1 vCPU does not give back 9 vCPUs of cycles: the cycles were never used. It frees allocation and memory.
 - Power it off: that frees its memory. Reducing its vCPUs does not.
@@ -127,11 +127,11 @@ object:
 internal_derive: []
 related:
 - operations-management/capacity/unused-vm
-- vcf-operations/metrics/vm/idle-vm
+- vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm
 - operations-management/capacity/rightsizing
 - vsphere/technology/storage/metrics/host/datastore
 - vsphere/technology/storage/concepts/snapshot-impact
-- vcf-operations/metrics/vm/disk-space-snapshot
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 images:
   - path: images/reclamation-five-areas-easiest-to-hardest-diagram.png

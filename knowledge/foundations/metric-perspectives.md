@@ -17,9 +17,9 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 |---|---|
 | Availability | Not given in the source. |
 | Performance | KPI (%) |
-| Security | PCI-DSS Compliance Score (%) |
+| Compliance | PCI-DSS Compliance Score (%) |
 | Capacity | Time Remaining, Recommended Size |
-| Value | Month-to-Date Cost |
+| Cost | Month-to-Date Cost |
 
 ## 3. Product / object
 - Each product (vSphere, NSX, Kubernetes, ...) brings its own object types.

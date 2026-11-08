@@ -55,7 +55,7 @@ same_meaning: []
 related:
 - guest-os/cpu/concepts/windows-cpu-scheduling
 - guest-os/cpu/metrics/run-queue
-- vcf-operations/metrics/vm/cpu-usage-disparity
+- vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 images:
   - path: ../images/guest-os-context-switch-rate-distribution-across-vms.png
     product: [windows]

@@ -63,7 +63,7 @@ object:
 internal_derive: []
 related:
 - operations-management/capacity/rightsizing
-- vcf-operations/metrics/vm/peak-20-second-metrics
+- vsphere/tools/vcf-operations/peak-20-second-metrics
 - foundations/thresholds
 - vsphere/tools/esxtop/overview
 source:

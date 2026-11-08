@@ -59,7 +59,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vcf-operations/metrics/vm/cpu-net-run
+- vsphere/technology/cpu/metrics/virtual-motherboard/net-run
 - vsphere/technology/cpu/metrics/virtual-motherboard/run
 - vsphere/technology/cpu/metrics/virtual-motherboard/used
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics

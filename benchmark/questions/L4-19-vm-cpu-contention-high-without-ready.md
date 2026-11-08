@@ -38,7 +38,7 @@ answer_type: deterministic
 input: [text]
 knowledge:
   - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
-  - vcf-operations/metrics/vm/cpu-contention
+  - vsphere/technology/cpu/metrics/virtual-motherboard/contention
   - vsphere/technology/cpu/concepts/hyper-threading
 attachments: []
 origin: synthetic

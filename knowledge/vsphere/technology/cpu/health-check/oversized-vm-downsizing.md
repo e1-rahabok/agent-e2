@@ -37,7 +37,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vcf-operations/metrics/vm/cpu-usage-disparity
+- vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage
 related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/run

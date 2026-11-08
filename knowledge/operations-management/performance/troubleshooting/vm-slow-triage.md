@@ -22,14 +22,14 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Time window and scope. Ask when the slowness happens (a time, a schedule, all the time) and which VMs. Read every counter below at the 20-second peak within that window, not the 5-minute or daily average. See `vcf-operations/metrics/vm/peak-20-second-metrics`. → step 2.
+1. Time window and scope. Ask when the slowness happens (a time, a schedule, all the time) and which VMs. Read every counter below at the 20-second peak within that window, not the 5-minute or daily average. See `vsphere/tools/vcf-operations/peak-20-second-metrics`. → step 2.
 2. Breadth (ClusterComputeResource). Several VMs on the same cluster or host slow in the same window → the cause is likely at host or cluster level → `vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`. One VM → step 3.
-3. VM contention (VirtualMachine), one resource at a time, in the complaint window. Start from VM Performance (%) at scale (`vcf-operations/kpis/vm-performance`), then the counters:
+3. VM contention (VirtualMachine), one resource at a time, in the complaint window. Start from VM Performance (%) at scale (`vsphere/object-types/vm/kpis/vm-performance`), then the counters:
    - CPU: Ready and Co-stop, read against Run → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.
    - Memory: Latency → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
    - Storage: disk latency per virtual disk, read and write, with outstanding IO → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`.
    - Network: dropped packets → `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
-   - The SLI thresholds give a first bar: Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped packets 0% (`vcf-operations/kpis/cluster-sla-sli`).
+   - The SLI thresholds give a first bar: Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped packets 0% (`vsphere/object-types/cluster/kpis/cluster-sla-sli`).
    - Contention found → that resource's flow, then step 5. No contention on any resource → step 4.
 4. Guest OS (Guest OS layer, through VMware Tools). CPU run queue, memory page-out rate, disk queue. High while the VM shows no contention → the VM gets what it demands; the Guest OS or the application waits on its own queues. Size the Guest OS from Guest OS counters (`guest-os/system/concepts/guest-os-sizing`). Either way → step 5.
 5. Configuration (VirtualMachine). Always checked, also when step 3 found contention: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations (`vsphere/foundations/resource-controls`); VMware Tools, virtual hardware and Guest OS versions, and settings that are outdated or incompatible (`vsphere/object-types/vm/configuration/vm-configuration-review`). Known bugs are mostly configuration: an older version or incompatible settings. → step 6.
@@ -77,14 +77,14 @@ object:
 - VirtualMachine
 internal_derive:
 - vsphere/object-types/vm/configuration/vm-configuration-review
-- vcf-operations/metrics/vm/peak-20-second-metrics
+- vsphere/tools/vcf-operations/peak-20-second-metrics
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
-- vcf-operations/kpis/vm-performance
+- vsphere/object-types/vm/kpis/vm-performance
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 - vsphere/technology/memory/troubleshooting/vm-memory-latency-high
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
-- vcf-operations/kpis/cluster-sla-sli
+- vsphere/object-types/cluster/kpis/cluster-sla-sli
 - guest-os/system/concepts/guest-os-sizing
 - vsphere/foundations/resource-controls
 - vsphere/technology/storage/concepts/snapshot-impact

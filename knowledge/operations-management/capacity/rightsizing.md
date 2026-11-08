@@ -31,7 +31,7 @@
 - Higher frequency with fewer vCPUs: fewer active threads let ESXi boost the active cores. Check CPU Usage (MHz) per vCPU.
 - Lower Co-stop and Ready: all vCPUs are scheduled, used or not.
 - Higher chance of CPU Overlap: more vCPUs, more interrupts and IO serviced on their time.
-- Process ping-pong: the guest scheduler moves threads across vCPUs; each move costs a context switch and cache warm-up (`vcf-operations/metrics/vm/cpu-usage-disparity`).
+- Process ping-pong: the guest scheduler moves threads across vCPUs; each move costs a context switch and cache warm-up (`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`).
 - Faster snapshots, especially with memory.
 - Faster vMotion: Windows and Linux use memory as cache; more memory, more to copy.
 - Faster boot: without a reservation, vSphere creates a swap file the size of configured RAM; slow storage delays boot.
@@ -164,7 +164,7 @@ related:
 - vsphere/technology/cpu/concepts/cpu-topology
 - vsphere/technology/cpu/concepts/numa
 - vsphere/technology/cpu/health-check/oversized-vm-downsizing
-- vcf-operations/metrics/vm/cpu-usage-disparity
+- vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - operations-management/capacity/reclamation
 - vcf-operations/concepts/real-time-metrics
 images:
