@@ -39,7 +39,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/technology/storage/metrics/virtual-motherboard/datastore
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
-- vsphere/technology/storage/diagnosis/vm-storage-performance-checks
+- vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 source:
   document: PART 3 - Counters.docx
   path: Storage > VM > Overview > Disk; Performance Metrics > Disk

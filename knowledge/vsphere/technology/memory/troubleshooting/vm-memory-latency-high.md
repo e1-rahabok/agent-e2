@@ -24,8 +24,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/memory/diagnosis/vm-memory-latency-high
-retriever_guide: what-to-check
+id: vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - memory
@@ -43,7 +43,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 - vsphere/technology/memory/metrics/virtual-motherboard/compressed
-- vsphere/technology/memory/diagnosis/overcommit-indicators
+- vsphere/technology/memory/troubleshooting/overcommit-indicators
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Contention Metrics > Latency

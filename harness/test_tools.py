@@ -75,7 +75,7 @@ class CatalogTest(unittest.TestCase):
 
 
 class KpiLookupTest(unittest.TestCase):
-    def test_kpi_found_by_title_with_bands(self):
+    def test_model_found_by_title_with_bands(self):
         r = CAT.lookup('Cluster Risk')
         self.assertTrue(r['metric_files'])
         self.assertTrue(r['bands'])
@@ -110,11 +110,11 @@ class FlowTest(unittest.TestCase):
         self.assertGreaterEqual(len(flows.flow_ids(DOCS)), 12)
 
     def test_step_and_reference(self):
-        out = flows.run(DOCS, 'vsphere/technology/cpu/diagnosis/vm-cpu-contention-high', '4')
+        out = flows.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '4')
         self.assertEqual((out['of'], out['next'], out['refers_to']), (6, '5', ['2']))
 
     def test_lettered_steps(self):
-        out = flows.run(DOCS, 'vsphere/technology/memory/diagnosis/overcommit-indicators')
+        out = flows.run(DOCS, 'vsphere/technology/memory/troubleshooting/overcommit-indicators')
         self.assertEqual(len(out['steps']), 4)
         self.assertTrue(out['steps'][0].startswith('a. '))
 
@@ -210,10 +210,10 @@ class PrimerTest(unittest.TestCase):
     def test_off_by_default(self):
         self.assertEqual(self.P.build(DOCS, {}), '')
 
-    def test_flow_index_lists_every_diagnosis_file(self):
+    def test_flow_index_lists_every_flow_file(self):
         t = self.P.flows_block(DOCS)
         for i in DOCS:
-            if '/diagnosis/' in i:
+            if '/troubleshooting/' in i or '/health-check/' in i:
                 self.assertIn(i, t)
 
     def test_agentic_adds_primer_to_system_prompt(self):
@@ -245,10 +245,10 @@ class RetrievalFixTest(unittest.TestCase):
         terms = retrieval.glossary_terms(DOCS)
         self.assertIn('ESXi', retrieval.expand_query('Is this ESX host overloaded?', terms))
 
-    def test_route_puts_a_diagnosis_file_first(self):
-        cfg = dict(ModesTest.CFG, route_diagnosis=True)
+    def test_route_puts_a_troubleshooting_file_first(self):
+        cfg = dict(ModesTest.CFG, route_troubleshooting=True)
         ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'Users say the VM is slow. What do you check first?', cfg)
-        self.assertIn('/diagnosis/', used[0])
+        self.assertIn('/troubleshooting/', used[0])
 
     def test_expand_derive_adds_linked_files(self):
         ret = Retriever(DOCS, CHUNKS)

@@ -37,7 +37,7 @@ level: 400
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/technology/cpu/diagnosis/vm-cpu-contention-high
+  - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
   - vcf-operations/metrics/vm/cpu-contention
   - vsphere/technology/cpu/concepts/hyper-threading
 attachments: []

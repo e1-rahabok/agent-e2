@@ -13,8 +13,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/storage/diagnosis/host-storage-latency
-retriever_guide: what-to-check
+id: vsphere/technology/storage/troubleshooting/host-storage-latency
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - storage

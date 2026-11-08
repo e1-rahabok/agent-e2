@@ -147,7 +147,7 @@
   - migrate VMs to another host. DRS can do this automatically.
 
 ## Host CPU monitoring
-- Moved to `vsphere/object-types/esxi/overview-what-to-monitor`, section Documentation guidance (esxtop).
+- Moved to `vsphere/object-types/esxi/health-check/esxi-health-check`, section Documentation guidance (esxtop).
 
 ## Traps
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.

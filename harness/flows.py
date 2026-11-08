@@ -1,4 +1,5 @@
-"""Flow executor: troubleshooting flows from knowledge/**/diagnosis/*.md, served one step at a time.
+"""Flow executor: health checks and troubleshooting flows (knowledge/**/health-check/*.md, knowledge/**/troubleshooting/*.md),
+served one step at a time.
 
 The markdown file is the single source. Two step formats are read:
   - a '## Checks, in order' section with numbered lines (1. 2. 3. ...), continuation lines kept with their step;
@@ -13,7 +14,7 @@ STEP_REF = re.compile(r'\bsteps?\s+(\d+|[a-h])\b', re.I)
 
 
 def steps_of(doc):
-    """Return [(key, text)] for a diagnosis doc, or [] if it has no steps."""
+    """Return [(key, text)] for a flow doc, or [] if it has no steps."""
     for head, text in doc.sections:
         if head.lower().startswith('checks'):
             out = []
@@ -33,14 +34,21 @@ def steps_of(doc):
     return out
 
 
+FLOW_FOLDERS = ('/health-check/', '/troubleshooting/')
+
+
+def is_flow(doc_id):
+    return any(f in doc_id for f in FLOW_FOLDERS)
+
+
 def flow_ids(docs):
-    return sorted(i for i in docs if '/diagnosis/' in i)
+    return sorted(i for i in docs if is_flow(i))
 
 
 def run(docs, flow_id, step=None):
     """One call of the flow tool. step None: all steps in order. step N: that step and where to go next."""
     d = docs.get(flow_id or '')
-    if not d or '/diagnosis/' not in d.id:
+    if not d or not is_flow(d.id):
         return {'error': f'unknown flow {flow_id!r}', 'flows': {i: docs[i].title for i in flow_ids(docs)}}
     steps = steps_of(d)
     if not steps:
@@ -62,12 +70,12 @@ def run(docs, flow_id, step=None):
 
 
 def check(docs):
-    """Problems for project/tools/lint.py: diagnosis files without steps, or step references that do not exist."""
+    """Problems for project/tools/lint.py: flow files without steps, or step references that do not exist."""
     problems = []
     for i in flow_ids(docs):
         steps = steps_of(docs[i])
         if len(steps) < 2:
-            problems.append((i, 'diagnosis file needs "## Checks, in order" with numbered steps, or "## Step a:" sections'))
+            problems.append((i, 'flow file (health-check/, troubleshooting/) needs "## Checks, in order" with numbered steps, or "## Step a:" sections'))
             continue
         keys = {k for k, _ in steps}
         for k, t in steps:

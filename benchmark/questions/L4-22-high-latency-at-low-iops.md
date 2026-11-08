@@ -30,8 +30,8 @@ level: 400
 answer_type: judged
 input: [text]
 knowledge:
-  - vsphere/technology/storage/diagnosis/vm-storage-performance-checks
-  - vsphere/technology/storage/diagnosis/host-storage-latency
+  - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
+  - vsphere/technology/storage/troubleshooting/host-storage-latency
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 attachments: []
 origin: synthetic

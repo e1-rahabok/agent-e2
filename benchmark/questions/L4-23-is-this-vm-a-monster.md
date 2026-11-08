@@ -35,7 +35,7 @@ level: 400
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vcf-operations/kpis/cluster-risk
+  - vcf-operations/models/cluster-risk
   - vsphere/object-types/cluster/concepts/cluster-operations
 attachments: []
 origin: synthetic

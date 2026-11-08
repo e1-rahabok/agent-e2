@@ -35,7 +35,7 @@
 | Utilization, inter-host | See `vcf-operations/metrics/cluster/cpu-inter-host-imbalance`. |
 | Utilization, intra-host | Report at cluster level as the highest among hosts. |
 | Overcommit | Running VM vCPU : ESXi usable threads differs between hosts. High overcommit is fine at low utilization. CPU is riskier than memory: more volatile. |
-| Monster VM | Concentration of monster VMs on one host raises contention risk. A monster VM has more than 50% of the host's physical cores (not threads), or more than 40% of its DRAM or 256 GB, whichever is smaller. Two such VMs rarely get runtime at once, since vSAN, NSX and VMkernel also demand CPU time. Definition: `vcf-operations/kpis/cluster-risk`, section Monster VM. |
+| Monster VM | Concentration of monster VMs on one host raises contention risk. A monster VM has more than 50% of the host's physical cores (not threads), or more than 40% of its DRAM or 256 GB, whichever is smaller. Two such VMs rarely get runtime at once, since vSAN, NSX and VMkernel also demand CPU time. Definition: `vcf-operations/models/cluster-risk`, section Monster VM. |
 
 ## Traps
 - "Cluster utilization = average of hosts tells the story" → imbalance hides behind the average.

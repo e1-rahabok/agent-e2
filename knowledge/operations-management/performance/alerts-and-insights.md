@@ -36,7 +36,7 @@
 - Limits of proactive work: false positives, and the daily discipline it takes.
 
 ## Finding, issue, alert, notification
-- Finding: the result of a diagnosis or analysis, from logs, events, metrics and tasks. Good or bad. The sources report the negative, so an empty result is usually a good day (example: no login to a confidential cluster).
+- Finding: the result of troubleshooting or analysis, from logs, events, metrics and tasks. Good or bad. The sources report the negative, so an empty result is usually a good day (example: no login to a confidential cluster).
 - Positive findings feed insight. Deriving an insight from findings takes someone who knows the technology and the environment.
 - Negative findings are issues. An issue is identified by one or more symptoms; no symptom, no issue.
 - Issue types: availability (hard failure, soft failure), configuration (drift, insecure), performance, capacity, security.

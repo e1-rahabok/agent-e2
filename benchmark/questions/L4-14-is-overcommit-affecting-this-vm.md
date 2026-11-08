@@ -39,7 +39,7 @@ level: 400
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/technology/memory/diagnosis/overcommit-indicators
+  - vsphere/technology/memory/troubleshooting/overcommit-indicators
   - vsphere/technology/memory/concepts/ballooning
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []

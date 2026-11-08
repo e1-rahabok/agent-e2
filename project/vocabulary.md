@@ -34,6 +34,10 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
 | Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
-| interpretation (as a folder) | diagnosis | Interpretation is the purpose of every metric file. |
+| interpretation (as a folder) | troubleshooting | Interpretation is the purpose of every metric file. |
+| diagnosis, diagnose | troubleshooting | Diagnosis is a medical word for one step of troubleshooting; one word for the why (author, 2026-11-08). |
+| what to monitor | health check | Lazy term: what is monitored is health; the health check gives order and verdict (author, 2026-11-08). |
+| verification (of an object's state) | health check | A third word for the same thing (author, 2026-11-08). |
+| KPI (for capacity, risk, availability) | model | KPI is strictly performance: the P in KPI. Capacity, risk, availability and security are models (author, 2026-11-08). |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
 | guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Keep the vendor term once in parentheses for retrieval. |

@@ -36,7 +36,7 @@ answer_type: judged
 input: [table, screenshot]
 knowledge:
   - vcf-operations/kpis/cluster-performance
-  - vsphere/object-types/cluster/diagnosis/cluster-vm-contention
+  - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
   - vsphere/technology/network/metrics/host/errors
 attachments:
   - 0088/host-vmnic-stats-64-hosts.xlsx

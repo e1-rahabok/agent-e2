@@ -90,7 +90,7 @@ related:
 - operations-management/performance/class-of-service
 - operations-management/capacity/host-spec-from-class-of-service
 - operations-management/performance/kpi-vs-sla
-- vcf-operations/kpis/cluster-risk
+- vcf-operations/models/cluster-risk
 - vcf-operations/kpis/vm-performance
 images:
   - path: images/class-of-service-2x-gap-gold-silver-bronze-table.png

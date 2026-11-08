@@ -53,11 +53,11 @@ input: [text]
 knowledge:
   - vsphere/technology/storage/concepts/snapshot-impact
   - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
-  - vsphere/technology/cpu/diagnosis/vm-other-wait-high
+  - vsphere/technology/cpu/troubleshooting/vm-other-wait-high
   - vsphere/technology/cpu/concepts/numa
-  - vcf-operations/kpis/cluster-risk
+  - vcf-operations/models/cluster-risk
   - vcf-operations/kpis/cluster-performance
-  - vsphere/technology/network/diagnosis/vnic-rx-drops
+  - vsphere/technology/network/troubleshooting/vnic-rx-drops
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"

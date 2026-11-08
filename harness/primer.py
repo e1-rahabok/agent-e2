@@ -4,7 +4,7 @@ Each block is generated from the knowledge base at start, so it cannot drift fro
   map        what each area holds, what each file kind answers, which tool serves it (from ids and retriever_guide)
   rules      Level 300 misreadings and their corrections (harness/misreadings.md)
   terms      confusable pairs (knowledge/glossary.md, section Confusable pairs)
-  flows      symptom -> flow index (every diagnosis file: title and id)
+  flows      symptom -> flow index (every health-check and troubleshooting file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
 Each block has a switch in benchmark/runner/config.yaml, key agent_primer. All off by default until the benchmark
 shows a gain (harness/AGENT.md, section 7).
@@ -22,13 +22,15 @@ KINDS = {  # folder kind -> what it answers and which tool serves it
     'concepts': ('how it works, why a value behaves so', 'search, read_file'),
     'metrics': ('what a counter means on one object', 'catalog, read_file, follow_links(same_name)'),
     'configuration': ('what a setting does', 'search, read_file'),
-    'diagnosis': ('what to check, in what order', 'flow'),
-    'kpis': ('a VCF Operations KPI: sub-metrics, bands, scoring', 'catalog, read_file'),
+    'health-check': ('is the object healthy: the what, in order of health, risk, efficiency', 'flow'),
+    'troubleshooting': ('why it fails a health check: what to check, in what order', 'flow'),
+    'kpis': ('a performance KPI: sub-metrics, bands, scoring', 'catalog, read_file'),
+    'models': ('a capacity or risk model: sub-metrics, bands, decision', 'catalog, read_file'),
     'tools': ('how esxtop or the vSphere Client shows the counters', 'read_file'),
 }
 
 PROCEDURE = """## Procedure
-- Troubleshooting question: find the matching flow (index above or search with retriever_guide what-to-check), then call flow and follow its steps in order.
+- Troubleshooting question: find the matching flow (index above or search with retriever_guide troubleshooting), then call flow and follow its steps in order.
 - A unit, rollup, statistics level, esxtop field or threshold: call catalog. Never answer a number from memory.
 - Any arithmetic or conversion: call calculate.
 - About a metric: read its file, then follow_links(same_name) to the same label on other objects.
@@ -85,7 +87,7 @@ def terms_block(docs):
 
 
 def flows_block(docs):
-    rows = sorted((d.title, d.id) for i, d in docs.items() if _kind(i) == 'diagnosis')
+    rows = sorted((d.title, d.id) for i, d in docs.items() if _kind(i) in ('health-check', 'troubleshooting'))
     if not rows:
         return ''
     return '\n'.join(['## Troubleshooting flows (symptom -> flow id)'] + [f'- {t}: {i}' for t, i in rows])

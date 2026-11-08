@@ -123,7 +123,7 @@ class Catalog:
                               (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
                                b['orange'], b['red'], r['source'], pillar, r.get('interval')))
         for d in self.docs.values():
-            if '/metrics/' not in d.id and '/kpis/' not in d.id:  # metric files and VCF Operations KPIs
+            if not any(f in d.id for f in ('/metrics/', '/kpis/', '/models/')):  # metric files, KPIs and models
                 continue
             m = d.meta
             c.execute('INSERT INTO metrics VALUES (?,?,?,?,?,?,?,?,?,?)',

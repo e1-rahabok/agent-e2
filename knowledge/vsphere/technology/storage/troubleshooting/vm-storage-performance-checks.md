@@ -17,8 +17,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/storage/diagnosis/vm-storage-performance-checks
-retriever_guide: what-to-check
+id: vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - storage

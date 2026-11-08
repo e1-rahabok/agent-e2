@@ -43,7 +43,7 @@ answer_type: deterministic
 input: [table]
 knowledge:
   - vsphere/technology/storage/metrics/host/adapter-and-path
-  - vsphere/technology/storage/diagnosis/host-storage-latency
+  - vsphere/technology/storage/troubleshooting/host-storage-latency
 attachments:
   - 0081/host-adapter-latency-192-hosts.xlsx
 origin: synthetic

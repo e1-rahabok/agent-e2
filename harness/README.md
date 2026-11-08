@@ -12,7 +12,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | Reads one meaning of a label that has two | Link expansion (`retrieval.py`) | Brings the `same_name` file on the other object with the first |
 | Gets a unit, rollup, statistics level or threshold wrong | Catalog (`catalog.py`) | Returns the exact value from the vSphere 9.1 tables, with its source |
 | Slips on arithmetic | Calculator (`calc.py`) | Computes the conversion and names the rule's source file |
-| Skips troubleshooting steps | Flow executor (`flows.py`) | Serves the diagnosis steps in order, one at a time |
+| Skips troubleshooting steps | Flow executor (`flows.py`) | Serves the flow steps in order, one at a time |
 | Answers in a broken format or guesses | Verifier (`verify.py`) | Rejects letters that are not options, Unsure mixed with others; one repair turn |
 | Answers from memory, or loops | Agent rules and budgets (`agent.py`, `AGENT.md`) | Lookup first, no repeats, same-name check, call and token budgets |
 
@@ -27,7 +27,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 - At start, `kb.py` loads every indexed file: the metadata block becomes filter fields and links; the body is chunked by `##` heading, each chunk prefixed with the file title and id.
 - `retrieval.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
 - `catalog.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
-- `flows.py` reads the numbered steps of each `diagnosis/` file directly; there is no second copy.
+- `flows.py` reads the numbered steps of each `health-check/` and `troubleshooting/` file directly; there is no second copy.
 - So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the agent finds files: `AGENT.md`, section 3. How the knowledge is shaped for this: `KNOWLEDGE-ENGINEERING.md`, Part B. Full ingest, query and answer contract: `ARCHITECTURE.md`, section Local LLM use.
 
 ## 4. Modules
@@ -37,7 +37,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, link expansion (`same_name`, `related`). |
 | `catalog.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; colour bands; object relations and paths. |
 | `calc.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
-| `flows.py` | Flow executor: a diagnosis file as ordered steps, one at a time, with the next step and the steps it refers to. |
+| `flows.py` | Flow executor: a health check or troubleshooting file as ordered steps, one at a time, with the next step and the steps it refers to. |
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
 | `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
 | `agent.py` | The agent loop: tools, rules (lookup first, no repeats, same-name check), budgets, fallback, verifier. Design: `AGENT.md`. |
@@ -54,10 +54,10 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | get_images | Image records of a file | Diagrams and charts. |
 | catalog | Counter unit, rollup, statistics level, esxtop field, thresholds with source, object relations | Exact values; never depends on retrieval rank. |
 | calculate | Result plus source notes | Any arithmetic or unit conversion. |
-| flow | Steps of a diagnosis file, or one step with next and references | Troubleshooting questions. |
+| flow | Steps of a health check or troubleshooting file, or one step with next and references | Health check and troubleshooting questions. |
 
 ## 6. Settings and checks
-- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_diagnosis`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
+- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
 - Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: `benchmark/runner/README.md`.
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.

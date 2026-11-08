@@ -92,7 +92,7 @@ python3 benchmark/runner/retrieval_eval.py
 | What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
 
 - Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this benchmark's label, not an industry term.
-- Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), traps and diagnosis files exist so a model can follow a chain across files.
+- Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), traps, health check and troubleshooting files exist so a model can follow a chain across files.
 - Classic and agentic answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
 - Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well.
 - The agentic limits (8 calls, 12K tokens) are cost caps for the benchmark, not a design choice.
