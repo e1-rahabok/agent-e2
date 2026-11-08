@@ -168,7 +168,7 @@ rows:
   unit: '%'
   meaning: Contention high. Next check Guest OS Run Queue, Context Switch, CPU Usage, VM Ready and Co-stop.
   source: book
-  kb: vsphere/technology/cpu/diagnosis/vm-cpu-contention-high
+  kb: vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
   quote: Contention high (above 37.5%)
 - kind: rule
   id: vm-cpu-usage-above-run
@@ -181,7 +181,7 @@ rows:
   condition: VM CPU Run below 90%
   meaning: Likely Turbo, not demand. Not a reason to add vCPUs.
   source: book
-  kb: vsphere/technology/cpu/diagnosis/oversized-vm-downsizing
+  kb: vsphere/technology/cpu/health-check/oversized-vm-downsizing
   quote: Usage above 90% with Run below 90% is likely Turbo, not demand.
 - kind: rule
   id: vm-cpu-ready-with-zero-latency
@@ -207,7 +207,7 @@ rows:
   condition: or ESXi Thread Utilization below 50%
   meaning: Physical cores are still free. New VMs can go on.
   source: book
-  kb: vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom
+  kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
   quote: 'Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free.'
 - kind: rule
   id: host-cpu-thread-utilization-target
@@ -221,7 +221,7 @@ rows:
   condition: Core Utilization at 100%
   meaning: Level the author keeps per host. Cluster level is lower.
   source: book
-  kb: vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom
+  kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
   quote: The author keeps it around 80%-90% per host
 - kind: rule
   id: host-memory-usage-docs
@@ -270,7 +270,7 @@ rows:
   unit: ms
   meaning: Check QAVG and the queue depths at each level of the stack.
   source: book
-  kb: vsphere/technology/storage/diagnosis/host-storage-latency
+  kb: vsphere/technology/storage/troubleshooting/host-storage-latency
   quote: 'KAVG above 0.5 ms: check QAVG and the queue depths at each level of the stack.'
 - kind: rule
   id: davg-book
@@ -580,6 +580,132 @@ rows:
     red: 0.4-0.8
   source: book
   kb: vcf-operations/kpis/cluster-performance
+- kind: bands
+  id: esxi-performance-worst-peak-vcpu-ready
+  metric: Worst peak vCPU Ready among VMs on the host (%)
+  group: Depth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-4
+    yellow: 4-8
+    orange: 8-16
+    red: 16-32
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-worst-peak-vcpu-co-stop
+  metric: Worst peak vCPU Co-stop among VMs on the host (%)
+  group: Depth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-2
+    yellow: 2-4
+    orange: 4-8
+    red: 8-16
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-worst-memory-latency
+  metric: Worst memory latency among VMs on the host (%)
+  group: Depth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-1
+    yellow: 1-2
+    orange: 2-4
+    red: 4-8
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-worst-peak-disk-latency
+  metric: Worst peak read/write disk latency, all vDisks of VMs on the host (ms)
+  group: Depth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-40
+    yellow: 40-80
+    orange: 80-160
+    red: 160-320
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-p90-peak-vcpu-ready
+  metric: 90th percentile peak vCPU Ready among VMs on the host (%)
+  group: Breadth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-1
+    yellow: 1-2
+    orange: 2-4
+    red: 4-8
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-p90-peak-vcpu-co-stop
+  metric: 90th percentile peak vCPU Co-stop among VMs on the host (%)
+  group: Breadth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-0.5
+    yellow: 0.5-1
+    orange: 1-2
+    red: 2-4
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-p90-memory-latency
+  metric: 90th percentile memory latency among VMs on the host (%)
+  group: Breadth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-0.5
+    yellow: 0.5-1
+    orange: 1-2
+    red: 2-4
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-p90-disk-latency
+  metric: 90th percentile read/write latency among virtual disks of VMs on the host (ms)
+  group: Breadth
+  object: HostSystem
+  interval: 20s
+  bands:
+    grey: null
+    green: 0-20
+    yellow: 20-40
+    orange: 40-60
+    red: 60-80
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
+- kind: bands
+  id: esxi-performance-esxi-error-dropped-network-packets
+  metric: ESXi (error + dropped) network packets (%)
+  group: ESXi
+  object: HostSystem
+  interval: 5m
+  bands:
+    grey: null
+    green: Excluded
+    yellow: 0-0.2
+    orange: 0.2-0.4
+    red: 0.4-0.8
+  source: author
+  kb: vcf-operations/kpis/esxi-performance
 - kind: bands
   id: vm-performance-peak-cpu-co-stop-among-any-vcpu
   metric: Peak CPU Co-stop among any vCPU (%)

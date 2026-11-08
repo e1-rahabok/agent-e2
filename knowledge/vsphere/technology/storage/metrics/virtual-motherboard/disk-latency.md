@@ -49,7 +49,7 @@ same_meaning: []
 related:
 - vsphere/technology/storage/concepts/ip-storage-network-accounting
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
-- vsphere/technology/storage/diagnosis/vm-storage-performance-checks
+- vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 - vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
 - vsphere/technology/storage/metrics/virtual-motherboard/disk

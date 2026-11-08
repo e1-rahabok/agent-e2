@@ -5,7 +5,7 @@
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
 - Not built into VCF Operations: it is a metric of the author's vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
 - Use: watch many clusters at once; when the score drops, open the 9 sub-metrics of that cluster.
-- Leading indicator of how close the cluster is to contention: `vcf-operations/kpis/cluster-risk`. Ballooning and swapping are scored there, not here.
+- Leading indicator of how close the cluster is to contention: `vcf-operations/models/cluster-risk`. Ballooning and swapping are scored there, not here.
 
 ## Design
 - Not the average of VM KPIs. A cluster serves VMs: guest contention matters little to it; ESXi physical network matters to it but not to a VM.

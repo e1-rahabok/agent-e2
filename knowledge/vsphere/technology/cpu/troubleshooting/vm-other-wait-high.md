@@ -17,8 +17,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/cpu/diagnosis/vm-other-wait-high
-retriever_guide: what-to-check
+id: vsphere/technology/cpu/troubleshooting/vm-other-wait-high
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - cpu

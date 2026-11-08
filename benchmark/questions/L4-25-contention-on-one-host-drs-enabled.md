@@ -35,7 +35,7 @@ level: 400
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster
+  - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
   - vsphere/object-types/cluster/concepts/drs-overview
 attachments: []
 origin: synthetic

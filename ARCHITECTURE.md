@@ -53,7 +53,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Mixes the VM and ESXi meaning of one label | One object per metric file; `same_name` links; a reminder before answering | Knowledge + harness |
 | Calls a Guest OS metric a VM metric | Separate `guest-os/` layer; `layer` tag; lint rule | Knowledge |
 | Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
-| Skips troubleshooting steps or jumps to a conclusion | Flow tool serves the diagnosis steps in order | Knowledge + harness |
+| Skips troubleshooting steps or jumps to a conclusion | Flow tool serves the troubleshooting steps in order | Knowledge + harness |
 | Invents a threshold | Rule: quote a threshold only with its source; thresholds catalog; verifier flags numbers not in the text | Knowledge + harness |
 | Guesses when unsure | Unsure option and the rule that a wrong answer is worse than Unsure | Agent (prompt) |
 | Answers from memory where the knowledge base speaks | Prompt rule: knowledge base first, and it wins on conflict; override rate measured (`benchmark/models.md`) | Agent (prompt) |
@@ -107,14 +107,14 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
 
 ### Query
-1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, what-to-check. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
+1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
 2. Extract filters from the question: `product`, `object`, `technology`, `pillar`. (Planned, as step 1.)
 3. Retrieve by similarity within those filters.
 4. Expand: add files named in `related`, `internal_derive`, `same_name`, `same_meaning`.
-   - Classic mode today: `same_name` and two `related` of the top 2 hits; with `expand_derive`, up to 3 `internal_derive` files of each. With `route_diagnosis`, a troubleshooting question puts its best diagnosis file first.
+   - Classic mode today: `same_name` and two `related` of the top 2 hits; with `expand_derive`, up to 3 `internal_derive` files of each. With `route_troubleshooting`, a troubleshooting question puts its best diagnosis file first.
    - `same_name` is the main trap guard: it brings in the other object's meaning of the same label.
 5. Add the matching foundations files when the answer depends on units, sampling, thresholds or the provider/consumer view.
-6. Fit to the context window. Priority: matching metric or diagnosis file, then its concepts, then foundations, then the rest of the links.
+6. Fit to the context window. Priority: matching metric or flow file, then its concepts, then foundations, then the rest of the links.
 7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.
 
 ### Answer
@@ -124,14 +124,14 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Use terms from `knowledge/glossary.md`: preferred names, defined terms, confusable pairs.
 - Quote a threshold only when a file states it with its source.
 
-### Troubleshooting questions (`what-to-check`)
-- Retrieve the matching `diagnosis/` file first. Retrieve its `internal_derive` metric files with it.
+### Troubleshooting questions (`troubleshooting`)
+- Retrieve the matching `troubleshooting/` file first. Retrieve its `internal_derive` metric files with it.
 - Follow the numbered steps in `## Checks, in order`, from step 1. Do not skip to a later step.
 - At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives.
 - Use the Mermaid flow only to confirm the branch. The numbered steps win if they differ.
 - When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
 - Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
-- No diagnosis file matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
+- No troubleshooting file matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
 - Contention before consumption before context, unless the file states another order.
 
 ### Trace

@@ -47,7 +47,7 @@
 ## Purpose decides
 - Performance (VM-centric): give VMs the best resource, without Hyper-Threading sharing.
 - Capacity (ESXi-centric): use all resources, including Hyper-Threading.
-- See `vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom`.
+- See `vsphere/technology/cpu/health-check/host-cpu-capacity-headroom`.
 
 ## Traps
 - "Usage (%) 100% means the host is full" → check Core and Thread Utilization.
@@ -78,7 +78,7 @@ related:
 - vsphere/technology/cpu/metrics/host/usage
 - vsphere/technology/cpu/metrics/host/used
 - vsphere/technology/cpu/metrics/host/demand
-- vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom
+- vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
 images:
   - path: ../../images/vcenter-esxi-cpu-consumption-counters-table.png
     product: [vsphere]

@@ -19,7 +19,7 @@
 - <One point per bullet. Scoring checks these.>
 
 ## Reasoning path
-<Optional. Order of diagnosis the answer should follow.>
+<Optional. Order of checks the answer should follow.>
 
 ## Notes
 - <Optional.>

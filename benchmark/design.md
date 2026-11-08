@@ -45,7 +45,7 @@ The product is a narrow expert for one reader: a VMware administrator. The admin
 | Judge a setting | What does this setting do to performance or capacity? | 10 |
 
 - The shares follow what administrators ask most: reading and troubleshooting. Capacity covers sizing and rightsizing (`operations-management/capacity/`).
-- Each task maps to a `retriever_guide` value of the knowledge base: metric-meaning, what-to-check, how-it-works, what-to-set. Capacity decisions use metric-meaning and what-to-check.
+- Each task maps to a `retriever_guide` value of the knowledge base: metric-meaning, health-check, troubleshooting, how-it-works, what-to-set. Capacity decisions use metric-meaning and health-check.
 
 ### 3.2 By level
 Levels follow `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
@@ -151,7 +151,7 @@ Level against input type (questions that include it):
 | Questions outside the knowledge base (answered from the model's own knowledge) | 5 |
 | Questions where the knowledge base and the vSphere documentation disagree | 3 |
 | Questions needing the calculator (summation to %, units, capacity) | 5 |
-| Questions that follow a troubleshooting flow (a `diagnosis/` file) in order | 10 |
+| Questions that follow a troubleshooting flow (a `troubleshooting/` file) in order | 10 |
 | Screenshot questions per source: esxtop, vCenter UI, VCF Operations UI | 5 each |
 | Table questions with at least 100 rows | 5 |
 | Long, complex questions: many screenshots and tables, many key points, as close as one prompt gets to a long troubleshooting discussion (author, 2026-11-05) | 1 |
@@ -284,7 +284,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in the classic context. Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
-- Result 2026-11-06 (90 questions), before the retrieval fixes: keyword search 70-71% of needed files reach the classic context, hybrid 72%; all needed files in 51 of 90 questions. After `expand_derive` and `route_diagnosis`: keyword 73% (53 of 90), hybrid 75% (57 of 90). This caps classic mode. Improve it before judging the model ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3). Earlier: 2026-11-04, 28 questions, hybrid 67%, 12 of 28 complete.
+- Result 2026-11-06 (90 questions), before the retrieval fixes: keyword search 70-71% of needed files reach the classic context, hybrid 72%; all needed files in 51 of 90 questions. After `expand_derive` and `route_troubleshooting`: keyword 73% (53 of 90), hybrid 75% (57 of 90). This caps classic mode. Improve it before judging the model ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3). Earlier: 2026-11-04, 28 questions, hybrid 67%, 12 of 28 complete.
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats

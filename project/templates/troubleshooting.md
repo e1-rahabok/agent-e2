@@ -1,7 +1,7 @@
-# <Symptom or question>
+# <Symptom or question: why the object failed a health check>
 
 ## Symptom
-- What is observed, on which object.
+- What is observed, on which object. Which health check step failed, or the user complaint (a complaint is a failed health check).
 
 ## Flow
 ```mermaid
@@ -26,8 +26,8 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: vsphere/technology/<technology>/diagnosis/<slug>
-retriever_guide: what-to-check
+id: vsphere/technology/<technology>/troubleshooting/<slug>
+retriever_guide: troubleshooting
 scope: vsphere
 technology: [cpu]
 pillar: [performance]

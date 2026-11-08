@@ -130,7 +130,7 @@ related:
 - operations-management/capacity/capacity-model
 - operations-management/capacity/reclamation
 - operations-management/capacity/rightsizing
-- operations-management/capacity/diagnosis/can-cluster-take-more-vms
+- operations-management/capacity/health-check/can-cluster-take-more-vms
 images:
   - path: images/capacity-management-six-steps-demand-and-supply-diagram.png
     product: [vsphere]

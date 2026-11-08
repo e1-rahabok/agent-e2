@@ -78,7 +78,7 @@ related:
 - vsphere/technology/cpu/concepts/cpu-frequency
 - vcf-operations/metrics/vm/cpu-net-run
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
-- vsphere/technology/cpu/diagnosis/run-vs-used-gap
+- vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency; CPU > VM (pp. 78-118) > Consumption Metrics > Run | Net Run

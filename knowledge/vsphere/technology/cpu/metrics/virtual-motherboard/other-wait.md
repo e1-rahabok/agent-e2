@@ -55,7 +55,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 - vsphere/technology/cpu/metrics/virtual-motherboard/idle
 - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
-- vsphere/technology/cpu/diagnosis/vm-other-wait-high
+- vsphere/technology/cpu/troubleshooting/vm-other-wait-high
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 source:
   document: PART 3 - Counters.docx

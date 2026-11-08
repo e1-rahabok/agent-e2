@@ -3,7 +3,7 @@
 ## Meaning
 - Past tense. A non-zero value does not mean ballooning is happening now.
 - Ballooning may have happened days ago. The page stays ballooned while idle, because the Guest OS has not asked for it.
-- Some ballooning is normal. See `vsphere/technology/memory/diagnosis/overcommit-indicators`.
+- Some ballooning is normal. See `vsphere/technology/memory/troubleshooting/overcommit-indicators`.
 
 ## Mechanism
 - Proactive: starts before ESXi fails to meet demand.
@@ -50,7 +50,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/technology/memory/diagnosis/overcommit-indicators
+- vsphere/technology/memory/troubleshooting/overcommit-indicators
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/concepts/ballooning
 - vsphere/technology/memory/metrics/virtual-motherboard/balloon-target

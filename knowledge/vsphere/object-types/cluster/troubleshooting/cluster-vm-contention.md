@@ -21,8 +21,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/object-types/cluster/diagnosis/cluster-vm-contention
-retriever_guide: what-to-check
+id: vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - cpu

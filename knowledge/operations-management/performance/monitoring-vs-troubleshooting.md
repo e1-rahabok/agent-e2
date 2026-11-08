@@ -32,7 +32,7 @@
   3. Availability: soft errors, vMotion stun time, lock-ups. Usually needs VCF Operations for logs.
   4. Utilization: last. Even at 100% it does not matter if the first three are good.
 ![Not healthy → four areas, in this order: contention (primary indicator); configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good)](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
-- VM-level flow: `operations-management/performance/diagnosis/vm-slow-triage`.
+- VM-level flow: `operations-management/performance/troubleshooting/vm-slow-triage`.
 
 ## Primary and secondary metrics
 - Layer the troubleshooting metrics, events and properties so a less technical team can use them.
@@ -97,7 +97,7 @@ internal_derive:
 - operations-management/performance/alerts-and-insights
 - operations-management/performance/kpi-vs-sla
 related:
-- operations-management/performance/diagnosis/vm-slow-triage
+- operations-management/performance/troubleshooting/vm-slow-triage
 - operations-management/performance/proactive-operations
 - operations-management/performance/health-risk-efficiency
 - foundations/input-types

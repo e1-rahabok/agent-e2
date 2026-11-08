@@ -46,7 +46,7 @@ answer_type: deterministic
 input: [table, screenshot]
 knowledge:
   - vsphere/tools/esxtop/storage
-  - vsphere/technology/storage/diagnosis/host-storage-latency
+  - vsphere/technology/storage/troubleshooting/host-storage-latency
   - vsphere/technology/storage/metrics/datastore/storage-io-control
 attachments:
   - 0086/esxtop-batch-one-hour.csv

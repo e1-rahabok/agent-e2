@@ -25,7 +25,7 @@ Why the system can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [A
 
 ### The gap
 - Searching helps only when the model knows it does not know. Its worst errors are Internet rules of thumb it believes, so it never searches for them.
-- Without a map, the agent searches blind: it does not know that a diagnosis file answers "what do I check" or that a comparison file sets two tools side by side.
+- Without a map, the agent searches blind: it does not know that a health check answers "is it healthy" and a troubleshooting file answers "why" or that a comparison file sets two tools side by side.
 
 ### How the agent finds knowledge
 A model that knows nothing about the knowledge base can still reach the right file, through these paths:
@@ -33,11 +33,11 @@ A model that knows nothing about the knowledge base can still reach the right fi
 | Path to a file | Built from | Used by |
 |---|---|---|
 | Words in the question | Body text, trap lines in the user's words, glossary synonyms | Search (BM25 and embeddings) |
-| Kind of question | `retriever_guide` and the folder (`concepts/`, `metrics/`, `kpis/`, `configuration/`, `diagnosis/`) | Search filters; the map (block 1) |
+| Kind of question | `retriever_guide` and the folder (`concepts/`, `metrics/`, `kpis/`, `models/`, `configuration/`, `health-check/`, `troubleshooting/`) | Search filters; the map (block 1) |
 | Object, layer, product | Metadata tags | Search filters |
 | From one file to the next | `same_name`, `same_meaning`, `internal_derive`, `related` | Link expansion; `follow_links` |
 | Exact values | `knowledge/catalog/*.yaml`, KPI colour-band tables | `catalog` tool |
-| Order of checks | Numbered steps in `diagnosis/` files | `flow` tool |
+| Order of checks | Numbered steps in `health-check/` and `troubleshooting/` files | `flow` tool |
 
 ### Five up-front blocks (built 2026-11-06, off until measured)
 Each is small (all five: about 1,800 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All are off by default until the benchmark shows a gain (section 7). When one is on, the trace records a `primer` step.
@@ -47,7 +47,7 @@ Each is small (all five: about 1,800 tokens; budget 3,000, checked by lint), nee
 | 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids (folders) |
 | 2 | Level 300 misreadings (`harness/misreadings.md`) | 12 short lines, each with its reason and file, that undo Internet priors: VM is not Guest OS; utilization is not contention; provider and consumer views differ; a counter means what its layer measures | `harness/misreadings.md`, section Misreadings |
 | 3 | Confusable terms | Only the pairs public text mixes up: Usage, Utilization and Demand; Ready and Latency; Run and Used; Consumed and Active; Ballooned and Swapped | `knowledge/glossary.md`, section Confusable pairs |
-| 4 | Symptom → flow index | One line per diagnosis file: its name and when to use it | `diagnosis/` files |
+| 4 | Symptom → flow index | One line per flow file: its name and when to use it | `health-check/` and `troubleshooting/` files |
 | 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |
 
 ### Kept behind tools
@@ -138,7 +138,7 @@ Each is small (all five: about 1,800 tokens; budget 3,000, checked by lint), nee
   - Why: Some runs ask "what if" (16 calls, primed agentic, another embedding model).
   - Handling: Run as named experiment profiles. Only the deployment profile produces the release score.
 
-- One harness, several profiles: the deployment profile (release score and product) and named experiment profiles (diagnosis only).
+- One harness, several profiles: the deployment profile (release score and product) and named experiment profiles (for experiments only).
 
 ## 9. Why classic mode stays
 - Classic mode costs a third of the benchmark. Reasons to keep it:

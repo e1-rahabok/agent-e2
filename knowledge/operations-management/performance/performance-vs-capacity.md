@@ -50,7 +50,7 @@
 - Provider objects (vSphere cluster, vSAN cluster): performance is bottom up, from the VMs inside, aggregated. Capacity is top down: the cluster first, then the hosts.
 - Consumer objects (VM, Kubernetes pod) relate the two pillars differently from provider objects.
 - 16-host cluster, utilization:
-  - risk: the average of 16 hosts reacts too late; a problem on one host is already a problem. Take the highest host. If it shows no issue, the other 15 hosts are lower. This reading belongs to Cluster Risk (%), a leading indicator (`vcf-operations/kpis/cluster-risk`), not to cluster performance, which reads VM contention.
+  - risk: the average of 16 hosts reacts too late; a problem on one host is already a problem. Take the highest host. If it shows no issue, the other 15 hosts are lower. This reading belongs to Cluster Risk (%), a leading indicator (`vcf-operations/models/cluster-risk`), not to cluster performance, which reads VM contention.
   - capacity: the average is right, because capacity is planned per cluster. Add workload until usable capacity runs out or contention appears.
 
 ## Contention vs consumption

@@ -16,7 +16,7 @@
 
 ## Reading it
 - Each component counts its own drops: the distributed port, the VM vNIC (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`), the LAG and the host vmnic (`vsphere/technology/network/metrics/host/packets-dropped`). Read each counter for its own component.
-- Which component caused a drop is a troubleshooting question the counters alone do not settle. For vNIC receive drops, see `vsphere/technology/network/diagnosis/vnic-rx-drops`.
+- Which component caused a drop is a troubleshooting question the counters alone do not settle. For vNIC receive drops, see `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
 - A drop count means little without the packet count of the same scope: read it as a share of `net.throughput` packets. See `vsphere/technology/network/metrics/distributed-switch/packets`.
 
 ## Traps
@@ -45,7 +45,7 @@ same_name:
 same_meaning: []
 related:
 - vsphere/technology/network/metrics/distributed-switch/packets
-- vsphere/technology/network/diagnosis/vnic-rx-drops
+- vsphere/technology/network/troubleshooting/vnic-rx-drops
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
   document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)

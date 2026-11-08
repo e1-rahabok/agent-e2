@@ -30,8 +30,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom
-retriever_guide: what-to-check
+id: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+retriever_guide: health-check
 scope: vsphere
 technology:
 - cpu

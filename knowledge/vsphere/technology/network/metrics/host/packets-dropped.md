@@ -40,7 +40,7 @@ same_meaning: []
 related:
 - vsphere/technology/network/metrics/host/errors
 - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-- vsphere/technology/network/diagnosis/vnic-rx-drops
+- vsphere/technology/network/troubleshooting/vnic-rx-drops
 images:
   - path: ../../images/esxi-network-transmit-dropped-across-hosts.png
     product: [vsphere]

@@ -111,7 +111,7 @@ internal_derive:
 related:
 - operations-management/performance/performance-vs-capacity
 - operations-management/performance/kpi-vs-sla
-- operations-management/performance/diagnosis/vm-slow-triage
+- operations-management/performance/troubleshooting/vm-slow-triage
 images:
   - path: images/three-realms-layers-sample-metrics-table.png
     product: [vsphere]

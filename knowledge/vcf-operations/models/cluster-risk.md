@@ -1,9 +1,9 @@
-# Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)
+# Cluster Risk (%) (risk model, vCommunity management pack for VCF Operations)
 
 ## Purpose
 - A leading indicator: it warns before the VMs feel contention. It covers capacity and performance.
 - Cluster Performance shows contention happening now (`vcf-operations/kpis/cluster-performance`). Cluster Risk shows how close the cluster is to it.
-- Higher is worse: 0 is no risk, 100 is maximum risk. The only KPI of the pack read this way.
+- Higher is worse: 0 is no risk, 100 is maximum risk. The only score of the pack read this way.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - Not built into VCF Operations: a metric of the author's vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
 
@@ -66,13 +66,13 @@ Per host, then the worst host is kept.
 - Monster VMs cause contention despite low utilization, reservation and allocation.
 
 ## Scoring
-- The sub-metrics are scored and combined as for every KPI of the pack (`operations-management/performance/performance-kpi-design`, section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
-- Bands are the mirror of the other KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
+- The sub-metrics are scored and combined as for every KPI and model of the pack (`operations-management/performance/performance-kpi-design`, section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
+- Bands are the mirror of the performance KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
 - Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
 
 ## Known limitation: a worse sub-metric can lower Cluster Risk
-- The weight of a sub-metric rises as its score falls. When the KPI is already high, a sub-metric that gets worse but is still better than the ones driving the KPI pulls the weighted average up, so Cluster Risk goes down.
+- The weight of a sub-metric rises as its score falls. When the score is already high, a sub-metric that gets worse but is still better than the ones driving the KPI pulls the weighted average up, so Cluster Risk goes down.
 - An Excluded row that leaves green enters at weight 2 at once: the same effect.
 - Example: Cluster Risk 67.9; new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow and Cluster Risk falls to 64.5. Only from about 2.7 does it raise Cluster Risk above 67.9.
 - Read the sub-metrics before acting on a falling Cluster Risk. A cluster just above orange (50) can drop to yellow after VMs are deployed.
@@ -88,13 +88,13 @@ Per host, then the worst host is kept.
 
 ## Traps
 - "Cluster average utilization shows risk" → use the worst host.
-- "Cluster Risk fell, so the cluster is safer" → a worse sub-metric can lower it when the KPI is already high; read the sub-metrics.
+- "Cluster Risk fell, so the cluster is safer" → a worse sub-metric can lower it when the score is already high; read the sub-metrics.
 - "Memory consumed is low against DRAM + NVMe" → risk is measured against DRAM only.
 - "A monster VM is one above half the host threads" → half the physical cores, not threads; memory above 40% of DRAM or 256 GB, whichever is smaller.
 
 ## Metadata
 ```yaml
-id: vcf-operations/kpis/cluster-risk
+id: vcf-operations/models/cluster-risk
 retriever_guide: metric-meaning
 scope: vcf-operations
 technology:
@@ -113,7 +113,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vcf-operations/kpis/cluster-consumption
+- vcf-operations/models/cluster-consumption
 - vsphere/technology/cpu/metrics/host/imbalance
 - vsphere/object-types/cluster/concepts/cluster-operations
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
@@ -131,6 +131,6 @@ corrections:
 - 'Section ''Monster VM'': the adapter definition is final (author, Q032, 2026-11-05): CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
 - 'Section ''Thresholds'', Allocation rows: the Part 1 class-of-service plan (Silver CPU 2:1 and Bronze 4:1 per thread; Bronze memory 2:1) falls in red here (Q120). Section ''Monster VM'': the 8-core CCD statement for Xeon is challenged in Q125.'
-- 'Moved 2026-11-06 from vcf-operations/kpis/cluster-risk (architecture review 2026-11-06, section 5).'
+- 'Moved 2026-11-06 from vcf-operations/models/cluster-risk (architecture review 2026-11-06, section 5).'
 status: draft
 ```
