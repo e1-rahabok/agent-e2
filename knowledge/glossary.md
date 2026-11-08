@@ -104,7 +104,7 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `operations-management/performance/alerts-and-insights` |
 | Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `foundations/input-types` |
 | Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/foundations/resource-controls` |
-| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, no logs. Troubleshooting: why, reactive, many metrics and logs | `operations-management/performance/monitoring-vs-troubleshooting` |
+| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, logs included. Troubleshooting: why, reactive (after an alert, an incident or a complaint), many metrics and logs | `operations-management/performance/monitoring-vs-troubleshooting` |
 | Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/performance/pillars-of-operations` |
 | Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/performance/pillars-of-operations` |
 | Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/performance/pillars-of-operations` |

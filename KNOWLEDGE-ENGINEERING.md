@@ -340,6 +340,8 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
   - Troubleshooting: the why. Done only after an object fails a health check; a user complaint counts as a failed health check. Troubleshooting is part of the health check, always after it.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
+- Order (author, Q104): availability, performance, security; configuration is the drill-down under each, because it can cause all three; known bugs count as configuration. Contention is part of performance. Every performance troubleshooting flow checks configuration.
+- Reactive: after an alert, an incident (outage, breach) or a complaint. Proactive: insight, typically anomaly detection, read with business context.
 - One flow per file. Template: `project/templates/health-check.md` or `project/templates/troubleshooting.md`. Order: symptom, Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.

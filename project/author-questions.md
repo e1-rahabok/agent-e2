@@ -324,13 +324,6 @@ Each entry has:
 - Written as now: both, flagged.
 - Answer:
 
-### Q104 · Part 1 > SP5 Framework > Troubleshoot; SP5 Framework: Process · Three orders of checks
-- Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md) (section Troubleshooting); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Dual track); [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/troubleshooting/vm-slow-triage.md). Related: Q060.
-- Search: image text only (not searchable): "4 possible areas. Check in this order: Contention, Configuration, Availability, Utilization"; reactive track "Configuration Issue? Availability Issue? Known Bugs? Consumption Issue?".
-- Question: the Not Healthy diagram starts with contention; the reactive track starts with configuration and adds known bugs; the VM slow triage flow (draft) has no configuration or known-bug step. (a) Is the reactive track the order after a complaint, and Not Healthy the order after a health check? (b) Should vm-slow-triage add configuration (version incompatibility) and known bugs after contention?
-- Written as now: each order in its file; vm-slow-triage unchanged.
-- Answer:
-
 ### Q105 · Part 1 > Monitor | Troubleshoot; SP5 Framework: Process · Logs in monitoring and the length of the daily check
 - Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md).
 - Search 1: "Not required. Metrics, properties, and Event suffice."
@@ -342,8 +335,9 @@ Each entry has:
   - (a) Monitoring needs no logs, yet availability data comes mostly from logs and the daily SOP reads logs for soft errors. Is log analysis (daily, in the cadence image) part of monitoring?
   - (b) Monitoring 5 minutes, daily check about 1 minute, timeline 10 minutes. One number?
   - (c) 3 techniques announced, 4 listed (text) and 4 in the diagram with other names. Use the diagram names?
-- Written as now: table as given; daily check 10 minutes; the diagram's four techniques.
-- Answer:
+- Written as now: (a) and the interval applied 2026-11-08 (monitoring-vs-troubleshooting: Logs row required, 20-second peak within the 5-minute interval, 20-second visibility for mission-critical systems); (b) daily check still 10 minutes, the table's "Duration: about 5 minutes" unchanged; (c) the diagram's four techniques.
+- Answer: Monitoring needs log. Monitoring depends on what is being monitored. Log is streaming continuously not discrete every 5 minutes or 1 minute. Performance monitoring reports peak of 20 seconds within 5 minutes reporting interval. An exception is mission critical system where 20 seconds visibility is worth the cost of monitoring. I'll review item 105(c).
+- Still open: (b) the length of the daily check (5, 1 or 10 minutes); (c).
 
 ### Q106 · Part 1 > Service Level Agreement > Performance SLA · SLA counters vs the prevention window alerts
 - Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).
@@ -589,11 +583,20 @@ Each entry has:
 ### Q133 · Health check · Decisions still open from the 2026-11-08 review
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section 10); the three health checks.
 - Search: not from the book.
-- Question: (a) Without VCF Operations (vCenter only), should a health check fall back to the raw counters of each KPI sub-metric? Answered (author, 2026-11-08): the question is invalid; there is no vCenter without VCF Operations. The fallback line was removed from the ESXi health check. (b) Order: a health check follows health-risk-efficiency (availability, performance, security, then risk, then efficiency); a troubleshooting flow follows the Not Healthy order (contention, configuration, availability, utilization). Correct? This also settles Q104. (c) Keep the word triage for the first troubleshooting step after a complaint (vm-slow-triage), or drop it?
+- Question: (a) Without VCF Operations (vCenter only), should a health check fall back to the raw counters of each KPI sub-metric? Answered (author, 2026-11-08): the question is invalid; there is no vCenter without VCF Operations. The fallback line was removed from the ESXi health check. (b) Order: answered by Q104 (2026-11-08): availability, performance, security, with configuration as the drill-down under each; every performance flow checks configuration. Still open: does risk (capacity, compliance) and efficiency follow, as in health-risk-efficiency? (c) Keep the word triage for the first troubleshooting step after a complaint (vm-slow-triage), or drop it?
 - Written as now: (a) resolved, no fallback; (b) as stated; (c) triage kept.
 - Answer:
 
 ## Resolved
+
+### Q104 · Part 1 > SP5 Framework > Troubleshoot; SP5 Framework: Process · Three orders of checks
+- Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md) (section Troubleshooting); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Dual track); [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/troubleshooting/vm-slow-triage.md). Related: Q060.
+- Search: image text only (not searchable): "4 possible areas. Check in this order: Contention, Configuration, Availability, Utilization"; reactive track "Configuration Issue? Availability Issue? Known Bugs? Consumption Issue?".
+- Question: the Not Healthy diagram starts with contention; the reactive track starts with configuration and adds known bugs; the VM slow triage flow (draft) has no configuration or known-bug step. (a) Is the reactive track the order after a complaint, and Not Healthy the order after a health check? (b) Should vm-slow-triage add configuration (version incompatibility) and known bugs after contention?
+- Written as now: each order in its file; vm-slow-triage unchanged.
+- Answer: There is an overall daily health check runs each morning so VMware Admin can review. It should start with Availability then performance then security. Configuration issue can cause these 3 so they are checked as a drill down. Known bugs are typically caused by configuration issue, such as older version or incompatible settings. Contention is part of performance as it's the primary metric type for performance management. Performance flow such as VM slow triage should always check configuration.
+  Reactive is after an alert, an incident (outage, breached), or human complain. Proactive focuses on insight, as system has not detected a known problem. Typically it's anomaly detection. While a monitoring system can detect anomaly mathematically it results in false positives as it lacks real world business context. What is abnormal can mean normal and vice versa.
+- Applied 2026-11-08: monitoring-vs-troubleshooting (section Troubleshooting), proactive-operations (Dual track, Day-to-day order), vm-slow-triage (new step 5, Configuration), the three health checks (configuration step as drill-down), KNOWLEDGE-ENGINEERING.md section 10, both flow templates.
 
 ### Q083 · Part 1 > Noisy Neighbour > Network · Author's network limit and reservation
 - Files: [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/foundations/noisy-neighbour.md) (section Network).
