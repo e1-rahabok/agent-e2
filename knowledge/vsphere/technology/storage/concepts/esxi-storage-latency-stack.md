@@ -64,7 +64,7 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/storage/metrics/host/disk
-- vsphere/technology/storage/diagnosis/host-storage-latency
+- vsphere/technology/storage/troubleshooting/host-storage-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 images:
   - path: ../images/esxi-storage-kernel-latency-vs-device-latency.png

@@ -91,7 +91,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` |
 | Folder hierarchy | Raw metrics by technology, derived content by object, VCF Operations as a derived layer, pillars across products | `knowledge/` |
 | Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite |
-| Troubleshooting flows | The expert's order of checks and the branch at each step | `diagnosis/` files |
+| Health checks and troubleshooting flows | The expert's order of checks and the branch at each step: the what (health check), then the why (troubleshooting) | `health-check/` and `troubleshooting/` files |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
 | Images with text twins | The author's diagrams and charts | `images/` folders |
 | Glossary | The agent's vocabulary: synonyms, defined terms, confusable pairs. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
@@ -121,7 +121,7 @@ Reason for each form, and its readers:
 The author's books describe metrics from three perspectives: technology, object, and operations management (pillar). A folder tree holds one; tags and links hold the others.
 - Example: VM CPU Ready.
   - Technology: `vsphere/technology/cpu/metrics/virtual-motherboard/ready` (folder), `technology: cpu` (tag).
-  - Object: `object: VirtualMachine` (tag), listed in `vsphere/object-types/vm/overview-what-to-monitor` (link), part of the VM Performance KPI.
+  - Object: `object: VirtualMachine` (tag), listed in `vsphere/object-types/vm/health-check/vm-health-check` (link), part of the VM Performance KPI.
   - Operations management: `pillar: performance` (tag), used by `operations-management/performance/performance-kpi-design` and the cluster KPI (links).
 - Retrieval filters on any tag. The model follows any link. A website can show any slice without moving a file.
 
@@ -185,8 +185,8 @@ knowledge/                           # what the model reads (indexed)
 ├── foundations/                     # vendor-neutral: units, sampling, accounting, perspectives, naming
 ├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
 ├── operations-management/           # pillars of operations that cut across products and technologies
-│   ├── performance/                 # KPI design; diagnosis/ for cross-technology flows (VM slow triage)
-│   └── capacity/                    # capacity model, sizing; diagnosis/ for capacity decisions
+│   ├── performance/                 # KPI design; health-check/ and troubleshooting/ for cross-technology flows (VM slow triage)
+│   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
 ├── vsphere/
 │   ├── foundations/                 # vSphere-wide: provider/consumer, VM vs Guest OS, overhead,
 │   │                                # resource controls (reservation, limit, shares), core rules
@@ -196,17 +196,19 @@ knowledge/                           # what the model reads (indexed)
 │   │       ├── metrics/<object>/    # one metric, one object type per file: virtual-motherboard/, host/,
 │   │       │                        # cluster/, datastore/; comparisons/ for side-by-side groups
 │   │       ├── configuration/       # what to set
-│   │       ├── diagnosis/           # flows within this technology
+│   │       ├── health-check/        # health check steps within this technology (capacity, efficiency)
+│   │       ├── troubleshooting/     # why flows within this technology
 │   │       └── images/
 │   ├── object-types/                # multi-technology content, by object (book route)
-│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, diagnosis/, images/
+│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/, images/
 │   └── tools/                       # how each tool shows the counters
 │       ├── esxtop/                  # panels, fields, units vs the vSphere Client
 │       └── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
 │                                    # screens/ for the screen library (release 1.1)
 ├── vcf-operations/                  # what VCF Operations computes or adds; links to the source files, never repeats them
 │   ├── concepts/
-│   ├── kpis/                        # KPIs with sub-metrics and colour bands (VCF Operations, vCommunity management pack)
+│   ├── kpis/                        # KPIs (performance only) with sub-metrics and colour bands (vCommunity management pack)
+│   ├── models/                      # capacity, risk and other non-performance models: sub-metrics, bands, decision
 │   ├── metrics/<object>/            # derived metrics: vm/, esxi/, cluster/
 │   └── ui/                          # screen library for VCF Operations (release 1.1)
 └── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
@@ -221,11 +223,11 @@ knowledge/                           # what the model reads (indexed)
   - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`.
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets an overview file that lists what to monitor, in priority order, linking the technology and VCF Operations files.
+  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `operations-management/performance/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
   - VCF Operations is a thin derived layer. A metric about a source object is documented once, at the source. `vcf-operations/` holds only what VCF Operations computes or adds (KPIs, derived metrics such as CPU Contention, 20-second peaks, disk space metrics), with `internal_derive` links to the source files. See `vcf-operations/concepts/vcf-operations-role`.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `operations-management/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
-  - Flows: one technology → `technology/<tech>/diagnosis/`; one object, several technologies → `object-types/<object>/diagnosis/`; across technologies or products (triage, capacity decisions) → `operations-management/<pillar>/diagnosis/`.
+  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (triage, capacity decisions) → `operations-management/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
 - Three foundations levels, different scope:
@@ -276,10 +278,11 @@ knowledge/                           # what the model reads (indexed)
 | Value | Question it answers | Folder | Template |
 |---|---|---|---|
 | how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `foundations/` | `concept.md` |
-| metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `tools/` | `metric.md` |
+| metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `models/`, `tools/` | `metric.md` |
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
-| what-to-check | Something is wrong. What do I check, in what order? | `diagnosis/` | `diagnosis.md` |
+| health-check | Is this object healthy? What do I check, in what order (the what)? | `health-check/` | `health-check.md` |
+| troubleshooting | It failed a health check. Why? What do I check, in what order? | `troubleshooting/` | `troubleshooting.md` |
 
 ## 8. Metadata (end of file)
 Every knowledge file and every benchmark question ends with a `## Metadata` section holding one yaml block. No front matter at the top.
@@ -327,15 +330,25 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - No invented thresholds: a threshold goes in only with a source (book, author, official documentation), quoted.
 - The rule for the model is in `foundations/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 
-## 10. Troubleshooting flows
+## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.
-- One flow per file. Order: symptom, Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
+- Vocabulary (author, 2026-11-08):
+  - Framework: how IT operations are managed (SP5). `operations-management/performance/pillars-of-operations`.
+  - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vcf-operations/models/` and `operations-management/capacity/`.
+  - KPI: a model of performance only (the P in KPI). Files in `vcf-operations/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
+  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/performance/health-risk-efficiency`. Monitoring belongs here.
+  - Troubleshooting: the why. Done only after an object fails a health check; a user complaint counts as a failed health check. Troubleshooting is part of the health check, always after it.
+  - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
+- A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
+- Order (author, Q104): availability, performance, security; configuration is the drill-down under each, because it can cause all three; known bugs count as configuration. Contention is part of performance. Every performance troubleshooting flow checks configuration.
+- Reactive: after an alert, an incident (outage, breach) or a complaint. Proactive: insight, typically anomaly detection, read with business context.
+- One flow per file. Template: `project/templates/health-check.md` or `project/templates/troubleshooting.md`. Order: symptom, Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
   - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.
 - Every metric or flow named in a step is linked in `internal_derive`, so retrieval brings in the files with the flow.
 - Mermaid node text repeats the step number: `S1[1. VM CPU Ready above threshold?]`. Step numbers tie the chart to the text.
-- Keep each flowchart to about 15 nodes. Split a larger flow into linked diagnosis files.
+- Keep each flowchart to about 15 nodes. Split a larger flow into linked flow files.
 - draw.io files are not read by the LLM: the XML is mostly layout and style, and compressed files are unreadable.
   - Keep the `.drawio` file and an exported `.png` in the `images/` folder next to the flow as the editable source.
   - Link the `.png` under the flowchart and tag it in `images` (`image_type: diagram`).

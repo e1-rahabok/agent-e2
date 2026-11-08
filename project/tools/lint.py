@@ -297,7 +297,7 @@ def check_tables(bad):
 
 
 VSPHERE_TOP = ['foundations', 'technology', 'object-types', 'tools']
-VCF_OPERATIONS_TOP = ['concepts', 'kpis', 'metrics', 'diagnosis', 'ui']
+VCF_OPERATIONS_TOP = ['concepts', 'kpis', 'models', 'metrics', 'troubleshooting', 'ui']
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
 PILLAR_FOLDERS = ['performance', 'capacity']
 CATALOG = 'knowledge/catalog'

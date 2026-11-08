@@ -1,4 +1,4 @@
-# Cluster Consumption (%) (VCF Operations KPI)
+# Cluster Consumption (%) (capacity model, vCommunity management pack for VCF Operations)
 
 ## Thresholds (book)
 | Group | Metric | Green | Yellow | Orange | Red |
@@ -19,7 +19,7 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/kpis/cluster-consumption
+id: vcf-operations/models/cluster-consumption
 retriever_guide: metric-meaning
 scope: vcf-operations
 technology:
@@ -37,7 +37,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vcf-operations/kpis/cluster-risk
+- vcf-operations/models/cluster-risk
 - vcf-operations/kpis/cluster-performance
 - operations-management/capacity/capacity-model
 images:
@@ -52,6 +52,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Thresholds (book)'': Part 1 puts 40-80% of usable capacity in green and 80% as best, with 0-40% grey (operations-management/capacity/capacity-dimensions). Which governs, and whether a grey band applies here: Q116.'
-- 'Moved 2026-11-06 from vcf-operations/kpis/cluster-consumption (architecture review 2026-11-06, section 5).'
+- 'Moved 2026-11-06 from vcf-operations/models/cluster-consumption (architecture review 2026-11-06, section 5).'
 status: draft
 ```

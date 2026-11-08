@@ -33,7 +33,7 @@ flowchart TD
    - the migration threshold is conservative, so only mandatory moves happen;
    - the load is unstable or vMotion cost exceeds the expected gain.
    Remove the blocker, or move the migration threshold toward Aggressive and check again. If no blocker exists for this VM, look for the same blockers on the other VMs of the host.
-6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See `vsphere/technology/cpu/diagnosis/vm-cpu-contention-high` and `vsphere/technology/memory/diagnosis/vm-memory-latency-high`.
+6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high` and `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
 
 ## Why this order
 - Cluster state first: in yellow or red, reservations themselves are not met, so the rest of the analysis is built on wrong assumptions.
@@ -54,8 +54,8 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster
-retriever_guide: what-to-check
+id: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - cpu
@@ -75,9 +75,9 @@ internal_derive:
 - vsphere/object-types/cluster/configuration/drs-migration-levels
 related:
 - vsphere/object-types/cluster/concepts/drs-overview
-- vsphere/technology/cpu/diagnosis/vm-cpu-contention-high
-- vsphere/technology/memory/diagnosis/vm-memory-latency-high
-- vsphere/object-types/cluster/diagnosis/cluster-vm-contention
+- vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
+- vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+- vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
   path: vSphere Resource Management > DRS Troubleshooting Information > Load Imbalance on Cluster, DRS Seldom or Never Performs vMotion Migrations, Virtual Machine Problems > Insufficient CPU or Memory Resources, DRS Does Not Move Any Virtual Machines from a Host (pp. 1950-1955)

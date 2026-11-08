@@ -25,8 +25,8 @@ vsish -e get /net/portsets/DvsPortset-0/ports/<port>/vmxnet3/rxSummary
 
 ## Metadata
 ```yaml
-id: vsphere/technology/network/diagnosis/vnic-rx-drops
-retriever_guide: what-to-check
+id: vsphere/technology/network/troubleshooting/vnic-rx-drops
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - network

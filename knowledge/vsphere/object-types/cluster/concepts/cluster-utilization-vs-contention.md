@@ -54,7 +54,7 @@ internal_derive:
 - vsphere/foundations/provider-consumer
 related:
 - vcf-operations/kpis/cluster-performance
-- vsphere/object-types/cluster/diagnosis/cluster-vm-contention
+- vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 images:
   - path: ../images/cluster-cpu-demand-low-timeline.png
     product: [vcf-operations]

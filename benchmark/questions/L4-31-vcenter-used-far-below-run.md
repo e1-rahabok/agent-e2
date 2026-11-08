@@ -45,7 +45,7 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/technology/cpu/diagnosis/run-vs-used-gap
+  - vsphere/technology/cpu/troubleshooting/run-vs-used-gap
   - vsphere/technology/cpu/metrics/virtual-motherboard/used
   - vsphere/technology/cpu/metrics/virtual-motherboard/run
 attachments:

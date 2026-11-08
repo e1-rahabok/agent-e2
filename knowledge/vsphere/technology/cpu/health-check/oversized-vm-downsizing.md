@@ -22,8 +22,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/cpu/diagnosis/oversized-vm-downsizing
-retriever_guide: what-to-check
+id: vsphere/technology/cpu/health-check/oversized-vm-downsizing
+retriever_guide: health-check
 scope: vsphere
 technology:
 - cpu

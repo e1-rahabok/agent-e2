@@ -22,8 +22,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/cpu/diagnosis/run-vs-used-gap
-retriever_guide: what-to-check
+id: vsphere/technology/cpu/troubleshooting/run-vs-used-gap
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - cpu

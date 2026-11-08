@@ -75,7 +75,7 @@ internal_derive:
 related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/foundations/scalable-shares
-- vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster
+- vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 - vsphere/technology/memory/concepts/memory-overhead
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)

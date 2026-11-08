@@ -11,6 +11,8 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | ESXi pages | machine pages, machine memory | Pages ESXi manages on DIMM, host cache or tiered NVMe. |
 | Guest OS sizing | VM rightsizing (inside the guest) | Sized from Guest OS counters. The external view is VM footprint. |
 | Usage Disparity | vCPU imbalance | Spread of usage across the vCPUs of one VM. |
+| Troubleshooting | diagnosis, diagnose, root cause analysis (the process) | The why, after an object fails a health check. |
+| Health check | what to monitor, monitoring checklist, verification, daily check | The what: is the object healthy, at risk, or wasteful. |
 
 ## Defined terms
 | Term | Meaning | Also called |
@@ -23,7 +25,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `vsphere/foundations/noisy-neighbour` | Resource management |
 | Class of service | Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA. | Tier |
 | Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. A capacity term only. | - |
-| Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `operations-management/capacity/diagnosis/can-cluster-take-more-vms` | Stop provisioning |
+| Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `operations-management/capacity/health-check/can-cluster-take-more-vms` | Stop provisioning |
 | vSphere World | VCF Operations object above all vCenter Server instances. | - |
 | Run Time | How long a CPU or vCPU runs. Binary per moment. Used for capacity. | Run (VM), Utilization (ESXi) |
 | Run Quality | Cycles completed while running. Varies with frequency and Hyper-Threading. Used for performance. | - |
@@ -70,12 +72,17 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Actual Availability (%) | Availability as it happened. Usually lower than Operational Availability. | - |
 | Crown jewels | Mission-critical business applications: few VMs, essential to revenue, profit or image. | Mission-critical applications |
 | Slow time | Time a VM spends above the Performance SLA threshold; the performance counterpart of downtime. `operations-management/performance/sla-metrics` | - |
-| Finding | Result of a diagnosis or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue. | - |
+| Finding | Result of troubleshooting or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue. | - |
 | Issue | A negative finding, identified by one or more symptoms. | - |
 | Notification | How VCF Operations pushes an insight or alert to a person: email, message, on screen at login. | - |
 | Present health | Real problems now: availability, performance, security incidents. `operations-management/performance/health-risk-efficiency` | Health |
 | Future health | Risk: no problem yet; security exposure, compliance, configuration, capacity. | Risk |
 | Primary metric, secondary metric | Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why). | - |
+| Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks. `operations-management/performance/pillars-of-operations` | - |
+| Model | How one pillar of one object is quantified into a number and a decision. Capacity model, availability model, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed. `vcf-operations/models/cluster-consumption` | - |
+| KPI | A model of performance only: the P in KPI. One 0-100% score per object. VM, Guest OS, ESXi and Cluster Performance. `vcf-operations/kpis/esxi-performance` | Key Performance Indicator |
+| Health check | Check of one object, in the order present health, risk, efficiency. The what. A failed step opens a troubleshooting flow. `vsphere/object-types/cluster/health-check/cluster-health-check` | - |
+| Troubleshooting | Finding why an object failed a health check, and the fix. Always after the health check, never instead of it. A user complaint is a failed health check. `operations-management/performance/monitoring-vs-troubleshooting` | - |
 
 ## Confusable pairs
 Pairs that public text mixes up. Each row points to the file that holds the mechanism.
@@ -85,7 +92,7 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | ESXi CPU Usage vs Utilization | Usage counts frequency and Hyper-Threading (both threads busy = core 100%); Utilization is static-frequency busy time, per thread | `vsphere/technology/cpu/metrics/host/utilization` |
 | ESXi CPU Demand vs Usage | Demand is the sum over the VMs of what they would use with no contention; kernel work is in Usage only, so a host with no VMs shows Demand 0 | `vsphere/technology/cpu/metrics/host/demand` |
 | VM CPU Ready vs Latency | Ready is time waiting for a physical CPU; Latency also rises with lower frequency, with no wait | `vsphere/technology/cpu/metrics/virtual-motherboard/latency` |
-| VM CPU Run vs Used | Run is time only; Used is scaled by frequency and Hyper-Threading, plus System, minus Overlap | `vsphere/technology/cpu/diagnosis/run-vs-used-gap` |
+| VM CPU Run vs Used | Run is time only; Used is scaled by frequency and Hyper-Threading, plus System, minus Overlap | `vsphere/technology/cpu/troubleshooting/run-vs-used-gap` |
 | VM Memory Consumed vs Active | Consumed is the ESXi pages of the VM, kept once touched; Active is an estimate of pages touched recently, with no operational use | `vsphere/technology/memory/metrics/virtual-motherboard/active` |
 | VM Memory Ballooned vs Swapped | Ballooned is reclaimed through the Guest OS, past tense; Swapped is paged out by ESXi at random, as it cannot see guest free memory | `vsphere/technology/memory/metrics/virtual-motherboard/swapped` |
 | Compression ZIP/s vs UNZIP/s | ZIP/s is a capacity signal of the host; UNZIP/s means the VM waits | `vsphere/tools/esxtop/memory` |
@@ -97,12 +104,14 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `operations-management/performance/alerts-and-insights` |
 | Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `foundations/input-types` |
 | Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/foundations/resource-controls` |
-| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, no logs. Troubleshooting: why, reactive, many metrics and logs | `operations-management/performance/monitoring-vs-troubleshooting` |
+| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, logs included. Troubleshooting: why, reactive (after an alert, an incident or a complaint), many metrics and logs | `operations-management/performance/monitoring-vs-troubleshooting` |
 | Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/performance/pillars-of-operations` |
 | Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/performance/pillars-of-operations` |
 | Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/performance/pillars-of-operations` |
 | Consistency vs compatibility check | Consistency: values identical across peers or partners (hosts in a cluster, ESXi and switch MTU). Compatibility: values differ but must work together (versions) | `operations-management/performance/configuration-management` |
 | Demand (capacity) vs ESXi CPU Demand | Capacity demand is the higher of utilization and reservation, per powered-on VM; ESXi CPU Demand is a counter of runtime demanded | `operations-management/capacity/capacity-dimensions` |
+| KPI vs model | A KPI scores performance only; capacity, risk, availability and security are scored by models. Cluster Risk is a model, not a KPI | `vcf-operations/models/cluster-risk` |
+| Health check (operations) vs health check (Kubernetes, load balancer) | Operations: a check of an object's health, risk and efficiency. Kubernetes and load balancers: a liveness or readiness probe of one endpoint | `operations-management/performance/health-risk-efficiency` |
 | Idle vs oversized vs unused VM | Idle: below an absolute MHz every day; oversized: relative to its size; unused: busy but of no business value | `operations-management/capacity/reclamation` |
 
 
@@ -123,6 +132,7 @@ source:
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
 corrections: []
 review_notes:
+  - "2026-11-08 (author decision): Framework, Model, KPI, Health check and Troubleshooting defined; diagnosis and what to monitor replaced. Confusable pair Health check (Kubernetes probe): Claude's knowledge."
   - "2026-11-07: Confusable pair Consistency vs compatibility check added from Part 1, Configuration Management. Proposal."
   - "2026-11-07: Defined terms Slow time to Primary metric and the pairs Monitoring vs troubleshooting, Inventory vs configuration, Security vs compliance, Short-term vs long-term capacity added from Part 1, Your Private Cloud (Service Level Agreement to SP5 Framework: Process). Proposals; author to confirm. Present and future health grouping: Q102."
   - "2026-11-07: Defined terms Symptom to Crown jewels and the pairs Alert vs insight, Metric vs property added from Part 1, Your Private Cloud (Overview, Purpose-Driven Architecture). Proposals; author to confirm."

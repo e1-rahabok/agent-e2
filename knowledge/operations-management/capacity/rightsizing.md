@@ -163,7 +163,7 @@ related:
 - operations-management/capacity/vm-footprint-sizing
 - vsphere/technology/cpu/concepts/cpu-topology
 - vsphere/technology/cpu/concepts/numa
-- vsphere/technology/cpu/diagnosis/oversized-vm-downsizing
+- vsphere/technology/cpu/health-check/oversized-vm-downsizing
 - vcf-operations/metrics/vm/cpu-usage-disparity
 - operations-management/capacity/reclamation
 - vcf-operations/concepts/real-time-metrics

@@ -60,7 +60,7 @@ weight = 2 ^ ((100 - score) / 25)
 - Green given as a single value (for example 0%): only that value scores 100; any other value starts in yellow at 75.
 - Excluded green: a metric whose green range says nothing about health (rare dropped packets, low utilization) is left out of the KPI while green, so it does not add a free 100. Once it leaves green it counts. If every metric with data is excluded, the KPI is 100.
 - Missing data: a metric with no data is left out, never counted as 0, because 0 usually means perfect. With no data at all, the KPI is not published.
-- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: `vcf-operations/kpis/cluster-risk`, section A worse sub-metric can lower Cluster Risk.
+- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: `vcf-operations/models/cluster-risk`, section A worse sub-metric can lower Cluster Risk.
 - CPU Net Run is special: green is 60-95%. Below 60% scores 100: max(Run - 60, 0).
 - Guest OS Free Memory is descending: more is better. Above 512 MB scores 100. KB is converted to MB.
 - Free Memory uses the 5-minute average, not the lowest 20-second value: it measures space, and the latest value matters.

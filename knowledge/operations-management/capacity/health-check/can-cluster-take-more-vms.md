@@ -32,16 +32,17 @@ flowchart TD
 4. Capacity and performance (ClusterComputeResource). Either one red → no: closed.
    - Capacity Remaining (%): projected 3 days ahead. Production: red below 10%, orange below 20%. Non-production: red below 15%, orange below 30%.
    - Cluster Performance (%), 95th percentile of the last 24 hours (`vcf-operations/kpis/cluster-performance`). Production: red below 40%, orange below 60%. Non-production: red below 20%, orange below 40%.
+   - The vCommunity management pack automates this step and step 5 with one band set for every cluster: `vcf-operations/models/close-for-business`.
    - Neither red → step 5.
-5. Risk (ClusterComputeResource). Only when capacity and performance are both orange. Cluster Risk (%), 95th percentile of the last 12 hours (`vcf-operations/kpis/cluster-risk`):
+5. Risk (ClusterComputeResource). Only when capacity and performance are both orange. Cluster Risk (%), 95th percentile of the last 12 hours (`vcf-operations/models/cluster-risk`):
    - production: above 50% (orange or red) → no: closed;
    - non-production: above 75% (red) → no: closed.
    - Read the sub-metrics, not only the score: a worse sub-metric can lower the score.
    - Below the limit, or capacity and performance not both orange → open → step 6.
 6. Fit of the new VMs (ClusterComputeResource, VirtualMachine).
    - Reservations: they must fit unreserved capacity; leave at least 10% unreserved (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`).
-   - Overcommit: the CPU and memory overcommit rows of Cluster Risk after the new VMs (`vcf-operations/kpis/cluster-risk`).
-   - Size: a monster VM (more than 50% of a host's physical cores, or more than 40% of its DRAM or 256 GB, whichever is smaller) raises contention risk even at low utilization (`vcf-operations/kpis/cluster-risk`, section Monster VM).
+   - Overcommit: the CPU and memory overcommit rows of Cluster Risk after the new VMs (`vcf-operations/models/cluster-risk`).
+   - Size: a monster VM (more than 50% of a host's physical cores, or more than 40% of its DRAM or 256 GB, whichever is smaller) raises contention risk even at low utilization (`vcf-operations/models/cluster-risk`, section Monster VM).
    - Memory: ballooning starts only near 99% host use, so set the normal ceiling from the HA case; with 12 hosts sized for 11, 99% × 11 / 12 = 90.75% (`vsphere/technology/memory/concepts/host-memory-states`).
    - Any no → no, or change the VM design. All fit → step 7.
 7. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room (`vcf-operations/metrics/cluster/cpu-inter-host-imbalance`). Then answer yes, with the resource that fills first and the time remaining from the projection (`operations-management/capacity/capacity-model`, section Capacity Remaining and Time Remaining).
@@ -72,8 +73,8 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: operations-management/capacity/diagnosis/can-cluster-take-more-vms
-retriever_guide: what-to-check
+id: operations-management/capacity/health-check/can-cluster-take-more-vms
+retriever_guide: health-check
 scope: operations-management
 technology:
 - cpu
@@ -89,16 +90,17 @@ product:
 object:
 - ClusterComputeResource
 internal_derive:
+- vcf-operations/models/close-for-business
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - operations-management/capacity/capacity-dimensions
 - vcf-operations/kpis/cluster-performance
-- vcf-operations/kpis/cluster-risk
+- vcf-operations/models/cluster-risk
 - operations-management/capacity/capacity-model
-- vcf-operations/kpis/cluster-consumption
+- vcf-operations/models/cluster-consumption
 - vsphere/technology/memory/concepts/host-memory-states
 - vcf-operations/metrics/cluster/cpu-inter-host-imbalance
 related:
-- vsphere/object-types/cluster/overview-what-to-monitor
+- vsphere/object-types/cluster/health-check/cluster-health-check
 - operations-management/capacity/class-of-service-planning
 images:
   - path: ../images/cluster-closure-decision-flow-diagram.png

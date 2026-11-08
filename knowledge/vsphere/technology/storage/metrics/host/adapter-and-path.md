@@ -43,7 +43,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/technology/storage/metrics/host/disk
-- vsphere/technology/storage/diagnosis/host-storage-latency
+- vsphere/technology/storage/troubleshooting/host-storage-latency
 images:
   - path: ../../images/esxi-storage-adapter-latency-99th-vs-95th-percentile-sorted.png
     product: [vcf-operations]

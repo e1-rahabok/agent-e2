@@ -52,7 +52,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
-- vsphere/technology/cpu/diagnosis/vm-cpu-contention-high
+- vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 images:
   - path: images/vm-cpu-contention-components-overlap-costop-ready-other-wait.png
     product: [vcf-operations]

@@ -42,7 +42,7 @@ SYSTEM_AGENT = SYSTEM_KB.replace(
     '- Before answering about a metric, call follow_links with link_type "same_name" on its file.\n'
     '- For a unit, rollup, statistics level, esxtop field, threshold or object relationship, call catalog. Its values are exact.\n'
     '- For any arithmetic or unit conversion, call calculate. Do not compute in your head.\n'
-    '- For a troubleshooting question, call flow on the matching diagnosis file and follow its steps in order.\n'
+    '- For a troubleshooting question, call flow on the matching troubleshooting file and follow its steps in order.\n'
     '- You have at most {max_calls} tool calls. Then answer.')
 
 OPEN_FORMAT = ('Answer in plain text, at most 250 words. Give the conclusion first, then the mechanism and the reason, '
@@ -119,9 +119,9 @@ def classic_context(retriever, question, cfg):
     """One fixed retrieval pass: search, expand same_name and related, fit to budget."""
     hits = retriever.search(question, k=cfg['classic_k'])
     ids = [h['id'] for h in hits]
-    if cfg.get('route_diagnosis') and TROUBLESHOOT.search(question):
-        flows = [h for h in retriever.search(question, filters={'retriever_guide': 'what-to-check'}, k=2, min_hits=1)
-                 if '/diagnosis/' in h['id']]
+    if cfg.get('route_troubleshooting') and TROUBLESHOOT.search(question):
+        flows = [h for h in retriever.search(question, filters={'retriever_guide': 'troubleshooting'}, k=2, min_hits=1)
+                 if '/troubleshooting/' in h['id']]
         for h in reversed(flows[:1]):
             if h['id'] in ids:
                 ids.remove(h['id'])

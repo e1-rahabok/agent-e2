@@ -79,7 +79,7 @@ same_meaning: []
 related:
 - vsphere/tools/esxtop/overview
 - vsphere/technology/network/metrics/host/packets-dropped
-- vsphere/technology/network/diagnosis/vnic-rx-drops
+- vsphere/technology/network/troubleshooting/vnic-rx-drops
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
   document: PART 3 - Counters.docx

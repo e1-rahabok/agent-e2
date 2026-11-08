@@ -33,8 +33,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/memory/diagnosis/overcommit-indicators
-retriever_guide: what-to-check
+id: vsphere/technology/memory/troubleshooting/overcommit-indicators
+retriever_guide: troubleshooting
 scope: vsphere
 technology:
 - memory

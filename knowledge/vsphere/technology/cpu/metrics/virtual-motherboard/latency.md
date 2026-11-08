@@ -79,7 +79,7 @@ related:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vcf-operations/metrics/vm/cpu-contention
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
-- vsphere/technology/cpu/diagnosis/vm-cpu-contention-high
+- vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 images:
   - path: ../../images/vm-cpu-latency-components-overlap-costop-ready-ht-power.png
     product: [vsphere]

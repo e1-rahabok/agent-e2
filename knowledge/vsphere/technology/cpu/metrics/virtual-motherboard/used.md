@@ -93,7 +93,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/run
 - vsphere/technology/cpu/metrics/virtual-motherboard/system
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
-- vsphere/technology/cpu/diagnosis/run-vs-used-gap
+- vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 images:
   - path: ../../images/vm-cpu-used-vs-run-overlap-and-system.png
     product: [vsphere]

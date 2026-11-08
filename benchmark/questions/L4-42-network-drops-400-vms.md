@@ -44,7 +44,7 @@ answer_type: deterministic
 input: [table]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-  - vsphere/technology/network/diagnosis/vnic-rx-drops
+  - vsphere/technology/network/troubleshooting/vnic-rx-drops
   - vcf-operations/kpis/cluster-sla-sli
 attachments:
   - 0082/vm-network-400-vms.xlsx
