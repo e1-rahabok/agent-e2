@@ -97,7 +97,7 @@ technology:
 - system
 pillar:
 - capacity
-- cost
+- value
 - compliance
 product:
 - vsphere

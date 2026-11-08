@@ -19,7 +19,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 | Performance | KPI (%) |
 | Compliance | PCI-DSS Compliance Score (%) |
 | Capacity | Time Remaining, Recommended Size |
-| Cost | Month-to-Date Cost |
+| Value | Month-to-Date Cost |
 
 ## 3. Product / object
 - Each product (vSphere, NSX, Kubernetes, ...) brings its own object types.
@@ -52,7 +52,7 @@ pillar:
 - performance
 - compliance
 - capacity
-- cost
+- value
 product: []
 internal_derive: []
 related:

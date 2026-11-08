@@ -29,7 +29,7 @@ technology:
 - cpu
 pillar:
 - capacity
-- cost
+- value
 - performance
 product:
 - vsphere

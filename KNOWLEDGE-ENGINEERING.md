@@ -298,7 +298,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `retriever_guide` | See section 7. |
 | `scope` | vendor-neutral (applies across VCF 9 components), operations-management, vsphere, vcf-operations or guest-os; matches the top folder. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
-| `pillar` | availability, performance, compliance, capacity, cost: the five pillars of the SP5 framework (author, Q091, 2026-11-08). Security is part of the platform; inventory and configuration sit under all five pillars. |
+| `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework (author, Q091 and 2026-11-08). Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
 | `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
 | `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
 | `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |

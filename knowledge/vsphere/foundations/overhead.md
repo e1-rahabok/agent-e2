@@ -169,7 +169,7 @@ technology:
 - system
 pillar:
 - capacity
-- cost
+- value
 - performance
 product:
 - vsphere

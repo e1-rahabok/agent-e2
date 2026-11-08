@@ -25,6 +25,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `vsphere/foundations/noisy-neighbour` | Resource management |
 | Class of service | Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA. | Tier |
 | Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. A capacity term only. | - |
+| Value (pillar) | One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management. `operations-management/sp5-framework/overview` | Cost and price |
 | Triple See Method | The author's method for VCF: read contention, consumption and context metrics as one set before concluding. Not USE, RED or Golden Signals. `operations-management/sp5-framework/triple-see-method` | Triple See |
 | Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `operations-management/capacity/health-check/can-cluster-take-more-vms` | Stop provisioning |
 | vSphere World | VCF Operations object above all vCenter Server instances. | - |
@@ -122,7 +123,7 @@ id: glossary
 retriever_guide: term-meaning
 scope: vendor-neutral
 technology: [cpu, memory, storage, network, system]
-pillar: [availability, performance, compliance, capacity, cost]
+pillar: [availability, performance, compliance, capacity, value]
 product: [vsphere, vcf-operations]
 internal_derive: []
 related:

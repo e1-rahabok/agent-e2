@@ -45,7 +45,7 @@ technology:
 - system
 pillar:
 - availability
-- cost
+- value
 product:
 - vsphere
 - vcf-operations

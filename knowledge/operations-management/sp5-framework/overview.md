@@ -24,7 +24,8 @@
 - Acid test of operations management: the lead can take a long holiday with no escalation call for information or decisions only they hold.
 
 ## The five pillars
-- Availability, performance, compliance, capacity, cost and price (SP5 diagram). Each is a unit of management with its own discipline. The `pillar` tag of the knowledge base uses these five: availability, performance, compliance, capacity, cost.
+- Availability, performance, compliance, capacity, value. Each is a unit of management with its own discipline. The `pillar` tag of the knowledge base uses these five.
+- Value management keeps three things apart: the cost of the infrastructure IT spends, the price IT charges each tenant (line of business), and the business value of the investment. The SP5 diagram labels the pillar Cost + Price.
 - Inventory and configuration are not pillars: they sit under all five.
 - Security is part of the platform (architecture layer), not a pillar.
 - CIO order: availability first (a system that is down has neither a performance nor a security problem; nobody can log in to a vCenter that is down); then performance (so slow it is as good as down); then security and compliance (up and fast is not secure).
@@ -90,7 +91,7 @@
 - Compliance is binary and unaffected by contention or performance. So the provider guarantees 100% compliance with its own benchmark for every class.
 - Guarantee only what you manage: no Guest OS in the service, no Guest OS compliance and no SLA on it. With the Guest OS in the service, manage its configuration (for example with Active Directory Group Policy).
 
-## Cost and price
+## Value: cost, price and business value
 - Needed to become a real service provider.
 - Price: hardware is a commodity and the price per VM is similar across providers; SLAs are the way to differentiate. Price must exceed cost but can be set independently of it. Discounts and progressive pricing set the terms and stop oversized VMs before production. Per VM, a better Performance SLA earns a higher price: price/performance.
 - Cost: at platform level it moves with capacity. Higher utilization, lower cost per VM.
@@ -148,7 +149,7 @@ pillar:
 - performance
 - compliance
 - capacity
-- cost
+- value
 product:
 - vsphere
 - vsan
@@ -193,7 +194,7 @@ source:
   path: 'Your Private Cloud > SP5 Framework (opening, capabilities); SP5 Framework: Pillars (Availability, Performance, Capacity, Reclamation, Compliance and Security, Cost and Price, Non-Pillars) (pp. 43-44, 52-58)'
 corrections: []
 review_notes:
-- 'Section ''The five pillars'': the five pillars follow the SP5 diagram (author, Q091, 2026-11-08). Security moved from pillar to platform; value renamed cost.'
+- 'Section ''The five pillars'': the five pillars follow the SP5 diagram (author, Q091, 2026-11-08). Security moved from pillar to platform. The fifth pillar is value: cost, price and business value (author, 2026-11-08).'
 - 'Section ''Relationships'': the text says Availability and Capacity have a line without arrowheads; the diagram shows an arrow from Availability to Capacity. The detailed relationship diagram (not copied) shows Availability → Performance, which the text says does not exist. Q101.'
 - 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value). Tag list: Q091.'
 - 'Section ''Capacity'', inputs diagram: ''a reservation becomes a share'' is the diagram label, written as given; its mechanism is not explained in the book. Q101.'

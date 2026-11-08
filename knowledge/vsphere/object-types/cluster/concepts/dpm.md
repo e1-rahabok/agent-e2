@@ -86,7 +86,7 @@ technology:
 - cpu
 - memory
 pillar:
-- cost
+- value
 - availability
 product:
 - vsphere

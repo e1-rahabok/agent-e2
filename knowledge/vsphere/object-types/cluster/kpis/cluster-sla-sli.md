@@ -43,7 +43,7 @@ technology:
 - system
 pillar:
 - performance
-- cost
+- value
 product:
 - vcf-operations
 - kubernetes

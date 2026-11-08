@@ -103,7 +103,7 @@ pillar:
 - performance
 - compliance
 - capacity
-- cost
+- value
 product:
 - vsphere
 - vsan
