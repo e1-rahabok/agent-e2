@@ -46,6 +46,7 @@ python3 -m unittest benchmark/runner/test_runner.py
 python3 benchmark/runner/retrieval_eval.py
 ```
 - Recall of each question's `knowledge` files in search and in the classic context. Add `--embeddings` for hybrid search (needs `AI_GATEWAY_API_KEY`).
+- Why it is needed, how to read the result, what to do when it is low: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
 
 ## Methodology
 
