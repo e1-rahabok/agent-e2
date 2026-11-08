@@ -78,15 +78,19 @@ product:
 internal_derive:
 - operations-management/sp5-framework/overview
 related:
+- foundations/collection-interval
+- foundations/aggregation
+- operations-management/sp5-framework/modelling
 - foundations/input-types
 - foundations/metric-perspectives
 - operations-management/sp5-framework/monitoring-vs-troubleshooting
 - operations-management/sp5-framework/performance-vs-capacity
 source:
-  document: PART 3 - Counters.docx
+  document: 'PART 3 - Counters.docx, Metric Mastery (author update, 2026-11-08)'
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
 review_notes:
+- 'Author update 2026-11-08: the table lists Value Management for consumption; the pillar tag is cost (Q091). Text unchanged otherwise.'
 - 'Section ''Why not USE, RED or Golden Signals'': the book names the three methods and says Triple See was built from their strengths and weaknesses, but does not list them. The comparison is Claude''s reading; to confirm (Q134). Sources: brendangregg.com/usemethod.html, weave.works RED Method blog, sre.google SRE book, Monitoring Distributed Systems.'
 - 'Section ''Three types of metric'': the book lists contention for performance only; availability for errors and drops follows from its Contention text.'
 status: draft
