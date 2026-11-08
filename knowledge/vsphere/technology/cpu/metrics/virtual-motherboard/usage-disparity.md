@@ -43,7 +43,7 @@ technology:
 pillar:
 - capacity
 - performance
-- cost
+- value
 product:
 - vcf-operations
 object:

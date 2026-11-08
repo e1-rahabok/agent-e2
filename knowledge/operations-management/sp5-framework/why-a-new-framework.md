@@ -61,7 +61,7 @@ pillar:
 - performance
 - compliance
 - capacity
-- cost
+- value
 product: []
 internal_derive:
 - operations-management/sp5-framework/overview

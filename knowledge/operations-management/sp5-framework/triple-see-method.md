@@ -10,7 +10,7 @@
 | Type | Measures | Primary pillar |
 |---|---|---|
 | Contention | Something bad | Performance; availability for errors and drops |
-| Consumption | Something good, if the load is useful | Capacity, cost, sustainability |
+| Consumption | Something good, if the load is useful | Capacity, value, sustainability |
 | Context | An account of inventory or configuration | Configuration, compliance, inventory |
 
 - The knowledge base tags each metric file with its type: `metric_class: contention | consumption | context`.
@@ -71,7 +71,7 @@ pillar:
 - capacity
 - availability
 - compliance
-- cost
+- value
 product:
 - vsphere
 - vcf-operations
@@ -90,7 +90,7 @@ source:
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
 review_notes:
-- 'Author update 2026-11-08: the table lists Value Management for consumption; the pillar tag is cost (Q091). Text unchanged otherwise.'
+- 'Author update 2026-11-08: Value Management, not Cost Management: value covers cost, price and business value (author, 2026-11-08).'
 - 'Section ''Why not USE, RED or Golden Signals'': the book names the three methods and says Triple See was built from their strengths and weaknesses, but does not list them. The comparison is Claude''s reading; to confirm (Q134). Sources: brendangregg.com/usemethod.html, weave.works RED Method blog, sre.google SRE book, Monitoring Distributed Systems.'
 - 'Section ''Three types of metric'': the book lists contention for performance only; availability for errors and drops follows from its Contention text.'
 status: draft

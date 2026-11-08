@@ -51,7 +51,7 @@ technology:
 pillar:
 - capacity
 - performance
-- cost
+- value
 product:
 - vsphere
 - vcf-operations

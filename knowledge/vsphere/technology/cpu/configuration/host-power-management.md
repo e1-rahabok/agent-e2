@@ -67,7 +67,7 @@ technology:
 - cpu
 pillar:
 - performance
-- cost
+- value
 product:
 - vsphere
 object:

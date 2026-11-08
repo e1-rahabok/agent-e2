@@ -132,7 +132,7 @@ pillar:
 - performance
 - compliance
 - capacity
-- cost
+- value
 product:
 - vsphere
 - vcf-operations

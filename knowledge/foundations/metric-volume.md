@@ -30,7 +30,7 @@ technology:
 - cpu
 - memory
 pillar:
-- cost
+- value
 product: []
 object:
 - VirtualMachine
