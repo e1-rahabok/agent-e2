@@ -88,7 +88,7 @@
 - Configuration: misconfigurations that can cause issues; urgent patches after validation.
 - Capacity:
   - VM provisioning, ideally automated through the day; check that the aggregate load does not overwhelm the shared environment;
-  - snapshot deletion by policy, for example older than 3 days, with agreed exclusions honoured;
+  - snapshot deletion by policy: older than one day, with agreed exclusions honoured;
   - powered-off VMs deleted once past the powered-off definition, without waiting another week (backups exist);
   - idle VMs shut down gracefully once past the idle definition.
 
@@ -166,6 +166,7 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle) (pp. 58-65); SP5 Framework: Pillars (pillar per phase table)'
 corrections:
+- 'Daily SOP per pillar, Capacity: snapshots older than one day (author, Q112, 2026-11-08); the book example said 3 days.'
 - 'Daily check length: author answer Q105 (b), 2026-11-08: about 5 minutes when there is no problem; a problem makes it longer.'
 - 'Sections ''Dual track'' and ''Day-to-day order'': author answer Q104 (2026-11-08): reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is Claude''s.'
 review_notes:
