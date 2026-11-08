@@ -307,9 +307,9 @@ def check_tables(bad):
 
 
 VSPHERE_TOP = ['foundations', 'technology', 'object-types', 'tools']
-VCF_OPERATIONS_TOP = ['concepts', 'kpis', 'models', 'metrics', 'troubleshooting', 'ui']
+VCF_OPERATIONS_TOP = ['concepts', 'troubleshooting', 'health-check']  # VCF Operations itself only (author, 2026-11-08)
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
-PILLAR_FOLDERS = ['performance', 'capacity']
+PILLAR_FOLDERS = ['sp5-framework', 'performance', 'capacity']
 CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['book', 'author', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']

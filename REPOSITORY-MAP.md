@@ -19,9 +19,9 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/` | What Agent E2 reads. The only indexed folder |
 | `knowledge/catalog/` | Exact data in YAML: vCenter counters, esxtop fields, thresholds, object model |
 | `knowledge/foundations/` | True across VCF components and the Guest OS: units, accounting, thresholds |
-| `knowledge/operations-management/` | Operations across products. Root: across pillars (SP5, SLAs, class of service, health, alerts). `performance/`, `capacity/`: one pillar |
-| `knowledge/vsphere/` | `foundations/`, `technology/<cpu, memory, storage, network, gpu>/`, `object-types/<vm, esxi, cluster>/`, `tools/` |
-| `knowledge/vcf-operations/` | What VCF Operations computes: `concepts/`, `kpis/`, `models/`, `metrics/` |
+| `knowledge/operations-management/` | Operations across products. `sp5-framework/`: the framework across pillars (overview, Triple See Method, SLAs, health, alerts). `performance/`, `capacity/`: one pillar each |
+| `knowledge/vsphere/` | `foundations/`, `technology/<cpu, memory, storage, network, gpu>/` (metrics, including those VCF Operations computes), `object-types/<vm, esxi, cluster>/` (KPIs, models, health checks), `tools/<esxtop, vsphere-client, vcf-operations>/` |
+| `knowledge/vcf-operations/` | VCF Operations itself: role, features, its own health. Metrics it computes about vSphere objects live with those objects |
 | `knowledge/guest-os/` | Windows and Linux, a separate layer |
 | `knowledge/glossary.md` | The agent's vocabulary |
 | `knowledge/moved.yaml` | Old file ids → current ids |

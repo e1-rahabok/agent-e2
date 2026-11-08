@@ -67,13 +67,13 @@ internal_derive:
 - vsphere/technology/memory/concepts/memory-layers
 related:
 - operations-management/capacity/capacity-model
-- vcf-operations/metrics/esxi/memory-utilization
-- vcf-operations/metrics/vm/memory-utilization
+- vsphere/technology/memory/metrics/host/utilization
+- vsphere/technology/memory/metrics/virtual-motherboard/utilization
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Capacity > Memory; Storage; Implementation
 corrections: []
 review_notes:
-- 'Section ''VCF Operations metrics (ESXi)'': VM demand here is max(reservation, Guest OS needed + page-in); the VM Utilization formula in vcf-operations/metrics/vm/memory-utilization adds unusable memory. Both from the book.'
+- 'Section ''VCF Operations metrics (ESXi)'': VM demand here is max(reservation, Guest OS needed + page-in); the VM Utilization formula in vsphere/technology/memory/metrics/virtual-motherboard/utilization adds unusable memory. Both from the book.'
 status: draft
 ```

@@ -125,7 +125,7 @@ internal_derive:
 - vsphere/foundations/metric-sources
 related:
 - vsphere/foundations/metric-sources
-- vcf-operations/metrics/vm/peak-20-second-metrics
+- vsphere/tools/vcf-operations/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/tools/vsphere-client/performance-guidance

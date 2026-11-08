@@ -50,7 +50,7 @@ same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/host/core-utilization
 - vsphere/technology/cpu/metrics/host/utilization
-- vcf-operations/metrics/esxi/cpu-peak-core-usage
+- vsphere/technology/cpu/metrics/host/peak-core-usage
 images:
   - path: ../../images/esxi-cpu-imbalance-core-utilization-vs-thread-utilization-best-and-worst.png
     product: [vcf-operations]

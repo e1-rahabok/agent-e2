@@ -35,7 +35,7 @@ level: 400
 answer_type: judged
 input: [table, screenshot]
 knowledge:
-  - vcf-operations/kpis/cluster-performance
+  - vsphere/object-types/cluster/kpis/cluster-performance
   - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
   - vsphere/technology/network/metrics/host/errors
 attachments:

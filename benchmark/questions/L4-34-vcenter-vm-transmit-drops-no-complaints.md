@@ -44,7 +44,7 @@ answer_type: deterministic
 input: [screenshot]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-  - vcf-operations/kpis/cluster-sla-sli
+  - vsphere/object-types/cluster/kpis/cluster-sla-sli
 attachments:
   - 0074/vcenter-vm-network-dropped.png
 origin: synthetic

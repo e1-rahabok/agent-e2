@@ -33,7 +33,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- vcf-operations/metrics/vm/cpu-contention
+- vsphere/technology/cpu/metrics/virtual-motherboard/contention
 - vsphere/technology/cpu/metrics/virtual-motherboard/latency
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 related:

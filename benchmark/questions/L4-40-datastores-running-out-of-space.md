@@ -38,7 +38,7 @@ level: 400
 answer_type: judged
 input: [table]
 knowledge:
-  - vcf-operations/metrics/vm/disk-space-provisioned
+  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
   - vsphere/technology/storage/concepts/snapshot-impact
   - operations-management/capacity/capacity-model
 attachments:

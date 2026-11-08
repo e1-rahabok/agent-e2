@@ -109,7 +109,7 @@ object:
 internal_derive: []
 related:
 - operations-management/capacity/reclamation
-- vcf-operations/metrics/vm/cpu-usage-disparity
+- vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/foundations/resource-controls
 source:
   document: PART 1 - Concepts of Operations Management.docx

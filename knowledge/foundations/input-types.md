@@ -74,7 +74,7 @@ internal_derive: []
 related:
 - foundations/metrics-as-accounting
 - foundations/metric-perspectives
-- operations-management/alerts-and-insights
+- operations-management/sp5-framework/alerts-and-insights
 images:
   - path: images/input-types-to-outputs-diagram.png
     product: [vcf-operations]

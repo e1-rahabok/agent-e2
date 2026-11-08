@@ -93,7 +93,7 @@ related:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/technology/cpu/metrics/virtual-motherboard/run
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
-- vcf-operations/metrics/vm/cpu-contention
+- vsphere/technology/cpu/metrics/virtual-motherboard/contention
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/tools/vsphere-client/performance-guidance
 - vsphere/tools/vsphere-client/vcenter-statistics

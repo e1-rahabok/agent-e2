@@ -89,7 +89,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Traps | Misconceptions and their correction | `## Traps` in each file |
 | Metadata tags | Technology, pillar, product, object, layer, instance, metric class | `## Metadata` yaml at the end of each file |
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` |
-| Folder hierarchy | Raw metrics by technology, derived content by object, VCF Operations as a derived layer, pillars across products | `knowledge/` |
+| Folder hierarchy | Metrics by technology, multi-technology content (KPIs, models) by object, pillars and the SP5 framework across products; VCF Operations only for itself | `knowledge/` |
 | Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite |
 | Health checks and troubleshooting flows | The expert's order of checks and the branch at each step: the what (health check), then the why (troubleshooting) | `health-check/` and `troubleshooting/` files |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
@@ -185,7 +185,8 @@ knowledge/                           # what the model reads (indexed)
 ├── foundations/                     # vendor-neutral: units, sampling, accounting, perspectives, naming
 ├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
 ├── operations-management/           # operations across products and technologies
-│   ├── *.md                         # across pillars: SP5 framework, SLAs, class of service, health, alerts (author, Q094)
+│   ├── sp5-framework/               # the framework across pillars: overview, why not ITIL, Triple See Method,
+│   │                                # SLAs, class of service, health, alerts, monitoring vs troubleshooting
 │   ├── performance/                 # KPI design; health-check/ and troubleshooting/ for cross-technology flows (VM slow triage)
 │   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
 ├── vsphere/
@@ -204,14 +205,12 @@ knowledge/                           # what the model reads (indexed)
 │   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/, images/
 │   └── tools/                       # how each tool shows the counters
 │       ├── esxtop/                  # panels, fields, units vs the vSphere Client
-│       └── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
-│                                    # screens/ for the screen library (release 1.1)
-├── vcf-operations/                  # what VCF Operations computes or adds; links to the source files, never repeats them
-│   ├── concepts/
-│   ├── kpis/                        # KPIs (performance only) with sub-metrics and colour bands (vCommunity management pack)
-│   ├── models/                      # capacity, risk and other non-performance models: sub-metrics, bands, decision
-│   ├── metrics/<object>/            # derived metrics: vm/, esxi/, cluster/
-│   └── ui/                          # screen library for VCF Operations (release 1.1)
+│       ├── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
+│       │                            # screens/ for the screen library (release 1.1)
+│       └── vcf-operations/          # how VCF Operations shows vSphere counters (20-second peaks); screens/ (1.1)
+├── vcf-operations/                  # VCF Operations as a system in its own right: role, features, its own sizing,
+│   ├── concepts/                    # health and performance; troubleshooting/ for VCF Operations itself
+│   └── troubleshooting/
 └── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
     └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
 ```
@@ -221,11 +220,16 @@ knowledge/                           # what the model reads (indexed)
   - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
   - multi-technology content follows the object route: `vsphere/object-types/<object>/`;
   - what VCF Operations computes: `vcf-operations/`;
-  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`; content across pillars: `operations-management/` itself (author, Q094, 2026-11-08).
+  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`; content across pillars: `operations-management/sp5-framework/`, so the framework reads as one unit (author, 2026-11-08).
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `operations-management/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
-  - VCF Operations is a thin derived layer. A metric about a source object is documented once, at the source. `vcf-operations/` holds only what VCF Operations computes or adds (KPIs, derived metrics such as CPU Contention, 20-second peaks, disk space metrics), with `internal_derive` links to the source files. See `vcf-operations/concepts/vcf-operations-role`.
+  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `operations-management/sp5-framework/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
+  - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage (author, 2026-11-08). Content about a managed object lives with that object, even when VCF Operations computes it:
+    - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
+    - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
+    - how VCF Operations shows a counter (rollup, 20-second peak): `vsphere/tools/vcf-operations/`.
+  - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), and later its own sizing, health and performance troubleshooting. See `vcf-operations/concepts/vcf-operations-role`.
+  - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `operations-management/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
   - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (triage, capacity decisions) → `operations-management/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
@@ -235,10 +239,10 @@ knowledge/                           # what the model reads (indexed)
   - `knowledge/foundations/`: true across VCF 9 components and Guest OS.
   - `knowledge/operations-management/`: how a pillar uses metrics, across products.
   - `knowledge/vsphere/foundations/`: true only in vSphere.
-- `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; `vm`, `esxi`, `cluster` under `vcf-operations/metrics/`. The `object` tag holds the vSphere managed object type name.
+- `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; the same names wherever a metric of that object lives. The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
 - Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. A VCF Operations KPI over Guest OS counters (Guest OS Performance) stays in `guest-os/` by this rule.
-- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/` or `vcf-operations/ui/screens/`, with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
+- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/`, with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
 - Indexed: every `knowledge/**/*.md`. Writing templates live in `project/templates/`; source documents in `project/sources/` (read-only). How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
 - `project/tools/lint.py` enforces the folder and tag rules.
 
@@ -252,7 +256,7 @@ knowledge/                           # what the model reads (indexed)
 | One object type per metric file | Mixing the VM, ESXi and cluster meanings of the same label. |
 | `same_name` / `same_meaning` links | Treating two metrics as equal because the labels match, or as different because the labels differ. |
 | Book-order folders plus tags | One hierarchy for review in the book's order; tags give the other perspectives (technology, pillar, product, object). |
-| VCF Operations as its own folder | Taking a derived VCF Operations metric for a vCenter counter (Contention vs Latency). |
+| Derived metrics beside their source metrics | Taking a derived VCF Operations metric for a vCenter counter (Contention vs Latency): both sit in the same folder, linked by `same_name` or `internal_derive`. |
 | Tool references in `tools/` | Reading esxtop, vCenter and VCF Operations values as the same thing. |
 | `retriever_guide` | Retrieving a definition when the question asks what to check or what to set. |
 | Small files, one fact per line | A retrieved chunk carrying unrelated facts; an error spreading beyond one line. |
@@ -334,10 +338,10 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 ## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.
 - Vocabulary (author, 2026-11-08):
-  - Framework: how IT operations are managed (SP5). `operations-management/sp5-framework`.
-  - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vcf-operations/models/` and `operations-management/capacity/`.
-  - KPI: a model of performance only (the P in KPI). Files in `vcf-operations/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
-  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/health-risk-efficiency`. Monitoring belongs here.
+  - Framework: how IT operations are managed (SP5). `operations-management/sp5-framework/overview`.
+  - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `operations-management/capacity/`.
+  - KPI: a model of performance only (the P in KPI). Files in `vsphere/object-types/<object>/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
+  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/sp5-framework/health-risk-efficiency`. Monitoring belongs here.
   - Troubleshooting: the why. Done only after an object fails a health check; a user complaint counts as a failed health check. Troubleshooting is part of the health check, always after it.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
@@ -379,7 +383,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - `knowledge/` is for Agent E2 only (author, 2026-11-07). An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
 - The agent reads the text twin and the alt text, not the pixels: `get_images` returns image records, never the image itself.
 - Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains. The facts an image proves go in the text.
-- Images live in the `images/` folder of the folder that uses them (for example `vsphere/technology/<tech>/images/`, `vcf-operations/kpis/images/`, `guest-os/<technology>/images/`).
+- Images live in the `images/` folder of the folder that uses them (for example `vsphere/technology/<tech>/images/`, `vsphere/object-types/cluster/images/`, `guest-os/<technology>/images/`).
 - Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
 - Every image has its own tags in the file's metadata `images` list (section 8). The validator fails on a missing or invalid entry.
 - Every image file is linked from a knowledge file. The validator fails on an unlinked image: an unlinked image has no context for the AI.

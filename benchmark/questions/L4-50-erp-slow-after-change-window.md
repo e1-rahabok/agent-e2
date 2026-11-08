@@ -55,8 +55,8 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
   - vsphere/technology/cpu/troubleshooting/vm-other-wait-high
   - vsphere/technology/cpu/concepts/numa
-  - vcf-operations/models/cluster-risk
-  - vcf-operations/kpis/cluster-performance
+  - vsphere/object-types/cluster/models/cluster-risk
+  - vsphere/object-types/cluster/kpis/cluster-performance
   - vsphere/technology/network/troubleshooting/vnic-rx-drops
 attachments: []
 origin: synthetic

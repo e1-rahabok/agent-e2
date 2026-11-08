@@ -185,7 +185,7 @@ related:
 - vsphere/foundations/vm-vs-guest-os
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - operations-management/capacity/capacity-model
-- vcf-operations/metrics/esxi/memory-utilization
+- vsphere/technology/memory/metrics/host/utilization
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 - vsphere/technology/cpu/concepts/numa

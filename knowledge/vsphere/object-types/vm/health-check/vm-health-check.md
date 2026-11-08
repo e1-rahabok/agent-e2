@@ -25,14 +25,14 @@ flowchart TD
 ## Principle
 - A VM is a consumer. Its performance is the runtime, memory, IO and network it demanded and did not get: contention.
 - Order: contention first, then consumption, then context. Consumption sizes the VM; it does not show whether the VM suffers.
-- Read contention at the 20-second peak, not the 5-minute average: short waits disappear in averages. See `vcf-operations/metrics/vm/peak-20-second-metrics`.
+- Read contention at the 20-second peak, not the 5-minute average: short waits disappear in averages. See `vsphere/tools/vcf-operations/peak-20-second-metrics`.
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## Checks, in order
-Order of `operations-management/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
+Order of `operations-management/sp5-framework/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
 1. Availability (VirtualMachine). Future, after 1.0: VM down, restarted by HA, unresponsive; mostly from logs and events. State what was not checked. → step 2.
-2. Performance: VM Performance (%) (VirtualMachine). Combines the VM contention metrics into one KPI with colour bands. Start here at scale (`vcf-operations/kpis/vm-performance`). Green → step 7. Yellow or worse → step 3, and read only the resources whose sub-metric fails.
-3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower (`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`). Co-stop: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`. Contention (VCF Operations) includes limit time (`vcf-operations/metrics/vm/cpu-contention`). Latency includes Hyper-Threading and frequency effects: not a pure wait (`vsphere/technology/cpu/metrics/virtual-motherboard/latency`). High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. → step 4.
+2. Performance: VM Performance (%) (VirtualMachine). Combines the VM contention metrics into one KPI with colour bands. Start here at scale (`vsphere/object-types/vm/kpis/vm-performance`). Green → step 7. Yellow or worse → step 3, and read only the resources whose sub-metric fails.
+3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower (`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`). Co-stop: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`. Contention (VCF Operations) includes limit time (`vsphere/technology/cpu/metrics/virtual-motherboard/contention`). Latency includes Hyper-Threading and frequency effects: not a pure wait (`vsphere/technology/cpu/metrics/virtual-motherboard/latency`). High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. → step 4.
 4. Memory contention (VirtualMachine). Latency is the only true memory contention counter (`vsphere/technology/memory/metrics/virtual-motherboard/latency`). Then, in order: swap-in, decompression, host cache, balloon. Ballooned, swapped and compressed memory are past reclamation, not current waiting (`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`). High → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`. → step 5.
 5. Storage contention (VirtualMachine). Disk latency per virtual disk, read and write separately (`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`). Outstanding IO: queued IO adds latency at any load (`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`). Bus resets and commands aborted should stay at 0. High → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`. → step 6.
 6. Network contention (VirtualMachine). Dropped packets are the only network contention metric of a VM; vSphere has no network latency or retransmit counter (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`). Receive drops → `vsphere/technology/network/troubleshooting/vnic-rx-drops`. → step 7.
@@ -42,7 +42,7 @@ Order of `operations-management/health-risk-efficiency`: present health (availab
    - CPU: Run, Usage, Demand. Usage includes Turbo; compare with Run before upsizing (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Oversized: `vsphere/technology/cpu/health-check/oversized-vm-downsizing`.
    - Memory: Consumed is the main counter; size the VM from Guest OS metrics, not VM metrics (`vsphere/technology/memory/metrics/virtual-motherboard/consumed`).
    - Storage: IOPS and throughput (`vsphere/technology/storage/metrics/virtual-motherboard/iops`). Network: throughput (`vsphere/technology/network/metrics/virtual-motherboard/throughput`).
-   - Idle VM: `vcf-operations/metrics/vm/idle-vm`.
+   - Idle VM: `vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`.
 - Not checked in 1.0: security and compliance (future phase).
 
 ## Why this order
@@ -82,7 +82,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- operations-management/health-risk-efficiency
+- operations-management/sp5-framework/health-risk-efficiency
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 - vsphere/technology/memory/troubleshooting/vm-memory-latency-high
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
@@ -91,12 +91,12 @@ internal_derive:
 - vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/network/metrics/comparisons/vm-network-metrics
-- vcf-operations/kpis/vm-performance
+- vsphere/object-types/vm/kpis/vm-performance
 related:
 - operations-management/performance/troubleshooting/vm-slow-triage
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - vsphere/object-types/cluster/health-check/cluster-health-check
-- vcf-operations/metrics/vm/peak-20-second-metrics
+- vsphere/tools/vcf-operations/peak-20-second-metrics
 - guest-os/system/metrics/guest-os-performance
 source:
   document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation)

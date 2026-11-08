@@ -51,7 +51,7 @@ objects:
   supplies: [cpu, memory]
   charts: true
   note: Aggregate of its hosts. Totals across cluster, host, VM and datastore do not reconcile because of many-to-many relationships.
-  kb: [vsphere/object-types/cluster/concepts/drs-overview, vsphere/object-types/cluster/concepts/cluster-operations, vcf-operations/kpis/cluster-performance]
+  kb: [vsphere/object-types/cluster/concepts/drs-overview, vsphere/object-types/cluster/concepts/cluster-operations, vsphere/object-types/cluster/kpis/cluster-performance]
 - type: ResourcePool
   role: both
   supplies: [cpu, memory]

@@ -15,12 +15,13 @@
 - vCenter performance charts keep a short history and roll peaks away. See `vsphere/tools/vsphere-client/vcenter-statistics`.
 
 ## Where its knowledge lives
-- A metric about a source object is documented once, at the source object. Example: VM CPU Ready lives in `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
-- This folder holds only what VCF Operations itself adds:
-  - computed metrics and KPIs, with their formula, linking each input to its source file;
-  - its own mechanisms: capacity engine, policies, symptoms and alerts, super metrics, KPI calculation;
-  - where a VCF Operations value differs from its source value (rollup, interval, peak handling).
-- Each file here links to the source files it derives from (`internal_derive`), so nothing is written twice.
+- VCF Operations is an observability tool. Without a system to manage it has nothing to show, so it is not a peer of vSphere, vSAN, NSX or the Guest OS.
+- A metric about a managed object is documented with that object, even when VCF Operations computes it:
+  - VM CPU Contention: `vsphere/technology/cpu/metrics/virtual-motherboard/contention`, beside VM CPU Ready;
+  - VM Performance (%): `vsphere/object-types/vm/kpis/vm-performance`;
+  - Cluster Risk (%): `vsphere/object-types/cluster/models/cluster-risk`;
+  - 20-second peaks, how VCF Operations shows a counter: `vsphere/tools/vcf-operations/peak-20-second-metrics`.
+- This folder holds VCF Operations itself: its role, its features (real-time metrics: `vcf-operations/concepts/real-time-metrics`), and its own sizing, health and performance troubleshooting.
 
 ## Traps
 - "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and `vsphere/tools/vsphere-client/vcenter-statistics`.
@@ -45,12 +46,13 @@ internal_derive:
 related:
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vsphere/foundations/provider-consumer
-- vcf-operations/metrics/vm/peak-20-second-metrics
+- vsphere/tools/vcf-operations/peak-20-second-metrics
 source:
   document: Author's answer (2026-11-04)
   path: Conversation with the author on VCF Operations and vCenter roles
 corrections: []
 review_notes:
+- 'Section ''Where its knowledge lives'': VCF Operations is not a peer of the managed systems; vcf-operations/ holds only content about itself (author, 2026-11-08).'
 - 'Whole file: from the author''s statement of 2026-11-04 (VCF Operations is monitoring software; all its metrics are derived; thin layer above vSphere, vSAN, NSX, Windows, Linux, VKS; vCenter is an administrative tool, not used for capacity planning or performance troubleshooting).'
 - 'Section ''vCenter is not the operations tool'': short history and rolled-up peaks follow vsphere/tools/vsphere-client/vcenter-statistics.'
 status: draft

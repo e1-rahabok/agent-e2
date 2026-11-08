@@ -63,7 +63,7 @@
 - Security SLA is preferred over compliance SLA, which is correct but narrower: compliance compares settings against a secured configuration; security also covers activity, such as undesirable activity that is a potential risk.
 - VM KPI: stops at Windows or Linux. The application or service inside the Guest OS is excluded: the infrastructure team stops at the OS.
 - Business application KPI: three levels. The business transaction first (user login). Below expectation → the application software KPI (Apache web server) and the infrastructure KPI (the VM KPI).
-- vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: `vcf-operations/kpis/cluster-performance`.
+- vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: `vsphere/object-types/cluster/kpis/cluster-performance`.
 - vSAN KPI: disk latency of every VM using the vSAN datastore, from the same or another cluster.
 - NSX KPI: many-to-many with vSphere clusters, so not tied to one cluster.
 ![KPI and SLA scope in VM as a Service: Guest OS KPI and VM KPI with Guest OS SLA and VM SLA; the business application KPI spans service, Guest OS and VM; ESXi, vSAN and NSX KPIs measure their own purpose](images/vm-as-a-service-kpi-and-sla-scope-diagram.png)
@@ -97,12 +97,12 @@ object:
 internal_derive:
 - operations-management/performance/performance-kpi-design
 related:
-- operations-management/sla-metrics
-- vcf-operations/kpis/cluster-sla-sli
-- vcf-operations/kpis/cluster-performance
-- vcf-operations/kpis/vm-performance
-- operations-management/performance-vs-capacity
-- operations-management/realms-and-layers
+- operations-management/sp5-framework/sla-metrics
+- vsphere/object-types/cluster/kpis/cluster-sla-sli
+- vsphere/object-types/cluster/kpis/cluster-performance
+- vsphere/object-types/vm/kpis/vm-performance
+- operations-management/sp5-framework/performance-vs-capacity
+- operations-management/sp5-framework/realms-and-layers
 images:
   - path: images/complaint-kpi-sla-maturity-steps-diagram.png
     product: [vcf-operations]

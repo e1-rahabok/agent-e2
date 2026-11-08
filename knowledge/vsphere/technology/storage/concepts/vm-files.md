@@ -73,10 +73,10 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/storage/concepts/snapshot-impact
-- vcf-operations/metrics/vm/disk-space-virtual-disk-used
-- vcf-operations/metrics/vm/disk-space-used
-- vcf-operations/metrics/vm/disk-space-provisioned
-- vcf-operations/metrics/vm/disk-space-snapshot
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-virtual-disk-used
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
 images:
   - path: ../images/vm-snapshot-files.png
     product: [vsphere]

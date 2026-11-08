@@ -46,7 +46,7 @@ object:
 - DistributedVirtualPortgroup
 - HostSystem
 internal_derive:
-- operations-management/configuration-management
+- operations-management/sp5-framework/configuration-management
 related:
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
 - vsphere/foundations/noisy-neighbour

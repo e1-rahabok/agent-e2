@@ -74,7 +74,7 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
-- vcf-operations/metrics/esxi/cpu-peak-core-usage
+- vsphere/technology/cpu/metrics/host/peak-core-usage
 source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > ESXi > Used | Usage; Usage; Usage and 100%; Consumed

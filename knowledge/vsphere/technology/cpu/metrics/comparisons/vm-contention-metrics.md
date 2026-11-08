@@ -67,7 +67,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
 - vsphere/technology/cpu/metrics/virtual-motherboard/latency
-- vcf-operations/metrics/vm/cpu-contention
+- vsphere/technology/cpu/metrics/virtual-motherboard/contention
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 images:
   - path: ../../images/vcenter-vm-cpu-contention-counters-table.png

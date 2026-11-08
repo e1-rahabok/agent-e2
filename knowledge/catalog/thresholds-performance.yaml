@@ -76,7 +76,7 @@ rows:
   unit: '%'
   meaning: CPU SLI fails for this 5-minute interval (Performance SLA counter).
   source: book
-  kb: operations-management/sla-metrics
+  kb: operations-management/sp5-framework/sla-metrics
   quote: '| CPU | Ready | above 2.5% |'
 - kind: rule
   id: vm-sli-memory-contention
@@ -90,7 +90,7 @@ rows:
   unit: '%'
   meaning: Memory SLI fails for this 5-minute interval (Performance SLA counter).
   source: book
-  kb: operations-management/sla-metrics
+  kb: operations-management/sp5-framework/sla-metrics
   quote: '| Memory | Contention | above 1% |'
 - kind: rule
   id: vm-sli-disk-latency
@@ -104,7 +104,7 @@ rows:
   unit: 'ms'
   meaning: Disk SLI fails for this 5-minute interval (Performance SLA counter). Average of read and write.
   source: book
-  kb: operations-management/sla-metrics
+  kb: operations-management/sp5-framework/sla-metrics
   quote: '| Disk | Latency | above 10 ms |'
 - kind: rule
   id: vm-sli-network-tx-dropped
@@ -118,7 +118,7 @@ rows:
   unit: '%'
   meaning: Network SLI fails for this 5-minute interval (Performance SLA counter). Received drops are excluded.
   source: book
-  kb: operations-management/sla-metrics
+  kb: operations-management/sp5-framework/sla-metrics
   quote: '| Network | Transmit dropped packets | above 0% |'
 - kind: rule
   id: vm-cpu-ready-poor
@@ -467,7 +467,7 @@ rows:
     orange: 8-16
     red: 16-32
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-worst-peak-vcpu-co-stop-among-all-vms
   metric: Worst peak vCPU Co-stop among all VMs (%)
@@ -481,7 +481,7 @@ rows:
     orange: 4-8
     red: 8-16
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-worst-memory-latency-among-all-vms
   metric: Worst memory latency among all VMs (%)
@@ -495,7 +495,7 @@ rows:
     orange: 2-4
     red: 4-8
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-worst-peak-read-write-disk-latency-all-v
   metric: Worst peak read/write disk latency, all VM vDisks (ms)
@@ -509,7 +509,7 @@ rows:
     orange: 80-160
     red: 160-320
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-peak-vcpu-ready-among-vm
   metric: 90th percentile peak vCPU Ready among VMs (%)
@@ -523,7 +523,7 @@ rows:
     orange: 2-4
     red: 4-8
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-peak-vcpu-co-stop-among-
   metric: 90th percentile peak vCPU Co-stop among VMs (%)
@@ -537,7 +537,7 @@ rows:
     orange: 1-2
     red: 2-4
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-memory-latency-among-vms
   metric: 90th percentile memory latency among VMs (%)
@@ -551,7 +551,7 @@ rows:
     orange: 1-2
     red: 2-4
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-read-write-latency-among
   metric: 90th percentile read/write latency among VM virtual disks (ms)
@@ -565,7 +565,7 @@ rows:
     orange: 40-60
     red: 60-80
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-highest-esxi-error-dropped-network-packe
   metric: Highest ESXi (error + dropped) network packets (%)
@@ -579,7 +579,7 @@ rows:
     orange: 0.2-0.4
     red: 0.4-0.8
   source: book
-  kb: vcf-operations/kpis/cluster-performance
+  kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: esxi-performance-worst-peak-vcpu-ready
   metric: Worst peak vCPU Ready among VMs on the host (%)
@@ -593,7 +593,7 @@ rows:
     orange: 8-16
     red: 16-32
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-worst-peak-vcpu-co-stop
   metric: Worst peak vCPU Co-stop among VMs on the host (%)
@@ -607,7 +607,7 @@ rows:
     orange: 4-8
     red: 8-16
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-worst-memory-latency
   metric: Worst memory latency among VMs on the host (%)
@@ -621,7 +621,7 @@ rows:
     orange: 2-4
     red: 4-8
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-worst-peak-disk-latency
   metric: Worst peak read/write disk latency, all vDisks of VMs on the host (ms)
@@ -635,7 +635,7 @@ rows:
     orange: 80-160
     red: 160-320
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-peak-vcpu-ready
   metric: 90th percentile peak vCPU Ready among VMs on the host (%)
@@ -649,7 +649,7 @@ rows:
     orange: 2-4
     red: 4-8
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-peak-vcpu-co-stop
   metric: 90th percentile peak vCPU Co-stop among VMs on the host (%)
@@ -663,7 +663,7 @@ rows:
     orange: 1-2
     red: 2-4
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-memory-latency
   metric: 90th percentile memory latency among VMs on the host (%)
@@ -677,7 +677,7 @@ rows:
     orange: 1-2
     red: 2-4
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-disk-latency
   metric: 90th percentile read/write latency among virtual disks of VMs on the host (ms)
@@ -691,7 +691,7 @@ rows:
     orange: 40-60
     red: 60-80
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-esxi-error-dropped-network-packets
   metric: ESXi (error + dropped) network packets (%)
@@ -705,7 +705,7 @@ rows:
     orange: 0.2-0.4
     red: 0.4-0.8
   source: author
-  kb: vcf-operations/kpis/esxi-performance
+  kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: vm-performance-peak-cpu-co-stop-among-any-vcpu
   metric: Peak CPU Co-stop among any vCPU (%)
@@ -719,7 +719,7 @@ rows:
     orange: 2-4
     red: 4-8
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-cpu-ready-among-any-vcpu
   metric: Peak CPU Ready among any vCPU (%)
@@ -733,7 +733,7 @@ rows:
     orange: 4-8
     red: 8-16
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-cpu-overlap
   metric: Peak CPU Overlap (%)
@@ -747,7 +747,7 @@ rows:
     orange: 1-2
     red: 2-4
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-ram-contention
   metric: Peak RAM Contention (%)
@@ -761,7 +761,7 @@ rows:
     orange: 1-2
     red: 2-4
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-read-write-latency-among-vdisks-ms
   metric: Peak read/write latency among vDisks (ms)
@@ -775,7 +775,7 @@ rows:
     orange: 20-40
     red: 40-80
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-network-tx-dropped-packets
   metric: Peak network TX dropped packets (%)
@@ -789,7 +789,7 @@ rows:
     orange: 0.5-1
     red: 1-2
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-cpu-net-run
   metric: CPU Net Run (%)
@@ -803,7 +803,7 @@ rows:
     orange: 97-99
     red: 99-100
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-vm-memory-ballooned
   metric: VM Memory Ballooned (%)
@@ -817,7 +817,7 @@ rows:
     orange: 4-8
     red: 8-16
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-vm-memory-compressed-swapped
   metric: VM Memory Compressed + Swapped (%)
@@ -831,4 +831,4 @@ rows:
     orange: 0.5-1
     red: 1-2
   source: book
-  kb: vcf-operations/kpis/vm-performance
+  kb: vsphere/object-types/vm/kpis/vm-performance

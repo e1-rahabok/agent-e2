@@ -69,7 +69,7 @@
 ## Contention
 - When the cluster cannot serve its current workload, remaining capacity is 0 in practice: provisioning stops.
 - Two metrics:
-  - Performance (%): the actual performance (`vcf-operations/kpis/cluster-performance`);
+  - Performance (%): the actual performance (`vsphere/object-types/cluster/kpis/cluster-performance`);
   - Stop Provisioning (yes or no): the cluster is closed for new VMs or pods, decided from Performance (%), Capacity Remaining (%) and Risk (%). Flow: `operations-management/capacity/health-check/can-cluster-take-more-vms`.
 - A leading indicator would let VMs already in the queue be provisioned, or give a week of notice. Performance and risk do not project well: a projection of them can be wrong.
 
@@ -184,7 +184,7 @@ internal_derive:
 related:
 - operations-management/capacity/class-of-service-planning
 - operations-management/capacity/health-check/can-cluster-take-more-vms
-- operations-management/performance-vs-capacity
+- operations-management/sp5-framework/performance-vs-capacity
 - vsphere/technology/memory/concepts/host-memory-states
 - vsphere/technology/memory/concepts/memory-tiering
 images:
