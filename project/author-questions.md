@@ -118,11 +118,11 @@ Each entry has:
 - Written as now: all files draft.
 - Answer:
 
-### Q072 · Part 1 > The Layers in IT Systems · Book corrections and Apdex
+### Q072 · Part 1 > The Layers in IT Systems · Apdex
 - Files: [Business, application and IaaS: layers, lost context and metric types](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/realms-and-layers.md) (image troubleshooting-layers-loss-of-context-example-table.png).
 - Search 1: "Johnny’s transaction was the worst at 20.1 seconds"
 - Search 2: "I like the principle behind apdex, but not its implementation"
-- Question: (a) GetBankDetail 5.2 s plus the other 7 functions 15.1 s = 20.3 s, not 20.1 s. (b) Image text: "None of the counters are AWS shows any signs of performance counters". (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
+- Question: (a) and (b), book typos, closed 2026-11-08 (book edition does not matter to Agent E2, author on Q107). (c) The book offers an improved Apdex formula. Give it to the knowledge base, or leave it out, since it is not IaaS?
 - Written as now: no number from the image in the text; no Apdex.
 - Answer:
 
@@ -203,18 +203,6 @@ Each entry has:
   - (a) Inside a tier, the average. Across tiers (web → application → database) work runs in sequence, like a convoy. Is the application's health the minimum of its tiers?
   - (b) A database tier with active and passive nodes: the passive node serves no requests. Average both, or count the active node only for performance?
 - Written as now: tier = average of members; nothing on across tiers or active/passive.
-- Answer:
-
-### Q093 · Part 1 > Your Private Cloud · Book corrections for the next edition
-- Files: none; the knowledge base already uses current names.
-- Search 1: "something you can implement with the current version of Aria products" (now VCF Operations).
-- Search 2: "Salesforce, VMware Skyline, Microsoft Office 365" (Skyline status under Broadcom to check).
-- Search 3: "Typically, Windows 10 + End-User applications" (Windows 10 support ended October 2025).
-- Search 4: "VMware Horizon Cloud, Microsoft Windows Cloud are cloud examples" (Horizon is now Omnissa; Microsoft's product is Windows 365).
-- Search 5: "This is not so obvious as it’s the only product in this category." (Nutanix Cloud Platform and Azure Local are in the same category.)
-- Search 6: "The creates a bigger problem" (typo: This).
-- Question: confirm each for the next edition; (5) is a claim the knowledge base does not repeat.
-- Written as now: not in the knowledge base.
 - Answer:
 
 ### Q094 · Repository · Where cross-pillar operations files go
@@ -348,21 +336,6 @@ Each entry has:
 - Written as now: four rows, interval 5m, instance aggregate.
 - Answer:
 
-### Q107 · Part 1 > Your Private Cloud (Service Level Agreement to SP5 Framework: Process) · Book corrections for the next edition
-- Files: none beyond those named; the knowledge base already uses the corrected wording.
-- Search 1: "because it is charged at 200% more" (2x price is 100% more).
-- Search 2: "It looks operationally visible" (viable).
-- Search 3: "It took me years to vrealize the mistake"; "you vrealize that there are 3 sides of health" (realize, twice).
-- Search 4: "Your ticket is also directly answered by Level 3" vs "Gold bypasses the first level help desk" (Level 2 in the service table).
-- Search 5: "We covered both in-depth in Part 1 of the book" (this is Part 1).
-- Search 6: "There are 3 techniques we can apply" (4 listed).
-- Search 7: "Happy to discuss my documented analysis ." (stray space; the link target is missing).
-- Search 8: "Buying 64 cores maximizes your vSphere license" (per-core licensing, Q099 d).
-- Image text: "Aria Operations for Logs" in the Not Healthy diagram (now VCF Operations for logs); the RCA screenshot is VMware Log Insight from 2016.
-- Search 9: "Since storage IO control configuration is not based on latency" (Storage I/O Control deprecated in VCF 9, Q080).
-- Question: confirm each for the next edition.
-- Written as now: corrected wording in the knowledge base.
-
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
 - Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
 - Search 1: "10 per GB" (default VM memory shares table)
@@ -418,18 +391,6 @@ Each entry has:
 - Search 4: "refer to KB 340" (VMware Tools benefits; KB number under Broadcom to confirm).
 - Question: confirm (1) every minute; (2) keep vVol checks for existing estates, with the deprecation stated; (3) one day or three days; (4) the KB number.
 - Written as now: every minute; vVols deprecated; one day in the VM review; KB 340 as cited.
-- Answer:
-
-### Q113 · Part 1 > Configuration Management · Book corrections for the next edition
-- Files: none beyond those named; the knowledge base uses the corrected wording.
-- Search 1: "You can categorizes check into 4" (two bullets follow; the four are value, consistency, compatibility, variance).
-- Search 2: "You have 1 ESXi host while providing higher redundancy" (you save 1 host: 21 vs 20).
-- Search 3: "Is the HBA configured for high availability?" under Network Related (NIC, not HBA).
-- Search 4: "both NSX Controller and Manager" (the controller is part of the NSX Manager cluster since NSX-T).
-- Search 5: "Use Log Insight to parse Windows events" (now VCF Operations for logs).
-- Search 6: "addiitonal", "combile", "issueing", "imaging both VMs" (typos).
-- Question: confirm each for the next edition.
-- Written as now: corrected wording.
 - Answer:
 
 ### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
@@ -590,6 +551,45 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q093 · Part 1 > Your Private Cloud · Book corrections for the next edition
+- Files: none; the knowledge base already uses current names.
+- Search 1: "something you can implement with the current version of Aria products" (now VCF Operations).
+- Search 2: "Salesforce, VMware Skyline, Microsoft Office 365" (Skyline status under Broadcom to check).
+- Search 3: "Typically, Windows 10 + End-User applications" (Windows 10 support ended October 2025).
+- Search 4: "VMware Horizon Cloud, Microsoft Windows Cloud are cloud examples" (Horizon is now Omnissa; Microsoft's product is Windows 365).
+- Search 5: "This is not so obvious as it’s the only product in this category." (Nutanix Cloud Platform and Azure Local are in the same category.)
+- Search 6: "The creates a bigger problem" (typo: This).
+- Question: confirm each for the next edition; (5) is a claim the knowledge base does not repeat.
+- Written as now: not in the knowledge base.
+- Answer (author, 2026-11-08, on Q107): the book edition does not matter to Agent E2; what matters is the knowledge. Closed without review: the knowledge base already holds the corrected facts and current names.
+
+### Q107 · Part 1 > Your Private Cloud (Service Level Agreement to SP5 Framework: Process) · Book corrections for the next edition
+- Files: none beyond those named; the knowledge base already uses the corrected wording.
+- Search 1: "because it is charged at 200% more" (2x price is 100% more).
+- Search 2: "It looks operationally visible" (viable).
+- Search 3: "It took me years to vrealize the mistake"; "you vrealize that there are 3 sides of health" (realize, twice).
+- Search 4: "Your ticket is also directly answered by Level 3" vs "Gold bypasses the first level help desk" (Level 2 in the service table).
+- Search 5: "We covered both in-depth in Part 1 of the book" (this is Part 1).
+- Search 6: "There are 3 techniques we can apply" (4 listed).
+- Search 7: "Happy to discuss my documented analysis ." (stray space; the link target is missing).
+- Search 8: "Buying 64 cores maximizes your vSphere license" (per-core licensing, Q099 d).
+- Image text: "Aria Operations for Logs" in the Not Healthy diagram (now VCF Operations for logs); the RCA screenshot is VMware Log Insight from 2016.
+- Search 9: "Since storage IO control configuration is not based on latency" (Storage I/O Control deprecated in VCF 9, Q080).
+- Question: confirm each for the next edition.
+- Written as now: corrected wording in the knowledge base.
+
+### Q113 · Part 1 > Configuration Management · Book corrections for the next edition
+- Files: none beyond those named; the knowledge base uses the corrected wording.
+- Search 1: "You can categorizes check into 4" (two bullets follow; the four are value, consistency, compatibility, variance).
+- Search 2: "You have 1 ESXi host while providing higher redundancy" (you save 1 host: 21 vs 20).
+- Search 3: "Is the HBA configured for high availability?" under Network Related (NIC, not HBA).
+- Search 4: "both NSX Controller and Manager" (the controller is part of the NSX Manager cluster since NSX-T).
+- Search 5: "Use Log Insight to parse Windows events" (now VCF Operations for logs).
+- Search 6: "addiitonal", "combile", "issueing", "imaging both VMs" (typos).
+- Question: confirm each for the next edition.
+- Written as now: corrected wording.
+- Answer (author, 2026-11-08, on Q107): the book edition does not matter to Agent E2; what matters is the knowledge. Closed without review: the knowledge base already holds the corrected facts and current names.
 
 ### Q104 · Part 1 > SP5 Framework > Troubleshoot; SP5 Framework: Process · Three orders of checks
 - Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/monitoring-vs-troubleshooting.md) (section Troubleshooting); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/proactive-operations.md) (section Dual track); [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/performance/troubleshooting/vm-slow-triage.md). Related: Q060.

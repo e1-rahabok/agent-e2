@@ -28,6 +28,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
   - vSAN, NSX and Linux flows: after 1.0.
   - Q104: the daily health check runs availability, performance, security; configuration is the drill-down under each (known bugs count as configuration); every performance flow checks configuration (vm-slow-triage gained step 5). Reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which needs business context. Q105: monitoring needs logs; performance monitoring reports the 20-second peak of each 5-minute interval, 20-second visibility for mission-critical systems.
   - Q105 (b): the daily check takes a few minutes, about 5, when there is no problem; a problem makes it longer, as long as the problem needs.
+  - Book corrections are not collected (author, on Q107): the book edition does not matter to Agent E2; the knowledge does. A wrong fact or old name in a source is fixed in the knowledge file, with a review note; no author question. Q093, Q107, Q113 closed; Q072 keeps only Apdex.
   - VCF always includes VCF Operations: health checks read its KPIs and models and need no vCenter-only fallback (Q133a).
 - 2026-11-07, author: `knowledge/` holds only what Agent E2 retrieves. Core rules moved to [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md) (Level 300 misreadings, an up-front prompt block, not indexed). Glossary cut to the agent's vocabulary (synonyms, defined terms, confusable pairs); writing vocabulary to [project/vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/vocabulary.md); term distinctions into their concept files; object types left to the catalog. The knowledge base holds Level 400 mechanisms, corrections of Level 300 misreadings and facts newer than the model; no definitions a 32B model already knows.
 - 2026-11-07, author: `knowledge/` is for Agent E2 only. Proof screenshots from the book are not added; the book stays the human reference. No audit of the 476 Part 3 images not copied.
@@ -54,6 +55,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | MoE models of 120B | Less compute per token than the dense candidates on twice the memory ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)) |
 | Availability flows; security and compliance in health checks | After 1.0 (author, 2026-11-08). Source for a later availability model: the adapter's Operational Availability page |
 | vSAN, NSX and Linux flows | After 1.0 (author, 2026-11-08) |
+| Book corrections for a next edition | The knowledge matters, not the book edition (author, 2026-11-08) |
 | The test website | Not started; design archived ([project/archive/design-kb-test-site.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/design-kb-test-site.md)) |
 
 ## Open work
@@ -79,7 +81,6 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - Capacity model: split the vSphere cluster part out of [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/capacity/capacity-model.md) if it is not cross-product.
 - Catalog: rows without a knowledge file (cluster and resource pool memory, datastore space, DPU charts); counter group of the per-host and per-VM-disk datastore charts (vSphere API reference); esxtop fields mapped to the `vsphere/tools/esxtop/` files; `interval` and `instance` of each band after Q048.
 - Tags assigned during migration (pillar, object, metric_class) to be reviewed by the author; `metric_class` of Wait, Idle, Swapped, Swap Used, Ballooned to confirm.
-- Book corrections for the author's next edition (P-states vs Turbo; idle frequency below base; wait sub-questions): strings in [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/todo-2026-11-06.md), section Open points from book extraction.
 - Field heuristics not written in the books: through author questions and real tickets (M2).
 - Later: the author's "My Recommendation" column in [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md); book terminology for the glossary.
 
