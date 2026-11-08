@@ -16,7 +16,7 @@ Order of `operations-management/performance/health-risk-efficiency`: present hea
 1. Availability. <What is checked, or: future, after 1.0.> → step 2.
 2. Performance: <KPI> (<object>). Green → step 3. Otherwise → `<troubleshooting id>`.
 3. Capacity: <model> (<object>). <Band, with source> → step 4.
-4. Configuration: `<configuration review id>`.
+4. Configuration: `<configuration review id>`. Also the drill-down when step 1 or 2 failed: configuration can cause both.
 5. Efficiency: <waste check>.
 - Not checked in 1.0: security and compliance (future phase).
 

@@ -15,9 +15,10 @@ flowchart TD
   S3 -->|storage| E3c[Storage flow]
   S3 -->|network| E3d[Network flow]
   S3 -->|none| S4[4. Guest OS queues high?]
-  S4 -->|yes| E4[Guest OS sizing or in-guest cause]
-  S4 -->|no| S5[5. Limits, snapshots, vMotion in the window?]
-  S5 -->|no| E5[Cause outside the VM: say so]
+  E3a & E3b & E3c & E3d --> S5
+  S4 --> S5[5. Configuration: settings, versions, known bugs?]
+  S5 --> S6[6. Snapshots, vMotion in the window?]
+  S6 -->|no| E6[Cause outside the VM: say so]
 ```
 
 ## Checks, in order
@@ -29,21 +30,24 @@ flowchart TD
    - Storage: disk latency per virtual disk, read and write, with outstanding IO → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`.
    - Network: dropped packets → `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
    - The SLI thresholds give a first bar: Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped packets 0% (`vcf-operations/kpis/cluster-sla-sli`).
-   - No contention on any resource → step 4.
-4. Guest OS (Guest OS layer, through VMware Tools). CPU run queue, memory page-out rate, disk queue. High while the VM shows no contention → the VM gets what it demands; the Guest OS or the application waits on its own queues. Size the Guest OS from Guest OS counters (`guest-os/system/concepts/guest-os-sizing`). Queues normal → step 5.
-5. Context in the window (VirtualMachine). A CPU or memory limit (`vsphere/foundations/resource-controls`), a snapshot (`vsphere/technology/storage/concepts/snapshot-impact`), a vMotion stun (`vsphere/object-types/vm/metrics/vmotion`). None → the cause is outside the VM and its host: the application, a dependency, or the network beyond the host. Say so; vSphere has no counter for it.
+   - Contention found → that resource's flow, then step 5. No contention on any resource → step 4.
+4. Guest OS (Guest OS layer, through VMware Tools). CPU run queue, memory page-out rate, disk queue. High while the VM shows no contention → the VM gets what it demands; the Guest OS or the application waits on its own queues. Size the Guest OS from Guest OS counters (`guest-os/system/concepts/guest-os-sizing`). Either way → step 5.
+5. Configuration (VirtualMachine). Always checked, also when step 3 found contention: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations (`vsphere/foundations/resource-controls`); VMware Tools, virtual hardware and Guest OS versions, and settings that are outdated or incompatible (`vsphere/object-types/vm/configuration/vm-configuration-review`). Known bugs are mostly configuration: an older version or incompatible settings. → step 6.
+6. Context in the window (VirtualMachine). A snapshot (`vsphere/technology/storage/concepts/snapshot-impact`), a vMotion stun (`vsphere/object-types/vm/metrics/vmotion`). Nothing in steps 3-6 → the cause is outside the VM and its host: the application, a dependency, or the network beyond the host. Say so; vSphere has no counter for it.
 
 ## Why this order
 - The window first: a counter read outside the complaint window, or averaged over a day, misses the wait.
 - Breadth before depth: many slow VMs point to a shared cause; tuning one VM would not help.
 - VM contention before Guest OS: contention is waiting the hypervisor imposes and the Guest OS cannot see. Rule it out before blaming the guest.
 - Guest OS before context: guest queues explain slowness with no hypervisor cause, and they are common.
-- Context last: limits, snapshots and stuns are causes of contention or of short stalls; they are checked when the counters do not explain it.
+- Configuration always: a configuration issue can cause a performance problem, and known bugs are mostly configuration (author, Q104). It is checked even when contention is found, because a limit or an outdated setting can be the cause of that contention.
+- Context last: snapshots and stuns cause short stalls; they are checked when the counters do not explain it.
 
 ## How to read the result
 - Contention on one resource → that resource's flow.
 - No contention, Guest OS queues high → the guest is short of vCPU or memory, or the application is the bottleneck.
-- No contention, queues normal, nothing in context → not a vSphere cause.
+- Contention and a configuration finding (a limit, an old version) → fix the configuration first.
+- No contention, queues normal, configuration clean, nothing in context → not a vSphere cause.
 
 ## Traps
 - "The VM's CPU Usage is 95%, so it is short of CPU" → Usage is consumption and includes Turbo; check Ready, Co-stop and Run.
@@ -72,6 +76,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
+- vsphere/object-types/vm/configuration/vm-configuration-review
 - vcf-operations/metrics/vm/peak-20-second-metrics
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 - vcf-operations/kpis/vm-performance
@@ -90,7 +95,8 @@ related:
 source:
   document: Knowledge base synthesis of the files in internal_derive
   path: n/a
-corrections: []
+corrections:
+- 'Step 5: author answer Q104 (2026-11-08): every performance flow, VM slow triage included, checks configuration; known bugs are mostly configuration.'
 review_notes:
 - 'Drafted by Claude 2026-11-06 from the files in internal_derive and vsphere/object-types/vm/health-check/vm-health-check (architecture review 2026-11-06, section 3.3). The order of checks is to be confirmed by the author from field practice (Q060).'
 status: draft

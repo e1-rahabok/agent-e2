@@ -16,7 +16,10 @@
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 
 ## Dual track: proactive first, reactive as fallback
-- Reactive track: a complaint or an alert starts a manual process by the operations team: configuration issue? availability issue? known bug? consumption issue? Then remediation.
+- Reactive track: starts after an alert, an incident (outage, SLA breached) or a human complaint. A manual process by the operations team: configuration issue? availability issue? known bug? consumption issue? Then remediation.
+- Known bugs are mostly configuration issues: an older version or incompatible settings.
+- Proactive track: focuses on insight. The system has not detected a known problem; typically this is anomaly detection.
+- Anomaly detection by mathematics alone gives false positives: it lacks the real-world business context. What looks abnormal can be normal, and the reverse (a month-end batch, a planned migration).
 - Proactive track, four techniques feeding a human expert, who decides the remediation:
   - automated process: a morning health check of configuration and state, with remediation by rules IT sets;
   - insight: important but not urgent symptoms, reviewed top down by someone who knows the environment;
@@ -34,6 +37,7 @@
 1. Availability: a system that is down has no performance problem.
 2. Performance: a system so slow it is as good as down.
 3. Security: third, not first, in day-to-day operations.
+- Configuration is checked as a drill-down under each of the three: a configuration issue can cause any of them.
 - Assess all three on both sides of VCF, platform and product (`operations-management/performance/purpose-driven-architecture`).
 
 ## A 24-hour day
@@ -105,6 +109,7 @@
 
 ## Traps
 - "Proactive operations means proactive alerts" → reacting to an alert is reactive. Proactive is the scheduled health check, insight, modelling and baselining.
+- "An anomaly is a problem" → anomaly detection lacks business context: what looks abnormal can be normal, and the reverse.
 - "Troubleshooting automation needs AI" → the rules are finite and the usual remediation is moving VMs out of a cluster; rules and automation do it.
 - "The morning check covers the whole day" → the NOC live screen covers the rest of the day; the weekly review catches what both missed.
 - "The daily check shows every problem" → it covers at most a day; quarterly patterns need monthly baselining.
@@ -159,7 +164,8 @@ images:
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle) (pp. 58-65); SP5 Framework: Pillars (pillar per phase table)'
-corrections: []
+corrections:
+- 'Sections ''Dual track'' and ''Day-to-day order'': author answer Q104 (2026-11-08): reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is Claude''s.'
 review_notes:
 - 'Section ''Dual track'': the book says 3 techniques and lists 4 (daily optimization, insight review, performance quantification, monthly baselining); the diagram names them automated process, insight, modelling, monthly performance baselining. Written from the diagram. Q105, Q107.'
 - 'Daily check length: about 1 minute (text), 10 minutes (timeline), 5 minutes (monitoring table). Written as 10 minutes from the timeline, short so it can run twice a day. Q105.'

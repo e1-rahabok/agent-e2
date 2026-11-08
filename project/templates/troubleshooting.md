@@ -13,7 +13,7 @@ flowchart TD
 
 ## Checks, in order
 1. <Metric> (<object>). <Threshold, with source> → step 2. Otherwise → step 4.
-2. Contention metrics first, then consumption, then context.
+2. Contention metrics first, then configuration (always, author Q104), then consumption, then context.
 
 ## Why this order
 - <Reason for each step's position.>
