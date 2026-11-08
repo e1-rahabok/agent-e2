@@ -589,8 +589,8 @@ Each entry has:
 ### Q133 · Health check · Decisions still open from the 2026-11-08 review
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section 10); the three health checks.
 - Search: not from the book.
-- Question: (a) Without VCF Operations (vCenter only), should a health check fall back to the raw counters of each KPI sub-metric? The ESXi health check says so in step 3. (b) Order: a health check follows health-risk-efficiency (availability, performance, security, then risk, then efficiency); a troubleshooting flow follows the Not Healthy order (contention, configuration, availability, utilization). Correct? This also settles Q104. (c) Keep the word triage for the first troubleshooting step after a complaint (vm-slow-triage), or drop it?
-- Written as now: (a) yes, in the ESXi health check only; (b) as stated; (c) triage kept.
+- Question: (a) Without VCF Operations (vCenter only), should a health check fall back to the raw counters of each KPI sub-metric? Answered (author, 2026-11-08): the question is invalid; there is no vCenter without VCF Operations. The fallback line was removed from the ESXi health check. (b) Order: a health check follows health-risk-efficiency (availability, performance, security, then risk, then efficiency); a troubleshooting flow follows the Not Healthy order (contention, configuration, availability, utilization). Correct? This also settles Q104. (c) Keep the word triage for the first troubleshooting step after a complaint (vm-slow-triage), or drop it?
+- Written as now: (a) resolved, no fallback; (b) as stated; (c) triage kept.
 - Answer:
 
 ## Resolved
