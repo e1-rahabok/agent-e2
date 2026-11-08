@@ -46,7 +46,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Repository layout
-- Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and `project/tools/`. Map: `README.md`, section Repository map.
+- Product (deployed): `knowledge/` and `harness/`. Proof: `benchmark/`. Project: `project/` and `project/tools/`. Map: `REPOSITORY-MAP.md`; how the parts fit: `ARCHITECTURE.md`, section Repository.
 - `harness/` depends on no folder outside the product. `project/tools/lint.py` imports the file parser from `harness/kb.py`, never the reverse.
 - What is indexed and what is not: `ARCHITECTURE.md`, section Local LLM use, Ingest.
 
