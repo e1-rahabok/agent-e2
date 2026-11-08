@@ -51,6 +51,7 @@
 - Two metrics, because vendors exclude scheduled downtime and can claim 99.999% while users see less:
   - Actual Availability (%): down is down, whatever the time, owner or cause. Easy to measure.
   - Operational Availability (%): excludes scheduled downtime and customer-caused downtime. Harder to measure. The SLA uses it.
+  - Scheduled downtime is downtime inside the green zone: the change window (also maintenance window, authorized execution window), the agreed time when approved changes, deployments, patches and infrastructure changes may enter production. Downtime outside it counts, even when planned.
 
 ```text
 Actual Availability (%)      = (minutes in month - all downtime minutes) / minutes in month × 100
@@ -256,7 +257,7 @@ corrections: []
 review_notes:
 - 'Section ''SLA calculation'': the book writes each counter as ''If VM CPU Ready > 2.5% then 100% else 0%'', which scores a breach as 100%. Written here as pass = 100%, so that the monthly mean reads 99.9% when good. Partial VM score (75%) vs binary failure vs ''a VM must pass all four'' in vsphere/object-types/cluster/kpis/cluster-sla-sli: Q095.'
 - 'Section ''Availability SLA'', example: the book counts 3 hours (Guest OS plus database restore) = 99.58%; by the book''s own definition (Guest OS ping, application start-up not counted) it is 45 minutes = 99.90%. Both written as arithmetic; which the example means: Q096.'
-- 'Section ''Availability SLA'', Operational Availability formula: written by Claude from the definition; the book has a Formula heading with no formula. Green zone (Q086) still undefined.'
+- 'Section ''Availability SLA'', Operational Availability formula: written by Claude from the definition; the book has a Formula heading with no formula. Green zone = change window (author, Q086, 2026-11-08).'
 - 'Section ''Performance SLA'', CPU Co-stop excluded: the book asks why Co-stop is excluded but gives the reason for CPU Contention only. ''Because it includes the Hyper-Threading effect'' is Claude''s reading of the 37.5% figure. Q097.'
 - 'Section ''What the numbers mean'', Memory Contention: the book says it is relative to memory used and not measured across time; the author''s answer to Q015 says time (page-fault wait). Written as time. Q097.'
 - 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them. ''Failed intervals allowed'' column: Claude converted the book''s ''< n times'' into whole 5-minute intervals.'

@@ -42,7 +42,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 ## Metrics per pillar
 | Pillar | Metric | Reading |
 |---|---|---|
-| Availability | Operational Availability (%) | Relative: against the availability architecture |
+| Availability | Operational Availability (%) | Relative: against the availability architecture and the green zone (change window) |
 | Availability | Actual Availability (%) | Absolute: as it happened; usually lower |
 | Performance | KPI (%) | Absolute: as it happened |
 | Performance | SLI (%) and SLA (%) | Relative: against the promised SLA |
@@ -152,7 +152,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Three variants of IaaS'', last bullet (contention from the pool limit or tenant overcommit is the tenant''s; Ready includes limit time): Claude, from the book''s resource pool row and the VM CPU Ready file.'
-- 'Section ''Metrics per pillar'': the book reads Operational Availability as relative to the availability architecture and green zone. Green zone not defined in this section (Q086). The Service Level Agreement section (extracted 2026-11-07 into sla-metrics) does not define it either.'
+- 'Section ''Metrics per pillar'': green zone = the change window (maintenance window, authorized execution window): the agreed time when approved changes, patches and deployments may enter production (author, Q086, 2026-11-08).'
 - 'Section ''A complete, correct and accurate SLA'', last bullet: reason added by Claude from observability/thresholds.'
 - 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
 - 'Book naming is older (Aria products); the knowledge base uses VCF Operations. Book corrections: Q093.'
