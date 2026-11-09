@@ -95,6 +95,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - Which source wins depends on the type of fact (author, 2026-11-09):
   - mechanism and interpretation (what a counter means, which metric to read, why a rule of thumb fails): the knowledge base wins over vendor pages, KB articles and blogs;
   - version-specific fact (defaults, configuration maximums, new or renamed counters, builds, bug fixes, scheduler changes): the newer official document wins when it is dated after the knowledge file's source; the file is flagged for review.
+  - The product can be newer than its own documentation: the VCF Operations 9.1 manuals are out of date in places (author, 2026-11-09; example: the VM Contention dashboard, deprecated in the product). A knowledge file that records the product's behaviour from the author wins over the manual.
 - Exact values come from the catalog and the calculator, and are shown as such.
 - Unsure is an answer: "The knowledge base does not settle this; here is what it does say."
 - Every fact cited. Linked files shown with their link type, so the same-name trap guard is visible.
