@@ -85,6 +85,11 @@
 - Reclamation: the infrastructure team should not force internal customers to cut consumption; developers outnumber administrators. Show the CFO the cost of waste. The CFO holds the hardware budget and makes each line of business optimize.
 
 ## Security and compliance
+- The question "is it secure?" covers both. They differ in urgency and in nature:
+  - Security management is operational, proactive and dynamic. It keeps the confidentiality, integrity and availability (the CIA triad) of hosts, storage fabrics and workloads against zero-day exploits, unauthorized access and runtime threats.
+  - Compliance management is structural, declarative and driven by governance. It enforces verifiable configuration baselines against internal policy, industry benchmarks (CIS Benchmarks, VMware security configuration guides) and regulation (PCI DSS, MAS Technology Risk Management, ISO 27001).
+- A security issue is more urgent: a non-compliant setting is being exploited, or it is exposed on a public network. That is present health.
+- Not every non-compliant setting raises a security alert: that would flood the team. A non-compliant setting is risk (future health) until it is exploited or exposed.
 - Security covers attacks, by insiders or outsiders: track malicious activity such as misuse of administrator accounts or denial of service.
 - Compliance covers settings that expose loopholes or must meet a standard. It is close to configuration: you comply by controlling configuration values.
 - Compliance is measured continuously, against internal and industry standards.
@@ -194,6 +199,7 @@ source:
   path: 'Your Private Cloud > SP5 Framework (opening, capabilities); SP5 Framework: Pillars (Availability, Performance, Capacity, Reclamation, Compliance and Security, Cost and Price, Non-Pillars) (pp. 43-44, 52-58)'
 corrections: []
 review_notes:
+- 'Section ''Security and compliance'': security vs compliance management, urgency, and why not every non-compliant setting is a security alert (author, Q102, 2026-11-09).'
 - 'Section ''The five pillars'': the five pillars follow the SP5 diagram (author, Q091, 2026-11-08). Security moved from pillar to platform. The fifth pillar is value: cost, price and business value (author, 2026-11-08).'
 - 'Section ''Relationships'': the text says Availability and Capacity have a line without arrowheads; the diagram shows an arrow from Availability to Capacity. The detailed relationship diagram (not copied) shows Availability → Performance, which the text says does not exist. Q101.'
 - 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value). Tag list: Q091.'

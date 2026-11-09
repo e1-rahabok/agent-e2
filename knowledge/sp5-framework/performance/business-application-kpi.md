@@ -9,10 +9,11 @@
 - Business leaders read IT by application: `vcf-operations/dashboards/it-leaders-dashboards`.
 
 ## Crown jewels
-- Crown jewels: the critical business applications, strategic to the core business. A small share of the VMs, essential to revenue, profit or image. Bank: internet banking. E-commerce: the online portal.
+- Crown jewels: the critical business applications, strategic to the core business. They contribute directly to revenue, to reputation, or both. A small share of the VMs.
+- Examples: an airline's ticketing and frequent flyer systems; a bank's internet banking and core banking; an online retailer's portal.
 - Check them several times a day, at least twice. The application team watches its system all day; a morning check is too late (`sp5-framework/concepts/proactive-operations`).
 - The question is whether the infrastructure causes the application's problem. Usually performance; sometimes availability or security.
-- They usually run in the Gold class of service (`sp5-framework/concepts/class-of-service`).
+- They always run in the Gold class of service (`sp5-framework/concepts/class-of-service`).
 
 ## How the KPI is built
 - Structure: application → tiers (web, application, database; or microservices, one pod set per function) → members (VMs, pods). In VCF Operations: `vcf-operations/dashboards/business-applications`.
@@ -70,6 +71,6 @@ corrections:
 review_notes:
 - 'Sections ''Crown jewels'' and the tier rules moved from sp5-framework/concepts/purpose-driven-architecture (2026-11-09).'
 - 'Section ''How the KPI is built'': the reasons (the passive node pulls the average up; the convoy) and the workaround (read the active node, exclude the passive by hand) are Claude''s.'
-- 'Section ''Crown jewels'': Gold class link is Claude''s.'
+- 'Section ''Crown jewels'': always Gold class; airline and bank examples (author, 2026-11-09).'
 status: draft
 ```

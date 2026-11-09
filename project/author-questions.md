@@ -223,14 +223,6 @@ Each entry has:
 - Written as now: text version for (a) and (b); (c) written as the label; (d) both, flagged.
 - Answer:
 
-### Q102 · Part 1 > SP5 Framework > Health · Where compliance and inventory sit
-- Files: [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md).
-- Search 1: "There are 4 problems that create risk in operations"
-- Image text (not searchable): present/future health image, "Is it safe? Security Compliance" under Present Health and "Inventory" under Future Health.
-- Question: the table and the grouping image put compliance under risk (future health) and inventory outside health (environment). The present/future health image puts compliance with security in present health and inventory in future health. Which grouping should the agent use?
-- Written as now: table and grouping image; the other image's details used as text only.
-- Answer:
-
 
 ### Q105 · Part 1 > Monitor | Troubleshoot; SP5 Framework: Process · Logs in monitoring and the length of the daily check
 - Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md).
@@ -566,7 +558,30 @@ Each entry has:
 - Written as now: (a) 8,640; (b) dark grey.
 - Answer:
 
+### Q149 · Term map · Wrong terms users write
+- Files: [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml) (35 rows, seeded from the glossary, the vocabulary file and the trap lines).
+- Search: not from the book.
+- Question: list the wrong terms VMware admins and architects write in tickets, forums and chats, each with what they actually mean (for example "steal time" means VM CPU Ready and Co-stop). Each becomes a row: the words, the knowledge-base terms, the file, the misreading.
+- Written as now: 35 rows written by Claude; none from real tickets.
+- Answer:
+
+### Q150 · URL questions · Pages with known Level 300 errors
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 3.4, URL questions); question 0091 is the first.
+- Search: not from the book.
+- Question: list 5-10 public pages (Broadcom KB or TechDocs, VMware blogs, community posts, third-party blogs) that you know are wrong, each with the error. Each becomes a URL question where a frontier model tends to agree with the page.
+- Written as now: one URL question (0091, the VM Contention dashboard page).
+- Answer:
+
 ## Resolved
+
+### Q102 · Part 1 > SP5 Framework > Health · Where compliance and inventory sit
+- Files: [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md).
+- Search 1: "There are 4 problems that create risk in operations"
+- Image text (not searchable): present/future health image, "Is it safe? Security Compliance" under Present Health and "Inventory" under Future Health.
+- Question: the table and the grouping image put compliance under risk (future health) and inventory outside health (environment). The present/future health image puts compliance with security in present health and inventory in future health. Which grouping should the agent use?
+- Written as now: table and grouping image; the other image's details used as text only.
+- Answer: "Is it secure?" implies both security and compliance. A security issue is more urgent: the non-compliant setting is being exploited already or is on a public network. Not all non-compliant settings trigger a security alert, as that would cause excessive noise. Security management: operational, proactive, dynamic; CIA triad of hosts, storage fabrics and workloads against zero-day exploits, unauthorized access and runtime threats. Compliance management: structural, declarative, governance-driven; verifiable baselines against internal policy, industry benchmarks (CIS, VMware security configuration guides) and regulation (PCI-DSS, MAS TRM, ISO 27001).
+- Applied 2026-11-09: sp5-framework/concepts/overview (section Security and compliance), health-risk-efficiency (definition vs check, analogies condensed), glossary pair Security vs compliance. Grouping kept: security incidents in present health; compliance in risk.
 
 ### Q133 · Health check · Decisions still open from the 2026-11-08 review
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section 10); the three health checks.

@@ -1,7 +1,10 @@
 # Health, risk and efficiency
 
 ## Why one score fails
-- What counts as healthy depends on the object and its context. A score that covers everything drops when anything is imperfect, so it reads low while the environment runs well.
+- IT uses the word health everywhere and rarely defines it. Trying to cover everything makes the definition too broad.
+- What counts as healthy depends on the object, the aspect and the scope. A score that covers everything drops when anything is imperfect, so it reads low while the environment runs well.
+- The same holds outside IT. A person can be physically fit and still ill in another sense; a country can be a strong economy and weak in some of its provinces. A health statement needs its aspect and its scope.
+- So there is no single health score. The definition of health (present health, risk, efficiency, below) is separate from the action of checking it: the health check runs availability, performance, security, capacity, with configuration as the drill-down (`vsphere/object-types/cluster/health-check/cluster-health-check`).
 - The book maps health to the pillars of operations and splits it into three metrics: present health, risk (future health) and efficiency.
 - Inventory is left out: it describes the environment, not its health.
 ![Environment: inventory. Health: performance, availability, security. Risk: capacity, configuration, compliance. Efficiency: cost, sustainability](images/health-risk-efficiency-pillar-grouping-diagram.png)
@@ -11,7 +14,7 @@
 - Three problem types, checked in this order:
   - Availability (is it up?): workloads (VMs, Kubernetes) and infrastructure (VCF appliances, ESXi). Crashes and unscheduled downtime. The data comes mostly from logs, not metrics.
   - Performance (is it fast?): actual slowness (contention) and its main cause (very high consumption), as a trend over time. Read both the KPI and the SLA.
-  - Security, present part (is it safe?): actual incidents. Example: the environment runs well, but unauthorized access and suspicious commands appear on ESXi consoles. Data from logs, events and metrics.
+  - Security, present part (is it secure?): actual incidents. Example: the environment runs well, but unauthorized access and suspicious commands appear on ESXi consoles. Data from logs, events and metrics.
 - An environment can be 100% available and still slow: availability and performance are measured separately.
 
 ## Future health: risk
@@ -36,6 +39,8 @@
 - Not part of health, but read next to it. Watch how the counts change over time and whether that matches the plan.
 
 ## Traps
+- "One health score for the whole environment" → health needs an aspect and a scope; a broad score is low while everything runs well.
+- "The health check order must match the health grouping" → the grouping defines health; the check is an action in its own order (availability, performance, security, capacity).
 - "The health score is low, so something is broken" → a broad score drops on risk and inefficiency too. Read present health, risk and efficiency separately.
 - "Security findings mean we are under attack" → a finding of exposure is risk (future health). Present health counts only actual incidents.
 - "Everything is up and fast, so the environment is healthy" → present health is fine; risk (no HA, outdated versions, capacity trend) can still be high.
@@ -83,6 +88,8 @@ source:
   path: 'Your Private Cloud > SP5 Framework > Health (pp. 50-52)'
 corrections: []
 review_notes:
+- 'Section ''Why one score fails'': the industry rarely defines health; the person and country analogies (condensed); definition of health vs the health check as an action (author, 2026-11-09).'
+- 'Security and compliance grouping: author answer Q102 (2026-11-09); the question is secure covers both; a security issue is present (exploited or exposed), a non-compliant setting is risk. See sp5-framework/concepts/overview, section Security and compliance.'
 - 'Grouping differs inside the section: the grouping image puts compliance under risk and inventory under environment; the present/future health image puts compliance in present health (with security) and inventory in future health. Written from the text table and the grouping image. Q102.'
 - 'Section ''Present health'' and ''Future health'': details (logs, data sources, four kinds of setting issue, capacity questions) from the present/future health image (not copied).'
 - 'The personal and country analogies of the book are left out.'
