@@ -1,20 +1,23 @@
 # Reclamation
 
 ## When reclamation is the provider's job
+
 - When VMs are free of charge, the infrastructure team have the right to reclaim.
 - When VMs are charged and are the main source of the IT budget, the application team owns VM cost; the infrastructure team has no authority to reclaim. Stocktake still applies to internal IT with chargeback (`sp5-framework/capacity/unused-vm`, section Annual stocktake).
 - Reclamation is step 3 of the six steps (`sp5-framework/capacity/capacity-management-process`).
 
 ## Five areas, easiest to hardest
+
 ![Five areas from easiest to hardest: non-VM files (unmapped blocks, ISO, orphaned VMDK, RDM, LUN) reclaim disk; powered-off VMs reclaim disk; idle VMs reclaim memory and CPU (allocation only), disk after power-off then delete; oversized VMs reclaim memory and CPU (allocation only); unused VMs reclaim CPU and memory, disk after power-off then delete](images/reclamation-five-areas-easiest-to-hardest-diagram.png)
 
-| Order | Area | Reclaims |
-|---|---|---|
-| 1 | Non-VM files: unmapped blocks, ISO, orphaned VMDK, RDM, LUN | Disk |
-| 2 | Powered-off VM | Disk |
-| 3 | Idle VM | Memory; CPU in allocation only; disk after power-off and delete |
-| 4 | Oversized VM | Memory; CPU in allocation only |
-| 5 | Unused VM | CPU and memory; disk after power-off and delete |
+
+| Order | Area                                                        | Reclaims                                                        |
+| ----- | ----------------------------------------------------------- | --------------------------------------------------------------- |
+| 1     | Non-VM files: unmapped blocks, ISO, orphaned VMDK, RDM, LUN | Disk                                                            |
+| 2     | Powered-off VM                                              | Disk                                                            |
+| 3     | Idle VM                                                     | Memory; CPU in allocation only; disk after power-off and delete |
+| 4     | Oversized VM                                                | Memory; CPU in allocation only                                  |
+| 5     | Unused VM                                                   | CPU and memory; disk after power-off and delete                 |
 
 - Non-VM files are easiest: they have no other owner. Only disk can be reclaimed from them, not CPU or memory.
 - Keep templates and ISO files in one datastore per physical location.
@@ -23,15 +26,17 @@
 - Snapshot: not a backup. Kept for long, it slows the VM (`vsphere/technology/storage/concepts/snapshot-impact`). Keep it only to protect a change; remove it once the change is validated. VCF Operations lists snapshots separately because they are easy to reclaim.
 
 ## What each area frees
-| Area | Frees | Does not free |
-|---|---|---|
-| Unused VM | Real CPU cycles and ESXi memory: the highest benefit | Disk until deleted |
-| Oversized VM | ESXi memory; VM performance | CPU cycles: the removed vCPUs were idle; allocation only |
-| Idle VM | ESXi memory (consumed pages stay on the host) | CPU cycles: the idle loop uses almost none; allocation only. Disk until deleted |
-| Powered-off VM | Datastore space | Cluster capacity: it holds no CPU or memory |
-| Orphaned VMDK | Datastore space | Cluster capacity |
-| Snapshot | Datastore space | - |
-| Unmapped blocks | Datastore and array space | - |
+
+
+| Area            | Free up                                                                           | Does not free up                                                                      |
+| --------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Unused VM       | Real CPU cycles and ESXi memory: the highest benefit                              | Disk until VM is deleted                                                              |
+| Oversized VM    | ESXi memory;<br /> <br /><br />Cluster capacity: lower Cluster overcommit ratio | CPU cycles: the removed vCPUs were idle; allocation only                              |
+| Idle VM         | ESXi memory (consumed pages stay on the host)                                     | CPU cycles: the idle loop uses almost none; allocation only. Disk until VM is deleted |
+| Powered-off VM  | Datastore space                                                                   | Cluster capacity: it holds no CPU or memory                                           |
+| Orphaned VMDK   | Datastore space                                                                   | Cluster capacity                                                                      |
+| Snapshot        | Datastore space                                                                   | -                                                                                     |
+| Unmapped blocks | Datastore and array space                                                         | -                                                                                     |
 
 - Unused VMs are the hardest to find: they look active, neither idle nor oversized.
 - Oversized VM performance gain: largest when the Guest OS does many context switches and the VM is larger than the cores of one host.
@@ -39,6 +44,7 @@
 - Storage is saved only when the VM is deleted, not when it is powered off.
 
 ## Approach for running VMs
+
 - Active VMs are politically the hardest: they serve the business.
 - Large VMs first. Reclaim CPU and memory in separate changes: if the application team reports slowness after a change to both, both have to be restored.
 - Small VMs are rarely worth it: a 1-vCPU idle VM cannot shrink further, and 4 to 2 vCPUs buys little on hosts with more than 20 cores per socket.
@@ -50,16 +56,19 @@
   - large VMs lower the consolidation ratio.
 
 ## Two sides of a running VM
-| Stage | Question | Where to measure |
-|---|---|---|
-| Before | Does the VM qualify (idle, oversized)? | Inside the VM: the workload runs there |
-| After | How much can be reclaimed? | ESXi metrics: ESXi resources are reclaimed |
+
+
+| Stage  | Question                               | Where to measure                           |
+| ------ | -------------------------------------- | ------------------------------------------ |
+| Before | Does the VM qualify (idle, oversized)? | Inside the VM: the workload runs there     |
+| After  | How much can be reclaimed?             | ESXi metrics: ESXi resources are reclaimed |
 
 - Before: ESXi-level metrics mislead. Some load charged to the VM is not the VM's own (vSphere Replication, vMotion); some CPU metrics move with power management.
 - After: Guest OS usage does not matter. A queue inside the Guest OS does not load the hypervisor, so it holds nothing to reclaim.
 - Two different logics, one per stage.
 
 ## Idle VM
+
 - Idle means no useful business workload. A VM running only non-business work (antivirus scan, Windows update) counts as idle.
 - Non-business work is hard to detect without per-process allow lists, and even those miss software that runs through Windows or Linux system services.
 - Defined on CPU only. Network and disk activity take CPU cycles (packets processed, data copied to RAM), so CPU idleness implies the rest.
@@ -76,18 +85,21 @@
 - Consumed pages linger long after a VM goes idle: Windows and Linux hold on to memory they have used, so the host keeps it mapped. Powering off reclaims it. The CPU side of idle vCPUs: `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`.
 
 ## Powered-off VM
+
 - Harder than orphaned files: the VM has an owner who must agree. Owner tags (email, business unit) make this possible.
 - Two definitions:
   - non-stop: powered off for the whole period; a short power-on resets it. VCF Operations uses this one: safer.
   - percentile: allowed on for a short part of the period.
 
 ### Power-off as a brake
+
 ![Idle → powered off (reclaim CPU and RAM, less network use, can power on again) → delete (reclaim disk)](images/vm-idle-powered-off-delete-continuum-diagram.png)
 
 - Treat idle and powered off as one continuum: power off idle VMs early. CPU and memory come back; powering on again undoes it.
 - Caveat: the VMs left running have a higher average utilization, so the overcommit ratio required to break even may not be reached.
 
 ## TRIM and unmap
+
 - When the Guest OS deletes a file, it does not zero the blocks; it leaves them. Faster, and recoverable. The thin virtual disk keeps its size, and the array keeps the blocks too.
 - TRIM (ATA) and unmap (SCSI) pass the free blocks down so that the virtual disk and the array can release them.
 - Applies only to thin-provisioned disks.
@@ -95,6 +107,7 @@
 - ESXi metrics: `vsphere/technology/storage/metrics/host/datastore`, section Unmap.
 
 ## Traps
+
 - "The VM is idle, so its memory is already free" → Consumed stays; only power-off returns it.
 - "Powering off an idle 10-vCPU VM frees 10 vCPUs of CPU cycles" → idle vCPUs used almost no cycles; it frees allocation and memory only.
 - "A powered-off VM frees datastore space" → space returns only when the VM is deleted.
@@ -106,6 +119,7 @@
 - "Snapshots are a backup, keep them" → keep them only for the change window.
 
 ## Metadata
+
 ```yaml
 id: sp5-framework/capacity/reclamation
 retriever_guide: how-it-works
