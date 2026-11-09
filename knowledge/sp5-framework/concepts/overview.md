@@ -1,18 +1,20 @@
 # SP5 framework
 
 ## SP5 framework
-- A private cloud on VCF needs its own IT operations management framework. SP5: the IT business strategy plus five components: policy, pillars, process, people, platform.
+
+- A private cloud on VCF needs its own IT operations management framework. The SP5 Framework implements the IT private cloud business strategy using the five P: policy, pillars, process, people, platform.
 - Strategy: an SLA-backed enterprise private cloud.
 - Policy (business and IT) and process (Day 2 → Day 0 → Day 1) are set along one timeline with people (users, application teams, infrastructure team, leadership).
-- Pillars: the disciplines a CIO cares about. People are organized around them; policies and processes balance governance and agility. A full set of policies and SOPs answers who does what, when, where and how.
+- Pillars: the disciplines a CIO cares about. People are organized around pillars; policies and processes. A full set of policies and SOPs answers who does what, when, where and how.
 - Platform: the system architecture (compute, storage, network, security, management and portal), implemented with a product such as VCF.
-![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
+  ![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
 - Why a new framework instead of ITIL or COBIT: `sp5-framework/concepts/why-a-new-framework`.
 - Metric types per pillar (contention, consumption, context): `sp5-framework/concepts/triple-see-method`.
 - Modelling a pillar into one number (KPI, risk): `sp5-framework/concepts/modelling`.
 - Day 2 → Day 0 → Day 1: `sp5-framework/concepts/purpose-driven-architecture`, section Plan from Day 2.
 
 ## What a private cloud manages
+
 - Consumer side: tenants consume and pay for IaaS through a self-service portal and API: SLA monitoring, inventory, projects, troubleshooting, security, team, bill.
 - Provider side:
   - IaaS management: the services above the platform (Kubernetes, database, desktop, private AI, VM), each managed by its persona (SRE, DBA, VDI team);
@@ -24,6 +26,7 @@
 - Acid test of operations management: the lead can take a long holiday with no escalation call for information or decisions only they hold.
 
 ## The five pillars
+
 - Availability, performance, compliance, capacity, value. Each is a unit of management with its own discipline. The `pillar` tag of the knowledge base uses these five.
 - Value management keeps three things apart: the cost of the infrastructure IT spends, the price IT charges each tenant (line of business), and the business value of the investment. The SP5 diagram labels the pillar Cost + Price.
 - Inventory and configuration are not pillars: they sit under all five.
@@ -32,6 +35,7 @@
 - The complexity of a pillar depends on the technology: vSAN capacity is more dynamic than a traditional SAN; a storage policy change can raise consumption at once.
 
 ## Relationships
+
 - Symptom and root cause sit in different pillars: a performance problem can come from configuration (outdated settings, incompatible versions).
 - Arrows mean impact:
   - Availability raises cost: extra resources with no capacity benefit.
@@ -43,30 +47,34 @@
   - Inventory and configuration do not impact each other.
 - Availability has no line to performance: a host outage planned for in the design does not reduce usable capacity, so performance holds.
 - Security and compliance sit outside the core group: usually another department, with a scope beyond the data centre (building security, work-from-home).
-![Capacity → Performance (red, non-linear); Cost & Price → Performance and → Capacity; Availability → Capacity and → Cost & Price; Security + Compliance → Cost & Price. Below: Inventory — Configuration (no arrow) → Sustainability](images/pillars-of-operations-relationships-diagram.png)
+  ![Capacity → Performance (red, non-linear); Cost & Price → Performance and → Capacity; Availability → Capacity and → Cost & Price; Security + Compliance → Cost & Price. Below: Inventory — Configuration (no arrow) → Sustainability](images/pillars-of-operations-relationships-diagram.png)
 
 ## Availability
+
 - Solutions span snapshots, backup, redundancy, fault tolerance, clustering and site recovery. Most consume resources (load balancers, replication), so they go into capacity planning; then they do not hurt performance.
 - Include the load of a DR event in capacity planning.
 - Two metrics: Actual Availability (%) ignores HA design and scheduled downtime; Operational Availability (%) accounts for them, is higher, and is the SLA number (`sp5-framework/concepts/sla-metrics`).
 - Each extra nine shrinks the margin of error 10x. The book puts five nines at 10x the cost of four nines.
 
 ## Performance
+
 - The most important pillar in day-to-day operations. With HA designed in, part of the system can be down with no impact on performance or capacity.
 - Often confused with capacity: more work done is read as good performance. That reading makes idle look like poor performance.
 - The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: `sp5-framework/concepts/performance-vs-capacity`.
 
 ## Capacity
+
 - Two kinds:
 
-| Item | Short term | Long term |
-|---|---|---|
-| Performed by | Day-to-day operations | Capacity planner |
-| Decision | Stop provisioning new load | Buy hardware |
-| Ties to | Availability, performance | Value (cost) |
-| Timeline | Now; no projection | Future; projection mandatory |
-| Scope | Resources provisioned within an hour | Resources not yet purchased |
-| Focus | Hardware | Software (costs more) |
+
+| Item         | Short term                           | Long term                    |
+| ------------ | ------------------------------------ | ---------------------------- |
+| Performed by | Day-to-day operations                | Capacity planner             |
+| Decision     | Stop provisioning new load           | Buy hardware                 |
+| Ties to      | Availability, performance            | Value (cost)                 |
+| Timeline     | Now; no projection                   | Future; projection mandatory |
+| Scope        | Resources provisioned within an hour | Resources not yet purchased  |
+| Focus        | Hardware                             | Software (costs more)        |
 
 - Long-term lead time follows procurement: months.
 - Short term looks at the consumer, long term at the provider.
@@ -80,11 +88,13 @@
 - How reservation, commitment, allocation, share and utilization feed the pillars:
   - share → contention (quality of service); utilization causes contention; contention → performance;
   - utilization → capacity; reservation and commitment → capacity; allocation → capacity only in plan;
-  - allocation, reservation, commitment and share justify cost and price; a reservation becomes a share.
-![Inputs (share, reservation, commitment, contention, utilization, allocation) and what is managed (performance, capacity, cost & price): share → contention (QoS); utilization causes contention; contention → performance; utilization, reservation, commitment → capacity; allocation → capacity only in plan; allocation, reservation, commitment, share justify cost & price; reservation becomes share](images/share-reservation-commitment-allocation-to-performance-capacity-cost-diagram.png)
+  - allocation, reservation, commitment and share justify cost and price;
+  - Reservation in planning phase becomes share in running phase. 
+    ![Inputs (share, reservation, commitment, contention, utilization, allocation) and what is managed (performance, capacity, cost & price): share → contention (QoS); utilization causes contention; contention → performance; utilization, reservation, commitment → capacity; allocation → capacity only in plan; allocation, reservation, commitment, share justify cost & price; reservation becomes share](images/share-reservation-commitment-allocation-to-performance-capacity-cost-diagram.png)
 - Reclamation: the infrastructure team should not force internal customers to cut consumption; developers outnumber administrators. Show the CFO the cost of waste. The CFO holds the hardware budget and makes each line of business optimize.
 
 ## Security and compliance
+
 - The question "is it secure?" covers both. They differ in urgency and in nature:
   - Security management is operational, proactive and dynamic. It keeps the confidentiality, integrity and availability (the CIA triad) of hosts, storage fabrics and workloads against zero-day exploits, unauthorized access and runtime threats.
   - Compliance management is structural, declarative and driven by governance. It enforces verifiable configuration baselines against internal policy, industry benchmarks (CIS Benchmarks, VMware security configuration guides) and regulation (PCI DSS, MAS Technology Risk Management, ISO 27001).
@@ -97,12 +107,14 @@
 - Guarantee only what you manage: no Guest OS in the service, no Guest OS compliance and no SLA on it. With the Guest OS in the service, manage its configuration (for example with Active Directory Group Policy).
 
 ## Value: cost, price and business value
+
 - Needed to become a real service provider.
 - Price: hardware is a commodity and the price per VM is similar across providers; SLAs are the way to differentiate. Price must exceed cost but can be set independently of it. Discounts and progressive pricing set the terms and stop oversized VMs before production. Per VM, a better Performance SLA earns a higher price: price/performance.
 - Cost: at platform level it moves with capacity. Higher utilization, lower cost per VM.
 - Cost and capacity can move independently: a technology refresh adds capacity at the same cost; cheaper service rates cut cost with the same capacity.
 
 ## Non-pillars
+
 - Inventory: what you have, where, and how it changes. A by-product: capacity and cost decisions shape it.
 - Configuration: a means to an end. It matters only through security, capacity, performance and availability; it is both the cause of and the fix for problems in all of them.
 - Sustainability: covered by capacity and cost. Only the power source is new; it is the same data from another angle.
@@ -110,14 +122,16 @@
 - Recoverability: a property of availability. Debuggability: of performance and availability. Manageability: of configuration.
 
 ## Inventory vs configuration
-| Item | Inventory | Configuration |
-|---|---|---|
-| What | An account of what is where: location, movement, count | Properties of the inventory; location is one property |
-| Properties used | A small subset: counting objects | The full set, set by choice or accepted |
-| Drift | Not relevant | Important |
-| Movement | Important | Not relevant |
-| Stocktake | Yes, physical or virtual | No |
-| Goal | Distribution: keep it balanced (VMs per cluster) | Variance: keep it minimal (VM hardware versions) |
+
+
+| Item            | Inventory                                              | Configuration                                         |
+| --------------- | ------------------------------------------------------ | ----------------------------------------------------- |
+| What            | An account of what is where: location, movement, count | Properties of the inventory; location is one property |
+| Properties used | A small subset: counting objects                       | The full set, set by choice or accepted               |
+| Drift           | Not relevant                                           | Important                                             |
+| Movement        | Important                                              | Not relevant                                          |
+| Stocktake       | Yes, physical or virtual                               | No                                                    |
+| Goal            | Distribution: keep it balanced (VMs per cluster)       | Variance: keep it minimal (VM hardware versions)      |
 
 - Configuration maximum is in fact an inventory maximum.
 - VMs in a cluster: inventory. ESXi hosts in a cluster: inventory, and configuration as well, because the host count is the cluster design; a deviation must be explained in the design document.
@@ -128,6 +142,7 @@
   - provider layers: cloud services, Kubernetes, vSphere with vSAN and NSX, physical (network, arrays, servers, UPS, racks).
 
 ## Traps
+
 - "Treat availability, performance and security as one health score" → they are separate pillars with separate metrics. Up is not fast; fast is not secure.
 - "Utilization is low, so capacity is fine" → short-term capacity is full when current demand is not served. Stop provisioning until contention is explained.
 - "More work done means better performance" → performance is contention. Idle is not poor performance.
@@ -143,6 +158,7 @@
 - "Sustainability is a sixth pillar" → it reads capacity and cost data from another angle.
 
 ## Metadata
+
 ```yaml
 id: sp5-framework/concepts/overview
 retriever_guide: how-it-works

@@ -3,7 +3,7 @@
 ## Status
 - vCenter 9.0: deprecated. Removal planned for a future vCenter release. Source: KB 312147.
 - vCenter 9.0 deprecates the requirement for vCLS to be active on clusters. KB 312147 recommends Retreat Mode.
-- vCenter 9.1: the author states vCLS is deprecated. Third-party sources say:
+- vCenter 9.1: 
   - vCLS is off by default,
   - it cannot be re-enabled,
   - SDDC Manager and VCF Installer controls were removed.

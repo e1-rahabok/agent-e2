@@ -1,18 +1,21 @@
 # KPI vs SLA
 
 ## KPI means performance
-- In this knowledge base KPI is strictly about performance: "performance" has a specific meaning in enterprise IT.
-- Key indicators for availability are KAI; for compliance, KCI. One name per pillar keeps implementation unambiguous.
+
+- In this knowledge base KPI is strictly about performance: "performance" has a specific meaning in enterprise IT infrastructure.
+- While capacity and availability can impact performance, they should not be mixed up. One name per pillar keeps monitoring unambiguous.
 - A KPI is one metric that quantifies the true performance of a logical entity.
 - A KPI is a baseline, the standard expectation maintained with effort, not a target still to reach. Provider and consumer each have their own KPI. The ideal, an ESXi host at 100% while no VM sees contention, is not realistic.
-- A performance SLA is rarely defined in public sources: the phrase is used without a number. Without a number it is subjective, and a dispute with a paying customer is lost.
+- A performance SLA is rarely defined in public sources: the phrase is used without a number. Without a number it becomes subjective to the interpretation.
 
 ## Three steps of maturity
-| Step | How it works |
-|---|---|
-| Complaint | Reactive, alert-driven, tickets passed between teams, blame between teams |
-| KPI | Modelled, measured, agreed; one policy for all; SOPs from insight; an RCA closes with an alert set up |
-| SLA | Part of the business contract; one policy per class of service; price and QoS separate the classes |
+
+
+| Step      | How it works                                                                                          |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| Complaint | Reactive, alert-driven, tickets passed between teams, blame between teams                             |
+| KPI       | Modelled, measured, agreed; one policy for all; SOPs from insight; an RCA closes with an alert set up |
+| SLA       | Part of the business contract; one policy per class of service; price and QoS separate the classes    |
 
 - The KPI step:
   - uses both the 20-second and the 5-minute average;
@@ -24,9 +27,10 @@
 - SLI means SLA leading indicator, not service level indicator. The two sound like peers; they are not.
 - Start with KPIs: they need no class of service. With different expectations for production and non-production, make one group per environment and a super metric that averages each group's KPI. Production should score better.
 - A KPI is the step that leads to operations with formal business SLAs.
-![Three steps: Complaint (reactive, blamestorming, alert-driven, tickets passing), KPI (modelled, measured, agreed; insight-based SOP; RCA closed when alert set up), SLA (business contract; 1-month average of SLI; pricing and QoS per class)](images/complaint-kpi-sla-maturity-steps-diagram.png)
+  ![Three steps: Complaint (reactive, blamestorming, alert-driven, tickets passing), KPI (modelled, measured, agreed; insight-based SOP; RCA closed when alert set up), SLA (business contract; 1-month average of SLI; pricing and QoS per class)](images/complaint-kpi-sla-maturity-steps-diagram.png)
 
 ## KPI vs SLA
+
 - Scope:
   - KPI: one metric for one object. VM and Guest OS each have a KPI. For the application team they are one entity (permanent 1:1), so operations can report the average of the two as a VM GOS KPI (`sp5-framework/performance/performance-kpi-design`).
   - SLA: a set of metrics in the contract between provider (infrastructure team) and consumer (application team or business unit). What happens inside the Guest OS is not part of the VM SLA.
@@ -55,9 +59,10 @@
   - application (IT developers): custom code and packaged ISV software, such as web server, application server and database KPIs;
   - infrastructure (IT administrators): consumer layer VM KPI and Kubernetes pod KPI; provider layer vSphere cluster, vSAN and NSX Edge KPIs.
   - The application SLA and the IaaS SLA each cover availability, performance and compliance.
-![Layer, owner, SLA and KPI: business (LOB), application (IT developers) and infrastructure (IT administrators); App SLA and IaaS SLA each with availability, performance, compliance](images/layer-owner-sla-kpi-table.png)
+    ![Layer, owner, SLA and KPI: business (LOB), application (IT developers) and infrastructure (IT administrators); App SLA and IaaS SLA each with availability, performance, compliance](images/layer-owner-sla-kpi-table.png)
 
 ## KPIs in VM as a Service
+
 - One SLA contract per service, holding several SLA metrics (availability, performance, security); several KPIs.
 - Guest OS SLA: when central IT owns the Guest OS, it provides a Guest OS SLA with its own availability, performance and security SLA. Its values can be combined with the VM SLA for reporting.
 - Security SLA is preferred over compliance SLA, which is correct but narrower: compliance compares settings against a secured configuration; security also covers activity, such as undesirable activity that is a potential risk.
@@ -66,9 +71,10 @@
 - vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: `vsphere/object-types/cluster/kpis/cluster-performance`.
 - vSAN KPI: disk latency of every VM using the vSAN datastore, from the same or another cluster.
 - NSX KPI: many-to-many with vSphere clusters, so not tied to one cluster.
-![KPI and SLA scope in VM as a Service: Guest OS KPI and VM KPI with Guest OS SLA and VM SLA; the business application KPI spans service, Guest OS and VM; ESXi, vSAN and NSX KPIs measure their own purpose](images/vm-as-a-service-kpi-and-sla-scope-diagram.png)
+  ![KPI and SLA scope in VM as a Service: Guest OS KPI and VM KPI with Guest OS SLA and VM SLA; the business application KPI spans service, Guest OS and VM; ESXi, vSAN and NSX KPIs measure their own purpose](images/vm-as-a-service-kpi-and-sla-scope-diagram.png)
 
 ## Traps
+
 - "The SLA is green, so there is no performance problem" → the SLA is a 30-day lagging average at 5-minute accuracy. The KPI, at 20-second accuracy over a moving window, shows the problem first.
 - "A KPI of 75% is a failure, since SLAs are above 99%" → KPIs are lower by design; 75% is acceptable. The two scales are not comparable.
 - "Put every KPI metric in the SLA" → more metrics make compliance harder. The SLA keeps the few contract metrics; the KPI covers the rest as early warning.
@@ -77,6 +83,7 @@
 - "KPI means any key indicator, availability included" → KPI is performance; availability is KAI, compliance KCI.
 
 ## Metadata
+
 ```yaml
 id: sp5-framework/performance/kpi-vs-sla
 retriever_guide: how-it-works
