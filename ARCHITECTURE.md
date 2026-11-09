@@ -127,7 +127,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 7. Status
-- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, one clarifying round per question (MISSION.md, section 5), `fetch_url` and `web_search`, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
+- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, `fetch_url` and `web_search`, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
 
 ## 8. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -170,6 +170,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
 - Use terms from `knowledge/glossary.md`: preferred names, defined terms, confusable pairs.
 - Quote a threshold only when a file states it with its source.
+- One clarifying round (`harness/clarify.py`, `modes.converse`; rules in MISSION.md, section 5). The shipped assistant runs the conversation kind `chat`: the model may reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
 
 ### Troubleshooting questions (`troubleshooting`)
 - Retrieve the matching `troubleshooting/` file first. Retrieve its `internal_derive` metric files with it.

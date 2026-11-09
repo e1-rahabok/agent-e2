@@ -8,6 +8,7 @@ meta:
     means: Knowledge-base terms added to the search query.
     note: 'One line for the model: the misreading the user''s words carry, and what to read instead.'
     files: Knowledge files pulled into the context when the row matches, most important first.
+    premise: 'Optional, true when the words usually carry a wrong premise (an odd question): the note is marked so the model names the premise first (harness/clarify.py).'
   review_notes:
   - 'Built 2026-11-09 (author request): question understanding before search. Seeded from knowledge/glossary.md (Synonyms, Confusable pairs), project/vocabulary.md (Words to avoid) and the Traps sections. Each note restates its file; the file is the source.'
   - 'Read by harness/terms.py. Switch: term_map in benchmark/runner/config.yaml.'
@@ -47,16 +48,19 @@ rows:
   note: 'VM CPU Latency also rises with lower frequency and Hyper-Threading, with no wait. CPU Ready is the wait for a physical CPU.'
   files: [vsphere/technology/cpu/metrics/virtual-motherboard/latency]
 - id: add-vcpu
+  premise: true
   match: ['(add|more|increase|give it|bump)( more)? (v ?cpus?|cores?|processors?|cpu)\b', '(upsize|scale up) the (vm|cpu)']
   means: rightsizing Ready Co-stop Guest OS run queue NUMA
   note: 'More vCPUs can raise CPU Ready and Co-stop and break NUMA fit. Add vCPUs only when the Guest OS run queue shows a CPU bottleneck and the VM has no contention.'
   files: [sp5-framework/capacity/rightsizing, vsphere/technology/cpu/metrics/virtual-motherboard/co-stop]
 - id: add-memory
+  premise: true
   match: ['(add|more|increase|give it)( more)? (ram|memory)\b', 'needs? more (ram|memory)']
   means: Guest OS sizing paging free memory
   note: 'Whether a VM needs memory is a Guest OS question (paging, free memory, application cache), not a VM memory counter.'
   files: [guest-os/system/concepts/guest-os-sizing, vsphere/architecture/vm-vs-guest-os]
 - id: host-memory-usage
+  premise: true
   match: ['(esxi?|host|cluster)\b[^.?\n]{0,25}\bmemory (usage|utili[sz]ation|consumed)', 'memory (usage|utili[sz]ation|consumed)\b[^.?\n]{0,25}\b(esxi?|host|cluster)\b']
   means: ESXi Memory Consumed Ballooned Swapped contention
   note: 'High ESXi Memory Consumed is normal: memory works as a cache. Pressure shows in ballooning, compression, swapping and VM Memory Contention.'
@@ -133,6 +137,7 @@ rows:
   note: 'Name the side and direction: received drops on a vNIC usually mean the Guest OS did not drain the ring; transmit drops are on the switch side.'
   files: [vsphere/technology/network/concepts/packet-drop-accounting, vsphere/technology/network/metrics/virtual-motherboard/packets-dropped]
 - id: cpu-limit
+  premise: true
   match: ['(set|add|apply|use|put)( a)? (cpu |memory )?limits?', '\blimits? (on|to) (the )?(vm|cpu|memory)']
   means: limit Ready contention resource controls noisy neighbour
   note: 'A limit creates contention of its own (CPU Ready includes time held back by a limit). Shares and reservations serve fairness without capping an idle host.'
@@ -193,6 +198,7 @@ rows:
   note: 'Find the victims by contention first, then the villain by consumption on the same resource and time.'
   files: [sp5-framework/performance/noisy-neighbour]
 - id: vm-contention-dashboard
+  premise: true
   match: ['contention dashboard', 'vm-contention-dashboard']
   means: VM Performance dashboard deprecated VM Contention
   note: 'The VM Contention dashboard is deprecated in VCF Operations 9.1 (DEP); VM Performance supersedes it. The 9.1 documentation still lists it as current.'

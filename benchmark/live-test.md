@@ -46,7 +46,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 6. Judge: bring the saved answers to a connected machine; the judge scores them; the report is built.
 7. Compare: paired, question by question, with the gateway run of the same model and mode (`design.md`, section 8). Note any question that changes.
 8. Speed: median and 95th percentile time per answer and per model turn, per mode; GPU memory at peak.
-9. Operator session: the author asks 20 real questions from the field, with screenshots, and judges each answer (right, partly right, wrong, unsure). Every wrong answer is traced to knowledge, retrieval or model.
+9. Operator session: the author asks 20 real questions from the field, with screenshots, and judges each answer (right, partly right, wrong, unsure). The assistant runs the conversation mode (`modes.converse`): for each question, record whether it asked a clarifying question, whether asking was right (odd question, text and attachment disagree, a missing fact that changes the answer), and the answer after the reply. Every wrong answer is traced to knowledge, retrieval or model.
 10. Update: import a newer knowledge bundle offline, rebuild the index, answer one question; the index version in the trace changes.
 
 ## 6. Pass criteria (proposal, for the author to set)

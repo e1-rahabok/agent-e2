@@ -9,6 +9,7 @@ import json
 import re
 
 import catalog
+import clarify
 import terms
 import verify
 from llm import LLMError
@@ -64,6 +65,9 @@ PROMPTS = {
     'choice': {'base': SYSTEM_BASE, 'kb': SYSTEM_KB, 'agent': SYSTEM_AGENT, 'format': FORMAT},
     'open': {'base': _open(SYSTEM_BASE), 'kb': _open(SYSTEM_KB), 'agent': _open(SYSTEM_AGENT), 'format': OPEN_FORMAT},
 }
+# Conversation kinds (the shipped assistant, harness/clarify.py): 'chat' may ask once; 'chat_final' must answer.
+PROMPTS['chat'] = {k: v + clarify.ASK_RULE for k, v in PROMPTS['open'].items()}
+PROMPTS['chat_final'] = {k: v + clarify.FINAL_RULE for k, v in PROMPTS['open'].items()}
 
 
 
@@ -214,6 +218,29 @@ def answer(mode, client, model, question, images, cfg, retriever, kind='choice')
         _step(trace, 'fallback', str(e)[:200], 'classic')
         res, used = classic(client, model, question, images, cfg, trace, retriever, kind)
         return res, used, trace, True
+
+
+def converse(mode, client, model, turns, images, cfg, retriever):
+    """The shipped assistant: one question, or the question, Agent E2's clarifying questions and the user's reply.
+
+    turns: [question] or [question, clarifying reply, user's reply].
+    Returns a dict: type 'clarify' (questions) or 'answer' (result), plus ids used, trace and fallback flag.
+    """
+    if len(turns) >= 3:
+        question, kind = clarify.joined(turns[0], turns[1], turns[2]), 'chat_final'
+    else:
+        question, kind = turns[0], 'chat'
+    res, used, trace, fb = answer(mode, client, model, question, images, cfg, retriever, kind)
+    asked = clarify.parse(res.get('content') or '')
+    if asked and kind == 'chat':
+        _step(trace, 'clarify', '', asked)
+        return {'type': 'clarify', 'questions': asked, 'result': res, 'used': used, 'trace': trace, 'fallback': fb}
+    if asked:  # asked a second time: the rule allows one round; one repair turn to answer
+        _step(trace, 'clarify_again', '', asked)
+        res, used, trace2, fb = answer(mode, client, model, question + '\n\nAnswer now. Do not ask the user again.',
+                                       images, cfg, retriever, 'chat_final')
+        trace += trace2
+    return {'type': 'answer', 'result': res, 'used': used, 'trace': trace, 'fallback': fb}
 
 
 # The agent loop lives in agent.py, which imports the prompts and helpers above; so it is imported last.

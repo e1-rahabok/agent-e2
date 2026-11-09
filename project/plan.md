@@ -18,7 +18,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) passed on the chosen model, running locally | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
 
-- 1.0 includes one clarifying round per question (MISSION.md, section 5, Ways to ask): the harness answers in one turn today, so a second turn is to build.
+- 2026-11-09: one clarifying round built (`harness/clarify.py`, `modes.converse`, prompt kinds `chat` and `chat_final`; term-map rows marked `premise`; 4 unit tests). Not measured: the benchmark is single turn. Open: a simulated user for the benchmark (the judge model plays the user from a hidden context in the question file) and scoring (asked when it should, did not ask when it should not, right after the reply); until then, the live test (M5) measures it with real operator questions.
 - 1.0 includes `fetch_url` and `web_search` (MISSION.md, section 5; ARCHITECTURE.md, section 5): page trimming, untrusted label, check against the knowledge base, the source rule by type of fact. Measured with URL questions (M2).
 - After 1.0 (author, 2026-11-09):
   - Live VCF Operations 9 integration: query the user's running instance through its API, so Agent E2 is not isolated from live VCF Operations, vCenter and ESXi data.

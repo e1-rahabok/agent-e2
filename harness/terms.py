@@ -64,5 +64,5 @@ def block(hits):
     """Notes for the model, one line per hit."""
     if not hits:
         return ''
-    lines = [f"- {h['note']} (`{(h.get('files') or [''])[0]}`)" for h in hits]
+    lines = [f"- {'Possible wrong premise: ' if h.get('premise') else ''}{h['note']} (`{(h.get('files') or [''])[0]}`)" for h in hits]
     return 'Terms in this question (read with the files cited):\n' + '\n'.join(lines)
