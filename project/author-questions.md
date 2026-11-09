@@ -182,23 +182,6 @@ Each entry has:
 - Answer:
 
 
-### Q101 · Part 1 > SP5 Framework: Pillars · Relationship lines and what is troubleshot
-- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/overview.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md) (section Who does which day).
-- Search 1: "Lines without arrowheads means there is relationship but not impact"
-- Search 2: "Availability and Capacity should not overlap"
-- Search 3: "Why isn’t there a line to Performance?"
-- Search 4: "You troubleshoot availability, performance, and security"
-- Question:
-  - (a) The text puts Availability-Capacity among lines without arrowheads; the diagram draws an arrow from Availability to Capacity. Arrow or not?
-  - (b) The detailed diagram that follows draws Availability → Performance; the text says there is no line. Remove it from the diagram?
-  - (c) The detailed capacity diagram says a reservation becomes a share. What is the mechanism you mean?
-  - (d) The Day 0-2 table marks compliance not applicable for troubleshooting; the Troubleshoot section troubleshoots security. Is security troubleshot and compliance not?
-- Written as now: text version for (a) and (b); (c) written as the label; (d) both, flagged.
-- Answer (2026-11-09): (a), (b) not clear, explanation sent in the session (see below). (c) Answered in the updated overview file: reservation in planning becomes share in running. (d) Only availability and performance are troubleshot; security is forensic investigation; compliance is finding the setting that differs from the desired configuration. Applied: proactive-operations, glossary.
-- Restated (a): the book's text says Availability and Capacity have a line without an arrowhead (a relationship, no impact), but its pillar diagram draws an arrowhead from Availability to Capacity (impact). Which is right: does availability design (an HA host held back) impact capacity, or only relate to it?
-- Restated (b): the text says there is no line from Availability to Performance (a planned host outage does not reduce performance). The detailed diagram after it draws Availability → Performance. Keep the arrow or remove it?
-- Answer:
-
 
 ### Q105 · Part 1 > Monitor | Troubleshoot; SP5 Framework: Process · Logs in monitoring and the length of the daily check
 - Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md).
@@ -490,6 +473,24 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q101 · Part 1 > SP5 Framework: Pillars · Relationship lines and what is troubleshot
+- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/overview.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md) (section Who does which day).
+- Search 1: "Lines without arrowheads means there is relationship but not impact"
+- Search 2: "Availability and Capacity should not overlap"
+- Search 3: "Why isn’t there a line to Performance?"
+- Search 4: "You troubleshoot availability, performance, and security"
+- Question:
+  - (a) The text puts Availability-Capacity among lines without arrowheads; the diagram draws an arrow from Availability to Capacity. Arrow or not?
+  - (b) The detailed diagram that follows draws Availability → Performance; the text says there is no line. Remove it from the diagram?
+  - (c) The detailed capacity diagram says a reservation becomes a share. What is the mechanism you mean?
+  - (d) The Day 0-2 table marks compliance not applicable for troubleshooting; the Troubleshoot section troubleshoots security. Is security troubleshot and compliance not?
+- Written as now: text version for (a) and (b); (c) written as the label; (d) both, flagged.
+- Answer (2026-11-09): (a), (b) not clear, explanation sent in the session (see below). (c) Answered in the updated overview file: reservation in planning becomes share in running. (d) Only availability and performance are troubleshot; security is forensic investigation; compliance is finding the setting that differs from the desired configuration. Applied: proactive-operations, glossary.
+- Restated (a): the book's text says Availability and Capacity have a line without an arrowhead (a relationship, no impact), but its pillar diagram draws an arrowhead from Availability to Capacity (impact). Which is right: does availability design (an HA host held back) impact capacity, or only relate to it?
+- Restated (b): the text says there is no line from Availability to Performance (a planned host outage does not reduce performance). The detailed diagram after it draws Availability → Performance. Keep the arrow or remove it?
+- Answer (a, b), 2026-11-09: (a) An availability problem can definitely impact available capacity. (b) Availability can impact performance, especially when it is intermittent: flapping between on and off, or between passive and active nodes. Diagram updated (attached).
+- Applied 2026-11-09: overview (section Relationships, diagram replaced, two traps).
 
 ### Q106 · Part 1 > Service Level Agreement > Performance SLA · SLA counters vs the prevention window alerts
 - Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).

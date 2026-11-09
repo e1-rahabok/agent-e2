@@ -42,12 +42,12 @@
   - Compliance raises cost: more requirements, more overhead to manage and measure them.
   - Cost and price drive capacity and performance.
   - Capacity → performance is non-linear: as capacity remaining falls, performance holds; below 0% it drops suddenly.
-- Lines without arrows mean a relationship without impact:
-  - Availability and capacity do not overlap: capacity is calculated after availability is taken out (usable capacity, `sp5-framework/capacity/capacity-model`).
-  - Inventory and configuration do not impact each other.
-- Availability has no line to performance: a host outage planned for in the design does not reduce usable capacity, so performance holds.
+  - Availability impacts capacity: an availability problem, such as a host down, reduces the capacity available. The planned part (the HA host) is already taken out of usable capacity (`sp5-framework/capacity/capacity-model`); an outage beyond the design takes more.
+  - Availability impacts performance, above all when it is intermittent: an object flapping between on and off, or a cluster flapping between its passive and active nodes.
+- A line without an arrow means a relationship without impact: inventory and configuration do not impact each other.
+- Below the pillars: the pillars feed inventory, configuration and sustainability; configuration impacts sustainability.
 - Security and compliance sit outside the core group: usually another department, with a scope beyond the data centre (building security, work-from-home).
-  ![Capacity → Performance (red, non-linear); Cost & Price → Performance and → Capacity; Availability → Capacity and → Cost & Price; Security + Compliance → Cost & Price. Below: Inventory — Configuration (no arrow) → Sustainability](images/pillars-of-operations-relationships-diagram.png)
+  ![Capacity → Performance (red, non-linear); Cost & Price → Performance and → Capacity; Availability → Performance, → Capacity and → Cost & Price; Security + Compliance → Cost & Price. Below, fed by the pillars: Inventory — Configuration (no arrow); Configuration → Sustainability](images/pillars-of-operations-relationships-diagram.png)
 
 ## Availability
 
@@ -142,6 +142,8 @@
   - provider layers: cloud services, Kubernetes, vSphere with vSAN and NSX, physical (network, arrays, servers, UPS, racks).
 
 ## Traps
+- "Availability and performance are separate, so an outage that HA covers has no performance cost" → flapping on and off, or between passive and active nodes, hurts performance.
+- "Capacity is computed after HA, so availability cannot touch capacity" → an outage beyond the design reduces the capacity available.
 
 - "Treat availability, performance and security as one health score" → they are separate pillars with separate metrics. Up is not fast; fast is not secure.
 - "Utilization is low, so capacity is fine" → short-term capacity is full when current demand is not served. Stop provisioning until contention is explained.
@@ -217,7 +219,7 @@ corrections: []
 review_notes:
 - 'Section ''Security and compliance'': security vs compliance management, urgency, and why not every non-compliant setting is a security alert (author, Q102, 2026-11-09).'
 - 'Section ''The five pillars'': the five pillars follow the SP5 diagram (author, Q091, 2026-11-08). Security moved from pillar to platform. The fifth pillar is value: cost, price and business value (author, 2026-11-08).'
-- 'Section ''Relationships'': the text says Availability and Capacity have a line without arrowheads; the diagram shows an arrow from Availability to Capacity. The detailed relationship diagram (not copied) shows Availability → Performance, which the text says does not exist. Q101.'
+- 'Section ''Relationships'': availability impacts capacity and performance (flapping); diagram replaced with the author''s updated version (author, Q101 a-b, 2026-11-09).'
 - 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value). Tag list: Q091.'
 - 'Section ''Capacity'': reservation in the planning phase becomes share in the running phase (author edit, Q101 c, 2026-11-09).'
 - 'Section ''What a private cloud manages'': text twin of the capabilities diagram (book p. 44), not copied: the text carries its content.'
