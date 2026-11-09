@@ -399,125 +399,77 @@ rows:
   kb: sp5-framework/capacity/capacity-dimensions
   quote: '| 80% | Best | Target |'
 - kind: rule
-  id: closure-capacity-remaining-prod-red
-  metric: Capacity Remaining (%), projected 3 days ahead
+  id: closure-cluster-consumption-red
+  metric: Cluster Consumption (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
-  operator: <
-  value: 10
+  operator: '>'
+  value: 80
   unit: '%'
-  condition: production cluster
+  condition: production and non-production
   meaning: Red. Cluster closed for new VMs and VM upsize.
-  source: book
+  source: author
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Production: red below 10%, orange below 20%.'
+  quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
 - kind: rule
-  id: closure-capacity-remaining-prod-orange
-  metric: Capacity Remaining (%), projected 3 days ahead
+  id: closure-cluster-consumption-orange
+  metric: Cluster Consumption (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
-  operator: <
-  value: 20
-  unit: '%'
-  condition: production cluster
-  meaning: Orange. With Performance (%) also orange, the risk check decides.
-  source: book
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Production: red below 10%, orange below 20%.'
-- kind: rule
-  id: closure-capacity-remaining-nonprod-red
-  metric: Capacity Remaining (%), projected 3 days ahead
-  object: ClusterComputeResource
-  operator: <
-  value: 15
-  unit: '%'
-  condition: non-production cluster
-  meaning: Red. Cluster closed for new VMs and VM upsize.
-  source: book
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Non-production: red below 15%, orange below 30%.'
-- kind: rule
-  id: closure-capacity-remaining-nonprod-orange
-  metric: Capacity Remaining (%), projected 3 days ahead
-  object: ClusterComputeResource
-  operator: <
-  value: 30
-  unit: '%'
-  condition: non-production cluster
-  meaning: Orange. With Performance (%) also orange, the risk check decides.
-  source: book
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Non-production: red below 15%, orange below 30%.'
-- kind: rule
-  id: closure-cluster-performance-prod-red
-  metric: Cluster Performance (%), 95th percentile of the last 24 hours
-  object: ClusterComputeResource
-  operator: <
-  value: 40
-  unit: '%'
-  condition: production cluster
-  meaning: Red. Cluster closed for new VMs and VM upsize.
-  source: book
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Production: red below 40%, orange below 60%.'
-- kind: rule
-  id: closure-cluster-performance-prod-orange
-  metric: Cluster Performance (%), 95th percentile of the last 24 hours
-  object: ClusterComputeResource
-  operator: <
+  operator: '>'
   value: 60
   unit: '%'
-  condition: production cluster
-  meaning: Orange. With Capacity Remaining also orange, the risk check decides.
-  source: book
+  condition: production and non-production
+  meaning: Orange. With Cluster Performance also orange, the risk check decides.
+  source: author
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Production: red below 40%, orange below 60%.'
+  quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
 - kind: rule
-  id: closure-cluster-performance-nonprod-red
+  id: closure-cluster-performance-red
   metric: Cluster Performance (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: <
   value: 20
   unit: '%'
-  condition: non-production cluster
+  condition: production and non-production
   meaning: Red. Cluster closed for new VMs and VM upsize.
-  source: book
+  source: author
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Non-production: red below 20%, orange below 40%.'
+  quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
 - kind: rule
-  id: closure-cluster-performance-nonprod-orange
+  id: closure-cluster-performance-orange
   metric: Cluster Performance (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: <
   value: 40
   unit: '%'
-  condition: non-production cluster
-  meaning: Orange. With Capacity Remaining also orange, the risk check decides.
-  source: book
+  condition: production and non-production
+  meaning: Orange. With Cluster Consumption also orange, the risk check decides.
+  source: author
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'Non-production: red below 20%, orange below 40%.'
+  quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
 - kind: rule
   id: closure-cluster-risk-prod
-  metric: Cluster Risk (%), 95th percentile of the last 12 hours
+  metric: Cluster Risk (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: '>'
-  value: 50
+  value: 60
   unit: '%'
-  condition: production cluster; Capacity Remaining and Cluster Performance both orange
-  meaning: Cluster closed (Risk orange or red).
-  source: book
+  condition: production cluster; Cluster Consumption and Cluster Performance both orange
+  meaning: Orange. Production cluster closed.
+  source: author
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'production: above 50% (orange or red) → no: closed;'
+  quote: 'production: above 60% (orange) → no: closed;'
 - kind: rule
   id: closure-cluster-risk-nonprod
-  metric: Cluster Risk (%), 95th percentile of the last 12 hours
+  metric: Cluster Risk (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: '>'
-  value: 75
+  value: 80
   unit: '%'
-  condition: non-production cluster; Capacity Remaining and Cluster Performance both orange
-  meaning: Cluster closed (Risk red).
-  source: book
+  condition: non-production cluster; Cluster Consumption and Cluster Performance both orange
+  meaning: Red. Non-production cluster closed.
+  source: author
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-  quote: 'non-production: above 75% (red) → no: closed.'
+  quote: 'non-production: above 80% (red) → no: closed.'
 - kind: rule
   id: class-gold-min-vm-performance
   metric: VM Performance (%), minimum for the class

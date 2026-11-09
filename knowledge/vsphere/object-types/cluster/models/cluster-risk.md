@@ -130,7 +130,7 @@ corrections:
 - 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table (author, Q031, 2026-11-05). Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
 - 'Section ''Monster VM'': the adapter definition is final (author, Q032, 2026-11-05): CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
-- 'Section ''Thresholds'', Allocation rows: the Part 1 class-of-service plan (Silver CPU 2:1 and Bronze 4:1 per thread; Bronze memory 2:1) falls in red here (Q120). Section ''Monster VM'': the 8-core CCD statement for Xeon is challenged in Q125.'
+- 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows. Intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold (author, Q120, 2026-11-09). The CPU overcommit row counts vCPUs per physical core, while the author states a CPU ratio is per thread (Q115 e): Q151. Section ''Monster VM'': the 8-core CCD statement for Xeon is challenged in Q125.'
 - 'Moved 2026-11-06 from vsphere/object-types/cluster/models/cluster-risk (architecture review 2026-11-06, section 5).'
 status: draft
 ```

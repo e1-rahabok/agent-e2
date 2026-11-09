@@ -1,7 +1,7 @@
 # Memory tiering
 
 ## Definition
-- Introduced in vSphere 9.0. Increased performance and redundancy in vSphere 9.1 (p. 38).
+- Tech preview in vSphere 8.0 Update 3; supported from vSphere 9.0. Increased performance and redundancy in vSphere 9.1 (p. 38).
 - Uses two types of memory devices to increase memory capacity at a reduced cost.
 - Tier 0: DRAM, fast and relatively expensive.
 - Tier 1: NVMe storage, secondary, slower and relatively less expensive.
