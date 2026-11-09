@@ -9,6 +9,7 @@ import json
 import re
 
 import catalog
+import terms
 import verify
 from llm import LLMError
 
@@ -117,7 +118,8 @@ TROUBLESHOOT = re.compile(r'\b(slow|troubleshoot\w*|what (do|should|would) (you|
 
 def classic_context(retriever, question, cfg):
     """One fixed retrieval pass: search, expand same_name and related, fit to budget."""
-    hits = retriever.search(question, k=cfg['classic_k'])
+    matched = terms.match(question) if cfg.get('term_map') else []
+    hits = retriever.search(terms.query(question, matched), k=cfg['classic_k'])
     ids = [h['id'] for h in hits]
     if cfg.get('route_troubleshooting') and TROUBLESHOOT.search(question):
         flows = [h for h in retriever.search(question, filters={'retriever_guide': 'troubleshooting'}, k=2, min_hits=1)
@@ -126,6 +128,11 @@ def classic_context(retriever, question, cfg):
             if h['id'] in ids:
                 ids.remove(h['id'])
             ids.insert(0, h['id'])
+    pos = cfg.get('term_map_position', 1)
+    for f in reversed(terms.files(matched, retriever.docs, cfg.get('term_map_files', 2))):
+        if f in ids:
+            ids.remove(f)
+        ids.insert(min(pos, len(ids)), f)
     for h in hits[:2]:
         links = retriever.links(h['id'], 'same_name') + retriever.links(h['id'], 'related')[:2]
         if cfg.get('expand_derive'):
@@ -134,6 +141,10 @@ def classic_context(retriever, question, cfg):
             if link['id'] in retriever.docs and link['id'] not in ids:
                 ids.append(link['id'])
     budget, parts, used = cfg['context_tokens'], [], []
+    notes = terms.block(matched)
+    if notes:
+        parts.append(notes)
+        budget -= _tok(notes)
     facts = catalog.get(retriever.docs).facts_for(ids) if cfg.get('catalog_facts', True) else ''
     if facts:
         parts.append(facts)

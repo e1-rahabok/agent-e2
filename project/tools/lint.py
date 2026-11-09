@@ -386,6 +386,21 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 kb_ok(path, w, r.get('kb'))
                 if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
                     bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
+        elif name == 'user-terms.yaml':
+            seen = set()
+            for n, r in enumerate(rows):
+                w = f'row {n + 1} ({r.get("id")})'
+                for k in ('id', 'match', 'means', 'note', 'files'):
+                    if not r.get(k): bad(path, f'{w}: {k} missing')
+                if r.get('id') in seen: bad(path, f'{w}: duplicate id')
+                seen.add(r.get('id'))
+                for pat in (r.get('match') or []) + ([r['unless']] if r.get('unless') else []):
+                    try:
+                        re.compile(pat)
+                    except re.error as e:
+                        bad(path, f'{w}: bad pattern {pat!r}: {e}')
+                for fid in r.get('files') or []:
+                    kb_ok(path, w, fid)
         elif name == 'objects.yaml':
             types = set()
             for o in data.get('objects') or []:

@@ -181,7 +181,7 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 ```text
 knowledge/                           # what the model reads (indexed)
 ├── catalog/                         # structured data read by harness tools, not chunked as prose:
-│                                    # vCenter counters, esxtop fields, thresholds, object model (YAML)
+│                                    # vCenter counters, esxtop fields, thresholds, object model, user terms (YAML)
 ├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
 │                                    # aggregation, units, thresholds, naming, accounting
 ├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)

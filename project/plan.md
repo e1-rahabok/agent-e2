@@ -122,6 +122,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - Table input: a harness table tool (load Excel or CSV, filter, sort, aggregate, top-N) and table attachments in the runner.
 
 ### M3 Retrieval
+- 2026-11-09: term map (question understanding before search): `knowledge/catalog/user-terms.yaml` (35 rows: user words, knowledge-base terms, files, a note per misreading), `harness/terms.py`, lint and unit tests. Classic mode, BM25: classic context 73% to 76%, complete questions 53 to 57 of 90; search recall@6 unchanged (62%; the check searches the raw question). Gained 0035, 0038, 0055, 0057, 0080, 0024, 0023, 0090 (partial); lost 0004 and 0025 one file each (pinned files take their place). 3 files per row gives 77%, same 57: kept at 2. Two tuning tries for 0025 cost other questions and were reverted: the rows are written from the glossary and traps, not tuned to the 90 questions. On in classic mode; agentic notes off until the benchmark. Open: the author's list of wrong user terms; questions written in users' wrong words (M2), the real test of the map.
 - Done 2026-11-06 (the three fixes of the review, section 3.2), keyword search, 90 questions: baseline 70% of needed files in the classic context, 50 of 90 complete.
   - `expand_derive` (internal_derive of the top hits): 71%, 52 of 90. On.
   - `route_troubleshooting` (troubleshooting question gets its flow first): 71%, 51 of 90. On.
