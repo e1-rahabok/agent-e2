@@ -5,9 +5,9 @@
   - The 5-second test: what question does it answer? Stick to one main question; if that is not possible, explain with a Text widget. Complete means nothing more can be taken out.
   - Purpose-built: for the role, the expertise level, the screen resolution, the viewing approach and the size of the environment.
   - Layout: a top-line header as the summary; the dashboard divided into sections.
-  - Performance of the page: many objects, long periods (one month of 5-minute data is 8,640 points per metric), data transformation. For a Top-N, there is rarely a reason to go beyond one day.
+  - Performance of the page: many objects, long periods (one month of 5-minute data is about 8,766 points per metric: 288 a day × 30.44 days, the average month of 365.25 / 12 days), data transformation. For a Top-N, there is rarely a reason to go beyond one day.
   - Scope: do not mix pillars (performance, capacity, configuration) in one dashboard. Do not mix monitoring and troubleshooting: troubleshooting has many paths, depending on the problem.
-  - Colour and content: blank means good where nothing is expected; red means highly utilized; dark grey (black in the picture) means wastage.
+  - Colour and content: blank means good where nothing is expected; red means highly utilized; dark grey means wastage.
 ![Six groups of dashboard design considerations: The 5-second Test, Purpose-Built, Layout, Performance, Scope, Color & Content](images/dashboard-design-considerations-diagram.png)
 - A dashboard understood within 5 seconds earns a few more minutes: the user sees what it does and spends time learning it. To pass, ask which object, metric or piece of information can be removed. A dashboard that tries to please everyone and cover every scenario ends up unused.
 - The purpose decides the design. Two dashboards with the same role, purpose and use case still differ when the environments differ in size: 50,000 VMs are managed differently from 500.
@@ -60,7 +60,7 @@
 - "One dashboard for every scenario" → it ends up unused; one main question per dashboard.
 - "The same dashboard for 500 and 50,000 VMs" → size changes the design even for the same role and purpose.
 - "Mix capacity and performance to save clicks" → mixing pillars, or monitoring with troubleshooting, makes the dashboard fail the 5-second test.
-- "A Top-N over a month" → a month is 8,640 points per metric; one day is enough for a Top-N.
+- "A Top-N over a month" → a month is about 8,766 points per metric; one day is enough for a Top-N.
 - "Show the current value only" → at 08:00 it says nothing about the night; show the trend.
 - "Show the maximum to summarize the past" → it hides the direction and duration; show a line chart, or the average with the worst.
 - "List every object in a View List" → filter first; it keeps the page fast and the focus on the big picture.
@@ -102,8 +102,8 @@ source:
   path: 'Overall Design Approach > Design Consideration (Design Methodology, Clean Layout, Past vs Present, Summary List Detail, Interaction) (pp. 27-35)'
 corrections: []
 review_notes:
-- 'Section ''Conflicting requirements'': the picture says 1 month = 8650 data; 30 days of 5-minute data is 8,640 points (Claude''s arithmetic). Written as 8,640. Q148.'
-- 'Section ''Conflicting requirements'': the picture says black for wastage; the colour table says dark grey. Written as dark grey. Q148.'
+- 'Section ''Conflicting requirements'': one month = 288 points a day × 365.25 / 12 days = 8,766 (author, Q148, 2026-11-09: per month, leap years included).'
+- 'Wastage colour: dark grey; black in the book picture is wrong (author, Q148, 2026-11-09).'
 - 'Section ''Layout'': the source shows example dashboards by Brock Peterson and Dale Hassinger; third-party screenshots not copied.'
 - 'Not copied: the layout sketches, the widget screenshots (Scoreboard, distribution, View List), the PowerPoint flow and the 4x4 heat map screenshot; their content is in the text.'
 status: draft

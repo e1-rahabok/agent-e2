@@ -11,13 +11,13 @@
 ![Five areas from easiest to hardest: non-VM files (unmapped blocks, ISO, orphaned VMDK, RDM, LUN) reclaim disk; powered-off VMs reclaim disk; idle VMs reclaim memory and CPU (allocation only), disk after power-off then delete; oversized VMs reclaim memory and CPU (allocation only); unused VMs reclaim CPU and memory, disk after power-off then delete](images/reclamation-five-areas-easiest-to-hardest-diagram.png)
 
 
-| Order | Area                                                        | Reclaims                                                        |
-| ----- | ----------------------------------------------------------- | --------------------------------------------------------------- |
-| 1     | Non-VM files: unmapped blocks, ISO, orphaned VMDK, RDM, LUN | Disk                                                            |
-| 2     | Powered-off VM                                              | Disk                                                            |
-| 3     | Idle VM                                                     | Memory; CPU in allocation only; disk after power-off and delete |
-| 4     | Oversized VM                                                | Memory; CPU in allocation only                                  |
-| 5     | Unused VM                                                   | CPU and memory; disk after power-off and delete                 |
+| Order | Area | Reclaims |
+|---|---|---|
+| 1 | Non-VM files: unmapped blocks, ISO, orphaned VMDK, RDM, LUN | Disk |
+| 2 | Powered-off VM | Disk |
+| 3 | Idle VM | Memory; CPU in allocation only; disk after power-off and delete |
+| 4 | Oversized VM | Memory; CPU in allocation only |
+| 5 | Unused VM | CPU and memory; disk after power-off and delete |
 
 - Non-VM files are easiest: they have no other owner. Only disk can be reclaimed from them, not CPU or memory.
 - Keep templates and ISO files in one datastore per physical location.
@@ -28,15 +28,15 @@
 ## What each area frees
 
 
-| Area            | Free up                                                                           | Does not free up                                                                      |
-| --------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| Unused VM       | Real CPU cycles and ESXi memory: the highest benefit                              | Disk until VM is deleted                                                              |
-| Oversized VM    | ESXi memory;<br /> <br /><br />Cluster capacity: lower Cluster overcommit ratio | CPU cycles: the removed vCPUs were idle; allocation only                              |
-| Idle VM         | ESXi memory (consumed pages stay on the host)                                     | CPU cycles: the idle loop uses almost none; allocation only. Disk until VM is deleted |
-| Powered-off VM  | Datastore space                                                                   | Cluster capacity: it holds no CPU or memory                                           |
-| Orphaned VMDK   | Datastore space                                                                   | Cluster capacity                                                                      |
-| Snapshot        | Datastore space                                                                   | -                                                                                     |
-| Unmapped blocks | Datastore and array space                                                         | -                                                                                     |
+| Area | Free up | Does not free up |
+|---|---|---|
+| Unused VM | Real CPU cycles and ESXi memory: the highest benefit | Disk until VM is deleted |
+| Oversized VM | ESXi memory; cluster capacity: a lower cluster overcommit ratio | CPU cycles: the removed vCPUs were idle; allocation only |
+| Idle VM | ESXi memory (consumed pages stay on the host) | CPU cycles: the idle loop uses almost none; allocation only. Disk until VM is deleted |
+| Powered-off VM | Datastore space | Cluster capacity: it holds no CPU or memory |
+| Orphaned VMDK | Datastore space | Cluster capacity |
+| Snapshot | Datastore space | - |
+| Unmapped blocks | Datastore and array space | - |
 
 - Unused VMs are the hardest to find: they look active, neither idle nor oversized.
 - Oversized VM performance gain: largest when the Guest OS does many context switches and the VM is larger than the cores of one host.
@@ -58,10 +58,10 @@
 ## Two sides of a running VM
 
 
-| Stage  | Question                               | Where to measure                           |
-| ------ | -------------------------------------- | ------------------------------------------ |
-| Before | Does the VM qualify (idle, oversized)? | Inside the VM: the workload runs there     |
-| After  | How much can be reclaimed?             | ESXi metrics: ESXi resources are reclaimed |
+| Stage | Question | Where to measure |
+|---|---|---|
+| Before | Does the VM qualify (idle, oversized)? | Inside the VM: the workload runs there |
+| After | How much can be reclaimed? | ESXi metrics: ESXi resources are reclaimed |
 
 - Before: ESXi-level metrics mislead. Some load charged to the VM is not the VM's own (vSphere Replication, vMotion); some CPU metrics move with power management.
 - After: Guest OS usage does not matter. A queue inside the Guest OS does not load the hypervisor, so it holds nothing to reclaim.
@@ -163,8 +163,8 @@ source:
   path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap). Pages 110-118.'
 corrections: []
 review_notes:
-- 'Section ''What each area frees'': the book table has cells that do not line up with their area (for example Idle VM, Storage: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"). Rewritten from the chapter text and the five-area image; to confirm (Q123).'
-- 'Section ''When reclamation is the provider''s job'': the book opens with "It is only applicable when VMs are free" and later applies stocktake to internal IT with chargeback. Both kept; see Q123.'
+- 'Section ''What each area frees'': table confirmed and edited by the author (Q123, 2026-11-09): oversized VM also frees cluster capacity through a lower overcommit ratio.'
+- 'Section ''When reclamation is the provider''s job'': free VMs, the infrastructure team may reclaim; charged VMs, the application team owns the cost; stocktake still applies (author edit, Q123, 2026-11-09).'
 - 'Section ''Idle VM'': power-off frees memory, consumed pages linger (author, Q042, 2026-11-06); moved here from sp5-framework/capacity/rightsizing 2026-11-07.'
 - 'Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming is Claude''s knowledge.'
 status: draft
