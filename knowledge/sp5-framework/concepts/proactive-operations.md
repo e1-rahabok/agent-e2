@@ -16,17 +16,21 @@
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 
 ## Dual track: proactive first, reactive as fallback
-- Reactive track: starts after an alert, an incident (outage, SLA breached) or a human complaint. A manual process by the operations team: configuration issue? availability issue? known bug? consumption issue? Then remediation.
+- Two processes: reactive and proactive (author, 2026-11-09).
+- Reactive: starts from a complaint or an alert. A manual process for three types of problem, each with its own order of checks, the what before the why:
+  - Down: log, saturation, configuration, known bug.
+  - Slow: contention, consumption, configuration, known bug, log. Read the KPI, not the SLA.
+  - Breached (compromised): configuration, known bug, log.
+- Down and slow are troubleshooting. Breached is a forensic investigation, not troubleshooting.
+- The three orders are the same as the availability, performance and security steps of the health check: reactive enters one pillar directly; proactive walks all four.
+- Proactive: the health check (its four questions in order: availability, performance, security, capacity). It is a superset of reactive, because nobody knows yet whether there is a problem.
+  - Daily: a morning health check of configuration and state, with remediation by rules IT sets; important but not urgent symptoms, reviewed top down by someone who knows the environment.
+  - Weekly: deeper analysis over a longer data range.
+  - Monthly: overall performance analysis and baselining, covering consumer and provider.
+- Proactive findings go to a human expert, who decides the remediation; reactive findings go straight to remediation. Remediation examples: vMotion a VM, reboot Windows, restart a pod.
 - Known bugs are mostly configuration issues: an older version or incompatible settings.
-- Proactive track: focuses on insight. The system has not detected a known problem; typically this is anomaly detection.
 - Anomaly detection by mathematics alone gives false positives: it lacks the real-world business context. What looks abnormal can be normal, and the reverse (a month-end batch, a planned migration).
-- Proactive track, four techniques feeding a human expert, who decides the remediation:
-  - automated process: a morning health check of configuration and state, with remediation by rules IT sets;
-  - insight: important but not urgent symptoms, reviewed top down by someone who knows the environment;
-  - modelling: quantification that makes observability work at scale;
-  - monthly performance baselining: overall performance analysis covering Guest OS and VM.
-- Remediation examples: vMotion a VM, reboot Windows, restart a pod.
-![Reactive: complaint or alert → manual process (configuration issue? availability issue? known bugs? consumption issue?) → remediation. Proactive: automated morning health check with rule-based remediation, insight, modelling, monthly performance baselining → human expert → remediation (vMotion VM, reboot Windows, restart pod)](images/reactive-vs-proactive-operations-dual-track-diagram.png)
+![Reactive: complaint or alert → manual process: Down (log → saturation → configuration → known bug), Slow (contention → consumption → configuration → known bug → log), Breached (configuration → known bug → log) → remediation. Proactive: Daily (morning health check of configuration and state with rule-based remediation; important-but-not-urgent symptoms reviewed top down), Weekly (deeper analysis across longer data), Monthly (overall performance analysis and baselining of consumer and provider) → human expert → remediation](images/reactive-vs-proactive-operations-dual-track-diagram.png)
 - Troubleshooting cannot be eliminated; regular health checks with automatic remediation reduce it.
 - The checks must cover every manual check done today: automate the whole checklist.
 - The rules are finite and known: the logic experts use to troubleshoot performance can be automated. Most remediation is moving VMs out of a cluster, which needs no AI and can be automated too.
@@ -170,7 +174,7 @@ corrections:
 - 'Daily check length: author answer Q105 (b), 2026-11-08: about 5 minutes when there is no problem; a problem makes it longer.'
 - 'Sections ''Dual track'' and ''Day-to-day order'': author answer Q104 (2026-11-08): reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is Claude''s.'
 review_notes:
-- 'Section ''Dual track'': the book says 3 techniques and lists 4 (daily optimization, insight review, performance quantification, monthly baselining); the diagram names them automated process, insight, modelling, monthly performance baselining. Written from the diagram. Q105, Q107.'
+- 'Section ''Dual track'': rewritten from the author''s updated diagram and explanation (Q105 c, 2026-11-09): reactive (down, slow, breached) and proactive (daily, weekly, monthly). Modelling is no longer listed as a proactive technique.'
 - 'Daily check length: the book gives about 1 minute (text), 10 minutes (timeline image), 5 minutes (monitoring table). Author answer Q105 (b), 2026-11-08: a few minutes, about 5, when there is no problem; longer when there is a problem, depending on the problem.'
 - 'Section ''Who does which day'': only availability and performance are troubleshot; security is a forensic investigation; compliance is finding the setting that differs from the desired configuration (author, Q101 d, 2026-11-09).'
 - 'Section ''NOC live screen and daily check'': the book says insight and alerts were covered in Part 1; this is Part 1 (Q107).'
