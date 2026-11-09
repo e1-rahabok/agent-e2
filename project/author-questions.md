@@ -583,6 +583,14 @@ Each entry has:
 - Written as now: (a) one condition; (b) 1 in 25; (c) not copied; (d) not stated.
 - Answer:
 
+### Q148 · Part 2 > Overall Design Approach > Design Consideration · Data points per month and the wastage colour
+- Files: [Dashboard design in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/dashboard-design.md) (section Conflicting requirements); [Colour and thresholds in dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/dashboard-colour.md).
+- Search 1: "Can the dashboard be understood within 5 seconds?" (the picture after it)
+- Search 2: "We use dark grey in Capacity as wastage"
+- Question: (a) the picture says 1 month = 8650 data; 30 days of 5-minute data is 8,640. Typo? (b) the picture says black for wastage, the colour table says dark grey. Which colour do the shipped capacity dashboards use?
+- Written as now: (a) 8,640; (b) dark grey.
+- Answer:
+
 ## Resolved
 
 ### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
