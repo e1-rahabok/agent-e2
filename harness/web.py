@@ -8,7 +8,8 @@ Rules (MISSION.md, section 5; ARCHITECTURE.md, section 5):
     parts relevant to the question and placed after the knowledge-base files.
   - Search runs only for current facts: bugs, builds, patches, maximums and defaults of a release, renamed products.
   - Without Internet access every call returns an error the model can state; the answer comes from the knowledge base.
-Config (benchmark/runner/config.yaml, key web): fetch, search_url (SearXNG-style JSON endpoint), allow_hosts, timeout,
+Config (benchmark/runner/config.yaml, key web): fetch, search_url (SearXNG-style JSON endpoint), allow_hosts (pages the
+user links), search_hosts (sites search may return; vendor documentation by default), timeout,
 max_bytes, page_tokens, search_results.
 """
 import datetime
@@ -169,12 +170,16 @@ def fetch(url, question, cfg):
 
 
 def search(query, cfg):
-    """Search results [{'url', 'title', 'snippet'}] from a SearXNG-style JSON endpoint, filtered by allow_hosts."""
+    """Search results [{'url', 'title', 'snippet'}] from a SearXNG-style JSON endpoint.
+    Results are kept only from search_hosts (vendor documentation by default), else from allow_hosts.
+    The query is restricted to those sites, so the search engine does the filtering too."""
     cfg = cfg or {}
     base = cfg.get('search_url')
     if not base:
         return {'error': 'web search is not configured'}
-    url = base + ('&' if '?' in base else '?') + urllib.parse.urlencode({'q': query, 'format': 'json'})
+    sites = cfg.get('search_hosts') or []
+    q = query + (' (' + ' OR '.join(f'site:{h}' for h in sites) + ')' if sites else '')
+    url = base + ('&' if '?' in base else '?') + urllib.parse.urlencode({'q': q, 'format': 'json'})
     try:
         raw, _ = _get(url, cfg.get('timeout', 15), cfg.get('max_bytes', 3_000_000))
         results = json.loads(raw).get('results') or []
@@ -184,7 +189,7 @@ def search(query, cfg):
     for r in results:
         u = r.get('url') or ''
         host = (urllib.parse.urlparse(u).hostname or '').lower()
-        allow = [h.lower() for h in (cfg.get('allow_hosts') or [])]
+        allow = [h.lower() for h in (cfg.get('search_hosts') or cfg.get('allow_hosts') or [])]
         if not host or (allow and not any(host == h or host.endswith('.' + h) for h in allow)):
             continue
         out.append({'url': u, 'title': (r.get('title') or '')[:200], 'snippet': (r.get('content') or '')[:300]})

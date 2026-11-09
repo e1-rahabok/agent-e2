@@ -358,9 +358,10 @@ class WebTest(unittest.TestCase):
     def test_search_only_for_current_facts(self):
         self.assertTrue(self.web.needs_search('Is there a known bug with vMotion after upgrade to 9.1?'))
         self.assertFalse(self.web.needs_search('What does VM CPU Ready mean?'))
-        cfg = {'search_url': 'https://searx.local/search', 'allow_hosts': ['broadcom.com']}
+        cfg = {'search_url': 'https://searx.local/search', 'search_hosts': ['broadcom.com']}
         self.assertEqual([r['url'] for r in self.web.search('vMotion bug 9.1', cfg)], ['https://knowledge.broadcom.com/kb/1'])
         self.assertEqual(self.web.gather('What does VM CPU Ready mean?', cfg), [])
+        self.assertIn('site%3Abroadcom.com', self.calls[-1])
 
     def test_query_drops_system_names(self):
         q = self.web.public_query('Known bug on esx-prd-01.corp.local, VM SAP_PRD01, ESXi 8.0U3, KB 312345?')
