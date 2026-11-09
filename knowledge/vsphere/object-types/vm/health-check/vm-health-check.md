@@ -29,7 +29,11 @@ flowchart TD
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## Checks, in order
-Order (author, Q104 and Q133, 2026-11-09): availability, performance, security, capacity. Configuration is checked as the drill-down under each of the four, because a setting can affect all of them. Efficiency (waste) is read as part of capacity. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
+Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
+- Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
+- Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
+- Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
+- Will it be enough? Capacity: consumption, configuration, contention, inventory. A healthy present does not mean a healthy future. Efficiency (waste) is read here. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
 1. Availability (VirtualMachine). Future, after 1.0: VM down, restarted by HA, unresponsive; mostly from logs and events. State what was not checked. → step 2.
 2. Performance: VM Performance (%) (VirtualMachine). Combines the VM contention metrics into one KPI with colour bands. Start here at scale (`vsphere/object-types/vm/kpis/vm-performance`). Green → step 7. Yellow or worse → step 3, and read only the resources whose sub-metric fails.
 3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower (`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`). Co-stop: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`. Contention (VCF Operations) includes limit time (`vsphere/technology/cpu/metrics/virtual-motherboard/contention`). Latency includes Hyper-Threading and frequency effects: not a pure wait (`vsphere/technology/cpu/metrics/virtual-motherboard/latency`). High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. → step 4.

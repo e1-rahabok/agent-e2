@@ -6,13 +6,31 @@
 ## Flow
 ```mermaid
 flowchart TD
-  S1[1. Availability] --> S2[2. Performance KPI green?]
-  S2 -->|no| T2[Troubleshooting flow]
-  S2 -->|yes| S3[3. Capacity model green?]
+  S0([Health check]) --> A1
+  subgraph AV["1. Is it up? Availability"]
+    A1[Log] --> A2[Saturation] --> A3[Configuration] --> A4[Known bug]
+  end
+  subgraph PF["2. Is it fast? Performance"]
+    P1[Contention] --> P2[Consumption] --> P3[Configuration] --> P4[Known bug] --> P5[Log]
+  end
+  subgraph SC["3. Is it secure? Security"]
+    S1[Configuration] --> S2[Known bug] --> S3[Log]
+  end
+  subgraph CP["4. Will it be enough? Capacity"]
+    C1[Consumption] --> C2[Configuration] --> C3[Contention] --> C4[Inventory]
+  end
+  A4 --> P1
+  P5 --> S1
+  S3 --> C1
+  C4 --> D([Done: a failed step opens its troubleshooting flow])
 ```
 
 ## Checks, in order
-Order (author, Q104 and Q133, 2026-11-09): availability, performance, security, capacity. Configuration is checked as the drill-down under each of the four, because a setting can affect all of them. Efficiency (waste) is read as part of capacity.
+Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
+- Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
+- Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
+- Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
+- Will it be enough? Capacity: consumption, configuration, contention, inventory. A healthy present does not mean a healthy future. Efficiency (waste) is read here.
 1. Availability. <What is checked, or: future, after 1.0.> → step 2.
 2. Performance: <KPI> (<object>). Green → step 3. Otherwise → `<troubleshooting id>`.
 3. Capacity: <model> (<object>). <Band, with source> → step 4.
