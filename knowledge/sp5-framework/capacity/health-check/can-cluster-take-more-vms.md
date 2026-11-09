@@ -29,16 +29,16 @@ flowchart TD
 1. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA no longer meets its failover capacity → no; fix the state first. Admission control counts reservations, not usage. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`. Green → step 2.
 2. Overcommit (ClusterComputeResource). Cluster planned without overcommit (1:1) → step 3. Overcommitted → step 4.
 3. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; `sp5-framework/capacity/capacity-model`). Allocation reaches usable capacity → no: closed. Below → step 6.
-4. Capacity and performance (ClusterComputeResource). Either one red → no: closed.
-   - Capacity Remaining (%): projected 3 days ahead. Production: red below 10%, orange below 20%. Non-production: red below 15%, orange below 30%.
-   - Cluster Performance (%), 95th percentile of the last 24 hours (`vsphere/object-types/cluster/kpis/cluster-performance`). Production: red below 40%, orange below 60%. Non-production: red below 20%, orange below 40%.
+4. Consumption and performance (ClusterComputeResource). Both read at the 95th percentile of the last 24 hours, with the same thresholds for production and non-production. Either one red → no: closed.
+   - Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.
+   - Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%. This is the cluster KPI; it is not related to the VM Performance SLA or to the class-of-service minimum VM Performance (%).
    - The vCommunity management pack automates this step and step 5 with one band set for every cluster: `vsphere/object-types/cluster/models/close-for-business`.
    - Neither red → step 5.
-5. Risk (ClusterComputeResource). Only when capacity and performance are both orange. Cluster Risk (%), 95th percentile of the last 12 hours (`vsphere/object-types/cluster/models/cluster-risk`):
-   - production: above 50% (orange or red) → no: closed;
-   - non-production: above 75% (red) → no: closed.
+5. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours (`vsphere/object-types/cluster/models/cluster-risk`):
+   - production: above 60% (orange) → no: closed;
+   - non-production: above 80% (red) → no: closed.
    - Read the sub-metrics, not only the score: a worse sub-metric can lower the score.
-   - Below the limit, or capacity and performance not both orange → open → step 6.
+   - Below the limit, or consumption and performance not both orange → open → step 6.
 6. Fit of the new VMs (ClusterComputeResource, VirtualMachine).
    - Reservations: they must fit unreserved capacity; leave at least 10% unreserved (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`).
    - Overcommit: the CPU and memory overcommit rows of Cluster Risk after the new VMs (`vsphere/object-types/cluster/models/cluster-risk`).
@@ -47,7 +47,7 @@ flowchart TD
    - Any no → no, or change the VM design. All fit → step 7.
 7. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room (`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`). Then answer yes, with the resource that fills first and the time remaining from the projection (`sp5-framework/capacity/capacity-model`, section Capacity Remaining and Time Remaining).
 
-![Closure thresholds. Capacity Remaining (projected 3 days ahead): production red below 10% orange below 20%; non-production red below 15% orange below 30%. Performance (%) (95th percentile, last 24 hours): production red below 40% orange below 60%; non-production red below 20% orange below 40%. Risk (%) (95th percentile, last 12 hours): production above 50%, non-production above 75%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
+![Closure thresholds, all at the 95th percentile of the last 24 hours. Consumption (%): red above 80%, orange above 60%, production and non-production. Performance (%): red below 20%, orange below 40%, production and non-production. Risk (%): production orange above 60%; non-production red above 80%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
 
 ## Why this order
 - State first: in yellow or red, reservations are not met; any capacity number is built on a broken base.
@@ -63,6 +63,8 @@ flowchart TD
 - Yes → give the limiting resource and how long the room lasts.
 
 ## Traps
+- "Cluster Performance below the Gold minimum of 99.5% closes the cluster" → the closure reads the cluster KPI (red below 20%); the class minimum is for each VM. Different metrics.
+- "Our SLA says 99%" → without a written agreement it is a KPI, not an SLA.
 - "Cluster CPU at 40%, so there is room" → check contention, risk and HA headroom; one hot host can be full.
 - "Memory consumed at 85% means the cluster is full" → consumed is utilization; check saturation rows and contention, and the HA ceiling.
 - "Capacity Remaining is orange, so the cluster is closed" → orange alone does not close it; both capacity and performance orange sends the decision to risk.
@@ -120,7 +122,7 @@ corrections: []
 review_notes:
 - 'Steps 2 to 5 and the closure thresholds follow the book (Cluster Closure, Logic) from 2026-11-07. Steps 1, 6 and 7 were drafted by Claude 2026-11-06 from the files in internal_derive (architecture review 2026-11-06, section 3.3); the full order is still to be confirmed by the author (Q061).'
 - 'Step 4: non-production closes at a higher Capacity Remaining (15%, 30%) than production (10%, 20%), while it closes later on performance and risk (Q121).'
-- 'Step 4: the Performance (%) closure values (production red below 40%) are far below the class-of-service minimum VM Performance (%) of 98-99.5% (sp5-framework/capacity/class-of-service-planning). Different metrics (cluster KPI vs VM KPI); confirm (Q122).'
+- 'Steps 4 and 5: thresholds from the author''s corrected table (Q121, Q122, 2026-11-09); the book table was wrong. Consumption (%) replaces Capacity Remaining; production and non-production share the consumption and performance thresholds; risk closes production at orange (above 60%) and non-production at red (above 80%). The cluster KPI is not related to the VM SLA: customers often say SLA when they mean KPI (author).'
 - 'Step 5: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open (Q121).'
 status: draft
 ```

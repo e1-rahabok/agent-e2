@@ -36,6 +36,7 @@
 - Good or bad is relative to the plan. A plan with no overcommit never runs out of capacity; in another plan the same result is wastage.
 - Monitor example: capacity for a new DaaS project planned for 1 year; after 3 months 25% of users are on it and utilization is already 70%. The plan is off by a wide margin.
 - Optimize supply: newer hardware can give about 2x the capacity at the same cost.
+- Optimize demand at the source: solve the oversized VM before it is provisioned. Progressive pricing makes smaller configurations cheaper per unit, so requesters choose them; reclaiming later is harder.
 
 ## Cadence
 ![Annual cadence: demand management runs reclamation and rightsizing weekly all year, gather and estimate in January to March, check points in June and December, adjustment in August; supply management runs procurement, lead time and onboarding twice a year, with a technology refresh decision before each](images/capacity-management-annual-cadence-demand-and-supply-timeline.png)
@@ -149,7 +150,7 @@ corrections: []
 review_notes:
 - 'Section ''Planning inputs'': the cluster-splitting list is the text of the book image after Architecture Plan; the example estate (18 clusters) is the book image after Example. Neither image is copied: the text holds the facts.'
 - 'Section ''Cluster is the unit of capacity'': the three-cluster example is the book table image after The Planning Stage, restated as text.'
-- 'Section ''Four phases'': the book has an orphan sentence fragment after the phase table ("e first place, by using progressive pricing"). Left out; see Q114.'
+- 'Section ''Four phases'': prevent oversized VMs before provisioning with progressive pricing (author, Q114, 2026-11-09). The reason (reclaiming later is harder) is Claude''s.'
 - 'Section ''Traps'': the book lists the "Good" Advice statements as wrong without saying why. The reasons in the traps of this file and of capacity-dimensions are Claude''s reading of the rest of the chapter (Q115).'
 status: draft
 ```

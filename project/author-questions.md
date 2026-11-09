@@ -295,31 +295,7 @@ Each entry has:
 - Related: Q099, Q100, Q120 (per thread in the capacity plan) and Q125.
 - Answer:
 
-### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
-- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management-process.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md).
-- Search 1: "e first place, by using progressive pricing"
-- Search 2: "They need to be reviewed as complimentary"
-- Search 3: "measured againsts usable"
-- Question: (a) Search 1 is a sentence fragment after the four-phase table; text seems lost before it. What was meant? (b) "complimentary" should be "complementary". (c) "againsts" should be "against". Confirm (b) and (c) for your next edition.
-- Written as now: fragment left out; the knowledge base uses the corrected words.
-- Answer:
 
-### Q115 · Part 1 > Capacity Management > "Good" Advice · Why each statement is wrong
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management-process.md) (section Traps).
-- Search 1: "Memory Active should not exceed 50-60%"
-- Search 2: "Memory should be running at high state"
-- Question: the book lists 9 statements as wrong but does not say why. Claude wrote one reason per statement as a trap. Confirm or correct each:
-  - (a) 2:1 RAM overcommit is risky → a ratio ignores utilization, VM size and class; Bronze can run 2:1.
-  - (b) 90% memory, aim for 80% because of HA → usable capacity already excludes the HA host; subtracting HA again counts it twice.
-  - (c) Active below 50-60% → Active is a sampled estimate; capacity reads demand against usable capacity.
-  - (d) Each host in the high memory state → High means much free memory: wastage.
-  - (e) 5:1 CPU on an important cluster → important clusters take a lower ratio.
-  - (f) 3:1 gives buffer for spikes and HA → allocation ignores utilization and VM size; buffer and HA belong in usable capacity.
-  - (g) 4:1 for Tier 3 → not used as a trap; what is wrong with it?
-  - (h) UAT at 70%, worry at 85% → utilization alone does not close a cluster; read contention and risk.
-  - (i) 25% CPU is good, plenty left → below 40% of usable is wastage.
-- Written as now: (a)-(f), (h), (i) as traps.
-- Answer:
 
 ### Q116 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
 - Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
@@ -328,48 +304,11 @@ Each entry has:
 - Written as now: zones as rules (grey below 40%, best 80%); Cluster Consumption bands unchanged.
 - Answer:
 
-### Q117 · Part 1 > 4 Dimensions of Capacity > Allocation · Memory tiering version
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Allocation), [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
-- Search: "a new feature in vSphere 8"
-- Question: memory tiering was a tech preview in vSphere 8.0 Update 3 and is supported from vSphere 9.0. The knowledge base says introduced in 9.0. Change the book to vSphere 9?
-- Written as now: no version in the capacity file; memory-tiering says 9.0.
-- Answer:
 
-### Q118 · Part 1 > 4 Dimensions of Capacity > Reservation | Share · Unit of CPU reservation
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Reservation and share).
-- Search: "That’s why the unit is Hertz, milliseconds"
-- Question: CPU reservation is set in MHz. What does "milliseconds" refer to? Share is the runtime one (time slices). Remove "milliseconds" from the reservation column?
-- Written as now: reservation in Hz; share in time slices.
-- Answer:
 
-### Q119 · Part 1 > Capacity Model > Planning Phase · Is the gap 2x everywhere
-- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Example implementation), [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Avoiding it).
-- Search: "Notice the consistent 2x gap"
-- Question: the implementation table keeps 2x for reservation (50/25/12.5% CPU, 100/50/25% RAM), CPU allocation (1:1, 2:1, 4:1) and contention (0.5/1/2% unmet). Memory allocation is 1:1, 1.5:1, 2:1, and utilization (50/70/90% CPU) is not 2x. Is memory deliberately less than 2x (risk of swapping), and should the text say so?
-- Written as now: the values as in the table, with a note that memory and utilization do not follow 2x.
-- Answer:
 
-### Q120 · Part 1 > Planning Phase vs Cluster Risk · Bronze plan scores red
-- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md), [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (Allocation rows).
-- Search: "Notice the consistent 2x gap"
-- Question: Bronze CPU 4:1 per thread is 8 vCPUs per core with Hyper-Threading. Cluster Risk counts vCPUs per physical core and marks 3-4 as red; Silver 2:1 per thread (4 per core) is red too. Bronze memory 2:1 sits in the Cluster Risk red range 1.8-2.2. So a cluster built to your plan always shows red overcommit rows, and with the production closure limit (Risk above 50%) it may close. (a) Should the Cluster Risk overcommit bands depend on the class of service? (b) Or is Cluster Risk meant only for Gold and Silver clusters?
-- Written as now: both files unchanged; the conflict is noted in review_notes.
-- Answer:
 
-### Q121 · Part 1 > Capacity Model > Cluster Closure > Logic · Non-production capacity and the orange case
-- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md) (steps 4 and 5), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows closure-*).
-- Search 1: "If both capacity and performance are orange"
-- Search 2: book table after "Implementing the above with actual threshold"
-- Question: (a) Non-production closes on performance and risk later than production (red below 20% vs 40%; risk above 75% vs 50%), but on Capacity Remaining earlier (red below 15% vs 10%; orange below 30% vs 20%). Intended (smaller buffer in non-production), or swapped? (b) One orange and one green: open without a risk check? (c) The flow now follows your closure logic for steps 2-5; Q061 stays open for the full order (state, fit, balance).
-- Written as now: as in the book table; (b) read as open.
-- Answer:
 
-### Q122 · Part 1 > Cluster Closure vs Planning Phase · Performance (%) closure values
-- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md) (step 4), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Example implementation), [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md).
-- Search: book table after "Implementing the above with actual threshold"
-- Question: production closes when Performance (%) at the 95th percentile of 24 hours drops below 40% (red) or 60% (orange). The class minimum for VM Performance (%) is 98-99.5%. The knowledge base reads the first as the cluster KPI (Cluster Performance, worst VM and 90th percentile rows) and the second as the VM KPI. Correct? With the weighted scoring, one row a quarter into red already gives about 53%; is 40% the value you want?
-- Written as now: both, as different metrics.
-- Answer:
 
 ### Q123 · Part 1 > Capacity Management > Reclamation · Benefit table and scope
 - Files: [Reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/reclamation.md) (sections When reclamation is the provider's job, What each area frees).
@@ -572,7 +511,91 @@ Each entry has:
 - Written as now: one URL question (0091, the VM Contention dashboard page).
 - Answer:
 
+### Q151 · Cluster Risk (%) · CPU overcommit per core or per thread
+- Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (row CPU overcommit), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (CPU per thread).
+- Search: not from the book; your answer to Q115 (e).
+- Question: you state that a CPU ratio is per thread, because the CPU executes per thread. The Cluster Risk CPU overcommit row (vCommunity pack) counts vCPUs of powered-on VMs per physical core (`hardware|cpuInfo|numCpuCores`), and its bands (red at 3-4) are set per core. With Hyper-Threading, 4:1 per thread is 8:1 per core. Should the row count per thread (and its bands change), or is per core intended for the risk score?
+- Written as now: the row per core, the planning ratios per thread, the conflict in review notes.
+- Answer:
+
 ## Resolved
+
+### Q122 · Part 1 > Cluster Closure vs Planning Phase · Performance (%) closure values
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md) (step 4), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Example implementation), [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md).
+- Search: book table after "Implementing the above with actual threshold"
+- Question: production closes when Performance (%) at the 95th percentile of 24 hours drops below 40% (red) or 60% (orange). The class minimum for VM Performance (%) is 98-99.5%. The knowledge base reads the first as the cluster KPI (Cluster Performance, worst VM and 90th percentile rows) and the second as the VM KPI. Correct? With the weighted scoring, one row a quarter into red already gives about 53%; is 40% the value you want?
+- Written as now: both, as different metrics.
+- Answer: Use the attached table (see Q121). The Cluster KPI is not related to the VM SLA. Many customers confuse SLA: when they say SLA they mean KPI, as they have no written agreement.
+- Applied 2026-11-09: can-cluster-take-more-vms (step 4, review note, two traps).
+
+### Q121 · Part 1 > Capacity Model > Cluster Closure > Logic · Non-production capacity and the orange case
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md) (steps 4 and 5), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows closure-*).
+- Search 1: "If both capacity and performance are orange"
+- Search 2: book table after "Implementing the above with actual threshold"
+- Question: (a) Non-production closes on performance and risk later than production (red below 20% vs 40%; risk above 75% vs 50%), but on Capacity Remaining earlier (red below 15% vs 10%; orange below 30% vs 20%). Intended (smaller buffer in non-production), or swapped? (b) One orange and one green: open without a risk check? (c) The flow now follows your closure logic for steps 2-5; Q061 stays open for the full order (state, fit, balance).
+- Written as now: as in the book table; (b) read as open.
+- Answer: The book was wrong; use the attached table (all at the 95th percentile of the last 24 hours): Consumption (%) red above 80%, orange above 60%; Performance (%) red below 20%, orange below 40%; both for production and non-production. Risk (%): production orange above 60%, non-production red above 80%.
+- Applied 2026-11-09: can-cluster-take-more-vms (steps 4 and 5, image replaced), thresholds-capacity.yaml (closure rows: 10 replaced by 6), glossary (Closed cluster).
+
+### Q120 · Part 1 > Planning Phase vs Cluster Risk · Bronze plan scores red
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md), [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (Allocation rows).
+- Search: "Notice the consistent 2x gap"
+- Question: Bronze CPU 4:1 per thread is 8 vCPUs per core with Hyper-Threading. Cluster Risk counts vCPUs per physical core and marks 3-4 as red; Silver 2:1 per thread (4 per core) is red too. Bronze memory 2:1 sits in the Cluster Risk red range 1.8-2.2. So a cluster built to your plan always shows red overcommit rows, and with the production closure limit (Risk above 50%) it may close. (a) Should the Cluster Risk overcommit bands depend on the class of service? (b) Or is Cluster Risk meant only for Gold and Silver clusters?
+- Written as now: both files unchanged; the conflict is noted in review_notes.
+- Answer: (a) and (b) together: planning phase vs running phase. Planning (no running VMs, maybe no cluster yet): use the overcommit ratio, tied to the VM price, not to the Cluster Risk (%) score. Running: reality overrides theory; Bronze clusters should have higher Cluster Risk (%) than Gold clusters.
+- Applied 2026-11-09: class-of-service-planning (new section Planning phase vs running phase, Traps), cluster-risk (review note).
+
+### Q119 · Part 1 > Capacity Model > Planning Phase · Is the gap 2x everywhere
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Example implementation), [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Avoiding it).
+- Search: "Notice the consistent 2x gap"
+- Question: the implementation table keeps 2x for reservation (50/25/12.5% CPU, 100/50/25% RAM), CPU allocation (1:1, 2:1, 4:1) and contention (0.5/1/2% unmet). Memory allocation is 1:1, 1.5:1, 2:1, and utilization (50/70/90% CPU) is not 2x. Is memory deliberately less than 2x (risk of swapping), and should the text say so?
+- Written as now: the values as in the table, with a note that memory and utilization do not follow 2x.
+- Answer: 2x consistency is a goal, not a rule.
+- Applied 2026-11-09: class-of-service-planning (section Why a fixed gap, Traps).
+
+### Q118 · Part 1 > 4 Dimensions of Capacity > Reservation | Share · Unit of CPU reservation
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Reservation and share).
+- Search: "That’s why the unit is Hertz, milliseconds"
+- Question: CPU reservation is set in MHz. What does "milliseconds" refer to? Share is the runtime one (time slices). Remove "milliseconds" from the reservation column?
+- Written as now: reservation in Hz; share in time slices.
+- Answer: The book contained a mistake: no milliseconds.
+- Applied: the knowledge base already gives reservation in Hz only.
+
+### Q117 · Part 1 > 4 Dimensions of Capacity > Allocation · Memory tiering version
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Allocation), [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Search: "a new feature in vSphere 8"
+- Question: memory tiering was a tech preview in vSphere 8.0 Update 3 and is supported from vSphere 9.0. The knowledge base says introduced in 9.0. Change the book to vSphere 9?
+- Written as now: no version in the capacity file; memory-tiering says 9.0.
+- Answer: Update the knowledge base: memory tiering was a tech preview in vSphere 8.0 Update 3 and is supported from vSphere 9.0.
+- Applied 2026-11-09: memory-tiering, capacity-dimensions (review note).
+
+### Q115 · Part 1 > Capacity Management > "Good" Advice · Why each statement is wrong
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management-process.md) (section Traps).
+- Search 1: "Memory Active should not exceed 50-60%"
+- Search 2: "Memory should be running at high state"
+- Question: the book lists 9 statements as wrong but does not say why. Claude wrote one reason per statement as a trap. Confirm or correct each:
+  - (a) 2:1 RAM overcommit is risky → a ratio ignores utilization, VM size and class; Bronze can run 2:1.
+  - (b) 90% memory, aim for 80% because of HA → usable capacity already excludes the HA host; subtracting HA again counts it twice.
+  - (c) Active below 50-60% → Active is a sampled estimate; capacity reads demand against usable capacity.
+  - (d) Each host in the high memory state → High means much free memory: wastage.
+  - (e) 5:1 CPU on an important cluster → important clusters take a lower ratio.
+  - (f) 3:1 gives buffer for spikes and HA → allocation ignores utilization and VM size; buffer and HA belong in usable capacity.
+  - (g) 4:1 for Tier 3 → not used as a trap; what is wrong with it?
+  - (h) UAT at 70%, worry at 85% → utilization alone does not close a cluster; read contention and risk.
+  - (i) 25% CPU is good, plenty left → below 40% of usable is wastage.
+- Written as now: (a)-(f), (h), (i) as traps.
+- Answer: (a) Confirm. (b) Wrong reason: Consumed is unaware of HA; do not worry about high Consumed, memory is a form of cache and has to be high, else the DIMM is wasted. (c) Active is not a capacity counter; it is for VMkernel memory management, of no use unless doing memory tiering. (d) Confirm. (e) Not wrong but misleading: it simplifies capacity management into the allocation model, and does not say physical core or thread; the CPU ratio is per thread, as execution is per thread. (f) (g) Not wrong but misleading, same reason. (h) Confirm; not wrong but misleading, same reason. (i) Confirm.
+- Applied 2026-11-09: capacity-dimensions (Traps); new trap for (g). The Cluster Risk CPU overcommit row counts per core: Q151.
+
+### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
+- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management-process.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md).
+- Search 1: "e first place, by using progressive pricing"
+- Search 2: "They need to be reviewed as complimentary"
+- Search 3: "measured againsts usable"
+- Question: (a) Search 1 is a sentence fragment after the four-phase table; text seems lost before it. What was meant? (b) "complimentary" should be "complementary". (c) "againsts" should be "against". Confirm (b) and (c) for your next edition.
+- Written as now: fragment left out; the knowledge base uses the corrected words.
+- Answer: (a) Solve the oversized VM in the first place, before the VM is provisioned. Use progressive pricing to encourage smaller size configuration. (b) and (c) fixed in the book's next update.
+- Applied 2026-11-09: capacity-management-process (section Four phases).
 
 ### Q102 · Part 1 > SP5 Framework > Health · Where compliance and inventory sit
 - Files: [Health: present health, risk and efficiency, not one score](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md).

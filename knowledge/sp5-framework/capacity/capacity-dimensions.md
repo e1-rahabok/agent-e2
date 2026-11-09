@@ -146,12 +146,13 @@ Demand = Max (Utilization, Reservation)
 
 ## Traps
 - "We recommend 2:1 memory overcommit; going above is risky" → a ratio alone ignores utilization, VM size and class of service. Bronze can run 2:1 while Gold runs 1:1 (`sp5-framework/capacity/class-of-service-planning`).
-- "Memory usage is 90%; aim for 80% because of HA" → measure against usable capacity, which already excludes the HA host. Subtracting HA again counts it twice.
-- "Memory Active should stay below 50-60% to keep a buffer to Consumed" → Active is a sampled estimate, not a capacity input; capacity reads demand (utilization or reservation) against usable capacity.
+- "Memory usage is 90%; aim for 80% because of HA" → Consumed is unaware of HA, and high Consumed is not a worry: memory is a cache and should be high, else the DIMMs, which are expensive, are wasted. HA is accounted in usable capacity.
+- "Memory Active should stay below 50-60% to keep a buffer to Consumed" → Active is not a capacity counter. It serves VMkernel memory management and has no use for capacity unless memory tiering is on (`vsphere/technology/memory/concepts/memory-tiering`).
 - "Each host should run in the high memory state" → High means much free memory: wastage for capacity. ESXi reclaims only near the top (`vsphere/technology/memory/concepts/host-memory-states`).
-- "Cluster XYZ is important, so 5:1 CPU overcommit is fine" → the more important the cluster, the lower its overcommit ratio.
-- "3:1 CPU gives buffer for spikes and HA" → allocation ignores utilization and VM size; buffer and HA are in usable capacity, not in the ratio.
-- "UAT at 70% CPU is fine until 85%" → utilization alone does not close a cluster; read contention and risk.
+- "Cluster XYZ is important, so 5:1 CPU overcommit is fine" → not wrong but misleading: it reduces capacity management to the allocation model, and the more important the cluster, the lower its ratio. It also omits the unit: a CPU ratio is per thread, not per core, because the CPU executes per thread.
+- "3:1 CPU gives buffer for spikes and HA" → not wrong but misleading: allocation alone ignores utilization and VM size; buffer and HA are in usable capacity, not in the ratio.
+- "Tier 3 can run 4:1 CPU" → not wrong but misleading: a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
+- "UAT at 70% CPU is fine until 85%" → not wrong but misleading: utilization alone does not close a cluster; read contention and risk.
 - "Utilization is low, so the reservation does not matter" → demand is the higher of utilization and reservation; an unused reservation is still taken.
 - "Doubling the CPU shares halves CPU Ready" → no deterministic link between shares or reservation and contention.
 - "Count powered-off VMs in demand to be safe" → powered-on VMs only; counting powered-off VMs makes capacity too conservative.
@@ -203,8 +204,9 @@ source:
   path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation, Overcommit). Pages 97-107.'
 corrections: []
 review_notes:
+- 'Section ''Traps'': author answer Q115 (2026-11-09): (a), (d), (i) confirmed; (b) Consumed is unaware of HA and should be high (cache); (c) Active is not a capacity counter, only for VMkernel memory management and memory tiering; (e)-(h) not wrong but misleading: they reduce capacity management to the allocation model; a CPU ratio is per thread.'
 - 'Section ''Utilization'': the 80-100% zone has no numbers in the book. Cluster Consumption (%) uses different bands (CPU green 0-55); see Q116.'
-- 'Section ''Allocation'': the book says memory tiering is new in vSphere 8. It was a tech preview in 8.0 Update 3 and is supported from vSphere 9.0 (vsphere/technology/memory/concepts/memory-tiering). Text written as 9.x; Q117.'
+- 'Section ''Allocation'': memory tiering was a tech preview in vSphere 8.0 Update 3 and is supported from vSphere 9.0 (author, Q117, 2026-11-09).'
 - 'Section ''Reservation and share'': the book gives the reservation unit as Hertz and milliseconds; CPU reservation is set in MHz. Written as Hz (Q118).'
 - 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
 - 'Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" is Claude''s explanation of why the book computes per VM first.'
