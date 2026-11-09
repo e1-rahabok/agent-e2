@@ -33,6 +33,16 @@ rerank_model: bge-reranker-v2-m3
 rerank_n: 10
 rerank_mode: fuse              # fuse: its rank added to the fusion; replace: its order alone
 rerank_stem: false             # true: score the question without its options
+web:                          # public web knowledge (harness/web.py; MISSION.md, section 5)
+  enabled: true               # read URLs in the question; tools fetch_url and web_search in agentic mode
+  fetch: true
+  search_url: null            # SearXNG-style JSON endpoint, e.g. https://searx.example/search; null = no web search
+  allow_hosts: []             # empty = any public host; a customer can restrict, e.g. [techdocs.broadcom.com, knowledge.broadcom.com]
+  timeout: 15
+  max_bytes: 3000000
+  page_tokens: 2000           # a page is trimmed to the parts most relevant to the question
+  search_results: 5
+  search_fetch: 2             # result pages read in classic mode
 agent_max_calls: 8            # tool calls per question
 agent_tool_tokens: 12000      # tool output budget per question
 context_window: 32000         # the deployed model's window (MISSION.md, section 5); the agent stops calling tools before the prompt outgrows it

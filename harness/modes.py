@@ -12,6 +12,7 @@ import catalog
 import clarify
 import terms
 import verify
+import web
 from llm import LLMError
 
 FORMAT = ('Reply with exactly two lines and nothing else:\n'
@@ -170,8 +171,12 @@ def classic(client, model, question, images, cfg, trace, retriever, kind='choice
     context, used, hits = classic_context(retriever, question, cfg)
     _step(trace, 'search', question[:200], [h['id'] for h in hits])
     _step(trace, 'context', '', used)
+    pages = web.gather(question, cfg['web']) if (cfg.get('web') or {}).get('enabled') else []
+    if pages:
+        _step(trace, 'web', [p['url'] for p in pages], [p.get('error') or f"{_tok(p['text'])} tokens" for p in pages])
+    pages_text = ('\n\n' + web.block(pages)) if pages else ''
     msgs = [{'role': 'system', 'content': PROMPTS[kind]['kb']},
-            _user(f'Knowledge base:\n{context}\n\nQuestion:\n{question}', images)]
+            _user(f'Knowledge base:\n{context}{pages_text}\n\nQuestion:\n{question}', images)]
     if over_window(msgs, cfg):
         _step(trace, 'context_over', cfg.get('context_window'), 'prompt larger than the deployed window')
     po = cfg.get('provider_order', {}).get(model)

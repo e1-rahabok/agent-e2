@@ -108,7 +108,14 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |
 
 - Updates arrive as a bundle: knowledge, catalog, index, and optionally new weights; downloaded, or imported offline. No customer data is sent out.
-- Internet access (author, 2026-11-09): two harness tools, `fetch_url` (a link in the question) and `web_search` (only for current facts: bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted, trimmed to the relevant parts, placed after the knowledge-base files and checked against them. Rules: `MISSION.md`, section 5 (Ways to ask, Answer). Not built yet.
+- Internet access (author, 2026-11-09): two harness tools, `fetch_url` (a link in the question) and `web_search` (only for current facts: bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted, trimmed to the relevant parts, placed after the knowledge-base files and checked against them. Rules: `MISSION.md`, section 5 (Ways to ask, Answer). Built in `harness/web.py` (2026-11-09):
+  - Every URL in the question (up to 3) is read before the model starts, in both modes; the agent also has the tools `fetch_url` and `web_search`.
+  - Search runs in classic mode only when the question asks for current facts (a pattern list: known bugs, builds, patches, release notes, maximums, defaults, renamed, end of support); the agent is told the same in the tool description.
+  - The search query keeps product words, versions and KB numbers and drops tokens that look like the customer's system names (letters mixed with digits, dots or underscores), so names of VMs, hosts and datastores do not leave the site.
+  - Private, loopback and link-local addresses are refused; an optional allow list restricts hosts.
+  - HTML is reduced to text without scripts, styles, menus and footers, then trimmed to about 2,000 tokens most relevant to the question (BM25 over 120-word chunks).
+  - The page block is labelled untrusted, states the source rule by type of fact, and tells the model to ignore instructions in a page.
+  - Search needs a backend the customer runs or chooses: a SearXNG-style JSON endpoint (`web.search_url`); none is configured by default.
 - The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 - One VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
 - The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.
@@ -127,7 +134,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 7. Status
-- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, `fetch_url` and `web_search`, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
+- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
 
 ## 8. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.

@@ -37,6 +37,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, link expansion (`same_name`, `related`). |
 | `catalog.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; colour bands; object relations and paths. |
 | `calc.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
+| `web.py` | Public web knowledge: URLs in the question read before the model starts; `fetch_url` and `web_search` for the agent; search only for current facts; system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
 | `flows.py` | Flow executor: a health check or troubleshooting file as ordered steps, one at a time, with the next step and the steps it refers to. |
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
 | `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
