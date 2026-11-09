@@ -26,7 +26,11 @@ flowchart TD
 - Host utilization is capacity, not performance. A host can run at high utilization with no VM waiting, and VMs can wait on a lightly used host.
 
 ## Checks, in order
-Order (author, Q104 and Q133, 2026-11-09): availability, performance, security, capacity. Configuration is checked as the drill-down under each of the four, because a setting can affect all of them. Efficiency (waste) is read as part of capacity. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
+Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
+- Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
+- Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
+- Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
+- Will it be enough? Capacity: consumption, configuration, contention, inventory. A healthy present does not mean a healthy future. Efficiency (waste) is read here. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
 1. Availability (HostSystem). Future, after 1.0: host not responding, disconnected, PSOD and soft errors come mostly from logs and events. State what was not checked. → step 2.
 2. Performance: ESXi Performance (%) (HostSystem). One score from the 8 VM contention sub-metrics (worst VM and 90th percentile of Ready, Co-stop, memory latency, disk latency) and the host's bad network packets. See `vsphere/object-types/esxi/kpis/esxi-performance`. Green → step 4. Yellow or worse → step 3.
 3. Which sub-metric fails (HostSystem, VirtualMachine). Open the sub-metric that drives the score down:
