@@ -4,7 +4,7 @@ Read first, every session. One page: mission, milestones with exit criteria, dec
 Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md).
 
 ## Mission
-- An open-weight model on one GPU, offline, answers Level 400 private cloud operations questions better than a frontier model.
+- An open-weight model on one GPU, running locally (customer data stays on site), answers Level 400 private cloud operations questions better than a frontier model.
 - Release gate: final score at least 85% on the shipped configuration (live test); target 99%; confident-wrong rate near 0.
 
 ## Milestones
@@ -14,12 +14,13 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | M2 | 100 questions | 100 questions at the allocation ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.6); every attachment supplied; synthetic share decided; held-out set kept by the author | 90 written, 66 scorable |
 | M3 | Retrieval | Retrieval check: every needed file in the context for at least 90% of questions and context recall at least 95% (proposal, Q130); the three experiments of the review scored | 3 fixes done: hybrid 72% to 75%, 57 of 90 complete |
 | M4 | Gateway benchmark | The 100 questions run on the candidates and the frontier reference; model and mode chosen; up-front blocks measured | Waits for M1 and M2 (author, 2026-11-06) |
-| M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) passed on the chosen model, offline | Planned |
+| M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) passed on the chosen model, running locally | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
 
 - After 1.0: screen library and screenshot read-back (1.1); data files (1.2); alert definitions (1.2): Iwan Rahabok first overhauls the shipped alerts in VCF Operations ([VMW-Alerts-Overhaul](https://github.com/e1-rahabok/VMW-Alerts-Overhaul): 1,193 alert definitions, 1,951 symptoms; analysis not finished), then the definitions become a YAML catalog with a harness lookup tool, measured on questions that need an exact definition; read-only VCF Operations connection; vSAN, NSX, Kubernetes, Linux content.
 
 ## Decisions (latest first)
+- 2026-11-09, author: the deployment is local, not cut off from the Internet. Customer data (questions, screenshots, files) never leaves the site and Agent E2 answers without Internet access, but users browse the Internet for knowledge, so a question can include a URL. Wording updated in MISSION.md, README.md, ARCHITECTURE.md, CLAUDE.md and the benchmark documents. Open: fetch user URLs (proposal in the session of 2026-11-09).
 - 2026-11-09, author: a concept is a general idea; a file that documents an actual implementation is not a concept. `operations-management/` renamed [sp5-framework/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework), its `sp5-framework/` renamed `concepts/`: the SP5 Framework covers all of operations management. Alerts in two parts: top down (alert architecture across products) in `sp5-framework/alerts/`; bottom up (how an alert definition is built in VCF Operations) in `vcf-operations/alerts/`. `vcf-operations/` split into concepts, features, dashboards, reports, alerts. Real-time metrics: concept in [Real-time metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/real-time-metrics.md), the VCF Operations 9.1 feature in `vcf-operations/features/`; the 20-second data the UI labels real time is not real time. Full VCF Operations alert definitions not ingested before 1.2.
 - 2026-11-08, author: no fast first-stage model. The fast stage is code (KPI and model results, threshold catalog, grouping); the reasoning model reads only the findings (`ARCHITECTURE.md`, section No fast first-stage model).
 - 2026-11-08, author, on the review of flow terms:

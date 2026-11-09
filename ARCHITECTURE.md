@@ -84,7 +84,7 @@ flowchart LR
 - The agent's rules, budgets, the tool-call limit, why classic mode stays, and a traced walkthrough of one question: `harness/AGENT.md`.
 - The benchmark uses the deployment budgets (context window, tool-output tokens, no-progress stops), so the score predicts the product: `harness/AGENT.md`, section Budgets.
 
-## 4. Level 400 offline
+## 4. Level 400 on a local model
 Each mechanism blocks one failure of a small model. None needs the Internet. Harness parts in detail: `harness/README.md`, section 1.
 
 | Failure of a model alone | Mechanism | Part |
@@ -99,7 +99,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Answers from memory where the knowledge base speaks | Prompt rule: knowledge base first, and it wins on conflict; override rate measured (`benchmark/models.md`) | Agent (prompt) |
 | Stale knowledge (older releases) | Knowledge written from the current release by rule (vSphere 9.1, VCF 9.1.1) | Knowledge |
 
-## 5. Dark-site deployment
+## 5. Local deployment
 | Component | Runs on | Notes |
 |---|---|---|
 | Chat model (one GPU, at most 96 GB) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
@@ -107,7 +107,8 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Harness | CPU | Python: retrieval, catalog (SQLite in memory), calculator, flow executor, verifier |
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |
 
-- Updates arrive as an offline bundle: knowledge, catalog, index, and optionally new weights. Nothing calls out.
+- Updates arrive as a bundle: knowledge, catalog, index, and optionally new weights; downloaded, or imported offline. No customer data is sent out.
+- Internet access (author, 2026-11-09): users browse the Internet, so a question can include a URL. Whether Agent E2 fetches it is an open design item (`project/plan.md`).
 - The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 - One VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
 - The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.

@@ -226,7 +226,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
   - The benchmark is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
   - Net points mixed two things an operator cares about separately: how often the system is right, and how often it is confidently wrong. Two plain shares say both without arithmetic.
 - In practice the -1 changed the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
-- Unsure applies to an AI too. On a dark site nobody checks the answer against the Internet, so "the knowledge base does not settle this" is the safe answer.
+- Unsure applies to an AI too. An operator acts on the answer without checking it elsewhere, so "the knowledge base does not settle this" is the safe answer.
 - Unsure means the sources do not decide the question. This can be checked against the cited files.
 - Check after the next benchmark: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
 

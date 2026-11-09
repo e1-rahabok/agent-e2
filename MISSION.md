@@ -4,8 +4,9 @@ Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
-- An open-weight model, running offline on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than the best frontier model.
-- Offline means a dark site: no Internet, no cloud API, no data leaving the customer. No per-token fee.
+- An open-weight model, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than the best frontier model.
+- Locally means on the customer's own infrastructure: no cloud AI service, and no customer data (questions, screenshots, files) leaving the customer network. No per-token fee.
+- Internet access (author, 2026-11-09): customers keep their data in, but their users browse the Internet for knowledge, so a question can include a URL. Agent E2 works without Internet access; public knowledge from the Internet is an addition, never a requirement.
 - Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer. Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
 - Release gate: final score at least 85% on the benchmark, each question scored on its worst of 5 runs. Target: 99%. Confident-wrong rate near 0.
 
@@ -73,7 +74,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 
 - Clarifying questions are part of every mode: the system asks when the object, the time window or the product version is unclear, because one metric name means different things on different objects.
 - Screenshots: several per question, compared with each other; the chart interval and rollup are read (a 1-day chart hides 20-second peaks); values are shown back before reasoning; images stay on site.
-- Data files are more exact than screenshots and work on a dark site; recommended when the user can export.
+- Data files are more exact than screenshots and need no screen reading; recommended when the user can export.
 
 ### Answer
 - Direct answer first, then the mechanism and the reason, then what to check next.
@@ -86,7 +87,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 ### Non-functional
 | Area | Requirement |
 |---|---|
-| Dark site | No call outside the customer network to answer, index or update. Updates arrive as an offline bundle. |
+| Data stays on site | No customer data leaves the customer network. Agent E2 answers without Internet access. A call out carries only public knowledge requests (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository; an edited prompt is an untested prompt. |
 | Model | Open weights with a commercial licence, vision, at least 32K context, one GPU of at most 96 GB. Chosen by the benchmark. |
 | Reproducibility | Every answer stores question, answer, cited ids, tool trace, index version, prompt version, model, settings. |

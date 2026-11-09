@@ -78,7 +78,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 | Where the model runs | A hosting provider's GPUs, reached through Vercel AI Gateway (`https://ai-gateway.vercel.sh/v1`, `gateway` in `config.yaml`) | The customer's own GPU VM, on its own VCF |
 | Who serves it | The provider the gateway routes to (for example Baseten, Fireworks, Groq); the runner records it per answer when the gateway returns it | vLLM, llama.cpp or Ollama, installed by the VMware administrator at initial setup |
 | Weights | The provider's copy and precision | Downloaded from Hugging Face, at the precision the GPU allows |
-| Internet | Yes | None (dark site) |
+| Internet | Yes | Not required; customer data stays on site |
 | Cost | Per token | GPU only, no per-token cost |
 
 - One gateway: Vercel AI Gateway. It is an OpenAI-compatible front door to many providers and many models, so the runner tests 3 or 10 models with one API key and one code path. It is a test convenience only.
