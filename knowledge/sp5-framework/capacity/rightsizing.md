@@ -1,9 +1,12 @@
 # Rightsizing VMs
 
 ## What is rightsized
-- VMs and Kubernetes. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
-- There is no single "VM rightsizing". Guest OS sizing (internal, Guest OS counters, includes guest queue, excludes VM overhead) and VM footprint (external, vSphere counters, includes VM overhead, excludes guest queue) answer different questions. See `guest-os/system/concepts/guest-os-sizing` and `sp5-framework/capacity/vm-footprint-sizing`.
-- This file covers why oversizing happens, what it costs, and how to get a downsize accepted and proven.
+- VMs. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
+- Kubernetes nodes are sized as part of the Kubernetes cluster design, not one by one.
+- "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names:
+  - Guest OS sizing: internal, from Guest OS counters; includes the guest queue, excludes VM overhead (`guest-os/system/concepts/guest-os-sizing`).
+  - VM footprint: external, from vSphere counters; the total load the VM puts on the infrastructure; includes VM overhead, excludes the guest queue (`sp5-framework/capacity/vm-footprint-sizing`).
+- This file covers why VMs are oversized in a private cloud, what that costs the company, and how to get a downsize accepted and proven.
 
 ## Why VMs are oversized
 | Cause | Mechanism |
@@ -128,6 +131,7 @@
 - Other: disk and network demand change CPU and memory use. Plot disk IOPS and throughput, network throughput and packets per second to compare like with like.
 
 ## Traps
+- "Rightsize this VM" → name the job first: Guest OS sizing (does the guest have enough?) or VM footprint (what does it cost the infrastructure?). Different counters, different answers.
 - "Size on CPU Usage" → Turbo inflates it 25% in this example, pushing the VM across NUMA nodes.
 - "20-second data shows the CPU peak" → bursts of 1-3 seconds average out; a 20-second reading of 50% can hide 80%+ bursts.
 - "Downsize everything that looks oversized in one program" → a few VMs that suffer discredit the program; go VM by VM, with proof.
@@ -184,6 +188,7 @@ source:
   path: 'Part 3: Consumer Objects > Capacity: Guest OS > Benefits. Part 1: Capacity Management > Rightsizing (Challenges; Micro Burst; Oversized Guest OS; Cost of Oversized; Optimization; Best Practices; The Big Picture; Progressive Pricing; Start Small?; Before vs After), pages 121-127.'
 corrections: []
 review_notes:
+- 'Section ''What is rightsized'': Kubernetes nodes sized in the cluster design; VM rightsizing is misleading, it usually means the Guest OS (author, 2026-11-09).'
 - 'Section ''Idle VM: power it off'' (author, Q042, 2026-11-06) moved to sp5-framework/capacity/reclamation, section Idle VM, 2026-11-07: one place for idle VM reclamation.'
 - 'Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q125).'
 - 'Section ''What to optimize'': the book says CPU utilization should be 100%; the Big Picture section expects about 40% average and 80% max across large VMs. Read as per-VM aim vs fleet average (Q126).'

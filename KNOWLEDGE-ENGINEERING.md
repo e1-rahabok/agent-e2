@@ -389,6 +389,19 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 
+### 11.1 Editing a knowledge file (author's checklist)
+How the model reads a file: the harness cuts it at every `##` heading, and each piece reaches the model alone, with only the file title and that heading in front. So:
+1. Each bullet stands alone. No "it", "this" or "the above" pointing to another bullet or section; name the thing again.
+2. One fact per bullet, with its reason: "X, because Y". The reason lets the model apply the fact to a new case.
+3. Exact names: metric and term names as in the metric files and the glossary, with the object ("VM CPU Ready", not "Ready"). A typo in a name breaks search; a typo in prose costs little.
+4. One name per concept. A new name needs the glossary first; another name users say goes into its Also called column, not into the text.
+5. Misreadings go in `## Traps`, in the user's words: "wrong belief" → correct reading. Search finds a misreading through those words.
+6. A number comes with unit, object, interval and source. A threshold in prose also needs a row in the threshold catalog.
+7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
+8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
+9. Headings at most 9 words, titles at most 8 (lint).
+10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check and merges.
+
 ## 12. Images
 - `knowledge/` is for Agent E2 only (author, 2026-11-07). An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
 - The agent reads the text twin and the alt text, not the pixels: `get_images` returns image records, never the image itself.
