@@ -79,12 +79,13 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - Progressive pricing: a 64-vCPU VM must cost more than 64x a 1-vCPU VM. A straight-line price gives no reason to size small, and rightsizing then happens in production, which is slow and costly.
 
 ## Size limit per class
+- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Cap by logical CPUs (`sp5-framework/performance/noisy-neighbour`) and keep a VM within one NUMA node where it can (`vsphere/technology/cpu/configuration/numa-settings`).
 - Overcommit risks contention. A cap on VM size stops monster VMs from dominating overcommitted hosts.
 - If one VM may be the size of the host, overcommit with good performance is not possible.
 
 | Tier | Limit | Example cap |
 |---|---|---|
-| 1 | ≤ 1 socket | 32 vCPU, 512 GB |
+| 1 | ≤ 1 socket (book example) | 32 vCPU, 512 GB |
 | 2 | ≤ 50% of a socket | 16 vCPU, 128 GB |
 | 3 | ≤ 25% of a socket | 8 vCPU, 32 GB |
 | 4 Free | n/a | 1 vCPU, 4 GB, 100 GB disk |
@@ -192,7 +193,7 @@ review_notes:
 - 'Section ''Planning example'': the book''s table gives Silver CPU 1:2 and RAM 1:1.5; its text gives Silver 3:1 CPU, no RAM overcommit, 67% of Gold. Only the text matches 67% (the table gives 58%). Written from the text; Bronze table values (6:1, 2:1) match 33%. Q099.'
 - 'Section ''Planning example'', price formula: written by Claude from the book''s 67% and 33% figures.'
 - 'Section ''Recommended SLA per class'', Compliance 99.95% vs 100% in the sample offering: Q098.'
-- 'Section ''Size limit per class'': socket-based limits; sp5-framework/performance/noisy-neighbour gives a logical-CPU basis (Gold 1:1 up to all logical CPUs). Q100.'
+- 'Section ''Size limit per class'': the socket-based table is the book''s example; the cap must not relate to the socket (author, Q100, 2026-11-09). Rule: logical CPUs plus NUMA node fit.'
 - 'Section ''Mixing compute and storage classes'', 28 pairs: Claude''s count of the book''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Section ''Compute and storage design'': the book says Gold is charged 200% more for 2x; written as twice the price (Q107). Storage I/O Control: deprecated in VCF 9 (Q080).'
 - 'Section ''Soft products'': the book''s Service SLA text says Gold tickets go to Level 3; its service table says Level 2, bypassing Level 1. Written as bypassing the first level. Q107.'

@@ -10,11 +10,11 @@
 ## Three types of metric
 
 
-| Type        | Measures                                 | Primary pillar                                 |
-| ----------- | ---------------------------------------- | ---------------------------------------------- |
-| Contention  | Something bad                            | Performance; availability for errors and drops |
-| Consumption | Something good, if the load is useful    | Capacity, value, sustainability                |
-| Context     | An account of inventory or configuration | Configuration, compliance, inventory           |
+| Type | Measures | Primary pillar |
+|---|---|---|
+| Contention | Something bad | Performance; availability for errors and drops |
+| Consumption | Something good, if the load is useful | Capacity, value, sustainability |
+| Context | An account of inventory or configuration | Configuration, compliance, inventory |
 
 - The knowledge base tags each metric file with its type: `metric_class: contention | consumption | context`.
 
@@ -45,13 +45,13 @@
 ## Primary and secondary metrics
 
 
-| Aspect  | Primary                     | Secondary                                 |
-| ------- | --------------------------- | ----------------------------------------- |
+| Aspect | Primary | Secondary |
+|---|---|---|
 | Answers | What: defines the situation | Why: possible causes of the primary value |
-| Count   | Usually one per use case    | Many per primary metric                   |
-| Colour  | Can be colour-coded         | Some can; context metrics cannot          |
-| Unit    | Usually %, 0 bad, 100 good  | Varies: GB, MHz, packets/s, ms            |
-| Used in | Monitoring                  | Troubleshooting                           |
+| Count | Usually one per use case | Many per primary metric |
+| Colour | Can be colour-coded | Some can; context metrics cannot |
+| Unit | Usually %, 0 bad, 100 good | Varies: GB, MHz, packets/s, ms |
+| Used in | Monitoring | Troubleshooting |
 
 - Example: Capacity Remaining (%) is primary; CPU utilization, memory usable capacity and CPU allocation are secondary.
 - Example: VM Performance (%) is primary (`vsphere/object-types/vm/kpis/vm-performance`); peak vCPU Ready among the vCPUs, peak read/write latency among the virtual disks and Guest OS CPU context switch are secondary.

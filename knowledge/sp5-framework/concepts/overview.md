@@ -67,14 +67,14 @@
 - Two kinds:
 
 
-| Item         | Short term                           | Long term                    |
-| ------------ | ------------------------------------ | ---------------------------- |
-| Performed by | Day-to-day operations                | Capacity planner             |
-| Decision     | Stop provisioning new load           | Buy hardware                 |
-| Ties to      | Availability, performance            | Value (cost)                 |
-| Timeline     | Now; no projection                   | Future; projection mandatory |
-| Scope        | Resources provisioned within an hour | Resources not yet purchased  |
-| Focus        | Hardware                             | Software (costs more)        |
+| Item | Short term | Long term |
+|---|---|---|
+| Performed by | Day-to-day operations | Capacity planner |
+| Decision | Stop provisioning new load | Buy hardware |
+| Ties to | Availability, performance | Value (cost) |
+| Timeline | Now; no projection | Future; projection mandatory |
+| Scope | Resources provisioned within an hour | Resources not yet purchased |
+| Focus | Hardware | Software (costs more) |
 
 - Long-term lead time follows procurement: months.
 - Short term looks at the consumer, long term at the provider.
@@ -124,14 +124,14 @@
 ## Inventory vs configuration
 
 
-| Item            | Inventory                                              | Configuration                                         |
-| --------------- | ------------------------------------------------------ | ----------------------------------------------------- |
-| What            | An account of what is where: location, movement, count | Properties of the inventory; location is one property |
-| Properties used | A small subset: counting objects                       | The full set, set by choice or accepted               |
-| Drift           | Not relevant                                           | Important                                             |
-| Movement        | Important                                              | Not relevant                                          |
-| Stocktake       | Yes, physical or virtual                               | No                                                    |
-| Goal            | Distribution: keep it balanced (VMs per cluster)       | Variance: keep it minimal (VM hardware versions)      |
+| Item | Inventory | Configuration |
+|---|---|---|
+| What | An account of what is where: location, movement, count | Properties of the inventory; location is one property |
+| Properties used | A small subset: counting objects | The full set, set by choice or accepted |
+| Drift | Not relevant | Important |
+| Movement | Important | Not relevant |
+| Stocktake | Yes, physical or virtual | No |
+| Goal | Distribution: keep it balanced (VMs per cluster) | Variance: keep it minimal (VM hardware versions) |
 
 - Configuration maximum is in fact an inventory maximum.
 - VMs in a cluster: inventory. ESXi hosts in a cluster: inventory, and configuration as well, because the host count is the cluster design; a deviation must be explained in the design document.
@@ -219,7 +219,7 @@ review_notes:
 - 'Section ''The five pillars'': the five pillars follow the SP5 diagram (author, Q091, 2026-11-08). Security moved from pillar to platform. The fifth pillar is value: cost, price and business value (author, 2026-11-08).'
 - 'Section ''Relationships'': the text says Availability and Capacity have a line without arrowheads; the diagram shows an arrow from Availability to Capacity. The detailed relationship diagram (not copied) shows Availability → Performance, which the text says does not exist. Q101.'
 - 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value). Tag list: Q091.'
-- 'Section ''Capacity'', inputs diagram: ''a reservation becomes a share'' is the diagram label, written as given; its mechanism is not explained in the book. Q101.'
+- 'Section ''Capacity'': reservation in the planning phase becomes share in the running phase (author edit, Q101 c, 2026-11-09).'
 - 'Section ''What a private cloud manages'': text twin of the capabilities diagram (book p. 44), not copied: the text carries its content.'
 - 'Section ''Availability'': five nines at 10x the cost of four nines is the book''s rule of thumb, not a measured figure.'
 - 'Not copied: detailed pillar relationship diagram (p. 53), private cloud capabilities diagram.'

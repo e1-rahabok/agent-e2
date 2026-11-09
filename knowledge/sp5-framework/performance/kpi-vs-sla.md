@@ -11,11 +11,11 @@
 ## Three steps of maturity
 
 
-| Step      | How it works                                                                                          |
-| --------- | ----------------------------------------------------------------------------------------------------- |
-| Complaint | Reactive, alert-driven, tickets passed between teams, blame between teams                             |
-| KPI       | Modelled, measured, agreed; one policy for all; SOPs from insight; an RCA closes with an alert set up |
-| SLA       | Part of the business contract; one policy per class of service; price and QoS separate the classes    |
+| Step | How it works |
+|---|---|
+| Complaint | Reactive, alert-driven, tickets passed between teams, blame between teams |
+| KPI | Modelled, measured, agreed; one policy for all; SOPs from insight; an RCA closes with an alert set up |
+| SLA | Part of the business contract; one policy per class of service; price and QoS separate the classes |
 
 - The KPI step:
   - uses both the 20-second and the 5-minute average;

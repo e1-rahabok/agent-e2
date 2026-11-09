@@ -24,14 +24,14 @@
 ### Overcommit: several classes (Mix)
 
 
-| Stage | What is used                         | Why                                                           |
-| ----- | ------------------------------------ | ------------------------------------------------------------- |
-| Plan  | Utilization, allocation, reservation | No real workload yet: a calculator simulates the combinations |
-| Plan  | Not contention                       | It does not exist before workload runs                        |
-| Run   | Share                                | DRS and ESXi must tell Gold from Silver from Bronze           |
-| Run   | Not reservation                      | Absolute, with side effects                                   |
-| Run   | Not allocation                       | Not in-line: the scheduler does not use it                    |
-| Run   | Not utilization                      | A result, not a setting                                       |
+| Stage | What is used | Why |
+|---|---|---|
+| Plan | Utilization, allocation, reservation | No real workload yet: a calculator simulates the combinations |
+| Plan | Not contention | It does not exist before workload runs |
+| Run | Share | DRS and ESXi must tell Gold from Silver from Bronze |
+| Run | Not reservation | Absolute, with side effects |
+| Run | Not allocation | Not in-line: the scheduler does not use it |
+| Run | Not utilization | A result, not a setting |
 
 - Most common case: overcommit, mixed classes, VMs given for free (no chargeback). The reason it is the most common is limtied budget and physical constraints.
 - Planning fills the cluster to 100% of the first dimension reached: utilization, allocation or reservation.
@@ -48,12 +48,12 @@
 ## Four dimensions
 
 
-| Dimension   | Role              | Used for                                                     |
-| ----------- | ----------------- | ------------------------------------------------------------ |
-| Utilization | Primary metric    | Against usable capacity, which holds availability and buffer |
-| Contention  | Override          | Stop provisioning: the main input to closing the cluster     |
-| Allocation  | Leading indicator | Protect the shared infrastructure from sudden demand         |
-| Reservation | Guarantee         | Planning. At run time use it sparingly; use shares           |
+| Dimension | Role | Used for |
+|---|---|---|
+| Utilization | Primary metric | Against usable capacity, which holds availability and buffer |
+| Contention | Override | Stop provisioning: the main input to closing the cluster |
+| Allocation | Leading indicator | Protect the shared infrastructure from sudden demand |
+| Reservation | Guarantee | Planning. At run time use it sparingly; use shares |
 
 ## Utilization
 
@@ -67,12 +67,12 @@
 ![Utilization against usable capacity in 10 chunks: 0-40% grey wastage zone, 40-80% green zone with 70-80% marked Best, 80-100% a gradient from yellow to red](images/cluster-utilization-against-usable-capacity-wastage-and-green-zones-diagram.png)
 
 
-| Utilization against usable capacity | Zone          | Meaning                                                   |
-| ----------------------------------- | ------------- | --------------------------------------------------------- |
-| 0-40%                               | Grey          | Wastage: capacity given, and likely paid for, is not used |
-| 40-80%                              | Green         | Consumed with enough buffer: no purchase yet              |
-| 80%                                 | Best          | Target                                                    |
-| 80-100%                             | Yellow to red | No values given by the source                             |
+| Utilization against usable capacity | Zone | Meaning |
+|---|---|---|
+| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |
+| 40-80% | Green | Consumed with enough buffer: no purchase yet |
+| 80% | Best | Target |
+| 80-100% | Yellow to red | No values given by the source |
 
 - Ten equal chunks of usable capacity: four grey, four green, two from yellow to red.
 
@@ -89,14 +89,14 @@
 Reviewed together: each covers what the other lacks.
 
 
-| Aspect   | Reservation                             | Share                                        |
-| -------- | --------------------------------------- | -------------------------------------------- |
-| Nature   | Absolute; a guarantee, so no overcommit | Relative; overcommit does not apply          |
-| Focus    | Throughput: CPU cycles (Hz)             | Runtime: CPU time slices; memory apportioned |
-| Drawback | At VM level it affects HA and DRS       | No guarantee                                 |
-| Use      | Conservatively; not the full value      | Aggressively: a wide Gold to Silver ratio    |
-| Stage    | Planning                                | Running                                      |
-| Where    | Indirectly: resource pool               | Directly: VM                                 |
+| Aspect | Reservation | Share |
+|---|---|---|
+| Nature | Absolute; a guarantee, so no overcommit | Relative; overcommit does not apply |
+| Focus | Throughput: CPU cycles (Hz) | Runtime: CPU time slices; memory apportioned |
+| Drawback | At VM level it affects HA and DRS | No guarantee |
+| Use | Conservatively; not the full value | Aggressively: a wide Gold to Silver ratio |
+| Stage | Planning | Running |
+| Where | Indirectly: resource pool | Directly: VM |
 
 - A reservation set on the VM changes HA admission control and HA restart: unreserved capacity left after host failures decides placement. Set it on a resource pool instead (Frank Denneman's recommendation, cited by the book).
 - VM-level reservation leads to lower provider utilization and higher consumer contention: placement becomes unbalanced.
@@ -134,12 +134,12 @@ Demand = Max (Utilization, Reservation)
 ### Invisible demand
 
 
-| Demand     | Example                                 | Response                                        |
-| ---------- | --------------------------------------- | ----------------------------------------------- |
-| Rare       | Annual sales; a market crash            | Set an overcommit ratio and drive by allocation |
-| Unexpected | DR drill or real DR wakes protected VMs | Count Site Recovery Manager recovery plans      |
-| Potential  | New VMs take months to reach full load  | Plan for their final size                       |
-| Unmet      | Demand the VM or the host cannot serve  | Count undersized VMs in cluster capacity        |
+| Demand | Example | Response |
+|---|---|---|
+| Rare | Annual sales; a market crash | Set an overcommit ratio and drive by allocation |
+| Unexpected | DR drill or real DR wakes protected VMs | Count Site Recovery Manager recovery plans |
+| Potential | New VMs take months to reach full load | Plan for their final size |
+| Unmet | Demand the VM or the host cannot serve | Count undersized VMs in cluster capacity |
 
 - Rare demand of a group of VMs can hurt the whole cluster or datastore at once. Paying ahead for a disaster is a business decision, not the capacity planner's.
 - Recovery plans: one recovery plan holds many protection groups, and one protection group can sit in many recovery plans. Count each VM once.
@@ -151,12 +151,12 @@ Demand = Max (Utilization, Reservation)
 ### Limitations of allocation
 
 
-| Limitation            | Effect                                                                                                                                               |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| VM size ignored       | Two monster VMs count the same as many small VMs of equal total; the scheduler fits small VMs more easily, more so when they peak at different times |
-| Utilization ignored   | Only configured size counts; extra load makes allocation report less consumption than real                                                           |
-| Overhead ignored      | vSAN keeps protection data on the same datastore: consumption doubles inside it                                                                      |
-| IaaS workload counted | Agent VMs count as demand, though they often use a local datastore                                                                                   |
+| Limitation | Effect |
+|---|---|
+| VM size ignored | Two monster VMs count the same as many small VMs of equal total; the scheduler fits small VMs more easily, more so when they peak at different times |
+| Utilization ignored | Only configured size counts; extra load makes allocation report less consumption than real |
+| Overhead ignored | vSAN keeps protection data on the same datastore: consumption doubles inside it |
+| IaaS workload counted | Agent VMs count as demand, though they often use a local datastore |
 
 ## Overcommit
 

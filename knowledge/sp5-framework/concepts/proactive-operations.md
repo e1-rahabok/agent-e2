@@ -10,7 +10,7 @@
 | Day 0: planning | All five | - | - |
 | Day 1: design and build | Availability, performance, compliance, capacity | Cost | - |
 | Day 2: monitoring | All five | - | - |
-| Day 2: troubleshooting | Availability, performance | - | Compliance, capacity, cost |
+| Day 2: troubleshooting | Availability, performance | - | Security (forensic investigation), compliance (drift against the desired configuration), capacity, cost |
 | Day 2: optimizing | Performance, capacity, cost | Availability | Compliance |
 
 - A major technology upgrade needs planning and redesign: the cycle starts again.
@@ -172,7 +172,7 @@ corrections:
 review_notes:
 - 'Section ''Dual track'': the book says 3 techniques and lists 4 (daily optimization, insight review, performance quantification, monthly baselining); the diagram names them automated process, insight, modelling, monthly performance baselining. Written from the diagram. Q105, Q107.'
 - 'Daily check length: the book gives about 1 minute (text), 10 minutes (timeline image), 5 minutes (monitoring table). Author answer Q105 (b), 2026-11-08: a few minutes, about 5, when there is no problem; longer when there is a problem, depending on the problem.'
-- 'Section ''Who does which day'', table: the troubleshooting row marks compliance not applicable, while the Troubleshoot text says availability, performance and security are troubleshot. Q101.'
+- 'Section ''Who does which day'': only availability and performance are troubleshot; security is a forensic investigation; compliance is finding the setting that differs from the desired configuration (author, Q101 d, 2026-11-09).'
 - 'Section ''NOC live screen and daily check'': the book says insight and alerts were covered in Part 1; this is Part 1 (Q107).'
 - 'Section ''Daily SOP per pillar'', 31 backups: Claude''s subtraction (1,549 - 1,518).'
 - 'Section ''Daily SOP per pillar'', Proactive HA reading hardware health: Claude''s knowledge (vSphere Proactive HA uses hardware vendor health providers).'
