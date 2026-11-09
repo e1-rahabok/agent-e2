@@ -10,15 +10,11 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | VM pages | guest physical pages, guest physical memory | Pages in the VM address space. Vendor term kept for search. |
 | ESXi pages | machine pages, machine memory | Pages ESXi manages on DIMM, host cache or tiered NVMe. |
 | Guest OS sizing | VM rightsizing (inside the guest) | Sized from Guest OS counters. The external view is VM footprint. |
-| Usage Disparity | vCPU imbalance | Spread of usage across the vCPUs of one VM. |
-| Troubleshooting | diagnosis, diagnose, root cause analysis (the process) | The why, after an object fails a health check. |
-| Health check | what to monitor, monitoring checklist, verification, daily check | The what: is the object healthy, at risk, or wasteful. |
 
 ## Defined terms
 | Term | Meaning | Also called |
 |---|---|---|
 | Virtual motherboard | What a VM is: vCPU, memory, virtual disks and vNICs that run a Guest OS. The Guest OS is not part of it. | VM |
-| KPI | Key performance indicator; performance only. One metric for the performance of one object. `sp5-framework/performance/kpi-vs-sla` | - |
 | KAI, KCI | Key availability indicator, key compliance indicator. Not called KPI. | - |
 | SLI | SLA leading indicator: pass or fail every 5 minutes; the SLA is its mean over the calendar month. Not service level indicator. | - |
 | Security SLA | Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings. | Compliance SLA |
@@ -27,7 +23,6 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. A capacity term only. | - |
 | Value (pillar) | One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management. `sp5-framework/concepts/overview` | Cost and price |
 | Green zone | The change window: the agreed time when approved changes, deployments and patches may enter production. Downtime inside it is excluded from Operational Availability. `sp5-framework/concepts/sla-metrics` | Change window, maintenance window, authorized execution window |
-| Crown jewels | The critical business applications, strategic to the core business; each gets a KPI at the infrastructure layer. `sp5-framework/performance/business-application-kpi` | Mission-critical applications |
 | Triple See Method | The author's method for VCF: read contention, consumption and context metrics as one set before concluding. Not USE, RED or Golden Signals. `sp5-framework/concepts/triple-see-method` | Triple See |
 | Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `sp5-framework/capacity/health-check/can-cluster-take-more-vms` | Stop provisioning |
 | vSphere World | VCF Operations object above all vCenter Server instances. | - |
@@ -50,7 +45,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Other Wait | Wait not caused by idle or swap: disk IO, network IO, vMotion, snapshots. | VM Wait |
 | Net Run | VCF Operations metric: Run - Overlap. | - |
 | Contention (VCF Operations) | Overlap + Co-stop + Ready + Other Wait. Before July 2024: mapped to CPU Latency. | - |
-| Usage Disparity | Spread of usage across the vCPUs of one VM. | Imbalance vCPU Usage (avoid) |
+| Usage Disparity | Spread of usage across the vCPUs of one VM. | vCPU imbalance, Imbalance vCPU Usage (avoid) |
 | MKS, VMX, Helper | VM worlds charged to VM-level Used: console, VM management and emulation, IO helpers. | - |
 | Thread Utilization | ESXi Utilization (%) read per physical thread. Binary per moment. | Utilization (%) |
 | Core Utilization | 100% when 1 or 2 threads of a core run. | - |
@@ -59,8 +54,6 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | ESXi CPU Imbalance | Running threads / running cores. | Imbalance Score |
 | Consumed CPU (%) | Host list column in vSphere Client. Maps to Usage (%). | - |
 | CPU Utilization for Resources | 17 legacy rescpu.* metrics. Avoid. | rescpu |
-| VM pages | Pages in the VM address space. Vendor term: guest physical pages. | - |
-| ESXi pages | Pages ESXi manages on DIMM, host cache or tiered NVMe. Vendor term: machine pages. | - |
 | Page-fault latency | VM memory Latency (%), esxtop %LAT_M. VCF Operations: VM Memory Contention. | Memory Latency |
 | Granted | VM pages with ESXi pages mapped. VM view. | - |
 | Entitlement (memory) | Granted + Overhead. | - |
@@ -74,7 +67,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Leading indicator, lagging indicator | Leading: underlying metric read in insights. Lagging: customer-facing metric used in alerts. | - |
 | Operational Availability (%) | Availability relative to the availability architecture. | - |
 | Actual Availability (%) | Availability as it happened. Usually lower than Operational Availability. | - |
-| Crown jewels | Mission-critical business applications: few VMs, essential to revenue, profit or image. | Mission-critical applications |
+| Crown jewels | The critical business applications, strategic to the core business: few VMs, essential to revenue, profit or image. Each gets a KPI at the infrastructure layer. `sp5-framework/performance/business-application-kpi` | Mission-critical applications |
 | Slow time | Time a VM spends above the Performance SLA threshold; the performance counterpart of downtime. `sp5-framework/concepts/sla-metrics` | - |
 | Finding | Result of troubleshooting or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue. | - |
 | Issue | A negative finding, identified by one or more symptoms. | - |
@@ -84,9 +77,9 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Primary metric, secondary metric | Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why). | - |
 | Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks. `sp5-framework/concepts/overview` | - |
 | Model | How one pillar of one object is quantified into a number and a decision. Capacity model, availability model, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed. `vsphere/object-types/cluster/models/cluster-consumption` | - |
-| KPI | A model of performance only: the P in KPI. One 0-100% score per object. VM, Guest OS, ESXi and Cluster Performance. `vsphere/object-types/esxi/kpis/esxi-performance` | Key Performance Indicator |
-| Health check | Check of one object, in the order present health, risk, efficiency. The what. A failed step opens a troubleshooting flow. `vsphere/object-types/cluster/health-check/cluster-health-check` | - |
-| Troubleshooting | Finding why an object failed a health check, and the fix. Always after the health check, never instead of it. A user complaint is a failed health check. `sp5-framework/concepts/monitoring-vs-troubleshooting` | - |
+| KPI | Key performance indicator: a model of performance only, the P in KPI. One 0-100% score per object: VM, Guest OS, ESXi and Cluster Performance. `sp5-framework/performance/kpi-vs-sla` | Key Performance Indicator |
+| Health check | Check of one object, in the order availability, performance, security, capacity, with configuration as the drill-down. The what: is the object healthy, at risk, or wasteful. A failed step opens a troubleshooting flow. `vsphere/object-types/cluster/health-check/cluster-health-check` | what to monitor, monitoring checklist, verification, daily check |
+| Troubleshooting | Finding why an object failed a health check, and the fix. Always after the health check, never instead of it. A user complaint is a failed health check. Each order of checks is a flow. `sp5-framework/concepts/monitoring-vs-troubleshooting` | diagnosis, diagnose, root cause analysis, triage |
 
 ## Confusable pairs
 Pairs that public text mixes up. Each row points to the file that holds the mechanism.
@@ -136,6 +129,7 @@ source:
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
 corrections: []
 review_notes:
+  - "2026-11-09: duplicate rows merged, one row per term (Usage Disparity, VM pages, ESXi pages, KPI, Crown jewels, Health check, Troubleshooting); aliases in Also called; triage added as an alias of troubleshooting (author, Q133 c)."
   - "2026-11-08 (author decision): Framework, Model, KPI, Health check and Troubleshooting defined; diagnosis and what to monitor replaced. Confusable pair Health check (Kubernetes probe): Claude's knowledge."
   - "2026-11-07: Confusable pair Consistency vs compatibility check added from Part 1, Configuration Management. Proposal."
   - "2026-11-07: Defined terms Slow time to Primary metric and the pairs Monitoring vs troubleshooting, Inventory vs configuration, Security vs compliance, Short-term vs long-term capacity added from Part 1, Your Private Cloud (Service Level Agreement to SP5 Framework: Process). Proposals; author to confirm. Present and future health grouping: Q102."

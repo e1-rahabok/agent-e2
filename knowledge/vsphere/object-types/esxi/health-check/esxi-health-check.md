@@ -26,7 +26,7 @@ flowchart TD
 - Host utilization is capacity, not performance. A host can run at high utilization with no VM waiting, and VMs can wait on a lightly used host.
 
 ## Checks, in order
-Order of `sp5-framework/concepts/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
+Order (author, Q104 and Q133, 2026-11-09): availability, performance, security, capacity. Configuration is checked as the drill-down under each of the four, because a setting can affect all of them. Efficiency (waste) is read as part of capacity. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
 1. Availability (HostSystem). Future, after 1.0: host not responding, disconnected, PSOD and soft errors come mostly from logs and events. State what was not checked. → step 2.
 2. Performance: ESXi Performance (%) (HostSystem). One score from the 8 VM contention sub-metrics (worst VM and 90th percentile of Ready, Co-stop, memory latency, disk latency) and the host's bad network packets. See `vsphere/object-types/esxi/kpis/esxi-performance`. Green → step 4. Yellow or worse → step 3.
 3. Which sub-metric fails (HostSystem, VirtualMachine). Open the sub-metric that drives the score down:

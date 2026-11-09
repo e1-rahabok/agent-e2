@@ -49,6 +49,16 @@ def glossary_terms(docs):
     if not g:
         return out
     for head, text in g.sections:
+        if head.startswith('Defined terms'):
+            for line in text.split('\n'):
+                cells = [c.strip() for c in line.strip().strip('|').split('|')]
+                if len(cells) < 3 or set(cells[0]) <= set('-: ') or cells[0] == 'Term':
+                    continue
+                preferred = re.sub(r'\(.*?\)', '', cells[0]).strip()
+                for a in cells[2].split(','):
+                    a = re.sub(r'\(.*?\)', '', a).strip()
+                    if len(a) > 2 and a != '-':
+                        out.append((a, preferred))
         if head.startswith('Synonyms') or head.startswith('Words to avoid'):
             for line in text.split('\n'):
                 cells = [c.strip() for c in line.strip().strip('|').split('|')]

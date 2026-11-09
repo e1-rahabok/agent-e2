@@ -228,7 +228,7 @@ knowledge/                           # what the model reads (indexed)
   - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `sp5-framework/<pillar>/`; content across pillars: `sp5-framework/concepts/`, so the framework reads as one unit (author, 2026-11-08).
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `sp5-framework/concepts/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
+  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order availability, performance, security, capacity, with configuration as the drill-down (section 10), starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
   - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage (author, 2026-11-08). Content about a managed object lives with that object, even when VCF Operations computes it:
     - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
     - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
@@ -354,7 +354,8 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
   - Troubleshooting: the why. Done only after an object fails a health check; a user complaint counts as a failed health check. Troubleshooting is part of the health check, always after it.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
-- Order (author, Q104): availability, performance, security; configuration is the drill-down under each, because it can cause all three; known bugs count as configuration. Contention is part of performance. Every performance troubleshooting flow checks configuration.
+- Order (author, Q104 and Q133, 2026-11-09): availability, performance, security, capacity; configuration is the drill-down under each of the four, because a setting can affect all of them; known bugs count as configuration. Efficiency (waste) is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
+- The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2 (author, Q133).
 - Reactive: after an alert, an incident (outage, breach) or a complaint. Proactive: insight, typically anomaly detection, read with business context.
 - One flow per file. Template: `project/templates/health-check.md` or `project/templates/troubleshooting.md`. Order: symptom, Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.

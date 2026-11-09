@@ -17,7 +17,7 @@ meta:
   status: draft
 rows:
 - id: vm-slow
-  match: ['\b(vm|virtual machine|server|application|app)s? (is|are|was|were|feels?|got|running|seems?) (very |really |so )?(slow|sluggish|laggy|unresponsive)', '\bslow (vm|virtual machine|server|application)', 'performance (issue|problem|degradation|complaint)']
+  match: ['\btriage\b', '\b(vm|virtual machine|server|application|app)s? (is|are|was|were|feels?|got|running|seems?) (very |really |so )?(slow|sluggish|laggy|unresponsive)', '\bslow (vm|virtual machine|server|application)', 'performance (issue|problem|degradation|complaint)']
   means: VM slow troubleshooting flow contention Guest OS
   note: 'A slow VM starts with the troubleshooting flow: Guest OS or VM (virtual motherboard), then contention before utilization, then configuration.'
   files: [sp5-framework/performance/troubleshooting/vm-slow]
