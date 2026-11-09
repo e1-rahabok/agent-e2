@@ -91,6 +91,7 @@ class Catalog:
                                 same_name TEXT, same_meaning TEXT, status TEXT);
           CREATE TABLE objects (type TEXT, role TEXT, layer TEXT, supplies TEXT, charts INT, note TEXT, kb TEXT);
           CREATE TABLE relations (src TEXT, dst TEXT, kind TEXT, cardinality TEXT);
+          CREATE TABLE levels (object TEXT, metric TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, src TEXT);
           CREATE TABLE formulas (formula TEXT, source TEXT);
         ''')
         for r in load_yaml('vcenter-api-counters.yaml')['rows']:
@@ -122,6 +123,9 @@ class Catalog:
                     c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
                               (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
                                b['orange'], b['red'], r['source'], pillar, r.get('interval')))
+        for lv in load_yaml('thresholds-performance.yaml').get('levels') or []:
+            c.execute('INSERT INTO levels VALUES (?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv['direction'],
+                      *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')), lv['from']))
         for d in self.docs.values():
             if not any(f in d.id for f in ('/metrics/', '/kpis/', '/models/')):  # metric files, KPIs and models
                 continue

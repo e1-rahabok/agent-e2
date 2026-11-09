@@ -427,6 +427,14 @@ Each entry has:
 - Answer:
 
 
+### Q152 · Thresholds > levels · Empty cells in the 9-value table
+- Files: [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml), section `levels`
+- Search 1 (file): "levels:"
+- What the knowledge base says now: 31 metrics, one line each. Every line has one interval filled from its band table (20s or 5m). The other two are null. No 2s value exists anywhere.
+- Question: give yellow, orange, red for the null cells, or say which stay empty. Should 2s apply only to the 20s-peak metrics (CPU Ready, Co-stop, disk latency)? A 2s value for Guest OS free memory or balloon has no meaning.
+- Written as now: null. The 4x rule is not used to fill cells.
+- Answer:
+
 ## Resolved
 
 ### Q126 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
