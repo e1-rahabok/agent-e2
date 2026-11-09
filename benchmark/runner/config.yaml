@@ -36,7 +36,10 @@ rerank_stem: false             # true: score the question without its options
 web:                          # public web knowledge (harness/web.py; MISSION.md, section 5)
   enabled: true               # read URLs in the question; tools fetch_url and web_search in agentic mode
   fetch: true
-  search_url: null            # SearXNG-style JSON endpoint, e.g. https://searx.example/search; null = no web search
+  search_backend: gateway     # gateway: Vercel AI Gateway's Perplexity search (benchmark; needs AI_GATEWAY_API_KEY, about USD 0.006 a search, 2026-11-09). searxng: a customer's SearXNG at search_url
+  search_url: null            # SearXNG-style JSON endpoint, e.g. https://searx.example/search
+  gateway_search_model: google/gemma-4-31b-it   # lists the result URLs; the harness fetches the pages itself
+  search_timeout: 60          # a gateway search takes 10-20 seconds
   allow_hosts: []             # pages the user links: empty = any public host; a customer can restrict
   search_hosts: [techdocs.broadcom.com, knowledge.broadcom.com, docs.vmware.com, developer.broadcom.com]  # search returns only vendor documentation
   timeout: 15
