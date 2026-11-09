@@ -1,0 +1,194 @@
+meta:
+  id: catalog/user-terms
+  title: 'User terms: the words users write, mapped to the knowledge base'
+  fields:
+    id: Stable key.
+    match: 'Patterns (Python regular expressions, case-insensitive) for the words a user writes. One hit is enough.'
+    unless: 'Optional pattern: no match when the question already uses the knowledge-base term.'
+    means: Knowledge-base terms added to the search query.
+    note: 'One line for the model: the misreading the user''s words carry, and what to read instead.'
+    files: Knowledge files pulled into the context when the row matches, most important first.
+  review_notes:
+  - 'Built 2026-11-09 (author request): question understanding before search. Seeded from knowledge/glossary.md (Synonyms, Confusable pairs), project/vocabulary.md (Words to avoid) and the Traps sections. Each note restates its file; the file is the source.'
+  - 'Read by harness/terms.py. Switch: term_map in benchmark/runner/config.yaml.'
+  - 'Author to extend: the wrong terms users write in tickets and forums, with what they mean.'
+  - 'Each note is condensed by Claude from the file it cites; to review against those files.'
+  status: draft
+rows:
+- id: vm-slow
+  match: ['\b(vm|virtual machine|server|application|app)s? (is|are|was|were|feels?|got|running|seems?) (very |really |so )?(slow|sluggish|laggy|unresponsive)', '\bslow (vm|virtual machine|server|application)', 'performance (issue|problem|degradation|complaint)']
+  means: VM slow triage contention Guest OS
+  note: 'A slow VM is first a triage: Guest OS or VM (virtual motherboard), then contention before utilization, then configuration.'
+  files: [sp5-framework/performance/troubleshooting/vm-slow-triage]
+- id: cpu-usage-high
+  match: ['cpu (usage|utili[sz]ation|util|load|busy)\b[^.?\n]{0,30}\b(high|9\d ?%|100 ?%|maxed|pegged|spike)', '\bhigh cpu (usage|utili[sz]ation|load)']
+  unless: '\b(esxi?|host)\b'
+  means: VM CPU contention Ready Co-stop Usage
+  note: 'High CPU usage is consumption, not contention. A VM can be busy and healthy; slowness shows in CPU Ready, Co-stop and the Guest OS run queue.'
+  files: [vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics, vsphere/technology/cpu/metrics/virtual-motherboard/usage]
+- id: host-cpu-usage
+  match: ['(esxi?|host)\b[^.?\n]{0,25}\bcpu (usage|utili[sz]ation)', 'cpu (usage|utili[sz]ation)\b[^.?\n]{0,25}\b(esxi?|host)\b']
+  means: ESXi CPU Usage Utilization Core Utilization Hyper-Threading frequency
+  note: 'ESXi CPU Usage counts frequency and Hyper-Threading (both threads busy = core 100%); Utilization is per thread at static frequency; Core Utilization is per core. They differ by design.'
+  files: [vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics, vsphere/technology/cpu/metrics/host/usage, vsphere/technology/cpu/metrics/host/utilization]
+- id: steal-time
+  match: ['steal(ed)? time', '%st\b', '\bcpu steal']
+  means: VM CPU Ready Co-stop
+  note: 'Steal time is the Linux guest view of time its vCPU was runnable but not running. On vSphere read VM CPU Ready and Co-stop.'
+  files: [vsphere/technology/cpu/metrics/virtual-motherboard/ready, vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu]
+- id: iowait
+  match: ['io ?wait', 'i/o wait', 'cpu wait']
+  means: VM CPU Wait Other Wait disk latency Guest OS
+  note: 'Guest OS iowait is idle time with IO outstanding. VM CPU Wait includes idle time, so it is not a wait problem by itself; read Other Wait and VM disk latency.'
+  files: [vsphere/technology/cpu/metrics/virtual-motherboard/other-wait, vsphere/technology/cpu/metrics/virtual-motherboard/wait]
+- id: cpu-latency
+  match: ['cpu latency']
+  means: VM CPU Latency Ready frequency Hyper-Threading
+  note: 'VM CPU Latency also rises with lower frequency and Hyper-Threading, with no wait. CPU Ready is the wait for a physical CPU.'
+  files: [vsphere/technology/cpu/metrics/virtual-motherboard/latency]
+- id: add-vcpu
+  match: ['(add|more|increase|give it|bump)( more)? (v ?cpus?|cores?|processors?|cpu)\b', '(upsize|scale up) the (vm|cpu)']
+  means: rightsizing Ready Co-stop Guest OS run queue NUMA
+  note: 'More vCPUs can raise CPU Ready and Co-stop and break NUMA fit. Add vCPUs only when the Guest OS run queue shows a CPU bottleneck and the VM has no contention.'
+  files: [sp5-framework/capacity/rightsizing, vsphere/technology/cpu/metrics/virtual-motherboard/co-stop]
+- id: add-memory
+  match: ['(add|more|increase|give it)( more)? (ram|memory)\b', 'needs? more (ram|memory)']
+  means: Guest OS sizing paging free memory
+  note: 'Whether a VM needs memory is a Guest OS question (paging, free memory, application cache), not a VM memory counter.'
+  files: [guest-os/system/concepts/guest-os-sizing, vsphere/architecture/vm-vs-guest-os]
+- id: host-memory-usage
+  match: ['(esxi?|host|cluster)\b[^.?\n]{0,25}\bmemory (usage|utili[sz]ation|consumed)', 'memory (usage|utili[sz]ation|consumed)\b[^.?\n]{0,25}\b(esxi?|host|cluster)\b']
+  means: ESXi Memory Consumed Ballooned Swapped contention
+  note: 'High ESXi Memory Consumed is normal: memory works as a cache. Pressure shows in ballooning, compression, swapping and VM Memory Contention.'
+  files: [vsphere/technology/memory/metrics/comparisons/host-memory-metrics, vsphere/technology/memory/metrics/host/consumed]
+- id: vm-memory-usage
+  match: ['(vm|virtual machine)\b[^.?\n]{0,20}\bmemory (usage|utili[sz]ation)', 'memory (usage|utili[sz]ation)\b[^.?\n]{0,20}\b(vm|virtual machine)\b']
+  means: VM Memory Usage Consumed Active Guest OS
+  note: 'VM memory counters are the virtual motherboard view. Whether the Guest OS has enough memory is read inside the Guest OS.'
+  files: [vsphere/technology/memory/metrics/comparisons/vm-memory-metrics, vsphere/architecture/vm-vs-guest-os]
+- id: active-memory
+  match: ['active memory', 'memory active']
+  means: VM Memory Active Consumed
+  note: 'Active is an estimate of pages touched recently, with no operational use for sizing.'
+  files: [vsphere/technology/memory/metrics/virtual-motherboard/active]
+- id: balloon
+  match: ['balloon']
+  means: VM Memory Ballooned Swapped
+  note: 'Ballooned memory was reclaimed through the Guest OS, in the past; it is not current pressure by itself. Swapped is paged out by ESXi at random.'
+  files: [vsphere/technology/memory/metrics/virtual-motherboard/ballooned]
+- id: swap
+  match: ['\bswap(ping|ped)?\b']
+  unless: 'swap partition|pagefile'
+  means: VM Memory Swapped Swap In Rate contention
+  note: 'Swapped is the past; the VM waits only when pages are read back (swap-in rate, Swap Wait).'
+  files: [vsphere/technology/memory/metrics/virtual-motherboard/swapped]
+- id: host-balloon-swap
+  match: ['(esxi?|host)\b[^.?\n]{0,40}\b(balloon|swap|compress)', '(balloon|swap|compress)\w*\b[^.?\n]{0,40}\b(esxi?|host)\b']
+  means: ESXi Memory Ballooned Swap Used Compressed host memory state
+  note: 'On ESXi, ballooned, compressed and swapped memory are what was reclaimed earlier, not what is under pressure now; one can be 0 while the others are not, because reclaim order depends on the memory state and per-VM settings.'
+  files: [vsphere/technology/memory/metrics/comparisons/host-memory-metrics, vsphere/technology/memory/metrics/host/ballooned, vsphere/technology/memory/metrics/host/swap-used]
+- id: disk-latency
+  match: ['(disk|storage|i/?o|datastore|san|lun) latency', 'latency (on|of) the (disk|datastore|storage|san|lun)']
+  means: VM Disk Latency storage layers datastore device KAVG DAVG
+  note: 'Disk latency has a layer: Guest OS, VM virtual disk, datastore, device. Each counter group has its own scope; name the layer before comparing values.'
+  files: [vsphere/technology/storage/concepts/storage-layers, vsphere/technology/storage/metrics/virtual-motherboard/disk-latency]
+- id: esxtop-storage
+  match: ['\b(davg|kavg|gavg|qavg)\b']
+  means: ESXi storage latency stack DAVG KAVG GAVG QAVG
+  note: 'GAVG = KAVG + DAVG. KAVG above a fraction of a millisecond points to queueing in the kernel (QAVG); DAVG is the device and fabric.'
+  files: [vsphere/technology/storage/concepts/esxi-storage-latency-stack]
+- id: esxtop-cpu
+  match: ['%rdy', '%cstp', '%mlmtd', '%swpwt', '%used', '%run']
+  means: VM CPU Ready Co-stop Run Used esxtop
+  note: 'esxtop CPU fields are per world and summed over vCPUs; %RDY includes %MLMTD (time held back by a limit).'
+  files: [vsphere/tools/esxtop/overview, vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics]
+- id: iops-high
+  match: ['iops (is |are )?(high|too high|maxed)', 'high iops', 'throughput (is )?(high|maxed)']
+  means: IOPS throughput latency storage
+  note: 'Storage has no clear 100%: high IOPS or throughput is not a problem unless latency rises with it.'
+  files: [vsphere/technology/storage/metrics/virtual-motherboard/iops]
+- id: queue-length
+  match: ['disk queue', 'queue length', 'outstanding (io|i/o)']
+  means: Guest OS Disk Queue VM outstanding IO
+  note: 'Guest OS Disk Queue and VM outstanding IO are different layers; a queue matters with latency, not alone.'
+  files: [guest-os/storage/metrics/disk-queue, vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io]
+- id: run-queue
+  match: ['run ?queue', 'processor queue', 'cpu queue']
+  means: Guest OS CPU Run Queue
+  note: 'The run queue is a Guest OS metric, not a VM metric: threads waiting inside Windows or Linux.'
+  files: [guest-os/cpu/metrics/run-queue]
+- id: real-time-chart
+  match: ['real[- ]?time (chart|data|metrics?|graph|view)', 'realtime']
+  means: 20-second real-time interval esxtop 2-second
+  note: 'The vSphere Client Real-time chart shows 20-second averages, not real time. A burst of 1-3 seconds needs esxtop or the VCF Operations 9.1 2-second tier.'
+  files: [observability/real-time-metrics, vsphere/tools/vsphere-client/vcenter-statistics]
+- id: vcenter-chart
+  match: ['vcenter (chart|graph|performance chart)', 'performance (chart|tab) in vcenter', 'past (day|week|month|year) chart']
+  means: vCenter statistics rollup interval average
+  note: 'vCenter history rolls 20-second samples into 5-minute, 30-minute and longer averages; peaks are averaged away.'
+  files: [vsphere/tools/vsphere-client/vcenter-statistics]
+- id: packet-drop
+  match: ['(packet|frame)s? (drop|dropped|loss|lost|discard)', 'dropped (packets|frames)', '(rx|tx) drops?']
+  means: Packets Dropped transmit receive vNIC ring
+  note: 'Name the side and direction: received drops on a vNIC usually mean the Guest OS did not drain the ring; transmit drops are on the switch side.'
+  files: [vsphere/technology/network/concepts/packet-drop-accounting, vsphere/technology/network/metrics/virtual-motherboard/packets-dropped]
+- id: cpu-limit
+  match: ['(set|add|apply|use|put)( a)? (cpu |memory )?limits?', '\blimits? (on|to) (the )?(vm|cpu|memory)']
+  means: limit Ready contention resource controls noisy neighbour
+  note: 'A limit creates contention of its own (CPU Ready includes time held back by a limit). Shares and reservations serve fairness without capping an idle host.'
+  files: [vsphere/architecture/resource-controls, sp5-framework/performance/noisy-neighbour]
+- id: reservation
+  match: ['reservations?\b']
+  means: reservation admission control
+  note: 'Admission control checks reservations, never usage. A reservation is a guarantee and cannot be overcommitted.'
+  files: [vsphere/architecture/resource-controls, vsphere/object-types/cluster/concepts/admission-control-and-cluster-state]
+- id: overcommit
+  match: ['over-?commit', 'consolidation ratio', 'vcpu ?(to|:) ?p?core', 'vcpu ?: ?pcpu']
+  means: overcommit allocation ratio contention
+  note: 'Only allocation can be overcommitted. A ratio says nothing about performance by itself; contention does.'
+  files: [vsphere/architecture/resource-controls, sp5-framework/capacity/capacity-model]
+- id: rightsizing
+  match: ['right-?siz', 'oversized', 'undersized', 'downsiz']
+  means: Guest OS sizing VM footprint rightsizing
+  note: 'Two jobs: Guest OS sizing from Guest OS counters (inside), VM footprint from vSphere counters (outside).'
+  files: [sp5-framework/capacity/rightsizing, sp5-framework/capacity/vm-footprint-sizing]
+- id: idle-vm
+  match: ['idle vms?', 'zombie', 'unused vms?', 'orphan(ed)? vms?']
+  means: idle oversized unused VM reclamation
+  note: 'Idle, oversized and unused are different: idle is below an absolute MHz every day; oversized is relative to its size; unused is busy but of no business value.'
+  files: [sp5-framework/capacity/reclamation, sp5-framework/capacity/unused-vm]
+- id: cluster-full
+  match: ['(cluster|environment)\b[^.?\n]{0,25}\b(full|out of capacity|running out)', 'how many (more )?vms', 'capacity (left|remaining)', 'headroom']
+  means: Cluster capacity usable capacity can cluster take more VMs
+  note: 'Capacity is read against usable capacity (total minus HA, buffer and overhead), and performance decides first: a cluster can be full with low utilization.'
+  files: [sp5-framework/capacity/health-check/can-cluster-take-more-vms, sp5-framework/capacity/capacity-model]
+- id: hyper-threading
+  match: ['hyper-?thread', '\bht\b', '\bsmt\b']
+  means: Hyper-Threading thread core utilization
+  note: 'A second thread adds throughput, not a second core. Two busy threads on one core each run slower.'
+  files: [vsphere/technology/cpu/concepts/hyper-threading]
+- id: numa
+  match: ['\bnuma\b', 'wide vm', 'monster vm']
+  means: NUMA vNUMA node size
+  note: 'A VM that does not fit a NUMA node reads remote memory; size vCPU and memory to the node.'
+  files: [vsphere/technology/cpu/configuration/numa-settings]
+- id: cpu-frequency
+  match: ['turbo', 'cpu (frequency|clock|speed|mhz|ghz)', 'power (policy|management|saving)', 'c-?states?']
+  means: CPU frequency Turbo power policy
+  note: 'Frequency changes what a percentage means: Usage and Latency move with frequency while Run time stays the same.'
+  files: [vsphere/technology/cpu/concepts/cpu-frequency]
+- id: snapshot
+  match: ['snapshot']
+  means: snapshot impact disk latency consolidation
+  note: 'A snapshot adds a read and write path; age and chain depth raise disk latency, and failed consolidation leaves it behind.'
+  files: [vsphere/technology/storage/concepts/snapshot-impact]
+- id: vmotion
+  match: ['vmotion', 'v-motion', 'stun']
+  means: vMotion stun time bandwidth
+  note: 'Slower vMotion is a leading indicator of a larger performance problem; read stun time and bandwidth.'
+  files: [vsphere/object-types/vm/metrics/vmotion]
+- id: noisy-neighbour
+  match: ['noisy neighbou?r', 'one vm (is )?(affecting|impacting|hurting) (others|other vms)']
+  means: noisy neighbour villain victim contention
+  note: 'Find the victims by contention first, then the villain by consumption on the same resource and time.'
+  files: [sp5-framework/performance/noisy-neighbour]

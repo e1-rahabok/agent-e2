@@ -127,7 +127,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 7. Status
-- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search (question type, object, layer as filters; user terms mapped to knowledge-base terms), query rewriting with glossary synonyms, one clarifying round per question (MISSION.md, section 5), `fetch_url` and `web_search`, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
+- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, one clarifying round per question (MISSION.md, section 5), `fetch_url` and `web_search`, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
 
 ## 8. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -153,6 +153,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
 
 ### Query
+0. Map the user's words (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misreading the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).
 1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
 2. Extract filters from the question: `product`, `object`, `technology`, `pillar`. (Planned, as step 1.)
 3. Retrieve by similarity within those filters.

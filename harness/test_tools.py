@@ -239,6 +239,41 @@ class WindowTest(unittest.TestCase):
         self.assertIn('context_full', [s['action'] for s in trace])
 
 
+class TermMapTest(unittest.TestCase):
+    """knowledge/catalog/user-terms.yaml read by harness/terms.py."""
+
+    def test_user_words_map_to_kb_terms_and_files(self):
+        import terms
+        hits = terms.match('Our Linux VM shows steal time of 20%. Is the host overloaded?')
+        self.assertIn('steal-time', [h['id'] for h in hits])
+        self.assertIn('Ready', terms.query('steal time', hits))
+        self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/ready', terms.files(hits, DOCS))
+        self.assertIn('Terms in this question', terms.block(hits))
+
+    def test_unless_blocks_a_match(self):
+        import terms
+        ids = [h['id'] for h in terms.match('ESXi host CPU usage is 100%')]
+        self.assertIn('host-cpu-usage', ids)
+        self.assertNotIn('cpu-usage-high', ids)
+
+    def test_every_file_exists(self):
+        import terms
+        for r in terms.rows():
+            for f in r['files']:
+                self.assertIn(f, DOCS, r['id'])
+
+    def test_classic_context_pulls_files_and_notes(self):
+        cfg = dict(ModesTest.CFG, term_map=True, context_tokens=50000)
+        ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
+        self.assertIn('observability/real-time-metrics', used)
+        self.assertTrue(ctx.startswith('Terms in this question'))
+
+    def test_off_by_switch(self):
+        cfg = dict(ModesTest.CFG, term_map=False, context_tokens=50000)
+        ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
+        self.assertNotIn('Terms in this question', ctx)
+
+
 class RetrievalFixTest(unittest.TestCase):
     def test_query_expansion_adds_preferred_term(self):
         import retrieval

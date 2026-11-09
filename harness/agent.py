@@ -11,6 +11,7 @@ import calc
 import catalog
 import flows
 import primer
+import terms
 from modes import PROMPTS, _step, _tok, _user, _verified, over_window
 
 
@@ -125,6 +126,10 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     if up_front:
         system += '\n\n' + up_front
         _step(trace, 'primer', sorted(k for k, v in (cfg.get('agent_primer') or {}).items() if v), f'{_tok(up_front)} tokens')
+    matched = terms.match(question) if cfg.get('term_map_agent') else []
+    if matched:
+        system += '\n\n' + terms.block(matched)
+        _step(trace, 'terms', [h['id'] for h in matched], terms.files(matched, retriever.docs, 6))
     msgs = [{'role': 'system', 'content': system}, _user(question, images)]
     state = {'read': [], 'same_name_checked': set(), 'searched': False}
     seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
