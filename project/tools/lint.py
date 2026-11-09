@@ -388,6 +388,27 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 kb_ok(path, w, r.get('kb'))
                 if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
                     bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
+            if name == 'thresholds-performance.yaml':
+                row_ids = {r.get("id"): r for r in rows}
+                for n, lv in enumerate(data.get('levels') or []):
+                    w = f'levels row {n + 1} ({lv.get("metric")})'
+                    for k in ('object', 'metric', 'direction', 'from'):
+                        if not lv.get(k): bad(path, f'{w}: {k} missing')
+                    if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
+                    src = row_ids.get(lv.get("from"))
+                    if not src: bad(path, f'{w}: from "{lv.get("from")}" is not a row id'); continue
+                    for iv in ('5m', '20s', '2s'):
+                        v = lv.get(iv, 'missing')
+                        if v == 'missing': bad(path, f'{w}: {iv} missing (write null when no source gives it)')
+                        elif v is not None and (not isinstance(v, list) or len(v) != 3): bad(path, f'{w}: {iv} needs [yellow, orange, red]')
+                    if src.get('kind') == 'bands' and src.get('interval') and lv.get(src['interval']) is not None:
+                        b = src['bands']
+                        def _n(x):
+                            x = str(x).replace(',', '')
+                            return float(x[:-1]) * 1000 if x.endswith('K') else float(x)
+                        edge = 1 if lv.get('direction') == 'below' else 0
+                        want = [_n(b[c].split('-')[edge]) for c in ('yellow', 'orange', 'red')]
+                        if [float(x) for x in lv[src['interval']]] != want: bad(path, f'{w}: {src["interval"]} values do not match bands of {src["id"]}')
         elif name == 'user-terms.yaml':
             seen = set()
             for n, r in enumerate(rows):
