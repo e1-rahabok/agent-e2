@@ -208,6 +208,8 @@ def main():
     import subprocess  # author-facing documents: file references must be clickable links
     r = subprocess.run([sys.executable, 'project/tools/link_refs.py', '--check'], capture_output=True, text=True)
     for line in r.stdout.splitlines(): bad(line.split(':')[0], line.split(': ', 1)[1])
+    r = subprocess.run([sys.executable, 'project/tools/tidy.py', '--check'], capture_output=True, text=True)  # Markdown formatter padding
+    for line in r.stdout.splitlines(): bad(line, 'padded tables or extra blank lines from a Markdown formatter: run python3 project/tools/tidy.py')
     import kb as _kb, primer  # agent up-front blocks: sources present, size within budget (harness/AGENT.md, section 3)
     pdocs, _ = _kb.load()
     for b in primer.BLOCKS:

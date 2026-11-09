@@ -81,7 +81,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - received packets dropped: not reliable for a contract; a packet can be dropped because it was not for the VM (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`);
   - CPU Overlap, CPU Other Wait, vMotion stun: too granular for a contract; tracked by KPIs;
   - CPU Contention (VCF Operations): it can reach 37.5% with no degradation the application notices, because it includes the Hyper-Threading effect;
-  - CPU Co-stop.
+  - CPU Co-stop. Excluded from the SLA and the SLI, not from the KPI: CPU Ready gives the best balance between the cost of reporting and its value.
 - Keep the thresholds as they are:
   - raising one (CPU Ready 2.5% to 5%) changes what each nine means; profile the environment first;
   - a common value lets you compare with peers and between classes (mission-critical vs test and development).
@@ -97,8 +97,9 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 
 ## Compliance SLA
 - Percentage of compliance against an agreed security policy or benchmark.
-- Compliance is binary: compliant or not. The provider promises perfect compliance with its own benchmark, for every class.
-- A window, usually ad hoc, allows investigation or maintenance that can make an object non-compliant for a while.
+- Compliance is binary: compliant or not.
+- The SLA is a formal contract between two entities: do not put 100% in it; the contract value is 99.95%. The internal KPI is 100%: a non-compliant setting can be a door for an attack.
+- The maintenance window is always excluded from the SLA: it is an agreed period of change.
 - Calculated from the infrastructure team's point of view.
 - Included:
   - internal standards, usually adapted from VMware best practices and security hardening guides;
@@ -188,6 +189,9 @@ VM Performance SLA (%) = average of the VM SLI over the calendar month
 - Production should score higher than development on the same threshold. How much higher is set by the nines per class: `sp5-framework/concepts/class-of-service`.
 
 ## Traps
+- "Write 100% compliance into the contract" → the SLA is 99.95%; 100% is the internal KPI.
+- "Measure the Performance SLA at the 20-second peak" → the SLA uses 5-minute values; 20 seconds leaves no room for error. The 20-second peak belongs to the KPI, as a leading indicator.
+- "Alert on the SLA or the SLI" → alerts are based on the KPI, set stricter than the SLA; a red alert may mean the SLI is already breached.
 - "Our availability SLA is 99.999%, so users had 5 minutes of downtime a year" → the SLA excludes scheduled and customer-caused downtime. Actual Availability counts everything and is lower.
 - "Application start-up after a reboot counts against the IaaS availability SLA" → IaaS uptime covers the Guest OS answering ping. fsck counts; application loading does not.
 - "Schedule a maintenance window for slow time, as for downtime" → performance has no scheduled window. The margin is the SLA percentage.
@@ -255,11 +259,12 @@ source:
   path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All) (pp. 23-35)'
 corrections: []
 review_notes:
+- 'Compliance SLA 99.95% in the contract, KPI 100%, maintenance window excluded (author, Q098, 2026-11-09). SLA never at 20 seconds; KPI at 20 seconds and stricter than the SLA; alerts on the KPI (author, Q106, 2026-11-09).'
 - 'Section ''SLA calculation'': the book writes each counter as ''If VM CPU Ready > 2.5% then 100% else 0%'', which scores a breach as 100%. Written here as pass = 100%, so that the monthly mean reads 99.9% when good. Partial VM score (75%) vs binary failure vs ''a VM must pass all four'' in vsphere/object-types/cluster/kpis/cluster-sla-sli: Q095.'
 - 'Section ''Availability SLA'', example: the book counts 3 hours (Guest OS plus database restore) = 99.58%; by the book''s own definition (Guest OS ping, application start-up not counted) it is 45 minutes = 99.90%. Both written as arithmetic; which the example means: Q096.'
 - 'Section ''Availability SLA'', Operational Availability formula: written by Claude from the definition; the book has a Formula heading with no formula. Green zone = change window (author, Q086, 2026-11-08).'
-- 'Section ''Performance SLA'', CPU Co-stop excluded: the book asks why Co-stop is excluded but gives the reason for CPU Contention only. ''Because it includes the Hyper-Threading effect'' is Claude''s reading of the 37.5% figure. Q097.'
-- 'Section ''What the numbers mean'', Memory Contention: the book says it is relative to memory used and not measured across time; the author''s answer to Q015 says time (page-fault wait). Written as time. Q097.'
+- 'Section ''Performance SLA'', CPU Co-stop: excluded from SLA and SLI only, Ready balances cost and value of reporting (author, Q097 a, 2026-11-09). CPU Contention: ''because it includes the Hyper-Threading effect'' is Claude''s reading of the 37.5% figure.'
+- 'Section ''What the numbers mean'', Memory Contention: aligned to the raw value, a share of time (author, Q097 b, 2026-11-09): less ideal for an SLA, simpler operationally.'
 - 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them. ''Failed intervals allowed'' column: Claude converted the book''s ''< n times'' into whole 5-minute intervals.'
 - 'Section ''Compliance SLA'': the recommended table gives 99.95% for all classes; the sample offering and this definition give 100% (perfect). Q098.'
 - 'Section ''Four SLAs of IaaS'': the book names Google Cloud and AWS SLA scopes; not repeated (public pages not checked).'

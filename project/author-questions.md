@@ -165,25 +165,7 @@ Each entry has:
 - Written as now: both numbers, each with its scope; the SLA covers the Guest OS only.
 - Answer:
 
-### Q097 · Part 1 > Service Level Agreement > Performance SLA · Co-stop exclusion and Memory Contention unit
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (sections Performance SLA, What the numbers mean); [VM Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md).
-- Search 1: "exclude CPU Co-Stop and CPU Contention from the Performance SLA"
-- Search 2: "Memory Contention is relative to the amount of memory being used"
-- Search 3: "Unlike CPU, it is not measured across time"
-- Question:
-  - (a) The book gives the reason for excluding CPU Contention (up to 37.5% unnoticed) but not for Co-stop. What is the reason for Co-stop? Is the 37.5% the Hyper-Threading effect inside Contention?
-  - (b) Your Q015 answer: Memory Latency (VCF Operations: Memory Contention) is a share of time a vCPU waits on page faults. This section says it is relative to memory used and not measured across time. Book correction to time?
-- Written as now: Co-stop listed as excluded with no reason; Contention excluded for the Hyper-Threading effect (Claude's reading); Memory Contention written as time.
-- Answer:
 
-### Q098 · Part 1 > Service Level Agreement > Recommended SLA · Compliance 99.95% or 100%
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section Compliance SLA); [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (sections Recommended SLA per class, Sample offering).
-- Search 1: "I did not put 99.99% as that"
-- Search 2: "You should maintain perfect compliance with your compliance requirements for all classes of service"
-- Search 3: "you should guarantee to your customers that you will be perfectly (100%) compliant"
-- Question: the recommended table gives Compliance 99.95% for every class; the sample offering, the Compliance SLA definition and the Compliance pillar give 100%. Which number goes in the contract? Is 99.95% the contract value, with perfect compliance as the promise outside the maintenance window?
-- Written as now: both tables as the book gives them; the definition says perfect compliance outside an ad hoc window.
-- Answer:
 
 ### Q099 · Part 1 > Service Level Agreement > Price & SLA · Silver ratios, notation and the 64-core licence
 - Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Planning example); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md) (section Silver at 3:1 CPU).
@@ -199,15 +181,6 @@ Each entry has:
 - Related (2026-11-08, Capacity Management session): Q119 and Q120 (the capacity plan states CPU per thread: Silver 2:1, Bronze 4:1; memory 1.5:1 and 2:1). One answer can settle (b), (c) and Q120.
 - Answer:
 
-### Q100 · Part 1 > Service Level Agreement > Size Limit · Socket or logical CPUs
-- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Size limit per class); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Maximum VM size).
-- Search 1: "Capping the size at each tier"
-- Search 2: "If you allow a single VM to be the same size as the ESXi host"
-- Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
-- Question: here the cap is per socket (Tier 1 one socket). Noisy Neighbour caps by host logical CPUs (1:1 up to all of them; 2:1 half; 4:1 a quarter). For a 2-socket, 48-core, 96-thread host, Tier 1 is 48 logical CPUs here and 96 there. Which rule should the agent give: (A) socket (NUMA) based; (B) logical-CPU based; (C) both, the smaller wins? Is 32 vCPU per socket meant as 32 cores or 32 threads?
-- Written as now: both, each in its file, linked.
-- Related: Q111 (VM size by physical cores) and Q125 (8-core block and VM size).
-- Answer:
 
 ### Q101 · Part 1 > SP5 Framework: Pillars · Relationship lines and what is troubleshot
 - Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/overview.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md) (section Who does which day).
@@ -221,6 +194,9 @@ Each entry has:
   - (c) The detailed capacity diagram says a reservation becomes a share. What is the mechanism you mean?
   - (d) The Day 0-2 table marks compliance not applicable for troubleshooting; the Troubleshoot section troubleshoots security. Is security troubleshot and compliance not?
 - Written as now: text version for (a) and (b); (c) written as the label; (d) both, flagged.
+- Answer (2026-11-09): (a), (b) not clear, explanation sent in the session (see below). (c) Answered in the updated overview file: reservation in planning becomes share in running. (d) Only availability and performance are troubleshot; security is forensic investigation; compliance is finding the setting that differs from the desired configuration. Applied: proactive-operations, glossary.
+- Restated (a): the book's text says Availability and Capacity have a line without an arrowhead (a relationship, no impact), but its pillar diagram draws an arrowhead from Availability to Capacity (impact). Which is right: does availability design (an HA host held back) impact capacity, or only relate to it?
+- Restated (b): the text says there is no line from Availability to Performance (a planned host outage does not reduce performance). The detailed diagram after it draws Availability → Performance. Keep the arrow or remove it?
 - Answer:
 
 
@@ -240,13 +216,8 @@ Each entry has:
 - Answer (b), 2026-11-08: A daily check, if there is no problem, it should take a few minutes. That's why I put 5 minutes. Now, if there is a problem, logically, it can take a lot longer than that, depending on the problem.
 - Applied (b): proactive-operations (A 24-hour day, Dual track, Traps), monitoring-vs-troubleshooting (Duration row).
 - Still open: (c).
-
-### Q106 · Part 1 > Service Level Agreement > Performance SLA · SLA counters vs the prevention window alerts
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).
-- Search: "Use the above threshold as they are."
-- Question: the four SLI thresholds are now catalog rows at 5-minute VM level (CPU Ready 2.5%, Memory Contention 1%, Disk Latency 10 ms, Transmit Dropped 0%). Q088 (a) asks about the 5% Ready in the prevention window image. Confirm the rows, and that the SLA reading is the 5-minute VM average, never the 20-second peak?
-- Written as now: four rows, interval 5m, instance aggregate.
-- Answer:
+- Restated (c), 2026-11-09: the book says "There are 3 techniques we can apply" for proactive operations, then lists 4 in the text; the dual-track diagram also has 4 but with other names (automated process, insight, modelling, monthly performance baselining). The knowledge base uses the diagram's 4 names. Correct, and is the "3" a typo for 4?
+- Answer (c):
 
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
 - Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
@@ -519,6 +490,47 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q106 · Part 1 > Service Level Agreement > Performance SLA · SLA counters vs the prevention window alerts
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (rows vm-sli-*). Related: Q088 (a).
+- Search: "Use the above threshold as they are."
+- Question: the four SLI thresholds are now catalog rows at 5-minute VM level (CPU Ready 2.5%, Memory Contention 1%, Disk Latency 10 ms, Transmit Dropped 0%). Q088 (a) asks about the 5% Ready in the prevention window image. Confirm the rows, and that the SLA reading is the 5-minute VM average, never the 20-second peak?
+- Written as now: four rows, interval 5m, instance aggregate.
+- Answer: The Performance SLA is never 20 seconds: a very short window gives no room for error. The KPI uses 20 seconds as a leading indicator. The KPI should be higher than the SLA. Alerts are based on the KPI, not the SLA or SLI; a red alert may mean the SLI is breached.
+- Applied 2026-11-09: sla-metrics (Traps); the vm-sli-* rows stay at 5 minutes.
+
+### Q100 · Part 1 > Service Level Agreement > Size Limit · Socket or logical CPUs
+- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Size limit per class); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Maximum VM size).
+- Search 1: "Capping the size at each tier"
+- Search 2: "If you allow a single VM to be the same size as the ESXi host"
+- Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
+- Question: here the cap is per socket (Tier 1 one socket). Noisy Neighbour caps by host logical CPUs (1:1 up to all of them; 2:1 half; 4:1 a quarter). For a 2-socket, 48-core, 96-thread host, Tier 1 is 48 logical CPUs here and 96 there. Which rule should the agent give: (A) socket (NUMA) based; (B) logical-CPU based; (C) both, the smaller wins? Is 32 vCPU per socket meant as 32 cores or 32 threads?
+- Written as now: both, each in its file, linked.
+- Related: Q111 (VM size by physical cores) and Q125 (8-core block and VM size).
+- Answer: The cap should not relate to the socket: many ESXi servers are single socket, and NUMA now happens within a socket, which consists of multiple CCDs (AMD EPYC) or compute tiles (Intel Xeon).
+- Applied 2026-11-09: class-of-service (Size limit per class).
+
+### Q098 · Part 1 > Service Level Agreement > Recommended SLA · Compliance 99.95% or 100%
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section Compliance SLA); [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (sections Recommended SLA per class, Sample offering).
+- Search 1: "I did not put 99.99% as that"
+- Search 2: "You should maintain perfect compliance with your compliance requirements for all classes of service"
+- Search 3: "you should guarantee to your customers that you will be perfectly (100%) compliant"
+- Question: the recommended table gives Compliance 99.95% for every class; the sample offering, the Compliance SLA definition and the Compliance pillar give 100%. Which number goes in the contract? Is 99.95% the contract value, with perfect compliance as the promise outside the maintenance window?
+- Written as now: both tables as the book gives them; the definition says perfect compliance outside an ad hoc window.
+- Answer: The SLA is a formal contract between 2 entities; do not put 100%. The KPI is 100%, as a non-compliant setting could be a door for a security attack. The maintenance window is always excluded from the SLA, as it is an agreed period of change.
+- Applied 2026-11-09: sla-metrics (Compliance SLA, Traps).
+
+### Q097 · Part 1 > Service Level Agreement > Performance SLA · Co-stop exclusion and Memory Contention unit
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (sections Performance SLA, What the numbers mean); [VM Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md).
+- Search 1: "exclude CPU Co-Stop and CPU Contention from the Performance SLA"
+- Search 2: "Memory Contention is relative to the amount of memory being used"
+- Search 3: "Unlike CPU, it is not measured across time"
+- Question:
+  - (a) The book gives the reason for excluding CPU Contention (up to 37.5% unnoticed) but not for Co-stop. What is the reason for Co-stop? Is the 37.5% the Hyper-Threading effect inside Contention?
+  - (b) Your Q015 answer: Memory Latency (VCF Operations: Memory Contention) is a share of time a vCPU waits on page faults. This section says it is relative to memory used and not measured across time. Book correction to time?
+- Written as now: Co-stop listed as excluded with no reason; Contention excluded for the Hyper-Threading effect (Claude's reading); Memory Contention written as time.
+- Answer: (a) Co-stop is excluded in the SLA or SLI, not in the KPI, as Ready gives the best balance between cost of reporting and value of reporting. (b) Align it to the raw value. Less ideal for an SLA, simpler operationally.
+- Applied 2026-11-09: sla-metrics (Performance SLA, review notes).
 
 ### Q122 · Part 1 > Cluster Closure vs Planning Phase · Performance (%) closure values
 - Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md) (step 4), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Example implementation), [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md).

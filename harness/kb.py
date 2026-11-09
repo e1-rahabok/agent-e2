@@ -18,10 +18,11 @@ def split(path):
     """Metadata is the last section of the file: '## Metadata' and one yaml block.
     Returns (meta, body); meta is None when the block is missing. project/tools/lint.py uses this parser too."""
     s = open(path).read()
-    i = s.rfind(META)
-    if i < 0 or not s.rstrip().endswith('```'):
+    m = list(re.finditer(r'\n## Metadata[ \t]*\n\s*```yaml[ \t]*\n', s))  # tolerant of blank lines a Markdown formatter adds
+    if not m or not s.rstrip().endswith('```'):
         return None, s
-    head = s[i + len(META):].rstrip().removesuffix('```')
+    i = m[-1].start()
+    head = s[m[-1].end():].rstrip().removesuffix('```')
     return yaml.safe_load(head) or {}, s[:i]
 
 LINK_TYPES = ['related', 'internal_derive', 'same_name', 'same_meaning']
