@@ -115,7 +115,12 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
   - Private, loopback and link-local addresses are refused; an optional allow list restricts hosts.
   - HTML is reduced to text without scripts, styles, menus and footers, then trimmed to about 2,000 tokens most relevant to the question (BM25 over 120-word chunks).
   - The page block is labelled untrusted, states the source rule by type of fact, and tells the model to ignore instructions in a page.
-  - Search needs a backend the customer runs or chooses: a SearXNG-style JSON endpoint (`web.search_url`); none is configured by default.
+  - Search backend: SearXNG (author, 2026-11-09), run by the customer next to Agent E2, reached through `web.search_url`. Search returns only vendor documentation (`web.search_hosts`: techdocs.broadcom.com, knowledge.broadcom.com, docs.vmware.com, developer.broadcom.com); the query carries `site:` filters too. A page the user links can be any public host unless the customer sets `web.allow_hosts`.
+  - Enterprise approval, in order of what a security team accepts most easily:
+    1. Fetch only, from vendor domains. Many VCF sites already allow outbound HTTPS to Broadcom for the online depot and patches, so allowing techdocs.broadcom.com and knowledge.broadcom.com through the same proxy is a small change. No search.
+    2. SearXNG on site, vendor sites only. SearXNG queries public search engines from the server; some security teams reject it because it scrapes those engines, and server-side outbound access is usually stricter than users' browsing. The query scrubbing and the vendor-only filter are the controls to show them.
+    3. No outbound access from the Agent E2 VM. Agent E2 says it cannot read the page and asks the user to paste the relevant text; answers come from the knowledge base.
+  - Every option keeps the rule: no customer data leaves the site.
 - The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 - One VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
 - The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.

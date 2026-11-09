@@ -37,7 +37,8 @@ web:                          # public web knowledge (harness/web.py; MISSION.md
   enabled: true               # read URLs in the question; tools fetch_url and web_search in agentic mode
   fetch: true
   search_url: null            # SearXNG-style JSON endpoint, e.g. https://searx.example/search; null = no web search
-  allow_hosts: []             # empty = any public host; a customer can restrict, e.g. [techdocs.broadcom.com, knowledge.broadcom.com]
+  allow_hosts: []             # pages the user links: empty = any public host; a customer can restrict
+  search_hosts: [techdocs.broadcom.com, knowledge.broadcom.com, docs.vmware.com, developer.broadcom.com]  # search returns only vendor documentation
   timeout: 15
   max_bytes: 3000000
   page_tokens: 2000           # a page is trimmed to the parts most relevant to the question
