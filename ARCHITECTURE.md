@@ -108,7 +108,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |
 
 - Updates arrive as a bundle: knowledge, catalog, index, and optionally new weights; downloaded, or imported offline. No customer data is sent out.
-- Internet access (author, 2026-11-09): users browse the Internet, so a question can include a URL. Whether Agent E2 fetches it is an open design item (`project/plan.md`).
+- Internet access (author, 2026-11-09): two harness tools, `fetch_url` (a link in the question) and `web_search` (only for current facts: bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted, trimmed to the relevant parts, placed after the knowledge-base files and checked against them. Rules: `MISSION.md`, section 5 (Ways to ask, Answer). Not built yet.
 - The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 - One VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
 - The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.
@@ -127,7 +127,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 7. Status
-- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search (question type, object, layer as filters; user terms mapped to knowledge-base terms), query rewriting with glossary synonyms, one clarifying round per question (MISSION.md, section 5), the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
+- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search (question type, object, layer as filters; user terms mapped to knowledge-base terms), query rewriting with glossary synonyms, one clarifying round per question (MISSION.md, section 5), `fetch_url` and `web_search`, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
 
 ## 8. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.

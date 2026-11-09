@@ -33,6 +33,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 - `project/sources/` is read-only.
 
 ## Working with the author
+- Claude is the author's co-designer, at VCDX and Level 400 depth, not an order taker. Challenge the author's logic and reasoning when it is weak. Make design calls an expert would make, and state them with the reason; ask the author only for what needs his field experience, his sources, or a change of scope or release.
 - Questions for the author go in `project/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
 - Extract the book one Heading 3 at a time. Add that section's questions and continue; do not wait for answers.

@@ -19,14 +19,15 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
 
 - 1.0 includes one clarifying round per question (MISSION.md, section 5, Ways to ask): the harness answers in one turn today, so a second turn is to build.
+- 1.0 includes `fetch_url` and `web_search` (MISSION.md, section 5; ARCHITECTURE.md, section 5): page trimming, untrusted label, check against the knowledge base, the source rule by type of fact. Measured with URL questions (M2).
 - After 1.0 (author, 2026-11-09):
   - Live VCF Operations 9 integration: query the user's running instance through its API, so Agent E2 is not isolated from live VCF Operations, vCenter and ESXi data.
   - Older releases (1.3 or later): detect or ask the user's version and warn when a fact differs by release.
   - Weekly update scan: check a few selected URLs (Broadcom TechDocs, KB, release notes) for changes, report them to Iwan Rahabok for manual review; approved changes update `knowledge/`; customers download the update and replace their files.
-  - Web search and URL fetch in answers: not in 1.0; release not set.
 - Earlier list: screen library and screenshot read-back (1.1); data files (1.2); alert definitions (1.2): Iwan Rahabok first overhauls the shipped alerts in VCF Operations ([VMW-Alerts-Overhaul](https://github.com/e1-rahabok/VMW-Alerts-Overhaul): 1,193 alert definitions, 1,951 symptoms; analysis not finished), then the definitions become a YAML catalog with a harness lookup tool, measured on questions that need an exact definition; read-only VCF Operations connection; vSAN, NSX, Kubernetes, Linux content.
 
 ## Decisions (latest first)
+- 2026-11-09, author: URL fetch and web search in 1.0. A page the user gives is evidence to check against the knowledge base, not a source. Search runs only for current facts (bugs, builds, maximums, renamed features). Mechanism and interpretation: the knowledge base wins; version-specific facts: the newer official document wins and the file is flagged. Claude acts as co-designer and makes the design calls (CLAUDE.md).
 - 2026-11-09, author: the deployment is local, not cut off from the Internet. Customer data (questions, screenshots, files) never leaves the site and Agent E2 answers without Internet access, but users browse the Internet for knowledge, so a question can include a URL. Wording updated in MISSION.md, README.md, ARCHITECTURE.md, CLAUDE.md and the benchmark documents. Open: fetch user URLs (proposal in the session of 2026-11-09).
 - 2026-11-09, author: a concept is a general idea; a file that documents an actual implementation is not a concept. `operations-management/` renamed [sp5-framework/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework), its `sp5-framework/` renamed `concepts/`: the SP5 Framework covers all of operations management. Alerts in two parts: top down (alert architecture across products) in `sp5-framework/alerts/`; bottom up (how an alert definition is built in VCF Operations) in `vcf-operations/alerts/`. `vcf-operations/` split into concepts, features, dashboards, reports, alerts. Real-time metrics: concept in [Real-time metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/real-time-metrics.md), the VCF Operations 9.1 feature in `vcf-operations/features/`; the 20-second data the UI labels real time is not real time. Full VCF Operations alert definitions not ingested before 1.2.
 - 2026-11-08, author: no fast first-stage model. The fast stage is code (KPI and model results, threshold catalog, grouping); the reasoning model reads only the findings (`ARCHITECTURE.md`, section No fast first-stage model).
@@ -111,6 +112,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - Later: the author's "My Recommendation" column in [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md); book terminology for the glossary.
 
 ### M2 Questions
+- Author to do: list 5-10 public pages (vendor KB, documentation, blogs) with known Level 300 errors, each with the error. They become URL questions ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.4).
 - 10 more questions: 1 at Level 200, 9 at Level 300, in the tasks below allocation (decide-capacity, troubleshoot, judge-setting, explain-mechanism).
 - Author: files for L4-26 to L4-49; Q058 (synthetic share, review of L4-14 to L4-50); real-ticket questions written by the author, the held-out set cut from them.
 - `trap_type` in question metadata and a coverage script for the blueprint counts.
