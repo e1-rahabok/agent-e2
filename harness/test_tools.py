@@ -274,6 +274,48 @@ class TermMapTest(unittest.TestCase):
         self.assertNotIn('Terms in this question', ctx)
 
 
+class ClarifyTest(unittest.TestCase):
+    """One clarifying round (harness/clarify.py, modes.converse)."""
+
+    class Scripted:
+        """Returns the scripted replies in order; records the system prompts it was sent."""
+        def __init__(self, replies):
+            self.replies, self.systems = list(replies), []
+
+        def chat(self, model, messages, tools=None, **kw):
+            self.systems.append(messages[0]['content'])
+            return {'content': self.replies.pop(0), 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1,
+                    'latency': 0, 'served_model': model, 'provider': 'mock'}
+
+    CFG = dict(ModesTest.CFG, verify=False)
+
+    def test_parse(self):
+        import clarify
+        self.assertIsNone(clarify.parse('VM CPU Ready is ...'))
+        qs = clarify.parse('CLARIFY:\n1. Which object, VM or ESXi? because the counter differs\n2. A\n3. B\n4. C')
+        self.assertEqual(len(qs), 3)
+        self.assertTrue(qs[0].startswith('Which object'))
+
+    def test_first_round_may_ask(self):
+        c = self.Scripted(['CLARIFY:\n1. What problem did users report? because more vCPUs can raise Ready'])
+        out = modes.converse('classic', c, 'm', ['Should I add vCPUs because CPU Ready is high?'], [], self.CFG, Retriever(DOCS, CHUNKS))
+        self.assertEqual(out['type'], 'clarify')
+        self.assertIn('Clarifying:', c.systems[0])
+
+    def test_second_round_must_answer(self):
+        c = self.Scripted(['CLARIFY:\n1. again?', 'Answer: the VM has contention.'])
+        out = modes.converse('classic', c, 'm', ['Add vCPUs?', 'CLARIFY:\n1. What problem?', 'Users say it is slow.'],
+                             [], self.CFG, Retriever(DOCS, CHUNKS))
+        self.assertEqual(out['type'], 'answer')
+        self.assertEqual(out['result']['content'], 'Answer: the VM has contention.')
+        self.assertIn('Do not ask again', c.systems[0])
+
+    def test_benchmark_kinds_never_offer_the_round(self):
+        for kind in ('choice', 'open'):
+            for prompt in modes.PROMPTS[kind].values():
+                self.assertNotIn('CLARIFY', prompt)
+
+
 class RetrievalFixTest(unittest.TestCase):
     def test_query_expansion_adds_preferred_term(self):
         import retrieval

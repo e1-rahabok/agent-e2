@@ -41,6 +41,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
 | `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
 | `agent.py` | The agent loop: tools, rules (lookup first, no repeats, same-name check), budgets, fallback, verifier. Design: `AGENT.md`. |
+| `clarify.py` | One clarifying round: the `chat` and `chat_final` prompt rules, `CLARIFY:` parsing; the conversation runs through `modes.converse`. |
 | `terms.py` | Question understanding before search: the user's words matched against `knowledge/catalog/user-terms.yaml`; adds knowledge-base terms to the query, pulls files into the context, adds a note per misreading. Switches `term_map`, `term_map_agent`. |
 | `primer.py` | The agent's five up-front blocks, generated from the knowledge base; switches `agent_primer` in the config. |
 | `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
