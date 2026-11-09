@@ -603,3 +603,41 @@ rows:
   source: vsphere-9.1-docs
   kb: vsphere/technology/storage/metrics/host/datastore
   quote: 'Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s'
+- kind: rule
+  id: alert-esxi-cpu-thread-utilization-red
+  metric: ESXi CPU Thread Utilization
+  object: HostSystem
+  layer: hypervisor
+  operator: '>'
+  value: 40
+  unit: '%'
+  condition: ESXi CPU Core Utilization above 80%, for 10 minutes; cluster when more than 25% of hosts
+  meaning: Red infrastructure CPU consumption alert.
+  source: book
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: ESXi CPU Thread Utilization above 40%;
+- kind: rule
+  id: alert-esxi-memory-consumed-red
+  metric: ESXi Memory Consumed
+  object: HostSystem
+  layer: hypervisor
+  operator: '>'
+  value: 95
+  unit: '%'
+  condition: ESXi Memory Ballooned above 10 MB, for 10 minutes; cluster when 50% of hosts
+  meaning: Red infrastructure memory consumption alert.
+  source: book
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: ESXi Memory Consumed above 95%.
+- kind: rule
+  id: alert-datastore-used-space-red
+  metric: Datastore Used Space
+  object: Datastore
+  layer: physical
+  operator: '>'
+  value: 90
+  unit: '%'
+  meaning: Red datastore consumption alert.
+  source: book
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: 'Datastore, red: used space above 90%.'

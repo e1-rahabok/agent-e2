@@ -22,6 +22,8 @@
   - Cluster Risk (%): `vsphere/object-types/cluster/models/cluster-risk`;
   - 20-second peaks, how VCF Operations shows a counter: `vsphere/tools/vcf-operations/peak-20-second-metrics`.
 - This folder holds VCF Operations itself: its role, its features (real-time metrics: `vcf-operations/concepts/real-time-metrics`), and its own sizing, health and performance troubleshooting.
+- Its channels and their design: `vcf-operations/concepts/system-engagement`, `vcf-operations/concepts/noc-live-screen`, `vcf-operations/concepts/daily-health-check-dashboards`, `vcf-operations/concepts/business-applications`, `vcf-operations/concepts/alert-definitions`.
+- Alert thresholds live with the resource they watch, such as `vsphere/technology/cpu/configuration/cpu-alerts`.
 
 ## Traps
 - "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and `vsphere/tools/vsphere-client/vcenter-statistics`.
