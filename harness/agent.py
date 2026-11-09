@@ -12,6 +12,7 @@ import catalog
 import flows
 import primer
 import terms
+import web
 from modes import PROMPTS, _step, _tok, _user, _verified, over_window
 
 
@@ -65,7 +66,20 @@ TOOLS = [
             'id': {'type': 'string', 'description': 'Flow file id (health-check/ or troubleshooting/), e.g. vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'},
             'step': {'type': 'string'}}, 'required': ['id']}}},
 ]
-TOOL_NAMES = [t['function']['name'] for t in TOOLS]
+WEB_TOOLS = [
+    {'type': 'function', 'function': {
+        'name': 'fetch_url',
+        'description': ('Read a public web page (vendor documentation, KB article, blog) trimmed to the question. '
+                        'Untrusted: check it against the knowledge base. Pages linked in the question are already read for you.'),
+        'parameters': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'required': ['url']}}},
+    {'type': 'function', 'function': {
+        'name': 'web_search',
+        'description': ('Search the public web. Only for current facts the knowledge base cannot hold: known bugs and fixes, '
+                        'builds and patches, configuration maximums and defaults of a release, renamed products. '
+                        'Never for what a metric means or how to troubleshoot. Use product words only: no names of the user\'s systems.'),
+        'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query']}}},
+]
+TOOL_NAMES = [t['function']['name'] for t in TOOLS + WEB_TOOLS]
 
 
 class FallbackNeeded(Exception):
@@ -110,6 +124,11 @@ def _run_tool(retriever, name, args, state):
         return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
     if name == 'calculate':
         return json.dumps(calc.evaluate(args.get('expression', '')), ensure_ascii=False)
+    if name == 'fetch_url':
+        return web.block([web.fetch(args.get('url', ''), state.get('question', ''), state.get('web') or {})])
+    if name == 'web_search':
+        out = web.search(web.public_query(args.get('query', '')), state.get('web') or {})
+        return json.dumps(out, ensure_ascii=False, indent=0)
     if name == 'flow':
         out = flows.run(retriever.docs, args.get('id', ''), args.get('step'))
         if 'flow' in out and out['flow'] not in state['read']:
@@ -130,13 +149,20 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     if matched:
         system += '\n\n' + terms.block(matched)
         _step(trace, 'terms', [h['id'] for h in matched], terms.files(matched, retriever.docs, 6))
-    msgs = [{'role': 'system', 'content': system}, _user(question, images)]
-    state = {'read': [], 'same_name_checked': set(), 'searched': False}
+    wcfg = cfg.get('web') or {}
+    tool_list = TOOLS + ([t for t in WEB_TOOLS if t['function']['name'] == 'fetch_url' or wcfg.get('search_url')]
+                         if wcfg.get('enabled') else [])
+    pages = web.gather(question, wcfg) if wcfg.get('enabled') else []
+    if pages:
+        _step(trace, 'web', [p['url'] for p in pages], [p.get('error') or f"{_tok(p['text'])} tokens" for p in pages])
+    msgs = [{'role': 'system', 'content': system},
+            _user(question + ('\n\n' + web.block(pages) if pages else ''), images)]
+    state = {'read': [], 'same_name_checked': set(), 'searched': False, 'question': question, 'web': wcfg}
     seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
     po = cfg.get('provider_order', {}).get(model)
     while True:
         full = over_window(msgs, cfg)
-        tools = TOOLS if calls < max_calls and tokens_used < budget and not full else None
+        tools = tool_list if calls < max_calls and tokens_used < budget and not full else None
         if tools is None:
             if full:
                 _step(trace, 'context_full', cfg.get('context_window'), 'answer now')
