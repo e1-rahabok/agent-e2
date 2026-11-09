@@ -4,6 +4,8 @@ Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
+- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available. It beats frontier models on monitoring and troubleshooting because its agent, harness and knowledge base are purpose-built. That is how a 32B-parameter model beats far larger models.
+- That is the 1.0 minimum (author, 2026-11-09). Anything else is not a release blocker; it goes to a later release.
 - An open-weight model, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than the best frontier model.
 - Locally means on the customer's own infrastructure: no cloud AI service, and no customer data (questions, screenshots, files) leaving the customer network. No per-token fee.
 - Internet access (author, 2026-11-09): customers keep their data in, but their users browse the Internet for knowledge, so a question can include a URL. Agent E2 works without Internet access; public knowledge from the Internet is an addition, never a requirement.
@@ -72,7 +74,11 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | 4 | Guided troubleshooting | A symptom ("VM is slow") | Run the matching flow one step at a time; ask for the next value; show the step and the branch taken | 1.0 (flow tool exists) |
 | 5 | Live instance | Read-only connection to VCF Operations | Read metrics of a named object; fill the flow steps from live values | After 1.0 |
 
-- Clarifying questions are part of every mode: the system asks when the object, the time window or the product version is unclear, because one metric name means different things on different objects.
+- Clarifying questions (author, 2026-11-09): at most one round per question, then answer.
+  - A question that makes sense is answered without asking why.
+  - Ask when the question is odd or illogical: a wrong premise usually shows a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
+  - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
+  - Otherwise answer and state the assumption first.
 - Screenshots: several per question, compared with each other; the chart interval and rollup are read (a 1-day chart hides 20-second peaks); values are shown back before reasoning; images stay on site.
 - Data files are more exact than screenshots and need no screen reading; recommended when the user can export.
 
