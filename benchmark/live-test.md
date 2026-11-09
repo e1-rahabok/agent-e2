@@ -1,12 +1,12 @@
-# Live test: the system on an offline model
+# Live test: the system on a local model
 
 The plan to deploy the system as a customer would, on one GPU with no Internet, and prove that it works there. Not indexed.
-Why it matters: the benchmark reaches models through a gateway; the mission is an offline model. The gaps the gateway leaves open are in [models.md](models.md), section What the gateway does not prove. Design: [../MISSION.md](../MISSION.md), section 5. Architecture: [../ARCHITECTURE.md](../ARCHITECTURE.md), section Dark-site deployment.
+Why it matters: the benchmark reaches models through a gateway; the mission is a local model. The gaps the gateway leaves open are in [models.md](models.md), section What the gateway does not prove. Design: [../MISSION.md](../MISSION.md), section 5. Architecture: [../ARCHITECTURE.md](../ARCHITECTURE.md), section Local deployment.
 
 ## 1. What it proves
 | Claim | Proof |
 |---|---|
-| Runs offline | No outbound connection during the whole test, checked at the network, not assumed |
+| Works without Internet | No outbound connection during the whole test, checked at the network, not assumed. Customer data never leaves the site; Internet access is optional |
 | Scores like the benchmark | The same questions, local weights at the deployed precision; final score compared with the gateway run of the same model |
 | Fits the hardware | One GPU of at most 96 GB; the 32K context window; no out-of-memory error |
 | Fast enough to use | Time per answer and per model turn on the target GPU, in each mode |

@@ -12,7 +12,7 @@
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
-  <img src="https://img.shields.io/badge/runs-offline%20%28dark%20site%29-6e7781?labelColor=3d444d" alt="Runs offline">
+  <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
   <img src="https://img.shields.io/badge/knowledge%20files-205-6e7781?labelColor=3d444d" alt="Knowledge files: 205">
   <img src="https://img.shields.io/badge/benchmark%20questions-90-6e7781?labelColor=3d444d" alt="Benchmark questions: 90">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
@@ -32,13 +32,13 @@
 
 **Business problem:**
 
-- Many private cloud customers cannot send operational data to a cloud AI service: regulated industries, government and defence, and dark sites with no Internet at all.
+- Many private cloud customers cannot send operational data to a cloud AI service: regulated industries, government and defence.
 - Others can use cloud AI but must contain its cost: per-token fees grow with every question, user and automated check.
 - Frontier AI models answer vSphere performance questions from public Internet text, which repeats common misconceptions. Their answers $\color{red}{\text{sound expert}}$ and are often wrong at Level 400.
 
 **Mission:**
 
-- An open-weight model, running offline on one GPU (dark site, no Internet), answering Level 400 private cloud management questions better than frontier models.
+- An open-weight model, running locally on one GPU (customer data stays on site), answering Level 400 private cloud management questions better than frontier models.
 
 ## Why it is possible
 
@@ -69,14 +69,14 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | Read                                                 | For                                                                                                         |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | [MISSION.md](MISSION.md)                             | The mission; why it is possible; what we can change; risks; what the product must do; design considerations |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: repository, parts, modes, dark site, checks, query flow                                   |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: repository, parts, modes, local deployment, checks, query flow                                   |
 | [REPOSITORY-MAP.md](REPOSITORY-MAP.md)               | Where each folder and file lives                                                                            |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How expertise is codified and found; folder, metadata, trap, flow, image and writing rules                  |
 | [harness/AGENT.md](harness/AGENT.md)                 | What the agent knows up front, what it decides, its rules, how it is improved                               |
 | [harness/README.md](harness/README.md)               | What each harness part does for an expert answer; modules                                                   |
 | [benchmark/design.md](benchmark/design.md)           | How the benchmark proves the claim; final score                                                             |
 | [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference; judge                      |
-| [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on an offline model: setup, steps, pass criteria                                        |
+| [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on a local model: setup, steps, pass criteria                                        |
 | [project/plan.md](project/plan.md)                   | Milestones, decisions, open work                                                                            |
 | [CONTRIBUTING.md](CONTRIBUTING.md)                   | How to add or change a file                                                                                 |
 
