@@ -1,4 +1,4 @@
-# Users say the VM is slow: triage
+# Users say the VM is slow
 
 ## Symptom
 - Users or the application owner report that a VM (and its application) is slow.
@@ -22,7 +22,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Time window and scope. Ask when the slowness happens (a time, a schedule, all the time) and which VMs. Read every counter below at the 20-second peak within that window, not the 5-minute or daily average. See `vsphere/tools/vcf-operations/peak-20-second-metrics`. → step 2.
+1. Time window and scope. Ask when the slowness happens (a time, a schedule, all the time) and which VMs. Read every counter below at the 20-second peak within that window, not the 5-minute or daily average. See `vcf-operations/features/peak-20-second-metrics`. → step 2.
 2. Breadth (ClusterComputeResource). Several VMs on the same cluster or host slow in the same window → the cause is likely at host or cluster level → `vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`. One VM → step 3.
 3. VM contention (VirtualMachine), one resource at a time, in the complaint window. Start from VM Performance (%) at scale (`vsphere/object-types/vm/kpis/vm-performance`), then the counters:
    - CPU: Ready and Co-stop, read against Run → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.
@@ -57,7 +57,7 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: sp5-framework/performance/troubleshooting/vm-slow-triage
+id: sp5-framework/performance/troubleshooting/vm-slow
 retriever_guide: troubleshooting
 scope: sp5-framework
 technology:
@@ -77,7 +77,7 @@ object:
 - VirtualMachine
 internal_derive:
 - vsphere/object-types/vm/configuration/vm-configuration-review
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 - vsphere/object-types/vm/kpis/vm-performance
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
@@ -96,7 +96,7 @@ source:
   document: Knowledge base synthesis of the files in internal_derive
   path: n/a
 corrections:
-- 'Step 5: author answer Q104 (2026-11-08): every performance flow, VM slow triage included, checks configuration; known bugs are mostly configuration.'
+- 'Step 5: author answer Q104 (2026-11-08): every performance flow, this one included, checks configuration; known bugs are mostly configuration.'
 review_notes:
 - 'Drafted by Claude 2026-11-06 from the files in internal_derive and vsphere/object-types/vm/health-check/vm-health-check (architecture review 2026-11-06, section 3.3). The order of checks is to be confirmed by the author from field practice (Q060).'
 status: draft

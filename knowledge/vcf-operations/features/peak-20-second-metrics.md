@@ -41,9 +41,9 @@
 
 ## Metadata
 ```yaml
-id: vsphere/tools/vcf-operations/peak-20-second-metrics
+id: vcf-operations/features/peak-20-second-metrics
 retriever_guide: metric-meaning
-scope: vsphere
+scope: vcf-operations
 technology:
 - cpu
 - memory
@@ -79,6 +79,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Design'': author (Q048, 2026-11-06).'
-- 'Moved 2026-11-06 from vsphere/tools/vcf-operations/peak-20-second-metrics (architecture review 2026-11-06, section 5).'
+- 'Moved 2026-11-06 from vcf-operations/features/peak-20-second-metrics (architecture review 2026-11-06, section 5).'
 status: draft
 ```

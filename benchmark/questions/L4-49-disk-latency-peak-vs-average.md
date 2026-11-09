@@ -38,7 +38,7 @@ level: 400
 answer_type: judged
 input: [table, screenshot]
 knowledge:
-  - vsphere/tools/vcf-operations/peak-20-second-metrics
+  - vcf-operations/features/peak-20-second-metrics
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
   - vsphere/object-types/cluster/kpis/cluster-sla-sli
 attachments:

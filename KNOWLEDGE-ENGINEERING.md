@@ -189,7 +189,7 @@ knowledge/                           # what the model reads (indexed)
 │   ├── concepts/                    # the framework across pillars: overview, why not ITIL, Triple See Method,
 │   │                                # SLAs, class of service, health, monitoring vs troubleshooting
 │   ├── alerts/                      # alert architecture, top down: alerts and insights, alert design across products
-│   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for cross-technology flows (VM slow triage)
+│   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for cross-technology flows (VM slow)
 │   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
 ├── vsphere/
 │   ├── architecture/                # vSphere-wide design that every metric depends on: provider/consumer,
@@ -207,12 +207,11 @@ knowledge/                           # what the model reads (indexed)
 │   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/, images/
 │   └── tools/                       # how each tool shows the counters
 │       ├── esxtop/                  # panels, fields, units vs the vSphere Client
-│       ├── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
-│       │                            # screens/ for the screen library (release 1.1)
-│       └── vcf-operations/          # how VCF Operations shows vSphere counters (20-second peaks); screens/ (1.1)
+│       └── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
+│                                    # screens/ for the screen library (release 1.1)
 ├── vcf-operations/                  # VCF Operations as a system in its own right
 │   ├── concepts/                    # what the product is for: role, how it reaches people
-│   ├── features/                    # features as implemented (real-time metrics)
+│   ├── features/                    # features as implemented (real-time metrics, 20-second peaks)
 │   ├── dashboards/                  # dashboard design and the dashboard suites
 │   ├── reports/                     # report design and the report suite
 │   ├── alerts/                      # alert definitions, bottom up: symptoms, conditions, cycles, recommendations
@@ -233,14 +232,14 @@ knowledge/                           # what the model reads (indexed)
   - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage (author, 2026-11-08). Content about a managed object lives with that object, even when VCF Operations computes it:
     - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
     - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
-    - how VCF Operations shows a counter (rollup, 20-second peak): `vsphere/tools/vcf-operations/`.
+    - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS (author, 2026-11-09). `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
   - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), and later its own sizing, health and performance troubleshooting. See `vcf-operations/concepts/vcf-operations-role`.
   - A concept is a general idea; a file that documents an actual implementation is not a concept (author, 2026-11-09). In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the general idea in `observability/` or `sp5-framework/concepts/`, the implementation in `vcf-operations/` (example: `observability/real-time-metrics` and `vcf-operations/features/real-time-metrics`).
   - Alerts have two parts (author, 2026-11-09). Top down, the alert architecture across products (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/alerts/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `sp5-framework/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
-  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (triage, capacity decisions) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
+  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (VM slow, capacity decisions) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
 - Three levels of general content, different scope (author, 2026-11-08: names say what the content is, not that it is basic):
@@ -252,7 +251,7 @@ knowledge/                           # what the model reads (indexed)
 - `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; the same names wherever a metric of that object lives. The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
 - Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. A VCF Operations KPI over Guest OS counters (Guest OS Performance) stays in `guest-os/` by this rule.
-- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/`, with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
+- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/` (vSphere Client, esxtop) or `vcf-operations/<features|dashboards|reports>/screens/` (VCF Operations), with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
 - Indexed: every `knowledge/**/*.md`. Writing templates live in `project/templates/`; source documents in `project/sources/` (read-only). How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
 - `project/tools/lint.py` enforces the folder and tag rules.
 

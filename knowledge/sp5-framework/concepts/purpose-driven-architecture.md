@@ -34,16 +34,7 @@
 - One model fits every application: the infrastructure metrics are the same for all of them (`sp5-framework/concepts/realms-and-layers`).
 
 ## Crown jewels
-- Mission-critical business applications: a small share of the VMs, essential to revenue, profit or image. Bank: internet banking. E-commerce: the online portal.
-- Check them several times a day. The application team watches its system all day; a morning check is too late.
-- The question to answer is whether the infrastructure causes the application's problem. Usually performance; sometimes availability or security.
-
-## Health of an application tier
-- A tier scales out: web and application servers behind load balancers; microservices as pods per function (payments, shipping).
-- Tier health is the average of its members, not the worst one. Members serve requests in parallel, so one slow member slows only its share. A good load balancer spreads both load and failures.
-- Spare members (4 or 5 web servers where 3 carry the load):
-  - Availability: count the spare. One member down does not reduce tier availability while the remaining members carry the load.
-  - Performance: average all members, spare included. Every member serves requests, so a slow one slows its share of them.
+- Mission-critical business applications get their own KPI at the infrastructure layer, built from their VMs: `sp5-framework/performance/business-application-kpi`.
 
 ## Automation after operations
 - Design only what the team can troubleshoot. Problems show on Day 2, under revenue workload.
@@ -104,6 +95,7 @@ object:
 internal_derive:
 - sp5-framework/concepts/iaas-business
 related:
+- sp5-framework/performance/business-application-kpi
 - sp5-framework/capacity/host-spec-from-class-of-service
 - sp5-framework/alerts/alerts-and-insights
 - sp5-framework/concepts/realms-and-layers
@@ -128,7 +120,7 @@ review_notes:
 - 'Section ''Two sides of VCF'': appliances are workload technically, internal operationally: KPI, no SLA (author, Q091, 2026-11-08).'
 - 'Section ''Goals come from what is sold'', DaaS: reason (same software on every desktop moves together) added by Claude.'
 - 'Section ''Day 2 → Day 0 → Day 1'', Example 2: the book does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
-- 'Section ''Health of an application tier'': the reason in the performance bullet (each member serves its share of requests) is Claude''s. Health across tiers (in sequence) and of an active/passive database tier: Q092.'
+- 'Sections ''Crown jewels'' and ''Health of an application tier'' moved to sp5-framework/performance/business-application-kpi (2026-11-09), with the author''s Q092 answer.'
 - 'Section ''Two sides of VCF'': the book text says workload means the customers'' VMs; its diagram lists IT appliances under Workloads (Q091). Pillar list differs from the pillar tag values (Q091).'
 - 'Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not): Claude''s own knowledge, vSphere 9.1 availability documentation.'
 - 'Not copied: the application tier diagram (three-tier vs microservices pods) and the maturity diagram; their content is in the text.'

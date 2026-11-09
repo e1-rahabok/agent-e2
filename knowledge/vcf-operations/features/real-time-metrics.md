@@ -66,7 +66,7 @@ internal_derive:
 - observability/real-time-metrics
 related:
 - sp5-framework/capacity/rightsizing
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - observability/thresholds
 - vsphere/tools/esxtop/overview
 source:

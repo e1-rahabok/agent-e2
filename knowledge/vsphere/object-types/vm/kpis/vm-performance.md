@@ -56,7 +56,7 @@ same_name: []
 same_meaning: []
 related:
 - guest-os/system/metrics/guest-os-performance
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 images:
   - path: ../images/vm-performance-thresholds-table.png
     product: [vcf-operations]

@@ -93,7 +93,7 @@ internal_derive:
 related:
 - vsphere/object-types/vm/kpis/vm-performance
 - guest-os/system/metrics/guest-os-performance
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 images:
   - path: images/guest-os-and-vm-performance-kpi-metrics.png
     product: [vcf-operations]

@@ -8,7 +8,7 @@
 ## What it shows
 - Performance means contention: the VM did not get the CPU, memory, disk or network service it demanded. VM Performance (%) is a KPI built from contention counters (`vsphere/object-types/vm/kpis/vm-performance`, `sp5-framework/performance/performance-kpi-design`).
 - Contention first and colour coded; utilization second, as context, not colour coded; then the configuration that can affect performance (`vcf-operations/dashboards/performance-dashboards`).
-- Counters are VCF Operations metrics on the VM object (VM CPU Ready, Co-stop, Memory Contention, Disk Latency), reported every 5 minutes as an average and as the 20-second peak (`vsphere/tools/vcf-operations/peak-20-second-metrics`). They are not esxtop fields.
+- Counters are VCF Operations metrics on the VM object (VM CPU Ready, Co-stop, Memory Contention, Disk Latency), reported every 5 minutes as an average and as the 20-second peak (`vcf-operations/features/peak-20-second-metrics`). They are not esxtop fields.
 - Widget detail: to be written after the author's dashboard overhaul.
 
 ## Traps
@@ -41,10 +41,10 @@ internal_derive:
 - vcf-operations/dashboards/performance-dashboards
 related:
 - sp5-framework/performance/performance-kpi-design
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 - vsphere/technology/cpu/configuration/cpu-alerts
-- sp5-framework/performance/troubleshooting/vm-slow-triage
+- sp5-framework/performance/troubleshooting/vm-slow
 source:
   document: Author's answer (2026-11-09)
   path: 'Conversation on a Gemini answer about the VM Contention dashboard: the author built VM Performance to supersede VM Contention and marked the latter (DEP) in VCF Operations 9.1; the 9.1 documentation was not updated'

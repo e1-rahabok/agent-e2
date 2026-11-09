@@ -22,7 +22,7 @@
 - The 20-second peak covers read and write together. This is a known limit.
 - CPU Usage and IOPS cut alerts during low activity, where business impact is likely negligible.
 - These are the standard production values. Class-of-service examples (30, 60, 120 ms): `sp5-framework/alerts/alert-design`.
-- Metrics: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`, `vsphere/technology/storage/metrics/virtual-motherboard/iops`, `vsphere/tools/vcf-operations/peak-20-second-metrics`.
+- Metrics: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`, `vsphere/technology/storage/metrics/virtual-motherboard/iops`, `vcf-operations/features/peak-20-second-metrics`.
 
 ## Datastore latency
 - Not implemented. VMs and datastores are many-to-many: a VM can span datastores and a datastore serves many VMs, so a VM-level condition cannot be set for a datastore.
@@ -66,7 +66,7 @@ internal_derive:
 - sp5-framework/alerts/alert-design
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 related:
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/storage/metrics/host/datastore

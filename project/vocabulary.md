@@ -36,6 +36,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | troubleshooting | Interpretation is the purpose of every metric file. |
 | foundations (as a folder) | a name for what the folder holds: observability, architecture | The content was neither basic (Level 100-200) nor lower stack; the word said nothing (author, 2026-11-08). |
+| triage (for a troubleshooting flow) | flow, troubleshooting flow | A troubleshooting file is a flow; one word (author, 2026-11-09). |
 | diagnosis, diagnose | troubleshooting | Diagnosis is a medical word for one step of troubleshooting; one word for the why (author, 2026-11-08). |
 | what to monitor | health check | Lazy term: what is monitored is health; the health check gives order and verdict (author, 2026-11-08). |
 | verification (of an object's state) | health check | A third word for the same thing (author, 2026-11-08). |
