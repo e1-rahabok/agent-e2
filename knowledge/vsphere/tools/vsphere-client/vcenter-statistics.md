@@ -1,7 +1,7 @@
 # vCenter statistics: sampling, rollup and levels
 
 ## Definition
-- ESXi samples performance counters every 20 seconds. This is the real-time data.
+- ESXi samples performance counters every 20 seconds. The vSphere Client labels this interval Real-time. It is not real time: each point is a 20-second average (`observability/real-time-metrics`).
 - vCenter stores history by rolling the 20-second samples into coarser intervals.
 - Two settings decide what history exists: the collection interval and the statistics level.
 - Each vCenter counter carries 4 attributes: unit, stat type, rollup type, collection level.
@@ -99,6 +99,7 @@ What the vCenter 9.1 API offered per object type in one inventory (author's expo
 
 ## Traps
 - "An API value of 4,194,304 for VM Consumed is 4 TB" → the API unit is KB: 4 GB.
+- "The Real-time chart shows real-time data" → it shows 20-second averages, the label is the UI's. A burst of 1-3 seconds needs esxtop or the 2-second tier of VCF Operations 9.1.
 - "The 1 Week chart shows the peak" → it shows 30-minute averages. Use real-time or esxtop for bursts.
 - "Max rollup is always available" → only at statistics level 4.
 - "Ready of 2,000 ms is high" → it depends on the interval: 2,000 ms in 20 seconds is 10% of one vCPU; in a 5-minute point it is 0.67%.
@@ -124,6 +125,7 @@ object:
 internal_derive:
 - vsphere/architecture/metric-sources
 related:
+- observability/real-time-metrics
 - vsphere/architecture/metric-sources
 - vsphere/tools/vcf-operations/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready

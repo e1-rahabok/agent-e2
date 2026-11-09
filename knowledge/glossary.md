@@ -18,17 +18,17 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Term | Meaning | Also called |
 |---|---|---|
 | Virtual motherboard | What a VM is: vCPU, memory, virtual disks and vNICs that run a Guest OS. The Guest OS is not part of it. | VM |
-| KPI | Key performance indicator; performance only. One metric for the performance of one object. `operations-management/performance/kpi-vs-sla` | - |
+| KPI | Key performance indicator; performance only. One metric for the performance of one object. `sp5-framework/performance/kpi-vs-sla` | - |
 | KAI, KCI | Key availability indicator, key compliance indicator. Not called KPI. | - |
 | SLI | SLA leading indicator: pass or fail every 5 minutes; the SLA is its mean over the calendar month. Not service level indicator. | - |
 | Security SLA | Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings. | Compliance SLA |
-| Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `operations-management/performance/noisy-neighbour` | Resource management |
+| Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims). `sp5-framework/performance/noisy-neighbour` | Resource management |
 | Class of service | Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA. | Tier |
 | Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. A capacity term only. | - |
-| Value (pillar) | One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management. `operations-management/sp5-framework/overview` | Cost and price |
-| Green zone | The change window: the agreed time when approved changes, deployments and patches may enter production. Downtime inside it is excluded from Operational Availability. `operations-management/sp5-framework/sla-metrics` | Change window, maintenance window, authorized execution window |
-| Triple See Method | The author's method for VCF: read contention, consumption and context metrics as one set before concluding. Not USE, RED or Golden Signals. `operations-management/sp5-framework/triple-see-method` | Triple See |
-| Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `operations-management/capacity/health-check/can-cluster-take-more-vms` | Stop provisioning |
+| Value (pillar) | One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management. `sp5-framework/concepts/overview` | Cost and price |
+| Green zone | The change window: the agreed time when approved changes, deployments and patches may enter production. Downtime inside it is excluded from Operational Availability. `sp5-framework/concepts/sla-metrics` | Change window, maintenance window, authorized execution window |
+| Triple See Method | The author's method for VCF: read contention, consumption and context metrics as one set before concluding. Not USE, RED or Golden Signals. `sp5-framework/concepts/triple-see-method` | Triple See |
+| Closed cluster | A cluster that accepts no new VM and no VM upsize, decided from Capacity Remaining, Performance (%) and Risk (%). `sp5-framework/capacity/health-check/can-cluster-take-more-vms` | Stop provisioning |
 | vSphere World | VCF Operations object above all vCenter Server instances. | - |
 | Run Time | How long a CPU or vCPU runs. Binary per moment. Used for capacity. | Run (VM), Utilization (ESXi) |
 | Run Quality | Cycles completed while running. Varies with frequency and Hyper-Threading. Used for performance. | - |
@@ -67,25 +67,25 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Balloon Target | Memory ESXi asks the balloon driver to reclaim. | - |
 | Active (memory) | Sampled estimate of recently touched VM memory. | Touch (ESXi), Non Zero Active (VCF Operations) |
 | Guest OS Needed Memory | VCF Operations guest metric behind VM Memory Usage (%). | - |
-| Symptom | A minor, non-urgent issue, read in the daily health check. A symptom that persists becomes an alert. `operations-management/sp5-framework/alerts-and-insights` | - |
+| Symptom | A minor, non-urgent issue, read in the daily health check. A symptom that persists becomes an alert. `sp5-framework/alerts/alerts-and-insights` | - |
 | Insight | A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close. | - |
 | Prevention window | Time between the operations team knowing of a problem (insight) and customers noticing it (alert). | - |
 | Leading indicator, lagging indicator | Leading: underlying metric read in insights. Lagging: customer-facing metric used in alerts. | - |
 | Operational Availability (%) | Availability relative to the availability architecture. | - |
 | Actual Availability (%) | Availability as it happened. Usually lower than Operational Availability. | - |
 | Crown jewels | Mission-critical business applications: few VMs, essential to revenue, profit or image. | Mission-critical applications |
-| Slow time | Time a VM spends above the Performance SLA threshold; the performance counterpart of downtime. `operations-management/sp5-framework/sla-metrics` | - |
+| Slow time | Time a VM spends above the Performance SLA threshold; the performance counterpart of downtime. `sp5-framework/concepts/sla-metrics` | - |
 | Finding | Result of troubleshooting or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue. | - |
 | Issue | A negative finding, identified by one or more symptoms. | - |
 | Notification | How VCF Operations pushes an insight or alert to a person: email, message, on screen at login. | - |
-| Present health | Real problems now: availability, performance, security incidents. `operations-management/sp5-framework/health-risk-efficiency` | Health |
+| Present health | Real problems now: availability, performance, security incidents. `sp5-framework/concepts/health-risk-efficiency` | Health |
 | Future health | Risk: no problem yet; security exposure, compliance, configuration, capacity. | Risk |
 | Primary metric, secondary metric | Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why). | - |
-| Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks. `operations-management/sp5-framework/overview` | - |
+| Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks. `sp5-framework/concepts/overview` | - |
 | Model | How one pillar of one object is quantified into a number and a decision. Capacity model, availability model, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed. `vsphere/object-types/cluster/models/cluster-consumption` | - |
 | KPI | A model of performance only: the P in KPI. One 0-100% score per object. VM, Guest OS, ESXi and Cluster Performance. `vsphere/object-types/esxi/kpis/esxi-performance` | Key Performance Indicator |
 | Health check | Check of one object, in the order present health, risk, efficiency. The what. A failed step opens a troubleshooting flow. `vsphere/object-types/cluster/health-check/cluster-health-check` | - |
-| Troubleshooting | Finding why an object failed a health check, and the fix. Always after the health check, never instead of it. A user complaint is a failed health check. `operations-management/sp5-framework/monitoring-vs-troubleshooting` | - |
+| Troubleshooting | Finding why an object failed a health check, and the fix. Always after the health check, never instead of it. A user complaint is a failed health check. `sp5-framework/concepts/monitoring-vs-troubleshooting` | - |
 
 ## Confusable pairs
 Pairs that public text mixes up. Each row points to the file that holds the mechanism.
@@ -104,18 +104,18 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Storage vs disk | Storage is the whole IO path; disk is one layer of it, and each vCenter counter group has its own scope | `vsphere/technology/storage/concepts/storage-layers` |
 | Device vs disk vs LUN | Device is generic; disk is physical; LUN is a logical volume on the array | `vsphere/technology/storage/concepts/storage-layers` |
 | vCenter vs VCF Operations | vCenter administers; VCF Operations monitors and plans, and every metric it shows derives from a source | `vcf-operations/concepts/vcf-operations-role` |
-| Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `operations-management/sp5-framework/alerts-and-insights` |
+| Alert vs insight | Alert: urgent, bottom up, one object above a threshold, a ticket. Insight: proactive, top down, from many metrics and context | `sp5-framework/alerts/alerts-and-insights` |
 | Metric vs property | Metric: produced every interval, even when constant (power state, VM count). Property: set by configuration (configured hosts, maximum VMs) | `observability/input-types` |
 | Allocation vs reservation | Allocation is a maximum and can be overcommitted; reservation is a guarantee and cannot | `vsphere/architecture/resource-controls` |
-| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, logs included. Troubleshooting: why, reactive (after an alert, an incident or a complaint), many metrics and logs | `operations-management/sp5-framework/monitoring-vs-troubleshooting` |
-| Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `operations-management/sp5-framework/overview` |
-| Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `operations-management/sp5-framework/overview` |
-| Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `operations-management/sp5-framework/overview` |
-| Consistency vs compatibility check | Consistency: values identical across peers or partners (hosts in a cluster, ESXi and switch MTU). Compatibility: values differ but must work together (versions) | `operations-management/sp5-framework/configuration-management` |
-| Demand (capacity) vs ESXi CPU Demand | Capacity demand is the higher of utilization and reservation, per powered-on VM; ESXi CPU Demand is a counter of runtime demanded | `operations-management/capacity/capacity-dimensions` |
+| Monitoring vs troubleshooting | Monitoring: what, proactive, one primary metric, logs included. Troubleshooting: why, reactive (after an alert, an incident or a complaint), many metrics and logs | `sp5-framework/concepts/monitoring-vs-troubleshooting` |
+| Inventory vs configuration | Inventory counts what is where and its movement; configuration is the settings and their drift. Configuration maximums are inventory maximums | `sp5-framework/concepts/overview` |
+| Security vs compliance | Security tracks attacks and malicious activity; compliance checks settings against a benchmark and is binary | `sp5-framework/concepts/overview` |
+| Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `sp5-framework/concepts/overview` |
+| Consistency vs compatibility check | Consistency: values identical across peers or partners (hosts in a cluster, ESXi and switch MTU). Compatibility: values differ but must work together (versions) | `sp5-framework/concepts/configuration-management` |
+| Demand (capacity) vs ESXi CPU Demand | Capacity demand is the higher of utilization and reservation, per powered-on VM; ESXi CPU Demand is a counter of runtime demanded | `sp5-framework/capacity/capacity-dimensions` |
 | KPI vs model | A KPI scores performance only; capacity, risk, availability and security are scored by models. Cluster Risk is a model, not a KPI | `vsphere/object-types/cluster/models/cluster-risk` |
-| Health check (operations) vs health check (Kubernetes, load balancer) | Operations: a check of an object's health, risk and efficiency. Kubernetes and load balancers: a liveness or readiness probe of one endpoint | `operations-management/sp5-framework/health-risk-efficiency` |
-| Idle vs oversized vs unused VM | Idle: below an absolute MHz every day; oversized: relative to its size; unused: busy but of no business value | `operations-management/capacity/reclamation` |
+| Health check (operations) vs health check (Kubernetes, load balancer) | Operations: a check of an object's health, risk and efficiency. Kubernetes and load balancers: a liveness or readiness probe of one endpoint | `sp5-framework/concepts/health-risk-efficiency` |
+| Idle vs oversized vs unused VM | Idle: below an absolute MHz every day; oversized: relative to its size; unused: busy but of no business value | `sp5-framework/capacity/reclamation` |
 
 
 ## Metadata

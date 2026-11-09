@@ -93,7 +93,7 @@ product:
 object:
 - HostSystem
 internal_derive:
-- operations-management/sp5-framework/configuration-management
+- sp5-framework/concepts/configuration-management
 related:
 - vsphere/object-types/esxi/configuration/bios-settings
 - vsphere/technology/cpu/configuration/host-power-management

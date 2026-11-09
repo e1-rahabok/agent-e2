@@ -47,7 +47,7 @@
 - Start from the fix (add hardware, change a setting), list the metrics it requires, then the granularity each requires.
 - 1-20 seconds is required for contention metrics only. Consumption and context: 5 minutes.
 - Higher resolution also helps where a contention metric does not exist. A VM has no network latency or retransmit metric, only dropped packets; read packets per second and throughput at high resolution instead.
-- 2-second data in VCF Operations 9.1: `vcf-operations/concepts/real-time-metrics`.
+- 2-second data in VCF Operations 9.1: `vcf-operations/features/real-time-metrics`.
 
 ## Traps
 - "CPU Ready 3,000 ms in a 5-minute VCF Operations point is 1%" → the base is 20,000 ms: 15%.
@@ -75,7 +75,7 @@ related:
 - vsphere/tools/vcf-operations/peak-20-second-metrics
 - observability/aggregation
 - observability/measurement-precision
-- vcf-operations/concepts/real-time-metrics
+- vcf-operations/features/real-time-metrics
 source:
   document: 'PART 3 - Counters.docx, Metric Mastery (author update, 2026-11-08)'
   path: Metric Mastery > Collection Interval; Why Milliseconds as Unit?; Rollup Type; Real Time Collection; Performance Troubleshooting

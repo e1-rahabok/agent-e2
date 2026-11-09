@@ -44,7 +44,7 @@ The product is a narrow expert for one reader: a VMware administrator. The admin
 | Explain a mechanism | Why does the counter behave this way? | 15 |
 | Judge a setting | What does this setting do to performance or capacity? | 10 |
 
-- The shares follow what administrators ask most: reading and troubleshooting. Capacity covers sizing and rightsizing (`operations-management/capacity/`).
+- The shares follow what administrators ask most: reading and troubleshooting. Capacity covers sizing and rightsizing (`sp5-framework/capacity/`).
 - Each task maps to a `retriever_guide` value of the knowledge base: metric-meaning, health-check, troubleshooting, how-it-works, what-to-set. Capacity decisions use metric-meaning and health-check.
 
 ### 3.2 By level

@@ -38,7 +38,7 @@ level: 400
 answer_type: judged
 input: [table]
 knowledge:
-  - operations-management/capacity/vm-footprint-sizing
+  - sp5-framework/capacity/vm-footprint-sizing
 attachments:
   - 0083/vm-footprint-150-vms.xlsx
 origin: synthetic

@@ -44,7 +44,7 @@ layer:
 - guest-os
 metric_class: contention
 internal_derive:
-- operations-management/performance/performance-kpi-design
+- sp5-framework/performance/performance-kpi-design
 same_name: []
 same_meaning: []
 related:

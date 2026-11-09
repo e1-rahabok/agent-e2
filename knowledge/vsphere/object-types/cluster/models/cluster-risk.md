@@ -66,7 +66,7 @@ Per host, then the worst host is kept.
 - Monster VMs cause contention despite low utilization, reservation and allocation.
 
 ## Scoring
-- The sub-metrics are scored and combined as for every KPI and model of the pack (`operations-management/performance/performance-kpi-design`, section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
+- The sub-metrics are scored and combined as for every KPI and model of the pack (`sp5-framework/performance/performance-kpi-design`, section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
 - Bands are the mirror of the performance KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
 - Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.

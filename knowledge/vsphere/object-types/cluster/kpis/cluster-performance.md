@@ -50,7 +50,7 @@
 - One VM with 200 ms disk latency and the others at 0: the worst-VM row is orange to red; the 90th percentile stays 0. One VM is not a broad problem.
 
 ## Scoring
-- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `operations-management/performance/performance-kpi-design`, section Scoring.
+- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `sp5-framework/performance/performance-kpi-design`, section Scoring.
 - Worked example: 8 sub-metrics at 0 (bad packets excluded), except 90th percentile Ready = 5% (a quarter into red). That row scores 18.75 with weight about 9.51. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2. A plain average gives about 89.8 and hides the problem.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out. It is never counted as 0, because 0 means perfect. With no sub-metric data, the KPI is not published.
 
@@ -103,7 +103,7 @@ object:
 - ClusterComputeResource
 metric_class: contention
 internal_derive:
-- operations-management/performance/performance-kpi-design
+- sp5-framework/performance/performance-kpi-design
 same_name: []
 same_meaning: []
 related:

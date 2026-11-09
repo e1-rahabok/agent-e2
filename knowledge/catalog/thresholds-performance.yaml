@@ -38,7 +38,7 @@ rows:
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Gold class of service.
   source: author
-  kb: operations-management/performance/noisy-neighbour
+  kb: sp5-framework/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
   id: performance-sla-silver
@@ -50,7 +50,7 @@ rows:
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Silver class of service.
   source: author
-  kb: operations-management/performance/noisy-neighbour
+  kb: sp5-framework/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
   id: performance-sla-bronze
@@ -62,7 +62,7 @@ rows:
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Bronze class of service.
   source: author
-  kb: operations-management/performance/noisy-neighbour
+  kb: sp5-framework/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
   id: vm-sli-cpu-ready
@@ -76,7 +76,7 @@ rows:
   unit: '%'
   meaning: CPU SLI fails for this 5-minute interval (Performance SLA counter).
   source: book
-  kb: operations-management/sp5-framework/sla-metrics
+  kb: sp5-framework/concepts/sla-metrics
   quote: '| CPU | Ready | above 2.5% |'
 - kind: rule
   id: vm-sli-memory-contention
@@ -90,7 +90,7 @@ rows:
   unit: '%'
   meaning: Memory SLI fails for this 5-minute interval (Performance SLA counter).
   source: book
-  kb: operations-management/sp5-framework/sla-metrics
+  kb: sp5-framework/concepts/sla-metrics
   quote: '| Memory | Contention | above 1% |'
 - kind: rule
   id: vm-sli-disk-latency
@@ -104,7 +104,7 @@ rows:
   unit: 'ms'
   meaning: Disk SLI fails for this 5-minute interval (Performance SLA counter). Average of read and write.
   source: book
-  kb: operations-management/sp5-framework/sla-metrics
+  kb: sp5-framework/concepts/sla-metrics
   quote: '| Disk | Latency | above 10 ms |'
 - kind: rule
   id: vm-sli-network-tx-dropped
@@ -118,7 +118,7 @@ rows:
   unit: '%'
   meaning: Network SLI fails for this 5-minute interval (Performance SLA counter). Received drops are excluded.
   source: book
-  kb: operations-management/sp5-framework/sla-metrics
+  kb: sp5-framework/concepts/sla-metrics
   quote: '| Network | Transmit dropped packets | above 0% |'
 - kind: rule
   id: vm-cpu-ready-poor

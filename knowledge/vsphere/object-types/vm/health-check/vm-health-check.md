@@ -6,7 +6,7 @@
 
 ## Symptom
 - None. A scheduled or on-demand check of one VM: the what. A failed step opens a troubleshooting flow: the why.
-- A user complaint ("the VM is slow") counts as a failed health check: start at `operations-management/performance/troubleshooting/vm-slow-triage`.
+- A user complaint ("the VM is slow") counts as a failed health check: start at `sp5-framework/performance/troubleshooting/vm-slow-triage`.
 
 ## Flow
 ```mermaid
@@ -29,7 +29,7 @@ flowchart TD
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## Checks, in order
-Order of `operations-management/sp5-framework/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
+Order of `sp5-framework/concepts/health-risk-efficiency`: present health (availability, performance, security), then risk (capacity, configuration, compliance), then efficiency.
 1. Availability (VirtualMachine). Future, after 1.0: VM down, restarted by HA, unresponsive; mostly from logs and events. State what was not checked. → step 2.
 2. Performance: VM Performance (%) (VirtualMachine). Combines the VM contention metrics into one KPI with colour bands. Start here at scale (`vsphere/object-types/vm/kpis/vm-performance`). Green → step 7. Yellow or worse → step 3, and read only the resources whose sub-metric fails.
 3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower (`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`). Co-stop: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`. Contention (VCF Operations) includes limit time (`vsphere/technology/cpu/metrics/virtual-motherboard/contention`). Latency includes Hyper-Threading and frequency effects: not a pure wait (`vsphere/technology/cpu/metrics/virtual-motherboard/latency`). High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. → step 4.
@@ -82,7 +82,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- operations-management/sp5-framework/health-risk-efficiency
+- sp5-framework/concepts/health-risk-efficiency
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 - vsphere/technology/memory/troubleshooting/vm-memory-latency-high
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
@@ -93,7 +93,7 @@ internal_derive:
 - vsphere/technology/network/metrics/comparisons/vm-network-metrics
 - vsphere/object-types/vm/kpis/vm-performance
 related:
-- operations-management/performance/troubleshooting/vm-slow-triage
+- sp5-framework/performance/troubleshooting/vm-slow-triage
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - vsphere/object-types/cluster/health-check/cluster-health-check
 - vsphere/tools/vcf-operations/peak-20-second-metrics

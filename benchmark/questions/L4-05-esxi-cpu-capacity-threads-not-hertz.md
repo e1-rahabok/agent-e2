@@ -53,7 +53,7 @@ input: [text]
 task: decide-capacity
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-measurement-levels
-  - operations-management/capacity/capacity-model
+  - sp5-framework/capacity/capacity-model
   - vsphere/technology/cpu/concepts/cpu-frequency
 attachments: []
 origin: quiz

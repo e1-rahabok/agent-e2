@@ -32,7 +32,7 @@ answer_type: judged
 input: [text]
 knowledge:
   - vsphere/object-types/cluster/models/cluster-risk
-  - operations-management/performance/performance-kpi-design
+  - sp5-framework/performance/performance-kpi-design
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"

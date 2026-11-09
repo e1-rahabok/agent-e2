@@ -21,7 +21,7 @@
 - Wait 10 minutes. Vendor best practice and field reality differ, so the wait is longer and the thresholds higher. A lower number is right in theory, but there are hardly any complaints at these levels, and investment is hard to justify without complaints.
 - The 20-second peak covers read and write together. This is a known limit.
 - CPU Usage and IOPS cut alerts during low activity, where business impact is likely negligible.
-- These are the standard production values. Class-of-service examples (30, 60, 120 ms): `operations-management/sp5-framework/alert-design`.
+- These are the standard production values. Class-of-service examples (30, 60, 120 ms): `sp5-framework/alerts/alert-design`.
 - Metrics: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`, `vsphere/technology/storage/metrics/virtual-motherboard/iops`, `vsphere/tools/vcf-operations/peak-20-second-metrics`.
 
 ## Datastore latency
@@ -63,7 +63,7 @@ object:
 - Datastore
 - StoragePod
 internal_derive:
-- operations-management/sp5-framework/alert-design
+- sp5-framework/alerts/alert-design
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 - vsphere/tools/vcf-operations/peak-20-second-metrics

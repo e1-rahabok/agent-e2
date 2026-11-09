@@ -24,7 +24,7 @@
 - Unmap starts from two places: the VMFS datastore (deleted or migrated VMs, consolidated snapshots) and the Guest OS (files deleted on a thin virtual disk).
 - VMFS6 sends unmap automatically, in the background, at a constant rate. Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s; None deactivates it. Granularity equals the VMFS block size (1 MB): free regions smaller than that are not reclaimed.
 - A host sending unmap regularly is normal on thin-provisioned arrays. Unmap Size near 0 for weeks on a thin datastore with deletions: check that space reclamation is on.
-- Space left to reclaim in a VM: compare Guest OS used space with virtual disk used space (`operations-management/capacity/reclamation`, section TRIM and unmap).
+- Space left to reclaim in a VM: compare Guest OS used space with virtual disk used space (`sp5-framework/capacity/reclamation`, section TRIM and unmap).
 
 ## Traps
 - "Host datastore IOPS = datastore total" → one host's share only.
@@ -55,7 +55,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/datastore
 - vsphere/technology/storage/metrics/host/disk
 - vsphere/technology/storage/metrics/datastore/storage-io-control
-- operations-management/capacity/reclamation
+- sp5-framework/capacity/reclamation
 images:
   - path: ../../images/datastore-latency-vs-latency-observed-by-vms.png
     product: [vsphere]

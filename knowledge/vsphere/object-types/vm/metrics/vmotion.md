@@ -48,7 +48,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- operations-management/performance/performance-kpi-design
+- sp5-framework/performance/performance-kpi-design
 - vsphere/technology/storage/concepts/snapshot-impact
 source:
   document: PART 3 - Counters.docx

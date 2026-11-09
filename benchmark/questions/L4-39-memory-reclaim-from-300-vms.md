@@ -39,7 +39,7 @@ level: 400
 answer_type: judged
 input: [table]
 knowledge:
-  - operations-management/capacity/rightsizing
+  - sp5-framework/capacity/rightsizing
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - vsphere/technology/memory/metrics/virtual-motherboard/ballooned

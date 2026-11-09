@@ -68,7 +68,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/object-types/cluster/metrics/vm-operations
-- operations-management/capacity/capacity-model
+- sp5-framework/capacity/capacity-model
 - vsphere/object-types/cluster/concepts/cluster-operations
 images:
   - path: ../../images/esxi-operational-availability-scoring-states.png

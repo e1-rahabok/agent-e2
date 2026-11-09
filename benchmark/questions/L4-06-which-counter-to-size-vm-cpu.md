@@ -35,7 +35,7 @@ technology: [cpu]
 input: [text]
 task: decide-capacity
 knowledge:
-  - operations-management/capacity/rightsizing
+  - sp5-framework/capacity/rightsizing
   - guest-os/system/concepts/guest-os-sizing
   - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
