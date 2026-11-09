@@ -4,6 +4,7 @@ Read first, every session. One page: mission, milestones with exit criteria, dec
 Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md).
 
 ## Mission
+- 1.0 minimum (author, 2026-11-09): Iwan 'E1' Rahabok's expertise in VCF performance and capacity management; beats frontier models on monitoring and troubleshooting through a purpose-built agent, harness and knowledge base. Anything else is not a release blocker.
 - An open-weight model on one GPU, running locally (customer data stays on site), answers Level 400 private cloud operations questions better than a frontier model.
 - Release gate: final score at least 85% on the shipped configuration (live test); target 99%; confident-wrong rate near 0.
 
@@ -17,7 +18,13 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | M5 | Live test | [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) passed on the chosen model, running locally | Planned |
 | M6 | Release 1.0 | Every knowledge file reviewed; release score from the live test; offline bundle; the app calls `harness/` | Planned |
 
-- After 1.0: screen library and screenshot read-back (1.1); data files (1.2); alert definitions (1.2): Iwan Rahabok first overhauls the shipped alerts in VCF Operations ([VMW-Alerts-Overhaul](https://github.com/e1-rahabok/VMW-Alerts-Overhaul): 1,193 alert definitions, 1,951 symptoms; analysis not finished), then the definitions become a YAML catalog with a harness lookup tool, measured on questions that need an exact definition; read-only VCF Operations connection; vSAN, NSX, Kubernetes, Linux content.
+- 1.0 includes one clarifying round per question (MISSION.md, section 5, Ways to ask): the harness answers in one turn today, so a second turn is to build.
+- After 1.0 (author, 2026-11-09):
+  - Live VCF Operations 9 integration: query the user's running instance through its API, so Agent E2 is not isolated from live VCF Operations, vCenter and ESXi data.
+  - Older releases (1.3 or later): detect or ask the user's version and warn when a fact differs by release.
+  - Weekly update scan: check a few selected URLs (Broadcom TechDocs, KB, release notes) for changes, report them to Iwan Rahabok for manual review; approved changes update `knowledge/`; customers download the update and replace their files.
+  - Web search and URL fetch in answers: not in 1.0; release not set.
+- Earlier list: screen library and screenshot read-back (1.1); data files (1.2); alert definitions (1.2): Iwan Rahabok first overhauls the shipped alerts in VCF Operations ([VMW-Alerts-Overhaul](https://github.com/e1-rahabok/VMW-Alerts-Overhaul): 1,193 alert definitions, 1,951 symptoms; analysis not finished), then the definitions become a YAML catalog with a harness lookup tool, measured on questions that need an exact definition; read-only VCF Operations connection; vSAN, NSX, Kubernetes, Linux content.
 
 ## Decisions (latest first)
 - 2026-11-09, author: the deployment is local, not cut off from the Internet. Customer data (questions, screenshots, files) never leaves the site and Agent E2 answers without Internet access, but users browse the Internet for knowledge, so a question can include a URL. Wording updated in MISSION.md, README.md, ARCHITECTURE.md, CLAUDE.md and the benchmark documents. Open: fetch user URLs (proposal in the session of 2026-11-09).
@@ -60,6 +67,8 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 | Availability flows; security and compliance in health checks | After 1.0 (author, 2026-11-08). Source for a later availability model: the adapter's Operational Availability page |
 | vSAN, NSX and Linux flows | After 1.0 (author, 2026-11-08) |
 | Book corrections for a next edition | The knowledge matters, not the book edition (author, 2026-11-08) |
+| Writing scripts (PowerCLI and the like) | Tools such as Claude Code do it and need no performance knowledge; a different category (author, 2026-11-09) |
+| Log analysis | Logs are largely undocumented and mostly about availability and security, not performance (author, 2026-11-09) |
 | The test website | Not started; design archived ([project/archive/design-kb-test-site.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/design-kb-test-site.md)) |
 
 ## Open work
