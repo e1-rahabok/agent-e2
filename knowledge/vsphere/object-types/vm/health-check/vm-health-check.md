@@ -6,7 +6,7 @@
 
 ## Symptom
 - None. A scheduled or on-demand check of one VM: the what. A failed step opens a troubleshooting flow: the why.
-- A user complaint ("the VM is slow") counts as a failed health check: start at `sp5-framework/performance/troubleshooting/vm-slow`.
+- A user complaint ("the VM is slow") is reactive: skip the health check and start at `sp5-framework/performance/troubleshooting/vm-slow`.
 
 ## Flow
 ```mermaid
