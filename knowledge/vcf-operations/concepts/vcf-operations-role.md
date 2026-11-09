@@ -24,6 +24,7 @@
 - This folder holds VCF Operations itself: its role, its features (real-time metrics: `vcf-operations/concepts/real-time-metrics`), and its own sizing, health and performance troubleshooting.
 - Its channels and their design: `vcf-operations/concepts/system-engagement`, `vcf-operations/concepts/noc-live-screen`, `vcf-operations/concepts/daily-health-check-dashboards`, `vcf-operations/concepts/business-applications`, `vcf-operations/concepts/alert-definitions`.
 - Dashboard design: `vcf-operations/concepts/dashboard-design`, `vcf-operations/concepts/dashboard-colour`; dashboard suites: `vcf-operations/concepts/performance-dashboards`, `vcf-operations/concepts/capacity-dashboards`, `vcf-operations/concepts/inventory-and-configuration-dashboards`, `vcf-operations/concepts/it-leaders-dashboards`.
+- Reports: `vcf-operations/concepts/reports-vs-dashboards`, `vcf-operations/concepts/report-design`, `vcf-operations/concepts/report-suite`.
 - Alert thresholds live with the resource they watch, such as `vsphere/technology/cpu/configuration/cpu-alerts`.
 
 ## Traps
