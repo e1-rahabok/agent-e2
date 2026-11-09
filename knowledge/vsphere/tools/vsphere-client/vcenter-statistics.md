@@ -127,7 +127,7 @@ internal_derive:
 related:
 - observability/real-time-metrics
 - vsphere/architecture/metric-sources
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/tools/vsphere-client/performance-guidance

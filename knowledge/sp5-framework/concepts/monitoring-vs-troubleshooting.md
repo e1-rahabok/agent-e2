@@ -35,9 +35,9 @@
 - Configuration is a drill-down under each of the three: a configuration issue can cause an availability, performance or security problem.
 - Known bugs are mostly configuration issues: an older version or incompatible settings.
 - Utilization comes last. Even at 100% it does not matter if availability, performance and configuration are good.
-- Every performance flow checks configuration, VM slow triage included.
+- Every performance flow checks configuration, the VM slow flow included.
 ![The book's earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the author's order above (Q104)](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
-- VM-level flow: `sp5-framework/performance/troubleshooting/vm-slow-triage`.
+- VM-level flow: `sp5-framework/performance/troubleshooting/vm-slow`.
 
 ## Primary and secondary metrics
 - Layer the troubleshooting metrics, events and properties so a less technical team can use them.
@@ -104,7 +104,7 @@ internal_derive:
 - sp5-framework/alerts/alerts-and-insights
 - sp5-framework/performance/kpi-vs-sla
 related:
-- sp5-framework/performance/troubleshooting/vm-slow-triage
+- sp5-framework/performance/troubleshooting/vm-slow
 - sp5-framework/concepts/proactive-operations
 - sp5-framework/concepts/health-risk-efficiency
 - observability/input-types
@@ -122,7 +122,7 @@ corrections:
 - 'Section ''Troubleshooting'', order: author answer Q104 (2026-11-08): daily health check availability, performance, security; configuration as drill-down; known bugs are configuration; every performance flow checks configuration. The book diagram (contention, configuration, availability, utilization) is replaced.'
 - 'Monitoring table, row Logs, and the interval bullets: author answer Q105 (2026-11-08): monitoring needs logs; performance monitoring reports the 20-second peak within the 5-minute interval; 20-second visibility for mission-critical systems.'
 review_notes:
-- 'Section ''Troubleshooting'', earlier order: contention, configuration, availability, utilization (book diagram). The reactive track diagram in SP5 Framework: Process uses configuration, availability, known bugs, consumption; vm-slow-triage has its own order (Q060). Q104.'
+- 'Section ''Troubleshooting'', earlier order: contention, configuration, availability, utilization (book diagram). The reactive track diagram in SP5 Framework: Process uses configuration, availability, known bugs, consumption; vm-slow has its own order (Q060). Q104.'
 - 'Section ''Troubleshooting'': the diagram says Aria Operations for Logs; written as VCF Operations for logs (current name, Q107).'
 - 'Monitoring table: logs not required for monitoring, while availability data comes mostly from logs (health section) and the daily SOP reads logs for soft errors. Duration: author answer Q105 (b), about 5 minutes when there is no problem.'
 - 'Section ''Validating a log message'': log lines from the book image (2016 example); the Log Insight screenshot is not copied. ''0.4 s earlier'' computed by Claude from the timestamps (23:42:14.842 vs 23:42:15.266).'

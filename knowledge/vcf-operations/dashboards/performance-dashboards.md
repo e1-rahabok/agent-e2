@@ -17,12 +17,12 @@
 - Consumer: one VM, container or application. Other consumers have no problem, or are independent.
 - Provider: the shared infrastructure, because the problem hits many consumers, possibly at random: different VMs at different times.
 - Clear the infrastructure first. If it struggles to serve most VMs, troubleshooting one VM is pointless. Only when the infrastructure is free of contention, troubleshoot the VM.
-- Infrastructure health is judged from its VMs, not from infrastructure metrics: does it serve every VM well? Flow: `sp5-framework/performance/troubleshooting/vm-slow-triage`.
+- Infrastructure health is judged from its VMs, not from infrastructure metrics: does it serve every VM well? Flow: `sp5-framework/performance/troubleshooting/vm-slow`.
 
 ## Three parts: contention, consumption, configuration
 - Contention: first and most visible. It is the primary counter for performance, and the only part that is colour coded.
 - Consumption: once contention is found, check whether very high utilization causes it. Above 100%, performance can suffer, above all when a queue builds inside Windows or Linux.
-  - VCF Operations collects every 5 minutes. A spike of a few seconds disappears when the rest of the 300 seconds is low (`vsphere/tools/vcf-operations/peak-20-second-metrics`).
+  - VCF Operations collects every 5 minutes. A spike of a few seconds disappears when the rest of the 300 seconds is low (`vcf-operations/features/peak-20-second-metrics`).
 - Configuration: only the settings that can affect performance.
 - The split keeps each dashboard simple and puts contention first.
 - Utilization is not colour coded. A health chart does not suit metrics without a ceiling, where 100% is hard to define, such as disk IOPS and CPU context switches. If operations sets a utilization limit, draw it as a line on the chart, so less technical teams can compare.
@@ -67,9 +67,9 @@ object:
 - Datacenter
 internal_derive:
 - vcf-operations/dashboards/dashboard-design
-- sp5-framework/performance/troubleshooting/vm-slow-triage
+- sp5-framework/performance/troubleshooting/vm-slow
 related:
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - vsphere/object-types/vm/kpis/vm-performance
 - sp5-framework/concepts/class-of-service
 - vcf-operations/dashboards/capacity-dashboards
@@ -79,7 +79,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Colour from best practice, or from a profile'': the source points to the Baseline Profiling section of the book for the profiling steps; not in this document.'
-- 'Section ''Consumer vs provider troubleshooting'': the link to vm-slow-triage is Claude''s.'
+- 'Section ''Consumer vs provider troubleshooting'': the link to vm-slow is Claude''s.'
 - 'Section ''Goals and users'': the source says which pods are affected; written as which VMs, as the question is about VMs.'
 status: draft
 ```

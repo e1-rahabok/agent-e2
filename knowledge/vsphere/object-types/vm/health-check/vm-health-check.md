@@ -6,7 +6,7 @@
 
 ## Symptom
 - None. A scheduled or on-demand check of one VM: the what. A failed step opens a troubleshooting flow: the why.
-- A user complaint ("the VM is slow") counts as a failed health check: start at `sp5-framework/performance/troubleshooting/vm-slow-triage`.
+- A user complaint ("the VM is slow") counts as a failed health check: start at `sp5-framework/performance/troubleshooting/vm-slow`.
 
 ## Flow
 ```mermaid
@@ -25,7 +25,7 @@ flowchart TD
 ## Principle
 - A VM is a consumer. Its performance is the runtime, memory, IO and network it demanded and did not get: contention.
 - Order: contention first, then consumption, then context. Consumption sizes the VM; it does not show whether the VM suffers.
-- Read contention at the 20-second peak, not the 5-minute average: short waits disappear in averages. See `vsphere/tools/vcf-operations/peak-20-second-metrics`.
+- Read contention at the 20-second peak, not the 5-minute average: short waits disappear in averages. See `vcf-operations/features/peak-20-second-metrics`.
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## Checks, in order
@@ -93,10 +93,10 @@ internal_derive:
 - vsphere/technology/network/metrics/comparisons/vm-network-metrics
 - vsphere/object-types/vm/kpis/vm-performance
 related:
-- sp5-framework/performance/troubleshooting/vm-slow-triage
+- sp5-framework/performance/troubleshooting/vm-slow
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - vsphere/object-types/cluster/health-check/cluster-health-check
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - guest-os/system/metrics/guest-os-performance
 source:
   document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation)

@@ -20,7 +20,7 @@
   - VM CPU Contention: `vsphere/technology/cpu/metrics/virtual-motherboard/contention`, beside VM CPU Ready;
   - VM Performance (%): `vsphere/object-types/vm/kpis/vm-performance`;
   - Cluster Risk (%): `vsphere/object-types/cluster/models/cluster-risk`;
-  - 20-second peaks, how VCF Operations shows a counter: `vsphere/tools/vcf-operations/peak-20-second-metrics`.
+  - 20-second peaks, how VCF Operations shows a counter: `vcf-operations/features/peak-20-second-metrics`.
 - This folder holds VCF Operations itself, in five folders:
   - `concepts/`: what the product is for and how it reaches people (this file, `vcf-operations/concepts/system-engagement`);
   - `features/`: product features as implemented, such as `vcf-operations/features/real-time-metrics`;
@@ -53,7 +53,7 @@ internal_derive:
 related:
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vsphere/architecture/provider-consumer
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 source:
   document: Author's answer (2026-11-04)
   path: Conversation with the author on VCF Operations and vCenter roles

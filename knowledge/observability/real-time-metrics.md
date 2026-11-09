@@ -15,7 +15,7 @@
 
 - esxtop: one host at a time, nothing kept unless batch mode is used. See `vsphere/tools/esxtop/overview`.
 - VCF Operations 2-second tier: across hosts and VMs, queried with PromQL in the Troubleshooting Workbench. See `vcf-operations/features/real-time-metrics`.
-- 20-second data: each point is the average of 20 seconds. vCenter keeps it for about an hour before rolling it into 5-minute points (`vsphere/tools/vsphere-client/vcenter-statistics`). VCF Operations reports the highest 20-second value of each 5-minute cycle as a peak metric (`vsphere/tools/vcf-operations/peak-20-second-metrics`).
+- 20-second data: each point is the average of 20 seconds. vCenter keeps it for about an hour before rolling it into 5-minute points (`vsphere/tools/vsphere-client/vcenter-statistics`). VCF Operations reports the highest 20-second value of each 5-minute cycle as a peak metric (`vcf-operations/features/peak-20-second-metrics`).
 
 ## Reading across intervals
 - The same workload reads higher at 2 seconds than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on one interval does not apply to another (`observability/thresholds`, Interval rule).
@@ -55,7 +55,7 @@ related:
 - vcf-operations/features/real-time-metrics
 - vsphere/tools/esxtop/overview
 - vsphere/tools/vsphere-client/vcenter-statistics
-- vsphere/tools/vcf-operations/peak-20-second-metrics
+- vcf-operations/features/peak-20-second-metrics
 - sp5-framework/capacity/rightsizing
 source:
   document: Author's answer (2026-11-09)

@@ -28,7 +28,7 @@ threshold(VM layer) < threshold(Guest OS layer) < threshold(application layer)
 ## Interval rule
 - A threshold is valid only for the sample interval it was set on. The same workload reads higher at a short interval than at a long one: averaging over a longer window flattens peaks.
 - Order for the same metric: 2-second (esxtop) ≥ 20-second (real-time) ≥ 5-minute ≥ 1-day values.
-- Example: VM disk latency 10,370 ms at the 20-second peak vs 257 ms as the 300-second average. See `vsphere/tools/vcf-operations/peak-20-second-metrics`.
+- Example: VM disk latency 10,370 ms at the 20-second peak vs 257 ms as the 300-second average. See `vcf-operations/features/peak-20-second-metrics`.
 - So a threshold set on 20-second peaks must be higher than one set on 5-minute averages for the same tolerance. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks), although it is the less serious signal. See `vsphere/object-types/vm/kpis/vm-performance`.
 - A threshold without its interval is incomplete.
 

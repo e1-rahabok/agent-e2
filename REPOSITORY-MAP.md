@@ -28,7 +28,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `harness/` | Retrieval, catalog, calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
-Order of checks, run step by step by the `flow` tool. Each sits next to its technology or object, in a folder named `troubleshooting/` or `health-check/`; the harness finds them by that folder name and gives the agent one index of all flows. Start a performance complaint at VM slow triage. Lint checks that this table lists every flow.
+Order of checks, run step by step by the `flow` tool. Each sits next to its technology or object, in a folder named `troubleshooting/` or `health-check/`; the harness finds them by that folder name and gives the agent one index of all flows. Start a performance complaint at the VM slow flow. Lint checks that this table lists every flow.
 
 | Kind | Flow | File |
 |---|---|---|
@@ -40,7 +40,7 @@ Order of checks, run step by step by the `flow` tool. Each sits next to its tech
 | Health check | vSphere cluster: health check | [`vsphere/object-types/cluster/health-check/cluster-health-check`](knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md) |
 | Troubleshooting | ESXi storage latency is high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
 | Troubleshooting | Overcommit indicators | [`vsphere/technology/memory/troubleshooting/overcommit-indicators`](knowledge/vsphere/technology/memory/troubleshooting/overcommit-indicators.md) |
-| Troubleshooting | Users say the VM is slow: triage | [`sp5-framework/performance/troubleshooting/vm-slow-triage`](knowledge/sp5-framework/performance/troubleshooting/vm-slow-triage.md) |
+| Troubleshooting | Users say the VM is slow | [`sp5-framework/performance/troubleshooting/vm-slow`](knowledge/sp5-framework/performance/troubleshooting/vm-slow.md) |
 | Troubleshooting | VM CPU Contention or Latency is high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
 | Troubleshooting | VM CPU Other Wait is high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | Troubleshooting | VM CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](knowledge/vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |

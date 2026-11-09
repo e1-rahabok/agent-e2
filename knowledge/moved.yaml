@@ -212,7 +212,7 @@ vsphere/object-types/cluster/metrics/cluster-consumption: vsphere/object-types/c
 vsphere/object-types/cluster/metrics/cluster-performance: vsphere/object-types/cluster/kpis/cluster-performance
 vsphere/object-types/cluster/metrics/cluster-risk: vsphere/object-types/cluster/models/cluster-risk
 vsphere/object-types/cluster/metrics/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-sla-sli
-vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics: vsphere/tools/vcf-operations/peak-20-second-metrics
+vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
 vsphere/object-types/vm/metrics/vm-performance: vsphere/object-types/vm/kpis/vm-performance
 vsphere/resource-management/concepts/admission-control-and-cluster-state: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 vsphere/resource-management/concepts/dpm: vsphere/object-types/cluster/concepts/dpm
@@ -277,7 +277,7 @@ vsphere/system/metrics/cluster/cluster-risk: vsphere/object-types/cluster/models
 vsphere/system/metrics/cluster/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-sla-sli
 vsphere/system/metrics/cluster/vm-operations: vsphere/object-types/cluster/metrics/vm-operations
 vsphere/system/metrics/comparisons/availability: vsphere/object-types/cluster/metrics/comparisons/availability
-vsphere/system/metrics/comparisons/peak-20-second-metrics: vsphere/tools/vcf-operations/peak-20-second-metrics
+vsphere/system/metrics/comparisons/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
 vsphere/system/metrics/guest-os/guest-os-performance: guest-os/system/metrics/guest-os-performance
 vsphere/system/metrics/virtual-machine/guest-os-performance: guest-os/system/metrics/guest-os-performance
 vsphere/system/metrics/virtual-machine/vm-performance: vsphere/object-types/vm/kpis/vm-performance
@@ -293,7 +293,7 @@ vsphere/technology/storage/metrics/virtual-motherboard/provisioned-space: vspher
 vsphere/technology/storage/metrics/virtual-motherboard/snapshot-space: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
 vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk-used: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-virtual-disk-used
 # 2026-11-08 (author): diagnosis/ split into troubleshooting/ and health-check/; overview-what-to-monitor became health checks; capacity and risk scores moved from kpis/ to models/.
-operations-management/performance/diagnosis/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow-triage
+operations-management/performance/diagnosis/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow
 vsphere/object-types/cluster/diagnosis/cluster-vm-contention: vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 vsphere/technology/cpu/diagnosis/vm-cpu-contention-high: vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
@@ -334,7 +334,7 @@ vcf-operations/metrics/vm/disk-space-used: vsphere/technology/storage/metrics/vi
 vcf-operations/metrics/vm/disk-space-provisioned: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
 vcf-operations/metrics/vm/disk-space-snapshot: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
 vcf-operations/metrics/vm/disk-space-virtual-disk-used: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-virtual-disk-used
-vcf-operations/metrics/vm/peak-20-second-metrics: vsphere/tools/vcf-operations/peak-20-second-metrics
+vcf-operations/metrics/vm/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
 vcf-operations/metrics/esxi/memory-utilization: vsphere/technology/memory/metrics/host/utilization
 vcf-operations/metrics/esxi/cpu-peak-core-usage: vsphere/technology/cpu/metrics/host/peak-core-usage
 vcf-operations/metrics/cluster/cpu-inter-host-imbalance: vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
@@ -401,7 +401,7 @@ operations-management/capacity/vm-footprint-sizing: sp5-framework/capacity/vm-fo
 operations-management/performance/kpi-vs-sla: sp5-framework/performance/kpi-vs-sla
 operations-management/performance/noisy-neighbour: sp5-framework/performance/noisy-neighbour
 operations-management/performance/performance-kpi-design: sp5-framework/performance/performance-kpi-design
-operations-management/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow-triage
+operations-management/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow
 operations-management/sp5-framework/alert-design: sp5-framework/alerts/alert-design
 operations-management/sp5-framework/alerts-and-insights: sp5-framework/alerts/alerts-and-insights
 operations-management/sp5-framework/class-of-service: sp5-framework/concepts/class-of-service
@@ -432,3 +432,5 @@ vcf-operations/concepts/report-design: vcf-operations/reports/report-design
 vcf-operations/concepts/report-suite: vcf-operations/reports/report-suite
 vcf-operations/concepts/alert-definitions: vcf-operations/alerts/alert-definitions
 vcf-operations/concepts/real-time-metrics: vcf-operations/features/real-time-metrics
+sp5-framework/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow
+vsphere/tools/vcf-operations/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
