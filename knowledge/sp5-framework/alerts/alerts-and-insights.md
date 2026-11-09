@@ -38,13 +38,14 @@
 ## Finding, issue, alert, notification
 - Finding: the result of troubleshooting or analysis, from logs, events, metrics and tasks. Good or bad. The sources report the negative, so an empty result is usually a good day (example: no login to a confidential cluster).
 - Positive findings feed insight. Deriving an insight from findings takes someone who knows the technology and the environment.
-- Negative findings are issues. An issue is identified by one or more symptoms; no symptom, no issue.
+- Negative findings are issues. An issue is a negative finding: something was found to be bad. It has one or more symptoms; no symptom, no issue.
+- Symptoms left untreated can degenerate over time and become urgent: that is when an issue becomes an alert.
 - Issue types: availability (hard failure, soft failure), configuration (drift, insecure), performance, capacity, security.
 - Every issue also feeds insight, which is read in the daily check at the start and end of the day. Insight is not urgent and needs a subject matter expert.
-- Alert: an issue whose symptom crossed a threshold. The NOC team watches alerts several times a day.
-- Notification: the way VCF Operations pushes an insight or alert to a person: email, messages, on screen at login. Only an urgent alert is pushed to mobile or email at once; a non-urgent one waits for the daily check.
+- Alert: an urgent issue. The NOC team watches alerts several times a day. A non-urgent issue is not an alert: it goes to the daily check.
+- Notification: the way VCF Operations pushes an alert to a person at once: mobile or email. Only an important alert is pushed (red: urgent and important). An alert that is urgent but not important (orange) stays in the NOC's alert list.
 - Admins want urgent issues fast; important but not urgent issues are analysed after the time-sensitive ones.
-![Finding (sources: logs, events, metrics, tasks): positive findings → Insight (not urgent, requires SME) → Daily Check (start of day + end of day). Negative findings → Issue (symptom) → all issues → Insight; important issues → Alert (NOC team watch multiple times daily) → urgent issue → Notification (pushed to mobile or email); non-important issue → Daily Check](images/finding-issue-alert-insight-notification-flow-diagram.png)
+![Information (logs, events, metrics, tasks) → analysis → Finding. Positive findings → Insight (not urgent, requires SME) → Daily Check (start of day + end of day). Negative findings → Issue (with its symptoms). All issues → Insight; non-urgent issues → Daily Check; urgent issues → Alert (NOC team watch multiple times daily) → important → Notification (immediately pushed to mobile or email)](images/finding-issue-alert-insight-notification-flow-diagram.png)
 - Monitoring and troubleshooting with these terms: `sp5-framework/concepts/monitoring-vs-troubleshooting`.
 
 ## Alert vs insight
@@ -184,7 +185,7 @@ review_notes:
 - 'Section ''Prevention window'': the image gives a threshold for each example. Not copied into the text or the threshold catalog until the author answers Q088: SLA VM CPU Ready above 5% vs the SLI value 2.5% (vsphere/object-types/cluster/kpis/cluster-sla-sli); Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as SLA alerts vs SLAs measured on each paying VM.'
 - 'Section ''Prevention window'', last bullet before the image: instance-rule example added by Claude.'
 - 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important. Q089. Whether KPI colour bands carry the same response times: Q089.'
-- 'Section ''Finding, issue, alert, notification'': the terminology table defines an alert as an urgent issue; the diagram sends important issues to alerts and urgent alerts to notification. Symptom here is part of an issue; in section Symptom, alert, insight it is a minor issue. Q103.'
+- 'Section ''Finding, issue, alert, notification'': author answer Q103 (2026-11-09): alert = urgent issue; only the important alert is pushed to the admin''s phone; an issue is a negative finding with one or more symptoms, which degenerate and become urgent if untreated. The diagram was replaced with the author''s corrected version.'
 - 'Not copied: the iceberg picture (decorative) and the colour legend (red: review today, the sooner the better; orange: review today; yellow: review tomorrow, could be a false positive; green: great), whose content is in the text.'
 status: draft
 ```

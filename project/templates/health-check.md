@@ -12,7 +12,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-Order of `sp5-framework/concepts/health-risk-efficiency`: present health (availability, performance, security), risk (capacity, configuration, compliance), efficiency.
+Order (author, Q104 and Q133, 2026-11-09): availability, performance, security, capacity. Configuration is checked as the drill-down under each of the four, because a setting can affect all of them. Efficiency (waste) is read as part of capacity.
 1. Availability. <What is checked, or: future, after 1.0.> → step 2.
 2. Performance: <KPI> (<object>). Green → step 3. Otherwise → `<troubleshooting id>`.
 3. Capacity: <model> (<object>). <Band, with source> → step 4.

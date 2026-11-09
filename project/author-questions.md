@@ -231,16 +231,6 @@ Each entry has:
 - Written as now: table and grouping image; the other image's details used as text only.
 - Answer:
 
-### Q103 · Part 1 > SP5 Framework > Basic Terminology · Alert: urgent or important; symptom
-- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/alerts-and-insights.md) (sections Symptom, alert, insight; Finding, issue, alert, notification). Related: Q089.
-- Search 1: "It’s an urgent Issue with Symptom crossing threshold"
-- Search 2: "An issue is identified by its 1 or more Symptom"
-- Image text (not searchable): "Important issues" (Issue → Alert), "Urgent issue" (Alert → Notification), "Non-important issue" (Alert → Daily Check).
-- Question:
-  - (a) The table defines an alert as an urgent issue; the diagram routes important issues to alerts, then urgent ones to notification and non-important ones to the daily check. Is an alert defined by urgency, by importance, or by a symptom crossing a threshold (either)?
-  - (b) Symptom: here part of an issue (an issue has 1 or more symptoms); in Observability, a minor non-urgent issue that becomes an alert if it persists. One definition?
-- Written as now: both, flagged.
-- Answer:
 
 ### Q105 · Part 1 > Monitor | Troubleshoot; SP5 Framework: Process · Logs in monitoring and the length of the daily check
 - Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md).
@@ -463,12 +453,6 @@ Each entry has:
 - Written as now: both, each in its own file; the closure flow says the pack automates steps 4 and 5.
 - Answer:
 
-### Q133 · Health check · Decisions still open from the 2026-11-08 review
-- Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section 10); the three health checks.
-- Search: not from the book.
-- Question: (a) Without VCF Operations (vCenter only), should a health check fall back to the raw counters of each KPI sub-metric? Answered (author, 2026-11-08): the question is invalid; there is no vCenter without VCF Operations. The fallback line was removed from the ESXi health check. (b) Order: answered by Q104 (2026-11-08): availability, performance, security, with configuration as the drill-down under each; every performance flow checks configuration. Still open: does risk (capacity, compliance) and efficiency follow, as in health-risk-efficiency? (c) Keep the word triage for the first troubleshooting step after a complaint (vm-slow-triage), or drop it? Answered (author, 2026-11-09): drop it; it is a flow. Renamed sp5-framework/performance/troubleshooting/vm-slow.
-- Written as now: (a) resolved, no fallback; (b) as stated; (c) triage kept.
-- Answer:
 
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
 - Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/triple-see-method.md) (section Why not USE, RED or Golden Signals).
@@ -583,6 +567,26 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q133 · Health check · Decisions still open from the 2026-11-08 review
+- Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section 10); the three health checks.
+- Search: not from the book.
+- Question: (a) Without VCF Operations (vCenter only), should a health check fall back to the raw counters of each KPI sub-metric? Answered (author, 2026-11-08): the question is invalid; there is no vCenter without VCF Operations. The fallback line was removed from the ESXi health check. (b) Order: answered by Q104 (2026-11-08): availability, performance, security, with configuration as the drill-down under each; every performance flow checks configuration. Still open: does risk (capacity, compliance) and efficiency follow, as in health-risk-efficiency? (c) Keep the word triage for the first troubleshooting step after a complaint (vm-slow-triage), or drop it? Answered (author, 2026-11-09): drop it; it is a flow. Renamed sp5-framework/performance/troubleshooting/vm-slow.
+- Written as now: (a) resolved, no fallback; (b) as stated; (c) triage kept.
+- Answer: (a) The SP5 health check requires VCF Operations, not vSphere alone; other health check tools are outside the scope of Agent E2, so the fallback is invalid. (b) Health check flow: availability, performance, security, capacity; configuration is checked during the check, as a setting can affect all four. (c) Drop triage: one English word per purpose; synonyms are kept in knowledge/glossary.md.
+- Applied 2026-11-09: the three health checks, the template and KNOWLEDGE-ENGINEERING.md sections 5 and 10; glossary (triage as an alias of troubleshooting, duplicate rows merged); vm-slow-triage renamed vm-slow.
+
+### Q103 · Part 1 > SP5 Framework > Basic Terminology · Alert: urgent or important; symptom
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/alerts-and-insights.md) (sections Symptom, alert, insight; Finding, issue, alert, notification). Related: Q089.
+- Search 1: "It’s an urgent Issue with Symptom crossing threshold"
+- Search 2: "An issue is identified by its 1 or more Symptom"
+- Image text (not searchable): "Important issues" (Issue → Alert), "Urgent issue" (Alert → Notification), "Non-important issue" (Alert → Daily Check).
+- Question:
+  - (a) The table defines an alert as an urgent issue; the diagram routes important issues to alerts, then urgent ones to notification and non-important ones to the daily check. Is an alert defined by urgency, by importance, or by a symptom crossing a threshold (either)?
+  - (b) Symptom: here part of an issue (an issue has 1 or more symptoms); in Observability, a minor non-urgent issue that becomes an alert if it persists. One definition?
+- Written as now: both, flagged.
+- Answer: (a) See the corrected diagram: alert = urgent; only the important one is pushed to the VMware admin's mobile phone. (b) An issue is a negative finding: something found bad. It can have 1 or more symptoms; untreated, they can degenerate and become urgent.
+- Applied 2026-11-09: sp5-framework/alerts/alerts-and-insights (section Finding, issue, alert, notification; diagram replaced).
 
 ### Q092 · Part 1 > Begin with The End in Mind > The Crown Jewel · Health across tiers
 - Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Health of an application tier).
