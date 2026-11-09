@@ -20,10 +20,10 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 |---|---|---|
 | Virtual motherboard | What a VM is: vCPU, memory, virtual disks and vNICs that run a Guest OS. The Guest OS is not part of it. | VM |
 | SLI | SLA Leading Indicator: pass or fail every 5 minutes; the SLA is its mean over the calendar month. SLI is not a peer to SLA. | - |
-| Security SLA | Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings.<br /> IT Security industry has failed to define this properly. | Compliance SLA |
+| Security SLA | Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings.; IT Security industry has failed to define this properly. | Compliance SLA |
 | Noisy neighbour | A consumer whose demand degrades others on shared capacity (villain and victims).`sp5-framework/performance/noisy-neighbour` | Resource management |
 | Class of service | Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA. | Tier |
-| Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. Performance management is never measured against Usable Capacity numbers. | - |
+| Usable capacity | Total capacity minus HA, buffer and hypervisor overhead. Performance management is never measured against Usable Capacity numbers. | - |
 | Value (pillar) | One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management.`sp5-framework/concepts/overview` | Cost and price |
 | Green zone | The change window: the agreed time when approved changes, deployments and patches may enter production. Downtime inside it is excluded from Operational Availability.`sp5-framework/concepts/sla-metrics` | Change window, maintenance window, authorized execution window |
 | Triple See Method | The SP5 Framework's observability method for VCF: read contention, consumption and context metrics as one set before concluding. Not based on the USE, RED or Golden Signals.`sp5-framework/concepts/triple-see-method` | Triple See |

@@ -246,13 +246,6 @@ Each entry has:
 
 
 
-### Q123 · Part 1 > Capacity Management > Reclamation · Benefit table and scope
-- Files: [Reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/reclamation.md) (sections When reclamation is the provider's job, What each area frees).
-- Search 1: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"
-- Search 2: "It is only applicable when VMs are free"
-- Question: (a) In the benefit table, cells seem shifted: Idle VM, Storage holds "Cluster RAM as idle RAM pages tend to occupy ESXi memory"; Oversized VM, Memory holds the context-switch text (a CPU benefit). Claude rewrote the table from the chapter text: unused VM frees real CPU and memory; oversized VM frees memory and performance, CPU in allocation only; idle VM frees memory, CPU in allocation only; storage only on delete. Correct? (b) The chapter starts with reclamation applying only when VMs are free, then applies the stocktake to internal IT with chargeback. Which scope is right?
-- Written as now: the rewritten table; both scope statements.
-- Answer:
 
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap).
@@ -269,13 +262,6 @@ Each entry has:
 - Related (2026-11-08): the Configuration Management review list says a 64-core CPU is 8 chiplets of 8 cores and a VM above 8 vCPU spans chiplets ([VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md), section Compute). The same answer applies there. Also Q111.
 - Answer:
 
-### Q126 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
-- Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (sections What to optimize, Big picture).
-- Search 1: "utilization should be 100% to minimize ping pong"
-- Search 2: "You expect this number to hover around 40%"
-- Question: per VM, CPU utilization should be near 100%; across hundreds of large right-sized VMs, the average is about 40% and the max about 80%. The knowledge base reads the first as the aim per VM at its busy time, the second as the fleet average over every 5 minutes. Correct?
-- Written as now: as above.
-- Answer:
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
 - Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Demand).
@@ -425,13 +411,6 @@ Each entry has:
 - Written as now: (a) one condition; (b) 1 in 25; (c) not copied; (d) not stated.
 - Answer:
 
-### Q148 · Part 2 > Overall Design Approach > Design Consideration · Data points per month and the wastage colour
-- Files: [Dashboard design in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/dashboard-design.md) (section Conflicting requirements); [Colour and thresholds in dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/dashboard-colour.md).
-- Search 1: "Can the dashboard be understood within 5 seconds?" (the picture after it)
-- Search 2: "We use dark grey in Capacity as wastage"
-- Question: (a) the picture says 1 month = 8650 data; 30 days of 5-minute data is 8,640. Typo? (b) the picture says black for wastage, the colour table says dark grey. Which colour do the shipped capacity dashboards use?
-- Written as now: (a) 8,640; (b) dark grey.
-- Answer:
 
 ### Q149 · Term map · Wrong terms users write
 - Files: [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml) (35 rows, seeded from the glossary, the vocabulary file and the trap lines).
@@ -447,14 +426,43 @@ Each entry has:
 - Written as now: one URL question (0091, the VM Contention dashboard page).
 - Answer:
 
+
+## Resolved
+
+### Q126 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
+- Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (sections What to optimize, Big picture).
+- Search 1: "utilization should be 100% to minimize ping pong"
+- Search 2: "You expect this number to hover around 40%"
+- Question: per VM, CPU utilization should be near 100%; across hundreds of large right-sized VMs, the average is about 40% and the max about 80%. The knowledge base reads the first as the aim per VM at its busy time, the second as the fleet average over every 5 minutes. Correct?
+- Written as now: as above.
+- Answer: Two different things; the author rewrote rightsizing.md (Monster VMs Capacity Management).
+- Applied 2026-11-09: typo fixed, monster VM definition linked, one bullet separating the per-VM aim from the monster VM group.
+
+### Q123 · Part 1 > Capacity Management > Reclamation · Benefit table and scope
+- Files: [Reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/reclamation.md) (sections When reclamation is the provider's job, What each area frees).
+- Search 1: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"
+- Search 2: "It is only applicable when VMs are free"
+- Question: (a) In the benefit table, cells seem shifted: Idle VM, Storage holds "Cluster RAM as idle RAM pages tend to occupy ESXi memory"; Oversized VM, Memory holds the context-switch text (a CPU benefit). Claude rewrote the table from the chapter text: unused VM frees real CPU and memory; oversized VM frees memory and performance, CPU in allocation only; idle VM frees memory, CPU in allocation only; storage only on delete. Correct? (b) The chapter starts with reclamation applying only when VMs are free, then applies the stocktake to internal IT with chargeback. Which scope is right?
+- Written as now: the rewritten table; both scope statements.
+- Answer: Answered by the author's edit of reclamation.md (2026-11-09): the benefit table (oversized VM also frees cluster capacity through a lower overcommit ratio) and the scope (free VMs: the infrastructure team may reclaim; charged VMs: the application team owns the cost; stocktake still applies).
+- Applied: review notes updated; table cleaned of HTML line breaks.
+
+### Q148 · Part 2 > Overall Design Approach > Design Consideration · Data points per month and the wastage colour
+- Files: [Dashboard design in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/dashboard-design.md) (section Conflicting requirements); [Colour and thresholds in dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/dashboard-colour.md).
+- Search 1: "Can the dashboard be understood within 5 seconds?" (the picture after it)
+- Search 2: "We use dark grey in Capacity as wastage"
+- Question: (a) the picture says 1 month = 8650 data; 30 days of 5-minute data is 8,640. Typo? (b) the picture says black for wastage, the colour table says dark grey. Which colour do the shipped capacity dashboards use?
+- Written as now: (a) 8,640; (b) dark grey.
+- Answer: (a) Per month: use 365.25 days a year on average (leap years), so 288 × 365.25 / 12 = about 8,766 points. (b) Dark grey; black is wrong.
+- Applied 2026-11-09: dashboard-design.
+
 ### Q151 · Cluster Risk (%) · CPU overcommit per core or per thread
 - Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (row CPU overcommit), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (CPU per thread).
 - Search: not from the book; your answer to Q115 (e).
 - Question: you state that a CPU ratio is per thread, because the CPU executes per thread. The Cluster Risk CPU overcommit row (vCommunity pack) counts vCPUs of powered-on VMs per physical core (`hardware|cpuInfo|numCpuCores`), and its bands (red at 3-4) are set per core. With Hyper-Threading, 4:1 per thread is 8:1 per core. Should the row count per thread (and its bands change), or is per core intended for the risk score?
 - Written as now: the row per core, the planning ratios per thread, the conflict in review notes.
-- Answer:
-
-## Resolved
+- Answer: Per thread. Document that the vCommunity pack must be fixed.
+- Applied 2026-11-09: cluster-risk (new section CPU overcommit: per thread, table row, trap); plan item to fix the pack.
 
 ### Q105 · Part 1 > Monitor | Troubleshoot; SP5 Framework: Process · Logs in monitoring and the length of the daily check
 - Files: [Monitoring vs troubleshooting, root cause analysis and validating a log alert](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/monitoring-vs-troubleshooting.md); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md).

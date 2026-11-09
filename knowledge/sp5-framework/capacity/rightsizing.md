@@ -12,13 +12,13 @@
 ## Why VMs are oversized
 
 
-| Cause       | Mechanism                                                |
-| ----------- | -------------------------------------------------------- |
-| Legacy      | P2V copied the physical server's configuration           |
-| Cost        | The VM is free or far cheaper than public cloud          |
-| Cost        | No progressive pricing: 10 vCPU costs exactly 10x 1 vCPU |
-| Education   | Bigger is believed to be faster                          |
-| Vendor      | Commercial software sizing; no support if changed        |
+| Cause | Mechanism |
+|---|---|
+| Legacy | P2V copied the physical server's configuration |
+| Cost | The VM is free or far cheaper than public cloud |
+| Cost | No progressive pricing: 10 vCPU costs exactly 10x 1 vCPU |
+| Education | Bigger is believed to be faster |
+| Vendor | Commercial software sizing; no support if changed |
 | Micro burst | CPU bursts of a few seconds vanish in 20-second averages |
 
 - Public cloud providers have no oversizing problem to fight: oversized instances earn them a higher margin.
@@ -57,13 +57,15 @@
 ## What to optimize in the consumer layer
 
 
-| Resource | Rule                                                                                                         |
-| -------- | ------------------------------------------------------------------------------------------------------------ |
-| CPU      | CPU Run Queue is the primary counter; high vCPU utilization is the aim: fewer vCPUs, less ping-pong and NUMA |
-| CPU      | Check CPU Usage Disparity: some applications stay on the first 8 vCPUs                                       |
-| Memory   | Utilization near 100% is normal: most pages are cache. Check page faults for excess                          |
-| Disk     | Rightsize the file system: a Windows or Linux partition change                                               |
-| Disk     | Use fewer RDMs; with array thin provisioning, check unmap for wastage                                        |
+| Resource | Rule |
+|---|---|
+| CPU | CPU Run Queue is the primary counter; high vCPU utilization of each VM at its busy time is the aim: fewer vCPUs, less ping-pong and NUMA |
+| CPU | Check CPU Usage Disparity: some applications stay on the first 8 vCPUs |
+| Memory | Utilization near 100% is normal: most pages are cache. Check page faults for excess |
+| Disk | Rightsize the file system: a Windows or Linux partition change |
+| Disk | Use fewer RDMs; with array thin provisioning, check unmap for wastage |
+
+- One VM vs the fleet: the aim of high utilization is for each VM at its busy time. A group of hundreds of right-sized monster VMs still averages about 40%, because at any moment some are busy and others idle (section Monster VMs Capacity Management).
 
 ## Micro burst
 
@@ -81,39 +83,39 @@
 - Saving money is a weak argument: owners already paid. Show that a right-sized VM performs better.
 
 
-| Concern                                          | Response                                                                                                 |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| Fear: it will be slow                            | A formal, open process: owners see performance and usage before and after, over 1 month (month-end peak) |
-| Fear: slowness from another cause                | Agree the metrics up front; show contention and Guest OS metrics                                         |
-| Paid for: the original size looks like a mistake | Present the owner as the one who saves the company; infrastructure only helps                            |
+| Concern | Response |
+|---|---|
+| Fear: it will be slow | A formal, open process: owners see performance and usage before and after, over 1 month (month-end peak) |
+| Fear: slowness from another cause | Agree the metrics up front; show contention and Guest OS metrics |
+| Paid for: the original size looks like a mistake | Present the owner as the one who saves the company; infrastructure only helps |
 
 ### Practices
 
 
-| Practice          | Action                                                                                                                                                                               |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Hardware          | Map the VM to the CPU and memory architecture; NUMA-aware vSocket × vCore                                                                                                           |
-| Performance       | Rightsizing serves performance at peak, not capacity. Include contention; sample at 20 seconds, not 5 minutes; add Guest OS and business transaction metrics for time-sensitive work |
-| Collaboration     | Agree metrics, method and change date up front; joint execution; a rollback plan; no other change (data, application) in the window                                                  |
-| Proof             | A dashboard of before vs after per right-sized VM                                                                                                                                    |
-| Big picture       | Company-wide excess, reported regularly to all stakeholders                                                                                                                          |
-| Encourage small   | Small VMs by self-service at once; large VMs require justification, approval and regular review                                                                                      |
-| Pricing           | Progressive pricing: large VMs at a premium pay for the small-VM discount                                                                                                            |
-| Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE                      |
-| Open              | A public dashboard any owner can use: transparency builds trust                                                                                                                      |
+| Practice | Action |
+|---|---|
+| Hardware | Map the VM to the CPU and memory architecture; NUMA-aware vSocket × vCore |
+| Performance | Rightsizing serves performance at peak, not capacity. Include contention; sample at 20 seconds, not 5 minutes; add Guest OS and business transaction metrics for time-sensitive work |
+| Collaboration | Agree metrics, method and change date up front; joint execution; a rollback plan; no other change (data, application) in the window |
+| Proof | A dashboard of before vs after per right-sized VM |
+| Big picture | Company-wide excess, reported regularly to all stakeholders |
+| Encourage small | Small VMs by self-service at once; large VMs require justification, approval and regular review |
+| Pricing | Progressive pricing: large VMs at a premium pay for the small-VM discount |
+| Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE |
+| Open | A public dashboard any owner can use: transparency builds trust |
 
 - Hardware sizes from the book: a VM above 8 vCPU risks the Hyper-Threading effect; above 16 vCPU risks the NUMA effect. Both depend on the host CPU (see review notes).
 
 ## Monster VMs Capacity Management
 
-- To show management that large VMs do not use their allocated CPU, create a dynamic group of all monster VMs (as defined in vCommunity adapter). One group for CPU and one group for memory. Plot the trend chart every 5 minutes for 3 months so short peaks stay in.
+- To show management that large VMs do not use their allocated CPU, create a dynamic group of all monster VMs (definition: `vsphere/object-types/cluster/models/cluster-risk`, section Monster VM). One group for CPU and one group for memory. Plot the trend chart every 5 minutes for 3 months so short peaks stay in.
 - Two metrics on the 2 groups:
 
 
-| Metric                             | Ideal (rigthsized) | Bad (oversized)                                                 |
-| ---------------------------------- | ------------------ | --------------------------------------------------------------- |
-| Maximum CPU workload among the VMs | About 80%          | Constantly flat at 100%: a runaway process; low: severe wastage |
-| Average CPU workload among the VMs | About 40%          | Below 20% all month: all large VMs oversized                    |
+| Metric | Ideal (rightsized) | Bad (oversized) |
+|---|---|---|
+| Maximum CPU workload among the VMs | About 80% | Constantly flat at 100%: a runaway process; low: severe wastage |
+| Average CPU workload among the VMs | About 40% | Below 20% all month: all large VMs oversized |
 
 - With hundreds of VMs, at any 5 minutes one VM is busy, so Max spikes; some are idle, others busy, so Average sits at 40-50%.
 - Minimum is not useful: some VM is always idle.
@@ -210,7 +212,7 @@ review_notes:
 - 'Section ''What is rightsized'': Kubernetes nodes sized in the cluster design; VM rightsizing is misleading, it usually means the Guest OS (author, 2026-11-09).'
 - 'Section ''Idle VM: power it off'' (author, Q042, 2026-11-06) moved to sp5-framework/capacity/reclamation, section Idle VM, 2026-11-07: one place for idle VM reclamation.'
 - 'Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q125).'
-- 'Section ''What to optimize'': the book says CPU utilization should be 100%; the Big Picture section expects about 40% average and 80% max across large VMs. Read as per-VM aim vs fleet average (Q126).'
+- 'Sections ''What to optimize'' and ''Monster VMs Capacity Management'': per-VM aim (high utilization at its busy time) vs the monster VM group (about 40% average, 80% max); section rewritten by the author (Q126, 2026-11-09).'
 - 'Section ''Micro burst'': 2-second metrics checked against the VCF Operations 9.1 documentation (2026-11-07).'
 - 'Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") is Claude''s explanation of the book image.'
 - 'Section ''Prevent oversizing'': the CPU Hot Add and vNUMA link is from Performance Best Practices (idle-and-unused-vcpus), not this chapter.'
