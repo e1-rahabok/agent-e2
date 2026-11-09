@@ -73,6 +73,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | 3 | Data files | esxtop batch CSV, vCenter chart export, VCF Operations export | Parse with code, not the model: peak, 95th percentile, time of peak, per object; feed exact values to the answer | 1.2 |
 | 4 | Guided troubleshooting | A symptom ("VM is slow") | Run the matching flow one step at a time; ask for the next value; show the step and the branch taken | 1.0 (flow tool exists) |
 | 5 | Live instance | Read-only connection to VCF Operations | Read metrics of a named object; fill the flow steps from live values | After 1.0 |
+| 6 | URL | A link in the question: KB article, documentation page, blog, community thread | Fetch the page, keep only the parts relevant to the question, check them against the knowledge base, say where the page is right and where it is wrong | 1.0 (author, 2026-11-09) |
 
 - Clarifying questions (author, 2026-11-09): at most one round per question, then answer.
   - A question that makes sense is answered without asking why.
@@ -81,11 +82,19 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - Otherwise answer and state the assumption first.
 - Screenshots: several per question, compared with each other; the chart interval and rollup are read (a 1-day chart hides 20-second peaks); values are shown back before reasoning; images stay on site.
 - Data files are more exact than screenshots and need no screen reading; recommended when the user can export.
+- URLs and web search (author, 2026-11-09):
+  - A page the user gives is evidence to check, not a source to follow. A small model tends to repeat text the user supplied, so the harness labels it and the answer states where the page agrees with the knowledge base and where it does not, and why. Level 300 errors in vendor KB articles and blogs are common; correcting them is where Agent E2 beats a frontier model, which tends to agree with the page.
+  - Web search runs only when the question needs current facts: a known bug or defect, a symptom after an upgrade, a version, build or patch level, a configuration maximum or default of a release, a renamed product or feature. Known bugs are part of every configuration check (Q104), and the knowledge base is always behind on them. Other questions are answered from the knowledge base without search.
+  - Trim: a page or search result is chunked and only the relevant parts (a few hundred to about 2,000 tokens) enter the context, after the knowledge-base files, so the 16K budget keeps the knowledge base.
+  - Without Internet access: say the page cannot be opened, ask for the relevant paragraph, answer from the knowledge base.
 
 ### Answer
 - Direct answer first, then the mechanism and the reason, then what to check next.
 - Name the object for every metric (VM CPU Ready, not CPU Ready). State units and the time interval.
 - Thresholds only with their source. When the book and the documentation differ, show both and say which applies.
+- Which source wins depends on the type of fact (author, 2026-11-09):
+  - mechanism and interpretation (what a counter means, which metric to read, why a rule of thumb fails): the knowledge base wins over vendor pages, KB articles and blogs;
+  - version-specific fact (defaults, configuration maximums, new or renamed counters, builds, bug fixes, scheduler changes): the newer official document wins when it is dated after the knowledge file's source; the file is flagged for review.
 - Exact values come from the catalog and the calculator, and are shown as such.
 - Unsure is an answer: "The knowledge base does not settle this; here is what it does say."
 - Every fact cited. Linked files shown with their link type, so the same-name trap guard is visible.

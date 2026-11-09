@@ -95,6 +95,7 @@ Three input types: what the administrator gives the product besides the question
 - Every question has a prompt, so every question has text. Text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]`, `[screenshot]` or `[table, screenshot]`, derived from `attachments` and checked by lint.
 - Not built yet: the table tool in the harness and table attachments in the runner (section 13.1).
+- URL questions (author, 2026-11-09): a question that carries a link to a public page with a known Level 300 error (vendor KB, documentation, blog). The key point is that the answer corrects the page with the mechanism, not that it summarizes it. A frontier model tends to agree with the page; this question type shows the mission directly. The page is fetched live, so the key also records the page's date; a changed page is re-checked before scoring. Pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
 - Examples:
   - Text: [Memory usage: VM vs ESXi](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-09-usage-vm-vs-esxi.md): every VM shows Memory Usage below 25% and the host shows 95%; the customer wants more RAM.
   - Table (to write): a VCF Operations export of 400 VMs with CPU Ready, Co-stop, Run, vCPU count and host; "which VMs suffer contention, and is it the host or the VM size?".
