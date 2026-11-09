@@ -1,6 +1,7 @@
 # Rightsizing VMs
 
 ## What is rightsized
+
 - VMs. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
 - Kubernetes nodes are sized as part of the Kubernetes cluster design, not one by one.
 - "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names:
@@ -9,18 +10,21 @@
 - This file covers why VMs are oversized in a private cloud, what that costs the company, and how to get a downsize accepted and proven.
 
 ## Why VMs are oversized
-| Cause | Mechanism |
-|---|---|
-| Legacy | P2V copied the physical server's configuration |
-| Cost | The VM is free or far cheaper than public cloud |
-| Cost | No progressive pricing: 10 vCPU costs exactly 10x 1 vCPU |
-| Education | Bigger is believed to be faster |
-| Vendor | Commercial software sizing; no support if changed |
+
+
+| Cause       | Mechanism                                                |
+| ----------- | -------------------------------------------------------- |
+| Legacy      | P2V copied the physical server's configuration           |
+| Cost        | The VM is free or far cheaper than public cloud          |
+| Cost        | No progressive pricing: 10 vCPU costs exactly 10x 1 vCPU |
+| Education   | Bigger is believed to be faster                          |
+| Vendor      | Commercial software sizing; no support if changed        |
 | Micro burst | CPU bursts of a few seconds vanish in 20-second averages |
 
 - Public cloud providers have no oversizing problem to fight: oversized instances earn them a higher margin.
 
 ## Oversized is relative
+
 - A 64-vCPU VM running 7 vCPUs is oversized; an 8-vCPU VM running 7 is not. Idle, in contrast, is absolute (`sp5-framework/capacity/reclamation`, section Idle VM).
 - VCF Operations definitions:
   - undersized: for CPU or memory, the recommended size is above the total (configured) size; the smallest increase is 1 vCPU or 1 GB;
@@ -28,6 +32,7 @@
 - VCF Operations bases both on the projection, not on 5-minute or daily data. A powered-off oversized VM stays oversized until it no longer meets the definition.
 
 ## Cost of an oversized VM
+
 ![Cost of an oversized VM: longer boot time, longer vMotion time, risk of NUMA effect, higher Co-stop and Ready time, longer snapshot time, process ping-pong, higher chance of CPU Overlap](images/vm-oversized-cost-diagram.png)
 
 - More CPU, memory and disk do not make a VM faster; they add overhead.
@@ -39,9 +44,10 @@
 - Faster vMotion: Windows and Linux use memory as cache; more memory, more to copy.
 - Faster boot: without a reservation, vSphere creates a swap file the size of configured RAM; slow storage delays boot.
 - Risk of NUMA effect: see the example below.
-![Usage (MHz) per vCPU](images/vm-cpu-usage-mhz-per-vcpu.png)
+  ![Usage (MHz) per vCPU](images/vm-cpu-usage-mhz-per-vcpu.png)
 
 ## NUMA example
+
 - Host: 2 sockets × 16 cores. VM: 16 vCPU at 90%, fits one socket.
 - Linux run queue below 2 per vCPU 95% of the time: busy but serving all processes.
 - Sizing on CPU Usage, which runs 25% higher due to Turbo: 16 × 90% × 125% = 18 vCPU.
@@ -49,15 +55,18 @@
 - With CCDs inside a socket, a smaller NUMA effect exists within a socket too.
 
 ## What to optimize in the consumer layer
-| Resource | Rule |
-|---|---|
-| CPU | CPU Run Queue is the primary counter; high vCPU utilization is the aim: fewer vCPUs, less ping-pong and NUMA |
-| CPU | Check CPU Usage Disparity: some applications stay on the first 8 vCPUs |
-| Memory | Utilization near 100% is normal: most pages are cache. Check page faults for excess |
-| Disk | Rightsize the file system: a Windows or Linux partition change |
-| Disk | Use fewer RDMs; with array thin provisioning, check unmap for wastage |
+
+
+| Resource | Rule                                                                                                         |
+| -------- | ------------------------------------------------------------------------------------------------------------ |
+| CPU      | CPU Run Queue is the primary counter; high vCPU utilization is the aim: fewer vCPUs, less ping-pong and NUMA |
+| CPU      | Check CPU Usage Disparity: some applications stay on the first 8 vCPUs                                       |
+| Memory   | Utilization near 100% is normal: most pages are cache. Check page faults for excess                          |
+| Disk     | Rightsize the file system: a Windows or Linux partition change                                               |
+| Disk     | Use fewer RDMs; with array thin provisioning, check unmap for wastage                                        |
 
 ## Micro burst
+
 - Some applications burst to above 80% CPU for 1-3 seconds. Per-second data shows it; a 20-second average of the same period reads about 50%. Sizing on the 20-second value leaves the burst short of vCPUs: CPU run queue rises.
 - Memory rarely bursts like this.
 - Two ways to find these applications:
@@ -66,39 +75,45 @@
 - Business transaction monitoring of the VM owner shows bursts that infrastructure metrics miss: work with the owner.
 
 ## Getting the downsize accepted
+
 - Taking resources away is harder politically than technically.
 - Mass downsizing backfires: a small share of VMs suffer, and the whole program loses trust.
 - Saving money is a weak argument: owners already paid. Show that a right-sized VM performs better.
 
-| Concern | Response |
-|---|---|
-| Fear: it will be slow | A formal, open process: owners see performance and usage before and after, over 1 month (month-end peak) |
-| Fear: slowness from another cause | Agree the metrics up front; show contention and Guest OS metrics |
-| Paid for: the original size looks like a mistake | Present the owner as the one who saves the company; infrastructure only helps |
+
+| Concern                                          | Response                                                                                                 |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Fear: it will be slow                            | A formal, open process: owners see performance and usage before and after, over 1 month (month-end peak) |
+| Fear: slowness from another cause                | Agree the metrics up front; show contention and Guest OS metrics                                         |
+| Paid for: the original size looks like a mistake | Present the owner as the one who saves the company; infrastructure only helps                            |
 
 ### Practices
-| Practice | Action |
-|---|---|
-| Hardware | Map the VM to the CPU and memory architecture; NUMA-aware vSocket × vCore |
-| Performance | Rightsizing serves performance at peak, not capacity. Include contention; sample at 20 seconds, not 5 minutes; add Guest OS and business transaction metrics for time-sensitive work |
-| Collaboration | Agree metrics, method and change date up front; joint execution; a rollback plan; no other change (data, application) in the window |
-| Proof | A dashboard of before vs after per right-sized VM |
-| Big picture | Company-wide excess, reported regularly to all stakeholders |
-| Encourage small | Small VMs by self-service at once; large VMs require justification, approval and regular review |
-| Pricing | Progressive pricing: large VMs at a premium pay for the small-VM discount |
-| Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE |
-| Open | A public dashboard any owner can use: transparency builds trust |
+
+
+| Practice          | Action                                                                                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Hardware          | Map the VM to the CPU and memory architecture; NUMA-aware vSocket × vCore                                                                                                           |
+| Performance       | Rightsizing serves performance at peak, not capacity. Include contention; sample at 20 seconds, not 5 minutes; add Guest OS and business transaction metrics for time-sensitive work |
+| Collaboration     | Agree metrics, method and change date up front; joint execution; a rollback plan; no other change (data, application) in the window                                                  |
+| Proof             | A dashboard of before vs after per right-sized VM                                                                                                                                    |
+| Big picture       | Company-wide excess, reported regularly to all stakeholders                                                                                                                          |
+| Encourage small   | Small VMs by self-service at once; large VMs require justification, approval and regular review                                                                                      |
+| Pricing           | Progressive pricing: large VMs at a premium pay for the small-VM discount                                                                                                            |
+| Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE                      |
+| Open              | A public dashboard any owner can use: transparency builds trust                                                                                                                      |
 
 - Hardware sizes from the book: a VM above 8 vCPU risks the Hyper-Threading effect; above 16 vCPU risks the NUMA effect. Both depend on the host CPU (see review notes).
 
-## Max and Average of large VMs
-- To show management that large VMs do not use their CPU: a dynamic group of all large VMs (example: more than 16 vCPU), one for CPU and one for memory, plotted every 5 minutes for 3 months so short peaks stay in.
-- Two super metrics on the group:
+## Monster VMs Capacity Management
 
-| Super metric | Right-sized fleet | Reading |
-|---|---|---|
-| Maximum CPU workload among the VMs | About 80% | Constantly flat at 100%: a runaway process; low: severe wastage |
-| Average CPU workload among the VMs | About 40% | Below 20% all month: all large VMs oversized |
+- To show management that large VMs do not use their allocated CPU, create a dynamic group of all monster VMs (as defined in vCommunity adapter). One group for CPU and one group for memory. Plot the trend chart every 5 minutes for 3 months so short peaks stay in.
+- Two metrics on the 2 groups:
+
+
+| Metric                             | Ideal (rigthsized) | Bad (oversized)                                                 |
+| ---------------------------------- | ------------------ | --------------------------------------------------------------- |
+| Maximum CPU workload among the VMs | About 80%          | Constantly flat at 100%: a runaway process; low: severe wastage |
+| Average CPU workload among the VMs | About 40%          | Below 20% all month: all large VMs oversized                    |
 
 - With hundreds of VMs, at any 5 minutes one VM is busy, so Max spikes; some are idle, others busy, so Average sits at 40-50%.
 - Minimum is not useful: some VM is always idle.
@@ -106,6 +121,7 @@
 - Limit: the counter does not tell real demand from infrastructure load (Guest OS reboot, antivirus full scan, runaway process). A multi-threaded runaway process can reach 100% CPU Demand.
 
 ## Prevent oversizing
+
 - Progressive pricing (Part 1, Cost and Price Management): the price per vCPU rises with VM size.
 - Without chargeback: approval chain grows with VM size; a longer form for monster VMs.
 - Every VM has a life span, renewed by an annual confirmation (`sp5-framework/capacity/unused-vm`, section Annual stocktake).
@@ -117,6 +133,7 @@
   - CPU Hot Add and memory Hot Add become required, and CPU Hot Add turns off vNUMA (`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, section CPU Hot Add).
 
 ## Before vs after
+
 - CPU:
   - total CPU use should stay the same;
   - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back;
@@ -131,6 +148,7 @@
 - Other: disk and network demand change CPU and memory use. Plot disk IOPS and throughput, network throughput and packets per second to compare like with like.
 
 ## Traps
+
 - "Rightsize this VM" → name the job first: Guest OS sizing (does the guest have enough?) or VM footprint (what does it cost the infrastructure?). Different counters, different answers.
 - "Size on CPU Usage" → Turbo inflates it 25% in this example, pushing the VM across NUMA nodes.
 - "20-second data shows the CPU peak" → bursts of 1-3 seconds average out; a 20-second reading of 50% can hide 80%+ bursts.
@@ -142,6 +160,7 @@
 - "Start every VM small" → upsizing is harder, slower and NUMA-sensitive; price is the better lever.
 
 ## Metadata
+
 ```yaml
 id: sp5-framework/capacity/rightsizing
 retriever_guide: how-it-works
