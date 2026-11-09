@@ -149,6 +149,7 @@ internal_derive:
 - observability/thresholds
 related:
 - operations-management/performance/kpi-vs-sla
+- operations-management/sp5-framework/alert-design
 - operations-management/sp5-framework/iaas-business
 - operations-management/sp5-framework/purpose-driven-architecture
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop

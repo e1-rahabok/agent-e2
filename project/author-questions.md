@@ -507,6 +507,90 @@ Each entry has:
 - Written as now: with 20,000 ms.
 - Answer:
 
+### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
+- Files: [How VCF Operations reaches its users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/system-engagement.md) (section Alerts, dashboards and reports compared).
+- Search: "Export to spreadsheet or PowerPoint"
+- Question: the Good For row reads Exception for alerts, Exception and Analysis for dashboards, and Exception for reports. Is Exception right for reports, or did you mean Summary or Trend?
+- Written as now: Exceptions for reports, as in the source.
+- Answer:
+
+### Q139 · Part 2 > Proactive Operations > Business Applications > vSphere Folder Structure · Diagram label
+- Files: [Business applications in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/business-applications.md) (section vSphere folder structure, image).
+- Search: "This is why I only have 2 levels of organisation in the above"
+- Question: in the folder diagram, the third application under Department 2 is labelled C.3: Application C. Should it be C.2: Application C?
+- Written as now: the image is copied as is; the alt text says Department 2 owns Applications A, B and C.
+- Answer:
+
+### Q140 · Part 2 > Proactive Operations > Alert > Threshold Design · Red vs orange scale
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/alert-design.md) (sections Threshold design, What not to alert).
+- Search 1: "For example, Red is always 4x of orange. You can make red 2x as bad by modifying any 2 of the following"
+- Search 2: "going up from the usual 0.2s to 0.6x second"
+- Question: (a) Is red 4x orange (two factors doubled) or 2x orange (one factor doubled)? Your CPU and memory alerts double one threshold (Peak vCPU Ready 12% to 24%, Memory Contention 2% to 4%). (b) 0.2 s to 0.6 s is 3x as long (200% longer); the text says 300% longer. Which number is right?
+- Written as now: (a) three ways to make red worse than orange, no 4x claim; (b) 3x as long, 0.2 s to 0.6 s.
+- Answer:
+
+### Q141 · Part 2 > Proactive Operations > Alert > Class of Service: The What · Class names
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/alert-design.md) (section Class of service); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/class-of-service.md).
+- Search: "Mission Critical: VM Disk Latency > 30 ms for 5 minutes."
+- Question: Part 2 names the classes mission critical, standard production, test and development; Part 1 names them Gold, Silver, Bronze. Map them one to one (Gold = mission critical, and so on)? And are 30, 60, 120 ms alert thresholds the same idea as the Performance SLA per class?
+- Written as now: both sets of names, no mapping.
+- Answer:
+
+### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/operations-management/sp5-framework/alert-design.md) (section Design the alerts as a set); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/configuration/guest-os-alerts.md); [Storage alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-alerts.md).
+- Search 1: "Not yet = I’ve not implemented it yet."
+- Search 2: "There is no alert defined, as it could result in false positive."
+- Search 3: "Not yet implemented. The reason is the many:many relationship"
+- Question: the count table shows (a) Guest OS Disk consumption 1, but Guest OS Consumption says no alert; (b) Datastore Cluster disk contention 2, but Storage Infrastructure Contention says not implemented. Which is current?
+- Written as now: both, as in the source, with this question in the review notes.
+- Answer:
+
+### Q143 · Part 2 > Proactive Operations > Alert > Threshold Design > Conditions · Condition vs symptom
+- Files: [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/alert-definitions.md) (section Conditions, not symptoms).
+- Search: "Do not use Symptoms. Instead, use Conditions."
+- Question: is a condition a test written inside the alert definition (the Conditions tab), as opposed to a reusable symptom definition? Is the reason only that symptoms are reserved for minor issues, or also a technical one (for example wait and cancel cycles per symptom)?
+- Written as now: a condition is a test written inside the alert definition; symptoms are minor issues for the daily check.
+- Answer:
+
+### Q144 · Part 2 > Proactive Operations > Alert > CPU Alerts > VM Contention · Orange values and the missing diagram
+- Files: [CPU alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/cpu-alerts.md) (sections VM CPU contention, Infrastructure CPU contention).
+- Search 1: "Peak vCPU Ready > 32%"
+- Search 2: "This is complex. See the diagram at the start of CPU Alert section."
+- Question: (a) Orange keeps Peak vCPU Ready above 32% and CPU Contention above 8%, the same as red; only CPU Ready drops to 4%. Should orange be 16% and 4%? (b) The diagram at the start of CPU Alerts is not in the document. Is the knowledge-base flow vm-cpu-contention-high the right link, or should the diagram be added?
+- Written as now: (a) as in the source; (b) linked to vm-cpu-contention-high.
+- Answer:
+
+### Q145 · Part 2 > Proactive Operations > Alert > Memory Alerts · Wait, example and instance
+- Files: [Memory alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/configuration/memory-alerts.md).
+- Search 1: "10 minutes is used instead of 5 to reduce false positive. Take note this means you get notified later."
+- Search 2: "VM 001 has 51% memory contention"
+- Question: (a) the infrastructure consumption red has no duration in its condition; is the wait 10 minutes? (b) the 51% example lists 5 MB, 1 MB, 2 MB and shares; the MB values cannot make 51%. Keep it as an illustration of mixed causes? (c) For ESXi and cluster, is Peak Memory Contention the worst VM, and Memory Contention the average of VMs?
+- Written as now: (a) 10 minutes; (b) illustration; (c) not stated.
+- Answer:
+
+### Q146 · Part 2 > Proactive Operations > Alert > Storage Alerts > VM Contention · 80 ms vs class of service
+- Files: [Storage alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-alerts.md) (section VM disk latency).
+- Search: "Average Read Latency > 80 ms"
+- Question: the VM disk latency alert is red above 80 ms average (orange 40 ms), while Class of Service gives standard production 60 ms for 10 minutes. Which class is the 80 ms alert for?
+- Written as now: the 80 ms alert is read as standard production, flagged.
+- Answer:
+
+### Q147 · Part 2 > Proactive Operations > Alert > Network Alerts · VM dropped packets
+- Files: [Network alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/configuration/network-alerts.md).
+- Search 1: "Transmitted packet drop > 4% and"
+- Search 2: "So the ratio is always 100%."
+- Question: (a) the condition ends with "and": is a second condition missing? (b) 4% is 1 in 25 packets, not 1 in 40. (c) What does "the ratio is always 100%" mean? (d) Port group: does "change to transmit only" mean received drops gave the false positives?
+- Written as now: (a) one condition; (b) 1 in 25; (c) not copied; (d) not stated.
+- Answer:
+
+### Q148 · Part 2 > Overall Design Approach > Design Consideration · Data points per month and the wastage colour
+- Files: [Dashboard design in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/dashboard-design.md) (section Conflicting requirements); [Colour and thresholds in dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/dashboard-colour.md).
+- Search 1: "Can the dashboard be understood within 5 seconds?" (the picture after it)
+- Search 2: "We use dark grey in Capacity as wastage"
+- Question: (a) the picture says 1 month = 8650 data; 30 days of 5-minute data is 8,640. Typo? (b) the picture says black for wastage, the colour table says dark grey. Which colour do the shipped capacity dashboards use?
+- Written as now: (a) 8,640; (b) dark grey.
+- Answer:
+
 ## Resolved
 
 ### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
