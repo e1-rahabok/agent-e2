@@ -150,7 +150,7 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
         system += '\n\n' + terms.block(matched)
         _step(trace, 'terms', [h['id'] for h in matched], terms.files(matched, retriever.docs, 6))
     wcfg = cfg.get('web') or {}
-    tool_list = TOOLS + ([t for t in WEB_TOOLS if t['function']['name'] == 'fetch_url' or wcfg.get('search_url')]
+    tool_list = TOOLS + ([t for t in WEB_TOOLS if t['function']['name'] == 'fetch_url' or web.search_configured(wcfg)]
                          if wcfg.get('enabled') else [])
     pages = web.gather(question, wcfg) if wcfg.get('enabled') else []
     if pages:

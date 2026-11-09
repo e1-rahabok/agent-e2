@@ -8,7 +8,8 @@ Rules (MISSION.md, section 5; ARCHITECTURE.md, section 5):
     parts relevant to the question and placed after the knowledge-base files.
   - Search runs only for current facts: bugs, builds, patches, maximums and defaults of a release, renamed products.
   - Without Internet access every call returns an error the model can state; the answer comes from the knowledge base.
-Config (benchmark/runner/config.yaml, key web): fetch, search_url (SearXNG-style JSON endpoint), allow_hosts (pages the
+Config (benchmark/runner/config.yaml, key web): fetch, search_backend (searxng at a customer site; gateway for the
+benchmark), search_url (SearXNG-style JSON endpoint), allow_hosts (pages the
 user links), search_hosts (sites search may return; vendor documentation by default), timeout,
 max_bytes, page_tokens, search_results.
 """
@@ -174,15 +175,18 @@ def search(query, cfg):
     Results are kept only from search_hosts (vendor documentation by default), else from allow_hosts.
     The query is restricted to those sites, so the search engine does the filtering too."""
     cfg = cfg or {}
-    base = cfg.get('search_url')
-    if not base:
+    if not search_configured(cfg):
         return {'error': 'web search is not configured'}
     sites = cfg.get('search_hosts') or []
-    q = query + (' (' + ' OR '.join(f'site:{h}' for h in sites) + ')' if sites else '')
-    url = base + ('&' if '?' in base else '?') + urllib.parse.urlencode({'q': q, 'format': 'json'})
     try:
-        raw, _ = _get(url, cfg.get('timeout', 15), cfg.get('max_bytes', 3_000_000))
-        results = json.loads(raw).get('results') or []
+        if cfg.get('search_backend') == 'gateway':
+            results = _gateway_search(query, sites, cfg)
+        else:
+            base = cfg['search_url']
+            q = query + (' (' + ' OR '.join(f'site:{h}' for h in sites) + ')' if sites else '')
+            url = base + ('&' if '?' in base else '?') + urllib.parse.urlencode({'q': q, 'format': 'json'})
+            raw, _ = _get(url, cfg.get('timeout', 15), cfg.get('max_bytes', 3_000_000))
+            results = json.loads(raw).get('results') or []
     except Exception as e:
         return {'error': f'search failed ({type(e).__name__}: {str(e)[:120]})'}
     out = []
@@ -196,6 +200,44 @@ def search(query, cfg):
         if len(out) >= cfg.get('search_results', 5):
             break
     return out
+
+
+def search_configured(cfg):
+    return bool((cfg or {}).get('search_backend') == 'gateway' or (cfg or {}).get('search_url'))
+
+
+def _post(url, body, headers, timeout):
+    """HTTP POST of a JSON body through the environment's proxy. Replaced in tests."""
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={'Content-Type': 'application/json', **headers})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.loads(r.read().decode())
+
+
+def _gateway_search(query, sites, cfg):
+    """Search through Vercel AI Gateway's Perplexity search tool (benchmark only: it needs the gateway key and the Internet).
+    The gateway runs the search and a small model lists the result URLs; the harness then fetches and trims the pages
+    itself, so the untrusted label, the trimming and the source rule stay the same as with SearXNG."""
+    import os
+    key = os.environ.get(cfg.get('gateway_key_env', 'AI_GATEWAY_API_KEY'), '')
+    if not key:
+        raise RuntimeError('no gateway key')
+    tool = {'type': 'vercel:perplexity_search',
+            'config': {'query': query, 'max_results': cfg.get('search_results', 5),
+                       **({'search_domain_filter': sites[:20]} if sites else {})}}
+    body = {'model': cfg.get('gateway_search_model', 'google/gemma-4-31b-it'), 'tools': [tool], 'tool_choice': 'required',
+            'max_tokens': 600, 'temperature': 0,
+            'messages': [{'role': 'user', 'content': 'Search the web for: ' + query +
+                          '\nThen list the search results only: one per line, the URL, a space, the title.'}]}
+    out = _post(cfg.get('gateway_url', 'https://ai-gateway.vercel.sh/v1').rstrip('/') + '/chat/completions', body,
+                {'Authorization': f'Bearer {key}'}, cfg.get('search_timeout', 60))
+    text = out['choices'][0]['message'].get('content') or ''
+    results = []
+    for line in text.split('\n'):
+        m = URL.search(line)
+        if m:
+            u = m.group(0).rstrip('.,;:')
+            results.append({'url': u, 'title': line.replace(m.group(0), '').strip(' -:|'), 'content': ''})
+    return results
 
 
 VERSION = re.compile(r'^(\d+(\.\d+)+([a-z]\d*)?|u\d|kb\d+|\d{4,6})$', re.I)
@@ -219,7 +261,7 @@ def gather(question, cfg):
     """Pages for a question: every URL it contains (up to 3), plus search results when it asks for current facts."""
     cfg = cfg or {}
     pages = [fetch(u, question, cfg) for u in urls_in(question)[:3]]
-    if cfg.get('search_url') and needs_search(question):
+    if search_configured(cfg) and needs_search(question):
         res = search(public_query(question), cfg)
         if isinstance(res, dict):
             pages.append({'url': 'web search', 'error': res['error']})

@@ -363,6 +363,23 @@ class WebTest(unittest.TestCase):
         self.assertEqual(self.web.gather('What does VM CPU Ready mean?', cfg), [])
         self.assertIn('site%3Abroadcom.com', self.calls[-1])
 
+    def test_gateway_search_backend(self):
+        import os
+        sent = []
+
+        def post(url, body, headers, timeout):
+            sent.append(body)
+            return {'choices': [{'message': {'content': 'https://knowledge.broadcom.com/kb/443813 vMotion is slow\n'
+                                                         'https://blog.example.com/x a blog'}}]}
+        self.web._post, old = post, self.web._post
+        os.environ.setdefault('AI_GATEWAY_API_KEY', 'test')
+        try:
+            res = self.web.search('vMotion slow known issue', {'search_backend': 'gateway', 'search_hosts': ['broadcom.com']})
+        finally:
+            self.web._post = old
+        self.assertEqual([r['url'] for r in res], ['https://knowledge.broadcom.com/kb/443813'])
+        self.assertEqual(sent[0]['tools'][0]['config']['search_domain_filter'], ['broadcom.com'])
+
     def test_query_drops_system_names(self):
         q = self.web.public_query('Known bug on esx-prd-01.corp.local, VM SAP_PRD01, ESXi 8.0U3, KB 312345?')
         for w in ('esx-prd-01', 'SAP_PRD01', 'corp'):
