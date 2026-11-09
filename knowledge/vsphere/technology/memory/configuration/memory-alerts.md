@@ -71,7 +71,7 @@ object:
 - ClusterComputeResource
 - ResourcePool
 internal_derive:
-- operations-management/sp5-framework/alert-design
+- sp5-framework/alerts/alert-design
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/metrics/host/ballooned
 - vsphere/technology/memory/metrics/host/consumed

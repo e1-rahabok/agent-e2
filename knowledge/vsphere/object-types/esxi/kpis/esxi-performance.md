@@ -46,7 +46,7 @@
 - It replaces the former "ESXi Bad Network Packets" super metric.
 
 ## Scoring
-- Each sub-metric scores 100-0 against its limits; the KPI is a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `operations-management/performance/performance-kpi-design`, section Scoring.
+- Each sub-metric scores 100-0 against its limits; the KPI is a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `sp5-framework/performance/performance-kpi-design`, section Scoring.
 - Nothing wrong: bad packets 0 (excluded), the other 8 score 100. KPI = 100.
 - One VM with 200 ms disk latency: the worst-VM disk row is a quarter into red (160-320 ms) and scores 18.75 with weight 9.51. The 90th percentile stays 0: one VM is not a broad problem. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2.
 - A host with no powered-on VMs: no VM sub-metric has data; bad packets 0 are left out. KPI = 100.
@@ -77,7 +77,7 @@ object:
 - HostSystem
 metric_class: contention
 internal_derive:
-- operations-management/performance/performance-kpi-design
+- sp5-framework/performance/performance-kpi-design
 - vsphere/object-types/cluster/kpis/cluster-performance
 same_name: []
 same_meaning: []

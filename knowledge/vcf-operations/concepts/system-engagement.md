@@ -17,7 +17,7 @@
 - Thresholds per channel: each channel has its own urgency, so each can carry its own green, yellow, orange, red thresholds.
 
 ## Alerts, dashboards and reports compared
-- The live screen is left out here: its use is narrow (`vcf-operations/concepts/noc-live-screen`).
+- The live screen is left out here: its use is narrow (`vcf-operations/dashboards/noc-live-screen`).
 
 | Item | Alert | Dashboard | Report |
 |---|---|---|---|
@@ -48,7 +48,7 @@
   - Live NOC screen: fits the TV or projector with no scrolling; no tables, because many numbers do not give a conclusion at a glance; trends with the current number; no interaction, because there is no keyboard or mouse; auto-refresh and auto-rotate.
   - Daily health check: 1-2 screens deep; scoreboards, because Level 2 clicks to filter and analyse; standard interaction.
   - Longer cadence: more than 2 screens deep; tables for export to a spreadsheet; interaction follows the need of the moment.
-- The daily health check itself: `vcf-operations/concepts/daily-health-check-dashboards`. Why insight replaces most alerts: `operations-management/sp5-framework/alerts-and-insights`.
+- The daily health check itself: `vcf-operations/dashboards/daily-health-check-dashboards`. Why insight replaces most alerts: `sp5-framework/alerts/alerts-and-insights`.
 
 ## Traps
 - "Send everyone a weekly report" → nobody can tell whether a report was read, and a report has the least depth. Use a dashboard; add a report where a role needs an offline copy.
@@ -72,12 +72,12 @@ pillar:
 product:
 - vcf-operations
 internal_derive:
-- operations-management/sp5-framework/alerts-and-insights
-- operations-management/sp5-framework/proactive-operations
+- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/concepts/proactive-operations
 related:
-- vcf-operations/concepts/noc-live-screen
-- vcf-operations/concepts/daily-health-check-dashboards
-- operations-management/sp5-framework/alert-design
+- vcf-operations/dashboards/noc-live-screen
+- vcf-operations/dashboards/daily-health-check-dashboards
+- sp5-framework/alerts/alert-design
 images:
   - path: images/vcf-operations-alert-dashboard-report-engagement-diagram.png
     product: [vcf-operations]
@@ -92,6 +92,6 @@ corrections:
 review_notes:
 - 'Section ''Alerts, dashboards and reports compared'': the source table lists Good for as Exception for all three; the report column lists Exception, written as is. Q138.'
 - 'Section ''Four channels'': the source says four ways and its diagram shows three (alert, dashboard, report); the live screen is the fourth, from the text.'
-- 'Not copied: the hexagon picture of NOC requirements (decorative; its content is in vcf-operations/concepts/noc-live-screen).'
+- 'Not copied: the hexagon picture of NOC requirements (decorative; its content is in vcf-operations/dashboards/noc-live-screen).'
 status: draft
 ```

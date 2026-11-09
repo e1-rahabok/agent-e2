@@ -122,7 +122,7 @@ The author's books describe metrics from three perspectives: technology, object,
 - Example: VM CPU Ready.
   - Technology: `vsphere/technology/cpu/metrics/virtual-motherboard/ready` (folder), `technology: cpu` (tag).
   - Object: `object: VirtualMachine` (tag), listed in `vsphere/object-types/vm/health-check/vm-health-check` (link), part of the VM Performance KPI.
-  - Operations management: `pillar: performance` (tag), used by `operations-management/performance/performance-kpi-design` and the cluster KPI (links).
+  - Operations management: `pillar: performance` (tag), used by `sp5-framework/performance/performance-kpi-design` and the cluster KPI (links).
 - Retrieval filters on any tag. The model follows any link. A website can show any slice without moving a file.
 
 ## 4. Traps and Level 400
@@ -185,9 +185,10 @@ knowledge/                           # what the model reads (indexed)
 ├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
 │                                    # aggregation, units, thresholds, naming, accounting
 ├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
-├── operations-management/           # operations across products and technologies
-│   ├── sp5-framework/               # the framework across pillars: overview, why not ITIL, Triple See Method,
-│   │                                # SLAs, class of service, health, alerts, monitoring vs troubleshooting
+├── sp5-framework/                   # operations management across products and technologies: the SP5 Framework
+│   ├── concepts/                    # the framework across pillars: overview, why not ITIL, Triple See Method,
+│   │                                # SLAs, class of service, health, monitoring vs troubleshooting
+│   ├── alerts/                      # alert architecture, top down: alerts and insights, alert design across products
 │   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for cross-technology flows (VM slow triage)
 │   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
 ├── vsphere/
@@ -209,9 +210,13 @@ knowledge/                           # what the model reads (indexed)
 │       ├── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
 │       │                            # screens/ for the screen library (release 1.1)
 │       └── vcf-operations/          # how VCF Operations shows vSphere counters (20-second peaks); screens/ (1.1)
-├── vcf-operations/                  # VCF Operations as a system in its own right: role, features, its own sizing,
-│   ├── concepts/                    # health and performance; troubleshooting/ for VCF Operations itself
-│   └── troubleshooting/
+├── vcf-operations/                  # VCF Operations as a system in its own right
+│   ├── concepts/                    # what the product is for: role, how it reaches people
+│   ├── features/                    # features as implemented (real-time metrics)
+│   ├── dashboards/                  # dashboard design and the dashboard suites
+│   ├── reports/                     # report design and the report suite
+│   ├── alerts/                      # alert definitions, bottom up: symptoms, conditions, cycles, recommendations
+│   └── troubleshooting/             # later: VCF Operations' own health and troubleshooting
 └── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
     └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
 ```
@@ -221,26 +226,28 @@ knowledge/                           # what the model reads (indexed)
   - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
   - multi-technology content follows the object route: `vsphere/object-types/<object>/`;
   - what VCF Operations computes: `vcf-operations/`;
-  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `operations-management/<pillar>/`; content across pillars: `operations-management/sp5-framework/`, so the framework reads as one unit (author, 2026-11-08).
+  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `sp5-framework/<pillar>/`; content across pillars: `sp5-framework/concepts/`, so the framework reads as one unit (author, 2026-11-08).
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `operations-management/sp5-framework/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
+  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order of `sp5-framework/concepts/health-risk-efficiency`, starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
   - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage (author, 2026-11-08). Content about a managed object lives with that object, even when VCF Operations computes it:
     - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
     - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
     - how VCF Operations shows a counter (rollup, 20-second peak): `vsphere/tools/vcf-operations/`.
   - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), and later its own sizing, health and performance troubleshooting. See `vcf-operations/concepts/vcf-operations-role`.
+  - A concept is a general idea; a file that documents an actual implementation is not a concept (author, 2026-11-09). In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the general idea in `observability/` or `sp5-framework/concepts/`, the implementation in `vcf-operations/` (example: `observability/real-time-metrics` and `vcf-operations/features/real-time-metrics`).
+  - Alerts have two parts (author, 2026-11-09). Top down, the alert architecture across products (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/alerts/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
-  - `operations-management/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
-  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (triage, capacity decisions) → `operations-management/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
+  - `sp5-framework/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
+  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (triage, capacity decisions) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
 - Three levels of general content, different scope (author, 2026-11-08: names say what the content is, not that it is basic):
   - `knowledge/observability/`: how to read any metric: true across VCF 9 components and the Guest OS.
-  - `knowledge/operations-management/`: how a pillar uses metrics, across products.
+  - `knowledge/sp5-framework/`: how operations management, the SP5 Framework, uses metrics, across products.
   - `knowledge/vsphere/architecture/`: vSphere design that its metrics follow from; true only in vSphere.
-- A setting of one object goes to that object: Scalable Shares is in `vsphere/object-types/resource-pool/configuration/`. A pillar problem across technologies goes to its pillar: noisy neighbour is in `operations-management/performance/`.
+- A setting of one object goes to that object: Scalable Shares is in `vsphere/object-types/resource-pool/configuration/`. A pillar problem across technologies goes to its pillar: noisy neighbour is in `sp5-framework/performance/`.
 - A top-level folder is never named `metrics`: lint and the harness read `/metrics/` in a path as a metric file.
 - `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; the same names wherever a metric of that object lives. The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
@@ -285,7 +292,7 @@ knowledge/                           # what the model reads (indexed)
 ## 7. retriever_guide
 | Value | Question it answers | Folder | Template |
 |---|---|---|---|
-| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `observability/`, `vsphere/architecture/` | `concept.md` |
+| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `observability/`, `vsphere/architecture/`, `sp5-framework/alerts/`, `vcf-operations/` features, dashboards, reports, alerts | `concept.md` |
 | metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `models/`, `tools/` | `metric.md` |
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
@@ -299,7 +306,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 |---|---|
 | `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `knowledge/moved.yaml` (old id → new id, kept forever): old references still resolve, and lint flags an old id still used in an active file. |
 | `retriever_guide` | See section 7. |
-| `scope` | vendor-neutral (applies across VCF 9 components), operations-management, vsphere, vcf-operations or guest-os; matches the top folder. |
+| `scope` | vendor-neutral (applies across VCF 9 components), sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
 | `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework (author, Q091 and 2026-11-08). Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
 | `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
@@ -341,10 +348,10 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 ## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.
 - Vocabulary (author, 2026-11-08):
-  - Framework: how IT operations are managed (SP5). `operations-management/sp5-framework/overview`.
-  - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `operations-management/capacity/`.
+  - Framework: how IT operations are managed (SP5). `sp5-framework/concepts/overview`.
+  - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `sp5-framework/capacity/`.
   - KPI: a model of performance only (the P in KPI). Files in `vsphere/object-types/<object>/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
-  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `operations-management/sp5-framework/health-risk-efficiency`. Monitoring belongs here.
+  - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `sp5-framework/concepts/health-risk-efficiency`. Monitoring belongs here.
   - Troubleshooting: the why. Done only after an object fails a health check; a user complaint counts as a failed health check. Troubleshooting is part of the health check, always after it.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.

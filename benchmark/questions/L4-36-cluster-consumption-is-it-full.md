@@ -42,7 +42,7 @@ input: [screenshot]
 knowledge:
   - vsphere/object-types/cluster/models/cluster-consumption
   - vsphere/technology/memory/concepts/host-memory-states
-  - operations-management/capacity/capacity-model
+  - sp5-framework/capacity/capacity-model
 attachments:
   - 0076/vcf-operations-cluster-consumption.png
 origin: synthetic

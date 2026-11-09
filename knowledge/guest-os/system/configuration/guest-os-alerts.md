@@ -63,7 +63,7 @@ product:
 - windows
 - linux
 internal_derive:
-- operations-management/sp5-framework/alert-design
+- sp5-framework/alerts/alert-design
 - guest-os/cpu/metrics/run-queue
 - guest-os/storage/metrics/disk-queue
 - vsphere/technology/cpu/metrics/virtual-motherboard/net-run

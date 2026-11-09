@@ -54,7 +54,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- operations-management/sp5-framework/sla-metrics
+- sp5-framework/concepts/sla-metrics
 - vsphere/object-types/cluster/kpis/cluster-performance
 - observability/thresholds
 images:

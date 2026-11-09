@@ -14,7 +14,7 @@ import re
 
 ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 OPTION = re.compile(r'^([A-J])\.\s+(.*)$', re.M)
-KB_ID = re.compile(r'\b(?:vsphere|guest-os|observability|operations-management|vcf-operations)/[a-z0-9][a-z0-9/\-]*[a-z0-9]')
+KB_ID = re.compile(r'\b(?:vsphere|guest-os|observability|sp5-framework|vcf-operations)/[a-z0-9][a-z0-9/\-]*[a-z0-9]')
 NUMBER = re.compile(r'(?<![\w.,])(\d+(?:\.\d+)?)\s?(%|ms|µs|us|ns|MB/s|MBps|KBps|Mbps|GB|MB|KB|GHz|MHz|seconds|minutes)(?![\w/])')
 
 

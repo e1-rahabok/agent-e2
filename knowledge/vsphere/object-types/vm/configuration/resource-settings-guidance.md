@@ -108,8 +108,8 @@ object:
 - HostSystem
 internal_derive: []
 related:
-- operations-management/sp5-framework/configuration-management
-- operations-management/sp5-framework/class-of-service
+- sp5-framework/concepts/configuration-management
+- sp5-framework/concepts/class-of-service
 - vsphere/architecture/resource-controls
 - vsphere/object-types/resource-pool/configuration/scalable-shares
 - vsphere/object-types/cluster/concepts/drs-overview
@@ -139,7 +139,7 @@ review_notes:
 - 'Share example: the book has both VMs demanding 10 GHz; a 1-vCPU VM cannot exceed one physical core. The book''s last line says VM 1 twice. Q108.'
 - 'The impact table image says a share of 2,000 depends on other VMs'' reservations; meant as shares. Q108.'
 - 'Resource pool weighing as a 4-vCPU, 16-GB VM: Claude''s explanation of the book''s 4x and 16x (the book says it is unsure why).'
-- 'Limit: the book says there is no network limit; vSphere has per-vNIC limits under Network I/O Control (operations-management/performance/noisy-neighbour). Q109.'
+- 'Limit: the book says there is no network limit; vSphere has per-vNIC limits under Network I/O Control (sp5-framework/performance/noisy-neighbour). Q109.'
 - 'HA slot size: only under the slot policy admission control. Q110.'
 - 'Siblings: the book calls VM and pool siblings a mistake; with Scalable Shares the dilution is solved (vsphere/object-types/resource-pool/configuration/scalable-shares). Both kept. Q110.'
 status: draft

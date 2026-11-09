@@ -48,7 +48,7 @@ object:
 - DistributedVirtualPortgroup
 - VmwareDistributedVirtualSwitch
 internal_derive:
-- operations-management/sp5-framework/alert-design
+- sp5-framework/alerts/alert-design
 - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
 - vsphere/technology/network/metrics/host/packets-dropped
 - vsphere/technology/network/metrics/distributed-switch/packets-dropped

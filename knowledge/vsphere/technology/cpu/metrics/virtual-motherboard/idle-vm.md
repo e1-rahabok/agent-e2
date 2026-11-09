@@ -5,7 +5,7 @@
 - Idleness Indicator: is the VM idle over the last 24 hours. Rolling: computed every 5 minutes, each value over the last 24 hours of data.
 - Reclaimable Idle: 1 (true) when the VM met the idle definition on every day of the idle window. A daily metric.
 - List an idle VM only when both are true.
-- Principles behind the definition (absolute MHz, CPU only, per day): `operations-management/capacity/reclamation`, section Idle VM.
+- Principles behind the definition (absolute MHz, CPU only, per day): `sp5-framework/capacity/reclamation`, section Idle VM.
 
 ## Policy defaults
 | Setting | Default |
@@ -48,12 +48,12 @@ layer:
 - virtual-motherboard
 metric_class: context
 internal_derive:
-- operations-management/capacity/reclamation
+- sp5-framework/capacity/reclamation
 same_name: []
 same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
-- operations-management/capacity/unused-vm
+- sp5-framework/capacity/unused-vm
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Capacity Management > Reclamation > Idle VM. Pages 114-116.'

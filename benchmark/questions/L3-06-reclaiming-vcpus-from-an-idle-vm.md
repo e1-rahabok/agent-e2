@@ -35,7 +35,7 @@ technology: [cpu]
 input: [text]
 task: decide-capacity
 knowledge:
-  - operations-management/capacity/reclamation
+  - sp5-framework/capacity/reclamation
   - vsphere/technology/cpu/health-check/oversized-vm-downsizing
   - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
   - vsphere/technology/memory/concepts/memory-as-storage

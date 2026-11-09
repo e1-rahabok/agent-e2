@@ -75,7 +75,7 @@ def main():
             linked_images.add(full)
             if not os.path.exists(full):
                 bad(f, f'image not found: {img}')
-        for r in re.findall(r'`((?:vsphere|observability|guest-os|operations-management|vcf-operations)/[a-z0-9\-/]+)`', body):
+        for r in re.findall(r'`((?:vsphere|observability|guest-os|sp5-framework|vcf-operations)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
         # vSphere folders: architecture/, technology/<tech>/, object-types/<object>/, tools/<ui>/ (esxtop, vsphere-client; screens/ inside).
         if f.startswith('knowledge/vsphere/'):
@@ -88,8 +88,8 @@ def main():
                 bad(f, f'object-types folder "{parts[3]}" not allowed. Allowed: {", ".join(OBJECT_FOLDERS)}')
             elif parts[2] == 'tools' and parts[3] not in allowed['ui']:
                 bad(f, f'tools folder "{parts[3]}" is not a ui tag value ({", ".join(allowed["ui"])})')
-        if f.startswith('knowledge/operations-management/'):
-            if fm.get('scope') != 'operations-management': bad(f, 'file in knowledge/operations-management/ must have scope: operations-management')
+        if f.startswith('knowledge/sp5-framework/'):
+            if fm.get('scope') != 'sp5-framework': bad(f, 'file in knowledge/sp5-framework/ must have scope: sp5-framework')
             if len(f.split('/')) > 3 and f.split('/')[2] not in PILLAR_FOLDERS: bad(f, f'pillar folder not allowed. Allowed: {", ".join(PILLAR_FOLDERS)}')
         if '/screens/' in f:
             if fm.get('ui') not in allowed['ui']: bad(f, f'screen file needs ui: {", ".join(allowed["ui"])}')
@@ -307,9 +307,9 @@ def check_tables(bad):
 
 
 VSPHERE_TOP = ['architecture', 'technology', 'object-types', 'tools']
-VCF_OPERATIONS_TOP = ['concepts', 'troubleshooting', 'health-check']  # VCF Operations itself only (author, 2026-11-08)
+VCF_OPERATIONS_TOP = ['concepts', 'features', 'dashboards', 'reports', 'alerts', 'troubleshooting', 'health-check']  # VCF Operations itself only (author, 2026-11-08)
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
-PILLAR_FOLDERS = ['sp5-framework', 'performance', 'capacity']
+PILLAR_FOLDERS = ['concepts', 'alerts', 'performance', 'capacity']
 CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['book', 'author', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']

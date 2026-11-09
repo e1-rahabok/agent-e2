@@ -184,7 +184,7 @@ internal_derive:
 related:
 - vsphere/architecture/vm-vs-guest-os
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
-- operations-management/capacity/capacity-model
+- sp5-framework/capacity/capacity-model
 - vsphere/technology/memory/metrics/host/utilization
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus

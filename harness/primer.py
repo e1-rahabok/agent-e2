@@ -41,7 +41,7 @@ def _area(doc_id):
     parts = doc_id.split('/')
     if parts[:2] in (['vsphere', 'technology'], ['vsphere', 'object-types'], ['vsphere', 'tools']) and len(parts) > 3:
         return '/'.join(parts[:3])
-    if parts[0] in ('guest-os', 'vsphere', 'operations-management') and len(parts) > 2:
+    if parts[0] in ('guest-os', 'vsphere', 'sp5-framework') and len(parts) > 2:
         return '/'.join(parts[:2])
     return parts[0] if len(parts) > 1 else 'glossary'
 
