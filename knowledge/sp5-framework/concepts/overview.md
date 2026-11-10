@@ -217,14 +217,9 @@ source:
   path: 'Your Private Cloud > SP5 Framework (opening, capabilities); SP5 Framework: Pillars (Availability, Performance, Capacity, Reclamation, Compliance and Security, Cost and Price, Non-Pillars) (pp. 43-44, 52-58)'
 corrections: []
 review_notes:
-- 'Section ''Security and compliance'': security vs compliance management, urgency, and why not every non-compliant setting is a security alert (author, Q102, 2026-11-09).'
-- 'Section ''The five pillars'': the five pillars follow the SP5 diagram (author, Q091, 2026-11-08). Security moved from pillar to platform. The fifth pillar is value: cost, price and business value (author, 2026-11-08).'
-- 'Section ''Relationships'': availability impacts capacity and performance (flapping); diagram replaced with the author''s updated version (author, Q101 a-b, 2026-11-09).'
-- 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value). Tag list: Q091.'
-- 'Section ''Capacity'': reservation in the planning phase becomes share in the running phase (author edit, Q101 c, 2026-11-09).'
+- 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value).'
 - 'Section ''What a private cloud manages'': text twin of the capabilities diagram (book p. 44), not copied: the text carries its content.'
 - 'Section ''Availability'': five nines at 10x the cost of four nines is the book''s rule of thumb, not a measured figure.'
 - 'Not copied: detailed pillar relationship diagram (p. 53), private cloud capabilities diagram.'
-- 'Folder: cross-pillar file kept in performance/ (Q094 open).'
 status: draft
 ```

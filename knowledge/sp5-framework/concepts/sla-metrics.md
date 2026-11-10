@@ -259,14 +259,11 @@ source:
   path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All) (pp. 23-35)'
 corrections: []
 review_notes:
-- 'Compliance SLA 99.95% in the contract, KPI 100%, maintenance window excluded (author, Q098, 2026-11-09). SLA never at 20 seconds; KPI at 20 seconds and stricter than the SLA; alerts on the KPI (author, Q106, 2026-11-09).'
-- 'Section ''SLA calculation'': the book writes each counter as ''If VM CPU Ready > 2.5% then 100% else 0%'', which scores a breach as 100%. Written here as pass = 100%, so that the monthly mean reads 99.9% when good. Partial VM score (75%) vs binary failure vs ''a VM must pass all four'' in vsphere/object-types/cluster/kpis/cluster-sla-sli: Q095.'
-- 'Section ''Availability SLA'', example: the book counts 3 hours (Guest OS plus database restore) = 99.58%; by the book''s own definition (Guest OS ping, application start-up not counted) it is 45 minutes = 99.90%. Both written as arithmetic; which the example means: Q096.'
-- 'Section ''Availability SLA'', Operational Availability formula: written by Claude from the definition; the book has a Formula heading with no formula. Green zone = change window (author, Q086, 2026-11-08).'
-- 'Section ''Performance SLA'', CPU Co-stop: excluded from SLA and SLI only, Ready balances cost and value of reporting (author, Q097 a, 2026-11-09). CPU Contention: ''because it includes the Hyper-Threading effect'' is Claude''s reading of the 37.5% figure.'
-- 'Section ''What the numbers mean'', Memory Contention: aligned to the raw value, a share of time (author, Q097 b, 2026-11-09): less ideal for an SLA, simpler operationally.'
-- 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them. ''Failed intervals allowed'' column: Claude converted the book''s ''< n times'' into whole 5-minute intervals.'
-- 'Section ''Compliance SLA'': the recommended table gives 99.95% for all classes; the sample offering and this definition give 100% (perfect). Q098.'
+- 'To check: Section ''SLA calculation'': the book writes each counter as ''If VM CPU Ready > 2.5% then 100% else 0%'', which scores a breach as 100%. Written here as pass = 100%, so that the monthly mean reads 99.9% when good. Partial VM score (75%) vs binary failure vs ''a VM must pass all four'' in vsphere/object-types/cluster/kpis/cluster-sla-sli (Q095).'
+- 'To check: Section ''Availability SLA'', example: the book counts 3 hours (Guest OS plus database restore) = 99.58%; by the book''s own definition (Guest OS ping, application start-up not counted) it is 45 minutes = 99.90%. Both written as arithmetic; which the example means (Q096).'
+- 'To check: Section ''Availability SLA'', Operational Availability formula: derived from the definition; the book has a Formula heading with no formula.'
+- 'To check: Section ''Performance SLA'', CPU Contention: ''because it includes the Hyper-Threading effect'' is a reading of the 37.5% figure; not stated in the book.'
+- 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them. ''Failed intervals allowed'' column: the book''s ''< n times'' converted into whole 5-minute intervals.'
 - 'Section ''Four SLAs of IaaS'': the book names Google Cloud and AWS SLA scopes; not repeated (public pages not checked).'
 status: draft
 ```

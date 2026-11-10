@@ -181,11 +181,9 @@ source:
   path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert) (pp. 2, 16-21); SP5 Framework > Basic Terminology (pp. 45-46)'
 corrections: []
 review_notes:
-- 'Section ''Criticality'': alerts minimized; yellow removed from alerts and handled as insight; red at most 1-2 hours, orange by end of day; alert colours unrelated to KPI colours (author, Q089, 2026-11-08).'
-- 'Section ''Prevention window'': the image gives a threshold for each example. Not copied into the text or the threshold catalog until the author answers Q088: SLA VM CPU Ready above 5% vs the SLI value 2.5% (vsphere/object-types/cluster/kpis/cluster-sla-sli); Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as SLA alerts vs SLAs measured on each paying VM.'
-- 'Section ''Prevention window'', last bullet before the image: instance-rule example added by Claude.'
-- 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important. Q089. Whether KPI colour bands carry the same response times: Q089.'
-- 'Section ''Finding, issue, alert, notification'': author answer Q103 (2026-11-09): alert = urgent issue; only the important alert is pushed to the admin''s phone; an issue is a negative finding with one or more symptoms, which degenerate and become urgent if untreated. The diagram was replaced with the author''s corrected version.'
+- 'To check: Section ''Prevention window'': the image gives a threshold for each example; not copied into the text or the threshold catalog until Q088 is answered: SLA VM CPU Ready above 5% vs the SLI value 2.5% (vsphere/object-types/cluster/kpis/cluster-sla-sli); Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as SLA alerts vs SLAs measured on each paying VM (Q088).'
+- 'To check: Section ''Prevention window'', last bullet before the image: the instance-rule example (not in the source).'
+- 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important.'
 - 'Not copied: the iceberg picture (decorative) and the colour legend (red: review today, the sooner the better; orange: review today; yellow: review tomorrow, could be a false positive; green: great), whose content is in the text.'
 status: draft
 ```

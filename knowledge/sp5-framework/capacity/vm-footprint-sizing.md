@@ -66,8 +66,7 @@ source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > VM Footprint'
 corrections:
-- 'Sections ''Purpose'' and ''CPU'': formula grouping and the narrow use case from the author answer Q027 (2026-11-05). The book prints System / 20,000 without the grouping.'
-review_notes:
-- 'Section ''CPU'': divisor 20,000 × vCPU and the System reason from the author answer Q055 (2026-11-05), quoting the book.'
+- 'Sections ''Purpose'' and ''CPU'': formula grouping and the narrow use case. The book prints System / 20,000 without the grouping.'
+review_notes: []
 status: draft
 ```

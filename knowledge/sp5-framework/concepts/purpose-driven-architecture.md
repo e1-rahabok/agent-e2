@@ -117,12 +117,10 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF) (pp. 11-22)'
 corrections: []
 review_notes:
-- 'Section ''Two sides of VCF'': appliances are workload technically, internal operationally: KPI, no SLA (author, Q091, 2026-11-08).'
-- 'Section ''Goals come from what is sold'', DaaS: reason (same software on every desktop moves together) added by Claude.'
-- 'Section ''Day 2 → Day 0 → Day 1'', Example 2: the book does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
-- 'Sections ''Crown jewels'' and ''Health of an application tier'' moved to sp5-framework/performance/business-application-kpi (2026-11-09), with the author''s Q092 answer.'
-- 'Section ''Two sides of VCF'': the book text says workload means the customers'' VMs; its diagram lists IT appliances under Workloads (Q091). Pillar list differs from the pillar tag values (Q091).'
-- 'Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not): Claude''s own knowledge, vSphere 9.1 availability documentation.'
+- 'To check: Section ''Goals come from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the book.'
+- 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: the book does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
+- 'Section ''Two sides of VCF'': the book text says workload means the customers'' VMs; its diagram lists IT appliances under Workloads. Pillar list differs from the pillar tag values.'
+- 'To check: Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not) (vSphere 9.1 availability documentation).'
 - 'Not copied: the application tier diagram (three-tier vs microservices pods) and the maturity diagram; their content is in the text.'
 status: draft
 ```

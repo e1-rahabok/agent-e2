@@ -154,10 +154,9 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > The 3 Realms > The Layers in IT Systems; The Layers in IaaS > IaaS Metric Types; Optimized Performance (pp. 71-76)'
 corrections:
-- 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, outside the IaaS SLA; the SLA covers the vNIC as the hypervisor sees it (author, Q070, 2026-11-06).'
-- 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS (author, Q071, 2026-11-06).'
+- 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, outside the IaaS SLA; the SLA covers the vNIC as the hypervisor sees it.'
+- 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS.'
 review_notes:
-- 'Image troubleshooting-layers-loss-of-context-example-table.png: 5.2 s + 15.1 s = 20.3 s, but the transaction is given as 20.1 s. Q072.'
-- 'Section ''Apdex: not used'': flaws and alternatives from the author''s note (Q072, 2026-11-08). The book''s improved Apdex formula is left out: business transaction monitoring is not the focus.'
+- 'Image troubleshooting-layers-loss-of-context-example-table.png: 5.2 s + 15.1 s = 20.3 s, but the transaction is given as 20.1 s.'
 status: draft
 ```

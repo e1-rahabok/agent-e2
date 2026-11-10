@@ -104,9 +104,8 @@ source:
   document: Knowledge base synthesis of the files in internal_derive
   path: n/a
 corrections:
-- 'Step 5: author answer Q104 (2026-11-08): every performance flow, this one included, checks configuration; known bugs are mostly configuration.'
+- 'Step 5: every performance flow, this one included, checks configuration; known bugs are mostly configuration.'
 review_notes:
-- 'Rewritten 2026-11-09 (author): steps follow the slow order of the reactive process: contention, consumption, configuration, known bug, log, after the time window and breadth; troubleshoot with the KPI, not the SLA (the SLI thresholds step removed).'
-- 'Drafted by Claude 2026-11-06 from the files in internal_derive and vsphere/object-types/vm/health-check/vm-health-check (architecture review 2026-11-06, section 3.3). The order of checks is to be confirmed by the author from field practice (Q060).'
+- 'To check: Order of checks, from field practice: drafted from the files in internal_derive and vsphere/object-types/vm/health-check/vm-health-check (architecture review 2026-11-06, section 3.3) (Q060).'
 status: draft
 ```

@@ -70,11 +70,11 @@ related:
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - observability/input-types
 source:
-  document: 'Author upload 2026-11-08: "Why a New Framework?" (Word document, deleted after use)'
+  document: '"Why a New Framework?" (Word document, deleted after use)'
   path: Why a New Framework?; Complexity; Duplication; Clarity
 corrections: []
 review_notes:
-- 'Section ''Complexity'': the source says "ITIL 5 has 34 management practices" and links the ITIL 4 list. ITIL 4 has 34 practices; written as ITIL 4 (Q135).'
+- 'To check: Section ''Complexity'': the source says "ITIL 5 has 34 management practices" and links the ITIL 4 list. ITIL 4 has 34 practices; written as ITIL 4 (Q135).'
 - 'Section ''Practices that are not pillars'': the source gives no reason for service request management and problem management in their own rows; grouped with service desk and incident management.'
 status: draft
 ```

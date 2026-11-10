@@ -100,8 +100,8 @@ source:
   document: 'PART 3 - Counters.docx; VCF-vCommunity-Adapter documentation, KPI Scoring Models (fetched 2026-11-08)'
   path: 'https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/concepts/kpi-scoring-models.md; The World of Metrics > Modelling (Actual | Potential; Calculation; Translation; Threshold; Progressive Weightage; Rare Metric; Limitation; Optional Features; Validation)'
 corrections:
-- 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the implementation wins over the book (author, 2026-11-08). The book weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the pack weights 2^((100 - score)/25), smooth, up to 16 at 0 (issue #18), so 9 green + 3 worst red is red. The book''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'
+- 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the implementation wins over the book. The book weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the pack weights 2^((100 - score)/25), smooth, up to 16 at 0 (issue #18), so 9 green + 3 worst red is red. The book''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'
 review_notes:
-- 'Section ''Setting thresholds'': the book maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow). The author answered Q089 that alert colours and KPI colours are not related. Kept as "look within hours" for red only (Q136).'
+- 'To check: Section ''Setting thresholds'': the book maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow), while alert colours and KPI colours are not related; kept as "look within hours" for red only (Q136).'
 status: draft
 ```

@@ -115,10 +115,9 @@ source:
   path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template. Pages 107-109.'
 corrections: []
 review_notes:
-- 'Sections ''Why a fixed gap'' and ''Planning phase vs running phase'': author answers Q119 and Q120 (2026-11-09).'
-- 'Section ''Example implementation'': the book says "Notice the consistent 2x gap"; memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow 2x (Q119).'
-- 'Section ''Example implementation'': Silver 2:1 and Bronze 4:1 per thread are 4 and 8 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, and memory 1.8-2.2 as red. A Bronze cluster built to this plan scores red on both rows (Q120).'
-- 'Section ''Example implementation'': Gold at 50% CPU reservation and 1:1 CPU per thread from the book image. Text written from the image; the image is kept as the author''s table.'
-- 'Section ''Example implementation'': the 2x gap in unmet demand (0.5%, 1%, 2%) is Claude''s arithmetic on the book values.'
+- 'Section ''Example implementation'': the book says "Notice the consistent 2x gap"; memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow 2x.'
+- 'Section ''Example implementation'': Silver 2:1 and Bronze 4:1 per thread are 4 and 8 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, and memory 1.8-2.2 as red. A Bronze cluster built to this plan scores red on both rows.'
+- 'Section ''Example implementation'': Gold at 50% CPU reservation and 1:1 CPU per thread from the book image. Text written from the image; the image is kept.'
+- 'To check: Section ''Example implementation'': the 2x gap in unmet demand (0.5%, 1%, 2%), computed from the book values.'
 status: draft
 ```

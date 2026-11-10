@@ -88,9 +88,7 @@ source:
   path: 'Your Private Cloud > SP5 Framework > Health (pp. 50-52)'
 corrections: []
 review_notes:
-- 'Section ''Why one score fails'': the industry rarely defines health; the person and country analogies (condensed); definition of health vs the health check as an action (author, 2026-11-09).'
-- 'Security and compliance grouping: author answer Q102 (2026-11-09); the question is secure covers both; a security issue is present (exploited or exposed), a non-compliant setting is risk. See sp5-framework/concepts/overview, section Security and compliance.'
-- 'Grouping differs inside the section: the grouping image puts compliance under risk and inventory under environment; the present/future health image puts compliance in present health (with security) and inventory in future health. Written from the text table and the grouping image. Q102.'
+- 'Grouping differs inside the section: the grouping image puts compliance under risk and inventory under environment; the present/future health image puts compliance in present health (with security) and inventory in future health. Written from the text table and the grouping image.'
 - 'Section ''Present health'' and ''Future health'': details (logs, data sources, four kinds of setting issue, capacity questions) from the present/future health image (not copied).'
 - 'The personal and country analogies of the book are left out.'
 status: draft

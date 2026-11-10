@@ -137,8 +137,7 @@ source:
   path: 'Configuration Management (opening); Approach (Review Approach, Time-based Approach, The 4 Types of Check); Review List (opening, Security) (pp. 129-133, 148-149)'
 corrections: []
 review_notes:
-- 'Section ''Four types of check'': the book announces 4 types and lists 2 bullets (value, multi-object); the subsections are value, consistency, compatibility, variance. Written as the four subsections. Q113.'
-- 'Section ''Security'': the book writes Log Insight; written as the log tool (VCF Operations for logs). Q113.'
-- 'Folder: no configuration pillar folder; kept in performance/ with the other cross-pillar files (Q094).'
+- 'Section ''Four types of check'': the book announces 4 types and lists 2 bullets (value, multi-object); the subsections are value, consistency, compatibility, variance. Written as the four subsections.'
+- 'Section ''Security'': the book writes Log Insight; written as the log tool (VCF Operations for logs).'
 status: draft
 ```

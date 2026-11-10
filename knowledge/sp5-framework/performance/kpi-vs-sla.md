@@ -130,11 +130,11 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS (pp. 76-80)'
 corrections:
-- 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team (author, Q073, 2026-11-06).'
-- 'Section ''KPI means performance'': a KPI is a baseline, not a target (author, Q067, 2026-11-06).'
-- 'Section ''KPIs in VM as a Service'': one SLA contract per service; Guest OS SLA when IT owns the Guest OS; security, not compliance (author, Q074, 2026-11-06).'
-- 'Sections ''Three steps of maturity'', ''KPI vs SLA'': KPI timing confirmed; both teams track the KPI (author, Q075, 2026-11-06).'
-- 'Section ''Three steps of maturity'': SLA = mean of SLI; SLI = SLA leading indicator (author, Q076, 2026-11-06).'
+- 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team.'
+- 'Section ''KPI means performance'': a KPI is a baseline, not a target.'
+- 'Section ''KPIs in VM as a Service'': one SLA contract per service; Guest OS SLA when IT owns the Guest OS; security, not compliance.'
+- 'Sections ''Three steps of maturity'', ''KPI vs SLA'': KPI timing confirmed; both teams track the KPI.'
+- 'Section ''Three steps of maturity'': SLA = mean of SLI; SLI = SLA leading indicator.'
 review_notes:
 - 'Source of the search for performance SLA articles (Google screenshot) not copied.'
 status: draft
