@@ -206,7 +206,7 @@ sla:
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 rules: []
 ```
-- Nine values per metric: yellow, orange, red for 5m, 20s and 2s, entered by hand. No value is derived from another interval: no 4x rule.
+- Nine values per metric: yellow, orange, red for 5m, 20s and 2s, entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell.
 - The green start and the red end stay in the KPI file's Markdown table; Agent E2 reads the vCommunity pack's published score in 1.0 and does not recompute it.
 - The why comes from the KPI file, which the lookup names.
 - One boundary rule: a value on an edge belongs to the better band (as Close for Business does).

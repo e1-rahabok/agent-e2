@@ -17,7 +17,7 @@ meta:
     kb: Knowledge file that states and explains the threshold.
     quote: 'rules: text copied from the kb file; lint checks it is still there.'
     interval: 20s (20-second peak) or 5m (5-minute average); 2s for esxtop; empty until a source states it.
-    levels: 'KPI colour levels, the one copy. One line per object and metric: [yellow, orange, red] for 5m, 20s and 2s, entered by hand; null until a value is entered. No value is derived (no 4x rule). direction above: higher is worse; below: lower is worse. The KPI file keeps the same values as its Markdown band table; lint checks they match.'
+    levels: 'KPI colour levels, the one copy. One line per object and metric: [yellow, orange, red] for 5m, 20s and 2s, entered by hand; null until a value is entered; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell. direction above: higher is worse; below: lower is worse. The KPI file keeps the same values as its Markdown band table; lint checks they match.'
   review_notes:
   - 'To check: levels cells still null: yellow, orange, red to enter by hand for each of 5m, 20s and 2s (Q152).'
   status: draft
