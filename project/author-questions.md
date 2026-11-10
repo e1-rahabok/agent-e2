@@ -434,7 +434,7 @@ Each entry has:
 - What the knowledge base says now: the KPI is a score every 5 minutes and is reviewed daily against its class target. It does not say how the 288 scores of a day become the daily actual.
 - Question: which statistic? (a) the average of the 288 scores; (b) the lowest score; (c) a percentile, such as the 5th, as Close for Business uses; (d) other. In the worked example, (a) gives VM 01 98.84 on its bad day, (b) gives 33.33.
 - Answer: For capacity, it is already part of the model. For performance, use the 95th percentile.
-- Applied 2026-11-10: kpi-vs-sla (Two numbers each: the 95th percentile of the day's 288 scores, worst 14 intervals ignored); explainer recomputed (both VMs score 100 daily; the 25-minute episode is the alert's job).
+- Applied 2026-11-10: kpi-vs-sla (Two numbers each: the 95th percentile of the day's 288 scores, worst 14 intervals ignored); explainer recomputed (both VMs score 100 daily; the 25-minute episode is the alert's job). Revised 2026-11-10: the 99th percentile (worst 2 intervals ignored); 95th is too lenient for large organisations. The KPI is never per class of service.
 
 ### Q160 · KPI vs SLA · "75% is acceptable" and the class KPI targets
 - Files: [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md) (Value; Traps), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (Contention).

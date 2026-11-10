@@ -15,7 +15,8 @@ ASK_RULE = (
     '\nClarifying: you may ask the user once before answering, and only when one of these holds:\n'
     '- the question is odd or illogical: name the wrong premise, then ask what problem the user saw;\n'
     '- the text and an attachment disagree (for example the text says one metric and the screenshot shows another);\n'
-    '- one missing fact changes the answer: which object (VM, ESXi, cluster), which layer (Guest OS or VM), which interval, which version.\n'
+    '- one missing fact changes the answer: which object (VM, ESXi, cluster), which layer (Guest OS or VM), which interval, which version;\n'
+    '- a term the user wrote is used for different things (a note marked Ambiguous lists them): ask "Do you mean A, B or C?".\n'
     'A question that makes sense is answered without asking why. Never ask what the knowledge base or an attachment already answers.\n'
     'To ask, reply with a first line "CLARIFY:" followed by at most 3 numbered questions, each ending with "because" and the reason. '
     'Write nothing else. Otherwise answer, and state any assumption in the first sentence.\n')
