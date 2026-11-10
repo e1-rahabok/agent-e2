@@ -44,8 +44,16 @@
   - KPI: simple to put in place.
   - SLA: needs operations transformation, more than technical change: contract, price (not only cost), process, people, class of service.
 - Reference:
-  - KPI: absolute, reporting raw metrics.
-  - SLA: always relative to an agreed threshold.
+  - KPI: reality, the absolute value: how bad. The contract is irrelevant to it.
+  - SLA: always relative to an agreed threshold. Each 5-minute SLI is binary: a fail is a fail, so 1.01% and 50% memory contention against a 1% promise count the same.
+- Two numbers each:
+  - actual: volatile, per VM (SLA: share of passed intervals in the month; KPI: the VM's score);
+  - target: steady, for many VMs, per class of service. SLA: Gold 99.9%, Silver 99.8%, Bronze 99.6% (`sp5-framework/performance/noisy-neighbour`). KPI: Gold 99.5%, Silver 99%, Bronze 98% (`sp5-framework/capacity/class-of-service-planning`).
+  - The KPI colour levels are the same for every class; the KPI target is not. A Gold VM must keep a higher KPI score than a Silver VM.
+- Cadence:
+  - KPI: daily, in a technical meeting. A month is far too late.
+  - SLA: monthly, in a business meeting with stakeholders.
+- Not related: no formula links SLA and KPI, and their rankings can be opposite. A VM whose few fails are severe has the better SLA and the worse KPI; a VM that fails often but barely has the worse SLA and the better KPI.
 - Timing:
   - KPI: leading indicator, 5-minute window, 20-second accuracy, more metrics and events. The start of troubleshooting, before a complaint.
   - SLA: lagging indicator, 30 days back, 5-minute accuracy. The SLI tracks it every 5 minutes. A breach means a penalty, usually a credit on the next bill, not a refund.
@@ -75,6 +83,7 @@
 
 ## Traps
 
+- "VM 01 has the better SLA, so it performed better" → the SLA counts fails, not how bad they were. Five intervals at 50% memory contention pass a Gold SLA that a hundred intervals at 1.01% breach; the KPI shows the 50% stall.
 - "The SLA is green, so there is no performance problem" → the SLA is a 30-day lagging average at 5-minute accuracy. The KPI, at 20-second accuracy over a moving window, shows the problem first.
 - "A KPI of 75% is a failure, since SLAs are above 99%" → KPIs are lower by design; 75% is acceptable. The two scales are not comparable.
 - "Put every KPI metric in the SLA" → more metrics make compliance harder. The SLA keeps the few contract metrics; the KPI covers the rest as early warning.

@@ -63,6 +63,7 @@ Order of checks, run step by step by the `flow` tool. Each sits next to its tech
 |---|---|
 | `project/plan.md` | Milestones, decisions, open work. Read first |
 | `project/author-questions.md` | Questions for the author |
+| `project/explainers/` | Worked examples for people (SLA vs KPI). Not for Agent E2; not indexed |
 | `project/design-thresholds.md` | Threshold catalog design: use cases, files, fields. Proposal |
 | `project/vocabulary.md`, `project/terms.md` | Writing vocabulary; repository terms |
 | `project/sources/` | Source documents. Read-only |
