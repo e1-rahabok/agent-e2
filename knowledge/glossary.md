@@ -130,19 +130,12 @@ related:
   - observability/naming-patterns
   - vsphere/architecture/resource-controls
 source:
-  document: Author statements (2026-11-02); vSphere API type names; VCF Operations object types
+  document: Knowledge base; vSphere API type names; VCF Operations object types
   path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
 corrections: []
 review_notes:
-  - "2026-11-09: duplicate rows merged, one row per term (Usage Disparity, VM pages, ESXi pages, KPI, Crown jewels, Health check, Troubleshooting); aliases in Also called; triage added as an alias of troubleshooting (author, Q133 c)."
-  - "2026-11-08 (author decision): Framework, Model, KPI, Health check and Troubleshooting defined; diagnosis and what to monitor replaced. Confusable pair Health check (Kubernetes probe): Claude's knowledge."
-  - "2026-11-07: Confusable pair Consistency vs compatibility check added from Part 1, Configuration Management. Proposal."
-  - "2026-11-07: Defined terms Slow time to Primary metric and the pairs Monitoring vs troubleshooting, Inventory vs configuration, Security vs compliance, Short-term vs long-term capacity added from Part 1, Your Private Cloud (Service Level Agreement to SP5 Framework: Process). Proposals; author to confirm. Present and future health grouping: Q102."
-  - "2026-11-07: Defined terms Symptom to Crown jewels and the pairs Alert vs insight, Metric vs property added from Part 1, Your Private Cloud (Overview, Purpose-Driven Architecture). Proposals; author to confirm."
-  - "2026-11-07 (author decision): knowledge/ is for Agent E2 only. Kept here: synonyms, defined terms, confusable pairs. Moved out: Core words and Words to avoid to project/vocabulary.md; Term distinctions to vsphere/architecture/resource-controls and vsphere/technology/storage/concepts/storage-layers (the OpenTelemetry note was already in observability/naming-patterns); Object types to catalog/objects.yaml. 'Book terminology' and 'Proposed terms' merged as 'Defined terms'."
-  - "Section 'Confusable pairs': drafted by Claude 2026-11-06 from the files in its File column, as block 3 of the agent up-front knowledge (harness/AGENT.md). Author to confirm (Q059)."
-  - "Section 'Defined terms': rows from Run Time onward were added 2026-11-02 from the book (CPU and Memory chapters) as proposals. Author to confirm each term and its preferred name. Class of service 'also called Tier' and the new Synonyms rows from Words to avoid are Claude's."
-  - "Moved 2026-11-02 from knowledge/vsphere/glossary/ to knowledge/glossary/: applies to all products. Scope set to vendor-neutral."
-  - "2026-11-04: merged glossary and glossary into this file (author decision); allowed tag values moved to tools/tags.yaml."
+  - "To check: section 'Confusable pairs': each pair against the files in its File column (Q059)."
+  - "To check: section 'Defined terms': each term and its preferred name, from Run Time onward."
+  - "To check: section 'Confusable pairs', row Health check (Kubernetes probe): against the Kubernetes documentation."
 status: draft
 ```

@@ -10,7 +10,7 @@
 - See `vsphere/architecture/kernel-worlds` for work charged to the VM rather than to a vCPU.
 
 ## Notes
-- The author states CPU Used is buggy. Do not build conclusions on it alone.
+- CPU Used is buggy. Do not build conclusions on it alone.
 
 ## Fair Share Scheduler
 - The scheduler charges each vCPU with Used, not Run, to keep relative fairness.

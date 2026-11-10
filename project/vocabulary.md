@@ -22,10 +22,10 @@ When the author corrects a wording mistake, add it here. A word users also say g
 
 | Avoid | Use instead | Why |
 |---|---|---|
-| utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand (author, Q067). |
-| KPI target | KPI baseline (standard expectation) | A target is not reached yet; a KPI is what is maintained as standard (author, Q067). |
-| code (as the actor: "code decides", "code loads") | Agent E2; name the Harness or the LLM only where the design depends on which part does the work | Code can mean the Agent or the Harness. Agent E2 is one program: LLM, Harness and Agent together (author, 2026-11-10). |
-| demand overcommit | overcommit (of allocation) | Only allocation can be overcommitted. Demand, usage and utilization are results, not settings (author, Q069). |
+| utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand. |
+| KPI target | KPI baseline (standard expectation) | A target is not reached yet; a KPI is what is maintained as standard. |
+| code (as the actor: "code decides", "code loads") | Agent E2; name the Harness or the LLM only where the design depends on which part does the work | Code can mean the Agent or the Harness. Agent E2 is one program: LLM, Harness and Agent together. |
+| demand overcommit | overcommit (of allocation) | Only allocation can be overcommitted. Demand, usage and utilization are results, not settings. |
 | VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
 | VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
 | virtual machine, thought of as a complete machine | virtual motherboard (VM) | A VM has no OS of its own. Author's book. |
@@ -36,11 +36,11 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | troubleshooting | Interpretation is the purpose of every metric file. |
-| foundations (as a folder) | a name for what the folder holds: observability, architecture | The content was neither basic (Level 100-200) nor lower stack; the word said nothing (author, 2026-11-08). |
-| triage (for a troubleshooting flow) | flow, troubleshooting flow | A troubleshooting file is a flow; one word (author, 2026-11-09). |
-| diagnosis, diagnose | troubleshooting | Diagnosis is a medical word for one step of troubleshooting; one word for the why (author, 2026-11-08). |
-| what to monitor | health check | Lazy term: what is monitored is health; the health check gives order and verdict (author, 2026-11-08). |
-| verification (of an object's state) | health check | A third word for the same thing (author, 2026-11-08). |
-| KPI (for capacity, risk, availability) | model | KPI is strictly performance: the P in KPI. Capacity, risk, availability and security are models (author, 2026-11-08). |
+| foundations (as a folder) | a name for what the folder holds: observability, architecture | The content was neither basic (Level 100-200) nor lower stack; the word said nothing. |
+| triage (for a troubleshooting flow) | flow, troubleshooting flow | A troubleshooting file is a flow; one word. |
+| diagnosis, diagnose | troubleshooting | Diagnosis is a medical word for one step of troubleshooting; one word for the why. |
+| what to monitor | health check | Lazy term: what is monitored is health; the health check gives order and verdict. |
+| verification (of an object's state) | health check | A third word for the same thing. |
+| KPI (for capacity, risk, availability) | model | KPI is strictly performance: the P in KPI. Capacity, risk, availability and security are models. |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
 | guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Keep the vendor term once in parentheses for retrieval. |

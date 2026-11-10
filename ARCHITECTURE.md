@@ -63,7 +63,7 @@ flowchart LR
 - Agent and harness split the agentic loop: the agent chooses, the harness executes and constrains. The harness hosts the agent; the agent is not a separate program.
 - Classic mode has no agent: the harness runs a fixed pipeline (one search, then one answer). Baseline mode is the model alone.
 - The model's own memory of vSphere metrics comes from public Internet text and repeats the misconceptions the knowledge base corrects.
-- The model is told to use the knowledge base first; where the knowledge base speaks, it wins; where it is silent, the model may use its own knowledge and must say so (author, Q038, 2026-11-05).
+- The model is told to use the knowledge base first; where the knowledge base speaks, it wins; where it is silent, the model may use its own knowledge and must say so.
 - The knowledge base does not answer by itself. It must be found, read and applied to the question.
 - The harness does not understand language. It searches, computes, enforces rules and checks answers.
 
@@ -108,14 +108,14 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |
 
 - Updates arrive as a bundle: knowledge, catalog, index, and optionally new weights; downloaded, or imported offline. No customer data is sent out.
-- Internet access (author, 2026-11-09): two harness tools, `fetch_url` (a link in the question) and `web_search` (only for current facts: bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted, trimmed to the relevant parts, placed after the knowledge-base files and checked against them. Rules: `MISSION.md`, section 5 (Ways to ask, Answer). Built in `harness/web.py` (2026-11-09):
+- Internet access: two harness tools, `fetch_url` (a link in the question) and `web_search` (only for current facts: bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted, trimmed to the relevant parts, placed after the knowledge-base files and checked against them. Rules: `MISSION.md`, section 5 (Ways to ask, Answer). Built in `harness/web.py` (2026-11-09):
   - Every URL in the question (up to 3) is read before the model starts, in both modes; the agent also has the tools `fetch_url` and `web_search`.
   - Search runs in classic mode only when the question asks for current facts (a pattern list: known bugs, builds, patches, release notes, maximums, defaults, renamed, end of support); the agent is told the same in the tool description.
   - The search query keeps product words, versions and KB numbers and drops tokens that look like the customer's system names (letters mixed with digits, dots or underscores), so names of VMs, hosts and datastores do not leave the site.
   - Private, loopback and link-local addresses are refused; an optional allow list restricts hosts.
   - HTML is reduced to text without scripts, styles, menus and footers, then trimmed to about 2,000 tokens most relevant to the question (BM25 over 120-word chunks).
   - The page block is labelled untrusted, states the source rule by type of fact, and tells the model to ignore instructions in a page.
-  - Search backend: SearXNG (author, 2026-11-09), run by the customer next to Agent E2, reached through `web.search_url`. Search returns only vendor documentation (`web.search_hosts`: techdocs.broadcom.com, knowledge.broadcom.com, docs.vmware.com, developer.broadcom.com); the query carries `site:` filters too. A page the user links can be any public host unless the customer sets `web.allow_hosts`.
+  - Search backend: SearXNG, run by the customer next to Agent E2, reached through `web.search_url`. Search returns only vendor documentation (`web.search_hosts`: techdocs.broadcom.com, knowledge.broadcom.com, docs.vmware.com, developer.broadcom.com); the query carries `site:` filters too. A page the user links can be any public host unless the customer sets `web.allow_hosts`.
   - Benchmark backend (2026-11-09): Vercel AI Gateway's Perplexity search (`web.search_backend: gateway`), with the same gateway key the runner uses and the same vendor-site filter; about USD 0.006 a search. A small model lists the result URLs; the harness fetches and trims the pages itself, so the benchmark tests the same page handling as a customer site. Customer sites use SearXNG (`search_backend: searxng`).
   - Enterprise approval, in order of what a security team accepts most easily:
     1. Fetch only, from vendor domains. Many VCF sites already allow outbound HTTPS to Broadcom for the online depot and patches, so allowing techdocs.broadcom.com and knowledge.broadcom.com through the same proxy is a small change. No search.
@@ -140,19 +140,19 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 7. Status
-- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, the offline bundle. Screenshots are read in 1.0 (author, 2026-11-06); the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
+- Milestones and what is built: `project/plan.md`. Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, the offline bundle. Screenshots are read in 1.0; the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
 
 ## 8. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
 - `harness/` implements the steps below (`harness/kb.py`, `harness/retrieval.py`, `harness/modes.py`, `harness/agent.py`). They are also the contract for any other RAG stack.
 
 ### Retrieval approach
-- Retrieval, not fine-tuning, supplies the facts: the knowledge is not on the Internet; it changes often (author answers); answers must cite files; small models memorise facts poorly.
+- Retrieval, not fine-tuning, supplies the facts: the knowledge is not on the Internet; it changes often; answers must cite files; small models memorise facts poorly.
 - Optional later: a light fine-tune (LoRA) for style and terminology only. Facts stay in retrieval.
 - Not used: long-context stuffing (the whole knowledge base is about 125K tokens: too much for a small model and too slow per question); a separate graph database (the metadata links already form the graph).
 
 ### No fast first-stage model
-- Not used: a second, fast model in front of the reasoning model (a "System 1" classifier). Decided with the author, 2026-11-08.
+- Not used: a second, fast model in front of the reasoning model (a "System 1" classifier). Decided 2026-11-08.
 - Manual use (an admin asks, with screenshots or CSV): requests are few and a person waits for each. Routing to the right file and flow is done by retrieval and the flow index; CSV files are parsed by code.
 - Automated use (a daily health check over VCF Operations): tens of millions of metrics cannot pass through any model. The fast stage is code: pull KPI and model results, score them against the threshold catalog, keep the objects in red or orange, and group them by what they share. The reasoning model then reads only those findings with their flows. Code is exact and repeatable, traceable to a threshold row, and uses no GPU memory.
 
@@ -178,7 +178,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.
 
 ### Answer
-- Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where they differ, the knowledge base wins (author, Q038, 2026-11-05). Prefer mechanism and reason over a definition.
+- Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where they differ, the knowledge base wins. Prefer mechanism and reason over a definition.
 - Cite each file `id` used.
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
 - Use terms from `knowledge/glossary.md`: preferred names, defined terms, confusable pairs.

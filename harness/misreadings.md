@@ -1,6 +1,6 @@
 # Level 300 misreadings
 
-Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a reading that public Internet text teaches, corrected in one sentence, with the knowledge file that holds the mechanism. Not knowledge: not indexed, so search never returns this summary instead of the file. Built by `harness/primer.py`. Author to review.
+Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a reading that public Internet text teaches, corrected in one sentence, with the knowledge file that holds the mechanism. Not knowledge: not indexed, so search never returns this summary instead of the file. Built by `harness/primer.py`.
 
 ## Misreadings
 - A VM is a virtual motherboard; the Guest OS is a separate layer. A counter belongs to the layer that produces it, not to the object that stores it. See `vsphere/architecture/vm-vs-guest-os`.

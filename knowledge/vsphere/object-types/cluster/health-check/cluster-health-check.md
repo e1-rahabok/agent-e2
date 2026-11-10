@@ -27,7 +27,7 @@ flowchart TD
 - One KPI and two models: Cluster Performance (KPI), Cluster Consumption (capacity model), Cluster Risk (risk model). Read them separately.
 
 ## Checks, in order
-Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
+Order: four questions, and within each the what (facts) before the why (explanation):
 - Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
 - Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
 - Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.

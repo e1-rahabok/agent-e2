@@ -63,7 +63,7 @@
 - Levels 3 and 4 raise vCenter load significantly. If vpxd cannot write statistics to the database fast enough, its memory grows until it runs out of memory and crashes. After raising a level, watch the vpxd process size.
 
 ## Level 1 counters per object (vCenter 9.1 API)
-What the vCenter 9.1 API offered per object type in one inventory (author's export). This is the history that exists when nobody raised the statistics level.
+What the vCenter 9.1 API offered per object type in one inventory (an export of the API). This is the history that exists when nobody raised the statistics level.
 
 | Object | Counters |
 |---|---|

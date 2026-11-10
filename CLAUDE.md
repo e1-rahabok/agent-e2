@@ -25,8 +25,9 @@ How Claude works in this repository. Read at the start of every session. The rul
 - Record the version and revision in `source.document`, e.g. "Performance Best Practices for VMware vSphere 9.1 (revision 20260624)".
 
 ## Facts and sources
-- Allowed fact sources: the author's book, the author's answers, official docs, Claude's own knowledge.
-- Record any fact not from the book in `review_notes`, naming the section, until the author confirms.
+- The knowledge base is the author's knowledge. Claude brings knowledge from official documents and its own knowledge; the author chooses what goes in.
+- No who-said-it tags (author, book, Claude) anywhere: not in knowledge text, metadata, catalogs or project documents. Agent E2 uses only `source` (knowledge base, or a vendor document with its version: it can go stale, and the newer official document wins) and `status` (draft or reviewed).
+- `review_notes` hold only what is still to check: section, what, and the URL or document to check against. A settled item is deleted; git keeps the history.
 - Before asking the author, look up official sources: Broadcom TechDocs (techdocs.broadcom.com), VMware docs (docs.vmware.com, www.vmware.com/docs), Broadcom KB (knowledge.broadcom.com), Broadcom developer API reference (developer.broadcom.com). PDFs: fetch them, then read the saved file with page ranges. Put the source URL in `review_notes`.
 - Ask the author only when the source text is ambiguous, contradicts official docs or the knowledge base, or the answer needs field experience. Do not ask the author to confirm virtualization basics.
 - No invented thresholds. Keep every `corrections` entry until the source document is updated. A rule row in `knowledge/catalog/thresholds-performance.yaml` or `thresholds-capacity.yaml` quotes its knowledge file: when that text changes, update the row.

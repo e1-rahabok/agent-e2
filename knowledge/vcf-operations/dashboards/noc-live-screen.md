@@ -40,7 +40,7 @@
 ## Auto-rotate
 - Auto-refresh is not enough for the amount of content. Auto-rotate shows more without scrolling and stops the boredom of one screen for hours.
 - Rotate in a logical order and explain it to the viewers; it can overwhelm.
-- Order in the author's design, about 60 seconds per screen: inventory, availability, performance, security, compliance, configuration, then back to inventory.
+- Recommended order, about 60 seconds per screen: inventory, availability, performance, security, compliance, configuration, then back to inventory.
 ![Auto-rotate cycle: Inventory → Availability → Performance → Security → Compliance → Configuration → Inventory; each screen about 60 seconds to prevent boredom from a static screen](images/noc-live-screen-auto-rotate-order-diagram.png)
 - To keep the screen running: disable the Guest OS screen saver and sleep of the display PC, and the VCF Operations user session time-out.
 

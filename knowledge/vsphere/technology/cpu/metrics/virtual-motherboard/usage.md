@@ -14,7 +14,7 @@
 
 ## Throughput
 - Usage (MHz) counts cycles completed. Read it as throughput.
-- The author's name for this metric: CPU Throughput.
+- A clearer name for this metric: CPU Throughput.
 - It includes frequency (Turbo, power management) and Hyper-Threading efficiency.
 - It includes IO processing done by the hypervisor on behalf of the VM. Significant for heavy databases and NSX Edge.
 - It is a performance metric, not a capacity metric: 100% cannot be defined.

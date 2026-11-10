@@ -9,7 +9,7 @@
 - Performance means contention: the VM did not get the CPU, memory, disk or network service it demanded. VM Performance (%) is a KPI built from contention counters (`vsphere/object-types/vm/kpis/vm-performance`, `sp5-framework/performance/performance-kpi-design`).
 - Contention first and colour coded; utilization second, as context, not colour coded; then the configuration that can affect performance (`vcf-operations/dashboards/performance-dashboards`).
 - Counters are VCF Operations metrics on the VM object (VM CPU Ready, Co-stop, Memory Contention, Disk Latency), reported every 5 minutes as an average and as the 20-second peak (`vcf-operations/features/peak-20-second-metrics`). They are not esxtop fields.
-- Widget detail: to be written after the author's dashboard overhaul.
+- Widget detail: to be written after the dashboard overhaul.
 
 ## Traps
 - "VM Contention is the dashboard for VM contention" → it is deprecated in 9.1; VM Performance supersedes it. The documentation lags the product.

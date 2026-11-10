@@ -16,7 +16,7 @@
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 
 ## Dual track: proactive first, reactive as fallback
-- Two processes: reactive and proactive (author, 2026-11-09).
+- Two processes: reactive and proactive.
 - Reactive: starts from a complaint or an alert. A manual process for three types of problem, each with its own order of checks, the what before the why:
   - Down: log, saturation, configuration, known bug.
   - Slow: contention, consumption, configuration, known bug, log. Read the KPI, not the SLA.
@@ -51,7 +51,7 @@
   - daily check at 09:00: about 5 minutes when there is no problem; a problem found makes it longer, as long as that problem needs;
   - weekly check: about 1 hour;
   - monthly review: about 1 day.
-![00:00-24:00 timeline. Reactive: alerts at random times. Proactive: NOC live screen always on; daily check at 09:00 (the image says 10 minutes; the author's length is about 5 minutes when there is no problem); weekly check (1 hour); monthly review (1 day)](images/operations-24-hour-reactive-vs-proactive-timeline.png)
+![00:00-24:00 timeline. Reactive: alerts at random times. Proactive: NOC live screen always on; daily check at 09:00 (the image says 10 minutes; it takes about 5 minutes when there is no problem); weekly check (1 hour); monthly review (1 day)](images/operations-24-hour-reactive-vs-proactive-timeline.png)
 - Morning sequence:
   - 08:00-09:00: an automatic health optimization script runs and flags VCF components it cannot remediate.
   - 09:00-09:30: a human expert reviews the script outcome and the daily dashboard, including the alert trend.

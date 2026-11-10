@@ -76,7 +76,7 @@ flowchart LR
 - Reading the diagram: 100 packets arriving at a VM count as 100 RX at the driver, 100 ingress at the firewall, 100 incoming on a dashboard. The traffic in the other direction is TX, egress and outgoing.
 
 ### Book diagrams (superseded)
-- The two book diagrams below show the earlier view that a VM has no ingress traffic. The author corrected it (2026-11-04): use the table above.
+- The two book diagrams below show the earlier view that a VM has no ingress traffic. That view is wrong: use the table above.
 ![Superseded book diagram: ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
 ![Superseded book diagram: distributed switch direction from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 

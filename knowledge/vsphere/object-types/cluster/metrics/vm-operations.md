@@ -27,7 +27,7 @@
 | Change of location | VM host change count, VM datastore change count | `vmop.numChangeHost`, `vmop.numChangeDS` | Powered-off and suspended VMs. |
 
 - vCenter stores all 20 counters on the cluster and on the datacenter, at level 1 (rollup latest, stat type absolute).
-- Whether vCenter accumulates them while VCF Operations shows a rate is author question Q052.
+- Whether vCenter accumulates them while VCF Operations shows a rate is not settled.
 
 ## Use
 - Compare dynamics with expectations. In production these numbers should be low.

@@ -49,7 +49,7 @@
 
 ## CPU Throughput
 - Frequency and efficiency have the same final effect: they change the productive cycles attributed to a vCPU thread.
-- The author's name for this metric: CPU Throughput.
+- A clearer name for this metric: CPU Throughput.
 - Reason: "usage" and "used" are general English words. They do not say what is counted.
 - A CPU is always running something. Cycles spent waiting for memory or disk are wasted from the task's point of view.
 - Throughput means useful cycles, not the idle loop.

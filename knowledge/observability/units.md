@@ -12,7 +12,7 @@
 - No single standard. Google uses 1000 for bytes and bits alike; 1 byte = 8 bits.
 - Storage vendors sell decimal capacity; Windows shows binary. A 128 GB drive shows about 116 GB in Windows: 9% less.
 - Windows: 1024 for storage.
-- VCF Operations: 1024 for storage, network and memory; 1000 for CPU (author's tests). It labels binary values KB, MB, GB, not KiB, MiB, GiB.
+- VCF Operations: 1024 for storage, network and memory; 1000 for CPU (tested). It labels binary values KB, MB, GB, not KiB, MiB, GiB.
 - vCenter counters: KB = 1,024 bytes; kb (kilobit) = 1,000 bits (`vsphere/tools/vsphere-client/vcenter-statistics`, section Units).
 - Binary names (IEC): kibi, mebi, gibi, tebi, pebi; symbols Ki, Mi, Gi. 1 KiB = 1,024 bytes = 1.024 KB. 1 GiB = 1,073,741,824 bytes.
 

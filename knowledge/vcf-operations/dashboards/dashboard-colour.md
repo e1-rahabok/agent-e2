@@ -2,7 +2,7 @@
 
 ## Colour carries meaning
 - Colour is read faster than numbers when it has a meaning. Operations often only need good or bad before the raw value, and colour scales across hundreds of numbers in a large table.
-- Colour sets in the author's dashboards:
+- Colour sets in the recommended dashboards:
   - Green, yellow, orange, red: green is good and gets worse towards red. Performance and compliance.
   - Dark grey, then green to red: capacity. Dark grey is wastage (unused), which is a bigger issue than over-utilization and can also hurt performance. In a performance dashboard, consider red for oversized, since oversizing hurts performance.
   - Blue: neutral, where the value has no good or bad.

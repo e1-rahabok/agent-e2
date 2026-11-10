@@ -140,7 +140,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 
 ## Used per thread
 - Used splits a core's time when both threads run: 10,000 ms each, not 20,000.
-- ESXi considers Hyper-Threading to deliver 1.25x. The author finds 12,500 ms per thread easier to read.
+- ESXi considers Hyper-Threading to deliver 1.25x. 12,500 ms per thread is easier to read.
 - At ESXi level the split is normalized back.
 ![Utilization and Used per thread for 6 scenarios on a 2-core host](../images/esxi-cpu-utilization-vs-used-per-thread-6-scenarios-2-core-host.png)
 

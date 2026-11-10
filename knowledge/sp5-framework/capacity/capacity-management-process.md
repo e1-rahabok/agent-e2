@@ -65,7 +65,7 @@ Capacity planning starts from a business plan: which class of service serves whi
   - security risk: Internet-facing and internal VMs do not share a network.
 - Scalability test of a revenue application cannot run in production. Option: a DR cluster with three purposes (DR, development, test), sized larger. Otherwise burst to public cloud: the load is temporary.
 - DR (for example Site Recovery Manager) adds demand twice: the DR test and the real DR.
-- Inputs that split clusters (author's list): OS license (Windows, RHEL), environment (production, test/dev), network (NSX Edge, DMZ, internal), location, licensed software (Oracle, SQL Server), service tier (Tier 1, 2, 3), function (management, NSX Edge).
+- Inputs that split clusters: OS license (Windows, RHEL), environment (production, test/dev), network (NSX Edge, DMZ, internal), location, licensed software (Oracle, SQL Server), service tier (Tier 1, 2, 3), function (management, NSX Edge).
 - The plan changes yearly: what worked last year may not work next year.
 
 ## Cluster is the unit of capacity

@@ -52,7 +52,7 @@
 
 ## Interaction and navigation
 - Interaction links widgets within a dashboard. Navigation links dashboards. Keep both consistent so they stay simple.
-- Draw the information flow first in any drawing tool (the author uses PowerPoint).
+- Draw the information flow first in any drawing tool, such as PowerPoint.
 - Prefer symmetrical interaction: for example, 4 heat maps each driving one of 4 line charts. It looks complex on a screenshot and feels natural in use.
 - Progressive disclosure limits information overload and keeps the page fast. The browser session remembers the last selection.
 

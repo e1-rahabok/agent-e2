@@ -3,7 +3,7 @@
 ## What it is
 - One score per vSphere cluster, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
-- Not built into VCF Operations: it is a metric of the author's vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
+- Not built into VCF Operations: it is a metric of the vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
 - Use: watch many clusters at once; when the score drops, open the 9 sub-metrics of that cluster.
 - Leading indicator of how close the cluster is to contention: `vsphere/object-types/cluster/models/cluster-risk`. Ballooning and swapping are scored there, not here.
 

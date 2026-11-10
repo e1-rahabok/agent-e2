@@ -70,7 +70,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 ### Principles
 1. The AI is the reader; humans review. Content is facts, mechanisms, formulas and reasons; no text aimed at human motivation or narrative.
 2. Mechanism before counter. A metric is a byproduct of the architecture; a metric file points back to the concepts it follows from.
-3. Technology before object. A technology (CPU, memory, storage, network) works across Guest OS, VM, ESXi and cluster: master how it works, then apply it to each object (author, 2026-11-06).
+3. Technology before object. A technology (CPU, memory, storage, network) works across Guest OS, VM, ESXi and cluster: master how it works, then apply it to each object.
 4. Nuance is explicit. Same name with a different meaning, and the reverse, is stored as links and traps, not buried in prose.
 5. Vantage points are never mixed. One object type and one layer per metric file; Guest OS is its own layer and folder.
 6. Traceable to source. Every file records its source document and heading path.
@@ -95,7 +95,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
 | Images with text twins | The author's diagrams and charts | `images/` folders |
 | Glossary | The agent's vocabulary: synonyms, defined terms, confusable pairs. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
-| Provenance | Source, review notes, corrections, author answers | metadata, `project/author-questions.md` |
+| Provenance | Source document and version, what is still to check, status | metadata |
 | Rules as code | Architecture and writing rules | `project/tools/lint.py`, `project/tools/tags.yaml` |
 | Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` |
 
@@ -225,24 +225,24 @@ knowledge/                           # what the model reads (indexed)
   - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
   - multi-technology content follows the object route: `vsphere/object-types/<object>/`;
   - what VCF Operations computes: `vcf-operations/`;
-  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `sp5-framework/<pillar>/`; content across pillars: `sp5-framework/concepts/`, so the framework reads as one unit (author, 2026-11-08).
+  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `sp5-framework/<pillar>/`; content across pillars: `sp5-framework/concepts/`, so the framework reads as one unit.
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
   - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order availability, performance, security, capacity, with configuration as the drill-down (section 10), starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
-  - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage (author, 2026-11-08). Content about a managed object lives with that object, even when VCF Operations computes it:
+  - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage. Content about a managed object lives with that object, even when VCF Operations computes it:
     - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
     - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
-    - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS (author, 2026-11-09). `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
+    - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS. `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
   - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), and later its own sizing, health and performance troubleshooting. See `vcf-operations/concepts/vcf-operations-role`.
-  - A concept is a general idea; a file that documents an actual implementation is not a concept (author, 2026-11-09). In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the general idea in `observability/` or `sp5-framework/concepts/`, the implementation in `vcf-operations/` (example: `observability/real-time-metrics` and `vcf-operations/features/real-time-metrics`).
-  - Alerts have two parts (author, 2026-11-09). Top down, the alert architecture across products (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/alerts/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
+  - A concept is a general idea; a file that documents an actual implementation is not a concept. In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the general idea in `observability/` or `sp5-framework/concepts/`, the implementation in `vcf-operations/` (example: `observability/real-time-metrics` and `vcf-operations/features/real-time-metrics`).
+  - Alerts have two parts. Top down, the alert architecture across products (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/alerts/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `sp5-framework/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
   - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (VM slow, capacity decisions) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
-- Three levels of general content, different scope (author, 2026-11-08: names say what the content is, not that it is basic):
+- Three levels of general content, different scope (names say what the content is, not that it is basic):
   - `knowledge/observability/`: how to read any metric: true across VCF 9 components and the Guest OS.
   - `knowledge/sp5-framework/`: how operations management, the SP5 Framework, uses metrics, across products.
   - `knowledge/vsphere/architecture/`: vSphere design that its metrics follow from; true only in vSphere.
@@ -307,7 +307,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `retriever_guide` | See section 7. |
 | `scope` | vendor-neutral (applies across VCF 9 components), sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
-| `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework (author, Q091 and 2026-11-08). Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
+| `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework. Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
 | `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
 | `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
 | `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
@@ -319,11 +319,11 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `related` | Ids to retrieve together. |
 | `images` | One entry per image linked in the body. Fields: `path` (as linked), `product`, `object`, `metric` (list of metric names shown) and/or `topic` (concept shown), `image_type` (diagram, table, timeline, distribution, scatter, screenshot), `sample` (optional: fleet size and period). The image's own tags: they can differ from the file's, e.g. an ESXi chart inside a cluster concept. |
 | `source.document` / `source.path` | Source document (with version and revision) and heading path or pages. |
-| `corrections` | Author facts not yet in the uploaded source document. Each entry names the section it affects. |
-| `review_notes` | Open questions, source URLs, and facts from Claude's own knowledge (with section names). |
-| `status` | draft (AI-extracted, not reviewed) or reviewed (author approved). |
+| `corrections` | Facts that differ from the source document named in `source.document`. Each entry names the section it affects. |
+| `review_notes` | Only what is still to check: section, what, and the URL or document to check against. No who-said-it tags. A settled item is deleted. |
+| `status` | draft (not reviewed) or reviewed. Agent E2 says so when an answer depends on a draft file. |
 
-- Audit information (corrections, Claude's own knowledge, review state) lives only in the metadata block. Body text and headings carry no audit markers.
+- Audit information (corrections, what is still to check, review state) lives only in the metadata block. Body text and headings carry no audit markers and no who-said-it tags: no "", no "the author states".
 
 ## 9. Thresholds
 - A threshold has more parts than a number:
@@ -334,29 +334,29 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 
 - Sample interval: the same workload reads higher at 2 seconds (esxtop) than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on 20-second peaks cannot be applied to a 5-minute chart. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks) although it is the less serious signal.
 - Instance reading: for a metric with instances (per vCPU, per disk), the worst instance is always at least the object value. The worst vCPU of a 64-vCPU VM can be far above the VM's normalized Ready. A band must say which reading it applies to, as "Peak CPU Ready among any vCPU" does.
-- Where thresholds live: two files, one place (author, 2026-11-06).
-  - `knowledge/catalog/thresholds-performance.yaml`: contention and health. Bands green, yellow, orange, red. Two readings: 20-second peak (`20s`) and 5-minute average (`5m`). Author rule: a 20-second threshold is generally about 4x the 5-minute one, because a spike does not sustain for 300 seconds. The rule is stated, not used to fill a missing value.
+- Where thresholds live: two files, one place.
+  - `knowledge/catalog/thresholds-performance.yaml`: contention and health. Bands green, yellow, orange, red. Two readings: 20-second peak (`20s`) and 5-minute average (`5m`). Rule: a 20-second threshold is generally about 4x the 5-minute one, because a spike does not sustain for 300 seconds. The rule is stated, not used to fill a missing value.
   - `knowledge/catalog/thresholds-capacity.yaml`: utilization, saturation, reservation, allocation, rightsizing. Five bands: grey (below green: wastage), green, yellow, orange, red.
   - Each row is a rule (above X means Y, with a quote from its file) or a band set. Ids are unique across both files.
   - A KPI file keeps its colour-band table for the reader. Lint checks that the table and the band rows match, both ways.
   - The harness loads both files into its catalog at start-up (YAML is the source; the in-memory SQLite is a copy).
   - Thresholds still written only in prose: `python3 project/tools/threshold_inventory.py` lists them. Each gets a row with its source, or the number goes.
-- No invented thresholds: a threshold goes in only with a source (book, author, official documentation), quoted.
+- No invented thresholds: a threshold goes in only with a source, quoted. Row field `source`: `knowledge-base`, or a vendor document with its version (`vsphere-9.1-docs`, `performance-best-practices-9.1`, `microsoft`), because vendor values can go stale and the newer official document wins.
 - The rule for the model is in `observability/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 
 ## 10. Health checks and troubleshooting flows
 - Location: section 5, Placement rules.
-- Vocabulary (author, 2026-11-08):
+- Vocabulary:
   - Framework: how IT operations are managed (SP5). `sp5-framework/concepts/overview`.
   - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `sp5-framework/capacity/`.
   - KPI: a model of performance only (the P in KPI). Files in `vsphere/object-types/<object>/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
   - Health check: the what. Is the object healthy, at risk, or wasteful? Read in the order of `sp5-framework/concepts/health-risk-efficiency`. Monitoring belongs here.
-  - Troubleshooting: the why, in the reactive process. It starts from a complaint, an alert, or a failed health check step. Two types only: down (availability) and slow (performance). A security breach gets a forensic investigation, not troubleshooting. Each type uses the same order of checks as its pillar in the health check (author, 2026-11-09).
+  - Troubleshooting: the why, in the reactive process. It starts from a complaint, an alert, or a failed health check step. Two types only: down (availability) and slow (performance). A security breach gets a forensic investigation, not troubleshooting. Each type uses the same order of checks as its pillar in the health check.
   - Two processes: reactive (troubleshooting, forensic investigation) and proactive (the health check, daily, with weekly and monthly analysis). The health check is a superset of reactive, because nobody knows yet whether there is a problem.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
-- Order (author, 2026-11-09): is it up (availability: log, saturation, configuration, known bug), is it fast (performance: contention, consumption, configuration, known bug, log), is it secure (security: configuration, known bug, log), will it be enough (capacity: consumption, configuration, contention, inventory). Within each pillar the what comes before the why: establish the fact, then explain it; do not jump to a conclusion. Known bugs are checked per pillar, because a bug can cause an outage, slowness or a security loophole. Efficiency is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
-- The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2 (author, Q133).
+- Order: is it up (availability: log, saturation, configuration, known bug), is it fast (performance: contention, consumption, configuration, known bug, log), is it secure (security: configuration, known bug, log), will it be enough (capacity: consumption, configuration, contention, inventory). Within each pillar the what comes before the why: establish the fact, then explain it; do not jump to a conclusion. Known bugs are checked per pillar, because a bug can cause an outage, slowness or a security loophole. Efficiency is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
+- The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2.
 - Reactive: after an alert, an incident (outage, breach) or a complaint. Proactive: insight, typically anomaly detection, read with business context.
 - One flow per file. Template: `project/templates/health-check.md` or `project/templates/troubleshooting.md`. Order: symptom, Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
@@ -374,7 +374,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - One fact per bullet or table row. A mistake should sit on one line.
 - One English word per concept. The agent's vocabulary: `knowledge/glossary.md`. Writing vocabulary and words to avoid: `project/vocabulary.md`. Repository terms: `project/terms.md`.
 - State mechanism and reason, not only the definition.
-- Facts may come from the source, the author, official docs, or Claude's own knowledge. Record any fact not in the source document in `review_notes` with its section. No generic filler.
+- Facts may come from the source, official docs, or Claude's own knowledge; the author chooses what goes in. A fact still to check gets a `review_notes` line with its section and the URL to check against. No generic filler.
 - No text aimed at human motivation.
 - No AI-speak. Plain words, short sentences, the fact itself:
   - no filler words or stock phrases of generated text;
@@ -404,7 +404,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check and merges.
 
 ## 12. Images
-- `knowledge/` is for Agent E2 only (author, 2026-11-07). An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
+- `knowledge/` is for Agent E2 only. An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
 - The agent reads the text twin and the alt text, not the pixels: `get_images` returns image records, never the image itself.
 - Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains. The facts an image proves go in the text.
 - Images live in the `images/` folder of the folder that uses them (for example `vsphere/technology/<tech>/images/`, `vsphere/object-types/cluster/images/`, `guest-os/<technology>/images/`).
@@ -428,7 +428,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 ## 14. From source to reviewed file
 1. Extract: the book one Heading 3 at a time, then official documentation for the current release, checking the document revision each time. Files start as `status: draft`.
 2. Structure: write each fact in the form that fits it (section 2); add tags, links and traps.
-3. Ask: every conflict or gap becomes an author question in `project/author-questions.md`, with a verbatim search string. The author's answer is applied, marked in the file's review notes, and kept as a correction until the book is updated. Extraction continues; it does not wait for answers.
+3. Ask: every conflict or gap becomes an author question in `project/author-questions.md`, with a verbatim search string. The answer is applied to the file; the review note is deleted. Extraction continues; it does not wait for answers.
 4. Check: `python3 project/tools/lint.py` must pass before merge (folders, tags, layers, links, images, quotes, tables, phrases). Unit tests check the tools.
 5. Prove: the retrieval check confirms that the right files are found; the benchmark runs the questions against the whole system; every wrong answer is traced to knowledge, retrieval or model.
 6. Review: the author reviews each file, answers `review_notes`, fixes errors and sets `status: reviewed`. Release content is final and curated: every file reviewed.

@@ -25,7 +25,7 @@ Cluster SLI (%) = 100 - ( (Sum [VM] Performance|Number of KPIs Breached + Sum [P
 ```
 - Normalized by actual breaches: 1 VM with 4 breaches scores the same as 4 VMs with 1 breach each.
 - One threshold set for all classes of service.
-- SLA, SLI and KPI differences: the author's VMware Operations Transformation book, Part 1. Implemented with VCF Operations super metrics and dashboards.
+- SLA, SLI and KPI differences: `sp5-framework/performance/kpi-vs-sla`. Implemented with VCF Operations super metrics and dashboards.
 
 ## Traps
 - "Cluster SLA = average VM SLA" → it is the share of VMs failing.

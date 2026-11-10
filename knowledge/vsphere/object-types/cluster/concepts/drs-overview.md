@@ -4,7 +4,7 @@
 - vCenter 9.0 and later: Broadcom KB 312147 says deactivating vCLS does not impact DRS or HA.
 - The 9.0 performance document (p. 76) says DRS requires the vCLS VMs and vCenter Server. KB 312147 overrides that statement for 9.0 and later.
 - The 9.1 performance document has no vCLS statement in its DRS pages (76-79). This matches the deprecation.
-- vCenter 9.1: vCLS is deprecated (author statement). Third-party sources say it is off by default and cannot be re-enabled. Not verified.
+- vCenter 9.1: vCLS is deprecated. Third-party sources say it is off by default and cannot be re-enabled.
 - See `vsphere/object-types/cluster/concepts/vcls`.
 
 ## Cluster health indicators

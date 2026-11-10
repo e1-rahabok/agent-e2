@@ -5,10 +5,10 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 
 ## 1. Mission
 - Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available. It beats frontier models on monitoring and troubleshooting because its agent, harness and knowledge base are purpose-built. That is how a 32B-parameter model beats far larger models.
-- That is the 1.0 minimum (author, 2026-11-09). Anything else is not a release blocker; it goes to a later release.
+- That is the 1.0 minimum. Anything else is not a release blocker; it goes to a later release.
 - An open-weight model, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than the best frontier model.
 - Locally means on the customer's own infrastructure: no cloud AI service, and no customer data (questions, screenshots, files) leaving the customer network. No per-token fee.
-- Internet access (author, 2026-11-09): customers keep their data in, but their users browse the Internet for knowledge, so a question can include a URL. Agent E2 works without Internet access; public knowledge from the Internet is an addition, never a requirement.
+- Internet access: customers keep their data in, but their users browse the Internet for knowledge, so a question can include a URL. Agent E2 works without Internet access; public knowledge from the Internet is an addition, never a requirement.
 - Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer. Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
 - Release gate: final score at least 85% on the benchmark, each question scored on its worst of 5 runs. Target: 99%. Confident-wrong rate near 0.
 
@@ -69,20 +69,20 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | # | Mode | Input | What the system does | Release |
 |---|---|---|---|---|
 | 1 | Text | A typed question | Retrieve, use tools, answer with citations | 1.0 |
-| 2 | Screenshots | One or more images: vCenter charts, esxtop, VCF Operations | Recognise the screen; read metric names, values, units, time range and interval; show what was read for confirmation; answer from the knowledge base | 1.0 (author, 2026-11-06); the screen library is 1.1 |
+| 2 | Screenshots | One or more images: vCenter charts, esxtop, VCF Operations | Recognise the screen; read metric names, values, units, time range and interval; show what was read for confirmation; answer from the knowledge base | 1.0; the screen library is 1.1 |
 | 3 | Data files | esxtop batch CSV, vCenter chart export, VCF Operations export | Parse with code, not the model: peak, 95th percentile, time of peak, per object; feed exact values to the answer | 1.2 |
 | 4 | Guided troubleshooting | A symptom ("VM is slow") | Run the matching flow one step at a time; ask for the next value; show the step and the branch taken | 1.0 (flow tool exists) |
 | 5 | Live instance | Read-only connection to VCF Operations | Read metrics of a named object; fill the flow steps from live values | After 1.0 |
-| 6 | URL | A link in the question: KB article, documentation page, blog, community thread | Fetch the page, keep only the parts relevant to the question, check them against the knowledge base, say where the page is right and where it is wrong | 1.0 (author, 2026-11-09) |
+| 6 | URL | A link in the question: KB article, documentation page, blog, community thread | Fetch the page, keep only the parts relevant to the question, check them against the knowledge base, say where the page is right and where it is wrong | 1.0 |
 
-- Clarifying questions (author, 2026-11-09): at most one round per question, then answer.
+- Clarifying questions: at most one round per question, then answer.
   - A question that makes sense is answered without asking why.
   - Ask when the question is odd or illogical: a wrong premise usually shows a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
   - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
   - Otherwise answer and state the assumption first.
 - Screenshots: several per question, compared with each other; the chart interval and rollup are read (a 1-day chart hides 20-second peaks); values are shown back before reasoning; images stay on site.
 - Data files are more exact than screenshots and need no screen reading; recommended when the user can export.
-- URLs and web search (author, 2026-11-09):
+- URLs and web search:
   - A page the user gives is evidence to check, not a source to follow. A small model tends to repeat text the user supplied, so the harness labels it and the answer states where the page agrees with the knowledge base and where it does not, and why. Level 300 errors in vendor KB articles and blogs are common; correcting them is where Agent E2 beats a frontier model, which tends to agree with the page.
   - Web search runs only when the question needs current facts: a known bug or defect, a symptom after an upgrade, a version, build or patch level, a configuration maximum or default of a release, a renamed product or feature. Known bugs are part of every configuration check (Q104), and the knowledge base is always behind on them. Other questions are answered from the knowledge base without search.
   - Trim: a page or search result is chunked and only the relevant parts (a few hundred to about 2,000 tokens) enter the context, after the knowledge-base files, so the 16K budget keeps the knowledge base.
@@ -92,10 +92,10 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - Direct answer first, then the mechanism and the reason, then what to check next.
 - Name the object for every metric (VM CPU Ready, not CPU Ready). State units and the time interval.
 - Thresholds only with their source. When the book and the documentation differ, show both and say which applies.
-- Which source wins depends on the type of fact (author, 2026-11-09):
+- Which source wins depends on the type of fact:
   - mechanism and interpretation (what a counter means, which metric to read, why a rule of thumb fails): the knowledge base wins over vendor pages, KB articles and blogs;
   - version-specific fact (defaults, configuration maximums, new or renamed counters, builds, bug fixes, scheduler changes): the newer official document wins when it is dated after the knowledge file's source; the file is flagged for review.
-  - The product can be newer than its own documentation: the VCF Operations 9.1 manuals are out of date in places (author, 2026-11-09; example: the VM Contention dashboard, deprecated in the product). A knowledge file that records the product's behaviour from the author wins over the manual.
+  - The product can be newer than its own documentation: the VCF Operations 9.1 manuals are out of date in places (example: the VM Contention dashboard, deprecated in the product). A knowledge file that records the product's behaviour wins over the manual.
 - Exact values come from the catalog and the calculator, and are shown as such.
 - Unsure is an answer: "The knowledge base does not settle this; here is what it does say."
 - Every fact cited. Linked files shown with their link type, so the same-name trap guard is visible.
@@ -112,9 +112,9 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | Privacy | Questions, screenshots and files stay on site; retention configurable. |
 | Users | Enterprise: SSO, roles, audit log. Several users: vLLM instead of Ollama. |
 
-### Decisions (author, 2026-11-04)
+### Decisions
 - D1: no draft status in the product. Release content is reviewed; answers never mention review status.
-- D2: screenshot upload is version 1.0 (changed by the author, 2026-11-06; was 1.1). The screen library follows in 1.1.
+- D2: screenshot upload is version 1.0 (was 1.1). The screen library follows in 1.1.
 - D3: data file upload is version 1.2. Each export format needs its own documented reading first.
 
 ## 6. Design considerations
@@ -132,4 +132,4 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - most of the hundreds of screens are configuration, not performance or capacity;
   - extra files compete in retrieval and push out the files that matter (ranking shifted when 2 files were added);
   - each file needs the author's review.
-- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: `KNOWLEDGE-ENGINEERING.md`, section 5. Kept only if the retrieval check on screenshot questions improves. Not started (author, 2026-11-06).
+- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: `KNOWLEDGE-ENGINEERING.md`, section 5. Kept only if the retrieval check on screenshot questions improves. Not started.

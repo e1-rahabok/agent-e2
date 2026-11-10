@@ -5,7 +5,7 @@
 - Cluster Performance shows contention happening now (`vsphere/object-types/cluster/kpis/cluster-performance`). Cluster Risk shows how close the cluster is to it.
 - Higher is worse: 0 is no risk, 100 is maximum risk. The only score of the pack read this way.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
-- Not built into VCF Operations: a metric of the author's vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
+- Not built into VCF Operations: a metric of the vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
 
 ## Thresholds
 | Group | Metric | Green | Yellow | Orange | Red |
@@ -54,7 +54,7 @@ Per host, then the worst host is kept.
 - Source: host `mem:DRAM\|memory_tier_total_capacity`; fallback `mem\|host_provisioned`. With neither, the host's memory rows are left out, never scored against a guess.
 
 ## CPU overcommit: per thread
-- The CPU overcommit ratio is per thread, because the CPU executes per thread (author, Q151, 2026-11-09). With Hyper-Threading, 4 vCPUs per thread is 8 per core.
+- The CPU overcommit ratio is per thread, because the CPU executes per thread. With Hyper-Threading, 4 vCPUs per thread is 8 per core.
 - The vCommunity pack counts vCPUs per physical core (`hardware|cpuInfo|numCpuCores`), so its row and bands use the wrong unit until the pack is fixed. With Hyper-Threading, halve the row to compare it with a per-thread plan.
 
 ## Monster VM

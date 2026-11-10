@@ -42,7 +42,7 @@
 - "Alert on the run queue alone" → the counter gives false positives; require Net Run above 75% and wait 15 minutes.
 - "Alert on low free memory" → the Guest OS uses free memory as cache; check paging and benchmark the application.
 - "Alert on low disk space for every partition" → swap partitions sit near 100% by design.
-- "Disk queue thresholds come from Microsoft or Linux guidance" → neither publishes one; the values are the author's, set high.
+- "Disk queue thresholds come from Microsoft or Linux guidance" → neither publishes one; the values here are set high on purpose.
 
 ## Metadata
 ```yaml

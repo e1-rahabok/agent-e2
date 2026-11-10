@@ -69,7 +69,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 ## Memory
 - Memory is cache. Unused memory is waste: aim high, with a narrow green band.
 - The book recommends option 2 of two range schemes: wide grey (waste) zone, then a narrow green band near the top.
-- Guest OS memory utilization ranges (option 2, author):
+- Guest OS memory utilization ranges (option 2):
 
 | Metric | Green | Yellow | Orange | Red |
 |---|---|---|---|---|

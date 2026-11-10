@@ -313,7 +313,7 @@ VCF_OPERATIONS_TOP = ['concepts', 'features', 'dashboards', 'reports', 'alerts',
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
 PILLAR_FOLDERS = ['concepts', 'alerts', 'performance', 'capacity']
 CATALOG = 'knowledge/catalog'
-THRESHOLD_SOURCES = ['book', 'author', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
+THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 
 

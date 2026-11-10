@@ -52,7 +52,7 @@ ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs)
 
 - The first questions about a slow VM: how bad (depth), how long and in what pattern, how many others (breadth). Nobody asks for the average.
 - Isolated: look at the affected object. Widespread: look at what the affected VMs share (cluster, datastore, resource pool, host).
-- Breadth by threshold (share of members above it) requires a threshold per metric. Breadth by percentile works for any metric; the author recommends the 90th percentile.
+- Breadth by threshold (share of members above it) requires a threshold per metric. Breadth by percentile works for any metric; use the 90th percentile.
 - Pattern of a cluster that cannot cope: maximum more than 10x the average, average flat, while one or two VMs at a time are not served. With equal treatment, VMs take turns to be hit; the worst VM line can be 60x the average.
 - Applied: Cluster Performance (%) uses worst VM for depth and 90th percentile for breadth (`vsphere/object-types/cluster/kpis/cluster-performance`).
 

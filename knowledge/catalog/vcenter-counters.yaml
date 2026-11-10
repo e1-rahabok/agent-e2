@@ -22,7 +22,7 @@ meta:
   - 'Omitted: vApp charts (the documentation describes them with the same counters as resource pools) and Fault Tolerance charts (out of scope).'
   - 'Kept as printed: host and VM network rate labelled Kilobytes per second (Kbps); the VM Virtual Disk Rate rows labelled Read Requests and Write Requests with a KBps unit; cluster Memory Active in kilobytes
     (kb).'
-  - 'Field kb: mapping from chart row to knowledge file made by Claude. Rows without kb have no dedicated knowledge file yet.'
+  - 'Field kb: rows without kb have no dedicated knowledge file yet.'
   status: draft
 rows:
 - counter: cpu.usagemhz

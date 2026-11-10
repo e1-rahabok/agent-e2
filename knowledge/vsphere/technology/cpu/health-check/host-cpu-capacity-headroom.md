@@ -10,7 +10,7 @@
 ## How to read the result
 - Primary counters: Core Utilization and Thread Utilization. Complement with Usage (MHz) for performance.
 - Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free. New VMs can go on.
-- Core Utilization at 100% (Thread Utilization at least 50%): watch Thread Utilization. The author keeps it around 80%-90% per host; cluster level is lower because of the HA host. Check contention.
+- Core Utilization at 100% (Thread Utilization at least 50%): watch Thread Utilization. Keep it around 80%-90% per host; cluster level is lower because of the HA host. Check contention.
 - Drive by contention (Mark Achtemichuk).
 
 ## Example: busy host

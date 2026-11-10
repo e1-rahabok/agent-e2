@@ -186,7 +186,7 @@ alert red  ⊂  alert orange  ⊂  SLI fail  ⊂  KPI not green
 | `direction` | above, below | Lower is worse for free memory, KPI scores, SLA |
 | `window` + `statistic` | 24h p95; calendar month mean | Window-level uses (sla, model, decision); sample-level uses take the interval from the reading key |
 | `class` | all, gold, silver, bronze, production, non-production | Thresholds per class of service |
-| `source` | knowledge base, or a vendor document with its version (Q159) | Which source wins: version-bound vendor facts can go stale |
+| `source` | `knowledge-base`, or a vendor document with its version | Which source wins: version-bound vendor facts can go stale (Q159) |
 | `kb`, `quote` | knowledge file id; sentence copied from it | Citation; lint keeps the number tied to its text |
 
 ### 8.2 `thresholds-performance.yaml`
@@ -404,7 +404,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## 14. Work list
 
 ### 14.1 1.0, in order
-1. Answers to Q153-Q159.
+1. Answers to Q153-Q158.
 2. `readings.yaml` for every reading that has a threshold today.
 3. Migration script: the 2 files to the performance, capacity and alerts files; lint; retrieval check before and after.
 4. Catalog tables, lookup with verdicts, `catalog` tool arguments, classic facts, unit tests.

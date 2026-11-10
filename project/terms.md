@@ -1,6 +1,6 @@
 # Repository terms
 
-One English word per concept in this repository (author, 2026-11-05). Not indexed.
+One English word per concept in this repository. Not indexed.
 - Vocabulary of the knowledge itself (vSphere, VCF, Guest OS terms): `knowledge/glossary.md`.
 - This file: words for the repository's own parts.
 - When two words name the same thing, pick one, add it here, and replace the other. When one word names two things, split it here.
@@ -26,13 +26,13 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | quiz | The author's quiz documents (vSphere Metric Quiz.docx, the book's chapter quizzes): a source of questions, `origin: quiz` | - |
 | author question | One entry in `project/author-questions.md` | - |
 | knowledge base | The content in `knowledge/` | KB (in prose) |
-| Agent E2 | The product: model, harness, agent and knowledge base as shipped. Always both words, like Agent 007 (author, 2026-11-06). Will run on isvara.io, replacing AskIO | Isvara (the website, not the product); E2 alone |
+| Agent E2 | The product: model, harness, agent and knowledge base as shipped. Always both words, like Agent 007. Will run on isvara.io, replacing AskIO | Isvara (the website, not the product); E2 alone |
 | agent | The model plus the tool loop, in agentic mode only: it chooses the next tool, query and file, and when to answer. The loop code is in the harness; the decisions are the model's | - |
 | harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, the loop's rules, the verifier. It hosts the agent and constrains it | wrapper, pipeline |
 | runner | The benchmark code (`benchmark/runner/`) | - |
 | judge | The model that scores free-text and compound answers 0-3 | grader |
 | candidate | A model in the benchmark | model under test, AI under test |
-| test | A code test only: `harness/test_tools.py`, `benchmark/runner/test_runner.py` (author, 2026-11-05) | the benchmark |
+| test | A code test only: `harness/test_tools.py`, `benchmark/runner/test_runner.py` | the benchmark |
 | retrieval check | `benchmark/runner/retrieval_eval.py`: are the files each question needs found, without a model. Guide: `benchmark/retrieval-check.md` | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
 | answer key | `answer` and `trap` letters, `## Expected key points`, `## Likely wrong answer` | key (alone) |
