@@ -1,3 +1,4 @@
 harness/.cache/
 benchmark/results/*/traces.jsonl
 __pycache__/
+project/levels.csv
