@@ -49,7 +49,7 @@
 - Security: a live attack (pair the alert with the NOC screen); undesirable events.
 - Configuration: only high-risk settings that cause urgent problems such as slowness, outage or a breach. Non-urgent configuration goes to the daily health check.
 - Compliance: only what cannot wait until tomorrow.
-- Capacity: red only, as a guard rail.
+- Capacity: a principle, not a rule. Capacity management takes the long view (weeks and months), so done properly it raises no alert. A capacity alert means something is amiss: a software bug or a hardware availability issue (a failed host taking capacity away).
 - An alert does not replace operations practice. Outdated VMware Tools is not urgent: a daily SOP lists the VMs with outdated Tools and the list is kept empty. An alert would make the team reactive and noisy.
 - Trigger the alert on every affected object, victims and cause. A failure at the bottom ripples up. Example: a physical disk fails in a vSAN cluster; the disk group can go down; a host with one disk group loses its storage.
 

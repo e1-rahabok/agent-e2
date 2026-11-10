@@ -3,7 +3,7 @@ meta:
   title: 'Performance thresholds: contention and health'
   fields:
     id: Stable key.
-    kind: 'rule (one value: above X means Y) or bands (colour bands).'
+    kind: 'rule: one value (above X means Y). KPI colour levels are in levels, not in rows.'
     metric: Metric as the knowledge file names it.
     object: Managed object type.
     layer: Layer that produces the metric (rules).
@@ -13,21 +13,13 @@ meta:
     unit: Unit of value.
     condition: 'rules: another condition that must hold at the same time.'
     meaning: 'rules: what the knowledge file says the value means.'
-    group: 'bands: the group column of the source table (for example Utilization, Depth).'
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: Knowledge file that states and explains the threshold.
     quote: 'rules: text copied from the kb file; lint checks it is still there.'
     interval: 20s (20-second peak) or 5m (5-minute average); 2s for esxtop; empty until a source states it.
-    bands: green, yellow, orange, red; grey is not used for performance.
-    levels: 'One line per object and metric: [yellow, orange, red] for 5m, 20s and 2s; null where no source gives the value. direction above: higher is worse; below: lower is worse. from: the row the values come from; lint checks they match.'
+    levels: 'KPI colour levels, the one copy. One line per object and metric: [yellow, orange, red] for 5m, 20s and 2s, entered by hand; null until a value is entered. No value is derived (no 4x rule). direction above: higher is worse; below: lower is worse. The KPI file keeps the same values as its Markdown band table; lint checks they match.'
   review_notes:
-  - 'levels: 9 values per metric, yellow/orange/red for 5m, 20s and 2s. Filled from the band rows only; empty cells are open (Q152). No value derived from the 4x rule.'
-  - 'Rule: a 20-second threshold is generally about 4x the 5-minute threshold, because a spike does not sustain for 300 seconds. The rule is stated,
-    not used to fill values: each row carries only what its source gives.'
-  - Every row restates a threshold written in its kb file. Band rows must match the colour-band table of the kb file; lint checks both ways.
-  - Merged 2026-11-06 from catalog/thresholds.yaml and the KPI band tables (one place for thresholds).
-  - 'Intervals of KPI and SLI rows: a VCF Operations metric named ''peak'' is the highest of the 15 20-second averages in the 5-minute
-    cycle (20s); every KPI and SLI is reported every 5 minutes (5m). The SLA is a lagging, monthly indicator.'
+  - 'To check: levels cells still null: yellow, orange, red to enter by hand for each of 5m, 20s and 2s (Q152).'
   status: draft
 rows:
 - kind: rule
@@ -122,19 +114,6 @@ rows:
   source: knowledge-base
   kb: sp5-framework/concepts/sla-metrics
   quote: '| Network | Transmit dropped packets | above 0% |'
-- kind: rule
-  id: vm-cpu-ready-poor
-  metric: VM CPU Ready
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>'
-  value: 50
-  unit: '%'
-  condition: high VM CPU Usage
-  meaning: Poor performance.
-  source: knowledge-base
-  kb: vsphere/technology/cpu/metrics/virtual-motherboard/ready
-  quote: Ready above 50% with high Usage results in poor performance.
 - kind: rule
   id: vm-cpu-ready-usage-docs
   metric: VM CPU Ready
@@ -400,440 +379,6 @@ rows:
   source: knowledge-base
   kb: guest-os/cpu/metrics/processor-time
   quote: 'High together with Privileged Time above 30%: too much OS work.'
-- kind: bands
-  id: guest-os-performance-peak-vcpu-run-queue-length
-  metric: Peak vCPU run queue length
-  group: Guest OS contention
-  object: null
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-2
-    yellow: 2-4
-    orange: 4-8
-    red: 8-16
-  source: knowledge-base
-  kb: guest-os/system/metrics/guest-os-performance
-- kind: bands
-  id: guest-os-performance-peak-disk-queue-length-count
-  metric: Peak disk queue length (count)
-  group: Guest OS contention
-  object: null
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-20
-    yellow: 20-40
-    orange: 40-80
-    red: 80-160
-  source: knowledge-base
-  kb: guest-os/system/metrics/guest-os-performance
-- kind: bands
-  id: guest-os-performance-free-memory-mb
-  metric: Free memory (MB)
-  group: Guest OS utilization
-  object: null
-  interval: 5m
-  bands:
-    grey: null
-    green: 512-1,024
-    yellow: 256-512
-    orange: 128-256
-    red: 0-128
-  source: knowledge-base
-  kb: guest-os/system/metrics/guest-os-performance
-- kind: bands
-  id: guest-os-performance-memory-page-out-rate-pages-s
-  metric: Memory page-out rate (pages/s)
-  group: Guest OS utilization
-  object: null
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-1,000
-    yellow: 1K-2K
-    orange: 2K-4K
-    red: 4K-8K
-  source: knowledge-base
-  kb: guest-os/system/metrics/guest-os-performance
-- kind: bands
-  id: cluster-performance-worst-peak-vcpu-ready-among-all-vms
-  metric: Worst peak vCPU Ready among all VMs (%)
-  group: Depth
-  object: ClusterComputeResource
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-4
-    yellow: 4-8
-    orange: 8-16
-    red: 16-32
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-worst-peak-vcpu-co-stop-among-all-vms
-  metric: Worst peak vCPU Co-stop among all VMs (%)
-  group: Depth
-  object: ClusterComputeResource
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-2
-    yellow: 2-4
-    orange: 4-8
-    red: 8-16
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-worst-memory-latency-among-all-vms
-  metric: Worst memory latency among all VMs (%)
-  group: Depth
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-worst-peak-read-write-disk-latency-all-v
-  metric: Worst peak read/write disk latency, all VM vDisks (ms)
-  group: Depth
-  object: ClusterComputeResource
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-40
-    yellow: 40-80
-    orange: 80-160
-    red: 160-320
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-90th-percentile-peak-vcpu-ready-among-vm
-  metric: 90th percentile peak vCPU Ready among VMs (%)
-  group: Breadth
-  object: ClusterComputeResource
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-90th-percentile-peak-vcpu-co-stop-among-
-  metric: 90th percentile peak vCPU Co-stop among VMs (%)
-  group: Breadth
-  object: ClusterComputeResource
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-0.5
-    yellow: 0.5-1
-    orange: 1-2
-    red: 2-4
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-90th-percentile-memory-latency-among-vms
-  metric: 90th percentile memory latency among VMs (%)
-  group: Breadth
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-0.5
-    yellow: 0.5-1
-    orange: 1-2
-    red: 2-4
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-90th-percentile-read-write-latency-among
-  metric: 90th percentile read/write latency among VM virtual disks (ms)
-  group: Breadth
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-20
-    yellow: 20-40
-    orange: 40-60
-    red: 60-80
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: cluster-performance-highest-esxi-error-dropped-network-packe
-  metric: Highest ESXi (error + dropped) network packets (%)
-  group: ESXi
-  object: ClusterComputeResource
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 0-0.2
-    orange: 0.2-0.4
-    red: 0.4-0.8
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/kpis/cluster-performance
-- kind: bands
-  id: esxi-performance-worst-peak-vcpu-ready
-  metric: Worst peak vCPU Ready among VMs on the host (%)
-  group: Depth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-4
-    yellow: 4-8
-    orange: 8-16
-    red: 16-32
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-worst-peak-vcpu-co-stop
-  metric: Worst peak vCPU Co-stop among VMs on the host (%)
-  group: Depth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-2
-    yellow: 2-4
-    orange: 4-8
-    red: 8-16
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-worst-memory-latency
-  metric: Worst memory latency among VMs on the host (%)
-  group: Depth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-worst-peak-disk-latency
-  metric: Worst peak read/write disk latency, all vDisks of VMs on the host (ms)
-  group: Depth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-40
-    yellow: 40-80
-    orange: 80-160
-    red: 160-320
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-p90-peak-vcpu-ready
-  metric: 90th percentile peak vCPU Ready among VMs on the host (%)
-  group: Breadth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-p90-peak-vcpu-co-stop
-  metric: 90th percentile peak vCPU Co-stop among VMs on the host (%)
-  group: Breadth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-0.5
-    yellow: 0.5-1
-    orange: 1-2
-    red: 2-4
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-p90-memory-latency
-  metric: 90th percentile memory latency among VMs on the host (%)
-  group: Breadth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-0.5
-    yellow: 0.5-1
-    orange: 1-2
-    red: 2-4
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-p90-disk-latency
-  metric: 90th percentile read/write latency among virtual disks of VMs on the host (ms)
-  group: Breadth
-  object: HostSystem
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-20
-    yellow: 20-40
-    orange: 40-60
-    red: 60-80
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: esxi-performance-esxi-error-dropped-network-packets
-  metric: ESXi (error + dropped) network packets (%)
-  group: ESXi
-  object: HostSystem
-  interval: 5m
-  bands:
-    grey: null
-    green: Excluded
-    yellow: 0-0.2
-    orange: 0.2-0.4
-    red: 0.4-0.8
-  source: knowledge-base
-  kb: vsphere/object-types/esxi/kpis/esxi-performance
-- kind: bands
-  id: vm-performance-peak-cpu-co-stop-among-any-vcpu
-  metric: Peak CPU Co-stop among any vCPU (%)
-  group: VM contention
-  object: VirtualMachine
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-1
-    yellow: 1-2
-    orange: 2-4
-    red: 4-8
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-peak-cpu-ready-among-any-vcpu
-  metric: Peak CPU Ready among any vCPU (%)
-  group: VM contention
-  object: VirtualMachine
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-2
-    yellow: 2-4
-    orange: 4-8
-    red: 8-16
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-peak-cpu-overlap
-  metric: Peak CPU Overlap (%)
-  group: VM contention
-  object: VirtualMachine
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-0.5
-    yellow: 0.5-1
-    orange: 1-2
-    red: 2-4
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-peak-ram-contention
-  metric: Peak RAM Contention (%)
-  group: VM contention
-  object: VirtualMachine
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-0.5
-    yellow: 0.5-1
-    orange: 1-2
-    red: 2-4
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-peak-read-write-latency-among-vdisks-ms
-  metric: Peak read/write latency among vDisks (ms)
-  group: VM contention
-  object: VirtualMachine
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-10
-    yellow: 10-20
-    orange: 20-40
-    red: 40-80
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-peak-network-tx-dropped-packets
-  metric: Peak network TX dropped packets (%)
-  group: VM contention
-  object: VirtualMachine
-  interval: 20s
-  bands:
-    grey: null
-    green: 0-0.25
-    yellow: 0.25-0.5
-    orange: 0.5-1
-    red: 1-2
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-cpu-net-run
-  metric: CPU Net Run (%)
-  group: VM utilization
-  object: VirtualMachine
-  interval: 5m
-  bands:
-    grey: null
-    green: 60-95
-    yellow: 95-97
-    orange: 97-99
-    red: 99-100
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-vm-memory-ballooned
-  metric: VM Memory Ballooned (%)
-  group: IaaS high utilization
-  object: VirtualMachine
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-2
-    yellow: 2-4
-    orange: 4-8
-    red: 8-16
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
-- kind: bands
-  id: vm-performance-vm-memory-compressed-swapped
-  metric: VM Memory Compressed + Swapped (%)
-  group: IaaS high utilization
-  object: VirtualMachine
-  interval: 5m
-  bands:
-    grey: null
-    green: 0-0.25
-    yellow: 0.25-0.5
-    orange: 0.5-1
-    red: 1-2
-  source: knowledge-base
-  kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: rule
   id: alert-guest-os-cpu-queue-red
   metric: Guest OS Peak CPU Queue
@@ -1060,34 +605,34 @@ rows:
   quote: 'Red: dropped packets above 10%.'
 
 levels:
-- {object: Guest OS, metric: "Peak vCPU run queue length", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null, from: guest-os-performance-peak-vcpu-run-queue-length}
-- {object: Guest OS, metric: "Peak disk queue length (count)", direction: above, 5m: null, 20s: [20, 40, 80], 2s: null, from: guest-os-performance-peak-disk-queue-length-count}
-- {object: Guest OS, metric: "Free memory (MB)", direction: below, 5m: [512, 256, 128], 20s: null, 2s: null, from: guest-os-performance-free-memory-mb}
-- {object: Guest OS, metric: "Memory page-out rate (pages/s)", direction: above, 5m: [1000, 2000, 4000], 20s: null, 2s: null, from: guest-os-performance-memory-page-out-rate-pages-s}
-- {object: ClusterComputeResource, metric: "Worst peak vCPU Ready among all VMs (%)", direction: above, 5m: null, 20s: [4, 8, 16], 2s: null, from: cluster-performance-worst-peak-vcpu-ready-among-all-vms}
-- {object: ClusterComputeResource, metric: "Worst peak vCPU Co-stop among all VMs (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null, from: cluster-performance-worst-peak-vcpu-co-stop-among-all-vms}
-- {object: ClusterComputeResource, metric: "Worst memory latency among all VMs (%)", direction: above, 5m: [1, 2, 4], 20s: null, 2s: null, from: cluster-performance-worst-memory-latency-among-all-vms}
-- {object: ClusterComputeResource, metric: "Worst peak read/write disk latency, all VM vDisks (ms)", direction: above, 5m: null, 20s: [40, 80, 160], 2s: null, from: cluster-performance-worst-peak-read-write-disk-latency-all-v}
-- {object: ClusterComputeResource, metric: "90th percentile peak vCPU Ready among VMs (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null, from: cluster-performance-90th-percentile-peak-vcpu-ready-among-vm}
-- {object: ClusterComputeResource, metric: "90th percentile peak vCPU Co-stop among VMs (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, from: cluster-performance-90th-percentile-peak-vcpu-co-stop-among-}
-- {object: ClusterComputeResource, metric: "90th percentile memory latency among VMs (%)", direction: above, 5m: [0.5, 1, 2], 20s: null, 2s: null, from: cluster-performance-90th-percentile-memory-latency-among-vms}
-- {object: ClusterComputeResource, metric: "90th percentile read/write latency among VM virtual disks (ms)", direction: above, 5m: [20, 40, 60], 20s: null, 2s: null, from: cluster-performance-90th-percentile-read-write-latency-among}
-- {object: ClusterComputeResource, metric: "Highest ESXi (error + dropped) network packets (%)", direction: above, 5m: [0, 0.2, 0.4], 20s: null, 2s: null, from: cluster-performance-highest-esxi-error-dropped-network-packe}
-- {object: HostSystem, metric: "Worst peak vCPU Ready among VMs on the host (%)", direction: above, 5m: null, 20s: [4, 8, 16], 2s: null, from: esxi-performance-worst-peak-vcpu-ready}
-- {object: HostSystem, metric: "Worst peak vCPU Co-stop among VMs on the host (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null, from: esxi-performance-worst-peak-vcpu-co-stop}
-- {object: HostSystem, metric: "Worst memory latency among VMs on the host (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null, from: esxi-performance-worst-memory-latency}
-- {object: HostSystem, metric: "Worst peak read/write disk latency, all vDisks of VMs on the host (ms)", direction: above, 5m: null, 20s: [40, 80, 160], 2s: null, from: esxi-performance-worst-peak-disk-latency}
-- {object: HostSystem, metric: "90th percentile peak vCPU Ready among VMs on the host (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null, from: esxi-performance-p90-peak-vcpu-ready}
-- {object: HostSystem, metric: "90th percentile peak vCPU Co-stop among VMs on the host (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, from: esxi-performance-p90-peak-vcpu-co-stop}
-- {object: HostSystem, metric: "90th percentile memory latency among VMs on the host (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, from: esxi-performance-p90-memory-latency}
-- {object: HostSystem, metric: "90th percentile read/write latency among virtual disks of VMs on the host (ms)", direction: above, 5m: null, 20s: [20, 40, 60], 2s: null, from: esxi-performance-p90-disk-latency}
-- {object: HostSystem, metric: "ESXi (error + dropped) network packets (%)", direction: above, 5m: [0, 0.2, 0.4], 20s: null, 2s: null, from: esxi-performance-esxi-error-dropped-network-packets}
-- {object: VirtualMachine, metric: "Peak CPU Co-stop among any vCPU (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null, from: vm-performance-peak-cpu-co-stop-among-any-vcpu}
-- {object: VirtualMachine, metric: "Peak CPU Ready among any vCPU (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null, from: vm-performance-peak-cpu-ready-among-any-vcpu}
-- {object: VirtualMachine, metric: "Peak CPU Overlap (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, from: vm-performance-peak-cpu-overlap}
-- {object: VirtualMachine, metric: "Peak RAM Contention (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, from: vm-performance-peak-ram-contention}
-- {object: VirtualMachine, metric: "Peak read/write latency among vDisks (ms)", direction: above, 5m: null, 20s: [10, 20, 40], 2s: null, from: vm-performance-peak-read-write-latency-among-vdisks-ms}
-- {object: VirtualMachine, metric: "Peak network TX dropped packets (%)", direction: above, 5m: null, 20s: [0.25, 0.5, 1], 2s: null, from: vm-performance-peak-network-tx-dropped-packets}
-- {object: VirtualMachine, metric: "CPU Net Run (%)", direction: above, 5m: [95, 97, 99], 20s: null, 2s: null, from: vm-performance-cpu-net-run}
-- {object: VirtualMachine, metric: "VM Memory Ballooned (%)", direction: above, 5m: [2, 4, 8], 20s: null, 2s: null, from: vm-performance-vm-memory-ballooned}
-- {object: VirtualMachine, metric: "VM Memory Compressed + Swapped (%)", direction: above, 5m: [0.25, 0.5, 1], 20s: null, 2s: null, from: vm-performance-vm-memory-compressed-swapped}
+- {object: Guest OS, metric: "Peak vCPU run queue length", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null}
+- {object: Guest OS, metric: "Peak disk queue length (count)", direction: above, 5m: null, 20s: [20, 40, 80], 2s: null}
+- {object: Guest OS, metric: "Free memory (MB)", direction: below, 5m: [512, 256, 128], 20s: null, 2s: null}
+- {object: Guest OS, metric: "Memory page-out rate (pages/s)", direction: above, 5m: [1000, 2000, 4000], 20s: null, 2s: null}
+- {object: ClusterComputeResource, metric: "Worst peak vCPU Ready among all VMs (%)", direction: above, 5m: null, 20s: [4, 8, 16], 2s: null}
+- {object: ClusterComputeResource, metric: "Worst peak vCPU Co-stop among all VMs (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null}
+- {object: ClusterComputeResource, metric: "Worst memory latency among all VMs (%)", direction: above, 5m: [1, 2, 4], 20s: null, 2s: null}
+- {object: ClusterComputeResource, metric: "Worst peak read/write disk latency, all VM vDisks (ms)", direction: above, 5m: null, 20s: [40, 80, 160], 2s: null}
+- {object: ClusterComputeResource, metric: "90th percentile peak vCPU Ready among VMs (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null}
+- {object: ClusterComputeResource, metric: "90th percentile peak vCPU Co-stop among VMs (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null}
+- {object: ClusterComputeResource, metric: "90th percentile memory latency among VMs (%)", direction: above, 5m: [0.5, 1, 2], 20s: null, 2s: null}
+- {object: ClusterComputeResource, metric: "90th percentile read/write latency among VM virtual disks (ms)", direction: above, 5m: [20, 40, 60], 20s: null, 2s: null}
+- {object: ClusterComputeResource, metric: "Highest ESXi (error + dropped) network packets (%)", direction: above, 5m: [0, 0.2, 0.4], 20s: null, 2s: null}
+- {object: HostSystem, metric: "Worst peak vCPU Ready among VMs on the host (%)", direction: above, 5m: null, 20s: [4, 8, 16], 2s: null}
+- {object: HostSystem, metric: "Worst peak vCPU Co-stop among VMs on the host (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null}
+- {object: HostSystem, metric: "Worst memory latency among VMs on the host (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null}
+- {object: HostSystem, metric: "Worst peak read/write disk latency, all vDisks of VMs on the host (ms)", direction: above, 5m: null, 20s: [40, 80, 160], 2s: null}
+- {object: HostSystem, metric: "90th percentile peak vCPU Ready among VMs on the host (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null}
+- {object: HostSystem, metric: "90th percentile peak vCPU Co-stop among VMs on the host (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null}
+- {object: HostSystem, metric: "90th percentile memory latency among VMs on the host (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null}
+- {object: HostSystem, metric: "90th percentile read/write latency among virtual disks of VMs on the host (ms)", direction: above, 5m: null, 20s: [20, 40, 60], 2s: null}
+- {object: HostSystem, metric: "ESXi (error + dropped) network packets (%)", direction: above, 5m: [0, 0.2, 0.4], 20s: null, 2s: null}
+- {object: VirtualMachine, metric: "Peak CPU Co-stop among any vCPU (%)", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null}
+- {object: VirtualMachine, metric: "Peak CPU Ready among any vCPU (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null}
+- {object: VirtualMachine, metric: "Peak CPU Overlap (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null}
+- {object: VirtualMachine, metric: "Peak RAM Contention (%)", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null}
+- {object: VirtualMachine, metric: "Peak read/write latency among vDisks (ms)", direction: above, 5m: null, 20s: [10, 20, 40], 2s: null}
+- {object: VirtualMachine, metric: "Peak network TX dropped packets (%)", direction: above, 5m: null, 20s: [0.25, 0.5, 1], 2s: null}
+- {object: VirtualMachine, metric: "CPU Net Run (%)", direction: above, 5m: [95, 97, 99], 20s: null, 2s: null}
+- {object: VirtualMachine, metric: "VM Memory Ballooned (%)", direction: above, 5m: [2, 4, 8], 20s: null, 2s: null}
+- {object: VirtualMachine, metric: "VM Memory Compressed + Swapped (%)", direction: above, 5m: [0.25, 0.5, 1], 20s: null, 2s: null}

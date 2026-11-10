@@ -71,7 +71,17 @@ class CatalogTest(unittest.TestCase):
         f = CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/ready'])
         self.assertIn('cpu.ready', f)
         self.assertIn('statistics level 1', f)
-        self.assertIn('Threshold', f)
+        self.assertIn('Threshold', CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/latency']))
+
+    def test_facts_for_kpi_levels(self):
+        f = CAT.facts_for(['vsphere/object-types/vm/kpis/vm-performance'])
+        self.assertIn('KPI levels', f)
+        self.assertIn('Peak CPU Ready among any vCPU (%), higher is worse: 20s 2, 4, 8; 5m no value', f)
+
+    def test_lookup_returns_levels(self):
+        r = CAT.thresholds(name='Peak CPU Ready among any vCPU')
+        self.assertEqual(r['levels'][0]['20s'], 'yellow/orange/red 2/4/8')
+        self.assertEqual(r['bands'][0]['interval'], '20s')
 
 
 class KpiLookupTest(unittest.TestCase):

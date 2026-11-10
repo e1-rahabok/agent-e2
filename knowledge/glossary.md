@@ -12,6 +12,9 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | VM pages | guest physical pages, guest physical memory | Pages in the VM address space. Vendor term kept for search. |
 | ESXi pages | machine pages, machine memory | Pages ESXi manages on DIMM, host cache or tiered NVMe. |
 | Guest OS sizing | VM rightsizing (inside the guest) | Sized from Guest OS counters. The external view is VM footprint. |
+| KAI | availability KPI, uptime KPI | Key availability indicator. KPI is performance only. |
+| KSI | security KPI, compliance KPI | Key security indicator; covers security and compliance. KPI is performance only. |
+| Symptom (VCF Operations) | condition | One test on a metric, property or event. A symptom definition is reusable across alert definitions; a condition is written inside one alert definition. |
 
 ## Defined terms
 
@@ -64,7 +67,7 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Balloon Target | Memory ESXi asks the balloon driver to reclaim. | - |
 | Active (memory) | Sampled estimate of recently touched VM memory. | Touch (ESXi), Non Zero Active (VCF Operations) |
 | Guest OS Needed Memory | VCF Operations guest metric behind VM Memory Usage (%). | - |
-| Symptom | A minor, non-urgent issue, read in the daily health check. A symptom that persists becomes an alert.`sp5-framework/alerts/alerts-and-insights` | - |
+| Symptom | A test on one metric, property or event (VCF Operations; also called condition). Triggered alone, it is a minor, non-urgent issue, read in the daily health check. When its alert's set of symptoms holds, the issue has become urgent: an alert.`sp5-framework/alerts/alerts-and-insights` | Condition |
 | Insight | A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close. | - |
 | Prevention window | Time between the operations team knowing of a problem (insight) and customers noticing it (alert). | - |
 | Leading indicator, lagging indicator | Leading: underlying metric read in insights. Lagging: customer-facing metric used in alerts. | - |
@@ -80,7 +83,9 @@ What Agent E2 needs to read the user's words and answer in one consistent vocabu
 | Primary metric, secondary metric | Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why). | - |
 | Framework | How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks.`sp5-framework/concepts/overview` | - |
 | Model | How one pillar of one object is quantified into a number and a decision. Capacity model, availability model, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed.`vsphere/object-types/cluster/models/cluster-consumption` | - |
-| KPI | Key performance indicator: a model of performance only, the P in KPI. One 0-100% score per object: VM, Guest OS, ESXi and Cluster Performance.`sp5-framework/performance/kpi-vs-sla` | Key Performance Indicator |
+| KPI | Key performance indicator: an internal target for performance only, the P in KPI; not a contract like the SLA. One 0-100% score per object: VM, Guest OS, ESXi and Cluster Performance. Availability has KAI; security has KSI.`sp5-framework/performance/kpi-vs-sla` | Key Performance Indicator |
+| KAI | Key availability indicator: the internal availability target, the availability counterpart of the KPI.`sp5-framework/performance/kpi-vs-sla` | Availability KPI (in daily speech) |
+| KSI | Key security indicator: the internal security and compliance target.`sp5-framework/performance/kpi-vs-sla` | Security KPI, compliance KPI (in daily speech) |
 | Health check | Check of one object, in the order availability, performance, security, capacity, with configuration as the drill-down. The what: is the object healthy, at risk, or wasteful. A failed step opens a troubleshooting flow.`vsphere/object-types/cluster/health-check/cluster-health-check` | what to monitor, monitoring checklist, verification, daily check |
 | Troubleshooting | The reactive process for an object that is down or slow: why, and the fix. Starts from a complaint, an alert or a failed health check step, and follows the order of checks of its pillar. A security breach gets a forensic investigation instead; compliance is drift detection. `sp5-framework/concepts/proactive-operations` | diagnosis, diagnose, root cause analysis, triage |
 
@@ -112,7 +117,7 @@ Pairs that public text mixes up. Each row points to the file that holds the mech
 | Short-term vs long-term capacity | Short term: now, stop provisioning, no projection. Long term: future, buy hardware, projection mandatory | `sp5-framework/concepts/overview` |
 | Consistency vs compatibility check | Consistency: values identical across peers or partners (hosts in a cluster, ESXi and switch MTU). Compatibility: values differ but must work together (versions) | `sp5-framework/concepts/configuration-management` |
 | Demand (capacity) vs ESXi CPU Demand | Capacity demand is the higher of utilization and reservation, per powered-on VM; ESXi CPU Demand is a counter of runtime demanded | `sp5-framework/capacity/capacity-dimensions` |
-| KPI vs model | A KPI scores performance only; capacity, risk, availability and security are scored by models. Cluster Risk is a model, not a KPI | `vsphere/object-types/cluster/models/cluster-risk` |
+| KPI vs model | A KPI scores performance only; availability has KAI, security KSI; capacity and risk are scored by models. Cluster Risk is a model, not a KPI | `vsphere/object-types/cluster/models/cluster-risk` |
 | Health check (operations) vs health check (Kubernetes, load balancer) | Operations: a check of an object's health, risk and efficiency. Kubernetes and load balancers: a liveness or readiness probe of one endpoint | `sp5-framework/concepts/health-risk-efficiency` |
 | Idle vs oversized vs unused VM | Idle: below an absolute MHz every day; oversized: relative to its size; unused: busy but of no business value | `sp5-framework/capacity/reclamation` |
 
