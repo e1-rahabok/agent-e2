@@ -24,6 +24,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 |---|---|---|
 | utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand (author, Q067). |
 | KPI target | KPI baseline (standard expectation) | A target is not reached yet; a KPI is what is maintained as standard (author, Q067). |
+| code (as the actor: "code decides", "code loads") | Agent E2; name the Harness or the LLM only where the design depends on which part does the work | Code can mean the Agent or the Harness. Agent E2 is one program: LLM, Harness and Agent together (author, 2026-11-10). |
 | demand overcommit | overcommit (of allocation) | Only allocation can be overcommitted. Demand, usage and utilization are results, not settings (author, Q069). |
 | VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
 | VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
