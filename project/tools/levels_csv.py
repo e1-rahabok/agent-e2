@@ -3,8 +3,8 @@
   python3 project/tools/levels_csv.py export [file.csv]   # default project/levels.csv
   python3 project/tools/levels_csv.py import [file.csv]   # writes the levels section back, then run lint
 
-Columns: object, metric, direction, 5m yellow/orange/red, 20s yellow/orange/red, 2s yellow/orange/red, from.
-An empty cell means no source gives the value. A row interval is kept only when all three cells are filled.
+Columns: object, metric, direction, 5m yellow/orange/red, 20s yellow/orange/red, 2s yellow/orange/red.
+An empty cell means no value entered yet. A row interval is kept only when all three cells are filled.
 """
 import csv, json, os, sys
 import yaml
@@ -12,7 +12,7 @@ import yaml
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 YAML = os.path.join(ROOT, 'knowledge', 'catalog', 'thresholds-performance.yaml')
 IVS, LVS = ('5m', '20s', '2s'), ('yellow', 'orange', 'red')
-HEAD = ['object', 'metric', 'direction'] + [f'{i} {l}' for i in IVS for l in LVS] + ['from']
+HEAD = ['object', 'metric', 'direction'] + [f'{i} {l}' for i in IVS for l in LVS]
 
 
 def _num(s):
@@ -27,7 +27,7 @@ def export(path):
         w.writerow(HEAD)
         for r in rows:
             w.writerow([r['object'], r['metric'], r['direction']]
-                       + [('' if r.get(i) is None else r[i][n]) for i in IVS for n in range(3)] + [r['from']])
+                       + [('' if r.get(i) is None else r[i][n]) for i in IVS for n in range(3)])
     print(f'{len(rows)} rows written to {path}')
 
 
@@ -42,7 +42,6 @@ def load(path):
             if any(cells) and not all(cells):
                 sys.exit(f'{line["metric"]}: {i} needs all of yellow, orange, red, or none')
             line[i] = [_num(c) for c in cells] if all(cells) else None
-        line['from'] = r['from'].strip()
         out.append(line)
     return out
 
@@ -55,7 +54,7 @@ def write(lines):
     text = open(YAML).read()
     head = text[:text.index('\nlevels:')]
     body = [f"- {{object: {l['object']}, metric: {json.dumps(l['metric'])}, direction: {l['direction']}, "
-            f"5m: {_flow(l['5m'])}, 20s: {_flow(l['20s'])}, 2s: {_flow(l['2s'])}, from: {l['from']}}}" for l in lines]
+            f"5m: {_flow(l['5m'])}, 20s: {_flow(l['20s'])}, 2s: {_flow(l['2s'])}}}" for l in lines]
     open(YAML, 'w').write(head + '\nlevels:\n' + '\n'.join(body) + '\n')
     print(f'{len(lines)} rows written to {YAML}. Run: python3 project/tools/lint.py')
 

@@ -80,7 +80,7 @@
 - "Put every KPI metric in the SLA" → more metrics make compliance harder. The SLA keeps the few contract metrics; the KPI covers the rest as early warning.
 - "Include Guest OS metrics in the IaaS SLA" → the fix for a Guest OS problem is in the Guest OS; the IaaS provider cannot remediate it.
 - "Cluster performance KPI includes host utilization" → it includes only the contention of the running VMs.
-- "KPI means any key indicator, availability included" → KPI is performance; availability is KAI, compliance KCI.
+- "KPI means any key indicator, availability included" → KPI is performance only: the P is performance. Availability has KAI (key availability indicator); security, compliance included, has KSI (key security indicator). In daily speech users say availability KPI, business KPI or marketing KPI for any key indicator: translate by the pillar it measures.
 
 ## Metadata
 

@@ -320,7 +320,7 @@ OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 def check_catalog(allowed, ids, bodies, bad, docs=None):
     """knowledge/catalog/*.yaml: valid tags, existing knowledge ids, thresholds still quoted in their files, band tables matched."""
     objects = set(allowed['object'])
-    seen_thresholds, yaml_bands = set(), set()
+    seen_thresholds, yaml_bands, levels_all = set(), set(), []
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')
@@ -389,26 +389,24 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
                     bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
             if name == 'thresholds-performance.yaml':
-                row_ids = {r.get("id"): r for r in rows}
+                if any(r.get('kind') == 'bands' for r in rows): bad(path, 'band rows are not allowed: KPI colour levels live in levels (one copy)')
+                seen_levels = set()
                 for n, lv in enumerate(data.get('levels') or []):
                     w = f'levels row {n + 1} ({lv.get("metric")})'
-                    for k in ('object', 'metric', 'direction', 'from'):
+                    for k in ('object', 'metric', 'direction'):
                         if not lv.get(k): bad(path, f'{w}: {k} missing')
+                    if 'from' in lv: bad(path, f'{w}: from is not used (the Markdown band table is found by metric name)')
                     if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
-                    src = row_ids.get(lv.get("from"))
-                    if not src: bad(path, f'{w}: from "{lv.get("from")}" is not a row id'); continue
+                    if lv.get('metric') in seen_levels: bad(path, f'{w}: duplicate metric')
+                    seen_levels.add(lv.get('metric'))
                     for iv in ('5m', '20s', '2s'):
                         v = lv.get(iv, 'missing')
-                        if v == 'missing': bad(path, f'{w}: {iv} missing (write null when no source gives it)')
+                        if v == 'missing': bad(path, f'{w}: {iv} missing (write null until a value is entered)')
                         elif v is not None and (not isinstance(v, list) or len(v) != 3): bad(path, f'{w}: {iv} needs [yellow, orange, red]')
-                    if src.get('kind') == 'bands' and src.get('interval') and lv.get(src['interval']) is not None:
-                        b = src['bands']
-                        def _n(x):
-                            x = str(x).replace(',', '')
-                            return float(x[:-1]) * 1000 if x.endswith('K') else float(x)
-                        edge = 1 if lv.get('direction') == 'below' else 0
-                        want = [_n(b[c].split('-')[edge]) for c in ('yellow', 'orange', 'red')]
-                        if [float(x) for x in lv[src['interval']]] != want: bad(path, f'{w}: {src["interval"]} values do not match bands of {src["id"]}')
+                        elif v is not None:
+                            x = [float(i) for i in v]
+                            if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from yellow to red')
+                    levels_all.append(lv)
         elif name == 'user-terms.yaml':
             seen = set()
             for n, r in enumerate(rows):
@@ -439,9 +437,21 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         else:
             bad(path, 'unknown catalog file: add its checks to project/tools/lint.py')
 
-    # Band tables in knowledge files and band rows in the threshold files must match, both ways.
+    # Band tables in knowledge files must match the catalog, both ways: capacity band rows, or a KPI levels line
+    # (same metric name; its yellow, orange, red equal one filled interval).
     import kb as _kb, catalog as _cat
-    table = {(b['kb'], b['metric'], b['group'], b['green'], b['yellow'], b['orange'], b['red']) for b in _cat.bands_from_docs(_kb.load()[0])}
+    docs_bands = _cat.bands_from_docs(_kb.load()[0])
+    table = {(b['kb'], b['metric'], b['group'], b['green'], b['yellow'], b['orange'], b['red']) for b in docs_bands}
+    by_metric = {lv.get('metric'): lv for lv in levels_all}
+    for b in docs_bands:
+        lv = by_metric.get(b['metric'])
+        if lv is None:
+            continue
+        if _cat.table_interval(b, lv) is None:
+            bad(f'knowledge/{b["kb"]}.md', f'band row "{b["metric"]}" does not match its levels line in thresholds-performance.yaml (no interval has these yellow, orange, red)')
+        yaml_bands.add((b['kb'], b['metric'], b['group'], b['green'], b['yellow'], b['orange'], b['red']))
+    for m in sorted(set(by_metric) - {b['metric'] for b in docs_bands}):
+        bad('knowledge/catalog/thresholds-performance.yaml', f'levels line "{m}" has no band table row in a knowledge file')
     for t in sorted(table - yaml_bands):
         bad(f'knowledge/{t[0]}.md', f'band row "{t[1]}" has no matching row in a threshold file (knowledge/catalog/thresholds-*.yaml)')
     for t in sorted(yaml_bands - table):

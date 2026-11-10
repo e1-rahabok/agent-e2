@@ -5,10 +5,10 @@
 - Each set of symptoms or conditions is defined on an object, for example Self (the object the alert is for).
 - A set is met when Any, or All, of its symptoms or conditions are true. The per-resource alerts in this knowledge base use All: every condition must hold at the same time.
 
-## Conditions, not symptoms
-- Build alerts from conditions, not from symptom definitions.
-- In this design a symptom is a light, small problem that does not warrant an alert, like a mild body ache that goes away with rest. Symptoms belong to the daily health check (`sp5-framework/alerts/alerts-and-insights`).
-- A condition is a test written inside the alert definition, such as a metric above a value.
+## Symptom and condition: one test, two names
+- A symptom and a condition are the same thing: a test on one metric, property or event, such as a metric above a value. The two names are a VCF Operations product detail.
+- A symptom definition is stored on its own and reused by many alert definitions. A condition is written inside one alert definition and cannot be reused.
+- A symptom that triggers without its alert is a minor issue: it belongs to the daily health check, not to an alert (`sp5-framework/alerts/alerts-and-insights`).
 
 ## Wait cycle
 - The wait cycle is how long a condition must stay true before the alert fires. It removes short spikes and false positives, and delays the alert by the same time.
@@ -23,7 +23,7 @@
 - A generic alert has many possible causes, so its recommendation list grows long. Add conditions inside the recommendation so only the relevant advice shows, with live, clickable data instead of plain text.
 
 ## Traps
-- "Reuse symptom definitions to build alerts" → in this design symptoms are minor issues for the daily check. Alerts are built from conditions.
+- "A condition and a symptom are different things" → they are the same test. A symptom definition is reusable; a condition lives inside one alert definition.
 - "A longer wait cycle has no cost" → the alert fires that much later: 15 minutes of wait is 15 minutes lost.
 - "Any of the conditions is enough" → the per-resource alerts need all conditions together; that is what narrows them.
 - "A recommendation fixes the problem" → it is advice. A remediation action changes the environment, and is riskier.

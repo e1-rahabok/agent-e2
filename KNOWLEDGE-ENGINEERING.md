@@ -335,12 +335,12 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - Sample interval: the same workload reads higher at 2 seconds (esxtop) than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on 20-second peaks cannot be applied to a 5-minute chart. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks) although it is the less serious signal.
 - Instance reading: for a metric with instances (per vCPU, per disk), the worst instance is always at least the object value. The worst vCPU of a 64-vCPU VM can be far above the VM's normalized Ready. A band must say which reading it applies to, as "Peak CPU Ready among any vCPU" does.
 - Where thresholds live: two files, one place.
-  - `knowledge/catalog/thresholds-performance.yaml`: contention and health. Bands green, yellow, orange, red. Two readings: 20-second peak (`20s`) and 5-minute average (`5m`). Rule: a 20-second threshold is generally about 4x the 5-minute one, because a spike does not sustain for 300 seconds. The rule is stated, not used to fill a missing value.
+  - `knowledge/catalog/thresholds-performance.yaml`: contention and health. KPI colour levels in `levels`, the one copy: one line per object and metric, yellow, orange, red for 5m, 20s and 2s (9 values), entered by hand; null until entered. No value is derived from another interval (no 4x rule). Rule rows for single values (SLI, SLA, vendor values, alerts).
   - `knowledge/catalog/thresholds-capacity.yaml`: utilization, saturation, reservation, allocation, rightsizing. Five bands: grey (below green: wastage), green, yellow, orange, red.
-  - Each row is a rule (above X means Y, with a quote from its file) or a band set. Ids are unique across both files.
-  - A KPI file keeps its colour-band table for the reader. Lint checks that the table and the band rows match, both ways.
+  - Each row is a rule (above X means Y, with a quote from its file) or, in the capacity file, a band set. Ids are unique across both files.
+  - A KPI file keeps its colour-band table: search returns the file, and the model reads the table there. Lint checks that each table row matches its `levels` line (by metric name) or its capacity band row, both ways.
   - The harness loads both files into its catalog at start-up (YAML is the source; the in-memory SQLite is a copy).
-  - Thresholds still written only in prose: `python3 project/tools/threshold_inventory.py` lists them. Each gets a row with its source, or the number goes.
+  - Thresholds still written only in prose: `python3 project/tools/threshold_inventory.py` lists them. A row is added only when Agent E2 can test the value exactly (numbers, not words such as "high"), or when it is a vendor value; otherwise the number stays in prose only.
 - No invented thresholds: a threshold goes in only with a source, quoted. Row field `source`: `knowledge-base`, or a vendor document with its version (`vsphere-9.1-docs`, `performance-best-practices-9.1`, `microsoft`), because vendor values can go stale and the newer official document wins.
 - The rule for the model is in `observability/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 

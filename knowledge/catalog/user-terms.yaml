@@ -208,3 +208,8 @@ rows:
   means: business application KPI tier crown jewels
   note: 'The infrastructure layer measures each critical business application too: tier = average of members, application = worst tier, active node only.'
   files: [sp5-framework/performance/business-application-kpi]
+- id: kpi-other-pillar
+  match: ['\b(availability|uptime|security|compliance|business|marketing) kpis?\b', '\bkpis? (for|of) (availability|uptime|security|compliance)\b']
+  means: KPI KAI KSI key availability indicator key security indicator
+  note: 'KPI is performance only. An availability KPI is a KAI (key availability indicator); a security or compliance KPI is a KSI. Business or marketing KPI in daily speech means any key indicator: name the pillar it measures.'
+  files: [sp5-framework/performance/kpi-vs-sla]
