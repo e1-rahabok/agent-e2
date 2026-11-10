@@ -100,7 +100,8 @@ def _run_tool(retriever, name, args, state):
         text = d.body
         if args.get('heading'):
             text = next((t for h, t in d.sections if h.lower() == args['heading'].lower()), text)
-        return f'id: {d.id} | status: {d.status}\n{text}'
+        facts = catalog.get(retriever.docs).facts_for([d.id])  # thresholds live only in the catalog: show them with the file
+        return f'id: {d.id} | status: {d.status}\n{text}' + (f'\n\n{facts}' if facts else '')
     if name == 'follow_links':
         lt = args.get('link_type', 'all')
         if lt in ('same_name', 'all'):

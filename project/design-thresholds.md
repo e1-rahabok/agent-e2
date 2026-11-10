@@ -24,9 +24,9 @@ Not indexed.
 ### 3.1 Files
 | File | Content |
 |---|---|
-| `knowledge/catalog/thresholds-performance.yaml` | 46 rule rows (one value: above X means Y); 31 `levels` lines, the one copy of the KPI colour levels: yellow, orange, red for 5m, 20s and 2s, entered by hand, null until entered (since 2026-11-10; band rows and the `from` field removed) |
-| `knowledge/catalog/thresholds-capacity.yaml` | 26 rule rows, 18 band rows with a grey (wastage) band |
-| Knowledge files | Each KPI and model file keeps its colour-band table in Markdown (search returns it; lint checks it against `levels` by metric name); each rule row quotes a sentence of its file |
+| `knowledge/catalog/thresholds-performance.yaml` | 24 rule rows: 3 SLA, 4 SLI, 17 alerts. 31 `levels` lines: yellow, orange, red for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
+| `knowledge/catalog/thresholds-capacity.yaml` | 21 rule rows, 18 band rows with a grey (wastage) band (2026-11-10: 7 vendor and default rows went back to prose) |
+| Knowledge files | No colour-band table and no SLI or SLA number: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
 - Alert thresholds are rule rows with the wait time inside the `condition` text ("for 15 minutes"). Three of them sit in the capacity file.
 - Rows are joined by the metric's English name; no key.
@@ -40,7 +40,7 @@ Not indexed.
 6. Prompt rules (`harness/modes.py`, `harness/primer.py`): "Quote a threshold only when the knowledge base states it"; "For a threshold, call catalog. Its values are exact."
 7. Verifier (`harness/verify.py`): a number with a unit in the reason line that is not in the question or the context is recorded as "ungrounded" in the trace. Soft: it does not trigger a repair.
 8. Clarifying (`harness/clarify.py`, shipped conversation only): one round of up to 3 questions when the question is odd, the text and an attachment disagree, or one missing fact (object, layer, interval, version) changes the answer.
-9. Quality checks: lint checks every row (fields, allowed values, quote still in its file), band rows against the Markdown tables both ways, and `levels` against the band rows. `project/tools/threshold_inventory.py` lists thresholds written in prose without a row. `harness/test_tools.py` checks that lookups return sourced thresholds.
+9. Quality checks: lint checks every catalog row (parses, fields, allowed values), a `quote` where one remains, and that no knowledge file carries a colour-band table. `harness/test_tools.py` checks lookups, classic facts and `read_file` show the catalog values.
 
 ### 3.3 Gaps in what is built
 | # | Gap | Effect on an answer |
@@ -432,7 +432,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 | Clarifying rule (`harness/clarify.py`) | Object, layer, interval, version | Adds instance, use, class, the customer's own setting; reads "depends on" |
 | Verifier (`harness/verify.py`) | Soft check on numbers in the reason line | Every number with a unit in the whole answer checked against the returned rows; a threshold not returned triggers the repair turn after the benchmark shows it helps |
 | Lint (`project/tools/lint.py`) | Fields, quotes; `levels` one copy, values worsen yellow to red, each line matched to its Markdown band table by metric name, both ways; capacity band rows vs Markdown | Plus: `use` and `reading` on every row; reading exists; ids unique; no yellow alert; cancel cycles within R1-R6 (section 9) |
-| Tools | `levels_csv.py`, `threshold_inventory.py` | Both on the new files; a migration script from the 2 files to the 6 |
+| Tools | `levels_csv.py` | `levels_csv.py` on the new files; a migration script from the 2 files to the 6 |
 | Tests (`harness/test_tools.py`) | Lookups return sourced rows | Verdicts per use, not-comparable cases, depends-on cases, alert timing, dominance |
 
 ## 14. Alternatives considered

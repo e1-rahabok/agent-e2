@@ -54,12 +54,12 @@ class CatalogTest(unittest.TestCase):
         self.assertTrue(all(c['object'] == 'VirtualMachine' for c in r['counters']))
 
     def test_thresholds_have_source(self):
-        r = CAT.lookup('KAVG')
-        self.assertTrue(any(t['value'] == 0.5 and t['source'] == 'knowledge-base' for t in r['thresholds']))
+        r = CAT.lookup('VM CPU Ready')
+        self.assertTrue(any(t['value'] == 2.5 and t['source'] == 'knowledge-base' for t in r['thresholds']))
 
-    def test_bands_parsed_from_knowledge(self):
-        bands = CAT.thresholds(name='Peak CPU Ready among any vCPU')['bands']
-        self.assertEqual((bands[0]['green'], bands[0]['red']), ('0-2', '8-16'))
+    def test_capacity_bands_from_catalog(self):
+        bands = CAT.thresholds(name='Worst ESXi memory ballooned')['bands']
+        self.assertEqual((bands[0]['green'], bands[0]['red']), ('0-1', '4-8'))
 
     def test_object_path(self):
         p = CAT.path('vm', 'cluster')['path']
@@ -71,17 +71,25 @@ class CatalogTest(unittest.TestCase):
         f = CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/ready'])
         self.assertIn('cpu.ready', f)
         self.assertIn('statistics level 1', f)
-        self.assertIn('Threshold', CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/latency']))
+        self.assertIn('Threshold', CAT.facts_for(['sp5-framework/concepts/sla-metrics']))
+        self.assertIn('Bands:', CAT.facts_for(['vsphere/object-types/cluster/models/cluster-risk']))
 
     def test_facts_for_kpi_levels(self):
         f = CAT.facts_for(['vsphere/object-types/vm/kpis/vm-performance'])
         self.assertIn('KPI levels', f)
-        self.assertIn('Peak CPU Ready among any vCPU (%), higher is worse: 20s 2, 4, 8; 5m no value', f)
+        self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s 2, 4, 8; 5m no value', f)
+
+    def test_read_file_shows_catalog_values(self):
+        import agent
+        class R: docs = DOCS
+        out = agent._run_tool(R(), 'read_file', {'id': 'vsphere/object-types/vm/kpis/vm-performance'}, {'read': []})
+        self.assertIn('KPI levels', out)
+        self.assertIn('20s 2, 4, 8', out)
 
     def test_lookup_returns_levels(self):
         r = CAT.thresholds(name='Peak CPU Ready among any vCPU')
         self.assertEqual(r['levels'][0]['20s'], 'yellow/orange/red 2/4/8')
-        self.assertEqual(r['bands'][0]['interval'], '20s')
+        self.assertEqual(r['levels'][0]['kb'], 'vsphere/object-types/vm/kpis/vm-performance')
 
 
 class KpiLookupTest(unittest.TestCase):

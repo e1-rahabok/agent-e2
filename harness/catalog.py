@@ -44,18 +44,6 @@ def norm_object(value):
     return OBJECT_ALIASES.get(value.strip().lower(), value.strip())
 
 
-def band_edge(cell, below=False):
-    """Number at the worse-side start of a band cell: '4-8' -> 4 (above), 256 for '256-512' read below -> 512. 1K = 1000."""
-    part = str(cell).replace(',', '').split('-')[1 if below else 0].strip()
-    return float(part[:-1]) * 1000 if part.upper().endswith('K') else float(part)
-
-
-def table_interval(table_row, level):
-    """The levels column (5m, 20s, 2s) whose [yellow, orange, red] equal the Markdown table row, or None."""
-    want = [band_edge(table_row[c], level['direction'] == 'below') for c in ('yellow', 'orange', 'red')]
-    return next((iv for iv in ('20s', '5m', '2s') if level.get(iv) is not None and [float(x) for x in level[iv]] == want), None)
-
-
 def bands_from_docs(docs):
     """Colour band tables (Green | Yellow | Orange | Red) in knowledge files, one row per metric."""
     out = []
@@ -103,7 +91,7 @@ class Catalog:
                                 same_name TEXT, same_meaning TEXT, status TEXT);
           CREATE TABLE objects (type TEXT, role TEXT, layer TEXT, supplies TEXT, charts INT, note TEXT, kb TEXT);
           CREATE TABLE relations (src TEXT, dst TEXT, kind TEXT, cardinality TEXT);
-          CREATE TABLE levels (object TEXT, metric TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, src TEXT);
+          CREATE TABLE levels (object TEXT, metric TEXT, grp TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, excluded INT, src TEXT);
           CREATE TABLE formulas (formula TEXT, source TEXT);
         ''')
         for r in load_yaml('vcenter-api-counters.yaml')['rows']:
@@ -135,18 +123,11 @@ class Catalog:
                     c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
                               (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
                                b['orange'], b['red'], r['source'], pillar, r.get('interval')))
-        # KPI levels: the one copy of the performance colour bands. The KPI file's Markdown table gives the knowledge
-        # file, the group and the green and red ends; the interval is the levels column whose values the table shows.
-        tables = {b['metric']: b for b in bands_from_docs(self.docs)}
+        # KPI levels: the one place for performance colour levels; no knowledge file repeats them.
         for lv in load_yaml('thresholds-performance.yaml').get('levels') or []:
-            t = tables.get(lv['metric'])
-            c.execute('INSERT INTO levels VALUES (?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv['direction'],
-                      *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')), t['kb'] if t else None))
-            if t:
-                iv = table_interval(t, lv)
-                c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                          (t['kb'], t['group'], lv['metric'], lv['object'], None, t['green'], t['yellow'], t['orange'], t['red'],
-                           'knowledge-base', 'performance', iv))
+            c.execute('INSERT INTO levels VALUES (?,?,?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv.get('group'), lv['direction'],
+                      *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')),
+                      int(bool(lv.get('excluded_when_green'))), lv['kb']))
         for d in self.docs.values():
             if not any(f in d.id for f in ('/metrics/', '/kpis/', '/models/')):  # metric files, KPIs and models
                 continue
@@ -239,12 +220,18 @@ class Catalog:
             s += _score(key, words, exact=[r['metric'].lower()], text=r['metric'].lower(), desc='') if key else 0
             if s:
                 bd.append((s, r))
-        th, bd = _best(th, limit), _best(bd, limit)
+        lv = []
+        for r in self._q('SELECT * FROM levels'):
+            s = 40 if r['src'] in kb_ids else 0
+            s += _score(key, words, exact=[r['metric'].lower()], text=r['metric'].lower(), desc='') if key else 0
+            if obj and r['object'] != obj:
+                s //= 2
+            if s:
+                lv.append((s, r))
+        th, bd, lv = _best(th, limit), _best(bd, limit), _best(lv, limit)
         return {'thresholds': [_compact(r, ('metric', 'object', 'operator', 'value', 'value_high', 'unit', 'condition', 'meaning', 'source', 'kb')) for r in th],
                 'bands': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd],
-                'levels': [{'object': r['object'], 'metric': r['metric'], 'worse': r['direction'],
-                            **{iv: (f'yellow/orange/red {r[col]}' if r[col] else 'no value') for iv, col in (('5m', 'm5'), ('20s', 's20'), ('2s', 's2'))}}
-                           for b in bd for r in self._q('SELECT * FROM levels WHERE metric = ?', (b['metric'],))]}
+                'levels': [_level(r) for r in lv]}
 
     def object_info(self, type_):
         t = norm_object(type_)
@@ -277,7 +264,7 @@ class Catalog:
     def formulas(self):
         return self._q('SELECT * FROM formulas')
 
-    def facts_for(self, ids, max_rows=14):
+    def facts_for(self, ids, max_rows=20):
         """Compact catalog facts for knowledge files already in the context (classic mode)."""
         if not ids:
             return ''
@@ -300,7 +287,11 @@ class Catalog:
         for r in self._q(f'SELECT * FROM levels WHERE src IN ({marks})', tuple(ids)):
             worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
             vals = '; '.join(f"{iv} {r[col].replace('/', ', ') if r[col] else 'no value'}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
-            lines.append(f"- KPI levels (yellow, orange, red): {r['object']} {r['metric']}, {worse}: {vals}. [{r['src']}]")
+            ex = '; left out of the score while green' if r['excluded'] else ''
+            lines.append(f"- KPI levels (yellow, orange, red): {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
+        for r in self._q(f'SELECT * FROM bands WHERE kb IN ({marks})', tuple(ids)):
+            grey = f"grey {r['grey']}, " if r['grey'] else ''
+            lines.append(f"- Bands: {r['metric']} ({r['grp']}): {grey}green {r['green']}, yellow {r['yellow']}, orange {r['orange']}, red {r['red']}. [{r['kb']}]")
         if not lines:
             return ''
         return 'Catalog facts (exact):\n' + '\n'.join(lines[:max_rows])
@@ -338,6 +329,12 @@ def _best(scored, limit, keep=0.6):
         return []
     top = scored[0][0]
     return [r for s, r in scored if s >= top * keep][:limit]
+
+
+def _level(r):
+    return {'object': r['object'], 'metric': r['metric'], 'group': r['grp'], 'worse': r['direction'],
+            **{iv: (f'yellow/orange/red {r[col]}' if r[col] else 'no value') for iv, col in (('5m', 'm5'), ('20s', 's20'), ('2s', 's2'))},
+            **({'excluded_when_green': True} if r['excluded'] else {}), 'kb': r['src']}
 
 
 def _compact(r, keys):

@@ -68,12 +68,14 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 - Slow is a spectrum from no contention to as good as dead. Disk latency and CPU Ready never read 0, so the threshold sits above 0.
 - Four counters, one per resource:
 
-| Resource | VM counter | Breach when |
-|---|---|---|
-| CPU | Ready | above 2.5% |
-| Memory | Contention | above 1% |
-| Disk | Latency | above 10 ms |
-| Network | Transmit dropped packets | above 0% |
+| Resource | VM counter |
+|---|---|
+| CPU | Ready |
+| Memory | Contention |
+| Disk | Latency |
+| Network | Transmit dropped packets |
+
+- SLI thresholds: `catalog/thresholds-performance`, rows `vm-sli-*`. They are shown with this file.
 
 - Measured at VM level, not per vCPU or per virtual disk. Disk latency is the average of read and write.
 - Averaged over 300 seconds. A 1-minute average is too tight: it forces either a higher cost or a lower threshold.
@@ -163,10 +165,10 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 - Every 5 minutes each counter passes or fails:
 
 ```text
-CPU SLI     = 100% if VM CPU Ready <= 2.5%, else 0%
-Memory SLI  = 100% if VM Memory Contention <= 1%, else 0%
-Disk SLI    = 100% if VM Disk Latency <= 10 ms, else 0%
-Network SLI = 100% if VM Network Transmit Dropped Packets = 0%, else 0%
+CPU SLI     = 100% if VM CPU Ready <= its SLI threshold, else 0%
+Memory SLI  = 100% if VM Memory Contention <= its SLI threshold, else 0%
+Disk SLI    = 100% if VM Disk Latency <= its SLI threshold, else 0%
+Network SLI = 100% if VM Network Transmit Dropped Packets <= its SLI threshold, else 0%
 VM SLI (%)  = average of the four          → 100, 75, 50, 25 or 0 every 5 minutes
 VM Performance SLA (%) = average of the VM SLI over the calendar month
 ```

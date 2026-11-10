@@ -38,7 +38,7 @@
   - KPI: comprehensive. The SLA metrics plus metrics that warn before an SLA metric is breached. Many KPIs per SLA: most performance metrics are monitored, few belong in a contract.
   - SLA: limited to the important metrics; more metrics make compliance harder. Guest OS metrics stay out of the IaaS SLA: they affect VM performance, but the fix is in the Guest OS.
 - Value:
-  - KPI: tends to be lower; 75% is acceptable.
+  - KPI: tends to be lower. A 5-minute score of 75% is acceptable for a development VM. The KPI is an internal target, not a legal contract with a penalty: one bad interval is not a breach.
   - SLA: near 100%; a typical SLA is above 99%.
 - Effort:
   - KPI: simple to put in place.
@@ -48,8 +48,9 @@
   - SLA: always relative to an agreed threshold. Each 5-minute SLI is binary: a fail is a fail, so 1.01% and 50% memory contention against a 1% promise count the same.
 - Two numbers each:
   - actual: volatile, per VM (SLA: share of passed intervals in the month; KPI: the VM's score);
-  - target: steady, for many VMs, per class of service. SLA: Gold 99.9%, Silver 99.8%, Bronze 99.6% (`sp5-framework/performance/noisy-neighbour`). KPI: Gold 99.5%, Silver 99%, Bronze 98% (`sp5-framework/capacity/class-of-service-planning`).
+  - target: steady, for many VMs, per class of service. SLA targets: `catalog/thresholds-performance`, rows `performance-sla-*`. KPI targets: `catalog/thresholds-capacity`, rows `class-*-min-vm-performance`. A lower class has a lower target.
   - The KPI colour levels are the same for every class; the KPI target is not. A Gold VM must keep a higher KPI score than a Silver VM.
+  - Daily KPI actual (performance): the 95th percentile of the day's 288 scores, the score that 95% of the intervals reach or exceed. The worst 5% (14 intervals, 70 minutes) are ignored, so a single short episode does not move it: that is the alert's job. For capacity, the summary over time is part of each model.
 - Cadence:
   - KPI: daily, in a technical meeting. A month is far too late.
   - SLA: monthly, in a business meeting with stakeholders.
@@ -85,7 +86,7 @@
 
 - "VM 01 has the better SLA, so it performed better" → the SLA counts fails, not how bad they were. Five intervals at 50% memory contention pass a Gold SLA that a hundred intervals at 1.01% breach; the KPI shows the 50% stall.
 - "The SLA is green, so there is no performance problem" → the SLA is a 30-day lagging average at 5-minute accuracy. The KPI, at 20-second accuracy over a moving window, shows the problem first.
-- "A KPI of 75% is a failure, since SLAs are above 99%" → KPIs are lower by design; 75% is acceptable. The two scales are not comparable.
+- "A KPI of 75% is a failure, since SLAs are above 99%" → one 5-minute score of 75% on a development VM is acceptable; the KPI is not a contract with a penalty. The two scales are not comparable.
 - "Put every KPI metric in the SLA" → more metrics make compliance harder. The SLA keeps the few contract metrics; the KPI covers the rest as early warning.
 - "Include Guest OS metrics in the IaaS SLA" → the fix for a Guest OS problem is in the Guest OS; the IaaS provider cannot remediate it.
 - "Cluster performance KPI includes host utilization" → it includes only the contention of the running VMs.

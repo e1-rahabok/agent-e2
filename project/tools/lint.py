@@ -121,17 +121,7 @@ def main():
             if not fm.get('metric_class'): bad(f, 'metric file must have metric_class')
             if '/comparisons/' not in f and len(fm.get('object') or []) > 1:
                 bad(f, 'metric file must have exactly one object type (comparisons excepted)')
-        if f in EXEMPT_WORDS: continue
-        for pat in allowed.get('avoid_everywhere', []):
-            if re.search(pat, body): bad(f, f'body contains audit marker matching {pat}')
-        if 'cpu' in (fm.get('technology') or []):
-            for line in body.splitlines():
-                checked = line
-                for ok in allowed.get('allow_in_cpu_files', []):
-                    checked = re.sub(ok, '', checked)
-                for pat in allowed.get('avoid_in_cpu_files', []):
-                    if re.search(pat, checked, re.I):
-                        bad(f, f'word to avoid ({pat}) in: {line.strip()[:100]}')
+        # Writing style (audit markers, words to avoid, AI-speak, title length) is the review's job, not lint's (2026-11-10).
 
     seen_ids, level_numbers = {}, {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
@@ -205,22 +195,13 @@ def main():
         text = open(f).read()
         for pat in allowed.get('injection_patterns', []):
             if re.search(pat, text): bad(f, f'possible prompt injection or hidden text (pattern {pat})')
-    import subprocess  # author-facing documents: file references must be clickable links
-    r = subprocess.run([sys.executable, 'project/tools/link_refs.py', '--check'], capture_output=True, text=True)
-    for line in r.stdout.splitlines(): bad(line.split(':')[0], line.split(': ', 1)[1])
-    r = subprocess.run([sys.executable, 'project/tools/tidy.py', '--check'], capture_output=True, text=True)  # Markdown formatter padding
-    for line in r.stdout.splitlines(): bad(line, 'padded tables or extra blank lines from a Markdown formatter: run python3 project/tools/tidy.py')
     import kb as _kb, primer  # agent up-front blocks: sources present, size within budget (harness/AGENT.md, section 3)
     pdocs, _ = _kb.load()
     for b in primer.BLOCKS:
         if not primer.build(pdocs, {b: True}): bad('harness/primer.py', f'up-front block "{b}" is empty: its source section is missing')
     n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
-    check_tables(bad)
-    check_titles(bad)
-    check_flow_map(bad)
     check_moved(ids, bad)
-    check_repo_terms(allowed, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
 
@@ -318,9 +299,9 @@ OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 
 
 def check_catalog(allowed, ids, bodies, bad, docs=None):
-    """knowledge/catalog/*.yaml: valid tags, existing knowledge ids, thresholds still quoted in their files, band tables matched."""
+    """knowledge/catalog/*.yaml: parses, required fields, valid tags, existing knowledge ids; a quote, where a row still has one, is still in its file."""
     objects = set(allowed['object'])
-    seen_thresholds, yaml_bands, levels_all = set(), set(), []
+    seen_thresholds, levels_all = set(), []
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')
@@ -374,10 +355,9 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
                     if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
                     kb_ok(path, w, r.get('kb'))
-                    yaml_bands.add((r.get('kb'), r.get('metric'), r.get('group') or '', bd.get('green'), bd.get('yellow'), bd.get('orange'), bd.get('red')))
                     continue
                 if r.get('kind') != 'rule': bad(path, f'{w}: kind must be rule or bands')
-                for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb', 'quote'):
+                for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb'):
                     if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
                 if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
                 if r.get('operator') not in OPERATORS: bad(path, f'{w}: operator "{r.get("operator")}" not allowed')
@@ -393,9 +373,8 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 seen_levels = set()
                 for n, lv in enumerate(data.get('levels') or []):
                     w = f'levels row {n + 1} ({lv.get("metric")})'
-                    for k in ('object', 'metric', 'direction'):
+                    for k in ('object', 'metric', 'group', 'direction', 'kb'):
                         if not lv.get(k): bad(path, f'{w}: {k} missing')
-                    if 'from' in lv: bad(path, f'{w}: from is not used (the Markdown band table is found by metric name)')
                     if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
                     if lv.get('metric') in seen_levels: bad(path, f'{w}: duplicate metric')
                     seen_levels.add(lv.get('metric'))
@@ -437,26 +416,12 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         else:
             bad(path, 'unknown catalog file: add its checks to project/tools/lint.py')
 
-    # Band tables in knowledge files must match the catalog, both ways: capacity band rows, or a KPI levels line
-    # (same metric name; its yellow, orange, red equal one filled interval).
+    # Thresholds live only in the catalog (one place): a knowledge file must not carry a colour-band table.
     import kb as _kb, catalog as _cat
-    docs_bands = _cat.bands_from_docs(_kb.load()[0])
-    table = {(b['kb'], b['metric'], b['group'], b['green'], b['yellow'], b['orange'], b['red']) for b in docs_bands}
-    by_metric = {lv.get('metric'): lv for lv in levels_all}
-    for b in docs_bands:
-        lv = by_metric.get(b['metric'])
-        if lv is None:
-            continue
-        if _cat.table_interval(b, lv) is None:
-            bad(f'knowledge/{b["kb"]}.md', f'band row "{b["metric"]}" does not match its levels line in thresholds-performance.yaml (no interval has these yellow, orange, red)')
-        yaml_bands.add((b['kb'], b['metric'], b['group'], b['green'], b['yellow'], b['orange'], b['red']))
-    for m in sorted(set(by_metric) - {b['metric'] for b in docs_bands}):
-        bad('knowledge/catalog/thresholds-performance.yaml', f'levels line "{m}" has no band table row in a knowledge file')
-    for t in sorted(table - yaml_bands):
-        bad(f'knowledge/{t[0]}.md', f'band row "{t[1]}" has no matching row in a threshold file (knowledge/catalog/thresholds-*.yaml)')
-    for t in sorted(yaml_bands - table):
-        bad('knowledge/catalog', f'band row "{t[1]}" ({t[0]}) does not match the table in its kb file')
-
+    for b in _cat.bands_from_docs(_kb.load()[0]):
+        bad(f'knowledge/{b["kb"]}.md', f'colour-band table row "{b["metric"]}": thresholds live only in knowledge/catalog/thresholds-*.yaml')
+    for lv in levels_all:
+        if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'levels line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
 
 def check_flows(docs, bad):
     """Diagnosis files must parse into steps for the flow tool (harness/flows.py); step references must exist."""

@@ -89,13 +89,13 @@
 - Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size.
 - Tell customers the quality of each class. Memory overcommit and the Performance SLA per class:
 
-| Class | Memory overcommit | Performance SLA |
-|---|---|---|
-| Gold | 1:1 | 99.9% |
-| Silver | 1.5:1 | 99.8% |
-| Bronze | 2:1 | 99.6% |
+| Class | Memory overcommit |
+|---|---|
+| Gold | 1:1 |
+| Silver | 1.5:1 |
+| Bronze | 2:1 |
 
-- 100% is not realistic: the cost escalates. Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.
+- 100% is not realistic: the cost escalates. Performance SLA targets per class: `catalog/thresholds-performance`, rows `performance-sla-*`. A lower class has a lower target.
 
 ### Maximum VM size
 | Overcommit | Maximum VM size |
@@ -175,7 +175,6 @@ corrections:
 - 'Section ''Disk'', Limit: 2.5% per VM, not 1%; 40 VMs saturate the array. The book says 5% of the population; 40 of 2,000 is 2%.'
 - 'Section ''Maximum VM size'': overcommit is per physical thread, not per core; the book''s example is per core.'
 - 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation.'
-- 'Section ''Avoiding it'': the book''s memory table was wrong; 100% is unrealistic; Performance SLA 99.9% Gold, 99.8% Silver, 99.6% Bronze.'
 review_notes: []
 status: draft
 ```

@@ -27,79 +27,6 @@ meta:
   status: draft
 rows:
 - kind: rule
-  id: tiering-active-ideal
-  metric: Active memory on a memory tiering host
-  object: HostSystem
-  layer: hypervisor
-  operator: <=
-  value: 50
-  unit: '% of host DRAM'
-  meaning: Ideal.
-  source: performance-best-practices-9.1
-  kb: vsphere/technology/memory/concepts/memory-tiering
-  quote: 'ideal: no more than 50% of the host DRAM capacity'
-- kind: rule
-  id: tiering-active-suffer
-  metric: Active memory on a memory tiering host
-  object: HostSystem
-  layer: hypervisor
-  operator: '>='
-  value: 75
-  unit: '% of host DRAM'
-  meaning: Some workloads begin to suffer.
-  source: performance-best-practices-9.1
-  kb: vsphere/technology/memory/concepts/memory-tiering
-  quote: some workloads do not begin to suffer until active memory approaches 75%
-- kind: rule
-  id: tiering-nvme-latency-ideal
-  metric: NVMe read latency (memory tiering)
-  object: HostSystem
-  layer: physical
-  operator: <
-  value: 200
-  unit: µs
-  meaning: Ideal.
-  source: performance-best-practices-9.1
-  kb: vsphere/technology/memory/concepts/memory-tiering
-  quote: 'ideal: below 200 microseconds'
-- kind: rule
-  id: tiering-nvme-latency-suffer
-  metric: NVMe read latency (memory tiering)
-  object: HostSystem
-  layer: physical
-  operator: '>='
-  value: 400
-  unit: µs
-  meaning: Some workloads begin to suffer.
-  source: performance-best-practices-9.1
-  kb: vsphere/technology/memory/concepts/memory-tiering
-  quote: some workloads do not begin to suffer until latency approaches 400 microseconds
-- kind: rule
-  id: tiering-nvme-bandwidth-watch
-  metric: NVMe read bandwidth (memory tiering)
-  object: HostSystem
-  layer: physical
-  operator: '>'
-  value: 200
-  unit: MB/s
-  meaning: Start watching NVMe device latency.
-  source: performance-best-practices-9.1
-  kb: vsphere/technology/memory/concepts/memory-tiering
-  quote: 'NVMe read bandwidth above 200 MB/s: start watching NVMe device latency'
-- kind: rule
-  id: tiering-large-vm
-  metric: VM memory size on a tiered host
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>'
-  value: 512
-  unit: GB
-  condition: and 64 vCPUs
-  meaning: Can degrade on a tiered host. Disable tiering for the VM, with a full memory reservation.
-  source: performance-best-practices-9.1
-  kb: vsphere/technology/memory/concepts/memory-tiering
-  quote: VMs with more than 512 GB of memory and 64 vCPUs can degrade on a tiered host.
-- kind: rule
   id: monster-vm-cpu
   metric: VM vCPU count relative to host physical cores
   object: VirtualMachine
@@ -543,18 +470,6 @@ rows:
   quote: '| Average CPU workload among the VMs | About 40% | Below 20% all month: all large VMs oversized |'
   interval: 5m
 - kind: rule
-  id: vmfs6-unmap-rate-low-default
-  metric: VMFS6 automatic unmap rate, priority Low (default)
-  object: Datastore
-  operator: range
-  value: 25
-  value_high: 50
-  unit: MB/s
-  meaning: Default background unmap rate. Medium 50-100 MB/s; High above 100 MB/s; None deactivates unmap.
-  source: vsphere-9.1-docs
-  kb: vsphere/technology/storage/metrics/host/datastore
-  quote: 'Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s'
-- kind: rule
   id: alert-esxi-cpu-thread-utilization-red
   metric: ESXi CPU Thread Utilization
   object: HostSystem
@@ -592,3 +507,30 @@ rows:
   source: knowledge-base
   kb: vsphere/technology/storage/configuration/storage-alerts
   quote: 'Datastore, red: used space above 90%.'
+- kind: rule
+  id: host-cpu-cores-free
+  metric: ESXi Core Utilization
+  object: HostSystem
+  layer: hypervisor
+  operator: <
+  value: 100
+  unit: '%'
+  condition: or ESXi Thread Utilization below 50%
+  meaning: Physical cores are still free. New VMs can go on.
+  source: knowledge-base
+  kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+  quote: 'Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free.'
+- kind: rule
+  id: host-cpu-thread-utilization-target
+  metric: ESXi Thread Utilization
+  object: HostSystem
+  layer: hypervisor
+  operator: range
+  value: 80
+  value_high: 90
+  unit: '%'
+  condition: Core Utilization at 100%
+  meaning: Level to keep per host. Cluster level is lower.
+  source: knowledge-base
+  kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+  quote: Keep it around 80%-90% per host

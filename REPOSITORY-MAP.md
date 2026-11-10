@@ -68,5 +68,5 @@ Order of checks, run step by step by the `flow` tool. Each sits next to its tech
 | `project/vocabulary.md`, `project/terms.md` | Writing vocabulary; repository terms |
 | `project/sources/` | Source documents. Read-only |
 | `project/templates/` | Templates for knowledge files |
-| `project/tools/` | `lint.py`, `tags.yaml`, `threshold_inventory.py`, `answered.py`, `link_refs.py` |
+| `project/tools/` | `lint.py`, `tags.yaml`, `levels_csv.py`, `answered.py`, `link_refs.py` |
 | `project/archive/` | Retired documents |
