@@ -1,19 +1,7 @@
 # VM Performance (%) (VCF Operations KPI)
 
 ## Thresholds (book)
-| Group | Metric | Green | Yellow | Orange | Red |
-|---|---|---|---|---|---|
-| VM contention | Peak CPU Co-stop among any vCPU (%) | 0-1 | 1-2 | 2-4 | 4-8 |
-| VM contention | Peak CPU Ready among any vCPU (%) | 0-2 | 2-4 | 4-8 | 8-16 |
-| VM contention | Peak CPU Overlap (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
-| VM contention | Peak RAM Contention (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
-| VM contention | Peak read/write latency among vDisks (ms) | 0-10 | 10-20 | 20-40 | 40-80 |
-| VM contention | Peak network TX dropped packets (%) | 0-0.25 | 0.25-0.5 | 0.5-1 | 1-2 |
-| VM utilization | CPU Net Run (%) | 60-95 | 95-97 | 97-99 | 99-100 |
-| IaaS high utilization | VM Memory Ballooned (%) | 0-2 | 2-4 | 4-8 | 8-16 |
-| IaaS high utilization | VM Memory Compressed + Swapped (%) | 0-0.25 | 0.25-0.5 | 0.5-1 | 1-2 |
-
-![VM Performance thresholds](../images/vm-performance-thresholds-table.png)
+- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `levels`. They are shown with this file; this file holds the reasons.
 
 ## Reasons
 - CPU uses 4 metrics (Co-stop, Ready, Overlap, Net Run). They do not peak in the same 20-second period, so they cannot be combined. Known limitation: CPU weight is larger.
@@ -58,11 +46,6 @@ related:
 - guest-os/system/metrics/guest-os-performance
 - vcf-operations/features/peak-20-second-metrics
 images:
-  - path: ../images/vm-performance-thresholds-table.png
-    product: [vcf-operations]
-    object: [VirtualMachine]
-    metric: ['VM Performance']
-    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%)'

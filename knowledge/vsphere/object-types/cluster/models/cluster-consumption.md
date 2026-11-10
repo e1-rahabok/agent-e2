@@ -1,15 +1,7 @@
 # Cluster Consumption (%) (capacity model, vCommunity management pack for VCF Operations)
 
 ## Thresholds (book)
-| Group | Metric | Green | Yellow | Orange | Red |
-|---|---|---|---|---|---|
-| Utilization | Cluster-wide ESXi CPU thread utilization (%) | 0-55 | 55-70 | 70-85 | 85-100 |
-| Utilization | Cluster-wide ESXi memory consumed (%) | 0-70 | 70-80 | 80-90 | 90-100 |
-| Saturation | Cluster memory tiering consumption (%) | 0-4 | 4-8 | 8-16 | 16-32 |
-| Saturation | Cluster-wide ESXi memory ballooned (%) | 0-1 | 1-2 | 2-4 | 4-8 |
-| Saturation | Cluster-wide ESXi swapped + zipped memory (%) | 0-0.25 | 0.25-0.5 | 0.5-1 | 1-2 |
-
-![Cluster Consumption thresholds](../images/cluster-consumption-thresholds-table.png)
+- Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
 
 ## Meaning
 - Saturation is not contention: no slowness yet. It is real consumption, tracked with dedicated metrics.
@@ -41,11 +33,6 @@ related:
 - vsphere/object-types/cluster/kpis/cluster-performance
 - sp5-framework/capacity/capacity-model
 images:
-  - path: ../images/cluster-consumption-thresholds-table.png
-    product: [vcf-operations]
-    object: [ClusterComputeResource]
-    metric: ['Cluster Consumption']
-    image_type: table
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Other Metrics > Cluster Consumption (%)

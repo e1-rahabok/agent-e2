@@ -71,9 +71,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - The book recommends option 2 of two range schemes: wide grey (waste) zone, then a narrow green band near the top.
 - Guest OS memory utilization ranges (option 2):
 
-| Metric | Green | Yellow | Orange | Red |
-|---|---|---|---|---|
-| Guest OS memory utilization, for sizing (%) | 75-85 | 85-90 | 90-95 | 95-100 |
+- Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
 
 - Below 75% is grey: waste.
 

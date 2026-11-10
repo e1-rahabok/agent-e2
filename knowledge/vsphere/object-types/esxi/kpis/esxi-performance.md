@@ -16,19 +16,7 @@
 - A VM belongs to the host named in its `summary|parentHost` property; it counts only when `summary|runtime|powerState` is Powered On.
 
 ## Thresholds
-| Dimension | Metric | Green | Yellow | Orange | Red |
-|---|---|---|---|---|---|
-| Depth | Worst peak vCPU Ready among VMs on the host (%) | 0-4 | 4-8 | 8-16 | 16-32 |
-| Depth | Worst peak vCPU Co-stop among VMs on the host (%) | 0-2 | 2-4 | 4-8 | 8-16 |
-| Depth | Worst memory latency among VMs on the host (%) | 0-1 | 1-2 | 2-4 | 4-8 |
-| Depth | Worst peak read/write disk latency, all vDisks of VMs on the host (ms) | 0-40 | 40-80 | 80-160 | 160-320 |
-| Breadth | 90th percentile peak vCPU Ready among VMs on the host (%) | 0-1 | 1-2 | 2-4 | 4-8 |
-| Breadth | 90th percentile peak vCPU Co-stop among VMs on the host (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
-| Breadth | 90th percentile memory latency among VMs on the host (%) | 0-0.5 | 0.5-1 | 1-2 | 2-4 |
-| Breadth | 90th percentile read/write latency among virtual disks of VMs on the host (ms) | 0-20 | 20-40 | 40-60 | 60-80 |
-| ESXi | ESXi (error + dropped) network packets (%) | Excluded | 0-0.2 | 0.2-0.4 | 0.4-0.8 |
-
-![ESXi Performance thresholds: 9 sub-metrics in How Deep, How Broad and ESXi groups, with green, yellow, orange and red ranges](../images/esxi-performance-thresholds-table.png)
+- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `levels`. They are shown with this file; this file holds the reasons.
 
 - The red range ends where the sub-metric scores 0.
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100. Any bad packet is yellow and counts.
@@ -86,11 +74,6 @@ related:
 - vsphere/object-types/vm/kpis/vm-performance
 - vsphere/architecture/provider-consumer
 images:
-  - path: ../images/esxi-performance-thresholds-table.png
-    product: [vcf-operations]
-    object: [HostSystem]
-    metric: ['ESXi Performance']
-    image_type: table
 source:
   document: VCF-vCommunity-Adapter documentation, ESXi Performance KPI
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/esxi-performance.md; formula/esxi-performance.png

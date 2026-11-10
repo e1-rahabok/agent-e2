@@ -45,19 +45,31 @@ For people, not for Agent E2. Not indexed. Agent E2 reads the rules in `knowledg
 | 50% | 0 (past 4%) | 16 | (8 × 100 + 0) / (8 + 16) = 33.33 | Orange (25-50) |
 
 ## KPI, daily
-Daily actual taken here as the average of the day's 288 interval scores (to confirm: Q161).
+Daily KPI actual for performance: the 95th percentile of the day's 288 scores, the score that 95% of the intervals reach or exceed. The worst 5% (14 intervals, 70 minutes) are ignored.
 
 | Day | VM 01 | VM 02 |
 |---|---|---|
-| 12 June | (283 × 100 + 5 × 33.33) / 288 = 98.84 | 99.77 or 99.82 |
-| Any other day | 100 | 99.77 (4 bad intervals) or 99.82 (3) |
-| Against Gold 99.5 | Fails on 12 June | Passes every day |
+| 12 June | 5 of 288 intervals at 33.33, all inside the ignored 14: daily KPI 100 | 3 or 4 intervals at 83.17, ignored: 100 |
+| Any other day | 100 | 100 |
+| Against Gold 99.5 | Pass | Pass |
 
-- On 12 June the technical meeting sees VM 01 below its Gold KPI target and starts troubleshooting. 98.84 would also fail Silver (99) and only pass Bronze (98).
-- VM 02 never misses its KPI target, yet it breaches the contract.
+- The daily KPI does not move for a 25-minute episode. It shows sustained degradation, not a single burst: that is the design.
+- Had VM 01's episode lasted 2 hours (24 intervals), the worst 14 would be ignored and the 15th worst, 33.33, would be the daily KPI: far below 99.5. The technical meeting would see it the next morning.
+
+## The alert, the same day
+- The 25-minute episode at 50% is caught by the VM memory contention alert, not by the KPI. The red alert needs VM Memory Contention above 6% (5-minute), Peak Memory Contention above 24% and CPU Usage above 1 GHz, all together (`knowledge/vsphere/technology/memory/configuration/memory-alerts.md`).
+- At 50%, all hold (assuming the VM is busy), so the alert fires after its wait cycle: one 5-minute collection. The admin acts within 1-2 hours.
+- VM 02 at 1.01% stays far below the orange alert (3%): no alert, correctly. Nothing urgent happened to it.
 
 ## What the example shows
-- The two rankings are opposite. On the SLA, VM 01 is better (99.94% against 98.84%). On the KPI, VM 01 is worse: 25 minutes where memory was so short that the application stalled.
-- SLA answers "did we keep the promise?" for the business, once a month. KPI answers "how did the VM actually perform?" for the technical team, every day.
-- Fixing only what breaches the SLA would leave VM 01's stall unexplained. Fixing only the KPI would leave VM 02's breach and its penalty unseen.
+- Three instruments, three questions:
+
+| Instrument | VM 01 (5 intervals at 50%) | VM 02 (100 intervals at 1.01%) | Question it answers |
+|---|---|---|---|
+| SLA, monthly | Pass (99.94%) | Fail (98.84%) | Did we keep the promise? A fail is a fail |
+| KPI, daily 95th percentile | Pass (100) | Pass (100) | Is the VM performing, day after day? |
+| Alert, intra-day | Red, on 12 June | None | Must someone act now? |
+
+- The SLA ranks VM 02 worse; the alert ranks VM 01 worse; the daily KPI sees neither, because neither degraded for more than 70 minutes in a day.
+- None of them can be computed from another. Each needs its own threshold, its own time span and its own spike filter: the SLI's pass or fail, the KPI's 95th percentile, the alert's wait cycle.
 - A Gold VM must keep a higher KPI score than a Silver VM: the target differs by class, the colour levels do not.

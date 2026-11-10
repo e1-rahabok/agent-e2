@@ -8,22 +8,7 @@
 - Not built into VCF Operations: a metric of the vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
 
 ## Thresholds
-| Group | Metric | Green | Yellow | Orange | Red |
-|---|---|---|---|---|---|
-| Utilization | Highest ESXi CPU thread utilization (%) | Excluded | 60-80 | 80-90 | 90-95 |
-| Utilization | Worst ESXi CPU imbalance (ratio) | 1 | 1-1.3 | 1.3-1.6 | 1.6-2 |
-| Utilization | Highest ESXi memory consumed (%) | Excluded | 80-90 | 90-95 | 95-100 |
-| Saturation | Worst ESXi memory ballooned (%) | 0-1 | 1-2 | 2-4 | 4-8 |
-| Saturation | Worst ESXi swapped + zipped memory (%) | 0-0.25 | 0.25-0.5 | 0.5-1 | 1-2 |
-| Saturation | Worst ESXi memory tiering latency (µs) | 0-150 | 150-300 | 300-450 | 450-600 |
-| Reservation | Highest ESXi CPU reservation (%) | Excluded | 10-40 | 40-60 | 60-80 |
-| Reservation | Highest ESXi memory reservation (%) | Excluded | 10-40 | 40-60 | 60-80 |
-| Allocation | Highest ESXi CPU overcommit ratio | Excluded | 1-2 | 2-3 | 3-4 |
-| Allocation | Highest ESXi memory overcommit ratio | Excluded | 1-1.4 | 1.4-1.8 | 1.8-2.2 |
-| Monster VM | Highest CPU monster VM : host ratio | 0-1 | 1-2 | 2-3 | 3-4 |
-| Monster VM | Highest memory monster VM : host ratio | 0-1 | 1-2 | 2-3 | 3-4 |
-
-![Cluster Risk thresholds: 12 sub-metrics in Utilization, Saturation, Reservation, Allocation and Monster VM groups, with green, yellow, orange and red ranges; six green ranges marked Excluded](../images/cluster-risk-thresholds-table.png)
+- Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
 
 - Excluded: six green ranges. A host that is not busy, has little reserved or is not overcommitted says nothing about risk. While green, these rows are left out instead of scoring 100; they count once they leave green.
 - The excluded green ends where yellow starts: thread utilization below 60%, memory consumed below 80%, reservation below 10%, overcommit below 1.
@@ -123,11 +108,6 @@ related:
 - vsphere/object-types/cluster/concepts/cluster-operations
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 images:
-  - path: ../images/cluster-risk-thresholds-table.png
-    product: [vcf-operations]
-    object: [ClusterComputeResource]
-    metric: ['Cluster Risk']
-    image_type: table
 source:
   document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI; PART 3 - Counters.docx for reasons and monster VM factors
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md; formula/cluster-risk.png; Provider Objects > Other Metrics > Cluster Risk (%); Monster VM

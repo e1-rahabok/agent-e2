@@ -10,14 +10,14 @@
 - An indicator, not in the SLA contract. Acts before the 30-day SLA.
 - Each VM has 4 IaaS SLIs (CPU, memory, disk, network). A VM must pass all four.
 
-| IaaS | VM counter | Threshold |
-|---|---|---|
-| CPU | Ready | 2.5% |
-| RAM | Contention | 1% |
-| Disk | Latency | 10 ms |
-| Network | TX dropped packets | 0% |
+| IaaS | VM counter |
+|---|---|
+| CPU | Ready |
+| RAM | Contention |
+| Disk | Latency |
+| Network | TX dropped packets |
 
-![SLI thresholds](../images/sli-thresholds-table.png)
+- SLI thresholds: `catalog/thresholds-performance`, rows `vm-sli-*`. They are shown with this file.
 
 ```text
 Cluster SLI (%) = 100 - ( (Sum [VM] Performance|Number of KPIs Breached + Sum [Pod] Performance|Number of KPIs Breached)
@@ -57,12 +57,7 @@ related:
 - sp5-framework/concepts/sla-metrics
 - vsphere/object-types/cluster/kpis/cluster-performance
 - observability/thresholds
-images:
-  - path: ../images/sli-thresholds-table.png
-    product: [vcf-operations]
-    object: [ClusterComputeResource, VirtualMachine]
-    topic: 'SLA and SLI'
-    image_type: table
+images: []
 source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Performance > Service Level Metrics
