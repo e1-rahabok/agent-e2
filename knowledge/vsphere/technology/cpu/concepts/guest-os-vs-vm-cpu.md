@@ -140,11 +140,8 @@ source:
   path: CPU > Architecture (pp. 52-55) > Guest OS vs VM
 corrections: []
 review_notes:
-- "Section 'Linux metrics': Steal and Idle rows confirmed by the author (2026-11-02)."
-- "Section 'What each layer cannot see': the book is unsure how often ESXi updates the guest on per-core frequency. Open question for the author."
-- "Section 'No 1:1 mapping': Utilization formula confirmed by the author (2026-11-02)."
+- 'To check: Section ''What each layer cannot see'': how often ESXi updates the guest on per-core frequency; the book is unsure.'
 - "Section 'Frozen time': reference paper from the book: https://dl.acm.org/doi/10.1145/2668930.2695524"
 - "Section 'Windows vs Linux accounting': Steal Time source from the book: https://github.com/torvalds/linux/blob/master/kernel/sched/cputime.c"
-- "Section 'Traps': author (2026-11-03), answer to Q035."
 status: draft
 ```

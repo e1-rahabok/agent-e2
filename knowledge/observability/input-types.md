@@ -90,9 +90,6 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture > Observability > Input | Output (pp. 17-18)'
 corrections: []
 review_notes:
-- 'Section ''Property'': the three types (label, setting, non-setting) from the author (Q090, 2026-11-08); they sit in a nested table the extraction missed.'
-- 'Section ''Event'', setting change: migration threshold 2 to 5, not automation level (author, Q090, 2026-11-08).'
-- 'Section ''Event'': the second Event row is an event, not the property types: an event can be a setting, state or label change (author, Q090, 2026-11-08). State itself is a metric; its change is an event.'
-- 'Section ''Property'', reason for VMs in a cluster being a metric (result of activity, collected every interval): Claude.'
+- 'To check: Section ''Property'': the reason for VMs in a cluster being a metric (result of activity, collected every interval) is not from the book.'
 status: draft
 ```

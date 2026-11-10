@@ -87,10 +87,9 @@ source:
   path: ESX Memory Considerations > Memory Overhead (pp. 36-37)
 corrections: []
 review_notes:
-- 'Section ''Overhead counter'': objects, level, unit and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. What the host, cluster and resource pool values include: author answer (2026-11-04): ESXi and cluster include VMkernel overhead; resource pool is the sum of VM overhead, negligible.'
+- 'Section ''Overhead counter'': objects, level, unit and summary from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 - 'Section ''Per-VM overhead'': VMMEM, the overhead percentages, hypervisor overhead and the DRS overhead limit from the vSphere 9.1 documentation, vSphere Resource Management > Overhead Memory on Virtual Machines, DRS Overhead Memory Management for VMs, Memory Tiering Troubleshooting > The Reservable Memory is Lower than Expected (pp. 1838, 1902-1903, 1958).'
 - Checked against 9.1 (revision 20260624). Pages 36-37 unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source links the per-VM overhead section to vSphere Resource Management for overhead details. Not read.
 status: draft
 ```

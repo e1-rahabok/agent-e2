@@ -137,8 +137,8 @@ review_notes:
 - 'Section ''High with Hyperthreading'': vHT name, defaults, reservation formulas and example from the vSphere 9.1 documentation, vSphere Resource Management > Virtual Hyperthreading support for VMs, vHT Full CPU Reservation, Activate vHT (pp. 1946-1947).'
 - Checked against 9.1 (revision 20260624). Pages 52-54 read. EDP Dedicated mode named in NFV guidance (p. 54). Power policy wording still inconsistent (p. 53 vs p. 31).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Inconsistent source naming, still present in 9.1: p. 53 says ''Set the ESX host power policy to Maximum performance''. The power policy list on p. 31 names ''High Performance''. Likely the same policy. Author to confirm.'
-- Source names the white paper 'Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs' and calls it dated. Not read.
+- 'To check: inconsistent source naming, still present in 9.1: p. 53 says ''Set the ESX host power policy to Maximum performance''; the power policy list on p. 31 names ''High Performance''. Likely the same policy (Performance Best Practices for VMware vSphere 9.1).'
+- 'To check: white paper ''Best Practices for Performance Tuning of Latency-Sensitive Workloads in vSphere VMs'', named by the source and called dated; not read.'
 - 'Section ''Effect on metrics (High)'': from Consumer Objects > Latency Sensitivity.'
 status: draft
 ```

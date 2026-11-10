@@ -64,6 +64,6 @@ source:
   path: Network > ESXi > Contention Metrics > Error Metrics; esxcli
 corrections: []
 review_notes:
-- 'KB from the book: https://knowledge.broadcom.com/external/article?articleNumber=341594 (not read; descriptions are the book''s summary).'
+- 'To check: KB cited by the book, not read; descriptions are the book''s summary (https://knowledge.broadcom.com/external/article?articleNumber=341594).'
 status: draft
 ```

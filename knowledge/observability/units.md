@@ -12,7 +12,7 @@
 - No single standard. Google uses 1000 for bytes and bits alike; 1 byte = 8 bits.
 - Storage vendors sell decimal capacity; Windows shows binary. A 128 GB drive shows about 116 GB in Windows: 9% less.
 - Windows: 1024 for storage.
-- VCF Operations: 1024 for storage, network and memory; 1000 for CPU (author's tests). It labels binary values KB, MB, GB, not KiB, MiB, GiB.
+- VCF Operations: 1024 for storage, network and memory; 1000 for CPU (tested). It labels binary values KB, MB, GB, not KiB, MiB, GiB.
 - vCenter counters: KB = 1,024 bytes; kb (kilobit) = 1,000 bits (`vsphere/tools/vsphere-client/vcenter-statistics`, section Units).
 - Binary names (IEC): kibi, mebi, gibi, tebi, pebi; symbols Ki, Mi, Gi. 1 KiB = 1,024 bytes = 1.024 KB. 1 GiB = 1,073,741,824 bytes.
 
@@ -59,8 +59,8 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections:
-- '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB; author has fixed the book.'
+- '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB.'
 review_notes:
-- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': PART 3 - Counters.docx, Metric Mastery > Units (author update, 2026-11-08).'
+- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': PART 3 - Counters.docx, Metric Mastery > Units (update of 2026-11-08).'
 status: draft
 ```

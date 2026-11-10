@@ -79,7 +79,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Colour from best practice, or from a profile'': the source points to the Baseline Profiling section of the book for the profiling steps; not in this document.'
-- 'Section ''Consumer vs provider troubleshooting'': the link to vm-slow is Claude''s.'
+- 'To check: Section ''Consumer vs provider troubleshooting'': the link to vm-slow is not in the source.'
 - 'Section ''Goals and users'': the source says which pods are affected; written as which VMs, as the question is about VMs.'
 status: draft
 ```

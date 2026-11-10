@@ -67,12 +67,12 @@ related:
 - vsphere/technology/network/metrics/host/throughput
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
-  document: 'Author''s technical note: Storage and Network Accounting for iSCSI over 10 GbE (Google Doc, read 2026-11-04)'
+  document: 'Technical note: Storage and Network Accounting for iSCSI over 10 GbE (Google Doc, read 2026-11-04)'
   path: https:/docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
 corrections: []
 review_notes:
-- 'Whole file: from the author''s answer to Q022 (2026-11-04) and the author''s technical note linked in source.path. Replaces the book statement that read and write both map to network Transmit.'
-- 'Section ''Principle'': NFS and NVMe/TCP named as IP storage are Claude''s own knowledge; the note covers iSCSI only.'
-- 'Sections ''Worked example'' (write reverses the pattern) and ''Consequences'' (1,500-byte MTU needs several frames): Claude''s inference from the note. Author to confirm.'
+- 'Whole file: from the technical note linked in source.path. Replaces the book statement that read and write both map to network Transmit.'
+- 'To check: Section ''Principle'': NFS and NVMe/TCP named as IP storage; the note covers iSCSI only.'
+- 'To check: Sections ''Worked example'' (write reverses the pattern) and ''Consequences'' (1,500-byte MTU needs several frames): inferred from the note.'
 status: draft
 ```

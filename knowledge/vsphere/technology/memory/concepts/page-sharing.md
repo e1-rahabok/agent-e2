@@ -56,6 +56,6 @@ corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 33-35 unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Source KB articles for security issues: 2080735 and 2097593. Not read.'
+- 'To check: KB 2080735 and 2097593 on page-sharing security issues, named by the source; not read.'
 status: draft
 ```

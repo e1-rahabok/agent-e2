@@ -75,9 +75,9 @@ source:
   path: 'Not in the 9.1 document. Previously in 9.0: CPU Hardware Considerations > Side-Channel Vulnerabilities (pp. 11-12); ESX CPU Considerations > Side-Channel Vulnerability Mitigation in ESX (pp. 25-26); Guest OS CPU Considerations (p. 55)'
 corrections: []
 review_notes:
-- Not in the 9.1 document. Its table of contents has no side-channel section. Checked CPU hardware pp. 11-13, ESX pp. 25-32, guest OS pp. 55-57. Content is from the 9.0 document. Verify against KB 55806 and current VMware security documentation before use.
+- 'To check: whole file: content is from the 9.0 document; the 9.1 table of contents has no side-channel section (checked CPU hardware pp. 11-13, ESX pp. 25-32, guest OS pp. 55-57). Verify against KB 55806 and current VMware security documentation before use.'
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-90-performance-best-practices'
-- Only the 9.0 source was read. The default scheduler behaviour in vSphere 9.x is not checked against KB 55806.
-- 'Not read: KB 52245, 54951, 55636, 56931. Source names these for details.'
+- 'To check: default scheduler behaviour in vSphere 9.x against KB 55806; only the 9.0 source was read.'
+- 'To check: KB 52245, 54951, 55636, 56931, named by the source for details; not read.'
 status: draft
 ```

@@ -4,7 +4,7 @@
 - vCenter 9.0 and later: Broadcom KB 312147 says deactivating vCLS does not impact DRS or HA.
 - The 9.0 performance document (p. 76) says DRS requires the vCLS VMs and vCenter Server. KB 312147 overrides that statement for 9.0 and later.
 - The 9.1 performance document has no vCLS statement in its DRS pages (76-79). This matches the deprecation.
-- vCenter 9.1: vCLS is deprecated (author statement). Third-party sources say it is off by default and cannot be re-enabled. Not verified.
+- vCenter 9.1: vCLS is deprecated. Third-party sources say it is off by default and cannot be re-enabled.
 - See `vsphere/object-types/cluster/concepts/vcls`.
 
 ## Cluster health indicators
@@ -94,8 +94,8 @@ source:
   path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 76); DRS Cluster Configuration Settings (pp. 76-77)
 corrections: []
 review_notes:
-- Checked against 9.1 (revision 20260624). Pages 76-77. The vCLS dependency statement is not in the 9.1 DRS section. Virtual hardware version 22 constraint added (ESX 9.1 p. 26).
+- 'The vCLS dependency statement is not in the 9.1 DRS section (pp. 76-77). Virtual hardware version 22 constraint from ESX 9.1 p. 26.'
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Broadcom KB 312147 (vCLS): https://knowledge.broadcom.com/external/article?articleNumber=312147. Overrides the 9.0 DRS-requires-vCLS statement for vCenter 9.0 and later. 9.1 status unverified.'
+- 'To check: vCLS status in 9.1: Broadcom KB 312147 (https://knowledge.broadcom.com/external/article?articleNumber=312147) overrides the 9.0 DRS-requires-vCLS statement for vCenter 9.0 and later.'
 status: draft
 ```

@@ -7,12 +7,12 @@
 
 ## Conditions, not symptoms
 - Build alerts from conditions, not from symptom definitions.
-- In the author's design a symptom is a light, small problem that does not warrant an alert, like a mild body ache that goes away with rest. Symptoms belong to the daily health check (`sp5-framework/alerts/alerts-and-insights`).
+- In this design a symptom is a light, small problem that does not warrant an alert, like a mild body ache that goes away with rest. Symptoms belong to the daily health check (`sp5-framework/alerts/alerts-and-insights`).
 - A condition is a test written inside the alert definition, such as a metric above a value.
 
 ## Wait cycle
 - The wait cycle is how long a condition must stay true before the alert fires. It removes short spikes and false positives, and delays the alert by the same time.
-- Values in the author's set:
+- Values in the recommended alert set:
   - contention: 5 minutes; 10 minutes where the metric tends to give false positives;
   - consumption: 15 minutes.
 - VCF Operations collects every 5 minutes, so 5, 10 and 15 minutes are 1, 2 and 3 collection cycles.
@@ -52,7 +52,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Parts of an alert definition'': the steps, Defined On Self and Any or All are read from the source screenshot of the Edit Alert Definition page (Pod object). Screenshot not copied.'
-- 'Section ''Wait cycle'': collection every 5 minutes and wait cycle counted in collection cycles are Claude''s knowledge of VCF Operations; check against the VCF Operations 9.1 documentation on symptom definitions.'
-- 'Section ''Conditions, not symptoms'': the definition of a condition (a test written inside the alert definition) is Claude''s reading of the screenshot, where Conditions and Symptoms are two tabs. Q143.'
+- 'To check: Section ''Wait cycle'': collection every 5 minutes and wait cycle counted in collection cycles (VCF Operations 9.1 documentation on symptom definitions).'
+- 'To check: Section ''Conditions, not symptoms'': the definition of a condition (a test written inside the alert definition) is read from the screenshot, where Conditions and Symptoms are two tabs (Q143).'
 status: draft
 ```

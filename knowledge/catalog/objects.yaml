@@ -10,7 +10,7 @@ meta:
     kb: Knowledge files that explain the object's metrics or behaviour.
     relations: Edges. kind is contains (inventory), resource-parent (resource hierarchy), runs-on, mounts, stores-files-on, connects-to. cardinality reads from -> to.
   review_notes:
-  - 'Whole file: object types and relationships are vSphere basics (Claude''s own knowledge), except where a kb file is named.'
+  - 'To check: object types and relationships without a kb file, against the vSphere 9.1 API reference.'
   - Many-to-many relationships between VM, datastore, host and cluster follow vsphere/architecture/object-relationships.
   - Provider and consumer roles follow vsphere/architecture/provider-consumer.
   - No performance charts for distributed switches and port groups follows vsphere/tools/vsphere-client/vcenter-statistics, section Chart behaviour.

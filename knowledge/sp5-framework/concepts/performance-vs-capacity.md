@@ -151,12 +151,12 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management (intro); Performance | Capacity > Utilization vs Demand; Contention vs Consumption; Pattern Difference (pp. 67-70)'
 corrections:
-- 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good (author, Q066, 2026-11-06).'
-- 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance (author, Q068, 2026-11-06).'
-- 'Section ''Pattern difference'': the drop starts where the allocation ratio passes 1, on the hottest host first; only allocation can be overcommitted (author, Q069, 2026-11-06).'
-- 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity (author, Q065, 2026-11-06). Corrects the book (performance is absolute).'
-- 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can (author, Q067, 2026-11-06).'
+- 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good.'
+- 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance.'
+- 'Section ''Pattern difference'': the drop starts where the allocation ratio passes 1, on the hottest host first; only allocation can be overcommitted.'
+- 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity. Corrects the book (performance is absolute).'
+- 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can.'
 review_notes:
-- 'Section ''Usable capacity exists only in capacity'': reservation is subtracted from supply here, while Part 1 Capacity Model puts it on the demand side (Demand = Max (Utilization, Reservation)); see sp5-framework/capacity/capacity-dimensions and Q127.'
+- 'To check: Section ''Usable capacity exists only in capacity'': reservation is subtracted from supply here, while Part 1 Capacity Model puts it on the demand side (Demand = Max (Utilization, Reservation)); see sp5-framework/capacity/capacity-dimensions (Q127).'
 status: draft
 ```

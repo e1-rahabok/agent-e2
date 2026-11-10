@@ -55,6 +55,6 @@ source:
   path: Memory > ESXi > Consumption Metrics > Shared
 corrections: []
 review_notes:
-- 'Section ''Behaviour'': the reason Shared Common exceeds half of Shared is the book''s guess (large pages). Author to confirm.'
+- 'To check: Section ''Behaviour'': the reason Shared Common exceeds half of Shared; the book guesses large pages.'
 status: draft
 ```

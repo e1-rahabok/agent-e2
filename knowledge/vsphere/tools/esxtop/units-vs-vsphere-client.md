@@ -32,7 +32,6 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections: []
-review_notes:
-- 'Moved 2026-11-06 from vsphere/tools/esxtop/units-vs-vsphere-client (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

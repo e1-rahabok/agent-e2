@@ -10,7 +10,7 @@
 - See `vsphere/architecture/kernel-worlds` for work charged to the VM rather than to a vCPU.
 
 ## Notes
-- The author states CPU Used is buggy. Do not build conclusions on it alone.
+- CPU Used is buggy. Do not build conclusions on it alone.
 
 ## Fair Share Scheduler
 - The scheduler charges each vCPU with Used, not Run, to keep relative fairness.
@@ -104,7 +104,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Fair Share Scheduler; CPU Efficiency; CPU > VM (pp. 78-118) > Consumption Metrics > Used | Usage > Used
 corrections:
-- '2026-11-02: Author states the CPU Used metric is buggy. The row ''VM Used HT penalty 37.5% vs ESXi Used 50%'' was removed (section: Notes).'
+- '2026-11-02: the CPU Used metric is buggy. The row ''VM Used HT penalty 37.5% vs ESXi Used 50%'' was removed (section: Notes).'
 review_notes:
 - Sections Fair Share Scheduler, Hyper-Threading examples, and the last trap: from CPU > Architecture.
 - 'Sections Formula, Worlds charged to the VM, Unit, Use cases: from CPU > VM.'

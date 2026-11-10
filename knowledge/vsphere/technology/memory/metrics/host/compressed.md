@@ -42,6 +42,6 @@ source:
   path: Memory > ESXi > Overview; Swap + Compress
 corrections: []
 review_notes:
-- 'Section ''Meaning'': the book is unsure whether Compressed is the input or the result.'
+- 'To check: Section ''Meaning'': whether Compressed is the input or the result of compression; the book is unsure.'
 status: draft
 ```

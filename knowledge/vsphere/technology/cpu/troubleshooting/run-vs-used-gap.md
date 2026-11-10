@@ -47,7 +47,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > When Run is lower than Used; When Run is higher than Used
 corrections: []
-review_notes:
-- "Section 'How to read the result': author (2026-11-03), Q006: the cause is CPU frequency (Turbo Boost), not Ready. The book was wrong."
+review_notes: []
 status: draft
 ```

@@ -106,10 +106,9 @@ source:
   path: 'Configuration Management > Review List > Compute > ESXi; Management; Storage Related; Network Related; ESXi Consistency (pp. 141-144)'
 corrections: []
 review_notes:
-- 'Section ''Memory'': 64 cores, 128 threads, 512 GB at 4 GB per vCPU is 1 vCPU per thread; the Price & SLA example (768 GB) is per core. Q111.'
-- 'Section ''Capacity'': the book says aim for 48 cores to maximize the software license; Price & SLA says 64. VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548). Dropped from the body. Q111.'
-- 'Section ''Network connectivity'': the book''s Network Related table asks whether the HBA is configured for high availability; written as physical NICs. Q113.'
-- 'Section ''Capacity'', 30-vCPU VM spanning NUMA: 2 sockets × 16 cores per socket is Claude''s reading of 32 cores.'
-- 'Traps 5 and 6: Claude, from the book''s rules.'
+- 'To check: Section ''Memory'': 64 cores, 128 threads, 512 GB at 4 GB per vCPU is 1 vCPU per thread; the Price & SLA example (768 GB) is per core. (Q111).'
+- 'To check: Section ''Capacity'': the book says aim for 48 cores to maximize the software license; Price & SLA says 64. VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548). Dropped from the body. (Q111).'
+- 'To check: Section ''Capacity'', 30-vCPU VM spanning NUMA: 32 cores read as 2 sockets × 16 cores per socket.'
+- 'To check: Traps 5 and 6: derived from the book''s rules, not stated in the book.'
 status: draft
 ```

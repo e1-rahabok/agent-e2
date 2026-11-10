@@ -27,7 +27,7 @@ flowchart TD
 - One KPI and two models: Cluster Performance (KPI), Cluster Consumption (capacity model), Cluster Risk (risk model). Read them separately.
 
 ## Checks, in order
-Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
+Order: four questions, and within each the what (facts) before the why (explanation):
 - Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
 - Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
 - Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
@@ -100,13 +100,12 @@ related:
 - sp5-framework/capacity/capacity-model
 - sp5-framework/capacity/reclamation
 source:
-  document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation)
+  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation)
   path: Linked files in each step
 corrections:
-- 'Whole file: author decisions 2026-11-08: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; KPI is performance only (Cluster Consumption and Cluster Risk are models); availability flows, security and compliance are future, after 1.0.'
+- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; KPI is performance only (Cluster Consumption and Cluster Risk are models); availability flows, security and compliance are future, after 1.0.'
 review_notes:
-- 'Section ''Checks, in order'': the order of the pillars follows health-risk-efficiency (book). Steps 3, 6 and 8 placed by Claude. Author to confirm (Q062).'
-- 'Sections ''Why this order'' and ''How to read the result'': Claude''s, from the linked files.'
-- 'Moved 2026-11-08 from vsphere/object-types/cluster/overview-what-to-monitor.'
+- 'To check: Section ''Checks, in order'': the placement of steps 3, 6 and 8; the order of the pillars follows health-risk-efficiency (book) (Q062).'
+- 'To check: Sections ''Why this order'' and ''How to read the result'': written from the linked files.'
 status: draft
 ```

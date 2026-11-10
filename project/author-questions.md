@@ -481,6 +481,8 @@ Each entry has:
 - Recommendation: (a). Without it the `all` logic and the 1 GHz gate are lost, and "why did this alert fire" cannot be answered.
 - Answer:
 
+## Resolved
+
 ### Q159 · Repository rules · Who-said-it tags
 - Files: [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Facts and sources); [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (sections 8, 13); [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (field `source`: book, author, vsphere-9.1-docs, ...); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Decisions: "author, date").
 - Search: not from the book.
@@ -489,9 +491,9 @@ Each entry has:
 - What Agent E2 does use: whether a fact comes from the knowledge base (mechanism, wins) or from a vendor document of a given version (can go stale; the newer official document wins), and whether a file is reviewed (`status: draft` is said in the answer).
 - Question: (a) drop who-said-it tags everywhere; keep `source` only as knowledge base vs vendor document with version, and `status` for review; review notes keep only what is still to check, with its URL; (b) drop them in prose and project documents, keep them in review notes until a file is reviewed; (c) keep as is.
 - Recommendation: (a). Applied already to the threshold design document.
-- Answer:
+- Answer: (a).
+- Applied 2026-11-10: CLAUDE.md (Facts and sources), KNOWLEDGE-ENGINEERING.md (sections 8, 9, 10, 13, 14), threshold `source` values (book and author became knowledge-base; lint, test), who-said-it tags removed from knowledge text, metadata, catalogs, plan and project documents; review notes cut to what is still to check.
 
-## Resolved
 
 ### Q126 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
 - Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (sections What to optimize, Big picture).

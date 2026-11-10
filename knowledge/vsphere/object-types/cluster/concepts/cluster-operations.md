@@ -68,7 +68,7 @@ source:
   document: PART 3 - Counters.docx
   path: Provider Objects > Overview > vSphere Cluster; Imbalance
 corrections:
-- 'Monster VM row: the book said above 45% of the host''s threads. Superseded by the adapter definition (author, Q032, 2026-11-05).'
+- 'Monster VM row: the book said above 45% of the host''s threads. Superseded by the adapter definition.'
 review_notes: []
 status: draft
 ```

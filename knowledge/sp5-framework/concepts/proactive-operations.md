@@ -16,7 +16,7 @@
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 
 ## Dual track: proactive first, reactive as fallback
-- Two processes: reactive and proactive (author, 2026-11-09).
+- Two processes: reactive and proactive.
 - Reactive: starts from a complaint or an alert. A manual process for three types of problem, each with its own order of checks, the what before the why:
   - Down: log, saturation, configuration, known bug.
   - Slow: contention, consumption, configuration, known bug, log. Read the KPI, not the SLA.
@@ -51,7 +51,7 @@
   - daily check at 09:00: about 5 minutes when there is no problem; a problem found makes it longer, as long as that problem needs;
   - weekly check: about 1 hour;
   - monthly review: about 1 day.
-![00:00-24:00 timeline. Reactive: alerts at random times. Proactive: NOC live screen always on; daily check at 09:00 (the image says 10 minutes; the author's length is about 5 minutes when there is no problem); weekly check (1 hour); monthly review (1 day)](images/operations-24-hour-reactive-vs-proactive-timeline.png)
+![00:00-24:00 timeline. Reactive: alerts at random times. Proactive: NOC live screen always on; daily check at 09:00 (the image says 10 minutes; it takes about 5 minutes when there is no problem); weekly check (1 hour); monthly review (1 day)](images/operations-24-hour-reactive-vs-proactive-timeline.png)
 - Morning sequence:
   - 08:00-09:00: an automatic health optimization script runs and flags VCF components it cannot remediate.
   - 09:00-09:30: a human expert reviews the script outcome and the daily dashboard, including the alert trend.
@@ -170,16 +170,13 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle) (pp. 58-65); SP5 Framework: Pillars (pillar per phase table)'
 corrections:
-- 'Daily SOP per pillar, Capacity: snapshots older than one day (author, Q112, 2026-11-08); the book example said 3 days.'
-- 'Daily check length: author answer Q105 (b), 2026-11-08: about 5 minutes when there is no problem; a problem makes it longer.'
-- 'Sections ''Dual track'' and ''Day-to-day order'': author answer Q104 (2026-11-08): reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is Claude''s.'
+- 'Daily SOP per pillar, Capacity: snapshots older than one day; the book example said 3 days.'
+- 'Daily check length: about 5 minutes when there is no problem; a problem makes it longer.'
+- 'Sections ''Dual track'' and ''Day-to-day order'': reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is not from the source.'
 review_notes:
-- 'Section ''Dual track'': rewritten from the author''s updated diagram and explanation (Q105 c, 2026-11-09): reactive (down, slow, breached) and proactive (daily, weekly, monthly). Modelling is no longer listed as a proactive technique.'
-- 'Daily check length: the book gives about 1 minute (text), 10 minutes (timeline image), 5 minutes (monitoring table). Author answer Q105 (b), 2026-11-08: a few minutes, about 5, when there is no problem; longer when there is a problem, depending on the problem.'
-- 'Section ''Who does which day'': only availability and performance are troubleshot; security is a forensic investigation; compliance is finding the setting that differs from the desired configuration (author, Q101 d, 2026-11-09).'
-- 'Section ''NOC live screen and daily check'': the book says insight and alerts were covered in Part 1; this is Part 1 (Q107).'
-- 'Section ''Daily SOP per pillar'', 31 backups: Claude''s subtraction (1,549 - 1,518).'
-- 'Section ''Daily SOP per pillar'', Proactive HA reading hardware health: Claude''s knowledge (vSphere Proactive HA uses hardware vendor health providers).'
+- 'Section ''NOC live screen and daily check'': the book says insight and alerts were covered in Part 1; this is Part 1.'
+- 'Section ''Daily SOP per pillar'', 31 backups: subtraction (1,549 - 1,518).'
+- 'To check: Section ''Daily SOP per pillar'', Proactive HA reading hardware health: vSphere Proactive HA uses hardware vendor health providers; not in the book.'
 - 'Not copied: day-to-day operations cadence image (text in A 24-hour day), day-to-day order image (text in Day-to-day order).'
 status: draft
 ```

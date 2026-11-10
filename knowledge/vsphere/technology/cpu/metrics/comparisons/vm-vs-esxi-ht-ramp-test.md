@@ -86,8 +86,6 @@ source:
   path: CPU > VM (pp. 78-118) > Quiz! > VM vs ESXi
 corrections: []
 review_notes:
-- Test data provided to the author by Valentin Bondzio (book footnote).
-- 'Section ''Why'': the book says ESXi Core Utilization matches VM Run and both went 2x, but its own values show Core Utilization at 100% throughout. Written as ESXi Utilization. Open question in project/author-questions.md.'
-- "Author (2026-11-03), Q008: the metric that went 2x with VM Run is Thread Utilization, not Core Utilization. Named Thread Utilization for clarity. Q003: Run is for Guest OS sizing, not VM sizing."
+- 'Test data from Valentin Bondzio (book footnote).'
 status: draft
 ```

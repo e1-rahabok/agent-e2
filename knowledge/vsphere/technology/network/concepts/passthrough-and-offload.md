@@ -71,6 +71,6 @@ corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 48-49 unchanged. Page references updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Not read: Enhanced Data Path (9.1 p. 46). Source links DPU configuration to NSX Manager and to ''What is VMware vSphere Distributed Services Engine'' in ESX Installation and Setup. Not read.'
+- 'To check: Enhanced Data Path (9.1 p. 46), and the DPU configuration references named by the source (NSX Manager; ''What is VMware vSphere Distributed Services Engine'' in ESX Installation and Setup); not read.'
 status: draft
 ```

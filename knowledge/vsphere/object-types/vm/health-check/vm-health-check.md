@@ -29,7 +29,7 @@ flowchart TD
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## Checks, in order
-Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
+Order: four questions, and within each the what (facts) before the why (explanation):
 - Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
 - Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
 - Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
@@ -103,12 +103,11 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 - guest-os/system/metrics/guest-os-performance
 source:
-  document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation)
+  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation)
   path: Linked files in each section
 corrections:
-- 'Whole file: author decisions 2026-11-08: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; availability, security and compliance are future, after 1.0.'
+- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; availability, security and compliance are future, after 1.0.'
 review_notes:
-- 'Section ''Checks, in order'': the order of the pillars follows health-risk-efficiency (book); the order inside performance (CPU, memory, storage, network) is Claude''s synthesis of the linked files. Author to confirm (Q062).'
-- 'Moved 2026-11-08 from vsphere/object-types/vm/overview-what-to-monitor.'
+- 'To check: Section ''Checks, in order'': the order inside performance (CPU, memory, storage, network), a synthesis of the linked files; the order of the pillars follows health-risk-efficiency (book) (Q062).'
 status: draft
 ```

@@ -20,12 +20,12 @@ benchmark/
 - One flat folder: a question often crosses products (vSphere, Windows, Linux, NSX, VCF Operations) and technologies, so folders cannot hold it. The slices are metadata (section Metadata tags):
   - `product`: every product the question touches (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml));
   - `technology`: every area it touches (cpu, memory, storage, network, system). The blueprint counts these: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.5.
-- File name: `L<level>-<nn>-<slug>.md`, numbered from 01 within each level, in id order. The last number of a level is its count (author, 2026-11-05).
+- File name: `L<level>-<nn>-<slug>.md`, numbered from 01 within each level, in id order. The last number of a level is its count.
 - The id is a 4-digit running number in the metadata only (`id: "0007"`). It never changes and is never reused. The runner and the results use it; people do not need it. A new question takes the next free id.
 - A question that changes level: edit `level:`, then run `python3 project/tools/renumber_questions.py`. It renumbers the files so each level runs from 01 without gaps, and updates the question links in the documents listed in `DOCS` of [project/tools/link_refs.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/link_refs.py). The id, the results and the attachments stay.
 - Attachments live in a folder named by the id: [benchmark/questions/0007](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/0007).
 - In documents, link a question by its title: `[title](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/<file>)`.
-- Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope (author, 2026-11-04).
+- Scope of questions: performance monitoring and troubleshooting, and the capacity view that supports it. Cost and price questions are out of scope.
 - One file per question: scales to hundreds of questions, one diff per question, attachments per question.
 - Ids never change and are never reused. Retired questions get `status: retired`. A question is deleted only when the author asks.
 - Deleted on author request: `vendor-neutral-general-001` (hyperscaler VM cost; out of scope, Q039).

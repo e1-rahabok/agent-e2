@@ -63,9 +63,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Contention Metrics > Contention
 corrections: []
-review_notes:
-- "Section 'Formula': author (2026-11-03), Q004: the 1% condition avoids false positives. https://knowledge.broadcom.com/external/article/338438/increased-vmwait-for-idle-vms-after-upgr.html"
-- "Section 'Meaning': author (2026-11-03), Q005: Contention is a VCF Operations counter; vSphere has CPU Latency (%LAT_C). The formula changed in VCF Operations 8.18."
-- 'Moved 2026-11-06 from vsphere/technology/cpu/metrics/virtual-motherboard/contention (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

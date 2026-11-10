@@ -54,8 +54,6 @@ source:
   document: PART 3 - Counters.docx
   path: Memory > ESXi > Consumption Metrics > Utilization; Analysis
 corrections: []
-review_notes:
-- 'Section ''Formula'': author answer Q021 (2026-11-04): kernel reservation and ESX System Usage are the same thing; Memory \\ ESX System Usage (KB) is a raw vCenter counter with a legacy name.'
-- 'Moved 2026-11-06 from vsphere/technology/memory/metrics/host/utilization (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

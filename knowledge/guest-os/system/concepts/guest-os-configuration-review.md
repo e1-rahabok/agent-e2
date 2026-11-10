@@ -64,6 +64,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Drivers'': the book links a networking driver best-practice page; the link target is not in the source text.'
-- 'Section ''Applications'', JVM: ''the Guest OS starts paging'' in the trap is Claude''s addition.'
+- 'To check: Section ''Applications'', JVM: the trap statement ''the Guest OS starts paging'' is not in the book.'
 status: draft
 ```

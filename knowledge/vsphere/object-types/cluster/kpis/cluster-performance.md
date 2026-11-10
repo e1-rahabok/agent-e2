@@ -3,7 +3,7 @@
 ## What it is
 - One score per vSphere cluster, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
-- Not built into VCF Operations: it is a metric of the author's vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
+- Not built into VCF Operations: it is a metric of the vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
 - Use: watch many clusters at once; when the score drops, open the 9 sub-metrics of that cluster.
 - Leading indicator of how close the cluster is to contention: `vsphere/object-types/cluster/models/cluster-risk`. Ballooning and swapping are scored there, not here.
 
@@ -117,13 +117,12 @@ images:
     metric: ['Cluster Performance']
     image_type: table
 source:
-  document: VCF-vCommunity-Adapter documentation, Cluster Performance KPI (author, 2026-11-05); PART 3 - Counters.docx for the design and threshold reasons
+  document: VCF-vCommunity-Adapter documentation, Cluster Performance KPI; PART 3 - Counters.docx for the design and threshold reasons
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md; formula/cluster-performance.png; Provider Objects > Performance > Cluster Performance (%)
 corrections:
-- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated (author, Q031, 2026-11-05). Current source is the adapter documentation: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
-- 'Section ''vMotion is not part of the KPI'': author answer Q030 (2026-11-05); the book text says both included and not included.'
+- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated. Current source is the adapter documentation: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
+- 'Section ''vMotion is not part of the KPI'': vMotion is excluded; the book text says both included and not included.'
 review_notes:
-- 'Sections ''Design'', ''Threshold reasons'' and ''Not used'' still come from the book; the author said the book text is outdated (Q031). Rows that conflict with the adapter documentation were removed (disk latency, balloon reason).'
-- 'Moved 2026-11-06 from vsphere/object-types/cluster/kpis/cluster-performance (architecture review 2026-11-06, section 5).'
+- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the book, whose text is outdated; check against the adapter documentation. Rows that conflict with it were removed (disk latency, balloon reason).'
 status: draft
 ```

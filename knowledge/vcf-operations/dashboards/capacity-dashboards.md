@@ -68,6 +68,6 @@ source:
   path: 'Overall Design Approach > Overall Design: Capacity Dashboard (pp. 38-40)'
 corrections: []
 review_notes:
-- 'Section ''Goals and users'': thin on thin explained as thin VMDKs on thin-provisioned LUNs is Claude''s knowledge.'
+- 'To check: Section ''Goals and users'': thin on thin explained as thin VMDKs on thin-provisioned LUNs; not in the source.'
 status: draft
 ```

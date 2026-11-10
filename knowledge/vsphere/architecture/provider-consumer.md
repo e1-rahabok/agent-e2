@@ -75,8 +75,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact
 corrections:
-- 'Section ''ESXi CPU Demand'': sum of VM demand, kernel not included; a host with no VMs shows 0 (author, Q084, 2026-11-07; Part 1). Replaces the 2026-11-02 reading as a provider metric.'
-review_notes:
-- "Section 'Provider metric types': author (2026-11-03), Q009."
+- 'Section ''ESXi CPU Demand'': sum of VM demand, kernel not included; a host with no VMs shows 0 (Part 1). Replaces the 2026-11-02 reading as a provider metric.'
+review_notes: []
 status: draft
 ```

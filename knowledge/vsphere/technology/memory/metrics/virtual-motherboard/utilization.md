@@ -48,8 +48,6 @@ source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Consumption Metrics > Utilization
 corrections: []
-review_notes:
-- "Section 'Why it can be high': author (2026-11-03), Q018: the 5% is a hardcoded buffer in the formula, through Guest Needed Memory (book, Windows chapter, Needed Memory)."
-- 'Moved 2026-11-06 from vsphere/technology/memory/metrics/virtual-motherboard/utilization (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

@@ -55,9 +55,8 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Swap + Compress
 corrections: []
 review_notes:
-- 'The vSphere 9.1 documentation (vSphere Monitoring and Performance > Virtual Machines > Memory (MB), p. 2105) defines Swapped = swapout - swapin. The author confirms the book: the documentation is wrong (Q045, 2026-11-06). The vMotion line in section ''Behaviour'' is from the same answer.'
-- metric_class set to contention. Author to confirm.
+- 'The vSphere 9.1 documentation (vSphere Monitoring and Performance > Virtual Machines > Memory (MB), p. 2105) defines Swapped = swapout - swapin. The documentation is wrong here; the book is right. The vMotion line in section ''Behaviour'' follows the book.'
+- 'To check: metric_class: set to contention.'
 - 'Sections Behaviour: from Memory > VM.'
-- "Section 'What a non-zero value means': author (2026-11-03), Q016: VM Compressed happens when ESXi Consumed is very high or the VM hit its limit. Consumed pages can hold a lot of cache, so it does not always translate to VM latency. The Architecture statement holds; the VM-section statement is superseded."
 status: draft
 ```

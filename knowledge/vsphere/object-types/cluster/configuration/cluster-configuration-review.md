@@ -69,9 +69,6 @@ source:
   path: 'Configuration Management > Review List > Cluster; vSphere Cluster Variation (pp. 144-145)'
 corrections: []
 review_notes:
-- 'Q112 answered by the author (2026-11-08): DRS runs every minute; vVol checks kept for existing estates with the deprecation stated; snapshots removed within one day; VMware Tools KB 315382.'
-- 'Section ''HA'': the book says reservation is respected only when admission control is enabled. Host admission control enforces reservations at power-on whatever the HA setting (vsphere/object-types/cluster/concepts/admission-control-and-cluster-state); HA admission control keeps failover capacity for them. Written that way. Q110.'
-- 'Section ''DRS'': the book says DRS calculates every five minutes; drs-migration-levels says every minute (vSphere 7 and later). Written as every minute. Q112.'
-- 'Section ''Cluster variants'', large cluster: the book says ''You have 1 ESXi host''; read as saving 1 host (21 vs 20). Q113.'
+- 'To check: Section ''HA'': the book says reservation is respected only when admission control is enabled. Host admission control enforces reservations at power-on whatever the HA setting (vsphere/object-types/cluster/concepts/admission-control-and-cluster-state); HA admission control keeps failover capacity for them. Written that way. (Q110).'
 status: draft
 ```

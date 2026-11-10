@@ -174,8 +174,6 @@ source:
   path: CPU > Architecture (pp. 52, 55-57) > Architecture intro; ESXi ≠ VM + Kernel; Provider Objects > Capacity > CPU (from former vsphere/technology/cpu/concepts/cpu-measurement-levels)
 corrections: []
 review_notes:
-- 'Section ''Three levels'': author (2026-11-02): a physical thread of a CPU core is a provider. A software thread in an OS (VMkernel, Windows) is a consumer.'
-- 'Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''. An average of GHz values is unusual; a sum is expected for GHz. Written as in the book. Author to confirm.'
-- '2026-11-04: merged vsphere/technology/cpu/concepts/cpu-measurement-levels into this file (author decision 5, holistic review).'
+- 'To check: Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''; an average of GHz values is unusual, a sum is expected. Written as in the book.'
 status: draft
 ```

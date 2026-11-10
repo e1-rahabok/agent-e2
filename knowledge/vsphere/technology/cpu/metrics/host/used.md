@@ -9,7 +9,7 @@
 - ESXi is the metric source. vCenter converts or adds metrics, and formulas do not match in every case. See `vsphere/architecture/metric-sources`.
 
 ## Notes
-- The author states CPU Used is buggy. Do not build conclusions on it alone.
+- CPU Used is buggy. Do not build conclusions on it alone.
 
 ## Mechanism
 - Calculated from Non-Halted Core Cycles (NHCC), a hardware counter. Higher clock speed, more cycles: Used rises with Turbo.
@@ -48,7 +48,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; CPU > ESXi > Used | Usage; Core vs Thread
 corrections:
-- '2026-11-02: Author states the CPU Used metric is buggy (section: Notes).'
+- '2026-11-02: the CPU Used metric is buggy (section: Notes).'
 review_notes:
 - 'Section Mechanism: from CPU > ESXi.'
 status: draft

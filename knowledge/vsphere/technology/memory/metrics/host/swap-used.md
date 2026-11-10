@@ -51,8 +51,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Swap + Compress
 corrections: []
 review_notes:
-- metric_class set to contention. Author to confirm.
+- 'To check: metric_class: set to contention.'
 - 'Section ''Swap counters at host level'': from Memory > ESXi.'
-- 'Section ''Swap counters at host level'': author answer Q019 (2026-11-04): Swap Consumed is not swapped out minus swapped in, consistent with VM Swapped. The ESXi section of the book was wrong.'
 status: draft
 ```

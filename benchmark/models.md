@@ -8,7 +8,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The model's job
 - The knowledge base is written at Level 400 and assumes the reader knows vSphere basics (`CLAUDE.md`, section Level): cluster, host, VM, datastore, HA, DRS, vMotion, resource pools, shares, reservations, limits, vCPU, NUMA.
-- So the model brings Level 100-300 vSphere knowledge from training. Public text covers it well, and it is mostly correct at that level. It is not documented in the knowledge base (author, 2026-11-05).
+- So the model brings Level 100-300 vSphere knowledge from training. Public text covers it well, and it is mostly correct at that level. It is not documented in the knowledge base.
 - The knowledge base adds the Level 400 layer: mechanisms, vantage points, and the corrections to Level 300 rules of thumb. Where the two differ, the knowledge base wins.
 - The model must:
   1. know vSphere basics well enough to understand the question and the retrieved text without a definition;
@@ -31,7 +31,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - For the GPU memory paid, a dense model gives the most compute per token. A 120B MoE with 6-12B active has less compute per token than a 31B dense model, on twice the GPU memory.
 - So a dense model of about 70B is a better challenger than a 120B MoE: it fits a 48 GB GPU at 4-bit (about 40 GB), has 6-10 times the active compute, and fewer total parameters. Its cost is speed: about 0.45x the decode speed of a 32B dense model on the same GPU (section Model size and speed).
 - No current-generation dense vision model of about 70B is on the gateway (checked 2026-11-05). Llama 3.3 70B is 2024 and has no vision. When one appears, it is the first challenger to add.
-- The 120B MoE models were dropped (author, 2026-11-05): less compute per token than the dense candidates, on twice the GPU memory. A later MoE candidate must pass the rule below.
+- The 120B MoE models were dropped: less compute per token than the dense candidates, on twice the GPU memory. A later MoE candidate must pass the rule below.
 
 ### What we prefer
 | Prefer | Over | Reason |
@@ -67,7 +67,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 | 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
 
 - Add the KV cache for the retrieved context (8-12K tokens per question).
-- Only two limits count (author, 2026-11-05): fit for the goal, and hardware cost (one GPU, at most 96 GB). Parameter count is not a limit.
+- Only two limits count: fit for the goal, and hardware cost (one GPU, at most 96 GB). Parameter count is not a limit.
 - 8B-14B: too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact; qwen-3-14b agentic 19%.
 - 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs (nemotron-3-nano-30b-a3b: 24-29% exact, almost no tool calls).
 
@@ -93,14 +93,14 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (open work in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Evaluation).
 
 ## 3. Selection criteria
-Two limits decide (author, 2026-11-05):
+Two limits decide:
 - Fit for the goal: the model knows vSphere basics and can become a narrow Level 400 VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
 - Hardware cost: it runs on one GPU at the customer site. Criterion 3.
 
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
 
 All are required. A model that fails one is not a candidate.
-1. Vision: reads screenshots. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI (author, 2026-11-05). Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
+1. Vision: reads screenshots. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI. Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
 2. Open weights, with a licence that allows commercial on-premises use. Checked per model before deployment.
 3. Fits one GPU with at most 96 GB of memory: all weights at 4-bit or better, plus the KV cache for a 32K context.
    - Memory is set by total parameters, also for a mixture-of-experts (MoE) model: every expert must be loaded. Speed is set by active parameters.
@@ -116,7 +116,7 @@ All are required. A model that fails one is not a candidate.
 4. Tool calling, for agentic retrieval and the calculator, catalog and flow tools.
 5. Context window of at least 32K tokens: system prompt + 8-12K retrieved text + images + answer.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
-7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate (author, 2026-11-05).
+7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate.
 
 Preferred, not required:
 - Vendor diversity: different training data fails on different questions. A mix shows whether a failure is a knowledge gap (all fail) or a model gap (one fails).
@@ -182,6 +182,6 @@ Preferred, not required:
 | InternVL2-26B | Released 2024-06: two generations old (InternVL2.5, then InternVL3.5 in 2025-08). Not on the gateway. Its latest sibling in the size range, InternVL3.5-30B-A3B, is not on the gateway either (rule 6). |
 
 ## 9. History
-- 2026-11-05: vision made a basic requirement (author); 5 text-only models removed; judge added. Then latest generation only (author): qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (author: the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected (author): the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped (author); 3 dense candidates remain. Section 2 (gateway vs site) added.
+- 2026-11-05: vision made a basic requirement; 5 text-only models removed; judge added. Then latest generation only: qwen3.6-27b and gemma-4-26b-a4b-it removed; muse-glimmer-30b added. Then the size rule changed from 24-35B parameters to one GPU of at most 96 GB (the only limits are fit for the goal and hardware cost); mistral-small identified as Mistral Small 4; ling-3.0-flash-vl and nemotron-3.5-super-vl added. All open-weight vision models on the gateway were checked; reasons in section 8. Then the selection reasoning (section 1) and the override rate were added. Then corrected: the model brings vSphere basics from training; the knowledge base holds Level 400 only. Dense about 70B named as a better challenger than 120B MoE; none available on the gateway. Then the 3 MoE models dropped; 3 dense candidates remain. Section 2 (gateway vs site) added.
 - 2026-11-04: added qwen3.8-27b, qwen3.6-27b and glm-4.7-flash. Licences and sizes checked on Hugging Face: Qwen/Qwen3.8-27B and Qwen/Qwen3.6-27B Apache 2.0, 27.8B parameters; zai-org/GLM-4.7-Flash MIT, 31.2B parameters.
 - 2026-11-03: the 7 earlier models kept until 100 questions; ministral-8b dropped. Candidate list was in [project/archive/solution-design.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/solution-design.md), section 5, until 2026-11-05.

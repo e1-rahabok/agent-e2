@@ -137,14 +137,12 @@ source:
   path: CPU > Architecture (pp. 70-75) > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
 corrections: []
 review_notes:
-- "Section 'P-states': author (2026-11-02): the number of P-states varies by processor. Not an industry standard."
-- "Section 'ESXi level': advanced option names Power.UseCStates and Power.UsePStates are from Claude's own knowledge. The book shows them as 'Use C States' and 'Use P States' in the UI."
-- "Section 'ESXi level': author (2026-11-02): an idle CPU lowers its frequency to save power. The author will elaborate in the book; see project/plan.md."
-- "Section 'C-state × P-state combinations': conflicts with the Use P States text and the Turbo observation. The author will update the book; see project/plan.md."
-- "Section 'C-state × P-state combinations': the row Use C States = 1, Use P States = 0 says no Turbo. The ESXi level text says P-states off means 'highest available frequency'. The Turbo section reports Turbo (129%) under BIOS static high performance. Author to reconcile."
+- 'To check: Section ''ESXi level'': advanced option names Power.UseCStates and Power.UsePStates; the book shows them as ''Use C States'' and ''Use P States'' in the UI.'
+- 'Section ''C-state × P-state combinations'': conflicts with the Use P States text and the Turbo observation; the book is to be updated (project/plan.md).'
+- 'To check: Section ''C-state × P-state combinations'': the row Use C States = 1, Use P States = 0 says no Turbo; the ESXi level text says P-states off means ''highest available frequency''; the Turbo section reports Turbo (129%) under BIOS static high performance.'
 - "Section 'CPPC': specification from the book: https://uefi.org/specs/ACPI/6.5/08_Processor_Configuration_and_Control.html"
 - "Section 'High Performance vs Balanced': the book cites the vSphere 9.0 Performance Best Practices. The current version (9.1, revision 20260624) is covered in vsphere/technology/cpu/configuration/host-power-management."
 - "Section 'Oversized VM': chart from 'Host Power Management in VMware vSphere 7.0' (2021), p. 24: https://www.vmware.com/docs/hpm-vsphere7-perf. No newer standalone version found on 2026-11-02."
-- "The book also cites the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series). Not read."
+- 'To check: the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series), both cited by the book; not read.'
 status: draft
 ```

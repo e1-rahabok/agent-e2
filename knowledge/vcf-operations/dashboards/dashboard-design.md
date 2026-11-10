@@ -52,7 +52,7 @@
 
 ## Interaction and navigation
 - Interaction links widgets within a dashboard. Navigation links dashboards. Keep both consistent so they stay simple.
-- Draw the information flow first in any drawing tool (the author uses PowerPoint).
+- Draw the information flow first in any drawing tool, such as PowerPoint.
 - Prefer symmetrical interaction: for example, 4 heat maps each driving one of 4 line charts. It looks complex on a screenshot and feels natural in use.
 - Progressive disclosure limits information overload and keeps the page fast. The browser session remembers the last selection.
 
@@ -102,8 +102,6 @@ source:
   path: 'Overall Design Approach > Design Consideration (Design Methodology, Clean Layout, Past vs Present, Summary List Detail, Interaction) (pp. 27-35)'
 corrections: []
 review_notes:
-- 'Section ''Conflicting requirements'': one month = 288 points a day × 365.25 / 12 days = 8,766 (author, Q148, 2026-11-09: per month, leap years included).'
-- 'Wastage colour: dark grey; black in the book picture is wrong (author, Q148, 2026-11-09).'
 - 'Section ''Layout'': the source shows example dashboards by Brock Peterson and Dale Hassinger; third-party screenshots not copied.'
 - 'Not copied: the layout sketches, the widget screenshots (Scoreboard, distribution, View List), the PowerPoint flow and the 4x4 heat map screenshot; their content is in the text.'
 status: draft

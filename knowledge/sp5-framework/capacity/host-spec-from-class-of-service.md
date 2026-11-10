@@ -76,10 +76,10 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2 (pp. 14-15); Service Level Agreement > Price & SLA (p. 37)'
 corrections: []
 review_notes:
-- 'Section ''Method'': formula written by Claude from the book''s Silver example.'
-- 'Section ''Method'', last bullet: overcommit per physical thread is the author''s rule (Q079, 2026-11-06). The book''s Silver example is per core (Q087 a).'
-- 'Section ''Gold'', last bullet: Gold with the Silver infrastructure share computed by Claude; the book keeps none for Gold (Q087 b).'
-- 'Section ''Reading the examples'': first two bullets are Claude''s reading of the book''s numbers. Silver memory 2:1 here vs 1.5:1 in Noisy Neighbour (Q087 c).'
-- 'Section ''Silver at 3:1 CPU'': the book''s planning table gives Silver CPU 1:2 and RAM 1:1.5; its text gives 3:1 and no RAM overcommit (Q099). Licensing bullet: per-core licensing with a 16-core minimum per CPU from Broadcom KB 313548 (https://knowledge.broadcom.com/external/article/313548) and the VCF 9.0 Licensing Model page (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html); the 32-core per-CPU licence is Claude''s knowledge. Book correction: Q107.'
+- 'To check: Section ''Method'': the formula, derived from the book''s Silver example.'
+- 'To check: Section ''Method'', last bullet: overcommit is per physical thread; the book''s Silver example is per core (Q087 a).'
+- 'To check: Section ''Gold'', last bullet: Gold with the Silver infrastructure share is computed; the book keeps none for Gold (Q087 b).'
+- 'To check: Section ''Reading the examples'': the first two bullets read the book''s numbers; Silver memory 2:1 here vs 1.5:1 in Noisy Neighbour (Q087 c).'
+- 'To check: Section ''Silver at 3:1 CPU'': the book''s planning table gives Silver CPU 1:2 and RAM 1:1.5; its text gives 3:1 and no RAM overcommit (Q099). Licensing bullet: the 32-core per-CPU licence; per-core licensing with a 16-core minimum per CPU is from Broadcom KB 313548 (https://knowledge.broadcom.com/external/article/313548) and the VCF 9.0 Licensing Model page (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html).'
 status: draft
 ```

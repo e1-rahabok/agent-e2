@@ -4,7 +4,7 @@
 - One score per ESXi host, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
 - ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See `vsphere/architecture/provider-consumer`.
-- Not built into VCF Operations: a metric of the author's vCommunity management pack, published on the host object under `vCommunity|ESXi Performance|ESXi Performance Score`, with its 9 sub-metrics beside it.
+- Not built into VCF Operations: a metric of the vCommunity management pack, published on the host object under `vCommunity|ESXi Performance|ESXi Performance Score`, with its 9 sub-metrics beside it.
 - Use: the first step of the ESXi health check (`vsphere/object-types/esxi/health-check/esxi-health-check`). When the score drops, open the 9 sub-metrics of that host.
 
 ## Design
@@ -92,12 +92,12 @@ images:
     metric: ['ESXi Performance']
     image_type: table
 source:
-  document: VCF-vCommunity-Adapter documentation, ESXi Performance KPI (author, 2026-11-08)
+  document: VCF-vCommunity-Adapter documentation, ESXi Performance KPI
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/esxi-performance.md; formula/esxi-performance.png
 corrections: []
 review_notes:
-- 'Whole file: from the adapter documentation and formula image (author decision 2026-11-08: ESXi has a KPI). Metric names follow Cluster Performance, with "on the host" added.'
-- 'Section Thresholds, interval: every VM sub-metric is a 20-second peak (adapter documentation, including mem|20_sec_peak_host_contentionPct). The Cluster Performance memory rows carry interval 5m in the catalog; to check.'
-- 'Section Traps: Claude''s, from the design text.'
+- 'Whole file: from the adapter documentation and formula image. Metric names follow Cluster Performance, with "on the host" added.'
+- 'To check: Section Thresholds, interval: the Cluster Performance memory rows carry interval 5m in the catalog; every VM sub-metric here is a 20-second peak (adapter documentation, including mem|20_sec_peak_host_contentionPct).'
+- 'To check: Section Traps: derived from the design text.'
 status: draft
 ```

@@ -209,12 +209,8 @@ source:
   path: 'Part 3: Consumer Objects > Capacity: Guest OS > Benefits. Part 1: Capacity Management > Rightsizing (Challenges; Micro Burst; Oversized Guest OS; Cost of Oversized; Optimization; Best Practices; The Big Picture; Progressive Pricing; Start Small?; Before vs After), pages 121-127.'
 corrections: []
 review_notes:
-- 'Section ''What is rightsized'': Kubernetes nodes sized in the cluster design; VM rightsizing is misleading, it usually means the Guest OS (author, 2026-11-09).'
-- 'Section ''Idle VM: power it off'' (author, Q042, 2026-11-06) moved to sp5-framework/capacity/reclamation, section Idle VM, 2026-11-07: one place for idle VM reclamation.'
-- 'Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q125).'
-- 'Sections ''What to optimize'' and ''Monster VMs Capacity Management'': per-VM aim (high utilization at its busy time) vs the monster VM group (about 40% average, 80% max); section rewritten by the author (Q126, 2026-11-09).'
-- 'Section ''Micro burst'': 2-second metrics checked against the VCF Operations 9.1 documentation (2026-11-07).'
-- 'Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") is Claude''s explanation of the book image.'
+- 'To check: Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q125).'
+- 'To check: Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") explains the book image; not in the book text.'
 - 'Section ''Prevent oversizing'': the CPU Hot Add and vNUMA link is from Performance Best Practices (idle-and-unused-vcpus), not this chapter.'
 - 'Part 1, VM Footprint | Guest OS Sizing repeats the Part 3 text already in guest-os/system/concepts/guest-os-sizing; nothing added.'
 status: draft

@@ -84,6 +84,6 @@ source:
   path: Memory > ESXi > Overview; Consumption Metrics > Analysis
 corrections: []
 review_notes:
-- 'VMFS pointer block cache documentation linked by the book is for vSphere 8.0: https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-FD9634FD-65E4-4EC8-BE9A-8BA0F68DD387.html. Check the 9.1 equivalent.'
+- 'To check: VMFS pointer block cache: the 9.1 equivalent of the vSphere 8.0 documentation linked by the book (https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-FD9634FD-65E4-4EC8-BE9A-8BA0F68DD387.html).'
 status: draft
 ```

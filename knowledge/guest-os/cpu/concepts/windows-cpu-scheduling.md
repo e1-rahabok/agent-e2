@@ -44,7 +44,7 @@
 - They do not measure the same thing.
 - Windows CPU Usage ignores hypervisor Hyper-Threading. Windows at 100% on a shared core: VM CPU Usage 62.5%, VM CPU Demand 100%.
 - Windows 8 and later report CPU usage above 100% when frequency exceeds nominal. Maximum Frequency shows speed relative to nominal. Example: 134% speed; 69% speed at low load (8% usage means 8% productive cycles).
-- How Windows fills frozen time (Ready, Co-stop, Overlap, Other Wait) is unknown to the author.
+- How Windows fills frozen time (Ready, Co-stop, Overlap, Other Wait) is not documented.
 ![Windows CPU usage above 100% with Turbo](../images/windows-cpu-usage-above-100-percent-with-turbo.png)
 
 | Metric | Frequency scaling | Hyper-Threading | VM contention |
@@ -59,7 +59,7 @@
 - C1 + C2 + C3 time below 100% is time in C0. The idle loop typically runs in C3: Idle Time and C3 Time track each other.
 
 ## OS vs process
-- OS-level CPU can look healthy while one process hangs. Example: Word hung (100% on one CPU) while Windows showed 57% overall and Word 18.9%. The author's guess: OS-level counters include Turbo, process counters do not.
+- OS-level CPU can look healthy while one process hangs. Example: Word hung (100% on one CPU) while Windows showed 57% overall and Word 18.9%. Likely cause, not confirmed: OS-level counters include Turbo, process counters do not.
 - Monitor process state for hangs, and the peak among vCPUs (VCF Operations provides it).
 - Runaway process: one CPU flat at 100% (example: Diagnostic Policy Service in an infinite loop) while the OS stays responsive. Track the highest CPU, not only the total.
 ![CPU0 flat out from a runaway service](../images/windows-cpu0-flat-out-from-runaway-service.png)
@@ -107,10 +107,9 @@ source:
   document: PART 3 - Counters.docx
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
 corrections:
-- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading (author answer Q033, 2026-11-05); the book table marks Run as Yes.'
-- 'Same table: VM CPU Demand is affected by Hyper-Threading (author answer Q035, 2026-11-03); the book table marks it No.'
+- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading; the book table marks Run as Yes.'
+- 'Same table: VM CPU Demand is affected by Hyper-Threading; the book table marks it No.'
 review_notes:
 - 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
-- "Section 'Thread states': author (2026-11-03), quiz CPU Q7 F confirmed correct (Q036)."
 status: draft
 ```

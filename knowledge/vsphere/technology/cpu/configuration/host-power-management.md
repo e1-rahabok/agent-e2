@@ -87,6 +87,6 @@ corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 31-32 read. Verification path changed to Overview tab. ACPI CPPC and Intel HWP added (pp. 12, 32).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Not read: Host Power Management Policies in the vSphere Resource Management guide (referenced for Custom policy details). Running Network Latency Sensitive Workloads (p. 49) is network, not CPU.'
+- 'To check: Host Power Management Policies in the vSphere Resource Management guide, referenced by the source for Custom policy details; not read. Running Network Latency Sensitive Workloads (p. 49) is network, not CPU.'
 status: draft
 ```

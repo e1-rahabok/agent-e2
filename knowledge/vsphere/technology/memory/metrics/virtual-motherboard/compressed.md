@@ -53,7 +53,6 @@ source:
   path: Memory > VM > Swap + Compress; Consumption Metrics > Compressed; Consumed > Ballooned
 corrections: []
 review_notes:
-- metric_class set to contention, matching Swapped and Ballooned. Author to confirm.
-- "Section 'What a non-zero value means': author (2026-11-03), Q016."
+- 'To check: metric_class: set to contention, matching Swapped and Ballooned.'
 status: draft
 ```

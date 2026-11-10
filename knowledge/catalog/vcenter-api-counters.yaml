@@ -2,7 +2,7 @@ meta:
   id: catalog/vcenter-api-counters
   title: vCenter performance counters as the API returns them (vCenter 9.1.0)
   source:
-    document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922; PerformanceManager.perfCounter and QueryAvailablePerfMetric)
+    document: Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922; PerformanceManager.perfCounter and QueryAvailablePerfMetric)
     path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
   fields:
     counter: group.name as the API returns it (nameInfo.key with its group).
@@ -14,9 +14,9 @@ meta:
     summary: Counter summary from the vCenter counter definition, verbatim.
     kb: Knowledge file that explains the metric, where one exists.
   review_notes:
-  - 'Whole file: copied from the authors CSV, one row per object type and counter. Union over every instance of each object type in one vCenter 9.1.0 inventory; the inventory had no vApp or datastore cluster.
+  - 'Whole file: copied from the CSV, one row per object type and counter. Union over every instance of each object type in one vCenter 9.1.0 inventory; the inventory had no vApp or datastore cluster.
     Folder, Network, Distributed Port Group and Compute Resource returned no counters.'
-  - 'Field kb: mapping by Claude. Rows without kb have no knowledge file yet (clusterServices.cpufairness, memfairness, effectivecpu, effectivemem: author questions Q049, Q050).'
+  - 'Field kb: rows without kb have no knowledge file yet (clusterServices.cpufairness, memfairness, effectivecpu, effectivemem).'
   - Summaries are verbatim from vCenter, including apparent copy errors (memfairness, mem.usage on VM says host physical memory).
   status: draft
 rows:

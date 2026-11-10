@@ -61,6 +61,6 @@ source:
   path: Storage > ESXi > Disk or Device
 corrections: []
 review_notes:
-- 'Section ''Memory tiering devices'': NVMe power-state facts are from the book. Not checked against vendor documents.'
+- 'To check: Section ''Memory tiering devices'': NVMe power-state facts from the book against vendor documents.'
 status: draft
 ```

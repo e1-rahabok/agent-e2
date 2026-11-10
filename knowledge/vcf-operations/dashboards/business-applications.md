@@ -81,8 +81,8 @@ source:
   path: 'Proactive Operations > Business Applications (The Crown Jewel, vSphere Folder Structure, Objects Design) (pp. 7-10)'
 corrections: []
 review_notes:
-- 'Section ''vSphere folder structure'', diagram: Application C under Department 2 is labelled C.3, not C.2. Q139.'
+- 'To check: Section ''vSphere folder structure'', diagram: Application C under Department 2 is labelled C.3, not C.2. (Q139).'
 - 'Section ''Objects in VCF Operations'': the inventory path is read from the source screenshot (Inventory > Container > Entire Enterprise > Entire Enterprise Applications > Internet Banking, MS Active Directory, Shop Floor Control). Screenshot not copied.'
-- 'Section ''Business application dashboard'': the KPI link is Claude''s; the source says detailed KPI, actual counters that define a VM KPI.'
+- 'To check: Section ''Business application dashboard'': the KPI link is not in the source, which says detailed KPI, actual counters that define a VM KPI.'
 status: draft
 ```

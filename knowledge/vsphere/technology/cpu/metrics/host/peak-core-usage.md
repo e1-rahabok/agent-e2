@@ -49,7 +49,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Thread Utilization > Peak Core CPU Usage
 corrections: []
-review_notes:
-- 'Moved 2026-11-06 from vsphere/technology/cpu/metrics/host/peak-core-usage (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

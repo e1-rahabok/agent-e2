@@ -83,12 +83,10 @@ source:
   path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration (pp. 135-138)'
 corrections: []
 review_notes:
-- 'Q112 answered by the author (2026-11-08): DRS runs every minute; vVol checks kept for existing estates with the deprecation stated; snapshots removed within one day; VMware Tools KB 315382.'
-- 'Section ''VMware Tools'': Broadcom KB 315382 (author, Q112, 2026-11-08); the book cited KB 340.'
-- 'Section ''Compute'', relative size: physical cores here; sp5-framework/performance/noisy-neighbour sizes by logical CPUs. Q111 (with Q100).'
-- 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols. Q112.'
-- 'Snapshot removed within one day: author, Q112 (2026-11-08).'
-- 'Section ''Compute'', chiplets: 8-core blocks hold for AMD EPYC, not Intel Xeon (Q125).'
-- 'Traps 1 and 2: examples by Claude from the book''s rules.'
+- 'Section ''VMware Tools'': Broadcom KB 315382; the book cited KB 340.'
+- 'To check: Section ''Compute'', relative size: physical cores here; sp5-framework/performance/noisy-neighbour sizes by logical CPUs. (Q111).'
+- 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols.'
+- 'To check: Section ''Compute'', chiplets: 8-core blocks hold for AMD EPYC, not Intel Xeon (Q125).'
+- 'To check: Traps 1 and 2: examples derived from the book''s rules.'
 status: draft
 ```

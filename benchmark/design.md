@@ -10,7 +10,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
 - Baseline mode (the model alone) is the zero point: system minus baseline is what our work adds.
-- Release gate: final score at least 85%. Target: 99% (author, 2026-11-03). Final score: section 7.4.
+- Release gate: final score at least 85%. Target: 99%. Final score: section 7.4.
 - The benchmark must:
   1. rank candidate models and answer modes against each other;
   2. show whether a configuration clears 85%;
@@ -95,14 +95,14 @@ Three input types: what the administrator gives the product besides the question
 - Every question has a prompt, so every question has text. Text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]`, `[screenshot]` or `[table, screenshot]`, derived from `attachments` and checked by lint.
 - Not built yet: the table tool in the harness and table attachments in the runner (section 13.1).
-- URL questions (author, 2026-11-09): a question that carries a link to a public page with a known Level 300 error (vendor KB, documentation, blog). The key point is that the answer corrects the page with the mechanism, not that it summarizes it. A frontier model tends to agree with the page; this question type shows the mission directly. The page is fetched live, so the key also records the page's date; a changed page is re-checked before scoring. Pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
+- URL questions: a question that carries a link to a public page with a known Level 300 error (vendor KB, documentation, blog). The key point is that the answer corrects the page with the mechanism, not that it summarizes it. A frontier model tends to agree with the page; this question type shows the mission directly. The page is fetched live, so the key also records the page's date; a changed page is re-checked before scoring. Pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
 - Examples:
   - Text: [Memory usage: VM vs ESXi](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-09-usage-vm-vs-esxi.md): every VM shows Memory Usage below 25% and the host shows 95%; the customer wants more RAM.
   - Table (to write): a VCF Operations export of 400 VMs with CPU Ready, Co-stop, Run, vCPU count and host; "which VMs suffer contention, and is it the host or the VM size?".
   - Screenshot: [ESXi true utilization from Usage, Core Utilization and Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md): a vCenter chart of Usage, Core Utilization and Utilization.
   - Table and screenshot (to write): an esxtop screenshot of one host and a spreadsheet of its VMs; "which VM causes the Co-stop on the others?".
 
-### 3.5 By area (author, 2026-11-04)
+### 3.5 By area
 
 | Area | Share of the 100 questions | Covers |
 |---|---|---|
@@ -155,7 +155,7 @@ Level against input type (questions that include it):
 | Questions that follow a troubleshooting flow (a `troubleshooting/` file) in order | 10 |
 | Screenshot questions per source: esxtop, vCenter UI, VCF Operations UI | 5 each |
 | Table questions with at least 100 rows | 5 |
-| Long, complex questions: many screenshots and tables, many key points, as close as one prompt gets to a long troubleshooting discussion (author, 2026-11-05) | 1 |
+| Long, complex questions: many screenshots and tables, many key points, as close as one prompt gets to a long troubleshooting discussion | 1 |
 
 - Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `trap_type` to be added; tags: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md), section Metadata tags), so coverage is counted by a script, not by eye.
 
@@ -222,7 +222,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 - Two numbers are reported for deterministic questions: **Stable correct** (absolute, against the fixed set; it is the deterministic question credit in the final score, section 7.4) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
 - The model is told: a wrong answer is worse than Unsure, because an operator would act on it; if it cannot decide every option, choose Unsure.
 
-### 7.1 No points, no -1 (author, 2026-11-04)
+### 7.1 No points, no -1
 - An earlier version scored +1 / 0 / -1 and reported "Net points". It was dropped:
   - The benchmark is an absolute measurement against a fixed question set, not a ranking against other benchmarks. Stable correct already counts only exact answers; a wrong answer and an Unsure both count as not correct, so the -1 never changed the headline.
   - Net points mixed two things an operator cares about separately: how often the system is right, and how often it is confidently wrong. Two plain shares say both without arithmetic.
@@ -258,7 +258,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Tools used, verifier flags | Whether the harness tools were used (agentic mode). |
 | Per area, per level | Diagnosis only (small counts). |
 
-### 7.4 Final score (author, 2026-11-05)
+### 7.4 Final score
 - One number, 0-100%, for each model and mode. Sub-scores support it: by answer type (deterministic, judged), by input type (text, table, screenshot), by level (100-400).
 - Question credit, 0 to 1, taken from the worst of the 5 runs:
   - deterministic: 1 if the letters are exactly right in every run, else 0 (Stable correct);
@@ -294,7 +294,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Wrong answer key | Every wrong answer from the best model is checked by the author: model error, knowledge gap, or key error. Keys cite knowledge ids. |
 | Knowledge base fitted to the benchmark (Claude edits the knowledge base and can read the questions) | A held-out set of about 20% of the questions, kept by the author outside the repository and run only before releases. Fixes to the knowledge base must be general (a fact or a trap), never a question-specific answer. |
 | Questions written by the knowledge base's own author favour its wording | Paraphrased stems; questions from real tickets and field forums; frontier baseline as an outside reference. |
-| Synthetic questions drafted by Claude mirror Claude's view | The author reviews every question one by one; no cap on the share. What matters is the allocation and distribution (author, Q058, 2026-11-06). |
+| Synthetic questions drafted by Claude mirror Claude's view | The author reviews every question one by one; no cap on the share. What matters is the allocation and distribution. |
 | Ambiguous options | A question with a disputed option is fixed or removed, and the benchmark is re-scored. |
 | Position, length and count bias | Shuffled options; similar option length; varied number of correct options. |
 | Guessing | Unsure option, the prompt rule that a wrong answer is worse than Unsure, confident-wrong rate, 5-run stability. |
@@ -327,7 +327,7 @@ For the set:
 - Next: `trap_type` per question; a coverage script that prints these counts; the held-out set.
 
 ## 13. Screenshot questions
-- Purpose: administrators upload screenshots and ask the agent to explain the problem. Often several at once, from different tools: esxtop, the vCenter UI, the VCF Operations UI (author, 2026-11-05).
+- Purpose: administrators upload screenshots and ask the agent to explain the problem. Often several at once, from different tools: esxtop, the vCenter UI, the VCF Operations UI.
 - Reading screenshots is a basic requirement. A model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)). There is no text-only track.
 - A screenshot question can be deterministic or judged. It carries all its images in `attachments`; every image is sent with the same prompt.
 - Coverage: section 3.7 (5 questions per source).
@@ -336,7 +336,7 @@ For the set:
 - Images: author screenshots with host and customer names masked before commit.
 
 ### 13.1 Table questions
-- Purpose: administrators export data in bulk and ask about it: a VCF Operations view or report, a vCenter list, a spreadsheet of every VM or host (author, 2026-11-05).
+- Purpose: administrators export data in bulk and ask about it: a VCF Operations view or report, a vCenter list, a spreadsheet of every VM or host.
 - Typical size: dozens of columns, hundreds of rows. Excel or CSV.
 - The model does not read the whole table. The harness converts it to CSV and gives the agent a table tool: list the columns, filter, sort, aggregate, top-N. The model reasons over the results. Reason: hundreds of rows do not fit a 32K context, and models misread long tables.
 - Every column name must map to a metric the knowledge base defines (catalog lookup), so the reading follows the knowledge base, not the column header's English.
@@ -352,7 +352,7 @@ For the set:
   - the candidate never sees it; the open-answer prompt asks for the conclusion, the mechanism and reason, and what to check next, in at most 250 words;
   - a full answer covers every key point. Four key points take about 3-6 sentences (80-150 words), the length an expert gives a colleague;
   - order: the conclusion first, then the reason, then what to check next;
-  - as many key points as the question takes. Most questions take 2-5. A long, complex question can take many more (author, 2026-11-05: real troubleshooting runs long, over a dozen screenshots). The 250-word limit of the open-answer prompt is too short for it: a per-question answer length is a to-do;
+  - as many key points as the question takes. Most questions take 2-5. A long, complex question can take many more (real troubleshooting runs long, over a dozen screenshots). The 250-word limit of the open-answer prompt is too short for it: a per-question answer length is a to-do;
   - a key point that is only nice to know is not a key point: it goes in `## Notes`.
 - Example ([CPU Latency without contention](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-01-cpu-latency-frequency.md)): a full answer reads like: No. Ready and Co-stop are flat, so the VM is not waiting for a physical CPU. CPU Latency rose because the BIOS power policy lowered the clock speed: the VM runs slower, as on an older CPU. Unlike Disk or Memory Latency, CPU Latency does not always mean a performance problem. Check the power policy and the frequency.
 - Rubric:
@@ -375,12 +375,12 @@ For the set:
   - a key point the judge misreads is rewritten as one testable fact per bullet.
 - Cost: one judge call per judged answer, about 1,500 input tokens.
 
-## 15. Target history (author, 2026-11-03)
+## 15. Target history
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
 - Target: 99% final score on the question set (chosen mode). See section 7.4. (Before 2026-11-05: Stable correct on multiple-choice questions only.)
 - Minimum: 85% final score. A model below 85% is not usable.
-- mistral/ministral-8b dropped from future runs (author, 2026-11-03): 29-40% exact in benchmark 20261103-081849.
-- The other candidates stay until the question set reaches 100 (author, 2026-11-03); 3 were added on 2026-11-04 (10 in total). No model is dropped on the 17-question results: the margin (about ±20-24 points) is too wide.
+- mistral/ministral-8b dropped from future runs: 29-40% exact in benchmark 20261103-081849.
+- The other candidates stay until the question set reaches 100; 3 were added on 2026-11-04 (10 in total). No model is dropped on the 17-question results: the margin (about ±20-24 points) is too wide.
 - Reference point: the best frontier model in baseline mode (no knowledge base). Measured in each benchmark.
 - What 99% requires:
   - At 17 questions, 99% allows no wrong question. One wrong question = 94%.

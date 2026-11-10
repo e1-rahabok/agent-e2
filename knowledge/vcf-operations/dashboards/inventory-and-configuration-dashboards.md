@@ -68,7 +68,7 @@ source:
   path: 'Overall Design Approach > Overall Design: Inventory Dashboards; Overall Design: Configuration Dashboard (pp. 35-36, 40-41)'
 corrections: []
 review_notes:
-- 'Section ''The configuration dashboard set'': the source says in future I would enhance them; written as due for enhancement. Whether the VCF Operations 9.1 dashboards changed since is not checked.'
+- 'To check: Section ''The configuration dashboard set'': whether the VCF Operations 9.1 dashboards changed since the source said in future I would enhance them (written as due for enhancement).'
 - 'Section ''Configuration dashboards'': the source question reads "Are the settings consistent when they have and up to date as per our plan?"; written as consistent and up to date with the plan.'
 status: draft
 ```

@@ -71,6 +71,6 @@ corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source refers to KB 81383 and the 'Virtual Machine vCPU and vNUMA Rightsizing' blog, and to the Virtual Machine Compute Optimizer tool. Not read.
+- 'To check: KB 81383, the ''Virtual Machine vCPU and vNUMA Rightsizing'' blog and the Virtual Machine Compute Optimizer tool, referenced by the source; not read.'
 status: draft
 ```

@@ -14,19 +14,19 @@ meta:
     condition: 'rules: another condition that must hold at the same time.'
     meaning: 'rules: what the knowledge file says the value means.'
     group: 'bands: the group column of the source table (for example Utilization, Depth).'
-    source: book, author, vsphere-9.1-docs, performance-best-practices-9.1, microsoft.
+    source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: Knowledge file that states and explains the threshold.
     quote: 'rules: text copied from the kb file; lint checks it is still there.'
     interval: 20s (20-second peak) or 5m (5-minute average); 2s for esxtop; empty until a source states it.
     bands: green, yellow, orange, red; grey is not used for performance.
     levels: 'One line per object and metric: [yellow, orange, red] for 5m, 20s and 2s; null where no source gives the value. direction above: higher is worse; below: lower is worse. from: the row the values come from; lint checks they match.'
   review_notes:
-  - 'levels (author, 2026-11-09): hardcode 9 values per metric, yellow/orange/red for 5m, 20s and 2s. Filled from the band rows only; empty cells wait for the author. No value derived from the 4x rule.'
-  - 'Author rule (2026-11-06): a 20-second threshold is generally about 4x the 5-minute threshold, because a spike does not sustain for 300 seconds. The rule is stated,
+  - 'levels: 9 values per metric, yellow/orange/red for 5m, 20s and 2s. Filled from the band rows only; empty cells are open (Q152). No value derived from the 4x rule.'
+  - 'Rule: a 20-second threshold is generally about 4x the 5-minute threshold, because a spike does not sustain for 300 seconds. The rule is stated,
     not used to fill values: each row carries only what its source gives.'
   - Every row restates a threshold written in its kb file. Band rows must match the colour-band table of the kb file; lint checks both ways.
   - Merged 2026-11-06 from catalog/thresholds.yaml and the KPI band tables (one place for thresholds).
-  - 'Intervals of KPI and SLI rows (author, Q048, 2026-11-06): a VCF Operations metric named ''peak'' is the highest of the 15 20-second averages in the 5-minute
+  - 'Intervals of KPI and SLI rows: a VCF Operations metric named ''peak'' is the highest of the 15 20-second averages in the 5-minute
     cycle (20s); every KPI and SLI is reported every 5 minutes (5m). The SLA is a lagging, monthly indicator.'
   status: draft
 rows:
@@ -39,7 +39,7 @@ rows:
   value: 99.9
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Gold class of service.
-  source: author
+  source: knowledge-base
   kb: sp5-framework/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
@@ -51,7 +51,7 @@ rows:
   value: 99.8
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Silver class of service.
-  source: author
+  source: knowledge-base
   kb: sp5-framework/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
@@ -63,7 +63,7 @@ rows:
   value: 99.6
   unit: '% (monthly mean of SLI)'
   meaning: Performance SLA threshold for the Bronze class of service.
-  source: author
+  source: knowledge-base
   kb: sp5-framework/performance/noisy-neighbour
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 - kind: rule
@@ -77,7 +77,7 @@ rows:
   value: 2.5
   unit: '%'
   meaning: CPU SLI fails for this 5-minute interval (Performance SLA counter).
-  source: book
+  source: knowledge-base
   kb: sp5-framework/concepts/sla-metrics
   quote: '| CPU | Ready | above 2.5% |'
 - kind: rule
@@ -91,7 +91,7 @@ rows:
   value: 1
   unit: '%'
   meaning: Memory SLI fails for this 5-minute interval (Performance SLA counter).
-  source: book
+  source: knowledge-base
   kb: sp5-framework/concepts/sla-metrics
   quote: '| Memory | Contention | above 1% |'
 - kind: rule
@@ -105,7 +105,7 @@ rows:
   value: 10
   unit: 'ms'
   meaning: Disk SLI fails for this 5-minute interval (Performance SLA counter). Average of read and write.
-  source: book
+  source: knowledge-base
   kb: sp5-framework/concepts/sla-metrics
   quote: '| Disk | Latency | above 10 ms |'
 - kind: rule
@@ -119,7 +119,7 @@ rows:
   value: 0
   unit: '%'
   meaning: Network SLI fails for this 5-minute interval (Performance SLA counter). Received drops are excluded.
-  source: book
+  source: knowledge-base
   kb: sp5-framework/concepts/sla-metrics
   quote: '| Network | Transmit dropped packets | above 0% |'
 - kind: rule
@@ -132,7 +132,7 @@ rows:
   unit: '%'
   condition: high VM CPU Usage
   meaning: Poor performance.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/metrics/virtual-motherboard/ready
   quote: Ready above 50% with high Usage results in poor performance.
 - kind: rule
@@ -157,7 +157,7 @@ rows:
   value: 1
   unit: '%'
   meaning: Level in a high-performing environment.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
   quote: In a high-performing environment Co-stop stays below 1%.
 - kind: rule
@@ -169,7 +169,7 @@ rows:
   value: 37.5
   unit: '%'
   meaning: Contention high. Next check Guest OS Run Queue, Context Switch, CPU Usage, VM Ready and Co-stop.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
   quote: Contention high (above 37.5%)
 - kind: rule
@@ -182,7 +182,7 @@ rows:
   unit: '%'
   condition: VM CPU Run below 90%
   meaning: Likely Turbo, not demand. Not a reason to add vCPUs.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/health-check/oversized-vm-downsizing
   quote: Usage above 90% with Run below 90% is likely Turbo, not demand.
 - kind: rule
@@ -195,7 +195,7 @@ rows:
   unit: '%'
   condition: VM CPU Latency near 0%
   meaning: A limit. Latency excludes limit time.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/metrics/virtual-motherboard/latency
   quote: 'Latency near 0% with Ready above 15%: a limit.'
 - kind: rule
@@ -208,7 +208,7 @@ rows:
   unit: '%'
   condition: or ESXi Thread Utilization below 50%
   meaning: Physical cores are still free. New VMs can go on.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
   quote: 'Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free.'
 - kind: rule
@@ -221,10 +221,10 @@ rows:
   value_high: 90
   unit: '%'
   condition: Core Utilization at 100%
-  meaning: Level the author keeps per host. Cluster level is lower.
-  source: book
+  meaning: Level to keep per host. Cluster level is lower.
+  source: knowledge-base
   kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
-  quote: The author keeps it around 80%-90% per host
+  quote: Keep it around 80%-90% per host
 - kind: rule
   id: host-memory-usage-docs
   metric: ESXi Memory Usage
@@ -271,7 +271,7 @@ rows:
   value: 0.5
   unit: ms
   meaning: Check QAVG and the queue depths at each level of the stack.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/storage/troubleshooting/host-storage-latency
   quote: 'KAVG above 0.5 ms: check QAVG and the queue depths at each level of the stack.'
 - kind: rule
@@ -283,7 +283,7 @@ rows:
   value: 5
   unit: ms
   meaning: Healthy is well within 5 ms; lower with SSD.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/storage/concepts/esxi-storage-latency-stack
   quote: Well within 5 ms; lower with SSD.
 - kind: rule
@@ -374,7 +374,7 @@ rows:
   value: 80
   unit: '%'
   meaning: Keep below 80%. Performance drops at 90%.
-  source: book
+  source: knowledge-base
   kb: guest-os/memory/concepts/windows-memory
   quote: '| % Committed | Keep below 80%. Performance drops at 90%.'
 - kind: rule
@@ -385,7 +385,7 @@ rows:
   value: 20000
   unit: per core
   meaning: High. Usually below 2,000.
-  source: book
+  source: knowledge-base
   kb: guest-os/cpu/metrics/processor-time
   quote: Above 20,000 per core is high; usually below 2,000.
 - kind: rule
@@ -397,7 +397,7 @@ rows:
   unit: '%'
   condition: together with high System Calls/sec
   meaning: Too much OS work.
-  source: book
+  source: knowledge-base
   kb: guest-os/cpu/metrics/processor-time
   quote: 'High together with Privileged Time above 30%: too much OS work.'
 - kind: bands
@@ -412,7 +412,7 @@ rows:
     yellow: 2-4
     orange: 4-8
     red: 8-16
-  source: book
+  source: knowledge-base
   kb: guest-os/system/metrics/guest-os-performance
 - kind: bands
   id: guest-os-performance-peak-disk-queue-length-count
@@ -426,7 +426,7 @@ rows:
     yellow: 20-40
     orange: 40-80
     red: 80-160
-  source: book
+  source: knowledge-base
   kb: guest-os/system/metrics/guest-os-performance
 - kind: bands
   id: guest-os-performance-free-memory-mb
@@ -440,7 +440,7 @@ rows:
     yellow: 256-512
     orange: 128-256
     red: 0-128
-  source: book
+  source: knowledge-base
   kb: guest-os/system/metrics/guest-os-performance
 - kind: bands
   id: guest-os-performance-memory-page-out-rate-pages-s
@@ -454,7 +454,7 @@ rows:
     yellow: 1K-2K
     orange: 2K-4K
     red: 4K-8K
-  source: book
+  source: knowledge-base
   kb: guest-os/system/metrics/guest-os-performance
 - kind: bands
   id: cluster-performance-worst-peak-vcpu-ready-among-all-vms
@@ -468,7 +468,7 @@ rows:
     yellow: 4-8
     orange: 8-16
     red: 16-32
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-worst-peak-vcpu-co-stop-among-all-vms
@@ -482,7 +482,7 @@ rows:
     yellow: 2-4
     orange: 4-8
     red: 8-16
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-worst-memory-latency-among-all-vms
@@ -496,7 +496,7 @@ rows:
     yellow: 1-2
     orange: 2-4
     red: 4-8
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-worst-peak-read-write-disk-latency-all-v
@@ -510,7 +510,7 @@ rows:
     yellow: 40-80
     orange: 80-160
     red: 160-320
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-peak-vcpu-ready-among-vm
@@ -524,7 +524,7 @@ rows:
     yellow: 1-2
     orange: 2-4
     red: 4-8
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-peak-vcpu-co-stop-among-
@@ -538,7 +538,7 @@ rows:
     yellow: 0.5-1
     orange: 1-2
     red: 2-4
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-memory-latency-among-vms
@@ -552,7 +552,7 @@ rows:
     yellow: 0.5-1
     orange: 1-2
     red: 2-4
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-90th-percentile-read-write-latency-among
@@ -566,7 +566,7 @@ rows:
     yellow: 20-40
     orange: 40-60
     red: 60-80
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: cluster-performance-highest-esxi-error-dropped-network-packe
@@ -580,7 +580,7 @@ rows:
     yellow: 0-0.2
     orange: 0.2-0.4
     red: 0.4-0.8
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/cluster/kpis/cluster-performance
 - kind: bands
   id: esxi-performance-worst-peak-vcpu-ready
@@ -594,7 +594,7 @@ rows:
     yellow: 4-8
     orange: 8-16
     red: 16-32
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-worst-peak-vcpu-co-stop
@@ -608,7 +608,7 @@ rows:
     yellow: 2-4
     orange: 4-8
     red: 8-16
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-worst-memory-latency
@@ -622,7 +622,7 @@ rows:
     yellow: 1-2
     orange: 2-4
     red: 4-8
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-worst-peak-disk-latency
@@ -636,7 +636,7 @@ rows:
     yellow: 40-80
     orange: 80-160
     red: 160-320
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-peak-vcpu-ready
@@ -650,7 +650,7 @@ rows:
     yellow: 1-2
     orange: 2-4
     red: 4-8
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-peak-vcpu-co-stop
@@ -664,7 +664,7 @@ rows:
     yellow: 0.5-1
     orange: 1-2
     red: 2-4
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-memory-latency
@@ -678,7 +678,7 @@ rows:
     yellow: 0.5-1
     orange: 1-2
     red: 2-4
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-p90-disk-latency
@@ -692,7 +692,7 @@ rows:
     yellow: 20-40
     orange: 40-60
     red: 60-80
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: esxi-performance-esxi-error-dropped-network-packets
@@ -706,7 +706,7 @@ rows:
     yellow: 0-0.2
     orange: 0.2-0.4
     red: 0.4-0.8
-  source: author
+  source: knowledge-base
   kb: vsphere/object-types/esxi/kpis/esxi-performance
 - kind: bands
   id: vm-performance-peak-cpu-co-stop-among-any-vcpu
@@ -720,7 +720,7 @@ rows:
     yellow: 1-2
     orange: 2-4
     red: 4-8
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-cpu-ready-among-any-vcpu
@@ -734,7 +734,7 @@ rows:
     yellow: 2-4
     orange: 4-8
     red: 8-16
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-cpu-overlap
@@ -748,7 +748,7 @@ rows:
     yellow: 0.5-1
     orange: 1-2
     red: 2-4
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-ram-contention
@@ -762,7 +762,7 @@ rows:
     yellow: 0.5-1
     orange: 1-2
     red: 2-4
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-read-write-latency-among-vdisks-ms
@@ -776,7 +776,7 @@ rows:
     yellow: 10-20
     orange: 20-40
     red: 40-80
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-peak-network-tx-dropped-packets
@@ -790,7 +790,7 @@ rows:
     yellow: 0.25-0.5
     orange: 0.5-1
     red: 1-2
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-cpu-net-run
@@ -804,7 +804,7 @@ rows:
     yellow: 95-97
     orange: 97-99
     red: 99-100
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-vm-memory-ballooned
@@ -818,7 +818,7 @@ rows:
     yellow: 2-4
     orange: 4-8
     red: 8-16
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: bands
   id: vm-performance-vm-memory-compressed-swapped
@@ -832,7 +832,7 @@ rows:
     yellow: 0.25-0.5
     orange: 0.5-1
     red: 1-2
-  source: book
+  source: knowledge-base
   kb: vsphere/object-types/vm/kpis/vm-performance
 - kind: rule
   id: alert-guest-os-cpu-queue-red
@@ -844,7 +844,7 @@ rows:
   unit: threads
   condition: VM CPU Net Run above 75%, for 15 minutes
   meaning: Red alert (application team).
-  source: book
+  source: knowledge-base
   kb: guest-os/system/configuration/guest-os-alerts
   quote: 'Red: for 15 minutes, Guest OS Peak CPU Queue above 20 and VM CPU Net Run above 75%.'
 - kind: rule
@@ -857,7 +857,7 @@ rows:
   unit: outstanding I/O
   condition: VM CPU Usage above 1 GHz, for 5 minutes
   meaning: Red alert (application team).
-  source: book
+  source: knowledge-base
   kb: guest-os/system/configuration/guest-os-alerts
   quote: 'Red: for 5 minutes, 20-second peak Guest OS disk queue above 10,000 and VM CPU Usage above 1 GHz.'
   interval: 20s
@@ -871,7 +871,7 @@ rows:
   unit: outstanding I/O
   condition: VM CPU Usage above 1 GHz, for 5 minutes
   meaning: Orange alert (application team).
-  source: book
+  source: knowledge-base
   kb: guest-os/system/configuration/guest-os-alerts
   quote: 'Orange: for 5 minutes, 20-second peak Guest OS disk queue above 5,000 and VM CPU Usage above 1 GHz.'
   interval: 20s
@@ -885,7 +885,7 @@ rows:
   unit: '%'
   condition: Peak vCPU Ready above 32%, CPU Contention above 8%, CPU Usage above 1 GHz
   meaning: Red VM CPU contention alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
   quote: VM CPU Ready above 8%;
 - kind: rule
@@ -898,7 +898,7 @@ rows:
   unit: '%'
   condition: Peak vCPU Ready above 32%, CPU Contention above 8%, CPU Usage above 1 GHz
   meaning: Orange VM CPU contention alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
   quote: VM CPU Ready above 4%;
 - kind: rule
@@ -911,7 +911,7 @@ rows:
   unit: '%'
   condition: CPU Contention above 6%
   meaning: Red infrastructure CPU contention alert (ESXi, resource pool, cluster).
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
   quote: Peak vCPU Ready above 24%;
   interval: 20s
@@ -925,7 +925,7 @@ rows:
   unit: '%'
   condition: CPU Contention above 3%
   meaning: Orange infrastructure CPU contention alert (ESXi, resource pool, cluster).
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
   quote: Peak vCPU Ready above 12%;
   interval: 20s
@@ -939,7 +939,7 @@ rows:
   unit: '%'
   condition: Guest OS CPU Queue above 4, for 15 minutes
   meaning: Red VM CPU consumption alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
   quote: VM CPU Net Run above 95%;
 - kind: rule
@@ -952,7 +952,7 @@ rows:
   unit: '%'
   condition: Peak Memory Contention above 24%, CPU Usage above 1 GHz
   meaning: Red VM memory contention alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/memory/configuration/memory-alerts
   quote: VM Memory Contention above 6%;
 - kind: rule
@@ -965,7 +965,7 @@ rows:
   unit: '%'
   condition: Peak Memory Contention above 12%, CPU Usage above 1 GHz
   meaning: Orange VM memory contention alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/memory/configuration/memory-alerts
   quote: VM Memory Contention above 3%;
 - kind: rule
@@ -978,7 +978,7 @@ rows:
   unit: '%'
   condition: Peak Memory Contention above 16%
   meaning: Red infrastructure memory contention alert (ESXi, resource pool, cluster).
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/memory/configuration/memory-alerts
   quote: Memory Contention above 4%.
 - kind: rule
@@ -991,7 +991,7 @@ rows:
   unit: '%'
   condition: Peak Memory Contention above 8%
   meaning: Orange infrastructure memory contention alert (ESXi, resource pool, cluster).
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/memory/configuration/memory-alerts
   quote: Memory Contention above 2%.
 - kind: rule
@@ -1004,7 +1004,7 @@ rows:
   unit: ms
   condition: Peak Disk Latency above 320 ms, CPU Usage above 1 GHz, IOPS of that direction above 100, for 10 minutes
   meaning: Red VM disk latency alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/storage/configuration/storage-alerts
   quote: VM Disk Read Latency (average) above 80 ms;
 - kind: rule
@@ -1017,7 +1017,7 @@ rows:
   unit: ms
   condition: Peak Disk Latency above 160 ms, CPU Usage above 1 GHz, IOPS of that direction above 100, for 10 minutes
   meaning: Orange VM disk latency alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/storage/configuration/storage-alerts
   quote: VM Disk Read Latency (average) above 40 ms;
 - kind: rule
@@ -1029,7 +1029,7 @@ rows:
   value: 4
   unit: '%'
   meaning: Red VM network alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/network/configuration/network-alerts
   quote: 'Red: transmitted packets dropped above 4%.'
   interval: 20s
@@ -1043,7 +1043,7 @@ rows:
   unit: packets
   condition: virtual or physical network, each
   meaning: Red ESXi network alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/network/configuration/network-alerts
   quote: 'Red: more than 50 transmitted packets dropped on the virtual network.'
 - kind: rule
@@ -1055,7 +1055,7 @@ rows:
   value: 10
   unit: '%'
   meaning: Red distributed port group alert.
-  source: book
+  source: knowledge-base
   kb: vsphere/technology/network/configuration/network-alerts
   quote: 'Red: dropped packets above 10%.'
 

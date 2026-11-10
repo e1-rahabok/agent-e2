@@ -103,6 +103,6 @@ review_notes:
 - 'Section ''VM CPU contention'': orange keeps Peak vCPU Ready above 32% and CPU Contention above 8%, the same as red; only CPU Ready changes (4% vs 8%). Q144.'
 - 'Section ''VM CPU contention'' and ''Infrastructure CPU contention'': the source says see the diagram at the start of the CPU Alert section for remediation; no diagram is in the document. Linked to the knowledge-base flow vm-cpu-contention-high instead. Q144.'
 - 'Section ''Infrastructure CPU contention'': no wait cycle stated; the threshold design rule gives 5 minutes for contention (sp5-framework/alerts/alert-design).'
-- 'Section ''VM CPU contention'': the 32% Peak vCPU Ready is 4x the 8% CPU Ready, the acute-vs-sustained rule (Claude''s observation).'
+- 'Section ''VM CPU contention'': the 32% Peak vCPU Ready is 4x the 8% CPU Ready, the acute-vs-sustained rule; this reading is not stated in the source.'
 status: draft
 ```

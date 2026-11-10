@@ -104,8 +104,7 @@ source:
   path: VMware Distributed Power Management (DPM) (pp. 80-81)
 corrections: []
 review_notes:
-- Checked against 9.1 (revision 20260624). Pages 80-81. Content unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Predictive DRS and predictive DPM require VMware vRealize Operations 6.4 or later, per the source. This product version is old. Author to confirm whether the feature still applies in vSphere 9.0 and VCF Operations.
+- 'To check: Predictive DRS and predictive DPM: the source requires VMware vRealize Operations 6.4 or later, an old product version; whether the feature still applies in vSphere 9.0 and VCF Operations.'
 status: draft
 ```

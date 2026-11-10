@@ -73,11 +73,11 @@ source:
   document: VCF Operations 9.1 documentation (TechDocs, VCF 9.1.x), Real-time Data in the Workbench (updated 2026-10-29); Real-Time Metrics Details and Deploy Real-Time Metrics (updated 2026-11-05)
   path: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/troubleshooting-workbench-home-page/real-time-data-in-troubleshooting-workbench.html; .../configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/real-time-metrics-policy-workspace.html; .../deploying-vcf-operations-for-real-time-data-service.html
 corrections:
-- 'Section ''What it adds'': designed for programmatic consumption, Prometheus compatibility for scripts (author, 2026-11-07).'
+- 'Section ''What it adds'': designed for programmatic consumption, Prometheus compatibility for scripts.'
 review_notes:
-- 'Section ''What it adds'': the docs show PromQL only in the Custom Query sub-tab; no Prometheus endpoint or API route for external scripts is described. To confirm with the author (Q129).'
+- 'To check: Section ''What it adds'': a Prometheus endpoint or API route for external scripts; the docs show PromQL only in the Custom Query sub-tab (Q129).'
 - 'Docs conflict: the policy page says ESX Top view is for Virtual Machine types; the Workbench page says Host System and VM.'
-- 'The list of the ~21 2-second metrics is in VODAP-9.1-Metrics-List-Per-Provider.xlsx (not read).'
+- 'To check: The list of the ~21 2-second metrics (VODAP-9.1-Metrics-List-Per-Provider.xlsx, not read).'
 - 'Section ''Cost'': 1,000 data points from the book; 10x volume is arithmetic.'
 status: draft
 ```

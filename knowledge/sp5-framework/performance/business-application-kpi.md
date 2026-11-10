@@ -62,15 +62,13 @@ related:
 - vcf-operations/dashboards/business-applications
 - vcf-operations/dashboards/it-leaders-dashboards
 source:
-  document: PART 1 - Concepts of Operations Management.docx; author's answer (2026-11-09)
-  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind: The Crown Jewel (pp. 11-14); author answer Q092 (2026-11-09)'
+  document: PART 1 - Concepts of Operations Management.docx; Knowledge base
+  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind: The Crown Jewel (pp. 11-14)'
 corrections:
-- 'Section ''How the KPI is built'': across tiers the application takes the worst tier; active/passive counts the active node only (author, Q092, 2026-11-09).'
-- 'Section ''Not yet in VCF Operations'': VCF Operations cannot tell active from passive (author, Q092, 2026-11-09).'
-- 'Section ''Why the infrastructure layer measures it'': not measuring business applications at the infrastructure layer is a Level 300 mistake (author, 2026-11-09).'
+- 'Section ''How the KPI is built'': across tiers the application takes the worst tier; active/passive counts the active node only.'
+- 'Section ''Not yet in VCF Operations'': VCF Operations cannot tell active from passive.'
+- 'Section ''Why the infrastructure layer measures it'': not measuring business applications at the infrastructure layer is a Level 300 mistake.'
 review_notes:
-- 'Sections ''Crown jewels'' and the tier rules moved from sp5-framework/concepts/purpose-driven-architecture (2026-11-09).'
-- 'Section ''How the KPI is built'': the reasons (the passive node pulls the average up; the convoy) and the workaround (read the active node, exclude the passive by hand) are Claude''s.'
-- 'Section ''Crown jewels'': always Gold class; airline and bank examples (author, 2026-11-09).'
+- 'To check: Section ''How the KPI is built'': the reasons (the passive node pulls the average up; the convoy) and the workaround (read the active node, exclude the passive by hand); not in the source.'
 status: draft
 ```

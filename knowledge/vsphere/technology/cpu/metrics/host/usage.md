@@ -79,12 +79,9 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > ESXi > Used | Usage; Usage; Usage and 100%; Consumed
 corrections:
-- '2026-11-02: Hyper-Threading values (section: Hyper-Threading) from the author.'
-- '2026-11-02: ESXi CPU Usage is artificially capped at 100%: accounting decision error, documented in an official VMware KB (section: Cap). The uploaded document describes it as normal behaviour.'
+- '2026-11-02: Hyper-Threading values (section: Hyper-Threading) are not in the uploaded document.'
+- 'Section Cap: the cap is removed in vCenter (Broadcom KB 417702, KB 431027) and in VCF Operations since Aria Operations 8.18; the uploaded document shows the older capped behaviour.'
 review_notes:
-- KB article number for the 100% cap not yet provided.
 - 'Sections Formula, Names and units, Cap by tool: from CPU > ESXi.'
-- 'Section ''Cap by tool'': the author''s correction states the metric is capped (KB pending); the ESXi section states VCF Operations removed the cap in Aria Operations 8.18. Open question in project/author-questions.md.'
-- "Sections 'Cap', 'Cap by tool': author (2026-11-03), Q010: cap removed in both vCenter and VCF Operations. https://knowledge.broadcom.com/external/article/417702/esxi-host-reporting-over-100-cpu-usage.html and https://knowledge.broadcom.com/external/article/431027/esxi-host-cpu-usage-appears-high-in-vcen.html"
 status: draft
 ```

@@ -167,15 +167,15 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size (pp. 80-90)'
 corrections:
-- 'Section ''Network'': no per-VM network limit or reservation; the book''s 8 Gb/s and 100 Mb/s are withdrawn (author, Q083, 2026-11-07).'
-- 'Section ''Network'': the pool is the uplink group, Load Based Teaming every 30 s above 75%; the villain sustains 10 Gb over 300 s (book said 5); VM traffic outnumbered by per-type VMkernel shares; the screenshot values are not defaults, customize them (author, Q081, 2026-11-07).'
-- 'Section ''Memory'': overcommit ratio against DRAM only with tiering (author, Q082, 2026-11-07).'
-- 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x (author, Q077, 2026-11-06).'
-- 'Section ''CPU'', Reservation: 4:1 against physical thread gives 0.25 thread; the book says 8:1 (author, Q078, 2026-11-06).'
-- 'Section ''Disk'', Limit: 2.5% per VM, not 1%; 40 VMs saturate the array (author, Q078, 2026-11-06). The book says 5% of the population; 40 of 2,000 is 2%.'
-- 'Section ''Maximum VM size'': overcommit is per physical thread, not per core; the book''s example is per core (author, Q079, 2026-11-06).'
-- 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation (author, Q080, 2026-11-06).'
-- 'Section ''Avoiding it'': the book''s memory table was wrong; 100% is unrealistic; Performance SLA 99.9% Gold, 99.8% Silver, 99.6% Bronze (author, Q076, 2026-11-06).'
-review_notes:
+- 'Section ''Network'': no per-VM network limit or reservation; the book''s 8 Gb/s and 100 Mb/s are withdrawn.'
+- 'Section ''Network'': the pool is the uplink group, Load Based Teaming every 30 s above 75%; the villain sustains 10 Gb over 300 s (book said 5); VM traffic outnumbered by per-type VMkernel shares; the screenshot values are not defaults, customize them.'
+- 'Section ''Memory'': overcommit ratio against DRAM only with tiering.'
+- 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x.'
+- 'Section ''CPU'', Reservation: 4:1 against physical thread gives 0.25 thread; the book says 8:1.'
+- 'Section ''Disk'', Limit: 2.5% per VM, not 1%; 40 VMs saturate the array. The book says 5% of the population; 40 of 2,000 is 2%.'
+- 'Section ''Maximum VM size'': overcommit is per physical thread, not per core; the book''s example is per core.'
+- 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation.'
+- 'Section ''Avoiding it'': the book''s memory table was wrong; 100% is unrealistic; Performance SLA 99.9% Gold, 99.8% Silver, 99.6% Bronze.'
+review_notes: []
 status: draft
 ```

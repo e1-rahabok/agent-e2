@@ -27,7 +27,7 @@
 | Change of location | VM host change count, VM datastore change count | `vmop.numChangeHost`, `vmop.numChangeDS` | Powered-off and suspended VMs. |
 
 - vCenter stores all 20 counters on the cluster and on the datacenter, at level 1 (rollup latest, stat type absolute).
-- Whether vCenter accumulates them while VCF Operations shows a rate is author question Q052.
+- Whether vCenter accumulates them while VCF Operations shows a rate is not settled.
 
 ## Use
 - Compare dynamics with expectations. In production these numbers should be low.
@@ -62,7 +62,6 @@ source:
   path: Provider Objects > Overview > vSphere Cluster > VM Operations
 corrections: []
 review_notes:
-- 'Section ''Meaning'': cumulative since object creation; not reset by a vCenter restart (author, Q052, 2026-11-06).'
-- 'Section ''Counters'': the book lists ''VM host and datastore change count'' twice. The vCenter API confirms two counters: numXVMotion (powered-on and suspended) and numChangeHostDS (powered-off and suspended). Counter names, the location definitions and the datacenter copy from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
+- 'Section ''Counters'': the book lists ''VM host and datastore change count'' twice. The vCenter API confirms two counters: numXVMotion (powered-on and suspended) and numChangeHostDS (powered-off and suspended). Counter names, the location definitions and the datacenter copy from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 status: draft
 ```

@@ -77,9 +77,10 @@ source:
   path: ESX CPU Considerations > Non-Uniform Memory Access (NUMA) (pp. 29-30); Hardware BIOS Settings > General BIOS Settings (p. 21)
 corrections: []
 review_notes:
-- 'Section ''Scheduler mechanics'': from the vSphere 9.1 documentation, vSphere Resource Management > How ESX NUMA Scheduling Works, Home Nodes and Initial Placement, Dynamic Load Balancing and Page Migration, Transparent Page Sharing Optimized for NUMA, Specifying NUMA Controls (pp. 1936-1942). The esxtop counter mapping is Claude''s own knowledge.'
+- 'Section ''Scheduler mechanics'': from the vSphere 9.1 documentation, vSphere Resource Management > How ESX NUMA Scheduling Works, Home Nodes and Initial Placement, Dynamic Load Balancing and Page Migration, Transparent Page Sharing Optimized for NUMA, Specifying NUMA Controls (pp. 1936-1942).'
+- 'To check: Section ''Scheduler mechanics'': the esxtop counter mapping; not in the documentation.'
 - Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.
+- 'To check: the ''Using NUMA Systems with ESX'' section of the vSphere Resource Management guide, referenced by the source; not read.'
 status: draft
 ```

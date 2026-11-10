@@ -76,7 +76,7 @@ flowchart LR
 - Reading the diagram: 100 packets arriving at a VM count as 100 RX at the driver, 100 ingress at the firewall, 100 incoming on a dashboard. The traffic in the other direction is TX, egress and outgoing.
 
 ### Book diagrams (superseded)
-- The two book diagrams below show the earlier view that a VM has no ingress traffic. The author corrected it (2026-11-04): use the table above.
+- The two book diagrams below show the earlier view that a VM has no ingress traffic. That view is wrong: use the table above.
 ![Superseded book diagram: ingress and egress vs receive and transmit](../images/network-ingress-egress-vs-receive-transmit.png)
 ![Superseded book diagram: distributed switch direction from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 
@@ -166,9 +166,8 @@ source:
   document: PART 3 - Counters.docx
   path: Network > Architecture > Architecture intro; Network Observability
 corrections:
-- 'Section ''Direction terms'': the book diagrams and text say a VM has no ingress traffic. Superseded by author answer Q024 (2026-11-04). Keep until the book is updated.'
+- 'Section ''Direction terms'': the book diagrams and text say a VM has no ingress traffic. Superseded on 2026-11-04. Keep until the book is updated.'
 review_notes:
-- 'Section ''vCenter counters on switches and port groups'': from the author''s vCenter 9.1.0 API export and its README (distributed port group returns no counters), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
-- 'Section ''Direction terms'': author answer Q024 (2026-11-04): RX/TX, ingress/egress and incoming/outgoing are three domains (driver, policy, telemetry); the table and Mermaid diagram are from the answer. The book diagrams are kept as superseded.'
+- 'Section ''vCenter counters on switches and port groups'': from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere and its README (distributed port group returns no counters), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 status: draft
 ```

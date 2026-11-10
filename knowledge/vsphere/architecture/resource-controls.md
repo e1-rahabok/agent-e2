@@ -81,7 +81,7 @@ Usage <= Entitlement   (at any point in time)
 ### Default CPU shares
 - Default CPU shares are per vCPU: Low, Normal and High are in the ratio 1:2:4 per vCPU.
 - With default settings, a 1-vCPU VM gets half the CPU share of a 2-vCPU VM under contention.
-- The VM's shares are shared among its vCPUs: a busy vCPU beside an idle sibling gets the idle sibling's part too (author, Q077). See `sp5-framework/performance/noisy-neighbour`.
+- The VM's shares are shared among its vCPUs: a busy vCPU beside an idle sibling gets the idle sibling's part too. See `sp5-framework/performance/noisy-neighbour`.
 
 ### Why Usage can appear slightly above Entitlement
 - Reporting technique, not a real violation.
@@ -121,13 +121,12 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Resource Management
 corrections:
-- 'Sections Reservation: CPU vs memory: CPU reservation capped at base clock speed × cores, and applies only under contention (author answer Q041, 2026-11-05; quiz CPU Q8 key options A and B).'
+- 'Sections Reservation: CPU vs memory: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
 - '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
-- 'Section ''Reservation: CPU vs memory'': memory reservation is also on demand. Consumed does not jump to the reservation at power-on; until the VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; touched reserved memory is kept, even when idle. Author (Q047, Q057, 2026-11-06), verified on a live vCenter; corrects the book and the 2026-11-02 entry.'
+- 'Section ''Reservation: CPU vs memory'': memory reservation is also on demand. Consumed does not jump to the reservation at power-on; until the VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; touched reserved memory is kept, even when idle. Verified on a live vCenter; corrects the book and the 2026-11-02 entry.'
 - '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
 review_notes:
-- '2026-11-04: moved from vsphere/foundations/resource-management into the resource-management topic folder (author decision 5).'
-- 'Sections ''How memory entitlement is set under overcommit'', ''Default CPU shares'': from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839). Shares per vCPU (Normal = 1,000 per vCPU) is Claude''s own knowledge; the documentation states equal share per vCPU and the 1:2:4 ratio.'
-- Cluster-level shares scope (siblings under the same parent resource pool) is from Claude's own knowledge (section: Two scheduler levels, Cluster row). Confirm.
+- 'To check: Section ''Default CPU shares'': Normal = 1,000 shares per vCPU; the documentation states equal share per vCPU and the 1:2:4 ratio. Sections ''How memory entitlement is set under overcommit'' and ''Default CPU shares'' are from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839).'
+- 'To check: Section ''Two scheduler levels'', Cluster row: cluster-level shares scope (siblings under the same parent resource pool).'
 status: draft
 ```

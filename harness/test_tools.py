@@ -55,7 +55,7 @@ class CatalogTest(unittest.TestCase):
 
     def test_thresholds_have_source(self):
         r = CAT.lookup('KAVG')
-        self.assertTrue(any(t['value'] == 0.5 and t['source'] == 'book' for t in r['thresholds']))
+        self.assertTrue(any(t['value'] == 0.5 and t['source'] == 'knowledge-base' for t in r['thresholds']))
 
     def test_bands_parsed_from_knowledge(self):
         bands = CAT.thresholds(name='Peak CPU Ready among any vCPU')['bands']

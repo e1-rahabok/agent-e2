@@ -75,6 +75,5 @@ corrections: []
 review_notes:
 - 'Section ''Unit'': from Memory > Architecture.'
 - 'Sections Mechanism, Observed values: from Memory > VM.'
-- "Section 'Unit': author (2026-11-03), Q015: share of time a vCPU waits on page-fault completion, not share of memory space. The book's Architecture definition (space) was wrong and is updated in the book."
 status: draft
 ```

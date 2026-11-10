@@ -8,7 +8,7 @@
 ![20-second peak vs 300-second average disk latency](images/vm-disk-latency-20-second-peak-vs-300-second-average.png)
 
 ## Design (VCF Operations 8.3 and later)
-- A metric named Peak ... within collection cycle is the highest of the 15 20-second averages in the 5-minute cycle (author, Q048).
+- A metric named Peak ... within collection cycle is the highest of the 15 20-second averages in the 5-minute cycle.
 - KPIs and SLIs are reported every 5 minutes; the SLA is a lagging indicator, reported once a month for the whole month. All are VCF Operations metrics, not vSphere metrics.
 - A new metric, not a replacement. The 5-minute average stays for SLAs; the peak is an early warning toward the SLA.
 - Stores only the peak of the 15 points every 5 minutes, not all 15: less IO and storage. Answers: did the VM or guest have a problem in any 20-second period?
@@ -77,8 +77,6 @@ source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics'
 corrections: []
-review_notes:
-- 'Section ''Design'': author (Q048, 2026-11-06).'
-- 'Moved 2026-11-06 from vcf-operations/features/peak-20-second-metrics (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

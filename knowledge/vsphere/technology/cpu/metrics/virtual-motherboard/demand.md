@@ -68,7 +68,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Consumption Metrics > Demand
 corrections: []
-review_notes:
-- "Section 'Meaning': author (2026-11-03), answer to Q035: Demand is affected by Hyper-Threading; Guest OS and VM are different realms."
+review_notes: []
 status: draft
 ```

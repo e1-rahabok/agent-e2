@@ -120,9 +120,7 @@ source:
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic. Pages 109-110.'
 corrections: []
 review_notes:
-- 'Steps 2 to 5 and the closure thresholds follow the book (Cluster Closure, Logic) from 2026-11-07. Steps 1, 6 and 7 were drafted by Claude 2026-11-06 from the files in internal_derive (architecture review 2026-11-06, section 3.3); the full order is still to be confirmed by the author (Q061).'
-- 'Step 4: non-production closes at a higher Capacity Remaining (15%, 30%) than production (10%, 20%), while it closes later on performance and risk (Q121).'
-- 'Steps 4 and 5: thresholds from the author''s corrected table (Q121, Q122, 2026-11-09); the book table was wrong. Consumption (%) replaces Capacity Remaining; production and non-production share the consumption and performance thresholds; risk closes production at orange (above 60%) and non-production at red (above 80%). The cluster KPI is not related to the VM SLA: customers often say SLA when they mean KPI (author).'
-- 'Step 5: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open (Q121).'
+- 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow the book (Cluster Closure, Logic) (Q061).'
+- 'Step 5: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open.'
 status: draft
 ```

@@ -3,7 +3,7 @@
 ## Why a fixed gap
 - Gold, Silver and Bronze require a relative value that tenants understand.
 - Recommendation: a 2x gap. Gold is 2x better than Silver; Silver is 2x better than Bronze.
-- The 2x consistency is a goal, not a rule: memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow it exactly (author, Q119).
+- The 2x consistency is a goal, not a rule: memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow it exactly.
 - A 2x gap is easier to explain to senior leadership and application teams than 1.5x or 3x, and easier to run at scale.
 - Price follows the same gap: Gold price = 2x Silver = 4x Bronze.
 - Price, SLA numbers per class, size limits and soft products: `sp5-framework/concepts/class-of-service`. This file holds the capacity settings.
@@ -59,7 +59,7 @@
 - Running phase: workload runs, so reality overrides the plan. Read Cluster Consumption, Cluster Performance and Cluster Risk. Bronze clusters are expected to score a higher Cluster Risk (%) than Gold clusters (`vsphere/object-types/cluster/models/cluster-risk`).
 
 ## Planning tool
-- The author's capacity planning spreadsheet implements this model (isvara.io). First input: the ESXi host size. Its defaults balance cost and host size.
+- The capacity planning spreadsheet on isvara.io implements this model. First input: the ESXi host size. Its defaults balance cost and host size.
 
 ## Traps
 - "Our Bronze plan of 4:1 shows red overcommit in Cluster Risk, so the plan is wrong" → the ratio is a planning input tied to price; Cluster Risk reads the running cluster, where Bronze is expected to score higher than Gold.
@@ -115,10 +115,9 @@ source:
   path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template. Pages 107-109.'
 corrections: []
 review_notes:
-- 'Sections ''Why a fixed gap'' and ''Planning phase vs running phase'': author answers Q119 and Q120 (2026-11-09).'
-- 'Section ''Example implementation'': the book says "Notice the consistent 2x gap"; memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow 2x (Q119).'
-- 'Section ''Example implementation'': Silver 2:1 and Bronze 4:1 per thread are 4 and 8 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, and memory 1.8-2.2 as red. A Bronze cluster built to this plan scores red on both rows (Q120).'
-- 'Section ''Example implementation'': Gold at 50% CPU reservation and 1:1 CPU per thread from the book image. Text written from the image; the image is kept as the author''s table.'
-- 'Section ''Example implementation'': the 2x gap in unmet demand (0.5%, 1%, 2%) is Claude''s arithmetic on the book values.'
+- 'Section ''Example implementation'': the book says "Notice the consistent 2x gap"; memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow 2x.'
+- 'Section ''Example implementation'': Silver 2:1 and Bronze 4:1 per thread are 4 and 8 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, and memory 1.8-2.2 as red. A Bronze cluster built to this plan scores red on both rows.'
+- 'Section ''Example implementation'': Gold at 50% CPU reservation and 1:1 CPU per thread from the book image. Text written from the image; the image is kept.'
+- 'To check: Section ''Example implementation'': the 2x gap in unmet demand (0.5%, 1%, 2%), computed from the book values.'
 status: draft
 ```

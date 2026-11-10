@@ -78,8 +78,7 @@ source:
   path: Memory > VM > Contention Metrics > Balloon; Swap + Compress > Balloon
 corrections: []
 review_notes:
-- '2026-11-04: content from former vsphere/technology/memory/concepts/host-memory-states folded in (author decision 5). Source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Section ''Mechanism'': Idle Memory Tax is the Mem.IdleTax setting (Claude''s own knowledge).'
-- 'Section ''Trigger and requirement'': ballooning requires VMware Tools running (author, Q043, 2026-11-06).'
+- 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'To check: Section ''Mechanism'': Idle Memory Tax is the Mem.IdleTax setting.'
 status: draft
 ```

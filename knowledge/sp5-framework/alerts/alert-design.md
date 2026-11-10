@@ -97,7 +97,7 @@
 | Consumption | Disk | 1 | Not yet | N/A | N/A |
 | Consumption | Network | N/A | N/A | N/A | N/A |
 
-- Not yet: not implemented in the author's set; some Guest OS alerts require the Telegraf agent. N/A: the daily check or the NOC screen serves better.
+- Not yet: not implemented in the recommended set; some Guest OS alerts require the Telegraf agent. N/A: the daily check or the NOC screen serves better.
 - The definitions: `guest-os/system/configuration/guest-os-alerts`, `vsphere/technology/cpu/configuration/cpu-alerts`, `vsphere/technology/memory/configuration/memory-alerts`, `vsphere/technology/storage/configuration/storage-alerts`, `vsphere/technology/network/configuration/network-alerts`.
 
 ## Generic vs specific alerts
@@ -127,7 +127,7 @@
 - Keep a consistent scale between colours, so red stays the same step worse than orange. Red can be made worse than orange in three ways:
   - 2x the threshold: orange at 10 ms latency, red at 20 ms;
   - 2x the population: orange when 10% of VMs are hit, red at 20%;
-  - 2x the time: orange for 5 minutes, red for 10 minutes. The author does not favour this one.
+  - 2x the time: orange for 5 minutes, red for 10 minutes. Not recommended.
 - Wait time before the alert fires: contention 5 minutes, 10 minutes for metrics with false positives; consumption 15 minutes. VCF Operations setting: `vcf-operations/alerts/alert-definitions`.
 
 ## Recommendation vs remediation
@@ -144,7 +144,7 @@
   - give the application team red only; keep orange for the infrastructure team as a heads-up;
   - give the application team a higher threshold, such as VM CPU Ready above 8%, against 6% for the infrastructure team.
 - Infrastructure-level alerts, such as on ESXi, are not relevant to the application team.
-- Shared infrastructure alerts look at the population, not a few VMs: the author uses 25% of the VM population as the overall threshold, with a lower per-VM threshold because 25% can mean hundreds of VMs. Applies to ESXi, resource pool and cluster; not Datacenter, whose clusters can serve different purposes.
+- Shared infrastructure alerts look at the population, not a few VMs: use 25% of the VM population as the overall threshold, with a lower per-VM threshold because 25% can mean hundreds of VMs. Applies to ESXi, resource pool and cluster; not Datacenter, whose clusters can serve different purposes.
 
 ## Traps
 - "Alert on everything so nothing is missed" → an alert nobody must act on today is noise. Use the daily dashboard.
@@ -202,13 +202,12 @@ source:
   path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts (pp. 10-19)'
 corrections: []
 review_notes:
-- 'Section ''Threshold design'', colour scale: the source says red is always 4x orange, and that red is made 2x as bad by changing any 2 of threshold, population and time; the per-resource alerts mostly use red = 2x orange on each threshold. Q140.'
-- 'Section ''Class of service'': the class names (mission critical, standard production, test and development) differ from Gold, Silver, Bronze in sp5-framework/concepts/class-of-service. Same concept, different labels; Q141.'
-- 'Section ''What not to alert'': the source row is Cost; written under value, the pillar name (author, 2026-11-08).'
-- 'Section ''What not to alert'', vMotion example: the source says 300% longer, from 0.2 s to 0.6 s; that is 3x as long (200% longer). Written as 3x. Q140.'
-- 'Section ''Recommendation vs remediation'': the source says Tanzu and K8; VKS (vSphere Kubernetes Service) is the current name. Claude''s knowledge.'
-- 'Section ''Design the alerts as a set'', first table: the source table shows Guest OS Disk consumption 1, while Guest OS Alerts > Consumption says no alert is defined. Q142.'
-- 'Section ''Design the alerts as a set'': the source counts Datastore disk contention 0 and Datastore Cluster 2; Storage Alerts > Infrastructure Contention says not yet implemented for the datastore. Q142.'
-- 'Section ''Threshold design'': the wait-time link to the VCF Operations setting is Claude''s.'
+- 'To check: Section ''Threshold design'', colour scale: the source says red is always 4x orange, and that red is made 2x as bad by changing any 2 of threshold, population and time; the per-resource alerts mostly use red = 2x orange on each threshold (Q140).'
+- 'To check: Section ''Class of service'': the class names (mission critical, standard production, test and development) differ from Gold, Silver, Bronze in sp5-framework/concepts/class-of-service; same concept, different labels (Q141).'
+- 'To check: Section ''What not to alert'', vMotion example: the source says 300% longer, from 0.2 s to 0.6 s; that is 3x as long (200% longer); written as 3x (Q140).'
+- 'To check: Section ''Recommendation vs remediation'': VKS (vSphere Kubernetes Service) as the current name for the source''s Tanzu and K8.'
+- 'To check: Section ''Design the alerts as a set'', first table: the source table shows Guest OS Disk consumption 1, while Guest OS Alerts > Consumption says no alert is defined (Q142).'
+- 'To check: Section ''Design the alerts as a set'': the source counts Datastore disk contention 0 and Datastore Cluster 2; Storage Alerts > Infrastructure Contention says not yet implemented for the datastore (Q142).'
+- 'To check: Section ''Threshold design'': the wait-time link to the VCF Operations setting (not in the source).'
 status: draft
 ```

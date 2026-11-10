@@ -114,8 +114,7 @@ source:
   path: Provider Objects > esxtop > Memory
 corrections: []
 review_notes:
-- 'Sections ''Summary lines'', ''Consumption'': state values, shared = common + saving, Consumed = GRANT - SHRDSVD and the CNSM definition from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > esxtop > Memory Panel (pp. 2155-2157). The esxtop section of the documentation lists only 4 states (high, soft, hard, low); the file keeps the 5 states of vsphere/technology/memory/concepts/host-memory-states (Clear added in ESXi 6.0, Claude''s own knowledge).'
+- 'To check: Sections ''Summary lines'', ''Consumption'': Clear state added in ESXi 6.0; the esxtop section of the documentation lists only 4 states (high, soft, hard, low), and the file keeps the 5 states of vsphere/technology/memory/concepts/host-memory-states. State values, shared = common + saving, Consumed = GRANT - SHRDSVD and the CNSM definition from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > esxtop > Memory Panel (pp. 2155-2157).'
 - 'Section ''Summary lines'': overcommit formula source cited by the book: https://communities.vmware.com/t5/Storage-Performance/Interpreting-esxtop-4-1-Statistics/ta-p/2786881 (esxtop 4.1 era).'
-- 'Moved 2026-11-06 from vsphere/tools/esxtop/memory (architecture review 2026-11-06, section 5).'
 status: draft
 ```

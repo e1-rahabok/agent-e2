@@ -13,7 +13,7 @@
 - Value at ESXi: summation over the VMs, not over physical threads. So it is not available per core or thread.
 - Can exceed 500%. Example: a host running flat out with Usage (%) above 100%; Demand 4.7x higher.
 - Includes reservations of running VMs and of the kernel. Usage includes actual use by running VMs and the kernel.
-- Host with no VMs: Demand flat at 0 (author, Part 1), or flat at the kernel reservation. Example: flat 10.21% for weeks, equal to Overhead (MHz). Usage is not 0: it includes kernel work such as vSAN and NSX.
+- Host with no VMs: Demand flat at 0, or flat at the kernel reservation. Example: flat 10.21% for weeks, equal to Overhead (MHz). Usage is not 0: it includes kernel work such as vSAN and NSX.
 - Example, real-time chart of a host without VMs: Usage about 3,000 MHz on average (peak 6,727 MHz), Demand 0 throughout.
 ![ESXi with no running VM: CPU Usage in MHz averages about 2,946 MHz with peaks near 6,700 MHz while CPU Demand stays at 0](../../images/esxi-cpu-demand-usage-without-vm.png)
 - Kernel reservation below kernel use: Demand below Usage.
@@ -67,8 +67,6 @@ source:
 corrections:
 - "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
 review_notes:
-- 'Section ''Behaviour'': screenshot of a host without VMs uploaded by the author (2026-11-07): Demand 0, Usage about 3 GHz.'
 - 'Section Behaviour: from CPU > ESXi.'
-- "Section 'Meaning': author (2026-11-03), Q009: providers have provider metrics and sum-of-consumer metrics. ESXi Demand is a sum of VM Demand."
 status: draft
 ```

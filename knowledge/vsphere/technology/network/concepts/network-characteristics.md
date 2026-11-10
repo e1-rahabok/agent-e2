@@ -97,7 +97,7 @@ source:
   path: Network > Architecture > Unique Characteristics
 corrections: []
 review_notes:
-- 'Section ''Contention metrics'': the book states there is no NIOC cap counter in vCenter 7. Not checked for vCenter 9.1.'
+- 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; the book states vCenter 7 has none.'
 - 'Section ''Interconnect'': example outage read from the book: https://blog.ipspace.net/2019/05/real-life-data-center-meltdown.html (third-party).'
 status: draft
 ```

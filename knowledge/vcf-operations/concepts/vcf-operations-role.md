@@ -55,12 +55,10 @@ related:
 - vsphere/architecture/provider-consumer
 - vcf-operations/features/peak-20-second-metrics
 source:
-  document: Author's answer (2026-11-04)
-  path: Conversation with the author on VCF Operations and vCenter roles
+  document: Knowledge base
+  path: Conversation on VCF Operations and vCenter roles
 corrections: []
 review_notes:
-- 'Section ''Where its knowledge lives'': folders concepts, features, dashboards, reports, alerts (author, 2026-11-09: a file that documents an actual implementation is not a concept). VCF Operations is not a peer of the managed systems; vcf-operations/ holds only content about itself (author, 2026-11-08).'
-- 'Whole file: from the author''s statement of 2026-11-04 (VCF Operations is monitoring software; all its metrics are derived; thin layer above vSphere, vSAN, NSX, Windows, Linux, VKS; vCenter is an administrative tool, not used for capacity planning or performance troubleshooting).'
 - 'Section ''vCenter is not the operations tool'': short history and rolled-up peaks follow vsphere/tools/vsphere-client/vcenter-statistics.'
 status: draft
 ```

@@ -74,6 +74,5 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Collection modes'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > Using the resxtop Utility, Interactive Mode, Batch Mode, Replay Mode (pp. 2148-2166).'
-- 'Moved 2026-11-06 from vsphere/tools/esxtop/overview (architecture review 2026-11-06, section 5).'
 status: draft
 ```

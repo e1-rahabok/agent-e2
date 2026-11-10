@@ -62,6 +62,6 @@ corrections: []
 review_notes:
 - 'Section ''VM dropped packets'': the source says 4% is 1 in 40 packets; 4% is 1 in 25. Written as 1 in 25. The source row ends with "and", so a second condition may be missing. Q147.'
 - 'Section ''What to set'': the source says the ratio is always 100% because dropped packets are retransmitted; meaning unclear, not copied. Q147.'
-- 'Section ''Distributed port group dropped packets'': the reason for transmitted only (received drops gave false positives) is Claude''s reading of "orange alert is not implemented due to false positive. In future I will change to transmit only". Q147.'
+- 'Section ''Distributed port group dropped packets'': the reason for transmitted only (received drops gave false positives) is a reading of the source text "orange alert is not implemented due to false positive. In future I will change to transmit only". Q147.'
 status: draft
 ```

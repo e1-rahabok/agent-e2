@@ -98,12 +98,11 @@ related:
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/performance-vs-capacity
 source:
-  document: 'PART 3 - Counters.docx, Metric Mastery (author update, 2026-11-08)'
+  document: 'PART 3 - Counters.docx, Metric Mastery'
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
 review_notes:
-- 'Author update 2026-11-08: Value Management, not Cost Management: value covers cost, price and business value (author, 2026-11-08).'
-- 'Section ''Why not USE, RED or Golden Signals'': the book names the three methods and says Triple See was built from their strengths and weaknesses, but does not list them. The comparison is Claude''s reading; to confirm (Q134). Sources: brendangregg.com/usemethod.html, weave.works RED Method blog, sre.google SRE book, Monitoring Distributed Systems.'
+- 'To check: Section ''Why not USE, RED or Golden Signals'': the book names the three methods and says Triple See was built from their strengths and weaknesses, but does not list them; the comparison is a reading of the book (Q134). Sources: brendangregg.com/usemethod.html, weave.works RED Method blog, sre.google SRE book, Monitoring Distributed Systems.'
 - 'Section ''Three types of metric'': the book lists contention for performance only; availability for errors and drops follows from its Contention text.'
 status: draft
 ```

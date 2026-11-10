@@ -41,7 +41,7 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Reservation
 corrections:
-- 'Sections Meaning, Traps: CPU reservation capped at base clock speed × cores, and applies only under contention (author answer Q041, 2026-11-05; quiz CPU Q8 key options A and B).'
+- 'Sections Meaning, Traps: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
 review_notes: []
 status: draft
 ```

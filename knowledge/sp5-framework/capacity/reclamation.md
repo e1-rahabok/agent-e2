@@ -163,9 +163,6 @@ source:
   path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap). Pages 110-118.'
 corrections: []
 review_notes:
-- 'Section ''What each area frees'': table confirmed and edited by the author (Q123, 2026-11-09): oversized VM also frees cluster capacity through a lower overcommit ratio.'
-- 'Section ''When reclamation is the provider''s job'': free VMs, the infrastructure team may reclaim; charged VMs, the application team owns the cost; stocktake still applies (author edit, Q123, 2026-11-09).'
-- 'Section ''Idle VM'': power-off frees memory, consumed pages linger (author, Q042, 2026-11-06); moved here from sp5-framework/capacity/rightsizing 2026-11-07.'
-- 'Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming is Claude''s knowledge.'
+- 'To check: Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming; not in the book.'
 status: draft
 ```

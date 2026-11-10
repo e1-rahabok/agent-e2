@@ -56,7 +56,7 @@ source:
   path: 'Configuration Management > Review List > Network (Distributed Switch & Port Group, Others) (pp. 147-148)'
 corrections: []
 review_notes:
-- 'Section ''Distributed switch'': the book names Cisco Discovery Protocol; LLDP added by Claude.'
-- 'Section ''Other components'': the book says ensure the redundancy for both NSX Controller and Manager; NSX-T merged the controller into the Manager cluster. Written as NSX Manager. Q113.'
+- 'Section ''Distributed switch'': the book names Cisco Discovery Protocol; LLDP added, not in the book.'
+- 'Section ''Other components'': the book says ensure the redundancy for both NSX Controller and Manager; NSX-T merged the controller into the Manager cluster. Written as NSX Manager.'
 status: draft
 ```

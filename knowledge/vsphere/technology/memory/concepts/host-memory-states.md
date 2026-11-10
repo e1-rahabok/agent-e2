@@ -108,9 +108,8 @@ source:
   path: Memory > ESXi > Contention Metrics > Balloon
 corrections: []
 review_notes:
-- '2026-11-04: content from former vsphere/technology/memory/concepts/host-memory-states folded in (author decision 5). Source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Section ''States'': minFree for 1 TB = 10.8 GB per the book. Calculator cited by the book: https://blogs.virtualmaestro.in/2020/06/02/vmware-vsphere-7-x-memory-reclamation-part-2-mem-memminfreepct/ (third-party). The minFree rule (899 MB for the first 28 GB, then 1% of the rest) is Claude''s own knowledge; it gives about 10.8 GB for 1 TB.'
+- 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'To check: Section ''States'': the minFree rule (899 MB for the first 28 GB, then 1% of the rest), which gives about 10.8 GB for 1 TB as the book states (calculator cited by the book, third-party: https://blogs.virtualmaestro.in/2020/06/02/vmware-vsphere-7-x-memory-reclamation-part-2-mem-memminfreepct/).'
 - 'Section ''When ballooning starts'': book typo ''993.1 BB'' written as GB.'
-- "Section 'HA headroom': author (2026-11-03), Q014: a limit does not cause ballooning directly. The book's phrase that balloon means a limit is imposed is read as a pointer to a VM-level cause."
 status: draft
 ```

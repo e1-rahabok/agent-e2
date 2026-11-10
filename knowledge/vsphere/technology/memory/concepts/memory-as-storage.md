@@ -60,7 +60,6 @@ source:
   document: PART 3 - Counters.docx
   path: Memory > Architecture > Architecture intro
 corrections: []
-review_notes:
-- "Section 'Two dimensions': author (2026-11-03), Q015: Memory Latency is a share of time, not of memory space. Book updated."
+review_notes: []
 status: draft
 ```
