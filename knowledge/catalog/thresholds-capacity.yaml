@@ -404,7 +404,7 @@ rows:
   value: 99.5
   unit: '%'
   condition: Gold class of service
-  meaning: Minimum VM Performance (%) KPI for Gold. A KPI threshold, not an SLA.
+  meaning: 'Expected VM Performance (%) of a cluster sized for Gold: a capacity design expectation. The KPI has no class of service.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
   quote: '- Gold: ≥ 99.5%'
@@ -416,7 +416,7 @@ rows:
   value: 99
   unit: '%'
   condition: Silver class of service
-  meaning: Minimum VM Performance (%) KPI for Silver. A KPI threshold, not an SLA.
+  meaning: 'Expected VM Performance (%) of a cluster sized for Silver: a capacity design expectation. The KPI has no class of service.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
   quote: '- Silver: ≥ 99%'
@@ -428,7 +428,7 @@ rows:
   value: 98
   unit: '%'
   condition: Bronze class of service
-  meaning: Minimum VM Performance (%) KPI for Bronze. A KPI threshold, not an SLA.
+  meaning: 'Expected VM Performance (%) of a cluster sized for Bronze: a capacity design expectation. The KPI has no class of service.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
   quote: '- Bronze: ≥ 98%'

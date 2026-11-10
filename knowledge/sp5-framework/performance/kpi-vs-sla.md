@@ -46,11 +46,11 @@
 - Reference:
   - KPI: reality, the absolute value: how bad. The contract is irrelevant to it.
   - SLA: always relative to an agreed threshold. Each 5-minute SLI is binary: a fail is a fail, so 1.01% and 50% memory contention against a 1% promise count the same.
+- Different metrics, different resolution: the SLA uses few metrics, the KPI many. Even the same metric is read differently: the SLI reads the 5-minute average at VM level; the KPI reads the 20-second peak of the worst vCPU or virtual disk. The SLI is the guide for the SLA.
 - Two numbers each:
   - actual: volatile, per VM (SLA: share of passed intervals in the month; KPI: the VM's score);
-  - target: steady, for many VMs, per class of service. SLA targets: `catalog/thresholds-performance`, rows `performance-sla-*`. KPI targets: `catalog/thresholds-capacity`, rows `class-*-min-vm-performance`. A lower class has a lower target.
-  - The KPI colour levels are the same for every class; the KPI target is not. A Gold VM must keep a higher KPI score than a Silver VM.
-  - Daily KPI actual (performance): the 95th percentile of the day's 288 scores, the score that 95% of the intervals reach or exceed. The worst 5% (14 intervals, 70 minutes) are ignored, so a single short episode does not move it: that is the alert's job. For capacity, the summary over time is part of each model.
+  - target: steady, for many VMs. SLA targets are per class of service: `catalog/thresholds-performance`, rows `performance-sla-*`. The KPI is never per class of service: one set of levels and one target for every VM. A Gold VM still tends to score higher than a Silver VM, because its design (less overcommit) causes less contention.
+  - Daily KPI actual (performance): the 99th percentile of the day's 288 scores, the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
 - Cadence:
   - KPI: daily, in a technical meeting. A month is far too late.
   - SLA: monthly, in a business meeting with stakeholders.
@@ -82,9 +82,29 @@
 - NSX KPI: many-to-many with vSphere clusters, so not tied to one cluster.
   ![KPI and SLA scope in VM as a Service: Guest OS KPI and VM KPI with Guest OS SLA and VM SLA; the business application KPI spans service, Guest OS and VM; ESXi, vSAN and NSX KPIs measure their own purpose](images/vm-as-a-service-kpi-and-sla-scope-diagram.png)
 
+## Worked example: higher KPI, failed SLA
+- Two Gold VMs, June 2026: 8,640 five-minute intervals. SLI: VM Memory Contention (5-minute average) fails above its SLI threshold of 1%. Gold SLA target 99.9%: at most 8 failed intervals in the month.
+- KPI: VM Performance (%). The memory sub-metric scores 100 at 0%, 50 at 1% and 0 at 4% and above (`sp5-framework/performance/performance-kpi-design`, Scoring). With the other 8 sub-metrics at 100:
+  - 1.01% scores 49.75 with weight 4.03: VM Performance (8 × 100 + 49.75 × 4.03) / (8 + 4.03) = 83.17;
+  - 50% scores 0 with weight 16: VM Performance (8 × 100) / (8 + 16) = 33.33.
+- Assumed: the 20-second peak equals the 5-minute average; contention is 0% otherwise.
+
+| | VM A | VM B |
+|---|---|---|
+| Bad intervals | 5 at 50%, one 25-minute episode on 12 June | 60 at 1.01%, two a day |
+| SLI fails | 5 | 60 |
+| SLA | 8,635 / 8,640 = 99.94%: pass | 8,580 / 8,640 = 99.31%: fail |
+| Daily KPI, 12 June (99th percentile: worst 2 ignored) | 3rd worst score: 33.33 | 2 bad intervals ignored: 100 |
+| Daily KPI, other days | 100 | 100 |
+
+- VM B has the higher KPI every day, yet fails the Gold SLA that VM A passes. The SLI does not care how bad a fail is: 1.01% and 50% count the same. The KPI shows how bad: VM A's application stalled for 25 minutes.
+- The same day, VM A's 50% also raises the red VM memory contention alert, after its wait cycle; VM B stays below any alert.
+- Lesson: the SLA answers "did we keep the promise?" for the business, monthly. The KPI answers "how did the VM perform?" for the technical team, daily. The alert answers "must someone act now?".
+
 ## Traps
 
-- "VM 01 has the better SLA, so it performed better" → the SLA counts fails, not how bad they were. Five intervals at 50% memory contention pass a Gold SLA that a hundred intervals at 1.01% breach; the KPI shows the 50% stall.
+- "VM 01 has the better SLA, so it performed better" → the SLA counts fails, not how bad they were. Five intervals at 50% memory contention pass a Gold SLA that sixty intervals at 1.01% breach; the KPI shows the 50% stall (section Worked example).
+- "The KPI target is higher for Gold" → the KPI has no class of service. Gold scores higher because it has less contention by design.
 - "The SLA is green, so there is no performance problem" → the SLA is a 30-day lagging average at 5-minute accuracy. The KPI, at 20-second accuracy over a moving window, shows the problem first.
 - "A KPI of 75% is a failure, since SLAs are above 99%" → one 5-minute score of 75% on a development VM is acceptable; the KPI is not a contract with a penalty. The two scales are not comparable.
 - "Put every KPI metric in the SLA" → more metrics make compliance harder. The SLA keeps the few contract metrics; the KPI covers the rest as early warning.

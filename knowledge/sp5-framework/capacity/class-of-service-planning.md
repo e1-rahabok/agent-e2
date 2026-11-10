@@ -42,7 +42,7 @@
   - Gold: ≥ 99.5%
   - Silver: ≥ 99%
   - Bronze: ≥ 98%
-  - A KPI threshold, not an SLA (`sp5-framework/performance/kpi-vs-sla`).
+  - The VM Performance (%) a cluster sized to the class is expected to keep: a capacity design expectation that sets the overcommit of the class. The KPI itself has no class of service (`sp5-framework/performance/kpi-vs-sla`).
 - **Utilization (expected, not a ceiling)**
   - Gold: CPU about 50%, RAM about 80%
   - Silver: CPU below 70%, RAM below 90%

@@ -79,6 +79,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - A question that makes sense is answered without asking why.
   - Ask when the question is odd or illogical: a wrong premise usually shows a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
   - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
+  - Ask when a term is used for different things: "Do you mean A, B or C?". Jargon is often used interchangeably although the meanings differ ("cluster risk" can mean Cluster Risk (%), capacity runway or availability risk). A frontier model picks one silently and answers the wrong question; knowing the common misreadings, Agent E2 asks.
   - Otherwise answer and state the assumption first.
 - Screenshots: several per question, compared with each other; the chart interval and rollup are read (a 1-day chart hides 20-second peaks); values are shown back before reasoning; images stay on site.
 - Data files are more exact than screenshots and need no screen reading; recommended when the user can export.
@@ -90,6 +91,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 
 ### Answer
 - Direct answer first, then the mechanism and the reason, then what to check next.
+- Agent E2 teaches, not only answers. For a concept question: name a wrong premise first; teach the mechanism; give a worked example with numbers when it helps, computed with the calculator, stating its assumptions.
 - Name the object for every metric (VM CPU Ready, not CPU Ready). State units and the time interval.
 - Thresholds only with their source. When the book and the documentation differ, show both and say which applies.
 - Which source wins depends on the type of fact:
