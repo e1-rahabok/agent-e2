@@ -6,6 +6,7 @@ How to answer:
 - Write your reply after `Answer:` under each question. Any length.
 - Leave `Answer:` empty to skip a question for now.
 - Then tell Claude the file is updated. Claude applies each answer to the knowledge base and moves the entry to Resolved.
+- `Proposed answer:` (added 2026-11-10) is a draft for your review, from the knowledge base, your earlier answers and vendor documents. Its status says how it was reached: settled (by an earlier answer or decision, named), expert call, or partly needs you. `For you:` names what only you can give. In `Answer:`, write accept, accept with changes, or your own answer.
 
 Each entry has:
 - Section: book chapter and Heading 3.
@@ -21,6 +22,15 @@ Each entry has:
 - Search 2: "Consumed does not include compressed"
 - Question: does host Consumed include the compressed result in DIMM?
 - Written as now: includes the result, flagged. Your diagram (physical view) also shows it inside Consumed.
+- Proposed answer (expert call, from the vSphere 9.1 documentation):
+  - Yes. ESXi Consumed includes the compressed result: the compression cache holding the zipped pages in DRAM. It excludes what compression freed.
+  - Mechanism: host Consumed = total host memory − free host memory (vSphere Web Services API 9.1, `mem.consumed`). Cache pages are ESXi pages in use, not free. Each VM's cache is capped by Mem.MemZipMaxPct (default 10% of its memory).
+  - The VM side agrees: esxtop CNSM excludes "the amount of memory saved if some of the VM memory is compressed". Only the saving leaves Consumed.
+  - The two search strings conflict in wording only. Read Search 2 as "Consumed does not include the memory compression freed". The chart (Compressed and swap-out up about 200 GB while Consumed falls) shows the saving plus swap-out, not the cache outside Consumed.
+  - Counter names per tool: esxtop CACHEUSD (per VM) = result held in DRAM; vCenter `mem.compressed` (VM and host), `mem.zipped` and `mem.zipSaved` (VM only). The 9.1 API summary of `mem.compressed` is a copy error ("Amount of memory reserved by userworlds").
+  - Sources: vSphere 9.1 documentation (Memory Compression; esxtop Memory panel: CNSM, CACHESZ, CACHEUSD); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html
+  - Change if accepted: host consumed (state as fact; "a Consumed drop while Compressed rises is the saving"); host compressed (counters per tool, API copy error). Side fix: virtual-motherboard consumed says a 4 KB page compressed to 1 KB frees "0.75 KB"; it frees 3 KB.
+  - For you: nothing. Optional live check: on a host that is compressing, compare vCenter Compressed with the sum of esxtop CACHEUSD.
 - Answer:
 
 ### Q053 · vCenter API counters · gpu.mem.reserved vs gpu.mem.used
@@ -36,6 +46,13 @@ Each entry has:
   2. Is `gpu.mem.used` the frame buffer the workloads actually touch, so it is always at or below reserved?
   3. When reserved approaches total, can no further vGPU be placed even with low utilization? (Placement is per physical GPU, so the cluster total may hide fragmentation.)
 - Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
+- Proposed answer (expert call; one live reading):
+  - 1. Yes. NVIDIA allocates a vGPU's frame buffer from the physical GPU when the vGPU is created (VM power-on) and keeps it until it is destroyed. Broadcom KB 439680: GPU memory use equals what is assigned, "a partition that is created on PowerOn of the VM". So `gpu.mem.reserved` = sum of the profile frame buffers of powered-on vGPU VMs. Whether whole-GPU DirectPath VMs count is not documented.
+  - 2. Yes, per vGPU. The configured profile is the upper bound of the frame buffer the VM uses (vSphere 9.1 documentation), so `gpu.mem.used` ≤ `gpu.mem.reserved`. Trap: the host per-device chart "Memory used" (level 4) shows the reserved frame buffer, not workload use. Same word, different meaning at host and cluster.
+  - 3. Yes, and well before reserved approaches total. Frame buffer is not overcommitted; only compute is time-sliced, so low utilization frees nothing. Placement needs one physical GPU with room for the whole profile; in equal-size mode (the default) a GPU that already holds a vGPU accepts only the same size. A cluster with GB to spare can refuse a VM (Broadcom KB 312021). Read DirectPath Profiles Remaining per profile.
+  - Sources: vSphere 9.1 documentation (Configuring vGPU Size; Capacity Visualization of DirectPath Profiles; GPU Memory charts); NVIDIA Virtual GPU Software User Guide, Release 21.0 (https://docs.nvidia.com/vgpu/latest/pdf/grid-vgpu-user-guide.pdf); https://knowledge.broadcom.com/external/article/439680
+  - Change if accepted: gpu-monitoring (Reading the counters: points 1-3; the "Memory used" trap; trap "utilization is low, so another vGPU fits").
+  - For you: one live reading: on a cluster with known profiles (for example 4 × 8 GB), does `gpu.mem.reserved` equal the sum, and do passthrough GPUs count?
 - Answer:
 
 ### Q059 · Agent · Core rules and confusable pairs given to the agent up front
@@ -45,6 +62,19 @@ Each entry has:
   1. Are these the 12 rules an expert would give a new colleague first? Which would you drop, add or reword?
   2. Are the 8 confusable pairs right, and is any pair missing?
 - Written as now: drafted by Claude 2026-11-06, status draft. The agent receives them only when the switches are on (all off by default).
+- Proposed answer (expert call). Now 12 rules and 28 pairs (not 8). The five up-front blocks total 2,997 of 3,000 tokens: every addition needs a cut.
+  - Rules: keep 1, 2, 5, 7, 10, 11.
+  - Reword 3: "Utilization is not contention ...". "Saturation" already names a metric type (Cluster Consumption, availability step); one word, one meaning.
+  - Reword 4: add "an ESXi Ready value is a sum or average of its VMs: read the worst VM".
+  - Reword 8: "Memory is a cache: high Consumed is normal and is not demand; Active is not a capacity counter" (Q115 b, c).
+  - Reword 9: "... convert with the interval and the vCPU count, and read Ready against Run". Broadcom KB 419238 and 386180 give a Ready bar of 5% or 10% without either.
+  - Drop 6: it repeats the pair Run vs Used.
+  - Drop 12: a flow heuristic; the flow carries it.
+  - Add: "A vCPU runs on a thread: overcommit ratios are per thread; 4:1 per thread is 8:1 per core" (Q079, Q151).
+  - Add: "Capacity is read against usable capacity; contention overrides utilization: a cluster at low utilization can be full."
+  - Pairs, 28 to 20: drop those a rule covers (Reservation vs usage, VM vs Guest OS, VM CPU Ready vs Latency); merge Consumed vs Active with Guest OS In Use vs VM Consumed; merge Storage vs disk with Device vs disk vs LUN; move four rare pairs (Consistency vs compatibility, Health check operations vs Kubernetes, Metric vs property, Inventory vs configuration) to a new glossary section "Other distinctions" (still indexed; the primer reads only Confusable pairs). Add Core Utilization vs Thread Utilization. Add to the Latency row: "network: no VM latency counter; read dropped packets". Frees about 300 tokens (measure with lint).
+  - Change if accepted: harness/misreadings.md; glossary (Confusable pairs, Other distinctions); harness/AGENT.md section 3.
+  - For you: whether your own top 12 for a new colleague differs.
 - Answer: 
 
 ### Q060 · Operations flows · Users say the VM is slow: your order of checks
@@ -55,6 +85,16 @@ Each entry has:
   2. What do you check that is missing, for example the application team's own evidence, or a recent change?
   3. Is the SLI bar (Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped 0%) the right first bar for one VM, or do you use other values?
 - Written as now: 5 steps, status draft. It hands over to the existing CPU, memory, storage, network and cluster flows.
+- Proposed answer ((1) settled by the 2026-11-09 rewrite; (3) by Q106 and the 2026-11-10 decisions; (2) expert call):
+  - (1) Settled. vm-slow now runs: time window, breadth, contention (KPI, not SLA), consumption (VM and Guest OS), configuration, known bug, log.
+  - (3) Settled. The first bar for one VM is the KPI at the 20-second peak in the complaint window (VirtualMachine rows of `levels`). The SLI values (2.5%, 1%, 10 ms, 0%; 5-minute) are the SLA's pass or fail line, read monthly. Never the troubleshooting bar.
+  - (2) Additions:
+    - Step 1 adds "since when, and what changed": change records in the window, vCenter tasks and events (reconfigure, vMotion, upgrade, snapshot), against the same window on a normal day. Today a recent change surfaces only at step 7 (log), yet it is the cheapest lead.
+    - Step 2 (breadth) adds the other tiers of the same application: an application is as slow as its worst tier, active node only (Q092). The VM the user names is often not the slow tier.
+    - Symptom: unreachable or failing is down, the availability process, not this flow (Q105 c).
+    - The application team's evidence (which transaction, its response time, its errors) is input to step 1.
+  - Change if accepted: vm-slow (Symptom, steps 1 and 2, trap "the VM the user names is the slow one"); delete the review note.
+  - For you: what you ask the application team first.
 - Answer:
 
 ### Q061 · Operations flows · Can this cluster take more VMs: your order of checks
@@ -65,6 +105,12 @@ Each entry has:
   2. Which resource do you find fills first in practice, and does that change the order?
   3. How do you state the answer to the requester: a yes/no, a number of VMs, or a date?
 - Written as now: 6 steps, status draft.
+- Proposed answer (steps 2-5 settled by Q120-Q122; the rest expert call):
+  - (1) Order: steps 2-5 settled. Step 1 (cluster state, HA) stays first: if HA failover capacity is not met, usable capacity is wrong and every later number with it. Add a planning gate before step 2: a cluster with no running history uses the class-of-service overcommit ratios tied to price, not Cluster Risk (Q120). Step 6 adds storage (new VMs' provisioned disks against datastore free space): the flow tags storage but no step reads it. Balance stays last.
+  - (2) What fills first: memory, in most enterprise server clusters. CPU overcommits per thread with low contention; memory is planned at 1:1 to 2:1, and the class table expects RAM utilization above CPU in every class. Gold: reservation and allocation fill before utilization. CPU first: VDI and dense CPU-bound clusters; memory tiering (supported from 9.0) moves more clusters this way. Storage first: vSAN (after 1.0). The order of steps does not change: each step reads all resources; the answer names the binding one.
+  - (3) State: yes or no; the number of VMs of the requested profile (vCPU, memory, disk, class) that fit before the binding resource reaches its limit, against usable capacity; the limiting resource and dimension; Time Remaining as a date (it ignores committed demand); what changes the answer (hosts, reclamation, VM design). In 1.0 the count comes from usable capacity arithmetic, not a what-if of the scores (2026-11-10).
+  - Change if accepted: can-cluster-take-more-vms (planning gate, storage in step 6, How to read the result).
+  - For you: confirm "memory first" for your customer types.
 - Answer:
 
 ### Q062 · Operations flows · Is this host or cluster healthy right now
@@ -73,6 +119,16 @@ Each entry has:
 - Question: what is your daily health check of an ESXi host and of a cluster, in order? The overview files list what to monitor, but not the order of checks with a stop at each step. With your order, a health-check flow can be written for each.
 - Written as now (2026-11-08): the three overview files are now health checks ([ESXi: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md), [vSphere cluster: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md), [VM: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/health-check/vm-health-check.md)) with numbered steps in the order of health-risk-efficiency. The order inside each pillar is still Claude's.
 - Partial answer (author, in session, 2026-11-08): "what to monitor" is a health check; troubleshooting is part of the health check and comes only after an object fails it (monitor is the what, troubleshoot is the why); availability flows, security and compliance are future, after 1.0. Still open: your order inside each pillar, and Q133.
+- Proposed answer (pillar order settled by Q104, Q105 b, Q133 b and the 2026-11-09 decisions; order inside each pillar: expert call):
+  - Settled: availability, performance, security, capacity. Performance: contention, consumption, configuration, known bug, log. Capacity: consumption, configuration, contention, inventory. Configuration is the drill-down. About 5 minutes when there is no problem.
+  - Stop rule: an availability failure stops that object's check. A performance failure opens its troubleshooting flow; the check then goes on to capacity.
+  - ESXi: performance = ESXi Performance (%), the failing sub-metric, consumption (Core and Thread Utilization, memory state, path and vmnic throughput), configuration (power, BIOS). Capacity = memory state and hot host only, then hand over to the cluster (a host is sized as part of its cluster). Today's steps 4-6 move from capacity into performance consumption.
+  - Cluster: performance = Cluster Performance (%), balance (hot host), contention flow, configuration (resource pools, limits). Capacity = Consumption, Risk, Close for Business, inventory, efficiency. Step 3 (SLA and SLI) leaves the daily check for the monthly review: the daily check reads the KPI (Q106; 2026-11-10).
+  - VM: add consumption (VM, then Guest OS) after contention, as vm-slow step 4, so both share one performance order.
+  - Daily run is top down: clusters worst first, then hosts, then VMs.
+  - Stale text: proactive-operations, Day-to-day order, lists three pillars; add capacity (Q133 b).
+  - Change if accepted: the three health checks (steps, diagrams); proactive-operations.
+  - For you: which VCF Operations dashboards you open each morning, and in what order.
 - Answer:
 
 
@@ -110,6 +166,37 @@ Each entry has:
 | 25 | 3 | [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md) |
 
 - Written as now: all files draft.
+- Proposed answer (expert call; you confirm the rule). Recount: 95 questions cite 128 of 267 files (moved ids resolved); 0 reviewed.
+  - Rule: sort by questions citing the file. Ties: first a file an up-front block points to (its error reaches every question), then inbound links (link expansion pulls it into other contexts). Glossary first, as item 0, with Q059. After the first benchmark run, files behind wrong answers sorted to "knowledge" come first. A substantive edit after review sets the file back to draft.
+  - Top 25 (about 18,400 words; ids under knowledge/; * = an up-front block points to it):
+    1. vsphere/architecture/vm-vs-guest-os (9) *
+    2. vsphere/architecture/resource-controls (6) *
+    3. vsphere/technology/cpu/metrics/virtual-motherboard/ready (6) *
+    4. vsphere/technology/network/metrics/virtual-motherboard/packets-dropped (6)
+    5. sp5-framework/capacity/capacity-model (5)
+    6. vsphere/technology/storage/metrics/virtual-motherboard/disk-latency (5)
+    7. vsphere/object-types/cluster/models/cluster-risk (4) *
+    8. vsphere/technology/memory/concepts/guest-os-vs-vm-memory (4) *
+    9. vsphere/technology/cpu/concepts/hyper-threading (4)
+    10. vsphere/technology/memory/metrics/virtual-motherboard/latency (4)
+    11. vsphere/technology/cpu/metrics/host/core-utilization (4)
+    12. vsphere/architecture/overhead (4)
+    13. vsphere/technology/storage/concepts/snapshot-impact (4)
+    14. vsphere/object-types/cluster/kpis/cluster-sla-sli (4)
+    15. vsphere/technology/memory/concepts/ballooning (4)
+    16. vsphere/tools/esxtop/storage (4)
+    17. vcf-operations/features/peak-20-second-metrics (3) *
+    18. vsphere/technology/cpu/metrics/virtual-motherboard/usage (3) *
+    19. vsphere/technology/cpu/metrics/host/utilization (3) *
+    20. vsphere/technology/memory/metrics/virtual-motherboard/ballooned (3) *
+    21. vsphere/technology/memory/metrics/virtual-motherboard/active (3) *
+    22. vsphere/object-types/cluster/concepts/admission-control-and-cluster-state (3) *
+    23. vsphere/object-types/cluster/kpis/cluster-performance (3)
+    24. vsphere/technology/cpu/concepts/cpu-frequency (3)
+    25. vsphere/technology/storage/concepts/esxi-storage-latency-stack (3)
+  - Just outside: vnic-rx-drops, host-storage-latency, adapter-and-path (3 each).
+  - Change if accepted: the table above replaces the one in this entry; plan M1 ("most-cited files reviewed") points to the rule.
+  - For you: confirm the rule.
 - Answer:
 
 
@@ -126,6 +213,16 @@ Each entry has:
   - (c) Silver memory overcommit is 2:1 here and 1.5:1 in the Noisy Neighbour table. Keep both as examples, or align them?
   - (d) The 32-node clusters with 1,000-2,000 VMs: a counter-example to the cap of 300 VMs per cluster failure?
 - Written as now: the book's numbers, with the basis stated (4:1 per core = 2:1 per thread); Gold with the share shown as Claude's arithmetic; both memory ratios kept as examples; (d) stated without a verdict.
+- Proposed answer ((a) settled by Q079, Q115 e, Q151; (b)-(d) expert call):
+  - (a) Per thread. Keep the arithmetic, restate the ratio: 56 cores = 112 threads × 2:1 = 224 vCPU. 4:1 per core is 2:1 per thread.
+  - (b) Gold keeps the share: vSAN, NSX, replication and kernel IO run on every host. Gold is 1:1 per thread: 112 vCPU × 4 GB + 64 GB = 512 GB. Gold's protection is the reservation and the low expected Thread Utilization, not one vCPU per core. Drop 256 GB (per core, no share).
+  - (c) Align. This Silver is the non-production class ("Silver: suitable for non-production workloads"); its 4:1 per core and 2:1 memory are the capacity plan's Bronze. Same host (64 cores, 128 threads), share kept:
+    - Gold (CPU 1:1, RAM 1:1): 112 vCPU, 512 GB.
+    - Silver (2:1, 1.5:1): 224 vCPU, 661 GB.
+    - Bronze (4:1, 2:1): 448 vCPU, 960 GB.
+  - (d) Not a counter-example: 300 VMs per cluster failure is an example value, not a rule. 1,000-2,000 VMs per cluster means no blast-radius limit, traded for a smaller HA share (1 host in 32, not 1 in 5). At about 74 VMs per host (the 32-host, 2,357-VM cluster in cluster-utilization-vs-contention), a 300 cap means about 4 + 1 hosts. State the trade-off.
+  - Change if accepted: host-spec-from-class-of-service (per thread; the three-class list replaces the per-core examples; remove "(book example)" and "The book picks", Q159); purpose-driven-architecture Example 2 (trade-off line).
+  - For you: nothing.
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
@@ -140,6 +237,14 @@ Each entry has:
   - (d) Cluster average CPU Ready and memory contention listed as SLA alerts. The litmus test says an SLA is measured on each paying VM, not at the infrastructure level. Should the image say cluster worst VM, or are cluster averages meant as provider-side alerts outside the SLA?
   - (e) VM CPU IO Wait: is this VM Other Wait (vCenter), or a Guest OS IO wait?
 - Written as now: metric names only, no numbers; nothing added to the threshold catalog until answered.
+- Proposed answer (expert call; (a) follows Q106, the vMotion value Q030):
+  - (a) 2.5%. The SLI row `vm-sli-cpu-ready` stays. The image's "SLA:" label is wrong: alerts read KPI metrics, not the SLA (Q106). Its 5% and 10 ms match no shipped alert (VM CPU Ready alert: orange 4%, red 8%; VM disk latency alert: orange 40 ms, red 80 ms). No image number goes into text or catalog.
+  - (b) No. Co-stop is out of the SLA and SLI (Q097). "Insight before alert" means earlier in time, not a lower number: on a wide VM one vCPU in Ready co-stops its siblings, so Co-stop can exceed Ready. The insight reads the existing KPI level (VM Peak CPU Co-stop, 20 s, yellow 1%), which matches the co-stop file. Drop 2.5%.
+  - (c) QAVG (vSphere Client "Queue command latency"). KAVG contains QAVG, so QAVG above 1 ms already puts KAVG at twice its 0.5 ms healthy value: a device or adapter queue is full. Block storage only; NFS has no QAVG.
+  - (d) Provider-side alerts, outside the SLA. They read the VM population, as cpu-alerts does (25% of VMs above a per-VM value). An average hides the victims; the worst VM is the VM alert's job.
+  - (e) VM CPU Other Wait (Wait − Idle − Swap Wait), a virtual-motherboard metric once labelled IO Wait. Not the Guest OS iowait. 1% would catch the accounting issue of Broadcom KB 85393, so the value is not kept.
+  - Change if accepted: alerts-and-insights, Prevention window: reword the examples; values live in the `alert-*` rows and `levels`; delete the review note. Image stays (alt text is what Agent E2 reads).
+  - For you: only if your daily health check dashboards use the image's insight values (Co-stop 2.5%, Other Wait 1%, QAVG 1 ms): their interval and instance.
 - Answer:
 
 
@@ -154,6 +259,12 @@ Each entry has:
   - (b) The VM SLI is the average of four pass/fail values (100, 75, 50, 25, 0). Penalty Quantification says there is no partial failure. Which holds for the VM: (A) partial, one counter breached = 75% for that interval; (B) binary, any counter breached = 0% for that interval?
   - (c) The Cluster SLI file says a VM must pass all four (option B), while its formula counts breaches divided by 4 (option A). Which should both files say?
 - Written as now: pass = 100%; VM SLI = average of the four (option A); Cluster SLI file unchanged, flagged.
+- Proposed answer (settled by the 2026-11-10 decision "SLI is binary: a fail is a fail"):
+  - (a) Yes: "If X > threshold then 0% else 100%". sla-metrics already has it right.
+  - (b) B, binary. Option A brings back, one level up, the partial failure that Penalty Quantification rules out. Arithmetic: Gold 99.9% in a 28-day month (8,064 intervals) allows 8 failed intervals. Under A, CPU alone could fail 32 times (32 × 25% = 8) and still pass. VM SLI = 100% if all four counters pass, else 0%.
+  - (c) B in both files. Cluster SLI (%) = 100 × (running VMs and pods with no breach) / (running VMs and pods). The current formula counts breaches: 1 VM with 4 breaches equals 4 VMs with 1 breach each. Under B that is 1 failing VM against 4. This matches the Cluster SLA (share of VMs that fail).
+  - Change if accepted: sla-metrics (SLA calculation), cluster-sla-sli (Cluster SLI formula; remove "Normalized by actual breaches"); delete both review notes.
+  - For you: whether the shipped Cluster SLI metric in the pack changes to count VMs with zero breaches.
 - Answer:
 
 ### Q096 · Part 1 > Service Level Agreement > Availability SLA · The database restore in Actual Availability
@@ -163,6 +274,13 @@ Each entry has:
 - Search 3: "If it takes the application 15 minutes to become fully operational"
 - Question: the definition counts the Guest OS only; application start-up is not counted. The example counts 15 minutes of Windows plus 45 minutes of database restore, 3 times: 99.58%. By the definition it is 3 × 15 = 45 minutes: 99.90%. Which is meant: (A) the IaaS Actual Availability is 99.90% and 99.58% is what the application owner sees; (B) 99.58%, because Actual Availability counts everything users see, including the application; (C) other?
 - Written as now: both numbers, each with its scope; the SLA covers the Guest OS only.
+- Proposed answer (expert call): (A).
+  - Actual and Operational Availability measure the same thing: the Guest OS answering. They differ only in which downtime counts (scheduled, customer-caused), not in which layer must be up. If Actual counted the application, the gap between the two numbers would mix two effects.
+  - IaaS Actual Availability: 3 × 15 = 45 of 43,200 minutes = 99.90%. Operational Availability: 100% (all three inside the change window).
+  - 99.58% (3 × 60 minutes, 717 / 720 hours) is the application owner's view. Database recovery is the application layer, like application start-up, which the definition already excludes. It belongs to the application SLA or the application team's KAI.
+  - fsck differs: it runs before the Guest OS is up, so it counts.
+  - Change if accepted: sla-metrics, Availability SLA example (99.90% IaaS; 99.58% application view, outside the IaaS SLA); glossary Actual Availability: "same scope as the SLA"; delete the review note.
+  - For you: nothing.
 - Answer:
 
 
@@ -179,6 +297,13 @@ Each entry has:
   - (d) VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548); 64 cores no longer maximizes a licence. Drop the reason in the next edition?
 - Written as now: Silver from the text (3:1, 1:1, 67%); N:1 notation; per core, flagged; licence reason replaced with the per-core rule.
 - Related (2026-11-08, Capacity Management session): Q119 and Q120 (the capacity plan states CPU per thread: Silver 2:1, Bronze 4:1; memory 1.5:1 and 2:1). One answer can settle (b), (c) and Q120.
+- Proposed answer ((b) settled: N:1 in capacity-dimensions; (c) by Q079, Q115 e, Q151; (a), (d) expert call):
+  - (a) Silver = the table, read per thread: CPU 2:1, RAM 1.5:1, the capacity plan's set. Its "(67% of Gold)" fails the 50/50 rule: 0.5 × 1/2 + 0.5 × 1/1.5 = 58%. Drop the 3:1 / 1:1 text example as Silver. Bronze 4:1, 2:1 gives 37.5%. The rule gives the cost share; the 2x price gap is a goal (Q119), so a half-price Silver earns a lower margin than Gold.
+  - (b) Keep N:1 (consumer : physical). The table's 1:2 is written 2:1.
+  - (c) Per thread. Drop 768 GB. Silver on 64 cores (128 threads): 256 vCPU × 4 GB / 1.5 = 683 GB without the share; 661 GB with 8 cores and 64 GB kept (Q087). At 3:1 per thread: 1,536 GB.
+  - (d) Drop the reason. VCF 9 is licensed per physical core, 16-core minimum per CPU (Broadcom KB 313548, read 2026-11-10): no sweet spot above 16. What licensing still decides: avoid CPUs under 16 cores (paid as 16); keep Hyper-Threading on (the licence counts cores, capacity counts threads); VCF entitles 1 TiB of vSAN per licensed core. Core count above that: Q111 (c).
+  - Change if accepted: class-of-service (Planning example: plan values, 58%, 37.5%; Sample offering per thread); host-spec-from-class-of-service (remove Silver at 3:1; licence bullet = 16-core floor and Hyper-Threading).
+  - For you: nothing.
 - Answer:
 
 
@@ -197,6 +322,14 @@ Each entry has:
   - (c) Second VM 1 should read VM 2; the image says reservation where it means share. Confirm both.
   - (d) You were unsure why a resource pool is 4x a VM for CPU and 16x for memory. The knowledge base explains it as a Normal pool weighing as much as a Normal 4-vCPU, 16-GB VM. Agree?
 - Written as now: per MB; the 1:2 split with the one-core cap stated; (d) as Claude's explanation.
+- Proposed answer ((a), (c) settled by the 2026-11-08 rule: a wrong fact is fixed in the knowledge file; (b), (d) expert call):
+  - (a) Yes, per MB: Low 5, Normal 10, High 20 per MB of configured memory (10,240 per GB at Normal). CPU 500, 1,000, 2,000 per vCPU. The file already says so.
+  - (b) Change the example; stating the cap is not enough. A 10 GHz host with 2.5 GHz cores has 4 cores: a 1-vCPU VM tops out near 2.5 GHz, a 2-vCPU VM near 5 GHz; 7.5 GHz together, no contention, so shares never act. Replacement: 4 cores × 2.5 GHz, Hyper-Threading off. VM A 2 vCPU (2,000 shares), VM B 4 vCPU (4,000 shares), both demand all vCPUs (15 GHz). Split 1:2: 3.33 and 6.67 GHz = 1.67 GHz per vCPU for both. Default shares give every vCPU the same runtime; only custom shares per class change that. If total demand is 10 GHz or less, each VM gets its demand.
+  - (c) Yes to both: "VM 2"; share, not reservation.
+  - (d) Agree. 4,000 = 4 × 1,000; 163,840 = 10 × 16,384 MB: a Normal pool weighs one Normal 4-vCPU, 16 GB VM. "4x and 16x" holds only against a 1-vCPU, 1 GB VM. One 8-vCPU, 32 GB sibling VM carries twice the pool's shares, and the pool's weight is split among all its VMs: why pools and VMs should not be siblings (Q110 c).
+  - Sources: vSphere Web Services API, SharesInfo.Level; vSphere 9.1 documentation, Create a Resource Pool; https://www.vmware.com/docs/drs-cluster-mgmt-perf
+  - Change if accepted: resource-settings-guidance (Review: share values: new example; sibling line).
+  - For you: nothing.
 - Answer:
 
 ### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
@@ -204,6 +337,18 @@ Each entry has:
 - Search: "There is no network limit"
 - Question: with Network I/O Control each VM network adapter has share, reservation and limit, and port groups have traffic shaping. Noisy Neighbour says so (and your Q083 withdrew the 8 Gb/s limit as a recommendation, not as a feature). Change to: a network limit exists per vNIC but is not recommended?
 - Written as now: VM limits for CPU, memory and disk IOPS; the network sentence left out.
+- Proposed answer (settled: Q083 for the advice; vSphere 9.1 documentation for the fact):
+  - Yes, change it. "There is no network limit" is wrong. Two controls exist:
+    - Network I/O Control v3 on a distributed switch: each VM network adapter has shares (1-100), reservation (Mbps) and limit, set in the VM hardware settings.
+    - Traffic shaping per port group or port: average, peak, burst. Distributed switch shapes in and out; standard switch outbound only.
+    - The lower of the two wins: a 200 Mbps adapter limit under a 100 Mbps shaping average gives 100 Mbps.
+  - Advice (Q083): no VM limit or reservation on any resource, network included.
+  - Two more reasons: a vNIC reservation is checked by the distributed switch, DRS and HA admission control (HA restarts a VM only on a host that meets its vNIC reservation); a limit is invisible to the Guest OS, as with CPU.
+  - Edge cases: Network I/O Control is off when Network Offloads compatibility is on; SR-IOV is not available with Network I/O Control v3.
+  - Text: "VM limits exist for CPU, memory, disk IOPS and network adapter bandwidth, plus traffic shaping per port group. Do not use them on VMs."
+  - Sources: vSphere 9.1 documentation (What is vSphere Network I/O Control; Defining Bandwidth Requirements for a Virtual Machine; Traffic Shaping Policy; Factors Considered for Virtual Machine Restarts).
+  - Change if accepted: resource-settings-guidance (Limit).
+  - For you: nothing.
 - Answer:
 
 ### Q110 · Part 1 > Configuration Management > Reservation, Cluster, Resource Pool · Admission control, slot size and siblings
@@ -216,6 +361,13 @@ Each entry has:
   - (b) Reservations change the slot size only under the slot policy; the default policy is cluster resource percentage. Add that condition?
   - (c) With Scalable Shares (vSphere 7 and later) a pool and VMs as siblings no longer dilute. Is the sibling rule still a mistake, or only without Scalable Shares?
 - Written as now: (a) and (b) worded with the condition; (c) both kept, flagged.
+- Proposed answer (expert call; (a), (b) from the vSphere 9.1 documentation):
+  - (a) Yes, reword. Host and DRS admission control check reservations at every power-on, reservation change and pool change, and cannot be turned off. HA admission control only keeps failover capacity. With it off, VMs power on into that capacity; after a host failure HA restarts a VM only where its CPU, memory and vNIC reservations plus overhead fit, so reserved VMs are the first to stay down. Text: "With HA admission control off, reservations are not protected after a host failure."
+  - (b) Yes, add the condition. Slot policy: the largest CPU and the largest memory reservation (plus overhead) set one slot for every VM; one big reservation cuts the slot count (cap with das.slotcpuinmhz, das.slotmeminmb). Cluster resource percentage (default): reservations are summed against failover capacity; each costs only its own size. Memory tiering clusters: do not use the slot policy; it cannot enforce DRAM failover capacity.
+  - (c) Keep the rule with or without Scalable Shares; only the reason changes. Off (default; per cluster or pool, inherited): dilution. On: a pool's shares = sum of its VMs' shares × 4, 2 or 1 (High, Normal, Low); dilution inside the pool is gone, but a Normal pool's VMs weigh twice a sibling Normal VM. Recommend Scalable Shares on, and pools and VMs never siblings.
+  - Sources: vSphere 9.1 documentation (Admission Control; vSphere HA Admission Control; Cluster Resources Percentage; Slot Size Calculation; DRS Scalable Shares); Performance Best Practices for VMware vSphere 9.1 (revision 20260624), p. 77.
+  - Change if accepted: resource-settings-guidance (Reservation: slot size condition); scalable-shares (multiplier caveat; default off).
+  - For you: nothing. Optional: whether your designs turn Scalable Shares on by default.
 - Answer:
 
 ### Q111 · Part 1 > Configuration Management > Compute-related, ESXi · Cores or threads, and 48 or 64 cores
@@ -229,6 +381,12 @@ Each entry has:
   - (c) 48 cores here, 64 cores in Price & SLA, both to maximize the licence. Under per-core licensing (16-core minimum per CPU) neither holds. Drop both?
 - Written as now: physical cores for VM size; the 512 GB rule as given; licence reason dropped.
 - Related: Q099, Q100, Q120 (per thread in the capacity plan) and Q125.
+- Proposed answer ((b) settled by Q079, Q115 e; (a) partly by Q100; (c) expert call):
+  - (a) Two limits; the smaller wins. Class cap per thread (Q079): logical CPUs × 1, 1/2, 1/4, 1/8 for 1:1 to 8:1 (a price rule). Ceiling at the physical cores: above it, sibling vCPUs share a core, each at about 62.5% when both threads run (a speed rule for one VM). 48 cores, 96 threads: 1:1 → 48 (not 96), 2:1 → 48, 4:1 → 24, 8:1 → 12. The ceiling binds only at 1:1. One NUMA node where possible; no socket cap (Q100).
+  - (b) Per thread. 128 threads × 4 GB = 512 GB is the Gold host (1:1, 1:1); with the share still 512 GB (112 × 4 + 64). Other classes: GB per thread = 4 GB × CPU ratio / memory ratio: Silver 5.3, Bronze 8 (661 and 960 GB with the share). Drop 768 GB (Q099 c).
+  - (c) Drop 48 and 64. The licence sets a floor (16 cores per CPU) and favours Hyper-Threading on. Above it, choose cores per host by: cost per sellable vCPU (hardware and licence); failure domain (VMs lost per host failure; HA share of few large hosts); the largest VM per class against the cores of one NUMA node; per-core application licences (Windows Server Datacenter, SQL Server, Oracle): a dedicated cluster with fewer, faster cores.
+  - Change if accepted: vm-configuration-review (relative size = smaller of class cap and physical cores); noisy-neighbour (Maximum VM size, 1:1 row); esxi-configuration-review (Memory formula per class; Capacity: licence floor and core-count reasons).
+  - For you: nothing.
 - Answer:
 
 
@@ -238,6 +396,15 @@ Each entry has:
 - Search: "I divide the capacity into 10 equal chunks"
 - Question: the book puts 40-80% of usable capacity in green and 80% as best. Cluster Consumption (%) has CPU green 0-55, yellow 55-70, orange 70-85, red 85-100, and memory green 0-70. A 10-host N+1 cluster at the best 80% of usable is 72% of total: orange on CPU in Cluster Consumption. (a) Is Cluster Consumption measured against total or usable capacity? (b) Which governs? (c) Give values for yellow, orange and red above 80%. (d) Should Cluster Consumption get a grey band (0-40%) for wastage? The plan lists grey values for capacity bands as open.
 - Written as now: zones as rules (grey below 40%, best 80%); Cluster Consumption bands unchanged.
+- Proposed answer ((a) settled by the pack's Cluster Consumption page; (b)-(d) expert call):
+  - (a) Usable. Usable = Total − HA − Buffer; CPU in threads, memory in DRAM. 80% of usable reads 80, not 72.
+  - The bands quoted are the sub-metric rows (catalog `cluster-consumption-*`), matching the pack. The score has its own bands: pack 25/50/75; closure since Q121 orange above 60, red above 80 (see Q132).
+  - (b) In a running cluster, the pack's sub-metric bands set the colour. At 80% of usable: CPU orange, memory at the yellow edge. The 80% best fits memory (capacity plan: Gold RAM about 80%), not CPU threads (Gold about 50%, Silver below 70%). Keep 80% in prose; drop catalog row `cluster-utilization-usable-best` (two verdicts for one value).
+  - (c) No new numbers: the pack has them. Memory orange 80-90, red 90-100. CPU threads orange 70-85, red 85-100.
+  - (d) Yes, on the two utilization rows, not the score: below 40% of usable is dark grey (Q148). The score blends in saturation, so no score value means 40%. Exceptions: a growing new cluster, DR capacity. Grey is an efficiency reading; the pack still shows green.
+  - Also: benchmark question 0076 computes 99% × 11/12 against total; the row is against usable.
+  - Change if accepted: cluster-consumption (usable; score vs sub-metric bands); catalog (grey below 40 on the two utilization rows; remove `cluster-utilization-usable-best`); capacity-dimensions Utilization; question 0076.
+  - For you: how long utilization stays below 40% before it counts as wastage; whether the 80% row leaves the catalog.
 - Answer:
 
 
@@ -252,6 +419,14 @@ Each entry has:
 - Search: "but you can’t aggregate them per datastore"
 - Question: the knowledge base reads this as: the metrics are on the ESXi host with one instance per datastore, and no datastore-wide total across hosts exists. Correct?
 - Written as now: as above; sum the hosts that mount the datastore.
+- Proposed answer (expert call; one live check): correct, with three precisions.
+  - vCenter keys `datastore.unmapIOs.summation` (count) and `datastore.unmapSize.summation` (MB), per host, one instance per datastore. Not in the 9.1 API counter pages or chart tables. ESXi keeps the same counts per volume (vsish) and per device (esxtop VAAI: DELETE, DELETE_F); both reset at reboot.
+  - The datastore object has no unmap counter: no datastore-wide total. Sum the hosts that mount it, same interval. The sum is complete: each unmap command comes from exactly one host. The space reclamation hosts setting limits how many hosts send automatic unmap, so most hosts read 0.
+  - Units: one value per 20 seconds. VCF Operations averages the 15 values of a 5-minute point: MB released in 5 minutes = value × 15; MB/s = value / 20.
+  - Scope: VMFS6, plus NFS through the VAAI unmap primitive.
+  - Sources: vSphere 9.1 documentation (Space Reclamation); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/datastore_counters.html (no unmap counter); Broadcom KB 374191.
+  - Change if accepted: host datastore (Unmap: keys, conversions, reclamation hosts, esxtop fields); close the plan item on unmap keys.
+  - For you: in a live VCF Operations 9.1, confirm the Datastore object has no unmap metric, and give the Host System metric keys.
 - Answer:
 
 ### Q125 · Part 1 > Rightsizing > Best Practices · 8-core block, 8 and 16 vCPU
@@ -260,6 +435,13 @@ Each entry has:
 - Question: AMD EPYC uses 8-core CCDs (16 cores on Zen 4c and Zen 5c). Intel Xeon has no 8-core block: Sapphire Rapids and Emerald Rapids use up to 4 tiles, Granite Rapids compute dies of over 40 cores, each a shared-LLC mesh. (a) Limit the 8-core block to AMD? (b) Why does a VM above 8 vCPU risk the Hyper-Threading effect? HT sharing depends on host load, not on VM size against a CCD. (c) A NUMA node on current hosts holds 32-128 cores; is above 16 vCPU about the CCD (L3) effect inside a socket, not NUMA? Cluster Risk repeats "most Xeon and EPYC use 8-core CCDs".
 - Written as now: the book rule, attributed, with a review note.
 - Related (2026-11-08): the Configuration Management review list says a 64-core CPU is 8 chiplets of 8 cores and a VM above 8 vCPU spans chiplets ([VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md), section Compute). The same answer applies there. Also Q111.
+- Proposed answer ((a), (c) expert call on top of Q100; (b) needs you):
+  - (a) Yes, AMD only, and name the unit: the L3 domain (CCX), not the die. Zen 3, 4, 5: 8 cores per CCD, one L3. Zen 4c: a 16-core CCD is two 8-core CCXs (L3 domain still 8). Zen 5c: one 16-core CCX per CCD. Xeon (Sapphire, Emerald, Granite Rapids) shares L3 across the socket or the SNC domain: no 8-core block.
+  - (b) VM size against a CCD does not cause the Hyper-Threading effect. A VM feels it when its vCPUs share cores with busy sibling threads: under host load, or when it has more vCPUs than its NUMA node has cores (numa.vcpu.preferHT). Above the L3 domain a VM pays a cache effect instead.
+  - (c) Yes. With Performance Best Practices 9.1 defaults (NPS-1, CCX-as-NUMA off), an AMD NUMA node is the whole socket: up to 128 cores (Zen 5) or 192 (Zen 5c). Intel with SNC: one node per compute die (over 40 cores on Granite Rapids SNC3). Rule: above the L3 domain → cache effect; above the cores of the NUMA node → NUMA effect. Both read from the host, not fixed at 8 and 16.
+  - Sources: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), BIOS and NUMA sections, preferHT; vSphere 9.1 documentation (llc.multiLLCPerSocket, llc.size.vcpu); AMD EPYC 9005 Architecture Overview (doc 58462).
+  - Change if accepted: rightsizing and vm-configuration-review (Compute: two host-derived limits replace 8/16); cluster-risk (fix "most Xeon and EPYC use 8-core CCDs"); glossary (CCX = L3 domain; a CCD holds one or two CCXs).
+  - For you: what the 8-vCPU Hyper-Threading rule is based on: a test, or how ESXi packs vCPUs in an AMD CCX? If neither, it is removed.
 - Answer:
 
 
@@ -269,6 +451,14 @@ Each entry has:
 - Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
 - Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
 - Written as now: both files as they are.
+- Proposed answer (expert call): yes, remove reservation from the usable capacity sentence. Reservation is demand, not supply.
+  - Demand = Max (Utilization, Reservation), per VM, then summed. Subtracting it from supply as well counts it twice. Example: 100 GHz usable; a VM uses 4 GHz with 5 GHz reserved. Demand side only: 95 GHz left. Both sides: 95 − 5 = 90; 5 GHz reserved takes 10 GHz of room.
+  - Same logic as the hypervisor in the utilization model: its load is in demand, so it is not subtracted from supply.
+  - Supply: Usable = Total − HA − Buffer; hypervisor overhead subtracted in the allocation model only. The pack's Usable Capacity leaves reservation out too.
+  - Reservation keeps its own dimension, reserved against capacity (admission control; Cluster Risk reservation rows). The cluster is full at the first of utilization, allocation or reservation.
+  - New text: "Capacity subtracts HA, buffer and hypervisor overhead from total capacity, and counts reservation in demand. Performance ignores all four."
+  - Change if accepted: performance-vs-capacity, Usable capacity exists only in capacity.
+  - For you: nothing.
 - Answer:
 
 ### Q128 · Glossary · Proposed terms from Capacity Management
@@ -276,6 +466,12 @@ Each entry has:
 - Search: "Stop Provisioning (Yes/No)"
 - Question: three proposals, in use as drafts: (a) defined term "Closed cluster" (also called stop provisioning); (b) pair "Demand (capacity) vs ESXi CPU Demand"; (c) pair "Idle vs oversized vs unused VM". Keep, rename or drop?
 - Written as now: all three in the glossary.
+- Proposed answer (expert call):
+  - (a) Rename to "Close for Business": the cluster decision, 1 = closed (no new VM, no VM upsize), 0 = open, from Cluster Consumption, Cluster Performance and Cluster Risk. Synonyms: closed cluster, stop provisioning. One word per concept, and it is the word already in use (pack metric `vCommunity|Periodic Cluster Check|Close for Business`, the file title, the plan). Also fix capacity-dimensions, Contention: it still says "Stop Provisioning ... from Performance (%), Capacity Remaining (%) and Risk (%)"; Consumption replaced Capacity Remaining (Q121).
+  - (b) Keep; widen to "Demand (capacity) vs CPU Demand (VM, ESXi)": VM CPU Demand is the same trap. Note the third use: VCF Operations names a capacity model Demand (policy setting Capacity Buffer (Demand)).
+  - (c) Keep. It matches reclamation and unused-vm after the Q123 edit: idle = below an absolute MHz every day; oversized = relative to the VM's size; unused = busy with no business value.
+  - Change if accepted: glossary (Close for Business replaces Closed cluster; Demand pair widened); capacity-dimensions Contention bullet.
+  - For you: nothing.
 - Answer:
 
 ### Q129 · VCF Operations 9.1 · Prometheus access for scripts
@@ -283,6 +479,13 @@ Each entry has:
 - Search: not from the book. TechDocs "Real-time Data in the Workbench": "Use the Add Query input field to enter and run your PromQL query."
 - Question: you say 2-second metrics are for programmatic use, with native Prometheus compatibility. The 9.1 docs show PromQL only in the Workbench Custom Query sub-tab; no Prometheus endpoint or API is described. How do scripts reach it (endpoint, auth, doc link)?
 - Written as now: PromQL in Custom Query; programmatic use stated from you.
+- Proposed answer (settled by vendor documentation; one live check):
+  - The statement holds. Broadcom publishes Real-Time Metrics APIs for 9.1 and 9.1.1: Prometheus-compatible APIs for querying real-time metrics from vCenter (https://developer.broadcom.com/xapis/realtime-metrics-api/latest/). Usable as a direct Grafana data source, down to 2-second granularity.
+  - Endpoints: GET `/api/v1/query`; GET `/api/v1/query_range` (start, end, step); GET `/api/v1/metadata`; PUT `/api/v1/vcenters/{vcId}/metrics_config` (STANDARD or VERBOSE profile; ESXi hosts for esxtop collection). Responses in Prometheus format.
+  - Not stock Prometheus: `sourceId` (vCenter instance UUID, NSX id) is required; `externalTagsFilter` optional.
+  - Auth: POST `/suite-api/api/auth/token/acquire` → OpsToken; read the integration services list, take the service of type VCF_VODAP; POST `/suite-api/api/auth/token/exchange` → JWT, sent as Bearer.
+  - Change if accepted: real-time-metrics, new section API for scripts (endpoints, sourceId, auth, URL); delete the review note; keep the corrections entry (the Workbench page still omits the API).
+  - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and does the esxtop feature return the 2-second data through the API?
 - Answer:
 
 ### Q130 · Benchmark · Retrieval check: what number is good enough to release
@@ -290,6 +493,12 @@ Each entry has:
 - Search: not from the book.
 - Question: proposed gate for classic mode: release at least 90% of questions with every needed file in context (81 of 90) and context recall at least 95%; target 97% (87 of 90) and 98%; perfect (100%) not a goal, except that no question may miss its main file. Today: 54-57 of 90. (a) Accept these levels? (b) Should each question mark its main file in `knowledge`, so the check can report main-file misses separately?
 - Written as now: the proposal, marked as not agreed.
+- Proposed answer (expert call):
+  - (a) Accept, in percent (the question count moves from 95 to 100), classic mode, the shipped search mode, BM25 and hybrid both reported. Release gate: main file in context for 100% of the visible set (each miss is a defect, fixed or explained); context recall at least 95%; complete questions at least 90%. Target: 97% complete, 98% recall. Held-out set within 5 points of the visible set (a larger gap means retrieval is fitted to the questions).
+  - Reasons: 0.90 × 0.95 ≈ 0.85 ties the gate to the release score. "Complete" punishes multi-file questions hardest (4 or more files: 3 of 16 complete today); a missing main file drives confident-wrong answers. Today: 64% complete (61 of 95), recall 77%.
+  - (b) Yes, as an explicit key (for example `knowledge_main`, also listed in `knowledge`; lint checks it). Not the list order: 10 questions miss their first-listed file today (0004, 0009, 0019, 0021, 0025, 0037, 0067, 0076, 0079, 0090), but first was never written to mean main. The retrieval check reports main-file misses as a fourth number.
+  - Change if accepted: retrieval-check.md (levels); plan M3 exit criteria; question template; retrieval_eval.py; lint; project/terms.md (new key as a proposal).
+  - For you: the main file of each question, during the one-go question review.
 - Answer:
 
 ### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
@@ -297,6 +506,12 @@ Each entry has:
 - Search: adapter docs/reference/metrics/README.md: "KPIs: Cluster Performance, Cluster Risk, Cluster Consumption, ESXi Performance, VM Performance, Guest OS Performance"; periodic-cluster-check.md: "the three cluster KPIs".
 - Question: your decision (2026-11-08): KPI is strictly performance; capacity and risk are models. (a) The adapter documentation still lists Cluster Risk and Cluster Consumption as KPIs: will you rename them there, or should the knowledge base keep a synonym? (b) Cluster SLA and SLI stays in `kpis/`: an SLA covers performance here (SLI on contention), so it stays. Correct, or a folder of its own?
 - Written as now: Cluster Risk and Cluster Consumption moved to `vcf-operations/models/` and titled as models; SLA and SLI unchanged.
+- Proposed answer ((a) settled for the knowledge base by the 2026-11-08 decision and Q153; (b) expert call):
+  - (a) Do both. The adapter's main branch (read 2026-11-10) still says KPI: README lists Cluster Risk and Cluster Consumption under KPIs; page titles "Cluster Risk KPI", "Cluster Consumption KPI"; "the three cluster KPIs". Rename them in the adapter with the Q151 fix (after 1.0). Add glossary Synonyms now: Cluster Risk KPI → Cluster Risk (%); Cluster Consumption KPI → Cluster Consumption (%); note "a model, not a KPI". Users read the pack pages and will keep saying KPI.
+  - Also fix: cluster-risk calls itself the only higher-is-worse score of the pack; Cluster Consumption is higher-is-worse too (same error on the adapter page).
+  - (b) Own folder: `vsphere/object-types/cluster/slas/cluster-sla-sli`. `kpis/` holds KPI files; an SLA is a contract and the SLI its pass-or-fail indicator. The id sits in the model's context, so `kpis/cluster-sla-sli` teaches that an SLA is a KPI: the confusion the KPI vs SLA pair corrects. Pillar is a tag, not a folder.
+  - Change if accepted: glossary Synonyms (2 rows); cluster-risk Purpose; move cluster-sla-sli (moved.yaml, KNOWLEDGE-ENGINEERING sections 5 and 10, lint, harness, links; retrieval check before and after).
+  - For you: renaming the two adapter pages, and when.
 - Answer:
 
 ### Q132 · VCF-vCommunity-Adapter vs Part 1 > Cluster Closure · Which closure thresholds does Agent E2 apply
@@ -304,6 +519,18 @@ Each entry has:
 - Search: book table after "Implementing the above with actual threshold"; adapter periodic-cluster-check.md, section The rule.
 - Question: the book closes production at Performance (%) below 40% (red) and Risk above 50%, non-production below 20% and Risk above 75%, with Capacity Remaining bands. The pack closes every cluster at Performance or Consumption below 25 / above 75 (red), or both orange with Risk orange or red. (a) When a user asks "is this cluster closed", which applies: the book (class of service) or the pack (one band set)? (b) Is the pack the current version of the book table?
 - Written as now: both, each in its own file; the closure flow says the pack automates steps 4 and 5.
+- Proposed answer (partly needs you):
+  - (a) The pack's published Close for Business, when present: 1.0 reads published scores (2026-11-10); a second rule set would contradict the customer's screen. Agent E2 adds the three worst-end values and the rule that fired. No class of service enters, except the Risk split below.
+  - (b) No. Q121 retired the book table (Performance 40/20, Risk 50/75, Capacity Remaining). Logic and window now match the pack (either red closes; both orange plus Risk orange or red closes; 24 hours, worst 5% ignored). Band edges differ:
+    - Consumption: Q121 orange > 60, red > 80; pack orange > 50, red > 75.
+    - Performance: Q121 orange < 40, red < 20; pack orange < 50, red < 25.
+    - Risk: Q121 production > 60, non-production > 80; pack orange (> 50) for every cluster.
+    - Worst Consumption 78: pack red, closed; Q121 orange, open unless Performance is orange.
+  - Proposal: one set, the pack's edges. 1.0 reads them; every pack score and dashboard shares them; 75/50/25 are the scoring model's break points. Keep the Risk split by class (production orange, non-production red), which the adapter's Capacity Management page already states but the pack does not apply: a pack change after 1.0, like Q151.
+  - Performance is higher-is-better: its worst end is the 5th percentile, not the 95th.
+  - Stale text either way: can-cluster-take-more-vms (Mermaid chart, lines still saying Capacity Remaining) and close-for-business (last trap quotes the retired 40/20, 50/75).
+  - Change if accepted: can-cluster-take-more-vms steps 4-5 and chart; the 6 closure-* catalog rows; close-for-business trap.
+  - For you: which set wins (pack 25/50/75 or Q121 20/40/60/80), and whether the pack gets the non-production Risk split.
 - Answer:
 
 
@@ -312,6 +539,17 @@ Each entry has:
 - Search: "Based on their strengths and weaknesses, I came up with The Triple See Method"
 - Question: the book does not say what each method lacks. Claude wrote: USE starts from utilization (consumption), which does not show who waits in an overcommitted cluster; RED and the Golden Signals are request-centric, built for services, and a VM has no request to time; none has a context type; none maps metric types to pillars. Correct, and anything to add?
 - Written as now: as above.
+- Proposed answer (expert call: two corrections, three additions):
+  - Correction 1: USE has a wait type: saturation is queue length, and USE is applied to hypervisor limits in the cloud. The real gaps: USE reads saturation per resource inside one OS; inside the Guest OS it cannot see Ready (the vCPU's frozen time is invisible to the guest run queue); at ESXi, saturation averages the VMs and hides the victim. Contention per consumer is what USE lacks.
+  - Correction 2: "a VM has no request to time" is wrong for storage. The virtual disk is request-shaped (IOPS, latency, aborted commands): RED fits it. CPU and memory are time-shared: Ready and memory contention are shares of time, with no request.
+  - Add: RED and the Golden Signals belong to the application layer (realms-and-layers); there they are right, and Triple See does not replace them.
+  - Add: none of the three has allocation or reservation as kinds of consumption, which overcommitted capacity is managed by.
+  - Add: the Golden Signals do separate symptom from cause (Google SRE book, Monitoring Distributed Systems, "Symptoms Versus Causes"), the same idea as primary vs secondary metrics. Do not claim otherwise.
+  - Keep "no context type" and "no pillar mapping" (the latter as scope, not a flaw).
+  - Glossary row says Triple See is "not based on" USE, RED or Golden Signals; the source says it was built from their strengths and weaknesses. Fix the row.
+  - Sources: brendangregg.com/usemethod.html; sre.google/sre-book/monitoring-distributed-systems/; grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/.
+  - Change if accepted: triple-see-method (Why not USE, RED or Golden Signals; trap "apply USE inside the Guest OS"); glossary row; delete the review note.
+  - For you: nothing.
 - Answer:
 
 ### Q135 · Why a New Framework? > Complexity · ITIL 4 or ITIL 5
@@ -319,6 +557,14 @@ Each entry has:
 - Search: "ITIL 5 has 34 management practices"
 - Question: the 34 practices are ITIL 4 (the linked list is ITIL 4). Is "ITIL 5" a typo, or does ITIL 5 keep the same 34?
 - Written as now: ITIL 4.
+- Proposed answer (expert call, from PeopleCert):
+  - Not a typo any more: ITIL (Version 5) exists. Foundation exam available since February 2026; PeopleCert plans to retire all ITIL 4 modules on 31 December 2027.
+  - It keeps 34 practices: "For ITIL (Version 5), the 34 ITIL management practices will remain largely the same" (https://www.peoplecert.org/help-and-support/faq-itil).
+  - Grouping changed: ITIL 4 had service (17), technical (3), general (14); ITIL (Version 5) has product and service management and general management (22 and 12, per a secondary source; the full list is for PeopleCert Plus members).
+  - Capacity and performance management is still one practice, so the Complexity point stands.
+  - Text: "ITIL (Version 5), like ITIL 4, has 34 management practices, in two groups: product and service management, general management." Drop the 17/3/14 split or label it ITIL 4.
+  - Change if accepted: why-a-new-framework (Complexity; PeopleCert source); delete the review note.
+  - For you: nothing.
 - Answer:
 
 ### Q136 · Part 3 > Modelling > Calculation · KPI colours and a timeline
@@ -326,6 +572,13 @@ Each entry has:
 - Search: "The threshold maps to a timeline."
 - Question: the Modelling section maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow). Your Q089 answer says alert colours have a timeline and KPI colours do not, as they are proactive. Remove the timeline from Modelling, or keep it for KPIs?
 - Written as now: red means look within hours; no timeline for orange and yellow.
+- Proposed answer (settled by Q089):
+  - Remove the timeline. Q089: alert colours carry a deadline because time has started; KPI colours are proactive and carry none.
+  - Modelling still says "Red is not an emergency: look within hours". That is a deadline on a KPI colour; it contradicts the alerts-and-insights trap "Alert colours and KPI colours mean the same".
+  - A KPI or model colour says how bad, not by when. The daily health check reads red first, then orange, then how often a value enters red and its trend.
+  - The deadline belongs to the alert: red within 1-2 hours, orange by the end of the day. Same for models (Cluster Consumption, Cluster Risk).
+  - Change if accepted: modelling, Setting thresholds (replace the bullet; add trap "KPI red: act within hours" → a KPI colour has no deadline); delete the review note.
+  - For you: nothing.
 - Answer:
 
 ### Q137 · Metric Mastery > Aggregation > The Problem with Average · ESXi CPU Ready (%)
@@ -333,6 +586,16 @@ Each entry has:
 - Search: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs)"
 - Question: the formula divides milliseconds by a vCPU count, which gives ms per vCPU, not %. The knowledge base writes ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs). Correct?
 - Written as now: with 20,000 ms.
+- Proposed answer (expert call; Broadcom KB 306576 confirms):
+  - Yes. ms divided by a vCPU count gives ms per vCPU, not %. The denominator needs the sample length.
+  - General form: ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of running VMs) × 100.
+  - Sample length: vCenter real time 20,000 ms; VCF Operations 20,000 ms, also for its 5-minute points (it averages the 15 20-second values); vCenter rollups are sums: 300,000 (past day), 1,800,000 (past week), 7,200,000 (past month), 86,400,000 (past year).
+  - Divide by vCPUs, not cores or threads: Ready is a state of each vCPU, and each vCPU's states add up to the sample length. Cores would make it a supply ratio with no 100% ceiling.
+  - Example: 149,116 ms / (20,000 × 195) = 3.8%.
+  - Limits: a VM powered on or moved in during the sample counts only part of it. The result is an average that hides the worst VM; use ESXi Performance (%) (worst VM and 90th percentile).
+  - Sources: https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html
+  - Change if accepted: aggregation (general formula, sample lengths, example); delete the review note.
+  - For you: nothing.
 - Answer:
 
 ### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
@@ -340,6 +603,13 @@ Each entry has:
 - Search: "Export to spreadsheet or PowerPoint"
 - Question: the Good For row reads Exception for alerts, Exception and Analysis for dashboards, and Exception for reports. Is Exception right for reports, or did you mean Summary or Trend?
 - Written as now: Exceptions for reports, as in the source.
+- Proposed answer (expert call): Trends.
+  - The report is a passive channel, weekly or longer, read by IT leaders and finance. They read trends over weeks.
+  - Depth already says Summary; Summary in Good for would repeat it.
+  - An exception needs action within the day. One found in a weekly report can be 7 days old; the daily dashboard covers it.
+  - Audit exception lists are covered by the row "Dashboard + Report work together".
+  - Change if accepted: system-engagement table, Good for / Report = Trends; delete the review note.
+  - For you: confirm Trends is what the row meant.
 - Answer:
 
 ### Q139 · Part 2 > Proactive Operations > Business Applications > vSphere Folder Structure · Diagram label
@@ -347,6 +617,11 @@ Each entry has:
 - Search: "This is why I only have 2 levels of organisation in the above"
 - Question: in the folder diagram, the third application under Department 2 is labelled C.3: Application C. Should it be C.2: Application C?
 - Written as now: the image is copied as is; the alt text says Department 2 owns Applications A, B and C.
+- Proposed answer (expert call): C.2: Application C.
+  - Every label starts with the business unit letter and the department number: "C.2: Application A", "C.2: Application B", "C.2.B: Web Tier". C.3 would sit under Department 3; its arrow comes from Department 2.
+  - Agent E2 reads the alt text, which already says Department 2 owns Applications A, B and C.
+  - Change if accepted: business-applications, delete the review note; relabel the image when convenient.
+  - For you: nothing.
 - Answer:
 
 ### Q140 · Part 2 > Proactive Operations > Alert > Threshold Design · Red vs orange scale
@@ -355,6 +630,16 @@ Each entry has:
 - Search 2: "going up from the usual 0.2s to 0.6x second"
 - Question: (a) Is red 4x orange (two factors doubled) or 2x orange (one factor doubled)? Your CPU and memory alerts double one threshold (Peak vCPU Ready 12% to 24%, Memory Contention 2% to 4%). (b) 0.2 s to 0.6 s is 3x as long (200% longer); the text says 300% longer. Which number is right?
 - Written as now: (a) three ways to make red worse than orange, no 4x claim; (b) 3x as long, 0.2 s to 0.6 s.
+- Proposed answer (expert call; the 4x part settled by Q152):
+  - (a) 2x. Correction to the question: the alerts double both thresholds of a set, not one. Inside a colour, the 20-second peak is 4x the 5-minute value; from orange to red every value doubles:
+    - Infrastructure CPU: orange 12% / 3%, red 24% / 6%.
+    - VM memory: orange 12% / 3%, red 24% / 6%.
+    - Infrastructure memory: orange 8% / 2%, red 16% / 4%.
+    - VM disk: orange 160 / 40 ms, red 320 / 80 ms.
+  - Doubling peak and average together is one factor: an episode twice as bad crosses both. So red = 2x orange. "Red is always 4x of orange" reads as the peak-to-average rule (4x inside one colour) put in the wrong place. Per Q152, 4x is a guide for choosing values, never a formula. The one exception, VM CPU orange, is Q144.
+  - (b) 0.2 s to 0.6 s is 3x as long = 200% longer. "300% longer" is wrong; "0.6x second" means 0.6 second.
+  - Change if accepted: alert-design, Threshold design: "In the recommended set red is 2x orange on every threshold; the 20-second peak is 4x the 5-minute value inside one colour." Delete both review notes.
+  - For you: nothing.
 - Answer:
 
 ### Q141 · Part 2 > Proactive Operations > Alert > Class of Service: The What · Class names
@@ -362,6 +647,15 @@ Each entry has:
 - Search: "Mission Critical: VM Disk Latency > 30 ms for 5 minutes."
 - Question: Part 2 names the classes mission critical, standard production, test and development; Part 1 names them Gold, Silver, Bronze. Map them one to one (Gold = mission critical, and so on)? And are 30, 60, 120 ms alert thresholds the same idea as the Performance SLA per class?
 - Written as now: both sets of names, no mapping.
+- Proposed answer (settled by class-of-service, the 2026-11-10 KPI decision, Q089, Q106, Q157):
+  - Mapping: Gold = mission critical, Silver = standard production, Bronze = test and development. class-of-service already says so. Free has no alert class. Write Gold, Silver, Bronze in the knowledge files; Part 2 names become glossary synonyms.
+  - 30/60/120 ms is not the per-class SLA idea. Three different rules:
+    - SLA: one threshold for every class (disk SLI 10 ms); the class sets the nines.
+    - KPI: no class (2026-11-10).
+    - Alert: threshold and wait per class allowed. An alert colour is urgency plus importance (Q089); a Gold VM's slowness matters more. The SLA objection ("Silver can outscore Gold") does not apply: an alert scores nothing.
+  - Also fix alert-design: "Keep the formal SLA (alert) apart from the internal KPI (insight)" and "Align with the SLA you promised" contradict Q106. Alerts read KPI metrics with their own values; a red alert may mean the SLI is already breached.
+  - Change if accepted: alert-design (class names; the two lines above); glossary synonyms for the class names; delete the review note.
+  - For you: nothing.
 - Answer:
 
 ### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
@@ -371,6 +665,12 @@ Each entry has:
 - Search 3: "Not yet implemented. The reason is the many:many relationship"
 - Question: the count table shows (a) Guest OS Disk consumption 1, but Guest OS Consumption says no alert; (b) Datastore Cluster disk contention 2, but Storage Infrastructure Contention says not implemented. Which is current?
 - Written as now: both, as in the source, with this question in the review notes.
+- Proposed answer (partly needs you):
+  - Rule: where a table cell and a section disagree, the section that gives a reason wins. The table summarises the sections.
+  - (a) No Guest OS disk consumption alert. The section gives the reasons: swap partitions sit near 100%; low disk space cannot be read at the virtual disk layer. Cell → "Not yet".
+  - (b) Storage infrastructure contention not implemented: VMs and datastores are many-to-many. The same holds for a datastore cluster (a VM's disks can sit in several). Cells Datastore and Datastore cluster → "Not yet".
+  - Change if accepted: alert-design, three table cells; delete the review notes in alert-design, guest-os-alerts, storage-alerts.
+  - For you: whether your shipped set has a Guest OS disk-space alert or two datastore cluster latency alerts (read, write). If yes, the sections change instead.
 - Answer:
 
 ### Q143 · Part 2 > Proactive Operations > Alert > Threshold Design > Conditions · Condition vs symptom
@@ -378,6 +678,12 @@ Each entry has:
 - Search: "Do not use Symptoms. Instead, use Conditions."
 - Question: is a condition a test written inside the alert definition (the Conditions tab), as opposed to a reusable symptom definition? Is the reason only that symptoms are reserved for minor issues, or also a technical one (for example wait and cancel cycles per symptom)?
 - Written as now: a condition is a test written inside the alert definition; symptoms are minor issues for the daily check.
+- Proposed answer (settled by Q154):
+  - Yes. Condition and symptom are one test with two names (Q154). A symptom definition is stored and reused; a condition sits inside one alert definition.
+  - Wait and cancel cycles are not the reason: a condition has its own wait cycle, cancel cycle and severity, as a symptom definition does (VCF Operations API 9.1.1, data structure alert-condition: waitCycles, cancelCycles, severity; https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/data-structures/alert-condition/).
+  - Two reasons hold: meaning (a symptom triggered alone is a minor issue for the daily health check); isolation (editing a shared symptom definition changes every alert that uses it, vendor alerts included; editing a condition changes one alert).
+  - Change if accepted: alert-definitions, one line on condition cycles and isolation; design-thresholds 9.3 R1 reads "symptom or condition"; delete the review note.
+  - For you: nothing.
 - Answer:
 
 ### Q144 · Part 2 > Proactive Operations > Alert > CPU Alerts > VM Contention · Orange values and the missing diagram
@@ -386,6 +692,12 @@ Each entry has:
 - Search 2: "This is complex. See the diagram at the start of CPU Alert section."
 - Question: (a) Orange keeps Peak vCPU Ready above 32% and CPU Contention above 8%, the same as red; only CPU Ready drops to 4%. Should orange be 16% and 4%? (b) The diagram at the start of CPU Alerts is not in the document. Is the knowledge-base flow vm-cpu-contention-high the right link, or should the diagram be added?
 - Written as now: (a) as in the source; (b) linked to vm-cpu-contention-high.
+- Proposed answer (partly needs you):
+  - (a) Yes: orange = Peak vCPU Ready above 16%, CPU Ready above 4%, CPU Contention above 4%, CPU Usage above 1 GHz. Every other contention alert halves each threshold from red to orange (Q140). As written, orange needs a red-level burst (32%) and red-level contention (8%), so it fires almost only when red does.
+  - Side point: from VCF Operations 8.18, VM CPU Contention = Overlap + Co-stop + Ready + Other Wait (when below 1%), so Contention ≥ Ready. A Contention condition at the same value as Ready adds nothing. It had a job when Contention mapped to CPU Latency.
+  - (b) Keep the link to vm-cpu-contention-high; do not rebuild the missing diagram. Fix the flow: it tests Contention against 37.5% (CPU Latency logic, pre-8.18), so a VM raised by the 8% Ready alert stops at step 1. Add a Ready branch: CPU limit, resource pool shares and limits, vCPU-to-thread overcommit at the time, VM size against the host (Co-stop), DRS. Give the flow its diagram (M1).
+  - Change if accepted: cpu-alerts orange values; catalog row `alert-vm-cpu-ready-orange`; vm-cpu-contention-high (Ready branch, diagram); delete the review notes.
+  - For you: what the shipped orange definition holds; whether Contention stays beside Ready after 8.18.
 - Answer:
 
 ### Q145 · Part 2 > Proactive Operations > Alert > Memory Alerts · Wait, example and instance
@@ -394,6 +706,12 @@ Each entry has:
 - Search 2: "VM 001 has 51% memory contention"
 - Question: (a) the infrastructure consumption red has no duration in its condition; is the wait 10 minutes? (b) the 51% example lists 5 MB, 1 MB, 2 MB and shares; the MB values cannot make 51%. Keep it as an illustration of mixed causes? (c) For ESXi and cluster, is Peak Memory Contention the worst VM, and Memory Contention the average of VMs?
 - Written as now: (a) 10 minutes; (b) illustration; (c) not stated.
+- Proposed answer (partly needs you):
+  - (a) 10 minutes. The design note on this alert says "10 minutes is used instead of 5"; infrastructure CPU consumption also uses 10, VM CPU consumption 15. Write the wait on each alert; the general line becomes "consumption: 10-15 minutes".
+  - (b) Keep the idea, drop the numbers. MB and % of time are different units: Memory Contention is the share of time a vCPU waits on memory (Q015, Q097). 1 MB of hot swapped pages can stall a VM more than 10 GB of cold ones. Rewrite: limit, swap-in, decompression and low shares can act at once; the metric gives the total wait, not each cause's share.
+  - (c) Neither worst VM nor average. Both are per-VM readings on each VM of the ESXi host, resource pool or cluster: Peak Memory Contention is the VM's highest 20-second value in the 5-minute interval (Q048); Memory Contention is its 5-minute value. The alert fires on the population (25% of VMs), as for CPU. That is why the per-VM values (16% / 4%) sit below the VM alert's (24% / 6%).
+  - Change if accepted: memory-alerts, three sections; wait lines in alert-design and alert-definitions; instance on catalog rows `alert-infra-memory-*`; delete the review notes.
+  - For you: confirm the infrastructure memory alert uses 25% of VMs, as the CPU alert does.
 - Answer:
 
 ### Q146 · Part 2 > Proactive Operations > Alert > Storage Alerts > VM Contention · 80 ms vs class of service
@@ -401,6 +719,13 @@ Each entry has:
 - Search: "Average Read Latency > 80 ms"
 - Question: the VM disk latency alert is red above 80 ms average (orange 40 ms), while Class of Service gives standard production 60 ms for 10 minutes. Which class is the 80 ms alert for?
 - Written as now: the 80 ms alert is read as standard production, flagged.
+- Proposed answer (partly needs you):
+  - The 80 ms alert belongs to no class. It is the recommended set for one policy over all VMs, set from field reality (the design note raises the value and waits 10 minutes because lower values draw hardly any complaints).
+  - It matches no class anyway: orange 40 ms is below the standard production 60 ms, red 80 ms above it. The shape also differs: average plus a 4x 20-second peak plus 1 GHz and 100 IOPS gates, against one average and a duration.
+  - 30/60/120 ms is an example of the step between classes (each 2x the one above). A site with classes makes one VCF Operations policy per class and sets each class's values.
+  - "These are the standard production values" has no basis in the source: remove it. Alert rows get `class: all`.
+  - Change if accepted: storage-alerts (VM disk latency); alert-design (Class of service: example, not shipped values); `class: all` on alert rows; delete the review note.
+  - For you: whether your shipped set has per-class policies. If yes, the per-class values are needed; none exist in the knowledge base.
 - Answer:
 
 ### Q147 · Part 2 > Proactive Operations > Alert > Network Alerts · VM dropped packets
@@ -409,6 +734,13 @@ Each entry has:
 - Search 2: "So the ratio is always 100%."
 - Question: (a) the condition ends with "and": is a second condition missing? (b) 4% is 1 in 25 packets, not 1 in 40. (c) What does "the ratio is always 100%" mean? (d) Port group: does "change to transmit only" mean received drops gave the false positives?
 - Written as now: (a) one condition; (b) 1 in 25; (c) not copied; (d) not stated.
+- Proposed answer (partly needs you):
+  - (a) Yes, a condition is missing. Every other VM contention alert has an activity gate (CPU Usage above 1 GHz; disk also IOPS above 100). A drop ratio over few packets is unstable: 1 drop in 20 packets is 5%, so a quiet VM fires. Likely gate: CPU Usage above 1 GHz or a packets-per-second floor.
+  - (b) 1 in 25 (1/25 = 4%; 1 in 40 = 2.5%). The knowledge base already says 1 in 25.
+  - (c) Read as: the data delivered reaches 100% in the end, because TCP resends dropped segments. The cost is time, not data: each loss cuts the congestion window or waits a retransmit timeout; UDP is not resent. Rewrite the line and the trap that way; do not copy "the ratio is always 100%".
+  - (d) Yes. Received drops include packets not meant for the port (why the SLA excludes them) and VMXNET3 receive-ring drops, a Guest OS problem (Q070, Q085). Transmit only keeps the alert on what the infrastructure team owns.
+  - Change if accepted: network-alerts (What to set, VM dropped packets, port group, trap); catalog row `alert-vm-network-tx-dropped-red`; delete the review notes.
+  - For you: the missing condition and its value; whether (c) meant the delivery ratio.
 - Answer:
 
 
@@ -417,6 +749,21 @@ Each entry has:
 - Search: not from the book.
 - Question: list the wrong terms VMware admins and architects write in tickets, forums and chats, each with what they actually mean (for example "steal time" means VM CPU Ready and Co-stop). Each becomes a row: the words, the knowledge-base terms, the file, the misreading.
 - Written as now: 35 rows written by Claude; none from real tickets.
+- Proposed answer (partly needs you). The term map now has 40 rows. Seed rows not yet in it, each backed by current knowledge-base text:
+  - `sla-means-kpi`: "SLA" with no written agreement means KPI (Q106, Q122). kpi-vs-sla.
+  - `latency-unqualified`: "latency" with no layer; answer the likely layer, name the others (clarify rule).
+  - `network-latency`: a VM has no network latency counter; read dropped packets.
+  - `host-ready`: "ESXi Ready" sums or averages its VMs; read the worst VM.
+  - `ready-percent`: "Ready 5% / 10%" or "Ready 2000 ms": summed over vCPUs, read against Run. ready.
+  - `vm-consumed`: "VM consumed memory high" or "memory leak": Consumed does not drop when the Guest OS frees memory. guest-os-vs-vm-memory.
+  - `thin-provisioning`: provisioned counts thin disks at full size.
+  - `drs-score`: DRS Score is demand met (VM happiness), not contention.
+  - `load-average`: esxtop load average is a utilization level; confirm with VM contention.
+  - `sioc`: Storage I/O Control deprecated in VCF 9.0.
+  - `memory-pressure`: three layers (Guest OS paging, VM memory contention, host state).
+  - Reword existing rows: `iowait` ("CPU wait" can mean Ready); `overcommit` (per thread, not per core); `esxtop-cpu` (read against Run).
+  - Change if accepted: user-terms.yaml (11 rows, 3 notes); re-run the retrieval check.
+  - For you: the wrong terms you see in real tickets.
 - Answer:
 
 ### Q150 · URL questions · Pages with known Level 300 errors
@@ -424,6 +771,13 @@ Each entry has:
 - Search: not from the book.
 - Question: list 5-10 public pages (Broadcom KB or TechDocs, VMware blogs, community posts, third-party blogs) that you know are wrong, each with the error. Each becomes a URL question where a frontier model tends to agree with the page.
 - Written as now: one URL question (0091, the VM Contention dashboard page).
+- Proposed answer (partly needs you). Two pages verified (fetched 2026-11-10):
+  - Broadcom KB 419238, Troubleshooting VM performance (https://knowledge.broadcom.com/external/article/419238): %RDY ≥ 10 for a VM, no per-vCPU normalisation, no Run; MCTLSZ, CACHEUSD, SWCUR ≥ 1 read as current problems (they are past tense); ZIP/s and UNZIP/s both read as overcommitment (only UNZIP/s and SWR/s mean the VM waits now); %DRPTX/%DRPRX above 0 read as "high network utilization" (received drops usually mean the Guest OS did not drain the ring); "Increase the amount of CPU and memory" (more vCPUs can raise Ready and Co-stop).
+  - Broadcom KB 386180, CPU Ready Time issues in ESXi environments running high I/O workloads (https://knowledge.broadcom.com/external/article/386180): Ready baseline 5%, warning 10% from an esxtop batch capture, not per vCPU, not against Run; CPU Latency 5% and 10% read as contention (Latency also rises with lower frequency and Hyper-Threading, with no wait).
+  - Checked and rejected: KB 306576 (correct apart from "cores" for vCPUs); KB 431027 (matches core-utilization).
+  - The page date renders by script: the question key records the fetch date and quotes the lines it relies on.
+  - Change if accepted: two URL questions (Level 300, troubleshoot).
+  - For you: 3-8 more pages (blogs, community posts) you know to be wrong.
 - Answer:
 
 ### Q162 · Class of service planning · "KPI (%), not SLA (%)" per class
@@ -431,6 +785,13 @@ Each entry has:
 - Search: your table image in Part 1, Capacity Management: row "Contention: Minimum Performance (%) threshold. KPI (%), not SLA (%)."
 - What the knowledge base says now: your table gives Gold ≥ 99.5%, Silver ≥ 99%, Bronze ≥ 98% and labels it "KPI (%), not SLA (%)". On 2026-11-10 you said the KPI is never per class of service. Claude reworded the text to "the VM Performance (%) a cluster sized to the class is expected to keep: a capacity design expectation"; the image still says KPI.
 - Question: (a) the reword is right: a capacity design expectation per class, read on the VM Performance (%) KPI; the KPI itself has no class; (b) the KPI has a target per class after all; (c) other.
+- Proposed answer (settled by the 2026-11-10 decision): (a).
+  - Already applied in class-of-service-planning (Contention), catalog rows `class-*-min-vm-performance`, kpi-vs-sla and the glossary pair KPI vs SLA.
+  - The image label "KPI (%), not SLA (%)" names the metric to read (VM Performance (%), not the SLA pass rate). That fits (a); the image can stay.
+  - Remaining: reword the alt text "Contention minimum Performance (%) KPI: 99.5%, 99%, 98%" to "minimum VM Performance (%), read on the KPI: a capacity design expectation"; can-cluster-take-more-vms trap "the Gold minimum of 99.5%" → "the Gold design expectation".
+  - Open point: what the expectation is compared against. The daily KPI is the 99th percentile of one VM's 288 scores; the class rows give no interval, statistic or VM aggregation. The unmet-demand reading (0.5%, 1%, 2%) suggests a time average across the cluster's VMs.
+  - Change if accepted: class-of-service-planning alt text and note; can-cluster-take-more-vms trap.
+  - For you: which statistic, period and VM aggregation the class expectation is compared against.
 - Answer:
 
 ## Resolved
