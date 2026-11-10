@@ -66,6 +66,6 @@ corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). RSS NIC list changed in 9.1 (pp. 50-51). Coalescing unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Exact driver and module commands for RSS are in the source (p. 48). Not copied here. Verify against the NIC driver release before use.
+- 'To check: exact driver and module commands for RSS against the NIC driver release before use; they are in the source (p. 48), not copied here.'
 status: draft
 ```

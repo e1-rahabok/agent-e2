@@ -137,6 +137,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Free memory guidance'': the 500 MB and 100 MB values are the book''s guidance.'
-- 'References from the book: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/ (not read).'
+- 'To check: References from the book, not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
 status: draft
 ```

@@ -85,6 +85,6 @@ source:
   path: CPU > VM (pp. 78-118) > Contention Metrics; Wait Metrics
 corrections: []
 review_notes:
-- 'Section ''Which state each metric includes'': assembled by Claude from the book''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams.'
+- 'To check: Section ''Which state each metric includes'': table assembled from the book''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the book.'
 status: draft
 ```

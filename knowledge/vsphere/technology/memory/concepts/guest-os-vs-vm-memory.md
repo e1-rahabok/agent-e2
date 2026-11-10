@@ -102,6 +102,5 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Example: VM more accurate'': the java.exe example comes from a blog by Manny Sidhu that is no longer available. Image not copied.'
-- 'Section ''No mapping'': independent management and VMware Tools as the only channel: author (Q043, 2026-11-06).'
 status: draft
 ```

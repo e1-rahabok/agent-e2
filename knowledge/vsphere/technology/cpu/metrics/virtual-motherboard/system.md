@@ -73,8 +73,7 @@ source:
   path: CPU > VM (pp. 78-118) > Consumption Metrics > System
 corrections: []
 review_notes:
-- "Section 'Instance': author (2026-11-03), Q002: System is charged at VM level, not vCPU 0. Total VM > sum of vCPUs. Book text saying vCPU 0 is wrong."
-- 'Section ''Values'': KB from the book: https://kb.vmware.com/s/article/59640 (not read).'
+- 'To check: Section ''Values'': KB cited by the book, not read (https://kb.vmware.com/s/article/59640).'
 - 'vCenter counter description reads: amount of time spent on system processes on each virtual CPU in the virtual machine. Differs from the book''s per-vCPU statement.'
 status: draft
 ```

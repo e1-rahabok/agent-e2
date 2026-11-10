@@ -77,8 +77,6 @@ source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics'
 corrections: []
-review_notes:
-- 'Section ''Design'': author (Q048, 2026-11-06).'
-- 'Moved 2026-11-06 from vcf-operations/features/peak-20-second-metrics (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

@@ -50,8 +50,7 @@ source:
   path: VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 77); DRS Cluster Sizing and Resource Settings (p. 78)
 corrections: []
 review_notes:
-- Checked against 9.1 (revision 20260624). Scalable Shares text on p. 77. Reservation and share guidance on p. 78. Unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source does not state whether Scalable Shares is on or off by default. Not read.
+- 'To check: Scalable Shares default (on or off): the source does not state it.'
 status: draft
 ```

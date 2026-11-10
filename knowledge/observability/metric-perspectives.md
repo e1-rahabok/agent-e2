@@ -62,9 +62,9 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Documentation Challenge
 corrections:
 - '2026-11-02: Contention first, then consumption, is an analysis rule (not only document layout).'
-- '2026-11-02: Pillars are availability, performance, security, capacity, value (section: 2. Pillars of operations). Uploaded document lists capacity, cost, performance, compliance. Author has updated the book.'
+- '2026-11-02: Pillars are availability, performance, security, capacity, value (section: 2. Pillars of operations). Uploaded document lists capacity, cost, performance, compliance.'
 - '2026-11-02: Technology includes system: OS, BIOS, or whole device (section: 1. Technology).'
 review_notes:
-- 'Example metrics re-mapped by Claude: Compliance Score moved under Security, Month-to-Date Cost under Value. Author to confirm.'
+- 'To check: Example metrics: Compliance Score moved under Security, Month-to-Date Cost under Value.'
 status: draft
 ```

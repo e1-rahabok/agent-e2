@@ -92,7 +92,6 @@ source:
 corrections: []
 review_notes:
 - Sections Hyper-Threading: from CPU > Architecture.
-- 'Sections What Latency includes, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram modified by the author from a Valentin Bondzio diagram.'
-- "Section 'Contrast with Linux Steal Time': author (2026-11-03), Q001: Steal Time = Ready only; blind to Overlap."
+- 'Sections What Latency includes, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram adapted from a Valentin Bondzio diagram.'
 status: draft
 ```

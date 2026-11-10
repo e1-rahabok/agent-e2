@@ -44,7 +44,6 @@ source:
   document: PART 3 - Counters.docx
   path: Storage > VM > Overview > Disk; Performance Metrics > Disk
 corrections: []
-review_notes:
-- 'Section ''Meaning'': the value is for the VM, not the whole device or datastore (author, Q023, 2026-11-06).'
+review_notes: []
 status: draft
 ```

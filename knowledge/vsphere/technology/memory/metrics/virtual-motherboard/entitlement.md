@@ -40,6 +40,6 @@ source:
   path: Memory > VM > Consumption Metrics
 corrections: []
 review_notes:
-- 'Section ''Meaning'': the limit behaviour is the book''s guess. Author to confirm.'
+- 'To check: Section ''Meaning'': the limit behaviour; the book''s guess.'
 status: draft
 ```

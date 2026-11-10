@@ -106,7 +106,7 @@ source:
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz
 corrections: []
 review_notes:
-- '2026-11-04: content from former vsphere/technology/memory/concepts/host-memory-states folded in (author decision 5). Source: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''When ESXi swaps instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
 - 'Section ''Mechanism'': the book''s sentence on why there is no 3:1 compression is incomplete. Left out.'
 status: draft

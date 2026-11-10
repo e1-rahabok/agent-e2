@@ -64,7 +64,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > ESXi ≠ VM + Kernel; CPU > ESXi > Thread Utilization
 corrections:
-- 'Section ''The capacity reading'' and Traps: Thread Utilization is the ESXi utilization for capacity management (author answer Q040, 2026-11-05, and the quiz key of CPU Q1).'
+- 'Section ''The capacity reading'' and Traps: Thread Utilization is the ESXi utilization for capacity management (quiz key of CPU Q1).'
 review_notes:
 - Sections Mechanism and Traps: from CPU > Architecture.
 - 'Section Thread Utilization: from CPU > ESXi.'

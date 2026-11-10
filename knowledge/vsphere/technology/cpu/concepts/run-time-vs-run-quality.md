@@ -102,9 +102,8 @@ source:
   path: CPU > Architecture (pp. 64-68, 77) > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
 corrections: []
 review_notes:
-- "Section 'Fair Share Scheduler': author (2026-11-02): VM CPU Used and Usage go down when the vCPU runs on a shared core. Book text to be corrected."
-- "Section 'Efficacy': the 30% figure is the author's estimate for a new vs a 5-year-old Intel Xeon at the same clock speed."
-- "Section 'CPU Throughput': 'CPU Throughput' is the author's preferred name. Proposed in glossary. Author to confirm which counters it names (Usage (MHz) at minimum)."
+- 'Section ''Efficacy'': the 30% figure is an estimate for a new vs a 5-year-old Intel Xeon at the same clock speed, not a published measurement.'
+- 'To check: Section ''CPU Throughput'': which counters the name ''CPU Throughput'' covers (Usage (MHz) at minimum); proposed in the glossary.'
 - "Section 'Fair Share Scheduler': the book compares with the Linux EEVDF scheduler (replaced CFS in Linux 6.12; https://lwn.net/Articles/925371/). Left out of the body as a tangent."
 status: draft
 ```

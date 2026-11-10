@@ -53,7 +53,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Consumption Metrics > Run | Net Run; Usage vs Net Run
 corrections: []
-review_notes:
-- 'Moved 2026-11-06 from vsphere/technology/cpu/metrics/virtual-motherboard/net-run (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

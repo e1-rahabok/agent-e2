@@ -143,8 +143,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?; The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility (from former vsphere/architecture/vm-vs-guest-os)
 corrections:
 - '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/architecture/overhead). Uploaded document labels layer C ''hypervisor overhead''.'
-review_notes:
-- 'Section ''Two realms'': author (2026-11-03), answer to Q035.'
-- '2026-11-04: merged vsphere/architecture/vm-vs-guest-os into this file (author decision 5, holistic review).'
+review_notes: []
 status: draft
 ```

@@ -48,6 +48,6 @@ source:
   path: CPU > VM (pp. 78-118) > Wait Metrics
 corrections: []
 review_notes:
-- metric_class set to context, matching vsphere/technology/cpu/metrics/host/idle. Author to confirm.
+- 'To check: metric_class: set to context, matching vsphere/technology/cpu/metrics/host/idle.'
 status: draft
 ```

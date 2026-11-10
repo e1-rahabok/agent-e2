@@ -52,7 +52,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Parts of an alert definition'': the steps, Defined On Self and Any or All are read from the source screenshot of the Edit Alert Definition page (Pod object). Screenshot not copied.'
-- 'Section ''Wait cycle'': collection every 5 minutes and wait cycle counted in collection cycles are Claude''s knowledge of VCF Operations; check against the VCF Operations 9.1 documentation on symptom definitions.'
-- 'Section ''Conditions, not symptoms'': the definition of a condition (a test written inside the alert definition) is Claude''s reading of the screenshot, where Conditions and Symptoms are two tabs. Q143.'
+- 'To check: Section ''Wait cycle'': collection every 5 minutes and wait cycle counted in collection cycles (VCF Operations 9.1 documentation on symptom definitions).'
+- 'To check: Section ''Conditions, not symptoms'': the definition of a condition (a test written inside the alert definition) is read from the screenshot, where Conditions and Symptoms are two tabs (Q143).'
 status: draft
 ```

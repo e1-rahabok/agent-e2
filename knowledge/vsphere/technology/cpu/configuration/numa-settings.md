@@ -81,6 +81,6 @@ corrections: []
 review_notes:
 - Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- Source refers to the 'Using NUMA Systems with ESX' section of the vSphere Resource Management guide. Not read.
+- 'To check: the ''Using NUMA Systems with ESX'' section of the vSphere Resource Management guide, referenced by the source; not read.'
 status: draft
 ```

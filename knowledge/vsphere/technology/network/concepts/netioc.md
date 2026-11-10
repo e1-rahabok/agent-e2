@@ -89,6 +89,6 @@ review_notes:
 - Checked against 9.1 (revision 20260624). Written from 9.1 pages 47-48. New in the 9.1 document.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - New in the 9.1 document. Not in the 9.0 table of contents as a separate section.
-- Network Traffic Shaping (p. 46), Enhanced Data Path (p. 46) not read.
+- 'To check: Network Traffic Shaping (p. 46) and Enhanced Data Path (p. 46) in Performance Best Practices for VMware vSphere 9.1; not read.'
 status: draft
 ```

@@ -93,11 +93,11 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:
-  document: 'PART 3 - Counters.docx, Metric Mastery (author update, 2026-11-08)'
+  document: PART 3 - Counters.docx, Metric Mastery (update of 2026-11-08)
   path: Metric Mastery > Aggregation; The Problem with Average; Lagging vs Leading Indicators; "Peak" Utilization; Depth vs Breadth; Usage Disparity
 corrections: []
 review_notes:
-- 'Section ''Summed counters'': the 20,000 ms factor in the formula is Claude''s; the book writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs) (Q137).'
+- 'To check: Section ''Summed counters'': the 20,000 ms factor in the formula is not in the book, which writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs) (Q137).'
 - 'Section ''Techniques'': the book table "Count / Worst 5th Percentile / Exclusion" lists 10 → 9.50, 0.50 and so on; written as members excluded.'
 status: draft
 ```

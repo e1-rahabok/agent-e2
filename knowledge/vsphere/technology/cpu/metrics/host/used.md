@@ -48,7 +48,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; CPU > ESXi > Used | Usage; Core vs Thread
 corrections:
-- '2026-11-02: Author states the CPU Used metric is buggy (section: Notes).'
+- '2026-11-02: the CPU Used metric is buggy (section: Notes).'
 review_notes:
 - 'Section Mechanism: from CPU > ESXi.'
 status: draft

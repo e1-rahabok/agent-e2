@@ -83,8 +83,8 @@ source:
 corrections: []
 review_notes:
 - 'Source URL: https://knowledge.broadcom.com/external/article?articleNumber=312147 (last updated date not shown on the page). Source states: ''vCenter 9.0 deprecates vCLS, and the service will be removed in a future vCenter release.'' and ''Deactivating vCLS does not impact the operation of vSphere DRS and vSphere HA services.'''
-- Broadcom KB 316514 (Retreat Mode) is referenced by KB 312147. Not read.
-- 'vCenter 9.1: user states vCLS is deprecated in 9.1. Third-party sources (vinfrastructure.it, May 2026; StarWind) say vCenter 9.1 turns vCLS off by default and it cannot be re-enabled, and that SDDC Manager and VCF Installer controls were removed. Not verified against official 9.1 release notes or Product Support Notes. Author to confirm the 9.1 status and wording.'
+- 'To check: Retreat Mode: Broadcom KB 316514, referenced by KB 312147, not read.'
+- 'To check: vCenter 9.1 vCLS status and wording: vCLS deprecated in 9.1; third-party sources (vinfrastructure.it, May 2026; StarWind) say vCenter 9.1 turns vCLS off by default and it cannot be re-enabled, and that SDDC Manager and VCF Installer controls were removed (official 9.1 release notes or Product Support Notes).'
 - Footprint tables are from the 9.0 performance document (pp. 76, 79). The 9.1 document has no vCLS section. Treat as historical (7.0 Update 1 to 8.x). Check VMware Configuration Maximums before any use.
 status: draft
 ```

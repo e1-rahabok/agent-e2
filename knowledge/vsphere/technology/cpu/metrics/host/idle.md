@@ -40,7 +40,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > ESXi > Wait Metric > Idle
 corrections: []
 review_notes:
-- metric_class set to context. Author to confirm.
+- 'To check: metric_class: set to context.'
 - 'Section Values: from CPU > ESXi.'
 status: draft
 ```

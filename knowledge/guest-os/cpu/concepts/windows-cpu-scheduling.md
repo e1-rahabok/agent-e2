@@ -107,10 +107,9 @@ source:
   document: PART 3 - Counters.docx
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
 corrections:
-- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading (author answer Q033, 2026-11-05); the book table marks Run as Yes.'
-- 'Same table: VM CPU Demand is affected by Hyper-Threading (author answer Q035, 2026-11-03); the book table marks it No.'
+- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading; the book table marks Run as Yes.'
+- 'Same table: VM CPU Demand is affected by Hyper-Threading; the book table marks it No.'
 review_notes:
 - 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
-- "Section 'Thread states': author (2026-11-03), quiz CPU Q7 F confirmed correct (Q036)."
 status: draft
 ```

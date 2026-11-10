@@ -66,8 +66,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Imbalance
 corrections: []
-review_notes:
-- The book does not say whether ESXi CPU Imbalance is a built-in VCF Operations metric or the author's custom metric. Author to confirm.
-- "Section 'Meaning': author (2026-11-03), Q011: author's own metric, not built-in."
+review_notes: []
 status: draft
 ```

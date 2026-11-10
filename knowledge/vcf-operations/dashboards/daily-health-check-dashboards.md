@@ -61,7 +61,7 @@ source:
   path: 'Proactive Operations > Daily Health Check (Morning Routine, vSphere Daily Log Check) (pp. 6-7)'
 corrections: []
 review_notes:
-- 'Section ''Morning routine'': the source names Log Insight; in VCF 9 it is VCF Operations for logs. Claude''s knowledge.'
+- 'To check: Section ''Morning routine'': the source names Log Insight; in VCF 9 it is VCF Operations for logs.'
 - 'Not copied: the screenshot of the two dashboards side by side (proof screenshot).'
 status: draft
 ```

@@ -96,10 +96,11 @@ source:
   path: vSphere Monitoring and Performance > Metric Groups, Statistics Levels, Hosts > GPU Compute, GPU Memory, GPU Compute Usage, GPU Memory Allocation, GPU Temperature, Preconfigured vSphere Alarms (pp. 2028-2030, 2065-2067, 2142); vSphere Resource Management > Configure Virtual Graphics, Migrating VMs with vGPUs, Configuring vGPU Size, Capacity Visualization of DirectPath Profiles, DRS Placement of vGPUs (pp. 1880-1884, 1902)
 corrections: []
 review_notes:
-- 'Section ''Counters'' (cluster and resource pool table) and ''Reading the counters'' (reserved vs used): counters, rollups, levels and summaries from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. Reserved vs used: author statement (2026-11-04): reservation is a setting, used is the result of activity, so reserved can exceed used. What gpu.mem.reserved and gpu.mem.used count exactly is author question Q053.'
+- 'Section ''Counters'' (cluster and resource pool table): counters, rollups, levels and summaries from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
+- 'To check: Section ''Reading the counters'': what gpu.mem.reserved and gpu.mem.used count exactly (Q053).'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
-- 'Section ''Reading the counters'': thermal throttling as a clock reduction, and vGPU time slicing as the quality-of-service mechanism, are Claude''s own knowledge. The documentation says overheating can cause throttling and reduced performance, and points to the GPU vendor for QoS.'
-- 'Section ''Placement and migration'': the statement that breadth-first placement fragments GPU capacity is Claude''s inference from the documentation''s remedies (same profile, GPU consolidation, manual migration to open up unused physical GPU capacity). The pause during GPU state copy is Claude''s own knowledge.'
+- 'To check: Section ''Reading the counters'': thermal throttling as a clock reduction, and vGPU time slicing as the quality-of-service mechanism; the documentation says only that overheating can cause throttling and reduced performance, and points to the GPU vendor for QoS.'
+- 'To check: Section ''Placement and migration'': breadth-first placement fragments GPU capacity (inferred from the documentation''s remedies: same profile, GPU consolidation, manual migration to open up unused physical GPU capacity), and the pause during GPU state copy (not in the documentation).'
 - 'Section ''vGPU and host memory'': exclusion from memory tiering follows from the documentation listing PCI Passthrough VMs as DRAM-only.'
 status: draft
 ```

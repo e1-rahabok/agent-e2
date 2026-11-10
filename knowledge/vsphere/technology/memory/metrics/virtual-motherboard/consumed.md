@@ -67,9 +67,8 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed
 corrections: []
 review_notes:
-- 'Section ''Meaning'': Consumed does not jump to the reservation (author, Q047 and Q057, 2026-11-06).'
 - 'Section ''View'': from Memory > Architecture.'
 - 'Sections Formula, Why Consumed stays high: from Memory > VM.'
-- 'Section ''Formula'': the book is unsure whether Consumed includes the compressed remainder that stays in DIMM.'
+- 'To check: Section ''Formula'': whether Consumed includes the compressed remainder that stays in DIMM; the book is unsure.'
 status: draft
 ```

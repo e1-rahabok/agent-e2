@@ -93,10 +93,9 @@ source:
   document: PART 3 - Counters.docx
   path: Network > VM > Contention Metrics
 corrections:
-- 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, outside the IaaS SLA (author, Q070, 2026-11-06).'
-- 'Section ''Profile transmit drops'': the book says 1 thousand dropped packets = 1,500 MB within 300 seconds. Correct: 1.5 MB (author answer Q025, 2026-11-04). Keep until the book is updated.'
+- 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, outside the IaaS SLA (2026-11-06).'
+- 'Section ''Profile transmit drops'': the book says 1 thousand dropped packets = 1,500 MB within 300 seconds. Correct: 1.5 MB (2026-11-04). Keep until the book is updated.'
 review_notes:
-- 'Section ''Profile transmit drops'': author answer Q025 (2026-11-04): 1,000 packets = 1.5 MB; the book''s 1,500 MB is wrong.'
-- 'KBs from the book: https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495 (not read).'
+- 'To check: KBs cited by the book, not read (https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495).'
 status: draft
 ```

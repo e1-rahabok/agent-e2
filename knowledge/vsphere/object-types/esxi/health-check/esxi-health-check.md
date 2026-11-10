@@ -109,15 +109,13 @@ related:
 - vsphere/tools/vsphere-client/performance-guidance
 - vsphere/tools/esxtop/cpu
 source:
-  document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation) + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation) + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Linked files in each step; section 'Documentation guidance (esxtop)' from ESX CPU Considerations (pp. 27-28)
 corrections:
-- 'Whole file: author decisions 2026-11-08: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback (author, Q133a).'
+- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback.'
 review_notes:
-- 'Section ''Checks, in order'': step order follows health-risk-efficiency (book). The order inside capacity (CPU, memory, storage, network, GPU) is Claude''s synthesis of the linked files. Author to confirm (Q062).'
-- 'Step 8: no host-level efficiency source; Claude''s reading that hosts are sized with their cluster.'
-- 'Section ''How to read the result'': Claude''s, from the Principle section.'
-- 'Section ''Documentation guidance (esxtop)'': moved from vsphere/architecture/overhead (section Host CPU monitoring, 2026-11-04), where a merge had placed it; it is host monitoring, not overhead. Text kept as written.'
-- 'Moved 2026-11-08 from vsphere/object-types/esxi/overview-what-to-monitor.'
+- 'To check: Section ''Checks, in order'': the order inside capacity (CPU, memory, storage, network, GPU), a synthesis of the linked files; step order follows health-risk-efficiency (book) (Q062).'
+- 'To check: Step 8: no host-level efficiency source; written as hosts sized with their cluster.'
+- 'To check: Section ''How to read the result'': derived from the Principle section.'
 status: draft
 ```

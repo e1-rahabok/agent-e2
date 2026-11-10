@@ -86,8 +86,7 @@ source:
   path: Provider Objects > esxtop > Network
 corrections: []
 review_notes:
-- 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the book says DTYP is no longer shown. The author confirms the book: the field is not shown on ESXi 9.1; the documentation is out of date (Q046, 2026-11-06).'
-- 'KB from the book: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html (not read).'
-- 'Moved 2026-11-06 from vsphere/tools/esxtop/network (architecture review 2026-11-06, section 5).'
+- 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the field is not shown on ESXi 9.1; the documentation is out of date.'
+- 'To check: KB from the book, not read: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html'
 status: draft
 ```

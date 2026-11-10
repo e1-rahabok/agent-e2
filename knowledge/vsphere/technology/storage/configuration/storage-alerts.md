@@ -75,8 +75,8 @@ source:
   path: 'Proactive Operations > Alert > Storage Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts) (pp. 24-26)'
 corrections: []
 review_notes:
-- 'Section ''VM disk latency'': the 80 ms red is for standard production in Claude''s reading; the class-of-service example in the same chapter gives standard production 60 ms for 10 minutes. Q146.'
-- 'Section ''Storage consumption'': Storage DRS as the remediation for a full member datastore is from the source; the datastore cluster object type is StoragePod (Claude''s knowledge).'
+- 'Section ''VM disk latency'': the 80 ms red is read as standard production; the class-of-service example in the same chapter gives standard production 60 ms for 10 minutes. Q146.'
+- 'To check: Section ''Storage consumption'': the datastore cluster object type is StoragePod; not in the source. Storage DRS as the remediation for a full member datastore is from the source.'
 - 'Section ''Datastore latency'': the source says Infrastructure Contention, not yet implemented; the alert count table shows Datastore Cluster contention 2. Q142.'
 status: draft
 ```

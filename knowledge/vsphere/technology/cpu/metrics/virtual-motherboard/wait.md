@@ -65,7 +65,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; CPU > VM (pp. 78-118) > Wait Metrics
 corrections: []
 review_notes:
-- metric_class set to context. The book groups Wait separately from contention and consumption. Author to confirm.
+- 'To check: metric_class: set to context; the book groups Wait separately from contention and consumption.'
 - Sections Mechanism and the last trap: from CPU > Architecture.
 - 'Section Sub-metrics: from CPU > VM. The IO wait and memory wait cases in vsphere/technology/cpu/concepts/vcpu-states map to Other Wait and Swap Wait.'
 status: draft

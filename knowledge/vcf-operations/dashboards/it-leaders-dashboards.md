@@ -116,7 +116,7 @@ source:
   path: 'Overall Design Approach > Overall Design: IT Leaders Dashboard (General Requirements, Sample Requirements Analysis: Business Applications, Operations Overview; Sample Dashboards: Capacity Summary, How to Use, Points to Note) (pp. 41-48)'
 corrections: []
 review_notes:
-- 'Section ''Capacity Summary dashboard'': AWS overcommit (CPU 2:1 counting hyper-threads, no memory overcommit) is from the source; not checked against AWS documentation.'
+- 'To check: Section ''Capacity Summary dashboard'': AWS overcommit (CPU 2:1 counting hyper-threads, no memory overcommit) is from the source (AWS documentation).'
 - 'Section ''Capacity Summary dashboard'': the source refers to an Executive Summary Dashboards page for common design; not in this document.'
 - 'Section ''Sample analysis'': the example names (John and Jill; Sam, Andy and Julia) are left out.'
 - 'Not copied: the general requirements hexagons (their words are in the text) and the Capacity Summary screenshots.'

@@ -129,13 +129,13 @@ images:
     metric: ['Cluster Risk']
     image_type: table
 source:
-  document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI (author, 2026-11-05); PART 3 - Counters.docx for reasons and monster VM factors
+  document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI; PART 3 - Counters.docx for reasons and monster VM factors
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md; formula/cluster-risk.png; Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections:
-- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table (author, Q031, 2026-11-05). Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
-- 'Section ''Monster VM'': the adapter definition is final (author, Q032, 2026-11-05): CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
+- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
+- 'Section ''Monster VM'': the adapter definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
-- 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows. Intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold (author, Q120, 2026-11-09). CPU overcommit: per thread (author, Q151); the pack counts per core and must be fixed (plan, after 1.0). Section ''Monster VM'': the 8-core CCD statement for Xeon is challenged in Q125.'
-- 'Moved 2026-11-06 from vsphere/object-types/cluster/models/cluster-risk (architecture review 2026-11-06, section 5).'
+- 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread; the pack counts per core and must be fixed (plan, after 1.0).'
+- 'To check: Section ''Monster VM'': the 8-core CCD statement for Xeon (Q125).'
 status: draft
 ```

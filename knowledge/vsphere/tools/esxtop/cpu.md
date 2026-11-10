@@ -154,8 +154,7 @@ source:
 corrections: []
 review_notes:
 - 'Sections ''Summary lines'', ''State counters'', ''Power'': load average meaning, CORE UTIL batch behaviour, %MLMTD inside %RDY, the two formulas, %RUN vs %USED with Hyper-Threading, %WAIT - %IDLE as guest IO wait estimate, per-core percentages, %A/MPERF formula and CPPC from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > CPU Panel, CPU Power Panel (pp. 2150-2155).'
-- 'The 9.1 documentation still lists HTQ in the CPU panel; the book says HTQ is no longer shown since ESXi 7.0. The author confirms the book: the field is not shown on ESXi 9.1; the documentation is out of date (Q046, 2026-11-06).'
-- 'Section ''Summary stats'': the book is unsure what the CPU column shows (always blank for the author) and whether AMLMT shows when a limit is applied.'
-- 'Moved 2026-11-06 from vsphere/tools/esxtop/cpu (architecture review 2026-11-06, section 5).'
+- 'The 9.1 documentation still lists HTQ in the CPU panel; the field is not shown since ESXi 7.0 and not on ESXi 9.1; the documentation is out of date.'
+- 'To check: Section ''Summary stats'': what the CPU column shows (always blank in the book''s tests) and whether AMLMT shows when a limit is applied; the book is unsure.'
 status: draft
 ```

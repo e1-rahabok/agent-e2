@@ -294,10 +294,9 @@ review_notes:
 - 'Sections ''Scheduling behaviour'', ''Affinity caution'': throughput, charging, scheduler preference and affinity side effects from the vSphere 9.1 documentation, vSphere Resource Management > Hyperthreading and ESX Hosts, Using CPU Affinity, Potential Issues with CPU Affinity (pp. 1829-1831).'
 - Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- This source gives no Hyper-Threading penalty percentages. The book's 37.5% (VM Usage) and 50% (ESXi Used) figures are not confirmed by this source. Author to confirm.
-- '[from former vsphere/technology/cpu/concepts/hyper-threading] Section ''Worked example'': the book gives the result (40.625%). The formula line is Claude''s reconstruction from the book''s description: VM A runs 50% of the time, half of it with VM B running.'
-- '[from former vsphere/technology/cpu/concepts/hyper-threading] Hyper-Threading figures (1.25x, 62.5%) are not in Performance Best Practices for vSphere 9.1. Open item in project/plan.md.'
-- '[from former vsphere/technology/cpu/concepts/hyper-threading] Section ''Time base'': the book states a thread running alone can reach 20,000 ms Used and that the author has not tested what the sibling thread then shows.'
-- '2026-11-04: merged vsphere/technology/cpu/concepts/hyper-threading, vsphere/technology/cpu/concepts/hyper-threading into this file (author decision 5, holistic review).'
+- 'To check: the book''s Hyper-Threading penalty figures, 37.5% (VM Usage) and 50% (ESXi Used); Performance Best Practices for VMware vSphere 9.1 gives no penalty percentages.'
+- 'To check: Section ''Worked example'': the formula line, reconstructed from the book''s description (VM A runs 50% of the time, half of it with VM B running); the book gives only the result (40.625%).'
+- 'Hyper-Threading figures (1.25x, 62.5%) are not in Performance Best Practices for vSphere 9.1. Open item in project/plan.md.'
+- 'To check: Section ''Time base'': what the sibling thread shows when a thread running alone reaches 20,000 ms Used; not tested, per the book.'
 status: draft
 ```

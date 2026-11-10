@@ -67,9 +67,7 @@ source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%)'
 corrections:
-- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded by author answer Q026 (2026-11-04). Keep until the book is updated.'
-review_notes:
-- 'Section ''Reasons'': author answer Q026 (2026-11-04): the table is right; the band was lowered because Compressed + Swapped is measured at 5 minutes and Memory Contention at 20 seconds.'
-- 'Moved 2026-11-06 from vsphere/object-types/vm/kpis/vm-performance (architecture review 2026-11-06, section 5).'
+- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded. Keep until the book is updated.'
+review_notes: []
 status: draft
 ```

@@ -132,15 +132,14 @@ source:
   path: 'Virtual Infrastructure Management > General Resource Management (p. 65); Part 1, Configuration Management > Review List > Resource Management, Share, Reservation, Limit, Resource Pool (pp. 138-141)'
 corrections: []
 review_notes:
-- Checked against 9.1 (revision 20260624). Page 65 unchanged.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- The source does not define a headroom percentage for memory virtualization overhead and migration overhead. Author to confirm whether the book gives one.
-- 'Sections Review (2026-11-07) from the book. Default memory shares: the book''s table says 5, 10, 20 per GB; its text and the vSphere defaults are per MB (10,240 per GB at Normal). Written per MB. Q108.'
-- 'Share example: the book has both VMs demanding 10 GHz; a 1-vCPU VM cannot exceed one physical core. The book''s last line says VM 1 twice. Q108.'
-- 'The impact table image says a share of 2,000 depends on other VMs'' reservations; meant as shares. Q108.'
-- 'Resource pool weighing as a 4-vCPU, 16-GB VM: Claude''s explanation of the book''s 4x and 16x (the book says it is unsure why).'
-- 'Limit: the book says there is no network limit; vSphere has per-vNIC limits under Network I/O Control (sp5-framework/performance/noisy-neighbour). Q109.'
-- 'HA slot size: only under the slot policy admission control. Q110.'
-- 'Siblings: the book calls VM and pool siblings a mistake; with Scalable Shares the dilution is solved (vsphere/object-types/resource-pool/configuration/scalable-shares). Both kept. Q110.'
+- 'To check: Headroom for memory virtualization overhead and migration overhead: the source defines no percentage; whether the book gives one.'
+- 'To check: Sections Review (2026-11-07) from the book. Default memory shares: the book''s table says 5, 10, 20 per GB; its text and the vSphere defaults are per MB (10,240 per GB at Normal). Written per MB. (Q108).'
+- 'To check: Share example: the book has both VMs demanding 10 GHz; a 1-vCPU VM cannot exceed one physical core. The book''s last line says VM 1 twice. (Q108).'
+- 'To check: The impact table image says a share of 2,000 depends on other VMs'' reservations; meant as shares. (Q108).'
+- 'To check: Resource pool weighing as a 4-vCPU, 16-GB VM: the explanation of the book''s 4x and 16x is not in the book, which says it is unsure why.'
+- 'To check: Limit: the book says there is no network limit; vSphere has per-vNIC limits under Network I/O Control (sp5-framework/performance/noisy-neighbour). (Q109).'
+- 'To check: HA slot size: only under the slot policy admission control. (Q110).'
+- 'To check: Siblings: the book calls VM and pool siblings a mistake; with Scalable Shares the dilution is solved (vsphere/object-types/resource-pool/configuration/scalable-shares). Both kept. (Q110).'
 status: draft
 ```

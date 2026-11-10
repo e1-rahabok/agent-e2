@@ -146,15 +146,16 @@ source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Memory Hardware Considerations > Memory Tiering Hardware (p. 14); ESX Memory Considerations > Memory Tiering (p. 38); Storage > ESXi > Disk or Device > Memory Tiering
 corrections:
-- 'Section ''Capacity management'': overcommit against DRAM only; consumed covers both tiers; whether %LAT_M includes NVMe page faults is unknown to the author (Q082, 2026-11-07).'
-- 'Sections ''Definition'' (tier numbering), ''Mechanism'' (swap comparison), ''Capacity management'', ''Interactions'' (DRAM on arrival, DRS), ''Monitoring counters'' (chart path, memstats, zero tier 1): author (2026-11-07). Tier numbering corrected: DRAM = tier 0, NVMe = tier 1, as in the counters.'
+- 'Section ''Capacity management'': overcommit against DRAM only; consumed covers both tiers; whether %LAT_M includes NVMe page faults is unknown (2026-11-07).'
+- 'Sections ''Definition'' (tier numbering), ''Mechanism'' (swap comparison), ''Capacity management'', ''Interactions'' (DRAM on arrival, DRS), ''Monitoring counters'' (chart path, memstats, zero tier 1): 2026-11-07. Tier numbering corrected: DRAM = tier 0, NVMe = tier 1, as in the counters.'
 review_notes:
 - Checked against 9.1 (revision 20260624). Pages 14 and 38 read. Setup changes and CPU headroom bullet added (p. 38).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Introduced in vSphere 9.0. The 9.1 document (p. 38) refers to ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub''. Not read.'
-- 'Section ''Operations (book)'': from Storage > ESXi. The 25% figure is the author''s practice.'
+- 'To check: ''More Memory, Less Effort: Configuring Memory Tiering in VCF 9.1'' and the ''Memory Tiering Resource Hub'', referenced on p. 38 of Performance Best Practices for VMware vSphere 9.1; not read. Memory tiering was introduced in vSphere 9.0.'
+- 'Section ''Operations (book)'': from Storage > ESXi. The 25% figure is field practice from the book, not a vendor value.'
 - 'Sections ''Mechanism'' (from the 80% line on), ''Sizing (documentation)'', ''VMs kept in DRAM'', ''Interactions'' and the bandwidth, latency and SMART lines in ''Monitoring counters'': from the vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe, Capacity Planning Considerations, Virtual Machine Profiles, Configuration Parameters, Assessing Customer Workloads, Memory Tiering Considerations and Best Practices, NVMe Failure Scenarios, Troubleshooting > The Reservable Memory is Lower than Expected, NVMe Device Health Monitoring (pp. 1844-1849, 1868-1873, 1957-1959).'
-- 'Section ''Interactions'': the reason given for not combining overcommit with tiering is Claude''s paraphrase of the documentation (potential performance impact).'
-- 'Section ''Monitoring counters'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Hosts > Memory (MB), Memory Rate (MBps), Memory Bandwidth (MBps), Memory Latency (ns); View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145). The reading of tier in rate as the performance signal is Claude''s inference.'
+- 'Section ''Interactions'': the reason given for not combining overcommit with tiering paraphrases the documentation (potential performance impact).'
+- 'Section ''Monitoring counters'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Hosts > Memory (MB), Memory Rate (MBps), Memory Bandwidth (MBps), Memory Latency (ns); View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145).'
+- 'To check: Section ''Monitoring counters'': tier in rate as the performance signal; an inference, not stated in the documentation.'
 status: draft
 ```

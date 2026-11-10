@@ -82,8 +82,8 @@ source:
   path: vSphere Resource Management > Admission Control in vSphere, Resource Allocation Settings Suggestions, Potential Issues with CPU Affinity, Resource Pool Admission Control, Expandable Reservations Examples, DRS Cluster Validity, DRS Troubleshooting > Cluster Problems (pp. 1825-1826, 1831, 1891-1892, 1908-1911, 1950)
 corrections: []
 review_notes:
-- 'Section ''Admission control'': the trap of non-identical hosts is from the author (Q051, 2026-11-06); the example (losing the largest host costs more) is Claude''s own knowledge.'
-- 'Section ''Admission control'': the failover counter, level and summary from the author''s vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
+- 'To check: Section ''Admission control'': the example (losing the largest host costs more).'
+- 'Section ''Admission control'': the failover counter, level and summary from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 status: draft
 ```

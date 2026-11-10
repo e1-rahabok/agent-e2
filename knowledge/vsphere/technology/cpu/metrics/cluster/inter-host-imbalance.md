@@ -90,7 +90,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Values'': the book''s grey range reads ''-1, -2, -3, ...., 64''. Read as down to -64.'
-- 'Section ''Definitions'': whether this is a built-in VCF Operations metric or the author''s own super metric is not stated. Related to Q011.'
-- 'Moved 2026-11-06 from vsphere/technology/cpu/metrics/cluster/inter-host-imbalance (architecture review 2026-11-06, section 5).'
+- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; the book does not say.'
 status: draft
 ```

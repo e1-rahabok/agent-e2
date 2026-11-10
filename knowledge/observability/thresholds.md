@@ -81,7 +81,6 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge
 corrections: []
-review_notes:
-- 'Sections ''Interval rule'', ''Instance rule'', ''Threshold definition'': from the author''s statement of 2026-11-04 (thresholds differ by 2-second, 20-second and 5-minute interval; the worst of 64 vCPUs is higher than the VM value) and author answer Q026. The ordering 2 s ≥ 20 s ≥ 5 min holds for peaks and averages of the same workload.'
+review_notes: []
 status: draft
 ```

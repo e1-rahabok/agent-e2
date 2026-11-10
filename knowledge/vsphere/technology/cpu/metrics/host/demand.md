@@ -67,8 +67,6 @@ source:
 corrections:
 - "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
 review_notes:
-- 'Section ''Behaviour'': screenshot of a host without VMs uploaded by the author (2026-11-07): Demand 0, Usage about 3 GHz.'
 - 'Section Behaviour: from CPU > ESXi.'
-- "Section 'Meaning': author (2026-11-03), Q009: providers have provider metrics and sum-of-consumer metrics. ESXi Demand is a sum of VM Demand."
 status: draft
 ```

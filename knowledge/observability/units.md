@@ -59,8 +59,8 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections:
-- '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB; author has fixed the book.'
+- '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB.'
 review_notes:
-- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': PART 3 - Counters.docx, Metric Mastery > Units (author update, 2026-11-08).'
+- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': PART 3 - Counters.docx, Metric Mastery > Units (update of 2026-11-08).'
 status: draft
 ```

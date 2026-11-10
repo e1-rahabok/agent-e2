@@ -195,10 +195,8 @@ source:
   path: CPU > Architecture (pp. 60-67) > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
 corrections: []
 review_notes:
-- "Section 'Basic states': author (2026-11-02): the wait sub-cases are IO wait, memory wait and other wait. The book text listing Co-stop is wrong and will be corrected."
-- "Section 'State diagram': transitions are read from the book's state diagram image. Three arrows (Wait to Run, Wait to Co-stop, Run to Co-stop) carry no label in the image. The meaning given for them in the body is Claude's reading. Author to confirm."
+- 'To check: Section ''State diagram'': the meaning given for the three arrows without a label in the book''s state diagram (Wait to Run, Wait to Co-stop, Run to Co-stop).'
 - "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/technology/cpu/metrics/virtual-motherboard/ready)."
 - "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
-- "Section 'Effect of VM size': author (2026-11-03), Q007: downsizing reduces both Ready and Co-stop; smaller shares can increase Ready."
 status: draft
 ```

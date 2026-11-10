@@ -86,7 +86,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Colour'': the source names the colours green, yellow, amber and red; written as orange, the word the knowledge base uses for the third band.'
-- 'Section ''Auto-rotate'': the source says Aria Operations user time out; Aria Operations is the former name of VCF Operations (renamed in VCF 9). Claude''s knowledge.'
+- 'To check: Section ''Auto-rotate'': the source says Aria Operations user time out; Aria Operations is the former name of VCF Operations (renamed in VCF 9).'
 - 'Section ''Auto-rotate'': the order puts security before compliance and configuration and starts with inventory; the day-to-day order is availability, performance, security (sp5-framework/concepts/proactive-operations). Consistent.'
 - 'Not copied: the hexagon picture of requirements (its words are the section headings) and the screenshot of the auto-rotate settings.'
 status: draft

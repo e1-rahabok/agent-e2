@@ -114,11 +114,9 @@ source:
   document: PART 3 - Counters.docx
   path: Provider Objects > esxtop > Storage
 corrections:
-- 'Section ''Panels'': the book says esxtop does not cover NFS. Author, 2026-11-05: NFS datastores show in the Disk Device panel as {NFS} pseudo-devices with DAVG, KAVG and GAVG.'
+- 'Section ''Panels'': the book says esxtop does not cover NFS. NFS datastores show in the Disk Device panel as {NFS} pseudo-devices with DAVG, KAVG and GAVG.'
 review_notes:
 - 'Section ''Disk Adapter'': the book lists the guest write counter as ''AVG/wr'' and the clone latency as ''AVAG''; read as GAVG/wr and an average clone latency.'
-- 'VAAI references from the book: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/ (not read).'
-- 'Section ''Panels'', NFS pseudo-devices: author, 2026-11-05 (review of the benchmark question Where the storage latency sits in esxtop, with an esxtop screenshot of an ESXi 9.1 host). Replaces the book line that NFS is not covered.'
-- 'Moved 2026-11-06 from vsphere/tools/esxtop/storage (architecture review 2026-11-06, section 5).'
+- 'To check: VAAI references from the book, not read: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/'
 status: draft
 ```

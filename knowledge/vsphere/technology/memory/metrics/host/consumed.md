@@ -84,6 +84,6 @@ corrections: []
 review_notes:
 - 'Section ''Scope'': from Memory > Architecture.'
 - 'Sections Formula, Behaviour: from Memory > ESXi.'
-- 'Section ''Formula'': the book says Consumed includes the resulting compressed size, and also says Consumed does not include compressed. Open question in project/author-questions.md.'
+- 'To check: Section ''Formula'': the book says Consumed includes the resulting compressed size, and also says Consumed does not include compressed (Q020).'
 status: draft
 ```

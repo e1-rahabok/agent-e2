@@ -44,6 +44,6 @@ source:
   path: Storage > VM > Performance Metrics > Contention Metrics > Virtual Disk
 corrections: []
 review_notes:
-- 'KB from the book: https://kb.vmware.com/s/article/2150017 (not read).'
+- 'To check: KB cited by the book, not read (https://kb.vmware.com/s/article/2150017).'
 status: draft
 ```

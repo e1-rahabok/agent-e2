@@ -63,7 +63,7 @@ source:
   path: Memory > VM > Consumption Metrics > Active; Consumed vs Active
 corrections: []
 review_notes:
-- 'Section ''Mechanism'': the 2-second sampling is the book''s assumption.'
-- 'Reference from the book: https://blogs.vmware.com/vsphere/2013/10/understanding-vsphere-active-memory.html (not read).'
+- 'To check: Section ''Mechanism'': the 2-second sampling; the book''s assumption.'
+- 'To check: reference cited by the book, not read (https://blogs.vmware.com/vsphere/2013/10/understanding-vsphere-active-memory.html).'
 status: draft
 ```

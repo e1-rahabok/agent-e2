@@ -105,8 +105,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''PDF or CSV'', context columns: the source says the folder column groups the VM by cluster; written as folder.'
-- 'Section ''PDF or CSV'': the 50-column limit is from the source; not checked against VCF Operations 9.1 documentation.'
-- 'Section ''Present or past data per pillar'': the source row is Cost; written as Value (cost), the pillar name (author, 2026-11-08).'
-- 'Section ''Traps'', pie chart for performance: the reason (judged against absolute values) is Claude''s reading of the source, which says relative distribution makes it less suitable for performance.'
+- 'To check: Section ''PDF or CSV'': the 50-column limit is from the source (VCF Operations 9.1 documentation).'
+- 'To check: Section ''Traps'', pie chart for performance: the reason (judged against absolute values) is a reading of the source, which says relative distribution makes it less suitable for performance.'
 status: draft
 ```

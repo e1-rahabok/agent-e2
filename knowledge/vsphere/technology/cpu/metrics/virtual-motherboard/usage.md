@@ -99,9 +99,9 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Guest OS vs VM; ESXi ≠ VM + Kernel; CPU Throughput; Impacts on VM; CPU > VM (pp. 78-118) > Consumption Metrics > Used | Usage > Usage
 corrections:
-- '2026-11-02: Hyper-Threading scenario (section: Hyper-Threading) rewritten from the author. The uploaded document sentence is truncated.'
+- '2026-11-02: Hyper-Threading scenario (section: Hyper-Threading) rewritten; the uploaded document sentence is truncated.'
 review_notes:
-- The 37.5% penalty is from the author. Not found in Performance Best Practices for vSphere 9.1.
+- 'To check: the 37.5% Hyper-Threading penalty; not found in Performance Best Practices for VMware vSphere 9.1.'
 - Sections Throughput, Masked degradation, and the last trap: from CPU > Architecture.
 - 'Sections Formula, Turbo example, Usage vs Run at scale: from CPU > VM.'
 status: draft

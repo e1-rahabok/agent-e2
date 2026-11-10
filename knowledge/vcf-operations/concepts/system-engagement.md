@@ -88,9 +88,9 @@ source:
   document: PART 2 - Consumption for Agent E2.docx
   path: 'Proactive Operations > System Engagement (with its two Heading 4 sections, the table of alerts, dashboards and reports, and Timeline) (pp. 1-3)'
 corrections:
-- 'Section ''Three dashboard cadences'', time spent on the daily health check: the source table says screen time 10 minutes; written as a few minutes, from the author''s answer Q105 (b), 2026-11-08 (about 5 minutes when there is no problem).'
+- 'Section ''Three dashboard cadences'', time spent on the daily health check: the source table says screen time 10 minutes; written as a few minutes (about 5 minutes when there is no problem).'
 review_notes:
-- 'Section ''Alerts, dashboards and reports compared'': the source table lists Good for as Exception for all three; the report column lists Exception, written as is. Q138.'
+- 'To check: Section ''Alerts, dashboards and reports compared'': the source table lists Good for as Exception for all three; the report column lists Exception, written as is. (Q138).'
 - 'Section ''Four channels'': the source says four ways and its diagram shows three (alert, dashboard, report); the live screen is the fourth, from the text.'
 - 'Not copied: the hexagon picture of NOC requirements (decorative; its content is in vcf-operations/dashboards/noc-live-screen).'
 status: draft

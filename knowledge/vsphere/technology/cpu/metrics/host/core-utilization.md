@@ -53,7 +53,7 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture (pp. 52-78) > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization
 corrections:
-- 'Section ''Why'': Core Utilization is not the capacity reading under Hyper-Threading (author answer Q040, 2026-11-05). The book calls it a capacity metric because it ignores frequency.'
+- 'Section ''Why'': Core Utilization is not the capacity reading under Hyper-Threading. The book calls it a capacity metric because it ignores frequency.'
 review_notes:
 - Sections Why: from CPU > Architecture.
 - 'Section Rollup: from CPU > ESXi.'

@@ -69,7 +69,7 @@ review_notes:
 - 'Section ''Meaning'': SIOC deprecation from the vSphere 9.1 documentation, vSphere Resource Management > Manage Storage I/O Resources with vSphere (p. 1886).'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Formula'': the plain-text formula restates the documentation text (IO count as weight, adjusted for IO size). The exact size adjustment is not published.'
-- 'Section ''Why'': SIOC lowering per-host device queue depth by shares when the congestion threshold is crossed is Claude''s own knowledge; the documentation says only that queue depth can change over time when congestion is detected at the array.'
-- 'Section ''Includes / excludes'': the statement that VM observed latency is higher than Normalized Latency on a congested host is Claude''s inference from the two definitions. It may explain the gap the book leaves unexplained in vsphere/technology/storage/metrics/host/datastore. Author to confirm.'
+- 'To check: Section ''Why'': SIOC lowers per-host device queue depth by shares when the congestion threshold is crossed; the documentation says only that queue depth can change over time when congestion is detected at the array.'
+- 'To check: Section ''Includes / excludes'': VM observed latency is higher than Normalized Latency on a congested host, inferred from the two definitions. It may explain the gap the book leaves unexplained in vsphere/technology/storage/metrics/host/datastore.'
 status: draft
 ```

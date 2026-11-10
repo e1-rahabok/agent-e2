@@ -76,11 +76,11 @@ related:
 - vsphere/tools/esxtop/network
 - sp5-framework/concepts/realms-and-layers
 source:
-  document: Author's document, Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07)
+  document: Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07)
   path: Scenario 1 (RX, guest buffer exhaustion); Scenario 2 (TX, top-of-rack congestion)
 corrections:
-- 'Answers Q085 (author, 2026-11-07): a full VMXNET3 receive ring is counted by the hypervisor (port, %DRPRX, droppedRx) and the guest. Corrects the reason given in Q070 (not visible to the hypervisor); the conclusion, outside the IaaS SLA, stands.'
+- '2026-11-07: a full VMXNET3 receive ring is counted by the hypervisor (port, %DRPRX, droppedRx) and the guest. Corrects the reason given in Q070 (not visible to the hypervisor); the conclusion, outside the IaaS SLA, stands.'
 review_notes:
-- 'Section ''VMXNET3 on ESXi'': the document names the shared counter dropOOB in UPT1_RxStats and the Linux ethtool name rx_out_of_buffer. In the Linux vmxnet3 driver Claude knows the shared receive statistic as pktsRxOutOfBuf, shown by ethtool as an out-of-buffer packet count; rx_out_of_buffer is a Mellanox (mlx5) counter name. Exact names left out until checked on a host. The Windows mapping to ifHCInDiscards is from the document, not verified.'
+- 'To check: Section ''VMXNET3 on ESXi'': counter names on a host. The document names the shared counter dropOOB in UPT1_RxStats and the Linux ethtool name rx_out_of_buffer; the Linux vmxnet3 driver statistic is likely pktsRxOutOfBuf (an out-of-buffer packet count in ethtool), and rx_out_of_buffer is a Mellanox (mlx5) counter name. Exact names left out until checked. The Windows mapping to ifHCInDiscards is from the document, not verified.'
 status: draft
 ```

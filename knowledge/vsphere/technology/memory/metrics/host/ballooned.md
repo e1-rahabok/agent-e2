@@ -50,6 +50,6 @@ source:
   path: Memory > ESXi > Overview; Contention Metrics > Balloon; All Together; Consumed > Ballooned
 corrections: []
 review_notes:
-- metric_class set to context, as a capacity warning. Author to confirm.
+- 'To check: metric_class: set to context, as a capacity warning.'
 status: draft
 ```

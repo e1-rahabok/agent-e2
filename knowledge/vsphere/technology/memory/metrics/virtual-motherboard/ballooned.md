@@ -59,11 +59,9 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; Memory > Architecture > Virtual Memory; Relationship; Memory > VM > Contention Metrics > Balloon; Consumption Metrics > Ballooned
 corrections: []
 review_notes:
-- metric_class set to contention. Author to confirm.
+- 'To check: metric_class: set to contention.'
 - 'Section ''Mechanism'': from Memory > Architecture.'
 - 'Sections Behaviour: from Memory > VM.'
-- "Section 'Behaviour': author (2026-11-03), Q014: a limit does not cause ballooning directly. A limit results in swapped or compressed when Consumed tries to grow beyond it. Consumed grows because the Guest OS uses more, from the balloon driver or other processes."
-- 'Section ''Behaviour'': the balloon maximum is the Mem.CtlMaxPercent setting, default 65% (Claude''s own knowledge). The book states around 63%.'
-- "Section 'Meaning': author (2026-11-03), Q013."
+- 'To check: Section ''Behaviour'': the balloon maximum is the Mem.CtlMaxPercent setting, default 65%; the book states around 63%.'
 status: draft
 ```

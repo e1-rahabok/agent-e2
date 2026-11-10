@@ -252,10 +252,8 @@ corrections:
 review_notes:
 - '[from former vsphere/architecture/overhead] Section ''Resource groups'': the book lists 5 groups but says to plot only iofilters, system and vim for kernel consumption; host/opt (vSAN) is not in that list. Kept as written.'
 - '[from former vsphere/architecture/overhead] Section ''Why the size is unpredictable'': based on Host Resources Deep Dive (Denneman, Hagoort), p. 258, cited by the book.'
-- '[from former vsphere/architecture/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation. This is relevant to Q021.'
-- '[from former vsphere/architecture/overhead] Checked against 9.1 (revision 20260624). Pages 27-28 unchanged. Page references updated.'
+- '[from former vsphere/architecture/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation.'
 - '[from former vsphere/architecture/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- '[from former vsphere/architecture/overhead] Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Author to decide whether to replace the old threshold.'
-- '2026-11-04: merged vsphere/architecture/overhead, vsphere/architecture/overhead into this file (author decision 5, holistic review).'
+- 'To check: Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Decide whether to replace the old threshold.'
 status: draft
 ```

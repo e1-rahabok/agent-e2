@@ -58,6 +58,6 @@ source:
   path: CPU > ESXi > Consumption Metrics > Summary > Recommendation; Real World Samples
 corrections: []
 review_notes:
-- 'Section ''How to read the result'': the 80%-90% Thread Utilization level is the author''s practice, from the book.'
+- 'Section ''How to read the result'': the 80%-90% Thread Utilization level is field practice from the book, not a vendor threshold.'
 status: draft
 ```

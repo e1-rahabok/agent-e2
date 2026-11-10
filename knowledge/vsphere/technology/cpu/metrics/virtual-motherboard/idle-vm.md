@@ -59,8 +59,8 @@ source:
   path: 'Capacity Management > Reclamation > Idle VM. Pages 114-116.'
 corrections: []
 review_notes:
-- 'Section ''Policy defaults'': values from the book screenshot of the VCF Operations policy (Idle VMs: 7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days). Not checked against VCF Operations 9.1 documentation; the screenshot is not copied.'
-- 'Section ''Policy defaults'': "any 5-minute period above 100 MHz makes the day not idle" is Claude''s reading of 100% of the time with 5-minute collection.'
-- 'Metric keys of Idleness Indicator and Reclaimable Idle are not in the book; to add from the VCF Operations 9.1 metric reference (plan, M1 VCF Operations).'
+- 'To check: Section ''Policy defaults'': values from the book screenshot of the VCF Operations policy (Idle VMs: 7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days) against the VCF Operations 9.1 documentation; the screenshot is not copied.'
+- 'To check: Section ''Policy defaults'': "any 5-minute period above 100 MHz makes the day not idle" as the reading of 100% of the time with 5-minute collection.'
+- 'To check: metric keys of Idleness Indicator and Reclaimable Idle; not in the book (VCF Operations 9.1 metric reference; plan, M1 VCF Operations).'
 status: draft
 ```

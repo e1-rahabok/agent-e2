@@ -103,12 +103,11 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 - guest-os/system/metrics/guest-os-performance
 source:
-  document: Knowledge base synthesis of the linked files (author's book; vSphere 9.1 documentation)
+  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation)
   path: Linked files in each section
 corrections:
-- 'Whole file: author decisions 2026-11-08: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; availability, security and compliance are future, after 1.0.'
+- 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; availability, security and compliance are future, after 1.0.'
 review_notes:
-- 'Section ''Checks, in order'': the order of the pillars follows health-risk-efficiency (book); the order inside performance (CPU, memory, storage, network) is Claude''s synthesis of the linked files. Author to confirm (Q062).'
-- 'Moved 2026-11-08 from vsphere/object-types/vm/overview-what-to-monitor.'
+- 'To check: Section ''Checks, in order'': the order inside performance (CPU, memory, storage, network), a synthesis of the linked files; the order of the pillars follows health-risk-efficiency (book) (Q062).'
 status: draft
 ```

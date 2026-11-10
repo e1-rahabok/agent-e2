@@ -61,7 +61,6 @@ source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Consumption Metrics > Shared; Savings
 corrections: []
-review_notes:
-- "Section 'Savings': author (2026-11-03), Q017: savings = Granted - Consumed = 23.7 TB (23%); 6.13 TB is the ESXi space the 29.83 TB of shared pages occupy."
+review_notes: []
 status: draft
 ```

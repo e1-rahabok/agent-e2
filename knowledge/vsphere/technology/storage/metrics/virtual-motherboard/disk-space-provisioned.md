@@ -42,7 +42,6 @@ source:
   path: Storage > VM > Capacity Metrics > All VM Files
 corrections: []
 review_notes:
-- 'KB from the book: https://kb.vmware.com/s/article/83990 (not read).'
-- 'Moved 2026-11-06 from vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned (architecture review 2026-11-06, section 5).'
+- 'To check: KB cited by the book, not read (https://kb.vmware.com/s/article/83990).'
 status: draft
 ```

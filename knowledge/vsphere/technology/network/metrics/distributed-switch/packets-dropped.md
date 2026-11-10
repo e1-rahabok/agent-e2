@@ -48,11 +48,11 @@ related:
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
-  document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
+  document: Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
   path: https:/github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv
 corrections: []
 review_notes:
-- 'Whole file: counter names, scopes, level and rollup from the author''s vCenter 9.1.0 API export. The author asked for the distributed switch to be documented (2026-11-04).'
-- 'Section ''Reading it'': author answer (2026-11-04): port, vNIC and uplink each have their own dropped packet counter; using them to find the component that caused a drop is not settled.'
+- 'Whole file: counter names, scopes, level and rollup from the vCenter 9.1.0 API export.'
+- 'To check: Section ''Reading it'': port, vNIC and uplink each have their own dropped packet counter; how to use them to find the component that caused a drop is not settled.'
 status: draft
 ```

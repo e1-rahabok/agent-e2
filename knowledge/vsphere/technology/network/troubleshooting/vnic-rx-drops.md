@@ -47,6 +47,6 @@ source:
   path: Network > ESXi > Contention Metrics > Dropped Packet > vsish
 corrections: []
 review_notes:
-- 'Section ''How to read the result'': the 2K ring size is the author''s suggestion.'
+- 'Section ''How to read the result'': the 2K ring size is a field suggestion from the book, not a vendor value.'
 status: draft
 ```

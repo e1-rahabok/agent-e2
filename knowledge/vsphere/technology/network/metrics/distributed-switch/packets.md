@@ -54,12 +54,12 @@ related:
 - vsphere/technology/network/metrics/host/throughput
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
-  document: Author repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
+  document: Repository e1-rahabok/Observability-vSphere, vsphere-metrics.csv (vCenter 9.1.0 build 25370922)
   path: https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv; README section Object types without metrics
 corrections: []
 review_notes:
-- 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the author''s vCenter 9.1.0 API export. The distributed port group returned no counters (same README). The author asked for switch and port group to be documented (2026-11-04).'
-- 'Sections ''Meaning'' (what a DVPort connects to), ''Reading it'' and the third trap: Claude''s own knowledge and inference from the counter scopes. Author to confirm.'
+- 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the vCenter 9.1.0 API export. The distributed port group returned no counters (same README).'
+- 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Reading it'' and the third trap: inferred from the counter scopes, not from a document.'
 - 'Section ''Reading it'': VCF Operations port group metrics aggregated over all hosts restates network-observability (book).'
 status: draft
 ```

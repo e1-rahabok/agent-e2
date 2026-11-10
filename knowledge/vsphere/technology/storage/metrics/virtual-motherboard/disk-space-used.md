@@ -42,7 +42,6 @@ source:
   document: PART 3 - Counters.docx
   path: Storage > VM > Capacity Metrics > All VM Files
 corrections: []
-review_notes:
-- 'Moved 2026-11-06 from vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used (architecture review 2026-11-06, section 5).'
+review_notes: []
 status: draft
 ```

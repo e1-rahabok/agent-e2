@@ -78,8 +78,8 @@ source:
 corrections: []
 review_notes:
 - 'Section ''CPU run queue alert'': the source thanks Darren Farrer for the collaboration on the remediation.'
-- 'Section ''CPU run queue alert'', remediation: the source refers to high VM CPU contention and high VM CPU consumption alerts; linked to vsphere/technology/cpu/configuration/cpu-alerts by Claude.'
-- 'Section ''Consumption'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. Q142.'
+- 'To check: Section ''CPU run queue alert'', remediation: the link to vsphere/technology/cpu/configuration/cpu-alerts; the source refers to high VM CPU contention and high VM CPU consumption alerts.'
+- 'To check: Section ''Consumption'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. (Q142).'
 - 'Section ''Disk queue alert'': the source says CPU Usage above 1 GHz without naming the object; written as VM CPU Usage, as in the VM alerts.'
 status: draft
 ```

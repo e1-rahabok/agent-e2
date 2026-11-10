@@ -82,12 +82,11 @@ related:
 - vsphere/object-types/cluster/health-check/cluster-health-check
 - sp5-framework/capacity/capacity-model
 source:
-  document: VCF-vCommunity-Adapter documentation, Periodic Cluster Check and Capacity Management concept (author, 2026-11-08)
+  document: VCF-vCommunity-Adapter documentation, Periodic Cluster Check and Capacity Management concept
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/periodic-cluster-check.md; docs/concepts/capacity-management.md, section Closing the cluster
 corrections: []
 review_notes:
-- 'Whole file: from the adapter documentation (author decision 2026-11-08: digest the adapter metric reference as needed). A model, not a KPI (author decision 2026-11-08).'
-- 'Section Traps, last trap: the pack thresholds differ from the book closure thresholds in can-cluster-take-more-vms (Q121, Q122). Which one Agent E2 applies: Q132.'
-- 'Section The rule: the adapter pages call Cluster Risk and Cluster Consumption KPIs; written as models per the author decision. Q131.'
+- 'To check: Section Traps, last trap: which thresholds Agent E2 applies, the pack thresholds or the book closure thresholds in can-cluster-take-more-vms (Q132).'
+- 'To check: Section The rule: the adapter pages call Cluster Risk and Cluster Consumption KPIs; written as models (Q131).'
 status: draft
 ```

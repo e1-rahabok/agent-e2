@@ -206,19 +206,14 @@ source:
   path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture (pp. 77-78) > Impacts on VM (from former vsphere/technology/cpu/concepts/cpu-frequency)
 corrections: []
 review_notes:
-- 'Section ''Impacts on ESXi'': author (2026-11-02): the table shows actual values. The Usage (%) metric is capped at 100%. The book''s ''My Recommendation'' column (a single-counter recommendation) is left out until later; see project/plan.md.'
 - 'Section ''Turbo'': whitepaper ''Host Power Management in VMware vSphere 7.0'' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices.'
-- 'Section ''Turbo'': %A/MPERF is the esxtop ratio of actual to nominal frequency (APERF/MPERF registers). From Claude''s own knowledge.'
-- 'Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q are from the book. Not checked against vendor pages.'
+- 'To check: Section ''Turbo'': %A/MPERF as the esxtop ratio of actual to nominal frequency (APERF/MPERF registers).'
+- 'To check: Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q (from the book) against vendor pages.'
 - 'Section ''Turbo'': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html'
 - 'Section ''Three speeds'': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book).'
 - 'Section ''All-Core Turbo'': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party).'
-- 'Sections ''All-Core Turbo'', ''Likely vCPU speed on a busy cluster'', ''TDP'': author (2026-11-03), quiz answers CPU Q2 and Q4 (vSphere Metric Quiz.docx). Author confirmed 2.4 GHz (All-Core Turbo x 80%) in Q034.'
-- 'Section ''Likely vCPU speed on a busy cluster'': `vsphere/technology/cpu/metrics/virtual-motherboard/used` and `usage` describe a 62.5% charge per thread when both threads run. The author confirmed 80% for the tenant-facing likely speed (Q034). Relationship between the two figures not yet written.'
-- 'Section ''Impacts on ESXi'': author (2026-11-03), Q010: Usage cap removed in both vCenter and VCF Operations; supersedes the 2026-11-02 note that the metric is capped.'
-- '[from former vsphere/technology/cpu/concepts/cpu-frequency] Section ''Scenarios'': the ''Total'' column is Claude''s arithmetic from the book''s per-vCPU values (2 × 0.8125 = 1.625 GHz).'
-- '[from former vsphere/technology/cpu/concepts/cpu-frequency] Section ''Scenarios'': the book names VM CPU Demand (170%, 130%). No VM Demand metric file exists yet. Create it when the book''s VM section is extracted.'
-- '[from former vsphere/technology/cpu/concepts/cpu-frequency] Section ''Sample CPU'': example CPU from the book: AMD EPYC 9634, https://www.amd.com/en/products/processors/server/epyc/4th-generation-9004-and-8004-series/amd-epyc-9634.html'
-- '2026-11-04: merged vsphere/technology/cpu/concepts/cpu-frequency into this file (author decision 5, holistic review).'
+- 'To check: Section ''Likely vCPU speed on a busy cluster'': relationship between the 62.5% charge per thread when both threads run (`vsphere/technology/cpu/metrics/virtual-motherboard/used` and `usage`) and the 80% tenant-facing likely speed; not yet written.'
+- 'Section ''Scenarios'': the ''Total'' column is computed from the book''s per-vCPU values (2 × 0.8125 = 1.625 GHz); the book gives no total.'
+- 'Section ''Sample CPU'': example CPU from the book: AMD EPYC 9634, https://www.amd.com/en/products/processors/server/epyc/4th-generation-9004-and-8004-series/amd-epyc-9634.html'
 status: draft
 ```

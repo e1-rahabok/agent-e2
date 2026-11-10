@@ -68,8 +68,8 @@ review_notes:
 - "Section 'System on a Chip': AMD source from the book: https://www.amd.com/system/files/documents/overview-amd-epyc7003-series-processors-microarchitecture.pdf (p. 5)."
 - "Section 'System on a Chip': performance example from the book: https://blogs.vmware.com/performance/2020/04/amd-epyc-rome-application-performance-on-vsphere-series-part-1-sql-server-2019.html"
 - "Section 'NUMA': AMD EPYC 9005 white paper from the book: https://www.amd.com/content/dam/amd/en/documents/epyc-business-docs/white-papers/5th-gen-amd-epyc-processor-architecture-white-paper.pdf"
-- "Section 'NUMA': Broadcom KB from the book: https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html (not read)."
-- "Section 'NUMA': SAP source from the book: https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html (not read)."
+- 'To check: Section ''NUMA'': Broadcom KB cited by the book, not read (https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html).'
+- 'To check: Section ''NUMA'': SAP source cited by the book, not read (https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html).'
 - "Section 'Cache latency': test source from the book: https://chipsandcheese.com/p/a-look-into-intel-xeon-6s-memory"
 status: draft
 ```

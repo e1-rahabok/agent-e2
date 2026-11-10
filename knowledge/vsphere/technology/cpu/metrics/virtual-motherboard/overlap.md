@@ -74,7 +74,6 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > VM (pp. 78-118) > Contention Metrics > Overlap
 corrections: []
-review_notes:
-- "Section 'Hyper-Threading': author (2026-11-03), Q001: Linux Steal Time includes Ready only, not Overlap. The book's VM section statement that Linux tracks Overlap as stolen time is wrong."
+review_notes: []
 status: draft
 ```

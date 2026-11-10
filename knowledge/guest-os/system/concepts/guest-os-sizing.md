@@ -158,12 +158,11 @@ source:
   document: PART 3 - Counters.docx
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
 corrections:
-- 'Section ''Memory'': balloon is included, to be conservative (author answer Q028, 2026-11-05); the book text says exclude.'
-- 'Section ''Memory'': option 2 ranges 0-75-85-90-95-100% (author answers Q029 and Q055, 2026-11-05); the book gives no numbers for option 2.'
+- 'Section ''Memory'': balloon is included, to be conservative; the book text says exclude.'
+- 'Section ''Memory'': option 2 ranges 0-75-85-90-95-100%; the book gives no numbers for option 2.'
 review_notes:
-- "Section 'No such thing as VM rightsizing': from the author's other book, section VM Footprint | Guest OS Sizing (screenshot provided 2026-11-03). Author: VM rightsizing is a common misconception; the full book will be provided later."
-- 'Section ''Memory'': ranges and the grey range rule from the author answer Q055 (2026-11-05).'
+- 'To check: Section ''No such thing as VM rightsizing'': from the other book, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full book when it is provided.'
 - 'Section ''Sizing rules'': PART 1 - Concepts of Operations Management.docx, Capacity Management > Rightsizing > Sizing Logic (pp. 127-128).'
-- 'References from the book: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html (not read).'
+- 'To check: References from the book, not read: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html'
 status: draft
 ```
