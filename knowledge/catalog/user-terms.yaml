@@ -222,5 +222,5 @@ rows:
 - id: cluster-risk-ambiguous
   match: ['\brisk\b[^.?\n]{0,40}\bcluster', '\bcluster\b[^.?\n]{0,40}\brisk\b', 'quantify risk']
   means: Cluster Risk leading indicator contention capacity Time Remaining
-  note: 'Ambiguous: "cluster risk" can mean (a) Cluster Risk (%), how close the hosts are to contention (worst host: utilization, saturation, reservation, allocation, monster VM); (b) capacity runway, Time Remaining against a projection; (c) availability risk, surviving a host failure. Ask which, or answer each. Utilization and allocation alone miss saturation, reservation, monster VMs and the worst host.'
+  note: 'Ambiguous: "cluster risk" can mean (a) Cluster Risk (%), how close the hosts are to contention (worst host: utilization, saturation, reservation, allocation, monster VM); (b) capacity runway, Time Remaining against a projection; (c) availability risk, surviving a host failure. Ask which only when the question does not tell and the answers differ; otherwise answer the likely one and name it. Utilization and allocation alone miss saturation, reservation, monster VMs and the worst host.'
   files: [vsphere/object-types/cluster/models/cluster-risk, sp5-framework/capacity/capacity-model]

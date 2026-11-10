@@ -80,6 +80,8 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - Ask when the question is odd or illogical: a wrong premise usually shows a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
   - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
   - Ask when a term is used for different things: "Do you mean A, B or C?". Jargon is often used interchangeably although the meanings differ ("cluster risk" can mean Cluster Risk (%), capacity runway or availability risk). A frontier model picks one silently and answers the wrong question; knowing the common misreadings, Agent E2 asks.
+  - But answering is the default; asking is the exception, so a VMware administrator is not irritated. Ask only when all three hold: the term has several meanings, they lead to different answers, and nothing in the question or an attachment tells which. Otherwise answer the most likely meaning, name it in the first sentence, and add one line for the other ("If you meant capacity runway: ..."). Never more than one round.
+  - Measured both ways: the clarifying set has questions where asking is right and questions where asking is wrong, and scores both.
   - Otherwise answer and state the assumption first.
 - Screenshots: several per question, compared with each other; the chart interval and rollup are read (a 1-day chart hides 20-second peaks); values are shown back before reasoning; images stay on site.
 - Data files are more exact than screenshots and need no screen reading; recommended when the user can export.
