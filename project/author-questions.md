@@ -426,6 +426,21 @@ Each entry has:
 - Written as now: one URL question (0091, the VM Contention dashboard page).
 - Answer:
 
+### Q160 · KPI vs SLA · "75% is acceptable" and the class KPI targets
+- Files: [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md) (Value; Traps), [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (Contention).
+- Search 1: "75% is acceptable"
+- Search 2: "Contention: minimum VM Performance"
+- What the knowledge base says now: KPI "tends to be lower; 75% is acceptable", and a trap says a KPI of 75% is not a failure. The class KPI targets are Gold 99.5%, Silver 99%, Bronze 98%.
+- Question: for a Gold VM, 75% misses the target by far. Is 75% the green edge of one 5-minute score (an interval at 75 or above is green), while the class target applies to the daily KPI? If yes, the Value line and the trap are rewritten that way.
+- Answer:
+
+### Q161 · KPI vs SLA · The daily KPI actual
+- Files: [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md) (Two numbers each), [project/explainers/sla-vs-kpi.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/explainers/sla-vs-kpi.md) (KPI, daily).
+- Search: not from the book.
+- What the knowledge base says now: the KPI is a score every 5 minutes and is reviewed daily against its class target. It does not say how the 288 scores of a day become the daily actual.
+- Question: which statistic? (a) the average of the 288 scores; (b) the lowest score; (c) a percentile, such as the 5th, as Close for Business uses; (d) other. In the worked example, (a) gives VM 01 98.84 on its bad day, (b) gives 33.33.
+- Answer:
+
 ## Resolved
 
 ### Q158 · Threshold design · Alert definitions in 1.0
