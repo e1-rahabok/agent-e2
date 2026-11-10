@@ -42,27 +42,12 @@ This timeline chart demonstrates the operator experience. Because the architectu
 
 ```mermaid
 timeline
-    title 3-Tier Alert Lifecycle (Horizontal Time Axis)
-    
-    00:00 (Trigger)
-        : Telemetry (Observer) : Wait Cycle breached. State changes to ACTIVE.
-        : Event Engine (Brain) : Triggers Page. Calls ITSM API.
-        : ITSM (Ledger) : Creates INC001234 (Status: New).
-        
-    00:02 (Recovery)
-        : Telemetry (Observer) : Hardware stabilizes. State changes to CLEARED.
-        : Event Engine (Brain) : Dashboard goes Green. Calls ITSM API.
-        : ITSM (Ledger) : Appends "Self-recovered" note. Ticket stays OPEN.
-        
-    00:11 (Flap)
-        : Telemetry (Observer) : Hardware fails again. State changes to ACTIVE.
-        : Event Engine (Brain) : Debounce rule hit. NO Page. Calls ITSM API.
-        : ITSM (Ledger) : Appends "Degraded again" note. Ticket stays OPEN.
-        
-    00:20 (Resolution)
-        : Operator : Fixes hardware. Types RCA and clicks Resolve in ITSM.
-        : Telemetry (Observer) : State remains CLEARED.
-        : ITSM (Ledger) : Status changes to Resolved.
+    title 3-Tier Alert Lifecycle
+    section Incident Lifecycle
+        00:00 : Wait Cycle breached : State ACTIVE : Page sent : INC001234 created
+        00:02 : Hardware stabilizes : State CLEARED : Dashboard Green : Note appended, Ticket Open
+        00:11 : Hardware fails again : State ACTIVE : Debounce hit (No Page) : Note appended, Ticket Open
+        00:20 : Operator fixes hardware : State CLEARED : RCA entered : Ticket Manually Resolved
 ```
 
 ### 4.2 Engineering Payload Flow (Sequence Diagram)
