@@ -426,6 +426,13 @@ Each entry has:
 - Written as now: one URL question (0091, the VM Contention dashboard page).
 - Answer:
 
+### Q162 · Class of service planning · "KPI (%), not SLA (%)" per class
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (Contention; image class-of-service-reservation-allocation-contention-utilization-table.png), [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md).
+- Search: your table image in Part 1, Capacity Management: row "Contention: Minimum Performance (%) threshold. KPI (%), not SLA (%)."
+- What the knowledge base says now: your table gives Gold ≥ 99.5%, Silver ≥ 99%, Bronze ≥ 98% and labels it "KPI (%), not SLA (%)". On 2026-11-10 you said the KPI is never per class of service. Claude reworded the text to "the VM Performance (%) a cluster sized to the class is expected to keep: a capacity design expectation"; the image still says KPI.
+- Question: (a) the reword is right: a capacity design expectation per class, read on the VM Performance (%) KPI; the KPI itself has no class; (b) the KPI has a target per class after all; (c) other.
+- Answer:
+
 ## Resolved
 
 ### Q161 · KPI vs SLA · The daily KPI actual
