@@ -435,6 +435,52 @@ Each entry has:
 - Written as now: null. The 4x rule is not used to fill cells.
 - Answer:
 
+### Q153 · Threshold design · KPI in availability and security files
+- Files: [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (section 5.5); [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md) (Traps); [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (KPI vs model).
+- Search: not from the book.
+- What the knowledge base says now: KPI is performance only; availability is KAI, compliance KCI. Your brief says availability.yaml and security.yaml hold "KPI and SLA". sla-metrics also says "the internal KPI is 100%" for compliance.
+- Question: the `use` value for the internal target in the availability and security files. (a) `kai` and `kci`, keeping the rule; (b) `kpi` everywhere, and the rule changes; (c) `target`, a neutral word for all non-performance pillars.
+- Recommendation: (a). One word per concept; a 32B model that sees `kpi` in the availability file will mix it with the performance KPI.
+- Answer:
+
+### Q154 · Threshold design · Symptom: two meanings
+- Files: [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (sections 5.4, 9); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md) (Conditions, not symptoms; Traps); [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/alerts/alerts-and-insights.md).
+- Search: "Build alerts from conditions, not from symptom definitions"
+- What the knowledge base says now: a symptom is a minor issue for the daily check; your alerts are built from conditions, and "reuse symptom definitions to build alerts" is listed as a trap. Your brief says alerts.yaml holds symptoms with wait and cancel cycles.
+- Question: (a) the file holds VCF Operations symptom definitions (tests); the glossary splits "symptom definition" (product object) from "symptom" (SP5 minor issue), and the trap is rewritten; (b) the file holds conditions, named `conditions`, and the knowledge file stays; (c) other.
+- Recommendation: (a). Reuse across alert definitions needs a stored test; inline conditions cannot be reused. Also: are conditions in the 9.1 editor stored as symptom definitions internally?
+- Answer:
+
+### Q155 · Threshold design · Cancel cycle values
+- Files: [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (section 5.4); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md) (Wait cycle).
+- Search: "Values in the author's set"
+- What the knowledge base says now: wait cycle 5 minutes for contention, 10 where false positives are common, 15 for consumption. No cancel cycle anywhere.
+- Question: (a) cancel cycle per type (contention, consumption)? (b) symptom-level wait and cancel with alert-level cycles at 1, as Broadcom advises? (c) does any of your alerts set an alert-level wait cycle?
+- Answer:
+
+### Q156 · Threshold design · Alert rows in the capacity file
+- Files: [knowledge/catalog/thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (ids `alert-esxi-cpu-thread-utilization-red`, `alert-esxi-memory-consumed-red`, `alert-datastore-used-space-red`); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/alerts/alert-design.md) ("Capacity: red only, as a guard rail").
+- Search: "Capacity: red only, as a guard rail"
+- What the knowledge base says now: three consumption alerts sit in the capacity file; alert-design gives capacity a red guard-rail alert.
+- Question: with your rule that capacity does not use alerts, (a) the two ESXi rows become performance consumption alerts (host saturated today) and the datastore row an availability alert (full datastore stops writes); the alert-design line "Capacity: red only" is rewritten; (b) they stay capacity.
+- Recommendation: (a).
+- Answer:
+
+### Q157 · Threshold design · VM CPU Net Run alert at KPI yellow
+- Files: [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (ids `alert-vm-cpu-net-run-red`, levels line CPU Net Run); [CPU alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/cpu-alerts.md).
+- Search: "VM CPU Net Run above 95%"
+- What the knowledge base says now: red alert above 95% with Guest OS CPU Queue above 4 for 15 minutes; VM KPI CPU Net Run is yellow 95, orange 97, red 99.
+- Question: an alert fires at the KPI yellow edge. (a) intended: the queue condition and 15 minutes make it urgent, and lint allows a lower value when a second issue symptom is required; (b) the alert value moves to 99 or above.
+- Answer:
+
+### Q158 · Threshold design · Alert definitions in 1.0
+- Files: [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (section 5.4, block `alerts`).
+- Search: not from the book.
+- What the knowledge base says now: your brief says the alerts file holds symptoms only. The plan puts the alert definition catalog at 1.2, after the overhaul.
+- Question: (a) a thin `alerts` block now: id, criticality, any or all, symptom ids, persona; only your ~20 book alerts; (b) symptoms only until 1.2.
+- Recommendation: (a). Without it the `all` logic and the 1 GHz gate are lost, and "why did this alert fire" cannot be answered.
+- Answer:
+
 ## Resolved
 
 ### Q126 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
