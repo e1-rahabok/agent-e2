@@ -206,6 +206,7 @@ def main():
     n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
     check_moved(ids, bad)
+    check_file_types(bad)
     check_terminology(pdocs, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
@@ -262,6 +263,13 @@ def check_terminology(docs, bad):
     m = os.path.join('knowledge', 'misconceptions.md')
     for ref in re.findall(r'See `([^`]+)`', open(m).read()):
         if ref not in docs: bad('knowledge/misconceptions.md', f'See `{ref}` is not a knowledge id')
+
+
+def check_file_types(bad):
+    """Every file under knowledge/ has a known type: a knowledge file without .md is never indexed or checked."""
+    for f in sorted(glob.glob('knowledge/**/*', recursive=True)):
+        if os.path.isfile(f) and not f.endswith(('.md', '.yaml', '.png', '.jpg', '.jpeg', '.webp', '.drawio')):
+            bad(f, 'unknown file type in knowledge/: a knowledge file needs .md')
 
 
 def check_moved(ids, bad):

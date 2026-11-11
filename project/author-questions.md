@@ -37,6 +37,7 @@ Each entry has:
   - Stale text: proactive-operations, Day-to-day order, lists three pillars; add capacity (Q133 b).
   - Change if accepted: the three health checks (steps, diagrams); proactive-operations.
   - For you: which VCF Operations dashboards you open each morning, and in what order.
+- Partly settled by the author's edit (2026-11-11): the ESXi health check has no efficiency step; waste is read on the cluster, because DRS and HA move VMs between hosts. Still open: the order inside each pillar.
 - Answer:
 
 ### Q064 · Review · Which files to review first
@@ -131,6 +132,7 @@ Each entry has:
   - (d) Not a counter-example: 300 VMs per cluster failure is an example value, not a rule. 1,000-2,000 VMs per cluster means no blast-radius limit, traded for a smaller HA share (1 host in 32, not 1 in 5). At about 74 VMs per host (the 32-host, 2,357-VM cluster in cluster-utilization-vs-contention), a 300 cap means about 4 + 1 hosts. State the trade-off.
   - Change if accepted: host-spec-from-class-of-service (per thread; the three-class list replaces the per-core examples; remove "(book example)" and "The book picks", Q159); purpose-driven-architecture Example 2 (trade-off line).
   - For you: nothing.
+- Partly settled by the author's edit (2026-11-11): host-spec-from-class-of-service now states overcommit per physical thread ((a)), and the noisy-neighbour memory table is removed ((c) no longer applies). Still open: (b) whether Gold keeps the infrastructure share; (d).
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
@@ -193,6 +195,7 @@ Each entry has:
   - (d) Drop the reason. VCF 9 is licensed per physical core, 16-core minimum per CPU (Broadcom KB 313548, read 2026-11-10): no sweet spot above 16. What licensing still decides: avoid CPUs under 16 cores (paid as 16); keep Hyper-Threading on (the licence counts cores, capacity counts threads); VCF entitles 1 TiB of vSAN per licensed core. Core count above that: Q111 (c).
   - Change if accepted: class-of-service (Planning example: plan values, 58%, 37.5%; Sample offering per thread); host-spec-from-class-of-service (remove Silver at 3:1; licence bullet = 16-core floor and Hyper-Threading).
   - For you: nothing.
+- Partly settled by the author's edit (2026-11-11): Example 3 is 1.5:1 per physical thread ((c), per thread). Still open: (a) which ratios are Silver; (d) the 64-core licence reason, still in host-spec-from-class-of-service.
 - Answer:
 
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
@@ -277,6 +280,7 @@ Each entry has:
   - (c) Drop 48 and 64. The licence sets a floor (16 cores per CPU) and favours Hyper-Threading on. Above it, choose cores per host by: cost per sellable vCPU (hardware and licence); failure domain (VMs lost per host failure; HA share of few large hosts); the largest VM per class against the cores of one NUMA node; per-core application licences (Windows Server Datacenter, SQL Server, Oracle): a dedicated cluster with fewer, faster cores.
   - Change if accepted: vm-configuration-review (relative size = smaller of class cap and physical cores); noisy-neighbour (Maximum VM size, 1:1 row); esxi-configuration-review (Memory formula per class; Capacity: licence floor and core-count reasons).
   - For you: nothing.
+- Partly settled by the author's edit (2026-11-11): the new file [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) counts the maximum VM size in logical CPUs (threads), 1:1 → 96 on 96 threads, with the Hyper-Threading and NUMA caveats; (b) per thread. Still open: (a) whether a ceiling at the physical cores applies at 1:1; (c).
 - Answer:
 
 
@@ -310,6 +314,7 @@ Each entry has:
   - Sources: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), BIOS and NUMA sections, preferHT; vSphere 9.1 documentation (llc.multiLLCPerSocket, llc.size.vcpu); AMD EPYC 9005 Architecture Overview (doc 58462).
   - Change if accepted: rightsizing and vm-configuration-review (Compute: two host-derived limits replace 8/16); cluster-risk (fix "most Xeon and EPYC use 8-core CCDs"); glossary (CCX = L3 domain; a CCD holds one or two CCXs).
   - For you: what the 8-vCPU Hyper-Threading rule is based on: a test, or how ESXi packs vCPUs in an AMD CCX? If neither, it is removed.
+- Related (2026-11-11): the new file [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) says the size depends on the host's CPU and NUMA architecture, the direction of (c). Still open: (a), (b).
 - Answer:
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side

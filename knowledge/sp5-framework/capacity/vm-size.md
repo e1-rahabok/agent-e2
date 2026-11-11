@@ -1,0 +1,71 @@
+# VM size
+
+## Size is set by the host
+- The right size of a VM depends on the ESXi host it runs on and on the CPU and NUMA architecture of that host, not on the VM alone.
+- A large VM is harder to schedule: its vCPUs compete for threads at the same time, and a VM larger than a NUMA node spans nodes and reads remote memory (`vsphere/technology/cpu/concepts/numa`, `vsphere/technology/cpu/concepts/virtual-numa`).
+- A VM large against its host raises contention even at low utilization: the monster VM of Cluster Risk (`vsphere/object-types/cluster/models/cluster-risk`, section Monster VM).
+- Overcommit ratios here are per physical thread (`sp5-framework/capacity/capacity-model`, section Overcommit).
+
+## Maximum VM size per overcommit
+| Overcommit per thread | Maximum VM size |
+|---|---|
+| 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
+| 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
+| 4:1 | 0.25 × logical CPUs |
+| 8:1 | 0.125 × logical CPUs; lab, dev, simple VDI |
+
+- 1:1: mind the Hyper-Threading throughput penalty and NUMA.
+- 2:1: two large VMs on one host each demand whole cores, and both get the 37.5% Hyper-Threading penalty.
+- 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
+- 8:1 per thread is 16:1 per core, because a core has two threads. For 2-vCPU desktops. On 96 threads the maximum is 12 vCPU; keep most VMs at 4-6 vCPU so they fit across the cluster.
+- These effects follow from overcommit on shared resources, not from a defect in vSphere.
+
+## Size as a class of service fence
+- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one.
+- Technique: Gold is entitled to larger VM configurations; Bronze is kept small. A small Bronze VM cannot take a large share of a host's threads at once, so its peaks hurt Gold less.
+- The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from its ratio in the table above (`sp5-framework/concepts/class-of-service`, `sp5-framework/performance/noisy-neighbour`).
+
+## Misconceptions
+- "A VM can be as large as its host" → by count at 1:1, yes; but the VM then pays the Hyper-Threading penalty and spans NUMA nodes. Size it against the host's NUMA node.
+- "Bronze is cheap, so a Bronze VM can be any size" → a large Bronze VM is the noisy neighbour of a mixed cluster; keep Bronze small and give large sizes to Gold.
+- "8:1 per thread is 4:1 per core" → 16:1 per core: each core has two threads, so a ratio per core is twice the ratio per thread.
+- "Low utilization, so the large VM is harmless" → a monster VM raises contention risk at low utilization.
+
+## Metadata
+```yaml
+id: sp5-framework/capacity/vm-size
+retriever_guide: how-it-works
+scope: sp5-framework
+technology:
+- cpu
+- memory
+pillar:
+- capacity
+- performance
+product:
+- vsphere
+- vcf-operations
+object:
+- VirtualMachine
+- HostSystem
+internal_derive:
+- vsphere/technology/cpu/concepts/numa
+- vsphere/object-types/cluster/models/cluster-risk
+- sp5-framework/capacity/capacity-model
+related:
+- sp5-framework/concepts/class-of-service
+- sp5-framework/performance/noisy-neighbour
+- sp5-framework/capacity/class-of-service-planning
+- sp5-framework/capacity/rightsizing
+- vsphere/technology/cpu/concepts/virtual-numa
+- vsphere/technology/cpu/concepts/hyper-threading
+source:
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Noisy Neighbour > Maximum VM size; Class of Service'
+corrections:
+- 'Section ''Maximum VM size per overcommit'', 8:1 row: the source text says 8:1 per thread is 4:1 per core; per core it is 16:1 (two threads per core).'
+review_notes:
+- 'To check: Section ''Maximum VM size per overcommit'': the size is counted in logical CPUs (threads); whether a ceiling at the physical cores applies at 1:1 (Q111 a).'
+- 'To check: Section ''Size is set by the host'': the NUMA node and L3 domain limits per CPU family (Q125).'
+status: draft
+```
