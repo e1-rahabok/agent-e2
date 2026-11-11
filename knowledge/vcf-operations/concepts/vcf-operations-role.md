@@ -30,7 +30,7 @@
 - Later: its own sizing, health and performance troubleshooting.
 - Alert architecture across products (top down): `sp5-framework/alerts/alert-design`. Alert thresholds live with the resource they watch, such as `vsphere/technology/cpu/configuration/cpu-alerts`.
 
-## Traps
+## Misconceptions
 - "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and `vsphere/tools/vsphere-client/vcenter-statistics`.
 - "Plan capacity from vCenter charts" → vCenter is an administrative tool; its history is short and averaged.
 - "A VCF Operations metric needs its own definition" → only computed metrics do. A passed-through metric means what its source means.

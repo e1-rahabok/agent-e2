@@ -69,7 +69,7 @@ class Chunk:
 
 # Knowledge given up front, not through search: indexing the one-line summaries would let search return them
 # in place of the files that hold the mechanism (KNOWLEDGE-ENGINEERING.md, section 2).
-NOT_INDEXED = ('knowledge/misreadings.md',)
+NOT_INDEXED = ('knowledge/misconceptions.md',)
 
 
 def load(root=ROOT):

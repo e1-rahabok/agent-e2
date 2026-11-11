@@ -60,7 +60,7 @@
   - Provider: the virtualized platform: compute, storage, network.
 - VCF scope ends at the VM (virtual motherboard and BIOS) and VMware Tools. The Guest OS is largely outside VCF's influence (`vsphere/architecture/vm-vs-guest-os`).
 
-## Traps
+## Misconceptions
 - "Plan first, then design, then work out how to operate it" → Day 2 drives Day 0, which drives Day 1. The class of service and the operations model fix the hardware and cluster design.
 - "Automate first; automation is the transformation" → automation is a feature of the architecture. Automating operations that are not governed speeds up the problem.
 - "Tier health is the worst member" → work in a tier runs in parallel; tier health is the average of its members.

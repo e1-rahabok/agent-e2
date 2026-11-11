@@ -109,7 +109,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - SSD pages (4-16 KB) are the read/write unit; blocks (4-32 MB) are the erase unit. This asymmetry makes NAND fragmentation the main NVMe performance risk.
 - An idle tier device shows latency spikes on sporadic reads: power-state wake-up. See `vsphere/technology/storage/metrics/host/disk`.
 
-## Traps
+## Misconceptions
 - "Tiered memory performs like DRAM" → infrequently accessed data sits on the NVMe tier.
 - "Any SSD works for memory tiering" → the source specifies a high-performance NVMe device with the write rate and endurance above.
 - "Active memory at 75% of DRAM is the limit" → 75% is the point where some workloads begin to suffer. The ideal is 50%.

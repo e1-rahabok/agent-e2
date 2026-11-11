@@ -40,7 +40,7 @@ flowchart LR
 ```
 
 - Product: what runs at the customer site.
-  - `knowledge/`: Level 400 mechanisms, metrics, traps and flows (health checks, troubleshooting, decision trees), plus exact data in `knowledge/catalog/`. Up-front text and domain code in `harness/` act on it (`KNOWLEDGE-ENGINEERING.md`, section 2). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
+  - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in `knowledge/catalog/`. Up-front text and domain code in `harness/` act on it (`KNOWLEDGE-ENGINEERING.md`, section 2). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
   - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code (`harness/agent.py`, up-front blocks in `harness/primer.py`); what it is told and how it decides: `harness/AGENT.md`.
   - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
@@ -55,7 +55,7 @@ flowchart LR
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
-| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog); up-front misreadings | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
+| Knowledge | Level 400 facts, mechanisms, misconceptions, flows (markdown) and exact data (YAML catalog); up-front misconceptions | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
 | Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only (`harness/AGENT.md`) | the loop in `harness/agent.py` (`agentic`), up-front blocks in `harness/primer.py`, the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, the loop's rules, the answer verifier | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
 | Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
@@ -89,7 +89,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 
 | Failure of a model alone | Mechanism | Part |
 |---|---|---|
-| Repeats a common misconception ("Ready above 5% is bad") | Trap lines in every metric file, in the user's own words, so the misconception retrieves its correction | Knowledge |
+| Repeats a common misconception ("Ready above 5% is bad") | Misconception lines in every metric file, in the user's own words, so the misconception retrieves its correction | Knowledge |
 | Mixes the VM and ESXi meaning of one label | One object per metric file; `same_name` links; a reminder before answering | Knowledge + harness |
 | Calls a Guest OS metric a VM metric | Separate `guest-os/` layer; `layer` tag; lint rule | Knowledge |
 | Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
@@ -164,16 +164,16 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
-8. Not indexed but deployed: `knowledge/misreadings.md` and the confusable pairs of `knowledge/glossary.md` reach the model as up-front blocks (`harness/primer.py`), not through search. All five paths by which knowledge reaches the model: `KNOWLEDGE-ENGINEERING.md`, section 2.
+8. Not indexed but deployed: `knowledge/misconceptions.md` and the confusable pairs of `knowledge/glossary.md` reach the model as up-front blocks (`harness/primer.py`), not through search. All five paths by which knowledge reaches the model: `KNOWLEDGE-ENGINEERING.md`, section 2.
 
 ### Query
-0. Map the user's words (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misreading the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).
+0. Map the user's words (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misconception the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).
 1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
 2. Extract filters from the question: `product`, `object`, `technology`, `pillar`. (Planned, as step 1.)
 3. Retrieve by similarity within those filters.
 4. Expand: add files named in `related`, `internal_derive`, `same_name`, `same_meaning`.
    - Classic mode today: `same_name` and two `related` of the top 2 hits; with `expand_derive`, up to 3 `internal_derive` files of each. With `route_troubleshooting`, a troubleshooting question puts its best diagnosis file first.
-   - `same_name` is the main trap guard: it brings in the other object's meaning of the same label.
+   - `same_name` is the main misconception guard: it brings in the other object's meaning of the same label.
 5. Add the matching observability and vSphere architecture files when the answer depends on units, sampling, thresholds or the provider/consumer view.
 6. Fit to the context window. Priority: matching metric or flow file, then its concepts, then observability and architecture, then the rest of the links.
 7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model.

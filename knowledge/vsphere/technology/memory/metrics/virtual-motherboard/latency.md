@@ -29,7 +29,7 @@
 - 2,441 VMs, worst value per VM over 4 months: only 13 VMs above 1%.
 ![Worst VM memory contention per VM across 2,441 VMs](../../images/vm-memory-contention-worst-value-distribution-across-vms.png)
 
-## Traps
+## Misconceptions
 - "Memory Latency 5% means 5 ns" → it is a percentage of time, not a duration.
 - "Memory Latency is the share of memory space that is slow to read" → it is a share of time a vCPU waits on page faults.
 

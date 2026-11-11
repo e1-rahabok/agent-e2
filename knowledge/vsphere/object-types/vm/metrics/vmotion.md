@@ -21,7 +21,7 @@
 - Caused by device reset, disk branching, disk promotion, snapshot take and snapshot consolidate.
 - In the first vMotion phase a snapshot (delta VMDK) is created, which requires a stun; writes then go to the delta disk.
 
-## Traps
+## Misconceptions
 - "Downtime value 150,000 is 150 seconds" → the unit is microseconds: 150 ms.
 
 ## Metadata

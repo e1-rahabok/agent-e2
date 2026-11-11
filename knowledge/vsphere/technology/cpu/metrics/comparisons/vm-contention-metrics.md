@@ -37,7 +37,7 @@
 - Troubleshooting CPU-sensitive VMs: Contention or Latency.
 - Cluster performance: not Contention (includes limits). Not Latency alone (includes HT and frequency).
 
-## Traps
+## Misconceptions
 - "Latency 0% and Contention 0% means no waiting" → a limit is excluded from Latency. Check Ready.
 - "The vCPU states metrics are independent" → Ready on one vCPU causes Co-stop on its siblings.
 

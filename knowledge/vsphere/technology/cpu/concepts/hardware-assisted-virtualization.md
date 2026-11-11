@@ -26,7 +26,7 @@ Three hardware features assist virtualization: CPU, MMU, and I/O MMU.
 - Lets VMs access hardware I/O devices directly. Examples: network cards, storage controllers (HBAs), GPUs.
 - Related options: DirectPath I/O and SR-IOV (p. 46).
 
-## Traps
+## Misconceptions
 - "Hardware MMU assist is always faster" → it reduces page table overhead, but it increases TLB miss service time. Workloads that stress the TLB can slow down.
 - "VT-d is a CPU feature" → it is a chipset feature.
 

@@ -94,7 +94,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - VM owners differ in expectation and knowledge, more so in large environments.
 - The provider side is changing too. The server, Windows or Linux team became the platform team; HCI brought storage into it; network virtualization blurred the line with the network team (firewalls, load balancers); Kubernetes added containers, with DevOps or SRE teams between platform and application teams.
 
-## Traps
+## Misconceptions
 - "Cluster average CPU Ready is low, so no paying VM is slow" → a cluster average hides the VM with contention. Check the VM KPI and the worst VM.
 - "Utilization is low, so the cluster has capacity" → a cluster is full when it cannot serve its VMs well. Limits, imbalance and configuration cause contention at low utilization.
 - "A VM in a tenant's resource pool shows contention, so the provider is at fault" → in the resource pool variant performance is the tenant's own. Check the pool limit and the tenant's overcommit first.

@@ -21,7 +21,7 @@
 - Reservations set too high leave few unreserved resources in the cluster. This limits the vMotion options DRS can recommend.
 - Limits set too low keep VMs from using extra resources available in the cluster, which would improve their performance.
 
-## Traps
+## Misconceptions
 - "Shares guarantee CPU" → shares apply only under contention. A reservation is the guarantee.
 - "Resource pools and VMs can always be siblings" → only with Scalable Shares active. Without it, mixing them causes dilution.
 

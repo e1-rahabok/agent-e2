@@ -53,7 +53,7 @@
 
 - Intel Granite Rapids C-state recommendations by workload: see `vsphere/object-types/esxi/configuration/bios-settings`.
 
-## Traps
+## Misconceptions
 - "Deactivate C-states for better performance everywhere" → the source names only a few latency-sensitive multithreaded workloads that gain from it. Activating all C-states gives the best performance per watt.
 - "Balanced always lowers performance" → typically it has little or no effect. On systems with idle CPUs it can raise performance through Turbo Boost.
 - "Low Power is a safe default" → Low Power reduces power aggressively, at the risk of reduced performance.

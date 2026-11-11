@@ -7,7 +7,7 @@
 - Per-VM overhead memory counts as reserved, on top of the memory reservation.
 - A VM with no reservation passes CPU and memory admission control; its overhead memory is still checked.
 - CPU admission control ignores CPU affinity. A pinned VM can be admitted and still not receive its full reservation.
-- vCenter stores `clusterServices.failover` on the cluster (level 1, rollup latest). Its counter summary: vSphere HA number of failures that can be tolerated. Low priority. Trap: when the hosts of the cluster are not identical, failures to tolerate counted in hosts does not equal capacity lost: losing the largest host costs more.
+- vCenter stores `clusterServices.failover` on the cluster (level 1, rollup latest). Its counter summary: vSphere HA number of failures that can be tolerated. Low priority. Misconception: when the hosts of the cluster are not identical, failures to tolerate counted in hosts does not equal capacity lost: losing the largest host costs more.
 - With DPM, capacity of hosts in standby counts as available; DRS recommends powering them on when a VM cannot be admitted without them.
 
 ## Fixed vs expandable reservation (resource pools)
@@ -46,7 +46,7 @@
 - Near 100% reserved, reservation changes and resource pool edits fail admission control.
 - Reservations that fully commit a host or the cluster stop DRS from migrating VMs: no destination can admit them.
 
-## Traps
+## Misconceptions
 - "The host is at 30% CPU, so the VM will power on" → admission control checks unreserved capacity, not usage.
 - "Yellow cluster means VMs are starving" → running VMs still have their reservations; resource pool reservations cannot all be met.
 - "Add a host to fix a red cluster" → red is an inconsistency in the tree; fix the reservations.

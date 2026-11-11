@@ -26,9 +26,9 @@ Rules:
 SYSTEM = ('You grade answers to VMware vSphere and VCF operations questions against an expert answer key.\n'
           + RUBRIC + '\n'
           'Reply with one JSON object and nothing else:\n'
-          '{"score": 0-3, "trap": true|false, "unsure": true|false, "missed": "<key point missed, or empty>", '
+          '{"score": 0-3, "misconception": true|false, "unsure": true|false, "missed": "<key point missed, or empty>", '
           '"reason": "<one sentence>"}\n'
-          'trap = the answer states the likely wrong answer.')
+          'misconception = the answer states the likely wrong answer (the Level 300 misconception).')
 
 
 def _user(question, answer, images):
@@ -51,7 +51,7 @@ def parse(text):
         return None
     if score not in (0, 1, 2, 3):
         return None
-    return {'score': score, 'trap': bool(v.get('trap')), 'unsure': bool(v.get('unsure')),
+    return {'score': score, 'misconception': bool(v.get('misconception')), 'unsure': bool(v.get('unsure')),
             'missed': str(v.get('missed') or '')[:200], 'reason': str(v.get('reason') or '')[:300]}
 
 
@@ -85,5 +85,5 @@ class MockJudge:
 
     def grade(self, question, answer, images=None):
         s = self.rng.randint(0, 3)
-        return ({'score': s, 'trap': s == 0, 'unsure': False, 'missed': '', 'reason': 'mock'},
+        return ({'score': s, 'misconception': s == 0, 'unsure': False, 'missed': '', 'reason': 'mock'},
                 {'prompt_tokens': 0, 'completion_tokens': 0, 'latency': 0})

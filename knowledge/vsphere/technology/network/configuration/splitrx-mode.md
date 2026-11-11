@@ -29,7 +29,7 @@
 - Overrides the host-wide setting for that adapter.
 - Change in vSphere Client: right-click the VM, Edit Settings, VM Options tab, expand Advanced, Edit Configuration. Set `ethernetX.emuRxMode`, or add it with Add Configuration Params if it is not present.
 
-## Traps
+## Misconceptions
 - "SplitRx is always on for all traffic" → automatic activation requires the conditions above. The default host setting only allows it.
 - "SplitRx helps traffic that stays inside the host" → automatic activation does not apply to purely internal traffic. Manual activation is required for that.
 

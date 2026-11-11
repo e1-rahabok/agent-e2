@@ -146,7 +146,7 @@
 - Infrastructure-level alerts, such as on ESXi, are not relevant to the application team.
 - Shared infrastructure alerts look at the population, not a few VMs: use 25% of the VM population as the overall threshold, with a lower per-VM threshold because 25% can mean hundreds of VMs. Applies to ESXi, resource pool and cluster; not Datacenter, whose clusters can serve different purposes.
 
-## Traps
+## Misconceptions
 - "Alert on everything so nothing is missed" → an alert nobody must act on today is noise. Use the daily dashboard.
 - "Lower thresholds catch problems earlier" → they create noise. Early warning comes from insight metrics.
 - "Orange consumption alerts give early warning" → consumption alerts are red only; orange belongs to the daily dashboard.

@@ -18,7 +18,7 @@
 - The vSphere Web Services API 9.1 summary of `mem.compressed` reads "Amount of memory reserved by userworlds". That summary is a copy error; the counter is the compressed amount.
 - Host Compressed equals the sum of the VMs' esxtop CACHEUSD on that host, because the host counter sums the VM compression caches.
 
-## Traps
+## Misconceptions
 - "Compressed > 0 means current pressure" → it can be years old. Check balloon and swap-in.
 - "Compressed is the memory freed by compression" → it is the result kept in DRAM. The freed amount is VM `mem.zipSaved`.
 - "The mem.compressed summary says userworld reservation" → copy error in the API summary.

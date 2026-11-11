@@ -13,7 +13,7 @@
 - Reason: the vCPU is not running, so its usage cannot be predicted.
 - Fix IO and memory bottlenecks at the Guest OS level, with Windows and Linux metrics.
 
-## Traps
+## Misconceptions
 - "High Idle means the VM is waiting for IO" → the kernel cannot tell idle from IO-blocked.
 - "Idle time should be sized for" → exclude it.
 

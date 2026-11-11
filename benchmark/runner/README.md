@@ -72,7 +72,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.1.
 - Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. It is the multiple-choice credit in the final score.
 - Luck: share of questions right in some runs only. Counted as not known.
-- Override (table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. Prior override, not a retrieval miss.
+- Override (table `Final score`): share of knowledge base answers that state the misconception although every needed file was in the context. Prior override, not a retrieval miss.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
 - Exact (mean over runs) is still reported in table `Scores`.
 - Reason and design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.
@@ -92,7 +92,7 @@ python3 benchmark/runner/retrieval_eval.py
 | What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
 
 - Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this benchmark's label, not an industry term.
-- Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), traps, health check and troubleshooting files exist so a model can follow a chain across files.
+- Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), misconceptions, health check and troubleshooting files exist so a model can follow a chain across files.
 - Classic and agentic answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
 - Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well.
 - The agentic limits (8 calls, 12K tokens) are cost caps for the benchmark, not a design choice.
@@ -156,7 +156,7 @@ python3 benchmark/runner/retrieval_eval.py
      - `baseline`: no knowledge base;
      - `classic`: one search, link expansion (`same_name`, `related`), 8K-token context;
      - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. Falls back to classic after 2 tool-format errors;
-   - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, trap hit, Not-covered pick, Unsure pick;
+   - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Not-covered pick, Unsure pick;
    - free text: the judge scores 0-3; credit = score / 3;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
 6. Writes the benchmark folder and appends one summary row per model, mode and question to [benchmark/results/results.csv](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/results.csv).
@@ -166,7 +166,7 @@ python3 benchmark/runner/retrieval_eval.py
 |---|---|---|
 | `config.json` | Index version (git SHA), models with tags and prices, settings | Yes |
 | `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
-| `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, trap, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
+| `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
 
 ## Question fields used
@@ -176,7 +176,7 @@ python3 benchmark/runner/retrieval_eval.py
 | `level` | `100`, `200`, `300`, `400` |
 | `input` | `text`, `table`, `screenshot`; checked against the attachments by lint |
 | `answer` | Correct option letters, as in `## Prompt` |
-| `trap` | Option letters that are the known wrong answer |
+| `misconception` | Option letters that are the known wrong answer |
 | `knowledge` | Files the answer should come from; used for retrieval recall |
 
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.

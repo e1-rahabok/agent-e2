@@ -23,7 +23,7 @@
 - Both exceed total capacity: Demand sums VM demand, and Usage includes Turbo above base frequency.
 - Per-vCPU view: Ready of 128 s across 250 vCPUs = 514 ms per vCPU = about 2.5%.
 
-## Traps
+## Misconceptions
 - "Host Ready is the host waiting" → it is the VMs' Ready summed.
 - "Host contention low, so all VMs are fine" → averages hide individual VMs.
 

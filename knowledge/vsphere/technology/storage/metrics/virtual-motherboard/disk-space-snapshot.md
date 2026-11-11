@@ -14,7 +14,7 @@ Sum of file sizes / (1024 × 1024 × 1024), for files whose layoutEx type is sna
 ## Use
 - Find VMs with large snapshots quickly.
 
-## Traps
+## Misconceptions
 - "Snapshot size ≤ VMDK size" → a snapshot of a nearly empty thin disk can grow larger.
 
 ## Metadata

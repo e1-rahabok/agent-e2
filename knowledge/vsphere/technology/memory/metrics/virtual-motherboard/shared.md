@@ -21,7 +21,7 @@
 - The 29.83 TB of shared VM pages take up only 29.83 - 23.7 = 6.13 TB of ESXi pages.
 ![Granted, Shared and Consumed across 7,505 VMs](../../images/vm-memory-granted-shared-consumed-across-vms.png)
 
-## Traps
+## Misconceptions
 - "Shared = memory saved" → it is the amount subjected to sharing.
 - "Sum VM Shared for host savings" → inter-VM shared pages count once per VM.
 

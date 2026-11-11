@@ -29,7 +29,7 @@ watch esxcli network nic stats get -n vmnic#
 - Hosts with receive errors spanned clusters, hardware models and ESXi builds. No correlation with other packet types.
 - Receive error counters showed irregular collection, while transmit error collection was regular.
 
-## Traps
+## Misconceptions
 - "esxcli shows errors, so the problem is now" → counters are cumulative.
 
 ## Metadata

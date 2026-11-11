@@ -165,7 +165,7 @@ Demand = Max (Utilization, Reservation)
 - Public cloud reference (book): CPU at 1:1, counted per thread, not per core; memory not overcommitted.
 - Overcommit ratios are written virtual : physical (4:1 = 4 vCPUs per thread).
 
-## Traps
+## Misconceptions
 
 - "We recommend 2:1 memory overcommit; going above is risky" → a ratio alone ignores utilization, VM size and class of service. Bronze can run 2:1 while Gold runs 1:1 (`sp5-framework/capacity/class-of-service-planning`).
 - "Memory usage is 90%; aim for 80% because of HA" → Consumed is unaware of HA, and high Consumed is not a worry: memory is a cache and should be high, else the DIMMs, which are expensive, are wasted. HA is accounted in usable capacity.

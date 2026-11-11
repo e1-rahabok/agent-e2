@@ -15,7 +15,7 @@
 ## Why
 - The mechanism behind the value.
 
-## Traps
+## Misconceptions
 - Wrong conclusion → correct conclusion.
 
 ## Metadata

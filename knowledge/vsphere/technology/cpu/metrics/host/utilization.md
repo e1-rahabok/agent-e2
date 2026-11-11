@@ -30,7 +30,7 @@
 - Usually lower than Core Utilization. Without Hyper-Threading, equal to it.
 - See `vsphere/technology/cpu/concepts/hyper-threading`.
 
-## Traps
+## Misconceptions
 - "ESXi Utilization = sum of VM Run + kernel" → different vantage points. See `vsphere/technology/cpu/concepts/cpu-measurement-levels`.
 - "Thread Utilization 50%, so half the host is free" → in space, yes: half the threads are free. In speed, no: every core may already run one thread, and a second thread shares the core (Hyper-Threading delivers about 1.25x per core, not 2x). Check Core Utilization for the speed effect.
 - "Core Utilization is the ESXi utilization for capacity" → it counts a half-used core as full. Use Thread Utilization.
@@ -64,9 +64,9 @@ source:
   document: PART 3 - Counters.docx
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > ESXi ≠ VM + Kernel; CPU > ESXi > Thread Utilization
 corrections:
-- 'Section ''The capacity reading'' and Traps: Thread Utilization is the ESXi utilization for capacity management (quiz key of CPU Q1).'
+- 'Section ''The capacity reading'' and Misconceptions: Thread Utilization is the ESXi utilization for capacity management (quiz key of CPU Q1).'
 review_notes:
-- Sections Mechanism and Traps: from CPU > Architecture.
+- Sections Mechanism and Misconceptions: from CPU > Architecture.
 - 'Section Thread Utilization: from CPU > ESXi.'
 status: draft
 ```

@@ -149,7 +149,7 @@
 ## Host CPU monitoring
 - Moved to `vsphere/object-types/esxi/health-check/esxi-health-check`, section Documentation guidance (esxtop).
 
-## Traps
+## Misconceptions
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
 - Area C in `vsphere/architecture/vm-vs-guest-os` (work invisible to the guest) is not the same as overhead.
 - "Use kernel reservation as overhead" → unstable, and too low or too high depending on the stack.

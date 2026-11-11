@@ -26,7 +26,7 @@ Other Wait = Wait - Idle - Swap Wait
 ## Known issue
 - An accounting issue wrongly inflates Other Wait and esxtop %VMWait (Broadcom KB 85393).
 
-## Traps
+## Misconceptions
 - "Other Wait means storage latency" → no correlation was found with disk latency or outstanding IO.
 - "Other Wait correlates with Ready" → no correlation found.
 - "High Other Wait is always real" → check KB 85393 first.

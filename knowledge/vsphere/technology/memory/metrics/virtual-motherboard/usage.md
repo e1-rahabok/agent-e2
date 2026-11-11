@@ -15,7 +15,7 @@
 - Guest OS metrics missing: VCF Operations Usage (%) falls back to Active (example: dropped to 6.99%). Workload (%) falls back to Consumed (example: jumped to 98.95%).
 ![VCF Operations Usage falls back to Active when guest metrics are missing](../../images/vcf-operations-vm-memory-usage-falls-back-to-active.png)
 
-## Traps
+## Misconceptions
 - Comparing VM Usage with ESXi Usage as if they measure the same thing. This confusion has led customers to buy more RAM than required.
 
 ## Metadata

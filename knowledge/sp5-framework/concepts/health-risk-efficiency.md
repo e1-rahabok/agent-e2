@@ -38,7 +38,7 @@
 ## Inventory over time
 - Not part of health, but read next to it. Watch how the counts change over time and whether that matches the plan.
 
-## Traps
+## Misconceptions
 - "One health score for the whole environment" → health needs an aspect and a scope; a broad score is low while everything runs well.
 - "The health check order must match the health grouping" → the grouping defines health; the check is an action in its own order (availability, performance, security, capacity).
 - "The health score is low, so something is broken" → a broad score drops on risk and inefficiency too. Read present health, risk and efficiency separately.

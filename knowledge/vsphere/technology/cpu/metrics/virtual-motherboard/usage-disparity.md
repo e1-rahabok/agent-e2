@@ -29,7 +29,7 @@
 - Above 100%: Turbo.
 ![Only the first vCPU is busy; the others are near 0](../../images/vm-cpu-usage-disparity-only-first-vcpu-busy.png)
 
-## Traps
+## Misconceptions
 - "Disparity means the guest is broken" → it is an observation, not a diagnosis.
 - "Usage cannot exceed 100% on one vCPU" → Turbo can push it above 100%.
 

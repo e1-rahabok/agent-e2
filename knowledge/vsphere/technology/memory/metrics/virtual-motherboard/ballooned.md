@@ -23,7 +23,7 @@
 - Example: 8 GB CentOS VM running MySQL with a 2 GB limit was heavily ballooned. The book notes a default maximum of around 63%.
 - See `vsphere/technology/memory/concepts/ballooning`.
 
-## Traps
+## Misconceptions
 - "Ballooned > 0, so the host is under memory pressure now" → not necessarily.
 - "Ballooning means VMs are contending for RAM" → check Contention.
 - "A limit causes ballooning" → not directly. A limit causes Compressed or Swapped when Consumed tries to grow beyond it.

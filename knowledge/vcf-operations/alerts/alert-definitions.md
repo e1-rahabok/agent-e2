@@ -22,7 +22,7 @@
 - A recommendation is advice attached to an alert; it changes nothing. A remediation action runs a change.
 - A generic alert has many possible causes, so its recommendation list grows long. Add conditions inside the recommendation so only the relevant advice shows, with live, clickable data instead of plain text.
 
-## Traps
+## Misconceptions
 - "A condition and a symptom are different things" → they are the same test. A symptom definition is reusable; a condition lives inside one alert definition.
 - "A longer wait cycle has no cost" → the alert fires that much later: 15 minutes of wait is 15 minutes lost.
 - "Any of the conditions is enough" → the per-resource alerts need all conditions together; that is what narrows them.

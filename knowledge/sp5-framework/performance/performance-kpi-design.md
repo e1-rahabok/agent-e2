@@ -67,7 +67,7 @@ weight = 2 ^ ((100 - score) / 25)
 - Swapped + Compressed has no built-in metric: a super metric sums them.
 - Why four equal ranges, thresholds and validation: `sp5-framework/concepts/modelling`.
 
-## Traps
+## Misconceptions
 - "Add IOPS to the KPI" → no universal range; it masks real problems.
 - "Use datastore latency in the VM KPI" → it is an average of VMs.
 

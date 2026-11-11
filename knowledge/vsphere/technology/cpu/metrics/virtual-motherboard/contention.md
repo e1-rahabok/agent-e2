@@ -21,7 +21,7 @@ Contention (%) = Overlap + Co-stop + Ready + Other Wait (if less than 1%)
 ## Limitation
 - Because it includes limit, it cannot measure ESXi or cluster performance. A limit is unrelated to the cluster.
 
-## Traps
+## Misconceptions
 - "Contention = Latency" → true only before July 2024.
 - "High Contention means the cluster is overloaded" → a limit can cause it.
 

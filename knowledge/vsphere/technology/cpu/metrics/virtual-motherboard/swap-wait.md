@@ -14,7 +14,7 @@
 ## vs Memory Latency
 - Memory Latency is a superset: it covers swap-in and decompression. Swap Wait covers swap-in only.
 
-## Traps
+## Misconceptions
 - "Swap Wait is a CPU problem" → its cause is memory. Check memory metrics.
 
 ## Metadata

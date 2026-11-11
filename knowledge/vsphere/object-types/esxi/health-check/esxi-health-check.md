@@ -60,7 +60,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
   - The source notes that organizations set their own standards for the target load percentage.
 - Knowledge base reading: these are utilization levels, so they are capacity signals. Confirm a performance problem with the contention of the host's VMs (step 2). Load average 1.00 means all PCPUs fully used. See `vsphere/tools/esxtop/cpu`.
 
-## Traps
+## Misconceptions
 - "Host CPU at 90%, so VMs are slow" → check ESXi Performance: worst VM Ready and Co-stop.
 - "Host Ready is low, so every VM is fine" → it is an average. Check the worst VM.
 - "Demand 130%, so the host is overloaded" → check Core Utilization, Thread Utilization and VM contention.

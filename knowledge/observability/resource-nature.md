@@ -46,7 +46,7 @@
 - Servers and storage are nodes. Network is the interconnect.
 - Network takes more than one shape: line (cable) and dot (switch). This makes network metrics harder than node metrics.
 
-## Traps
+## Misconceptions
 - Applying one threshold philosophy to all four resources → wrong. The same % means different things per resource.
 - Comparing GHz across CPU generations or models → wrong. Work per GHz differs.
 - Expecting a "memory demand" metric like CPU demand → wrong. Memory is space, not time.

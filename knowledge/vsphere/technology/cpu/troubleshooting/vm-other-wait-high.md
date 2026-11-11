@@ -12,7 +12,7 @@
 - Update ESXi (including physical device drivers), virtual hardware and VMware Tools (virtual device drivers) to the latest build.
 - Still high: open a support request with Broadcom. Finding the root cause takes low-level debug data (stats vmx, schedtraces, vprobes).
 
-## Traps
+## Misconceptions
 - "Other Wait means storage latency" → no correlation found with disk latency or outstanding IO.
 
 ## Metadata

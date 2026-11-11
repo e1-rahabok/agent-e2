@@ -9,7 +9,7 @@
 - Correlates highly with Memory Latency.
 - It does not mean the host is under pressure now. The pressure happened in the past.
 
-## Traps
+## Misconceptions
 - "No current host pressure, so swap in is harmless" → the guest still waits for each page.
 
 ## Metadata

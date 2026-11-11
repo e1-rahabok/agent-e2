@@ -13,7 +13,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 
 ## Rules for knowledge files
-- Design (where knowledge lives, forms, Level 400 and traps): `KNOWLEDGE-ENGINEERING.md`. Rules, one module each in `project/knowledge-rules/`: placement, flows, metadata, thresholds, writing (including no AI-speak, images, versions and sources), terminology.
+- Design (where knowledge lives, forms, Level 400 and misconceptions): `KNOWLEDGE-ENGINEERING.md`. Rules, one module each in `project/knowledge-rules/`: placement, flows, metadata, thresholds, writing (including no AI-speak, images, versions and sources), terminology.
 - Architecture rule to keep in mind: a VM is a virtual motherboard; the Guest OS is a separate layer. Decide a metric's home by the layer that produces it, not by the object that stores it.
 - When a repository rule conflicts with the author's architecture, raise it in `project/author-questions.md`; do not resolve it silently.
 

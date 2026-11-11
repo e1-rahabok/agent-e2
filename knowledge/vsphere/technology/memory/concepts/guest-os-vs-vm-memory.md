@@ -51,7 +51,7 @@
 - Applications that manage their own memory reserve a contiguous block up front. Example: java.exe holding 26 GB.
 - Windows cannot see inside the block. It counts all of it as used and committed.
 
-## Traps
+## Misconceptions
 - "Windows In Use = VM Active" → different layers. No mapping.
 - "VM Active 100% means the guest is short of memory" → Active is sampled and can stay wrong for hours.
 - "Windows In Use high means the VM is busy" → applications reserve memory up front.

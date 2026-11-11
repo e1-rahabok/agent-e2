@@ -21,7 +21,7 @@ flowchart TD
 ## How to read the result
 - Value pattern → meaning → next check.
 
-## Traps
+## Misconceptions
 - Wrong conclusion → correct conclusion.
 
 ## Metadata

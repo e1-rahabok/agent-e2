@@ -104,7 +104,7 @@ flowchart TB
 ## Reference
 - Detailed scientific treatment: Benjamin Serebrin and Daniel Hecht, https://link.springer.com/chapter/10.1007%2F978-3-642-29737-3_26
 
-## Traps
+## Misconceptions
 - "Guest OS crashed, so the VM is down" → wrong. The VM is available while BIOS runs; the Guest OS is unavailable.
 - Asking for VM process or thread counts → wrong layer. Those are Guest OS metrics.
 - "Demand is not affected by Hyper-Threading because the Guest OS cannot see threads" → mixes realms. Demand is a VM-realm kernel counter; the VMkernel sees threads.

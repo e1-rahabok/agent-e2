@@ -109,7 +109,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - Two parts: the value at each point in time (wrong input, wrong result), then thousands of values projected forward. The projection leans conservative for the peak cycle and covers the business cycle: annual sales require annual data.
 - These rules size the Guest OS only. Containers and business applications have their own sizing.
 
-## Traps
+## Misconceptions
 - "Size the guest with VM CPU Usage" → includes HT, frequency and System.
 - "Free memory is safe headroom" → for memory, unused is waste.
 - "Size memory on In Use: that is the demand" → without cache the Guest OS pages and runs slower; size for performance, not only demand.

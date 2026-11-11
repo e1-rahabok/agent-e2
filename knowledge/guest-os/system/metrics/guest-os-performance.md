@@ -13,7 +13,7 @@
 - Linux and Windows track memory space, throughput and IOPS, but not memory latency. A Guest OS memory performance metric is still missing.
 - Utilization metrics are included because the Guest OS has only 4 metrics: combining keeps it simple.
 
-## Traps
+## Misconceptions
 - "Guest OS memory latency is in the KPI" → Windows and Linux do not track it.
 
 ## Metadata

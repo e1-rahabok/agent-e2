@@ -1,14 +1,15 @@
-# Level 300 misreadings
+# Level 300 misconceptions
 
-Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a correction to what public Internet text misteaches. It documents the correct understanding. Not indexed (`harness/kb.py`, NOT_INDEXED), so search never returns this summary instead of the file. Built by `harness/primer.py`.
+The misconceptions with the widest reach, given to the agent before every question (up-front block `rules`, switch `agent_primer.rules`, off until the benchmark shows a gain). Built by `harness/primer.py`. Not indexed (`harness/kb.py`, `NOT_INDEXED`), so search never returns this summary instead of the file.
 
 What belongs here:
-- A wrong belief that a frontier model applies with confidence, so it never looks it up: what is a problem, which metric decides, what to add or size by. Level 300: a VMware administrator who knows the basics still holds it.
-- Not a definition, and not two terms swapped: those are entries of `knowledge/glossary.md` (column Not to confuse with). A line here may point to a file the glossary also cites, but never repeats the glossary's difference.
-- Not Level 100 or 200: Agent E2 serves VMware administrators with hands-on vSphere knowledge.
-- One line per belief: the correct reading, then the file that holds the mechanism.
+- A misconception a frontier model applies with confidence, so it never looks it up: what is a problem, which metric decides, what to add or size by. Level 300: a VMware administrator who knows the basics still holds it.
+- Promoted from a file: each line is also a misconception in the `## Misconceptions` section of the file it names, where the mechanism and the user's own words live. This list only makes sure the correction is in place before the model reasons.
+- Chosen by reach: a misconception that changes the verdict on many questions (layer, provider and consumer, utilization vs contention, memory as cache), not one that matters for a single counter.
+- Not a definition, and not two terms swapped: those are entries of `knowledge/glossary.md` (Not to confuse with).
+- One line: the correct understanding, then `See` the file that holds the mechanism.
 
-## Misreadings Correction
+## Corrections
 
 - A VM is just the virtual motherboard layer. A VM does not include the Guest OS running above the motherboard. Guest OS is a separate layer. A counter belongs to the layer that produces it, not to the object that stores it. See `vsphere/architecture/vm-vs-guest-os`.
 - Metrics with identical name, but on different objects, may not have the same meaning. For example, Linux CPU Usage, VM CPU Usage and ESXi CPU Usage differ in formula and meaning. Check the `same_name` links before answering. See `vsphere/technology/cpu/metrics/virtual-motherboard/usage`.

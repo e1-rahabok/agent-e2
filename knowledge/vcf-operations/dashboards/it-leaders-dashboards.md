@@ -73,7 +73,7 @@
 - Capacity remaining is not shown at the World level: it misleads in a large or global estate, and clusters serve different purposes and are not interchangeable.
 - With on-premises and public cloud (for example VMware Cloud on AWS), split the dashboard into two columns, given the screen space.
 
-## Traps
+## Misconceptions
 - "Executives want detail" → summary and trend first, exceptions only; drill-down on request.
 - "One leadership dashboard fits all layers" → middle managers and senior leaders differ in channel, frequency, focus and authority.
 - "Report Operational Availability to the business" → end customers count scheduled downtime too; report Actual Availability.

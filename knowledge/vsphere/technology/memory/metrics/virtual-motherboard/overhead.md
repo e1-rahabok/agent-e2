@@ -8,7 +8,7 @@
 - Not visible to the Guest OS. Excluded from Consumed and from configured memory.
 - Under a limit, Consumed sits just below the limit plus overhead (example: 2 GB limit shows as 2.12 GB).
 
-## Traps
+## Misconceptions
 - "Overhead explains a large memory gap" → it is negligible.
 
 ## Metadata

@@ -89,7 +89,7 @@ Usage <= Entitlement   (at any point in time)
 - vCenter reports Entitlement in MHz as the latest value in the sample period.
 - For a highly utilized vCPU, the average can be slightly above the latest value.
 
-## Traps
+## Misconceptions
 - "CPU reservation shows up in CPU usage" → wrong. CPU reservation is on demand and not in utilization metrics.
 - "High Memory Consumed means the VM is actively using that memory" → not necessarily. Reservation is counted in Consumed.
 - Using a limit instead of right-sizing → unpredictable; the guest cannot see the limit.

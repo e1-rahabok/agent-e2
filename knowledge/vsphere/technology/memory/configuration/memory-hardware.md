@@ -8,7 +8,7 @@
 - Memory tiering hardware (NVMe devices, write rate, endurance, capacity): see `vsphere/technology/memory/concepts/memory-tiering`.
 - BIOS settings that affect memory: see `vsphere/object-types/esxi/configuration/bios-settings`.
 
-## Traps
+## Misconceptions
 - "Uneven population across channels is acceptable" → the source says balance across all channels in most environments.
 
 ## Metadata

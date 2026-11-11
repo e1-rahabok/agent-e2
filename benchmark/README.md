@@ -64,7 +64,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
 | `answer_type` | How the answer is scored (section 3.3) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
 | `answer` | The correct letters, as written in `## Prompt`. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
-| `trap` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
+| `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
 
 **What the administrator gives besides the prompt**
 

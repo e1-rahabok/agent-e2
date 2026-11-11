@@ -47,7 +47,7 @@
   - reports potential issues before activation,
   - activates and deactivates SCAv1, SCAv2 and related settings.
 
-## Traps
+## Misconceptions
 - "Side-channel mitigation has no performance cost" → some mitigations have significant impact. Hardware mitigations on newer CPUs usually have little or none.
 - "Hyper-Threading is safe by default" → with L1TF, the concurrent-context vector is not addressed by default. Hyper-Threading is in use when the risk applies.
 

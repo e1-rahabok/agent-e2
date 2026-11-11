@@ -4,7 +4,7 @@
 - A normalized average of the Memory Latency of the running VMs.
 - An average hides the VM that suffers. Use the maximum VM Memory Contention across the host's VMs instead.
 
-## Traps
+## Misconceptions
 - "Host memory latency is low, so no VM waits" → check the worst VM.
 
 ## Metadata

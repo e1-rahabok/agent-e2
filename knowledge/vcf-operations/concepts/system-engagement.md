@@ -50,7 +50,7 @@
   - Longer cadence: more than 2 screens deep; tables for export to a spreadsheet; interaction follows the need of the moment.
 - The daily health check itself: `vcf-operations/dashboards/daily-health-check-dashboards`. Why insight replaces most alerts: `sp5-framework/alerts/alerts-and-insights`.
 
-## Traps
+## Misconceptions
 - "Send everyone a weekly report" → nobody can tell whether a report was read, and a report has the least depth. Use a dashboard; add a report where a role needs an offline copy.
 - "One threshold set for every channel" → each channel has its own urgency. A live screen that turns red for a non-urgent issue is ignored after a while.
 - "The NOC screen is a smaller daily health check" → the NOC screen covers the last 5 minutes for Level 1; the daily check covers the next 12 hours for Level 2. Content, size and interaction differ.

@@ -15,7 +15,7 @@
 - A constantly high value: one or more cores are highly utilized.
 - No separate imbalance value among cores: imbalance is expected when utilization is not high.
 
-## Traps
+## Misconceptions
 - "Host average 20%, so no core is busy" → check the peak core.
 
 ## Metadata

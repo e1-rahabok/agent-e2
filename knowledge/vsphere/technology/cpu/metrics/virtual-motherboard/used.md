@@ -57,7 +57,7 @@ Used (vCPU) = Run - Overlap ± E
 - VM migration: the destination host must absorb the real footprint.
 - Chargeback: charge the full cost of the VM, based on actual utilization, not rated clock speed.
 
-## Traps
+## Misconceptions
 - "Sum of per-vCPU Used equals VM Used" → the VM value includes System time; the per-vCPU values do not.
 - "Used lower than Run means the VM received less runtime" → Used is a charge adjusted for shared core, frequency and hypervisor IO.
 
@@ -106,7 +106,7 @@ source:
 corrections:
 - '2026-11-02: the CPU Used metric is buggy. The row ''VM Used HT penalty 37.5% vs ESXi Used 50%'' was removed (section: Notes).'
 review_notes:
-- Sections Fair Share Scheduler, Hyper-Threading examples, and the last trap: from CPU > Architecture.
+- Sections Fair Share Scheduler, Hyper-Threading examples, and the last misconception: from CPU > Architecture.
 - 'Sections Formula, Worlds charged to the VM, Unit, Use cases: from CPU > VM.'
 status: draft
 ```

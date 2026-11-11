@@ -49,7 +49,7 @@
 - Added a 20 GB thick disk on vSAN: Used 760 MB (380 MB data + 380 MB vSAN protection, no dedupe or compression). Allocated 32.93 GB (30 GB configured + 2.93 GB overhead including vSAN protection). The datastore shows 40.86 GB for that disk.
 - Allocated contains used plus potential future use up to configured size. Only the used part includes vSAN overhead.
 
-## Traps
+## Misconceptions
 - "Thick disk Used = guest usage" → it is the configured size.
 - "Snapshots apply to RDM" → no; the array handles it.
 - "Hard disk size in the UI includes vSAN" → it shows configured size, the guest view.

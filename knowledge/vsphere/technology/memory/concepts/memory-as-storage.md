@@ -29,7 +29,7 @@
 - Space is static enough for a heat map of all Guest OS or VM memory consumption.
 - Target: near 100% use, with page-in and page-out rates within normal expectation.
 
-## Traps
+## Misconceptions
 - "Memory at 100% is a problem" → memory is cache. Check paging and contention, not utilization.
 - "Memory Latency is in nanoseconds" → it is a percentage of time, not a duration.
 - "Memory Latency is the share of memory space facing latency" → it is a share of time.

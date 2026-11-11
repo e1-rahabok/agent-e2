@@ -8,7 +8,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [README.md](README.md) | What Agent E2 is, in one page |
 | [MISSION.md](MISSION.md) | Why a small local model can win; requirements; risks |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The whole system: repository, parts, modes, query flow |
-| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and traps. Rules: `project/knowledge-rules/` |
+| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and misconceptions. Rules: `project/knowledge-rules/` |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 | [CLAUDE.md](CLAUDE.md) | How Claude works in this repository |
 | [SECURITY.md](SECURITY.md) | Security policy |
@@ -27,7 +27,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/vcf-operations/` | VCF Operations itself: `concepts/` (role, channels), `features/`, `dashboards/`, `reports/`, `alerts/` (alert definitions). Metrics it computes about vSphere objects live with those objects |
 | `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it |
 | `knowledge/glossary.md` | The agent's vocabulary |
-| `knowledge/misreadings.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
+| `knowledge/misconceptions.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
 | `harness/` | Retrieval, catalog, calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows

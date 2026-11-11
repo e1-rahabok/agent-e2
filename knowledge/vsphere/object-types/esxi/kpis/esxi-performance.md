@@ -40,7 +40,7 @@
 - A host with no powered-on VMs: no VM sub-metric has data; bad packets 0 are left out. KPI = 100.
 - Missing data: a sub-metric with no data, or a stat older than 10 minutes, is left out, never counted as 0. A host that is not connected gets no KPI.
 
-## Traps
+## Misconceptions
 - "ESXi CPU Ready is the host's contention" → host Ready sums its VMs and hides the one that suffers; this KPI takes the worst VM and the 90th percentile.
 - "ESXi Performance is low, so the host is overloaded" → it scores VM contention and bad packets, not utilization. A host can be busy and score 100.
 - "Host with no VMs scores 100, so the host is fine" → the KPI has nothing to score; availability and configuration are separate health check steps.
@@ -81,6 +81,6 @@ corrections: []
 review_notes:
 - 'Whole file: from the adapter documentation and formula image. Metric names follow Cluster Performance, with "on the host" added.'
 - 'To check: Section Thresholds, interval: the Cluster Performance memory rows carry interval 5m in the catalog; every VM sub-metric here is a 20-second peak (adapter documentation, including mem|20_sec_peak_host_contentionPct).'
-- 'To check: Section Traps: derived from the design text.'
+- 'To check: Section Misconceptions: derived from the design text.'
 status: draft
 ```

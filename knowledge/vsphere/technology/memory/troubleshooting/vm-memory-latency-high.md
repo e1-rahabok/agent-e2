@@ -19,7 +19,7 @@
 - Swap out without swap in: past pressure, no wait yet.
 - Latency with a flat Consumed near the limit: the limit is the cause.
 
-## Traps
+## Misconceptions
 - "Balloon is in Latency" → Latency excludes balloon.
 
 ## Metadata

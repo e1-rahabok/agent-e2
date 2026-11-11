@@ -12,7 +12,7 @@
 - Consumed fluctuated slightly. Consumed and Swap Target mirror each other: when Consumed rises, Swap Target falls.
 ![Swap Target, Swapped, Granted and Consumed table](../../images/vm-memory-swap-target-swapped-granted-consumed-quiz-table.png)
 
-## Traps
+## Misconceptions
 - "Swap Target = Swapped" → the target is an input; Swapped is the result.
 
 ## Metadata

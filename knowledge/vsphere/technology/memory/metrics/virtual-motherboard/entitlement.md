@@ -9,7 +9,7 @@ Entitlement = Granted + Overhead
 - ESXi memory the VM deserves, as determined by the ESXi scheduler.
 - The book's assumption: it excludes memory above a limit, since the VM is not entitled beyond its limit.
 
-## Traps
+## Misconceptions
 - "Entitlement is what the VM uses" → it is a scheduler value.
 
 ## Metadata

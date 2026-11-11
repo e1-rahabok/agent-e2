@@ -51,7 +51,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 - Cluster Performance red with low Cluster Consumption → contention from imbalance, limits, resource pools or storage; not from load. Step 5, then the cluster flow.
 - Cluster Risk red alone does not close the cluster: it is a leading indicator.
 
-## Traps
+## Misconceptions
 - "Cluster CPU at 40%, so no VM waits" → check worst VM Ready and the share of VMs with Ready.
 - "Few VMs affected, so the cluster is fine" → depth matters: one VM can be badly hit.
 - "Average the VM KPIs to get the cluster KPI" → aggregate from VMs by worst and 90th percentile.

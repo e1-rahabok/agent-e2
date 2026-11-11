@@ -20,7 +20,7 @@ vsish -e get /net/portsets/DvsPortset-0/ports/<port>/vmxnet3/rxSummary
 - Network VMs (firewalls, routers) or VMs expecting high packet rates: check whether the VM requests NetQ RSS.
 - VMXNET3 can lose packets in very high bursts when buffers run out (KB 2039495).
 
-## Traps
+## Misconceptions
 - "vSphere shows the drop reason" → only vsish shows it.
 
 ## Metadata

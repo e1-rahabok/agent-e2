@@ -44,7 +44,7 @@
 - Cluster: fires when 50% of its hosts meet the condition. Most clusters have fewer than 20 hosts, and memory works as a cache, so high consumption does not mean slow.
 - Metrics: `vsphere/technology/memory/metrics/host/ballooned`, `vsphere/technology/memory/metrics/host/consumed`.
 
-## Traps
+## Misconceptions
 - "Memory contention tells which cause dominates" → limit, swap, compression and shares mix; the split cannot be read from the metric.
 - "Alert on VM memory usage" → a VM is a virtual motherboard; memory sufficiency is a Guest OS question with no common threshold.
 - "Host consumed at 95% is a problem" → memory is a cache. The alert needs ballooning above 10 MB as well.

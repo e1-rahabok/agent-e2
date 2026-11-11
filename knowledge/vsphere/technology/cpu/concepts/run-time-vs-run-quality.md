@@ -54,7 +54,7 @@
 - A CPU is always running something. Cycles spent waiting for memory or disk are wasted from the task's point of view.
 - Throughput means useful cycles, not the idle loop.
 
-## Traps
+## Misconceptions
 - "Run 100% means the vCPU got full performance" → Run is time. Throughput depends on frequency and Hyper-Threading.
 - "Same MHz, same work done across CPU generations" → efficacy differs. No counter shows it.
 - "Used equals Run" → Used is adjusted for shared cores, frequency and hypervisor IO.

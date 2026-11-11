@@ -15,7 +15,7 @@
 - Small swap-in rates matter little: 1-2 KB/s averaged over 20 s = 20-40 KB.
 ![Cumulative swap in and swap out](../../images/esxi-memory-swap-in-vs-swap-out-cumulative.png)
 
-## Traps
+## Misconceptions
 - "Swap Consumed = Swap Out - Swap In" → no. Swap Out and Swap In are cumulative totals. Swap Consumed is what sits in swap now, like VM Swapped.
 
 ## Metadata

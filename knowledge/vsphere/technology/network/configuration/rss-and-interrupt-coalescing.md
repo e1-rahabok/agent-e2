@@ -34,7 +34,7 @@
 - Change in vSphere Client: right-click the VM, Edit Settings, VM Options tab, expand Advanced, Edit Configuration. Set `ethernetX.coalescingScheme` or `ethernetX.coalescingParams`.
 - Change takes effect after the VM restarts, or after the vNIC is disconnected and reconnected.
 
-## Traps
+## Misconceptions
 - "Coalescing is always good" → it can add latency, and disabling it raises CPU use.
 - "RSS is free" → it adds CPU use. The source says it is acceptable with recent CPUs, but it is deactivated by default in some configurations.
 - "Coalescing latency is always microseconds" → the source gives a few hundred microseconds up to a few milliseconds.

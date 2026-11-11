@@ -24,7 +24,7 @@ Granted = normal pages + shared pages + zero pages + pages being swapped in + ti
 ![Granted ignores the limit; Consumed stays below it](../../images/vm-memory-granted-ignores-limit-consumed-below-limit.png)
 ![Granted rises as Compressed and Swapped fall](../../images/vm-memory-granted-rises-as-compressed-and-swapped-fall.png)
 
-## Traps
+## Misconceptions
 - "Granted = Consumed" → Granted is the VM view, Consumed the ESXi view after savings and limits.
 - "Granted near configured means the guest uses all its memory" → touched pages stay mapped, including zero and shared pages.
 

@@ -10,7 +10,7 @@
 Sum over layoutEx.file of (uniqueSize if not null else size) / (1024 × 1024 × 1024)
 ```
 
-## Traps
+## Misconceptions
 - "VM Used = sum of virtual disks" → includes all files in the folder.
 
 ## Metadata

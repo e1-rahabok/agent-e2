@@ -57,7 +57,7 @@ esxcli sched swap system set -d true -n <datastore name>
 ## Offsets
 - ESX page sharing and other optimizations can save more memory than the overhead described here in some cases.
 
-## Traps
+## Misconceptions
 - "Resource pool overhead is a cost of the pool" → it is the sum of its VMs' overhead; the pool adds none.
 - "Overhead is counted inside the configured memory of the VM" → the per-VM overhead is reserved in addition to the configured memory.
 - "The VMX swap file is a regular swap file" → it is unrelated to host-level swapping and swap to host cache.

@@ -51,7 +51,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 
 | Part           | Job                                                                          | Where                 |
 | -------------- | ---------------------------------------------------------------------------- | --------------------- |
-| Knowledge base | Level 400 facts, mechanisms, traps, flows and exact data                     | `knowledge/`          |
+| Knowledge base | Level 400 facts, mechanisms, misconceptions, flows and exact data                     | `knowledge/`          |
 | Harness        | Retrieval, exact tools, rules, budgets, answer verifier                      | `harness/`            |
 | Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | `harness/AGENT.md`    |
 | Model          | An open-weight vision model on one GPU, chosen by the benchmark              | `benchmark/models.md` |
@@ -71,7 +71,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | [MISSION.md](MISSION.md)                             | The mission; why it is possible; what we can change; risks; what the product must do; design considerations |
 | [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: repository, parts, modes, local deployment, checks, query flow                                   |
 | [REPOSITORY-MAP.md](REPOSITORY-MAP.md)               | Where each folder and file lives                                                                            |
-| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How expertise is codified and found; folder, metadata, trap, flow, image and writing rules                  |
+| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How expertise is codified and found; folder, metadata, misconception, flow, image and writing rules                  |
 | [harness/AGENT.md](harness/AGENT.md)                 | What the agent knows up front, what it decides, its rules, how it is improved                               |
 | [harness/README.md](harness/README.md)               | What each harness part does for an expert answer; modules                                                   |
 | [benchmark/design.md](benchmark/design.md)           | How the benchmark proves the claim; final score                                                             |

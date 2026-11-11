@@ -103,7 +103,7 @@ current frequency = %A/MPERF x nominal frequency
 - Device list: `sched-stats -t sys-service-stats` (service, count, time, name such as VMK-igbn-rxq0, TCPIPRX, Netpoll, SCSI).
 - Some services are reported under VMK-timer, for example vDS IOChain.
 
-## Traps
+## Misconceptions
 - "%RDY 300% is impossible" → summed over vCPUs.
 - "%A/MPERF per VM" → per physical CPU only.
 

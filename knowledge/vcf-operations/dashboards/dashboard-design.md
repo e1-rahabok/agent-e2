@@ -56,7 +56,7 @@
 - Prefer symmetrical interaction: for example, 4 heat maps each driving one of 4 line charts. It looks complex on a screenshot and feels natural in use.
 - Progressive disclosure limits information overload and keeps the page fast. The browser session remembers the last selection.
 
-## Traps
+## Misconceptions
 - "One dashboard for every scenario" → it ends up unused; one main question per dashboard.
 - "The same dashboard for 500 and 50,000 VMs" → size changes the design even for the same role and purpose.
 - "Mix capacity and performance to save clicks" → mixing pillars, or monitoring with troubleshooting, makes the dashboard fail the 5-second test.

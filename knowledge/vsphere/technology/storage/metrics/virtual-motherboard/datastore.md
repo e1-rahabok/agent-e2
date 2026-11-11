@@ -16,7 +16,7 @@
 - Higher read IOPS than virtual disk when a snapshot exists. See `vsphere/technology/storage/concepts/snapshot-impact`.
 - With all disks on one datastore backed by one LUN, virtual disk, disk and datastore metrics are nearly identical. Differences come from files outside virtual disks (snapshots, logs, swap).
 
-## Traps
+## Misconceptions
 - "Datastore IOPS = VM total IOPS" → RDM IO is excluded.
 
 ## Metadata

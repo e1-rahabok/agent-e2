@@ -42,7 +42,7 @@
 - Trade-off: reservations reduce the number of VMs that can run on a host, cluster or resource pool. ESX keeps enough memory for all reservations, so it does not power on a VM if that would reduce available memory below the reserved amount.
 - See `vsphere/object-types/vm/configuration/resource-settings-guidance` for reservation guidance.
 
-## Traps
+## Misconceptions
 - "Swap file size equals configured memory" → size is configured memory minus reservation.
 - "Put the swap file on the fastest datastore" → the source ranks local SSD first, then remote SSD, then fastest available storage. Thin-provisioned storage is excluded.
 - "Local swap files speed up vMotion" → the source says they can reduce vMotion performance.

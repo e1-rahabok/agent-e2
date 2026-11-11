@@ -179,7 +179,7 @@ def main():
         if at == 'deterministic':
             prompt = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
             letters = set(re.findall(r'^(?:[-*]\s+)?([A-H])\.\s', prompt.group(1), re.M)) if prompt else set()
-            for k in ('answer', 'trap'):
+            for k in ('answer', 'misconception'):
                 for x in fm.get(k) or []:
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')
             if not fm.get('answer'): bad(f, 'deterministic question has no answer')
@@ -236,7 +236,7 @@ def check_repo_terms(allowed, bad):
 
 
 def check_terminology(docs, bad):
-    """Glossary entries and misreadings, as the harness reads them (project/knowledge-rules/terminology.md)."""
+    """Glossary entries and misconceptions, as the harness reads them (project/knowledge-rules/terminology.md)."""
     import kb as _kb
     g = 'knowledge/glossary.md'
     if 'glossary' in docs:
@@ -259,9 +259,9 @@ def check_terminology(docs, bad):
             if t.lower() in seen: bad(g, f'term "{t}" has two entries')
             seen.add(t.lower())
             if e['file'] and e['file'] not in docs: bad(g, f'term "{t}": File {e["file"]} is not a knowledge id')
-    m = os.path.join('knowledge', 'misreadings.md')
+    m = os.path.join('knowledge', 'misconceptions.md')
     for ref in re.findall(r'See `([^`]+)`', open(m).read()):
-        if ref not in docs: bad('knowledge/misreadings.md', f'See `{ref}` is not a knowledge id')
+        if ref not in docs: bad('knowledge/misconceptions.md', f'See `{ref}` is not a knowledge id')
 
 
 def check_moved(ids, bad):

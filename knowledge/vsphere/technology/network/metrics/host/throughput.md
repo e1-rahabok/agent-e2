@@ -21,7 +21,7 @@ Average packet size = bits per second / packets per second
 ## Unusual packets
 - Broadcast and multicast counters exist. Hosts and VMs should have minimal broadcast and multicast.
 
-## Traps
+## Misconceptions
 - "Usage rate above link speed is impossible" → it adds both directions.
 
 ## Metadata

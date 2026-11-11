@@ -16,7 +16,7 @@ Utilization (KB) = Guest Needed Memory (KB)
 - Excessive paging is added. Excessive is relative.
 - Linux Available and Windows Cache are included, to be conservative.
 
-## Traps
+## Misconceptions
 - "Utilization above 100% is an error" → the formula adds paging and unusable memory.
 
 ## Metadata

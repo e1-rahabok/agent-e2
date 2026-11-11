@@ -110,7 +110,7 @@
   - Green: nothing to do.
 ![Decision flow: something happened or changed on an object → urgent (act today)? No → low importance (yellow), next business day, seen as a group in the daily health check. Yes → acknowledge, when to act? As soon as possible → high importance (red); sometime today → medium importance (orange). The wider the impact, the higher the importance](images/alert-criticality-urgency-importance-diagram.png)
 
-## Traps
+## Misconceptions
 - "Yellow alert: deal with it tomorrow" → yellow is not an alert. Not urgent means it belongs in the daily health check as an insight.
 - "Alert colours and KPI colours mean the same" → an alert colour is a deadline, because time has started. A KPI colour band is proactive and carries no deadline. They are not related.
 - "We have proactive alerts" → reacting to an alert is reactive, even before business impact. Proactive work is insight from the daily health check.

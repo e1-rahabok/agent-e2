@@ -23,7 +23,7 @@
 - Active is sampled. It can stay constant when it should not, and can stay at 100% for hours (see `vsphere/technology/memory/concepts/guest-os-vs-vm-memory`).
 ![Active falls while Consumed rises](../../images/vm-memory-active-falls-while-consumed-rises.png)
 
-## Traps
+## Misconceptions
 - "Active = VM memory utilization" → it is a sampled estimate for the kernel.
 - "Active over-reports, so it is always higher than Consumed" → it is usually far lower.
 

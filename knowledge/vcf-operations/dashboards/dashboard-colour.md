@@ -26,7 +26,7 @@
   - utilization turns red only at 75%.
 - After both fixes the heat map shows only what matters.
 
-## Traps
+## Misconceptions
 - "Different colours mean imbalance" → a gradient colours any difference; minor imbalance is normal. Set the scale so only significant gaps show.
 - "Low utilization is green" → in capacity, low utilization is wastage (dark grey), and can point to a bottleneck elsewhere.
 - "White for missing data" → white is hard to read; grey means collection error.

@@ -81,7 +81,7 @@
   - compare sibling values: if Gold should have 2x Silver, its shares must be 2x.
 - Cascading: nested pools are often folders by mistake. Each level adds complexity to performance management; avoid sub-pools.
 
-## Traps
+## Misconceptions
 - "Reservation is a target to aim for" → Reservation is a minimum. Shares divide the rest.
 - "A CPU limit caps a noisy VM safely" → the Guest OS cannot see it; performance turns unpredictable. Rightsize instead.
 - "The VM was resized, so its shares followed" → only a resize in the vSphere Client recalculates default shares; API resizes and hand-set values do not.

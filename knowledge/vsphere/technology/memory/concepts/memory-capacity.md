@@ -43,7 +43,7 @@ VM Demand   = Min (Limit, Consumed + Ballooned + Zipped + Swapped)
 ## Storage: used can exceed allocated
 - vSAN protects in software. A 10 GB thick disk (vSAN policy) consumes 20 GB at the VMFS layer.
 
-## Traps
+## Misconceptions
 - "Allocated is the ceiling of used" → vSAN protection and other files exceed it.
 
 ## Metadata

@@ -23,8 +23,8 @@ knowledge/vcf-operations/<features|dashboards|reports>/screens/<slug>.md for VCF
 ## Reading it
 - Healthy pattern vs problem pattern, with the knowledge files that explain why.
 
-## Traps
-- Misreadings this screen invites → correct reading.
+## Misconceptions
+- Misconceptions this screen invites → correct reading.
 
 ## Metadata
 ```yaml

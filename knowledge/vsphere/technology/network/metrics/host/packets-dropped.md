@@ -16,7 +16,7 @@
 - Find which vmnic drops and which VMkernel interface is affected.
 - A data center network should be free of drops: discuss any pattern with the network team.
 
-## Traps
+## Misconceptions
 - "Host transmit drops are common" → rare; 99th percentile 0.
 
 ## Metadata

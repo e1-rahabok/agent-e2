@@ -21,7 +21,7 @@
 - All vCPUs balanced and low: the application cannot use even one vCPU. Questions the vendor's sizing and license cost.
 - Imbalanced: some vCPUs saturated. Shows real demand on few vCPUs.
 
-## Traps
+## Misconceptions
 - "Low utilization alone convinces the owner" → owners who paid do not care. Show vCPU usage disparity.
 - "Usage above 90%, so upsize" → Turbo inflates Usage. Check Run.
 

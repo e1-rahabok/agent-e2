@@ -39,7 +39,7 @@
 - Both MUX and UPTv2 provide accelerated networking services for VLAN and overlay networking, checksum offload, TCP Segmentation Offload (TSO), and Receive Side Scaling (RSS).
 - Configuring a data path mode requires NSX Manager. Some configuration options do not require an NSX license.
 
-## Traps
+## Misconceptions
 - "DirectPath I/O is a general performance upgrade" → the source says typical VMs do not require it. It removes vMotion, snapshots, FT and NetIOC.
 - "SR-IOV gives the same limits as DirectPath I/O" → the list of incompatible features is the same, but SR-IOV allows one device to be shared among guests.
 - "UPTv2 works without a memory reservation" → it requires full memory reservation and pinning.

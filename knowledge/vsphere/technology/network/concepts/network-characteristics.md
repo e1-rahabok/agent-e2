@@ -61,7 +61,7 @@
 - Basic services (DNS, NTP) need availability monitoring.
 - Partner with network experts.
 
-## Traps
+## Misconceptions
 - "Each VM can use the full uplink speed" → the uplink is shared, dynamic and often oversubscribed.
 - "No NIOC metric, so NIOC never capped" → no such metric exists.
 

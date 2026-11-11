@@ -57,7 +57,7 @@
 - Compare with a ratio. LUN IOPS / datastore IOPS = 1 with a 1:1 mapping.
 - Ratio above 1: the array does its own IO, such as replication or snapshots.
 
-## Traps
+## Misconceptions
 - "Adapter IOPS can be split per VM" → physical layers have no VM breakdown.
 - "vSAN has 4 paths like FC" → one path per device.
 - "Sum datastore capacity per cluster" → shared datastores make it impossible.

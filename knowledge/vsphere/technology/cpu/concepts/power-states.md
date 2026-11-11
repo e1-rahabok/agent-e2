@@ -94,7 +94,7 @@ Platform Power Management Features
   - At idle, Balanced: the core enters C2. No spike. The frequency drops further.
 - Balanced delivers higher performance than High Performance on low-to-medium load hosts.
 
-## Traps
+## Misconceptions
 - "High Performance always gives the highest frequency" → Balanced reached about 151% vs 130% when other cores were idle.
 - "Disabling deep C-states disables Turbo" → firmware thermal management still sets per-core frequency.
 - "ESXi controls power states" → only when the BIOS hands control to the OS.

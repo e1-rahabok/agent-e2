@@ -12,7 +12,7 @@
 ## Includes / excludes
 - excludes: hypervisor (kernel) reservation.
 
-## Traps
+## Misconceptions
 - "Reserved CPU is unavailable to other VMs" → unused reserved CPU is used by other VMs.
 - "A CPU reservation speeds up the VM" → it only matters under contention. With enough CPU for every VM it changes nothing.
 - "The host can reserve up to its Turbo capacity" → reservation is capped at base clock speed × cores.
@@ -41,7 +41,7 @@ source:
   document: PART 3 - Counters.docx
   path: CPU > ESXi > Consumption Metrics > Reservation
 corrections:
-- 'Sections Meaning, Traps: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
+- 'Sections Meaning, Misconceptions: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
 review_notes: []
 status: draft
 ```

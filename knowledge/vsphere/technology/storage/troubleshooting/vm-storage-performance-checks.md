@@ -12,7 +12,7 @@
 - Latency with low IOPS: queues in one of the layers.
 - Only read or only write affected: common. Look at that side only.
 
-## Traps
+## Misconceptions
 - "Low IOPS, so latency cannot be a storage problem" → queues add latency at any load.
 
 ## Metadata

@@ -48,7 +48,7 @@
   - Tenant: a regular reclamation email to the VM owner, copied to their senior leadership and the CFO office, gets a different reaction from a self-service portal. Example content: the top 10 VMs with the largest saving, with owner names. Weekly to monthly.
   - Consultant: comprehensive, covering all of operations management, for an assessment done rarely, such as once a year.
 
-## Traps
+## Misconceptions
 - "Send a daily report" → daily information belongs on a dashboard; a report is fixed and has no drill-down.
 - "Put VM performance in the monthly report" → reports prove overall performance; individual VMs are for dashboards.
 - "One report for all of the auditor's needs" → one report per persona and use case; several reports if needed.

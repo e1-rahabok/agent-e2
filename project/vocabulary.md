@@ -13,7 +13,7 @@ How the knowledge files are written: the dimensions not to mix, and the words to
 - Pillar: availability, performance, security, capacity, value. Not a technology.
 - Metric class: contention, consumption, context. Not a pillar.
 - Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
-- Trap: a wrong conclusion from a true observation. Format: `KNOWLEDGE-ENGINEERING.md`, section 4.
+- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One concept, two homes: `## Misconceptions` in the file, and the widest-reaching ones up front in `knowledge/misconceptions.md`. `KNOWLEDGE-ENGINEERING.md`, section 4.
 - Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
 - Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.
 
@@ -34,6 +34,8 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | need, want, wish (for a vCPU or VM) | demands runtime; the kernel decides how much it gets | A vCPU is a thread in the scheduler. It has no intent. |
 | "uses only X% of what it needs" | "is charged X%" or "gets X% of the runtime it demands" | Same reason. |
 | object (for vCPU, Guest OS) | instance (vCPU), layer (Guest OS) | vCPU and Guest OS are not vSphere object types. |
+| trap (for a wrong belief or wrong reading) | misconception | In IT infrastructure a trap is an event notification (SNMP trap, a log message an alert traps) or, in CPU virtualization, a hand-over to the hypervisor (trap-and-emulate). Agent E2 does not set traps for other models; it knows the mechanism (author, 2026-11-11). |
+| misreading (for the up-front list) | misconception | One concept, one word: the up-front lines are misconceptions promoted from their files. |
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
 | Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |

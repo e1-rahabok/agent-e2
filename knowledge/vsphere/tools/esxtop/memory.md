@@ -74,7 +74,7 @@
 | CPTRD (MB) | Data read from the checkpoint file (snapshot, suspend). Large values can slow the VM. |
 | CPTTGT (MB) | Checkpoint target size. |
 
-## Traps
+## Misconceptions
 - "ZIP/s means VMs wait" → UNZIP/s does.
 - "NMIG is current" → cumulative since power-on.
 

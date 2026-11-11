@@ -23,7 +23,7 @@ flowchart TD
 ## How to read the result
 - <Where the tree stopped> → <what the answer means and what to do>.
 
-## Traps
+## Misconceptions
 - Wrong conclusion → correct conclusion.
 
 ## Metadata

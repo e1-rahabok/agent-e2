@@ -21,7 +21,7 @@
 | DPC Rate, Interrupts/sec | Inputs to the time counters. |
 | System Calls/sec | User-to-kernel transitions (Ring 3 to Ring 0). High together with Privileged Time above 30%: too much OS work. Above 20,000 per core is high; usually below 2,000. Not collected by VMware Tools. |
 
-## Traps
+## Misconceptions
 - "Privileged Time high means a CPU shortage" → it means kernel or driver work.
 
 ## Metadata

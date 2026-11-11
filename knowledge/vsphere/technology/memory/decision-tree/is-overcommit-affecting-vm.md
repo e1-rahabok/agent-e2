@@ -31,7 +31,7 @@
   - the guest OS has another issue unrelated to the host,
   - the guest memory size is too small.
 
-## Traps
+## Misconceptions
 - "Ballooned memory above zero means the VM is short of memory now" → some ballooning is normal, and ballooning can reflect earlier reclamation. See `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`.
 - "No ballooning means no memory problem" → the indicator is valid only when the balloon driver works. Check Swapped and Compressed too.
 - "Guest swap activity proves host overcommitment" → guest swap can have other causes. Check the host indicators first.

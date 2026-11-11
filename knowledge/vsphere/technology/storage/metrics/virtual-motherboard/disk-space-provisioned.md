@@ -11,7 +11,7 @@
 ## Known issue
 - Can report a much higher value: Broadcom KB 83990. Fixed in ESXi 7.0 U2c (7.0.2 P03), PR 2725886.
 
-## Traps
+## Misconceptions
 - "Provisioned = used" → thin disks count at full size.
 
 ## Metadata

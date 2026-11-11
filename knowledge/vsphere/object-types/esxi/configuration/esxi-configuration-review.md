@@ -61,7 +61,7 @@
 - Identical: CPU model, generation and frequency; memory size and speed; BIOS and ESXi versions; BIOS and ESXi power management; storage paths (count and policy); hardware drivers and firmware.
 - Devices of one type in the same bus or slot on every host: easier automated install, administration and troubleshooting.
 
-## Traps
+## Misconceptions
 - "Turn off Hyper-Threading for predictable performance" → it costs a large share of capacity; keep it on unless a workload proves otherwise.
 - "The host fits a 30-vCPU VM, so it runs well" → on 16 cores per socket it spans NUMA nodes.
 - "The NIC is 25 Gb" → check the negotiated speed; auto-negotiation can drop it.
@@ -109,6 +109,6 @@ review_notes:
 - 'To check: Section ''Memory'': 64 cores, 128 threads, 512 GB at 4 GB per vCPU is 1 vCPU per thread; the Price & SLA example (768 GB) is per core. (Q111).'
 - 'To check: Section ''Capacity'': the book says aim for 48 cores to maximize the software license; Price & SLA says 64. VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548). Dropped from the body. (Q111).'
 - 'To check: Section ''Capacity'', 30-vCPU VM spanning NUMA: 32 cores read as 2 sockets × 16 cores per socket.'
-- 'To check: Traps 5 and 6: derived from the book''s rules, not stated in the book.'
+- 'To check: Misconceptions 5 and 6: derived from the book''s rules, not stated in the book.'
 status: draft
 ```

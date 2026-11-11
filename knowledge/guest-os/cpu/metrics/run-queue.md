@@ -33,7 +33,7 @@
 - High queue while idle: the application created many threads. 20-second spikes are much smaller in the 5-minute average.
 ![Imbalanced vCPU run with a high queue](../images/windows-high-run-queue-with-imbalanced-vcpu-run.png)
 
-## Traps
+## Misconceptions
 - "Queue 53 on 8 vCPUs means add vCPUs" → check locks, imbalance and kernel time first.
 
 ## Metadata

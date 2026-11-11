@@ -149,7 +149,7 @@
   - Windows Available (MB) drops: fine, that memory was not used.
 - Other: disk and network demand change CPU and memory use. Plot disk IOPS and throughput, network throughput and packets per second to compare like with like.
 
-## Traps
+## Misconceptions
 
 - "Rightsize this VM" → name the job first: Guest OS sizing (does the guest have enough?) or VM footprint (what does it cost the infrastructure?). Different counters, different answers.
 - "Size on CPU Usage" → Turbo inflates it 25% in this example, pushing the VM across NUMA nodes.

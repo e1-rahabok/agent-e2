@@ -59,6 +59,6 @@ source_path: "Author's book, opening chapter: Think virtual motherboard, not vir
 answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [A, C, E]
-trap: [B, D]
+misconception: [B, D]
 status: reviewed
 ```

@@ -9,7 +9,7 @@
 ## Related counter
 - Low Free Threshold (KB): the free-memory level below which ESXi reclaims from VMs.
 
-## Traps
+## Misconceptions
 - "State Soft means VMs are slow" → it means ballooning has started. Check contention.
 
 ## Metadata

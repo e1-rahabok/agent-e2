@@ -61,7 +61,7 @@
 - Example: 3 VM pages shared into 1 ESXi page. VM metrics report 3 shared pages; ESXi metrics report 1.
 - Ballooned pages exist only in the VM view. They point to no ESXi page.
 
-## Traps
+## Misconceptions
 - "Compare Granted with Consumed" → different layers and contexts.
 - "TPS means memory pressure" → TPS runs regardless of pressure.
 - "Balloon or swap means VMs are contending" → both are proactive. Check Contention.

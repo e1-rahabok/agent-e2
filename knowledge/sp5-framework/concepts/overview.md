@@ -141,7 +141,7 @@
   - consumer layers: business application (spans pods or VMs), software (such as SQL Server), container or pod, VM (on premises or in a cloud);
   - provider layers: cloud services, Kubernetes, vSphere with vSAN and NSX, physical (network, arrays, servers, UPS, racks).
 
-## Traps
+## Misconceptions
 - "Availability and performance are separate, so an outage that HA covers has no performance cost" → flapping on and off, or between passive and active nodes, hurts performance.
 - "Capacity is computed after HA, so availability cannot touch capacity" → an outage beyond the design reduces the capacity available.
 

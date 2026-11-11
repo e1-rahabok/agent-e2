@@ -8,7 +8,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 
 | Failure of a model alone | Harness part | What it does instead |
 |---|---|---|
-| Does not know the Level 400 fact | Retrieval (`retrieval.py`, `kb.py`) | Finds the knowledge file, then its linked traps and mechanisms |
+| Does not know the Level 400 fact | Retrieval (`retrieval.py`, `kb.py`) | Finds the knowledge file, then its linked misconceptions and mechanisms |
 | Reads one meaning of a label that has two | Link expansion (`retrieval.py`) | Brings the `same_name` file on the other object with the first |
 | Gets a unit, rollup, statistics level or threshold wrong | Catalog (`catalog.py`) | Returns the exact value from the vSphere 9.1 tables, with its source |
 | Slips on arithmetic | Calculator (`calc.py`) | Computes the conversion and names the rule's source file |
@@ -43,7 +43,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
 | `agent.py` | The agent loop: tools, rules (lookup first, no repeats, same-name check), budgets, fallback, verifier. Design: `AGENT.md`. |
 | `clarify.py` | One clarifying round: the `chat` and `chat_final` prompt rules, `CLARIFY:` parsing; the conversation runs through `modes.converse`. |
-| `terms.py` | Question understanding before search: the user's words matched against `knowledge/catalog/user-terms.yaml`; adds knowledge-base terms to the query, pulls files into the context, adds a note per misreading. Switches `term_map`, `term_map_agent`. |
+| `terms.py` | Question understanding before search: the user's words matched against `knowledge/catalog/user-terms.yaml`; adds knowledge-base terms to the query, pulls files into the context, adds a note per misconception. Switches `term_map`, `term_map_agent`. |
 | `primer.py` | The agent's five up-front blocks, generated from the knowledge base; switches `agent_primer` in the config. |
 | `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |

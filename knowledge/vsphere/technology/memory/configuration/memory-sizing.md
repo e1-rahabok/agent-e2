@@ -14,7 +14,7 @@
 - ESX can reclaim over-allocated memory. It cannot reclaim the memory overhead associated with over-allocated memory.
 - Result: over-allocation consumes memory that could otherwise support more VMs.
 
-## Traps
+## Misconceptions
 - "Over-allocation is harmless because ballooning reclaims it" → ballooning reclaims the cache memory the guest uses. The overhead of the over-allocated memory stays. See `vsphere/technology/memory/concepts/memory-overhead`.
 - "Under-allocation is as safe as over-allocation" → the source calls under-allocation the more damaging error, because of thrashing.
 

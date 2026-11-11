@@ -28,7 +28,7 @@
 ## Not yet in VCF Operations
 - VCF Operations cannot tell an active node from a passive one, so it averages both. Until it can, read the active node alone, or exclude the passive node from the tier by hand.
 
-## Traps
+## Misconceptions
 - "Business applications are the application team's job; infrastructure measures clusters" → the infrastructure layer must prove, per application, that it serves it. A cluster KPI cannot say that.
 - "The tier is as slow as its worst VM" → members work in parallel; the tier is the average. The worst rule applies across tiers, not inside one.
 - "Average the tiers into one application score" → tiers are in sequence; one slow tier makes the application slow. Take the worst tier.

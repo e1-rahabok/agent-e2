@@ -75,7 +75,7 @@ Per host, then the worst host is kept.
 - Inter-host imbalance: partly covered by highest host utilization; complex; field validation that it changes remediation is pending.
 - vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health (`vsphere/object-types/cluster/kpis/cluster-performance`, section vMotion is not part of the KPI).
 
-## Traps
+## Misconceptions
 - "The CPU overcommit row reads 4, so the Bronze 4:1 plan is met" → the row is per core; 4 per core is 2 per thread with Hyper-Threading. The plan is per thread.
 - "Cluster average utilization shows risk" → use the worst host.
 - "Cluster Risk fell, so the cluster is safer" → a worse sub-metric can lower it when the score is already high; read the sub-metrics.

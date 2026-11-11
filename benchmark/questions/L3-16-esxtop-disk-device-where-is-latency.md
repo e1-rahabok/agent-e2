@@ -35,7 +35,7 @@ D: assuming an NFS datastore does not show in the device panel and has no DAVG.
 
 ## Notes
 - Previous id: question-0050 (renamed 2026-11-05).
-- Author 2026-11-05: Level 300; the trap is thinking an NFS datastore is not in the device panel and has no DAVG.
+- Author 2026-11-05: Level 300; the misconception is thinking an NFS datastore is not in the device panel and has no DAVG.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml
@@ -56,6 +56,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
-trap: [D]
+misconception: [D]
 status: draft
 ```

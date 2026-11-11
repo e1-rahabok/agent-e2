@@ -93,7 +93,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
   - flow: an NSX Edge VM on the edge cluster can slow a business VM on another cluster, because the traffic passes through it;
   - version: drivers and firmware outside the interoperability matrix can show up as a performance problem.
 
-## Traps
+## Misconceptions
 - "Apdex 0.75 means a mild slowdown" → the same 0.75 can hide a quarter of requests failing; read percentiles and errors.
 - "The application is slow, so find the slow infrastructure metric" → infrastructure metrics have no transaction or user context. Prove the layer with its KPI, then eliminate it.
 - "Guest OS disk latency is high, so storage is slow" → a paused or stopped vCPU inflates Guest OS latency for disk and memory, because the guest clock keeps running. Check VM CPU contention first.

@@ -53,7 +53,7 @@
 - Trace: a record of code in motion. Some traces yield metrics. Used for function-level troubleshooting.
 - NetFlow: the path taken by network flows. Shows networked relationships and yields metrics.
 
-## Traps
+## Misconceptions
 - "Power state is a property because it rarely changes" → it is sampled at a regular interval, so it is a metric.
 - "Number of VMs in the cluster is a property because it has been constant for months" → it results from activity and is collected every interval: a metric. The maximum number of VMs is the property.
 - "Number of hosts in the cluster is a metric" → configured hosts is a property; running hosts is a metric.

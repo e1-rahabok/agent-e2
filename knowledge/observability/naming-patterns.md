@@ -45,7 +45,7 @@ The patterns below classify the ways names mislead.
 - pattern: same-name-different-behaviour
 - Processor Queue Length: counts only threads waiting. Excludes threads currently running.
 - Current Disk Queue Length: includes IOs being processed, not only IOs waiting.
-- trap: treating both "queue" counters as the same kind of count.
+- misconception: treating both "queue" counters as the same kind of count.
 
 ### Windows "Task Manager"
 - pattern: incorrect-name

@@ -11,7 +11,7 @@
 - Not 0 on a host with no running VMs. The book's guess: non-VM user worlds.
 ![Granted above total capacity](../../images/esxi-memory-granted-above-total-capacity.png)
 
-## Traps
+## Misconceptions
 - "Granted above capacity is impossible" → it is the VMs' view.
 
 ## Metadata

@@ -37,7 +37,7 @@
 - Activated: `/Net/NetTuneHostMode = "dense"`.
 - Set with the vSphere Client or esxcli.
 
-## Traps
+## Misconceptions
 - "Dense mode is always beneficial" → the source warns about higher individual latency, and lower system-wide throughput at low CPU utilization.
 - "Setting dense mode activates the optimizations" → the optimizations run only when the host meets the thresholds.
 

@@ -10,7 +10,7 @@
 - Performance monitoring and troubleshooting use the KPI only. No performance SLA, no SLI, no SLO.
 - The SLA is a business contract between two parties (`sp5-framework/concepts/sla-metrics`). It is not an operations metric.
 - A contract counts pass or fail against one agreed line, monthly. Operations need to know how bad, now, and on which object. The KPI gives both: a 0-100 score per object, at 20-second resolution, read daily.
-- A performance SLA is rarely defined with a number. Customers who say they have one, probed for the metric, state the wrong one or none (section Traps).
+- A performance SLA is rarely defined with a number. Customers who say they have one, probed for the metric, state the wrong one or none (section Misconceptions).
 
 ## Two steps of maturity
 | Step | How it works |
@@ -58,7 +58,7 @@
 - vSAN KPI: disk latency of every VM using the vSAN datastore, from the same or another cluster.
 - NSX KPI: many-to-many with vSphere clusters, so not tied to one cluster.
 
-## Traps
+## Misconceptions
 - "Our performance SLA is met, so there is no performance problem" → ask which metric, object, target and window. Usually there is none, or it is on the wrong object. Read the KPI.
 - "Our SLA is Cluster Availability" → the application team cares about its VMs and pods, not the cluster. A cluster number hides the VM that was down.
 - "Track an SLI or SLO as the leading indicator" → the KPI is the leading indicator: 20-second accuracy, colour levels, alerts on it.

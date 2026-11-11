@@ -42,7 +42,7 @@ Control frame with no payload = 14 + 20 + 20 + 48 + 4 = 106 bytes
 - A 9,000-byte MTU keeps a 4 KB or 8 KB block in one frame: no IP fragmentation, so the overhead stays a fixed set of headers per IO.
 - With a 1,500-byte MTU the same 8 KB block needs several frames, each with its own headers: more packets per IO and more overhead.
 
-## Traps
+## Misconceptions
 - "Storage reads appear as network Transmit because the host issues the command" → only the command is Transmit; the data returns as Receive.
 - "Network Receive throughput equals storage read throughput" → network bytes include headers and acknowledgements.
 

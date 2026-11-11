@@ -53,7 +53,7 @@
 - Strict view: only contention is unmet demand. Ballooned, swapped and compressed memory is not; swap-in and decompression are.
 - Problem with the strict view: host metrics cannot separate contention caused by limits. VM-level metrics must exclude it.
 
-## Traps
+## Misconceptions
 - "Use VM metrics to size the Guest OS" → use Guest OS metrics.
 - "Ballooned, Swapped, Compressed are performance counters" → they measure space. Latency measures the wait.
 

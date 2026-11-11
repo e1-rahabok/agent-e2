@@ -230,7 +230,7 @@ class PrimerTest(unittest.TestCase):
 
     def test_all_blocks_present_and_within_budget(self):
         t = self.P.build(DOCS, {b: True for b in self.P.BLOCKS})
-        for head in ('## Map of the knowledge base', '## Level 300 misreadings', '## Confusable terms',
+        for head in ('## Map of the knowledge base', '## Level 300 misconceptions', '## Confusable terms',
                      '## Health checks', '## Troubleshooting (symptom', '## Decision trees', '## Procedure'):
             self.assertIn(head, t)
         self.assertLessEqual(self.P.tokens(t), self.P.BUDGET_TOKENS)
@@ -246,9 +246,9 @@ class PrimerTest(unittest.TestCase):
         self.assertEqual(len(lines), len(pairs))
         self.assertTrue(all(' vs ' in l for l in lines))
 
-    def test_rules_block_takes_only_the_misreading_lines(self):
+    def test_rules_block_takes_only_the_misconception_lines(self):
         t = self.P.rules_block(DOCS)
-        self.assertTrue(t.startswith('## Level 300 misreadings\n- '))
+        self.assertTrue(t.startswith('## Level 300 misconceptions\n- '))
         self.assertNotIn('What belongs here', t)
         self.assertNotIn('Correction', t)
 
@@ -266,7 +266,7 @@ class PrimerTest(unittest.TestCase):
         cfg = dict(ModesTest.CFG, agent_primer={'rules': True})
         rec = Recorder()
         res, used, trace, fb = modes.answer('agentic', rec, 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
-        self.assertIn('## Level 300 misreadings', rec.system)
+        self.assertIn('## Level 300 misconceptions', rec.system)
         self.assertIn('primer', [s['action'] for s in trace])
 
 

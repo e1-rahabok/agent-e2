@@ -54,7 +54,7 @@ flowchart TD
 - Contention and a configuration finding (a limit, an old version) → fix the configuration first.
 - No contention, queues normal, configuration clean, no known bug, nothing in the logs → not a vSphere cause.
 
-## Traps
+## Misconceptions
 - "The VM's CPU Usage is 95%, so it is short of CPU" → Usage is consumption and includes Turbo; check Ready, Co-stop and Run first.
 - "The daily chart is flat, so nothing happened" → read the 20-second peak in the complaint window.
 - "The Guest OS run queue is high, so the host is overloaded" → the run queue is inside the Guest OS; check VM contention first.

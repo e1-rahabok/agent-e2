@@ -85,7 +85,7 @@
 - Each layer exposes different performance problems. Monitor both.
 - VMware Tools reports Guest OS statistics to ESXi every 20 seconds by default.
 
-## Traps
+## Misconceptions
 - "Windows shows 100%, so the VM is at 100%" → Windows does not account frozen time. vSphere can report 50% for the same period.
 - "Map Guest OS CPU utilization to one VM counter" → no 1:1 mapping exists. Use each counter at its own layer.
 - "The guest sees Hyper-Threading contention" → the guest is unaware of Hyper-Threading.

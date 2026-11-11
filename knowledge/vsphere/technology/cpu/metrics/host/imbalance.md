@@ -26,7 +26,7 @@ Cluster ESXi CPU Imbalance = average (ESXi CPU Imbalance)
   - 24 cores are idle.
 - Ideal: 60 cores running 1 thread each.
 
-## Traps
+## Misconceptions
 - "Score 2.0 is always bad" → bad only while cores are idle. At 100% Core Utilization, 2 threads per core is expected.
 
 ## Metadata
