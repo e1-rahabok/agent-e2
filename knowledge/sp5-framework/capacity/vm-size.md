@@ -11,11 +11,11 @@
 |---|---|
 | 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
 | 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
-| 4:1 | 0.25 × logical CPUs |
+| 3:1 | 0.33 × logical CPUs (96 threads → 32) |
 
 - 1:1: mind the Hyper-Threading throughput penalty and NUMA.
 - 2:1: two large VMs on one host each demand whole cores, and both get the 37.5% Hyper-Threading penalty.
-- 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
+- 3:1 is the highest CPU overcommit of any class (Bronze); higher ratios are not used.
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
 
 ## Size as a class of service fence
@@ -26,7 +26,7 @@
 ## Misconceptions
 - "A VM can be as large as its host" → by count at 1:1, yes; but the VM then pays the Hyper-Threading penalty and spans NUMA nodes. Size it against the host's NUMA node.
 - "Bronze is cheap, so a Bronze VM can be any size" → a large Bronze VM is the noisy neighbour of a mixed cluster; keep Bronze small and give large sizes to Gold.
-- "8:1 per thread is 4:1 per core" → 16:1 per core: each core has two threads, so a ratio per core is twice the ratio per thread.
+- "Bronze at 3:1 per thread is 3:1 per core" → 6:1 per core: each core has two threads, so a ratio per core is twice the ratio per thread.
 - "Low utilization, so the large VM is harmless" → a monster VM raises contention risk at low utilization.
 
 ## Metadata
@@ -60,8 +60,7 @@ related:
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Noisy Neighbour > Maximum VM size; Class of Service'
-corrections:
-- 'Section ''Maximum VM size per overcommit'', 8:1 row: the source text says 8:1 per thread is 4:1 per core; per core it is 16:1 (two threads per core).'
+corrections: []
 review_notes:
 - 'To check: Section ''Maximum VM size per overcommit'': the size is counted in logical CPUs (threads); whether a ceiling at the physical cores applies at 1:1 (Q111 a).'
 - 'To check: Section ''Size is set by the host'': the NUMA node and L3 domain limits per CPU family (Q125).'

@@ -39,7 +39,7 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 ## Reading the examples
 - On the same 64-core host, Gold takes less RAM than Silver (256 GB vs 512 GB): Gold sells fewer vCPUs per host, and RAM follows the vCPUs sold.
 - Each class gets its own host specification, or its own cluster with a matching specification. Mixing classes on one host specification leaves RAM unsold in one of them.
-- Silver ratios differ between the book's examples: CPU 4:1 with memory 2:1 here; CPU 3:1 with memory 1:1 in the planning example; memory 1.5:1 in the class of service table of `sp5-framework/performance/noisy-neighbour`. Each is a business choice per provider.
+- CPU overcommit per class, per physical thread: Gold 1:1, Silver 2:1, Bronze 3:1 (`sp5-framework/capacity/class-of-service-planning`). The examples above are sizing arithmetic, not class definitions.
 
 ## Misconceptions
 - "Buy as much RAM as the host takes; memory is cheap" → RAM is sold with vCPU. Beyond (sellable vCPU × GB per vCPU / memory overcommit) + infrastructure share, it cannot be sold.

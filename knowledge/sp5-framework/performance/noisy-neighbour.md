@@ -27,9 +27,9 @@
 - Example cluster: 10 hosts × 40 cores × 2.5 GHz = 1,000 GHz (HT not counted). Overcommit 4:1 per core (2:1 per thread): 400 VMs × 4 vCPU = 1,600 vCPU on 400 cores, 800 threads. Overcommit is stated per physical thread from here on. A core runs 2 vCPU at once with HT, at a 37.5% penalty each.
   - A few 32-vCPU VMs cause the problem: 10 of them can each fill one host. So overcommit ratio and maximum VM size both belong in the pricing policy.
 - Reservation:
-  - at 4:1, at most 25% of each VM's configured capacity can be reserved: a 2-vCPU VM gets 1.25 GHz, about 0.5 vCPU;
+  - at 4:1 per core (2:1 per thread), at most 25% of each VM's configured capacity in GHz can be reserved: a 2-vCPU VM gets 1.25 GHz, about 0.5 vCPU;
   - reserving the first vCPU of each VM: 400 × 2.5 GHz = 1,000 GHz, the whole cluster, beyond usable capacity once HA is counted. HT adds about 25% throughput;
-  - the higher the overcommit, the less a reservation can guarantee: at 4:1 per physical thread, at most 0.25 thread per vCPU across the environment, on average.
+  - the higher the overcommit, the less a reservation can guarantee: at 3:1 per physical thread (Bronze, the highest class ratio), at most a third of a thread per vCPU across the environment, on average.
 - Share:
   - shares are per VM, not per vCPU. A larger VM has more shares in total, shared among its vCPUs;
   - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 point;
@@ -91,7 +91,7 @@
 
 ## Misconceptions
 - "Find the villain VM" → the villain can be a schedule or an external system, and the damage can travel through a shared path (replication link). Look for a common time and path, not a VM.
-- "Reserve CPU for every VM to stop noisy neighbours" → at 4:1 overcommit a reservation covers at most 25% of each VM; reserving the first vCPU of 400 VMs uses the whole cluster.
+- "Reserve CPU for every VM to stop noisy neighbours" → at 4:1 per core a reservation covers at most 25% of each VM; reserving the first vCPU of 400 VMs uses the whole cluster.
 - "A CPU limit on the VM is a safe cap" → the Guest OS cannot see it, and it is in GHz, so its effect changes with frequency. Rightsize instead.
 - "A VM with low CPU Run cannot run out of CPU shares" → shares are charged on Used, which includes System time from IO. An IO-heavy VM can see Ready.
 - "Memory reservation protects the VM's working set" → it is sticky and blind to page use; it pins idle pages too.
@@ -150,7 +150,6 @@ corrections:
 - 'Section ''Network'': the pool is the uplink group, Load Based Teaming every 30 s above 75%; the villain sustains 10 Gb over 300 s (book said 5); VM traffic outnumbered by per-type VMkernel shares; the screenshot values are not defaults, customize them.'
 - 'Section ''Memory'': overcommit ratio against DRAM only with tiering.'
 - 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x.'
-- 'Section ''CPU'', Reservation: 4:1 against physical thread gives 0.25 thread; the book says 8:1.'
 - 'Section ''Disk'', Limit: 2.5% per VM, not 1%; 40 VMs saturate the array. The book says 5% of the population; 40 of 2,000 is 2%.'
 - 'Section ''Maximum VM size'': overcommit is per physical thread, not per core; the book''s example is per core.'
 - 'Section ''Storage I/O Control'': deprecated features are not practised; follow the official documentation (vSphere 9.1, Manage Storage I/O Resources with vSphere, p. 1886); no disk reservation.'

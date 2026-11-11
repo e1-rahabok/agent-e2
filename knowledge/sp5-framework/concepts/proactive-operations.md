@@ -41,8 +41,9 @@
 1. Availability: a system that is down has no performance problem.
 2. Performance: a system so slow it is as good as down.
 3. Security: third, not first, in day-to-day operations.
-- Configuration is checked as a drill-down under each of the three: a configuration issue can cause any of them.
-- Assess all three on both sides of VCF, platform and product (`sp5-framework/concepts/purpose-driven-architecture`).
+4. Capacity: will it be enough; efficiency is read here.
+- Configuration is checked as a drill-down under each of the four: a configuration issue can cause any of them.
+- Assess all four on both sides of VCF, platform and product (`sp5-framework/concepts/purpose-driven-architecture`).
 
 ## A 24-hour day
 - Alerts arrive at random times, day and night: reactive.
