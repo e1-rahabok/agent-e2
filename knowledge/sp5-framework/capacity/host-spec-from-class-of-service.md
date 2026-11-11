@@ -17,7 +17,7 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 
 ## Silver: cost optimized (book example)
 - Host: 64 cores. Kept for infrastructure: 8 cores, 64 GB. Left: 56 cores.
-- CPU overcommit 4:1 per core (2:1 per physical thread): 56 × 4 = 224 vCPU.
+- CPU overcommit 2:1 per physical thread: 56 × 4 = 224 vCPU.
 - 224 vCPU × 4 GB = 896 GB. Memory overcommit 2:1: 448 GB for VMs.
 - Host RAM: 448 + 64 = 512 GB.
 - Specification: 64 cores, 512 GB.
