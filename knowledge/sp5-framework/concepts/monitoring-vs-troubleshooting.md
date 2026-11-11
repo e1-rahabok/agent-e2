@@ -29,12 +29,13 @@
 
 
 ## Troubleshooting
-- Troubleshooting is not the centre of operations. What can be troubleshot, and how, is planned in the architecture: what can go wrong, how it is detected, how it is remediated. Unplanned, each incident costs more than it should.
+- There are only 2 types of troubleshooting, as a system is either down or slow. 
+- An incident means something is dead, slow or breached. You perform availability troubleshooting, performance troubleshooting, or security forensic investigation. Capacity and cost are not considered troubleshooting.
+- Troubleshooting should not be the centre of operations. What can be troubleshot, and how, should be planned as part of the architecture. Document what can go wrong, how it is detected, how it is remediated. Unplanned incident gets added to the architecture.
 - An expert team troubleshoots. The same team sets the thresholds the Level 1 team uses.
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
 - Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
-- An incident means something is dead, slow or breached. Availability, performance and security are troubleshot. Capacity and cost are not.
-- The aim is why, and a fix that prevents the next incident, not only the facts.
+- Root Cause Analysis is mandatory to ensure future problem is detected promptly. Ideally it comes with a fix that prevents the next incident, not only setting up alerts to detect.
 - Order of the daily health check, each morning for the VMware administrator to review: availability, then performance, then security.
   - Availability: soft errors, vMotion stun time, lock-ups. Usually needs VCF Operations for logs.
   - Performance: contention is part of performance, its primary metric type.
