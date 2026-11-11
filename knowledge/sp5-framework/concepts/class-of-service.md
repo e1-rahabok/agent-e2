@@ -12,14 +12,14 @@
   - Compliance: the same for every class. A weak class is a jump box into the rest.
 - The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and compliance SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA (`sp5-framework/performance/kpi-vs-sla`).
 - Capacity settings per class (reservation, allocation per thread, minimum VM Performance (%), expected utilization): `sp5-framework/capacity/class-of-service-planning`. This file holds price and SLA numbers.
-- Overcommit ratios here are vCPU : physical CPU and VM memory : physical memory (N:1). The basis for CPU (core or thread) changes the number by 2x with Hyper-Threading: `sp5-framework/capacity/host-spec-from-class-of-service`.
+- Overcommit ratios here are vCPU : physical thread and VM memory : physical memory (N:1). CPU overcommit per class: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread, never higher; per core with Hyper-Threading that is 2:1, 4:1 and 6:1 (`sp5-framework/capacity/host-spec-from-class-of-service`).
 
 ## Generic guideline
 | Tier | Price | CPU overcommit | Performance penalty |
 |---|---|---|---|
 | 1 Gold | 1.00x | 1:1 | none |
 | 2 Silver | 0.50x | 2:1 | 5% |
-| 3 Bronze | 0.25x | 4:1 | 10% |
+| 3 Bronze | 0.25x | 3:1 | 10% |
 | 4 Free | 0 | maximum | no SLA |
 
 - Gold: performance guarantee for latency-sensitive, mission-critical applications. The guarantee is not literal for CPU: VM CPU Ready never reads 0.00%, even with no contention.
@@ -48,7 +48,7 @@
 | Item | Gold | Silver | Why |
 |---|---|---|---|
 | Price | 2x | 1x | Gold is priced 2x Silver |
-| Overcommit | CPU 2:1, RAM 1:1 | CPU 4:1, RAM 2:1 | Twice as many consumers in Silver |
+| Overcommit | CPU 1:1, RAM 1:1 | CPU 2:1, RAM 1.5:1 | Twice as many consumers in Silver (CPU) |
 | Availability SLA | 99.975% | 99.950% | Gold: half the downtime |
 | Compliance SLA | 100% | 100% | Perfect compliance for every class |
 
@@ -63,8 +63,8 @@
 ```text
 price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 ```
-- Silver at CPU 3:1 and no memory overcommit: 0.5 × 1/3 + 0.5 × 1 = 67% of Gold, a 33% discount.
-- Bronze at CPU 6:1 and memory 2:1: 0.5 × 1/6 + 0.5 × 1/2 = 33% of Gold.
+- Silver at CPU 2:1 per thread and memory 1.5:1: 0.5 × 1/2 + 0.5 × 1/1.5 = 58% of Gold.
+- Bronze at CPU 3:1 per thread and memory 2:1: 0.5 × 1/3 + 0.5 × 1/2 = 42% of Gold.
 - Gold: CPU 1:1, memory 1:1, all flash. Free: no overcommit stated, magnetic storage; may be left out entirely (business decision).
 - Average VM profile for Silver and Bronze: 1 vCPU to 4 GB RAM, a common ratio. Measure the real ratio in VCF Operations.
 - Host for Silver: `sp5-framework/capacity/host-spec-from-class-of-service`.
@@ -182,7 +182,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Overcommit basis (core or thread) (Q087 a, Q099). Notation: the book writes 1:2 and 2:1 for the same idea; written here as N:1 (consumer : physical) throughout.'
-- 'To check: Section ''Planning example'': the book''s table gives Silver CPU 1:2 and RAM 1:1.5; its text gives Silver 3:1 CPU, no RAM overcommit, 67% of Gold. Only the text matches 67% (the table gives 58%). Written from the text; Bronze table values (6:1, 2:1) match 33% (Q099).'
 - 'To check: Section ''Planning example'', price formula: derived from the book''s 67% and 33% figures.'
 - 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of the book''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Section ''Compute and storage design'': the book says Gold is charged 200% more for 2x; written as twice the price. Storage I/O Control: deprecated in VCF 9.'

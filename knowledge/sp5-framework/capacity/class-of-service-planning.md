@@ -22,11 +22,11 @@
 | Contention (slowness) | 1x | 2x | 4x |
 | VM size (configured) | 4x | 2x | 1x |
 | VM reservation rights | 4x | 2x | 1x |
-| VM to ESXi overcommit ratio | 1x | 2x | 4x |
+| VM to ESXi overcommit ratio | 1x | 2x | 3x |
 | Likely cluster headroom | 4x | 2x | 1x |
 
 ## Example implementation
-![Reservation (relative to VM configured size, set at resource pool): Gold 50% CPU 100% RAM, Silver 25% CPU 50% RAM, Bronze 12.5% CPU 25% RAM. Allocation (thread, usable capacity; memory tiering beyond 1:1): Gold CPU 1:1 RAM 1:1, Silver CPU 2:1 RAM 1.5:1, Bronze CPU 4:1 RAM 2:1. Contention minimum Performance (%) KPI: 99.5%, 99%, 98%. Expected utilization against ESXi threads and usable capacity: Gold CPU about 50% RAM about 80%, Silver CPU below 70% RAM below 90%, Bronze CPU below 90% RAM below 95%](images/class-of-service-reservation-allocation-contention-utilization-table.png)
+![Reservation (relative to VM configured size, set at resource pool): Gold 50% CPU 100% RAM, Silver 25% CPU 50% RAM, Bronze 12.5% CPU 25% RAM. Allocation (thread, usable capacity; memory tiering beyond 1:1): Gold CPU 1:1 RAM 1:1, Silver CPU 2:1 RAM 1.5:1, Bronze CPU 4:1 RAM 2:1 (the image predates the final Bronze 3:1). Contention minimum Performance (%) KPI: 99.5%, 99%, 98%. Expected utilization against ESXi threads and usable capacity: Gold CPU about 50% RAM about 80%, Silver CPU below 70% RAM below 90%, Bronze CPU below 90% RAM below 95%](images/class-of-service-reservation-allocation-contention-utilization-table.png)
 
 - **Reservation**
   - Gold: 50% CPU, 100% RAM
@@ -36,8 +36,8 @@
 - **Allocation (overcommit, virtual : physical)**
   - Gold: CPU 1:1, RAM 1:1
   - Silver: CPU 2:1, RAM 1.5:1
-  - Bronze: CPU 4:1, RAM 2:1
-  - CPU per thread, not per core. Against usable capacity, not total capacity. Memory tiering serves memory beyond 1:1.
+  - Bronze: CPU 3:1, RAM 2:1
+  - CPU per thread, not per core. 3:1 is the highest CPU overcommit of any class: 6:1 per core with Hyper-Threading. Against usable capacity, not total capacity. Memory tiering serves memory beyond 1:1.
 - **Contention: minimum VM Performance (%)**
   - Gold: ≥ 99.5%
   - Silver: ≥ 99%
@@ -62,12 +62,12 @@
 - The capacity planning spreadsheet on isvara.io implements this model. First input: the ESXi host size. Its defaults balance cost and host size.
 
 ## Misconceptions
-- "Our Bronze plan of 4:1 shows red overcommit in Cluster Risk, so the plan is wrong" → the ratio is a planning input tied to price; Cluster Risk reads the running cluster, where Bronze is expected to score higher than Gold.
+- "Our Bronze plan of 3:1 shows red overcommit in Cluster Risk, so the plan is wrong" → the ratio is a planning input tied to price; Cluster Risk reads the running cluster, where Bronze is expected to score higher than Gold.
 - "Keep exactly 2x on every row" → the 2x gap is a goal, not a rule.
 - "Gold gets 2x the performance of Silver" → Gold gets half the chance of contention; speed is not doubled.
 - "Set the Gold reservation on each VM" → set it on the resource pool; VM-level reservation changes HA admission control and restart.
 - "Bronze at 90% CPU is overloaded" → for Bronze, 90% is the expected upper limit; for Gold, about 50% is expected.
-- "Overcommit ratio per core" → the plan counts threads, not cores; 4:1 per thread is 8:1 per core with Hyper-Threading.
+- "Overcommit ratio per core" → the plan counts threads, not cores; 3:1 per thread is 6:1 per core with Hyper-Threading.
 - "Gold memory at 1:1 means no memory tiering" → tiering serves memory beyond 1:1; Gold stays at 1:1 against DRAM.
 
 ## Metadata
@@ -113,10 +113,11 @@ images:
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template'
-corrections: []
+corrections:
+- 'Section ''Example implementation'': the image shows Bronze CPU 4:1; the final ratio is 3:1 per thread (2026-11-11). The text states 3:1.'
 review_notes:
 - 'Section ''Example implementation'': the book says "Notice the consistent 2x gap"; memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow 2x.'
-- 'Section ''Example implementation'': Silver 2:1 and Bronze 4:1 per thread are 4 and 8 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, and memory 1.8-2.2 as red. A Bronze cluster built to this plan scores red on both rows.'
+- 'Section ''Example implementation'': Silver 2:1 and Bronze 3:1 per thread are 4 and 6 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, and memory 1.8-2.2 as red. A Bronze cluster built to this plan scores red on both rows.'
 - 'Section ''Example implementation'': Gold at 50% CPU reservation and 1:1 CPU per thread from the book image. Text written from the image; the image is kept.'
 - 'To check: Section ''Example implementation'': the 2x gap in unmet demand (0.5%, 1%, 2%), computed from the book values.'
 - 'To check: section Contention: class minimum VM Performance (%) read as a capacity design expectation; the author''s table says KPI (Q162).'

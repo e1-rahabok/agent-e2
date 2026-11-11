@@ -43,7 +43,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 ## Overcommit (allocation model)
 ![Overcommit ratio excludes buffer](images/cluster-overcommit-ratio-excludes-buffer.png)
 - The overcommit ratio excludes buffer. Allocation ignores utilization and the provider part.
-- CPU: include Hyper-Threading; a vCPU maps to a thread. Say 4:1 per thread instead of 8:1 per core.
+- CPU: include Hyper-Threading; a vCPU maps to a thread. Say 3:1 per thread instead of 6:1 per core.
 - CPU: a thread on a shared 1 GHz core gets 625 MHz; 1.6 GHz restores 1 GHz per thread. Tenants buying 4 GHz expect 4 GHz; with HT, state 2.5 GHz.
 - Disk: count only virtual disks; exclude snapshots and swap. On vSAN, exclude FTT protection and lower the ratio to match (FTT doubling space: halve the ratio).
 - Network: exclude inter-switch links; count only ESXi ports used by VMs.

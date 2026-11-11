@@ -125,7 +125,7 @@ Demand = Max (Utilization, Reservation)
 
 - The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.
 - A provider that does not overcommit may not compete on cost.
-- Overcommit ratios are written virtual : physical (4:1 = 4 vCPUs per thread).
+- Overcommit ratios are written virtual : physical (3:1 = 3 vCPUs per thread). Per class: Gold 1:1, Silver 2:1, Bronze 3:1 (`sp5-framework/capacity/class-of-service-planning`).
 
 ### Invisible demand
 
@@ -162,7 +162,7 @@ Demand = Max (Utilization, Reservation)
 - "Each host should run in the high memory state" → High means much free memory: wastage for capacity. ESXi reclaims only near the top (`vsphere/technology/memory/concepts/host-memory-states`).
 - "Cluster XYZ is important, so 5:1 CPU overcommit is fine" → not wrong but misleading: it reduces capacity management to the allocation model, and the more important the cluster, the lower its ratio. It also omits the unit: a CPU ratio is per thread, not per core, because the CPU executes per thread.
 - "3:1 CPU gives buffer for spikes and HA" → not wrong but misleading: allocation alone ignores utilization and VM size; buffer and HA are in usable capacity, not in the ratio.
-- "Tier 3 can run 4:1 CPU" → not wrong but misleading: a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
+- "Tier 3 can run 4:1 CPU" → 4:1 per thread (8:1 per core) is above the highest class ratio, Bronze 3:1; and a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
 - "UAT at 70% CPU is fine until 85%" → not wrong but misleading: utilization alone does not close a cluster; read contention and risk.
 - "Utilization is low, so the reservation does not matter" → demand is the higher of utilization and reservation; an unused reservation is still taken.
 - "Doubling the CPU shares halves CPU Ready" → no deterministic link between shares or reservation and contention.

@@ -20,25 +20,6 @@ Each entry has:
 
 
 
-### Q062 · Operations flows · Is this host or cluster healthy right now
-
-- Files: [ESXi: what to monitor, in priority order](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md); [vSphere cluster: what to monitor, in priority order](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md).
-- Search: not from the book.
-- Question: what is your daily health check of an ESXi host and of a cluster, in order? The overview files list what to monitor, but not the order of checks with a stop at each step. With your order, a health-check flow can be written for each.
-- Written as now (2026-11-08): the three overview files are now health checks ([ESXi: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md), [vSphere cluster: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md), [VM: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/health-check/vm-health-check.md)) with numbered steps in the order of health-risk-efficiency. The order inside each pillar is still Claude's.
-- Partial answer (author, in session, 2026-11-08): "what to monitor" is a health check; troubleshooting is part of the health check and comes only after an object fails it (monitor is the what, troubleshoot is the why); availability flows, security and compliance are future, after 1.0. Still open: your order inside each pillar, and Q133.
-- Proposed answer (pillar order settled by Q104, Q105 b, Q133 b and the 2026-11-09 decisions; order inside each pillar: expert call):
-  - Settled: availability, performance, security, capacity. Performance: contention, consumption, configuration, known bug, log. Capacity: consumption, configuration, contention, inventory. Configuration is the drill-down. About 5 minutes when there is no problem.
-  - Stop rule: an availability failure stops that object's check. A performance failure opens its troubleshooting flow; the check then goes on to capacity.
-  - ESXi: performance = ESXi Performance (%), the failing sub-metric, consumption (Core and Thread Utilization, memory state, path and vmnic throughput), configuration (power, BIOS). Capacity = memory state and hot host only, then hand over to the cluster (a host is sized as part of its cluster). Today's steps 4-6 move from capacity into performance consumption.
-  - Cluster: performance = Cluster Performance (%), balance (hot host), contention flow, configuration (resource pools, limits). Capacity = Consumption, Risk, Close for Business, inventory, efficiency. Step 3 (SLA and SLI) removed 2026-11-11: no SLA or SLI in operations; the daily check reads the KPI. The cluster health check now has 7 steps.
-  - VM: add consumption (VM, then Guest OS) after contention, as vm-slow step 4, so both share one performance order.
-  - Daily run is top down: clusters worst first, then hosts, then VMs.
-  - Stale text: proactive-operations, Day-to-day order, lists three pillars; add capacity (Q133 b).
-  - Change if accepted: the three health checks (steps, diagrams); proactive-operations.
-  - For you: which VCF Operations dashboards you open each morning, and in what order.
-- Partly settled by the author's edit (2026-11-11): the ESXi health check has no efficiency step; waste is read on the cluster, because DRS and HA move VMs between hosts. Still open: the order inside each pillar.
-- Answer:
 
 ### Q064 · Review · Which files to review first
 
@@ -133,6 +114,7 @@ Each entry has:
   - Change if accepted: host-spec-from-class-of-service (per thread; the three-class list replaces the per-core examples; remove "(book example)" and "The book picks", Q159); purpose-driven-architecture Example 2 (trade-off line).
   - For you: nothing.
 - Partly settled by the author's edit (2026-11-11): host-spec-from-class-of-service now states overcommit per physical thread ((a)), and the noisy-neighbour memory table is removed ((c) no longer applies). Still open: (b) whether Gold keeps the infrastructure share; (d).
+- Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread.
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
@@ -196,6 +178,7 @@ Each entry has:
   - Change if accepted: class-of-service (Planning example: plan values, 58%, 37.5%; Sample offering per thread); host-spec-from-class-of-service (remove Silver at 3:1; licence bullet = 16-core floor and Hyper-Threading).
   - For you: nothing.
 - Partly settled by the author's edit (2026-11-11): Example 3 is 1.5:1 per physical thread ((c), per thread). Still open: (a) which ratios are Silver; (d) the 64-core licence reason, still in host-spec-from-class-of-service.
+- Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread. Applied in class-of-service (planning example: Silver 58%, Bronze 42% of Gold). Still open: (d) the 64-core licence reason.
 - Answer:
 
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
@@ -725,7 +708,36 @@ Each entry has:
 - For you: whether your customers' Linux teams read pressure stall information, and whether the Linux counters in the new flow match what they use.
 - Answer: Author (2026-11-11): deferred to after 1.0, as Linux is after 1.0. Two kinds of knowledge: theory is not limited by VMware Tools (Linux, Windows, Kubernetes); practical advice follows what each product can do, so Agent E2 must know exactly what VMware Tools collects. Linux knowledge starts at release 5.0; no older releases.
 
+### Q173 · Class of service · Price and reservation after Bronze 3:1
+- Files: [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Generic guideline); [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Example implementation, its image).
+- Search: not from the book.
+- Written as now: CPU overcommit per class is final at 1:1, 2:1, 3:1 per physical thread (2026-11-11), applied everywhere. Three values were set for Bronze 4:1 and are unchanged: the Generic guideline price 0.25x ("each step halves the price"); the Bronze reservation 12.5% CPU (Gold 50%, Silver 25%: each step halves); the class image, which still shows Bronze CPU 4:1 (recorded in corrections). The relative-value table keeps contention 4x and VM size 1x for Bronze while overcommit is now 3x.
+- Question: (a) Bronze price: 0.33x (follows 1/3 overcommit) or keep 0.25x (a business choice, more margin pressure)? (b) Bronze CPU reservation: keep 12.5% or 1/6 (about 17%)? (c) Will you update the image?
+- Proposed answer (expert call): (a) 0.33x: price follows the overcommit, which is the reason the guideline gives. (b) Keep 12.5%: a reservation protects against starvation and is not tied to the ratio; a lower value keeps Bronze from reserving the cluster. (c) Yes; until then the correction stays.
+- For you: (a), (b), (c).
+- Answer:
+
 ## Resolved
+
+### Q062 · Operations flows · Is this host or cluster healthy right now
+
+- Files: [ESXi: what to monitor, in priority order](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md); [vSphere cluster: what to monitor, in priority order](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md).
+- Search: not from the book.
+- Question: what is your daily health check of an ESXi host and of a cluster, in order? The overview files list what to monitor, but not the order of checks with a stop at each step. With your order, a health-check flow can be written for each.
+- Written as now (2026-11-08): the three overview files are now health checks ([ESXi: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md), [vSphere cluster: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md), [VM: health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/health-check/vm-health-check.md)) with numbered steps in the order of health-risk-efficiency. The order inside each pillar is still Claude's.
+- Partial answer (author, in session, 2026-11-08): "what to monitor" is a health check; troubleshooting is part of the health check and comes only after an object fails it (monitor is the what, troubleshoot is the why); availability flows, security and compliance are future, after 1.0. Still open: your order inside each pillar, and Q133.
+- Proposed answer (pillar order settled by Q104, Q105 b, Q133 b and the 2026-11-09 decisions; order inside each pillar: expert call):
+  - Settled: availability, performance, security, capacity. Performance: contention, consumption, configuration, known bug, log. Capacity: consumption, configuration, contention, inventory. Configuration is the drill-down. About 5 minutes when there is no problem.
+  - Stop rule: an availability failure stops that object's check. A performance failure opens its troubleshooting flow; the check then goes on to capacity.
+  - ESXi: performance = ESXi Performance (%), the failing sub-metric, consumption (Core and Thread Utilization, memory state, path and vmnic throughput), configuration (power, BIOS). Capacity = memory state and hot host only, then hand over to the cluster (a host is sized as part of its cluster). Today's steps 4-6 move from capacity into performance consumption.
+  - Cluster: performance = Cluster Performance (%), balance (hot host), contention flow, configuration (resource pools, limits). Capacity = Consumption, Risk, Close for Business, inventory, efficiency. Step 3 (SLA and SLI) removed 2026-11-11: no SLA or SLI in operations; the daily check reads the KPI. The cluster health check now has 7 steps.
+  - VM: add consumption (VM, then Guest OS) after contention, as vm-slow step 4, so both share one performance order.
+  - Daily run is top down: clusters worst first, then hosts, then VMs.
+  - Stale text: proactive-operations, Day-to-day order, lists three pillars; add capacity (Q133 b).
+  - Change if accepted: the three health checks (steps, diagrams); proactive-operations.
+  - For you: which VCF Operations dashboards you open each morning, and in what order.
+- Partly settled by the author's edit (2026-11-11): the ESXi health check has no efficiency step; waste is read on the cluster, because DRS and HA move VMs between hosts. Still open: the order inside each pillar.
+- Answer: Author (2026-11-11): agrees with the proposed answer; the VCF Operations dashboards of the daily check are after 1.0. Applied: ESXi health check (performance = KPI, failing sub-metric, consumption, configuration; capacity = memory state and hot host, then the cluster); cluster health check (performance = KPI, balance, configuration; capacity = consumption and risk, closure, inventory and efficiency); VM health check (consumption after contention, 9 steps); sp5-framework/concepts/health-check, section Running the daily check (top down, stop rule); proactive-operations day-to-day order adds capacity.
 
 ### Q116 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
 

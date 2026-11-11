@@ -12,11 +12,13 @@
 flowchart TD
   S1[1. Availability: future] --> S2[2. ESXi Performance green?]
   S2 -->|no| S3[3. Which sub-metric: CPU, memory, storage, network]
-  S2 -->|yes| S4[4. CPU capacity]
+  S2 -->|yes| S4[4. Consumption: CPU]
   S3 --> T3[Troubleshooting flow of that resource]
-  S4 --> S5[5. Memory capacity]
-  S5 --> S6[6. Storage, network, GPU consumption]
+  T3 --> S4
+  S4 --> S5[5. Consumption: memory]
+  S5 --> S6[6. Consumption: storage, network, GPU]
   S6 --> S7[7. Configuration review]
+  S7 --> S8[8. Capacity: memory state, hot host, then the cluster]
 ```
 
 ## Principle
@@ -35,10 +37,11 @@ Order: availability, performance, security, capacity; within each pillar the wha
    - Disk latency → `vsphere/technology/storage/troubleshooting/host-storage-latency`: split KAVG (kernel), DAVG (device), QAVG (queue) (`vsphere/technology/storage/concepts/esxi-storage-latency-stack`).
    - Bad network packets → `vsphere/technology/network/metrics/host/packets-dropped` and `vsphere/technology/network/metrics/host/errors`.
    - → step 4.
-4. Capacity, CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) (`vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own (`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`). Hot cores and NUMA nodes: Peak Core Usage and Imbalance (`vsphere/technology/cpu/metrics/host/peak-core-usage`). Headroom: `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`. → step 5.
-5. Capacity, memory (HostSystem). Consumed is the main capacity counter; it holds guest cache, so high Consumed alone is not a problem (`vsphere/technology/memory/metrics/host/consumed`). Leading warnings: Balloon and State. Past contention: Swap and Compressed (`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`). Memory tiering hosts: active memory against DRAM, NVMe latency (`vsphere/technology/memory/concepts/memory-tiering`). → step 6.
-6. Capacity, storage, network and GPU consumption (HostSystem). Device, adapter and path throughput and IOPS (`vsphere/technology/storage/metrics/host/disk`, `vsphere/technology/storage/metrics/host/adapter-and-path`). Network throughput per vmnic (`vsphere/technology/network/metrics/host/throughput`). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level (`vsphere/technology/gpu/concepts/gpu-monitoring`). → step 7.
-7. Configuration (HostSystem). `vsphere/object-types/esxi/configuration/esxi-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means (`vsphere/technology/cpu/configuration/host-power-management`, `vsphere/object-types/esxi/configuration/bios-settings`). Hypervisor overhead (vSAN, NSX, kernel): `vsphere/architecture/overhead`.
+4. Performance, consumption: CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) (`vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own (`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`). Hot cores and NUMA nodes: Peak Core Usage and Imbalance (`vsphere/technology/cpu/metrics/host/peak-core-usage`). → step 5.
+5. Performance, consumption: memory (HostSystem). Consumed is the main capacity counter; it holds guest cache, so high Consumed alone is not a problem (`vsphere/technology/memory/metrics/host/consumed`). Leading warnings: Balloon and State. Past contention: Swap and Compressed (`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`). Memory tiering hosts: active memory against DRAM, NVMe latency (`vsphere/technology/memory/concepts/memory-tiering`). → step 6.
+6. Performance, consumption: storage, network and GPU (HostSystem). Device, adapter and path throughput and IOPS (`vsphere/technology/storage/metrics/host/disk`, `vsphere/technology/storage/metrics/host/adapter-and-path`). Network throughput per vmnic (`vsphere/technology/network/metrics/host/throughput`). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level (`vsphere/technology/gpu/concepts/gpu-monitoring`). → step 7.
+7. Configuration (HostSystem). `vsphere/object-types/esxi/configuration/esxi-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means (`vsphere/technology/cpu/configuration/host-power-management`, `vsphere/object-types/esxi/configuration/bios-settings`). Hypervisor overhead (vSAN, NSX, kernel): `vsphere/architecture/overhead`. → step 8.
+8. Capacity (HostSystem). Two host-level signals only: the memory state as the leading warning (`vsphere/technology/memory/metrics/host/state`) and a hot host against its cluster (`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`). CPU headroom of this host: `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`. Then hand over to the cluster: a host is sized as part of its cluster (`vsphere/object-types/cluster/health-check/cluster-health-check`, step 5).
 
 - Efficiency (wastage, reclamation) is not part of the ESXi health check: VMs move between hosts by DRS and HA, so waste is read on the cluster and its VMs (`vsphere/object-types/cluster/health-check/cluster-health-check`).
 - Not checked in 1.0: security and compliance (future phase).
@@ -46,7 +49,8 @@ Order: availability, performance, security, capacity; within each pillar the wha
 ## Why this order
 - Availability first: a host that is down has no performance problem. Then performance, then capacity; efficiency belongs to the cluster.
 - Performance from the KPI before raw counters: one score covers depth and breadth; the sub-metric points to the flow.
-- Capacity after performance: utilization does not show whether a VM waits.
+- Consumption inside performance: it explains the contention found in steps 2-3; utilization alone does not show whether a VM waits.
+- Capacity last and short: a host is sized as part of its cluster, so only the memory state and a hot host are read here.
 
 ## How to read the result
 - Present health, risk and efficiency are read separately, never as one score.
@@ -112,7 +116,6 @@ source:
 corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback.'
 review_notes:
-- 'To check: Section ''Checks, in order'': the order inside capacity (CPU, memory, storage, network, GPU), a synthesis of the linked files; step order follows health-risk-efficiency (book) (Q062).'
 - 'To check: Section ''How to read the result'': derived from the Principle section.'
 status: draft
 ```

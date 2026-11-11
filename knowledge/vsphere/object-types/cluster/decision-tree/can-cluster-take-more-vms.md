@@ -3,7 +3,7 @@
 ## Question
 - Can this vSphere cluster take N more VMs, a project, or a VM upsize?
 - The answer is yes or no, with the resource that limits it and the reason.
-- An operational question, answered by a decision tree; not a health check. The cluster health check reads the result of this tree in its capacity step (`vsphere/object-types/cluster/health-check/cluster-health-check`, step 4).
+- An operational question, answered by a decision tree; not a health check. The cluster health check reads the result of this tree in its capacity step (`vsphere/object-types/cluster/health-check/cluster-health-check`, step 6).
 - A closed cluster accepts no new VM and no VM upsize. Once capacity, performance and risk metrics exist, the decision can be automated: self-driving capacity management.
 
 ## Flow
