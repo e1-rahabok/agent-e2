@@ -82,9 +82,7 @@
 
 ## Avoiding it
 - With overcommit it cannot be avoided, only reduced: like a highway with more cars than lanes at peak hour. Capacity planning reduces the impact.
-- Pricing policy:
-  - a function of the overcommit ratio: half price means twice as many tenants to break even;
-  - progressive tiers: a 64-vCPU VM costs more than 64 × a 1-vCPU VM.
+- Price: a lower price per class needs a higher overcommit ratio to break even (`sp5-framework/capacity/overcommit`, section Ratio and price); progressive pricing makes large VMs cost more than their size (`sp5-framework/concepts/class-of-service`).
 - Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size (`sp5-framework/capacity/vm-size`). Tell customers the quality of each class through its overcommit.
 
 - No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class (`sp5-framework/performance/kpi-vs-sla`).
@@ -125,6 +123,8 @@ object:
 internal_derive:
 - vsphere/architecture/resource-controls
 related:
+- sp5-framework/performance/performance-management
+- sp5-framework/capacity/overcommit
 - sp5-framework/capacity/vm-size
 - vsphere/object-types/resource-pool/configuration/scalable-shares
 - sp5-framework/capacity/supply

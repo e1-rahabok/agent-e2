@@ -62,6 +62,7 @@
 - The most important pillar in day-to-day operations. With HA designed in, part of the system can be down with no impact on performance or capacity.
 - Often confused with capacity: more work done is read as good performance. That reading makes idle look like poor performance.
 - The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: `sp5-framework/concepts/performance-vs-capacity`.
+- Its boundary with the peer pillars, its two processes (monitoring with KPIs, troubleshooting), its KPIs and where each question is answered: `sp5-framework/performance/performance-management`.
 
 ## Capacity
 
@@ -168,6 +169,7 @@ internal_derive:
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/capacity/supply
 related:
+- sp5-framework/performance/performance-management
 - sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/modelling
 - sp5-framework/concepts/why-a-new-framework

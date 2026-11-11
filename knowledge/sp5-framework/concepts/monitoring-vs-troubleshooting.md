@@ -17,10 +17,7 @@
 
 
 ## Primary and secondary metrics
-- Layer the troubleshooting metrics, events and properties so Level 1 Team can use them easily and quickly.
-- Primary metric: defines performance; the what. Always 0-100%, usually a hybrid of several metrics. Example: Kubernetes Cluster Performance (%).
-- Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
-- A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
+- Monitoring reads the primary metric, the what; troubleshooting reads the secondary metrics, the why. Definitions and examples: `sp5-framework/observability/triple-see-method`, section Primary and secondary metrics.
 
 ## Monitoring
 - Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
@@ -36,12 +33,8 @@
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
 - Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
 - Root Cause Analysis is mandatory to ensure future problem is detected promptly. Ideally it comes with a fix that prevents the next incident, not only setting up alerts to detect.
-- Order of the daily health check, each morning for the VMware administrator to review: availability, then performance, then security.
-  - Availability: soft errors, vMotion stun time, lock-ups. Usually needs VCF Operations for logs.
-  - Performance: contention is part of performance, its primary metric type.
-  - Security: actual incidents.
-- Configuration is a drill-down under each of the three: a configuration issue can cause an availability, performance or security problem.
-- Known bugs are mostly configuration issues: an older version or incompatible settings.
+- Order of checks, the same in the daily health check and in troubleshooting: availability, performance, security, capacity; inside each, configuration and known bugs as the drill-down (`sp5-framework/concepts/health-check`, section Order of checks).
+- Availability is read from soft errors, vMotion stun time and lock-ups, mostly in logs (VCF Operations for logs).
 - Utilization comes last. Even at 100% it does not matter if availability, performance and configuration are good.
 - Every performance flow checks configuration, the VM slow flow included.
 ![The book's earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the order above](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
@@ -106,6 +99,7 @@ internal_derive:
 - sp5-framework/outputs/alerts-and-insights
 - sp5-framework/performance/kpi-vs-sla
 related:
+- sp5-framework/performance/performance-management
 - sp5-framework/performance/troubleshooting/vm-slow
 - sp5-framework/concepts/proactive-operations
 - sp5-framework/concepts/health-risk-efficiency

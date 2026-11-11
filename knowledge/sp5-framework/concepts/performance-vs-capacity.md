@@ -1,11 +1,7 @@
 # Performance vs capacity
 
-## Goal of performance management
-- Find the problem before the customer complains. A process that waits for an alert or a complaint is troubleshooting, not performance management.
-- Proactive takes a regular cadence and an internal threshold: the KPI levels.
-- Performance first, capacity second: performance is more time sensitive. Restaurant analogy: the dining area before the kitchen.
-
 ## Two pillars, two questions
+- Each pillar has its main file: `sp5-framework/performance/performance-management`, `sp5-framework/capacity/capacity-management`. This file holds where they meet.
 - Performance: quality, speed. Are the consumers served well now?
 - Capacity: quantity, space. Is there enough supply for the demand to come?
 - They are intertwined:
@@ -114,6 +110,8 @@ internal_derive:
 - sp5-framework/capacity/supply
 - sp5-framework/capacity/demand
 related:
+- sp5-framework/performance/performance-management
+- sp5-framework/capacity/capacity-management
 - sp5-framework/performance/kpi-vs-sla
 - sp5-framework/concepts/realms-and-layers
 - vsphere/object-types/cluster/kpis/cluster-performance
