@@ -1,27 +1,32 @@
-# IaaS SLAs
+# SLA: a business contract, not an operations metric
 
 ## SLA in the contract
 - An SLA is one section of a business contract between a consuming entity (pays) and a providing entity (supplies). The contract also holds clauses, context and other agreements (confidentiality, payment terms, non-compete, marketing).
 - The SLA section holds the metrics and their numbers. A financial penalty makes the provider accountable; certifications and architecture claims do not.
 - The SLA (what is delivered) comes before the process and architecture (how it is delivered).
-- A private cloud has no use for an SLO. It is a goal, not a peer of the SLA; public cloud providers use it because they offer their own customers no SLA on the workload. SLA and SLI are enough.
-- SLI means SLA leading indicator, not a peer of the SLA (`sp5-framework/performance/kpi-vs-sla`).
+- An SLA is always between two parties. Internal objects (management cluster, vCenter, NSX Edge) have no SLA.
+- Operations do not run on the SLA. Performance monitoring and troubleshooting use the KPI only: no performance SLA, no SLI, no SLO (`sp5-framework/performance/kpi-vs-sla`). Availability is monitored with KAI, security with KSI.
 
-## Four SLAs of IaaS
-- Public providers commit to availability only: it is binary and the easiest to measure. For IaaS that is incomplete: up is not fast, and fast is not secure.
+## When a customer says "our SLA"
+- Common: VMware customers say they have an SLA. Probed for the metrics that define it, they state a wrong metric, or they have none.
+- Probe with five questions: which metric, on which object, which target, over which window, with which penalty. No metric and no number: it is an intention, not an SLA. Work from the KPI.
+- The object must be one the consumer owns. Application teams care about their own VMs and Kubernetes pods, not the infrastructure under them.
+- Typical wrong metric: Cluster Availability. The cluster is the provider's object. A cluster that stays up while one VM is down is a failure for that VM's owner; a host failure whose VMs restart elsewhere is a short outage for those VMs, and the cluster number hides it.
+- The Kubernetes node is often owned by the SRE team, not the developers; developers may not care about it either. Their object is the pod.
+- Provider objects (cluster, ESXi host, Kubernetes node, datastore, NSX Edge) carry a KPI and a KAI, never an SLA.
+
+## What an IaaS contract can hold
+- Public providers commit to availability only: it is binary and the easiest to measure.
 - Each SLA measures time in a bad state and expresses the month as 0-100%, 100% being perfect against the contract.
 
 | SLA | Question | Measures |
 |---|---|---|
-| Availability | Is it up? | Downtime |
-| Performance | Is it fast? | Slow time, from CPU, RAM, disk and network |
+| Availability | Is it up? | Downtime of the VM or Guest OS |
 | Compliance | Is it secure? | Unsecured time |
 | Service | Is the human and portal service delivered? | Response, provisioning, support |
 
-![Is it secured? → Compliance SLA → unsecured time. Is it fast? → Performance SLA (CPU, RAM, disk, network) → slow time. Is it up? → Availability SLA → downtime](images/sla-availability-performance-compliance-what-each-measures-diagram.png)
-- Availability, performance and compliance cover the workload. The Service SLA covers the human side (tenant, application team) and has a secondary role.
+- Performance has no SLA in this knowledge base. Fast is defined by the KPI: it shows how bad, at 20-second resolution, daily; a contract can only count pass or fail, monthly.
 - Availability is largely a given: whatever the agreed number, a down VM is restored at once.
-- The Performance SLA carries more value: it ends complaint-based operations by defining fast with a number.
 - The Compliance SLA is also called Security SLA (preferred term: `knowledge/glossary.md`). Customers and providers assume 100%; promising 100% without a contract number leads to disappointment.
 
 ## VM and Guest OS scope
@@ -29,13 +34,9 @@
 - **Availability**
   - VM: powered on, BIOS running. The Guest OS is not in the VM SLA.
   - Guest OS: Windows or Linux running, including basic services such as security agents. The application is not in the SLA.
-- **Performance**
-  - VM: gets the CPU, memory, disk and network it demands.
-  - Guest OS: Windows or Linux counters within expectation.
 - **Security**
   - VM: protected per the vSphere hardening guide or industry regulation.
   - Guest OS: protected per its vendor or industry regulation.
-- Windows and Linux performance metrics are less complete: their performance modelling is less mature.
 
 ## Availability SLA
 - Definition: the Guest OS answers ping. A VM that runs but is isolated fails.
@@ -47,7 +48,7 @@
   - reboots by the VM owner, after a software install or to fix a problem. Windows does not fully trap this event, so tracking it is hard;
   - work inside the scheduled downtime: Guest OS upgrade, patch reboot, VMware Tools and VM hardware upgrade.
 - The cause of a downtime takes time to find, so the metric must be recalculable after the month.
-- Recovery time counts: Windows or Linux may boot in 1 minute and then run fsck before the application can start. That time is downtime. It affects availability, not performance.
+- Recovery time counts: Windows or Linux may boot in 1 minute and then run fsck before the application can start. That time is downtime.
 - Two metrics, because vendors exclude scheduled downtime and can claim 99.999% while users see less:
   - Actual Availability (%): down is down, whatever the time, owner or cause. Easy to measure.
   - Operational Availability (%): excludes scheduled downtime and customer-caused downtime. Harder to measure. The SLA uses it.
@@ -63,44 +64,10 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - Actual Availability counting until the database is restored: 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%.
 - Supporting offers that justify a higher class: application-level backup and self-service file restore; application-level HA monitoring, boot order, VM-host affinity; lower RPO and RTO with a yearly real DR test; longer and larger snapshots; patch deferral and custom patch sets; deferral of VMware Tools and VM hardware updates.
 
-## Performance SLA
-- No scheduled slow time exists: an infrastructure upgrade is no excuse for slow VMs. The margin sits in the SLA percentage, not in a window.
-- Slow is a spectrum from no contention to as good as dead. Disk latency and CPU Ready never read 0, so the threshold sits above 0.
-- Four counters, one per resource:
-
-| Resource | VM counter |
-|---|---|
-| CPU | Ready |
-| Memory | Contention |
-| Disk | Latency |
-| Network | Transmit dropped packets |
-
-- SLI thresholds: `catalog/thresholds-performance`, rows `vm-sli-*`. They are shown with this file.
-
-- Measured at VM level, not per vCPU or per virtual disk. Disk latency is the average of read and write.
-- Averaged over 300 seconds. A 1-minute average is too tight: it forces either a higher cost or a lower threshold.
-- Excluded:
-  - received packets dropped: not reliable for a contract; a packet can be dropped because it was not for the VM (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`);
-  - CPU Overlap, CPU Other Wait, vMotion stun: too granular for a contract; tracked by KPIs;
-  - CPU Contention (VCF Operations): it can reach 37.5% with no degradation the application notices, because it includes the Hyper-Threading effect;
-  - CPU Co-stop. Excluded from the SLA and the SLI, not from the KPI: CPU Ready gives the best balance between the cost of reporting and its value.
-- Keep the thresholds as they are:
-  - raising one (CPU Ready 2.5% to 5%) changes what each nine means; profile the environment first;
-  - a common value lets you compare with peers and between classes (mission-critical vs test and development).
-- If an SLA is too strict for a class, lower its percentage, not the threshold. To see how bad reality is, use the KPI.
-
-### What the numbers mean
-- CPU Ready 2.5% over 300 seconds = 7.5 seconds of ready state. It is rarely one block; usually sub-second waits spread over the 300,000 ms.
-- Ready is not read against utilization in the SLA, but its impact depends on Run:
-  - VM 1: Ready 10%, Run 90%. It ran most of the time it demanded.
-  - VM 2: Ready 10%, Run 10%. It waited as long as it ran: half of the runtime it demanded was delayed.
-- Memory Contention is a share of time a vCPU waits for a page fault to complete, not a share of memory space (`vsphere/technology/memory/metrics/virtual-motherboard/latency`).
-- Disk latency: the average over 300 seconds of every IO. A VM at 1,000 IOPS issues 300,000 IOs in the interval. Each virtual disk has its own latency; the VM value is normalized across them.
-
 ## Compliance SLA
 - Percentage of compliance against an agreed security policy or benchmark.
 - Compliance is binary: compliant or not.
-- The SLA is a formal contract between two entities: do not put 100% in it; the contract value is 99.95%. The internal KPI is 100%: a non-compliant setting can be a door for an attack.
+- The SLA is a formal contract between two entities: do not put 100% in it; the contract value is 99.95%. The internal KSI is 100%: a non-compliant setting can be a door for an attack.
 - The maintenance window is always excluded from the SLA: it is an agreed period of change.
 - Calculated from the infrastructure team's point of view.
 - Included:
@@ -121,7 +88,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 - Leave out metrics that serve no business purpose. Portal availability is one: the provider's office is open 24 x 7 x 365.
 
 ## Time window
-- The SLA is monthly, on the calendar month. It averages the 5-minute values of the month: 8,640 in a 30-day month.
+- The SLA is monthly, on the calendar month.
 - Yearly: customers reject it; a year allows long outages. Daily: providers reject it; no room for error.
 - Allowable downtime per period:
 
@@ -144,70 +111,28 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 | 99.950% | 50x | 20.2 min | 21.6 min | 22.3 min |
 | 99.900% | 100x | 40.3 min | 43.2 min | 44.6 min |
 
-- Failure window in a 30-day month, counted in 5-minute intervals:
-
-| SLA | Failure window | Failed intervals allowed |
-|---|---|---|
-| 99.99% | 4.3 min | 0 |
-| 99.98% | 8.6 min | 1 |
-| 99.97% | 13.0 min | 2 |
-| 99.96% | 17.3 min | 3 |
-| 99.95% | 21.6 min | 4 |
-| 99.90% | 43.2 min | 8 |
-| 99.80% | 86.4 min | 17 |
-
 ## Promise and reality
 - Promise: what is sold. Several numbers, one per class of service: a higher price buys a higher SLA.
-- Reality: what is delivered, calculated at month end. One number per VM, whatever its class. A Gold VM can fail its SLA while scoring higher than a Bronze VM that passes.
+- Reality: what is delivered, calculated at month end. One number per VM, whatever its class. A Gold VM can fail its SLA while a Bronze VM passes.
 
-## SLA calculation
-- The month's SLA is built from 5-minute values. The 5-minute value is the SLI (SLA leading indicator): it warns before the month ends.
-- Every 5 minutes each counter passes or fails:
-
-```text
-CPU SLI     = 100% if VM CPU Ready <= its SLI threshold, else 0%
-Memory SLI  = 100% if VM Memory Contention <= its SLI threshold, else 0%
-Disk SLI    = 100% if VM Disk Latency <= its SLI threshold, else 0%
-Network SLI = 100% if VM Network Transmit Dropped Packets <= its SLI threshold, else 0%
-VM SLI (%)  = average of the four          → 100, 75, 50, 25 or 0 every 5 minutes
-VM Performance SLA (%) = average of the VM SLI over the calendar month
-```
-- Pass or fail is binary per interval. A breach at 48.25% CPU Ready and a breach at 2.51% count the same: there is no severe failure and no partial failure of one counter.
-- Example, VM 007, one hour, CPU only: 12 intervals, 10 pass. 00:10-00:15 at 48.25% (144.75 s of Ready) fails; 00:25-00:30 at 2.51% (7.53 s) fails; 00:20-00:25 at 2.49% (7.47 s) passes.
-![VM 007, 00:00-01:00, CPU Ready per 5-minute window with seconds of Ready and status: 10 windows pass (0.06% to 2.49%); 00:10-00:15 at 48.25% (144.75 s) fails; 00:25-00:30 at 2.51% (7.53 s) fails](images/vm-cpu-ready-sla-pass-fail-per-5-minute-window-table.png)
-- Why Gold is 99.9% and not 99.95%: in the shortest month (28 days) 0.1% is 40.3 minutes, 8 five-minute failures. 99.95% leaves 4. The difference matters operationally.
-- Cluster SLA and SLI built from VM values: `vsphere/object-types/cluster/kpis/cluster-sla-sli`.
-
-## Same threshold for every class
+## Same benchmark for every class
 - Every class is measured against the same benchmark; the classes differ in how often they may miss it.
   - Availability: against no downtime.
-  - Performance: against the same slow-time threshold.
   - Compliance: against perfect compliance.
   - Service: against the best possible service.
-- A Silver VM expects to be denied what it demands more often than a Gold VM. More consistency costs more: move to Gold.
-- Different thresholds per class fail in two ways. Example: Gold memory contention 0.5%, Silver 1.5%.
-  - The gap cannot be explained: Silver gets a 3x looser threshold at half the price, not a proportional one.
-  - Silver can score better than Gold, because its standard is lower.
-- Production should score higher than development on the same threshold. How much higher is set by the nines per class: `sp5-framework/concepts/class-of-service`.
+- A different benchmark per class cannot be explained by price, and lets a lower class score better than a higher one. Numbers per class: `sp5-framework/concepts/class-of-service`.
 
 ## Traps
-- "Write 100% compliance into the contract" → the SLA is 99.95%; 100% is the internal KPI.
-- "Measure the Performance SLA at the 20-second peak" → the SLA uses 5-minute values; 20 seconds leaves no room for error. The 20-second peak belongs to the KPI, as a leading indicator.
-- "Alert on the SLA or the SLI" → alerts are based on the KPI, set stricter than the SLA; a red alert may mean the SLI is already breached.
+- "Our SLA is Cluster Availability 99.95%" → wrong object. The application team cares about its own VMs and pods; a cluster can be up while their VM is down. Measure the consumer's object.
+- "Our Kubernetes SLA is node availability" → the node is often the SRE team's object; developers own the pod.
+- "We have a performance SLA" → ask for the metric, object, target and window. Usually there is none, or the metric is wrong. Operations use the KPI.
+- "Track an SLI or SLO for performance" → neither is used. The KPI covers performance; the SLA is the contract.
+- "Alert on the SLA" → alerts are based on the KPI. The SLA is monthly and lagging.
+- "Write 100% compliance into the contract" → the SLA is 99.95%; 100% is the internal KSI.
 - "Our availability SLA is 99.999%, so users had 5 minutes of downtime a year" → the SLA excludes scheduled and customer-caused downtime. Actual Availability counts everything and is lower.
 - "Application start-up after a reboot counts against the IaaS availability SLA" → IaaS uptime covers the Guest OS answering ping. fsck counts; application loading does not.
-- "Schedule a maintenance window for slow time, as for downtime" → performance has no scheduled window. The margin is the SLA percentage.
-- "A breach at 2.51% Ready is a minor failure, half a breach" → each interval is pass or fail. 2.51% and 48% count the same.
-- "Bronze fails the performance SLA too often; raise its Ready threshold to 5%" → keep one threshold for every class and lower Bronze's nines. Changing the threshold changes what each nine means.
-- "Put CPU Contention in the SLA; it covers Ready, Co-stop and more" → Contention includes the Hyper-Threading effect and reaches 37.5% with no visible degradation. The SLA uses Ready.
-- "Count received dropped packets in the network SLA" → a VM can drop packets not meant for it. The SLA uses transmit drops only.
-- "Ready 2.5% means the VM froze for 7.5 seconds" → 7.5 seconds in total over 300 seconds, mostly sub-second waits.
-- "Ready 10% is equally bad for every VM" → read it against Run: 10% beside 90% Run is mild; 10% beside 10% Run delays half the demanded runtime.
-- "Memory Contention 1% means 1% of the VM's memory is contended" → it is a share of time spent waiting on page faults.
-- "Per-vCPU Ready above 2.5% breaches the SLA" → the SLA is measured at VM level over 300 seconds. Per-vCPU and 20-second peaks belong to KPIs.
 - "A yearly SLA is easier on the customer" → a yearly window allows the longest single outage; 99.999% a year is more downtime than 99.95% a week.
-- "A Gold VM that failed its SLA must have scored lower than every passing Bronze VM" → reality is one number per VM; the promise differs per class.
-- "Set a tighter memory threshold for Gold than for Silver" → one threshold for all; classes differ in nines. Different thresholds let Silver outscore Gold.
+- "vCenter and NSX Edge get the same SLA as customer VMs" → they are internal: KPI and KAI only. An SLA needs two parties.
 
 ## Metadata
 ```yaml
@@ -215,14 +140,9 @@ id: sp5-framework/concepts/sla-metrics
 retriever_guide: how-it-works
 scope: sp5-framework
 technology:
-- cpu
-- memory
-- storage
-- network
 - system
 pillar:
 - availability
-- performance
 - compliance
 product:
 - vsphere
@@ -233,39 +153,20 @@ object:
 - VirtualMachine
 internal_derive:
 - sp5-framework/performance/kpi-vs-sla
-- vsphere/object-types/cluster/kpis/cluster-sla-sli
-- vsphere/technology/memory/metrics/virtual-motherboard/latency
-- vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
 related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/concepts/iaas-business
-- vsphere/technology/cpu/metrics/virtual-motherboard/ready
-- vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/architecture/vm-vs-guest-os
 - observability/thresholds
-images:
-  - path: images/sla-availability-performance-compliance-what-each-measures-diagram.png
-    product: [vsphere]
-    object: [VirtualMachine]
-    topic: 'Availability, Performance and Compliance SLA: question, SLA, what each measures'
-    image_type: diagram
-  - path: images/vm-cpu-ready-sla-pass-fail-per-5-minute-window-table.png
-    product: [vcf-operations]
-    object: [VirtualMachine]
-    metric: [CPU Ready]
-    topic: 'Pass or fail per 5-minute window, one hour of VM 007'
-    image_type: table
-    sample: 'one VM, 12 five-minute windows'
+images: []
 source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All) (pp. 23-35)'
-corrections: []
+corrections:
+- 'Performance SLA, SLI and SLO removed (2026-11-11): the SLA is a business contract; performance is managed by the KPI only. The book''s Performance SLA, SLA calculation and Performance Quantification sections are not used.'
 review_notes:
-- 'To check: Section ''SLA calculation'': the book writes each counter as ''If VM CPU Ready > 2.5% then 100% else 0%'', which scores a breach as 100%. Written here as pass = 100%, so that the monthly mean reads 99.9% when good. Partial VM score (75%) vs binary failure vs ''a VM must pass all four'' in vsphere/object-types/cluster/kpis/cluster-sla-sli (Q095).'
 - 'To check: Section ''Availability SLA'', example: the book counts 3 hours (Guest OS plus database restore) = 99.58%; by the book''s own definition (Guest OS ping, application start-up not counted) it is 45 minutes = 99.90%. Both written as arithmetic; which the example means (Q096).'
 - 'To check: Section ''Availability SLA'', Operational Availability formula: derived from the definition; the book has a Formula heading with no formula.'
-- 'To check: Section ''Performance SLA'', CPU Contention: ''because it includes the Hyper-Threading effect'' is a reading of the 37.5% figure; not stated in the book.'
-- 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them. ''Failed intervals allowed'' column: the book''s ''< n times'' converted into whole 5-minute intervals.'
-- 'Section ''Four SLAs of IaaS'': the book names Google Cloud and AWS SLA scopes; not repeated (public pages not checked).'
+- 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them.'
 status: draft
 ```

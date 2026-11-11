@@ -25,7 +25,7 @@ flowchart TD
 ## Checks, in order
 1. Time window (VirtualMachine). Ask when the slowness happens (a time, a schedule, all the time). Read every counter below at the 20-second peak within that window, not the 5-minute or daily average (`vcf-operations/features/peak-20-second-metrics`). → step 2.
 2. Breadth (ClusterComputeResource). Several VMs on the same cluster or host slow in the same window → the cause is likely shared → `vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`. One VM → step 3.
-3. Contention (VirtualMachine), the what. Start from the KPI, not the SLA: VM Performance (%) and its colour bands (`vsphere/object-types/vm/kpis/vm-performance`). Then the counter that pulls it down:
+3. Contention (VirtualMachine), the what. Start from the KPI: VM Performance (%) and its colour bands (`vsphere/object-types/vm/kpis/vm-performance`). Then the counter that pulls it down:
    - CPU: Ready and Co-stop, read against Run → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.
    - Memory: Latency (VCF Operations: Memory Contention) → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
    - Storage: disk latency per virtual disk, read and write, with outstanding IO → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`.
@@ -44,7 +44,7 @@ flowchart TD
 - Breadth before depth: many slow VMs point to a shared cause; tuning one VM would not help.
 - The what before the why: contention and consumption establish what happened; configuration, known bugs and logs explain it. This is the order of the performance step of every health check.
 - Contention before consumption: contention is the performance metric; consumption explains it or rules out the platform.
-- The KPI, not the SLA: the KPI is stricter and has the 20-second leading view; the SLA is monthly and lagging.
+- The KPI: it has the 20-second view and shows how bad. A contract number, if the customer has one, is monthly, lagging and often on the wrong object.
 - Configuration always: a limit or an outdated setting can cause the contention itself.
 - Log last: logs explain short events (snapshots, stuns) once the counters have placed the problem in time.
 
@@ -58,7 +58,7 @@ flowchart TD
 - "The VM's CPU Usage is 95%, so it is short of CPU" → Usage is consumption and includes Turbo; check Ready, Co-stop and Run first.
 - "The daily chart is flat, so nothing happened" → read the 20-second peak in the complaint window.
 - "The Guest OS run queue is high, so the host is overloaded" → the run queue is inside the Guest OS; check VM contention first.
-- "The SLA is met, so the VM is not slow" → the SLA is a monthly average; troubleshoot with the KPI.
+- "Our SLA is met, so the VM is not slow" → an SLA is a monthly contract number, often on the wrong object (the cluster, not the VM); troubleshoot with the KPI.
 - "Contention found, so the cause is the host" → a limit or an old version on the VM can cause it; check configuration and known bugs.
 - "No vSphere counter is high, so the users are wrong" → the cause can be outside the VM; say what was checked and what is not visible.
 

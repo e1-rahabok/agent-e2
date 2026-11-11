@@ -13,7 +13,7 @@
 - Problems that happened or are still going on. A possible problem is risk: a security exposure is not a breach.
 - Three problem types, checked in this order:
   - Availability (is it up?): workloads (VMs, Kubernetes) and infrastructure (VCF appliances, ESXi). Crashes and unscheduled downtime. The data comes mostly from logs, not metrics.
-  - Performance (is it fast?): actual slowness (contention) and its main cause (very high consumption), as a trend over time. Read both the KPI and the SLA.
+  - Performance (is it fast?): actual slowness (contention) and its main cause (very high consumption), as a trend over time. Read the KPI.
   - Security, present part (is it secure?): actual incidents. Example: the environment runs well, but unauthorized access and suspicious commands appear on ESXi consoles. Data from logs, events and metrics.
 - An environment can be 100% available and still slow: availability and performance are measured separately.
 

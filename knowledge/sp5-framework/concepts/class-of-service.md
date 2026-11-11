@@ -10,7 +10,7 @@
   - Availability: measurable. Half the downtime window, twice the price.
   - Performance: utilization does not exist before the VM runs, so the overcommit ratio stands in. Twice the vCPUs on a cluster, each pays half: the cost is shared by all.
   - Compliance: the same for every class. A weak class is a jump box into the rest.
-- The class sets four things: price (overcommit ratio and quality of service), capacity (overcommit ratio), and the Availability, Performance and Compliance SLAs.
+- The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and compliance SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA (`sp5-framework/performance/kpi-vs-sla`).
 - Capacity settings per class (reservation, allocation per thread, minimum VM Performance (%), expected utilization): `sp5-framework/capacity/class-of-service-planning`. This file holds price and SLA numbers.
 - Overcommit ratios here are vCPU : physical CPU and VM memory : physical memory (N:1). The basis for CPU (core or thread) changes the number by 2x with Hyper-Threading: `sp5-framework/capacity/host-spec-from-class-of-service`.
 
@@ -25,30 +25,24 @@
 - Gold: performance guarantee for latency-sensitive, mission-critical applications. The guarantee is not literal for CPU: VM CPU Ready never reads 0.00%, even with no contention.
 - Silver: most production workloads. Bronze: test and development. Free: temporary projects.
 - Each step halves the price and doubles the penalty: consistent and fair.
-- The penalty column positions the business value; it is not the SLA. Bronze is not CPU Ready at or below 10% at all times:
-  - a VM at 9.9% Ready all month would pass, which is unacceptable;
-  - at all times means a 100% SLA, which is cost-prohibitive;
-  - a plain average is far too loose.
-- So one threshold (CPU Ready 2.5%, a 5-minute average) serves every class, and the class sets the nines. An SLA is never 95%: that is 1 failure in 20.
+- The penalty column positions the business value. It is not a threshold: Bronze does not tolerate CPU Ready of 10%. The KPI levels are the same for every class (`catalog/thresholds-performance`); a lower class scores lower more often because of its higher overcommit.
 
 ## Free tier
-- Shows the value of the SLA by its absence.
-- Funded by the paid tiers, so it carries no SLA: unpredictable downtime and slow time are acceptable. Public clouds make their free tier slower and less reliable on purpose, so customers upgrade.
+- Shows the value of the paid classes by their absence.
+- Funded by the paid tiers, so it carries no SLA: unpredictable downtime and slowness are acceptable. Public clouds make their free tier slower and less reliable on purpose, so customers upgrade.
 - Cap the number of free VMs per customer as well as their size.
 
 ## Recommended SLA per class
-| Tier | Availability | Performance | Compliance |
-|---|---|---|---|
-| 1 Gold | 99.975% | 99.9% | 99.95% |
-| 2 Silver | 99.950% | 99.8% | 99.95% |
-| 3 Bronze | 99.900% | 99.6% | 99.95% |
+| Tier | Availability | Compliance |
+|---|---|---|
+| 1 Gold | 99.975% | 99.95% |
+| 2 Silver | 99.950% | 99.95% |
+| 3 Bronze | 99.900% | 99.95% |
 
 - Different numbers per pillar because they measure different things.
 - Availability is the highest: scheduled and customer-caused downtime are excluded. Not higher than 99.975%: Windows or Linux may run a filesystem check after a crash, and IT or security services may have to start before the application. The windows are 1x, 2x, 4x from Gold to Bronze.
-- Performance is lower: the threshold is strict enough for mission-critical VMs, so Bronze meets it less often. The failure windows are 1x, 2x, 4x: half the price, twice the window.
-- Gold performance is not 100% even with no CPU overcommit: the provider's compute is only part of the path; storage and network are outside its control.
+- Performance has no SLA: it is managed by the KPI, one set of levels for every class. Gold does not promise perfect performance even with no CPU overcommit: the provider's compute is only part of the path; storage and network are outside its control.
 - Compliance is the same for all classes. Not 99.99%: that allows no failed interval in a month. A compliance value is the last value collected, which can be one second old. If changes are manual, adjust the number for the time a change takes.
-- Performance numbers are also in `knowledge/catalog/thresholds-performance.yaml` (performance-sla-gold, -silver, -bronze).
 
 ## Sample offering: Gold at 2x Silver
 | Item | Gold | Silver | Why |
@@ -56,12 +50,11 @@
 | Price | 2x | 1x | Gold is priced 2x Silver |
 | Overcommit | CPU 2:1, RAM 1:1 | CPU 4:1, RAM 2:1 | Twice as many consumers in Silver |
 | Availability SLA | 99.975% | 99.950% | Gold: half the downtime |
-| Performance SLA | 99.9% | 99.8% | Gold: half the slow time |
 | Compliance SLA | 100% | 100% | Perfect compliance for every class |
 
 - The SLA is the hard product, what is paid for, like the seat in an airline. Support, reports and backup are soft products.
 - Customers do not care about SSD type or memory brand; they buy the SLA.
-- Classes mixed in one cluster leave only reservations and shares to separate them, for example Gold with 2x the shares of Silver. That is hard to run and does not prove the SLA.
+- Classes mixed in one cluster leave only reservations and shares to separate them, for example Gold with 2x the shares of Silver. That is hard to run and gives no predictable difference between the classes.
 
 ## Planning example: hardware follows price
 - Decide the overcommit and the price first; the hardware specification follows. Use vendor discounts and licensing to complement the plan, not to dictate it.
@@ -131,9 +124,9 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
   - troubleshooting: a VM with Bronze compute and Gold storage can show disk latency caused by CPU contention.
 
 ## Traps
-- "Gold has no overcommit, so its Performance SLA can be 100%" → the provider controls compute only; storage and network sit in the path. 99.9% is the recommended number.
-- "Bronze tolerates 10% CPU Ready" → the 10% is a price-position penalty, not a threshold. Every class uses CPU Ready 2.5%; Bronze gets fewer nines.
-- "Give Silver its own looser threshold" → one threshold, different nines. Separate thresholds cannot be justified by price and let Silver outscore Gold.
+- "Gold has no overcommit, so the contract can promise its performance" → the provider controls compute only; storage and network sit in the path. Performance is managed by the KPI, not the contract.
+- "Bronze tolerates 10% CPU Ready" → the 10% is a price-position penalty, not a threshold. Every class uses the same KPI levels; Bronze scores lower more often.
+- "Give Silver its own looser threshold" → one set of KPI levels for every class. Separate levels cannot be justified by price and let Silver outscore Gold.
 - "Use resource pools with 2x shares to sell Gold and Silver in one cluster" → shares do not translate into a predictable Ready. The cluster is the smallest unit for a class.
 - "Storage policies give Gold 10 ms and Silver 20 ms" → the controls are not based on latency; the result is not predictable.
 - "Let customers mix any compute class with any storage class" → combinations multiply with every cluster, tagging doubles, and disk latency caused by CPU contention gets misread.
@@ -175,7 +168,6 @@ internal_derive:
 - sp5-framework/capacity/host-spec-from-class-of-service
 related:
 - sp5-framework/concepts/iaas-business
-- vsphere/object-types/cluster/kpis/cluster-sla-sli
 - sp5-framework/capacity/rightsizing
 - vsphere/architecture/resource-controls
 images:

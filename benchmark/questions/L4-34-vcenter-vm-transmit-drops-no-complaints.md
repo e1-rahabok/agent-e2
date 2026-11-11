@@ -10,7 +10,7 @@ Which statements are correct? Choose all that apply.
 
 - A. Transmit drops can be large without complaints: TCP retransmits the packets, and the application sees only higher latency.
 - B. No complaints, so the drops can be ignored.
-- C. The VM fails the network SLI: its threshold for transmit dropped packets is 0%.
+- C. The drops count against the VM KPI: transmit dropped packets is one of its contention sub-metrics.
 - D. The drops are caused by a full receive ring in the VMXNET3 driver.
 
 ## Input to supply
@@ -26,7 +26,7 @@ B: ignoring drops because users do not complain.
 ## Expected key points
 - Answer: A, C.
 - TCP retransmits hide transmit drops: millions a month can pass without complaints. Profile them with the network team.
-- The VM network SLI uses transmit dropped packets with a threshold of 0%.
+- The VM KPI (VM Performance) includes transmit dropped packets as a contention sub-metric; receive drops are left out.
 - D is wrong: a full receive ring causes receive drops, and receive drops are 0 here.
 
 ## Notes
@@ -44,7 +44,7 @@ answer_type: deterministic
 input: [screenshot]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-  - vsphere/object-types/cluster/kpis/cluster-sla-sli
+  - vsphere/object-types/vm/kpis/vm-performance
 attachments:
   - 0074/vcenter-vm-network-dropped.png
 origin: synthetic

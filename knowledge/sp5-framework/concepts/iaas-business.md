@@ -5,7 +5,7 @@
 - A system is judged by its architecture. A service is judged by its service level.
 - It is a service with or without chargeback. VM owners no longer own the hardware, so they judge only the service level, not the architecture.
 - The architecture is judged by its result in production: firefighting and blame between teams, or alerts that are meaningful and actionable.
-- Moving from SDDC to IaaS is an operations change: complaint-based to SLA-based, alert-driven to insight-driven. The maturity steps: `sp5-framework/performance/kpi-vs-sla`. Alerts and insights: `sp5-framework/alerts/alerts-and-insights`.
+- Moving from SDDC to IaaS is an operations change: complaint-based to KPI-based, alert-driven to insight-driven. The maturity steps: `sp5-framework/performance/kpi-vs-sla`. Alerts and insights: `sp5-framework/alerts/alerts-and-insights`.
 
 ## Three variants of IaaS
 The variants differ in what is sold, how it is priced, and which SLA is offered.
@@ -13,17 +13,17 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
   - Sold: a VM of a given size in a given tier. Example: 1 VM, 4 vCPU, 16 GB RAM, 200 GB disk, Gold.
   - Price rises with size and with tier.
   - Availability SLA: per VM, by tier.
-  - Performance SLA: per VM, by tier.
+  - Performance: per VM, by tier, through overcommit and maximum VM size; read with the VM KPI.
 - **Resource pool**
   - Sold: GHz, GB of RAM, TB of disk. Example: 100 GHz CPU, 1 TB RAM, 80 TB disk.
   - Reservation: 100% (guaranteed) or partial. Burst is best effort, through an expandable resource pool.
   - A limit, when set, is above what is paid. Example: 1 TB RAM paid, 0.5 TB reserved, 2 TB limit.
   - Availability SLA: per VM, with limited tiering.
-  - Performance SLA: none. The tenant may overcommit inside its own pool; the service definition does not impose it.
+  - Performance: the tenant's own. The tenant may overcommit inside its own pool; the service definition does not impose it.
 - **Hardware**
   - Sold: ESXi hosts. Example: 8 hosts. The tenant decides how many VMs to place. HA is provided by the vendor. Example provider: Azure VMware Solution.
   - Availability SLA: on the host or cluster, not the VM.
-  - Performance SLA: none. The tenant can place as many VMs as it likes.
+  - Performance: the tenant's own. The tenant can place as many VMs as it likes.
 - Class of service is harder to run in the resource pool variant: nested resource pools add moving parts.
 - In the resource pool variant, contention caused by the pool's own limit or by the tenant's overcommit inside the pool is the tenant's. VM CPU Ready includes time held back by a limit (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`).
 
@@ -35,8 +35,8 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - Cost is known: hardware, software, services, salaries. Running well is the unknown, and the source of disputes between application teams and the infrastructure team.
 - The VM profile is unknown at design time: size (vCPU, RAM, disk), intensity (CPU and RAM utilization, disk IOPS, network throughput) and pattern (daily, weekly, monthly, none). Application teams and their vendors do not know it either; some applications are not written yet.
 - So the platform cannot promise to serve every VM well in absolute terms. It promises price/performance per class of service: cheap is not fast, fast is not cheap.
-- Each class of service has its own availability, performance, security and service SLA, written in the contract with numbers.
-- Class of service parameters (overcommit ratio, maximum VM size, Performance SLA): `sp5-framework/performance/noisy-neighbour`. Host specification per class: `sp5-framework/capacity/host-spec-from-class-of-service`.
+- Each class of service has its own availability, security and service SLA, written in the contract with numbers. Performance per class follows from overcommit and size limits and is read with the KPI.
+- Class of service parameters (overcommit ratio, maximum VM size): `sp5-framework/performance/noisy-neighbour`. Host specification per class: `sp5-framework/capacity/host-spec-from-class-of-service`.
 - Provisioning has an SLA too, delivered through self-service with workflows and electronic approval.
 
 ## Metrics per pillar
@@ -45,17 +45,16 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 | Availability | Operational Availability (%) | Relative: against the availability architecture and the green zone (change window) |
 | Availability | Actual Availability (%) | Absolute: as it happened; usually lower |
 | Performance | KPI (%) | Absolute: as it happened |
-| Performance | SLI (%) and SLA (%) | Relative: against the promised SLA |
 | Capacity | Capacity Remaining (%) | Relative to usable capacity, not total |
 | Capacity | Time Remaining (days) | Days until Capacity Remaining reaches 0 |
 | Compliance | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
 
-- SLI means SLA leading indicator (`sp5-framework/performance/kpi-vs-sla`).
+- Performance has no SLA and no SLI: the KPI is enough (`sp5-framework/performance/kpi-vs-sla`).
 - Definitions, formulas and the time window of each SLA: `sp5-framework/concepts/sla-metrics`. Numbers per class: `sp5-framework/concepts/class-of-service`.
 - Usable capacity: `sp5-framework/capacity/capacity-model`.
 
 ## A complete, correct and accurate SLA
-- Complete: performance and compliance SLAs as well as availability.
+- Complete: compliance as well as availability; performance through the KPI.
 - Correct: measured on each paying VM, not at the infrastructure level, with the right metrics.
 - Accurate: measured every 5 minutes. A longer interval averages a breach away.
 - Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in `observability/thresholds`.
@@ -72,7 +71,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - Private cloud run as an automation project. Automation, workflow and the self-service portal support it. Its core is SLAs and class of service: it is operations-centric.
 - VCF designed with a server-consolidation mindset: no awareness of IaaS and SLAs; classes of service mixed in one cluster or datastore.
 - Class of service exists, but names of clusters and datastores do not show it.
-- Performance never defined: the design benchmark does not match what is sold; no Performance SLA, often no KPI.
+- Performance never defined: the design benchmark does not match what is sold; often no KPI.
 - The infrastructure has no awareness of business units, applications or application tiers.
 
 ## Consumer layer and provider layer
@@ -96,9 +95,9 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - The provider side is changing too. The server, Windows or Linux team became the platform team; HCI brought storage into it; network virtualization blurred the line with the network team (firewalls, load balancers); Kubernetes added containers, with DevOps or SRE teams between platform and application teams.
 
 ## Traps
-- "Cluster average CPU Ready is low, so the Performance SLA is met" → the SLA is measured on each paying VM. A cluster average hides the VM in breach. Check the per-VM SLI or the worst VM.
+- "Cluster average CPU Ready is low, so no paying VM is slow" → a cluster average hides the VM with contention. Check the VM KPI and the worst VM.
 - "Utilization is low, so the cluster has capacity" → a cluster is full when it cannot serve its VMs well. Limits, imbalance and configuration cause contention at low utilization.
-- "A VM in a tenant's resource pool shows contention, so the provider breached its SLA" → the resource pool variant has no Performance SLA. Check the pool limit and the tenant's overcommit first.
+- "A VM in a tenant's resource pool shows contention, so the provider is at fault" → in the resource pool variant performance is the tenant's own. Check the pool limit and the tenant's overcommit first.
 - "In the hardware variant the provider answers for VM uptime" → its availability SLA is on the host or cluster. The tenant places the VMs.
 - "Actual Availability below Operational Availability means a data error" → Actual is absolute; Operational is relative to the availability architecture. Actual is usually lower.
 - "Capacity Remaining 20% means 20% of the cluster's total capacity is free" → it is relative to usable capacity: total minus HA, buffer and overhead.
@@ -138,7 +137,6 @@ related:
 - sp5-framework/capacity/rightsizing
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/concepts/realms-and-layers
-- vsphere/object-types/cluster/kpis/cluster-sla-sli
 - observability/thresholds
 images:
   - path: images/consumer-provider-layer-what-each-checks-diagram.png

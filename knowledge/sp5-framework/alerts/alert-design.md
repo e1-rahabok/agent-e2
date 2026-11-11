@@ -45,7 +45,7 @@
   - Consumption alerts: red only. The orange level belongs to the daily dashboard.
   - Contention alerts: suppress at low utilization, where the application likely feels no impact. CPU usage is the proxy for application activity.
   - Sustained high utilization, above all when trending up: daily check.
-  - Keep the formal SLA (alert) apart from the internal KPI (insight). See `sp5-framework/performance/kpi-vs-sla`.
+  - Keep the alert (customers would notice) apart from the insight (early, internal); both read the KPI. See `sp5-framework/performance/kpi-vs-sla`.
 - Security: a live attack (pair the alert with the NOC screen); undesirable events.
 - Configuration: only high-risk settings that cause urgent problems such as slowness, outage or a breach. Non-urgent configuration goes to the daily health check.
 - Compliance: only what cannot wait until tomorrow.
@@ -116,7 +116,7 @@
 
 ## Threshold design
 - Follow industry standards; for compliance, the relevant regulation.
-- Align with the SLA you promised. Without an SLA, use the internal target.
+- Align with the KPI levels, the internal baseline.
 - Review complaints, formal (tickets) and informal (through management).
 - Use several conditions instead of one: each added condition narrows the alert.
 - Contention: the issue must be both acute and sustained.

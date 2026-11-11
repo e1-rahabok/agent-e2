@@ -23,6 +23,8 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | Avoid | Use instead | Why |
 |---|---|---|
 | utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand. |
+| SLI, SLO, performance SLA | KPI | The SLA is a business contract, not an operations metric; performance is managed by the KPI only (author, 2026-11-11). |
+| Cluster Availability as an SLA | the availability of the consumer's VMs and pods | The application team does not care about the infrastructure under its VMs and pods (author, 2026-11-11). |
 | KPI target | KPI baseline (standard expectation) | A target is not reached yet; a KPI is what is maintained as standard. |
 | code (as the actor: "code decides", "code loads") | Agent E2; name the Harness or the LLM only where the design depends on which part does the work | Code can mean the Agent or the Harness. Agent E2 is one program: LLM, Harness and Agent together. |
 | demand overcommit | overcommit (of allocation) | Only allocation can be overcommitted. Demand, usage and utilization are results, not settings. |

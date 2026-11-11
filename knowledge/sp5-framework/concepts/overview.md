@@ -15,10 +15,10 @@
 
 ## What a private cloud manages
 
-- Consumer side: tenants consume and pay for IaaS through a self-service portal and API: SLA monitoring, inventory, projects, troubleshooting, security, team, bill.
+- Consumer side: tenants consume and pay for IaaS through a self-service portal and API: KPI and SLA reports, inventory, projects, troubleshooting, security, team, bill.
 - Provider side:
   - IaaS management: the services above the platform (Kubernetes, database, desktop, private AI, VM), each managed by its persona (SRE, DBA, VDI team);
-  - private cloud operations: day-to-day running (NOC live screen, alerts and symptoms, tasks, events, health check, SLA), operations management (availability, capacity, performance, cost and price, configuration, sustainability), inventory management (inventory, tags, groups, folders);
+  - private cloud operations: day-to-day running (NOC live screen, alerts and symptoms, tasks, events, health check, KPI), operations management (availability, capacity, performance, cost and price, configuration, sustainability), inventory management (inventory, tags, groups, folders);
   - cloud platform management: VCF as a Broadcom product: identity (users, passwords, roles, single sign-on) and platform (licenses, certificates, life cycle, appliances);
   - security operations: threat, compliance, audit, events.
 - Virtualization: the virtualization manager over servers, storage and network, integrated with hardware management (top-of-rack switches, racks, backup, arrays).
@@ -109,7 +109,7 @@
 ## Value: cost, price and business value
 
 - Needed to become a real service provider.
-- Price: hardware is a commodity and the price per VM is similar across providers; SLAs are the way to differentiate. Price must exceed cost but can be set independently of it. Discounts and progressive pricing set the terms and stop oversized VMs before production. Per VM, a better Performance SLA earns a higher price: price/performance.
+- Price: hardware is a commodity and the price per VM is similar across providers; SLAs are the way to differentiate. Price must exceed cost but can be set independently of it. Discounts and progressive pricing set the terms and stop oversized VMs before production. Per VM, less overcommit (less contention) earns a higher price: price/performance.
 - Cost: at platform level it moves with capacity. Higher utilization, lower cost per VM.
 - Cost and capacity can move independently: a technology refresh adds capacity at the same cost; cheaper service rates cut cost with the same capacity.
 

@@ -19,7 +19,7 @@
 - Two processes: reactive and proactive.
 - Reactive: starts from a complaint or an alert. A manual process for three types of problem, each with its own order of checks, the what before the why:
   - Down: log, saturation, configuration, known bug.
-  - Slow: contention, consumption, configuration, known bug, log. Read the KPI, not the SLA.
+  - Slow: contention, consumption, configuration, known bug, log. Read the KPI.
   - Breached (compromised): configuration, known bug, log.
 - Down and slow are troubleshooting. Breached is a forensic investigation, not troubleshooting.
 - The three orders are the same as the availability, performance and security steps of the health check: reactive enters one pillar directly; proactive walks all four.
@@ -99,7 +99,7 @@
 ## Optimization
 - Monitoring that finds nothing to fix can still find something to improve.
 - Lower cost: reclaim orphaned, powered-off, idle and oversized VMs and snapshots; a smaller data-centre footprint saves software, hardware, rack space, cooling and UPS; move burst capacity from owned to on-demand.
-- Better performance: profiling with real baselines; Performance SLAs beside Availability SLAs; NOC dashboards (insight, then alerts); self-service with approval workflows.
+- Better performance: profiling with real baselines; a performance KPI beside the availability SLA; NOC dashboards (insight, then alerts); self-service with approval workflows.
 - Lower complexity: standard architecture; simpler business and security policy; SOPs; automation against human error; replace ageing hardware and outdated software.
 - Customer satisfaction: reputation with application teams (internal IT); repeat business (service provider); price/performance that justifies the price.
 - Compliance: internal and industry benchmarks such as VMware hardening guides, CIS, ISO, FISMA, DISA, PCI DSS, HIPAA.

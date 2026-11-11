@@ -23,7 +23,7 @@
 ## Scale 0-100%
 - 100% is the best achievable, not a theoretical perfect: disk latency is never 0, so 100.00% does not occur.
 - 0% is the worst tolerated, not the slowest possible. With 40 ms as the tolerance, 40 ms scores 0% and 400 ms also scores 0%: no negative.
-- A KPI is not an SLA. An SLA aims for 100%; a KPI of 75% is good.
+- A KPI is not a contract: it does not aim for 100%; a KPI of 75% is good.
 - Four equal bands: green 75-100, yellow 50-75, orange 25-50, red 0-25. Four splits evenly (three gives 33.33 and 66.67), and yellow gives a leading indicator.
 - Equal bands keep metric thresholds easy to set. Green at 95-100 would force unequal bands and harder thresholds.
 - Thresholds are the hardest part. A metric whose threshold cannot be defended is left out of the KPI.
@@ -71,7 +71,7 @@
 
 ## Traps
 - "KPI at 75%, so 25% of the VMs are slow" → 75% is the top of yellow; the scale is scores, not shares.
-- "Aim for a 100% KPI like an SLA" → 100% is unreachable; 75-100 is green.
+- "Aim for a 100% KPI" → 100% is unreachable; 75-100 is green.
 - "One red metric makes the KPI red" → one worst red among 8 greens scores about 33, orange; read the score and the sub-metrics.
 - "Red means drop everything" → look within hours.
 - "Use the worst colour for performance, like a vCenter alarm" → contention adds up across resources; worst colour fits availability only.

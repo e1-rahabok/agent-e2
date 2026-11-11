@@ -9,8 +9,8 @@
 
 ## Design (VCF Operations 8.3 and later)
 - A metric named Peak ... within collection cycle is the highest of the 15 20-second averages in the 5-minute cycle.
-- KPIs and SLIs are reported every 5 minutes; the SLA is a lagging indicator, reported once a month for the whole month. All are VCF Operations metrics, not vSphere metrics.
-- A new metric, not a replacement. The 5-minute average stays for SLAs; the peak is an early warning toward the SLA.
+- KPIs are reported every 5 minutes. Both the peak and the 5-minute average are VCF Operations metrics, not vSphere metrics.
+- A new metric, not a replacement. The 5-minute average stays for trends and capacity; the peak shows the short burst the average hides. The VM KPI reads the peak.
 - Stores only the peak of the 15 points every 5 minutes, not all 15: less IO and storage. Answers: did the VM or guest have a problem in any 20-second period?
 - Takes the peak across instances: all virtual disks (read and write), all vCPUs. A 64-vCPU VM gets one metric. Which vCPU it was rarely changes the remediation.
 

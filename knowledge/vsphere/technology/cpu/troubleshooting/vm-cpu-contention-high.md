@@ -16,7 +16,7 @@
 
 ## Traps
 - "Contention above 37.5% means CPU starvation" → it can be Hyper-Threading and frequency alone. Check Ready and Co-stop.
-- "Use Latency as the SLA" → too volatile. Use Ready.
+- "Use Latency as the KPI" → too volatile. Use Ready.
 
 ## Metadata
 ```yaml

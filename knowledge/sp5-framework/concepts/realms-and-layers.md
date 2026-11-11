@@ -67,7 +67,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Consumer:
   - business application: business metrics, spanning VMs, containers and functions; best at showing that the application performs, unable to say why not;
   - service: a process in Windows or Linux, usually called the application (a database server);
-  - Guest OS: two kinds, the Windows or Linux layer and the driver layer (PVSCSI, vmxnet). A VMXNET3 ring-buffer drop is caused and fixed in the guest, so it is outside the IaaS SLA, although the hypervisor counts it too; the SLA covers the vNIC as the hypervisor sees it;
+  - Guest OS: two kinds, the Windows or Linux layer and the driver layer (PVSCSI, vmxnet). A VMXNET3 ring-buffer drop is caused and fixed in the guest, so it is the Guest OS owner's to fix, although the hypervisor counts it too; the VM KPI covers the vNIC as the hypervisor sees it;
   - container: usually inside a VM; more than one container per VM makes operations harder;
   - VM.
 - Provider:
@@ -154,7 +154,7 @@ source:
   document: PART 1 - Concepts of Operations Management.docx
   path: 'Performance Management > The 3 Realms > The Layers in IT Systems; The Layers in IaaS > IaaS Metric Types; Optimized Performance (pp. 71-76)'
 corrections:
-- 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, outside the IaaS SLA; the SLA covers the vNIC as the hypervisor sees it.'
+- 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, fixed in the guest; the VM KPI covers the vNIC as the hypervisor sees it.'
 - 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS.'
 review_notes:
 - 'Image troubleshooting-layers-loss-of-context-example-table.png: 5.2 s + 15.1 s = 20.3 s, but the transaction is given as 20.1 s.'
