@@ -1,11 +1,33 @@
 # VMs in a cluster face contention
 
+## Symptom
+- Cluster Performance (%) is yellow or worse, or several VMs of one cluster are slow in the same window (`sp5-framework/performance/troubleshooting/vm-slow`, step 3).
+- The cluster KPI quantifies the problem; this flow finds which VMs and which shared cause.
+
+## Flow
+```mermaid
+flowchart TD
+  S1[1. Depth: worst VM] --> S2[2. Breadth: share of VMs]
+  S2 -->|one VM deep| E2[That VM's flow]
+  S2 -->|many VMs| S3[3. Hot hosts and imbalance]
+  S3 --> S4[4. Resource pools, shares, DRS rules]
+  S4 --> S5[5. vSAN CPU Ready, ESXi error packets]
+  S5 --> S6[6. Known bug and log]
+  S6 --> E6[Shared cause and action]
+```
+
 ## Checks, in order
-1. Worst VM CPU Ready and worst VM memory contention: depth.
-2. % of VMs with CPU Ready and with memory contention: breadth.
-3. Breadth high: the cause is likely host or cluster level, not a VM setting.
-4. Check imbalance among hosts. Cluster utilization is rarely high (HA and buffer), so look for hot hosts.
-5. Check vSAN CPU Ready and ESXi error packets.
+1. Depth (VirtualMachine). Worst VM CPU Ready and worst VM memory contention: the depth rows of Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`). → step 2.
+2. Breadth (ClusterComputeResource). The 90th percentile rows, or the % of VMs with CPU Ready and with memory contention. One VM deep and breadth low → that VM's flow (`sp5-framework/performance/troubleshooting/vm-slow`, step 4). Breadth high → the cause is likely host or cluster level, not a VM setting → step 3.
+3. Consumption (HostSystem). Imbalance among hosts (`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`). Cluster utilization is rarely high (HA and buffer), so look for hot hosts: the hottest host and monster VMs are in Cluster Risk (%) (`vsphere/object-types/cluster/models/cluster-risk`). → step 4.
+4. Configuration (ClusterComputeResource, ResourcePool). VMs that are siblings of a resource pool; unbalanced shares; DRS settings, VM-host or VM-VM affinity; inconsistent host configuration, such as storage or network not on all hosts (`vsphere/object-types/cluster/configuration/cluster-configuration-review`). → step 5.
+5. Kernel and network (HostSystem). vSAN CPU Ready; ESXi error packets (`vsphere/technology/network/metrics/host/errors`). → step 6.
+6. Known bug and log (HostSystem): driver and firmware versions; events in the window (`sp5-framework/performance/troubleshooting/vm-slow`, its known bug and log checks).
+
+## Why this order
+- Depth and breadth first: they tell a cluster problem from one VM's problem.
+- Hot hosts before configuration: cluster totals stay low while one host is full.
+- Configuration before kernel and network: resource pools, shares and rules cause contention that load does not explain.
 
 ## How to read the result
 | Finding | Possible cause | Action |
@@ -18,6 +40,7 @@
 
 ## Misconceptions
 - "Few VMs affected means the cluster is fine" → depth matters: one VM can be badly hit.
+- "Cluster utilization is low, so contention cannot come from load" → one hot host is full while the cluster total is low.
 
 ## Metadata
 ```yaml
@@ -39,9 +62,14 @@ object:
 - ClusterComputeResource
 internal_derive:
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
-related:
 - vsphere/object-types/cluster/kpis/cluster-performance
+- sp5-framework/performance/troubleshooting/vm-slow
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
+- vsphere/object-types/cluster/models/cluster-risk
+- vsphere/object-types/cluster/configuration/cluster-configuration-review
+- vsphere/technology/network/metrics/host/errors
+related:
+- sp5-framework/performance/performance-management
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Performance > Cluster Performance (%) > Troubleshooting

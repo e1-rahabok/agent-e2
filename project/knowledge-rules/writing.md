@@ -47,7 +47,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 | Wrong conclusion → correct reading | The misconception retrieves its correction | The misconception is explicit and reviewable |
 | Tables only when simple | Rows survive chunking | Scannable |
 | Exact data in YAML, prose in markdown | Lookups are exact; prose stays short | Data is reviewable as a table |
-| Mermaid plus text for diagrams | Text-only models read the steps | GitHub renders the chart |
+| Mermaid plus text for diagrams | The model reads the steps; the chart is left out of its text | GitHub renders the chart |
 
 ## Images
 - `knowledge/` is for Agent E2 only. An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
