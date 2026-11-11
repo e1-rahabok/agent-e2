@@ -8,6 +8,9 @@ The host is full at the first of the six to reach 100%. Mixed classes are compar
 dividing each class's demand by its overcommit ratio. HA hosts are added on top: capacity counts the hosts that
 carry load (hosts - ha_hosts).
 
+Host specification: with no RAM given, the CPU side decides how many VMs of one class fit, and the RAM that
+matches them is returned (knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md).
+
 Class defaults (overcommit, reservation, expected concurrent peak, typical VM size) are rows of
 knowledge/catalog/thresholds-capacity.yaml, section rules, ids starting with "planning-". One place per number.
 """
@@ -80,6 +83,33 @@ def vms_per_host(vm_class, cores, ghz, ram_gb, ht=True, classes=None, **host):
             'fit': int(n), 'exact': round(n, 2), 'binding': f'{model} {res}'}
 
 
+def host_spec(vm_class, cores, ghz, ht=True, classes=None, **host):
+    """RAM that matches the CPU of one host for one class. The CPU side (allocation, reservation, utilization)
+    decides how many VMs fit; each VM needs the largest of its three memory needs; RAM = VMs x need + hypervisor.
+    Memory tiering is not counted (Q177)."""
+    root = host.pop('root', ROOT)
+    d = defaults(root)
+    cls = _classes(classes, d)[vm_class]
+    hv_m = host.pop('hypervisor_memory_gb', None)
+    hv_m = d['host']['hypervisor-memory-gb'] if hv_m is None else hv_m
+    host.pop('memory_tiering_gb', None)
+    s = supply(cores, ghz, 0, ht, root=root, **host)
+    vcpu, mem = cls['vcpu'], cls['memory-gb']
+    cpu = {'allocation': cls['cpu-overcommit'] * s['cpu_threads'] / vcpu,
+           'reservation': s['cpu_reservable_ghz'] / (vcpu * cls['cpu-reservation'] * ghz),
+           'utilization': s['cpu_threads'] / (vcpu * cls['cpu-concurrent-peak'])}
+    need = {'allocation': mem / cls['memory-overcommit'],
+            'reservation': mem * cls['memory-reservation'],
+            'utilization': mem * cls['memory-concurrent-peak']}
+    cpu_model, n = min(cpu.items(), key=lambda kv: kv[1])
+    mem_model, m = max(need.items(), key=lambda kv: kv[1])
+    return {'class': vm_class, 'vm': {'vcpu': vcpu, 'memory_gb': mem},
+            'vms_per_host': {k: round(v, 2) for k, v in cpu.items()}, 'fit': round(n, 2), 'cpu_binding': f'{cpu_model} cpu',
+            'memory_per_vm_gb': {k: round(v, 2) for k, v in need.items()}, 'memory_binding': f'{mem_model} memory',
+            'vm_memory_gb': round(n * m, 1), 'hypervisor_memory_gb': hv_m, 'ram_gb': round(n * m + hv_m),
+            'note': 'Round up to a DIMM configuration the server supports; less RAM makes memory bind first.'}
+
+
 def consumption(vms, cores, ghz, ram_gb, ht=True, hosts=1, ha_hosts=0, classes=None, **host):
     """Planned consumption of a host or cluster for a VM mix {'gold': n, 'silver': n, 'bronze': n}: six percentages.
 
@@ -119,14 +149,20 @@ def consumption(vms, cores, ghz, ram_gb, ht=True, hosts=1, ha_hosts=0, classes=N
 def plan(args):
     """Tool entry point. args: cores, ghz, ram_gb, optional ht, hosts, ha_hosts, hypervisor_threads,
     hypervisor_memory_gb, system_reservation_ghz, memory_tiering_gb, classes (overrides per class);
-    then either vm_class (how many fit per host) or vms (a mix {'gold': n, 'silver': n, 'bronze': n})."""
+    then either vm_class (how many fit per host) or vms (a mix {'gold': n, 'silver': n, 'bronze': n}).
+    vm_class without ram_gb: the host specification (RAM that matches the CPU)."""
     a = dict(args)
+    extra = {k: a.pop(k) for k in ('ht', 'classes', 'hypervisor_threads', 'hypervisor_memory_gb',
+                                    'system_reservation_ghz', 'memory_tiering_gb') if k in a}
+    if 'ram_gb' not in a and 'vm_class' in a and 'cores' in a and 'ghz' in a:
+        try:
+            return host_spec(a['vm_class'], a['cores'], a['ghz'], **extra)
+        except (ValueError, KeyError, TypeError, ZeroDivisionError) as e:
+            return {'error': str(e)}
     try:
         base = {k: a.pop(k) for k in ('cores', 'ghz', 'ram_gb')}
     except KeyError as e:
-        return {'error': f'missing {e.args[0]}: give the host cores, base GHz and RAM in GB'}
-    extra = {k: a.pop(k) for k in ('ht', 'classes', 'hypervisor_threads', 'hypervisor_memory_gb',
-                                    'system_reservation_ghz', 'memory_tiering_gb') if k in a}
+        return {'error': f'missing {e.args[0]}: give the host cores, base GHz and RAM in GB (or vm_class without RAM for a host specification)'}
     try:
         if 'vm_class' in a:
             return vms_per_host(a['vm_class'], **base, **extra)

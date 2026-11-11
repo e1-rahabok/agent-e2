@@ -13,7 +13,7 @@
 
 ## Memory
 - Too many size variants.
-- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB of VM RAM per vCPU, so 64 cores with 128 threads maps to 512 GB (1 vCPU per thread).
+- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB of VM RAM per vCPU, so 64 cores with 128 threads maps to 512 GB (1 vCPU per thread). Per class of service, the RAM that matches the CPU: `sp5-framework/capacity/host-spec-from-class-of-service`.
 - Large pages: keep them on when performance matters more than memory savings.
 
 ## Power management
@@ -95,6 +95,7 @@ object:
 internal_derive:
 - sp5-framework/concepts/configuration-management
 related:
+- sp5-framework/capacity/host-spec-from-class-of-service
 - vsphere/object-types/esxi/configuration/bios-settings
 - vsphere/technology/cpu/configuration/host-power-management
 - vsphere/technology/cpu/concepts/numa

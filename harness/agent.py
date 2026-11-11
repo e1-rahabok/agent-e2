@@ -64,11 +64,12 @@ TOOLS = [
         'description': ('Planning calculator (no live data): how many VMs fit on an ESXi host, or how full a host or cluster is '
                         'for a planned VM mix. Three models (allocation, reservation, utilization) x CPU and memory: the first '
                         'to reach 100% binds. Class defaults (overcommit, reservation, concurrent peak, typical VM size) come '
-                        'from the catalog; override them in classes. Give vm_class for VMs per host, or vms for a mix.'),
+                        'from the catalog; override them in classes. Give vm_class for VMs per host, or vms for a mix. '
+                        'Give vm_class without ram_gb for the host specification: the RAM that matches the CPU.'),
         'parameters': {'type': 'object', 'properties': {
             'cores': {'type': 'number', 'description': 'Physical cores per host'},
             'ghz': {'type': 'number', 'description': 'Base clock in GHz'},
-            'ram_gb': {'type': 'number', 'description': 'Host DRAM in GB'},
+            'ram_gb': {'type': 'number', 'description': 'Host DRAM in GB; leave out with vm_class for a host specification'},
             'ht': {'type': 'boolean', 'description': 'Hyper-Threading on (default true)'},
             'hosts': {'type': 'integer', 'description': 'Hosts in the cluster, HA hosts included (default 1)'},
             'ha_hosts': {'type': 'integer', 'description': 'Hosts kept for HA (default 0)'},
@@ -77,7 +78,7 @@ TOOLS = [
             'vm_class': {'type': 'string', 'enum': ['gold', 'silver', 'bronze']},
             'vms': {'type': 'object', 'description': 'VM count per class, e.g. {"gold": 2, "silver": 20, "bronze": 4}'},
             'classes': {'type': 'object', 'description': 'Overrides per class, e.g. {"silver": {"vcpu": 4, "memory_gb": 24}}'}},
-            'required': ['cores', 'ghz', 'ram_gb']}}},
+            'required': ['cores', 'ghz']}}},
     {'type': 'function', 'function': {
         'name': 'flow',
         'description': ('Health check or troubleshooting flow, one step at a time. Without step: all steps in order. '
