@@ -27,9 +27,9 @@ technology: [system]
 input: [text]
 task: judge-setting
 knowledge:
-  - observability/metric-volume
+  - sp5-framework/observability/metric-volume
   - vcf-operations/features/peak-20-second-metrics
-  - observability/collection-interval
+  - sp5-framework/observability/collection-interval
 attachments: []
 origin: synthetic
 source_path: "Author's prompt and Gemini 3.1 Pro exchange, 2026-11-10"

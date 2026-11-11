@@ -75,7 +75,7 @@
 - Too many alerts overwhelm; too few give no early warning. Insight leads; alerts play a secondary role.
 - Proactive operations reduce alerts in count and intensity. Most alerts are yellow (lower threshold); insight from the daily health check replaces them.
 - Weekly, review the alerts that slipped through the daily check and NOC screens, and improve the dashboards. Repeated over months, fewer alerts slip through.
-- Colours and urgency: `sp5-framework/alerts/alerts-and-insights`.
+- Colours and urgency: `sp5-framework/outputs/alerts-and-insights`.
 
 ## Deeper analysis
 - Daily check and NOC screens cover at most one day. A quarterly workload pattern is invisible to them.
@@ -147,7 +147,7 @@ object:
 - ClusterComputeResource
 - HostSystem
 internal_derive:
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/purpose-driven-architecture
 related:
@@ -167,8 +167,8 @@ images:
     topic: 'Alerts, NOC live screen, daily, weekly and monthly checks over 24 hours'
     image_type: timeline
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle) (pp. 58-65); SP5 Framework: Pillars (pillar per phase table)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle); SP5 Framework: Pillars (pillar per phase table)'
 corrections:
 - 'Daily SOP per pillar, Capacity: snapshots older than one day; the book example said 3 days.'
 - 'Daily check length: about 5 minutes when there is no problem; a problem makes it longer.'

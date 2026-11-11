@@ -82,7 +82,7 @@ images:
     metric: ['Cluster Operational Availability']
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Other Metrics > Availability
 corrections: []
 review_notes:

@@ -43,7 +43,7 @@ related:
 - vsphere/object-types/cluster/kpis/cluster-performance
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Performance > Cluster Performance (%) > Troubleshooting
 corrections: []
 review_notes: []

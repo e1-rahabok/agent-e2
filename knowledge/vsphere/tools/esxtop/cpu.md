@@ -149,7 +149,7 @@ images:
     metric: ['esxtop %A/MPERF', 'esxtop %UTIL']
     image_type: screenshot
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > esxtop > CPU
 corrections: []
 review_notes:

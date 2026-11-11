@@ -44,7 +44,7 @@ related:
 - vsphere/object-types/vm/kpis/vm-performance
 images:
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Performance: VM & Guest OS > Guest OS Performance (%)'
 corrections: []
 review_notes: []

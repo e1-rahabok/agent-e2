@@ -77,7 +77,7 @@ images:
     metric: ['Guest OS CPU Run Queue', 'VM CPU Run']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: MS Windows > CPU > Run Queue
 corrections: []
 review_notes:

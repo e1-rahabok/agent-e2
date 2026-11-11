@@ -70,14 +70,14 @@ object:
 - HostSystem
 - ClusterComputeResource
 internal_derive:
-- vcf-operations/reports/report-design
-- vcf-operations/reports/reports-vs-dashboards
+- sp5-framework/outputs/report-design
+- sp5-framework/outputs/reports-vs-dashboards
 related:
-- vcf-operations/dashboards/it-leaders-dashboards
+- sp5-framework/outputs/it-leaders-dashboards
 - sp5-framework/capacity/rightsizing
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Reports > Functional Considerations (the reports as a set; Overall Design: Executive Report, Operations Management) (pp. 58-61)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Reports > Functional Considerations (the reports as a set; Overall Design: Executive Report, Operations Management)'
 corrections: []
 review_notes:
 - 'To check: Report names: whether VCF Operations 9.1 still ships them (VCF Operations 9.1 documentation).'

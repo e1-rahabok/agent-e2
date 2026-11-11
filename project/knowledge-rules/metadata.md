@@ -5,7 +5,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 ## retriever_guide
 | Value | Question it answers | Folder | Template |
 |---|---|---|---|
-| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `observability/`, `vsphere/architecture/`, `sp5-framework/alerts/`, `vcf-operations/` features, dashboards, reports, alerts | `concept.md` |
+| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `sp5-framework/observability/`, `sp5-framework/outputs/`, `vsphere/architecture/`, `vcf-operations/` features, dashboards, reports, alerts | `concept.md` |
 | metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `models/`, `tools/` | `metric.md` |
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
@@ -20,10 +20,10 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 |---|---|
 | `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `project/tools/moved.yaml` (old id → new id): lint names the current id when an old one is still used, and `link_refs.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
 | `retriever_guide` | See retriever_guide above. |
-| `scope` | vendor-neutral (applies across VCF 9 components), sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. |
+| `scope` | sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. Root files (glossary, misconceptions): sp5-framework. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
 | `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework. Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
-| `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
+| `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. On a method file: the products its terms and examples use. |
 | `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
 | `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
 | `instance` | Metric files only, optional. The instance level when the formula differs by instance: aggregate, per-vcpu, per-vmnic, ... |

@@ -62,9 +62,9 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 
 ## Metadata
 ```yaml
-id: observability/thresholds
+id: sp5-framework/observability/thresholds
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -72,13 +72,15 @@ technology:
 - network
 pillar:
 - performance
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/metrics-as-accounting
+- sp5-framework/observability/metrics-as-accounting
 - vsphere/architecture/vm-vs-guest-os
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge
 corrections: []
 review_notes: []

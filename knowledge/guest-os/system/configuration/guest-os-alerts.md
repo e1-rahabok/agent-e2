@@ -63,7 +63,7 @@ product:
 - windows
 - linux
 internal_derive:
-- sp5-framework/alerts/alert-design
+- sp5-framework/outputs/alert-design
 - guest-os/cpu/metrics/run-queue
 - guest-os/storage/metrics/disk-queue
 - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
@@ -73,8 +73,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - guest-os/system/metrics/guest-os-performance
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption) (pp. 16-18)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption)'
 corrections: []
 review_notes:
 - 'Section ''CPU run queue alert'': the source thanks Darren Farrer for the collaboration on the remediation.'

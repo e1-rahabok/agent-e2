@@ -69,7 +69,7 @@ images:
     image_type: distribution
     sample: '2,441 VMs'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture; Memory > VM > Contention Metrics > Latency; Best Practice
 corrections: []
 review_notes:

@@ -111,8 +111,8 @@ images:
     topic: 'Class of service planning values'
     image_type: table
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template. Pages 107-109.'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template'
 corrections: []
 review_notes:
 - 'Section ''Example implementation'': the book says "Notice the consistent 2x gap"; memory allocation (1:1, 1.5:1, 2:1) and utilization do not follow 2x.'

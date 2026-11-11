@@ -90,7 +90,7 @@ images:
     metric: ['VM Network Transmit Packets Dropped']
     image_type: distribution
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > VM > Contention Metrics
 corrections:
 - 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, fixed in the guest (2026-11-06).'

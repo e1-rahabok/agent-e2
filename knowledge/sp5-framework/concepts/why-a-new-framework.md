@@ -26,7 +26,7 @@
 
 - A monitoring result is one of three: troubleshoot (broken or wrong), optimize (not broken, but cost or performance can improve), or nothing to do.
 - Events can be neutral or positive, unlike alerts. An event accounts for an activity, as a metric accounts for utilization or contention.
-- Metrics, properties, events, logs and network flows are inputs, not things managed: their meaning comes from the pillar that reads them (`observability/input-types`).
+- Metrics, properties, events, logs and network flows are inputs, not things managed: their meaning comes from the pillar that reads them (`sp5-framework/observability/input-types`).
 - Governance covers risk (availability, capacity, security) and control (compliance with approved configuration, clear accountability per role, cost kept within budget).
 
 ## Practices that are not pillars
@@ -62,13 +62,15 @@ pillar:
 - compliance
 - capacity
 - value
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive:
 - sp5-framework/concepts/overview
 related:
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/concepts/monitoring-vs-troubleshooting
-- observability/input-types
+- sp5-framework/observability/input-types
 source:
   document: '"Why a New Framework?" (Word document, deleted after use)'
   path: Why a New Framework?; Complexity; Duplication; Clarity

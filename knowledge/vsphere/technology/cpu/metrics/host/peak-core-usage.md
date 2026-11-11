@@ -46,7 +46,7 @@ images:
     metric: ['ESXi Peak CPU Core Usage']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Consumption Metrics > Thread Utilization > Peak Core CPU Usage
 corrections: []
 review_notes: []

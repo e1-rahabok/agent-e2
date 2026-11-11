@@ -52,8 +52,8 @@ related:
 - sp5-framework/performance/noisy-neighbour
 - vsphere/object-types/esxi/configuration/bios-settings
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Configuration Management > Review List > Network (Distributed Switch & Port Group, Others) (pp. 147-148)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Configuration Management > Review List > Network (Distributed Switch & Port Group, Others)'
 corrections: []
 review_notes:
 - 'Section ''Distributed switch'': the book names Cisco Discovery Protocol; LLDP added, not in the book.'

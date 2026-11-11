@@ -59,8 +59,8 @@ related:
 - guest-os/system/concepts/guest-os-sizing
 - vsphere/architecture/vm-vs-guest-os
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Configuration Management > Review List > Consumer Objects > Guest OS (pp. 134-135)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Configuration Management > Review List > Consumer Objects > Guest OS'
 corrections: []
 review_notes:
 - 'Section ''Drivers'': the book links a networking driver best-practice page; the link target is not in the source text.'

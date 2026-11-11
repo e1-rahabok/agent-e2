@@ -35,7 +35,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/entitlement
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Consumption Metrics; Limit
 corrections: []
 review_notes: []

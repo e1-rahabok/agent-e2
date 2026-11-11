@@ -44,8 +44,8 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Wait Metrics
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Wait Metrics
 corrections: []
 review_notes:
 - 'Section ''vs Memory Latency'': from Memory > VM > Latency.'

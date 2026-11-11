@@ -93,7 +93,7 @@ images:
     topic: 'Network I/O Control'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > Architecture > Unique Characteristics
 corrections: []
 review_notes:

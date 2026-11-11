@@ -64,7 +64,7 @@ internal_derive:
 - sp5-framework/concepts/iaas-business
 related:
 - vsphere/object-types/vm/kpis/vm-performance
-- vcf-operations/dashboards/daily-health-check-dashboards
+- sp5-framework/outputs/daily-health-check-dashboards
 images:
   - path: images/business-application-health-chart-and-kpi-dashboard-layout-diagram.png
     product: [vcf-operations]
@@ -77,8 +77,8 @@ images:
     topic: 'vSphere folder tree: business unit, department, application, tier, VM'
     image_type: diagram
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Business Applications (The Crown Jewel, vSphere Folder Structure, Objects Design) (pp. 7-10)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Business Applications (The Crown Jewel, vSphere Folder Structure, Objects Design)'
 corrections: []
 review_notes:
 - 'To check: Section ''vSphere folder structure'', diagram: Application C under Department 2 is labelled C.3, not C.2. (Q139).'

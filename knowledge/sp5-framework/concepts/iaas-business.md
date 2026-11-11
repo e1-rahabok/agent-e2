@@ -5,7 +5,7 @@
 - A system is judged by its architecture. A service is judged by its service level.
 - It is a service with or without chargeback. VM owners no longer own the hardware, so they judge only the service level, not the architecture.
 - The architecture is judged by its result in production: firefighting and blame between teams, or alerts that are meaningful and actionable.
-- Moving from SDDC to IaaS is an operations change: complaint-based to KPI-based, alert-driven to insight-driven. The maturity steps: `sp5-framework/performance/kpi-vs-sla`. Alerts and insights: `sp5-framework/alerts/alerts-and-insights`.
+- Moving from SDDC to IaaS is an operations change: complaint-based to KPI-based, alert-driven to insight-driven. The maturity steps: `sp5-framework/performance/kpi-vs-sla`. Alerts and insights: `sp5-framework/outputs/alerts-and-insights`.
 
 ## Three variants of IaaS
 The variants differ in what is sold, how it is priced, and which SLA is offered.
@@ -57,7 +57,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - Complete: compliance as well as availability; performance through the KPI.
 - Correct: measured on each paying VM, not at the infrastructure level, with the right metrics.
 - Accurate: measured every 5 minutes. A longer interval averages a breach away.
-- Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in `observability/thresholds`.
+- Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in `sp5-framework/observability/thresholds`.
 
 ## Signs of complaint-based operations
 - Customers blame the IaaS. Complaints are the only signal because performance is not defined or measured.
@@ -131,13 +131,13 @@ related:
 - sp5-framework/concepts/sla-metrics
 - sp5-framework/concepts/class-of-service
 - sp5-framework/concepts/purpose-driven-architecture
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/capacity/host-spec-from-class-of-service
 - sp5-framework/capacity/capacity-model
 - sp5-framework/capacity/rightsizing
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/concepts/realms-and-layers
-- observability/thresholds
+- sp5-framework/observability/thresholds
 images:
   - path: images/consumer-provider-layer-what-each-checks-diagram.png
     product: [vsphere]
@@ -145,12 +145,12 @@ images:
     topic: 'What the consumer layer and the provider layer each check, per pillar'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Overview > Complaint-based Operations (The Litmus Test, Common Mistakes); The Business of IaaS (VM as a Service, Capabilities, Key Metrics, The Restaurant Analogy) (pp. 2-11)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > Overview > Complaint-based Operations (The Litmus Test, Common Mistakes); The Business of IaaS (VM as a Service, Capabilities, Key Metrics, The Restaurant Analogy)'
 corrections: []
 review_notes:
 - 'To check: Section ''Three variants of IaaS'', last bullet: contention from the pool limit or tenant overcommit is the tenant''s, and Ready includes limit time; derived from the book''s resource pool row and the VM CPU Ready file.'
-- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from observability/thresholds; not in the book.'
+- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from sp5-framework/observability/thresholds; not in the book.'
 - 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
 - 'Book naming is older (Aria products); the knowledge base uses VCF Operations.'
 status: draft

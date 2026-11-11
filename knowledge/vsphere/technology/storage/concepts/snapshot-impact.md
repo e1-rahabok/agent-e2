@@ -52,7 +52,7 @@ images:
     topic: 'VM snapshot'
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > VM > Performance Metrics > Consumption metrics > Datastore
 corrections: []
 review_notes:

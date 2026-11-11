@@ -36,7 +36,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/granted
 - vsphere/technology/memory/metrics/virtual-motherboard/overhead
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Consumption Metrics
 corrections: []
 review_notes:

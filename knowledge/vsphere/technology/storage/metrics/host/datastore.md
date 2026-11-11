@@ -63,8 +63,8 @@ images:
     metric: ['Datastore Latency', 'VM Disk Latency']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
-  path: Storage > ESXi > Datastore; PART 1 - Concepts of Operations Management.docx, Capacity Management > Reclamation > TRIM and Unmap (pp. 116-117)
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: Storage > ESXi > Datastore; Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Capacity Management > Reclamation > TRIM and Unmap
 corrections: []
 review_notes:
 - 'Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency is unexplained in the book.'

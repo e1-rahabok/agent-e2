@@ -60,8 +60,8 @@ images:
     metric: ['VM CPU Contention']
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Contention Metrics > Contention
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Contention Metrics > Contention
 corrections: []
 review_notes: []
 status: draft

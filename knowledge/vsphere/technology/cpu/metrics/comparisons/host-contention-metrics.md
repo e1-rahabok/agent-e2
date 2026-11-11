@@ -56,7 +56,7 @@ images:
     metric: ['ESXi CPU Ready', 'ESXi CPU Co-stop', 'ESXi CPU Latency']
     image_type: table
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Contention Metrics
 corrections: []
 review_notes:

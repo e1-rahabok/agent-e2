@@ -136,8 +136,8 @@ images:
     topic: 'vCPU states'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 52-55) > Guest OS vs VM
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > Guest OS vs VM
 corrections: []
 review_notes:
 - 'To check: Section ''What each layer cannot see'': how often ESXi updates the guest on per-core frequency; the book is unsure.'

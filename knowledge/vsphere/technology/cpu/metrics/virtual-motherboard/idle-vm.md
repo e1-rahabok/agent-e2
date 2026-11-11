@@ -55,8 +55,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - sp5-framework/capacity/unused-vm
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Capacity Management > Reclamation > Idle VM. Pages 114-116.'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Capacity Management > Reclamation > Idle VM'
 corrections: []
 review_notes:
 - 'To check: Section ''Policy defaults'': values from the book screenshot of the VCF Operations policy (Idle VMs: 7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days) against the VCF Operations 9.1 documentation; the screenshot is not copied.'

@@ -73,7 +73,7 @@ images:
     topic: 'Multi-writer disk'
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > VM > Overview > Virtual Disk; Multi-Writer Disk
 corrections: []
 review_notes:

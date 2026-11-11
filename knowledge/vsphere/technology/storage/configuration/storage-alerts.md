@@ -21,7 +21,7 @@
 - Wait 10 minutes. Vendor best practice and field reality differ, so the wait is longer and the thresholds higher. A lower number is right in theory, but there are hardly any complaints at these levels, and investment is hard to justify without complaints.
 - The 20-second peak covers read and write together. This is a known limit.
 - CPU Usage and IOPS cut alerts during low activity, where business impact is likely negligible.
-- These are the standard production values. Class-of-service examples (30, 60, 120 ms): `sp5-framework/alerts/alert-design`.
+- These are the standard production values. Class-of-service examples (30, 60, 120 ms): `sp5-framework/outputs/alert-design`.
 - Metrics: `vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`, `vsphere/technology/storage/metrics/virtual-motherboard/iops`, `vcf-operations/features/peak-20-second-metrics`.
 
 ## Datastore latency
@@ -63,7 +63,7 @@ object:
 - Datastore
 - StoragePod
 internal_derive:
-- sp5-framework/alerts/alert-design
+- sp5-framework/outputs/alert-design
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 - vcf-operations/features/peak-20-second-metrics
@@ -71,8 +71,8 @@ related:
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/storage/metrics/host/datastore
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Alert > Storage Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts) (pp. 24-26)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Alert > Storage Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts)'
 corrections: []
 review_notes:
 - 'Section ''VM disk latency'': the 80 ms red is read as standard production; the class-of-service example in the same chapter gives standard production 60 ms for 10 minutes. Q146.'

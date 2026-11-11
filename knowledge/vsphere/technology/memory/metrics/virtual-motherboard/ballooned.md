@@ -55,7 +55,7 @@ related:
 - vsphere/technology/memory/concepts/ballooning
 - vsphere/technology/memory/metrics/virtual-motherboard/balloon-target
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; Memory > Architecture > Virtual Memory; Relationship; Memory > VM > Contention Metrics > Balloon; Consumption Metrics > Ballooned
 corrections: []
 review_notes:

@@ -48,7 +48,7 @@ object:
 - DistributedVirtualPortgroup
 - VmwareDistributedVirtualSwitch
 internal_derive:
-- sp5-framework/alerts/alert-design
+- sp5-framework/outputs/alert-design
 - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
 - vsphere/technology/network/metrics/host/packets-dropped
 - vsphere/technology/network/metrics/distributed-switch/packets-dropped
@@ -56,8 +56,8 @@ related:
 - vsphere/technology/network/concepts/packet-drop-accounting
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Alert > Network Alerts > Contention Alerts (p. 26)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Alert > Network Alerts > Contention Alerts'
 corrections: []
 review_notes:
 - 'Section ''VM dropped packets'': the source says 4% is 1 in 40 packets; 4% is 1 in 25. Written as 1 in 25. The source row ends with "and", so a second condition may be missing. Q147.'

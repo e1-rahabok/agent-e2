@@ -21,9 +21,9 @@
 
 ## Metadata
 ```yaml
-id: observability/measurement-precision
+id: sp5-framework/observability/measurement-precision
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -31,13 +31,15 @@ technology:
 - network
 pillar:
 - performance
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/resource-nature
-- observability/units
+- sp5-framework/observability/resource-nature
+- sp5-framework/observability/units
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections: []
 review_notes: []

@@ -32,9 +32,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/daily-health-check-dashboards
+id: sp5-framework/outputs/daily-health-check-dashboards
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -50,15 +50,15 @@ object:
 - ClusterComputeResource
 internal_derive:
 - sp5-framework/concepts/proactive-operations
-- vcf-operations/concepts/system-engagement
+- sp5-framework/outputs/system-engagement
 related:
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/concepts/health-risk-efficiency
 - vsphere/object-types/vm/metrics/vmotion
-- observability/input-types
+- sp5-framework/observability/input-types
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Daily Health Check (Morning Routine, vSphere Daily Log Check) (pp. 6-7)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Daily Health Check (Morning Routine, vSphere Daily Log Check)'
 corrections: []
 review_notes:
 - 'To check: Section ''Morning routine'': the source names Log Insight; in VCF 9 it is VCF Operations for logs.'

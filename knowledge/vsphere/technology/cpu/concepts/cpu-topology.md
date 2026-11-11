@@ -61,8 +61,8 @@ images:
     topic: 'CPU topology'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 57-60) > CPU vs vCPU > System on a Chip; NUMA
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > CPU vs vCPU > System on a Chip; NUMA
 corrections: []
 review_notes:
 - "Section 'System on a Chip': AMD source from the book: https://www.amd.com/system/files/documents/overview-amd-epyc7003-series-processors-microarchitecture.pdf (p. 5)."

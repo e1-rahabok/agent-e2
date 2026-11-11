@@ -63,7 +63,7 @@
 - Capacity Summary explains remaining capacity and time; Inventory Summary explains available resources and what runs on them.
 - Top section: the vSphere World summary.
   - Weekly average VM growth across all data centres, running and powered off. VM count rising without utilization rising means the new VMs are not yet used.
-  - Overcommit ratio: the efficiency of running many workloads on shared hosts. Read it together with contention (performance dashboards). Overcommit is what makes a private cloud cheaper than the public cloud. Reference: AWS overcommits CPU 2:1 by counting hyper-threads and does not overcommit memory.
+  - Overcommit ratio: the efficiency of running many workloads on shared hosts. Read it together with contention (performance dashboards). Overcommit is what makes a private cloud cheaper than the public cloud.
   - VCF Operations counts physical cores, not logical (hyper-threaded) cores, in all CPU capacity calculations.
 - Bottom section: two columns, compute and storage, with the same design.
   - Network is left out: it is an interconnect, not a node, so its capacity is much harder to compute.
@@ -85,9 +85,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/it-leaders-dashboards
+id: sp5-framework/outputs/it-leaders-dashboards
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -104,19 +104,18 @@ object:
 - Datastore
 - VirtualMachine
 internal_derive:
-- vcf-operations/dashboards/dashboard-design
+- sp5-framework/outputs/dashboard-design
 - vcf-operations/dashboards/business-applications
 related:
 - sp5-framework/concepts/sla-metrics
-- vcf-operations/dashboards/capacity-dashboards
+- sp5-framework/outputs/capacity-dashboards
 - sp5-framework/capacity/capacity-model
-- vcf-operations/concepts/system-engagement
+- sp5-framework/outputs/system-engagement
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Overall Design Approach > Overall Design: IT Leaders Dashboard (General Requirements, Sample Requirements Analysis: Business Applications, Operations Overview; Sample Dashboards: Capacity Summary, How to Use, Points to Note) (pp. 41-48)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Overall Design Approach > Overall Design: IT Leaders Dashboard (General Requirements, Sample Requirements Analysis: Business Applications, Operations Overview; Sample Dashboards: Capacity Summary, How to Use, Points to Note)'
 corrections: []
 review_notes:
-- 'To check: Section ''Capacity Summary dashboard'': AWS overcommit (CPU 2:1 counting hyper-threads, no memory overcommit) is from the source (AWS documentation).'
 - 'Section ''Capacity Summary dashboard'': the source refers to an Executive Summary Dashboards page for common design; not in this document.'
 - 'Section ''Sample analysis'': the example names (John and Jill; Sam, Andy and Julia) are left out.'
 - 'Not copied: the general requirements hexagons (their words are in the text) and the Capacity Summary screenshots.'

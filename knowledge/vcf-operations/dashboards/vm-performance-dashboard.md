@@ -7,7 +7,7 @@
 
 ## What it shows
 - Performance means contention: the VM did not get the CPU, memory, disk or network service it demanded. VM Performance (%) is a KPI built from contention counters (`vsphere/object-types/vm/kpis/vm-performance`, `sp5-framework/performance/performance-kpi-design`).
-- Contention first and colour coded; utilization second, as context, not colour coded; then the configuration that can affect performance (`vcf-operations/dashboards/performance-dashboards`).
+- Contention first and colour coded; utilization second, as context, not colour coded; then the configuration that can affect performance (`sp5-framework/outputs/performance-dashboards`).
 - Counters are VCF Operations metrics on the VM object (VM CPU Ready, Co-stop, Memory Contention, Disk Latency), reported every 5 minutes as an average and as the 20-second peak (`vcf-operations/features/peak-20-second-metrics`). They are not esxtop fields.
 - Widget detail: to be written after the dashboard overhaul.
 
@@ -38,7 +38,7 @@ object:
 - VirtualMachine
 internal_derive:
 - vsphere/object-types/vm/kpis/vm-performance
-- vcf-operations/dashboards/performance-dashboards
+- sp5-framework/outputs/performance-dashboards
 related:
 - sp5-framework/performance/performance-kpi-design
 - vcf-operations/features/peak-20-second-metrics
@@ -51,7 +51,7 @@ source:
 corrections:
 - 'Section ''Which dashboard to use'': VM Contention deprecated, superseded by VM Performance. The VCF Operations 9.1 documentation (TechDocs, Performance Dashboards > VM Contention Dashboard) still describes it as current.'
 review_notes:
-- 'To check: Section ''What it shows'': widget detail, after the dashboard overhaul; the layout follows vcf-operations/dashboards/performance-dashboards (Part 2).'
+- 'To check: Section ''What it shows'': widget detail, after the dashboard overhaul; the layout follows sp5-framework/outputs/performance-dashboards (Part 2).'
 - 'To check: Section ''Misconceptions'': written from a Gemini answer of 2026-11-09 (benchmark question 0091); check each misconception.'
 status: draft
 ```

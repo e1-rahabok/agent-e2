@@ -34,7 +34,7 @@ related:
 - sp5-framework/capacity/capacity-model
 images:
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections: []
 review_notes:

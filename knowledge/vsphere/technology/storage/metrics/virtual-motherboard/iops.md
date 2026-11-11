@@ -43,7 +43,7 @@ layer:
 metric_class: consumption
 internal_derive:
 - vsphere/architecture/vm-vs-guest-os
-- observability/resource-nature
+- sp5-framework/observability/resource-nature
 same_name: []
 same_meaning: []
 related:
@@ -56,7 +56,7 @@ images:
     image_type: distribution
     sample: '3,500 VMs'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; Storage > VM > Performance Metrics > Consumption metrics
 corrections: []
 review_notes:

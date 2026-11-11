@@ -65,7 +65,7 @@ related:
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 - vsphere/object-types/cluster/metrics/vm-operations
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Overview > vSphere Cluster; Imbalance
 corrections:
 - 'Monster VM row: the book said above 45% of the host''s threads. Superseded by the adapter definition.'

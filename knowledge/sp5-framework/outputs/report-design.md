@@ -76,9 +76,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/reports/report-design
+id: sp5-framework/outputs/report-design
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -94,14 +94,14 @@ object:
 - ClusterComputeResource
 - Datacenter
 internal_derive:
-- vcf-operations/reports/reports-vs-dashboards
-- observability/aggregation
+- sp5-framework/outputs/reports-vs-dashboards
+- sp5-framework/observability/aggregation
 related:
-- vcf-operations/dashboards/dashboard-design
+- sp5-framework/outputs/dashboard-design
 - vcf-operations/reports/report-suite
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Reports > Technical Considerations (Output, Context, Widgets); Functional Considerations (pp. 53-58)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Reports > Technical Considerations (Output, Context, Widgets); Functional Considerations'
 corrections: []
 review_notes:
 - 'Section ''PDF or CSV'', context columns: the source says the folder column groups the VM by cluster; written as folder.'

@@ -97,7 +97,7 @@ internal_derive:
 related:
 - sp5-framework/performance/business-application-kpi
 - sp5-framework/capacity/host-spec-from-class-of-service
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/concepts/realms-and-layers
 - vsphere/architecture/vm-vs-guest-os
 - vsphere/object-types/cluster/concepts/drs-overview
@@ -113,8 +113,8 @@ images:
     topic: 'Two sides of VCF: IaaS platform of the customer and software product of Broadcom, across seven pillars'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF) (pp. 11-22)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF)'
 corrections: []
 review_notes:
 - 'To check: Section ''Goals come from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the book.'

@@ -102,8 +102,8 @@ related:
 - vsphere/technology/network/configuration/network-configuration-review
 - vsphere/technology/storage/configuration/storage-configuration-review
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Configuration Management > Review List > Compute > ESXi; Management; Storage Related; Network Related; ESXi Consistency (pp. 141-144)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Configuration Management > Review List > Compute > ESXi; Management; Storage Related; Network Related; ESXi Consistency'
 corrections: []
 review_notes:
 - 'To check: Section ''Memory'': 64 cores, 128 threads, 512 GB at 4 GB per vCPU is 1 vCPU per thread; the Price & SLA example (768 GB) is per core. (Q111).'

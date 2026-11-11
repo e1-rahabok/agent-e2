@@ -53,9 +53,9 @@
 
 ## Metadata
 ```yaml
-id: observability/resource-nature
+id: sp5-framework/observability/resource-nature
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -64,15 +64,17 @@ technology:
 pillar:
 - performance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/measurement-precision
+- sp5-framework/observability/measurement-precision
 - vsphere/architecture/resource-controls
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
 corrections:
 - '2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A.'

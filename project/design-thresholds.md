@@ -107,7 +107,7 @@ reading key = (object, metric, instance, interval or window statistic)
   - Alert: reactive, a guard rail when people ignore the KPI; colour means by when (red 1-2 hours, orange end of day). Its spike filter is the wait cycle and cancel cycle (section 9), which the KPI does not have.
 - Reading them together still needs two rules about readings, used when Agent E2 explains why an alert fired while the KPI looks better, or the reverse:
   - peak dominates average: the 20-second peak of an interval is at least its 5-minute average;
-  - worst instance dominates aggregate: the worst vCPU or virtual disk is at least the VM value (`observability/thresholds`, Instance rule).
+  - worst instance dominates aggregate: the worst vCPU or virtual disk is at least the VM value (`sp5-framework/observability/thresholds`, Instance rule).
 - Example: the VM KPI reads the worst vCPU at 20 seconds; the VM CPU contention alert reads the VM total at 5 minutes with a usage gate. A VM can be KPI red with no alert (short or gated bursts), and the answer says why.
 - KPI colour and alert colour are never compared as if one scale.
 
@@ -337,7 +337,7 @@ Proposal. Values are design values for the recommended alert set, to tune from e
 - R6. Red and orange on one metric are separate alert definitions. When red clears and orange still holds, the orange alert stays; the cancel cycle of the red symptom does not hold red for orange's sake.
 
 ### 9.4 Incident layer
-- Red (urgent and important, pushed to the phone): the alert cancelling does not close the ticket. The ticket records the recovery; a person closes it with the cause. This matches the misconception in `sp5-framework/alerts/alerts-and-insights`: alerts that close themselves breed "no open alert means no problem".
+- Red (urgent and important, pushed to the phone): the alert cancelling does not close the ticket. The ticket records the recovery; a person closes it with the cause. This matches the misconception in `sp5-framework/outputs/alerts-and-insights`: alerts that close themselves breed "no open alert means no problem".
 - Orange (urgent, not important): the ticket may close with the alert, with the recovery recorded; the end-of-day review reads the closed ones.
 - Re-trigger within a debounce window (proposal: 30 minutes) appends to the open ticket and sends no new page.
 - Two topologies:
@@ -484,5 +484,5 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## Sources
 - Broadcom TechDocs, VCF 9.0: [Alert Definition Best Practices](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html).
 - Broadcom TechDocs, VCF 9.1: [Add a Virtual Machine CPU Usage Symptom to the Alert Definition](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-alerts-and-actions/create-a-problem-alert-definition/add-a-virtual-machine-cpu-usage-symptom-to-the-alert-definition.html).
-- Knowledge base: `sp5-framework/performance/kpi-vs-sla`, `sp5-framework/alerts/alert-design`, `sp5-framework/alerts/alerts-and-insights`, `vcf-operations/alerts/alert-definitions`, the cluster models, `close-for-business`, `observability/thresholds`.
+- Knowledge base: `sp5-framework/performance/kpi-vs-sla`, `sp5-framework/outputs/alert-design`, `sp5-framework/outputs/alerts-and-insights`, `vcf-operations/alerts/alert-definitions`, the cluster models, `close-for-business`, `sp5-framework/observability/thresholds`.
 - Harness: `harness/catalog.py`, `harness/agent.py`, `harness/modes.py`, `harness/primer.py`, `harness/clarify.py`, `harness/verify.py`, `project/tools/lint.py`.

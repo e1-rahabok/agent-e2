@@ -51,7 +51,7 @@ related:
 - sp5-framework/performance/performance-kpi-design
 - vsphere/technology/storage/concepts/snapshot-impact
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Performance: VM & Guest OS > vMotion'
 corrections: []
 review_notes: []

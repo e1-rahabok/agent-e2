@@ -18,11 +18,6 @@
 - Windows: the driver maps it to inbound discards: Packets Received Discarded (Performance Monitor), ReceivedDiscardedPackets (PowerShell).
 - So the drop is visible to the hypervisor and to the guest. It is caused and fixed in the guest (larger ring, CPU), which is why the Guest OS owner fixes it.
 
-### Comparison: Linux KVM with virtio-net
-- The hypervisor thread finds no free descriptor, drops the frame, and counts it on the host tap device and the emulated device.
-- The guest's counters stay at 0: the frame never entered guest memory, and virtio-net shares no drop statistics with the guest.
-- VMXNET3 differs: the guest sees the drop too.
-
 ## Transmit drop: the top-of-rack switch is congested
 - Ethernet does not acknowledge frames. Unless 802.3x PAUSE flow control holds it back, ESXi counts a frame as sent once the physical NIC has put it on the wire.
 - A frame dropped by a congested top-of-rack switch is counted only in that switch.
@@ -52,7 +47,6 @@ sequenceDiagram
 - "The Guest OS shows no dropped packets, so the network is clean" → on transmit, a drop at the top-of-rack switch is invisible to ESXi and to the guest; look at TCP retransmissions and the switch counters.
 - "A receive drop on the VM means the physical network dropped it" → a full guest receive ring drops it inside the host; check the guest's CPU, the vCPU's Ready and the ring size.
 - "The hypervisor cannot see a VMXNET3 ring drop" → it counts it at the port and the VM (%DRPRX, droppedRx); the guest sees it too.
-- "KVM and ESXi report receive drops the same way" → on KVM with virtio-net the guest counter stays 0.
 
 ## Metadata
 ```yaml

@@ -12,9 +12,9 @@
 
 ## Metadata
 ```yaml
-id: observability/metrics-as-accounting
+id: sp5-framework/observability/metrics-as-accounting
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -23,13 +23,15 @@ technology:
 pillar:
 - performance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/naming-patterns
-- observability/thresholds
+- sp5-framework/observability/naming-patterns
+- sp5-framework/observability/thresholds
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances
 corrections: []
 review_notes: []

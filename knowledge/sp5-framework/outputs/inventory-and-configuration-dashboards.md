@@ -7,7 +7,7 @@
 - Users: the platform team.
 - Frequency: mostly ad hoc; daily for VM inventory changes.
 - Features: the relationships between objects shown visually; fast traversal of the inventory hierarchy; the count of objects at each level, ideally with their movement over time.
-- Inventory gets no alert: it is an account of what exists, not good or bad. Changes are watched on the NOC screen (`sp5-framework/alerts/alert-design`).
+- Inventory gets no alert: it is an account of what exists, not good or bad. Changes are watched on the NOC screen (`sp5-framework/outputs/alert-design`).
 
 ## Configuration dashboards
 - Goals: fix configuration issues before they cause impact; when an issue occurs, check whether configuration plays a part.
@@ -37,9 +37,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/inventory-and-configuration-dashboards
+id: sp5-framework/outputs/inventory-and-configuration-dashboards
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -56,7 +56,7 @@ object:
 - ClusterComputeResource
 - ResourcePool
 internal_derive:
-- vcf-operations/dashboards/dashboard-design
+- sp5-framework/outputs/dashboard-design
 - sp5-framework/concepts/configuration-management
 related:
 - vsphere/object-types/vm/configuration/vm-configuration-review
@@ -64,8 +64,8 @@ related:
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Overall Design Approach > Overall Design: Inventory Dashboards; Overall Design: Configuration Dashboard (pp. 35-36, 40-41)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Overall Design Approach > Overall Design: Inventory Dashboards; Overall Design: Configuration Dashboard'
 corrections: []
 review_notes:
 - 'To check: Section ''The configuration dashboard set'': whether the VCF Operations 9.1 dashboards changed since the source said in future I would enhance them (written as due for enhancement).'

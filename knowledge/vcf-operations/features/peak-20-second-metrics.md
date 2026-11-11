@@ -60,7 +60,7 @@ object:
 - VirtualMachine
 metric_class: contention
 internal_derive:
-- observability/measurement-precision
+- sp5-framework/observability/measurement-precision
 same_name: []
 same_meaning: []
 related:
@@ -74,7 +74,7 @@ images:
     topic: '20-second peak vs 5-minute average'
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics'
 corrections: []
 review_notes: []

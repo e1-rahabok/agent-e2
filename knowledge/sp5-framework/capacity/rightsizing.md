@@ -124,7 +124,7 @@
 
 ## Prevent oversizing
 
-- Progressive pricing (Part 1, Cost and Price Management): the price per vCPU rises with VM size.
+- Progressive pricing (SP5 Framework, Cost and Price Management): the price per vCPU rises with VM size.
 - Without chargeback: approval chain grows with VM size; a longer form for monster VMs.
 - Every VM has a life span, renewed by an annual confirmation (`sp5-framework/capacity/unused-vm`, section Annual stocktake).
 - Start small (minimal size for every VM, upsize later) has costs:
@@ -205,7 +205,7 @@ images:
     topic: 'Cost of an oversized VM'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx; PART 1 - Concepts of Operations Management.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Part 3: Consumer Objects > Capacity: Guest OS > Benefits. Part 1: Capacity Management > Rightsizing (Challenges; Micro Burst; Oversized Guest OS; Cost of Oversized; Optimization; Best Practices; The Big Picture; Progressive Pricing; Start Small?; Before vs After), pages 121-127.'
 corrections: []
 review_notes:

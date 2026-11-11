@@ -96,8 +96,8 @@ related:
 - sp5-framework/concepts/realms-and-layers
 images: []
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS (pp. 76-80)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS'
 corrections:
 - 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team.'
 - 'Section ''KPI means performance'': a KPI is a baseline, not a target.'

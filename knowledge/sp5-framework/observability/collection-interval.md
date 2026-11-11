@@ -59,25 +59,27 @@
 
 ## Metadata
 ```yaml
-id: observability/collection-interval
+id: sp5-framework/observability/collection-interval
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - system
 pillar:
 - performance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vcf-operations/features/peak-20-second-metrics
-- observability/aggregation
-- observability/measurement-precision
+- sp5-framework/observability/aggregation
+- sp5-framework/observability/measurement-precision
 - vcf-operations/features/real-time-metrics
 source:
-  document: PART 3 - Counters.docx, Metric Mastery (update of 2026-11-08)
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
   path: Metric Mastery > Collection Interval; Why Milliseconds as Unit?; Rollup Type; Real Time Collection; Performance Troubleshooting
 corrections: []
 review_notes:

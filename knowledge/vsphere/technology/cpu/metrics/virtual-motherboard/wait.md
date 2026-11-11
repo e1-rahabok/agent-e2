@@ -61,8 +61,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; CPU > VM (pp. 78-118) > Wait Metrics
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > State of a VM vCPU; CPU > VM > Wait Metrics
 corrections: []
 review_notes:
 - 'To check: metric_class: set to context; the book groups Wait separately from contention and consumption.'

@@ -25,7 +25,7 @@
 
 ## Agent VMs
 - One per host. No HA: usually on local datastore.
-- Examples: storage service (for example Nutanix CVM), network service, security (for example Trend Micro Deep Security).
+- Examples: storage service, network service, security (for example Trend Micro Deep Security).
 - A slow security agent VM in the data path looks like a network or storage problem to business VMs. The interception happens in the hypervisor, not on the network.
 ![Host with storage, network and security agent VMs](../images/esxi-agent-vms-storage-network-security.png)
 
@@ -163,7 +163,7 @@ images:
     topic: 'Network direction'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > Architecture > Architecture intro; Network Observability
 corrections:
 - 'Section ''Direction terms'': the book diagrams and text say a VM has no ingress traffic. Superseded on 2026-11-04. Keep until the book is updated.'

@@ -111,7 +111,7 @@ images:
     topic: 'Memory page mapping'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > Architecture > The 4 Layers; Virtual Memory; Relationship
 corrections: []
 review_notes:

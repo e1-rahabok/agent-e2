@@ -37,9 +37,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/capacity-dashboards
+id: sp5-framework/outputs/capacity-dashboards
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -56,16 +56,16 @@ object:
 - ClusterComputeResource
 - Datastore
 internal_derive:
-- vcf-operations/dashboards/dashboard-design
+- sp5-framework/outputs/dashboard-design
 - sp5-framework/capacity/capacity-model
 related:
 - sp5-framework/capacity/rightsizing
 - sp5-framework/capacity/reclamation
-- vcf-operations/dashboards/performance-dashboards
-- vcf-operations/dashboards/it-leaders-dashboards
+- sp5-framework/outputs/performance-dashboards
+- sp5-framework/outputs/it-leaders-dashboards
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Overall Design Approach > Overall Design: Capacity Dashboard (pp. 38-40)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Overall Design Approach > Overall Design: Capacity Dashboard'
 corrections: []
 review_notes:
 - 'To check: Section ''Goals and users'': thin on thin explained as thin VMDKs on thin-provisioned LUNs; not in the source.'

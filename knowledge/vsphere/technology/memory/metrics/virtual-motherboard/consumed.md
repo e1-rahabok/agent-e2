@@ -63,7 +63,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/zero-pages
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed
 corrections: []
 review_notes:

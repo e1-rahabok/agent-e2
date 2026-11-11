@@ -27,7 +27,7 @@
 - An NVMe device used for tiering is not available to vSAN. Count the lost vSAN capacity when sizing the cluster.
 - Do not overcommit memory on top of tiering (see Interactions). The overcommit ratio counts DRAM only: the NVMe tier exists to avoid overcommit.
 - Consumed covers both tiers; once cold pages move to tier 1, consumed can exceed DRAM.
-- Unknown: whether VM memory contention (esxtop %LAT_M) counts time spent on pages in the NVMe tier. NVMe is about 1,000x slower than DRAM, so read the NVMe tier counters (read bandwidth and latency) directly. Linux KVM has no such per-VM signal either.
+- Unknown: whether VM memory contention (esxtop %LAT_M) counts time spent on pages in the NVMe tier. NVMe is about 1,000x slower than DRAM, so read the NVMe tier counters (read bandwidth and latency) directly.
 
 ## Sizing (documentation)
 - Default DRAM:NVMe ratio 1:1: doubles host memory. NVMe used = the smaller of the ratio and the tier partition, at most 4 TB.

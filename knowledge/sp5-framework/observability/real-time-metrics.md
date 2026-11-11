@@ -18,7 +18,7 @@
 - 20-second data: each point is the average of 20 seconds. vCenter keeps it for about an hour before rolling it into 5-minute points (`vsphere/tools/vsphere-client/vcenter-statistics`). VCF Operations reports the highest 20-second value of each 5-minute cycle as a peak metric (`vcf-operations/features/peak-20-second-metrics`).
 
 ## Reading across intervals
-- The same workload reads higher at 2 seconds than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on one interval does not apply to another (`observability/thresholds`, Interval rule).
+- The same workload reads higher at 2 seconds than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on one interval does not apply to another (`sp5-framework/observability/thresholds`, Interval rule).
 - A spike seen at 2 seconds and absent at 20 seconds lasted less than 20 seconds.
 
 ## Misconceptions
@@ -30,9 +30,9 @@
 
 ## Metadata
 ```yaml
-id: observability/real-time-metrics
+id: sp5-framework/observability/real-time-metrics
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -49,8 +49,8 @@ object:
 - HostSystem
 - VirtualMachine
 internal_derive:
-- observability/collection-interval
-- observability/thresholds
+- sp5-framework/observability/collection-interval
+- sp5-framework/observability/thresholds
 related:
 - vcf-operations/features/real-time-metrics
 - vsphere/tools/esxtop/overview

@@ -101,8 +101,8 @@ images:
     metric: ['VM CPU Used', 'VM CPU Run', 'VM CPU Overlap', 'VM CPU System']
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > Fair Share Scheduler; CPU Efficiency; CPU > VM (pp. 78-118) > Consumption Metrics > Used | Usage > Used
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Fair Share Scheduler; CPU Efficiency; CPU > VM > Consumption Metrics > Used | Usage > Used
 corrections:
 - '2026-11-02: the CPU Used metric is buggy. The row ''VM Used HT penalty 37.5% vs ESXi Used 50%'' was removed (section: Notes).'
 review_notes:

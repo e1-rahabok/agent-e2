@@ -58,8 +58,8 @@ related:
 - vsphere/technology/cpu/troubleshooting/vm-other-wait-high
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Wait Metrics > Other Wait
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Wait Metrics > Other Wait
 corrections: []
 review_notes:
 - 'To check: KB 85393 (legacy id) cited by the book, not read (https://knowledge.broadcom.com/external/article?legacyId=85393).'

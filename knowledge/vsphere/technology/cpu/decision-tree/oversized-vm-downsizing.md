@@ -48,8 +48,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/run
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Consumption Metrics > CPU Usage Disparity; Usage vs Net Run > Overall
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Consumption Metrics > CPU Usage Disparity; Usage vs Net Run > Overall
 corrections: []
 review_notes: []
 status: draft

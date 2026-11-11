@@ -48,9 +48,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/performance-dashboards
+id: sp5-framework/outputs/performance-dashboards
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -66,16 +66,16 @@ object:
 - ClusterComputeResource
 - Datacenter
 internal_derive:
-- vcf-operations/dashboards/dashboard-design
+- sp5-framework/outputs/dashboard-design
 - sp5-framework/performance/troubleshooting/vm-slow
 related:
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/object-types/vm/kpis/vm-performance
 - sp5-framework/concepts/class-of-service
-- vcf-operations/dashboards/capacity-dashboards
+- sp5-framework/outputs/capacity-dashboards
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Overall Design Approach > Overall Design: Performance Dashboards (pp. 36-38)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Overall Design Approach > Overall Design: Performance Dashboards'
 corrections: []
 review_notes:
 - 'Section ''Colour from best practice, or from a profile'': the source points to the Baseline Profiling section of the book for the profiling steps; not in this document.'

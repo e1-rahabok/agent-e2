@@ -99,7 +99,7 @@ related:
 - vsphere/object-types/vm/kpis/vm-performance
 images:
 source:
-  document: VCF-vCommunity-Adapter documentation, Cluster Performance KPI; PART 3 - Counters.docx for the design and threshold reasons
+  document: VCF-vCommunity-Adapter documentation, Cluster Performance KPI; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the design and threshold reasons
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md; formula/cluster-performance.png; Provider Objects > Performance > Cluster Performance (%)
 corrections:
 - 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated. Current source is the adapter documentation: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'

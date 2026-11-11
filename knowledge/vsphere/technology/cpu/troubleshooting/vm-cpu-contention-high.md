@@ -42,8 +42,8 @@ related:
 - vsphere/technology/cpu/concepts/power-states
 - vsphere/technology/cpu/concepts/hyper-threading
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Contention Metrics > Latency
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Contention Metrics > Latency
 corrections: []
 review_notes:
 - 'Section ''Checks'': the 37.5% value is from the book.'

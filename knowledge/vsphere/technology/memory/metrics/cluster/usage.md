@@ -18,7 +18,7 @@ object:
 - ClusterComputeResource
 metric_class: consumption
 internal_derive:
-- observability/resource-nature
+- sp5-framework/observability/resource-nature
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/memory/metrics/host/usage
@@ -26,7 +26,7 @@ same_meaning: []
 related:
 - vsphere/technology/memory/metrics/cluster/consumed
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
 corrections: []
 review_notes: []

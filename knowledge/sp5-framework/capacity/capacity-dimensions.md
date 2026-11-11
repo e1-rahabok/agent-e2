@@ -223,14 +223,14 @@ images:
     topic: 'Utilization zones'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation, Overcommit). Pages 97-107.'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation, Overcommit)'
 corrections: []
 review_notes:
 - 'To check: Section ''Utilization'': the 80-100% zone has no numbers in the book; Cluster Consumption (%) uses different bands (CPU green 0-55) (Q116).'
 - 'Section ''Reservation and share'': the book gives the reservation unit as Hertz and milliseconds; CPU reservation is set in MHz. Written as Hz.'
 - 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
 - 'To check: Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" explains why the book computes per VM first; the explanation is not in the book.'
-- 'To check: Section ''Overcommit'': burstable instance families (for example AWS T series) share CPU by credits; not in the book. Public cloud CPU at 1:1 per thread is the book''s statement.'
+- 'To check: Section ''Overcommit'', public cloud reference: keep or remove (Q171).'
 status: draft
 ```

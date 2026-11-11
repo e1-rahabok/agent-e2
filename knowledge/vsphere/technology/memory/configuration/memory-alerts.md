@@ -71,7 +71,7 @@ object:
 - ClusterComputeResource
 - ResourcePool
 internal_derive:
-- sp5-framework/alerts/alert-design
+- sp5-framework/outputs/alert-design
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/metrics/host/ballooned
 - vsphere/technology/memory/metrics/host/consumed
@@ -79,8 +79,8 @@ related:
 - vsphere/technology/memory/metrics/host/latency
 - vsphere/technology/cpu/configuration/cpu-alerts
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Alert > Memory Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts: Infrastructure Consumption) (pp. 22-24)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Alert > Memory Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts: Infrastructure Consumption)'
 corrections: []
 review_notes:
 - 'Section ''Memory consumption'': the design note says 10 minutes instead of 5; the red condition gives no duration. Written as a 10-minute wait. Q145.'

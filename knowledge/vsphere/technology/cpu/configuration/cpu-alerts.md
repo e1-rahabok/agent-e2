@@ -17,7 +17,7 @@
   - VM CPU Contention above 8%;
   - VM CPU Usage above 1 GHz.
 - CPU Usage is in GHz, not %: a small percentage of a monster VM is still a sizable load.
-- The application team gets red only, at a higher CPU Ready than the infrastructure team (8% against 6%), so infrastructure acts first (`sp5-framework/alerts/alert-design`).
+- The application team gets red only, at a higher CPU Ready than the infrastructure team (8% against 6%), so infrastructure acts first (`sp5-framework/outputs/alert-design`).
 - Remediation: open `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.
 
 ## Infrastructure CPU contention
@@ -83,7 +83,7 @@ object:
 - ClusterComputeResource
 - ResourcePool
 internal_derive:
-- sp5-framework/alerts/alert-design
+- sp5-framework/outputs/alert-design
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/virtual-motherboard/contention
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage
@@ -96,13 +96,13 @@ related:
 - vsphere/technology/cpu/configuration/numa-settings
 - guest-os/system/configuration/guest-os-alerts
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Alert > CPU Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts: VM Consumption, Infrastructure Consumption) (pp. 19-22)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Alert > CPU Alerts (Contention Alerts: VM Contention, Infrastructure Contention; Consumption Alerts: VM Consumption, Infrastructure Consumption)'
 corrections: []
 review_notes:
 - 'Section ''VM CPU contention'': orange keeps Peak vCPU Ready above 32% and CPU Contention above 8%, the same as red; only CPU Ready changes (4% vs 8%). Q144.'
 - 'Section ''VM CPU contention'' and ''Infrastructure CPU contention'': the source says see the diagram at the start of the CPU Alert section for remediation; no diagram is in the document. Linked to the knowledge-base flow vm-cpu-contention-high instead. Q144.'
-- 'Section ''Infrastructure CPU contention'': no wait cycle stated; the threshold design rule gives 5 minutes for contention (sp5-framework/alerts/alert-design).'
+- 'Section ''Infrastructure CPU contention'': no wait cycle stated; the threshold design rule gives 5 minutes for contention (sp5-framework/outputs/alert-design).'
 - 'Section ''VM CPU contention'': the 32% Peak vCPU Ready is 4x the 8% CPU Ready, the acute-vs-sustained rule; this reading is not stated in the source.'
 status: draft
 ```

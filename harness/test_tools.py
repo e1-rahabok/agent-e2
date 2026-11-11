@@ -307,7 +307,7 @@ class TermMapTest(unittest.TestCase):
     def test_classic_context_pulls_files_and_notes(self):
         cfg = dict(ModesTest.CFG, term_map=True, context_tokens=50000)
         ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
-        self.assertIn('observability/real-time-metrics', used)
+        self.assertIn('sp5-framework/observability/real-time-metrics', used)
         self.assertTrue(ctx.startswith('Terms in this question'))
 
     def test_off_by_switch(self):

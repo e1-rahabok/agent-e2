@@ -36,7 +36,7 @@ related:
 - vsphere/technology/network/metrics/virtual-motherboard/packets
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > VM > Overview; Consumption Metrics
 corrections: []
 review_notes: []

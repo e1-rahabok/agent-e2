@@ -177,8 +177,8 @@ images:
     topic: 'Compute and storage pools per service tier; management and NSX pools with KPI only'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Service Level Agreement (Class of Service, Price/Performance, Free Tier, Recommended SLA, Penalty Quantification, Sample Offering, Price & SLA, Size Limit, Service, Availability, Compute & Storage, Mix and Match) (pp. 32-42)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > Service Level Agreement (Class of Service, Price/Performance, Free Tier, Recommended SLA, Penalty Quantification, Sample Offering, Price & SLA, Size Limit, Service, Availability, Compute & Storage, Mix and Match)'
 corrections: []
 review_notes:
 - 'To check: Overcommit basis (core or thread) (Q087 a, Q099). Notation: the book writes 1:2 and 2:1 for the same idea; written here as N:1 (consumer : physical) throughout.'

@@ -39,7 +39,7 @@ related:
 - vsphere/architecture/provider-consumer
 - vsphere/tools/vsphere-client/vcenter-statistics
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
 corrections: []
 review_notes: []

@@ -32,7 +32,7 @@ task: read-metric
 knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/technology/memory/metrics/host/usage
-  - observability/resource-nature
+  - sp5-framework/observability/resource-nature
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Architecture Complexity (Memory)."

@@ -57,7 +57,7 @@ images:
     topic: 'Memory tiering'
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > ESXi > Disk or Device
 corrections: []
 review_notes:

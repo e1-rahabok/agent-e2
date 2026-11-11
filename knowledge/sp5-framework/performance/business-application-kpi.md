@@ -6,7 +6,7 @@
 - Troubleshooting eliminates layers (`sp5-framework/concepts/realms-and-layers`). Each layer needs a KPI for the application, so the infrastructure layer needs the infrastructure slice of the application, not only a cluster KPI.
 - Infrastructure metrics are horizontal: one KPI works for every application, with no agent and no per-software design. Transaction monitoring covers few applications and is built per application.
 - vSphere objects do not map to applications. An application spans tiers, VMs, pods and clusters; a cluster serves many applications.
-- Business leaders read IT by application: `vcf-operations/dashboards/it-leaders-dashboards`.
+- Business leaders read IT by application: `sp5-framework/outputs/it-leaders-dashboards`.
 
 ## Crown jewels
 - Crown jewels: the critical business applications, strategic to the core business. They contribute directly to revenue, to reputation, or both. A small share of the VMs.
@@ -60,10 +60,10 @@ related:
 - sp5-framework/concepts/proactive-operations
 - sp5-framework/concepts/class-of-service
 - vcf-operations/dashboards/business-applications
-- vcf-operations/dashboards/it-leaders-dashboards
+- sp5-framework/outputs/it-leaders-dashboards
 source:
-  document: PART 1 - Concepts of Operations Management.docx; Knowledge base
-  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind: The Crown Jewel (pp. 11-14)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); Knowledge base
+  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind: The Crown Jewel'
 corrections:
 - 'Section ''How the KPI is built'': across tiers the application takes the worst tier; active/passive counts the active node only.'
 - 'Section ''Not yet in VCF Operations'': VCF Operations cannot tell active from passive.'

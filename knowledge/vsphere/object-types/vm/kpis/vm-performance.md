@@ -47,7 +47,7 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 images:
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%)'
 corrections:
 - 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded. Keep until the book is updated.'

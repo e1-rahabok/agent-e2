@@ -27,7 +27,7 @@ object:
 - HostSystem
 metric_class: consumption
 internal_derive:
-- observability/resource-nature
+- sp5-framework/observability/resource-nature
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/memory/metrics/cluster/usage
@@ -36,7 +36,7 @@ related:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/tools/vsphere-client/performance-guidance
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Consumed
 corrections: []
 review_notes:

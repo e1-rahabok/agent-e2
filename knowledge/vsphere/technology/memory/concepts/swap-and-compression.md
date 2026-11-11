@@ -102,7 +102,7 @@ images:
     metric: ['VM Memory Consumed', 'VM Memory Swapped', 'VM Memory Compressed']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz
 corrections: []
 review_notes:

@@ -43,7 +43,7 @@ related:
 - vsphere/technology/network/metrics/host/packets-dropped
 - vsphere/technology/network/configuration/rss-and-interrupt-coalescing
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > ESXi > Contention Metrics > Dropped Packet > vsish
 corrections: []
 review_notes:

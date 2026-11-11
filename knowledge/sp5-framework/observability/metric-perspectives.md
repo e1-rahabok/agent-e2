@@ -23,7 +23,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 
 ## 3. Product / object
 - Each product (vSphere, NSX, Kubernetes, ...) brings its own object types.
-- Each object type (VM, Kubernetes Pod, AWS S3, Oracle DB, ...) has its own metrics.
+- Each object type (VM, Kubernetes pod, datastore, Oracle DB, ...) has its own metrics.
 - Objects relate to other objects and are grouped under parents (e.g. Kubernetes cluster → nodes → pods).
 - Result: multiple parallel or overlapping hierarchies.
 
@@ -38,9 +38,9 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 
 ## Metadata
 ```yaml
-id: observability/metric-perspectives
+id: sp5-framework/observability/metric-perspectives
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -53,12 +53,14 @@ pillar:
 - compliance
 - capacity
 - value
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/resource-nature
+- sp5-framework/observability/resource-nature
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Documentation Challenge
 corrections:
 - '2026-11-02: Contention first, then consumption, is an analysis rule (not only document layout).'

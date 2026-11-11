@@ -58,7 +58,7 @@ images:
     image_type: table
     sample: '192 hosts, 1 week'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > ESXi > Storage Adapter & Path
 corrections: []
 review_notes: []

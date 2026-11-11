@@ -79,8 +79,8 @@ related:
 - vsphere/technology/storage/concepts/snapshot-impact
 - vsphere/technology/storage/configuration/storage-configuration-review
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration (pp. 135-138)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration'
 corrections: []
 review_notes:
 - 'Section ''VMware Tools'': Broadcom KB 315382; the book cited KB 340.'

@@ -63,9 +63,9 @@
 
 ## Metadata
 ```yaml
-id: observability/input-types
+id: sp5-framework/observability/input-types
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -73,12 +73,14 @@ pillar:
 - performance
 - compliance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/metrics-as-accounting
-- observability/metric-perspectives
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/observability/metrics-as-accounting
+- sp5-framework/observability/metric-perspectives
+- sp5-framework/outputs/alerts-and-insights
 images:
   - path: images/input-types-to-outputs-diagram.png
     product: [vcf-operations]
@@ -86,8 +88,8 @@ images:
     topic: 'Six input types and the outputs they feed (push and pull)'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Purpose-Driven Architecture > Observability > Input | Output (pp. 17-18)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > Purpose-Driven Architecture > Observability > Input | Output'
 corrections: []
 review_notes:
 - 'To check: Section ''Property'': the reason for VMs in a cluster being a metric (result of activity, collected every interval) is not from the book.'

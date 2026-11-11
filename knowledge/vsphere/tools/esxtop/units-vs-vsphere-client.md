@@ -24,12 +24,12 @@ object:
 - VirtualMachine
 metric_class: consumption
 internal_derive:
-- observability/units
+- sp5-framework/observability/units
 same_name: []
 same_meaning: []
 related: []
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections: []
 review_notes: []

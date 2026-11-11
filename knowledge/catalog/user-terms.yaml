@@ -125,7 +125,7 @@ rows:
   match: ['real[- ]?time (chart|data|metrics?|graph|view)', 'realtime']
   means: 20-second real-time interval esxtop 2-second
   note: 'The vSphere Client Real-time chart shows 20-second averages, not real time. A burst of 1-3 seconds needs esxtop or the VCF Operations 9.1 2-second tier.'
-  files: [observability/real-time-metrics, vsphere/tools/vsphere-client/vcenter-statistics]
+  files: [sp5-framework/observability/real-time-metrics, vsphere/tools/vsphere-client/vcenter-statistics]
 - id: vcenter-chart
   match: ['vcenter (chart|graph|performance chart)', 'performance (chart|tab) in vcenter', 'past (day|week|month|year) chart']
   means: vCenter statistics rollup interval average
@@ -224,7 +224,7 @@ rows:
   match: ['collect (all|every|everything)\b', '(all|every) metrics?\b[^.?\n]{0,30}\b(collect|20.?sec)', 'collect them all']
   means: metric volume collection interval 20-second peak begin with the end in mind
   note: '"Collect everything" means more metrics and more often: 2x the metrics at 20 seconds is 30x the data. Work backwards from what can go down or slow; take 20-second peaks where bursts matter.'
-  files: [observability/metric-volume, vcf-operations/features/peak-20-second-metrics]
+  files: [sp5-framework/observability/metric-volume, vcf-operations/features/peak-20-second-metrics]
 - id: cluster-risk-ambiguous
   match: ['\brisk\b[^.?\n]{0,40}\bcluster', '\bcluster\b[^.?\n]{0,40}\brisk\b', 'quantify risk']
   means: Cluster Risk leading indicator contention capacity Time Remaining

@@ -22,13 +22,13 @@
   - Cluster Risk (%): `vsphere/object-types/cluster/models/cluster-risk`;
   - 20-second peaks, how VCF Operations shows a counter: `vcf-operations/features/peak-20-second-metrics`.
 - This folder holds VCF Operations itself, in five folders:
-  - `concepts/`: what the product is for and how it reaches people (this file, `vcf-operations/concepts/system-engagement`);
+  - `concepts/`: what the product is for and how it reaches people (this file, `sp5-framework/outputs/system-engagement`);
   - `features/`: product features as implemented, such as `vcf-operations/features/real-time-metrics`;
-  - `dashboards/`: dashboard design and the shipped dashboard suites, such as `vcf-operations/dashboards/dashboard-design`;
-  - `reports/`: report design and the report suite, such as `vcf-operations/reports/report-design`;
+  - `dashboards/`: dashboard design and the shipped dashboard suites, such as `sp5-framework/outputs/dashboard-design`;
+  - `reports/`: report design and the report suite, such as `sp5-framework/outputs/report-design`;
   - `alerts/`: how alert definitions are built (bottom up), `vcf-operations/alerts/alert-definitions`.
 - Later: its own sizing, health and performance troubleshooting.
-- Alert architecture across products (top down): `sp5-framework/alerts/alert-design`. Alert thresholds live with the resource they watch, such as `vsphere/technology/cpu/configuration/cpu-alerts`.
+- Alert architecture across products (top down): `sp5-framework/outputs/alert-design`. Alert thresholds live with the resource they watch, such as `vsphere/technology/cpu/configuration/cpu-alerts`.
 
 ## Misconceptions
 - "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and `vsphere/tools/vsphere-client/vcenter-statistics`.

@@ -133,8 +133,8 @@ images:
     topic: 'CPU power states'
     image_type: screenshot
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 70-75) > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
 corrections: []
 review_notes:
 - 'To check: Section ''ESXi level'': advanced option names Power.UseCStates and Power.UsePStates; the book shows them as ''Use C States'' and ''Use P States'' in the UI.'
