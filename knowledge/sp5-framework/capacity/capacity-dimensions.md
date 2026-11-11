@@ -23,19 +23,11 @@
 
 ### Overcommit: several classes (Mix)
 
-
-| Stage | What is used | Why |
-|---|---|---|
-| Plan | Utilization, allocation, reservation | No real workload yet: a calculator simulates the combinations |
-| Plan | Not contention | It does not exist before workload runs |
-| Run | Share | DRS and ESXi must tell Gold from Silver from Bronze |
-| Run | Not reservation | Absolute, with side effects |
-| Run | Not allocation | Not in-line: the scheduler does not use it |
-| Run | Not utilization | A result, not a setting |
-
-- Most common case: overcommit, mixed classes, VMs given for free (no chargeback). The reason it is the most common is limtied budget and physical constraints.
+- Planning uses utilization, allocation and reservation; running uses share. What each stage uses and why: `sp5-framework/capacity/capacity-management`, section Two stages.
+- Most common case: overcommit, mixed classes, VMs given for free (no chargeback). Common because of limited budget and physical constraints, not because it is the design.
+- The design is one class per cluster: shares and reservations inside one cluster give no predictable difference between classes (`sp5-framework/concepts/class-of-service`, section Compute and storage design). Mixed classes are a compromise to plan and run with care.
 - Planning fills the cluster to 100% of the first dimension reached: utilization, allocation or reservation.
-- A cluster of mostly Gold VMs holds fewer VMs, have lower Risk (%) score and higher Performance (%) score.
+- A cluster of mostly Gold VMs holds fewer VMs, scores a lower Risk (%) and a higher Performance (%).
 - The same technique mixes Kubernetes and VMs as Kubernetes Node takes the shape of a vSphere VM.
 - Gold VMs get higher shares under contention. Avoid absolute reservation at run time.
 
@@ -43,7 +35,7 @@
 
 - A price helps even for internal customers: money is the simplest way to value a service.
 - VMs free of charge: VMs are added until someone complains. Put a performance KPI in place to avoid complaint-based operations (`sp5-framework/performance/kpi-vs-sla`).
-- VMs not free of charge: the allocation model justifies why a Gold vCPU costs more than a Bronze vCPU on the same hardware. Bronze costs 4x less because it is overcommitted 4x; cost is covered.
+- VMs not free of charge: the allocation model justifies why a Gold vCPU costs more than a Bronze vCPU on the same hardware. Bronze costs a third of Gold because it is overcommitted 3:1 per thread; cost is covered.
 
 ## Four dimensions
 
@@ -162,6 +154,7 @@ Demand = Max (Utilization, Reservation)
 - "Each host should run in the high memory state" → High means much free memory: wastage for capacity. ESXi reclaims only near the top (`vsphere/technology/memory/concepts/host-memory-states`).
 - "Cluster XYZ is important, so 5:1 CPU overcommit is fine" → not wrong but misleading: it reduces capacity management to the allocation model, and the more important the cluster, the lower its ratio. It also omits the unit: a CPU ratio is per thread, not per core, because the CPU executes per thread.
 - "3:1 CPU gives buffer for spikes and HA" → not wrong but misleading: allocation alone ignores utilization and VM size; buffer and HA are in usable capacity, not in the ratio.
+- "Mixed classes are the most common case, so they are the recommended design" → common because of budget and physical constraints; the design is one class per cluster.
 - "Tier 3 can run 4:1 CPU" → 4:1 per thread (8:1 per core) is above the highest class ratio, Bronze 3:1; and a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
 - "UAT at 70% CPU is fine until 85%" → not wrong but misleading: utilization alone does not close a cluster; read contention and risk.
 - "Utilization is low, so the reservation does not matter" → demand is the higher of utilization and reservation; an unused reservation is still taken.
@@ -195,6 +188,7 @@ internal_derive:
 - sp5-framework/capacity/capacity-model
 - vsphere/architecture/resource-controls
 related:
+- sp5-framework/capacity/capacity-management
 - sp5-framework/capacity/class-of-service-planning
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 - sp5-framework/concepts/performance-vs-capacity

@@ -83,19 +83,15 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | Maintenance mode | Yes | No | Usable capacity |
 | HA event | No | No | Usable capacity |
 
-| One host out | DPM | Maintenance mode |
-|---|---|---|
-| Total capacity | 9 | 10 |
-| Usable capacity | 8 | 9 |
-| Actual availability | 9/9 = 100% | 9/10 = 90% |
-| Operational availability | 9/8 → 100% (capped) | 9/9 = 100% |
+| Hosts out | Event | Total capacity | Usable capacity |
+|---|---|---|---|
+| 1 | DPM | 9 | 8 |
+| 1 | Maintenance mode | 10 | 9 |
+| 2 | DPM | 8 | 7 |
+| 2 | Maintenance mode | 10 | 8 |
 
-| Two hosts out | DPM | Maintenance mode |
-|---|---|---|
-| Total capacity | 8 | 10 |
-| Usable capacity | 7 | 8 |
-| Actual availability | 8/8 = 100% | 8/10 = 80% |
-| Operational availability | 8/7 → 100% | 8/9 = 89% |
+- 10-host cluster with 1 HA host. DPM takes hosts out of total capacity; maintenance mode keeps them in total and takes them out of usable capacity.
+- The same events read as availability (Actual and Operational Availability of the hosts): `sp5-framework/concepts/sla-metrics`, section Availability SLA.
 
 - Total Capacity counts only hosts connected to vCenter. A disconnected host's value goes blank.
 
@@ -126,8 +122,9 @@ object:
 - HostSystem
 internal_derive: []
 related:
+- sp5-framework/concepts/sla-metrics
 - sp5-framework/capacity/capacity-dimensions
-- sp5-framework/capacity/capacity-management-process
+- sp5-framework/capacity/capacity-management
 - vsphere/architecture/overhead
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 - vsphere/technology/memory/concepts/memory-capacity

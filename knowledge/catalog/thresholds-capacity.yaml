@@ -403,7 +403,7 @@ rules:
   unit: VMs
   meaning: Concentration risk cap (example policy).
   source: knowledge-base
-  kb: sp5-framework/capacity/capacity-management-process
+  kb: sp5-framework/capacity/capacity-management
   quote: 'concentration risk: fewer than 250 mission-critical VMs per datastore'
 - id: large-vm-fleet-average-cpu-oversized
   metric: Average CPU workload among large VMs (super metric)

@@ -642,6 +642,16 @@ Each entry has:
 - For you: (a)-(e).
 - Answer:
 
+### Q176 · Part 1 > Service Level Agreement > Size Limit · Memory cap per class after the socket rule
+- Files: [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Size limit per class); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) (section Maximum VM size); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (section Monster VM).
+- Search: "Capping the size at each tier is a good way to prevent monster VMs"
+- Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
+- Written as now: your Q100 answer removed the socket basis. The CPU cap moved to vm-size (logical CPUs × 1, 0.5, 0.33 at 1:1, 2:1, 3:1). The memory caps (512, 128, 32 GB) were per socket, so they are withdrawn and no memory cap per class is stated. Cluster Risk still flags a monster VM above 40% of host DRAM or 256 GB, whichever is smaller.
+- Question: what is the memory cap per class? (A) the same step as CPU: host DRAM × 1, 0.5, 0.33; (B) one rule for every class, below the Cluster Risk monster size; (C) the CPU cap × the class's GB per vCPU (4 GB in the plan); (D) no memory cap per class.
+- Proposed answer (expert call): (C), bounded by (B). Memory is sold with vCPUs (host-spec-from-class-of-service), so the cap follows the CPU cap: 4 GB per vCPU gives Bronze 0.33 × 128 threads × 4 = 170 GB on a 64-core host. (B) keeps every class below the size Cluster Risk calls a monster (256 GB on that host), so Gold is capped by memory before CPU. (A) ignores that memory is sold with vCPUs; (D) leaves Bronze unbounded.
+- For you: pick (A)-(D), or give the field rule.
+- Answer:
+
 ## Resolved
 
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
@@ -1269,7 +1279,7 @@ Each entry has:
 
 ### Q115 · Part 1 > Capacity Management > "Good" Advice · Why each statement is wrong
 
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management-process.md) (section Traps).
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md) (section Traps).
 - Search 1: "Memory Active should not exceed 50-60%"
 - Search 2: "Memory should be running at high state"
 - Question: the book lists 9 statements as wrong but does not say why. Claude wrote one reason per statement as a trap. Confirm or correct each:
@@ -1288,7 +1298,7 @@ Each entry has:
 
 ### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
 
-- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management-process.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md).
+- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md).
 - Search 1: "e first place, by using progressive pricing"
 - Search 2: "They need to be reviewed as complimentary"
 - Search 3: "measured againsts usable"
