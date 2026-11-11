@@ -116,7 +116,7 @@ A metric with its own file is an entry only when it has another name or a confus
 ### Performance, SLA and KPI
 
 - **Actual Availability (%)**: Availability as it happened. Usually lower than Operational Availability.
-- **Class of service**: Gold, Silver, Bronze: each with its own overcommit ratio, maximum VM size and Performance SLA.
+- **Class of service**: Gold, Silver, Bronze: each with its own price, overcommit ratio, maximum VM size and availability SLA.
   - Also called: Tier
 - **Crown jewels**: The critical business applications, strategic to the core business: few VMs, essential to revenue, profit or image. Each gets a KPI at the infrastructure layer.
   - Also called: Mission-critical applications
@@ -124,9 +124,9 @@ A metric with its own file is an entry only when it has another name or a confus
 - **KAI**: Key availability indicator: the internal availability target, the availability counterpart of the KPI.
   - Also called: availability KPI, uptime KPI
   - File: `sp5-framework/performance/kpi-vs-sla`
-- **KPI**: Key performance indicator: an internal target for performance only, the P in KPI. One 0-100% score per object: VM, Guest OS, ESXi and Cluster Performance. Availability has KAI; security has KSI.
-  - Also called: Key Performance Indicator
-  - Not to confuse with SLA: the KPI is internal, says how bad, is read daily and has no class; the SLA is a contract, pass or fail per 5 minutes, read monthly, per class.
+- **KPI**: Key performance indicator: an internal baseline for performance only, the P in KPI. Performance monitoring and troubleshooting use the KPI only: no performance SLA, SLI or SLO. One 0-100% score per object: VM, Guest OS, ESXi and Cluster Performance. Availability has KAI; security has KSI.
+  - Also called: Key Performance Indicator, performance SLA, SLI, SLO, service level (for performance)
+  - Not to confuse with SLA: the KPI is for operations, covers performance, says how bad, is read daily, per object; the SLA is a business contract between two parties, on the consumer's object (VM, pod), read monthly. When a user cites an SLA, ask its metric, object, target and window.
   - File: `sp5-framework/performance/kpi-vs-sla`
 - **KSI**: Key security indicator: the internal security and compliance target.
   - Also called: security KPI, compliance KPI
@@ -137,11 +137,6 @@ A metric with its own file is an entry only when it has another name or a confus
 - **Operational Availability (%)**: Availability relative to the availability architecture.
 - **Security SLA**: Preferred over compliance SLA, which is correct but narrower: security also covers activity, not only settings. The IT security industry has not defined it well.
   - Also called: Compliance SLA
-- **SLI**: SLA leading indicator: pass or fail every 5 minutes; the SLA is its mean over the calendar month. Not a peer of the SLA.
-  - Not to confuse with SLI (SRE): the SRE service level indicator is a measured value (latency, error rate) with an SLO as its goal; the SP5 SLI is pass or fail, and a private cloud has no SLO.
-  - File: `sp5-framework/concepts/sla-metrics`
-- **Slow time**: Time a VM spends above the Performance SLA threshold; the performance counterpart of downtime.
-  - File: `sp5-framework/concepts/sla-metrics`
 
 ### Capacity
 
@@ -176,9 +171,9 @@ A metric with its own file is an entry only when it has another name or a confus
 - **Green zone**: The change window: the agreed time when approved changes, deployments and patches may enter production. Downtime inside it is excluded from Operational Availability.
   - Also called: Change window, maintenance window, authorized execution window
   - File: `sp5-framework/concepts/sla-metrics`
-- **Health check**: Check of one object, in the order availability, performance, security, capacity, with configuration as the drill-down. The what: is the object healthy, at risk, or wasteful. A failed step opens a troubleshooting flow.
+- **Health check**: Check of one object across every pillar, in the order availability, performance, security, capacity, with configuration as the drill-down. The what; a superset of troubleshooting. A failed step opens a troubleshooting flow.
   - Also called: what to monitor, monitoring checklist, verification, daily check
-  - File: `vsphere/object-types/cluster/health-check/cluster-health-check`
+  - File: `sp5-framework/concepts/health-check`
 - **Insight**: A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close.
   - Not to confuse with Alert: an alert is an urgent issue (red or orange), bottom up, on one object, with a ticket; yellow is not urgent, so it is an insight, read in the daily health check.
   - File: `sp5-framework/alerts/alerts-and-insights`

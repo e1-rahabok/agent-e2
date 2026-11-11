@@ -24,9 +24,9 @@ Each entry has:
   2. What do you check that is missing, for example the application team's own evidence, or a recent change?
   3. Is the SLI bar (Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped 0%) the right first bar for one VM, or do you use other values?
 - Written as now: 5 steps, status draft. It hands over to the existing CPU, memory, storage, network and cluster flows.
-- Proposed answer ((1) settled by the 2026-11-09 rewrite; (3) by Q106 and the 2026-11-10 decisions; (2) expert call):
-  - (1) Settled. vm-slow now runs: time window, breadth, contention (KPI, not SLA), consumption (VM and Guest OS), configuration, known bug, log.
-  - (3) Settled. The first bar for one VM is the KPI at the 20-second peak in the complaint window (VirtualMachine rows of `levels`). The SLI values (2.5%, 1%, 10 ms, 0%; 5-minute) are the SLA's pass or fail line, read monthly. Never the troubleshooting bar.
+- Proposed answer (updated 2026-11-11: no SLA, no SLI; (1) settled by the 2026-11-09 rewrite; (3) by your 2026-11-11 decision; (2) expert call):
+  - (1) Settled. vm-slow now runs: time window, breadth, contention (KPI), consumption (VM and Guest OS), configuration, known bug, log.
+  - (3) Settled: no SLI. The first bar for one VM is the VM KPI: VM Performance (%) and the sub-metric that pulls it down, at the 20-second peak in the complaint window (VirtualMachine rows of `kpi` in `knowledge/catalog/thresholds-performance.yaml`: Ready, Co-stop and Overlap of the worst vCPU, memory contention, disk latency of the worst virtual disk, transmit dropped packets). The SLI rows and the Performance SLA are removed from the catalog. If the user cites an SLA, ask its metric and object: it does not change the bar, and it is often on the wrong object (the cluster, not the VM).
   - (2) Additions:
     - Step 1 adds "since when, and what changed": change records in the window, vCenter tasks and events (reconfigure, vMotion, upgrade, snapshot), against the same window on a normal day. Today a recent change surfaces only at step 7 (log), yet it is the cheapest lead.
     - Step 2 (breadth) adds the other tiers of the same application: an application is as slow as its worst tier, active node only (Q092). The VM the user names is often not the slow tier.
@@ -46,10 +46,16 @@ Each entry has:
 - Written as now: 6 steps, status draft.
 - Proposed answer (steps 2-5 settled by Q120-Q122; the rest expert call):
   - (1) Order: steps 2-5 settled. Step 1 (cluster state, HA) stays first: if HA failover capacity is not met, usable capacity is wrong and every later number with it. Add a planning gate before step 2: a cluster with no running history uses the class-of-service overcommit ratios tied to price, not Cluster Risk (Q120). Step 6 adds storage (new VMs' provisioned disks against datastore free space): the flow tags storage but no step reads it. Balance stays last.
-  - (2) What fills first: memory, in most enterprise server clusters. CPU overcommits per thread with low contention; memory is planned at 1:1 to 2:1, and the class table expects RAM utilization above CPU in every class. Gold: reservation and allocation fill before utilization. CPU first: VDI and dense CPU-bound clusters; memory tiering (supported from 9.0) moves more clusters this way. Storage first: vSAN (after 1.0). The order of steps does not change: each step reads all resources; the answer names the binding one.
+  - (2) Corrected 2026-11-11. The earlier answer ("memory, in most enterprise server clusters") read utilization as fullness: a Level 300 mistake. Memory is a cache: high Consumed is expected and wanted, and an ESXi host can show ballooned, compressed and swapped memory with 0% memory contention. A resource is full when its contention rises, not when its utilization or its reclamation counters do.
+    - Overcommitted cluster: the binding resource is the one whose contention worsens first in Cluster Performance (%): CPU Ready and Co-stop, memory contention, disk latency, dropped packets. Not Consumed, ballooned or swapped memory.
+    - Expected (expert call): CPU contention shows first. Ready and Co-stop appear as soon as vCPUs compete for threads; memory contention appears only when a reclaimed page is touched again.
+    - Cluster without overcommit (1:1, Gold): allocation and reservation fill first, by design; utilization does not decide (step 3). Memory binds first here only because it is allocated, not because it is used.
+    - Storage: datastore space and disk latency (vSAN after 1.0).
+    - The order of steps does not change: each step reads all resources; the answer names the binding resource and the dimension (allocation or contention).
   - (3) State: yes or no; the number of VMs of the requested profile (vCPU, memory, disk, class) that fit before the binding resource reaches its limit, against usable capacity; the limiting resource and dimension; Time Remaining as a date (it ignores committed demand); what changes the answer (hosts, reclamation, VM design). In 1.0 the count comes from usable capacity arithmetic, not a what-if of the scores (2026-11-10).
+  - Applied 2026-11-11: trap in can-cluster-take-more-vms (ballooned, compressed or swapped memory is not a full cluster).
   - Change if accepted: can-cluster-take-more-vms (planning gate, storage in step 6, How to read the result).
-  - For you: confirm "memory first" for your customer types.
+  - For you: which contention counter you see move first in your customers' overcommitted clusters.
 - Answer:
 
 ### Q062 · Operations flows · Is this host or cluster healthy right now
@@ -62,7 +68,7 @@ Each entry has:
   - Settled: availability, performance, security, capacity. Performance: contention, consumption, configuration, known bug, log. Capacity: consumption, configuration, contention, inventory. Configuration is the drill-down. About 5 minutes when there is no problem.
   - Stop rule: an availability failure stops that object's check. A performance failure opens its troubleshooting flow; the check then goes on to capacity.
   - ESXi: performance = ESXi Performance (%), the failing sub-metric, consumption (Core and Thread Utilization, memory state, path and vmnic throughput), configuration (power, BIOS). Capacity = memory state and hot host only, then hand over to the cluster (a host is sized as part of its cluster). Today's steps 4-6 move from capacity into performance consumption.
-  - Cluster: performance = Cluster Performance (%), balance (hot host), contention flow, configuration (resource pools, limits). Capacity = Consumption, Risk, Close for Business, inventory, efficiency. Step 3 (SLA and SLI) leaves the daily check for the monthly review: the daily check reads the KPI (Q106; 2026-11-10).
+  - Cluster: performance = Cluster Performance (%), balance (hot host), contention flow, configuration (resource pools, limits). Capacity = Consumption, Risk, Close for Business, inventory, efficiency. Step 3 (SLA and SLI) removed 2026-11-11: no SLA or SLI in operations; the daily check reads the KPI. The cluster health check now has 7 steps.
   - VM: add consumption (VM, then Guest OS) after contention, as vm-slow step 4, so both share one performance order.
   - Daily run is top down: clusters worst first, then hosts, then VMs.
   - Stale text: proactive-operations, Day-to-day order, lists three pillars; add capacity (Q133 b).
@@ -84,7 +90,7 @@ Each entry has:
 | 5 | 5 | [VM Disk Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md) |
 | 6 | 4 | [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) |
 | 7 | 4 | [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md) |
-| 8 | 4 | [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md) |
+| 8 | 4 | [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md) |
 | 9 | 4 | [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-model.md) |
 | 10 | 4 | [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md) |
 | 11 | 4 | [Snapshot impact on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/snapshot-impact.md) |
@@ -162,7 +168,7 @@ Each entry has:
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
-- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/alerts-and-insights.md) (section Prevention window); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
+- Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/alerts-and-insights.md) (section Prevention window); [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
 - Search 1: "In the following example, the alerts use the SLA metrics and threshold."
 - Search 2: "Correct means the SLA is measured on each paying VM, and not at the infrastructure level."
 - Image text (not searchable): "SLA: VM CPU Ready > 5%", "SLA: VM Disk Latency > 10 ms", "Cluster average CPU Ready.", "VM CPU Co-Stop > 2.5%", "VM CPU IO Wait > 1%", "ESXi VMkernel queue > 1 ms", "vMotion stun time > 0.2 second".
@@ -174,31 +180,13 @@ Each entry has:
   - (e) VM CPU IO Wait: is this VM Other Wait (vCenter), or a Guest OS IO wait?
 - Written as now: metric names only, no numbers; nothing added to the threshold catalog until answered.
 - Proposed answer (expert call; (a) follows Q106, the vMotion value Q030):
-  - (a) 2.5%. The SLI row `vm-sli-cpu-ready` stays. The image's "SLA:" label is wrong: alerts read KPI metrics, not the SLA (Q106). Its 5% and 10 ms match no shipped alert (VM CPU Ready alert: orange 4%, red 8%; VM disk latency alert: orange 40 ms, red 80 ms). No image number goes into text or catalog.
-  - (b) No. Co-stop is out of the SLA and SLI (Q097). "Insight before alert" means earlier in time, not a lower number: on a wide VM one vCPU in Ready co-stops its siblings, so Co-stop can exceed Ready. The insight reads the existing KPI level (VM Peak CPU Co-stop, 20 s, yellow 1%), which matches the co-stop file. Drop 2.5%.
+  - (a) Neither (updated 2026-11-11): operations use no SLA or SLI, and the SLI rows are removed. The image's "SLA:" label is wrong: alerts read KPI metrics with their own values (Q106). Its 5% and 10 ms match no shipped alert (VM CPU Ready alert: orange 4%, red 8%; VM disk latency alert: orange 40 ms, red 80 ms). No image number goes into text or catalog.
+  - (b) No. "Insight before alert" means earlier in time, not a lower number: on a wide VM one vCPU in Ready co-stops its siblings, so Co-stop can exceed Ready. The insight reads the existing KPI level (VM Peak CPU Co-stop, 20 s, yellow 1%), which matches the co-stop file. Drop 2.5%.
   - (c) QAVG (vSphere Client "Queue command latency"). KAVG contains QAVG, so QAVG above 1 ms already puts KAVG at twice its 0.5 ms healthy value: a device or adapter queue is full. Block storage only; NFS has no QAVG.
-  - (d) Provider-side alerts, outside the SLA. They read the VM population, as cpu-alerts does (25% of VMs above a per-VM value). An average hides the victims; the worst VM is the VM alert's job.
+  - (d) Provider-side alerts on the cluster. They read the VM population, as cpu-alerts does (25% of VMs above a per-VM value). An average hides the victims; the worst VM is the VM alert's job.
   - (e) VM CPU Other Wait (Wait − Idle − Swap Wait), a virtual-motherboard metric once labelled IO Wait. Not the Guest OS iowait. 1% would catch the accounting issue of Broadcom KB 85393, so the value is not kept.
   - Change if accepted: alerts-and-insights, Prevention window: reword the examples; values live in the `alert-*` rows and `levels`; delete the review note. Image stays (alt text is what Agent E2 reads).
   - For you: only if your daily health check dashboards use the image's insight values (Co-stop 2.5%, Other Wait 1%, QAVG 1 ms): their interval and instance.
-- Answer:
-
-### Q095 · Part 1 > Service Level Agreement > SLA Calculation · Pass scored as 0%, and partial VM scores
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section SLA calculation); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md) (section Cluster SLI).
-- Search 1: "If VM CPU Ready > 2.5% then 100% else 0%"
-- Search 2: "So, every 5 minutes, a VM gets a score of 100% or 75%"
-- Search 3: "Since SLA is binary, this is simply counted as failure"
-- Question:
-  - (a) As written, a breach scores 100% and a pass 0%, so a good month averages near 0%, not 99.9%. Should all four lines read "If ... > threshold then 0% else 100%"?
-  - (b) The VM SLI is the average of four pass/fail values (100, 75, 50, 25, 0). Penalty Quantification says there is no partial failure. Which holds for the VM: (A) partial, one counter breached = 75% for that interval; (B) binary, any counter breached = 0% for that interval?
-  - (c) The Cluster SLI file says a VM must pass all four (option B), while its formula counts breaches divided by 4 (option A). Which should both files say?
-- Written as now: pass = 100%; VM SLI = average of the four (option A); Cluster SLI file unchanged, flagged.
-- Proposed answer (settled by the 2026-11-10 decision "SLI is binary: a fail is a fail"):
-  - (a) Yes: "If X > threshold then 0% else 100%". sla-metrics already has it right.
-  - (b) B, binary. Option A brings back, one level up, the partial failure that Penalty Quantification rules out. Arithmetic: Gold 99.9% in a 28-day month (8,064 intervals) allows 8 failed intervals. Under A, CPU alone could fail 32 times (32 × 25% = 8) and still pass. VM SLI = 100% if all four counters pass, else 0%.
-  - (c) B in both files. Cluster SLI (%) = 100 × (running VMs and pods with no breach) / (running VMs and pods). The current formula counts breaches: 1 VM with 4 breaches equals 4 VMs with 1 breach each. Under B that is 1 failing VM against 4. This matches the Cluster SLA (share of VMs that fail).
-  - Change if accepted: sla-metrics (SLA calculation), cluster-sla-sli (Cluster SLI formula; remove "Normalized by actual breaches"); delete both review notes.
-  - For you: whether the shipped Cluster SLI metric in the pack changes to count VMs with zero breaches.
 - Answer:
 
 ### Q096 · Part 1 > Service Level Agreement > Availability SLA · The database restore in Actual Availability
@@ -421,15 +409,15 @@ Each entry has:
 - Answer:
 
 ### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
-- Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md).
+- Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md).
 - Search: adapter docs/reference/metrics/README.md: "KPIs: Cluster Performance, Cluster Risk, Cluster Consumption, ESXi Performance, VM Performance, Guest OS Performance"; periodic-cluster-check.md: "the three cluster KPIs".
 - Question: your decision (2026-11-08): KPI is strictly performance; capacity and risk are models. (a) The adapter documentation still lists Cluster Risk and Cluster Consumption as KPIs: will you rename them there, or should the knowledge base keep a synonym? (b) Cluster SLA and SLI stays in `kpis/`: an SLA covers performance here (SLI on contention), so it stays. Correct, or a folder of its own?
 - Written as now: Cluster Risk and Cluster Consumption moved to `vcf-operations/models/` and titled as models; SLA and SLI unchanged.
 - Proposed answer ((a) settled for the knowledge base by the 2026-11-08 decision and Q153; (b) expert call):
   - (a) Do both. The adapter's main branch (read 2026-11-10) still says KPI: README lists Cluster Risk and Cluster Consumption under KPIs; page titles "Cluster Risk KPI", "Cluster Consumption KPI"; "the three cluster KPIs". Rename them in the adapter with the Q151 fix (after 1.0). Add glossary Synonyms now: Cluster Risk KPI → Cluster Risk (%); Cluster Consumption KPI → Cluster Consumption (%); note "a model, not a KPI". Users read the pack pages and will keep saying KPI.
   - Also fix: cluster-risk calls itself the only higher-is-worse score of the pack; Cluster Consumption is higher-is-worse too (same error on the adapter page).
-  - (b) Own folder: `vsphere/object-types/cluster/slas/cluster-sla-sli`. `kpis/` holds KPI files; an SLA is a contract and the SLI its pass-or-fail indicator. The id sits in the model's context, so `kpis/cluster-sla-sli` teaches that an SLA is a KPI: the confusion the KPI vs SLA pair corrects. Pillar is a tag, not a folder.
-  - Change if accepted: glossary Synonyms (2 rows); cluster-risk Purpose; move cluster-sla-sli (moved.yaml, KNOWLEDGE-ENGINEERING sections 5 and 10, lint, harness, links; retrieval check before and after).
+  - (b) Settled 2026-11-11: no SLA or SLI in operations. cluster-sla-sli is archived in `project/archive/knowledge/`; its old ids point to Cluster Performance. Nothing to move.
+  - Change if accepted: glossary Synonyms (2 rows); cluster-risk Purpose.
   - For you: renaming the two adapter pages, and when.
 - Answer:
 
@@ -567,11 +555,10 @@ Each entry has:
 - Written as now: both sets of names, no mapping.
 - Proposed answer (settled by class-of-service, the 2026-11-10 KPI decision, Q089, Q106, Q157):
   - Mapping: Gold = mission critical, Silver = standard production, Bronze = test and development. class-of-service already says so. Free has no alert class. Write Gold, Silver, Bronze in the knowledge files; Part 2 names become glossary synonyms.
-  - 30/60/120 ms is not the per-class SLA idea. Three different rules:
-    - SLA: one threshold for every class (disk SLI 10 ms); the class sets the nines.
+  - 30/60/120 ms per class. Two different rules (no performance SLA since 2026-11-11):
     - KPI: no class (2026-11-10).
-    - Alert: threshold and wait per class allowed. An alert colour is urgency plus importance (Q089); a Gold VM's slowness matters more. The SLA objection ("Silver can outscore Gold") does not apply: an alert scores nothing.
-  - Also fix alert-design: "Keep the formal SLA (alert) apart from the internal KPI (insight)" and "Align with the SLA you promised" contradict Q106. Alerts read KPI metrics with their own values; a red alert may mean the SLI is already breached.
+    - Alert: threshold and wait per class allowed. An alert colour is urgency plus importance (Q089); a Gold VM's slowness matters more. The KPI objection ("Silver can outscore Gold") does not apply: an alert scores nothing.
+  - alert-design: "Keep the formal SLA (alert) apart from the internal KPI (insight)" and "Align with the SLA you promised" fixed 2026-11-11: alerts and insights both read the KPI.
   - Change if accepted: alert-design (class names; the two lines above); glossary synonyms for the class names; delete the review note.
   - For you: nothing.
 - Answer:
@@ -667,7 +654,7 @@ Each entry has:
 - Question: list the wrong terms VMware admins and architects write in tickets, forums and chats, each with what they actually mean (for example "steal time" means VM CPU Ready and Co-stop). Each becomes a row: the words, the knowledge-base terms, the file, the misreading.
 - Written as now: 35 rows written by Claude; none from real tickets.
 - Proposed answer (partly needs you). The term map now has 40 rows. Seed rows not yet in it, each backed by current knowledge-base text:
-  - `sla-means-kpi`: "SLA" with no written agreement means KPI (Q106, Q122). kpi-vs-sla.
+  - `sla-for-performance` (added 2026-11-11): performance SLA, SLI, SLO, or an SLA on a cluster or node, means KPI; ask the metric and the object. kpi-vs-sla, sla-metrics.
   - `latency-unqualified`: "latency" with no layer; answer the likely layer, name the others (clarify rule).
   - `network-latency`: a VM has no network latency counter; read dropped packets.
   - `host-ready`: "ESXi Ready" sums or averages its VMs; read the worst VM.
@@ -756,6 +743,15 @@ Each entry has:
 - For you: the 8.x behaviour from field experience.
 - Answer:
 
+### Q169 · KNOWLEDGE-ENGINEERING.md, sections 5 and 10 · Single-pillar flows filed as health checks
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md), [Does this ESXi host have CPU headroom?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/health-check/host-cpu-capacity-headroom.md), [Downsizing a large, idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/health-check/oversized-vm-downsizing.md); rule: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md), section 5 (Placement rules, Flows) and section 10; concept: [Health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-check.md).
+- Search: not from the book. Follows your statement of 2026-11-11: a health check is done on a system or object, never on one pillar.
+- Written as now: the repository rule (section 5, Flows) lets `health-check/` hold single-pillar flows ("is it full, is it wasteful"). The three files above are capacity or efficiency only, so their folder calls them health checks. can-cluster-take-more-vms now says it is a capacity decision used by the cluster health check, not a health check. The Harness finds flows by the folder names `health-check/` and `troubleshooting/` (harness/flows.py, primer flow index, lint flow map).
+- Question: where do single-pillar flows go? (a) a third flow kind, folder `decision/` (for example `sp5-framework/capacity/decision/can-cluster-take-more-vms`), run by the flow tool like the other two; (b) keep them in `health-check/` and accept the name; (c) fold each into its object health check as a step.
+- Proposed answer (expert call): (a). The folder name is read by the Harness and shown to the model in the flow index: a capacity question labelled health check teaches the wrong concept. (c) loses the standalone question ("can this cluster take 20 more VMs?"), which users ask on its own. Cost of (a): 3 ids moved (moved.yaml), `decision` added to tags.yaml and the flow folders, a retrieval check before and after.
+- For you: accept (a), or choose (b) or (c).
+- Answer:
+
 ## Resolved
 
 ### Q059 · Agent · Core rules and confusable pairs given to the agent up front
@@ -780,6 +776,23 @@ Each entry has:
   - For you: whether your own top 12 for a new colleague differs.
 - Answer: Author (2026-11-11), in chat and by editing harness/misreadings.md: terminology is the overall structure; an entry may have synonyms and confusable pairs. Misreadings hold only Level 300 mistakes a frontier model makes, never a duplicate of the glossary, never Level 100. Review every pair: add, remove, correct. Author's misreadings edit kept (rule 12 dropped; ESXi CPU Utilization for capacity, memory as a cache, overcommit per thread added).
 - Applied 2026-11-11: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) is one entry per term (meaning; Also called; Not to confuse with; File), grouped by area; tables Synonyms, Defined terms and Confusable pairs merged into it; duplicate rows (KAI, KSI, Symptom, Consumed CPU) merged. Pairs 28 to 17 (counted, not row numbers): 13 removed (2 of them by the author on main, d791a29), 2 merges, 4 added; the list with reasons is in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), decision 2026-11-11, terminology. [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md): the two Consumed lines merged, the summation line dropped (Level 200; the catalog and calculate tools cover it), files added to the Utilization and overcommit lines, grammar. Rules: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md), section 11.2. No section 'Other distinctions': it was a way to keep rare pairs out of the up-front block; the pair tests remove them instead.
+### Q095 · Part 1 > Service Level Agreement > SLA Calculation · Pass scored as 0%, and partial VM scores
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section SLA calculation); [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md) (section Cluster SLI).
+- Search 1: "If VM CPU Ready > 2.5% then 100% else 0%"
+- Search 2: "So, every 5 minutes, a VM gets a score of 100% or 75%"
+- Search 3: "Since SLA is binary, this is simply counted as failure"
+- Question:
+  - (a) As written, a breach scores 100% and a pass 0%, so a good month averages near 0%, not 99.9%. Should all four lines read "If ... > threshold then 0% else 100%"?
+  - (b) The VM SLI is the average of four pass/fail values (100, 75, 50, 25, 0). Penalty Quantification says there is no partial failure. Which holds for the VM: (A) partial, one counter breached = 75% for that interval; (B) binary, any counter breached = 0% for that interval?
+  - (c) The Cluster SLI file says a VM must pass all four (option B), while its formula counts breaches divided by 4 (option A). Which should both files say?
+- Written as now: pass = 100%; VM SLI = average of the four (option A); Cluster SLI file unchanged, flagged.
+- Proposed answer (settled by the 2026-11-10 decision "SLI is binary: a fail is a fail"):
+  - (a) Yes: "If X > threshold then 0% else 100%". sla-metrics already has it right.
+  - (b) B, binary. Option A brings back, one level up, the partial failure that Penalty Quantification rules out. Arithmetic: Gold 99.9% in a 28-day month (8,064 intervals) allows 8 failed intervals. Under A, CPU alone could fail 32 times (32 × 25% = 8) and still pass. VM SLI = 100% if all four counters pass, else 0%.
+  - (c) B in both files. Cluster SLI (%) = 100 × (running VMs and pods with no breach) / (running VMs and pods). The current formula counts breaches: 1 VM with 4 breaches equals 4 VMs with 1 breach each. Under B that is 1 failing VM against 4. This matches the Cluster SLA (share of VMs that fail).
+  - Change if accepted: sla-metrics (SLA calculation), cluster-sla-sli (Cluster SLI formula; remove "Normalized by actual breaches"); delete both review notes.
+  - For you: whether the shipped Cluster SLI metric in the pack changes to count VMs with zero breaches.
+- Answer: closed 2026-11-11. The SLI and the Performance SLA are removed (author: the SLA is a business contract; the KPI is enough). Nothing left to fix.
 
 ### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
 - Files: [ESXi Memory Consumed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md)
@@ -1376,7 +1389,7 @@ Capacity is relative because it's relative to Usable Capacity, not Total Capacit
 - (c) In the absence of SLA, yes, both application team and infrastructure team tracks KPI. SLA requires far more advanced cloud maturity model.
 
 ### Q076 · Part 1 > KPI step and Noisy Neighbour > Solution · How the SLA is computed; 99.99% at 5 minutes
-- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (memory class table); [knowledge/vcf-operations/kpis/cluster-sla-sli.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md).
+- Files: [KPI vs SLA: from complaint-based operations to a contract](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (memory class table); [knowledge/vcf-operations/kpis/cluster-sla-sli.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md).
 - Search 1: "SLA = 1 month average of SLI of that specific month."
 - Search 2: "VM contention is <1% for 99.99% of the time in the entire month"
 - Question: (a) Is the SLA the mean of the SLI values, or the share of 5-minute intervals that pass the threshold? They differ: one bad hour at 50% contention averages out in a mean, but fails 12 intervals. (b) A 30-day month has 8,640 five-minute intervals. One failed interval gives 99.988%. So 99.99% allows 0 failures, the same count as Gold's 100%; only the threshold differs (0% vs below 1%). Did you mean 99.9% (8 intervals, 40 minutes)? (c) Bronze has no threshold. Give one?
@@ -1497,7 +1510,7 @@ BTW, the page is 2105, not 2103.
 - Done 2026-11-06: Resource controls (table and corrections) and VM Memory Consumed: Consumed does not jump to the reservation; untouched reserved memory can go to other VMs.
 
 ### Q048 · Thresholds · Interval and instance reading of every band
-- Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/kpis/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) and [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (fields `interval`, `instance`).
+- Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/kpis/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) and [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (fields `interval`, `instance`).
 - Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
@@ -1556,14 +1569,14 @@ All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported
 - Answer: I was wrong. Memory is also on demand. So both are. I verified on a live vCenter.
 - Done 2026-11-06: question L3-07 key and the resource controls file: memory reservation is also on demand.
 
-### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-50
-- Files: https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (L4-14 to L4-50); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
+### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-49
+- Files: https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (L4-14 to L4-49); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
 - Search: not from the book.
 - Context: the Level 400 allocation (37 questions) is now drafted by Claude from the knowledge base. Synthetic questions are 63 of 90 (70%), against the cap of about 30% in section 10.
 - Question:
   1. Keep the cap? If yes, which synthetic questions should be replaced by book, quiz or real-ticket questions, or should the cap rise?
   2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
-  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-48-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-49-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
+  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-47-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-48-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
 - Answer: no need to keep cap as I'm reviewing every question one by one. What is important is the allocation and distribution. The source (book versus Claude) is less important.
 - Done 2026-11-06: synthetic cap removed from benchmark/design.md (sections 10 and 12).

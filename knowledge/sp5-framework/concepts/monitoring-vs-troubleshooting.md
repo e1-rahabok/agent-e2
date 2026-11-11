@@ -11,12 +11,11 @@
 | Question | What is the problem? | Why does it happen? |
 | Nature | Proactive | Reactive |
 | Expertise | Low: repetitive, with dashboards and alerts | High: varied steps, needs the environment's context |
-| Metrics | Usually one, the SLA metric: primary, checked by SOP | Many, in layers: secondary, read when the primary nears its threshold |
+| Metrics | Usually one, the KPI: primary, checked by SOP | Many, in layers: secondary, read when the primary nears its threshold |
 | Duration | A few minutes, about 5, when there is no problem | Can take days across teams |
 | Frequency | Daily; Gold more often than Bronze | On demand |
 | Timeline | Now and future: anticipate load | Now: put out the fire |
 | Logs | Required: logs stream continuously, not in 5-minute samples | Almost always; NetFlow for network |
-| SLA | Applies | Urgent once the SLA is breached |
 | KPI | KPIs, not single metrics | Starting point, then raw supporting metrics |
 
 - What is monitored decides the data. Logs stream continuously; metrics arrive per reporting interval.
@@ -50,7 +49,7 @@
 - The second time: the same problem is known within minutes; a similar one is understood within an hour.
 - Process maturity:
   - manual: blamestorming with all hands on deck, ping-pong between teams, time lost, no RCA;
-  - optimized: SLA breach → big picture on a shared dashboard → joint analysis with shared tools → RCA report → alert set up in VCF Operations;
+  - optimized: KPI red or complaint → big picture on a shared dashboard → joint analysis with shared tools → RCA report → alert set up in VCF Operations;
   - ideal: early warning → preventive action → optimization.
 
 ## Root cause analysis

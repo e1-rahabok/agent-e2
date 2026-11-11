@@ -3,7 +3,7 @@
 ## Purpose
 - Real-time metrics show what a 5-minute average flattens: a micro burst of 1-3 seconds, or a spike of under a minute.
 - Use cases: troubleshooting a burst on a known host or VM while it happens or soon after; checking whether a short spike, not a sustained load, causes a complaint; rightsizing for bursty workloads (`sp5-framework/capacity/rightsizing`, section Micro burst).
-- They add to 5-minute metrics; they do not replace them. 5-minute data stays the base for monitoring, capacity, KPIs and SLAs: it is kept for months or years and is cheap to store and query.
+- They add to 5-minute metrics; they do not replace them. 5-minute data stays the base for monitoring, capacity and KPIs: it is kept for months or years and is cheap to store and query.
 - Cost: each step finer multiplies the data. 2-second data is 10x the volume of 20-second data, and 150x that of 5-minute data. Retention is short, and collection is limited to a subset of metrics and objects so the monitored system is not loaded.
 
 ## Three implementations
@@ -23,7 +23,7 @@
 
 ## Traps
 - "The vSphere Client Real-time chart is real time" → it shows 20-second averages; the label is the UI's.
-- "Real-time data replaces 5-minute data" → it adds to it; 5-minute data carries monitoring, capacity and SLAs over months.
+- "Real-time data replaces 5-minute data" → it adds to it; 5-minute data carries monitoring, capacity and KPI history over months.
 - "Collect 2-second data on everything" → 10x the volume of 20-second data; limit it to the metrics and objects being troubleshot.
 - "Compare 2-second CPU Ready with the 20-second bands" → shorter samples read higher; each interval has its own band.
 - "No spike in the Real-time chart, so no burst" → a burst under 20 seconds is averaged away; use esxtop or the 2-second tier.

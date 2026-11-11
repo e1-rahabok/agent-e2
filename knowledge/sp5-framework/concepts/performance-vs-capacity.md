@@ -2,7 +2,7 @@
 
 ## Goal of performance management
 - Find the problem before the customer complains. A process that waits for an alert or a complaint is troubleshooting, not performance management.
-- Proactive takes a regular cadence and an internal threshold stricter than the SLA agreed with the customer.
+- Proactive takes a regular cadence and an internal threshold: the KPI levels.
 - Performance first, capacity second: performance is more time sensitive. Restaurant analogy: the dining area before the kitchen.
 
 ## Two pillars, two questions
@@ -57,8 +57,8 @@
 - Three cases of unmet demand on an ESXi host:
   - expected: contention only at high utilization, with unused capacity as a cushion. Unlikely, because of imbalance;
   - common: unmet demand at low utilization, from imbalance or wrong cluster configuration;
-  - optimized: high utilization with unmet demand kept within the SLA.
-![ESXi capacity in three cases: unmet demand only above used capacity (expected), unmet demand with much capacity unused (common), unmet demand within SLA at high utilization (optimized)](images/esxi-unmet-demand-three-scenarios-diagram.png)
+  - optimized: high utilization with unmet demand kept within the KPI levels.
+![ESXi capacity in three cases: unmet demand only above used capacity (expected), unmet demand with much capacity unused (common), unmet demand kept low at high utilization (optimized)](images/esxi-unmet-demand-three-scenarios-diagram.png)
 
 - High utilization is not a performance problem while there is no queue or contention.
 - ESXi ballooning, compression or swapping does not mean a VM has a memory performance problem. Read the VM's own contention.
@@ -77,7 +77,7 @@
 - It falls first on the hottest host, before the cluster average reaches 100%: each host is its own pool, and DRS balances the hosts only approximately.
 - Only allocation can be overcommitted. Demand, usage and utilization are results, not settings.
 - So a utilization trend line says nothing about when performance will drop.
-- The performance target depends on the class of service: Gold must perform better than the free tier. Two metrics carry it: SLA and KPI (`sp5-framework/performance/kpi-vs-sla`).
+- The performance target depends on the class of service: Gold must perform better than the free tier. The KPI carries it: one set of levels for every class; Gold scores higher because its design causes less contention (`sp5-framework/performance/kpi-vs-sla`).
 ![Cluster Utilization (%) rising from 0% toward 100%; Cluster Performance (%) flat near 100% until overcommit above 1, then falling below 95%](images/cluster-utilization-vs-cluster-performance-pattern-timeline.png)
 
 ## Traps

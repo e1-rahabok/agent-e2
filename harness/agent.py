@@ -42,7 +42,7 @@ TOOLS = [
     {'type': 'function', 'function': {
         'name': 'catalog',
         'description': ('Exact facts from the metric catalog. name = a vCenter counter (cpu.ready.summation), chart label (Ready), '
-                        'esxtop field (%RDY, DAVG) or metric title: returns unit, rollup, statistics level, thresholds by use (SLA, SLI, alert, KPI, capacity) with source, '
+                        'esxtop field (%RDY, DAVG) or metric title: returns unit, rollup, statistics level, thresholds by use (KPI, alert, capacity) with source, '
                         'and the knowledge file. name = an object type (VirtualMachine, HostSystem, Datastore, ...): returns its role '
                         'and relations; add "to" for the path between two object types.'),
         'parameters': {'type': 'object', 'properties': {

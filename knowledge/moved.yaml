@@ -211,7 +211,7 @@ vsphere/network/metrics/virtual-motherboard/throughput: vsphere/technology/netwo
 vsphere/object-types/cluster/metrics/cluster-consumption: vsphere/object-types/cluster/models/cluster-consumption
 vsphere/object-types/cluster/metrics/cluster-performance: vsphere/object-types/cluster/kpis/cluster-performance
 vsphere/object-types/cluster/metrics/cluster-risk: vsphere/object-types/cluster/models/cluster-risk
-vsphere/object-types/cluster/metrics/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-sla-sli
+vsphere/object-types/cluster/metrics/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-performance
 vsphere/object-types/vm/metrics/comparisons/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
 vsphere/object-types/vm/metrics/vm-performance: vsphere/object-types/vm/kpis/vm-performance
 vsphere/resource-management/concepts/admission-control-and-cluster-state: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
@@ -274,7 +274,7 @@ vsphere/system/diagnosis/cluster-vm-contention: vsphere/object-types/cluster/tro
 vsphere/system/metrics/cluster/cluster-consumption: vsphere/object-types/cluster/models/cluster-consumption
 vsphere/system/metrics/cluster/cluster-performance: vsphere/object-types/cluster/kpis/cluster-performance
 vsphere/system/metrics/cluster/cluster-risk: vsphere/object-types/cluster/models/cluster-risk
-vsphere/system/metrics/cluster/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-sla-sli
+vsphere/system/metrics/cluster/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-performance
 vsphere/system/metrics/cluster/vm-operations: vsphere/object-types/cluster/metrics/vm-operations
 vsphere/system/metrics/comparisons/availability: vsphere/object-types/cluster/metrics/comparisons/availability
 vsphere/system/metrics/comparisons/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
@@ -341,7 +341,7 @@ vcf-operations/metrics/cluster/cpu-inter-host-imbalance: vsphere/technology/cpu/
 vcf-operations/kpis/vm-performance: vsphere/object-types/vm/kpis/vm-performance
 vcf-operations/kpis/esxi-performance: vsphere/object-types/esxi/kpis/esxi-performance
 vcf-operations/kpis/cluster-performance: vsphere/object-types/cluster/kpis/cluster-performance
-vcf-operations/kpis/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-sla-sli
+vcf-operations/kpis/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-performance
 vcf-operations/models/cluster-risk: vsphere/object-types/cluster/models/cluster-risk
 vcf-operations/models/cluster-consumption: vsphere/object-types/cluster/models/cluster-consumption
 vcf-operations/models/close-for-business: vsphere/object-types/cluster/models/close-for-business
@@ -434,3 +434,4 @@ vcf-operations/concepts/alert-definitions: vcf-operations/alerts/alert-definitio
 vcf-operations/concepts/real-time-metrics: vcf-operations/features/real-time-metrics
 sp5-framework/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow
 vsphere/tools/vcf-operations/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
+vsphere/object-types/cluster/kpis/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-performance

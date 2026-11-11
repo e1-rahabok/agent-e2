@@ -14,7 +14,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 ```
 
 ## Behaviour
-- Receive drops are far higher than transmit drops: 3,938 VMs, 1 month, about 35 million data points. Receive drops are left out of the SLA for this reason.
+- Receive drops are far higher than transmit drops: 3,938 VMs, 1 month, about 35 million data points. Receive drops are left out of the VM KPI for this reason.
 - Drops are short and spiky: the 99th percentile was 35x smaller than the maximum.
 ![VM network dropped: 99th percentile vs maximum, list view](../../images/vm-network-dropped-99th-percentile-vs-max-list-view.png)
 - Packets Dropped (%) can jump above 95% for under 15 minutes. Driven by low throughput and high receive drops.
@@ -32,7 +32,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 
 ## Known causes
 - False positive transmit drops: NSX firewall rejects outgoing packets (Broadcom KB 322462).
-- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495). A full receive ring is counted here (droppedRx, %DRPRX) and by the guest; the cause and the fix (a larger ring, guest CPU) are in the Guest OS, so it stays outside the IaaS SLA. Which layer counts which drop: `vsphere/technology/network/concepts/packet-drop-accounting`.
+- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495). A full receive ring is counted here (droppedRx, %DRPRX) and by the guest; the cause and the fix (a larger ring, guest CPU) are in the Guest OS, so the Guest OS owner fixes it. Which layer counts which drop: `vsphere/technology/network/concepts/packet-drop-accounting`.
 
 ## Traps
 - "Packets Dropped (%) at 95% means an outage" → short spikes at low throughput, driven by receive drops.
@@ -93,7 +93,7 @@ source:
   document: PART 3 - Counters.docx
   path: Network > VM > Contention Metrics
 corrections:
-- 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, outside the IaaS SLA (2026-11-06).'
+- 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, fixed in the guest (2026-11-06).'
 - 'Section ''Profile transmit drops'': the book says 1 thousand dropped packets = 1,500 MB within 300 seconds. Correct: 1.5 MB (2026-11-04). Keep until the book is updated.'
 review_notes:
 - 'To check: KBs cited by the book, not read (https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495).'

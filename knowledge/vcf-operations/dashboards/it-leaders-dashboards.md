@@ -51,12 +51,12 @@
 - An infrastructure-centric report is the other common request. A request for basic facts usually means they do not know the environment.
 
 ## Operations overview report
-- Summarizes how operations went: was the week or month busy and volatile? Were availability, performance and compliance within SLA?
+- Summarizes how operations went: was the week or month busy and volatile? Were availability and compliance within SLA, and performance within the KPI levels?
 - Fields:
   - inventory: key items, absolute or relative; items added or removed; settings changed;
   - configuration: what they care about, or what you want them to see;
   - capacity: enough? If not, when to act? What changed?
-  - performance: ideally against the SLA.
+  - performance: against the KPI.
 
 ## Capacity Summary dashboard
 - VCF Operations ships two sample dashboards for presenting live information to senior management: Inventory Summary and Capacity Summary. They are for the operations team to present, not for self-service.

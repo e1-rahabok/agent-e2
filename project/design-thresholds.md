@@ -3,6 +3,8 @@
 Status: design, with Q152-Q158 answered (2026-11-10). Built: one copy of the KPI levels (2026-11-10); sections named by use and alerts in their own file (2026-11-11) (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work.
 Not indexed.
 
+2026-11-11: the performance SLA and the SLI are removed from operations (author: the SLA is a business contract; the KPI is enough). The `sla` and `sli` sections of `thresholds-performance.yaml` and their 7 rows are gone; the Harness, lint and tests no longer know the uses. Rows and sections below that still show `sla` or `sli` for performance are the earlier design, kept for the record; the availability and security SLA (contract) rows of the future files stay.
+
 ## 1. Goal
 
 - Agent E2 knows every threshold it needs, applies the right one to the reading in front of it, explains why that number sits there, and never mixes the uses.
@@ -15,7 +17,7 @@ Not indexed.
 - Capacity principle: capacity management takes the long view, weeks and months, so done properly it raises no alert. A capacity alert means something is amiss: a software bug, or a hardware availability issue that took capacity away.
 - Alert and KPI are independent: different purpose, set separately. KPI is proactive, an internal target; an alert is reactive, a guard rail when people ignore the KPI, and fires when the issue has become urgent.
 - An alert has a dimension the KPI does not have: wait cycle and cancel cycle. They remove one-off spikes and flapping.
-- Performance has two uses, KPI (internal target) and SLA (contract), with different thresholds for the same metric.
+- Performance has one use, the KPI (internal baseline). No performance SLA or SLI (2026-11-11). Alerts read the KPI metrics with their own values.
 - KPI is performance only: the P is performance. Availability has KAI (key availability indicator); security, compliance included, has KSI (key security indicator). Users say availability KPI or business KPI in daily speech; Agent E2 translates by the pillar measured (term map row `kpi-other-pillar`).
 - Symptom and condition are one thing in VCF Operations: a test on a metric, property or event. A symptom definition is reusable across alert definitions; a condition is written inside one.
 
@@ -24,17 +26,17 @@ Not indexed.
 ### 3.1 Files
 | File | Content |
 |---|---|
-| `knowledge/catalog/thresholds-performance.yaml` | `sla`: 3 rows, one per `class`. `sli`: 4 rows. `kpi`: 31 lines, yellow, orange, red for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
+| `knowledge/catalog/thresholds-performance.yaml` | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), yellow, orange, red for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
 | `knowledge/catalog/thresholds-capacity.yaml` | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
 | `knowledge/catalog/thresholds-alerts.yaml` | `alerts`: 20 rows, one per alert and `criticality` (red, orange), with `pillar` (17 performance, 3 capacity) |
-| Knowledge files | No colour-band table and no SLI or SLA number: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
+| Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
 - The section name is the use (2026-11-11): rows carry no `kind` or `use` field; the Harness stores the use as a column and puts it first in every result.
 - Alert rows hold the main test, with the other tests and the wait time inside the `condition` text ("for 15 minutes"). Splitting them into symptoms is still to do (section 8.4).
 - Rows are joined by the metric's English name; no key.
 
 ### 3.2 How Agent E2 uses them
-1. Start-up: `harness/catalog.py` loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: sla, sli, alert, decision, rule; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
+1. Start-up: `harness/catalog.py` loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
 2. Term map (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
 3. Classic mode: `Catalog.facts_for(ids)` adds up to 14 "Catalog facts (exact)" lines for the files in the context: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
 4. Agentic mode: the LLM may call the `catalog` tool with a name. `Catalog.lookup` scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
@@ -49,7 +51,7 @@ Not indexed.
 |---|---|---|
 | G1 | Lookup by fuzzy name | "Ready" returns VM, ESXi and cluster rows mixed; the LLM picks |
 | G2 | Fixed 2026-11-11: results and classic facts carry `interval` and `instance` where a row has them | - |
-| G3 | Fixed 2026-11-11: every value is labelled with its use ("SLI: VM CPU Ready (5m) > 2.5", "Alert, red: VM CPU Ready > 8") | - |
+| G3 | Fixed 2026-11-11: every value is labelled with its use ("Alert, red: VM CPU Ready > 8", "Capacity decision: ...") | - |
 | G4 | The LLM compares the value | Errors on ranges, open ends and lower-is-worse metrics |
 | G5 | Fixed 2026-11-10: lookups and classic facts return the KPI levels (`kpi`) | - |
 | G6 | Fixed 2026-11-10: classic facts include the KPI levels of a KPI file in the context | - |
@@ -63,14 +65,14 @@ Not indexed.
 | # | Use case | Example | Time span | Files | Release |
 |---|---|---|---|---|---|
 | U1 | Daily health check over many objects | Score every KPI and model; list objects in orange and red | Last 24 hours | performance, capacity, availability | Needs data: exports (1.2) or live VCF Operations (after 1.0) |
-| U2 | Troubleshooting a complaint | "Users say VM X is slow since 10:00" | Minutes to hours | performance (KPI, not SLA) | 1.0 |
+| U2 | Troubleshooting a complaint | "Users say VM X is slow since 10:00" | Minutes to hours | performance (KPI) | 1.0 |
 | U3 | Read a screenshot | "Is 6% Ready bad?" with a chart | One reading | performance, capacity | 1.0 |
 | U4 | Explain an alert | "Why did this alert fire? Is it real?" | One alert | alerts, performance | 1.0 |
 | U5 | Review alert design | "We get 500 alerts a day"; "Is 4% Ready a good alert threshold?" | Design | alerts, performance | 1.0 |
-| U6 | SLA report or breach | "Did Gold VMs meet the SLA in October?" (forensic investigation) | Calendar month | performance (SLI, SLA) | 1.0 |
+| U6 | "Our SLA" claim | "Did Gold VMs meet the SLA in October?"; "Our SLA is Cluster Availability" | Concept | none: probe the metric and object; performance reads the KPI | 1.0 |
 | U7 | Capacity decision | "Can this cluster take 20 more VMs?"; close for business | 24 hours to months | capacity, performance (KPI as input) | 1.0 |
 | U8 | Rightsizing and reclamation | "Which VMs are oversized?" | 30 days or more | capacity (grey band, sizing bands) | 1.0 |
-| U9 | Explain a threshold | "Why is Ready 2.5% in the SLA and 8% in the alert?" | Concept | all files, one reading across uses | 1.0 |
+| U9 | Explain a threshold | "Why is Ready 2 in the KPI and 8 in the alert?" | Concept | all files, one reading across uses | 1.0 |
 | U10 | Policy setting | "What do I set in the VCF Operations policy?" | Design | the file of the use asked | 1.0 |
 | U11 | Availability SLA | "Did we meet 99.95%?" | Calendar month | availability | After 1.0 |
 | U12 | Security and compliance | "How compliant is the cluster?" | Daily | security | After 1.0 |
@@ -86,13 +88,11 @@ Each use has its own time span, spike filter and cost of a wrong call.
 | Use | Question | Reading | Spike filter | Deadline | Cost of a false positive | Cost of a false negative |
 |---|---|---|---|---|---|---|
 | KPI | Is it performing now? | 20-second peak and 5-minute average, rolling window | None: the peak is wanted | None | A line read in the daily check | VMs suffer unseen until a complaint |
-| SLI | Did these 5 minutes pass the contract? | 5-minute average | The 5-minute average | None | Penalty paid for nothing | Breach not reported |
-| SLA | Did the month pass? | Mean of SLI passes, calendar month | The month | Lagging | Credit on the next bill | Contract dispute |
 | Alert | Must someone act today? | 5-minute average, often with a 20s peak condition | Wait cycle, cancel cycle | Red 1-2 hours; orange end of day | Alert fatigue; real alerts ignored | Outage or slowness with no one acting |
 | Capacity | Is there room for weeks to months? | 95th percentile over 24 hours; monthly trend | Percentile: the worst 5% ignored | Weeks | Hardware bought early | Contention for months; long lead time |
 
 - ESXi CPU thread utilization: Cluster Consumption red from 85% (cluster-wide, p95 of 24 h); Cluster Risk red from 90% (worst host); alert above 40% thread with core utilization above 80% for 10 minutes (one host).
-- VM CPU Ready: KPI on the worst vCPU at 20s (yellow 2, orange 4, red 8); SLI on the VM total at 5m (fail above 2.5%); alert on the VM total at 5m (orange above 4%, red above 8%) with peak vCPU Ready, contention and a usage gate.
+- VM CPU Ready: KPI on the worst vCPU at 20s (yellow 2, orange 4, red 8); alert on the VM total at 5m (orange above 4%, red above 8%) with peak vCPU Ready, contention and a usage gate.
 - A threshold therefore has six parts:
 
 ```text

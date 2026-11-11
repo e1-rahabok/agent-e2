@@ -34,8 +34,8 @@ Used + Latency = 100%
 - Both threads running: Used reports 62.5% and Latency 37.5%. Ready stays 0%.
 
 ## Use
-- Volatile, because of Hyper-Threading and frequency. Not suitable as a formal performance SLA.
-- Use Ready for the SLA. Use Latency (or Contention) for troubleshooting CPU-sensitive VMs.
+- Volatile, because of Hyper-Threading and frequency. Not suitable as a KPI counter.
+- The VM KPI uses Ready. Use Latency (or Contention) for troubleshooting CPU-sensitive VMs.
 - Latency and Ready correlate poorly: built for different purposes (2,500 VMs analyzed).
 - Latency can fall while Ready and Co-stop rise.
 - Latency near 0% with Ready above 15%: a limit. Latency excludes it. VMware Cloud Director sets limits, so Latency misses that contention.
@@ -47,7 +47,7 @@ Used + Latency = 100%
 ## Traps
 - "CPU Latency rose, so the VM has CPU contention" → check whether CPU frequency changed. Waiting shows in unmet-demand metrics (Ready, Co-Stop). See `vsphere/architecture/vm-vs-guest-os`, area D.
 - "Steal Time inside Linux equals VM CPU Latency" → different formulas.
-- "Latency is the best SLA metric" → too volatile. Use Ready.
+- "Latency is the best KPI metric" → too volatile. Use Ready.
 - "Latency 0% means no contention" → limits are excluded. Check Ready.
 
 ## Metadata

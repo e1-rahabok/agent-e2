@@ -1,7 +1,7 @@
 # <Object>: health check
 
-## Symptom
-- None. A scheduled or on-demand check of one object: is it healthy, at risk, or wasteful? The what, not the why.
+## Purpose
+- A scheduled or on-demand check of one object across every pillar: is it healthy, at risk, or wasteful? The what, not the why. What a health check is: `sp5-framework/concepts/health-check`.
 
 ## Flow
 ```mermaid
@@ -57,7 +57,7 @@ pillar: [availability, performance, capacity]
 product: [vsphere, vcf-operations]
 object: [<ManagedObjectType>]
 internal_derive: []                # KPI, model and flow ids the steps name
-related: []
+related: [sp5-framework/concepts/health-check]
 source:
   document: <document name, version, revision>
   path: <heading path and pages>

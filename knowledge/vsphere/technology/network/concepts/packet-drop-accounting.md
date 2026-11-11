@@ -16,7 +16,7 @@
 
 - Linux: `ethtool -S` on the VMXNET3 interface shows the out-of-buffer count; the standard `rx_dropped` also rises.
 - Windows: the driver maps it to inbound discards: Packets Received Discarded (Performance Monitor), ReceivedDiscardedPackets (PowerShell).
-- So the drop is visible to the hypervisor and to the guest. It is caused and fixed in the guest (larger ring, CPU), which is why it stays outside the IaaS SLA.
+- So the drop is visible to the hypervisor and to the guest. It is caused and fixed in the guest (larger ring, CPU), which is why the Guest OS owner fixes it.
 
 ### Comparison: Linux KVM with virtio-net
 - The hypervisor thread finds no free descriptor, drops the frame, and counts it on the host tap device and the emulated device.
@@ -79,7 +79,7 @@ source:
   document: Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07)
   path: Scenario 1 (RX, guest buffer exhaustion); Scenario 2 (TX, top-of-rack congestion)
 corrections:
-- '2026-11-07: a full VMXNET3 receive ring is counted by the hypervisor (port, %DRPRX, droppedRx) and the guest. Corrects the reason given in Q070 (not visible to the hypervisor); the conclusion, outside the IaaS SLA, stands.'
+- '2026-11-07: a full VMXNET3 receive ring is counted by the hypervisor (port, %DRPRX, droppedRx) and the guest. Corrects the reason given in Q070 (not visible to the hypervisor); the conclusion, fixed in the guest, stands.'
 review_notes:
 - 'To check: Section ''VMXNET3 on ESXi'': counter names on a host. The document names the shared counter dropOOB in UPT1_RxStats and the Linux ethtool name rx_out_of_buffer; the Linux vmxnet3 driver statistic is likely pktsRxOutOfBuf (an out-of-buffer packet count in ethtool), and rx_out_of_buffer is a Mellanox (mlx5) counter name. Exact names left out until checked. The Windows mapping to ifHCInDiscards is from the document, not verified.'
 status: draft
