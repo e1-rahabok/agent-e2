@@ -91,7 +91,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` |
 | Folder hierarchy | Metrics by technology, multi-technology content (KPIs, models) by object, pillars and the SP5 framework across products; VCF Operations only for itself | `knowledge/` |
 | Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite |
-| Health checks and troubleshooting flows | The expert's order of checks and the branch at each step: the what (health check), then the why (troubleshooting) | `health-check/` and `troubleshooting/` files |
+| Flows: health checks, troubleshooting, decision trees | The expert's order of checks and the branch at each step: the what (health check of one object), the why (troubleshooting), the choice to act (decision tree) | `health-check/`, `troubleshooting/` and `decision-tree/` files |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
 | Images with text twins | The author's diagrams and charts | `images/` folders |
 | Terminology | The agent's vocabulary: one entry per concept, with its other names and the term it is confused with (section 11.2). Wrong beliefs: `harness/misreadings.md`. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
@@ -190,7 +190,7 @@ knowledge/                           # what the model reads (indexed)
 │   │                                # SLAs, class of service, health, monitoring vs troubleshooting
 │   ├── alerts/                      # alert architecture, top down: alerts and insights, alert design across products
 │   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for cross-technology flows (VM slow)
-│   └── capacity/                    # capacity model, sizing; health-check/ for capacity decisions
+│   └── capacity/                    # capacity model, sizing; decision-tree/ for capacity questions across products
 ├── vsphere/
 │   ├── architecture/                # vSphere-wide design that every metric depends on: provider/consumer,
 │   │                                # VM vs Guest OS, kernel worlds, overhead, resource controls, metric sources
@@ -200,11 +200,12 @@ knowledge/                           # what the model reads (indexed)
 │   │       ├── metrics/<object>/    # one metric, one object type per file: virtual-motherboard/, host/,
 │   │       │                        # cluster/, datastore/; comparisons/ for side-by-side groups
 │   │       ├── configuration/       # what to set
-│   │       ├── health-check/        # health check steps within this technology (capacity, efficiency)
+│   │       ├── decision-tree/       # operational questions within this technology (headroom, downsizing)
 │   │       ├── troubleshooting/     # why flows within this technology
 │   │       └── images/
 │   ├── object-types/                # multi-technology content, by object (book route)
-│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/, images/
+│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/,
+│   │                                # decision-tree/, images/
 │   └── tools/                       # how each tool shows the counters
 │       ├── esxtop/                  # panels, fields, units vs the vSphere Client
 │       └── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
@@ -228,7 +229,7 @@ knowledge/                           # what the model reads (indexed)
   - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `sp5-framework/<pillar>/`; content across pillars: `sp5-framework/concepts/`, so the framework reads as one unit.
 - Placement rules, so a fact lives in one place:
   - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object folder gets a health check (`health-check/<object>-health-check`): numbered steps in the order availability, performance, security, capacity, with configuration as the drill-down (section 10), starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
+  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object type gets a health check, and only object types do (`health-check/<object>-health-check`): numbered steps in the order availability, performance, security, capacity, with configuration as the drill-down (section 10), starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
   - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage. Content about a managed object lives with that object, even when VCF Operations computes it:
     - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
     - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
@@ -239,7 +240,7 @@ knowledge/                           # what the model reads (indexed)
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `sp5-framework/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
-  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across technologies or products (VM slow, capacity decisions) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `health-check` (the what: is it healthy, is it full, is it wasteful) or `troubleshooting` (the why: after an object fails a health check).
+  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across products (VM slow) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `troubleshooting` (the why: down or slow) or `decision-tree` (one operational question). `health-check` lives only under `object-types/<object>/` (and `vcf-operations/` for VCF Operations itself): a health check is on an object type, never on a technology or a pillar.
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
 - Three levels of general content, different scope (names say what the content is, not that it is basic):
@@ -296,7 +297,8 @@ knowledge/                           # what the model reads (indexed)
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
 | what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
 | health-check | Is this object healthy? What do I check, in what order (the what)? | `health-check/` | `health-check.md` |
-| troubleshooting | It failed a health check. Why? What do I check, in what order? | `troubleshooting/` | `troubleshooting.md` |
+| troubleshooting | It is down or slow (complaint, alert, failed health check step). Why? What do I check, in what order? | `troubleshooting/` | `troubleshooting.md` |
+| decision-tree | Can it, should it, how much? One operational question, ending in a choice to act | `decision-tree/` | `decision-tree.md` |
 
 ## 8. Metadata (end of file)
 Every knowledge file and every benchmark question ends with a `## Metadata` section holding one yaml block. No front matter at the top.
@@ -347,21 +349,23 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - No invented thresholds: a threshold goes in only with a source. Row field `source`: `knowledge-base`, or a vendor document with its version (`vsphere-9.1-docs`, `performance-best-practices-9.1`, `microsoft`), because vendor values can go stale and the newer official document wins.
 - The rule for the model is in `observability/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 
-## 10. Health checks and troubleshooting flows
+## 10. Flows: health checks, troubleshooting, decision trees
 - Location: section 5, Placement rules.
 - Vocabulary:
   - Framework: how IT operations are managed (SP5). `sp5-framework/concepts/overview`.
   - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `sp5-framework/capacity/`.
   - KPI: a model of performance only (the P in KPI). Files in `vsphere/object-types/<object>/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
-  - Health check: the what. Is the object healthy, at risk, or wasteful? Always one object or system across every pillar, never one pillar alone (author, 2026-11-11). Read in the order of `sp5-framework/concepts/health-risk-efficiency`. Monitoring belongs here. Explained to the agent in `sp5-framework/concepts/health-check`.
+  - Health check: the what. Is the object healthy, at risk, or wasteful? Always on one object type (VM, host, cluster, datastore), never on a technology (CPU, memory) and never on one pillar (author, 2026-11-11). A parent's health includes its children's, unless a realm separates them: Guest OS slowness is not ESXi or VM health, because the hypervisor neither sees nor controls it. Read in the order of `sp5-framework/concepts/health-risk-efficiency`. Monitoring belongs here. Explained to the agent in `sp5-framework/concepts/health-check`.
   - Troubleshooting: the why, in the reactive process. It starts from a complaint, an alert, or a failed health check step. Two types only: down (availability) and slow (performance). A security breach gets a forensic investigation, not troubleshooting. Each type uses the same order of checks as its pillar in the health check.
   - Two processes: reactive (troubleshooting, forensic investigation) and proactive (the health check, daily, with weekly and monthly analysis). The health check is a superset of reactive, because nobody knows yet whether there is a problem.
+  - Decision tree: answers one operational question (can this cluster take more VMs, should this VM be downsized) and ends in a choice to act, with its reason. Not a health check, even when a health check step reads its result. Not a decision record: a decision records what was done; a decision tree decides what to do.
+  - Most operational questions are neither a health check nor troubleshooting. A flow for one is a decision tree; a question answered by reading, not by a branching order of checks, is a concept or metric file.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
 - Order: is it up (availability: log, saturation, configuration, known bug), is it fast (performance: contention, consumption, configuration, known bug, log), is it secure (security: configuration, known bug, log), will it be enough (capacity: consumption, configuration, contention, inventory). Within each pillar the what comes before the why: establish the fact, then explain it; do not jump to a conclusion. Known bugs are checked per pillar, because a bug can cause an outage, slowness or a security loophole. Efficiency is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
 - The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2.
 - Reactive: after an alert, an incident (outage, breach) or a complaint. Proactive: insight, typically anomaly detection, read with business context.
-- One flow per file. Template: `project/templates/health-check.md` or `project/templates/troubleshooting.md`. Order: purpose (health check: nothing is wrong yet, so no symptom) or symptom (troubleshooting), Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
+- One flow per file. Template: `project/templates/health-check.md`, `troubleshooting.md` or `decision-tree.md`. Order: purpose (health check: nothing is wrong yet, so no symptom), symptom (troubleshooting) or question (decision tree), Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
   - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.

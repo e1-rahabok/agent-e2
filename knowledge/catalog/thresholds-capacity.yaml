@@ -270,7 +270,7 @@ decisions:
   condition: production and non-production
   meaning: Red. Cluster closed for new VMs and VM upsize.
   source: knowledge-base
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+  kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
 - id: closure-cluster-consumption-orange
   metric: Cluster Consumption (%), 95th percentile of the last 24 hours
@@ -281,7 +281,7 @@ decisions:
   condition: production and non-production
   meaning: Orange. With Cluster Performance also orange, the risk check decides.
   source: knowledge-base
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+  kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
 - id: closure-cluster-performance-red
   metric: Cluster Performance (%), 95th percentile of the last 24 hours
@@ -292,7 +292,7 @@ decisions:
   condition: production and non-production
   meaning: Red. Cluster closed for new VMs and VM upsize.
   source: knowledge-base
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+  kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
 - id: closure-cluster-performance-orange
   metric: Cluster Performance (%), 95th percentile of the last 24 hours
@@ -303,7 +303,7 @@ decisions:
   condition: production and non-production
   meaning: Orange. With Cluster Consumption also orange, the risk check decides.
   source: knowledge-base
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+  kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
 - id: closure-cluster-risk-prod
   metric: Cluster Risk (%), 95th percentile of the last 24 hours
@@ -314,7 +314,7 @@ decisions:
   condition: production cluster; Cluster Consumption and Cluster Performance both orange
   meaning: Orange. Production cluster closed.
   source: knowledge-base
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+  kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'production: above 60% (orange) → no: closed;'
 - id: closure-cluster-risk-nonprod
   metric: Cluster Risk (%), 95th percentile of the last 24 hours
@@ -325,7 +325,7 @@ decisions:
   condition: non-production cluster; Cluster Consumption and Cluster Performance both orange
   meaning: Red. Non-production cluster closed.
   source: knowledge-base
-  kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+  kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'non-production: above 80% (red) → no: closed.'
 rules:
 - id: monster-vm-cpu
@@ -447,7 +447,7 @@ rules:
   condition: or ESXi Thread Utilization below 50%
   meaning: Physical cores are still free. New VMs can go on.
   source: knowledge-base
-  kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+  kb: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
   quote: 'Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free.'
 - id: host-cpu-thread-utilization-target
   metric: ESXi Thread Utilization
@@ -460,5 +460,5 @@ rules:
   condition: Core Utilization at 100%
   meaning: Level to keep per host. Cluster level is lower.
   source: knowledge-base
-  kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+  kb: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
   quote: Keep it around 80%-90% per host

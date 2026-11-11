@@ -58,7 +58,7 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage
-- vsphere/technology/cpu/health-check/oversized-vm-downsizing
+- vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 images:
   - path: ../../images/vm-cpu-usage-disparity-only-first-vcpu-busy.png
     product: [vcf-operations]

@@ -26,11 +26,7 @@ flowchart TD
 - Host utilization is capacity, not performance. A host can run at high utilization with no VM waiting, and VMs can wait on a lightly used host.
 
 ## Checks, in order
-Order: four questions, and within each the what (facts) before the why (explanation):
-- Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
-- Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
-- Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
-- Will it be enough? Capacity: consumption, configuration, contention, inventory. A healthy present does not mean a healthy future. Efficiency (waste) is read here. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
+Order: availability, performance, security, capacity; within each pillar the what before the why (`sp5-framework/concepts/health-check`).
 1. Availability (HostSystem). Future, after 1.0: host not responding, disconnected, PSOD and soft errors come mostly from logs and events. State what was not checked. → step 2.
 2. Performance: ESXi Performance (%) (HostSystem). One score from the 8 VM contention sub-metrics (worst VM and 90th percentile of Ready, Co-stop, memory latency, disk latency) and the host's bad network packets. See `vsphere/object-types/esxi/kpis/esxi-performance`. Green → step 4. Yellow or worse → step 3.
 3. Which sub-metric fails (HostSystem, VirtualMachine). Open the sub-metric that drives the score down:
@@ -39,7 +35,7 @@ Order: four questions, and within each the what (facts) before the why (explanat
    - Disk latency → `vsphere/technology/storage/troubleshooting/host-storage-latency`: split KAVG (kernel), DAVG (device), QAVG (queue) (`vsphere/technology/storage/concepts/esxi-storage-latency-stack`).
    - Bad network packets → `vsphere/technology/network/metrics/host/packets-dropped` and `vsphere/technology/network/metrics/host/errors`.
    - → step 4.
-4. Capacity, CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) (`vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own (`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`). Hot cores and NUMA nodes: Peak Core Usage and Imbalance (`vsphere/technology/cpu/metrics/host/peak-core-usage`). Headroom: `vsphere/technology/cpu/health-check/host-cpu-capacity-headroom`. → step 5.
+4. Capacity, CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) (`vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own (`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`). Hot cores and NUMA nodes: Peak Core Usage and Imbalance (`vsphere/technology/cpu/metrics/host/peak-core-usage`). Headroom: `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`. → step 5.
 5. Capacity, memory (HostSystem). Consumed is the main capacity counter; it holds guest cache, so high Consumed alone is not a problem (`vsphere/technology/memory/metrics/host/consumed`). Leading warnings: Balloon and State. Past contention: Swap and Compressed (`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`). Memory tiering hosts: active memory against DRAM, NVMe latency (`vsphere/technology/memory/concepts/memory-tiering`). → step 6.
 6. Capacity, storage, network and GPU consumption (HostSystem). Device, adapter and path throughput and IOPS (`vsphere/technology/storage/metrics/host/disk`, `vsphere/technology/storage/metrics/host/adapter-and-path`). Network throughput per vmnic (`vsphere/technology/network/metrics/host/throughput`). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level (`vsphere/technology/gpu/concepts/gpu-monitoring`). → step 7.
 7. Configuration (HostSystem). `vsphere/object-types/esxi/configuration/esxi-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means (`vsphere/technology/cpu/configuration/host-power-management`, `vsphere/object-types/esxi/configuration/bios-settings`). Hypervisor overhead (vSAN, NSX, kernel): `vsphere/architecture/overhead`. → step 8.
@@ -95,7 +91,7 @@ internal_derive:
 - sp5-framework/concepts/health-risk-efficiency
 - vsphere/technology/cpu/metrics/comparisons/host-contention-metrics
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
-- vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+- vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
 - vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high

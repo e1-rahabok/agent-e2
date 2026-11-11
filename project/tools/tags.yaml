@@ -1,6 +1,6 @@
 # Allowed tag values and avoided phrases. Read by tools/lint.py.
 # Change values here, not in the script. Term meanings: knowledge/glossary.md.
-retriever_guide: [how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting]
+retriever_guide: [how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree]
 scope: [vendor-neutral, sp5-framework, vsphere, vcf-operations, guest-os]
 technology: [cpu, gpu, memory, storage, network, system]
 pillar: [availability, performance, compliance, capacity, value]

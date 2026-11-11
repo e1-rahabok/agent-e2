@@ -24,7 +24,7 @@ TOOLS = [
             'product': {'type': 'string', 'description': 'vsphere, vsan, nsx, vcf-operations, windows, linux'},
             'object': {'type': 'string', 'description': 'VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ...'},
             'technology': {'type': 'string', 'description': 'cpu, memory, storage, network, system'},
-            'retriever_guide': {'type': 'string', 'description': 'how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting'}},
+            'retriever_guide': {'type': 'string', 'description': 'how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree'}},
             'required': ['query']}}},
     {'type': 'function', 'function': {
         'name': 'read_file', 'description': 'Read one knowledge file, or one section of it.',
@@ -63,7 +63,7 @@ TOOLS = [
         'description': ('Health check or troubleshooting flow, one step at a time. Without step: all steps in order. '
                         'With step: that step, the next step, and the metric files to read.'),
         'parameters': {'type': 'object', 'properties': {
-            'id': {'type': 'string', 'description': 'Flow file id (health-check/ or troubleshooting/), e.g. vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'},
+            'id': {'type': 'string', 'description': 'Flow file id (health-check/, troubleshooting/ or decision-tree/), e.g. vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'},
             'step': {'type': 'string'}}, 'required': ['id']}}},
 ]
 WEB_TOOLS = [

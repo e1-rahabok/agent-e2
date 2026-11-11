@@ -1,5 +1,10 @@
 # Does this ESXi host have CPU headroom?
 
+## Question
+- Can this ESXi host run more vCPUs without its VMs waiting?
+- The answer is yes or no, with the free cores or threads and the contention that confirms it.
+- An operational question, answered by a decision tree; not a health check. The ESXi health check reads it in its CPU capacity step (`vsphere/object-types/esxi/health-check/esxi-health-check`, step 4).
+
 ## Checks, in order
 1. Contention first: VM Ready and Co-stop on the host's VMs, per vCPU.
 2. Core Utilization (%).
@@ -30,8 +35,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
-retriever_guide: health-check
+id: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
+retriever_guide: decision-tree
 scope: vsphere
 technology:
 - cpu
