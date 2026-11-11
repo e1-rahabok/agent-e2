@@ -22,6 +22,12 @@
 - Performance monitoring reports the 20-second peak within each 5-minute reporting interval. Exception: a mission-critical system, where 20-second visibility is worth the cost of monitoring.
 - Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
 
+## Primary and secondary metrics
+- Layer the troubleshooting metrics, events and properties so a less technical team can use them.
+- Primary metric: defines performance; the what. Always 0-100%, usually a hybrid of several metrics. Example: Kubernetes Cluster Performance (%).
+- Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
+- A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
+
 ## Troubleshooting
 - An expert team troubleshoots. The same team sets the thresholds the Level 1 team uses.
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
@@ -38,13 +44,7 @@
 ![The book's earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the order above](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
 - VM-level flow: `sp5-framework/performance/troubleshooting/vm-slow`.
 
-## Primary and secondary metrics
-- Layer the troubleshooting metrics, events and properties so a less technical team can use them.
-- Primary metric: defines performance; the what. Always 0-100%, usually a hybrid of several metrics. Example: Kubernetes Cluster Performance (%).
-- Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
-- A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
-
-## First incident: forgivable once
+### First incident: forgivable once
 - The first time an issue happens: troubleshoot, write the RCA, set up an alert.
 - The second time: the same problem is known within minutes; a similar one is understood within an hour.
 - Process maturity:
@@ -52,12 +52,12 @@
   - optimized: KPI red or complaint → big picture on a shared dashboard → joint analysis with shared tools → RCA report → alert set up in VCF Operations;
   - ideal: early warning → preventive action → optimization.
 
-## Root cause analysis
+### Root cause analysis
 - The most important content of an RCA report is the corrective action that prevents a repeat, above all the alerts that flag signs of recurrence. Without them the issue cannot be caught before it returns.
 - The root cause often differs from the symptom: another object, a message that looks unrelated. It usually starts as a log message that never became an alarm in the UI.
 - An alert from a log message must not give false positives. Validate it before setting it up.
 
-## Validating a log message before alerting on it
+### Validating a log message before alerting on it
 - Example: VDI mass disconnect, more than 100 users at the same moment.
   - vmware.log: GuestRpc to the VDI agent timed out; second ping timeout, app assumed down.
   - vmkernel log, 0.4 s earlier: resuming traffic on DV port.
