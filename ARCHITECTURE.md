@@ -41,7 +41,7 @@ flowchart LR
 
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in `knowledge/catalog/`. Up-front text and domain code in `harness/` act on it (`KNOWLEDGE-ENGINEERING.md`, section 2). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
-  - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
+  - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, planning calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
   - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code (`harness/agent.py`, up-front blocks in `harness/primer.py`); what it is told and how it decides: `harness/AGENT.md`.
   - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
 - Proof: shows that the product beats a frontier model.
@@ -93,6 +93,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Mixes the VM and ESXi meaning of one label | One object per metric file; `same_name` links; a reminder before answering | Knowledge + harness |
 | Calls a Guest OS metric a VM metric | Separate `guest-os/` layer; `layer` tag; lint rule | Knowledge |
 | Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
+| Loses track in a multi-step capacity plan (six numbers, three classes, HA) | Planning calculator: the model gathers inputs and explains | Harness |
 | Skips steps or jumps to a conclusion | Flow tool serves the steps of a health check, troubleshooting flow or decision tree in order | Knowledge + harness |
 | Invents a threshold | Rule: quote a threshold only with its source; thresholds catalog; verifier flags numbers not in the text | Knowledge + harness |
 | Guesses when unsure | Unsure option and the rule that a wrong answer is worse than Unsure | Agent (prompt) |

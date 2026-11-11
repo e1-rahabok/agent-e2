@@ -97,7 +97,7 @@ class CatalogTest(unittest.TestCase):
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'alert', 'decision', 'rule'})
-        self.assertEqual(CAT.stats()['thresholds'], 36)  # 2 capacity rule rows archived 2026-11-11 (Q116)
+        self.assertEqual(CAT.stats()['thresholds'], 61)  # 36 + 25 planning defaults (capacity calculator, 2026-11-11)
         self.assertEqual(CAT.stats()['bands'], 18)
         self.assertEqual(CAT.stats()['kpi'], 31)
 
@@ -130,6 +130,48 @@ class CalcTest(unittest.TestCase):
         self.assertIn('error', calc.evaluate('2 ** 1000'))
         self.assertIn('thousands', calc.evaluate('13,856 * 300')['error'])
         self.assertIn('error', calc.evaluate('convert(1, "GB", "ms")'))
+
+
+class CapacityPlanTest(unittest.TestCase):
+    """Reproduces project/sources/Capacity Planning Stage.xlsx (64 cores, 2.5 GHz, 768 GB, HT on)."""
+    import capacity as C  # noqa: E402
+    HOST = dict(cores=64, ghz=2.5, ram_gb=768)
+
+    def test_defaults_from_catalog(self):
+        d = self.C.defaults()
+        self.assertEqual([d[c]['cpu-overcommit'] for c in ('gold', 'silver', 'bronze')], [1, 2, 3])
+        self.assertEqual([d[c]['memory-overcommit'] for c in ('gold', 'silver', 'bronze')], [1, 1.2, 1.4])
+
+    def test_supply(self):
+        s = self.C.supply(**self.HOST)
+        self.assertEqual((s['threads'], s['cpu_threads'], s['cpu_reservable_ghz'], s['memory_gb']), (128, 114, 150, 704))
+
+    def test_silver_vms_per_host(self):
+        r = self.C.vms_per_host('silver', **self.HOST)
+        self.assertEqual(r['vms']['allocation cpu'], 28.5)
+        self.assertEqual(r['vms']['allocation memory'], 26.4)
+        self.assertEqual(r['vms']['reservation memory'], 44.0)
+        self.assertEqual((r['fit'], r['exact'], r['binding']), (25, 25.88, 'utilization memory'))
+
+    def test_three_scenarios(self):
+        want = {('gold', 6, 4, 2): (100.6, 72.9, 95.0, 64.8, 48.1, 65.7),
+                ('silver', 2, 20, 4): (102.9, 100.4, 96.7, 65.9, 89.1, 100.5),
+                ('bronze', 1, 5, 34): (71.3, 83.2, 58.3, 39.8, 100.0, 92.7)}
+        for (_, g, s_, b), pct in want.items():
+            r = self.C.consumption({'gold': g, 'silver': s_, 'bronze': b}, **self.HOST)
+            self.assertEqual(tuple(r['consumption_pct'].values()), pct)
+
+    def test_cluster_counts_only_hosts_that_carry_load(self):
+        one = self.C.consumption({'silver': 25}, **self.HOST)['consumption_pct']['utilization memory']
+        four = self.C.consumption({'silver': 100}, hosts=5, ha_hosts=1, **self.HOST)['consumption_pct']['utilization memory']
+        self.assertEqual(one, four)
+
+    def test_tool_entry_and_errors(self):
+        self.assertEqual(self.C.plan({'cores': 64, 'ghz': 2.5, 'ram_gb': 768, 'vm_class': 'silver'})['fit'], 25)
+        self.assertIn('error', self.C.plan({'cores': 64, 'ghz': 2.5}))
+        self.assertIn('error', self.C.plan({'cores': 64, 'ghz': 2.5, 'ram_gb': 768, 'vms': {'platinum': 1}}))
+        r = self.C.plan({'cores': 64, 'ghz': 2.5, 'ram_gb': 768, 'vm_class': 'silver', 'classes': {'silver': {'vcpu': 4}}})
+        self.assertEqual(r['vm'], {'vcpu': 4, 'memory_gb': 16})
 
 
 class FlowTest(unittest.TestCase):

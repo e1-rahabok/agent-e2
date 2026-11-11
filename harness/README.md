@@ -12,6 +12,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | Reads one meaning of a label that has two | Link expansion (`retrieval.py`) | Brings the `same_name` file on the other object with the first |
 | Gets a unit, rollup, statistics level or threshold wrong | Catalog (`catalog.py`) | Returns the exact value from the vSphere 9.1 tables, with its source |
 | Slips on arithmetic | Calculator (`calc.py`) | Computes the conversion and names the rule's source file |
+| Slips on a multi-step capacity plan | Planning calculator (`capacity.py`) | Six numbers per host (3 models × CPU and memory), the binding one, HA hosts on top; class defaults from the catalog |
 | Skips troubleshooting steps | Flow executor (`flows.py`) | Serves the flow steps in order, one at a time |
 | Answers in a broken format or guesses | Verifier (`verify.py`) | Rejects letters that are not options, Unsure mixed with others; one repair turn |
 | Answers from memory, or loops | Agent rules and budgets (`agent.py`, `AGENT.md`) | Lookup first, no repeats, same-name check, call and token budgets |
@@ -37,6 +38,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, link expansion (`same_name`, `related`). |
 | `catalog.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; colour bands; object relations and paths. |
 | `calc.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
+| `capacity.py` | Planning calculator, tool `capacity_plan`: how many VMs of a class fit per host, or how full a host or cluster is for a VM mix. Allocation, reservation and utilization × CPU and memory; defaults are catalog rows `planning-*`. Method: `sp5-framework/capacity/class-of-service-planning`, section Planning calculator. |
 | `web.py` | Public web knowledge: URLs in the question read before the model starts; `fetch_url` and `web_search` for the agent; search only for current facts; system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
 | `flows.py` | Flow executor: a health check or troubleshooting file as ordered steps, one at a time, with the next step and the steps it refers to. |
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |

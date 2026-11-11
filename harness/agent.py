@@ -8,6 +8,7 @@ Up-front knowledge (the five blocks) is built by primer.py and added to the syst
 import json
 
 import calc
+import capacity
 import catalog
 import flows
 import primer
@@ -58,6 +59,25 @@ TOOLS = [
                         'rates with ps or /s, ns us ms s min h, MHz GHz; capacity_ghz(cores, ghz_per_core), pct(part, whole), '
                         'cpu_states(run, ready, costop, wait, vcpus=1), used_pct(run, system, overlap), min, max, round, sum, avg.'),
         'parameters': {'type': 'object', 'properties': {'expression': {'type': 'string'}}, 'required': ['expression']}}},
+    {'type': 'function', 'function': {
+        'name': 'capacity_plan',
+        'description': ('Planning calculator (no live data): how many VMs fit on an ESXi host, or how full a host or cluster is '
+                        'for a planned VM mix. Three models (allocation, reservation, utilization) x CPU and memory: the first '
+                        'to reach 100% binds. Class defaults (overcommit, reservation, concurrent peak, typical VM size) come '
+                        'from the catalog; override them in classes. Give vm_class for VMs per host, or vms for a mix.'),
+        'parameters': {'type': 'object', 'properties': {
+            'cores': {'type': 'number', 'description': 'Physical cores per host'},
+            'ghz': {'type': 'number', 'description': 'Base clock in GHz'},
+            'ram_gb': {'type': 'number', 'description': 'Host DRAM in GB'},
+            'ht': {'type': 'boolean', 'description': 'Hyper-Threading on (default true)'},
+            'hosts': {'type': 'integer', 'description': 'Hosts in the cluster, HA hosts included (default 1)'},
+            'ha_hosts': {'type': 'integer', 'description': 'Hosts kept for HA (default 0)'},
+            'hypervisor_threads': {'type': 'number'}, 'hypervisor_memory_gb': {'type': 'number'},
+            'system_reservation_ghz': {'type': 'number'}, 'memory_tiering_gb': {'type': 'number'},
+            'vm_class': {'type': 'string', 'enum': ['gold', 'silver', 'bronze']},
+            'vms': {'type': 'object', 'description': 'VM count per class, e.g. {"gold": 2, "silver": 20, "bronze": 4}'},
+            'classes': {'type': 'object', 'description': 'Overrides per class, e.g. {"silver": {"vcpu": 4, "memory_gb": 24}}'}},
+            'required': ['cores', 'ghz', 'ram_gb']}}},
     {'type': 'function', 'function': {
         'name': 'flow',
         'description': ('Health check or troubleshooting flow, one step at a time. Without step: all steps in order. '
@@ -125,6 +145,8 @@ def _run_tool(retriever, name, args, state):
         return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
     if name == 'calculate':
         return json.dumps(calc.evaluate(args.get('expression', '')), ensure_ascii=False)
+    if name == 'capacity_plan':
+        return json.dumps(capacity.plan(args), ensure_ascii=False)
     if name == 'fetch_url':
         return web.block([web.fetch(args.get('url', ''), state.get('question', ''), state.get('web') or {})])
     if name == 'web_search':
@@ -223,6 +245,9 @@ def _summary(name, out):
     if name == 'calculate':
         o = json.loads(out)
         return o.get('result', o.get('error'))
+    if name == 'capacity_plan':
+        o = json.loads(out)
+        return o.get('error') or {k: o.get(k) for k in ('fit', 'binding', 'binding_pct', 'verdict') if k in o}
     if name == 'catalog':
         o = json.loads(out)
         return {k: len(v) for k, v in o.items() if isinstance(v, list)} or out[:120]
