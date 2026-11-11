@@ -1,6 +1,6 @@
 # Knowledge engineering
 
-What Agent E2 knows, where each kind of knowledge lives (knowledge base, harness, agent instructions), in what form, and how to write it. For human reviewers and writers. Not indexed.
+What Agent E2 knows, how each kind of knowledge reaches the model, and why it is shaped that way. The design overview for reviewers; the detailed rules for writers are modules in [project/knowledge-rules/](project/knowledge-rules/). Not indexed.
 Why the system can win: [MISSION.md](MISSION.md). How the parts run, including ingest and indexing: [ARCHITECTURE.md](ARCHITECTURE.md). What the agent is told about the knowledge base: [harness/AGENT.md](harness/AGENT.md). Plan and open gaps: [project/plan.md](project/plan.md).
 
 ## From expertise to knowledge the model reads
@@ -54,9 +54,15 @@ flowchart LR
 - Nothing reaches the model unchecked: lint, the author's review, and the benchmark.
 - The loop closes: every wrong answer is traced back to a missing fact, a retrieval miss or a model error.
 
-Part A says what the knowledge is (sections 1-4). Part B gives the rules for writing it (sections 5-13). Part C is the workflow (section 14).
-
-# Part A. The knowledge
+| Read | For |
+|---|---|
+| This file | The design: problem, where knowledge lives, forms, Level 400 and traps, why the structure is so, workflow |
+| [placement.md](project/knowledge-rules/placement.md) | Which folder a file goes in; the `knowledge/` tree |
+| [flows.md](project/knowledge-rules/flows.md) | Health checks, troubleshooting flows, decision trees: vocabulary, order, step format |
+| [metadata.md](project/knowledge-rules/metadata.md) | `retriever_guide` values and every metadata field |
+| [thresholds.md](project/knowledge-rules/thresholds.md) | What a threshold is, the catalog files, one place per number |
+| [writing.md](project/knowledge-rules/writing.md) | Writing rules, the author's editing checklist, format choices, images, versions |
+| [terminology.md](project/knowledge-rules/terminology.md) | Glossary entries, confusable pairs, misreadings, up-front budget |
 
 ## 1. The problem
 - Source: the author's books, quizzes, field answers and 20+ years of operating vSphere.
@@ -82,48 +88,39 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 - The model retrieves and recombines text. Structure improves its answers; it does not create understanding.
 - Quality drifts without review. Coverage is partial on purpose: depth first.
 
-## 2. Knowledge forms
-| Form | Holds | Where |
-|---|---|---|
-| Structured prose | Mechanisms, reasons, edge cases | `knowledge/**/*.md` |
-| Traps | Misconceptions and their correction | `## Traps` in each file |
-| Metadata tags | Technology, pillar, product, object, layer, instance, metric class | `## Metadata` yaml at the end of each file |
-| Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` |
-| Folder hierarchy | Metrics by technology, multi-technology content (KPIs, models) by object, pillars and the SP5 framework across products; VCF Operations only for itself | `knowledge/` |
-| Catalog | Counter unit, rollup, statistics level; esxtop fields; thresholds; object model | `knowledge/catalog/*.yaml` → SQLite |
-| Flows: health checks, troubleshooting, decision trees | The expert's order of checks and the branch at each step: the what (health check of one object), the why (troubleshooting), the choice to act (decision tree) | `health-check/`, `troubleshooting/` and `decision-tree/` files |
-| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
-| Images with text twins | The author's diagrams and charts | `images/` folders |
-| Terminology | The agent's vocabulary: one entry per concept, with its other names and the term it is confused with (section 11.2). Wrong beliefs: `knowledge/misreadings.md`. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
-| Provenance | Source document and version, what is still to check, status | metadata |
-| Rules as code | Architecture and writing rules, checked before merge (project, not deployed) | `project/tools/lint.py`, `project/tools/tags.yaml` |
-| Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` |
+## 2. Where the knowledge lives
+- Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is product, deployed to the site, and all of it is reviewed by the author.
+- The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:
 
-Reason for each form, and its readers:
+| Path | Holds | Home | Why this path |
+|---|---|---|---|
+| Retrieved when a question needs it | Mechanisms, metrics, traps, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
+| Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
+| Given up front, every question | Misreadings, confusable pairs, flow index, map | `knowledge/misreadings.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
+| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
+| Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | `harness/modes.py` (system prompts), `harness/primer.py` (procedure) | Conduct for every answer, not a fact about one metric |
 
-| Form | Why this form | Read by |
-|---|---|---|
-| Structured prose | Reasons need prose; one fact per bullet keeps a mistake to one line and a chunk to one topic | Model, human |
-| Traps | Experts know when a true number is read wrongly; the wrong conclusion, written in the user's words, retrieves its correction | Model, human, benchmark |
-| Metadata tags | Lets one file be found from several perspectives and filters retrieval | Harness, website |
-| Links | Encodes the expert's mental map: which facts must be read together | Harness, model |
-| Folder hierarchy | One browsable tree in the order the author reviews | Human |
-| Catalog | Exact values must not depend on retrieval luck or model memory | Harness tools |
-| Flows | Small models skip steps; an ordered, executable form keeps them on the path | Harness (flow tool), model |
-| Formulas and calculator | Arithmetic is where models slip; code does it exactly | Harness |
-| Images with text twins | Diagrams carry expert insight; the text twin makes them usable by a text-only model | Model, human, vision model |
-| Terminology | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA, Core vs Thread Utilization) | Model, harness, human, lint |
-| Provenance | Every fact must be traceable and challengeable | Human |
-| Rules as code | A rule that a script checks cannot drift | Lint |
-| Executable expectations | Shows that the knowledge changes answers | Benchmark |
+- One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each misreading line ends with `See <id>`.
+- Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong misreading or prompt rule therefore costs more than a wrong metric file, and its review comes first.
+- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. `knowledge/misreadings.md` is given up front and kept out of the index (`harness/kb.py`, `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
+- Not product: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge; they are not deployed and hold nothing the agent reads.
 
-## 3. Slices
-The author's books describe metrics from three perspectives: technology, object, and operations management (pillar). A folder tree holds one; tags and links hold the others.
-- Example: VM CPU Ready.
-  - Technology: `vsphere/technology/cpu/metrics/virtual-motherboard/ready` (folder), `technology: cpu` (tag).
-  - Object: `object: VirtualMachine` (tag), listed in `vsphere/object-types/vm/health-check/vm-health-check` (link), part of the VM Performance KPI.
-  - Operations management: `pillar: performance` (tag), used by `sp5-framework/performance/performance-kpi-design` and the cluster KPI (links).
-- Retrieval filters on any tag. The model follows any link. A website can show any slice without moving a file.
+## 3. Knowledge forms
+| Form | Holds | Home | Why this form |
+|---|---|---|---|
+| Structured prose | Mechanisms, reasons, edge cases | `knowledge/**/*.md` | Reasons need prose; one fact per bullet keeps a mistake to one line |
+| Traps | Misconceptions and their correction | `## Traps` in each file | The wrong conclusion, in the user's words, retrieves its correction |
+| Metadata tags | Technology, pillar, product, object, layer, instance, metric class | `## Metadata` yaml | One file found from several perspectives; filters retrieval |
+| Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | The expert's mental map: which facts are read together |
+| Folder hierarchy | Metrics by technology, KPIs and models by object, pillars across products | `knowledge/` | One tree in the order the author reviews |
+| Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
+| Flows | Order of checks: health check, troubleshooting, decision tree | `health-check/`, `troubleshooting/`, `decision-tree/` | Small models skip steps; the flow tool keeps them on the path |
+| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | `harness/calc.py`, formulas in files | Arithmetic is where models slip |
+| Images with text twins | The author's diagrams and charts | `images/` folders | The text twin makes a diagram usable by a text-only model |
+| Terminology | Vocabulary, confusable pairs, misreadings | `knowledge/glossary.md`, `knowledge/misreadings.md` | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |
+| Provenance | Source and version, what is still to check, status | metadata | Every fact traceable and challengeable |
+| Rules as code | Architecture and writing rules (project, not deployed) | `project/tools/lint.py`, `tags.yaml` | A rule a script checks cannot drift |
+| Executable expectations | Expert answers and the trap a non-expert falls into | `benchmark/questions/` | Shows that the knowledge changes answers |
 
 ## 4. Traps and Level 400
 
@@ -174,109 +171,7 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 - Benchmark: every multiple-choice question has a trap option named in `## Likely wrong answer`; the trap rate is reported per model. See `benchmark/design.md`.
 - A trap needs a mechanism and a source, like any other fact.
 
-# Part B. Writing rules
-
-## 5. Where the knowledge lives
-
-### 5.1 Across the product
-- Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is product, deployed to the site, and all of it is reviewed by the author.
-- The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:
-
-| Path | Holds | Home | Why this path |
-|---|---|---|---|
-| Retrieved when a question needs it | Mechanisms, metrics, traps, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
-| Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
-| Given up front, every question | Misreadings, confusable pairs, flow index, map | `knowledge/misreadings.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
-| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
-| Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | `harness/modes.py` (system prompts), `harness/primer.py` (procedure) | Conduct for every answer, not a fact about one metric |
-
-- One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each misreading line ends with `See <id>`.
-- Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong misreading or prompt rule therefore costs more than a wrong metric file, and its review comes first.
-- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. `knowledge/misreadings.md` is given up front and kept out of the index (`harness/kb.py`, `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
-- Not product: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge; they are not deployed and hold nothing the agent reads.
-
-### 5.2 The knowledge base folder
-
-```text
-knowledge/                           # what the model reads (indexed)
-├── catalog/                         # structured data read by harness tools, not chunked as prose:
-│                                    # vCenter counters, esxtop fields, thresholds, object model, user terms (YAML)
-├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
-│                                    # aggregation, units, thresholds, naming, accounting
-├── glossary.md                      # the agent's vocabulary: one entry per term, other names, confusable term (all products)
-├── misreadings.md                   # Level 300 wrong beliefs and their corrections; given up front, not indexed
-├── sp5-framework/                   # operations management across products and technologies: the SP5 Framework
-│   ├── concepts/                    # the framework across pillars: overview, why not ITIL, Triple See Method,
-│   │                                # SLAs, class of service, health, monitoring vs troubleshooting
-│   ├── alerts/                      # alert architecture, top down: alerts and insights, alert design across products
-│   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for cross-technology flows (VM slow)
-│   └── capacity/                    # capacity model, sizing; decision-tree/ for capacity questions across products
-├── vsphere/
-│   ├── architecture/                # vSphere-wide design that every metric depends on: provider/consumer,
-│   │                                # VM vs Guest OS, kernel worlds, overhead, resource controls, metric sources
-│   ├── technology/                  # raw metrics, by technology (book route: contention first, then consumption)
-│   │   └── cpu/ gpu/ memory/ storage/ network/
-│   │       ├── concepts/            # how it works
-│   │       ├── metrics/<object>/    # one metric, one object type per file: virtual-motherboard/, host/,
-│   │       │                        # cluster/, datastore/; comparisons/ for side-by-side groups
-│   │       ├── configuration/       # what to set
-│   │       ├── decision-tree/       # operational questions within this technology (headroom, downsizing)
-│   │       ├── troubleshooting/     # why flows within this technology
-│   │       └── images/
-│   ├── object-types/                # multi-technology content, by object (book route)
-│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/,
-│   │                                # decision-tree/, images/
-│   └── tools/                       # how each tool shows the counters
-│       ├── esxtop/                  # panels, fields, units vs the vSphere Client
-│       └── vsphere-client/          # vCenter statistics (levels, rollups, intervals), documentation guidance;
-│                                    # screens/ for the screen library (release 1.1)
-├── vcf-operations/                  # VCF Operations as a system in its own right
-│   ├── concepts/                    # what the product is for: role, how it reaches people
-│   ├── features/                    # features as implemented (real-time metrics, 20-second peaks)
-│   ├── dashboards/                  # dashboard design and the dashboard suites
-│   ├── reports/                     # report design and the report suite
-│   ├── alerts/                      # alert definitions, bottom up: symptoms, conditions, cycles, recommendations
-│   └── troubleshooting/             # later: VCF Operations' own health and troubleshooting
-└── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
-    └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
-```
-
-- The author's book sees metrics from 3 perspectives: technology, pillar of operations, product. A folder tree holds one hierarchy; tags (`technology`, `pillar`, `product`, `object`) hold the others, and retrieval and the website browse by any of them.
-- The folders follow the book's blend:
-  - raw metrics follow the technology route: `vsphere/technology/<tech>/`;
-  - multi-technology content follows the object route: `vsphere/object-types/<object>/`;
-  - what VCF Operations computes: `vcf-operations/`;
-  - pillars that cut across products (vSphere, vSAN, NSX, Guest OS): `sp5-framework/<pillar>/`; content across pillars: `sp5-framework/concepts/`, so the framework reads as one unit.
-- Placement rules, so a fact lives in one place:
-  - A raw metric about one technology goes in `technology/`, even when it belongs to one object. VM CPU Ready: `vsphere/technology/cpu/metrics/virtual-motherboard/`.
-  - `object-types/` holds what combines technologies for one object: vMotion, DRS, admission control, cluster operations. Each object type gets a health check, and only object types do (`health-check/<object>-health-check`): numbered steps in the order availability, performance, security, capacity, with configuration as the drill-down (section 10), starting from the object's KPI and models, each step linking the troubleshooting flow to open when it fails.
-  - VCF Operations is an observability tool, not a peer of vSphere, vSAN, NSX or the Guest OS: it has nothing to say without a system to manage. Content about a managed object lives with that object, even when VCF Operations computes it:
-    - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
-    - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
-    - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS. `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
-  - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), and later its own sizing, health and performance troubleshooting. See `vcf-operations/concepts/vcf-operations-role`.
-  - A concept is a general idea; a file that documents an actual implementation is not a concept. In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the general idea in `observability/` or `sp5-framework/concepts/`, the implementation in `vcf-operations/` (example: `observability/real-time-metrics` and `vcf-operations/features/real-time-metrics`).
-  - Alerts have two parts. Top down, the alert architecture across products (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/alerts/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
-  - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
-  - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
-  - `sp5-framework/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
-  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across products (VM slow) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `troubleshooting` (the why: down or slow) or `decision-tree` (one operational question). `health-check` lives only with an object type: `object-types/<object>/`, `vcf-operations/` for VCF Operations itself, and later `guest-os/` for the Guest OS as its own object. Never on a technology or a pillar.
-- Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
-- vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
-- Three levels of general content, different scope (names say what the content is, not that it is basic):
-  - `knowledge/observability/`: how to read any metric: true across VCF 9 components and the Guest OS.
-  - `knowledge/sp5-framework/`: how operations management, the SP5 Framework, uses metrics, across products.
-  - `knowledge/vsphere/architecture/`: vSphere design that its metrics follow from; true only in vSphere.
-- A setting of one object goes to that object: Scalable Shares is in `vsphere/object-types/resource-pool/configuration/`. A pillar problem across technologies goes to its pillar: noisy neighbour is in `sp5-framework/performance/`.
-- A top-level folder is never named `metrics`: lint and the harness read `/metrics/` in a path as a metric file.
-- `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; the same names wherever a metric of that object lives. The `object` tag holds the vSphere managed object type name.
-- A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
-- Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. A VCF Operations KPI over Guest OS counters (Guest OS Performance) stays in `guest-os/` by this rule.
-- Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/` (vSphere Client, esxtop) or `vcf-operations/<features|dashboards|reports>/screens/` (VCF Operations), with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
-- Indexed: every `knowledge/**/*.md`. Writing templates live in `project/templates/`; source documents in `project/sources/` (read-only). How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
-- `project/tools/lint.py` enforces the folder and tag rules.
-
-## 6. Structure rationale
+## 5. Structure rationale
 - A generic AI fails on vSphere metrics in a known way: it knows the general meaning of a label and applies it where vSphere differs.
 - Each structural choice blocks one failure:
 
@@ -294,196 +189,11 @@ knowledge/                           # what the model reads (indexed)
 | General content at three levels (observability, operations management, vSphere architecture) | vSphere-only rules applied to other products, or general rules duplicated per product. |
 | A `## Traps` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
-- Each format choice serves both readers:
-
-| Choice | Machine benefit | Human benefit |
-|---|---|---|
-| Markdown, not HTML or JSON | Clean chunking by heading | Readable and reviewable on GitHub |
-| One fact per bullet | Small, single-topic chunks | A mistake is one line to fix |
-| Mechanism before metric name | The model learns why, not only what | Matches how an expert explains |
-| Metadata at the end of the file | Parsed separately, never embedded as text | The body reads like a page |
-| Wrong conclusion → correct reading | The misconception retrieves its correction | The trap is explicit and reviewable |
-| Tables only when simple | Rows survive chunking | Scannable |
-| Exact data in YAML, prose in markdown | Lookups are exact; prose stays short | Data is reviewable as a table |
-| Mermaid plus text for diagrams | Text-only models read the steps | GitHub renders the chart |
-
 - A file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason. How the agent uses this structure: `harness/AGENT.md`, section 3.
 
-## 7. retriever_guide
-| Value | Question it answers | Folder | Template |
-|---|---|---|---|
-| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `observability/`, `vsphere/architecture/`, `sp5-framework/alerts/`, `vcf-operations/` features, dashboards, reports, alerts | `concept.md` |
-| metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `models/`, `tools/` | `metric.md` |
-| term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
-| what-to-set | What should be configured, and why? | `configuration/` | `configuration.md` |
-| health-check | Is this object healthy? What do I check, in what order (the what)? | `health-check/` | `health-check.md` |
-| troubleshooting | It is down or slow (complaint, alert, failed health check step). Why? What do I check, in what order? | `troubleshooting/` | `troubleshooting.md` |
-| decision-tree | Can it, should it, how much? One operational question, ending in a choice to act | `decision-tree/` | `decision-tree.md` |
-
-## 8. Metadata (end of file)
-Every knowledge file and every benchmark question ends with a `## Metadata` section holding one yaml block. No front matter at the top.
-
-| Field | Meaning |
-|---|---|
-| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `project/tools/moved.yaml` (old id → new id): lint names the current id when an old one is still used, and `link_refs.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
-| `retriever_guide` | See section 7. |
-| `scope` | vendor-neutral (applies across VCF 9 components), sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. |
-| `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
-| `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework. Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
-| `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. Empty for vendor-neutral files. |
-| `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
-| `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
-| `instance` | Metric files only, optional. The instance level when the formula differs by instance: aggregate, per-vcpu, per-vmnic, ... |
-| `metric_class` | Metric files only. contention, consumption, or context. Context metrics account for inventory or configuration and answer "it depends" questions. |
-| `internal_derive` | Ids of other knowledge-base files that this file is derived from. Internal links only. Not book chapters, not URLs. |
-| `same_name` | Metric files only. Ids of metrics with the same label but a different meaning. |
-| `same_meaning` | Metric files only. Ids of metrics with a different label but the same meaning. |
-| `related` | Ids to retrieve together. |
-| `images` | One entry per image linked in the body. Fields: `path` (as linked), `product`, `object`, `metric` (list of metric names shown) and/or `topic` (concept shown), `image_type` (diagram, table, timeline, distribution, scatter, screenshot), `sample` (optional: fleet size and period). The image's own tags: they can differ from the file's, e.g. an ESXi chart inside a cluster concept. |
-| `source.document` / `source.path` | Source document (with version and revision) and heading path or pages. |
-| `corrections` | Facts that differ from the source document named in `source.document`. Each entry names the section it affects. |
-| `review_notes` | Only what is still to check: section, what, and the URL or document to check against. No who-said-it tags. A settled item is deleted. |
-| `status` | draft (not reviewed) or reviewed. Agent E2 says so when an answer depends on a draft file. |
-
-- Audit information (corrections, what is still to check, review state) lives only in the metadata block. Body text and headings carry no audit markers and no who-said-it tags: no "", no "the author states".
-
-## 9. Thresholds
-- A threshold has more parts than a number:
-
-```text
-threshold = (metric, object, instance reading, sample interval, time window) -> band values and source
-```
-
-- Sample interval: the same workload reads higher at 2 seconds (esxtop) than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on 20-second peaks cannot be applied to a 5-minute chart. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks) although it is the less serious signal.
-- Instance reading: for a metric with instances (per vCPU, per disk), the worst instance is always at least the object value. The worst vCPU of a 64-vCPU VM can be far above the VM's normalized Ready. A band must say which reading it applies to, as "Peak CPU Ready among any vCPU" does.
-- One place per number (2026-11-10). A number Agent E2 or a system decides with lives only in `knowledge/catalog/thresholds-*.yaml`; no knowledge file, table or image repeats it. A knowledge file holds the mechanism and the reasons, and numbers that no machine decides with: vendor values written as traps ("the vendor says X; read Y"), reading rules ("Latency near 0 with Ready above 15% means a limit"), worked examples.
-  - Admission: a row exists only for a use case: KPI levels, KAI or KSI, alert symptom, capacity model input or decision.
-  - A KPI metric qualifies only if it maps to green, yellow, orange, red and a worse colour means slower work for the consumer. Banding alone is not enough: CPU Usage can be banded, but high usage is consumption, not slowness.
-  - Sections are named by use, and the section name is the use: no `kind` or `use` field on the rows. The Harness labels every value with its use (KPI, Alert, Capacity decision, Capacity rule), because one metric has a different threshold per use. Lint rejects any other section.
-  - `knowledge/catalog/thresholds-performance.yaml` (no SLA and no SLI: performance is managed by the KPI only, 2026-11-11):
-    - `kpi`: KPI colour levels, one line per object and metric, yellow, orange, red for 5m, 20s and 2s (9 values), entered by hand, null until entered, with `group`, `kb` and `excluded_when_green`. The 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell. No class of service.
-  - `knowledge/catalog/thresholds-capacity.yaml`: `models` (capacity and risk model inputs with grey for wastage, green, yellow, orange, red), `decisions` (close for business), `rules` (planning and sizing).
-  - `knowledge/catalog/thresholds-alerts.yaml`: `alerts`, one row per alert and criticality (`criticality`: red or orange, no yellow; `pillar`: performance or capacity). Alerts are set apart from the KPI: different purpose, set separately.
-  - Ids are unique across the three files. The Harness loads them into its catalog at start-up and shows a file's rows whenever the file is in the context (classic facts, agentic `read_file`).
-  - Still to move (a `quote` marks a row whose number is also in prose; lint checks the copy until it goes): alert values in the alert files; decision tree steps (can-cluster-take-more-vms, host-cpu-capacity-headroom); class of service planning; monster VM sizes.
-- No invented thresholds: a threshold goes in only with a source. Row field `source`: `knowledge-base`, or a vendor document with its version (`vsphere-9.1-docs`, `performance-best-practices-9.1`, `microsoft`), because vendor values can go stale and the newer official document wins.
-- The rule for the model is in `observability/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
-
-## 10. Flows: health checks, troubleshooting, decision trees
-- Location: section 5, Placement rules.
-- Vocabulary:
-  - Framework: how IT operations are managed (SP5). `sp5-framework/concepts/overview`.
-  - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `sp5-framework/capacity/`.
-  - KPI: a model of performance only (the P in KPI). Files in `vsphere/object-types/<object>/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
-  - Health check: the what. Is the object healthy, at risk, or wasteful? Always on one object type (VM, host, cluster, datastore), never on a technology (CPU, memory) and never on one pillar (author, 2026-11-11). A parent's health includes its children's, unless a realm separates them: Guest OS slowness is not ESXi or VM health, because the hypervisor neither sees nor controls it. Its order of checks is below; the health grouping (present health, risk, efficiency) defines the verdicts, not the order (`sp5-framework/concepts/health-risk-efficiency`). Monitoring belongs here. Explained to the agent in `sp5-framework/concepts/health-check`.
-  - Troubleshooting: the why, in the reactive process. It starts from a complaint, an alert, or a failed health check step. Two types only: down (availability) and slow (performance). A security breach gets a forensic investigation, not troubleshooting. Each type uses the same order of checks as its pillar in the health check.
-  - Two processes: reactive (troubleshooting, forensic investigation) and proactive (the health check, daily, with weekly and monthly analysis). The health check is a superset of reactive, because nobody knows yet whether there is a problem. Proactive findings arrive as insight, typically anomaly detection read with business context.
-  - Decision tree: answers one operational question (can this cluster take more VMs, should this VM be downsized) and ends in a choice to act, with its reason. Not a health check, even when a health check step reads its result. Not a decision record: a decision records what was done; a decision tree decides what to do.
-  - Most operational questions are neither a health check nor troubleshooting. A flow for one is a decision tree; a question answered by reading, not by a branching order of checks, is a concept or metric file.
-  - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
-- A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
-- Order: is it up (availability: log, saturation, configuration, known bug), is it fast (performance: contention, consumption, configuration, known bug, log), is it secure (security: configuration, known bug, log), will it be enough (capacity: consumption, configuration, contention, inventory). Within each pillar the what comes before the why: establish the fact, then explain it; do not jump to a conclusion. Known bugs are checked per pillar, because a bug can cause an outage, slowness or a security loophole. Efficiency is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
-- The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2.
-- One flow per file. Template: `project/templates/health-check.md`, `troubleshooting.md` or `decision-tree.md`. Order: purpose (health check: nothing is wrong yet, so no symptom), symptom (troubleshooting) or question (decision tree), Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
-- The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
-- Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
-  - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.
-- Every metric or flow named in a step is linked in `internal_derive`, so retrieval brings in the files with the flow.
-- Mermaid node text repeats the step number: `S1[1. VM CPU Ready above threshold?]`. Step numbers tie the chart to the text.
-- Keep each flowchart to about 15 nodes. Split a larger flow into linked flow files.
-- draw.io files are not read by the LLM: the XML is mostly layout and style, and compressed files are unreadable.
-  - Keep the `.drawio` file and an exported `.png` in the `images/` folder next to the flow as the editable source.
-  - Link the `.png` under the flowchart and tag it in `images` (`image_type: diagram`).
-  - The Mermaid chart and numbered steps are the content the LLM uses.
-
-## 11. Writing rules
-- One fact per bullet or table row. A mistake should sit on one line.
-- One English word per concept. The agent's vocabulary: `knowledge/glossary.md`. Writing vocabulary and words to avoid: `project/vocabulary.md`. Repository terms: `project/terms.md`.
-- State mechanism and reason, not only the definition.
-- Facts may come from the source, official docs, or Claude's own knowledge; the author chooses what goes in. A fact still to check gets a `review_notes` line with its section and the URL to check against. No generic filler.
-- No text aimed at human motivation.
-- No AI-speak. Plain words, short sentences, the fact itself:
-  - no filler words or stock phrases of generated text;
-  - no praise, hedging or summary lines;
-  - no adjective where a number or a mechanism can stand; name the thing.
-  - The list of flagged phrases, each with its plain replacement: `project/tools/tags.yaml`, `avoid_ai_speak`. Lint flags them. The same rule applies to documents, commit messages and pull request text.
-- Titles name the topic: at most 8 words, no list of contents after a colon. Section headings at most 9 words. Words in parentheses (an alias, a counter name) do not count. Reason: `harness/kb.py` prefixes the title and the heading to every chunk, so a long title repeats in every chunk of the file and spends the context budget. Lint checks both.
-- Write full sentences. No slogans ("Three sides, three metrics."), no aphorisms in place of the mechanism, no "X, not Y" where a plain statement says it.
-- One vSphere object type per metric file.
-- Formulas as plain text. Diagrams as Mermaid plus a text explanation.
-- Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
-- Every metric file ends its body with `## Traps`, written in the format of section 4.
-- CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
-- Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
-
-### 11.1 Editing a knowledge file (author's checklist)
-How the model reads a file: the harness cuts it at every `##` heading, and each piece reaches the model alone, with only the file title and that heading in front. So:
-1. Each bullet stands alone. No "it", "this" or "the above" pointing to another bullet or section; name the thing again.
-2. One fact per bullet, with its reason: "X, because Y". The reason lets the model apply the fact to a new case.
-3. Exact names: metric and term names as in the metric files and the glossary, with the object ("VM CPU Ready", not "Ready"). A typo in a name breaks search; a typo in prose costs little.
-4. One name per concept. A new name needs the glossary first; another name users say goes into the Also called line of its entry, not into the text.
-5. Misreadings go in `## Traps`, in the user's words: "wrong belief" → correct reading. Search finds a misreading through those words.
-6. A number comes with unit, object, interval and source. A threshold in prose also needs a row in the threshold catalog.
-7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
-8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
-9. Headings at most 9 words, titles at most 8 (lint).
-10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check and merges.
-
-### 11.2 Terminology
-Agent E2 has four jobs with words. Each has one home, so a fact is written once.
-
-| Job | Failure it prevents | Home | Reaches the model |
-|---|---|---|---|
-| Recognize the user's word | Search misses the file ("steal time", "%RDY", "uptime KPI") | Glossary, Also called; the term map (`knowledge/catalog/user-terms.yaml`) for phrases | Query terms, files and notes before search |
-| Know what a term means here | The public meaning wins (ESXi CPU Demand read where capacity Demand is meant) | Glossary entry; the file for a metric | Search, `read_file` |
-| Keep two terms apart | The answer uses the wrong one of two real terms | Glossary, Not to confuse with | Up-front block `terms` |
-| Drop a wrong belief | A confident rule of thumb, never looked up | `knowledge/misreadings.md` | Up-front block `rules` |
-
-Glossary entry (`knowledge/glossary.md`, read by `harness/kb.py`, checked by lint):
-- `- **Term**: meaning`, then optional lines `  - Also called: a, b`, `  - Not to confuse with Other term: difference.`, ``  - File: `id` ``. Grouped by area under `###` headings, alphabetical within each. Not `##`: the glossary must stay one chunk, so search never ranks this summary above the files that hold the mechanism (retrieval check 2026-11-11: with `##` areas the glossary entered 18 of 95 classic contexts instead of 3, and 2 questions lost a needed file).
-- Meaning only where Agent E2's meaning differs from public text, or a 32B model lacks it (SP5 and VCF Operations terms, redefined words). No Level 100 or 200 definitions.
-- A metric with its own file is an entry only when it has another name or a confusable partner.
-- Same name, two things (Demand for capacity, Demand on ESXi): two entries with a qualifier, each pointing at the other.
-
-A confusable pair passes all four tests:
-1. Two (or three) terms of the same kind, each a real term: two metrics, two processes, two scores. "Reservation vs usage" is a rule, not a pair.
-2. Swapped in practice by public text, vendor documents or frontier models. Not a difference every VMware administrator knows (Ballooned vs Swapped, allocation vs reservation).
-3. The swap changes the answer: another verdict, metric, number or action.
-4. Not already a misreading. One home per fact.
-- Written once, under the term users misuse; the difference names both terms, so the line reads alone.
-
-Misreading (`knowledge/misreadings.md`):
-- A wrong belief a frontier model applies without being asked: what is a problem, which metric decides, what to add or size by.
-- Level 300: a VMware administrator with hands-on vSphere knowledge still holds it. Not a definition, not a swap of two terms (those are glossary entries).
-- One line: the correct reading, then `See` the file with the mechanism.
-
-Up-front budget: the five blocks together stay within 3,000 tokens (`harness/primer.py`, lint). A new pair or misreading needs room; drop a weaker one first.
-
-## 12. Images
-- `knowledge/` is for Agent E2 only. An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
-- The agent reads the text twin and the alt text, not the pixels: `get_images` returns image records, never the image itself.
-- Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains. The facts an image proves go in the text.
-- Images live in the `images/` folder of the folder that uses them (for example `vsphere/technology/<tech>/images/`, `vsphere/object-types/cluster/images/`, `guest-os/<technology>/images/`).
-- Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
-- Every image has its own tags in the file's metadata `images` list (section 8). The validator fails on a missing or invalid entry.
-- Every image file is linked from a knowledge file. The validator fails on an unlinked image: an unlinked image has no context for the AI.
-- File names describe what the image shows. No length limit applies (GitHub, git and Markdown accept long names).
-  - Pattern: `<object>-<metric or topic>-<what it shows>.png`, lowercase, hyphens. Example: `esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png`.
-  - Chart type at the end when it helps: `-distribution`, `-scatter`, `-timeline`, `-table`, `-diagram`.
-  - No bare numbers. Sample sizes (192 hosts, 3,385 VMs) go in the alt text and body, not the file name. A number stays only when it is the point, e.g. `62-5-percent`.
-- Third-party images (vendor diagrams, documentation screenshots) are not copied. Link the source in `review_notes`.
-
-## 13. Versions and sources
-- Write from the current release: vSphere 9.1, VCF 9.1.1 (the Versions section of `CLAUDE.md` holds the current list).
-- Before writing from a vendor document, check that it is the current version and read its revision date; record version and revision in `source.document`.
-- A file written from an older version gets a `review_notes` line naming the newer version, and is re-checked before `status: reviewed`.
-- `project/sources/` is read-only.
-
-# Part C. Workflow
-
-## 14. From source to reviewed file
+## 6. Workflow: from source to reviewed file
 1. Extract: the book one Heading 3 at a time, then official documentation for the current release, checking the document revision each time. Files start as `status: draft`.
-2. Structure: write each fact in the form that fits it (section 2); add tags, links and traps.
+2. Structure: write each fact in the form that fits it (section 3); add tags, links and traps.
 3. Ask: every conflict or gap becomes an author question in `project/author-questions.md`, with a verbatim search string. The answer is applied to the file; the review note is deleted. Extraction continues; it does not wait for answers.
 4. Check: `python3 project/tools/lint.py` must pass before merge (folders, tags, layers, links, images, quotes, tables, phrases). Unit tests check the tools.
 5. Prove: the retrieval check confirms that the right files are found; the benchmark runs the questions against the whole system; every wrong answer is traced to knowledge, retrieval or model.

@@ -68,7 +68,7 @@ class Chunk:
 
 
 # Knowledge given up front, not through search: indexing the one-line summaries would let search return them
-# in place of the files that hold the mechanism (KNOWLEDGE-ENGINEERING.md, section 5.1).
+# in place of the files that hold the mechanism (KNOWLEDGE-ENGINEERING.md, section 2).
 NOT_INDEXED = ('knowledge/misreadings.md',)
 
 
@@ -95,7 +95,7 @@ def glossary(docs):
 
     An entry is '- **Term**: meaning' with optional sub-bullets '  - Also called: a, b',
     '  - Not to confuse with Other term: difference.' and '  - File: `id`', under '### Area' headings
-    (KNOWLEDGE-ENGINEERING.md, section 11.2).
+    (project/knowledge-rules/terminology.md).
     """
     g = docs.get('glossary')
     out = []

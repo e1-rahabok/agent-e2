@@ -20,7 +20,7 @@ allow_in_cpu_files: ['Guest OS (CPU )?Needed( Memory)?', 'VM (CPU|Memory) Needed
 injection_patterns: ['<!--', '[\u200b-\u200f\u2060\ufeff]', '(?i)ignore (all |any )?(previous|prior|above) instructions', '(?i)disregard (the )?(above|previous|prior)', '(?i)you are now (a|an|the)\b', '(?i)new instructions:', '(?i)system prompt']
 # Phrases rejected in body text of every knowledge file.
 avoid_everywhere: ['\[author-correction', '\[claude-knowledge\]']
-# AI-speak: filler words and stock phrases of generated text. Plain words instead (KNOWLEDGE-ENGINEERING.md, section 11).
+# AI-speak: filler words and stock phrases of generated text. Plain words instead (project/knowledge-rules/writing.md).
 # Checked where the repository terms are checked. Domain words stay allowed: utilization/utilized, realm (the author's word).
 avoid_ai_speak:
   '(?i)\bdelv(e|es|ed|ing)\b': 'look at, read'

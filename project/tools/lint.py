@@ -232,11 +232,11 @@ def check_repo_terms(allowed, bad):
                     bad(f, f'line {i}: repository term "{re.search(pat, line).group(0)}": use "{use}" (project/terms.md)')
             for pat, use in (allowed.get('avoid_ai_speak') or {}).items():
                 if re.search(pat, line):
-                    bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (KNOWLEDGE-ENGINEERING.md, section 11)')
+                    bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (project/knowledge-rules/writing.md)')
 
 
 def check_terminology(docs, bad):
-    """Glossary entries and misreadings, as the harness reads them (KNOWLEDGE-ENGINEERING.md, section 11.2)."""
+    """Glossary entries and misreadings, as the harness reads them (project/knowledge-rules/terminology.md)."""
     import kb as _kb
     g = 'knowledge/glossary.md'
     if 'glossary' in docs:

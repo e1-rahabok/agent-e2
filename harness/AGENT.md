@@ -1,7 +1,7 @@
 # Agent
 
 What the agent is, what it knows when a question arrives, what it decides, and how it is improved. Not indexed.
-Why the system can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md), Part B.
+Why the system can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md) and its rule modules in [project/knowledge-rules/](../project/knowledge-rules/).
 
 ## 1. What it is
 - The agent is the model plus the tool loop, in agentic mode only. It is not a separate program.
@@ -46,7 +46,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 |---|---|---|---|
 | 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids (folders) |
 | 2 | Level 300 misreadings (`knowledge/misreadings.md`) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | `knowledge/misreadings.md`, the lines under its first heading |
-| 3 | Confusable terms | 17 pairs that pass the tests of `KNOWLEDGE-ENGINEERING.md`, section 11.2: Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; KPI, SLA, SLI and model; alert and insight | `knowledge/glossary.md`, lines Not to confuse with |
+| 3 | Confusable terms | 17 pairs that pass the tests of `project/knowledge-rules/terminology.md`: Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; KPI, SLA, SLI and model; alert and insight | `knowledge/glossary.md`, lines Not to confuse with |
 | 4 | Flow index by kind | One line per flow file: its name and id, grouped as health check (object), troubleshooting (symptom), decision tree (question) | `health-check/`, `troubleshooting/` and `decision-tree/` files |
 | 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |
 
