@@ -1,7 +1,7 @@
 # Purpose-driven architecture
 
 ## Goals come from what is sold
-- Architecture goals are business results, as seen by whoever pays for the platform and whoever pays for the service. Availability and performance practice come after.
+- Architecture goals are business outcome as seen by whoever pays for the platform, and SLA as seen by whoever pays for the service.
 - The goals depend on what is sold: an application or infrastructure.
 - **SaaS**: no on-premises install. ISVs use it so customers do not run outdated versions.
 - **DBaaS**: two variants.
@@ -13,7 +13,7 @@
 - **K8aaS**: Kubernetes, on a dedicated or a shared cluster.
 - **IaaS**: three variants (VM, resource pool, hardware): `sp5-framework/concepts/iaas-business`.
 
-## Plan from Day 2
+## Begin with the end in mind
 - Day 0: plan. Business plan, high-level architecture, operations model.
 - Day 1: design and build. Low-level architecture, deployment, commissioning.
 - Day 2: operate. It starts at go-live and lasts the life of the platform.
