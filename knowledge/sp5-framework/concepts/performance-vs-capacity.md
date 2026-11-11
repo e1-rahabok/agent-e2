@@ -14,7 +14,8 @@
 - In large organizations two teams own them. Capacity looks at long-term supply, latent workload and future demand. Operations looks at what runs on the floor this hour.
 
 ## Usable capacity exists only in capacity
-- Capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. What remains is usable capacity, and capacity is measured against it.
+- Capacity subtracts HA, buffer and hypervisor overhead from total capacity. What remains is usable capacity, and capacity is measured against it.
+- Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice (`sp5-framework/capacity/capacity-model`).
 - Performance ignores all four. It measures what happens, against total capacity. These factors can cause a performance problem, but they are not inputs to a performance metric.
 - No other pillar has a usable part: no usable performance, usable availability or usable compliance.
 ![Performance management spans 0-100% of total capacity; capacity management spans 0-100% of usable capacity, which sits between the hypervisor overhead below and the buffer above, beside High Availability](images/performance-vs-capacity-total-vs-usable-range-diagram.png)
@@ -157,6 +158,5 @@ corrections:
 - 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity. Corrects the book (performance is absolute).'
 - 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can.'
 review_notes:
-- 'To check: Section ''Usable capacity exists only in capacity'': reservation is subtracted from supply here, while Part 1 Capacity Model puts it on the demand side (Demand = Max (Utilization, Reservation)); see sp5-framework/capacity/capacity-dimensions (Q127).'
 status: draft
 ```
