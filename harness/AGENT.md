@@ -40,13 +40,13 @@ A model that knows nothing about the knowledge base can still reach the right fi
 | Order of checks | Numbered steps in `health-check/` and `troubleshooting/` files | `flow` tool |
 
 ### Five up-front blocks (built 2026-11-06, off until measured)
-Each is small (all five: about 1,800 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All are off by default until the benchmark shows a gain (section 7). When one is on, the trace records a `primer` step.
+Each is small (all five: about 2,800 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All are off by default until the benchmark shows a gain (section 7). When one is on, the trace records a `primer` step.
 
 | # | Block | Content | Built from |
 |---|---|---|---|
 | 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids (folders) |
-| 2 | Level 300 misreadings (`harness/misreadings.md`) | 12 short lines, each with its reason and file, that undo Internet priors: VM is not Guest OS; utilization is not contention; provider and consumer views differ; a counter means what its layer measures | `harness/misreadings.md`, section Misreadings |
-| 3 | Confusable terms | Only the pairs public text mixes up: Usage, Utilization and Demand; Ready and Latency; Run and Used; Consumed and Active; Ballooned and Swapped | `knowledge/glossary.md`, section Confusable pairs |
+| 2 | Level 300 misreadings (`harness/misreadings.md`) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | `harness/misreadings.md`, the lines under its first heading |
+| 3 | Confusable terms | 19 pairs that pass the tests of `KNOWLEDGE-ENGINEERING.md`, section 11.2: Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; swap in and swap out; KPI, SLA, SLI and model; alert and insight | `knowledge/glossary.md`, lines Not to confuse with |
 | 4 | Symptom → flow index | One line per flow file: its name and when to use it | `health-check/` and `troubleshooting/` files |
 | 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |
 

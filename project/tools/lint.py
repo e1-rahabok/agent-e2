@@ -202,6 +202,7 @@ def main():
     n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
     check_moved(ids, bad)
+    check_terminology(pdocs, bad)
     check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
 
@@ -228,6 +229,35 @@ def check_repo_terms(allowed, bad):
             for pat, use in (allowed.get('avoid_ai_speak') or {}).items():
                 if re.search(pat, line):
                     bad(f, f'line {i}: AI-speak "{re.search(pat, line).group(0)}": {use} (KNOWLEDGE-ENGINEERING.md, section 11)')
+
+
+def check_terminology(docs, bad):
+    """Glossary entries and misreadings, as the harness reads them (KNOWLEDGE-ENGINEERING.md, section 11.2)."""
+    import kb as _kb
+    g = 'knowledge/glossary.md'
+    if 'glossary' in docs:
+        area = ''
+        for line in docs['glossary'].body.split('\n'):
+            if line.startswith('## '): bad(g, f'areas are ### headings, so the glossary stays one chunk and never outranks the files: {line}')
+            if line.startswith('### '): area = line[4:].strip()
+            if area:
+                if line.startswith('- ') and not _kb.GLOSSARY_ENTRY.match(line):
+                    bad(g, f'section "{area}": an entry reads "- **Term**: meaning": {line[:50]}')
+                if line.startswith('  - '):
+                    field, sep, value = line[4:].partition(': ')
+                    if not sep or not (field in ('Also called', 'File') or field.startswith('Not to confuse with ')):
+                        bad(g, f'section "{area}": entry lines are {", ".join(_kb.GLOSSARY_FIELDS)}: {line[:50]}')
+                    elif field.startswith('Not to confuse with ') and len(field.split()) > 10:
+                        bad(g, f'section "{area}": "Not to confuse with Other term: difference" (other term up to 6 words): {line[:50]}')
+        seen = set()
+        for e in _kb.glossary(docs):
+            t = e['term']
+            if t.lower() in seen: bad(g, f'term "{t}" has two entries')
+            seen.add(t.lower())
+            if e['file'] and e['file'] not in docs: bad(g, f'term "{t}": File {e["file"]} is not a knowledge id')
+    m = os.path.join(HARNESS, 'misreadings.md')
+    for ref in re.findall(r'See `([^`]+)`', open(m).read()):
+        if ref not in docs: bad('harness/misreadings.md', f'See `{ref}` is not a knowledge id')
 
 
 def check_moved(ids, bad):

@@ -181,7 +181,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where they differ, the knowledge base wins. Prefer mechanism and reason over a definition.
 - Cite each file `id` used.
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
-- Use terms from `knowledge/glossary.md`: preferred names, defined terms, confusable pairs.
+- Use terms from `knowledge/glossary.md`: preferred names, other names, confusable terms.
 - Quote a threshold only when a file states it with its source.
 - One clarifying round (`harness/clarify.py`, `modes.converse`; rules in MISSION.md, section 5). The shipped assistant runs the conversation kind `chat`: the model may reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
 

@@ -6,6 +6,7 @@ import os
 import re
 from collections import Counter, defaultdict
 
+import kb
 from kb import FILTER_FIELDS, ROOT
 
 TOKEN = re.compile(r'[a-z0-9]+(?:[.\-][a-z0-9]+)*')
@@ -43,36 +44,14 @@ class BM25:
 
 
 def glossary_terms(docs):
-    """(term found in a question, words to add) from the glossary tables Synonyms and Words to avoid."""
-    g = docs.get('glossary')
+    """(name found in a question, preferred term) from the glossary column Also called."""
     out = []
-    if not g:
-        return out
-    for head, text in g.sections:
-        if head.startswith('Defined terms'):
-            for line in text.split('\n'):
-                cells = [c.strip() for c in line.strip().strip('|').split('|')]
-                if len(cells) < 3 or set(cells[0]) <= set('-: ') or cells[0] == 'Term':
-                    continue
-                preferred = re.sub(r'\(.*?\)', '', cells[0]).strip()
-                for a in cells[2].split(','):
-                    a = re.sub(r'\(.*?\)', '', a).strip()
-                    if len(a) > 2 and a != '-':
-                        out.append((a, preferred))
-        if head.startswith('Synonyms') or head.startswith('Words to avoid'):
-            for line in text.split('\n'):
-                cells = [c.strip() for c in line.strip().strip('|').split('|')]
-                if len(cells) < 2 or set(cells[0]) <= set('-: ') or cells[0] in ('Preferred term', 'Avoid'):
-                    continue
-                if head.startswith('Synonyms'):
-                    preferred, aliases = cells[0], cells[1].split(',')
-                else:
-                    preferred, aliases = cells[1], [cells[0]]
-                preferred = re.sub(r'\(.*?\)', '', preferred).strip()
-                for a in aliases:
-                    a = re.sub(r'\(.*?\)', '', a).strip()
-                    if len(a) > 2:
-                        out.append((a, preferred))
+    for e in kb.glossary(docs):
+        preferred = re.sub(r'\(.*?\)', '', e['term']).strip()
+        for a in e['also']:
+            a = re.sub(r'\(.*?\)', '', a).strip()
+            if len(a) > 2:
+                out.append((a, preferred))
     return out
 
 
