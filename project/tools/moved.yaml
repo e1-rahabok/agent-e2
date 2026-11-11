@@ -259,7 +259,7 @@ vsphere/storage/metrics/virtual-motherboard/provisioned-space: vsphere/technolog
 vsphere/storage/metrics/virtual-motherboard/snapshot-space: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
 vsphere/storage/metrics/virtual-motherboard/virtual-disk: vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 vsphere/storage/metrics/virtual-motherboard/virtual-disk-used: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-virtual-disk-used
-vsphere/system/concepts/capacity-model: sp5-framework/capacity/capacity-model
+vsphere/system/concepts/capacity-model: sp5-framework/capacity/supply
 vsphere/system/concepts/cluster-operations: vsphere/object-types/cluster/concepts/cluster-operations
 vsphere/system/concepts/cluster-utilization-vs-contention: vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
 vsphere/system/concepts/esxtop: vsphere/tools/esxtop/overview
@@ -388,9 +388,9 @@ metrics/naming-patterns: sp5-framework/observability/naming-patterns
 metrics/resource-nature: sp5-framework/observability/resource-nature
 metrics/thresholds: sp5-framework/observability/thresholds
 metrics/units: sp5-framework/observability/units
-operations-management/capacity/capacity-dimensions: sp5-framework/capacity/capacity-dimensions
+operations-management/capacity/capacity-dimensions: sp5-framework/capacity/demand
 operations-management/capacity/capacity-management-process: sp5-framework/capacity/capacity-management
-operations-management/capacity/capacity-model: sp5-framework/capacity/capacity-model
+operations-management/capacity/capacity-model: sp5-framework/capacity/supply
 operations-management/capacity/class-of-service-planning: sp5-framework/capacity/class-of-service-planning
 operations-management/capacity/health-check/can-cluster-take-more-vms: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 operations-management/capacity/host-spec-from-class-of-service: sp5-framework/capacity/host-spec-from-class-of-service
@@ -466,3 +466,5 @@ vcf-operations/dashboards/performance-dashboards: sp5-framework/outputs/performa
 vcf-operations/reports/report-design: sp5-framework/outputs/report-design
 vcf-operations/reports/reports-vs-dashboards: sp5-framework/outputs/reports-vs-dashboards
 sp5-framework/capacity/capacity-management-process: sp5-framework/capacity/capacity-management
+sp5-framework/capacity/capacity-model: sp5-framework/capacity/supply
+sp5-framework/capacity/capacity-dimensions: sp5-framework/capacity/demand

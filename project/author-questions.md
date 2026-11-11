@@ -38,7 +38,7 @@ Each entry has:
 | 6  | 4        | [Overhead: classification, hypervisor overhead and CPU virtualization overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md)                            |
 | 7  | 4        | [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md)                                                                                   |
 | 8  | 4        | [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md)                                                               |
-| 9  | 4        | [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-model.md)                                                |
+| 9  | 4        | [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md)                                                |
 | 10 | 4        | [CPU frequency, Turbo and their impact on a VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md)                                            |
 | 11 | 4        | [Snapshot impact on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/snapshot-impact.md)                                                         |
 | 12 | 4        | [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md)                                                                               |
@@ -652,6 +652,15 @@ Each entry has:
 - For you: pick (A)-(D), or give the field rule.
 - Answer:
 
+### Q177 · Capacity Planning Stage.xlsx · Memory tiering on top of the memory overcommit ratio
+- Files: [Overcommit ratio](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/overcommit.md) (section Per resource); [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (sections Example implementation, Planning calculator); [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md) (section Capacity management); [harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py) (functions vms_per_host, consumption).
+- Search: not from the book; the spreadsheet input "memory tiering" and the knowledge base line "Memory tiering serves memory beyond 1:1".
+- Written as now: class-of-service-planning says tiering serves the memory beyond 1:1 of Silver (1.2:1) and Bronze (1.4:1). The calculator adds the tiering capacity on top: allocation supply = DRAM × class ratio + tiering. memory-tiering (Performance Best Practices 9.1) says not to overcommit on top of tiering: the ratio counts DRAM only, and the NVMe tier exists to avoid overcommit. The calculator default is 0 GB of tiering, so the default numbers are not affected.
+- Question: with tiering on, which is meant? (A) the class ratio is served by tiering: allocation supply = max(DRAM × ratio, DRAM + tiering), no overcommit on top; (B) the ratio applies to DRAM and tiering adds on top (the calculator today); (C) tiering hosts run the class at 1:1 against DRAM + tiering.
+- Proposed answer (expert call): (A). The tier replaces the ESXi reclamation that a ratio above 1:1 would otherwise need, so it is the same memory counted once. (B) counts the beyond-1:1 memory twice and goes against the vendor guidance; (C) drops the class difference.
+- For you: (A), (B) or (C).
+- Answer:
+
 ## Resolved
 
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
@@ -752,7 +761,7 @@ Each entry has:
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
 
-- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Demand).
+- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Demand).
 - Search 1: "Demand = Max (Utilization, Reservation)"
 - Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
 - Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
@@ -789,7 +798,7 @@ Each entry has:
 
 ### Q116 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
 
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
 - Search: "I divide the capacity into 10 equal chunks"
 - Question: the book puts 40-80% of usable capacity in green and 80% as best. Cluster Consumption (%) has CPU green 0-55, yellow 55-70, orange 70-85, red 85-100, and memory green 0-70. A 10-host N+1 cluster at the best 80% of usable is 72% of total: orange on CPU in Cluster Consumption. (a) Is Cluster Consumption measured against total or usable capacity? (b) Which governs? (c) Give values for yellow, orange and red above 80%. (d) Should Cluster Consumption get a grey band (0-40%) for wastage? The plan lists grey values for capacity bands as open.
 - Written as now: zones as rules (grey below 40%, best 80%); Cluster Consumption bands unchanged.
@@ -849,7 +858,7 @@ Each entry has:
 - Answer: Author (2026-11-11): users rarely tell the Guest OS from the VM, so the first step is to ask the application team to quantify the slowness in the Windows or Linux counters they can see; developers have no access to vSphere or Kubernetes metrics. Guest OS counters belong outside the VM, so they leave step 4 (consumption). Applied: vm-slow step 1 hands over to two new flows, guest-os/system/troubleshooting/ms-windows-slow and guest-os/system/troubleshooting/linux-os-slow; VM consumption reads VM counters only; 8 steps.
 
 ### Q171 · Scope · Generic public cloud in the SP5 Framework
-- Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Business, application and IaaS layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
+- Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Business, application and IaaS layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
 - Search 1: "Customers usually aim at half the public cloud price"
 - Search 2: "Public cloud free tiers are smaller"
 - Search 3: "Public cloud providers have no oversizing problem"
@@ -1261,7 +1270,7 @@ Each entry has:
 
 ### Q118 · Part 1 > 4 Dimensions of Capacity > Reservation | Share · Unit of CPU reservation
 
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Reservation and share).
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Reservation and share).
 - Search: "That’s why the unit is Hertz, milliseconds"
 - Question: CPU reservation is set in MHz. What does "milliseconds" refer to? Share is the runtime one (time slices). Remove "milliseconds" from the reservation column?
 - Written as now: reservation in Hz; share in time slices.
@@ -1270,7 +1279,7 @@ Each entry has:
 
 ### Q117 · Part 1 > 4 Dimensions of Capacity > Allocation · Memory tiering version
 
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Allocation), [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Allocation), [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md).
 - Search: "a new feature in vSphere 8"
 - Question: memory tiering was a tech preview in vSphere 8.0 Update 3 and is supported from vSphere 9.0. The knowledge base says introduced in 9.0. Change the book to vSphere 9?
 - Written as now: no version in the capacity file; memory-tiering says 9.0.
@@ -1279,7 +1288,7 @@ Each entry has:
 
 ### Q115 · Part 1 > Capacity Management > "Good" Advice · Why each statement is wrong
 
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md) (section Traps).
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md) (section Traps).
 - Search 1: "Memory Active should not exceed 50-60%"
 - Search 2: "Memory should be running at high state"
 - Question: the book lists 9 statements as wrong but does not say why. Claude wrote one reason per statement as a trap. Confirm or correct each:
@@ -1298,7 +1307,7 @@ Each entry has:
 
 ### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
 
-- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md).
+- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
 - Search 1: "e first place, by using progressive pricing"
 - Search 2: "They need to be reviewed as complimentary"
 - Search 3: "measured againsts usable"
@@ -1762,7 +1771,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q050 · vCenter API counters · clusterServices.effectivecpu and effectivemem vs totalmhz and totalmb (low priority)
 
-- Files: [knowledge/catalog/vcenter-api-counters.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/vcenter-api-counters.yaml) (ClusterComputeResource rows); candidate: [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-model.md).
+- Files: [knowledge/catalog/vcenter-api-counters.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/vcenter-api-counters.yaml) (ClusterComputeResource rows); candidate: [Capacity model: total, usable, buffer, projection](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md).
 - Search: not from the book. vCenter 9.1.0 API summaries: effectivecpu "Total available CPU resources of all hosts within a cluster"; effectivemem "Total amount of machine memory of all hosts in the cluster that is available for use for virtual machine memory and overhead".
 - Question: Claude's own knowledge (the API's cluster summary) says effective capacity excludes hosts in maintenance mode or not responding, and virtualization overhead. Is that right, and should the knowledge base prefer it over totalmhz and totalmb for usable capacity?
 - Written as now: listed in the catalog only.

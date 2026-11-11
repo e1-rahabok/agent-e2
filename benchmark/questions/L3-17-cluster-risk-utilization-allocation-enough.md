@@ -32,7 +32,7 @@ input: [text]
 task: explain-mechanism
 knowledge:
   - vsphere/object-types/cluster/models/cluster-risk
-  - sp5-framework/capacity/capacity-model
+  - sp5-framework/capacity/demand
   - vsphere/object-types/cluster/models/close-for-business
 attachments: []
 origin: synthetic

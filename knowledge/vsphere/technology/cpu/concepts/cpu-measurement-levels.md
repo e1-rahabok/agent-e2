@@ -123,7 +123,7 @@ related:
 - vsphere/technology/cpu/metrics/host/usage
 - vsphere/technology/cpu/metrics/host/demand
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - vsphere/architecture/overhead
 images:
 - path: ../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png

@@ -151,7 +151,7 @@ rows:
   match: ['over-?commit', 'consolidation ratio', 'vcpu ?(to|:) ?p?core', 'vcpu ?: ?pcpu']
   means: overcommit allocation ratio contention
   note: 'Only allocation can be overcommitted. A ratio says nothing about performance by itself; contention does.'
-  files: [vsphere/architecture/resource-controls, sp5-framework/capacity/capacity-model]
+  files: [sp5-framework/capacity/overcommit, vsphere/architecture/resource-controls]
 - id: rightsizing
   match: ['right-?siz', 'oversized', 'undersized', 'downsiz']
   means: Guest OS sizing VM footprint rightsizing
@@ -166,7 +166,7 @@ rows:
   match: ['(cluster|environment)\b[^.?\n]{0,25}\b(full|out of capacity|running out)', 'how many (more )?vms', 'capacity (left|remaining)', 'headroom']
   means: Cluster capacity usable capacity can cluster take more VMs
   note: 'Capacity is read against usable capacity (total minus HA, buffer and overhead), and performance decides first: a cluster can be full with low utilization.'
-  files: [vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms, sp5-framework/capacity/capacity-model]
+  files: [vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms, sp5-framework/capacity/supply]
 - id: hyper-threading
   match: ['hyper-?thread', '\bht\b', '\bsmt\b']
   means: Hyper-Threading thread core utilization
@@ -229,4 +229,4 @@ rows:
   match: ['\brisk\b[^.?\n]{0,40}\bcluster', '\bcluster\b[^.?\n]{0,40}\brisk\b', 'quantify risk']
   means: Cluster Risk leading indicator contention capacity Time Remaining
   note: 'Ambiguous: "cluster risk" can mean (a) Cluster Risk (%), how close the hosts are to contention (worst host: utilization, saturation, reservation, allocation, monster VM); (b) capacity runway, Time Remaining against a projection; (c) availability risk, surviving a host failure. Ask which only when the question does not tell and the answers differ; otherwise answer the likely one and name it. Utilization and allocation alone miss saturation, reservation, monster VMs and the worst host.'
-  files: [vsphere/object-types/cluster/models/cluster-risk, sp5-framework/capacity/capacity-model]
+  files: [vsphere/object-types/cluster/models/cluster-risk, sp5-framework/capacity/forecasting]

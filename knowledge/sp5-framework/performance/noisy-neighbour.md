@@ -127,7 +127,7 @@ internal_derive:
 related:
 - sp5-framework/capacity/vm-size
 - vsphere/object-types/resource-pool/configuration/scalable-shares
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/concepts/performance-vs-capacity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/tools/esxtop/cpu

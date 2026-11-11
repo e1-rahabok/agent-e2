@@ -25,7 +25,7 @@
 
 ## Consumer vs provider capacity
 - Consumer: one VM, container or application; rightsize it and reclaim what is unused (`sp5-framework/capacity/rightsizing`, `sp5-framework/capacity/reclamation`).
-- Provider: the shared infrastructure, because a shortage hits many consumers (`sp5-framework/capacity/capacity-model`).
+- Provider: the shared infrastructure, because a shortage hits many consumers (`sp5-framework/capacity/supply`).
 - Special clusters change the capacity model. A stretched cluster gets its own model and view: one object or custom group per site, shown side by side.
 
 ## Misconceptions
@@ -57,7 +57,7 @@ object:
 - Datastore
 internal_derive:
 - sp5-framework/outputs/dashboard-design
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 related:
 - sp5-framework/capacity/rightsizing
 - sp5-framework/capacity/reclamation

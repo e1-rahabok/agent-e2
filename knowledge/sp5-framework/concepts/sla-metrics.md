@@ -62,7 +62,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - Operational Availability: 100%. All three are inside the scheduled window.
   - Actual Availability counting the Guest OS only: 45 minutes, 99.90%.
   - Actual Availability counting until the database is restored: 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%.
-- Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity (`sp5-framework/capacity/capacity-model`, section Total vs usable after host loss).
+- Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity (`sp5-framework/capacity/supply`, section Total vs usable after host loss).
 
 | Hosts out | Event | Actual Availability | Operational Availability |
 |---|---|---|---|
@@ -163,7 +163,7 @@ object:
 internal_derive:
 - sp5-framework/performance/kpi-vs-sla
 related:
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/concepts/class-of-service
 - sp5-framework/concepts/iaas-business
 - vsphere/architecture/vm-vs-guest-os

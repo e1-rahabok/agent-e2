@@ -15,7 +15,7 @@
 
 ## Usable capacity exists only in capacity
 - Capacity subtracts HA, buffer and hypervisor overhead from total capacity. What remains is usable capacity, and capacity is measured against it.
-- Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice (`sp5-framework/capacity/capacity-model`).
+- Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice (`sp5-framework/capacity/demand`, section Demand).
 - Performance ignores all four. It measures what happens, against total capacity. These factors can cause a performance problem, but they are not inputs to a performance metric.
 - No other pillar has a usable part: no usable performance, usable availability or usable compliance.
 ![Performance management spans 0-100% of total capacity; capacity management spans 0-100% of usable capacity, which sits between the hypervisor overhead below and the buffer above, beside High Availability](images/performance-vs-capacity-total-vs-usable-range-diagram.png)
@@ -25,7 +25,7 @@
 - By class of service, a Gold cluster should score higher Performance (%), lower consumption (%) and lower Risk (%) than a Bronze cluster.
 - Capacity is relative to usable capacity, not total capacity. The real utilization is lower; divided by the smaller usable capacity, the capacity score reads higher.
 - Utilization is not managed for its own sake. Alone it means nothing: 0% can be bad, 100% can be good. It is an input to both pillars, read differently by each.
-- Capacity reads demand, not utilization: demand is the higher of utilization and reservation. Model: `sp5-framework/capacity/capacity-model`.
+- Capacity reads demand, not utilization: demand is the higher of utilization and reservation. Model: `sp5-framework/capacity/demand`.
 
 | Reading | Performance | Capacity |
 |---|---|---|
@@ -111,7 +111,8 @@ object:
 - HostSystem
 - ClusterComputeResource
 internal_derive:
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
+- sp5-framework/capacity/demand
 related:
 - sp5-framework/performance/kpi-vs-sla
 - sp5-framework/concepts/realms-and-layers

@@ -51,7 +51,7 @@ internal_derive:
 - sp5-framework/outputs/dashboard-design
 related:
 - sp5-framework/observability/thresholds
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Overall Design Approach > Design Consideration > Color as Meaning (Threshold, Gradient, Example Implementation)'

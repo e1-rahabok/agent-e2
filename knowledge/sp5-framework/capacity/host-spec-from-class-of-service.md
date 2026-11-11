@@ -68,7 +68,7 @@ internal_derive:
 - sp5-framework/performance/noisy-neighbour
 related:
 - sp5-framework/concepts/class-of-service
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/concepts/iaas-business
 - vsphere/architecture/overhead
 source:
