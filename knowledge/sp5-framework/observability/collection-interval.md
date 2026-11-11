@@ -25,8 +25,8 @@
 - VCF Operations collects every 5 minutes by default. A problem shorter than 5 minutes can be missed.
 - Example: idle 08:00:00-08:02:30, busy 08:02:30-08:07:30, idle again. Collections at 08:00, 08:05 and 08:10 each average half busy, half idle. To appear whole in one point, a spike may have to last 10 minutes.
 - The 100% of any millisecond value in VCF Operations is 20,000 ms, not 300,000 ms: it averages the 15 20-second values. CPU Ready of 3,000 ms is 15%, not 1%.
-- Storing all 15 20-second values costs 15x the data. Usually only the peak is used: `vcf-operations/features/peak-20-second-metrics`.
-- vCenter statistics levels do not apply to VCF Operations. It collects from vCenter through its own filter, set in the policy (`vsphere/tools/vsphere-client/vcenter-statistics`).
+- Storing all 15 20-second values costs 15x the data. Usually only the peak is used: [`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md).
+- vCenter statistics levels do not apply to VCF Operations. It collects from vCenter through its own filter, set in the policy ([`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md)).
 - The vSAN API returns the latest value, not the average or peak. At a 5-minute cycle that is second 300 only.
 - Collection frequency is not granularity: VCF Operations collects every 5 minutes but takes 15 20-second points per cycle.
 
@@ -47,7 +47,7 @@
 - Start from the fix (add hardware, change a setting), list the metrics it requires, then the granularity each requires.
 - 1-20 seconds is required for contention metrics only. Consumption and context: 5 minutes.
 - Higher resolution also helps where a contention metric does not exist. A VM has no network latency or retransmit metric, only dropped packets; read packets per second and throughput at high resolution instead.
-- 2-second data in VCF Operations 9.1: `vcf-operations/features/real-time-metrics`.
+- 2-second data in VCF Operations 9.1: [`vcf-operations/features/real-time-metrics`](../../vcf-operations/features/real-time-metrics.md).
 
 ## Misconceptions
 - "CPU Ready 3,000 ms in a 5-minute VCF Operations point is 1%" → the base is 20,000 ms: 15%.

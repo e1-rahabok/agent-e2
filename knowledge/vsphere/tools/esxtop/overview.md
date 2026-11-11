@@ -29,7 +29,7 @@
 | Batch | `esxtop -b -a -d <seconds> -n <iterations> > file.csv` | Minimum supported delay 10 seconds; shorter can cause issues. Runs until n iterations or Ctrl+C. |
 | Replay | Collect with `vm-support -p -i <interval> -d <duration>`, extract, then `esxtop -R <directory>` | Replays the snapshots captured by vm-support. |
 
-- esxtop samples are much finer than vCenter history (20-second real-time, 5-minute 1 Day). Use batch mode to keep a burst for later analysis. See `vsphere/tools/vsphere-client/vcenter-statistics`.
+- esxtop samples are much finer than vCenter history (20-second real-time, 5-minute 1 Day). Use batch mode to keep a burst for later analysis. See [`vsphere/tools/vsphere-client/vcenter-statistics`](../vsphere-client/vcenter-statistics.md).
 - `-a` exports every counter. Without it, batch exports the fields saved with the W command in the configuration file.
 - Replay works only on esxtop of the same ESX version that produced the vm-support bundle. Batch CSV output cannot be replayed.
 - Secure mode (`-s`) disables changing the delay.

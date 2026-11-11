@@ -13,11 +13,11 @@
 
 ## Memory
 - Too many size variants.
-- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB of VM RAM per vCPU, so 64 cores with 128 threads maps to 512 GB (1 vCPU per thread). Per class of service, the RAM that matches the CPU: `sp5-framework/capacity/host-spec-from-class-of-service`.
+- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB of VM RAM per vCPU, so 64 cores with 128 threads maps to 512 GB (1 vCPU per thread). Per class of service, the RAM that matches the CPU: [`sp5-framework/capacity/host-spec-from-class-of-service`](../../../../sp5-framework/capacity/host-spec-from-class-of-service.md).
 - Large pages: keep them on when performance matters more than memory savings.
 
 ## Power management
-- BIOS set to OS controlled, so ESXi manages power; ESXi set to Balanced, unless the workload requires otherwise. Details: `vsphere/technology/cpu/configuration/host-power-management`.
+- BIOS set to OS controlled, so ESXi manages power; ESXi set to Balanced, unless the workload requires otherwise. Details: [`vsphere/technology/cpu/configuration/host-power-management`](../../../technology/cpu/configuration/host-power-management.md).
 
 ## Availability
 - Host quarantined, disconnected from vCenter or cluster, unreachable or unresponsive, or powered off.

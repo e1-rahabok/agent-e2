@@ -1,7 +1,7 @@
 # Direct device access, SR-IOV and DPUs
 
 ## DirectPath I/O
-- Uses Intel VT-d or AMD-Vi hardware support. See `vsphere/technology/cpu/concepts/hardware-assisted-virtualization`.
+- Uses Intel VT-d or AMD-Vi hardware support. See [`vsphere/technology/cpu/concepts/hardware-assisted-virtualization`](../../cpu/concepts/hardware-assisted-virtualization.md).
 - The guest OS accesses a physical NIC directly, instead of an emulated device (for example E1000) or a paravirtualized device (for example VMXNET or VMXNET3).
 - Gain: limited increases in throughput, and a reduction in CPU cost for networking-intensive workloads.
 - Not compatible with:

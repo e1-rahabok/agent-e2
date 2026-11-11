@@ -11,28 +11,28 @@
 - Red: for 15 minutes, Guest OS Peak CPU Queue above 20 and VM CPU Net Run above 75%.
 - Orange: not set, to reduce noise. To set one: Guest OS Peak CPU Queue above 10 and VM CPU Net Run above 75%.
 - Why 15 minutes and Net Run: the queue counter gives false positives, so the wait is longer and Net Run confirms a real workload.
-- Use it with the VM CPU contention and VM CPU consumption alerts (`vsphere/technology/cpu/configuration/cpu-alerts`). Remediation:
+- Use it with the VM CPU contention and VM CPU consumption alerts ([`vsphere/technology/cpu/configuration/cpu-alerts`](../../../vsphere/technology/cpu/configuration/cpu-alerts.md)). Remediation:
   1. VM CPU contention alert also fired → follow its remediation.
   2. VM CPU consumption alert also fired → follow its remediation.
   3. Neither → find why the application creates so many threads. Compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
-- Metrics: `guest-os/cpu/metrics/run-queue`, `vsphere/technology/cpu/metrics/virtual-motherboard/net-run`.
+- Metrics: [`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/net-run`](../../../vsphere/technology/cpu/metrics/virtual-motherboard/net-run.md).
 
 ## Disk queue alert
 - Red: for 5 minutes, 20-second peak Guest OS disk queue above 10,000 and VM CPU Usage above 1 GHz.
 - Orange: for 5 minutes, 20-second peak Guest OS disk queue above 5,000 and VM CPU Usage above 1 GHz.
 - Neither Windows nor Linux gives official guidance. The values are set high; adjust them to the environment. With too many false positives, disable orange.
-- Metric: `guest-os/storage/metrics/disk-queue`.
+- Metric: [`guest-os/storage/metrics/disk-queue`](../../storage/metrics/disk-queue.md).
 
 ## Other contention: build your own
 - Other Guest OS problems not caused by virtualization have thresholds that vary widely by application, so no alert is defined. Build your own for:
-  - CPU context switches consistently high. Tell the developers it can slow the application. If VM CPU Net Run and the run queue are both low, reduce the vCPU count (`guest-os/cpu/metrics/context-switch`).
+  - CPU context switches consistently high. Tell the developers it can slow the application. If VM CPU Net Run and the run queue are both low, reduce the vCPU count ([`guest-os/cpu/metrics/context-switch`](../../cpu/metrics/context-switch.md)).
   - Heavy memory paging with many page faults.
   - Many outstanding disk operations.
   - Network packets dropped (requires the Telegraf agent).
 
 ## Consumption: daily checks, no alert
 - Consumption alerts at the Guest OS level give false positives. Proactive checks instead:
-  - CPU usage disparity consistently high: ask the VM owner why the application cannot use all vCPUs equally. Reduce the vCPU count if the application does not use them, above all when context switches are high and the run queue is low (`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`).
+  - CPU usage disparity consistently high: ask the VM owner why the application cannot use all vCPUs equally. Reduce the vCPU count if the application does not use them, above all when context switches are high and the run queue is low ([`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`](../../../vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity.md)).
   - Free memory consistently near 0 MB with moderate or heavy paging: ask the owner whether performance suffers. Benchmark the application before and after adding memory, because too much memory can reduce performance.
   - Low disk space: not implemented. Some partitions, such as swap, are always near 100%. It cannot be done at the VM virtual disk layer either.
 

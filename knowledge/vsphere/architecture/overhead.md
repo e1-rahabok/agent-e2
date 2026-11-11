@@ -147,11 +147,11 @@
   - migrate VMs to another host. DRS can do this automatically.
 
 ## Host CPU monitoring
-- Moved to `vsphere/object-types/esxi/health-check/esxi-health-check`, section Documentation guidance (esxtop).
+- Moved to [`vsphere/object-types/esxi/health-check/esxi-health-check`](../object-types/esxi/health-check/esxi-health-check.md), section Documentation guidance (esxtop).
 
 ## Misconceptions
 - Counting snapshots, HA spare hosts or vSAN FTT as virtualization overhead → wrong. They are optional capabilities.
-- Area C in `vsphere/architecture/vm-vs-guest-os` (work invisible to the guest) is not the same as overhead.
+- Area C in [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md) (work invisible to the guest) is not the same as overhead.
 - "Use kernel reservation as overhead" → unstable, and too low or too high depending on the stack.
 - "Memory | VMkernel consumed = all hypervisor memory" → system group only.
 - "Overcommit is never safe" → overcommit is allowed in most environments. The risk is saturation, which happens when VMs use their full allocations at the same time.

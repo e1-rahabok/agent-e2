@@ -22,7 +22,7 @@
 - Environments with extensive small memory pages, such as many VDI deployments: sharing can reduce memory usage considerably.
 
 ## Interaction with large pages
-- ESX does not share 2 MB large pages. See `vsphere/technology/memory/concepts/large-memory-pages`.
+- ESX does not share 2 MB large pages. See [`vsphere/technology/memory/concepts/large-memory-pages`](large-memory-pages.md).
 - Page sharing can start only when overcommitment is high enough to break large pages into small pages.
 
 ## Misconceptions

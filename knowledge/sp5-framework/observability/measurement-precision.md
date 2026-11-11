@@ -17,7 +17,7 @@
 
 ## Past tense metrics
 - Some metric names are in past tense because the value reflects what happened in the past, not current activity.
-- See `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`.
+- See [`vsphere/technology/memory/metrics/virtual-motherboard/ballooned`](../../vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md).
 
 ## Metadata
 ```yaml

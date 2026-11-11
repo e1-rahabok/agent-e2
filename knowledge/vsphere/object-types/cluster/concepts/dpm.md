@@ -19,11 +19,11 @@
 - DPM considers both CPU and memory demand, but it mostly responds to changes in CPU demand.
 
 ## Relation to DRS
-- DPM uses DRS. Most DRS best practices also apply to DPM. See `vsphere/object-types/cluster/concepts/drs-overview`.
+- DPM uses DRS. Most DRS best practices also apply to DPM. See [`vsphere/object-types/cluster/concepts/drs-overview`](drs-overview.md).
 
 ## DPM vs host power management
 - DPM powers off hosts to save power.
-- Host power management reduces power on hosts that stay powered on. See `vsphere/technology/cpu/configuration/host-power-management`.
+- Host power management reduces power on hosts that stay powered on. See [`vsphere/technology/cpu/configuration/host-power-management`](../../../technology/cpu/configuration/host-power-management.md).
 - DPM and host power management can be used together for the best power conservation.
 - Host power management policies allow efficient use of the hosts that remain on. Using both together can save more power than either alone.
 

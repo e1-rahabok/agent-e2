@@ -3,7 +3,7 @@
 ## Question
 - Can this vSphere cluster take N more VMs, a project, or a VM upsize?
 - The answer is yes or no, with the resource that limits it and the reason.
-- An operational question, answered by a decision tree; not a health check. The cluster health check reads the result of this tree in its capacity step (`vsphere/object-types/cluster/health-check/cluster-health-check`, step 6).
+- An operational question, answered by a decision tree; not a health check. The cluster health check reads the result of this tree in its capacity step ([`vsphere/object-types/cluster/health-check/cluster-health-check`](../health-check/cluster-health-check.md), step 6).
 - A closed cluster accepts no new VM and no VM upsize. Once capacity, performance and risk metrics exist, the decision can be automated: self-driving capacity management.
 
 ## Flow
@@ -29,38 +29,38 @@ flowchart TD
 
 ## Checks, in order
 1. Goal (ClusterComputeResource). Ask whether the customer runs the cluster to its limit, maximizing utilization.
-   - No → the basic answer is VCF Operations' own Capacity Remaining (%) and Time Remaining (days) for the cluster (`sp5-framework/capacity/forecasting`, section Reading the two numbers; how they are computed: `vcf-operations/features/capacity-forecast`). Give them with what they mean: Capacity Remaining is a 3-day projection; Time Remaining is the days until the forecast crosses usable capacity.
+   - No → the basic answer is VCF Operations' own Capacity Remaining (%) and Time Remaining (days) for the cluster ([`sp5-framework/capacity/forecasting`](../../../../sp5-framework/capacity/forecasting.md), section Reading the two numbers; how they are computed: [`vcf-operations/features/capacity-forecast`](../../../../vcf-operations/features/capacity-forecast.md)). Give them with what they mean: Capacity Remaining is a 3-day projection; Time Remaining is the days until the forecast crosses usable capacity.
    - No, and the customer does not trust these numbers → why they differ from the customer's expectation is a VCF Operations product question, outside Agent E2 1.0: say so.
-   - Yes → the closure model of the SP5 Framework (`sp5-framework/capacity/demand`) → step 2.
-2. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA no longer meets its failover capacity → no; fix the state first. Admission control counts reservations, not usage. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`. Green → step 3.
+   - Yes → the closure model of the SP5 Framework ([`sp5-framework/capacity/demand`](../../../../sp5-framework/capacity/demand.md)) → step 2.
+2. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA no longer meets its failover capacity → no; fix the state first. Admission control counts reservations, not usage. See [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md). Green → step 3.
 3. Overcommit (ClusterComputeResource). Cluster planned without overcommit (1:1) → step 4. Overcommitted → step 5.
-4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; `sp5-framework/capacity/supply`). Allocation reaches usable capacity → no: closed. Below → step 7.
+4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; [`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md)). Allocation reaches usable capacity → no: closed. Below → step 7.
 5. Consumption and performance (ClusterComputeResource). Both read at the 95th percentile of the last 24 hours, with the same thresholds for production and non-production. Either one red → no: closed.
-   - Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.
-   - Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
-   - The vCommunity management pack automates this step and step 6 with one band set for every cluster: `vsphere/object-types/cluster/models/close-for-business`.
+   - Cluster Consumption (%) ([`vsphere/object-types/cluster/models/cluster-consumption`](../models/cluster-consumption.md)): red above 80%, orange above 60%.
+   - Cluster Performance (%) ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
+   - The vCommunity management pack automates this step and step 6 with one band set for every cluster: [`vsphere/object-types/cluster/models/close-for-business`](../models/close-for-business.md).
    - Neither red → step 6.
-6. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours (`vsphere/object-types/cluster/models/cluster-risk`):
+6. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md)):
    - production: above 60% (orange) → no: closed;
    - non-production: above 80% (red) → no: closed.
    - Read the sub-metrics, not only the score: a worse sub-metric can lower the score.
    - Below the limit, or consumption and performance not both orange → open → step 7.
 7. Fit of the new VMs (ClusterComputeResource, VirtualMachine).
-   - Reservations: they must fit unreserved capacity; leave at least 10% unreserved (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`).
-   - Overcommit: the CPU and memory overcommit rows of Cluster Risk after the new VMs (`vsphere/object-types/cluster/models/cluster-risk`).
-   - Size: a monster VM (more than 50% of a host's physical cores, or more than 40% of its DRAM or 256 GB, whichever is smaller) raises contention risk even at low utilization (`vsphere/object-types/cluster/models/cluster-risk`, section Monster VM).
-   - Memory: ballooning starts only near 99% host use, so set the normal ceiling from the HA case; with 12 hosts sized for 11, 99% × 11 / 12 = 90.75% (`vsphere/technology/memory/concepts/host-memory-states`).
+   - Reservations: they must fit unreserved capacity; leave at least 10% unreserved ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md)).
+   - Overcommit: the CPU and memory overcommit rows of Cluster Risk after the new VMs ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md)).
+   - Size: a monster VM (more than 50% of a host's physical cores, or more than 40% of its DRAM or 256 GB, whichever is smaller) raises contention risk even at low utilization ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md), section Monster VM).
+   - Memory: ballooning starts only near 99% host use, so set the normal ceiling from the HA case; with 12 hosts sized for 11, 99% × 11 / 12 = 90.75% ([`vsphere/technology/memory/concepts/host-memory-states`](../../../technology/memory/concepts/host-memory-states.md)).
    - What the new VMs change, at their CPU and memory concurrent peak: Cluster Risk (%) moves most (monster VM, overcommit ratio, the highest ESXi utilization prorated among hosts, reservation); Cluster Consumption (%) moves with ESXi CPU thread utilization and memory consumed; Cluster Performance (%) cannot be modelled reliably, so it is kept unchanged. Not considered: DRS rules (VM-VM anti-affinity, VM-host should or must), HA admission control, vSAN or datastore capacity.
    ![Impact of additional workload, assuming CPU and memory concurrent peak: biggest impact on Risk (%) (monster VM, overcommit ratio, highest ESXi utilization prorated among hosts, reservation); Consumption (%) (ESXi CPU thread utilization, ESXi memory consumed); Contention (%): reliable modelling is not possible, the score is kept unchanged. Not considered: DRS rules, HA admission control, vSAN or datastore capacity](../images/cluster-new-workload-impact-on-risk-consumption-contention-diagram.png)
    - Any no → no, or change the VM design. All fit → step 8.
-8. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room (`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`). Then answer yes, with the resource that fills first and the time remaining from the projection (`sp5-framework/capacity/forecasting`).
+8. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room ([`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../../../technology/cpu/metrics/cluster/inter-host-imbalance.md)). Then answer yes, with the resource that fills first and the time remaining from the projection ([`sp5-framework/capacity/forecasting`](../../../../sp5-framework/capacity/forecasting.md)).
 
 ![Closure thresholds, all at the 95th percentile of the last 24 hours. Consumption (%): red above 80%, orange above 60%, production and non-production. Performance (%): red below 20%, orange below 40%, production and non-production. Risk (%): production orange above 60%; non-production red above 80%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
 
 ## Why this order
 - The goal first: a customer who does not run clusters to the limit has a sufficient answer in VCF Operations' own capacity metrics; the closure model is for running to the limit.
 - State first: in yellow or red, reservations are not met; any capacity number is built on a broken base.
-- Overcommit next: without overcommit, utilization, reservation and contention do not decide; allocation against usable capacity is the only input (`sp5-framework/capacity/demand`, section No overcommit).
+- Overcommit next: without overcommit, utilization, reservation and contention do not decide; allocation against usable capacity is the only input ([`sp5-framework/capacity/demand`](../../../../sp5-framework/capacity/demand.md), section No overcommit).
 - Capacity and performance before risk: either one red is enough to close. Risk is a leading indicator that buys time; it decides only the grey case where both are orange.
 - Production closes on a lower risk than non-production: a critical cluster has a lower risk threshold.
 - Contention overrides utilization: a cluster that cannot serve its current VMs has no remaining capacity, whatever utilization says.

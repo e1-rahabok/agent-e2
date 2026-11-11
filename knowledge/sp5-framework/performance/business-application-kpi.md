@@ -3,21 +3,21 @@
 ## Why the infrastructure layer measures it
 - A Level 300 view: the business application is the application team's job, measured by transaction monitoring; the infrastructure team measures VMs, hosts and clusters. That leaves the most important question unanswered.
 - The question the infrastructure team must answer is per application: is the infrastructure serving application X? A business owner complains about internet banking, not about a cluster.
-- Troubleshooting eliminates layers (`sp5-framework/concepts/realms-and-layers`). Each layer needs a KPI for the application, so the infrastructure layer needs the infrastructure slice of the application, not only a cluster KPI.
+- Troubleshooting eliminates layers ([`sp5-framework/concepts/realms-and-layers`](../concepts/realms-and-layers.md)). Each layer needs a KPI for the application, so the infrastructure layer needs the infrastructure slice of the application, not only a cluster KPI.
 - Infrastructure metrics are horizontal: one KPI works for every application, with no agent and no per-software design. Transaction monitoring covers few applications and is built per application.
 - vSphere objects do not map to applications. An application spans tiers, VMs, pods and clusters; a cluster serves many applications.
-- Business leaders read IT by application: `sp5-framework/outputs/it-leaders-dashboards`.
+- Business leaders read IT by application: [`sp5-framework/outputs/it-leaders-dashboards`](../outputs/it-leaders-dashboards.md).
 
 ## Crown jewels
 - Crown jewels: the critical business applications, strategic to the core business. They contribute directly to revenue, to reputation, or both. A small share of the VMs.
 - Examples: an airline's ticketing and frequent flyer systems; a bank's internet banking and core banking; an online retailer's portal.
-- Check them several times a day, at least twice. The application team watches its system all day; a morning check is too late (`sp5-framework/concepts/proactive-operations`).
+- Check them several times a day, at least twice. The application team watches its system all day; a morning check is too late ([`sp5-framework/concepts/proactive-operations`](../concepts/proactive-operations.md)).
 - The question is whether the infrastructure causes the application's problem. Usually performance; sometimes availability or security.
-- They always run in the Gold class of service (`sp5-framework/concepts/class-of-service`).
+- They always run in the Gold class of service ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md)).
 
 ## How the KPI is built
-- Structure: application → tiers (web, application, database; or microservices, one pod set per function) → members (VMs, pods). In VCF Operations: `vcf-operations/dashboards/business-applications`.
-- Member: its own KPI, VM Performance (%) for a VM (`vsphere/object-types/vm/kpis/vm-performance`).
+- Structure: application → tiers (web, application, database; or microservices, one pod set per function) → members (VMs, pods). In VCF Operations: [`vcf-operations/dashboards/business-applications`](../../vcf-operations/dashboards/business-applications.md).
+- Member: its own KPI, VM Performance (%) for a VM ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)).
 - Tier: the average of its members. Members serve requests in parallel behind a load balancer, so one slow member slows only its share; a good load balancer spreads both load and failures.
 - Spare members (4 or 5 web servers where 3 carry the load):
   - availability: count the spare; one member down does not reduce tier availability while the others carry the load;

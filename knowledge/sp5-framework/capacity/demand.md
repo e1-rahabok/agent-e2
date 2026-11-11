@@ -5,7 +5,7 @@
 ![Planning stage, theory before workload: Overcommit? No (business value far exceeds infrastructure cost) → buffer, then allocation in operation. Yes (majority of cases) → workload type Mono (one class, equal treatment) or Mix (Gold, Silver, Bronze on the same infrastructure; same technique to mix Kubernetes and VMs). Planning parameters: buffer cluster wide, utilization as the expected concurrent peak, allocation through the VM price (overcommit ratio justifies pricing to the tenant), reservation in mixed-class planning. Operating stage, actual metrics for an automated system: Buffer (%), Consumption (%) as an average against usable, Contention (%) as the brake, Risk (%) from monster VM, imbalance, overcommit ratio and reservation; share replaces reservation as the QoS lever, because a reservation can starve a lower class. Most common path: overcommit, mixed workload, VMs given for free](images/capacity-model-planning-vs-operating-stage-diagram.png)
 
 - There are only 2 main models: overcommit or not-overcommit.
-- Automated capacity management requires a model: for each dimension, a formula for total capacity, usable capacity (`sp5-framework/capacity/supply`) and consumption.
+- Automated capacity management requires a model: for each dimension, a formula for total capacity, usable capacity ([`sp5-framework/capacity/supply`](supply.md)) and consumption.
 - The model follows the goal. Two questions pick it: overcommit or not, and one class of service or several.
 - Multi-cluster load balancing: every member cluster has the same settings.
 
@@ -23,10 +23,10 @@
 
 ### Overcommit: several classes (Mix)
 
-- Planning uses utilization, allocation and reservation; running uses share. What each stage uses and why: `sp5-framework/capacity/capacity-management`, section Two stages.
-- Price per class follows the overcommit ratio (`sp5-framework/capacity/overcommit`, section Ratio and price).
+- Planning uses utilization, allocation and reservation; running uses share. What each stage uses and why: [`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages.
+- Price per class follows the overcommit ratio ([`sp5-framework/capacity/overcommit`](overcommit.md), section Ratio and price).
 - Most common case: overcommit, mixed classes, VMs given for free (no chargeback). Common because of limited budget and physical constraints, not because it is the design.
-- The design is one class per cluster: shares and reservations inside one cluster give no predictable difference between classes (`sp5-framework/concepts/class-of-service`, section Compute and storage design). Mixed classes are a compromise to plan and run with care.
+- The design is one class per cluster: shares and reservations inside one cluster give no predictable difference between classes ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), section Compute and storage design). Mixed classes are a compromise to plan and run with care.
 - Planning fills the cluster to 100% of the first dimension reached: utilization, allocation or reservation.
 - A cluster of mostly Gold VMs holds fewer VMs, scores a lower Risk (%) and a higher Performance (%).
 - The same technique mixes Kubernetes and VMs as Kubernetes Node takes the shape of a vSphere VM.
@@ -57,8 +57,8 @@
 
 - When the cluster cannot serve its current workload, remaining capacity is 0 in practice: provisioning stops.
 - Two metrics:
-  - Performance (%): the actual performance (`vsphere/object-types/cluster/kpis/cluster-performance`);
-  - Stop Provisioning (yes or no): the cluster is closed for new VMs or pods, decided from Performance (%), Capacity Remaining (%) and Risk (%). Flow: `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`.
+  - Performance (%): the actual performance ([`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md));
+  - Stop Provisioning (yes or no): the cluster is closed for new VMs or pods, decided from Performance (%), Capacity Remaining (%) and Risk (%). Flow: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../../vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md).
 - A leading indicator would let VMs already in the queue be provisioned, or give a week of notice. Performance and risk do not project well: a projection of them can be wrong.
 
 ## Reservation and share
@@ -78,7 +78,7 @@ Reviewed together: each covers what the other lacks.
 - A reservation set on the VM changes HA admission control and HA restart: unreserved capacity left after host failures decides placement. Set it on a resource pool instead (Frank Denneman's recommendation, cited by the book).
 - VM-level reservation leads to lower provider utilization and higher consumer contention: placement becomes unbalanced.
 - Through a resource pool, a Gold VM may not get its reserved share on time: the DRS scheduler lags the ESXi scheduler.
-- Turbo gives spare CPU at ESXi level above the reservable base clock (`vsphere/architecture/resource-controls`, section Reservation: CPU vs memory).
+- Turbo gives spare CPU at ESXi level above the reservable base clock ([`vsphere/architecture/resource-controls`](../../vsphere/architecture/resource-controls.md), section Reservation: CPU vs memory).
 - Both add operational work: over time nobody knows which VM or pool has which reservation or share, or since when.
 - No deterministic link to performance: doubling a VM's CPU reservation or shares does not halve its CPU Ready.
 - Reservation adds complexity because it has two parts (allocated and used), and a resource pool and its child VMs carry independent settings.
@@ -102,10 +102,10 @@ Demand = Max (Utilization, Reservation)
 
 - The metric used to sell capacity: the price per class follows its overcommit ratio.
 - Leading indicator: total demand can exceed visible demand, because part of the demand has no utilization yet.
-- Not in-line: ESXi and vCenter do not schedule by allocation. So allocation can be overcommitted (`vsphere/architecture/resource-controls`, section Allocation vs reservation).
+- Not in-line: ESXi and vCenter do not schedule by allocation. So allocation can be overcommitted ([`vsphere/architecture/resource-controls`](../../vsphere/architecture/resource-controls.md), section Allocation vs reservation).
 - Usable capacity applies here too: deduct the hypervisor (VMkernel, vSAN, NSX, vSphere Replication) from total capacity.
 - Counted only for powered-on VMs.
-- The ratio of allocation to supply is the overcommit ratio: per thread for CPU, against DRAM for memory, per resource and per class in `sp5-framework/capacity/overcommit`.
+- The ratio of allocation to supply is the overcommit ratio: per thread for CPU, against DRAM for memory, per resource and per class in [`sp5-framework/capacity/overcommit`](overcommit.md).
 
 ### Invisible demand
 
@@ -122,7 +122,7 @@ Demand = Max (Utilization, Reservation)
 - New VMs are often idle for months, then grow fast.
 - Unmet demand has two parts:
   - inside the VM: an undersized VM queues inside the Guest OS; the infrastructure never sees it;
-  - outside the VM: contention, visible to the infrastructure and part of the IaaS KPI (`sp5-framework/performance/kpi-vs-sla`).
+  - outside the VM: contention, visible to the infrastructure and part of the IaaS KPI ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 ### Limitations of allocation
 
@@ -137,8 +137,8 @@ Demand = Max (Utilization, Reservation)
 ## Misconceptions
 
 - "Memory usage is 90%; aim for 80% because of HA" → Consumed is unaware of HA, and high Consumed is not a worry: memory is a cache and should be high, else the DIMMs, which are expensive, are wasted. HA is accounted in usable capacity.
-- "Memory Active should stay below 50-60% to keep a buffer to Consumed" → Active is not a capacity counter. It serves VMkernel memory management and has no use for capacity unless memory tiering is on (`vsphere/technology/memory/concepts/memory-tiering`).
-- "Each host should run in the high memory state" → High means much free memory: wastage for capacity. ESXi reclaims only near the top (`vsphere/technology/memory/concepts/host-memory-states`).
+- "Memory Active should stay below 50-60% to keep a buffer to Consumed" → Active is not a capacity counter. It serves VMkernel memory management and has no use for capacity unless memory tiering is on ([`vsphere/technology/memory/concepts/memory-tiering`](../../vsphere/technology/memory/concepts/memory-tiering.md)).
+- "Each host should run in the high memory state" → High means much free memory: wastage for capacity. ESXi reclaims only near the top ([`vsphere/technology/memory/concepts/host-memory-states`](../../vsphere/technology/memory/concepts/host-memory-states.md)).
 - "Mixed classes are the most common case, so they are the recommended design" → common because of budget and physical constraints; the design is one class per cluster.
 - "UAT at 70% CPU is fine until 85%" → not wrong but misleading: utilization alone does not close a cluster; read contention and risk.
 - "Utilization is low, so the reservation does not matter" → demand is the higher of utilization and reservation; an unused reservation is still taken.

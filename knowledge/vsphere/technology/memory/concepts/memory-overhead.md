@@ -40,7 +40,7 @@ esxcli sched swap system set -d true -n <datastore name>
 - vCenter stores `mem.overhead` at level 1 on the VM, the ESXi host, the cluster and the resource pool: host physical memory consumed by ESXi data structures for running the VMs, in KB.
 - ESXi and cluster values include the VMkernel overhead, not only the VMs' overhead.
 - The resource pool value is the sum of its VMs' overhead. It is negligible: a resource pool has no overhead of its own.
-- VM-level reading: `vsphere/technology/memory/metrics/virtual-motherboard/overhead`.
+- VM-level reading: [`vsphere/technology/memory/metrics/virtual-motherboard/overhead`](../metrics/virtual-motherboard/overhead.md).
 
 ## VMX swap
 - VMX swap can significantly reduce the per-VM VMX memory reservation, which allows more memory to be swapped out when the host is overcommitted.

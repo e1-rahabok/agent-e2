@@ -19,7 +19,7 @@
 - **NUMA**:
   - more vCPUs than cores per socket → the VM spans NUMA nodes; on a multi-socket host remote memory access lowers performance. Keep it within a socket;
   - chiplet CPUs (AMD EPYC): a 64-core CPU of 8 chiplets of 8 cores, each with its own L3 cache. A VM above 8 vCPUs spans chiplets;
-  - vSocket and vCore configured per vNUMA practice: `vsphere/technology/cpu/concepts/virtual-numa`.
+  - vSocket and vCore configured per vNUMA practice: [`vsphere/technology/cpu/concepts/virtual-numa`](../../../technology/cpu/concepts/virtual-numa.md).
 - **Large VMs**:
   - vMotion, Storage vMotion and backup take longer;
   - a monster VM running hot hurts other VMs: default shares scale with size, so it gets more under contention. Others get CPU only when it is under-utilized.
@@ -31,7 +31,7 @@
   - unmap reclamation: how much space can be returned;
   - monitor each virtual disk (IOPS, throughput, latency), not only the VM. More disks, more to monitor and troubleshoot;
   - several disks for performance: name the counter that proves one disk is not enough. One may be.
-- **Snapshot**: removed within one day of the change request. A forgotten snapshot grows and slows the VM: `vsphere/technology/storage/concepts/snapshot-impact`.
+- **Snapshot**: removed within one day of the change request. A forgotten snapshot grows and slows the VM: [`vsphere/technology/storage/concepts/snapshot-impact`](../../../technology/storage/concepts/snapshot-impact.md).
 - **Disaster recovery**: vSphere Replication settings drift when owners do not report changes. Check that every VM protected by Site Recovery is still meant to be protected; review the recovery plan: how often it runs, when it last ran.
 - **Fault Tolerance**: only on the VMs meant to have it; it brings its own complexity.
 - **vVols**: per design practice. vVols are deprecated in VCF 9.

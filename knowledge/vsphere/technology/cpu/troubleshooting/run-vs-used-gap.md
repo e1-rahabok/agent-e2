@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM CPU Run and Used differ by a wide margin, and someone asks whether the VM needs more vCPUs.
-- Run is time only; Used also moves with frequency, Hyper-Threading and work done for the VM (`vsphere/technology/cpu/metrics/virtual-motherboard/run`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`).
+- Run is time only; Used also moves with frequency, Hyper-Threading and work done for the VM ([`vsphere/technology/cpu/metrics/virtual-motherboard/run`](../metrics/virtual-motherboard/run.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/used`](../metrics/virtual-motherboard/used.md)).
 
 ## Flow
 ```mermaid
@@ -15,10 +15,10 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Contention (VirtualMachine): Ready, Co-stop, Overlap. High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. Low → step 2.
-2. System (ms) and Overlap (ms) (VirtualMachine): they move Used away from Run (`vsphere/technology/cpu/metrics/virtual-motherboard/system`). → step 3.
-3. Configuration, host (HostSystem). The host power management policy and the actual frequency (esxtop %A/MPERF) (`vsphere/technology/cpu/concepts/power-states`). → step 4.
-4. Hyper-Threading (HostSystem). Whether sibling threads are busy (`vsphere/technology/cpu/concepts/hyper-threading`).
+1. Contention (VirtualMachine): Ready, Co-stop, Overlap. High → [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](vm-cpu-contention-high.md). Low → step 2.
+2. System (ms) and Overlap (ms) (VirtualMachine): they move Used away from Run ([`vsphere/technology/cpu/metrics/virtual-motherboard/system`](../metrics/virtual-motherboard/system.md)). → step 3.
+3. Configuration, host (HostSystem). The host power management policy and the actual frequency (esxtop %A/MPERF) ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). → step 4.
+4. Hyper-Threading (HostSystem). Whether sibling threads are busy ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)).
 
 ## Why this order
 - Contention first: a VM that waits has a different problem, with its own flow.

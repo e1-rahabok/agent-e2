@@ -4,7 +4,7 @@
 - Managing alerts deals with alerts already triggered. Minimizing alerts prevents them from firing.
 - Use insight to keep alert definitions few: an alert is reserved for urgent and important issues.
 - Goal: the broadest coverage with the fewest alert storms. That takes planning of each definition, its conditions and its thresholds.
-- What an alert is (rapid, real, rare) and its colours: `sp5-framework/outputs/alerts-and-insights`.
+- What an alert is (rapid, real, rare) and its colours: [`sp5-framework/outputs/alerts-and-insights`](alerts-and-insights.md).
 
 ## One question per alert
 - For each alert: what action must the person who sees it take, today?
@@ -30,7 +30,7 @@
 | Standard production | 60 ms | 10 minutes |
 | Test and development | 120 ms | 10 minutes |
 
-- Classes of service: `sp5-framework/concepts/class-of-service`.
+- Classes of service: [`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md).
 
 ## What to alert, by pillar
 - Define the problem types of each pillar; for each type, decide whether it gets an alert.
@@ -45,7 +45,7 @@
   - Consumption alerts: red only. The orange level belongs to the daily dashboard.
   - Contention alerts: suppress at low utilization, where the application likely feels no impact. CPU usage is the proxy for application activity.
   - Sustained high utilization, above all when trending up: daily check.
-  - Keep the alert (customers would notice) apart from the insight (early, internal); both read the KPI. See `sp5-framework/performance/kpi-vs-sla`.
+  - Keep the alert (customers would notice) apart from the insight (early, internal); both read the KPI. See [`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md).
 - Security: a live attack (pair the alert with the NOC screen); undesirable events.
 - Configuration: only high-risk settings that cause urgent problems such as slowness, outage or a breach. Non-urgent configuration goes to the daily health check.
 - Compliance: only what cannot wait until tomorrow.
@@ -98,7 +98,7 @@
 | Consumption | Network | N/A | N/A | N/A | N/A |
 
 - Not yet: not implemented in the recommended set; some Guest OS alerts require the Telegraf agent. N/A: the daily check or the NOC screen serves better.
-- The definitions: `guest-os/system/configuration/guest-os-alerts`, `vsphere/technology/cpu/configuration/cpu-alerts`, `vsphere/technology/memory/configuration/memory-alerts`, `vsphere/technology/storage/configuration/storage-alerts`, `vsphere/technology/network/configuration/network-alerts`.
+- The definitions: [`guest-os/system/configuration/guest-os-alerts`](../../guest-os/system/configuration/guest-os-alerts.md), [`vsphere/technology/cpu/configuration/cpu-alerts`](../../vsphere/technology/cpu/configuration/cpu-alerts.md), [`vsphere/technology/memory/configuration/memory-alerts`](../../vsphere/technology/memory/configuration/memory-alerts.md), [`vsphere/technology/storage/configuration/storage-alerts`](../../vsphere/technology/storage/configuration/storage-alerts.md), [`vsphere/technology/network/configuration/network-alerts`](../../vsphere/technology/network/configuration/network-alerts.md).
 
 ## Generic vs specific alerts
 - Generic alert: symptom oriented; many possible causes. Example: a VM did not get the CPU time it asked for.
@@ -122,13 +122,13 @@
 - Contention: the issue must be both acute and sustained.
   - Acute: severe for one 20-second sample.
   - Sustained: the average over 300 seconds.
-  - Set the acute threshold at 4x the sustained one, because a spike does not last 300 seconds (`sp5-framework/observability/thresholds`).
+  - Set the acute threshold at 4x the sustained one, because a spike does not last 300 seconds ([`sp5-framework/observability/thresholds`](../observability/thresholds.md)).
 - Do not raise a contention alert at very low utilization, where there may be no real business workload.
 - Keep a consistent scale between colours, so red stays the same step worse than orange. Red can be made worse than orange in three ways:
   - 2x the threshold: orange at 10 ms latency, red at 20 ms;
   - 2x the population: orange when 10% of VMs are hit, red at 20%;
   - 2x the time: orange for 5 minutes, red for 10 minutes. Not recommended.
-- Wait time before the alert fires: contention 5 minutes, 10 minutes for metrics with false positives; consumption 15 minutes. VCF Operations setting: `vcf-operations/alerts/alert-definitions`.
+- Wait time before the alert fires: contention 5 minutes, 10 minutes for metrics with false positives; consumption 15 minutes. VCF Operations setting: [`vcf-operations/alerts/alert-definitions`](../../vcf-operations/alerts/alert-definitions.md).
 
 ## Recommendation vs remediation
 - A recommendation is advice; it changes nothing. A remediation runs a change in the environment. A recommendation is safer because it is not automated.

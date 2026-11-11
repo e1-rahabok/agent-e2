@@ -1,7 +1,7 @@
 # vCenter statistics: sampling, rollup and levels
 
 ## Definition
-- ESXi samples performance counters every 20 seconds. The vSphere Client labels this interval Real-time. It is not real time: each point is a 20-second average (`sp5-framework/observability/real-time-metrics`).
+- ESXi samples performance counters every 20 seconds. The vSphere Client labels this interval Real-time. It is not real time: each point is a 20-second average ([`sp5-framework/observability/real-time-metrics`](../../../sp5-framework/observability/real-time-metrics.md)).
 - vCenter stores history by rolling the 20-second samples into coarser intervals.
 - Two settings decide what history exists: the collection interval and the statistics level.
 - Each vCenter counter carries 4 attributes: unit, stat type, rollup type, collection level.
@@ -59,7 +59,7 @@
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
 - Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
 - The VM CPU Ready chart shows the average of all vCPUs at level 1. Ready per vCPU appears only at level 3.
-- Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See `vsphere/technology/gpu/concepts/gpu-monitoring`.
+- Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See [`vsphere/technology/gpu/concepts/gpu-monitoring`](../../technology/gpu/concepts/gpu-monitoring.md).
 - Levels 3 and 4 raise vCenter load significantly. If vpxd cannot write statistics to the database fast enough, its memory grows until it runs out of memory and crashes. After raising a level, watch the vpxd process size.
 
 ## Level 1 counters per object (vCenter 9.1 API)
@@ -83,7 +83,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 - KB in vCenter counters = 1,024 bytes. KBps = 1,024 bytes per second.
 - kb (kilobit) = 1,000 bits. kbps = 1,000 bits per second.
 - The API and the charts use different units for the same counter. The API returns memory in KB (mem.consumed, mem.vmmemctl, mem.overhead), swap rates in KBps, disk and network usage in KBps, and space in KB. The vSphere Client charts convert: memory to MB, space to GB, network usage to Mbps. A value exported through the API and read as MB is 1,024 times too large.
-- Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See `vsphere/tools/esxtop/units-vs-vsphere-client`.
+- Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See [`vsphere/tools/esxtop/units-vs-vsphere-client`](../esxtop/units-vs-vsphere-client.md).
 
 ## Where history is lost
 - Removing an object from vCenter and adding it again deletes its history.
@@ -94,7 +94,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 ## Chart behaviour
 - Stacked charts show the 10 child objects with the highest values. Smaller children are not shown.
 - Datastore space charts show the latest data only, not history. Space statistics are refreshed every 30 minutes and collected asynchronously across datastores, so they can be up to 30 minutes old.
-- Performance charts do not exist for network objects (switches, port groups). The distributed switch still has API counters at level 3 (switch, port, LAG); the distributed port group has none. See `vsphere/technology/network/metrics/distributed-switch/packets`.
+- Performance charts do not exist for network objects (switches, port groups). The distributed switch still has API counters at level 3 (switch, port, LAG); the distributed port group has none. See [`vsphere/technology/network/metrics/distributed-switch/packets`](../../technology/network/metrics/distributed-switch/packets.md).
 - Overview and advanced charts show a subset of the counters. The vSphere API reference lists all counters.
 
 ## Misconceptions

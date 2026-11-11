@@ -3,7 +3,7 @@
 ## Meaning
 - Past tense. A non-zero value does not mean ballooning is happening now.
 - Ballooning may have happened days ago. The page stays ballooned while idle, because the Guest OS has not asked for it.
-- Some ballooning is normal. See `vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`.
+- Some ballooning is normal. See [`vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`](../../decision-tree/is-overcommit-affecting-vm.md).
 
 ## Mechanism
 - Proactive: starts before ESXi fails to meet demand.
@@ -21,7 +21,7 @@
   - ESXi layer: when Consumed tries to grow beyond the limit, ESXi compresses or swaps.
 - So under a limit, the direct result is Compressed or Swapped. Balloon is not.
 - Example: 8 GB CentOS VM running MySQL with a 2 GB limit was heavily ballooned. The book notes a default maximum of around 63%.
-- See `vsphere/technology/memory/concepts/ballooning`.
+- See [`vsphere/technology/memory/concepts/ballooning`](../../concepts/ballooning.md).
 
 ## Misconceptions
 - "Ballooned > 0, so the host is under memory pressure now" → not necessarily.

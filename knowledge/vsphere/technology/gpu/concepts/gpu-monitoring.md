@@ -8,7 +8,7 @@
 | Temperature (GPU Temperature) | HostSystem, per GPU device | °C, Average, level 4 | GPU device temperature. |
 | GPU (watts) | VirtualMachine | Watts, level 1 (VM power group) | Power drawn by the VM's virtual GPU. |
 
-- Utilization, memory used and temperature per GPU device on the host are statistics level 4 counters in the chart tables: at the default level 1, vCenter keeps no per-device history. See `vsphere/tools/vsphere-client/vcenter-statistics`.
+- Utilization, memory used and temperature per GPU device on the host are statistics level 4 counters in the chart tables: at the default level 1, vCenter keeps no per-device history. See [`vsphere/tools/vsphere-client/vcenter-statistics`](../../../tools/vsphere-client/vcenter-statistics.md).
 - Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API, so their history exists by default:
 
 | Counter | Rollup | Meaning (vCenter summary) |

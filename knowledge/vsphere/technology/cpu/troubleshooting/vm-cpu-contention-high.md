@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM CPU Contention (VCF Operations) or CPU Latency is high, or the CPU rows of VM Performance (%) are yellow or worse.
-- Entered from `sp5-framework/performance/troubleshooting/vm-slow` (step 4), a health check performance step, or an alert.
+- Entered from [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md) (step 4), a health check performance step, or an alert.
 - Contention includes Ready, Co-stop, limit time, power management and Hyper-Threading: a high value is not yet a wait for a physical thread.
 
 ## Flow
@@ -20,13 +20,13 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Contention (VirtualMachine) (`vsphere/technology/cpu/metrics/virtual-motherboard/contention`). Low → stop: Ready, Co-stop, power management and CPU overcommit are all accounted for in it, so CPU is not the cause. High (above 37.5%) → step 2.
-2. Ready and Co-stop (VirtualMachine): the time a vCPU waited for a physical thread, or for its siblings. Read Ready against Run (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`, `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`). Both low with high contention → the wait is frequency or Hyper-Threading → step 5. Not low → step 3.
+1. Contention (VirtualMachine) ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../metrics/virtual-motherboard/contention.md)). Low → stop: Ready, Co-stop, power management and CPU overcommit are all accounted for in it, so CPU is not the cause. High (above 37.5%) → step 2.
+2. Ready and Co-stop (VirtualMachine): the time a vCPU waited for a physical thread, or for its siblings. Read Ready against Run ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../metrics/virtual-motherboard/ready.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../metrics/virtual-motherboard/co-stop.md)). Both low with high contention → the wait is frequency or Hyper-Threading → step 5. Not low → step 3.
 3. Demand (Guest OS, VirtualMachine). Guest OS CPU run queue, context switches and CPU usage show whether the guest asks for more than it gets. VM Demand rising while Usage falls: the VM demanded more CPU than it got. → step 4.
-4. Configuration, VM (VirtualMachine). A CPU limit, and CPU shares against the other VMs (`vsphere/architecture/resource-controls`). Latency near 0% with high Ready: a limit, because Latency excludes Max Limited. → step 5.
-5. Configuration, host (HostSystem). Power management policy (`vsphere/technology/cpu/concepts/power-states`). Set to maximum performance: frequency scaling is ruled out and Hyper-Threading remains. Otherwise both can be at play. → step 6.
-6. Overcommit at the time of the issue (HostSystem). More vCPUs than physical cores on the host: Hyper-Threading can be the cause (`vsphere/technology/cpu/concepts/hyper-threading`). Otherwise it is not. → step 7.
-7. Known bug and log (VirtualMachine, HostSystem): versions against known issues, and events in the window (`sp5-framework/performance/troubleshooting/vm-slow`, its known bug and log checks).
+4. Configuration, VM (VirtualMachine). A CPU limit, and CPU shares against the other VMs ([`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md)). Latency near 0% with high Ready: a limit, because Latency excludes Max Limited. → step 5.
+5. Configuration, host (HostSystem). Power management policy ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). Set to maximum performance: frequency scaling is ruled out and Hyper-Threading remains. Otherwise both can be at play. → step 6.
+6. Overcommit at the time of the issue (HostSystem). More vCPUs than physical cores on the host: Hyper-Threading can be the cause ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)). Otherwise it is not. → step 7.
+7. Known bug and log (VirtualMachine, HostSystem): versions against known issues, and events in the window ([`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Why this order
 - Contention first: it holds every CPU wait, so a low value ends the flow at once.

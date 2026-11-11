@@ -10,9 +10,9 @@
   - Availability: measurable. Half the downtime window, twice the price.
   - Performance: utilization does not exist before the VM runs, so the overcommit ratio stands in. Twice the vCPUs on a cluster, each pays half: the cost is shared by all.
   - Compliance: the same for every class. A weak class is a jump box into the rest.
-- The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and compliance SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA (`sp5-framework/performance/kpi-vs-sla`).
-- Capacity settings per class (reservation, allocation per thread, minimum VM Performance (%), expected utilization): `sp5-framework/capacity/class-of-service-planning`. This file holds price and SLA numbers.
-- Overcommit ratios here are vCPU : physical thread and VM memory : physical memory (N:1). CPU overcommit per class: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread, never higher; per core with Hyper-Threading that is 2:1, 4:1 and 6:1 (`sp5-framework/capacity/host-spec-from-class-of-service`).
+- The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and compliance SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
+- Capacity settings per class (reservation, allocation per thread, minimum VM Performance (%), expected utilization): [`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md). This file holds price and SLA numbers.
+- Overcommit ratios here are vCPU : physical thread and VM memory : physical memory (N:1). CPU overcommit per class: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread, never higher; per core with Hyper-Threading that is 2:1, 4:1 and 6:1 ([`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md)).
 
 ## Generic guideline
 | Tier | Price | CPU overcommit | Performance penalty |
@@ -68,16 +68,16 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - The guideline price (0.50x, 0.33x) follows CPU alone; with memory in the price, the lower memory overcommit keeps Silver and Bronze dearer.
 - Gold: CPU 1:1, memory 1:1, all flash. Free: no overcommit stated, magnetic storage; may be left out entirely (business decision).
 - Average VM profile for Silver and Bronze: 1 vCPU to 4 GB RAM, a common ratio. Measure the real ratio in VCF Operations.
-- Host for Silver: `sp5-framework/capacity/host-spec-from-class-of-service`.
+- Host for Silver: [`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md).
 - Open question for the business: what performance penalty is fair for a 33% discount?
 - Progressive pricing: a 64-vCPU VM must cost more than 64x a 1-vCPU VM. A straight-line price gives no reason to size small, and rightsizing then happens in production, which is slow and costly.
 
 ## Size limit per class
-- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Cap by logical CPUs (`sp5-framework/capacity/vm-size`) and keep a VM within one NUMA node where it can (`vsphere/technology/cpu/configuration/numa-settings`).
+- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Cap by logical CPUs ([`sp5-framework/capacity/vm-size`](../capacity/vm-size.md)) and keep a VM within one NUMA node where it can ([`vsphere/technology/cpu/configuration/numa-settings`](../../vsphere/technology/cpu/configuration/numa-settings.md)).
 - Overcommit risks contention. A cap on VM size stops monster VMs from dominating overcommitted hosts.
 - If one VM may be the size of the host, overcommit with good performance is not possible.
 
-- CPU cap per class, by logical CPUs and the overcommit ratio: `sp5-framework/capacity/vm-size`, section Maximum VM size.
+- CPU cap per class, by logical CPUs and the overcommit ratio: [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), section Maximum VM size.
 - Memory cap per class: none set. The book's caps (512, 128 and 32 GB for Tiers 1-3) were per socket and were withdrawn with the socket rule.
 - Free tier: 1 vCPU, 4 GB, 100 GB disk.
 
@@ -103,7 +103,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
   - they add operations complexity.
 - Storage has the same limit. A VMFS datastore cannot deliver differentiated service levels by latency, which is what customers buy. vSAN storage policies do not either.
   - Example: Gold promised 10 ms worst case, Silver 20 ms (half the price). Controls that are not based on latency can give 9 ms for Gold and 21 ms for Silver, where 10 ms and 20 ms were possible.
-  - Storage I/O Control is deprecated in VCF 9: `sp5-framework/performance/noisy-neighbour`.
+  - Storage I/O Control is deprecated in VCF 9: [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md).
 - Layout: one compute pool and one storage pool per tier. Management and NSX Edge clusters, with their own storage, carry no SLA, only a KPI.
 ![Service Tier 1 (Gold, highest SLA), Tier 2 (Silver), Tier 3 (Bronze, lowest SLA), each with its own compute pools and storage pools. Below: management compute and storage pools, NSX compute and storage pools: no SLA, only KPI](images/class-of-service-tier-compute-and-storage-pools-diagram.png)
 - Name clusters and datastores after their class.

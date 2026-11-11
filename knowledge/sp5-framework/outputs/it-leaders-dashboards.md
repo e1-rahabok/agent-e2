@@ -44,8 +44,8 @@
 - Likely the most important view for both sides: it proves the infrastructure does its part.
 - A summary of all mission-critical business applications, grouped by business unit, since they are equally important.
 - Fields:
-  - Name: as the business calls it. Applications span tiers, VMs and Kubernetes pods, so build the structure in VCF Operations first (`vcf-operations/dashboards/business-applications`).
-  - Availability: average uptime in the period, as Actual Availability (%), not Operational Availability (%). End customers, often external, do not care about scheduled downtime, and most websites are expected up 24x7 all year (`sp5-framework/concepts/sla-metrics`).
+  - Name: as the business calls it. Applications span tiers, VMs and Kubernetes pods, so build the structure in VCF Operations first ([`vcf-operations/dashboards/business-applications`](../../vcf-operations/dashboards/business-applications.md)).
+  - Availability: average uptime in the period, as Actual Availability (%), not Operational Availability (%). End customers, often external, do not care about scheduled downtime, and most websites are expected up 24x7 all year ([`sp5-framework/concepts/sla-metrics`](../concepts/sla-metrics.md)).
   - Performance: average over the period. The average can hide poor moments, so they may ask for the worst too; with many applications, the average of all, possibly over time like a stock chart.
   - Compliance: configuration compliant with security and with the master template.
 - An infrastructure-centric report is the other common request. A request for basic facts usually means they do not know the environment.

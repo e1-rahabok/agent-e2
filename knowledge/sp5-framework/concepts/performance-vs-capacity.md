@@ -1,7 +1,7 @@
 # Performance vs capacity
 
 ## Two pillars, two questions
-- Each pillar has its main file: `sp5-framework/performance/performance-management`, `sp5-framework/capacity/capacity-management`. This file holds where they meet.
+- Each pillar has its main file: [`sp5-framework/performance/performance-management`](../performance/performance-management.md), [`sp5-framework/capacity/capacity-management`](../capacity/capacity-management.md). This file holds where they meet.
 - Performance: quality, speed. Are the consumers served well now?
 - Capacity: quantity, space. Is there enough supply for the demand to come?
 - They are intertwined:
@@ -11,7 +11,7 @@
 
 ## Usable capacity exists only in capacity
 - Capacity subtracts HA, buffer and hypervisor overhead from total capacity. What remains is usable capacity, and capacity is measured against it.
-- Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice (`sp5-framework/capacity/demand`, section Demand).
+- Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice ([`sp5-framework/capacity/demand`](../capacity/demand.md), section Demand).
 - Performance ignores all four. It measures what happens, against total capacity. These factors can cause a performance problem, but they are not inputs to a performance metric.
 - No other pillar has a usable part: no usable performance, usable availability or usable compliance.
 ![Performance management spans 0-100% of total capacity; capacity management spans 0-100% of usable capacity, which sits between the hypervisor overhead below and the buffer above, beside High Availability](images/performance-vs-capacity-total-vs-usable-range-diagram.png)
@@ -21,7 +21,7 @@
 - By class of service, a Gold cluster should score higher Performance (%), lower consumption (%) and lower Risk (%) than a Bronze cluster.
 - Capacity is relative to usable capacity, not total capacity. The real utilization is lower; divided by the smaller usable capacity, the capacity score reads higher.
 - Utilization is not managed for its own sake. Alone it means nothing: 0% can be bad, 100% can be good. It is an input to both pillars, read differently by each.
-- Capacity reads demand, not utilization: demand is the higher of utilization and reservation. Model: `sp5-framework/capacity/demand`.
+- Capacity reads demand, not utilization: demand is the higher of utilization and reservation. Model: [`sp5-framework/capacity/demand`](../capacity/demand.md).
 
 | Reading | Performance | Capacity |
 |---|---|---|
@@ -47,7 +47,7 @@
 - Provider objects (vSphere cluster, vSAN cluster): performance is bottom up, from the VMs inside, aggregated. Capacity is top down: the cluster first, then the hosts.
 - Consumer objects (VM, Kubernetes pod) relate the two pillars differently from provider objects.
 - 16-host cluster, utilization:
-  - risk: the average of 16 hosts reacts too late; a problem on one host is already a problem. Take the highest host. If it shows no issue, the other 15 hosts are lower. This reading belongs to Cluster Risk (%), a leading indicator (`vsphere/object-types/cluster/models/cluster-risk`), not to cluster performance, which reads VM contention.
+  - risk: the average of 16 hosts reacts too late; a problem on one host is already a problem. Take the highest host. If it shows no issue, the other 15 hosts are lower. This reading belongs to Cluster Risk (%), a leading indicator ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md)), not to cluster performance, which reads VM contention.
   - capacity: the average is right, because capacity is planned per cluster. Add workload until usable capacity runs out or contention appears.
 
 ## Contention vs consumption
@@ -74,7 +74,7 @@
 - It falls first on the hottest host, before the cluster average reaches 100%: each host is its own pool, and DRS balances the hosts only approximately.
 - Only allocation can be overcommitted. Demand, usage and utilization are results, not settings.
 - So a utilization trend line says nothing about when performance will drop.
-- The performance target depends on the class of service: Gold must perform better than the free tier. The KPI carries it: one set of levels for every class; Gold scores higher because its design causes less contention (`sp5-framework/performance/kpi-vs-sla`).
+- The performance target depends on the class of service: Gold must perform better than the free tier. The KPI carries it: one set of levels for every class; Gold scores higher because its design causes less contention ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 ![Cluster Utilization (%) rising from 0% toward 100%; Cluster Performance (%) flat near 100% until overcommit above 1, then falling below 95%](images/cluster-utilization-vs-cluster-performance-pattern-timeline.png)
 
 ## Misconceptions

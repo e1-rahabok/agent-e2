@@ -38,7 +38,7 @@
 | PAE and split | SPLTCMD/s, SPLTCP/s | Large IOs split by the kernel. Higher values reduce performance. |
 | Configuration | NPTH | Number of paths. Should match the design. |
 
-- See `vsphere/technology/storage/concepts/esxi-storage-latency-stack` for GAVG, KAVG, QAVG, DAVG.
+- See [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../technology/storage/concepts/esxi-storage-latency-stack.md) for GAVG, KAVG, QAVG, DAVG.
 
 ## Disk Device
 | Group | Counters | Meaning |

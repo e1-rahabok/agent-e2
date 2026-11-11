@@ -14,10 +14,10 @@
 
 - Causes the documentation lists: host short of CPU; too many vCPUs relative to physical cores; storage or network IO that puts the CPU in a wait state; Guest OS load.
 - VM CPU Ready in the vCenter chart is a percentage averaged over the vCPUs at statistics level 1.
-- The knowledge base reads Ready against Run, not against a fixed value: 2% Ready on 10% Run delayed 20% of transactions. See `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
+- The knowledge base reads Ready against Run, not against a fixed value: 2% Ready on 10% Run delayed 20% of transactions. See [`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../technology/cpu/metrics/virtual-motherboard/ready.md).
 - High Ready while Usage sits at the VM CPU limit: the limit causes it. esxtop %MLMTD is counted inside %RDY. Remove or raise the limit.
 - More shares give one VM more chances to run. Total host Ready stays the same when the host itself is short of CPU.
-- Idle vCPUs still cost host CPU: the hypervisor maintains them. Right-size to the vCPUs the workload runs. See `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`.
+- Idle vCPUs still cost host CPU: the hypervisor maintains them. Right-size to the vCPUs the workload runs. See [`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`](../../technology/cpu/concepts/idle-and-unused-vcpus.md).
 - Documentation actions: VMware Tools installed; CPU reservations for high-priority VMs; fewer vCPUs on oversized VMs; DRS and more hosts; TCP Segmentation Offload, large memory pages and jumbo frames to cut CPU per IO.
 
 ## Memory
@@ -31,8 +31,8 @@
 | Host has free memory, yet a VM shows high balloon or swap | The VM, or its resource pool, has hit its memory limit. |
 
 - Sizing rule in the documentation: host memory slightly larger than the combined Active of its VMs; VM memory slightly larger than average guest memory usage.
-- vSphere Client host Memory Usage (%) is Consumed / total. Consumed holds guest cache, so high usage alone is not a problem. See `vsphere/technology/memory/metrics/host/usage` and `vsphere/technology/memory/concepts/memory-as-storage`.
-- Swap-out and compression mean pressure or a limit. VM Memory Latency and swap-in mean the VM is waiting. See `vsphere/technology/memory/concepts/swap-and-compression`.
+- vSphere Client host Memory Usage (%) is Consumed / total. Consumed holds guest cache, so high usage alone is not a problem. See [`vsphere/technology/memory/metrics/host/usage`](../../technology/memory/metrics/host/usage.md) and [`vsphere/technology/memory/concepts/memory-as-storage`](../../technology/memory/concepts/memory-as-storage.md).
+- Swap-out and compression mean pressure or a limit. VM Memory Latency and swap-in mean the VM is waiting. See [`vsphere/technology/memory/concepts/swap-and-compression`](../../technology/memory/concepts/swap-and-compression.md).
 - A memory reservation far above Active blocks reclamation of idle pages. Lower it so the kernel can give them to other VMs.
 - The documentation calls ballooning and swapping regular reclamation that generally does not affect performance, provided the balloon driver runs.
 - Documentation actions: VMware Tools and the balloon driver enabled; smaller VM memory where the guest cache is oversized; lower oversized reservations; DRS; more host memory.
@@ -45,7 +45,7 @@
 | queueLatency | QAVG | Must always be 0. Above 0: workload too high; the array cannot process data fast enough. |
 | totalReadLatency, totalWriteLatency | GAVG | kernelLatency + deviceLatency. |
 
-- The knowledge base uses lower values: KAVG above 0.5 ms → check QAVG and queue depths; DAVG healthy well within 5 ms. See `vsphere/technology/storage/troubleshooting/host-storage-latency`.
+- The knowledge base uses lower values: KAVG above 0.5 ms → check QAVG and queue depths; DAVG healthy well within 5 ms. See [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../technology/storage/troubleshooting/host-storage-latency.md).
 - The documentation's device remedy names spindles: the 15 ms value comes from spinning-disk arrays. Flash arrays run far lower; compare with the array's own baseline.
 - Documentation actions: more VM memory for guest caching (less IO); antivirus on-demand scans off for VMDK and VMEM files; array-side statistics; Storage vMotion to spread IO-heavy VMs; spread busy LUNs across adapters; adequate HBA and RAID controller queue depth (Disk.SchedNumReqOutstanding); multipathing when IO exceeds one HBA; preallocated virtual disks.
 
@@ -56,10 +56,10 @@
 
 ## Network
 - Dropped packets indicate a network bottleneck. Check droppedTx and droppedRx in vCenter, or %DRPTX and %DRPRX in esxtop.
-- Drops at the virtual switch port: increase the vNIC driver ring buffers. See `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
+- Drops at the virtual switch port: increase the vNIC driver ring buffers. See [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](../../technology/network/troubleshooting/vnic-rx-drops.md).
 - No drops but a slow receive rate: host or VM CPU cannot keep up with the packet rate.
 - Small packets: more packets per byte, so more CPU per byte. Large packets: fewer packets and less CPU, but possibly higher latency.
-- vSphere has no network latency counter. The documentation points to external tools. See `vsphere/technology/network/concepts/network-observability`.
+- vSphere has no network latency counter. The documentation points to external tools. See [`vsphere/technology/network/concepts/network-observability`](../../technology/network/concepts/network-observability.md).
 - Documentation checks: VMs per physical NIC; VMs on the same host that talk to each other on the same virtual switch (no physical hop); separate physical NICs per traffic type (VM, iSCSI, vMotion); physical NIC speed and duplex as expected (a 1 Gbps NIC reset to 100 Mbps by an older switch; half duplex); vmxnet3; TCP Segmentation Offload and jumbo frames.
 
 ## Misconceptions

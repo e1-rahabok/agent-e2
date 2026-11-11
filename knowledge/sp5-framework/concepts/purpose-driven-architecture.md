@@ -11,7 +11,7 @@
 - **DaaS**: desktops at a low price per user.
   - All desktops run the same software, so one software change hits every desktop at once. A 10% CPU increase in the browser, on a heavily overcommitted host, can push every desktop's KPI into red. Application teams must be involved.
 - **K8aaS**: Kubernetes, on a dedicated or a shared cluster.
-- **IaaS**: three variants (VM, resource pool, hardware): `sp5-framework/concepts/iaas-business`.
+- **IaaS**: three variants (VM, resource pool, hardware): [`sp5-framework/concepts/iaas-business`](iaas-business.md).
 
 ## Begin with the end in mind
 - Day 0: plan. Business plan, high-level architecture, operations model.
@@ -20,7 +20,7 @@
 - Think in the order Day 2, Day 0, Day 1. How the platform will be sold and operated decides the plan, and the plan decides the architecture.
 - A major upgrade or migration starts the cycle again from Day 2.
 ![Day 2 Operate → Day 0 Plan (high-level architecture and operations model) → Day 1 Design (low-level architecture and deployment); a major upgrade or migration loops back to Day 2](images/day2-day0-day1-sequence-diagram.png)
-- Example 1: the class of service and the average VM profile fix the ESXi host specification (`sp5-framework/capacity/host-spec-from-class-of-service`).
+- Example 1: the class of service and the average VM profile fix the ESXi host specification ([`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md)).
 - Example 2: business continuity caps cluster size.
   - Policy: one cluster failure may affect at most N number of mission critical VMs. Specify this as part of architecture as a cluster can easily host thousands of VMs.
   - Size the cluster so its VMs stay under N. A larger cluster cannot be filled without breaking the policy.
@@ -31,10 +31,10 @@
 - The infrastructure team must know which business application each object serves, and what its failure costs.
 - CIO view: live information on how IT serves each business unit and its critical applications. The platform must map business units and applications to their VMs.
 - Tenant view: customers check their own VM health and how the platform serves their VMs. The platform must associate each tenant with its VMs; at least a structure to browse or find applications and VMs.
-- One model fits every application: the infrastructure metrics are the same for all of them (`sp5-framework/concepts/realms-and-layers`).
+- One model fits every application: the infrastructure metrics are the same for all of them ([`sp5-framework/concepts/realms-and-layers`](realms-and-layers.md)).
 
 ## Crown jewels
-- Mission-critical business applications get their own KPI at the infrastructure layer, built from their VMs: `sp5-framework/performance/business-application-kpi`.
+- Mission-critical business applications get their own KPI at the infrastructure layer, built from their VMs: [`sp5-framework/performance/business-application-kpi`](../performance/business-application-kpi.md).
 
 ## Automation after operations
 - Design only what the team can troubleshoot. Problems show on Day 2, under revenue workload.
@@ -58,7 +58,7 @@
 - Two layers: consumer and provider.
   - Consumer: where VMs and containers run. Three sublayers: application, Guest OS, VM.
   - Provider: the virtualized platform: compute, storage, network.
-- VCF scope ends at the VM (virtual motherboard and BIOS) and VMware Tools. The Guest OS is largely outside VCF's influence (`vsphere/architecture/vm-vs-guest-os`).
+- VCF scope ends at the VM (virtual motherboard and BIOS) and VMware Tools. The Guest OS is largely outside VCF's influence ([`vsphere/architecture/vm-vs-guest-os`](../../vsphere/architecture/vm-vs-guest-os.md)).
 
 ## Misconceptions
 - "Plan first, then design, then work out how to operate it" → Day 2 drives Day 0, which drives Day 1. The class of service and the operations model fix the hardware and cluster design.

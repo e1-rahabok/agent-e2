@@ -15,7 +15,7 @@
 - Lesson: no villain VM existed. The villain was a schedule, and the path was the replication link.
 
 ## The three controls
-- Limit, reservation, share. Details: `vsphere/architecture/resource-controls`.
+- Limit, reservation, share. Details: [`vsphere/architecture/resource-controls`](../../vsphere/architecture/resource-controls.md).
 - Priority is not a control: it gives 0% to the lower priority. Shares still give every consumer some.
 - Resource pools add a management layer and make the settings harder.
 
@@ -34,7 +34,7 @@
   - shares are per VM, not per vCPU. A larger VM has more shares in total, shared among its vCPUs;
   - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 point;
   - shares are charged against CPU Used, not CPU Run. Used includes System time, the hypervisor's work for the VM (network packets, disk commands). A VM with heavy IO uses up its shares and can see CPU Ready.
-  - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): `vsphere/tools/esxtop/cpu`.
+  - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): [`vsphere/tools/esxtop/cpu`](../../vsphere/tools/esxtop/cpu.md).
 ![VM 1 has one busy vCPU; VM 2 has a busy vCPU 1 and an idle vCPU 2](images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png)
 
 ## Memory
@@ -82,10 +82,10 @@
 
 ## Avoiding it
 - With overcommit it cannot be avoided, only reduced: like a highway with more cars than lanes at peak hour. Capacity planning reduces the impact.
-- Price: a lower price per class needs a higher overcommit ratio to break even (`sp5-framework/capacity/overcommit`, section Ratio and price); progressive pricing makes large VMs cost more than their size (`sp5-framework/concepts/class-of-service`).
-- Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size (`sp5-framework/capacity/vm-size`). Tell customers the quality of each class through its overcommit.
+- Price: a lower price per class needs a higher overcommit ratio to break even ([`sp5-framework/capacity/overcommit`](../capacity/overcommit.md), section Ratio and price); progressive pricing makes large VMs cost more than their size ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md)).
+- Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size ([`sp5-framework/capacity/vm-size`](../capacity/vm-size.md)). Tell customers the quality of each class through its overcommit.
 
-- No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class (`sp5-framework/performance/kpi-vs-sla`).
+- No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md)).
 
 ## Misconceptions
 - "Find the villain VM" → the villain can be a schedule or an external system, and the damage can travel through a shared path (replication link). Look for a common time and path, not a VM.

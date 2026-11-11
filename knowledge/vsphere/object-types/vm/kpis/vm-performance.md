@@ -2,10 +2,10 @@
 
 ## What it is
 - One 0-100% score per VM. 100 is perfect.
-- It scores the VM as a virtual motherboard: is ESXi giving it the CPU, memory, disk and network it asks for? What happens inside Windows or Linux is scored by Guest OS Performance (%) (`guest-os/system/metrics/guest-os-performance`).
+- It scores the VM as a virtual motherboard: is ESXi giving it the CPU, memory, disk and network it asks for? What happens inside Windows or Linux is scored by Guest OS Performance (%) ([`guest-os/system/metrics/guest-os-performance`](../../../../guest-os/system/metrics/guest-os-performance.md)).
 - Published on every powered-on VM as `vCommunity|VM Performance|VM Performance Score`. A powered-off VM gets no score: its stats are old.
 - VM Guest OS KPI: `vCommunity|VM Guest OS KPI`, the average of VM Performance (%) and Guest OS Performance (%), one score per VM for the application team. A VM without VMware Tools has no Guest OS Performance, so its VM Guest OS KPI is its VM Performance alone.
-- Use: step 2 of the VM health check (`vsphere/object-types/vm/health-check/vm-health-check`); when it drops, open the sub-metric that pulls it down.
+- Use: step 2 of the VM health check ([`vsphere/object-types/vm/health-check/vm-health-check`](../health-check/vm-health-check.md)); when it drops, open the sub-metric that pulls it down.
 
 ## Sub-metrics
 | Group | Sub-metric | Source (VCF Operations) |
@@ -20,7 +20,7 @@
 | IaaS high utilization | Memory Ballooned | `mem\|balloonPct` |
 | IaaS high utilization | Memory Zip Swap | (`mem\|compressed_average` + `mem\|swapped_average`) ÷ `guest\|used_memory` × 100 |
 
-- 20-second peaks where they exist, not 5-minute averages: the KPI is a leading indicator (`vcf-operations/features/peak-20-second-metrics`).
+- 20-second peaks where they exist, not 5-minute averages: the KPI is a leading indicator ([`vcf-operations/features/peak-20-second-metrics`](../../../../vcf-operations/features/peak-20-second-metrics.md)).
 - Colour levels: `catalog/thresholds-performance`, section `kpi`, rows with this file as `kb`.
 - Excluded while green, so they do not add a free 100: CPU Overlap below 0.5% (some overlap is normal), Network Dropped Tx at exactly 0 (drops are rare; any drop is yellow), CPU Run below 95% (a VM that is not busy says nothing about its performance; above 95% the VM itself is too small).
 
@@ -36,7 +36,7 @@
 - Network: vCenter has no latency or retransmit counter, so transmit dropped packets are used. Drops are retransmitted and often unnoticed, so the threshold is not low.
 
 ## Scoring
-- The scoring shared by every KPI: `sp5-framework/performance/performance-kpi-design`, section Scoring.
+- The scoring shared by every KPI: [`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
 - Nothing wrong: Overlap, Dropped Tx and Run are in their excluded green and left out; the other 6 score 100. KPI = 100.
 - CPU Ready 10%: a quarter into red (8 to 16) scores 18.75, weight 9.51. KPI = (5 × 100 + 18.75 × 9.51) / (5 + 9.51) ≈ 46.74.
 - CPU Run 98%: halfway through orange (97 to 99) scores 37.5, weight 5.66. KPI ≈ 69.67.

@@ -18,7 +18,7 @@
 - For the Guest OS, Ready is frozen time. Linux reports it as Steal Time. Windows does not account it.
 - Ready does not register Hyper-Threading contention. A busy sibling thread does not put a vCPU into Ready.
 - Ready on one vCPU can cause Co-stop on a sibling vCPU of the same VM.
-- See `vsphere/technology/cpu/concepts/vcpu-states`.
+- See [`vsphere/technology/cpu/concepts/vcpu-states`](../../concepts/vcpu-states.md).
 
 ## Read against Run
 - Ready 5% with Run 95%: low.
@@ -60,7 +60,7 @@
 ![Worst and 99th percentile 20-second Ready across 3,937 VMs](../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png)
 
 ## Misconceptions
-- "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See `vsphere/architecture/provider-consumer`.
+- "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See [`vsphere/architecture/provider-consumer`](../../../../architecture/provider-consumer.md).
 - "Ready 2% is always low" → read it against Run.
 - "Ready is always caused by ESXi" → shares, vMotion and limits are VM-side causes.
 - "5-minute Ready is low, so no problem" → Ready lasts seconds. Check the 20-second peak.

@@ -7,7 +7,7 @@
 - Performance-first environments: keep host balloon at 0. Consumed then becomes the main capacity counter.
 
 ## Behaviour
-- Ballooning starts at the Soft state: about 99% of host memory used. See `vsphere/technology/memory/concepts/host-memory-states`.
+- Ballooning starts at the Soft state: about 99% of host memory used. See [`vsphere/technology/memory/concepts/host-memory-states`](../../concepts/host-memory-states.md).
 - Balloon is slower to act than swap and compress and works at a different layer. Host balloon can be 0 while swap and compress exist.
 - Consumed drops when balloon rises: ballooned pages are no longer backed by ESXi pages.
 - Balloon does not mean contention. Example: constant, significant balloon for 7 days; worst VM contention below 1%; most of 19 VMs had none.

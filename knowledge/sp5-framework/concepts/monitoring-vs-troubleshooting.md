@@ -17,7 +17,7 @@
 
 
 ## Primary and secondary metrics
-- Monitoring reads the primary metric, the what; troubleshooting reads the secondary metrics, the why. Definitions and examples: `sp5-framework/observability/triple-see-method`, section Primary and secondary metrics.
+- Monitoring reads the primary metric, the what; troubleshooting reads the secondary metrics, the why. Definitions and examples: [`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md), section Primary and secondary metrics.
 
 ## Monitoring
 - Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
@@ -33,12 +33,12 @@
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
 - Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
 - Root Cause Analysis is mandatory to ensure future problem is detected promptly. Ideally it comes with a fix that prevents the next incident, not only setting up alerts to detect.
-- Order of checks, the same in the daily health check and in troubleshooting: availability, performance, security, capacity; inside each, configuration and known bugs as the drill-down (`sp5-framework/concepts/health-check`, section Order of checks).
+- Order of checks, the same in the daily health check and in troubleshooting: availability, performance, security, capacity; inside each, configuration and known bugs as the drill-down ([`sp5-framework/concepts/health-check`](health-check.md), section Order of checks).
 - Availability is read from soft errors, vMotion stun time and lock-ups, mostly in logs (VCF Operations for logs).
 - Utilization comes last. Even at 100% it does not matter if availability, performance and configuration are good.
 - Every performance flow checks configuration, the VM slow flow included.
 ![The book's earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the order above](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
-- VM-level flow: `sp5-framework/performance/troubleshooting/vm-slow`.
+- VM-level flow: [`sp5-framework/performance/troubleshooting/vm-slow`](../performance/troubleshooting/vm-slow.md).
 
 ### First incident: forgivable once
 - The first time an issue happens: troubleshoot, write the RCA, set up an alert.

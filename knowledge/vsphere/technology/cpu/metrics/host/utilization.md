@@ -2,7 +2,7 @@
 
 ## Meaning
 - Static-frequency CPU utilization, from the host vantage point.
-- The VM equivalent is called Run. See `vsphere/technology/cpu/metrics/virtual-motherboard/run`.
+- The VM equivalent is called Run. See [`vsphere/technology/cpu/metrics/virtual-motherboard/run`](../virtual-motherboard/run.md).
 
 ## Why the names differ
 - Different vantage points: provider (ESXi) and consumer (VM).
@@ -12,7 +12,7 @@
 - ESXi Utilization (%) = average of thread utilization.
 - It is a static counter: it ignores frequency. So it suits capacity management.
 - Ready and Wait do not apply at this level. A thread runs or is idle.
-- See `vsphere/technology/cpu/concepts/cpu-measurement-levels`.
+- See [`vsphere/technology/cpu/concepts/cpu-measurement-levels`](../../concepts/cpu-measurement-levels.md).
 
 ## The capacity reading
 - Capacity is about space (quantity); performance is about speed (quality).
@@ -28,10 +28,10 @@
 - Ignores frequency and Hyper-Threading. Relevant only with Hyper-Threading on.
 - Disregards that Hyper-Threading does not deliver 2x. Example: both threads of every core busy = 100%; one thread per core = 50%.
 - Usually lower than Core Utilization. Without Hyper-Threading, equal to it.
-- See `vsphere/technology/cpu/concepts/hyper-threading`.
+- See [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md).
 
 ## Misconceptions
-- "ESXi Utilization = sum of VM Run + kernel" → different vantage points. See `vsphere/technology/cpu/concepts/cpu-measurement-levels`.
+- "ESXi Utilization = sum of VM Run + kernel" → different vantage points. See [`vsphere/technology/cpu/concepts/cpu-measurement-levels`](../../concepts/cpu-measurement-levels.md).
 - "Thread Utilization 50%, so half the host is free" → in space, yes: half the threads are free. In speed, no: every core may already run one thread, and a second thread shares the core (Hyper-Threading delivers about 1.25x per core, not 2x). Check Core Utilization for the speed effect.
 - "Core Utilization is the ESXi utilization for capacity" → it counts a half-used core as full. Use Thread Utilization.
 

@@ -12,13 +12,13 @@
 
 ## DRS
 - DRS disabled: DRS covers performance and capacity, HA covers availability. Without DRS every host must keep its own buffer for peak demand.
-- DRS in manual mode: recommendations wait for an administrator; DRS recalculates every minute, so a late approval acts on a condition that has changed. Details: `vsphere/object-types/cluster/configuration/drs-migration-levels`.
+- DRS in manual mode: recommendations wait for an administrator; DRS recalculates every minute, so a late approval acts on a condition that has changed. Details: [`vsphere/object-types/cluster/configuration/drs-migration-levels`](drs-migration-levels.md).
 - Automation level matches the cluster's purpose.
 - EVC mode: the cluster cannot use newer CPU capabilities.
 - VMs with overrides of the cluster default.
 
 ## DPM
-- Settings match expectation: `vsphere/object-types/cluster/concepts/dpm`.
+- Settings match expectation: [`vsphere/object-types/cluster/concepts/dpm`](../concepts/dpm.md).
 
 ## Cluster variants
 - **Sub-cluster** (VM-host affinity): operational complexity; performance problems despite enough cluster capacity.
@@ -28,7 +28,7 @@
 - **Multi-cluster**: clusters balanced as one; each keeps its own capacity remaining.
 - **Stretched cluster**: more complex. It gives disaster avoidance, not disaster recovery; DR is still required.
 - **Site Recovery cluster**: protected VMs from the other site must be counted in capacity.
-- Cluster size cap from business continuity: `sp5-framework/concepts/purpose-driven-architecture`.
+- Cluster size cap from business continuity: [`sp5-framework/concepts/purpose-driven-architecture`](../../../../sp5-framework/concepts/purpose-driven-architecture.md).
 
 ## Misconceptions
 - "HA is off but every host runs, so availability is fine" → availability today is fine; the risk is in future health. Each application must now protect itself.

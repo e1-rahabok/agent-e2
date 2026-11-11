@@ -5,7 +5,7 @@
 - A system is judged by its architecture. A service is judged by its service level.
 - It is a service with or without chargeback. VM owners no longer own the hardware, so they judge only the service level, not the architecture.
 - The architecture is judged by its result in production: firefighting and blame between teams, or alerts that are meaningful and actionable.
-- Moving from SDDC to IaaS is an operations change: complaint-based to KPI-based, alert-driven to insight-driven. The maturity steps: `sp5-framework/performance/kpi-vs-sla`. Alerts and insights: `sp5-framework/outputs/alerts-and-insights`.
+- Moving from SDDC to IaaS is an operations change: complaint-based to KPI-based, alert-driven to insight-driven. The maturity steps: [`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md). Alerts and insights: [`sp5-framework/outputs/alerts-and-insights`](../outputs/alerts-and-insights.md).
 
 ## Three variants of IaaS
 The variants differ in what is sold, how it is priced, and which SLA is offered.
@@ -25,7 +25,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
   - Availability SLA: on the host or cluster, not the VM.
   - Performance: the tenant's own. The tenant can place as many VMs as it likes.
 - Class of service is harder to run in the resource pool variant: nested resource pools add moving parts.
-- In the resource pool variant, contention caused by the pool's own limit or by the tenant's overcommit inside the pool is the tenant's. VM CPU Ready includes time held back by a limit (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`).
+- In the resource pool variant, contention caused by the pool's own limit or by the tenant's overcommit inside the pool is the tenant's. VM CPU Ready includes time held back by a limit ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md)).
 
 ## VM as a Service
 - The most common variant. Buy wholesale, sell retail: hardware, software and data-centre space are bought in bulk and committed for years; VMs and Kubernetes pods are sold in small units.
@@ -36,7 +36,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - The VM profile is unknown at design time: size (vCPU, RAM, disk), intensity (CPU and RAM utilization, disk IOPS, network throughput) and pattern (daily, weekly, monthly, none). Application teams and their vendors do not know it either; some applications are not written yet.
 - So the platform cannot promise to serve every VM well in absolute terms. It promises price/performance per class of service: cheap is not fast, fast is not cheap.
 - Each class of service has its own availability, security and service SLA, written in the contract with numbers. Performance per class follows from overcommit and size limits and is read with the KPI.
-- Class of service parameters (overcommit ratio, maximum VM size): `sp5-framework/performance/noisy-neighbour`. Host specification per class: `sp5-framework/capacity/host-spec-from-class-of-service`.
+- Class of service parameters (overcommit ratio, maximum VM size): [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md). Host specification per class: [`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md).
 - Provisioning has an SLA too, delivered through self-service with workflows and electronic approval.
 
 ## Metrics per pillar
@@ -49,23 +49,23 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 | Capacity | Time Remaining (days) | Days until Capacity Remaining reaches 0 |
 | Compliance | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
 
-- Performance has no SLA and no SLI: the KPI is enough (`sp5-framework/performance/kpi-vs-sla`).
-- Definitions, formulas and the time window of each SLA: `sp5-framework/concepts/sla-metrics`. Numbers per class: `sp5-framework/concepts/class-of-service`.
-- Usable capacity: `sp5-framework/capacity/supply`.
+- Performance has no SLA and no SLI: the KPI is enough ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
+- Definitions, formulas and the time window of each SLA: [`sp5-framework/concepts/sla-metrics`](sla-metrics.md). Numbers per class: [`sp5-framework/concepts/class-of-service`](class-of-service.md).
+- Usable capacity: [`sp5-framework/capacity/supply`](../capacity/supply.md).
 
 ## A complete, correct and accurate SLA
 - Complete: compliance as well as availability; performance through the KPI.
 - Correct: measured on each paying VM, not at the infrastructure level, with the right metrics.
 - Accurate: measured every 5 minutes. A longer interval averages a breach away.
-- Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in `sp5-framework/observability/thresholds`.
+- Why per VM: a cluster average hides the VM in breach. Why 5 minutes: the interval rule in [`sp5-framework/observability/thresholds`](../observability/thresholds.md).
 
 ## Signs of complaint-based operations
 - Customers blame the IaaS. Complaints are the only signal because performance is not defined or measured.
 - Troubleshooting pulls in every team (network, storage, server, OS, application). No shared process ends in a root cause analysis (RCA).
 - An RCA closes only when an alert is set up that detects the same issue earlier next time.
 - Many oversized VMs. The team works as a system builder: it sizes each application and argues with its owners, who are its customers.
-- A service provider does not block a purchase. It prices so that the right behaviour pays. Why rightsizing still matters: `sp5-framework/capacity/rightsizing`.
-- New hardware cannot be justified while utilization is low. Capacity is measured on utilization and performance: a cluster is full when it cannot serve its VMs well. Hardware takes time to buy, so contention must give early warning (`sp5-framework/concepts/performance-vs-capacity`).
+- A service provider does not block a purchase. It prices so that the right behaviour pays. Why rightsizing still matters: [`sp5-framework/capacity/rightsizing`](../capacity/rightsizing.md).
+- New hardware cannot be justified while utilization is low. Capacity is measured on utilization and performance: a cluster is full when it cannot serve its VMs well. Hardware takes time to buy, so contention must give early warning ([`sp5-framework/concepts/performance-vs-capacity`](performance-vs-capacity.md)).
 
 ## Common mistakes
 - Private cloud run as an automation project. Automation, workflow and the self-service portal support it. Its core is SLAs and class of service: it is operations-centric.

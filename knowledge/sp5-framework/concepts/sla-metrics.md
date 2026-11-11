@@ -5,7 +5,7 @@
 - The SLA section holds the metrics and their numbers. A financial penalty makes the provider accountable; certifications and architecture claims do not.
 - The SLA (what is delivered) comes before the process and architecture (how it is delivered).
 - An SLA is always between two parties. Internal objects (management cluster, vCenter, NSX Edge) have no SLA.
-- Operations do not run on the SLA. Performance monitoring and troubleshooting use the KPI only: no performance SLA, no SLI, no SLO (`sp5-framework/performance/kpi-vs-sla`). Availability is monitored with KAI, security with KSI.
+- Operations do not run on the SLA. Performance monitoring and troubleshooting use the KPI only: no performance SLA, no SLI, no SLO ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)). Availability is monitored with KAI, security with KSI.
 
 ## When a customer says "our SLA"
 - Common: VMware customers say they have an SLA. Probed for the metrics that define it, they state a wrong metric, or they have none.
@@ -62,7 +62,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - Operational Availability: 100%. All three are inside the scheduled window.
   - Actual Availability counting the Guest OS only: 45 minutes, 99.90%.
   - Actual Availability counting until the database is restored: 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%.
-- Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity (`sp5-framework/capacity/supply`, section Total vs usable after host loss).
+- Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity ([`sp5-framework/capacity/supply`](../capacity/supply.md), section Total vs usable after host loss).
 
 | Hosts out | Event | Actual Availability | Operational Availability |
 |---|---|---|---|
@@ -129,7 +129,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - Availability: against no downtime.
   - Compliance: against perfect compliance.
   - Service: against the best possible service.
-- A different benchmark per class cannot be explained by price, and lets a lower class score better than a higher one. Numbers per class: `sp5-framework/concepts/class-of-service`.
+- A different benchmark per class cannot be explained by price, and lets a lower class score better than a higher one. Numbers per class: [`sp5-framework/concepts/class-of-service`](class-of-service.md).
 
 ## Misconceptions
 - "Our SLA is Cluster Availability 99.95%" → wrong object. The application team cares about its own VMs and pods; a cluster can be up while their VM is down. Measure the consumer's object.

@@ -13,7 +13,7 @@
 
 ## Behaviour
 - Lower than disk and virtual-disk IOPS when most disks are RDM. Example: Oracle EBS VM with 26 virtual disks, mostly RDM.
-- Higher read IOPS than virtual disk when a snapshot exists. See `vsphere/technology/storage/concepts/snapshot-impact`.
+- Higher read IOPS than virtual disk when a snapshot exists. See [`vsphere/technology/storage/concepts/snapshot-impact`](../../concepts/snapshot-impact.md).
 - With all disks on one datastore backed by one LUN, virtual disk, disk and datastore metrics are nearly identical. Differences come from files outside virtual disks (snapshots, logs, swap).
 
 ## Misconceptions

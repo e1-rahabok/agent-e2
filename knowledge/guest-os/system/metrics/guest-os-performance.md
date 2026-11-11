@@ -6,7 +6,7 @@
 
 ## What it is
 - One 0-100% score for the operating system inside a VM. 100 is perfect. It answers: is the Guest OS getting the CPU, disk and memory it needs?
-- VM Performance (%) scores the virtual motherboard; this KPI scores what runs on it (`vsphere/object-types/vm/kpis/vm-performance`). Their average is the VM Guest OS KPI, one score per VM for the application team.
+- VM Performance (%) scores the virtual motherboard; this KPI scores what runs on it ([`vsphere/object-types/vm/kpis/vm-performance`](../../../vsphere/object-types/vm/kpis/vm-performance.md)). Their average is the VM Guest OS KPI, one score per VM for the application team.
 - Published on every powered-on VM with VMware Tools as `vCommunity|Guest OS Performance|Guest OS Performance Score`. Without VMware Tools there is no score.
 
 ## Sub-metrics
@@ -29,7 +29,7 @@
 - Utilization metrics are included because the Guest OS has only 4 metrics: combining keeps it simple.
 
 ## Scoring
-- The scoring shared by every KPI: `sp5-framework/performance/performance-kpi-design`, section Scoring.
+- The scoring shared by every KPI: [`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
 - Nothing wrong: all 4 score 100. KPI = 100.
 - CPU run queue of 3 per vCPU: halfway through yellow (2 to 4) scores 62.5, weight 2.83. KPI = (3 × 100 + 62.5 × 2.83) / (3 + 2.83) ≈ 81.8.
 - 192 MB free memory: halfway through orange (256 down to 128) scores 37.5, weight 5.66. KPI ≈ 59.16.

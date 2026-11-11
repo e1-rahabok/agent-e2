@@ -32,7 +32,7 @@ Packets Dropped (%) = dropped / (dropped + delivered) × 100
 
 ## Known causes
 - False positive transmit drops: NSX firewall rejects outgoing packets (Broadcom KB 322462).
-- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495). A full receive ring is counted here (droppedRx, %DRPRX) and by the guest; the cause and the fix (a larger ring, guest CPU) are in the Guest OS, so the Guest OS owner fixes it. Which layer counts which drop: `vsphere/technology/network/concepts/packet-drop-accounting`.
+- VMXNET3 packet loss in very high traffic bursts, even VM freezes: not enough receive and transmit buffer, or speed-constrained receive traffic (KB 2039495). A full receive ring is counted here (droppedRx, %DRPRX) and by the guest; the cause and the fix (a larger ring, guest CPU) are in the Guest OS, so the Guest OS owner fixes it. Which layer counts which drop: [`vsphere/technology/network/concepts/packet-drop-accounting`](../../concepts/packet-drop-accounting.md).
 
 ## Misconceptions
 - "Packets Dropped (%) at 95% means an outage" → short spikes at low throughput, driven by receive drops.

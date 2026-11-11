@@ -2,14 +2,14 @@
 
 ## Meaning
 - Indicates a performance problem. A primary counter for how well the VM is served.
-- Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`.
-- Threshold setting by layer: see `sp5-framework/observability/thresholds`.
+- Contrast: CPU Latency does not always indicate a performance problem. See [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../../cpu/metrics/virtual-motherboard/latency.md).
+- Threshold setting by layer: see [`sp5-framework/observability/thresholds`](../../../../../sp5-framework/observability/thresholds.md).
 
 ## Mechanism
 - Latency can be high at low IOPS and throughput: each layer in the stack has its own queue (process, Guest OS storage subsystem, VM driver, kernel, array).
 - Total latency is not (read latency + write latency) / 2. It is the average over all commands. 100 reads and 10 writes per second: total latency follows read latency.
 - Read and write latency have different patterns. Often only one has a problem. Check both when troubleshooting.
-- IP storage: storage read and write do not map 1:1 to network Receive and Transmit. A read sends a small command and its returned data arrives as Receive. See `vsphere/technology/storage/concepts/ip-storage-network-accounting`.
+- IP storage: storage read and write do not map 1:1 to network Receive and Transmit. A read sends a small command and its returned data arrives as Receive. See [`vsphere/technology/storage/concepts/ip-storage-network-accounting`](../../concepts/ip-storage-network-accounting.md).
 
 ## Units and levels
 - Virtual disk latency is provided in ms and in microseconds.

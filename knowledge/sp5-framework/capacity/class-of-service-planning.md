@@ -4,9 +4,9 @@
 - Gold, Silver and Bronze require a relative value that tenants understand.
 - The step follows the CPU overcommit ratio, 1:1, 2:1, 3:1 per physical thread: Silver has 2 consumers per thread, Bronze 3. So Bronze has about 3x the chance of contention of Gold, and costs a third.
 - A step tied to one setting is easy to explain to senior leadership and application teams, and easy to run at scale.
-- Price follows the same step: Gold price = 2x Silver = 3x Bronze (`sp5-framework/concepts/class-of-service`, section Generic guideline).
+- Price follows the same step: Gold price = 2x Silver = 3x Bronze ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), section Generic guideline).
 - The steps are a goal, not a rule: memory allocation (1:1, 1.2:1, 1.4:1), shares and utilization do not follow them exactly.
-- Price, SLA numbers per class, size limits and soft products: `sp5-framework/concepts/class-of-service`. This file holds the capacity settings.
+- Price, SLA numbers per class, size limits and soft products: [`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md). This file holds the capacity settings.
 
 ## Promise vs technique
 ![Relative value per class, Gold, Silver, Bronze: relative contention 1x, 2x, 3x; maximum VM size 3x, 2x, 1x; VM reservation 3x, 2x, 1x; VM share 4-8x, 2-4x, 1x; VM to ESXi overcommit ratio 1x, 2x, 3x](images/class-of-service-relative-value-gold-silver-bronze-table.png)
@@ -16,7 +16,7 @@
   - a lower overcommit ratio;
   - a larger reservation;
   - more shares, so a higher class wins under contention;
-  - a larger maximum VM size, so a lower class cannot become the noisy neighbour (`sp5-framework/capacity/vm-size`).
+  - a larger maximum VM size, so a lower class cannot become the noisy neighbour ([`sp5-framework/capacity/vm-size`](vm-size.md)).
 
 | Relative value | Gold | Silver | Bronze |
 |---|---|---|---|
@@ -47,7 +47,7 @@
   - Gold: ≥ 99.5%
   - Silver: ≥ 99%
   - Bronze: ≥ 98%
-  - The VM Performance (%) a cluster sized to the class is expected to keep: a capacity design expectation that sets the overcommit of the class. The KPI itself has no class of service (`sp5-framework/performance/kpi-vs-sla`).
+  - The VM Performance (%) a cluster sized to the class is expected to keep: a capacity design expectation that sets the overcommit of the class. The KPI itself has no class of service ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 - **Utilization: expected concurrent peak of the VMs**
   - Gold: CPU 35%, RAM 85%
   - Silver: CPU 50%, RAM 85%
@@ -60,9 +60,9 @@
 - The minimum Performance (%) leaves unmet demand of 0.5%, 1% and 2%.
 
 ## Planning calculator
-- At the planning stage there is no workload, so the plan is a simulation. What the planning and running stages each use: `sp5-framework/capacity/capacity-management`, section Two stages. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
+- At the planning stage there is no workload, so the plan is a simulation. What the planning and running stages each use: [`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
 - Inputs: per host the cores, base GHz, DRAM, Hyper-Threading, hypervisor overhead (threads and GB), system CPU reservation, memory tiering; the number of hosts and HA hosts; per class the typical VM (vCPU, GB per vCPU), overcommit, reservation and expected concurrent peak.
-- Supply per host, by model (usable capacity: `sp5-framework/capacity/supply`):
+- Supply per host, by model (usable capacity: [`sp5-framework/capacity/supply`](supply.md)):
   - utilization: threads - hypervisor threads; DRAM - hypervisor GB + tiering;
   - allocation: the utilization supply × the class overcommit (memory: DRAM part × overcommit + tiering);
   - reservation: CPU cores × base GHz - system reservation, because a reservation is capped at the base clock; memory as in utilization.

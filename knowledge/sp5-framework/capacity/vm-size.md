@@ -2,9 +2,9 @@
 
 ## Size is set by the host
 - The right size of a VM depends on the ESXi host it runs on and on the CPU and NUMA architecture of that host, not on the VM alone.
-- A large VM is harder to schedule: its vCPUs compete for threads at the same time, and a VM larger than a NUMA node spans nodes and reads remote memory (`vsphere/technology/cpu/concepts/numa`, `vsphere/technology/cpu/concepts/virtual-numa`).
-- A VM large against its host raises contention even at low utilization: the monster VM of Cluster Risk (`vsphere/object-types/cluster/models/cluster-risk`, section Monster VM).
-- The CPU overcommit ratio is per physical thread, not per core (`sp5-framework/capacity/overcommit`).
+- A large VM is harder to schedule: its vCPUs compete for threads at the same time, and a VM larger than a NUMA node spans nodes and reads remote memory ([`vsphere/technology/cpu/concepts/numa`](../../vsphere/technology/cpu/concepts/numa.md), [`vsphere/technology/cpu/concepts/virtual-numa`](../../vsphere/technology/cpu/concepts/virtual-numa.md)).
+- A VM large against its host raises contention even at low utilization: the monster VM of Cluster Risk ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section Monster VM).
+- The CPU overcommit ratio is per physical thread, not per core ([`sp5-framework/capacity/overcommit`](overcommit.md)).
 
 ## Maximum VM size
 | Overcommit Ratio | Maximum VM size |
@@ -19,9 +19,9 @@
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
 
 ## Size as a class of service fence
-- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one. Mixed clusters are common but a compromise: the design is one class per cluster (`sp5-framework/capacity/demand`, section Overcommit: several classes).
+- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one. Mixed clusters are common but a compromise: the design is one class per cluster ([`sp5-framework/capacity/demand`](demand.md), section Overcommit: several classes).
 - Technique: Gold is entitled to larger VM configurations; Bronze is kept small. A small Bronze VM cannot take a large share of a host's threads at once, so its peaks hurt Gold less.
-- The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from its ratio in the table above (`sp5-framework/concepts/class-of-service`, `sp5-framework/performance/noisy-neighbour`).
+- The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from its ratio in the table above ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md)).
 
 ## Misconceptions
 - "A VM can be as large as its host" → by count at 1:1, yes; but the VM then pays the Hyper-Threading penalty and spans NUMA nodes. Size it against the host's NUMA node.

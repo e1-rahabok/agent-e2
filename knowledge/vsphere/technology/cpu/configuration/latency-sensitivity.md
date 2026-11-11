@@ -62,25 +62,25 @@ CPU reservation, High with vHT    = (numVcpus / numSMT) x cpuFrequency
 - Fully reserving CPUs can also reduce latency when latency sensitivity is Normal.
 
 ## Other measures for latency-sensitive traffic
-- SR-IOV or DirectPath I/O, to give the VM direct access to the network device. Also tune the interrupt rate for the device in the guest. See `vsphere/technology/network/concepts/passthrough-and-offload`.
+- SR-IOV or DirectPath I/O, to give the VM direct access to the network device. Also tune the interrupt rate for the device in the guest. See [`vsphere/technology/network/concepts/passthrough-and-offload`](../../network/concepts/passthrough-and-offload.md).
 - VMXNET3 is the best choice when direct device access is unavailable or undesirable.
 - Enhanced Data Path (EDP) is an option without the limitations of SR-IOV. See the 9.1 document, p. 46. Not read.
 - NFV workloads that depend on high packet throughput (telco, 5G, IoT) might benefit from Enhanced Network Stack (also called EDP Dedicated mode) in VCF (9.1 p. 54).
 
 ## Host power management
 - Power management features in newer server hardware can increase network latency.
-- Preferred: set the ESX host power policy to Maximum performance. See `vsphere/technology/cpu/configuration/host-power-management`.
+- Preferred: set the ESX host power policy to Maximum performance. See [`vsphere/technology/cpu/configuration/host-power-management`](host-power-management.md).
 - Alternative: deactivate power management in the BIOS.
 - BIOS steps:
   - deactivate C1E and other C-states,
   - activate Turbo Boost.
-- See `vsphere/object-types/esxi/configuration/bios-settings`.
+- See [`vsphere/object-types/esxi/configuration/bios-settings`](../../../object-types/esxi/configuration/bios-settings.md).
 
 ## Virtual NIC tuning
 - For most general-purpose workloads, and moderately latency-sensitive workloads, the default VMXNET3 settings give the best performance.
 - Workloads with a low packet rate or few active threads might benefit from deactivating VMXNET3 virtual interrupt coalescing for the NIC.
 - Workloads with many outstanding network requests can see reduced performance when interrupt coalescing is deactivated.
-- See `vsphere/technology/network/configuration/rss-and-interrupt-coalescing`.
+- See [`vsphere/technology/network/configuration/rss-and-interrupt-coalescing`](../../network/configuration/rss-and-interrupt-coalescing.md).
 
 ## Effect on metrics (High)
 - The vCPU is scheduled 100% of the time: no wake-up or scheduling latency. Exclusive affinity is literal.

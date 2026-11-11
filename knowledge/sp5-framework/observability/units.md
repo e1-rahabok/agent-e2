@@ -13,7 +13,7 @@
 - Storage vendors sell decimal capacity; Windows shows binary. A 128 GB drive shows about 116 GB in Windows: 9% less.
 - Windows: 1024 for storage.
 - VCF Operations: 1024 for storage, network and memory; 1000 for CPU (tested). It labels binary values KB, MB, GB, not KiB, MiB, GiB.
-- vCenter counters: KB = 1,024 bytes; kb (kilobit) = 1,000 bits (`vsphere/tools/vsphere-client/vcenter-statistics`, section Units).
+- vCenter counters: KB = 1,024 bytes; kb (kilobit) = 1,000 bits ([`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md), section Units).
 - Binary names (IEC): kibi, mebi, gibi, tebi, pebi; symbols Ki, Mi, Gi. 1 KiB = 1,024 bytes = 1.024 KB. 1 GiB = 1,073,741,824 bytes.
 
 ## Bit or byte
@@ -22,15 +22,15 @@
 - Converting a VCF Operations network rate: 30.81 MBps × 1024 = 31,549 KBps, not 30,810, because VCF Operations uses 1024.
 
 ## Storage throughput
-- Measured in bytes/second, not bits/second. See `sp5-framework/observability/resource-nature`.
+- Measured in bytes/second, not bits/second. See [`sp5-framework/observability/resource-nature`](resource-nature.md).
 
 ## Same metric, different unit per tool
 - Tools can show the same metric in different units.
-- vSphere example: esxtop shows network in megabits; vSphere Client shows kilobytes. See `vsphere/tools/esxtop/units-vs-vsphere-client`.
+- vSphere example: esxtop shows network in megabits; vSphere Client shows kilobytes. See [`vsphere/tools/esxtop/units-vs-vsphere-client`](../../vsphere/tools/esxtop/units-vs-vsphere-client.md).
 
 ## Values above 100%
 - A metric computed by summation (not average) can exceed 100%.
-- vSphere example: VM CPU Ready, and many VM-level values in esxtop. See `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
+- vSphere example: VM CPU Ready, and many VM-level values in esxtop. See [`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md).
 
 ## Misconceptions
 - "The 128 GB drive shows 116 GB, so 12 GB is lost" → the vendor counts 1000, Windows counts 1024.

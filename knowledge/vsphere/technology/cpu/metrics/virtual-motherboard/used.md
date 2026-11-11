@@ -7,7 +7,7 @@
 
 ## Why
 - System time is charged at VM level. It does not exist at vCPU level.
-- See `vsphere/architecture/kernel-worlds` for work charged to the VM rather than to a vCPU.
+- See [`vsphere/architecture/kernel-worlds`](../../../../architecture/kernel-worlds.md) for work charged to the VM rather than to a vCPU.
 
 ## Notes
 - CPU Used is buggy. Do not build conclusions on it alone.
@@ -18,7 +18,7 @@
   - a shared physical core (Hyper-Threading): Used goes down. Used is lower than Run.
   - CPU frequency.
   - hypervisor IO done on behalf of the vCPU: Used is decreased.
-- See `vsphere/technology/cpu/concepts/run-time-vs-run-quality`.
+- See [`vsphere/technology/cpu/concepts/run-time-vs-run-quality`](../../concepts/run-time-vs-run-quality.md).
 
 ## Hyper-Threading examples
 | Scenario | Run | Used |
@@ -26,7 +26,7 @@
 | Two VMs share a core, each runs half the time, half of it overlapping | 50% | 40.625% |
 | Both threads busy all the time | 100% | 62.5% |
 
-- See `vsphere/technology/cpu/concepts/hyper-threading`.
+- See [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md).
 
 ## Formula
 ```text

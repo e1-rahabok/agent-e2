@@ -6,7 +6,7 @@
 - No breakdown per VM.
 
 ## Contention counters
-- Device, kernel, queue and guest latency, each as read, write and command. See `vsphere/technology/storage/concepts/esxi-storage-latency-stack`.
+- Device, kernel, queue and guest latency, each as read, write and command. See [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../concepts/esxi-storage-latency-stack.md).
 - Bus Resets and Commands Aborted: always 0 in the book's observation.
 - Highest Latency: the book is unsure whether it is guest, kernel or device.
 - Maximum Queue Depth: a setting, more property than metric.

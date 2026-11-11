@@ -90,7 +90,7 @@
 - NVMe device wear: `esxcli nvme device log smart get -A <adapter>` shows remaining life and wear rate.
 - NVMe read latency against the thresholds above uses latency.read of the NVMe tier, in nanoseconds: 200 µs = 200,000 ns.
 - The NVMe charts appear only on hosts with memory tiering configured.
-- latency.read and latency.write are level 3: not stored at the default statistics level. See `vsphere/tools/vsphere-client/vcenter-statistics`.
+- latency.read and latency.write are level 3: not stored at the default statistics level. See [`vsphere/tools/vsphere-client/vcenter-statistics`](../../../tools/vsphere-client/vcenter-statistics.md).
 - The vSphere Client lists each tier device with its details on the host's Memory Tiering pane.
 - Chart path: Monitor > Performance > Advanced, Memory view: Memory type read bandwidth, read latency, write bandwidth, write latency.
 - Per VM, tier 1 use from the ESXi shell (MB):
@@ -107,7 +107,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - Leave 25% of the NVMe drive unpartitioned (for example 1.2 TB of a 1.6 TB drive). The flash translation layer then has spare blocks for lazy garbage collection, avoiding urgent inline garbage collection under write pressure.
 - Track the read latency of the tier device.
 - SSD pages (4-16 KB) are the read/write unit; blocks (4-32 MB) are the erase unit. This asymmetry makes NAND fragmentation the main NVMe performance risk.
-- An idle tier device shows latency spikes on sporadic reads: power-state wake-up. See `vsphere/technology/storage/metrics/host/disk`.
+- An idle tier device shows latency spikes on sporadic reads: power-state wake-up. See [`vsphere/technology/storage/metrics/host/disk`](../../storage/metrics/host/disk.md).
 
 ## Misconceptions
 - "Tiered memory performs like DRAM" → infrequently accessed data sits on the NVMe tier.

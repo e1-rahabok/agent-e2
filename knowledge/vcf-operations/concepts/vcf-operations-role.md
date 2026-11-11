@@ -12,26 +12,26 @@
 - vCenter is the administrative tool of vSphere: create VMs, configure switches, set reservations and limits.
 - Capacity planning and performance troubleshooting are done in VCF Operations, not in vCenter.
 - Admins often treat the two as interchangeable because VCF Operations is the main monitoring tool for vCenter. They are different tools with different jobs.
-- vCenter performance charts keep a short history and roll peaks away. See `vsphere/tools/vsphere-client/vcenter-statistics`.
+- vCenter performance charts keep a short history and roll peaks away. See [`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md).
 
 ## Where its knowledge lives
 - VCF Operations is an observability tool. Without a system to manage it has nothing to show, so it is not a peer of vSphere, vSAN, NSX or the Guest OS.
 - A metric about a managed object is documented with that object, even when VCF Operations computes it:
-  - VM CPU Contention: `vsphere/technology/cpu/metrics/virtual-motherboard/contention`, beside VM CPU Ready;
-  - VM Performance (%): `vsphere/object-types/vm/kpis/vm-performance`;
-  - Cluster Risk (%): `vsphere/object-types/cluster/models/cluster-risk`;
-  - 20-second peaks, how VCF Operations shows a counter: `vcf-operations/features/peak-20-second-metrics`.
+  - VM CPU Contention: [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../../vsphere/technology/cpu/metrics/virtual-motherboard/contention.md), beside VM CPU Ready;
+  - VM Performance (%): [`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md);
+  - Cluster Risk (%): [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md);
+  - 20-second peaks, how VCF Operations shows a counter: [`vcf-operations/features/peak-20-second-metrics`](../features/peak-20-second-metrics.md).
 - This folder holds VCF Operations itself, in five folders:
-  - `concepts/`: what the product is for and how it reaches people (this file, `sp5-framework/outputs/system-engagement`);
-  - `features/`: product features as implemented, such as `vcf-operations/features/real-time-metrics`;
-  - `dashboards/`: dashboard design and the shipped dashboard suites, such as `sp5-framework/outputs/dashboard-design`;
-  - `reports/`: report design and the report suite, such as `sp5-framework/outputs/report-design`;
-  - `alerts/`: how alert definitions are built (bottom up), `vcf-operations/alerts/alert-definitions`.
+  - `concepts/`: what the product is for and how it reaches people (this file, [`sp5-framework/outputs/system-engagement`](../../sp5-framework/outputs/system-engagement.md));
+  - `features/`: product features as implemented, such as [`vcf-operations/features/real-time-metrics`](../features/real-time-metrics.md);
+  - `dashboards/`: dashboard design and the shipped dashboard suites, such as [`sp5-framework/outputs/dashboard-design`](../../sp5-framework/outputs/dashboard-design.md);
+  - `reports/`: report design and the report suite, such as [`sp5-framework/outputs/report-design`](../../sp5-framework/outputs/report-design.md);
+  - `alerts/`: how alert definitions are built (bottom up), [`vcf-operations/alerts/alert-definitions`](../alerts/alert-definitions.md).
 - Later: its own sizing, health and performance troubleshooting.
-- Alert architecture across products (top down): `sp5-framework/outputs/alert-design`. Alert thresholds live with the resource they watch, such as `vsphere/technology/cpu/configuration/cpu-alerts`.
+- Alert architecture across products (top down): [`sp5-framework/outputs/alert-design`](../../sp5-framework/outputs/alert-design.md). Alert thresholds live with the resource they watch, such as [`vsphere/technology/cpu/configuration/cpu-alerts`](../../vsphere/technology/cpu/configuration/cpu-alerts.md).
 
 ## Misconceptions
-- "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and `vsphere/tools/vsphere-client/vcenter-statistics`.
+- "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and [`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md).
 - "Plan capacity from vCenter charts" → vCenter is an administrative tool; its history is short and averaged.
 - "A VCF Operations metric needs its own definition" → only computed metrics do. A passed-through metric means what its source means.
 

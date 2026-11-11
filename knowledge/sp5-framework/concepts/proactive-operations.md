@@ -43,7 +43,7 @@
 3. Security: third, not first, in day-to-day operations.
 4. Capacity: will it be enough; efficiency is read here.
 - Configuration is checked as a drill-down under each of the four: a configuration issue can cause any of them.
-- Assess all four on both sides of VCF, platform and product (`sp5-framework/concepts/purpose-driven-architecture`).
+- Assess all four on both sides of VCF, platform and product ([`sp5-framework/concepts/purpose-driven-architecture`](purpose-driven-architecture.md)).
 
 ## A 24-hour day
 - Alerts arrive at random times, day and night: reactive.
@@ -76,7 +76,7 @@
 - Too many alerts overwhelm; too few give no early warning. Insight leads; alerts play a secondary role.
 - Proactive operations reduce alerts in count and intensity. Most alerts are yellow (lower threshold); insight from the daily health check replaces them.
 - Weekly, review the alerts that slipped through the daily check and NOC screens, and improve the dashboards. Repeated over months, fewer alerts slip through.
-- Colours and urgency: `sp5-framework/outputs/alerts-and-insights`.
+- Colours and urgency: [`sp5-framework/outputs/alerts-and-insights`](../outputs/alerts-and-insights.md).
 
 ## Deeper analysis
 - Daily check and NOC screens cover at most one day. A quarterly workload pattern is invisible to them.

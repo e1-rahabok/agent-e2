@@ -13,7 +13,7 @@
 - Idle means the vCPU executes the idle loop. A CPU cannot stop executing instructions without powering down. The kernel runs a lowest-priority idle task.
 - Guest OS IO wait can appear as VM Run (guest IO processing) or as VM Wait (VM IO).
 - Wait is one of 4 states: Run + Ready + Co-stop + Wait = 100%, per vCPU.
-- See `vsphere/technology/cpu/concepts/vcpu-states`.
+- See [`vsphere/technology/cpu/concepts/vcpu-states`](../../concepts/vcpu-states.md).
 
 ## Sub-metrics
 ```text

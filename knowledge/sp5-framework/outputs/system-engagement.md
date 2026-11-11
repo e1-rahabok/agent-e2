@@ -17,7 +17,7 @@
 - Thresholds per channel: each channel has its own urgency, so each can carry its own green, yellow, orange, red thresholds.
 
 ## Alerts, dashboards and reports compared
-- The live screen is left out here: its use is narrow (`sp5-framework/outputs/noc-live-screen`).
+- The live screen is left out here: its use is narrow ([`sp5-framework/outputs/noc-live-screen`](noc-live-screen.md)).
 
 | Item | Alert | Dashboard | Report |
 |---|---|---|---|
@@ -48,7 +48,7 @@
   - Live NOC screen: fits the TV or projector with no scrolling; no tables, because many numbers do not give a conclusion at a glance; trends with the current number; no interaction, because there is no keyboard or mouse; auto-refresh and auto-rotate.
   - Daily health check: 1-2 screens deep; scoreboards, because Level 2 clicks to filter and analyse; standard interaction.
   - Longer cadence: more than 2 screens deep; tables for export to a spreadsheet; interaction follows the need of the moment.
-- The daily health check itself: `sp5-framework/outputs/daily-health-check-dashboards`. Why insight replaces most alerts: `sp5-framework/outputs/alerts-and-insights`.
+- The daily health check itself: [`sp5-framework/outputs/daily-health-check-dashboards`](daily-health-check-dashboards.md). Why insight replaces most alerts: [`sp5-framework/outputs/alerts-and-insights`](alerts-and-insights.md).
 
 ## Misconceptions
 - "Send everyone a weekly report" → nobody can tell whether a report was read, and a report has the least depth. Use a dashboard; add a report where a role needs an offline copy.

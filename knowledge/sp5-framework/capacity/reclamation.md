@@ -3,8 +3,8 @@
 ## When reclamation is the provider's job
 
 - When VMs are free of charge, the infrastructure team have the right to reclaim.
-- When VMs are charged and are the main source of the IT budget, the application team owns VM cost; the infrastructure team has no authority to reclaim. Stocktake still applies to internal IT with chargeback (`sp5-framework/capacity/unused-vm`, section Annual stocktake).
-- Reclamation is step 3 of the six steps (`sp5-framework/capacity/capacity-management`).
+- When VMs are charged and are the main source of the IT budget, the application team owns VM cost; the infrastructure team has no authority to reclaim. Stocktake still applies to internal IT with chargeback ([`sp5-framework/capacity/unused-vm`](unused-vm.md), section Annual stocktake).
+- Reclamation is step 3 of the six steps ([`sp5-framework/capacity/capacity-management`](capacity-management.md)).
 - With VMs free of charge, the infrastructure team still should not force internal customers to cut consumption: developers outnumber administrators. Show the CFO the cost of waste. The CFO holds the hardware budget and makes each line of business optimize.
 
 ## Five areas, easiest to hardest
@@ -24,7 +24,7 @@
 - Keep templates and ISO files in one datastore per physical location.
 - Orphaned VM or VMDK: a file in a datastore no longer tied to a registered VM. Not registered in vCenter, or shown in italics when something is wrong; often without an owner.
 - Orphaned RDM: check on the array whether any ESXi host still mounts the LUN. Requires a management pack (adapter) for that array.
-- Snapshot: not a backup. Kept for long, it slows the VM (`vsphere/technology/storage/concepts/snapshot-impact`). Keep it only to protect a change; remove it once the change is validated. VCF Operations lists snapshots separately because they are easy to reclaim.
+- Snapshot: not a backup. Kept for long, it slows the VM ([`vsphere/technology/storage/concepts/snapshot-impact`](../../vsphere/technology/storage/concepts/snapshot-impact.md)). Keep it only to protect a change; remove it once the change is validated. VCF Operations lists snapshots separately because they are easy to reclaim.
 
 ## What each area frees
 
@@ -76,14 +76,14 @@
 - Threshold is absolute, in MHz, not relative to VM size: idle is absolute; oversized is relative.
 - Default: 100 MHz. On a 2 GHz host that is 5% of a 1-vCPU VM and 0.25% of a 20-vCPU VM.
 - Evaluate every day, not over the whole window. A VM used 2 hours a week is 98.8% idle over the week (166 of 168 hours) but is not idle.
-- The VM must be idle every day for N days. VCF Operations implements it with two metrics (`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`).
+- The VM must be idle every day for N days. VCF Operations implements it with two metrics ([`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm.md)).
 - Window: a short window catches a decommissioned VM fast; a long window protects a month-end VM (payroll can be idle 29 days). With a 1-month window, a retired VM waits a month to be flagged.
 - Check the creation date before powering off: a new VM can stay unused for a long time before go-live.
-- Corner case: a runaway process keeps CPU high with no memory, network or disk work. The idle definition misses it. Use CPU Usage Disparity (%): a runaway process is usually single-threaded (`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`).
+- Corner case: a runaway process keeps CPU high with no memory, network or disk work. The idle definition misses it. Use CPU Usage Disparity (%): a runaway process is usually single-threaded ([`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`](../../vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity.md)).
 - Declare the definition as a formal policy: measurable, so customers cannot dispute it.
 - Reclaiming an idle 10-vCPU VM that runs 1 vCPU does not give back 9 vCPUs of cycles: the cycles were never used. It frees allocation and memory.
 - Power it off: that frees its memory. Reducing its vCPUs does not.
-- Consumed pages linger long after a VM goes idle: Windows and Linux hold on to memory they have used, so the host keeps it mapped. Powering off reclaims it. The CPU side of idle vCPUs: `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`.
+- Consumed pages linger long after a VM goes idle: Windows and Linux hold on to memory they have used, so the host keeps it mapped. Powering off reclaims it. The CPU side of idle vCPUs: [`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`](../../vsphere/technology/cpu/concepts/idle-and-unused-vcpus.md).
 
 ## Powered-off VM
 
@@ -105,7 +105,7 @@
 - TRIM (ATA) and unmap (SCSI) pass the free blocks down so that the virtual disk and the array can release them.
 - Applies only to thin-provisioned disks.
 - Estimate the space to reclaim per VM: Guest OS used space against virtual disk used space.
-- ESXi metrics: `vsphere/technology/storage/metrics/host/datastore`, section Unmap.
+- ESXi metrics: [`vsphere/technology/storage/metrics/host/datastore`](../../vsphere/technology/storage/metrics/host/datastore.md), section Unmap.
 
 ## Misconceptions
 

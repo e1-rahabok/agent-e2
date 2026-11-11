@@ -21,8 +21,8 @@
 | Counter | Meaning |
 |---|---|
 | %USED | Not a state: affected by power management and Hyper-Threading. |
-| %RUN | Run. See `vsphere/technology/cpu/metrics/virtual-motherboard/run`. |
-| %SYS | System. See `vsphere/technology/cpu/metrics/virtual-motherboard/system`. |
+| %RUN | Run. See [`vsphere/technology/cpu/metrics/virtual-motherboard/run`](../../technology/cpu/metrics/virtual-motherboard/run.md). |
+| %SYS | System. See [`vsphere/technology/cpu/metrics/virtual-motherboard/system`](../../technology/cpu/metrics/virtual-motherboard/system.md). |
 | %WAIT | Wait = %VMWAIT + %IDLE. %VMWAIT includes %SWPWT. |
 | %VMWAIT, %SWPWT, %IDLE | Components of Wait. VCF Operations uses a VM Wait that excludes Swap Wait: different remediation. |
 | %RDY | Ready, summed over vCPUs: can exceed 100%. |
@@ -51,9 +51,9 @@
 ## Summary stats
 | Counter | Meaning |
 |---|---|
-| %LAT_C | CPU Latency. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`. |
-| %LAT_M | Memory Latency. See `vsphere/technology/memory/metrics/virtual-motherboard/latency`. |
-| %DMD | Demand. See `vsphere/technology/cpu/metrics/virtual-motherboard/demand`. |
+| %LAT_C | CPU Latency. See [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../technology/cpu/metrics/virtual-motherboard/latency.md). |
+| %LAT_M | Memory Latency. See [`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../../technology/memory/metrics/virtual-motherboard/latency.md). |
+| %DMD | Demand. See [`vsphere/technology/cpu/metrics/virtual-motherboard/demand`](../../technology/cpu/metrics/virtual-motherboard/demand.md). |
 | EMIN | Minimum MHz the world gets when there is not enough for all. |
 | TIMER/s | Timer rate of the world. |
 | AFFINITY BIT MASK | Current scheduling affinity. Not set for Latency Sensitivity High VMs. |

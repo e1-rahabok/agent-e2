@@ -4,7 +4,7 @@
 - Scenario: two vCPUs run on the two threads of the same physical core at the same time.
 - VM Usage is HT-aware. When both threads run, the VM is charged a 37.5% penalty, so it shows about 62.5%.
 - The VM cannot see the core or its two threads. ESXi can.
-- The host view of the same core: see `vsphere/technology/cpu/metrics/host/usage`.
+- The host view of the same core: see [`vsphere/technology/cpu/metrics/host/usage`](../host/usage.md).
 
 ## Cap
 - VM CPU Usage (MHz) is not capped.
@@ -22,7 +22,7 @@
 ## Masked degradation
 - At Run 100%, throughput per vCPU can fall from 1.7 GHz to 0.81 GHz as the host fills up (sample CPU, 1 GHz nominal).
 - Usage (%) masks this degradation.
-- See `vsphere/technology/cpu/concepts/cpu-frequency`.
+- See [`vsphere/technology/cpu/concepts/cpu-frequency`](../../concepts/cpu-frequency.md).
 
 ## Formula
 ```text

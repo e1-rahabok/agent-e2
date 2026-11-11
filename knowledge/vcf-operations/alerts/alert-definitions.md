@@ -8,7 +8,7 @@
 ## Symptom and condition: one test, two names
 - A symptom and a condition are the same thing: a test on one metric, property or event, such as a metric above a value. The two names are a VCF Operations product detail.
 - A symptom definition is stored on its own and reused by many alert definitions. A condition is written inside one alert definition and cannot be reused.
-- A symptom that triggers without its alert is a minor issue: it belongs to the daily health check, not to an alert (`sp5-framework/outputs/alerts-and-insights`).
+- A symptom that triggers without its alert is a minor issue: it belongs to the daily health check, not to an alert ([`sp5-framework/outputs/alerts-and-insights`](../../sp5-framework/outputs/alerts-and-insights.md)).
 
 ## Wait cycle
 - The wait cycle is how long a condition must stay true before the alert fires. It removes short spikes and false positives, and delays the alert by the same time.
@@ -16,7 +16,7 @@
   - contention: 5 minutes; 10 minutes where the metric tends to give false positives;
   - consumption: 15 minutes.
 - VCF Operations collects every 5 minutes, so 5, 10 and 15 minutes are 1, 2 and 3 collection cycles.
-- Wait cycle and threshold together: a 20-second peak above 4x the 5-minute threshold, plus the 5-minute average above the threshold, catches an issue that is both acute and sustained (`sp5-framework/outputs/alert-design`).
+- Wait cycle and threshold together: a 20-second peak above 4x the 5-minute threshold, plus the 5-minute average above the threshold, catches an issue that is both acute and sustained ([`sp5-framework/outputs/alert-design`](../../sp5-framework/outputs/alert-design.md)).
 
 ## Recommendations
 - A recommendation is advice attached to an alert; it changes nothing. A remediation action runs a change.

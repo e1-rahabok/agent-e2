@@ -14,9 +14,9 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Idle and Run (VirtualMachine) (`vsphere/technology/cpu/metrics/virtual-motherboard/idle`). When Run is low, Idle and Other Wait add up to about 100%: the VM is idle, not waiting. → stop. Otherwise → step 2.
+1. Idle and Run (VirtualMachine) ([`vsphere/technology/cpu/metrics/virtual-motherboard/idle`](../metrics/virtual-motherboard/idle.md)). When Run is low, Idle and Other Wait add up to about 100%: the VM is idle, not waiting. → stop. Otherwise → step 2.
 2. Breadth (VirtualMachine). Several VMs affected: find what they share (host, datastore, versions). → step 3.
-3. Configuration (VirtualMachine). Snapshots on the VM (`vsphere/technology/storage/concepts/snapshot-impact`). → step 4.
+3. Configuration (VirtualMachine). Snapshots on the VM ([`vsphere/technology/storage/concepts/snapshot-impact`](../../storage/concepts/snapshot-impact.md)). → step 4.
 4. Known bug (VirtualMachine, HostSystem). Broadcom KB 85393: a known accounting issue inflates Other Wait and esxtop %VMWait. Compare the ESXi, virtual hardware and VMware Tools builds with the fixed builds.
 
 ## Why this order

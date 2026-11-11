@@ -16,7 +16,7 @@
   - An administrator who can monitor a system cannot necessarily fix it.
 - Debuggability is the property that matters for fixing. Modern debugging can include in-line analytics while the code runs; the system must be built for it.
 - Experts should explore data (metrics, logs, events, traces, NetFlow) on a regular cadence. Low-level metrics often behave differently from their documentation, which is rarely deep; metric bugs from several vendors were found this way.
-- Input types: `sp5-framework/observability/input-types`.
+- Input types: [`sp5-framework/observability/input-types`](../observability/input-types.md).
 
 ## Symptom, alert, insight
 - Symptom: a minor, non-urgent issue. Caught in the proactive daily health check.
@@ -46,7 +46,7 @@
 - Notification: the way VCF Operations pushes an alert to a person at once: mobile or email. Only an important alert is pushed (red: urgent and important). An alert that is urgent but not important (orange) stays in the NOC's alert list.
 - Admins want urgent issues fast; important but not urgent issues are analysed after the time-sensitive ones.
 ![Information (logs, events, metrics, tasks) → analysis → Finding. Positive findings → Insight (not urgent, requires SME) → Daily Check (start of day + end of day). Negative findings → Issue (with its symptoms). All issues → Insight; non-urgent issues → Daily Check; urgent issues → Alert (NOC team watch multiple times daily) → important → Notification (immediately pushed to mobile or email)](images/finding-issue-alert-insight-notification-flow-diagram.png)
-- Monitoring and troubleshooting with these terms: `sp5-framework/concepts/monitoring-vs-troubleshooting`.
+- Monitoring and troubleshooting with these terms: [`sp5-framework/concepts/monitoring-vs-troubleshooting`](../concepts/monitoring-vs-troubleshooting.md).
 
 ## Alert vs insight
 | Item | Alert | Insight |
@@ -67,9 +67,9 @@
 - Two points in time: when the operations team knows there is a problem (insight), and when customers would know if nothing were done (alert). The time between is the prevention window.
 - Alert examples: VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention.
 - Insight examples: anomaly metrics; VM CPU Co-stop; VM CPU IO wait; read latency of an individual virtual disk; vMotion stun time; ESXi VMkernel queue time.
-- Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, `sp5-framework/observability/thresholds`).
+- Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, [`sp5-framework/observability/thresholds`](../observability/thresholds.md)).
 ![Timeline: Insight (green) → prevention window (yellow to red) → Alert (red). Insight starts when you know it is a problem; alert starts when customers would know. Insight examples: anomaly metrics, VM CPU Co-stop, VM CPU IO wait, individual virtual disk read latency, vMotion stun time, ESXi VMkernel queue. Alert examples: SLA VM CPU Ready, SLA VM disk latency, cluster average CPU Ready, cluster average memory contention; each example with a threshold](images/insight-prevention-window-alert-timeline-diagram.png)
-- Metric files: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`, `vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`, `vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk`, `vsphere/object-types/vm/metrics/vmotion`, `vsphere/technology/storage/concepts/esxi-storage-latency-stack`.
+- Metric files: [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../../vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`](../../vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md), [`vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk`](../../vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk.md), [`vsphere/object-types/vm/metrics/vmotion`](../../vsphere/object-types/vm/metrics/vmotion.md), [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
 
 ## Lagging and leading indicators
 | Item | Lagging indicator | Leading indicator |
@@ -79,7 +79,7 @@
 | Technicality | Meaning simple, formula maybe not | Low level; deep technical knowledge |
 | Persona | Level 1 and help desk | Subject matter expert who knows the environment |
 
-- The KPI serves both: the insight reads it early, the alert at red (`sp5-framework/performance/kpi-vs-sla`).
+- The KPI serves both: the insight reads it early, the alert at red ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 ## What an alert is: rapid, real, rare
 - Rapid: the issue is urgent, so it must be known at once.

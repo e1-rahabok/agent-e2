@@ -5,12 +5,12 @@
 - The 9.0 performance document (p. 76) says DRS requires the vCLS VMs and vCenter Server. KB 312147 overrides that statement for 9.0 and later.
 - The 9.1 performance document has no vCLS statement in its DRS pages (76-79). This matches the deprecation.
 - vCenter 9.1: vCLS is deprecated. Third-party sources say it is off by default and cannot be re-enabled.
-- See `vsphere/object-types/cluster/concepts/vcls`.
+- See [`vsphere/object-types/cluster/concepts/vcls`](vcls.md).
 
 ## Cluster health indicators
 - Watch for manual recommendations. Unaddressed manual recommendations can stop DRS from generating new recommendations.
 - Watch for DRS faults caused by affinity rule violations. Fixing them can significantly help load balancing.
-- Since vSphere 7.0, the Cluster DRS Score replaces the cluster balance metric. See `vsphere/object-types/cluster/configuration/drs-migration-levels`.
+- Since vSphere 7.0, the Cluster DRS Score replaces the cluster balance metric. See [`vsphere/object-types/cluster/configuration/drs-migration-levels`](../configuration/drs-migration-levels.md).
 
 ## Host homogeneity
 - Group hosts that are as similar as possible in CPU and memory. This improves predictability and stability.

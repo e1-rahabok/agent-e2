@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM disk latency is high, or the disk row of VM Performance (%) is yellow or worse.
-- Entered from `sp5-framework/performance/troubleshooting/vm-slow` (step 4), a health check performance step, or an alert.
+- Entered from [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md) (step 4), a health check performance step, or an alert.
 
 ## Flow
 ```mermaid
@@ -16,12 +16,12 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Latency (VirtualMachine) (`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`). Per virtual disk, not only the VM aggregate; read latency and write latency separately. Only read or only write affected is common: look at that side only. → step 2.
+1. Latency (VirtualMachine) ([`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`](../metrics/virtual-motherboard/disk-latency.md)). Per virtual disk, not only the VM aggregate; read latency and write latency separately. Only read or only write affected is common: look at that side only. → step 2.
 2. Errors (VirtualMachine, Datastore). Packet loss for IP storage, dropped frames for FC, aborted SCSI commands for block storage: signs of contention on a shared datastore. Bus resets and commands aborted should be 0 all the time; track them at higher-level objects with a super metric (max or sum) and expect a flat line. → step 3.
-3. Consumption (VirtualMachine). IOPS and throughput, with outstanding IO (`vsphere/technology/storage/metrics/virtual-motherboard/iops`, `vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`). Latency with low IOPS: queues in one of the layers. → step 4.
+3. Consumption (VirtualMachine). IOPS and throughput, with outstanding IO ([`vsphere/technology/storage/metrics/virtual-motherboard/iops`](../metrics/virtual-motherboard/iops.md), [`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`](../metrics/virtual-motherboard/outstanding-io.md)). Latency with low IOPS: queues in one of the layers. → step 4.
 4. Backing device ratio (Datastore): LUN IOPS / datastore IOPS. Above 1: array-side IO (replication, snapshots). → step 5.
-5. Configuration (VirtualMachine, HostSystem). Snapshots on the VM add IO and latency (`vsphere/technology/storage/concepts/snapshot-impact`). Latency on many VMs of one host or datastore → `vsphere/technology/storage/troubleshooting/host-storage-latency` to split kernel and device latency. → step 6.
-6. Known bug and log (VirtualMachine, HostSystem): `sp5-framework/performance/troubleshooting/vm-slow`, its known bug and log checks.
+5. Configuration (VirtualMachine, HostSystem). Snapshots on the VM add IO and latency ([`vsphere/technology/storage/concepts/snapshot-impact`](../concepts/snapshot-impact.md)). Latency on many VMs of one host or datastore → [`vsphere/technology/storage/troubleshooting/host-storage-latency`](host-storage-latency.md) to split kernel and device latency. → step 6.
+6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks.
 
 ## Why this order
 - Latency per disk first: a VM aggregate hides the one slow disk, and read and write often have different causes.
@@ -30,7 +30,7 @@ flowchart TD
 - The array-side ratio before the host stack: IO the VM did not issue explains latency the VM did not cause.
 
 ## How to read the result
-- Latency with low IOPS: queues in one of the layers (`vsphere/technology/storage/concepts/storage-layers`).
+- Latency with low IOPS: queues in one of the layers ([`vsphere/technology/storage/concepts/storage-layers`](../concepts/storage-layers.md)).
 - Only read or only write affected: common. Look at that side only.
 - Latency on one VM only, with a snapshot: the snapshot first.
 - Latency on many VMs of a host or datastore: the host or the array, not the VM.

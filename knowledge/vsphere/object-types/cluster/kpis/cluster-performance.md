@@ -5,10 +5,10 @@
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
 - Not built into VCF Operations: it is a metric of the vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
 - Use: watch many clusters at once; when the score drops, open the 9 sub-metrics of that cluster.
-- Leading indicator of how close the cluster is to contention: `vsphere/object-types/cluster/models/cluster-risk`. Ballooning and swapping are scored there, not here.
+- Leading indicator of how close the cluster is to contention: [`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md). Ballooning and swapping are scored there, not here.
 
 ## Design
-- Depth (the worst VM) and breadth (the 90th percentile) of the contention of the cluster's powered-on VMs, aggregated directly from the VMs, with VM stats at their 20-second peaks. Why this design, and why not the average of the VM KPIs: `sp5-framework/performance/performance-kpi-design`, section Depth and breadth.
+- Depth (the worst VM) and breadth (the 90th percentile) of the contention of the cluster's powered-on VMs, aggregated directly from the VMs, with VM stats at their 20-second peaks. Why this design, and why not the average of the VM KPIs: [`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Depth and breadth.
 - Drill to hosts only when troubleshooting.
 - One ESXi row: the physical network matters to the cluster, not to a VM.
 - Limitation: outliers, for example one VM with a limit in a large cluster; the worst-VM rows have higher limits than the 90th-percentile rows for that reason.
@@ -34,7 +34,7 @@
 - One VM with 200 ms disk latency and the others at 0: the worst-VM row is orange to red; the 90th percentile stays 0. One VM is not a broad problem.
 
 ## Scoring
-- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `sp5-framework/performance/performance-kpi-design`, section Scoring.
+- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: [`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
 - Worked example: 8 sub-metrics at 0 (bad packets excluded), except 90th percentile Ready = 5% (a quarter into red). That row scores 18.75 with weight about 9.51. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2. A plain average gives about 89.8 and hides the problem.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out. It is never counted as 0, because 0 means perfect. With no sub-metric data, the KPI is not published.
 

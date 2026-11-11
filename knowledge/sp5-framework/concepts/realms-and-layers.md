@@ -4,7 +4,7 @@
 - Business, application and IaaS. Each has its own teams, responsibilities and skills.
 - TOGAF mapping: business → business architecture; application → information systems architecture; IaaS → technology architecture.
 - Disputes are usually between the application team and the infrastructure team: both are IT. Business users are the consumers and do not supply technical answers.
-- Each realm has its own KPIs, with SLAs between realms (`sp5-framework/performance/kpi-vs-sla`).
+- Each realm has its own KPIs, with SLAs between realms ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 | Realm | Owner | What can be observed |
 |---|---|---|
@@ -35,7 +35,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Everything above 4T is one bucket, so a tail at 4T + 100 ms and a tail at 60 seconds score the same.
 - It times one server response; client-rendered applications are judged by Core Web Vitals (Largest Contentful Paint, Interaction to Next Paint, Cumulative Layout Shift).
 - Used instead: percentiles (p95, p99), SLOs with error budgets, Core Web Vitals.
-- Business-transaction monitoring is outside the IaaS scope of the knowledge base. IaaS performance is read from contention per VM (`sp5-framework/performance/kpi-vs-sla`).
+- Business-transaction monitoring is outside the IaaS scope of the knowledge base. IaaS performance is read from contention per VM ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 ## Troubleshooting by elimination
 - Performance troubleshooting eliminates layers: slice each layer and decide whether it causes the problem.
@@ -58,7 +58,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 | 3 | VM contention | IaaS performance: does the platform serve the VM? |
 | 4 | IaaS utilization | IaaS capacity; not the VM owner's concern |
 
-- Level 2 can be read in the Guest OS or at the VM. The right one depends on the use case: each layer lacks visibility into the other (`vsphere/architecture/vm-vs-guest-os`).
+- Level 2 can be read in the Guest OS or at the VM. The right one depends on the use case: each layer lacks visibility into the other ([`vsphere/architecture/vm-vs-guest-os`](../../vsphere/architecture/vm-vs-guest-os.md)).
 - Level 3 is where the VM meets the provider. It is the IaaS performance measure.
 - Level 4 belongs to capacity planners and troubleshooting specialists.
 ![IaaS levels: guest contention → guest performance, VM utilization → VM capacity, VM contention → IaaS performance, IaaS utilization → IaaS capacity](images/iaas-four-levels-contention-and-utilization-diagram.png)

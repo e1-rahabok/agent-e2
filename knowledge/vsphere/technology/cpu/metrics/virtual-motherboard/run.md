@@ -2,7 +2,7 @@
 
 ## Meaning
 - Static-frequency CPU utilization, from the VM vantage point.
-- The ESXi equivalent is called Utilization. See `vsphere/technology/cpu/metrics/host/utilization`.
+- The ESXi equivalent is called Utilization. See [`vsphere/technology/cpu/metrics/host/utilization`](../host/utilization.md).
 - Source: ESXi provides Run in ms.
 
 ## Reservation
@@ -15,7 +15,7 @@
 - Run is one of 4 states: Run + Ready + Co-stop + Wait = 100%, per vCPU.
 - vCenter: 20,000 ms = 100% per vCPU. The VM value in ms is the sum over its vCPUs.
 - Use Run for capacity (Run Time). Use throughput in MHz for performance (Run Quality).
-- See `vsphere/technology/cpu/concepts/vcpu-states` and `vsphere/technology/cpu/concepts/run-time-vs-run-quality`.
+- See [`vsphere/technology/cpu/concepts/vcpu-states`](../../concepts/vcpu-states.md) and [`vsphere/technology/cpu/concepts/run-time-vs-run-quality`](../../concepts/run-time-vs-run-quality.md).
 
 ## Run vs Guest OS
 - The Guest OS counts time as running when its vCPU is in Ready or Co-stop. VM Run excludes that time.

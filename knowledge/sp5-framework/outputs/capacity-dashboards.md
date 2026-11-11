@@ -24,8 +24,8 @@
 - Beyond the built-in pages: reclamation sizes grouped into buckets, to start with the largest; trend charts in the same view to see growth.
 
 ## Consumer vs provider capacity
-- Consumer: one VM, container or application; rightsize it and reclaim what is unused (`sp5-framework/capacity/rightsizing`, `sp5-framework/capacity/reclamation`).
-- Provider: the shared infrastructure, because a shortage hits many consumers (`sp5-framework/capacity/supply`).
+- Consumer: one VM, container or application; rightsize it and reclaim what is unused ([`sp5-framework/capacity/rightsizing`](../capacity/rightsizing.md), [`sp5-framework/capacity/reclamation`](../capacity/reclamation.md)).
+- Provider: the shared infrastructure, because a shortage hits many consumers ([`sp5-framework/capacity/supply`](../capacity/supply.md)).
 - Special clusters change the capacity model. A stretched cluster gets its own model and view: one object or custom group per site, shown side by side.
 
 ## Misconceptions

@@ -9,10 +9,10 @@
 - Platform: the system architecture (compute, storage, network, security, management and portal), implemented with a product such as VCF.
   ![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
 - The SP5 Framework is documented in the book Private Cloud Management by Iwan Rahabok, free to download at https://isvara.io/download. Cite it by that title when a user asks where the framework comes from.
-- Why a new framework instead of ITIL or COBIT: `sp5-framework/concepts/why-a-new-framework`.
-- Metric types per pillar (contention, consumption, context): `sp5-framework/observability/triple-see-method`.
-- Modelling a pillar into one number (KPI, risk): `sp5-framework/concepts/modelling`.
-- Day 2 → Day 0 → Day 1: `sp5-framework/concepts/purpose-driven-architecture`, section Begin with the end in mind.
+- Why a new framework instead of ITIL or COBIT: [`sp5-framework/concepts/why-a-new-framework`](why-a-new-framework.md).
+- Metric types per pillar (contention, consumption, context): [`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md).
+- Modelling a pillar into one number (KPI, risk): [`sp5-framework/concepts/modelling`](modelling.md).
+- Day 2 → Day 0 → Day 1: [`sp5-framework/concepts/purpose-driven-architecture`](purpose-driven-architecture.md), section Begin with the end in mind.
 
 ## What a private cloud manages
 
@@ -43,7 +43,7 @@
   - Compliance raises cost: more requirements, more overhead to manage and measure them.
   - Cost and price drive capacity and performance.
   - Capacity → performance is non-linear: as capacity remaining falls, performance holds; below 0% it drops suddenly.
-  - Availability impacts capacity: an availability problem, such as a host down, reduces the capacity available. The planned part (the HA host) is already taken out of usable capacity (`sp5-framework/capacity/supply`); an outage beyond the design takes more.
+  - Availability impacts capacity: an availability problem, such as a host down, reduces the capacity available. The planned part (the HA host) is already taken out of usable capacity ([`sp5-framework/capacity/supply`](../capacity/supply.md)); an outage beyond the design takes more.
   - Availability impacts performance, above all when it is intermittent: an object flapping between on and off, or a cluster flapping between its passive and active nodes.
 - A line without an arrow means a relationship without impact: inventory and configuration do not impact each other.
 - Below the pillars: the pillars feed inventory, configuration and sustainability; configuration impacts sustainability.
@@ -54,19 +54,19 @@
 
 - Solutions span snapshots, backup, redundancy, fault tolerance, clustering and site recovery. Most consume resources (load balancers, replication), so they go into capacity planning; then they do not hurt performance.
 - Include the load of a DR event in capacity planning.
-- Two metrics: Actual Availability (%) ignores HA design and scheduled downtime; Operational Availability (%) accounts for them, is higher, and is the SLA number (`sp5-framework/concepts/sla-metrics`).
+- Two metrics: Actual Availability (%) ignores HA design and scheduled downtime; Operational Availability (%) accounts for them, is higher, and is the SLA number ([`sp5-framework/concepts/sla-metrics`](sla-metrics.md)).
 - Each extra nine shrinks the margin of error 10x. The book puts five nines at 10x the cost of four nines.
 
 ## Performance
 
 - The most important pillar in day-to-day operations. With HA designed in, part of the system can be down with no impact on performance or capacity.
 - Often confused with capacity: more work done is read as good performance. That reading makes idle look like poor performance.
-- The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: `sp5-framework/concepts/performance-vs-capacity`.
-- Its boundary with the peer pillars, its two processes (monitoring with KPIs, troubleshooting), its KPIs and where each question is answered: `sp5-framework/performance/performance-management`.
+- The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: [`sp5-framework/concepts/performance-vs-capacity`](performance-vs-capacity.md).
+- Its boundary with the peer pillars, its two processes (monitoring with KPIs, troubleshooting), its KPIs and where each question is answered: [`sp5-framework/performance/performance-management`](../performance/performance-management.md).
 
 ## Capacity
 
-- Quantity: is there enough supply for the demand to come? Its two stages (planning, running), its horizons (short term: stop provisioning; long term: buy hardware), its boundary with the peer pillars and where each question is answered: `sp5-framework/capacity/capacity-management`.
+- Quantity: is there enough supply for the demand to come? Its two stages (planning, running), its horizons (short term: stop provisioning; long term: buy hardware), its boundary with the peer pillars and where each question is answered: [`sp5-framework/capacity/capacity-management`](../capacity/capacity-management.md).
 - Short-term capacity and performance depend on each other, which is why they are confused. A cluster that cannot serve its current demand is full, whatever its utilization: stop adding workload until the cause is known.
 - How reservation, commitment, allocation, share and utilization feed the pillars:
   - share → contention (quality of service); utilization causes contention; contention → performance;

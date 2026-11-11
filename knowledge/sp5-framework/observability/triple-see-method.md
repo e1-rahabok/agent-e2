@@ -5,7 +5,7 @@
 - Thousands of metrics across a VCF private cloud are mastered by seeing what they have in common: every metric is one of three types.
 - The Triple See Method: see contention, consumption and context, and verify them as one set before concluding.
 - Designed for Broadcom VCF by Iwan 'e1' Rahabok, after studying the USE Method (Brendan Gregg), the RED Method (Weaveworks) and the Golden Signals (Google SRE).
-- The three types are peers, each with its own purpose, and each maps to pillars of the SP5 framework (`sp5-framework/concepts/overview`).
+- The three types are peers, each with its own purpose, and each maps to pillars of the SP5 framework ([`sp5-framework/concepts/overview`](../concepts/overview.md)).
 
 ## Three types of metric
 
@@ -56,7 +56,7 @@
 - Layer the troubleshooting metrics, events and properties so a Level 1 team can use them quickly: a primary metric is 0-100%, usually a hybrid of several metrics; secondary metrics aim for 0-100% too.
 - A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
 - Example: Capacity Remaining (%) is primary; CPU utilization, memory usable capacity and CPU allocation are secondary.
-- Example: VM Performance (%) is primary (`vsphere/object-types/vm/kpis/vm-performance`); peak vCPU Ready among the vCPUs, peak read/write latency among the virtual disks and Guest OS CPU context switch are secondary.
+- Example: VM Performance (%) is primary ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)); peak vCPU Ready among the vCPUs, peak read/write latency among the virtual disks and Guest OS CPU context switch are secondary.
 
 ## Why not USE, RED or Golden Signals
 

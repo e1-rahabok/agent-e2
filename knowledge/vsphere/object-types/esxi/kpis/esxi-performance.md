@@ -3,12 +3,12 @@
 ## What it is
 - One score per ESXi host, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
-- ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See `vsphere/architecture/provider-consumer`.
+- ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See [`vsphere/architecture/provider-consumer`](../../../architecture/provider-consumer.md).
 - Not built into VCF Operations: a metric of the vCommunity management pack, published on the host object under `vCommunity|ESXi Performance|ESXi Performance Score`, with its 9 sub-metrics beside it.
-- Use: the first step of the ESXi health check (`vsphere/object-types/esxi/health-check/esxi-health-check`). When the score drops, open the 9 sub-metrics of that host.
+- Use: the first step of the ESXi health check ([`vsphere/object-types/esxi/health-check/esxi-health-check`](../health-check/esxi-health-check.md)). When the score drops, open the 9 sub-metrics of that host.
 
 ## Design
-- Same 9 sub-metrics and the same limits as Cluster Performance (`vsphere/object-types/cluster/kpis/cluster-performance`), measured over the VMs of one host instead of the whole cluster: depth (the worst VM) and breadth (the 90th percentile), at 20-second peaks (`sp5-framework/performance/performance-kpi-design`, section Depth and breadth).
+- Same 9 sub-metrics and the same limits as Cluster Performance ([`vsphere/object-types/cluster/kpis/cluster-performance`](../../cluster/kpis/cluster-performance.md)), measured over the VMs of one host instead of the whole cluster: depth (the worst VM) and breadth (the 90th percentile), at 20-second peaks ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Depth and breadth).
 - A VM belongs to the host named in its `summary|parentHost` property; it counts only when `summary|runtime|powerState` is Powered On.
 
 ## Thresholds
@@ -30,7 +30,7 @@
 - It replaces the former "ESXi Bad Network Packets" super metric.
 
 ## Scoring
-- Each sub-metric scores 100-0 against its limits; the KPI is a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: `sp5-framework/performance/performance-kpi-design`, section Scoring.
+- Each sub-metric scores 100-0 against its limits; the KPI is a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: [`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
 - Nothing wrong: bad packets 0 (excluded), the other 8 score 100. KPI = 100.
 - One VM with 200 ms disk latency: the worst-VM disk row is a quarter into red (160-320 ms) and scores 18.75 with weight 9.51. The 90th percentile stays 0: one VM is not a broad problem. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2.
 - A host with no powered-on VMs: no VM sub-metric has data; bad packets 0 are left out. KPI = 100.

@@ -3,7 +3,7 @@
 ## Question
 - Should this large VM give back vCPUs, and what evidence convinces its owner?
 - The answer is downsize or keep, with the vCPU usage pattern that proves it.
-- An operational question, answered by a decision tree; not a health check. The VM health check reads it in its efficiency step (`vsphere/object-types/vm/health-check/vm-health-check`).
+- An operational question, answered by a decision tree; not a health check. The VM health check reads it in its efficiency step ([`vsphere/object-types/vm/health-check/vm-health-check`](../../../object-types/vm/health-check/vm-health-check.md)).
 
 ## Checks, in order
 1. Utilization over a long window (example: 90 days): Usage (%), Demand, Idle (%).

@@ -89,7 +89,7 @@
 - "Windows shows 100%, so the VM is at 100%" → Windows does not account frozen time. vSphere can report 50% for the same period.
 - "Map Guest OS CPU utilization to one VM counter" → no 1:1 mapping exists. Use each counter at its own layer.
 - "The guest sees Hyper-Threading contention" → the guest is unaware of Hyper-Threading.
-- "A table of Guest OS-visible metrics marks Demand as not HT-aware, so Demand ignores HT" → that table is the Guest OS realm view. In the VM realm Demand is affected by Hyper-Threading. See `vsphere/architecture/vm-vs-guest-os`.
+- "A table of Guest OS-visible metrics marks Demand as not HT-aware, so Demand ignores HT" → that table is the Guest OS realm view. In the VM realm Demand is affected by Hyper-Threading. See [`vsphere/architecture/vm-vs-guest-os`](../../../architecture/vm-vs-guest-os.md).
 - "Guest run queue is visible in vSphere" → it is internal to the Guest OS.
 
 ## Metadata

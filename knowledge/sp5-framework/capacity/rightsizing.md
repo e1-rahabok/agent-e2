@@ -5,8 +5,8 @@
 - VMs. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
 - Kubernetes nodes are sized as part of the Kubernetes cluster design, not one by one.
 - "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names:
-  - Guest OS sizing: internal, from Guest OS counters; includes the guest queue, excludes VM overhead (`guest-os/system/concepts/guest-os-sizing`).
-  - VM footprint: external, from vSphere counters; the total load the VM puts on the infrastructure; includes VM overhead, excludes the guest queue (`sp5-framework/capacity/vm-footprint-sizing`).
+  - Guest OS sizing: internal, from Guest OS counters; includes the guest queue, excludes VM overhead ([`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md)).
+  - VM footprint: external, from vSphere counters; the total load the VM puts on the infrastructure; includes VM overhead, excludes the guest queue ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md)).
 - This file covers why VMs are oversized in a private cloud, what that costs the company, and how to get a downsize accepted and proven.
 
 ## Why VMs are oversized
@@ -24,7 +24,7 @@
 
 ## Oversized is relative
 
-- A 64-vCPU VM running 7 vCPUs is oversized; an 8-vCPU VM running 7 is not. Idle, in contrast, is absolute (`sp5-framework/capacity/reclamation`, section Idle VM).
+- A 64-vCPU VM running 7 vCPUs is oversized; an 8-vCPU VM running 7 is not. Idle, in contrast, is absolute ([`sp5-framework/capacity/reclamation`](reclamation.md), section Idle VM).
 - VCF Operations definitions:
   - undersized: for CPU or memory, the recommended size is above the total (configured) size; the smallest increase is 1 vCPU or 1 GB;
   - oversized: CPU or memory can be reclaimed, from total capacity against the recommended size.
@@ -38,7 +38,7 @@
 - Higher frequency with fewer vCPUs: fewer active threads let ESXi boost the active cores. Check CPU Usage (MHz) per vCPU.
 - Lower Co-stop and Ready: all vCPUs are scheduled, used or not.
 - Higher chance of CPU Overlap: more vCPUs, more interrupts and IO serviced on their time.
-- Process ping-pong: the guest scheduler moves threads across vCPUs; each move costs a context switch and cache warm-up (`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`).
+- Process ping-pong: the guest scheduler moves threads across vCPUs; each move costs a context switch and cache warm-up ([`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`](../../vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity.md)).
 - Faster snapshots, especially with memory.
 - Faster vMotion: Windows and Linux use memory as cache; more memory, more to copy.
 - Faster boot: without a reservation, vSphere creates a swap file the size of configured RAM; slow storage delays boot.
@@ -72,7 +72,7 @@
 - Memory rarely bursts like this.
 - Two ways to find these applications:
   - default no: the application team must declare short, sharp bursts;
-  - default yes: the infrastructure team scans the estate. No agent allowed, so esxtop, the 2-second real-time metrics of VCF Operations 9.1 (`vcf-operations/features/real-time-metrics`), or a custom management pack (vCommunity). Limit collection to about 1,000 data points: 2-second data is heavy on the monitored system.
+  - default yes: the infrastructure team scans the estate. No agent allowed, so esxtop, the 2-second real-time metrics of VCF Operations 9.1 ([`vcf-operations/features/real-time-metrics`](../../vcf-operations/features/real-time-metrics.md)), or a custom management pack (vCommunity). Limit collection to about 1,000 data points: 2-second data is heavy on the monitored system.
 - Business transaction monitoring of the VM owner shows bursts that infrastructure metrics miss: work with the owner.
 
 ## Getting the downsize accepted
@@ -107,7 +107,7 @@
 
 ## Monster VMs Capacity Management
 
-- To show management that large VMs do not use their allocated CPU, create a dynamic group of all monster VMs (definition: `vsphere/object-types/cluster/models/cluster-risk`, section Monster VM). One group for CPU and one group for memory. Plot the trend chart every 5 minutes for 3 months so short peaks stay in.
+- To show management that large VMs do not use their allocated CPU, create a dynamic group of all monster VMs (definition: [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section Monster VM). One group for CPU and one group for memory. Plot the trend chart every 5 minutes for 3 months so short peaks stay in.
 - Two metrics on the 2 groups:
 
 
@@ -125,13 +125,13 @@
 
 - Progressive pricing (SP5 Framework, Cost and Price Management): the price per vCPU rises with VM size.
 - Without chargeback: approval chain grows with VM size; a longer form for monster VMs.
-- Every VM has a life span, renewed by an annual confirmation (`sp5-framework/capacity/unused-vm`, section Annual stocktake).
+- Every VM has a life span, renewed by an annual confirmation ([`sp5-framework/capacity/unused-vm`](unused-vm.md), section Annual stocktake).
 - Start small (minimal size for every VM, upsize later) has costs:
   - it breaks the service provider model: IT joins every sizing discussion; price is the better lever;
   - upsizing is harder than downsizing: NUMA, and the maximum size depends on the host;
   - it can be gamed with synthetic load: monitor continuously and long term;
   - upsizing must be fast: the same day, or within an hour when performance is hit. Downsizing can wait weeks.
-  - CPU Hot Add and memory Hot Add become required, and CPU Hot Add turns off vNUMA (`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`, section CPU Hot Add).
+  - CPU Hot Add and memory Hot Add become required, and CPU Hot Add turns off vNUMA ([`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`](../../vsphere/technology/cpu/concepts/idle-and-unused-vcpus.md), section CPU Hot Add).
 
 ## Before vs after
 

@@ -7,7 +7,7 @@
 ## Why memory contention is hard to trace
 - VM Memory Contention combines several causes, and the share of each cannot be separated.
 - Example: a VM shows 51% memory contention. It can come from memory held back by a limit (5 MB), swapped (1 MB), compressed (2 MB), and a low shares setting, all at once.
-- Metric: `vsphere/technology/memory/metrics/virtual-motherboard/latency` (VCF Operations VM Memory Contention).
+- Metric: [`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../metrics/virtual-motherboard/latency.md) (VCF Operations VM Memory Contention).
 
 ## VM memory contention
 - Red, all of:
@@ -42,7 +42,7 @@
 - Balloon is an absolute 10 MB, not a share of consumed memory, so the impact means the same on every host size.
 - Swapped and compressed are left out so the alert fires earlier: remediation, such as reducing demand, can take hours or days.
 - Cluster: fires when 50% of its hosts meet the condition. Most clusters have fewer than 20 hosts, and memory works as a cache, so high consumption does not mean slow.
-- Metrics: `vsphere/technology/memory/metrics/host/ballooned`, `vsphere/technology/memory/metrics/host/consumed`.
+- Metrics: [`vsphere/technology/memory/metrics/host/ballooned`](../metrics/host/ballooned.md), [`vsphere/technology/memory/metrics/host/consumed`](../metrics/host/consumed.md).
 
 ## Misconceptions
 - "Memory contention tells which cause dominates" → limit, swap, compression and shares mix; the split cannot be read from the metric.

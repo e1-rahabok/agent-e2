@@ -6,7 +6,7 @@ import glob, os, re, sys, yaml
 
 HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
 sys.path.insert(0, HARNESS)
-from kb import split, NOT_INDEXED  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
+from kb import split, NOT_INDEXED, FILE_LINK  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
 
 # Old id -> current id for moved knowledge files. A repository tool, not product: the harness never reads it.
 MOVED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'moved.yaml')
@@ -208,7 +208,7 @@ def main():
     check_moved(ids, bad)
     check_file_types(bad)
     check_terminology(pdocs, bad)
-    check_catalog(allowed, ids, {fm.get('id'): body for fm, body in docs.values()}, bad)
+    check_catalog(allowed, ids, {fm.get('id'): FILE_LINK.sub(r'\1', body) for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
 
     # every image file must be linked from a knowledge file, so the AI gets its context

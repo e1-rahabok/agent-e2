@@ -13,7 +13,7 @@
 ## Business application dashboard
 - Top row: one tile per application, coloured by health.
 - Selecting an application shows the health of every VM that makes it up, colour coded.
-- Selecting a VM shows the counters that make up its KPI. KPI: `vsphere/object-types/vm/kpis/vm-performance`.
+- Selecting a VM shows the counters that make up its KPI. KPI: [`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md).
 ![Dashboard layout: a row of application tiles coloured green, yellow or orange; selecting one (App DEF) fills a Health Chart with the health of every VM of that application, colour coded; selecting a VM fills Detailed KPI with the actual counters that define a VM KPI](images/business-application-health-chart-and-kpi-dashboard-layout-diagram.png)
 
 ## vSphere folder structure
