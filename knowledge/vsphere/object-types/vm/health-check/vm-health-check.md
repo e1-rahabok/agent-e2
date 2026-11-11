@@ -16,10 +16,9 @@ flowchart TD
   S3 --> S4[4. Memory contention]
   S4 --> S5[5. Storage contention]
   S5 --> S6[6. Network contention]
-  S2 -->|yes| S7[7. Guest OS health check]
+  S2 -->|yes| S7[7. Configuration]
   S6 --> S7
-  S7 --> S8[8. Configuration]
-  S8 --> S9[9. Efficiency: sizing]
+  S7 --> S8[8. Efficiency: sizing]
 ```
 
 ## Principle
@@ -29,21 +28,16 @@ flowchart TD
 - The VM is the virtual motherboard. Run queue, page-outs and disk queue inside the guest belong to the Guest OS layer. See `guest-os/system/metrics/guest-os-performance`.
 
 ## Checks, in order
-Order: four questions, and within each the what (facts) before the why (explanation):
-- Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
-- Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
-- Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
-- Will it be enough? Capacity: consumption, configuration, contention, inventory. A healthy present does not mean a healthy future. Efficiency (waste) is read here. Framework view: `sp5-framework/concepts/health-risk-efficiency`.
+Order: availability, performance, security, capacity; within each pillar the what before the why (`sp5-framework/concepts/health-check`).
 1. Availability (VirtualMachine). Future, after 1.0: VM down, restarted by HA, unresponsive; mostly from logs and events. State what was not checked. → step 2.
 2. Performance: VM Performance (%) (VirtualMachine). Combines the VM contention metrics into one KPI with colour bands. Start here at scale (`vsphere/object-types/vm/kpis/vm-performance`). Green → step 7. Yellow or worse → step 3, and read only the resources whose sub-metric fails.
 3. CPU contention (VirtualMachine). Ready and Co-stop are the main counters; Overlap and Other Wait usually read much lower (`vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics`). Read Ready against Run: 2% Ready on 10% Run is bad; 2% Ready on 98% Run is fine (`vsphere/technology/cpu/metrics/virtual-motherboard/ready`). Co-stop: `vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`. Contention (VCF Operations) includes limit time (`vsphere/technology/cpu/metrics/virtual-motherboard/contention`). Latency includes Hyper-Threading and frequency effects: not a pure wait (`vsphere/technology/cpu/metrics/virtual-motherboard/latency`). High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. → step 4.
 4. Memory contention (VirtualMachine). Latency is the only true memory contention counter (`vsphere/technology/memory/metrics/virtual-motherboard/latency`). Then, in order: swap-in, decompression, host cache, balloon. Ballooned, swapped and compressed memory are past reclamation, not current waiting (`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`). High → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`. → step 5.
 5. Storage contention (VirtualMachine). Disk latency per virtual disk, read and write separately (`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`). Outstanding IO: queued IO adds latency at any load (`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`). Bus resets and commands aborted should stay at 0. High → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`. → step 6.
 6. Network contention (VirtualMachine). Dropped packets are the only network contention metric of a VM; vSphere has no network latency or retransmit counter (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`). Receive drops → `vsphere/technology/network/troubleshooting/vnic-rx-drops`. → step 7.
-7. Guest OS (Guest OS layer). Guest OS Performance (%): run queue, disk queue, free memory, page-out rate (`guest-os/system/metrics/guest-os-performance`). A separate layer: the VM can be green while the Guest OS waits on its own queues. → step 8.
-8. Configuration (VirtualMachine). `vsphere/object-types/vm/configuration/vm-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Limits, shares and reservations explain contention the host does not cause (`vsphere/architecture/resource-controls`). vMotion stun time: `vsphere/object-types/vm/metrics/vmotion`. → step 9.
-9. Efficiency (VirtualMachine). Consumption sizes the VM:
-   - CPU: Run, Usage, Demand. Usage includes Turbo; compare with Run before upsizing (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Oversized: `vsphere/technology/cpu/health-check/oversized-vm-downsizing`.
+7. Configuration (VirtualMachine). `vsphere/object-types/vm/configuration/vm-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Limits, shares and reservations explain contention the host does not cause (`vsphere/architecture/resource-controls`). vMotion stun time: `vsphere/object-types/vm/metrics/vmotion`. → step 8.
+8. Efficiency (VirtualMachine). Consumption sizes the VM:
+   - CPU: Run, Usage, Demand. Usage includes Turbo; compare with Run before upsizing (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Oversized: `vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`.
    - Memory: Consumed is the main counter; size the VM from Guest OS metrics, not VM metrics (`vsphere/technology/memory/metrics/virtual-motherboard/consumed`).
    - Storage: IOPS and throughput (`vsphere/technology/storage/metrics/virtual-motherboard/iops`). Network: throughput (`vsphere/technology/network/metrics/virtual-motherboard/throughput`).
    - Idle VM: `vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`.
@@ -52,12 +46,12 @@ Order: four questions, and within each the what (facts) before the why (explanat
 ## Why this order
 - Availability first: a VM that is down has no performance problem.
 - Contention before consumption: consumption sizes the VM; it does not show whether the VM suffers.
-- VM before Guest OS: contention is waiting the hypervisor imposes, which the Guest OS cannot see.
+- No Guest OS step: the Guest OS is a separate realm. The hypervisor neither sees nor controls its run queue, disk queue or page-outs, so they do not decide the health of the VM. The Guest OS is checked as its own object.
 - Efficiency last: sizing is done when there is no problem.
 
 ## How to read the result
 - Present health, risk and efficiency are read separately, never as one score.
-- VM Performance green, Guest OS Performance red → the VM gets what it demands; the Guest OS or the application waits on its own queues.
+- VM Performance green and the application slow → the VM gets what it demands; the wait is inside the Guest OS (`guest-os/system/metrics/guest-os-performance`).
 
 ## Traps
 - "VM CPU Usage is 95%, so the VM is short of CPU" → Usage includes Turbo and is consumption. Check Ready, Co-stop and Run.

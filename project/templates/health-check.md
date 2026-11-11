@@ -26,11 +26,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-Order (author, 2026-11-09): four questions, and within each the what (facts) before the why (explanation):
-- Is it up? Availability: log, saturation, configuration, known bug. A system that is down has no performance problem and cannot be attacked.
-- Is it fast? Performance: contention, consumption, configuration, known bug, log. Up does not mean fast.
-- Is it secure? Security: configuration, known bug, log. Running well does not mean safe from attack.
-- Will it be enough? Capacity: consumption, configuration, contention, inventory. A healthy present does not mean a healthy future. Efficiency (waste) is read here.
+Order: availability, performance, security, capacity; within each pillar the what before the why (`sp5-framework/concepts/health-check`).
 1. Availability. <What is checked, or: future, after 1.0.> → step 2.
 2. Performance: <KPI> (<object>). Green → step 3. Otherwise → `<troubleshooting id>`.
 3. Capacity: <model> (<object>). <Band, with source> → step 4.

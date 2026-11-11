@@ -131,7 +131,7 @@ related:
 - sp5-framework/capacity/capacity-model
 - sp5-framework/capacity/reclamation
 - sp5-framework/capacity/rightsizing
-- sp5-framework/capacity/health-check/can-cluster-take-more-vms
+- vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 images:
   - path: images/capacity-management-six-steps-demand-and-supply-diagram.png
     product: [vsphere]

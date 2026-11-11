@@ -283,9 +283,12 @@ def check_flow_map(bad):
     """REPOSITORY-MAP.md, section Flows, lists every flow file."""
     text = open('REPOSITORY-MAP.md').read() if os.path.exists('REPOSITORY-MAP.md') else ''
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
-        if '/troubleshooting/' in f or '/health-check/' in f:
+        if '/troubleshooting/' in f or '/health-check/' in f or '/decision-tree/' in f:
             if f'({f})' not in text:
                 bad('REPOSITORY-MAP.md', f'flow {f} not listed in section Flows')
+        if '/health-check/' in f and ('/technology/' in f or f.startswith('knowledge/sp5-framework/')):
+            bad(f, 'a health check is on an object type, never on a technology or a pillar: '
+                   'use object-types/<object>/health-check/, or decision-tree/ for one operational question')
 
 
 def check_titles(bad):

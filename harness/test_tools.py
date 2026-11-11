@@ -102,7 +102,7 @@ class CatalogTest(unittest.TestCase):
         f = CAT.facts_for(['vsphere/technology/cpu/configuration/cpu-alerts'])
         self.assertIn('- Alert, red: VM CPU Ready > 8', f)
         self.assertIn('- Alert, orange: VM CPU Ready > 4', f)
-        self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['sp5-framework/capacity/health-check/can-cluster-take-more-vms']))
+        self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms']))
 
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
@@ -241,7 +241,7 @@ class PrimerTest(unittest.TestCase):
     def test_all_blocks_present_and_within_budget(self):
         t = self.P.build(DOCS, {b: True for b in self.P.BLOCKS})
         for head in ('## Map of the knowledge base', '## Level 300 misreadings', '## Confusable terms',
-                     '## Troubleshooting flows', '## Procedure'):
+                     '## Health checks', '## Troubleshooting (symptom', '## Decision trees', '## Procedure'):
             self.assertIn(head, t)
         self.assertLessEqual(self.P.tokens(t), self.P.BUDGET_TOKENS)
 
@@ -265,7 +265,7 @@ class PrimerTest(unittest.TestCase):
     def test_flow_index_lists_every_flow_file(self):
         t = self.P.flows_block(DOCS)
         for i in DOCS:
-            if '/troubleshooting/' in i or '/health-check/' in i:
+            if '/troubleshooting/' in i or '/health-check/' in i or '/decision-tree/' in i:
                 self.assertIn(i, t)
 
     def test_agentic_adds_primer_to_system_prompt(self):

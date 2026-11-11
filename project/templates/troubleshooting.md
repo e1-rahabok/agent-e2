@@ -1,7 +1,7 @@
-# <Symptom or question: why the object failed a health check>
+# <Symptom: what is down or slow, on which object>
 
 ## Symptom
-- What is observed, on which object. Which health check step failed, or the user complaint (a complaint is a failed health check).
+- What is observed, on which object. The known problem that starts it: a user complaint, an alert, or a failed health check step.
 
 ## Flow
 ```mermaid

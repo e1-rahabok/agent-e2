@@ -142,7 +142,7 @@ A metric with its own file is an entry only when it has another name or a confus
 
 - **Closed cluster**: A cluster that accepts no new VM and no VM upsize, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%).
   - Also called: Stop provisioning
-  - File: `sp5-framework/capacity/health-check/can-cluster-take-more-vms`
+  - File: `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`
 - **Cluster Risk (%)**: How close the worst ESXi host of a cluster is to contention: a leading indicator, 0 no risk, 100 maximum risk.
   - Not to confuse with Time Remaining: Cluster Risk reads the running cluster now (short-term capacity: stop provisioning, no projection); Time Remaining is the long-term runway, days until the forecast crosses usable capacity (buy hardware).
   - File: `vsphere/object-types/cluster/models/cluster-risk`
@@ -163,6 +163,9 @@ A metric with its own file is an entry only when it has another name or a confus
 - **Compliance**: Settings measured against internal policy, industry benchmarks and regulation; binary.
   - Not to confuse with Security: security covers live threats and activity, and a security issue is present and urgent; a non-compliant setting is risk (future health) until it is exploited or exposed.
   - File: `sp5-framework/concepts/overview`
+- **Decision tree**: A flow that answers one operational question (can it, should it, how much) and ends in a choice to act, with its reason. Folder `decision-tree/`.
+  - Not to confuse with Health check: a decision tree answers one question, usually on one pillar; a health check covers every pillar of one object and may read a decision tree's result as one step.
+  - File: `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`
 - **Finding**: Result of troubleshooting or analysis from logs, events, metrics, tasks. Positive feeds insight; negative is an issue.
 - **Framework**: How IT operations are managed: policy, pillars, process, people, platform. The SP5 framework; ITIL and COBIT are other frameworks.
   - File: `sp5-framework/concepts/overview`
@@ -171,7 +174,7 @@ A metric with its own file is an entry only when it has another name or a confus
 - **Green zone**: The change window: the agreed time when approved changes, deployments and patches may enter production. Downtime inside it is excluded from Operational Availability.
   - Also called: Change window, maintenance window, authorized execution window
   - File: `sp5-framework/concepts/sla-metrics`
-- **Health check**: Check of one object across every pillar, in the order availability, performance, security, capacity, with configuration as the drill-down. The what; a superset of troubleshooting. A failed step opens a troubleshooting flow.
+- **Health check**: Check of one object type (VM, host, cluster), never a technology or a single pillar, in the order availability, performance, security, capacity, with configuration as the drill-down. The what; a superset of troubleshooting. A failed step opens a troubleshooting flow.
   - Also called: what to monitor, monitoring checklist, verification, daily check
   - File: `sp5-framework/concepts/health-check`
 - **Insight**: A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close.
@@ -196,8 +199,8 @@ A metric with its own file is an entry only when it has another name or a confus
   - File: `sp5-framework/concepts/triple-see-method`
 - **Troubleshooting**: The reactive process for an object that is down or slow: why, and the fix, in the order of checks of its pillar. A security breach gets a forensic investigation instead; compliance is drift detection.
   - Also called: diagnosis, diagnose, root cause analysis, triage
-  - Not to confuse with Health check: the health check is the what (healthy, at risk, wasteful) and comes first; troubleshooting is the why and starts only from a complaint, an alert or a failed health check step.
-  - File: `sp5-framework/concepts/monitoring-vs-troubleshooting`
+  - Not to confuse with Health check: the health check first finds whether there is a problem (the what); troubleshooting starts from a known one (complaint, alert, failed health check step) and asks why.
+  - File: `sp5-framework/concepts/health-check`
 - **Value (pillar)**: One of the five SP5 pillars. Keeps apart cost (what IT spends on infrastructure), price (what IT charges a tenant) and business value (what the investment returns). Formerly cost management.
   - Also called: Cost and price
   - File: `sp5-framework/concepts/overview`

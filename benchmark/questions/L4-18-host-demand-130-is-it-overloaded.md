@@ -34,7 +34,7 @@ level: 400
 answer_type: judged
 input: [text]
 knowledge:
-  - vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
+  - vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
   - vsphere/technology/cpu/metrics/host/utilization
   - vsphere/technology/cpu/metrics/host/core-utilization
 attachments: []

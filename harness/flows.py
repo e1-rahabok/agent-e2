@@ -1,4 +1,5 @@
-"""Flow executor: health checks and troubleshooting flows (knowledge/**/health-check/*.md, knowledge/**/troubleshooting/*.md),
+"""Flow executor: health checks, troubleshooting flows and decision trees (knowledge/**/health-check/*.md,
+knowledge/**/troubleshooting/*.md, knowledge/**/decision-tree/*.md),
 served one step at a time.
 
 The markdown file is the single source. Two step formats are read:
@@ -34,7 +35,7 @@ def steps_of(doc):
     return out
 
 
-FLOW_FOLDERS = ('/health-check/', '/troubleshooting/')
+FLOW_FOLDERS = ('/health-check/', '/troubleshooting/', '/decision-tree/')
 
 
 def is_flow(doc_id):
@@ -75,7 +76,7 @@ def check(docs):
     for i in flow_ids(docs):
         steps = steps_of(docs[i])
         if len(steps) < 2:
-            problems.append((i, 'flow file (health-check/, troubleshooting/) needs "## Checks, in order" with numbered steps, or "## Step a:" sections'))
+            problems.append((i, 'flow file (health-check/, troubleshooting/, decision-tree/) needs "## Checks, in order" with numbered steps, or "## Step a:" sections'))
             continue
         keys = {k for k, _ in steps}
         for k, t in steps:

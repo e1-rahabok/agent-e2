@@ -167,7 +167,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 
 ### Query
 0. Map the user's words (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misreading the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).
-1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
+1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
 2. Extract filters from the question: `product`, `object`, `technology`, `pillar`. (Planned, as step 1.)
 3. Retrieve by similarity within those filters.
 4. Expand: add files named in `related`, `internal_derive`, `same_name`, `same_meaning`.

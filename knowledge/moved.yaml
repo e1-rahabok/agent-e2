@@ -39,8 +39,8 @@ vsphere/cpu/configuration/host-wide-dense-mode: vsphere/technology/cpu/configura
 vsphere/cpu/configuration/latency-sensitivity: vsphere/technology/cpu/configuration/latency-sensitivity
 vsphere/cpu/configuration/numa-settings: vsphere/technology/cpu/configuration/numa-settings
 vsphere/cpu/configuration/side-channel-scheduling: vsphere/technology/cpu/configuration/side-channel-scheduling
-vsphere/cpu/diagnosis/host-cpu-capacity-headroom: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
-vsphere/cpu/diagnosis/oversized-vm-downsizing: vsphere/technology/cpu/health-check/oversized-vm-downsizing
+vsphere/cpu/diagnosis/host-cpu-capacity-headroom: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
+vsphere/cpu/diagnosis/oversized-vm-downsizing: vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 vsphere/cpu/diagnosis/run-vs-used-gap: vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 vsphere/cpu/diagnosis/vm-cpu-contention-high: vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 vsphere/cpu/diagnosis/vm-other-wait-high: vsphere/technology/cpu/troubleshooting/vm-other-wait-high
@@ -304,9 +304,9 @@ vsphere/technology/memory/diagnosis/vm-memory-latency-high: vsphere/technology/m
 vsphere/technology/network/diagnosis/vnic-rx-drops: vsphere/technology/network/troubleshooting/vnic-rx-drops
 vsphere/technology/storage/diagnosis/host-storage-latency: vsphere/technology/storage/troubleshooting/host-storage-latency
 vsphere/technology/storage/diagnosis/vm-storage-performance-checks: vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
-operations-management/capacity/diagnosis/can-cluster-take-more-vms: sp5-framework/capacity/health-check/can-cluster-take-more-vms
-vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
-vsphere/technology/cpu/diagnosis/oversized-vm-downsizing: vsphere/technology/cpu/health-check/oversized-vm-downsizing
+operations-management/capacity/diagnosis/can-cluster-take-more-vms: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
+vsphere/technology/cpu/diagnosis/host-cpu-capacity-headroom: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
+vsphere/technology/cpu/diagnosis/oversized-vm-downsizing: vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 vsphere/object-types/cluster/overview-what-to-monitor: vsphere/object-types/cluster/health-check/cluster-health-check
 vsphere/object-types/esxi/overview-what-to-monitor: vsphere/object-types/esxi/health-check/esxi-health-check
 vsphere/object-types/vm/overview-what-to-monitor: vsphere/object-types/vm/health-check/vm-health-check
@@ -392,7 +392,7 @@ operations-management/capacity/capacity-dimensions: sp5-framework/capacity/capac
 operations-management/capacity/capacity-management-process: sp5-framework/capacity/capacity-management-process
 operations-management/capacity/capacity-model: sp5-framework/capacity/capacity-model
 operations-management/capacity/class-of-service-planning: sp5-framework/capacity/class-of-service-planning
-operations-management/capacity/health-check/can-cluster-take-more-vms: sp5-framework/capacity/health-check/can-cluster-take-more-vms
+operations-management/capacity/health-check/can-cluster-take-more-vms: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 operations-management/capacity/host-spec-from-class-of-service: sp5-framework/capacity/host-spec-from-class-of-service
 operations-management/capacity/reclamation: sp5-framework/capacity/reclamation
 operations-management/capacity/rightsizing: sp5-framework/capacity/rightsizing
@@ -435,3 +435,6 @@ vcf-operations/concepts/real-time-metrics: vcf-operations/features/real-time-met
 sp5-framework/performance/troubleshooting/vm-slow-triage: sp5-framework/performance/troubleshooting/vm-slow
 vsphere/tools/vcf-operations/peak-20-second-metrics: vcf-operations/features/peak-20-second-metrics
 vsphere/object-types/cluster/kpis/cluster-sla-sli: vsphere/object-types/cluster/kpis/cluster-performance
+sp5-framework/capacity/health-check/can-cluster-take-more-vms: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
+vsphere/technology/cpu/health-check/host-cpu-capacity-headroom: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
+vsphere/technology/cpu/health-check/oversized-vm-downsizing: vsphere/technology/cpu/decision-tree/oversized-vm-downsizing

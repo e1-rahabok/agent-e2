@@ -166,7 +166,7 @@ rows:
   match: ['(cluster|environment)\b[^.?\n]{0,25}\b(full|out of capacity|running out)', 'how many (more )?vms', 'capacity (left|remaining)', 'headroom']
   means: Cluster capacity usable capacity can cluster take more VMs
   note: 'Capacity is read against usable capacity (total minus HA, buffer and overhead), and performance decides first: a cluster can be full with low utilization.'
-  files: [sp5-framework/capacity/health-check/can-cluster-take-more-vms, sp5-framework/capacity/capacity-model]
+  files: [vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms, sp5-framework/capacity/capacity-model]
 - id: hyper-threading
   match: ['hyper-?thread', '\bht\b', '\bsmt\b']
   means: Hyper-Threading thread core utilization

@@ -188,7 +188,7 @@ related:
 - sp5-framework/capacity/vm-footprint-sizing
 - vsphere/technology/cpu/concepts/cpu-topology
 - vsphere/technology/cpu/concepts/numa
-- vsphere/technology/cpu/health-check/oversized-vm-downsizing
+- vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - sp5-framework/capacity/reclamation
 - vcf-operations/features/real-time-metrics

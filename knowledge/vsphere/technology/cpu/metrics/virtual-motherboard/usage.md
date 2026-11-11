@@ -87,7 +87,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
 - vsphere/technology/cpu/metrics/virtual-motherboard/demand
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
-- vsphere/technology/cpu/health-check/oversized-vm-downsizing
+- vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 images:
   - path: ../../images/vm-cpu-usage-vs-run-scatter-across-vms.png
     product: [vsphere]

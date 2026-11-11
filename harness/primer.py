@@ -4,7 +4,7 @@ Each block is generated from the knowledge base at start, so it cannot drift fro
   map        what each area holds, what each file kind answers, which tool serves it (from ids and retriever_guide)
   rules      Level 300 misreadings and their corrections (harness/misreadings.md)
   terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
-  flows      symptom -> flow index (every health-check and troubleshooting file: title and id)
+  flows      flow index by kind (every health-check, troubleshooting and decision-tree file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
 Each block has a switch in benchmark/runner/config.yaml, key agent_primer. All off by default until the benchmark
 shows a gain (harness/AGENT.md, section 7).
@@ -21,15 +21,16 @@ KINDS = {  # folder kind -> what it answers and which tool serves it
     'concepts': ('how it works, why a value behaves so', 'search, read_file'),
     'metrics': ('what a counter means on one object', 'catalog, read_file, follow_links(same_name)'),
     'configuration': ('what a setting does', 'search, read_file'),
-    'health-check': ('is the object healthy: the what, in order of health, risk, efficiency', 'flow'),
-    'troubleshooting': ('why it fails a health check: what to check, in what order', 'flow'),
+    'health-check': ('is this object healthy, on every pillar: the what', 'flow'),
+    'troubleshooting': ('why is it down or slow: from a complaint, alert or failed health check step', 'flow'),
+    'decision-tree': ('can it, should it, how much: one operational question, ending in a choice to act', 'flow'),
     'kpis': ('a performance KPI: sub-metrics, bands, scoring', 'catalog, read_file'),
     'models': ('a capacity or risk model: sub-metrics, bands, decision', 'catalog, read_file'),
     'tools': ('how esxtop or the vSphere Client shows the counters', 'read_file'),
 }
 
 PROCEDURE = """## Procedure
-- Troubleshooting question: find the matching flow (index above or search with retriever_guide troubleshooting), then call flow and follow its steps in order.
+- Health check, troubleshooting or decision question: find the matching flow (index above, or search with its retriever_guide), then call flow and follow its steps in order.
 - A unit, rollup, statistics level, esxtop field or threshold: call catalog. Never answer a number from memory.
 - Any arithmetic or conversion: call calculate.
 - About a metric: read its file, then follow_links(same_name) to the same label on other objects.
@@ -89,10 +90,14 @@ def terms_block(docs):
 
 
 def flows_block(docs):
-    rows = sorted((d.title, d.id) for i, d in docs.items() if _kind(i) in ('health-check', 'troubleshooting'))
-    if not rows:
-        return ''
-    return '\n'.join(['## Troubleshooting flows (symptom -> flow id)'] + [f'- {t}: {i}' for t, i in rows])
+    heads = {'health-check': 'Health checks (object -> flow id)', 'troubleshooting': 'Troubleshooting (symptom -> flow id)',
+             'decision-tree': 'Decision trees (question -> flow id)'}
+    lines = []
+    for k, head in heads.items():
+        rows = sorted((d.title, d.id) for i, d in docs.items() if _kind(i) == k)
+        if rows:
+            lines += [f'## {head}'] + [f'- {t}: {i}' for t, i in rows]
+    return '\n'.join(lines)
 
 
 def build(docs, switches):
