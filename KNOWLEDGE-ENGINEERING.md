@@ -102,7 +102,7 @@ flowchart LR
 | Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
 | Given up front, every question | Misconceptions with the widest reach, confusable pairs, flow index, map | `knowledge/misconceptions.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
-| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
+| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `capacity.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
 | Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | `harness/modes.py` (system prompts), `harness/primer.py` (procedure) | Conduct for every answer, not a fact about one metric |
 
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each up-front misconception ends with `See <id>`.

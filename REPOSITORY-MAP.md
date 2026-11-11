@@ -27,7 +27,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it |
 | `knowledge/glossary.md` | The agent's vocabulary |
 | `knowledge/misconceptions.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
-| `harness/` | Retrieval, catalog, calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
+| `harness/` | Retrieval, catalog, calculator, planning calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
 A flow is an expert's order of checks, run step by step by the `flow` tool. Three kinds, each in a folder of that name; the harness finds them by the folder name and gives the agent one index, grouped by kind. What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md). Lint checks that these tables list every flow.

@@ -7,7 +7,7 @@ Why the system can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [A
 - The agent is the model plus the tool loop, in agentic mode only. It is not a separate program.
 - The model makes the decisions: which tool next, with which query, which file to read, when to stop and answer.
 - The harness hosts the loop and constrains it: it runs the tools, enforces the rules and the budgets, and checks the answer.
-- Code: `harness/agent.py` (the loop, the tools, the rules), `harness/primer.py` (the up-front blocks), prompts `SYSTEM_AGENT` and `PROMPTS` in `harness/modes.py`. The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `flows.py`); the verifier in `verify.py`.
+- Code: `harness/agent.py` (the loop, the tools, the rules), `harness/primer.py` (the up-front blocks), prompts `SYSTEM_AGENT` and `PROMPTS` in `harness/modes.py`. The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `capacity.py`, `flows.py`); the verifier in `verify.py`.
 - The model is frozen. What we change is what the agent is told, which tools it has, and the rules around them.
 
 ## 2. Why an agent

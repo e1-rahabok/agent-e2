@@ -116,6 +116,7 @@ Each entry has:
 - Partly settled by the author's edit (2026-11-11): host-spec-from-class-of-service now states overcommit per physical thread ((a)), and the noisy-neighbour memory table is removed ((c) no longer applies). Still open: (b) whether Gold keeps the infrastructure share; (d).
 - Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread.
 - Partly settled by the author's working model (Capacity Planning Stage.xlsx, 2026-11-11): (b) every class keeps the infrastructure share: hypervisor overhead (14 threads, 64 GB on a 64-core, 768 GB host) is subtracted per ESXi host before any class. Still open: (d).
+- Settled 2026-11-11: (a), (b), (c) (memory ratios from the spreadsheet: 1:1, 1.2:1, 1.4:1). Still open: (d).
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
@@ -158,29 +159,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-### Q099 · Part 1 > Service Level Agreement > Price & SLA · Silver ratios, notation and the 64-core licence
-
-- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Planning example); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md) (section Silver at 3:1 CPU).
-- Search 1: "For Silver, you decide on 3:1 CPU overcommit and no RAM overcommit"
-- Search 2: "(67% of Gold)" and the cells "CPU 1:2", "RAM 1:1.5" in the same table
-- Search 3: "Buying 64 cores maximizes your vSphere license"
-- Question:
-  - (a) The table gives Silver CPU 1:2 and RAM 1:1.5 (price 58% of Gold by the 50/50 rule); the text gives 3:1 and 1:1 (67%). Which is Silver?
-  - (b) The book writes overcommit both ways (1:2 in two tables, 2:1 and 4:1 in the sample offering). The knowledge base writes N:1 (consumer : physical). Keep that?
-  - (c) 768 GB = 64 cores × 3 vCPU × 4 GB is per core. Per thread (your Q079 rule) it is 1,536 GB. Which basis?
-  - (d) VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548); 64 cores no longer maximizes a licence. Drop the reason in the next edition?
-- Written as now: Silver from the text (3:1, 1:1, 67%); N:1 notation; per core, flagged; licence reason replaced with the per-core rule.
-- Related (2026-11-08, Capacity Management session): Q119 and Q120 (the capacity plan states CPU per thread: Silver 2:1, Bronze 4:1; memory 1.5:1 and 2:1). One answer can settle (b), (c) and Q120.
-- Proposed answer ((b) settled: N:1 in capacity-dimensions; (c) by Q079, Q115 e, Q151; (a), (d) expert call):
-  - (a) Silver = the table, read per thread: CPU 2:1, RAM 1.5:1, the capacity plan's set. Its "(67% of Gold)" fails the 50/50 rule: 0.5 × 1/2 + 0.5 × 1/1.5 = 58%. Drop the 3:1 / 1:1 text example as Silver. Bronze 4:1, 2:1 gives 37.5%. The rule gives the cost share; the 2x price gap is a goal (Q119), so a half-price Silver earns a lower margin than Gold.
-  - (b) Keep N:1 (consumer : physical). The table's 1:2 is written 2:1.
-  - (c) Per thread. Drop 768 GB. Silver on 64 cores (128 threads): 256 vCPU × 4 GB / 1.5 = 683 GB without the share; 661 GB with 8 cores and 64 GB kept (Q087). At 3:1 per thread: 1,536 GB.
-  - (d) Drop the reason. VCF 9 is licensed per physical core, 16-core minimum per CPU (Broadcom KB 313548, read 2026-11-10): no sweet spot above 16. What licensing still decides: avoid CPUs under 16 cores (paid as 16); keep Hyper-Threading on (the licence counts cores, capacity counts threads); VCF entitles 1 TiB of vSAN per licensed core. Core count above that: Q111 (c).
-  - Change if accepted: class-of-service (Planning example: plan values, 58%, 37.5%; Sample offering per thread); host-spec-from-class-of-service (remove Silver at 3:1; licence bullet = 16-core floor and Hyper-Threading).
-  - For you: nothing.
-- Partly settled by the author's edit (2026-11-11): Example 3 is 1.5:1 per physical thread ((c), per thread). Still open: (a) which ratios are Silver; (d) the 64-core licence reason, still in host-spec-from-class-of-service.
-- Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread. Applied in class-of-service (planning example: Silver 58%, Bronze 42% of Gold). Still open: (d) the 64-core licence reason.
-- Answer:
 
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
 
@@ -674,6 +652,51 @@ Each entry has:
 - Answer:
 
 
+
+
+
+
+
+### Q175 · Class of service · New relative-value diagram vs the reservation shares, VM size and minimum performance
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (sections Promise vs technique, Example implementation); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) (table); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (Sample offering); project/sources/Capacity Planning Stage.xlsx.
+- Search: not from the book; the new diagram of 2026-11-11 (Relative Contention 1x 2x 3x).
+- Written as now: the new diagram is applied (contention 1x, 2x, 3x; maximum VM size 3x, 2x, 1x; reservation 3x, 2x, 1x; share 4-8x, 2-4x, 1x; overcommit 1x, 2x, 3x). Four places still step 4x, 2x, 1x or differ:
+  - (a) Reservation shares: Gold 50%, Silver 25%, Bronze 12.5% CPU and 100%, 50%, 25% memory (the spreadsheet: "Gold VM is entitled to 4x reservation than Bronze") step 4x, 2x, 1x; the diagram says 3x, 2x, 1x.
+  - (b) Maximum VM size: vm-size gives 1.0, 0.5 and 0.33 × logical CPUs at 1:1, 2:1, 3:1, which is 3x, 1.5x, 1x; the diagram says Silver 2x. The spreadsheet's typical VM (16, 8, 4 vCPU) steps 4x, 2x, 1x, but that is the average VM, not the maximum.
+  - (c) Minimum VM Performance (%): 99.5%, 99%, 98% leave unmet demand of 0.5%, 1%, 2%, a 4x step; the diagram's contention steps 3x (Bronze 98.5% would match).
+  - (d) The class planning values image still shows Bronze CPU 4:1 and memory 1.5:1 and 2:1 (recorded in corrections).
+  - (e) Sample offering: the row is now "Security SLA 100%, perfect compliance for every class", while the Recommended SLA table keeps Compliance at 99.95% and says 100% allows no failed interval. Security and compliance are different pillars in the glossary.
+- Question: which values win for (a), (b), (c); will you update the image (d); is (e) a Compliance SLA or a Security SLA, and at which number?
+- Proposed answer (expert call): (a) keep 50%, 25%, 12.5% and 100%, 50%, 25%: the spreadsheet uses them and a reservation protects against starvation, not in step with the ratio; relabel the diagram row 4x, 2x, 1x. (b) vm-size wins (1.0, 0.5, 0.33): it follows the overcommit; the diagram row reads 3x, 1.5x, 1x. (c) Bronze 98.5%, so the minimum steps with contention. (d) yes. (e) Compliance SLA at 99.95%, as in the table; a security SLA has no measurable number.
+- For you: (a)-(e).
+- Answer:
+
+## Resolved
+
+### Q099 · Part 1 > Service Level Agreement > Price & SLA · Silver ratios, notation and the 64-core licence
+
+- Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Planning example); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md) (section Silver at 3:1 CPU).
+- Search 1: "For Silver, you decide on 3:1 CPU overcommit and no RAM overcommit"
+- Search 2: "(67% of Gold)" and the cells "CPU 1:2", "RAM 1:1.5" in the same table
+- Search 3: "Buying 64 cores maximizes your vSphere license"
+- Question:
+  - (a) The table gives Silver CPU 1:2 and RAM 1:1.5 (price 58% of Gold by the 50/50 rule); the text gives 3:1 and 1:1 (67%). Which is Silver?
+  - (b) The book writes overcommit both ways (1:2 in two tables, 2:1 and 4:1 in the sample offering). The knowledge base writes N:1 (consumer : physical). Keep that?
+  - (c) 768 GB = 64 cores × 3 vCPU × 4 GB is per core. Per thread (your Q079 rule) it is 1,536 GB. Which basis?
+  - (d) VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548); 64 cores no longer maximizes a licence. Drop the reason in the next edition?
+- Written as now: Silver from the text (3:1, 1:1, 67%); N:1 notation; per core, flagged; licence reason replaced with the per-core rule.
+- Related (2026-11-08, Capacity Management session): Q119 and Q120 (the capacity plan states CPU per thread: Silver 2:1, Bronze 4:1; memory 1.5:1 and 2:1). One answer can settle (b), (c) and Q120.
+- Proposed answer ((b) settled: N:1 in capacity-dimensions; (c) by Q079, Q115 e, Q151; (a), (d) expert call):
+  - (a) Silver = the table, read per thread: CPU 2:1, RAM 1.5:1, the capacity plan's set. Its "(67% of Gold)" fails the 50/50 rule: 0.5 × 1/2 + 0.5 × 1/1.5 = 58%. Drop the 3:1 / 1:1 text example as Silver. Bronze 4:1, 2:1 gives 37.5%. The rule gives the cost share; the 2x price gap is a goal (Q119), so a half-price Silver earns a lower margin than Gold.
+  - (b) Keep N:1 (consumer : physical). The table's 1:2 is written 2:1.
+  - (c) Per thread. Drop 768 GB. Silver on 64 cores (128 threads): 256 vCPU × 4 GB / 1.5 = 683 GB without the share; 661 GB with 8 cores and 64 GB kept (Q087). At 3:1 per thread: 1,536 GB.
+  - (d) Drop the reason. VCF 9 is licensed per physical core, 16-core minimum per CPU (Broadcom KB 313548, read 2026-11-10): no sweet spot above 16. What licensing still decides: avoid CPUs under 16 cores (paid as 16); keep Hyper-Threading on (the licence counts cores, capacity counts threads); VCF entitles 1 TiB of vSAN per licensed core. Core count above that: Q111 (c).
+  - Change if accepted: class-of-service (Planning example: plan values, 58%, 37.5%; Sample offering per thread); host-spec-from-class-of-service (remove Silver at 3:1; licence bullet = 16-core floor and Hyper-Threading).
+  - For you: nothing.
+- Partly settled by the author's edit (2026-11-11): Example 3 is 1.5:1 per physical thread ((c), per thread). Still open: (a) which ratios are Silver; (d) the 64-core licence reason, still in host-spec-from-class-of-service.
+- Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread. Applied in class-of-service (planning example: Silver 58%, Bronze 42% of Gold). Still open: (d) the 64-core licence reason.
+- Answer: Settled 2026-11-11: (a) Silver is CPU 2:1 per physical thread with memory 1.2:1 (the author's final ratios and the spreadsheet); (b) N:1 notation; (c) per thread; (d) the knowledge base states VCF 9 per-core licensing with a 16-core minimum per CPU in host-spec-from-class-of-service; the book's 64-core reason is for the next edition.
+
 ### Q168 · vCenter API counters · gpu.mem.used on vSphere 8.x
 
 - Files: [GPU monitoring](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md) (section Reading the counters).
@@ -681,8 +704,7 @@ Each entry has:
 - Written as now: on vSphere 9.0 and 9.1 `gpu.mem.used` is the frame buffer workloads touch, at or below `gpu.mem.reserved`. On 8.x the knowledge base says only that the rule does not hold.
 - Question: on vSphere 8.x, what does `gpu.mem.used` count? (a) the allocated frame buffer, equal to reserved; (b) something else (please name it); and from which 8.x update did it change, or only from 9.0?
 - For you: the 8.x behaviour from field experience.
-- Answer:
-
+- Answer: Closed 2026-11-11 by the author's rule (Q172): no knowledge of outdated releases; Agent E2 covers vSphere 9.x, and older releases are after 1.0 (plan, After 1.0). The 9.0 and 9.1 behaviour stays in gpu-monitoring.
 
 ### Q172 · Guest OS · Linux pressure stall information vs "no memory latency"
 - Files: [Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md) (section Reasons); [Windows memory management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/memory/concepts/windows-memory.md) (section Free memory guidance); [Linux is slow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/troubleshooting/linux-os-slow.md) (steps 2, 4, 5).
@@ -701,7 +723,7 @@ Each entry has:
 - Proposed answer (expert call): (a) 0.33x: price follows the overcommit, which is the reason the guideline gives. (b) Keep 12.5%: a reservation protects against starvation and is not tied to the ratio; a lower value keeps Bronze from reserving the cluster. (c) Yes; until then the correction stays.
 - For you: (a), (b), (c).
 - Partly settled by the author's working model (Capacity Planning Stage.xlsx, 2026-11-11): (b) Bronze CPU reservation stays 12.5% with CPU 3:1. (a) Its note says price follows overcommit ("Bronze is 4x cheaper than Gold because it has 4x overcommit"), which with 3:1 gives 0.33x; the note still says 4x (Q174). (c) open.
-- Answer:
+- Answer: Author (2026-11-11): (a) Bronze price 0.33x (class-of-service, Generic guideline); (b) Bronze CPU reservation stays 12.5% (the spreadsheet); (c) the relative-value image is replaced by the author's new diagram. The class planning values image (reservation, allocation, contention, utilization) still shows the old ratios: Q175 (d).
 
 ### Q174 · Capacity Planning Stage.xlsx · Conflicts with the knowledge base, and four formula errors
 - Files: [project/sources/Capacity Planning Stage.xlsx](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/Capacity%20Planning%20Stage.xlsx) (read-only); [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md).
@@ -716,9 +738,7 @@ Each entry has:
   - (f) The named range ESXi.CPU.Usable.Capacity.Allocation points to #REF! (unused).
 - Proposed answer (expert call): (a) the spreadsheet: it is the newest model and already carries Bronze 3:1; then class-of-service and class-of-service-planning change to 1.2:1 and 1.4:1, and the price example becomes Silver 67%, Bronze 52% of Gold. (b), (c), (d), (f): fix in the spreadsheet. (e) KPI.
 - For you: (a); fix the spreadsheet, since project/sources is read-only for Claude.
-- Answer:
-
-## Resolved
+- Answer: Author (2026-11-11): the spreadsheet is fixed ((b) overhead no longer counted twice; (c) the Read Me answer reads 25.9; (d) B60 says 3x; (e) KPI, not Performance SLA; (f) broken name removed); memory overcommit follows the spreadsheet: Gold 1:1, Silver 1.2:1, Bronze 1.4:1, with CPU 1:1, 2:1, 3:1. Applied in class-of-service, class-of-service-planning, the catalog rows planning-*, and harness/capacity.py, which reproduces the spreadsheet's three scenarios and the Read Me answer.
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
 

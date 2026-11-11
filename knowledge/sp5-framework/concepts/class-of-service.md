@@ -24,8 +24,8 @@
 
 - Gold: performance guarantee for latency-sensitive, mission-critical applications. The guarantee is not literal for CPU: VM CPU Ready never reads 0.00%, even with no contention.
 - Silver: most production workloads. Bronze: test and development. Free: temporary projects.
-- Each step halves the price and doubles the penalty: consistent and fair.
-- The penalty column positions the business value. It is not a threshold: Bronze does not tolerate CPU Ready of 10%. The KPI levels are the same for every class (`catalog/thresholds-performance`); a lower class scores lower more often because of its higher overcommit.
+- Price follows the CPU overcommit: Silver half of Gold, Bronze a third. The relative penalty grows with the overcommit: consistent and fair.
+- The penalty column positions the business value. It is not a threshold: Bronze is not allowed 3x the CPU Ready of Gold. The KPI levels are the same for every class (`catalog/thresholds-performance`); a lower class scores lower more often because of its higher overcommit.
 
 ## Free tier
 - Shows the value of the paid classes by their absence.
@@ -48,7 +48,7 @@
 | Item | Gold | Silver | Why |
 |---|---|---|---|
 | Price | 2x | 1x | Gold is priced 2x Silver |
-| Overcommit | CPU 1:1, RAM 1:1 | CPU 2:1, RAM 1.5:1 | Twice as many consumers in Silver (CPU) |
+| Overcommit | CPU 1:1, RAM 1:1 | CPU 2:1, RAM 1.2:1 | Twice as many consumers in Silver (CPU) |
 | Availability SLA | 99.975% | 99.950% | Gold: half the downtime |
 | Security SLA | 100% | 100% | Perfect compliance for every class |
 
@@ -63,8 +63,9 @@
 ```text
 price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 ```
-- Silver at CPU 2:1 per thread and memory 1.5:1: 0.5 × 1/2 + 0.5 × 1/1.5 = 58% of Gold.
-- Bronze at CPU 3:1 per thread and memory 2:1: 0.5 × 1/3 + 0.5 × 1/2 = 42% of Gold.
+- Silver at CPU 2:1 per thread and memory 1.2:1: 0.5 × 1/2 + 0.5 × 1/1.2 = 67% of Gold.
+- Bronze at CPU 3:1 per thread and memory 1.4:1: 0.5 × 1/3 + 0.5 × 1/1.4 = 52% of Gold.
+- The guideline price (0.50x, 0.33x) follows CPU alone; with memory in the price, the lower memory overcommit keeps Silver and Bronze dearer.
 - Gold: CPU 1:1, memory 1:1, all flash. Free: no overcommit stated, magnetic storage; may be left out entirely (business decision).
 - Average VM profile for Silver and Bronze: 1 vCPU to 4 GB RAM, a common ratio. Measure the real ratio in VCF Operations.
 - Host for Silver: `sp5-framework/capacity/host-spec-from-class-of-service`.
@@ -72,7 +73,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - Progressive pricing: a 64-vCPU VM must cost more than 64x a 1-vCPU VM. A straight-line price gives no reason to size small, and rightsizing then happens in production, which is slow and costly.
 
 ## Size limit per class
-- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Cap by logical CPUs (`sp5-framework/performance/noisy-neighbour`) and keep a VM within one NUMA node where it can (`vsphere/technology/cpu/configuration/numa-settings`).
+- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Cap by logical CPUs (`sp5-framework/capacity/vm-size`) and keep a VM within one NUMA node where it can (`vsphere/technology/cpu/configuration/numa-settings`).
 - Overcommit risks contention. A cap on VM size stops monster VMs from dominating overcommitted hosts.
 - If one VM may be the size of the host, overcommit with good performance is not possible.
 
