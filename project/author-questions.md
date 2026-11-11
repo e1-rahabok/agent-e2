@@ -16,45 +16,6 @@ Each entry has:
 
 ## Open
 
-### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
-- Files: [ESXi Memory Consumed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md)
-- Search 1: "It only includes the resultant zipped, not the amount subjected to compression"
-- Search 2: "Consumed does not include compressed"
-- Question: does host Consumed include the compressed result in DIMM?
-- Written as now: includes the result, flagged. Your diagram (physical view) also shows it inside Consumed.
-- Proposed answer (expert call, from the vSphere 9.1 documentation):
-  - Yes. ESXi Consumed includes the compressed result: the compression cache holding the zipped pages in DRAM. It excludes what compression freed.
-  - Mechanism: host Consumed = total host memory − free host memory (vSphere Web Services API 9.1, `mem.consumed`). Cache pages are ESXi pages in use, not free. Each VM's cache is capped by Mem.MemZipMaxPct (default 10% of its memory).
-  - The VM side agrees: esxtop CNSM excludes "the amount of memory saved if some of the VM memory is compressed". Only the saving leaves Consumed.
-  - The two search strings conflict in wording only. Read Search 2 as "Consumed does not include the memory compression freed". The chart (Compressed and swap-out up about 200 GB while Consumed falls) shows the saving plus swap-out, not the cache outside Consumed.
-  - Counter names per tool: esxtop CACHEUSD (per VM) = result held in DRAM; vCenter `mem.compressed` (VM and host), `mem.zipped` and `mem.zipSaved` (VM only). The 9.1 API summary of `mem.compressed` is a copy error ("Amount of memory reserved by userworlds").
-  - Sources: vSphere 9.1 documentation (Memory Compression; esxtop Memory panel: CNSM, CACHESZ, CACHEUSD); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html
-  - Change if accepted: host consumed (state as fact; "a Consumed drop while Compressed rises is the saving"); host compressed (counters per tool, API copy error). Side fix: virtual-motherboard consumed says a 4 KB page compressed to 1 KB frees "0.75 KB"; it frees 3 KB.
-  - For you: nothing. Optional live check: on a host that is compressing, compare vCenter Compressed with the sum of esxtop CACHEUSD.
-- Answer:
-
-### Q053 · vCenter API counters · gpu.mem.reserved vs gpu.mem.used
-- Files: [GPU monitoring](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md) (sections Counters, Reading the counters, vGPU capacity).
-- Search: not from the book. Counters and vCenter 9.1.0 API summaries, on ClusterComputeResource and ResourcePool, level 1:
-  - `gpu.mem.reserved` (latest, KB): "The amount of GPU memory consumed by virtual GPUs in kilobytes".
-  - `gpu.mem.used` (average, KB): "The amount of GPU memory used by workloads in kilobytes".
-  - `gpu.mem.total` (latest, KB): "The total amount of GPU memory in kilobytes".
-  - `gpu.utilization` (average, %): "The compute utilization of a GPU in percentage".
-- Context: the knowledge base says a vGPU profile fixes the frame buffer per VM, reserved at power-on, so host GPU memory can look high while VMs are idle. Per-device host counters (GPU Memory Usage) are level 4 in the chart tables.
-- Question:
-  1. Is `gpu.mem.reserved` the sum of the vGPU profile frame buffers of powered-on VMs?
-  2. Is `gpu.mem.used` the frame buffer the workloads actually touch, so it is always at or below reserved?
-  3. When reserved approaches total, can no further vGPU be placed even with low utilization? (Placement is per physical GPU, so the cluster total may hide fragmentation.)
-- Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
-- Proposed answer (expert call; one live reading):
-  - 1. Yes. NVIDIA allocates a vGPU's frame buffer from the physical GPU when the vGPU is created (VM power-on) and keeps it until it is destroyed. Broadcom KB 439680: GPU memory use equals what is assigned, "a partition that is created on PowerOn of the VM". So `gpu.mem.reserved` = sum of the profile frame buffers of powered-on vGPU VMs. Whether whole-GPU DirectPath VMs count is not documented.
-  - 2. Yes, per vGPU. The configured profile is the upper bound of the frame buffer the VM uses (vSphere 9.1 documentation), so `gpu.mem.used` ≤ `gpu.mem.reserved`. Trap: the host per-device chart "Memory used" (level 4) shows the reserved frame buffer, not workload use. Same word, different meaning at host and cluster.
-  - 3. Yes, and well before reserved approaches total. Frame buffer is not overcommitted; only compute is time-sliced, so low utilization frees nothing. Placement needs one physical GPU with room for the whole profile; in equal-size mode (the default) a GPU that already holds a vGPU accepts only the same size. A cluster with GB to spare can refuse a VM (Broadcom KB 312021). Read DirectPath Profiles Remaining per profile.
-  - Sources: vSphere 9.1 documentation (Configuring vGPU Size; Capacity Visualization of DirectPath Profiles; GPU Memory charts); NVIDIA Virtual GPU Software User Guide, Release 21.0 (https://docs.nvidia.com/vgpu/latest/pdf/grid-vgpu-user-guide.pdf); https://knowledge.broadcom.com/external/article/439680
-  - Change if accepted: gpu-monitoring (Reading the counters: points 1-3; the "Memory used" trap; trap "utilization is low, so another vGPU fits").
-  - For you: one live reading: on a cluster with known profiles (for example 4 × 8 GB), does `gpu.mem.reserved` equal the sum, and do passthrough GPUs count?
-- Answer:
-
 ### Q059 · Agent · Core rules and confusable pairs given to the agent up front
 - Files: [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md) (Level 300 misreadings; moved out of the knowledge base 2026-11-07); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
 - Search: not from the book. Each rule and pair summarises the knowledge file it points to.
@@ -131,7 +92,6 @@ Each entry has:
   - For you: which VCF Operations dashboards you open each morning, and in what order.
 - Answer:
 
-
 ### Q064 · Review · Which files to review first
 - Files: the 25 most-cited knowledge files below (119 files are cited by at least one benchmark question). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.4.
 - Search: not applicable.
@@ -199,8 +159,6 @@ Each entry has:
   - For you: confirm the rule.
 - Answer:
 
-
-
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
 - Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
 - Search 1: "If 1 CPU typically uses 4 GB RAM, then a 64-core ESXi host will only need 256 GB."
@@ -247,8 +205,6 @@ Each entry has:
   - For you: only if your daily health check dashboards use the image's insight values (Co-stop 2.5%, Other Wait 1%, QAVG 1 ms): their interval and instance.
 - Answer:
 
-
-
 ### Q095 · Part 1 > Service Level Agreement > SLA Calculation · Pass scored as 0%, and partial VM scores
 - Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section SLA calculation); [Cluster SLA and SLI](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-sla-sli.md) (section Cluster SLI).
 - Search 1: "If VM CPU Ready > 2.5% then 100% else 0%"
@@ -283,8 +239,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-
-
 ### Q099 · Part 1 > Service Level Agreement > Price & SLA · Silver ratios, notation and the 64-core licence
 - Files: [Class of service: price, overcommit, SLA numbers, size limit and cluster design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Planning example); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md) (section Silver at 3:1 CPU).
 - Search 1: "For Silver, you decide on 3:1 CPU overcommit and no RAM overcommit"
@@ -305,9 +259,6 @@ Each entry has:
   - Change if accepted: class-of-service (Planning example: plan values, 58%, 37.5%; Sample offering per thread); host-spec-from-class-of-service (remove Silver at 3:1; licence bullet = 16-core floor and Hyper-Threading).
   - For you: nothing.
 - Answer:
-
-
-
 
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
 - Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
@@ -389,8 +340,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-
-
 ### Q116 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
 - Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
 - Search: "I divide the capacity into 10 equal chunks"
@@ -406,13 +355,6 @@ Each entry has:
   - Change if accepted: cluster-consumption (usable; score vs sub-metric bands); catalog (grey below 40 on the two utilization rows; remove `cluster-utilization-usable-best`); capacity-dimensions Utilization; question 0076.
   - For you: how long utilization stays below 40% before it counts as wastage; whether the 80% row leaves the catalog.
 - Answer:
-
-
-
-
-
-
-
 
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap).
@@ -443,7 +385,6 @@ Each entry has:
   - Change if accepted: rightsizing and vm-configuration-review (Compute: two host-derived limits replace 8/16); cluster-risk (fix "most Xeon and EPYC use 8-core CCDs"); glossary (CCX = L3 domain; a CCD holds one or two CCXs).
   - For you: what the 8-vCPU Hyper-Threading rule is based on: a test, or how ESXi packs vCPUs in an AMD CCX? If neither, it is removed.
 - Answer:
-
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
 - Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Demand).
@@ -532,7 +473,6 @@ Each entry has:
   - Change if accepted: can-cluster-take-more-vms steps 4-5 and chart; the 6 closure-* catalog rows; close-for-business trap.
   - For you: which set wins (pack 25/50/75 or Q121 20/40/60/80), and whether the pack gets the non-production Risk split.
 - Answer:
-
 
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
 - Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/triple-see-method.md) (section Why not USE, RED or Golden Signals).
@@ -743,7 +683,6 @@ Each entry has:
   - For you: the missing condition and its value; whether (c) meant the delivery ratio.
 - Answer:
 
-
 ### Q149 · Term map · Wrong terms users write
 - Files: [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml) (35 rows, seeded from the glossary, the vocabulary file and the trap lines).
 - Search: not from the book.
@@ -831,7 +770,65 @@ Each entry has:
 - For you: the scope sentence.
 - Answer:
 
+### Q168 · vCenter API counters · gpu.mem.used on vSphere 8.x
+- Files: [GPU monitoring](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md) (section Reading the counters).
+- Search: not from the book. Follow-up to Q053, point 2.
+- Written as now: on vSphere 9.0 and 9.1 `gpu.mem.used` is the frame buffer workloads touch, at or below `gpu.mem.reserved`. On 8.x the knowledge base says only that the rule does not hold.
+- Question: on vSphere 8.x, what does `gpu.mem.used` count? (a) the allocated frame buffer, equal to reserved; (b) something else (please name it); and from which 8.x update did it change, or only from 9.0?
+- For you: the 8.x behaviour from field experience.
+- Answer:
+
 ## Resolved
+
+### Q020 · Chapter 3 Memory > ESXi · Consumed and compressed
+- Files: [ESXi Memory Consumed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md)
+- Search 1: "It only includes the resultant zipped, not the amount subjected to compression"
+- Search 2: "Consumed does not include compressed"
+- Question: does host Consumed include the compressed result in DIMM?
+- Written as now: includes the result, flagged. Your diagram (physical view) also shows it inside Consumed.
+- Proposed answer (expert call, from the vSphere 9.1 documentation):
+  - Yes. ESXi Consumed includes the compressed result: the compression cache holding the zipped pages in DRAM. It excludes what compression freed.
+  - Mechanism: host Consumed = total host memory − free host memory (vSphere Web Services API 9.1, `mem.consumed`). Cache pages are ESXi pages in use, not free. Each VM's cache is capped by Mem.MemZipMaxPct (default 10% of its memory).
+  - The VM side agrees: esxtop CNSM excludes "the amount of memory saved if some of the VM memory is compressed". Only the saving leaves Consumed.
+  - The two search strings conflict in wording only. Read Search 2 as "Consumed does not include the memory compression freed". The chart (Compressed and swap-out up about 200 GB while Consumed falls) shows the saving plus swap-out, not the cache outside Consumed.
+  - Counter names per tool: esxtop CACHEUSD (per VM) = result held in DRAM; vCenter `mem.compressed` (VM and host), `mem.zipped` and `mem.zipSaved` (VM only). The 9.1 API summary of `mem.compressed` is a copy error ("Amount of memory reserved by userworlds").
+  - Sources: vSphere 9.1 documentation (Memory Compression; esxtop Memory panel: CNSM, CACHESZ, CACHEUSD); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html
+  - Change if accepted: host consumed (state as fact; "a Consumed drop while Compressed rises is the saving"); host compressed (counters per tool, API copy error). Side fix: virtual-motherboard consumed says a 4 KB page compressed to 1 KB frees "0.75 KB"; it frees 3 KB.
+  - For you: nothing. Optional live check: on a host that is compressing, compare vCenter Compressed with the sum of esxtop CACHEUSD.
+- Answer: agree with the proposed answer.
+- Applied 2026-11-11: host consumed (Formula: compression cache inside Consumed, only the saving leaves; Behaviour: a Consumed drop while Compressed rises is the saving; trap); host compressed (Meaning: the result in DRAM, Mem.MemZipMaxPct cap; new section Counters per tool; API copy error; traps); virtual-motherboard consumed (a 4 KB page compressed to 1 KB frees 3 KB, not 0.75 KB). Live check of host Compressed against the sum of CACHEUSD kept in review_notes.
+
+### Q053 · vCenter API counters · gpu.mem.reserved vs gpu.mem.used
+- Files: [GPU monitoring](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md) (sections Counters, Reading the counters, vGPU capacity).
+- Search: not from the book. Counters and vCenter 9.1.0 API summaries, on ClusterComputeResource and ResourcePool, level 1:
+  - `gpu.mem.reserved` (latest, KB): "The amount of GPU memory consumed by virtual GPUs in kilobytes".
+  - `gpu.mem.used` (average, KB): "The amount of GPU memory used by workloads in kilobytes".
+  - `gpu.mem.total` (latest, KB): "The total amount of GPU memory in kilobytes".
+  - `gpu.utilization` (average, %): "The compute utilization of a GPU in percentage".
+- Context: the knowledge base says a vGPU profile fixes the frame buffer per VM, reserved at power-on, so host GPU memory can look high while VMs are idle. Per-device host counters (GPU Memory Usage) are level 4 in the chart tables.
+- Question:
+  1. Is `gpu.mem.reserved` the sum of the vGPU profile frame buffers of powered-on VMs?
+  2. Is `gpu.mem.used` the frame buffer the workloads actually touch, so it is always at or below reserved?
+  3. When reserved approaches total, can no further vGPU be placed even with low utilization? (Placement is per physical GPU, so the cluster total may hide fragmentation.)
+- Written as now: reserved and used named, with your rule that reservation is a setting and used is activity, so reserved can exceed used. Points 1-3 not stated.
+- Proposed answer (expert call; one live reading):
+  - 1. Yes. NVIDIA allocates a vGPU's frame buffer from the physical GPU when the vGPU is created (VM power-on) and keeps it until it is destroyed. Broadcom KB 439680: GPU memory use equals what is assigned, "a partition that is created on PowerOn of the VM". So `gpu.mem.reserved` = sum of the profile frame buffers of powered-on vGPU VMs. Whether whole-GPU DirectPath VMs count is not documented.
+  - 2. Yes, per vGPU. The configured profile is the upper bound of the frame buffer the VM uses (vSphere 9.1 documentation), so `gpu.mem.used` ≤ `gpu.mem.reserved`. Trap: the host per-device chart "Memory used" (level 4) shows the reserved frame buffer, not workload use. Same word, different meaning at host and cluster.
+  - 3. Yes, and well before reserved approaches total. Frame buffer is not overcommitted; only compute is time-sliced, so low utilization frees nothing. Placement needs one physical GPU with room for the whole profile; in equal-size mode (the default) a GPU that already holds a vGPU accepts only the same size. A cluster with GB to spare can refuse a VM (Broadcom KB 312021). Read DirectPath Profiles Remaining per profile.
+  - Sources: vSphere 9.1 documentation (Configuring vGPU Size; Capacity Visualization of DirectPath Profiles; GPU Memory charts); NVIDIA Virtual GPU Software User Guide, Release 21.0 (https://docs.nvidia.com/vgpu/latest/pdf/grid-vgpu-user-guide.pdf); https://knowledge.broadcom.com/external/article/439680
+  - Change if accepted: gpu-monitoring (Reading the counters: points 1-3; the "Memory used" trap; trap "utilization is low, so another vGPU fits").
+  - For you: one live reading: on a cluster with known profiles (for example 4 × 8 GB), does `gpu.mem.reserved` equal the sum, and do passthrough GPUs count?
+- Answer (summary of the author's review):
+  - 1. Partly correct. NVIDIA allocates the whole frame buffer at VM power-on, so `gpu.mem.reserved` is the sum of the assigned profiles. DirectPath I/O (PCI passthrough) VMs are excluded: the whole device is mapped into the VM and bypasses the NVIDIA vGPU Manager on ESXi, so the host cannot account for or monitor that memory.
+  - 2. Correct for vSphere 9.0 and 9.1; not for vSphere 8.x.
+  - 3. Frame buffer overcommit is not supported. Placement needs one contiguous frame buffer on one physical GPU; cluster capacity hides fragmentation (32 GB free across four GPUs rejects a 16 GB profile). "Only the same size on a GPU that holds a vGPU" applies to older architectures: Ampere, Ada Lovelace and Hopper support mixed profile sizes on one GPU (for example 8Q and 4Q). Fragmentation still decides placement; DirectPath Profiles Remaining is the metric for exhaustion.
+- Review of the answer:
+  - Accepted all three corrections.
+  - Naming: nv-hostengine is NVIDIA's DCGM host engine, not the vGPU Manager. The knowledge base names the NVIDIA vGPU Manager (the host driver) as the component passthrough bypasses.
+  - Added: MixedSize needs both a supporting GPU and the host set to MixedSize; each profile size has fixed placement positions on the GPU, so one GPU can be fragmented too.
+  - Added trap: DirectPath Profiles charts count vGPU instances, not DirectPath I/O passthrough; the two names share a word.
+  - Open: what `gpu.mem.used` counts on 8.x (Q168); whether passthrough GPUs are also outside `gpu.mem.total` (review_notes, live check).
+- Applied 2026-11-11: gpu-monitoring (Counters: host Memory used is allocation; Reading the counters: reserved = sum of profiles at power-on, passthrough excluded, used ≤ reserved on 9.0 and 9.1 only, no frame buffer overcommit; vGPU capacity: one GPU, contiguous, fragmentation example, SameSize vs MixedSize by architecture; 5 traps).
 
 ### Q161 · KPI vs SLA · The daily KPI actual
 - Files: [KPI vs SLA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/kpi-vs-sla.md) (Two numbers each), [project/explainers/sla-vs-kpi.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/explainers/sla-vs-kpi.md) (KPI, daily).
@@ -921,7 +918,6 @@ Each entry has:
 - Recommendation: (a). Applied already to the threshold design document.
 - Answer: (a).
 - Applied 2026-11-10: CLAUDE.md (Facts and sources), KNOWLEDGE-ENGINEERING.md (sections 8, 9, 10, 13, 14), threshold `source` values (book and author became knowledge-base; lint, test), who-said-it tags removed from knowledge text, metadata, catalogs, plan and project documents; review notes cut to what is still to check.
-
 
 ### Q126 · Part 1 > Rightsizing > Optimization vs The Big Picture · 100% or 40%
 - Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (sections What to optimize, Big picture).
@@ -1571,7 +1567,6 @@ All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported
 - Answer: no need to keep cap as I'm reviewing every question one by one. What is important is the allocation and distribution. The source (book versus Claude) is less important.
 - Done 2026-11-06: synthetic cap removed from benchmark/design.md (sections 10 and 12).
 
-
 ### Q023 · Chapter 4 Storage > VM · Disk metric scope
 - Files: [VM Disk (device level)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk.md)
 - Search: "if the value is per VM or per disk"
@@ -1605,7 +1600,6 @@ All the KPI and SLI are always by 5 minute. SLA is a lagging indicator, reported
 - Written as now: diagnosis file uses the book values (KAVG 0.5 ms, DAVG well within 5 ms). The guidance file lists the documentation values, says the 15 ms value comes from spinning-disk arrays, and points to the book values.
 - Answer: move all these threshold guidance from scattered over many files into a single small database, so it's quick for the Agent or Harness to check, and easy for human expert to review. You did create the database before. Where is it?
 - Done 2026-11-06: all thresholds in one place, [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) and `thresholds-capacity.yaml` (YAML source, loaded into the harness catalog). The book values (KAVG 0.5 ms, DAVG within 5 ms) and the documentation values (kernelLatency above 4 ms, deviceLatency above 15 ms, queueLatency 0) are separate rows, each with its source.
-
 
 ### Q056 · Benchmark · Level of each existing question
 - Files: the 28 files in https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (metadata `level`).

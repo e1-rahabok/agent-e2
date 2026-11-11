@@ -16,11 +16,14 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Only pages mapped in physical DIMM.
 - excludes: ballooned (guest level), swapped (on disk or host cache).
 - includes: the resulting compressed size (not the input), the result of TPS savings (not the shared amount), VM overhead, all kernel processes (user and kernel space).
+- Compression: the compression cache (the zipped pages held in DRAM) is inside ESXi Memory Consumed, because cache pages are ESXi pages in use, not free. Only the memory compression freed leaves ESXi Memory Consumed.
+- Example: a 4 KB page compressed to 1 KB keeps 1 KB in ESXi Memory Consumed and frees 3 KB.
 - Includes actual kernel use, not kernel reservation.
 
 ## Behaviour
 - The primary ESXi utilization counter, but full of cache and inactive pages. Near 100% in an overcommitted host is the goal, not a problem.
 - Drops when balloon or swap out rises.
+- ESXi Memory Consumed falling while ESXi Memory Compressed rises shows the compression saving plus any swap out. The compressed result stays inside Consumed.
 - Includes non-VM consumers: kernel, vSAN, NSX. Can exceed the memory allocated to all running VMs.
 ![ESXi memory Consumed above the memory allocated to running VMs](../../images/esxi-memory-consumed-above-vm-allocated.png)
 - Host with 0 VMs: example 17 GB consumed, likely vSAN.
@@ -34,6 +37,7 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Summing VM Consumed and expecting ESXi Consumed.
 - "Host Consumed near 100% is a problem" → memory is cache. Check balloon, swap-in and VM contention.
 - "Host with no VMs should show 0 Consumed" → kernel, vSAN and NSX consume memory.
+- "Consumed does not include compressed memory" → it includes the compressed result in DRAM; it excludes only what compression freed.
 
 ## Metadata
 ```yaml
@@ -84,6 +88,6 @@ corrections: []
 review_notes:
 - 'Section ''Scope'': from Memory > Architecture.'
 - 'Sections Formula, Behaviour: from Memory > ESXi.'
-- 'To check: Section ''Formula'': the book says Consumed includes the resulting compressed size, and also says Consumed does not include compressed (Q020).'
+- 'Section ''Formula'' (compression): Consumed = total host memory minus free host memory, from the vSphere Web Services API 9.1, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html; esxtop CNSM excludes the memory saved by compression (vSphere 9.1 documentation, esxtop Memory panel).'
 status: draft
 ```
