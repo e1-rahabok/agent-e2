@@ -160,7 +160,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 ### Ingest
 1. Index `knowledge/**/*.md`. Do not index `benchmark/` (it holds answer keys; indexing it invalidates the evaluation), `project/`, `harness/`, or the root documents (`README.md`, `CLAUDE.md`, `MISSION.md`, `ARCHITECTURE.md`, `KNOWLEDGE-ENGINEERING.md`, `CONTRIBUTING.md`, `SECURITY.md`).
 2. Split each file at `## Metadata`. Parse the yaml block into filter fields. Do not embed it.
-3. Chunk the body by `##` heading. Files are short, so one file is often one chunk.
+3. Chunk the body by `##` heading. Files are short, so one file is often one chunk. Mermaid charts are left out of the indexed and retrieved text: they repeat the numbered steps for GitHub, and the model follows the steps (retrieval check 2026-11-11: no change on the files as they were; with the flows rewritten to the template, search 59% → 60%, complete 60 → 61 of 95).
 4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.
 5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
@@ -191,7 +191,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Retrieve the matching flow file first: the object's health check, the troubleshooting flow for the symptom, or the decision tree for the question. Retrieve its `internal_derive` metric files with it.
 - Follow the numbered steps in `## Checks, in order`, from step 1. Do not skip to a later step.
 - At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives.
-- Use the Mermaid flow only to confirm the branch. The numbered steps win if they differ.
+- The Mermaid chart is not in the model's text (Ingest, step 3): the numbered steps are the flow. A reviewer checks that chart and steps agree.
 - When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
 - Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
 - No flow matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.

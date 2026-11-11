@@ -1,10 +1,29 @@
 # VM CPU Run and Used differ
 
+## Symptom
+- VM CPU Run and Used differ by a wide margin, and someone asks whether the VM needs more vCPUs.
+- Run is time only; Used also moves with frequency, Hyper-Threading and work done for the VM (`vsphere/technology/cpu/metrics/virtual-motherboard/run`, `vsphere/technology/cpu/metrics/virtual-motherboard/used`).
+
+## Flow
+```mermaid
+flowchart TD
+  S1[1. Ready, Co-stop, Overlap high?] -->|yes| E1[Contention flow]
+  S1 -->|no| S2[2. System and Overlap ms]
+  S2 --> S3[3. Power management and frequency]
+  S3 --> S4[4. Sibling threads busy?]
+  S4 --> E4[Frequency, Hyper-Threading or System: not vCPU count]
+```
+
 ## Checks, in order
-1. Check contention metrics first: Ready, Co-stop, Overlap.
-2. Check System (ms) and Overlap (ms): they move Used away from Run.
-3. Check the host power management policy and actual frequency (esxtop %A/MPERF).
-4. Check whether sibling threads are busy (Hyper-Threading).
+1. Contention (VirtualMachine): Ready, Co-stop, Overlap. High → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`. Low → step 2.
+2. System (ms) and Overlap (ms) (VirtualMachine): they move Used away from Run (`vsphere/technology/cpu/metrics/virtual-motherboard/system`). → step 3.
+3. Configuration, host (HostSystem). The host power management policy and the actual frequency (esxtop %A/MPERF) (`vsphere/technology/cpu/concepts/power-states`). → step 4.
+4. Hyper-Threading (HostSystem). Whether sibling threads are busy (`vsphere/technology/cpu/concepts/hyper-threading`).
+
+## Why this order
+- Contention first: a VM that waits has a different problem, with its own flow.
+- System and Overlap next: work charged to the VM explains Used above Run without any hardware effect.
+- Frequency before Hyper-Threading: power management is a setting that can be checked and changed; a busy sibling depends on the other VMs.
 
 ## How to read the result
 | Pattern | Meaning | Next step |
@@ -14,11 +33,8 @@
 | Example: 4-vCPU Ubuntu VM, Used about 44% of Run | Power saving plus SMT. | If Run is far from 100% and the team asks for speed, adding vCPUs is the wrong answer. |
 | Example: 1-vCPU VM, 2.095 GHz host, 2 GHz limit | Demand and Usage flat around 1.96 GHz (about 94%). Used about 18,600 ms (93%). Run much lower: Used 41% higher than Run. | Cause: CPU frequency. The VM ran above nominal clock speed because of Turbo Boost. Used grows with frequency; Run is time only. |
 
-- Under a limit, Demand equals Usage: the kernel does not see the limited time as demand.
-
 ## Misconceptions
-- "Run is low, so the VM has headroom" → check Ready. Under a limit, Run stays low.
-- "Add vCPUs to speed up" → when Used is far below Run, the cause is frequency or SMT.
+- "Used is far below Run, so the VM needs more vCPUs" → power saving and Hyper-Threading lower Used; more vCPUs do not change either.
 
 ## Metadata
 ```yaml
@@ -38,11 +54,14 @@ object:
 internal_derive:
 - vsphere/technology/cpu/metrics/virtual-motherboard/run
 - vsphere/technology/cpu/metrics/virtual-motherboard/used
+- vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
+- vsphere/technology/cpu/metrics/virtual-motherboard/system
+- vsphere/technology/cpu/concepts/power-states
+- vsphere/technology/cpu/concepts/hyper-threading
 related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/virtual-motherboard/demand
-- vsphere/technology/cpu/concepts/power-states
-- vsphere/technology/cpu/concepts/hyper-threading
+- sp5-framework/performance/performance-management
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > VM > When Run is lower than Used; When Run is higher than Used

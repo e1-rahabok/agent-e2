@@ -190,8 +190,14 @@ class FlowTest(unittest.TestCase):
         self.assertGreaterEqual(len(flows.flow_ids(DOCS)), 12)
 
     def test_step_and_reference(self):
-        out = flows.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '4')
-        self.assertEqual((out['of'], out['next'], out['refers_to']), (6, '5', ['2']))
+        out = flows.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '2')
+        self.assertEqual((out['of'], out['next'], out['refers_to']), (7, '3', ['5', '3']))
+
+    def test_mermaid_left_out_of_model_text(self):
+        d = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high']
+        self.assertIn('```mermaid', open(d.path).read())
+        self.assertNotIn('```mermaid', d.body)
+        self.assertIn('## Checks, in order', d.body)
 
     def test_lettered_steps(self):
         out = flows.run(DOCS, 'vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm')

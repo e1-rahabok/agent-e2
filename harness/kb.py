@@ -3,6 +3,7 @@
 - Index knowledge/**/*.md.
 - Split each file at '## Metadata'; the yaml block becomes filter fields, never text.
 - Chunk the body by '## ' heading; prefix each chunk with title and id.
+- Leave out Mermaid charts: they repeat the numbered steps for GitHub.
 """
 import glob
 import os
@@ -25,6 +26,9 @@ def split(path):
     head = s[m[-1].end():].rstrip().removesuffix('```')
     return yaml.safe_load(head) or {}, s[:i]
 
+# A Mermaid chart repeats the numbered steps for GitHub; the model reads the steps (project/knowledge-rules/flows.md).
+MERMAID = re.compile(r'\n```mermaid\n.*?\n```[ \t]*(?=\n)', re.S)
+
 LINK_TYPES = ['related', 'internal_derive', 'same_name', 'same_meaning']
 FILTER_FIELDS = ['product', 'object', 'technology', 'pillar', 'retriever_guide']
 
@@ -36,7 +40,7 @@ class Doc:
         self.meta = meta
         lines = body.strip().split('\n')
         self.title = lines[0].lstrip('# ').strip() if lines else self.id
-        self.body = body.strip()
+        self.body = MERMAID.sub('', body).strip()
         self.status = meta.get('status', 'draft')
         self.links = {t: list(meta.get(t) or []) for t in LINK_TYPES}
         self.images = list(meta.get('images') or [])

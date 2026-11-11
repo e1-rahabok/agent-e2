@@ -17,7 +17,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 - Order: is it up (availability: log, saturation, configuration, known bug), is it fast (performance: contention, consumption, configuration, known bug, log), is it secure (security: configuration, known bug, log), will it be enough (capacity: consumption, configuration, contention, inventory). Within each pillar the what comes before the why: establish the fact, then explain it; do not jump to a conclusion. Known bugs are checked per pillar, because a bug can cause an outage, slowness or a security loophole. Efficiency is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
 - The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2.
 - One flow per file. Template: `project/templates/health-check.md`, `troubleshooting.md` or `decision-tree.md`. Order: purpose (health check: nothing is wrong yet, so no symptom), symptom (troubleshooting) or question (decision tree), Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, misconceptions, metadata.
-- The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
+- The numbered steps are what the LLM follows. The Mermaid chart is the view for reviewers: GitHub renders it, and the harness leaves it out of the model's text (`ARCHITECTURE.md`, section Ingest). Chart and steps must agree.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
   - Example: 1. Check VM CPU Ready (VirtualMachine). Above <threshold> (<source>) → step 2. Otherwise → step 4.
 - Every metric or flow named in a step is linked in `internal_derive`, so retrieval brings in the files with the flow.
@@ -26,4 +26,4 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 - draw.io files are not read by the LLM: the XML is mostly layout and style, and compressed files are unreadable.
   - Keep the `.drawio` file and an exported `.png` in the `images/` folder next to the flow as the editable source.
   - Link the `.png` under the flowchart and tag it in `images` (`image_type: diagram`).
-  - The Mermaid chart and numbered steps are the content the LLM uses.
+  - The numbered steps are the content the LLM uses; the Mermaid chart is for review.
