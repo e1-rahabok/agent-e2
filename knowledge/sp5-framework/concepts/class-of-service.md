@@ -77,14 +77,9 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - Overcommit risks contention. A cap on VM size stops monster VMs from dominating overcommitted hosts.
 - If one VM may be the size of the host, overcommit with good performance is not possible.
 
-| Tier | Limit | Example cap |
-|---|---|---|
-| 1 | ≤ 1 socket (book example) | 32 vCPU, 512 GB |
-| 2 | ≤ 50% of a socket | 16 vCPU, 128 GB |
-| 3 | ≤ 25% of a socket | 8 vCPU, 32 GB |
-| 4 Free | n/a | 1 vCPU, 4 GB, 100 GB disk |
-
-- Size limit by overcommit ratio and logical CPUs: `sp5-framework/performance/noisy-neighbour`.
+- CPU cap per class, by logical CPUs and the overcommit ratio: `sp5-framework/capacity/vm-size`, section Maximum VM size.
+- Memory cap per class: none set. The book's caps (512, 128 and 32 GB for Tiers 1-3) were per socket and were withdrawn with the socket rule.
+- Free tier: 1 vCPU, 4 GB, 100 GB disk.
 
 ## Soft products
 - Support (Gold vs Silver):
@@ -182,11 +177,12 @@ source:
   path: 'Your Private Cloud > Service Level Agreement (Class of Service, Price/Performance, Free Tier, Recommended SLA, Penalty Quantification, Sample Offering, Price & SLA, Size Limit, Service, Availability, Compute & Storage, Mix and Match)'
 corrections: []
 review_notes:
-- 'To check: Overcommit basis (core or thread) (Q087 a, Q099). Notation: the book writes 1:2 and 2:1 for the same idea; written here as N:1 (consumer : physical) throughout.'
+- 'Notation: the book writes 1:2 and 2:1 for the same idea; written here as N:1 (consumer : physical) throughout.'
 - 'To check: Section ''Planning example'', price formula: derived from the book''s 67% and 33% figures.'
 - 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of the book''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Section ''Compute and storage design'': the book says Gold is charged 200% more for 2x; written as twice the price. Storage I/O Control: deprecated in VCF 9.'
 - 'Section ''Soft products'': the book''s Service SLA text says Gold tickets go to Level 3; its service table says Level 2, bypassing Level 1. Written as bypassing the first level.'
+- 'To check: Section ''Size limit per class'': memory cap per class after the socket caps were withdrawn (Q176).'
 - 'Not copied: class of service input diagram (text in Price/performance), mix-and-match diagrams (text), size limit image (table), generic tables (text).'
 status: draft
 ```

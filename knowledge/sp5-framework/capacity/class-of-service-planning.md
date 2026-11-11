@@ -59,12 +59,8 @@
 - Bronze fills on CPU utilization: on the same host, 43 Bronze VMs reach 98% CPU utilization at 50% CPU allocation. Its threads are planned to be busy; above that, contention risk rises.
 - The minimum Performance (%) leaves unmet demand of 0.5%, 1% and 2%.
 
-## Planning phase vs running phase
-- Planning phase: no VMs run yet, the cluster may not even be bought. The overcommit ratio is the input, and it is tied to the VM price. It is not tied to the Cluster Risk (%) score.
-- Running phase: workload runs, so reality overrides the plan. Read Cluster Consumption, Cluster Performance and Cluster Risk. Bronze clusters are expected to score a higher Cluster Risk (%) than Gold clusters (`vsphere/object-types/cluster/models/cluster-risk`).
-
 ## Planning calculator
-- At the planning stage there is no workload, so the plan is a simulation. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
+- At the planning stage there is no workload, so the plan is a simulation. What the planning and running stages each use: `sp5-framework/capacity/capacity-management`, section Two stages. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
 - Inputs: per host the cores, base GHz, DRAM, Hyper-Threading, hypervisor overhead (threads and GB), system CPU reservation, memory tiering; the number of hosts and HA hosts; per class the typical VM (vCPU, GB per vCPU), overcommit, reservation and expected concurrent peak.
 - Supply per host, by model (usable capacity: `sp5-framework/capacity/capacity-model`):
   - utilization: threads - hypervisor threads; DRAM - hypervisor GB + tiering;
@@ -110,6 +106,7 @@ internal_derive:
 - sp5-framework/capacity/capacity-model
 - sp5-framework/capacity/capacity-dimensions
 related:
+- sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/class-of-service
 - sp5-framework/performance/noisy-neighbour
 - sp5-framework/capacity/vm-size

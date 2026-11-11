@@ -65,34 +65,14 @@
 
 ## Capacity
 
-- Two kinds:
-
-
-| Item | Short term | Long term |
-|---|---|---|
-| Performed by | Day-to-day operations | Capacity planner |
-| Decision | Stop provisioning new load | Buy hardware |
-| Ties to | Availability, performance | Value (cost) |
-| Timeline | Now; no projection | Future; projection mandatory |
-| Scope | Resources provisioned within an hour | Resources not yet purchased |
-| Focus | Hardware | Software (costs more) |
-
-- Long-term lead time follows procurement: months.
-- Short term looks at the consumer, long term at the provider.
-- Short-term questions:
-  - Can more workload be deployed now? Automation deploys, so it must be blocked if it would cause a problem: check the present and the projected state.
-  - Can providers be taken out for a while (ESXi maintenance mode, cluster upgrade)?
+- Quantity: is there enough supply for the demand to come? Its two stages (planning, running), its horizons (short term: stop provisioning; long term: buy hardware), its boundary with the peer pillars and where each question is answered: `sp5-framework/capacity/capacity-management`.
 - Short-term capacity and performance depend on each other, which is why they are confused. A cluster that cannot serve its current demand is full, whatever its utilization: stop adding workload until the cause is known.
-- Capacity also counts demand not yet visible: reservations and allocation. They also keep consumption below the point of contention.
-- Price manages capacity: a price plan that rewards small VMs is the best fix for oversized VMs. With no price, use business justification to rightsize.
-- Do not add lanes for congestion that is short or rare. A revenue peak (annual sale, 1 day in 365) can be served by burst capacity in the cloud or on premises, or by limiting, powering off or moving other workloads, or by borrowing hosts from other clusters for that day.
 - How reservation, commitment, allocation, share and utilization feed the pillars:
   - share → contention (quality of service); utilization causes contention; contention → performance;
   - utilization → capacity; reservation and commitment → capacity; allocation → capacity only in plan;
   - allocation, reservation, commitment and share justify cost and price;
-  - Reservation in planning phase becomes share in running phase. 
+  - Reservation in the planning stage becomes share in the running stage.
     ![Inputs (share, reservation, commitment, contention, utilization, allocation) and what is managed (performance, capacity, cost & price): share → contention (QoS); utilization causes contention; contention → performance; utilization, reservation, commitment → capacity; allocation → capacity only in plan; allocation, reservation, commitment, share justify cost & price; reservation becomes share](images/share-reservation-commitment-allocation-to-performance-capacity-cost-diagram.png)
-- Reclamation: the infrastructure team should not force internal customers to cut consumption; developers outnumber administrators. Show the CFO the cost of waste. The CFO holds the hardware budget and makes each line of business optimize.
 
 ## Security and compliance
 
@@ -188,6 +168,7 @@ internal_derive:
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/capacity/capacity-model
 related:
+- sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/modelling
 - sp5-framework/concepts/why-a-new-framework
 - sp5-framework/observability/triple-see-method

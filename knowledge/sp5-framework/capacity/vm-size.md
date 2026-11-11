@@ -19,7 +19,7 @@
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
 
 ## Size as a class of service fence
-- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one.
+- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one. Mixed clusters are common but a compromise: the design is one class per cluster (`sp5-framework/capacity/capacity-dimensions`, section Overcommit: several classes).
 - Technique: Gold is entitled to larger VM configurations; Bronze is kept small. A small Bronze VM cannot take a large share of a host's threads at once, so its peaks hurt Gold less.
 - The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from its ratio in the table above (`sp5-framework/concepts/class-of-service`, `sp5-framework/performance/noisy-neighbour`).
 

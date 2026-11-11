@@ -62,6 +62,15 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - Operational Availability: 100%. All three are inside the scheduled window.
   - Actual Availability counting the Guest OS only: 45 minutes, 99.90%.
   - Actual Availability counting until the database is restored: 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%.
+- Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity (`sp5-framework/capacity/capacity-model`, section Total vs usable after host loss).
+
+| Hosts out | Event | Actual Availability | Operational Availability |
+|---|---|---|---|
+| 1 | DPM | 9/9 = 100% | 9/8 → 100% (capped) |
+| 1 | Maintenance mode | 9/10 = 90% | 9/9 = 100% |
+| 2 | DPM | 8/8 = 100% | 8/7 → 100% (capped) |
+| 2 | Maintenance mode | 8/10 = 80% | 8/9 = 89% |
+
 - Supporting offers that justify a higher class: application-level backup and self-service file restore; application-level HA monitoring, boot order, VM-host affinity; lower RPO and RTO with a yearly real DR test; longer and larger snapshots; patch deferral and custom patch sets; deferral of VMware Tools and VM hardware updates.
 
 ## Compliance SLA
@@ -154,6 +163,7 @@ object:
 internal_derive:
 - sp5-framework/performance/kpi-vs-sla
 related:
+- sp5-framework/capacity/capacity-model
 - sp5-framework/concepts/class-of-service
 - sp5-framework/concepts/iaas-business
 - vsphere/architecture/vm-vs-guest-os
