@@ -20,7 +20,6 @@
 - Resource pools add a management layer and make the settings harder.
 
 ## CPU
-- CPU is where the problem usually is.
 - Limit:
   - the default limit is the configured size; it is usually too high because the price is low. A VM that runs on 8 vCPU is given 32 because the buyer can afford it;
   - a limit set on the VM gives unpredictable performance: Windows or Linux does not know it can use only part of its vCPUs;
@@ -88,12 +87,6 @@
   - progressive tiers: a 64-vCPU VM costs more than 64 × a 1-vCPU VM.
 - Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size.
 - Tell customers the quality of each class through its overcommit:
-
-| Class | Memory overcommit |
-|---|---|
-| Gold | 1:1 |
-| Silver | 1.5:1 |
-| Bronze | 2:1 |
 
 - No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class (`sp5-framework/performance/kpi-vs-sla`).
 
