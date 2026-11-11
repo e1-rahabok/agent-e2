@@ -33,7 +33,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | Reservation | Included | - | Included |
 
 - Included: subtracted from total capacity in that model.
-- Utilization, running stage: the hypervisor is not subtracted. Its load is in the measured utilization, and it is too volatile to fix as a constant. Planning stage: nothing is measured yet, so the calculator subtracts it from supply ([`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages).
+- Utilization, running stage: the hypervisor is not subtracted. Its load is in the measured utilization, and it is too volatile to fix as a constant. Planning stage: nothing is measured yet, so the calculator subtracts it from supply ([`sp5-framework/capacity/capacity-management`](README.md), section Two stages).
 - Reservation: CPU supply is cores × base clock, because a reservation is capped at the base clock; memory supply is DRAM ([`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md), section Planning calculator).
 
 ## Buffer

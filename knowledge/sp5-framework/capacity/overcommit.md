@@ -7,7 +7,7 @@
 - A provider that does not overcommit may not compete on cost.
 - The ratio excludes buffer: it is read against the capacity left after HA and buffer. Allocation ignores utilization and the provider part ([`sp5-framework/capacity/supply`](supply.md)).
 ![Overcommit ratio excludes buffer](images/cluster-overcommit-ratio-excludes-buffer.png)
-- A planning input tied to the VM price, not a verdict on a running cluster. A running cluster is judged by consumption, performance and risk ([`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages).
+- A planning input tied to the VM price, not a verdict on a running cluster. A running cluster is judged by consumption, performance and risk ([`sp5-framework/capacity/capacity-management`](README.md), section Two stages).
 
 ## Per resource
 - CPU: per physical thread, not per core, because the CPU executes per thread. With Hyper-Threading a ratio per core is twice the ratio per thread: 3:1 per thread is 6:1 per core.

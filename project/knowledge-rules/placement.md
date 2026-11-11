@@ -89,6 +89,7 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
   - `knowledge/vsphere/architecture/`: vSphere design that its metrics follow from.
 - Scope: VCF only. No competitor products, their behaviour or comparisons with them: out of scope for a machine, and politically sensitive. A VMware offering on a hyperscaler (VMware Cloud on AWS, Azure VMware Solution) is VCF and stays.
 - A setting of one object goes to that object: Scalable Shares is in `vsphere/object-types/resource-pool/configuration/`. A pillar problem across technologies goes to its pillar: noisy neighbour is in `sp5-framework/performance/`.
+- A pillar folder's main file is `README.md`, so GitHub opens it with the folder. Its `id` keeps a descriptive name (`sp5-framework/capacity/capacity-management`): the id, not the file name, is what the model reads and links use. Lint checks it.
 - A top-level folder is never named `metrics`: lint and the harness read `/metrics/` in a path as a metric file.
 - `metrics/<object>` folder names: `virtual-motherboard`, `host`, `cluster`, `datastore` under `vsphere/technology/`; the same names wherever a metric of that object lives. The `object` tag holds the vSphere managed object type name.
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.

@@ -1,7 +1,7 @@
 # Forecasting capacity
 
 ## What is forecast
-- The long-term horizon of the running stage: when must hardware be bought? Procurement takes months, so the answer must come before the shortage ([`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages).
+- The long-term horizon of the running stage: when must hardware be bought? Procurement takes months, so the answer must come before the shortage ([`sp5-framework/capacity/capacity-management`](README.md), section Two stages).
 - Supply is a chosen constant ([`sp5-framework/capacity/supply`](supply.md)). What is forecast is demand: utilization against usable capacity.
 - Compute is projected from its past. Storage space is not: 0 bytes left stops IO, and that reality overrides any projection ([`vsphere/technology/storage/concepts/storage-dimensions`](../../vsphere/technology/storage/concepts/storage-dimensions.md)).
 - Demand that is not yet visible is in no projection: new projects, DR tests and real DR, new VMs not yet at full load. Add it on top ([`sp5-framework/capacity/demand`](demand.md), section Invisible demand).

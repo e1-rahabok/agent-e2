@@ -1,7 +1,7 @@
 # Performance management
 
 ## What it answers
-- Quality: are the consumers served well now? Capacity asks quantity: is there enough supply for the demand to come ([`sp5-framework/capacity/capacity-management`](../capacity/capacity-management.md)).
+- Quality: are the consumers served well now? Capacity asks quantity: is there enough supply for the demand to come ([`sp5-framework/capacity/capacity-management`](../capacity/README.md)).
 - Performance is contention: the time a consumer waited for a resource it demanded. No contention, no performance problem. Utilization is consumption: 100% with no queue is the most work done ([`sp5-framework/concepts/performance-vs-capacity`](../concepts/performance-vs-capacity.md)).
 - Measured on the consumer: the VM, the Guest OS, the pod. A provider (ESXi host, cluster) has no contention of its own: its performance is the contention of its consumers ([`vsphere/architecture/provider-consumer`](../../vsphere/architecture/provider-consumer.md)).
 - Read against total capacity, at the 20-second peak, over seconds to hours. HA, buffer and usable capacity are capacity ideas.
