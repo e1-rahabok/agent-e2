@@ -100,10 +100,6 @@ A metric with its own file is an entry only when it has another name or a confus
   - Also called: Memory Latency
 - **Swap Target**: Memory ESXi aims to reclaim by compression and swapping.
   - Also called: Compress-swap target
-- **VM Memory Swap In Rate**: Rate of pages read back from the swap file into DIMM.
-  - Also called: SWR/s (esxtop)
-  - Not to confuse with VM Memory Swap Out Rate: swap out (SWW/s) and compression (ZIP/s) are ESXi reclaiming memory, a capacity signal; only swap in (SWR/s) and decompression (UNZIP/s) make the VM wait.
-  - File: `vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate`
 - **VM Memory Usage (%)**: vCenter: from Active. VCF Operations: Guest OS Needed Memory / VM memory, falling back to Active without Guest OS data.
   - Not to confuse with ESXi Memory Usage (%): ESXi and cluster Usage is Consumed, a capacity reading; VM Usage is not. Read as one metric, they have led customers to buy RAM they did not need.
   - File: `vsphere/technology/memory/metrics/virtual-motherboard/usage`
@@ -162,9 +158,6 @@ A metric with its own file is an entry only when it has another name or a confus
   - Also called: VM rightsizing (inside the guest)
   - Not to confuse with VM footprint: VM footprint sizes from vSphere counters (outside); two jobs, two formulas.
   - File: `sp5-framework/capacity/rightsizing`
-- **Idle VM**: Below an absolute MHz every day.
-  - Not to confuse with Oversized VM, unused VM: idle is below an absolute MHz every day; oversized is relative to its own size; unused is busy but of no business value.
-  - File: `sp5-framework/capacity/reclamation`
 - **Model**: How one pillar of one object is quantified into a number and a decision: capacity, availability, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed.
   - Not to confuse with KPI: a KPI scores performance only; capacity and risk are scored by models, so Cluster Risk is a model, not a KPI.
   - File: `vsphere/object-types/cluster/models/cluster-consumption`
@@ -233,7 +226,7 @@ source:
 corrections: []
 review_notes:
   - "To check: column 'Not to confuse with': each pair against the file in its File column."
-  - "To check: the entries added 2026-11-11 to carry a pair (ESXi CPU Demand, ESXi CPU Usage, VM CPU Used, Guest OS In Use, VM Memory Swap In Rate, VM Memory Usage (%), Disk (device), Cluster Risk (%), Idle VM, Compliance, Property, Insight)."
+  - "To check: the entries added 2026-11-11 to carry a pair (ESXi CPU Demand, ESXi CPU Usage, VM CPU Used, Guest OS In Use, VM Memory Usage (%), Disk (device), Cluster Risk (%), Compliance, Property)."
   - "To check: each term and its preferred name in section 'CPU', from Run Quality onward."
 status: draft
 ```
