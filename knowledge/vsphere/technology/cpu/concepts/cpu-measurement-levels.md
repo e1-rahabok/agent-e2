@@ -71,7 +71,6 @@
 ## CPU capacity: Rules
 - Capacity is counted in physical threads: where a vCPU can run. Speed is performance.
 - Running 40 vCPU on 40 threads is not overcommit (ignoring hypervisor overhead): no Ready. They run slower, like on slower hardware.
-- AWS also counts threads and sells allocation without overcommit.
 - Do not express capacity in MHz: Hyper-Threading adds only 1.25x while each thread slows 37.5%, and All-Core Turbo varies per model. GHz mixes performance and capacity.
 - Enable Hyper-Threading, but set customer expectations on speed. Future CPUs may drop HT (some new Intel Xeon use performance and efficiency cores; AMD keeps SMT).
 - Reservation is in hertz; allocation is in vCPUs. After vMotion to a faster host, adjust reservations manually if they do not scale.
@@ -170,8 +169,8 @@ images:
   topic: CPU capacity
   image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 52, 55-57) > Architecture intro; ESXi ≠ VM + Kernel; Provider Objects > Capacity > CPU (from former vsphere/technology/cpu/concepts/cpu-measurement-levels)
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > Architecture intro; ESXi ≠ VM + Kernel; Provider Objects > Capacity > CPU (from former vsphere/technology/cpu/concepts/cpu-measurement-levels)
 corrections: []
 review_notes:
 - 'To check: Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''; an average of GHz values is unusual, a sum is expected. Written as in the book.'

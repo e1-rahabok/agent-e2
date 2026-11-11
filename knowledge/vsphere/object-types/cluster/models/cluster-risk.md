@@ -109,7 +109,7 @@ related:
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 images:
 source:
-  document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI; PART 3 - Counters.docx for reasons and monster VM factors
+  document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for reasons and monster VM factors
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md; formula/cluster-risk.png; Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections:
 - 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'

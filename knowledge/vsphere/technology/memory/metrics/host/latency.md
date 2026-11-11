@@ -28,7 +28,7 @@ same_meaning: []
 related:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Overview; Contention Metrics
 corrections: []
 review_notes: []

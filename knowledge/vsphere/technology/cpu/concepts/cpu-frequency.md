@@ -202,8 +202,8 @@ images:
   - VM CPU Usage
   image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 68-75) > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture (pp. 77-78) > Impacts on VM (from former vsphere/technology/cpu/concepts/cpu-frequency)
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > CPU Frequency; Total Capacity; Turbo; All Cores Turbo; Impacts on ESXi; CPU > Architecture > Impacts on VM (from former vsphere/technology/cpu/concepts/cpu-frequency)
 corrections: []
 review_notes:
 - 'Section ''Turbo'': whitepaper ''Host Power Management in VMware vSphere 7.0'' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices.'

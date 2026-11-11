@@ -45,7 +45,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/compressed
 - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Contention Metrics > Latency
 corrections: []
 review_notes:

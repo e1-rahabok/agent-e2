@@ -81,8 +81,8 @@ images:
     metric: ['VM CPU Wait', 'VM CPU Idle', 'VM CPU Swap Wait']
     image_type: table
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Contention Metrics; Wait Metrics
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Contention Metrics; Wait Metrics
 corrections: []
 review_notes:
 - 'To check: Section ''Which state each metric includes'': table assembled from the book''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the book.'

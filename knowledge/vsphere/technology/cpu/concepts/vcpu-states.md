@@ -191,8 +191,8 @@ images:
     topic: 'vCPU states'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 60-67) > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
 corrections: []
 review_notes:
 - 'To check: Section ''State diagram'': the meaning given for the three arrows without a label in the book''s state diagram (Wait to Run, Wait to Co-stop, Run to Co-stop).'

@@ -132,7 +132,7 @@ images:
     image_type: table
     sample: 'about 3,000 VMs'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: MS Windows > Memory
 corrections: []
 review_notes:

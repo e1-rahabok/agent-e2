@@ -113,7 +113,7 @@ images:
     topic: 'Object relationships'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > Architecture > Storage Layers; VM Layer; ESXi Layer; Datastore Layer
 corrections: []
 review_notes:

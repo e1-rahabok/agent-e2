@@ -40,7 +40,7 @@
 ## Past vs present
 - The present value depends on when you look. At 08:00, the 08:00 value does not say what happened overnight.
 - The past has more than one point per object, so it is harder to show. A line chart shows the trend; one number, such as the maximum or the average, hides whether it is going up or down and how long the peak lasted. A line chart takes space.
-- With many objects or metrics, summarize. Show two numbers where one is an average, such as the average and the worst (`observability/aggregation`).
+- With many objects or metrics, summarize. Show two numbers where one is an average, such as the average and the worst (`sp5-framework/observability/aggregation`).
 
 ## Summary, list, detail
 - Large environments have many items (Kubernetes pods, cloud instances). Summarize, work on a subset, then pick the item.
@@ -67,9 +67,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/dashboard-design
+id: sp5-framework/outputs/dashboard-design
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -80,12 +80,12 @@ pillar:
 product:
 - vcf-operations
 internal_derive:
-- vcf-operations/concepts/system-engagement
+- sp5-framework/outputs/system-engagement
 related:
-- vcf-operations/dashboards/dashboard-colour
-- vcf-operations/dashboards/performance-dashboards
-- vcf-operations/dashboards/capacity-dashboards
-- observability/aggregation
+- sp5-framework/outputs/dashboard-colour
+- sp5-framework/outputs/performance-dashboards
+- sp5-framework/outputs/capacity-dashboards
+- sp5-framework/observability/aggregation
 images:
   - path: images/dashboard-design-considerations-diagram.png
     product: [vcf-operations]
@@ -98,8 +98,8 @@ images:
     topic: 'Persona grid: frequency of use against granularity; executive, manager, admin'
     image_type: diagram
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Overall Design Approach > Design Consideration (Design Methodology, Clean Layout, Past vs Present, Summary List Detail, Interaction) (pp. 27-35)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Overall Design Approach > Design Consideration (Design Methodology, Clean Layout, Past vs Present, Summary List Detail, Interaction)'
 corrections: []
 review_notes:
 - 'Section ''Layout'': the source shows example dashboards by Brock Peterson and Dale Hassinger; third-party screenshots not copied.'

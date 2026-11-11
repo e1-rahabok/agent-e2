@@ -94,7 +94,7 @@ class Evaluator:
             self.note('vCenter counters: KB = 1,024 bytes, KBps = 1,024 bytes per second; kb = 1,000 bits, kbps = 1,000 bits per '
                       f'second. 1 byte = 8 bits. esxtop network is in megabits. See {SRC_STATS}, section Units.')
         if k1 == 'freq':
-            self.note('CPU frequency is decimal: 1 GHz = 1,000 MHz. See observability/units.')
+            self.note('CPU frequency is decimal: 1 GHz = 1,000 MHz. See sp5-framework/observability/units.')
         return value * f1 / f2
 
     def capacity_ghz(self, cores, ghz_per_core):

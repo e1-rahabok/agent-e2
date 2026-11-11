@@ -72,8 +72,8 @@ related:
 - sp5-framework/concepts/iaas-business
 - vsphere/architecture/overhead
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2 (pp. 14-15); Service Level Agreement > Price & SLA (p. 37)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2; Service Level Agreement > Price & SLA'
 corrections: []
 review_notes:
 - 'To check: Section ''Method'': the formula, derived from the book''s Silver example.'

@@ -82,8 +82,8 @@ images:
     topic: 'Hyper-Threading accounting'
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Quiz! > VM vs ESXi
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Quiz! > VM vs ESXi
 corrections: []
 review_notes:
 - 'Test data from Valentin Bondzio (book footnote).'

@@ -38,7 +38,7 @@ related:
 - vsphere/technology/cpu/metrics/host/demand
 - vsphere/architecture/resource-controls
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Consumption Metrics > Reservation
 corrections:
 - 'Sections Meaning, Misconceptions: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'

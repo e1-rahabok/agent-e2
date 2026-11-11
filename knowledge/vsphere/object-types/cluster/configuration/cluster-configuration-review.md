@@ -65,8 +65,8 @@ related:
 - sp5-framework/capacity/capacity-model
 - sp5-framework/concepts/health-risk-efficiency
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Configuration Management > Review List > Cluster; vSphere Cluster Variation (pp. 144-145)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Configuration Management > Review List > Cluster; vSphere Cluster Variation'
 corrections: []
 review_notes:
 - 'To check: Section ''HA'': the book says reservation is respected only when admission control is enabled. Host admission control enforces reservations at power-on whatever the HA setting (vsphere/object-types/cluster/concepts/admission-control-and-cluster-state); HA admission control keeps failover capacity for them. Written that way. (Q110).'

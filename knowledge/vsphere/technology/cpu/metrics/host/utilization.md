@@ -61,8 +61,8 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/host/imbalance
 source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > ESXi ≠ VM + Kernel; CPU > ESXi > Thread Utilization
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > ESXi ≠ VM + Kernel; CPU > ESXi > Thread Utilization
 corrections:
 - 'Section ''The capacity reading'' and Misconceptions: Thread Utilization is the ESXi utilization for capacity management (quiz key of CPU Q1).'
 review_notes:

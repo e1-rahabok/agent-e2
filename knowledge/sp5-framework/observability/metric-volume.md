@@ -34,24 +34,26 @@ every minute, per day ≈ 134 million metrics
 
 ## Metadata
 ```yaml
-id: observability/metric-volume
+id: sp5-framework/observability/metric-volume
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
 pillar:
 - value
-product: []
+product:
+- vsphere
+- vcf-operations
 object:
 - VirtualMachine
 internal_derive: []
 related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vcf-operations/features/peak-20-second-metrics
-- observability/collection-interval
+- sp5-framework/observability/collection-interval
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections: []
 review_notes: []

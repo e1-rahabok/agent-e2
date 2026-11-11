@@ -244,7 +244,7 @@ images:
   image_type: scatter
   sample: 607 hosts
 source:
-  document: PART 3 - Counters.docx + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download) + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > Overhead vs Not Overhead; Provider Objects > Capacity > Hypervisor; CPU > Hypervisor; Memory > Hypervisor Metrics (from former vsphere/architecture/overhead); ESX CPU Considerations (pp. 27-28) (from former vsphere/architecture/overhead)
 corrections:
 - '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'

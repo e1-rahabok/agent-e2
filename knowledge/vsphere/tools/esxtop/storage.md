@@ -111,7 +111,7 @@ images:
     topic: 'esxtop storage'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > esxtop > Storage
 corrections:
 - 'Section ''Panels'': the book says esxtop does not cover NFS. NFS datastores show in the Disk Device panel as {NFS} pseudo-devices with DAVG, KAVG and GAVG.'

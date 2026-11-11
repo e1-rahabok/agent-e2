@@ -112,8 +112,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/architecture/resource-controls
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Capacity Management > Reclamation > Unused VM (Configuration; Utilization; Other Signs; Annual Stocktake). Pages 118-121.'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Capacity Management > Reclamation > Unused VM (Configuration; Utilization; Other Signs; Annual Stocktake)'
 corrections: []
 review_notes:
 - 'Section ''Signs'': several signs read inside the Guest OS (login, process, logs, paging). Kept in operations-management, not guest-os/, because the file spans layers and products.'

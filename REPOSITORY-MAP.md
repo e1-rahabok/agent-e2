@@ -18,13 +18,12 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 |---|---|
 | `knowledge/` | What Agent E2 reads. The only indexed folder. Placement rules: [project/knowledge-rules/placement.md](project/knowledge-rules/placement.md) |
 | `knowledge/catalog/` | Exact data in YAML, read by code: vCenter counters, esxtop fields, object model, thresholds (performance KPI, capacity models and decisions, alerts), user terms |
-| `knowledge/observability/` | How to read any metric, any product: input types, collection interval, aggregation, units, thresholds |
-| `knowledge/sp5-framework/` | How operations are managed, across products. `concepts/`: the framework across pillars (overview, health check, health-risk-efficiency, monitoring vs troubleshooting, proactive operations, class of service, SLAs). `alerts/`: alert architecture. `performance/`: KPI design, noisy neighbour, the VM slow flow. `capacity/`: capacity model, dimensions, sizing, reclamation |
+| `knowledge/sp5-framework/` | The method: how to operate VCF, the SP5 Framework (source: Private Cloud Management by Iwan Rahabok). `concepts/`: across pillars (overview, health check, health-risk-efficiency, class of service, modelling). `observability/`: how to read telemetry. `outputs/`: alerts, dashboards, reports, NOC live screen. `performance/`, `capacity/`: one pillar each |
 | `knowledge/vsphere/architecture/` | vSphere design every metric follows from: provider and consumer, VM vs Guest OS realms, overhead, resource controls |
 | `knowledge/vsphere/technology/` | One technology at a time (`cpu`, `memory`, `storage`, `network`, `gpu`): how it works, metrics per object, what to set, troubleshooting and decision trees within that technology |
 | `knowledge/vsphere/object-types/` | One object type at a time (`vm`, `esxi`, `cluster`, `resource-pool`): what combines technologies, KPIs, models, the object's health check, troubleshooting and decision trees on that object |
 | `knowledge/vsphere/tools/` | How esxtop and the vSphere Client show the counters |
-| `knowledge/vcf-operations/` | VCF Operations itself: `concepts/` (role, channels), `features/`, `dashboards/`, `reports/`, `alerts/` (alert definitions). Metrics it computes about vSphere objects live with those objects |
+| `knowledge/vcf-operations/` | The product VCF Operations: `concepts/` (role), `features/`, `dashboards/` and `reports/` as built in it, `alerts/` (alert definitions). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
 | `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it |
 | `knowledge/glossary.md` | The agent's vocabulary |
 | `knowledge/misconceptions.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |

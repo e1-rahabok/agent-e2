@@ -89,7 +89,7 @@ product:
 object:
 - VirtualMachine
 internal_derive:
-- observability/thresholds
+- sp5-framework/observability/thresholds
 related:
 - vsphere/object-types/vm/kpis/vm-performance
 - guest-os/system/metrics/guest-os-performance
@@ -101,7 +101,7 @@ images:
     metric: ['VM Performance', 'Guest OS Performance']
     image_type: table
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Performance: VM & Guest OS > Approach; Metrics Not Used; Implementation'
 corrections:
 - 'Section ''Two KPIs, not one'': VM GOS KPI = average of the two, for the application team. Part 1 of the book, which combines them in one KPI, is outdated.'

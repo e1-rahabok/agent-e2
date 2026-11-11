@@ -69,7 +69,7 @@ images:
     topic: 'esxtop panels'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > esxtop > Overview
 corrections: []
 review_notes:

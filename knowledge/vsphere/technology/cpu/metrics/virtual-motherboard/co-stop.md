@@ -76,8 +76,8 @@ images:
     image_type: distribution
     sample: '2,429 VMs'
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Contention Metrics > Co-stop
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Contention Metrics > Co-stop
 corrections: []
 review_notes:
 - 'Section ''Values'': the 1% value is the book''s best practice, based on about 64 million data points (2,429 VMs × 26,298).'

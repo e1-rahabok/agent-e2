@@ -73,7 +73,7 @@
 ## Metadata
 
 ```yaml
-id: sp5-framework/concepts/triple-see-method
+id: sp5-framework/observability/triple-see-method
 retriever_guide: how-it-works
 scope: sp5-framework
 technology:
@@ -90,15 +90,15 @@ product:
 internal_derive:
 - sp5-framework/concepts/overview
 related:
-- observability/collection-interval
-- observability/aggregation
+- sp5-framework/observability/collection-interval
+- sp5-framework/observability/aggregation
 - sp5-framework/concepts/modelling
-- observability/input-types
-- observability/metric-perspectives
+- sp5-framework/observability/input-types
+- sp5-framework/observability/metric-perspectives
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/performance-vs-capacity
 source:
-  document: 'PART 3 - Counters.docx, Metric Mastery'
+  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery'
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
 review_notes:

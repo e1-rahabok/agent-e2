@@ -33,7 +33,7 @@ related:
 - vsphere/tools/vsphere-client/performance-guidance
 - vsphere/technology/storage/metrics/datastore/storage-io-control
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > ESXi > Disk or Device; Storage Adapter & Path
 corrections: []
 review_notes:

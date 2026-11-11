@@ -32,7 +32,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 - vsphere/technology/cpu/metrics/host/idle
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Wait Metric
 corrections: []
 review_notes: []

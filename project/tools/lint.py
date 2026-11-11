@@ -79,7 +79,7 @@ def main():
             linked_images.add(full)
             if not os.path.exists(full):
                 bad(f, f'image not found: {img}')
-        for r in re.findall(r'`((?:vsphere|observability|guest-os|sp5-framework|vcf-operations)/[a-z0-9\-/]+)`', body):
+        for r in re.findall(r'`((?:vsphere|guest-os|sp5-framework|vcf-operations)/[a-z0-9\-/]+)`', body):
             if r not in ids: bad(f, f'inline link "{r}" does not exist')
         # vSphere folders: architecture/, technology/<tech>/, object-types/<object>/, tools/<ui>/ (esxtop, vsphere-client; screens/ inside).
         if f.startswith('knowledge/vsphere/'):
@@ -329,7 +329,7 @@ def check_tables(bad):
 VSPHERE_TOP = ['architecture', 'technology', 'object-types', 'tools']
 VCF_OPERATIONS_TOP = ['concepts', 'features', 'dashboards', 'reports', 'alerts', 'troubleshooting', 'health-check']  # VCF Operations itself only (author, 2026-11-08)
 OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
-PILLAR_FOLDERS = ['concepts', 'alerts', 'performance', 'capacity']
+PILLAR_FOLDERS = ['concepts', 'observability', 'outputs', 'performance', 'capacity']  # SP5 Framework parts (2026-11-11)
 CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 # Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.

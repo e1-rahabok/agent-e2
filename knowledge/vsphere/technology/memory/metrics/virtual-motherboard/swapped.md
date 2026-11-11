@@ -51,7 +51,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-out-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-target
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Swap + Compress
 corrections: []
 review_notes:

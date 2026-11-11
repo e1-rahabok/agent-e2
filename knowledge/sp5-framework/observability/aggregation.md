@@ -75,25 +75,27 @@ Disparity (%) = (highest - lowest) / total capacity
 
 ## Metadata
 ```yaml
-id: observability/aggregation
+id: sp5-framework/observability/aggregation
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - system
 pillar:
 - performance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
-- observability/collection-interval
-- observability/thresholds
+- sp5-framework/observability/collection-interval
+- sp5-framework/observability/thresholds
 - vsphere/object-types/cluster/kpis/cluster-performance
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:
-  document: PART 3 - Counters.docx, Metric Mastery (update of 2026-11-08)
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
   path: Metric Mastery > Aggregation; The Problem with Average; Lagging vs Leading Indicators; "Peak" Utilization; Depth vs Breadth; Usage Disparity
 corrections: []
 review_notes:

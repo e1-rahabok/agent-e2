@@ -47,7 +47,7 @@ images:
     metric: ['VM Memory Swap Target', 'VM Memory Swapped', 'VM Memory Granted', 'VM Memory Consumed']
     image_type: table
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Swap + Compress > Transition; Quiz!
 corrections: []
 review_notes: []

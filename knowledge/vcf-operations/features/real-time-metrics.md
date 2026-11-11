@@ -1,7 +1,7 @@
 # Real-time metrics (VCF Operations 9.1)
 
 ## What it adds
-- The purpose and the three implementations (esxtop, VCF Operations 2 seconds, 20-second data labelled real time): `observability/real-time-metrics`. This file is the VCF Operations 9.1 feature.
+- The purpose and the three implementations (esxtop, VCF Operations 2 seconds, 20-second data labelled real time): `sp5-framework/observability/real-time-metrics`. This file is the VCF Operations 9.1 feature.
 - New in VCF Operations 9.1: live performance data, streamed from vCenter, ESX, NSX and vSAN into a real-time metrics store.
 - Two tiers on ESX hosts and VMs: 20-second (standard real-time interval) and 2-second (high-resolution, an esxtop subset of about 21 metrics).
 - Purpose of 2-second data: micro bursts of 1-3 seconds that a 20-second average flattens (`sp5-framework/capacity/rightsizing`, section Micro burst).
@@ -37,12 +37,12 @@ cpu.ready.HOST{feature='TROUBLESHOOTING'} 20-second
 - 2-second data is 10x the volume of 20-second data. Limit collection (book: about 1,000 data points) so the monitored system is not loaded.
 
 ## Misconceptions
-- "The 20-second tier is real time" → the UI calls it real time; each point is a 20-second average. Only the 2-second tier sees a burst of 1-3 seconds (`observability/real-time-metrics`).
+- "The 20-second tier is real time" → the UI calls it real time; each point is a 20-second average. Only the 2-second tier sees a burst of 1-3 seconds (`sp5-framework/observability/real-time-metrics`).
 - "The cluster chart shows the 2-second peak" → cluster and datacenter stop at 60 seconds; read hosts and VMs.
 - "Top N lists the 2-second spikes" → Top N uses 20-second data only.
 - "No 2-second data, so no burst happened" → ESX Top must be activated in the policy, and the ESX Top view selected.
 - "Query cpu.ready.HOST and read one line" → both tiers return; filter feature='ESX_TOP'.
-- "2-second Ready compares with 20-second thresholds" → shorter samples read higher; bands set on 20-second peaks do not apply (`observability/thresholds`).
+- "2-second Ready compares with 20-second thresholds" → shorter samples read higher; bands set on 20-second peaks do not apply (`sp5-framework/observability/thresholds`).
 
 ## Metadata
 ```yaml
@@ -63,11 +63,11 @@ object:
 - HostSystem
 - VirtualMachine
 internal_derive:
-- observability/real-time-metrics
+- sp5-framework/observability/real-time-metrics
 related:
 - sp5-framework/capacity/rightsizing
 - vcf-operations/features/peak-20-second-metrics
-- observability/thresholds
+- sp5-framework/observability/thresholds
 - vsphere/tools/esxtop/overview
 source:
   document: VCF Operations 9.1 documentation (TechDocs, VCF 9.1.x), Real-time Data in the Workbench (updated 2026-10-29); Real-Time Metrics Details and Deploy Real-Time Metrics (updated 2026-11-05)

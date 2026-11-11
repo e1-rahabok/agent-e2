@@ -89,7 +89,12 @@ flowchart LR
 - Quality drifts without review. Coverage is partial on purpose: depth first.
 
 ## 2. Where the knowledge lives
-- Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is product, deployed to the site, and all of it is reviewed by the author.
+
+- Two bodies of knowledge, as the author carries them as a consultant, and Agent E2 combines them in every answer:
+  - the method, the SP5 Framework: how to operate VCF, in VCF terms and examples (`sp5-framework/`). Source: Private Cloud Management by Iwan Rahabok.
+  - the product, VCF 9.x: what each component is and does (`vsphere/`, `vcf-operations/`), and the Guest OS above the VM (`guest-os/`).
+- Scope is VCF only: nothing about competitor products. Folder rules: `project/knowledge-rules/placement.md`.
+- Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is deployed to the site, and all of it is reviewed by the author.
 - The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:
 
 | Path | Holds | Home | Why this path |
@@ -103,7 +108,7 @@ flowchart LR
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each up-front misconception ends with `See <id>`.
 - Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong up-front line or prompt rule therefore costs more than a wrong metric file, and its review comes first.
 - All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. `knowledge/misconceptions.md` is given up front and kept out of the index (`harness/kb.py`, `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
-- Not product: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge; they are not deployed and hold nothing the agent reads.
+- Not deployed: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge and hold nothing the agent reads.
 
 ## 3. Knowledge forms
 | Form | Holds | Home | Why this form |
@@ -112,7 +117,7 @@ flowchart LR
 | Misconceptions | Wrong readings and their correction | `## Misconceptions` in each file | The wrong conclusion, in the user's words, retrieves its correction |
 | Metadata tags | Technology, pillar, product, object, layer, instance, metric class | `## Metadata` yaml | One file found from several perspectives; filters retrieval |
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | The expert's mental map: which facts are read together |
-| Folder hierarchy | Metrics by technology, KPIs and models by object, pillars across products | `knowledge/` | One tree in the order the author reviews |
+| Folder hierarchy | The method (SP5 Framework) and the product (VCF 9.x) apart; inside the product, metrics by technology and KPIs by object | `knowledge/` | One tree in the order the author reviews; links and tags give the other views |
 | Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
 | Flows | Order of checks: health check, troubleshooting, decision tree | `health-check/`, `troubleshooting/`, `decision-tree/` | Small models skip steps; the flow tool keeps them on the path |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | `harness/calc.py`, formulas in files | Arithmetic is where models slip |
@@ -193,7 +198,7 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 | `retriever_guide` | Retrieving a definition when the question asks what to check or what to set. |
 | Small files, one fact per line | A retrieved chunk carrying unrelated facts; an error spreading beyond one line. |
 | Metadata at the end, parsed separately | Audit text (status, corrections) polluting the embedded content. |
-| General content at three levels (observability, operations management, vSphere architecture) | vSphere-only rules applied to other products, or general rules duplicated per product. |
+| Method apart from product (SP5 Framework vs vSphere and VCF Operations) | A design rule mistaken for product behaviour, or a product limit mistaken for a rule of the method. |
 | A `## Misconceptions` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
 - A file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason. How the agent uses this structure: `harness/AGENT.md`, section 3.

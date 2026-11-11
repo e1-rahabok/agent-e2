@@ -74,7 +74,7 @@ internal_derive:
 - sp5-framework/concepts/overview
 related:
 - sp5-framework/concepts/health-check
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/proactive-operations
 - sp5-framework/capacity/rightsizing
@@ -85,8 +85,8 @@ images:
     topic: 'Pillars grouped as environment, health, risk and efficiency'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > SP5 Framework > Health (pp. 50-52)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > SP5 Framework > Health'
 corrections: []
 review_notes:
 - 'Grouping differs inside the section: the grouping image puts compliance under risk and inventory under environment; the present/future health image puts compliance in present health (with security) and inventory in future health. Written from the text table and the grouping image.'

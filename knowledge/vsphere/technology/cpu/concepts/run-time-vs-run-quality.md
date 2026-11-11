@@ -98,8 +98,8 @@ images:
     topic: 'CPU throughput'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > Architecture (pp. 64-68, 77) > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > Architecture > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
 corrections: []
 review_notes:
 - 'Section ''Efficacy'': the 30% figure is an estimate for a new vs a 5-year-old Intel Xeon at the same clock speed, not a published measurement.'

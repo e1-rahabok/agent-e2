@@ -74,7 +74,7 @@ images:
     metric: ['VM Memory Ballooned', 'VM Memory Latency']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Contention Metrics > Balloon; Swap + Compress > Balloon
 corrections: []
 review_notes:

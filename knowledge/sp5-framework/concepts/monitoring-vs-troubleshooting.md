@@ -100,13 +100,13 @@ object:
 - ClusterComputeResource
 - VmwareDistributedVirtualSwitch
 internal_derive:
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 - sp5-framework/performance/kpi-vs-sla
 related:
 - sp5-framework/performance/troubleshooting/vm-slow
 - sp5-framework/concepts/proactive-operations
 - sp5-framework/concepts/health-risk-efficiency
-- observability/input-types
+- sp5-framework/observability/input-types
 - vsphere/object-types/vm/metrics/vmotion
 images:
   - path: images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png
@@ -115,8 +115,8 @@ images:
     topic: 'Order of areas to check when an object is not healthy'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > SP5 Framework > Monitor | Troubleshoot; Troubleshoot; Root Cause Analysis (pp. 46-50)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > SP5 Framework > Monitor | Troubleshoot; Troubleshoot; Root Cause Analysis'
 corrections:
 - 'Section ''Troubleshooting'', order: daily health check availability, performance, security; configuration as drill-down; known bugs are configuration; every performance flow checks configuration. The book diagram (contention, configuration, availability, utilization) is replaced.'
 - 'Monitoring table, row Logs, and the interval bullets: monitoring needs logs; performance monitoring reports the 20-second peak within the 5-minute interval; 20-second visibility for mission-critical systems.'

@@ -3,7 +3,7 @@
 ## Meaning
 - Indicates a performance problem. A primary counter for how well the VM is served.
 - Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`.
-- Threshold setting by layer: see `observability/thresholds`.
+- Threshold setting by layer: see `sp5-framework/observability/thresholds`.
 
 ## Mechanism
 - Latency can be high at low IOPS and throughput: each layer in the stack has its own queue (process, Guest OS storage subsystem, VM driver, kernel, array).
@@ -62,7 +62,7 @@ images:
     image_type: distribution
     sample: '2,400 VMs'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance; Storage > VM > Performance Metrics > Contention Metrics
 corrections:
 - 'Section ''Mechanism'' (2026-11-04): the book says read and write both map to network Transmit. Wrong: they do not map 1:1 to Transmit and Receive; it depends on block size, MTU and TCP handshake packets. Keep until the book is updated.'

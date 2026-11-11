@@ -287,7 +287,7 @@ images:
   topic: CPU time-based vs work-based metrics
   image_type: table
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624) + PART 3 - Counters.docx
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624) + Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21); CPU > Architecture (pp. 75-77) > CPU Efficiency (from former vsphere/technology/cpu/concepts/hyper-threading); CPU > ESXi > Consumption Metrics > Core vs Thread; Thread Utilization; Used | Usage; Summary (from former vsphere/technology/cpu/concepts/hyper-threading)
 corrections: []
 review_notes:

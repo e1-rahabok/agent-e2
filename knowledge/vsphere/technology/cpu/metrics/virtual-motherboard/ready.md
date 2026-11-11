@@ -105,8 +105,8 @@ images:
     image_type: scatter
     sample: '3,937 VMs'
 source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture (pp. 52-78) > State of a VM vCPU; State Across Time; State Across Multiple vCPU; CPU > VM (pp. 78-118) > Contention Metrics > Ready; Best Practice; Ready | Readiness
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > State of a VM vCPU; State Across Time; State Across Multiple vCPU; CPU > VM > Contention Metrics > Ready; Best Practice; Ready | Readiness
 corrections: []
 review_notes:
 - Sections Mechanism, Read against Run, Units, and the last 2 misconceptions: from CPU > Architecture.

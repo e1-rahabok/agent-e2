@@ -33,7 +33,7 @@ same_meaning: []
 related:
 - vsphere/technology/memory/metrics/host/ballooned
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Overview; Contention Metrics > Balloon
 corrections: []
 review_notes: []

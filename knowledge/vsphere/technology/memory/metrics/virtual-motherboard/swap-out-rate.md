@@ -37,7 +37,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Swap + Compress > Transition; Example
 corrections: []
 review_notes:

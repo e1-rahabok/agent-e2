@@ -44,7 +44,7 @@ related:
 - vsphere/technology/cpu/metrics/host/demand
 - vsphere/technology/cpu/metrics/host/usage
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Consumption Metrics > Metrics to Avoid > CPU Utilization for Resources
 corrections: []
 review_notes: []

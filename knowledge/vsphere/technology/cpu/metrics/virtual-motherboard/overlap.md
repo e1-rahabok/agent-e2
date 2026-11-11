@@ -71,8 +71,8 @@ images:
     metric: ['VM CPU Used', 'VM CPU Run', 'VM CPU Overlap', 'VM CPU System']
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Contention Metrics > Overlap
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Contention Metrics > Overlap
 corrections: []
 review_notes: []
 status: draft

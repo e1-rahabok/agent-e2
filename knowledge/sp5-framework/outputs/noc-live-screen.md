@@ -58,9 +58,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/noc-live-screen
+id: sp5-framework/outputs/noc-live-screen
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -70,10 +70,10 @@ pillar:
 product:
 - vcf-operations
 internal_derive:
-- vcf-operations/concepts/system-engagement
+- sp5-framework/outputs/system-engagement
 related:
 - sp5-framework/concepts/proactive-operations
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/outputs/alerts-and-insights
 images:
   - path: images/noc-live-screen-auto-rotate-order-diagram.png
     product: [vcf-operations]
@@ -81,8 +81,8 @@ images:
     topic: 'Auto-rotate order of NOC live screens, about 60 seconds each'
     image_type: diagram
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Live Screen (Action, Auto Rotate) (pp. 3-6)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Live Screen (Action, Auto Rotate)'
 corrections: []
 review_notes:
 - 'Section ''Colour'': the source names the colours green, yellow, amber and red; written as orange, the word the knowledge base uses for the third band.'

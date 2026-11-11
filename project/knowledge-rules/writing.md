@@ -67,4 +67,5 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 - Write from the current release: vSphere 9.1, VCF 9.1.1 (the Versions section of `CLAUDE.md` holds the current list).
 - Before writing from a vendor document, check that it is the current version and read its revision date; record version and revision in `source.document`.
 - A file written from an older version gets a `review_notes` line naming the newer version, and is re-checked before `status: reviewed`.
+- The author's book is cited as "Private Cloud Management by Iwan Rahabok (https://isvara.io/download)" in `source.document`, with the heading path in `source.path`. The working files in `project/sources/` (Part 1, 2, 3) are not named in `knowledge/`, and their page numbers are not used: Agent E2 knows the book, not its parts.
 - `project/sources/` is read-only.

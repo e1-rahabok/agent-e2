@@ -73,7 +73,7 @@ images:
     metric: ['ESXi Disk Kernel Latency', 'ESXi Disk Device Latency']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > ESXi > Disk or Device > Contention Metrics
 corrections: []
 review_notes:

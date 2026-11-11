@@ -137,9 +137,9 @@ related:
 - vsphere/architecture/kernel-worlds
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/architecture/overhead
-- observability/thresholds
+- sp5-framework/observability/thresholds
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?; The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility (from former vsphere/architecture/vm-vs-guest-os)
 corrections:
 - '2026-11-02: Layer C is work done outside the guest that the guest cannot see. It is not ''overhead'' in the strict sense. Disk snapshot is not overhead (see vsphere/architecture/overhead). Uploaded document labels layer C ''hypervisor overhead''.'

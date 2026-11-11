@@ -70,7 +70,7 @@ related:
 - vsphere/technology/memory/metrics/host/utilization
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Capacity > Memory; Storage; Implementation
 corrections: []
 review_notes:

@@ -44,8 +44,8 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Wait Metrics
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Wait Metrics
 corrections: []
 review_notes:
 - 'To check: metric_class: set to context, matching vsphere/technology/cpu/metrics/host/idle.'

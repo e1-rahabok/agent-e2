@@ -42,7 +42,7 @@ images:
     metric: ['ESXi Memory Granted']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Consumption Metrics > Granted
 corrections: []
 review_notes: []

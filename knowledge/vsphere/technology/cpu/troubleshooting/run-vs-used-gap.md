@@ -44,8 +44,8 @@ related:
 - vsphere/technology/cpu/concepts/power-states
 - vsphere/technology/cpu/concepts/hyper-threading
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > When Run is lower than Used; When Run is higher than Used
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > When Run is lower than Used; When Run is higher than Used
 corrections: []
 review_notes: []
 status: draft

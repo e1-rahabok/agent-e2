@@ -16,7 +16,7 @@
   - orange = 2x yellow;
   - red = 2x orange, so red is 8x green.
 - The scale fails when the range is small. Example: a Horizon user has 1-4 desktops and rarely more, so the bounds are yellow 2, orange 3, red 4.
-- Colour thresholds per channel can differ; see `vcf-operations/concepts/system-engagement`. KPI bands: `knowledge/catalog/thresholds-performance.yaml`.
+- Colour thresholds per channel can differ; see `sp5-framework/outputs/system-engagement`. KPI bands: `knowledge/catalog/thresholds-performance.yaml`.
 
 ## Gradient
 - A gradient suits widgets where the relative comparison among many objects matters.
@@ -35,9 +35,9 @@
 
 ## Metadata
 ```yaml
-id: vcf-operations/dashboards/dashboard-colour
+id: sp5-framework/outputs/dashboard-colour
 retriever_guide: how-it-works
-scope: vcf-operations
+scope: sp5-framework
 technology:
 - system
 pillar:
@@ -48,18 +48,18 @@ product:
 - vcf-operations
 - vsan
 internal_derive:
-- vcf-operations/dashboards/dashboard-design
+- sp5-framework/outputs/dashboard-design
 related:
-- observability/thresholds
+- sp5-framework/observability/thresholds
 - sp5-framework/capacity/capacity-model
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Overall Design Approach > Design Consideration > Color as Meaning (Threshold, Gradient, Example Implementation) (pp. 31-33)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Overall Design Approach > Design Consideration > Color as Meaning (Threshold, Gradient, Example Implementation)'
 corrections: []
 review_notes:
 - 'Section ''Where colours change'': the Horizon bounds (yellow 2, orange 3, red 4) are read from the source screenshot of the widget colour settings (coloring: above).'
 - 'To check: Section ''Gradient'': vSAN disk groups exist in the vSAN Original Storage Architecture; vSAN ESA uses a storage pool per host. The point about gradients holds either way.'
-- 'To check: Section ''Where colours change'': the 2x per colour scale differs from the alert scale in sp5-framework/alerts/alert-design (red worse than orange by threshold, population or time). (Q140).'
+- 'To check: Section ''Where colours change'': the 2x per colour scale differs from the alert scale in sp5-framework/outputs/alert-design (red worse than orange by threshold, population or time). (Q140).'
 - 'Not copied: the gradient heat maps and the compliance dashboard screenshot.'
 status: draft
 ```

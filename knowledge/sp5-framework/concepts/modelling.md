@@ -17,7 +17,7 @@
 | Metric type | Contention, plus saturation (compressed, swapped) | Consumption: allocation, utilization and imbalance, reservation; count of monster VMs |
 | Low value | Bad | Good |
 
-- Both assume configuration is already optimized and availability is handled separately, so the models read only contention and consumption (`sp5-framework/concepts/triple-see-method`).
+- Both assume configuration is already optimized and availability is handled separately, so the models read only contention and consumption (`sp5-framework/observability/triple-see-method`).
 - Implementations: `vsphere/object-types/vm/kpis/vm-performance`, `vsphere/object-types/cluster/kpis/cluster-performance`, `vsphere/object-types/cluster/models/cluster-risk`.
 
 ## Scale 0-100%
@@ -92,12 +92,12 @@ product:
 internal_derive:
 - sp5-framework/performance/performance-kpi-design
 related:
-- sp5-framework/concepts/triple-see-method
-- sp5-framework/alerts/alerts-and-insights
+- sp5-framework/observability/triple-see-method
+- sp5-framework/outputs/alerts-and-insights
 - vsphere/object-types/vm/kpis/vm-performance
 - vsphere/object-types/cluster/models/cluster-risk
 source:
-  document: 'PART 3 - Counters.docx; VCF-vCommunity-Adapter documentation, KPI Scoring Models (fetched 2026-11-08)'
+  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download); VCF-vCommunity-Adapter documentation, KPI Scoring Models (fetched 2026-11-08)'
   path: 'https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/concepts/kpi-scoring-models.md; The World of Metrics > Modelling (Actual | Potential; Calculation; Translation; Threshold; Progressive Weightage; Rare Metric; Limitation; Optional Features; Validation)'
 corrections:
 - 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the implementation wins over the book. The book weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the pack weights 2^((100 - score)/25), smooth, up to 16 at 0 (issue #18), so 9 green + 3 worst red is red. The book''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'

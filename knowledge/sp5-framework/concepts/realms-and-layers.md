@@ -47,7 +47,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Business layer: each transaction has an id; which user and which transaction were slow is known, and custom code can be traced per function call.
 - Packaged software (COTS): metrics no longer relate to users or transactions. A queue of 10,000 does not say whether the user's transaction was in it.
 - Guest OS: every application is a process. Per-process CPU, memory, disk and network; deeper metrics are system-wide. Packet loss does not say which process lost packets.
-- VM or EC2 instance to shared infrastructure: context is lost again. In public cloud, troubleshooting stops at the consumer layer.
+- VM to shared infrastructure: context is lost again. In public cloud, troubleshooting stops at the consumer layer.
 ![Troubleshooting layers from business to IaaS, with an example complaint traced down; context is lost between custom code, packaged software, Guest OS and IaaS](images/troubleshooting-layers-loss-of-context-example-table.png)
 
 ## Four levels in IaaS
@@ -151,8 +151,8 @@ images:
     topic: 'Consumer and provider metric types; drive by contention'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Performance Management > The 3 Realms > The Layers in IT Systems; The Layers in IaaS > IaaS Metric Types; Optimized Performance (pp. 71-76)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Performance Management > The 3 Realms > The Layers in IT Systems; The Layers in IaaS > IaaS Metric Types; Optimized Performance'
 corrections:
 - 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, fixed in the guest; the VM KPI covers the vNIC as the hypervisor sees it.'
 - 'Realm means a world with a boundary, not an operations term: used both for business, application, IaaS and for VM vs Guest OS.'

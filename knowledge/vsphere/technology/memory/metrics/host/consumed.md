@@ -82,7 +82,7 @@ images:
     metric: ['ESXi Memory Consumed']
     image_type: screenshot
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship; Memory > ESXi > Consumption Metrics > Consumed
 corrections: []
 review_notes:

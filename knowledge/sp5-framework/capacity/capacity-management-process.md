@@ -144,8 +144,8 @@ images:
     topic: 'Capacity management cadence'
     image_type: timeline
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Capacity Management > Overview ("Good" Advice; Concept; Private Cloud Capacity; Stages; The Planning Stage; Architecture Plan; Example; Optimized Capacity). Pages 91-96.'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Capacity Management > Overview ("Good" Advice; Concept; Private Cloud Capacity; Stages; The Planning Stage; Architecture Plan; Example; Optimized Capacity)'
 corrections: []
 review_notes:
 - 'Section ''Planning inputs'': the cluster-splitting list is the text of the book image after Architecture Plan; the example estate (18 clusters) is the book image after Example. Neither image is copied: the text holds the facts.'

@@ -157,11 +157,11 @@ related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/concepts/iaas-business
 - vsphere/architecture/vm-vs-guest-os
-- observability/thresholds
+- sp5-framework/observability/thresholds
 images: []
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All) (pp. 23-35)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All)'
 corrections:
 - 'Performance SLA, SLI and SLO removed (2026-11-11): the SLA is a business contract; performance is managed by the KPI only. The book''s Performance SLA, SLA calculation and Performance Quantification sections are not used.'
 review_notes:

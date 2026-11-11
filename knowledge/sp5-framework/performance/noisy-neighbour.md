@@ -109,7 +109,7 @@
 - 2:1: two large VMs on one host each demand whole cores and both get the 37.5% penalty.
 - 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
 - 8:1 per thread (4:1 per core with HT): for 2-vCPU desktops. On 96 threads the maximum is 12 vCPU; keep most VMs at 4-6 vCPU so they fit across the cluster.
-- The problem is not specific to vSphere: it follows from overcommit on shared resources (Microsoft Azure noisy neighbour antipattern).
+- The problem follows from overcommit on shared resources, not from a defect in vSphere.
 
 ## Misconceptions
 - "Find the villain VM" → the villain can be a schedule or an external system, and the damage can travel through a shared path (replication link). Look for a common time and path, not a VM.
@@ -164,8 +164,8 @@ images:
     topic: 'CPU shares per VM: busy vs idle vCPU'
     image_type: diagram
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size (pp. 80-90)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size'
 corrections:
 - 'Section ''Network'': no per-VM network limit or reservation; the book''s 8 Gb/s and 100 Mb/s are withdrawn.'
 - 'Section ''Network'': the pool is the uplink group, Load Based Teaming every 30 s above 75%; the villain sustains 10 Gb over 300 s (book said 5); VM traffic outnumbered by per-type VMkernel shares; the screenshot values are not defaults, customize them.'

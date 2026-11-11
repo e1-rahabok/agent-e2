@@ -85,7 +85,7 @@ images:
     image_type: table
     sample: '12 hosts'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Overview > Inter-Host Imbalance
 corrections: []
 review_notes:

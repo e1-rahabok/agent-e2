@@ -82,7 +82,7 @@ related:
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > esxtop > Network
 corrections: []
 review_notes:

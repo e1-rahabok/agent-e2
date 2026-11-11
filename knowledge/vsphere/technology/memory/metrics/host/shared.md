@@ -51,7 +51,7 @@ images:
     metric: ['ESXi Memory Shared', 'ESXi Memory Shared Common']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Consumption Metrics > Shared
 corrections: []
 review_notes:

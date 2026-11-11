@@ -36,7 +36,7 @@ internal_derive:
 related:
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > Architecture > VM Layer > Performance; Backing Device
 corrections: []
 review_notes: []

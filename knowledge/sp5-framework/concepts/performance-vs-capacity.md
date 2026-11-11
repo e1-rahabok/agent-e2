@@ -148,8 +148,8 @@ images:
     metric: ['Cluster Utilization', 'Cluster Performance']
     image_type: timeline
 source:
-  document: PART 1 - Concepts of Operations Management.docx
-  path: 'Performance Management (intro); Performance | Capacity > Utilization vs Demand; Contention vs Consumption; Pattern Difference (pp. 67-70)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Performance Management (intro); Performance | Capacity > Utilization vs Demand; Contention vs Consumption; Pattern Difference'
 corrections:
 - 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good.'
 - 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance.'

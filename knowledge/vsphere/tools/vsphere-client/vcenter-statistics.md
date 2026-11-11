@@ -1,7 +1,7 @@
 # vCenter statistics: sampling, rollup and levels
 
 ## Definition
-- ESXi samples performance counters every 20 seconds. The vSphere Client labels this interval Real-time. It is not real time: each point is a 20-second average (`observability/real-time-metrics`).
+- ESXi samples performance counters every 20 seconds. The vSphere Client labels this interval Real-time. It is not real time: each point is a 20-second average (`sp5-framework/observability/real-time-metrics`).
 - vCenter stores history by rolling the 20-second samples into coarser intervals.
 - Two settings decide what history exists: the collection interval and the statistics level.
 - Each vCenter counter carries 4 attributes: unit, stat type, rollup type, collection level.
@@ -125,7 +125,7 @@ object:
 internal_derive:
 - vsphere/architecture/metric-sources
 related:
-- observability/real-time-metrics
+- sp5-framework/observability/real-time-metrics
 - vsphere/architecture/metric-sources
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready

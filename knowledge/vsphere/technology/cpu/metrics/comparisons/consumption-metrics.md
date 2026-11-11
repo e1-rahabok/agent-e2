@@ -44,7 +44,7 @@ object:
 metric_class: consumption
 internal_derive:
 - vsphere/architecture/metric-sources
-- observability/metric-volume
+- sp5-framework/observability/metric-volume
 same_name: []
 same_meaning: []
 related:
@@ -70,8 +70,8 @@ images:
     metric: ['VM CPU Usage', 'VM CPU Usage (MHz)', 'VM CPU Demand', 'VM CPU Used', 'VM CPU Run']
     image_type: table
 source:
-  document: PART 3 - Counters.docx
-  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > VM (pp. 78-118) > Consumption Metrics
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > VM > Consumption Metrics
 corrections: []
 review_notes:
 - 'Section ''VM consumption counters (vCenter)'': from CPU > VM.'

@@ -54,9 +54,9 @@ The patterns below classify the ways names mislead.
 
 ## Metadata
 ```yaml
-id: observability/naming-patterns
+id: sp5-framework/observability/naming-patterns
 retriever_guide: metric-meaning
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -65,7 +65,9 @@ technology:
 pillar:
 - performance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
 - glossary
@@ -74,7 +76,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
 corrections:
 - '2026-11-02: Windows queue counters. Processor Queue Length excludes running threads; Current Disk Queue Length includes IOs being processed. Uploaded document states the disk part reversed.'

@@ -69,8 +69,8 @@ images:
     metric: ['VM CPU System']
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
-  path: CPU > VM (pp. 78-118) > Consumption Metrics > System
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: CPU > VM > Consumption Metrics > System
 corrections: []
 review_notes:
 - 'To check: Section ''Values'': KB cited by the book, not read (https://kb.vmware.com/s/article/59640).'

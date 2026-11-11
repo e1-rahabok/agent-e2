@@ -32,7 +32,7 @@ same_meaning: []
 related:
 - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Contention Metrics > Balloon
 corrections: []
 review_notes: []

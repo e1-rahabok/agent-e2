@@ -36,7 +36,7 @@ layer:
 - virtual-motherboard
 metric_class: consumption
 internal_derive:
-- observability/resource-nature
+- sp5-framework/observability/resource-nature
 same_name:
 - vsphere/technology/memory/metrics/host/usage
 - vsphere/technology/memory/metrics/cluster/usage
@@ -52,7 +52,7 @@ images:
     metric: ['VM Memory Usage', 'VM Memory Active']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Consumption Metrics > Usage (%)
 corrections: []
 review_notes:

@@ -22,7 +22,7 @@
 - Converting a VCF Operations network rate: 30.81 MBps × 1024 = 31,549 KBps, not 30,810, because VCF Operations uses 1024.
 
 ## Storage throughput
-- Measured in bytes/second, not bits/second. See `observability/resource-nature`.
+- Measured in bytes/second, not bits/second. See `sp5-framework/observability/resource-nature`.
 
 ## Same metric, different unit per tool
 - Tools can show the same metric in different units.
@@ -39,9 +39,9 @@
 
 ## Metadata
 ```yaml
-id: observability/units
+id: sp5-framework/observability/units
 retriever_guide: how-it-works
-scope: vendor-neutral
+scope: sp5-framework
 technology:
 - cpu
 - memory
@@ -50,17 +50,19 @@ technology:
 pillar:
 - performance
 - capacity
-product: []
+product:
+- vsphere
+- vcf-operations
 internal_derive: []
 related:
 - vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections:
 - '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB.'
 review_notes:
-- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': PART 3 - Counters.docx, Metric Mastery > Units (update of 2026-11-08).'
+- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery > Units (update of 2026-11-08).'
 status: draft
 ```

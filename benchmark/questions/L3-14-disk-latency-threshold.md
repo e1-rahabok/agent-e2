@@ -27,7 +27,7 @@ technology: [storage]
 input: [text]
 task: judge-setting
 knowledge:
-  - observability/thresholds
+  - sp5-framework/observability/thresholds
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Interpretation Challenge."

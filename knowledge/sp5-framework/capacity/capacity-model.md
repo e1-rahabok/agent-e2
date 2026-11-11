@@ -148,7 +148,7 @@ images:
     topic: 'Capacity model'
     image_type: diagram
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Capacity > Key Metrics; Projected Metrics; Cluster Capacity
 corrections: []
 review_notes:

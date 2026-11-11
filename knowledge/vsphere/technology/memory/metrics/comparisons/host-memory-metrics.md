@@ -80,7 +80,7 @@ images:
     image_type: table
     sample: '185 hosts'
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Overview; Consumption Metrics > Analysis
 corrections: []
 review_notes:

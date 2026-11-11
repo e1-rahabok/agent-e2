@@ -82,7 +82,7 @@ images:
     metric: ['Guest OS Disk Queue', 'VM Disk Latency']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: MS Windows > Storage
 corrections: []
 review_notes: []

@@ -45,7 +45,7 @@ images:
     metric: ['VM Memory Consumed', 'VM Memory Zero Pages', 'Guest OS Memory Used']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Consumption Metrics > Shared > Zero; Consumed > Guest OS
 corrections: []
 review_notes: []

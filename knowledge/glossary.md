@@ -179,7 +179,7 @@ A metric with its own file is an entry only when it has another name or a confus
   - File: `sp5-framework/concepts/health-check`
 - **Insight**: A top-down finding from alerts, symptoms, context and supporting metrics. Proactive; no ticket, no automatic close.
   - Not to confuse with Alert: an alert is an urgent issue (red or orange), bottom up, on one object, with a ticket; yellow is not urgent, so it is an insight, read in the daily health check.
-  - File: `sp5-framework/alerts/alerts-and-insights`
+  - File: `sp5-framework/outputs/alerts-and-insights`
 - **Issue**: A negative finding, identified by one or more symptoms.
 - **Leading indicator, lagging indicator**: Leading: underlying metric read in insights. Lagging: customer-facing metric used in alerts.
 - **Notification**: How VCF Operations pushes an insight or alert to a person: email, message, on screen at login.
@@ -190,13 +190,13 @@ A metric with its own file is an entry only when it has another name or a confus
 - **Primary metric, secondary metric**: Primary: 0-100%, defines performance (the what). Secondary: explains the primary (the why).
 - **Property**: An input set by configuration or capability (configured hosts, maximum VMs), not produced every interval.
   - Not to confuse with Metric: a metric is produced every interval, even when constant (a power state or a VM count is a metric); a property is set by configuration.
-  - File: `observability/input-types`
+  - File: `sp5-framework/observability/input-types`
 - **Symptom**: A test on one metric, property or event (VCF Operations). A symptom definition is reusable across alert definitions; a condition is the same test written inside one alert definition. Triggered alone, it is a minor, non-urgent issue, read in the daily health check; when its alert's set of symptoms holds, the issue has become urgent: an alert.
   - Also called: Condition
-  - File: `sp5-framework/alerts/alerts-and-insights`
+  - File: `sp5-framework/outputs/alerts-and-insights`
 - **Triple See Method**: The SP5 Framework's observability method for VCF: read contention, consumption and context metrics as one set before concluding. Not based on the USE, RED or Golden Signals.
   - Also called: Triple See
-  - File: `sp5-framework/concepts/triple-see-method`
+  - File: `sp5-framework/observability/triple-see-method`
 - **Troubleshooting**: The reactive process for an object that is down or slow: why, and the fix, in the order of checks of its pillar. A security breach gets a forensic investigation instead; compliance is drift detection.
   - Also called: diagnosis, diagnose, root cause analysis, triage
   - Not to confuse with Health check: the health check first finds whether there is a problem (the what); troubleshooting starts from a known one (complaint, alert, failed health check step) and asks why.
@@ -210,17 +210,17 @@ A metric with its own file is an entry only when it has another name or a confus
 ```yaml
 id: glossary
 retriever_guide: term-meaning
-scope: vendor-neutral
+scope: sp5-framework
 technology: [cpu, memory, storage, network, system]
 pillar: [availability, performance, compliance, capacity, value]
 product: [vsphere, vcf-operations]
 internal_derive: []
 related:
-  - observability/naming-patterns
+  - sp5-framework/observability/naming-patterns
   - vsphere/architecture/resource-controls
 source:
   document: Knowledge base; vSphere API type names; VCF Operations object types
-  path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from PART 3 - Counters.docx, The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
+  path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from Private Cloud Management by Iwan Rahabok (https://isvara.io/download), The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
 corrections: []
 review_notes:
   - "To check: column 'Not to confuse with': each pair against the file in its File column."

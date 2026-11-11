@@ -59,7 +59,7 @@ images:
     metric: ['VM Memory Active', 'VM Memory Consumed']
     image_type: timeline
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > VM > Consumption Metrics > Active; Consumed vs Active
 corrections: []
 review_notes:

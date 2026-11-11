@@ -38,7 +38,7 @@ same_meaning: []
 related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
 source:
-  document: PART 3 - Counters.docx
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > VM > Capacity Metrics > All VM Files
 corrections: []
 review_notes:

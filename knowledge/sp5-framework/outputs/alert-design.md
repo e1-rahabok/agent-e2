@@ -4,7 +4,7 @@
 - Managing alerts deals with alerts already triggered. Minimizing alerts prevents them from firing.
 - Use insight to keep alert definitions few: an alert is reserved for urgent and important issues.
 - Goal: the broadest coverage with the fewest alert storms. That takes planning of each definition, its conditions and its thresholds.
-- What an alert is (rapid, real, rare) and its colours: `sp5-framework/alerts/alerts-and-insights`.
+- What an alert is (rapid, real, rare) and its colours: `sp5-framework/outputs/alerts-and-insights`.
 
 ## One question per alert
 - For each alert: what action must the person who sees it take, today?
@@ -122,7 +122,7 @@
 - Contention: the issue must be both acute and sustained.
   - Acute: severe for one 20-second sample.
   - Sustained: the average over 300 seconds.
-  - Set the acute threshold at 4x the sustained one, because a spike does not last 300 seconds (`observability/thresholds`).
+  - Set the acute threshold at 4x the sustained one, because a spike does not last 300 seconds (`sp5-framework/observability/thresholds`).
 - Do not raise a contention alert at very low utilization, where there may be no real business workload.
 - Keep a consistent scale between colours, so red stays the same step worse than orange. Red can be made worse than orange in three ways:
   - 2x the threshold: orange at 10 ms latency, red at 20 ms;
@@ -160,7 +160,7 @@
 
 ## Metadata
 ```yaml
-id: sp5-framework/alerts/alert-design
+id: sp5-framework/outputs/alert-design
 retriever_guide: how-it-works
 scope: sp5-framework
 technology:
@@ -186,8 +186,8 @@ object:
 - ResourcePool
 - Datastore
 internal_derive:
-- sp5-framework/alerts/alerts-and-insights
-- observability/thresholds
+- sp5-framework/outputs/alerts-and-insights
+- sp5-framework/observability/thresholds
 related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/performance/kpi-vs-sla
@@ -198,8 +198,8 @@ related:
 - vsphere/technology/storage/configuration/storage-alerts
 - vsphere/technology/network/configuration/network-alerts
 source:
-  document: PART 2 - Consumption for Agent E2.docx
-  path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts (pp. 10-19)'
+  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts'
 corrections: []
 review_notes:
 - 'To check: Section ''Threshold design'', colour scale: the source says red is always 4x orange, and that red is made 2x as bad by changing any 2 of threshold, population and time; the per-resource alerts mostly use red = 2x orange on each threshold (Q140).'

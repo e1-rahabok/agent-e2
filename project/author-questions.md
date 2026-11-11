@@ -441,7 +441,7 @@ Each entry has:
 - Answer:
 
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
-- Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/triple-see-method.md) (section Why not USE, RED or Golden Signals).
+- Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/triple-see-method.md) (section Why not USE, RED or Golden Signals).
 - Search: "Based on their strengths and weaknesses, I came up with The Triple See Method"
 - Question: the book does not say what each method lacks. Claude wrote: USE starts from utilization (consumption), which does not show who waits in an overcommitted cluster; RED and the Golden Signals are request-centric, built for services, and a VM has no request to time; none has a context type; none maps metric types to pillars. Correct, and anything to add?
 - Written as now: as above.
@@ -488,7 +488,7 @@ Each entry has:
 - Answer:
 
 ### Q137 · Metric Mastery > Aggregation > The Problem with Average · ESXi CPU Ready (%)
-- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/aggregation.md) (section Divide summed counters correctly).
+- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/aggregation.md) (section Divide summed counters correctly).
 - Search: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs)"
 - Question: the formula divides milliseconds by a vCPU count, which gives ms per vCPU, not %. The knowledge base writes ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs). Correct?
 - Written as now: with 20,000 ms.
@@ -505,7 +505,7 @@ Each entry has:
 - Answer:
 
 ### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
-- Files: [How VCF Operations reaches its users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/concepts/system-engagement.md) (section Alerts, dashboards and reports compared).
+- Files: [How VCF Operations reaches its users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/system-engagement.md) (section Alerts, dashboards and reports compared).
 - Search: "Export to spreadsheet or PowerPoint"
 - Question: the Good For row reads Exception for alerts, Exception and Analysis for dashboards, and Exception for reports. Is Exception right for reports, or did you mean Summary or Trend?
 - Written as now: Exceptions for reports, as in the source.
@@ -743,6 +743,17 @@ Each entry has:
 - For you: the 8.x behaviour from field experience.
 - Answer:
 
+### Q171 · Scope · Generic public cloud in the SP5 Framework
+- Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Business, application and IaaS layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
+- Search 1: "Customers usually aim at half the public cloud price"
+- Search 2: "Public cloud free tiers are smaller"
+- Search 3: "Public cloud providers have no oversizing problem"
+- Written as now: named competitor vendors and products are removed (2026-11-11: AWS, Azure, EC2, Nutanix, KVM). About 14 lines still name the public cloud as a category: as a price target for the IaaS business, as a reference for overcommit and free tier sizes, and as a statement about public cloud providers' motives. VMware offerings on a hyperscaler (VMware Cloud on AWS, Azure VMware Solution) stay: they are VCF.
+- Question: the public cloud is a competitor of the private cloud. Do these lines stay? (a) keep the public cloud as a price and service benchmark for the IaaS business, and remove the lines on what public cloud providers sell or why (free tier sizes, CPU 1:1 reference, the oversizing motive); (b) keep all; (c) remove all.
+- Proposed answer (expert call): (a). Pricing a private cloud against the public cloud is part of running IaaS as a business, which the SP5 Framework teaches; facts about a provider's offering go stale and invite comparison Agent E2 should not make.
+- For you: (a), (b) or (c).
+- Answer:
+
 ## Resolved
 
 ### Q170 · KNOWLEDGE-ENGINEERING.md, section 5.1 · Home of the misreadings
@@ -888,7 +899,7 @@ Each entry has:
 - Applied 2026-11-10: design section 6 rewritten (KPI and alert: independent); the consistency rules and their lint check removed.
 
 ### Q156 · Threshold design · Alert rows in the capacity file
-- Files: [knowledge/catalog/thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (ids `alert-esxi-cpu-thread-utilization-red`, `alert-esxi-memory-consumed-red`, `alert-datastore-used-space-red`); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/alerts/alert-design.md) ("Capacity: red only, as a guard rail").
+- Files: [knowledge/catalog/thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (ids `alert-esxi-cpu-thread-utilization-red`, `alert-esxi-memory-consumed-red`, `alert-datastore-used-space-red`); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) ("Capacity: red only, as a guard rail").
 - Search: "Capacity: red only, as a guard rail"
 - What the knowledge base says now: three consumption alerts sit in the capacity file; alert-design gives capacity a red guard-rail alert.
 - Question: with your rule that capacity does not use alerts, (a) the two ESXi rows become performance consumption alerts (host saturated today) and the datastore row an availability alert (full datastore stops writes); the alert-design line "Capacity: red only" is rewritten; (b) they stay capacity.
@@ -905,7 +916,7 @@ Each entry has:
 - Applied 2026-11-10: proposal in project/design-thresholds.md, section 9 (three states, rules R1-R6, incident layer, review of the example). Values wait for approval.
 
 ### Q154 · Threshold design · Symptom: two meanings
-- Files: [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (sections 5.4, 9); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md) (Conditions, not symptoms; Traps); [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/alerts/alerts-and-insights.md).
+- Files: [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (sections 5.4, 9); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md) (Conditions, not symptoms; Traps); [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alerts-and-insights.md).
 - Search: "Build alerts from conditions, not from symptom definitions"
 - What the knowledge base says now: a symptom is a minor issue for the daily check; your alerts are built from conditions, and "reuse symptom definitions to build alerts" is listed as a trap. Your brief says alerts.yaml holds symptoms with wait and cancel cycles.
 - Question: (a) the file holds VCF Operations symptom definitions (tests); the glossary splits "symptom definition" (product object) from "symptom" (SP5 minor issue), and the trap is rewritten; (b) the file holds conditions, named `conditions`, and the knowledge file stays; (c) other.
@@ -961,7 +972,7 @@ Each entry has:
 - Applied: review notes updated; table cleaned of HTML line breaks.
 
 ### Q148 · Part 2 > Overall Design Approach > Design Consideration · Data points per month and the wastage colour
-- Files: [Dashboard design in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/dashboard-design.md) (section Conflicting requirements); [Colour and thresholds in dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/dashboard-colour.md).
+- Files: [Dashboard design in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/dashboard-design.md) (section Conflicting requirements); [Colour and thresholds in dashboards](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/dashboard-colour.md).
 - Search 1: "Can the dashboard be understood within 5 seconds?" (the picture after it)
 - Search 2: "We use dark grey in Capacity as wastage"
 - Question: (a) the picture says 1 month = 8650 data; 30 days of 5-minute data is 8,640. Typo? (b) the picture says black for wastage, the colour table says dark grey. Which colour do the shipped capacity dashboards use?
@@ -1160,7 +1171,7 @@ Each entry has:
   - (b) Symptom: here part of an issue (an issue has 1 or more symptoms); in Observability, a minor non-urgent issue that becomes an alert if it persists. One definition?
 - Written as now: both, flagged.
 - Answer: (a) See the corrected diagram: alert = urgent; only the important one is pushed to the VMware admin's mobile phone. (b) An issue is a negative finding: something found bad. It can have 1 or more symptoms; untreated, they can degenerate and become urgent.
-- Applied 2026-11-09: sp5-framework/alerts/alerts-and-insights (section Finding, issue, alert, notification; diagram replaced).
+- Applied 2026-11-09: sp5-framework/outputs/alerts-and-insights (section Finding, issue, alert, notification; diagram replaced).
 
 ### Q092 · Part 1 > Begin with The End in Mind > The Crown Jewel · Health across tiers
 - Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Health of an application tier).
@@ -1173,7 +1184,7 @@ Each entry has:
 - Applied 2026-11-09: new file sp5-framework/performance/business-application-kpi (why the infrastructure layer measures it, crown jewels, tier average, worst tier across tiers, active node only, not yet in VCF Operations); crown jewels and tier rules moved there from purpose-driven-architecture.
 
 ### Q090 · Part 1 > Observability > Input | Output · Property types, the second Event row, DRS automation level
-- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/input-types.md) (sections Property, Event).
+- Files: [Input types: metric, property, event, log, trace, NetFlow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/input-types.md) (sections Property, Event).
 - Search 1: "There are 3 types of properties:"
 - Search 2: "It can be a setting change, a state change, or a label change."
 - Search 3: "Cluster 007 DRS automation level was changed from 2 to 5."
@@ -1183,7 +1194,7 @@ Each entry has:
   - (b) The table has two rows named Event. Is the second (setting, state, label change) meant as Property? If so, state is listed both as a metric and as a property type.
   - (c) DRS automation level is Manual, Partially Automated or Fully Automated; the 1-5 scale is the migration threshold. Change the example to migration threshold?
 - Written as now: setting, state and label change as change events; the example written as migration threshold, flagged.
-- Answer: (a), (b) In the attached document: three property types (label or tag; setting; non-setting); the second Event row is an event (setting, state or label change), in a nested table the extraction missed. (c) Yes. Applied 2026-11-08: observability/input-types.
+- Answer: (a), (b) In the attached document: three property types (label or tag; setting; non-setting); the second Event row is an event (setting, state or label change), in a nested table the extraction missed. (c) Yes. Applied 2026-11-08: sp5-framework/observability/input-types.
 
 ### Q086 · Part 1 > Your Private Cloud > Overview > Key Metrics · Operational Availability and green zone
 - Files: [IaaS as a service: variants, class of service and what each layer checks](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (section Metrics per pillar).
@@ -1217,7 +1228,7 @@ Each entry has:
 - Answer: (B). C is wrong as the jargon service is incorrect here. Applied 2026-11-08: 12 cross-pillar files and their images moved to [knowledge/operations-management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework); lint allows files at its root; every reference updated.
 
 ### Q091 · Part 1 > Purpose-Driven Architecture > The 2 Sides of VCF · Workload and the pillar list
-- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
+- Files: [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Two sides of VCF); [Three perspectives on metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/metric-perspectives.md); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (pillar).
 - Search 1: "Workload means the customers VM, not your infrastructure software."
 - Search 2: diagram label "IT (VCF & Non-VCF Appliances )"
 - Question:
@@ -1520,7 +1531,7 @@ BTW, the page is 2105, not 2103.
 
 ### Q048 · Thresholds · Interval and instance reading of every band
 - Files: band tables in [VM Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/kpis/vm-performance.md), [Cluster Performance (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md), [Cluster Consumption (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Cluster Risk (%) (vCommunity management pack KPI for VCF Operations)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md), [Guest OS Performance (%) (VCF Operations KPI)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md); rows in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) and [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (fields `interval`, `instance`).
-- Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/observability/thresholds.md) (Interval rule, Instance rule).
+- Search: not from the book. Follows the rule added to [Thresholds and interpretation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/thresholds.md) (Interval rule, Instance rule).
 - Question: for each band row, which sample interval was it set on (20-second peak, 5-minute, 1-day), and which reading (worst instance, object aggregate, percentile of objects)? Most rows say "peak" or "worst" but not the interval; utilization rows say neither.
 - Written as now: interval and instance stated only where the row name says it (for example "Peak CPU Ready among any vCPU"); Compressed + Swapped at 5 minutes and Memory Contention at 20 seconds (Q026).
 - Answer: In VCF Operations, when the metric name has the word peak, that means it's reporting the highest 20-second-average within the 300-second reporting period. There are 15 data points within each 5 minute, each is a 20-second average. It's taking the highest among these 15 instance. The metrics at VM level are:
