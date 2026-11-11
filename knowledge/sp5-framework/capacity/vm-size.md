@@ -4,10 +4,10 @@
 - The right size of a VM depends on the ESXi host it runs on and on the CPU and NUMA architecture of that host, not on the VM alone.
 - A large VM is harder to schedule: its vCPUs compete for threads at the same time, and a VM larger than a NUMA node spans nodes and reads remote memory (`vsphere/technology/cpu/concepts/numa`, `vsphere/technology/cpu/concepts/virtual-numa`).
 - A VM large against its host raises contention even at low utilization: the monster VM of Cluster Risk (`vsphere/object-types/cluster/models/cluster-risk`, section Monster VM).
-- Overcommit ratios here are per physical thread (`sp5-framework/capacity/capacity-model`, section Overcommit).
+- CPU Overcommit ratio is per physical thread, not core (`sp5-framework/capacity/capacity-model`, section Overcommit).
 
-## Maximum VM size per overcommit
-| Overcommit per thread | Maximum VM size |
+## Maximum VM size
+| Overcommit Ratio | Maximum VM size |
 |---|---|
 | 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
 | 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
