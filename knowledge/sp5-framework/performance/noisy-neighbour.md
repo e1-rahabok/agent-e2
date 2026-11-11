@@ -90,20 +90,6 @@
 
 - No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class (`sp5-framework/performance/kpi-vs-sla`).
 
-### Maximum VM size
-| Overcommit | Maximum VM size |
-|---|---|
-| 1:1 per physical thread | ESXi logical CPUs (48 cores, 96 threads → 96) |
-| 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
-| 4:1 | 0.25 × logical CPUs |
-| 8:1 | 0.125 × logical CPUs; lab, dev, simple VDI |
-
-- 1:1: mind the HT throughput penalty and NUMA.
-- 2:1: two large VMs on one host each demand whole cores and both get the 37.5% penalty.
-- 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
-- 8:1 per thread (4:1 per core with HT): for 2-vCPU desktops. On 96 threads the maximum is 12 vCPU; keep most VMs at 4-6 vCPU so they fit across the cluster.
-- The problem follows from overcommit on shared resources, not from a defect in vSphere.
-
 ## Misconceptions
 - "Find the villain VM" → the villain can be a schedule or an external system, and the damage can travel through a shared path (replication link). Look for a common time and path, not a VM.
 - "Reserve CPU for every VM to stop noisy neighbours" → at 4:1 overcommit a reservation covers at most 25% of each VM; reserving the first vCPU of 400 VMs uses the whole cluster.
