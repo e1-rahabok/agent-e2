@@ -29,7 +29,7 @@
 
 ## Free tier
 - Shows the value of the paid classes by their absence.
-- Funded by the paid tiers, so it carries no SLA: unpredictable downtime and slowness are acceptable. Public clouds make their free tier slower and less reliable on purpose, so customers upgrade.
+- Funded by the paid tiers, so it carries no SLA: unpredictable downtime and slowness are acceptable.
 - Cap the number of free VMs per customer as well as their size.
 
 ## Recommended SLA per class
@@ -83,7 +83,6 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 | 3 | ≤ 25% of a socket | 8 vCPU, 32 GB |
 | 4 Free | n/a | 1 vCPU, 4 GB, 100 GB disk |
 
-- Public cloud free tiers are smaller: 1-2 vCPU and 1 GB RAM.
 - Size limit by overcommit ratio and logical CPUs: `sp5-framework/performance/noisy-neighbour`.
 
 ## Soft products

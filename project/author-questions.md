@@ -739,21 +739,7 @@ Each entry has:
   - For you: which statistic, period and VM aggregation the class expectation is compared against.
 - Answer:
 
-### Q163 · Plan, Decisions 2026-11-06 · Benchmark before M1 and M2 are complete
 
-- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5).
-- What the knowledge base says now: no benchmark run until the 100 questions and the knowledge base are complete. Last run 2026-11-03, 17 questions.
-- Question: (a) run the 70 scorable questions now as a development signal: 1 candidate and the frontier reference, 3 modes, 5 runs, about US$ 20-40; (b) keep the 2026-11-06 decision.
-- Proposed answer: (a). Every change since 2026-11-03 is unmeasured.
-- Answer:
-
-### Q164 · benchmark/design.md, sections 1 and 8 · What "frontier model" means in the claim
-
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) (section 5).
-- What the knowledge base says now: one frontier reference, baseline mode, no web search, no extended thinking.
-- Question: (a) best of 3 vendors, as shipped (web search and thinking on), plus frontier with the E2 knowledge base as the ceiling; (b) keep one reference; (c) other.
-- Proposed answer: (a). One model without its product features invites the strawman charge.
-- Answer:
 
 ### Q165 · benchmark/design.md, sections 3-5 and 10 · Sealed claim set and knowledge_class tag
 
@@ -772,14 +758,6 @@ Each entry has:
 - Proposed answer: (a), for 1.0, starting with the VM slow flow.
 - Answer:
 
-### Q167 · MISSION.md, section 1 · Mission sentence and outcome metric
-
-- Files: [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission).
-- What the knowledge base says now: scope worded four ways; target 99% in the headline; no user-outcome metric.
-- Question: (a) one scope sentence; claim = beats frontier models used alone, stretch = matches frontier with the knowledge base; 99% moved to the 300-question plan; add one outcome metric (right root cause on real tickets in the live test); (b) keep.
-- Proposed answer: (a).
-- For you: the scope sentence.
-- Answer:
 
 ### Q168 · vCenter API counters · gpu.mem.used on vSphere 8.x
 
@@ -790,6 +768,9 @@ Each entry has:
 - For you: the 8.x behaviour from field experience.
 - Answer:
 
+
+## Resolved
+
 ### Q171 · Scope · Generic public cloud in the SP5 Framework
 - Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Business, application and IaaS layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
 - Search 1: "Customers usually aim at half the public cloud price"
@@ -799,9 +780,32 @@ Each entry has:
 - Question: the public cloud is a competitor of the private cloud. Do these lines stay? (a) keep the public cloud as a price and service benchmark for the IaaS business, and remove the lines on what public cloud providers sell or why (free tier sizes, CPU 1:1 reference, the oversizing motive); (b) keep all; (c) remove all.
 - Proposed answer (expert call): (a). Pricing a private cloud against the public cloud is part of running IaaS as a business, which the SP5 Framework teaches; facts about a provider's offering go stale and invite comparison Agent E2 should not make.
 - For you: (a), (b) or (c).
-- Answer:
+- Answer: Author (2026-11-11): (a). Applied: lines on public cloud free tier sizes, the CPU 1:1 reference, the oversizing motive, the free tier made slower on purpose, and the 40-vCPU instance removed; public cloud as a price and service benchmark kept.
 
-## Resolved
+### Q167 · MISSION.md, section 1 · Mission sentence and outcome metric
+
+- Files: [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission).
+- What the knowledge base says now: scope worded four ways; target 99% in the headline; no user-outcome metric.
+- Question: (a) one scope sentence; claim = beats frontier models used alone, stretch = matches frontier with the knowledge base; 99% moved to the 300-question plan; add one outcome metric (right root cause on real tickets in the live test); (b) keep.
+- Proposed answer: (a).
+- For you: the scope sentence.
+- Answer: Author (2026-11-11): closed. MISSION.md edited directly by the author.
+
+### Q164 · benchmark/design.md, sections 1 and 8 · What "frontier model" means in the claim
+
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) (section 5).
+- What the knowledge base says now: one frontier reference, baseline mode, no web search, no extended thinking.
+- Question: (a) best of 3 vendors, as shipped (web search and thinking on), plus frontier with the E2 knowledge base as the ceiling; (b) keep one reference; (c) other.
+- Proposed answer: (a). One model without its product features invites the strawman charge.
+- Answer: Author (2026-11-11): only Claude Opus 5.5 is tested, because the whole application is built with Claude. Web search on (Claude Opus has it). Effort capped at medium, for the cost of the subscription. Applied in benchmark/models.md, section 5. Closed.
+
+### Q163 · Plan, Decisions 2026-11-06 · Benchmark before M1 and M2 are complete
+
+- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5).
+- What the knowledge base says now: no benchmark run until the 100 questions and the knowledge base are complete. Last run 2026-11-03, 17 questions.
+- Question: (a) run the 70 scorable questions now as a development signal: 1 candidate and the frontier reference, 3 modes, 5 runs, about US$ 20-40; (b) keep the 2026-11-06 decision.
+- Proposed answer: (a). Every change since 2026-11-03 is unmeasured.
+- Answer: Author (2026-11-11): (b). Absolutely no benchmark until development is done. Closed.
 
 ### Q170 · KNOWLEDGE-ENGINEERING.md, section 5.1 · Home of the misreadings
 

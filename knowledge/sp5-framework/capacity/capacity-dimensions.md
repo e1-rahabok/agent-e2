@@ -162,7 +162,6 @@ Demand = Max (Utilization, Reservation)
 
 - The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.
 - A provider that does not overcommit may not compete on cost.
-- Public cloud reference (book): CPU at 1:1, counted per thread, not per core; memory not overcommitted.
 - Overcommit ratios are written virtual : physical (4:1 = 4 vCPUs per thread).
 
 ## Misconceptions
@@ -231,6 +230,5 @@ review_notes:
 - 'Section ''Reservation and share'': the book gives the reservation unit as Hertz and milliseconds; CPU reservation is set in MHz. Written as Hz.'
 - 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
 - 'To check: Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" explains why the book computes per VM first; the explanation is not in the book.'
-- 'To check: Section ''Overcommit'', public cloud reference: keep or remove (Q171).'
 status: draft
 ```
