@@ -53,10 +53,10 @@ def main():
         ret = Retriever(docs, chunks, expand=cfg.get('query_expansion', False), **rr)
     rows = []
     for c in C.load(a.questions):
-        need = [kb.resolve(i) for i in c.knowledge]
+        need = list(c.knowledge)
         unknown = [i for i in need if i not in docs]
         if unknown:  # never drop a needed file silently: that would raise recall
-            sys.exit(f'{c.id}: unknown knowledge ids {unknown} (moved? add them to knowledge/moved.yaml)')
+            sys.exit(f'{c.id}: unknown knowledge ids {unknown} (moved? use the current id: project/tools/moved.yaml maps old ids)')
         if not need:
             continue
         question = c.render(random.Random(0))[0] if c.options else c.prompt

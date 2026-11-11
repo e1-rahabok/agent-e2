@@ -6,7 +6,11 @@ import glob, os, re, sys, yaml
 
 HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
 sys.path.insert(0, HARNESS)
-from kb import split, MOVED  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
+from kb import split  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
+
+# Old id -> current id for moved knowledge files. A repository tool, not product: the harness never reads it.
+MOVED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'moved.yaml')
+MOVED = (yaml.safe_load(open(MOVED_FILE)) or {}) if os.path.exists(MOVED_FILE) else {}
 
 TERMS = 'project/tools/tags.yaml'
 REQUIRED = ['id', 'retriever_guide', 'scope', 'technology', 'pillar', 'product',
@@ -130,7 +134,7 @@ def main():
         fm, _ = split(f)
         if fm is None: bad(f, 'missing ## Metadata section with one yaml block at the end'); fm = {}
         for r in (fm or {}).get('knowledge') or []:
-            if r in MOVED: bad(f, f'knowledge link "{r}" moved: use "{MOVED[r]}" (knowledge/moved.yaml)')
+            if r in MOVED: bad(f, f'knowledge link "{r}" moved: use "{MOVED[r]}" (project/tools/moved.yaml)')
             elif r not in ids: bad(f, f'knowledge link "{r}" does not exist')
         for k in ('product', 'technology'):
             v = (fm or {}).get(k)
@@ -261,10 +265,10 @@ def check_terminology(docs, bad):
 
 
 def check_moved(ids, bad):
-    """knowledge/moved.yaml points to files that exist; active files use current ids, not moved ones."""
+    """project/tools/moved.yaml points to files that exist; active files use current ids, not moved ones."""
     for old, new in MOVED.items():
-        if new not in ids: bad('knowledge/moved.yaml', f'"{old}" points to "{new}", which does not exist')
-        if old in ids: bad('knowledge/moved.yaml', f'"{old}" is moved but a file with that id exists')
+        if new not in ids: bad('project/tools/moved.yaml', f'"{old}" points to "{new}", which does not exist')
+        if old in ids: bad('project/tools/moved.yaml', f'"{old}" is moved but a file with that id exists')
     if not MOVED:
         return
     old_ids = '|'.join(re.escape(o) for o in sorted(MOVED, key=len, reverse=True))
