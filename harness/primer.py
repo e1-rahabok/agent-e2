@@ -3,7 +3,7 @@
 Each block is generated from the knowledge base at start, so it cannot drift from it:
   map        what each area holds, what each file kind answers, which tool serves it (from ids and retriever_guide)
   rules      Level 300 misreadings and their corrections (harness/misreadings.md)
-  terms      confusable pairs (knowledge/glossary.md, section Confusable pairs)
+  terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
   flows      symptom -> flow index (every health-check and troubleshooting file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
 Each block has a switch in benchmark/runner/config.yaml, key agent_primer. All off by default until the benchmark
@@ -15,7 +15,6 @@ from collections import Counter, defaultdict
 
 BLOCKS = ('map', 'rules', 'terms', 'flows', 'procedure')
 BUDGET_TOKENS = 3000          # all five blocks together; lint checks it
-TERMS_ID = 'glossary'
 MISREADINGS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'misreadings.md')
 
 KINDS = {  # folder kind -> what it answers and which tool serves it
@@ -67,23 +66,26 @@ def map_block(docs):
     return '\n'.join(lines)
 
 
-def _section(docs, doc_id, heading):
-    d = docs.get(doc_id)
-    if not d:
-        return ''
-    return next((t for h, t in d.sections if h.lower() == heading.lower()), '')
-
-
 def rules_block(docs):
+    """The bullet lines of harness/misreadings.md under its first '## ' heading, whatever that heading says."""
     if not os.path.exists(MISREADINGS):
         return ''
-    t = open(MISREADINGS).read()
-    return t[t.index('## Misreadings'):].replace('## Misreadings', '## Level 300 misreadings', 1).strip()
+    with open(MISREADINGS) as f:
+        t = f.read()
+    m = re.search(r'^## .*$', t, re.M)
+    lines = [l for l in t[m.end():].split('\n') if l.startswith('- ')] if m else []
+    return '\n'.join(['## Level 300 misreadings'] + lines) if lines else ''
 
 
 def terms_block(docs):
-    t = _section(docs, TERMS_ID, 'Confusable pairs')
-    return t.replace('## Confusable pairs', '## Confusable terms', 1) if t else ''
+    """One line per glossary entry with a 'Not to confuse with' cell."""
+    import kb
+    rows = [e for e in kb.glossary(docs) if e['confusable']]
+    if not rows:
+        return ''
+    lines = [f"- {e['term']} vs {e['confusable'][0]}: {e['confusable'][1]}" + (f" (`{e['file']}`)" if e['file'] else '')
+             for e in rows]
+    return '\n'.join(['## Confusable terms'] + lines)
 
 
 def flows_block(docs):

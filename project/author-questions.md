@@ -16,28 +16,6 @@ Each entry has:
 
 ## Open
 
-### Q059 · Agent · Core rules and confusable pairs given to the agent up front
-- Files: [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md) (Level 300 misreadings; moved out of the knowledge base 2026-11-07); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
-- Search: not from the book. Each rule and pair summarises the knowledge file it points to.
-- Question:
-  1. Are these the 12 rules an expert would give a new colleague first? Which would you drop, add or reword?
-  2. Are the 8 confusable pairs right, and is any pair missing?
-- Written as now: drafted by Claude 2026-11-06, status draft. The agent receives them only when the switches are on (all off by default).
-- Proposed answer (expert call). Now 12 rules and 28 pairs (not 8). The five up-front blocks total 2,997 of 3,000 tokens: every addition needs a cut.
-  - Rules: keep 1, 2, 5, 7, 10, 11.
-  - Reword 3: "Utilization is not contention ...". "Saturation" already names a metric type (Cluster Consumption, availability step); one word, one meaning.
-  - Reword 4: add "an ESXi Ready value is a sum or average of its VMs: read the worst VM".
-  - Reword 8: "Memory is a cache: high Consumed is normal and is not demand; Active is not a capacity counter" (Q115 b, c).
-  - Reword 9: "... convert with the interval and the vCPU count, and read Ready against Run". Broadcom KB 419238 and 386180 give a Ready bar of 5% or 10% without either.
-  - Drop 6: it repeats the pair Run vs Used.
-  - Drop 12: a flow heuristic; the flow carries it.
-  - Add: "A vCPU runs on a thread: overcommit ratios are per thread; 4:1 per thread is 8:1 per core" (Q079, Q151).
-  - Add: "Capacity is read against usable capacity; contention overrides utilization: a cluster at low utilization can be full."
-  - Pairs, 28 to 20: drop those a rule covers (Reservation vs usage, VM vs Guest OS, VM CPU Ready vs Latency); merge Consumed vs Active with Guest OS In Use vs VM Consumed; merge Storage vs disk with Device vs disk vs LUN; move four rare pairs (Consistency vs compatibility, Health check operations vs Kubernetes, Metric vs property, Inventory vs configuration) to a new glossary section "Other distinctions" (still indexed; the primer reads only Confusable pairs). Add Core Utilization vs Thread Utilization. Add to the Latency row: "network: no VM latency counter; read dropped packets". Frees about 300 tokens (measure with lint).
-  - Change if accepted: harness/misreadings.md; glossary (Confusable pairs, Other distinctions); harness/AGENT.md section 3.
-  - For you: whether your own top 12 for a new colleague differs.
-- Answer: 
-
 ### Q060 · Operations flows · Users say the VM is slow: your order of checks
 - Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/troubleshooting/vm-slow.md) (sections Checks, in order; Why this order). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
 - Search: not from the book. Drafted from the VM overview file and the per-resource flows.
@@ -776,6 +754,28 @@ Each entry has:
 
 ## Resolved
 
+### Q059 · Agent · Core rules and confusable pairs given to the agent up front
+- Files: [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md) (Level 300 misreadings; moved out of the knowledge base 2026-11-07); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Confusable pairs); design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
+- Search: not from the book. Each rule and pair summarises the knowledge file it points to.
+- Question:
+  1. Are these the 12 rules an expert would give a new colleague first? Which would you drop, add or reword?
+  2. Are the 8 confusable pairs right, and is any pair missing?
+- Written as now: drafted by Claude 2026-11-06, status draft. The agent receives them only when the switches are on (all off by default).
+- Proposed answer (expert call). Now 12 rules and 28 pairs (not 8). The five up-front blocks total 2,997 of 3,000 tokens: every addition needs a cut.
+  - Rules: keep 1, 2, 5, 7, 10, 11.
+  - Reword 3: "Utilization is not contention ...". "Saturation" already names a metric type (Cluster Consumption, availability step); one word, one meaning.
+  - Reword 4: add "an ESXi Ready value is a sum or average of its VMs: read the worst VM".
+  - Reword 8: "Memory is a cache: high Consumed is normal and is not demand; Active is not a capacity counter" (Q115 b, c).
+  - Reword 9: "... convert with the interval and the vCPU count, and read Ready against Run". Broadcom KB 419238 and 386180 give a Ready bar of 5% or 10% without either.
+  - Drop 6: it repeats the pair Run vs Used.
+  - Drop 12: a flow heuristic; the flow carries it.
+  - Add: "A vCPU runs on a thread: overcommit ratios are per thread; 4:1 per thread is 8:1 per core" (Q079, Q151).
+  - Add: "Capacity is read against usable capacity; contention overrides utilization: a cluster at low utilization can be full."
+  - Pairs, 28 to 20: drop those a rule covers (Reservation vs usage, VM vs Guest OS, VM CPU Ready vs Latency); merge Consumed vs Active with Guest OS In Use vs VM Consumed; merge Storage vs disk with Device vs disk vs LUN; move four rare pairs (Consistency vs compatibility, Health check operations vs Kubernetes, Metric vs property, Inventory vs configuration) to a new glossary section "Other distinctions" (still indexed; the primer reads only Confusable pairs). Add Core Utilization vs Thread Utilization. Add to the Latency row: "network: no VM latency counter; read dropped packets". Frees about 300 tokens (measure with lint).
+  - Change if accepted: harness/misreadings.md; glossary (Confusable pairs, Other distinctions); harness/AGENT.md section 3.
+  - For you: whether your own top 12 for a new colleague differs.
+- Answer: Author (2026-11-11), in chat and by editing harness/misreadings.md: terminology is the overall structure; an entry may have synonyms and confusable pairs. Misreadings hold only Level 300 mistakes a frontier model makes, never a duplicate of the glossary, never Level 100. Review every pair: add, remove, correct. Author's misreadings edit kept (rule 12 dropped; ESXi CPU Utilization for capacity, memory as a cache, overcommit per thread added).
+- Applied 2026-11-11: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) is one entry per term (meaning; Also called; Not to confuse with; File), grouped by area; tables Synonyms, Defined terms and Confusable pairs merged into it; duplicate rows (KAI, KSI, Symptom, Consumed CPU) merged. Pairs 28 to 17 (counted, not row numbers): 13 removed (2 of them by the author on main, d791a29), 2 merges, 4 added; the list with reasons is in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), decision 2026-11-11, terminology. [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md): the two Consumed lines merged, the summation line dropped (Level 200; the catalog and calculate tools cover it), files added to the Utilization and overcommit lines, grammar. Rules: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md), section 11.2. No section 'Other distinctions': it was a way to keep rare pairs out of the up-front block; the pair tests remove them instead.
 ### Q095 · Part 1 > Service Level Agreement > SLA Calculation · Pass scored as 0%, and partial VM scores
 - Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section SLA calculation); [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md) (section Cluster SLI).
 - Search 1: "If VM CPU Ready > 2.5% then 100% else 0%"

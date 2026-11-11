@@ -38,7 +38,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 - Questions for the author go in `project/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
 - Extract the book one Heading 3 at a time. Add that section's questions and continue; do not wait for answers.
-- When the author corrects a wording mistake, add it to the Words to avoid table in `project/vocabulary.md`; if users also say the word, add it to the Synonyms table in `knowledge/glossary.md`.
+- When the author corrects a wording mistake, add it to the Words to avoid table in `project/vocabulary.md`; if users also say the word, add it to the Also called line of its entry in `knowledge/glossary.md`.
 - One English word per concept: the agent's vocabulary in `knowledge/glossary.md`, writing vocabulary in `project/vocabulary.md`, repository terms in `project/terms.md`. A new term is added there as a proposal and flagged for the author before use.
 
 ## Evaluation

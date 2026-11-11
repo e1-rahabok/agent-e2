@@ -10,7 +10,7 @@ meta:
     files: Knowledge files pulled into the context when the row matches, most important first.
     premise: 'Optional, true when the words usually carry a wrong premise (an odd question): the note is marked so the model names the premise first (harness/clarify.py).'
   review_notes:
-  - 'Question understanding before search. Seeded from knowledge/glossary.md (Synonyms, Confusable pairs), project/vocabulary.md (Words to avoid) and the Traps sections. Each note restates its file; the file is the source.'
+  - 'Question understanding before search. Seeded from knowledge/glossary.md (Also called, Not to confuse with), project/vocabulary.md (Words to avoid) and the Traps sections. Each note restates its file; the file is the source.'
   - 'Read by harness/terms.py. Switch: term_map in benchmark/runner/config.yaml.'
   - 'To check: the wrong terms users write in tickets and forums, with what they mean (Q149).'
   - 'To check: each note against the file it cites.'

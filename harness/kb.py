@@ -93,6 +93,43 @@ def load(root=ROOT):
     return docs, chunks
 
 
+GLOSSARY_FIELDS = ('Also called', 'Not to confuse with', 'File')
+GLOSSARY_ENTRY = re.compile(r'^- \*\*(.+?)\*\*: (.*)$')
+
+
+def glossary(docs):
+    """Entries of knowledge/glossary.md: one dict per entry (term, meaning, also, confusable, file, area).
+
+    An entry is '- **Term**: meaning' with optional sub-bullets '  - Also called: a, b',
+    '  - Not to confuse with Other term: difference.' and '  - File: `id`', under '### Area' headings
+    (KNOWLEDGE-ENGINEERING.md, section 11.2).
+    """
+    g = docs.get('glossary')
+    out = []
+    if not g:
+        return out
+    area = ''
+    for line in g.body.split('\n'):
+        if line.startswith('### '):
+            area = line[4:].strip()
+            continue
+        if area:
+            m = GLOSSARY_ENTRY.match(line)
+            if m:
+                out.append({'term': m.group(1), 'meaning': m.group(2), 'area': area, 'also': [], 'confusable': None, 'file': ''})
+                continue
+            if not out or out[-1]['area'] != area or not line.startswith('  - '):
+                continue
+            field, _, value = line[4:].partition(': ')
+            if field == 'Also called':
+                out[-1]['also'] = [a.strip() for a in value.split(',') if a.strip()]
+            elif field.startswith('Not to confuse with '):
+                out[-1]['confusable'] = (field[len('Not to confuse with '):].strip(), value.strip().rstrip('.'))
+            elif field == 'File':
+                out[-1]['file'] = value.strip().strip('`')
+    return out
+
+
 def git_sha(root=ROOT):
     try:
         import subprocess

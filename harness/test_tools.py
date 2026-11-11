@@ -248,6 +248,20 @@ class PrimerTest(unittest.TestCase):
     def test_off_by_default(self):
         self.assertEqual(self.P.build(DOCS, {}), '')
 
+    def test_terms_block_has_one_line_per_glossary_pair(self):
+        import kb
+        pairs = [e for e in kb.glossary(DOCS) if e['confusable']]
+        self.assertGreater(len(pairs), 0)
+        lines = self.P.terms_block(DOCS).split('\n')[1:]
+        self.assertEqual(len(lines), len(pairs))
+        self.assertTrue(all(' vs ' in l for l in lines))
+
+    def test_rules_block_takes_only_the_misreading_lines(self):
+        t = self.P.rules_block(DOCS)
+        self.assertTrue(t.startswith('## Level 300 misreadings\n- '))
+        self.assertNotIn('What belongs here', t)
+        self.assertNotIn('Correction', t)
+
     def test_flow_index_lists_every_flow_file(self):
         t = self.P.flows_block(DOCS)
         for i in DOCS:

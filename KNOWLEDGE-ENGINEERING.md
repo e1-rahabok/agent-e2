@@ -94,7 +94,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Health checks and troubleshooting flows | The expert's order of checks and the branch at each step: the what (health check), then the why (troubleshooting) | `health-check/` and `troubleshooting/` files |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
 | Images with text twins | The author's diagrams and charts | `images/` folders |
-| Glossary | The agent's vocabulary: synonyms, defined terms, confusable pairs. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
+| Terminology | The agent's vocabulary: one entry per concept, with its other names and the term it is confused with (section 11.2). Wrong beliefs: `harness/misreadings.md`. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
 | Provenance | Source document and version, what is still to check, status | metadata |
 | Rules as code | Architecture and writing rules | `project/tools/lint.py`, `project/tools/tags.yaml` |
 | Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` |
@@ -112,7 +112,7 @@ Reason for each form, and its readers:
 | Troubleshooting flows | Small models skip steps; an ordered, executable form keeps them on the path | Harness (flow tool), model |
 | Formulas and calculator | Arithmetic is where models slip; code does it exactly | Harness |
 | Images with text twins | Diagrams carry expert insight; the text twin makes them usable by a text-only model | Model, human, vision model |
-| Glossary | Wrong words produce wrong reasoning (VM vs Guest OS, storage vs disk, vCenter vs VCF Operations) | Model, human, lint |
+| Terminology | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA, the SP5 SLI vs the SRE SLI) | Model, harness, human, lint |
 | Provenance | Every fact must be traceable and challengeable | Human |
 | Rules as code | A rule that a script checks cannot drift | Lint |
 | Executable expectations | Shows that the knowledge changes answers | Benchmark |
@@ -184,7 +184,7 @@ knowledge/                           # what the model reads (indexed)
 │                                    # vCenter counters, esxtop fields, thresholds, object model, user terms (YAML)
 ├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
 │                                    # aggregation, units, thresholds, naming, accounting
-├── glossary.md                      # the agent's vocabulary: synonyms, defined terms, confusable pairs (all products)
+├── glossary.md                      # the agent's vocabulary: one entry per term, other names, confusable term (all products)
 ├── sp5-framework/                   # operations management across products and technologies: the SP5 Framework
 │   ├── concepts/                    # the framework across pillars: overview, why not ITIL, Triple See Method,
 │   │                                # SLAs, class of service, health, monitoring vs troubleshooting
@@ -398,13 +398,43 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 1. Each bullet stands alone. No "it", "this" or "the above" pointing to another bullet or section; name the thing again.
 2. One fact per bullet, with its reason: "X, because Y". The reason lets the model apply the fact to a new case.
 3. Exact names: metric and term names as in the metric files and the glossary, with the object ("VM CPU Ready", not "Ready"). A typo in a name breaks search; a typo in prose costs little.
-4. One name per concept. A new name needs the glossary first; another name users say goes into its Also called column, not into the text.
+4. One name per concept. A new name needs the glossary first; another name users say goes into the Also called line of its entry, not into the text.
 5. Misreadings go in `## Traps`, in the user's words: "wrong belief" → correct reading. Search finds a misreading through those words.
 6. A number comes with unit, object, interval and source. A threshold in prose also needs a row in the threshold catalog.
 7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
 8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
 9. Headings at most 9 words, titles at most 8 (lint).
 10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check and merges.
+
+### 11.2 Terminology
+Agent E2 has four jobs with words. Each has one home, so a fact is written once.
+
+| Job | Failure it prevents | Home | Reaches the model |
+|---|---|---|---|
+| Recognize the user's word | Search misses the file ("steal time", "%RDY", "uptime KPI") | Glossary, Also called; the term map (`knowledge/catalog/user-terms.yaml`) for phrases | Query terms, files and notes before search |
+| Know what a term means here | The public meaning wins (SLI as the SRE indicator) | Glossary entry; the file for a metric | Search, `read_file` |
+| Keep two terms apart | The answer uses the wrong one of two real terms | Glossary, Not to confuse with | Up-front block `terms` |
+| Drop a wrong belief | A confident rule of thumb, never looked up | `harness/misreadings.md` | Up-front block `rules` |
+
+Glossary entry (`knowledge/glossary.md`, read by `harness/kb.py`, checked by lint):
+- `- **Term**: meaning`, then optional lines `  - Also called: a, b`, `  - Not to confuse with Other term: difference.`, ``  - File: `id` ``. Grouped by area under `###` headings, alphabetical within each. Not `##`: the glossary must stay one chunk, so search never ranks this summary above the files that hold the mechanism (retrieval check 2026-11-11: with `##` areas the glossary entered 18 of 95 classic contexts instead of 3, and 2 questions lost a needed file).
+- Meaning only where Agent E2's meaning differs from public text, or a 32B model lacks it (SP5 and VCF Operations terms, redefined words). No Level 100 or 200 definitions.
+- A metric with its own file is an entry only when it has another name or a confusable partner.
+- Same name, two things (Demand for capacity, Demand on ESXi): two entries with a qualifier, each pointing at the other.
+
+A confusable pair passes all four tests:
+1. Two (or three) terms of the same kind, each a real term: two metrics, two processes, two scores. "Reservation vs usage" is a rule, not a pair.
+2. Swapped in practice by public text, vendor documents or frontier models. Not a difference every VMware administrator knows (Ballooned vs Swapped, allocation vs reservation).
+3. The swap changes the answer: another verdict, metric, number or action.
+4. Not already a misreading. One home per fact.
+- Written once, under the term users misuse; the difference names both terms, so the line reads alone.
+
+Misreading (`harness/misreadings.md`):
+- A wrong belief a frontier model applies without being asked: what is a problem, which metric decides, what to add or size by.
+- Level 300: a VMware administrator with hands-on vSphere knowledge still holds it. Not a definition, not a swap of two terms (those are glossary entries).
+- One line: the correct reading, then `See` the file with the mechanism.
+
+Up-front budget: the five blocks together stay within 3,000 tokens (`harness/primer.py`, lint). A new pair or misreading needs room; drop a weaker one first.
 
 ## 12. Images
 - `knowledge/` is for Agent E2 only. An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.

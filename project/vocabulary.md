@@ -1,6 +1,6 @@
 # Writing vocabulary
 
-How the knowledge files are written: the dimensions not to mix, and the words to avoid when writing. For writers and lint, not for Agent E2; not indexed. The agent's vocabulary (synonyms, defined terms, confusable pairs) is `knowledge/glossary.md`. Repository terms: `project/terms.md`.
+How the knowledge files are written: the dimensions not to mix, and the words to avoid when writing. For writers and lint, not for Agent E2; not indexed. The agent's vocabulary (one entry per term: meaning, other names, the term it is confused with) is `knowledge/glossary.md`. Repository terms: `project/terms.md`.
 
 ## Dimensions (do not mix)
 - Object type: a kind of managed object (VirtualMachine, HostSystem). Not a component inside an object (vCPU, vmnic).
@@ -18,7 +18,7 @@ How the knowledge files are written: the dimensions not to mix, and the words to
 - Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.
 
 ## Words to avoid
-When the author corrects a wording mistake, add it here. A word users also say goes into the Synonyms table of `knowledge/glossary.md` too, so search maps it.
+When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in `knowledge/glossary.md` too, so search maps it.
 
 | Avoid | Use instead | Why |
 |---|---|---|
