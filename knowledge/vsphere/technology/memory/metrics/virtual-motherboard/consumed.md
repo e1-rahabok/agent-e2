@@ -21,7 +21,7 @@ Consumed = Granted - savings (sharing)
 - ESXi memory mapped to the VM.
 - ESXi backs VM memory with 2 MB pages whenever possible, even if the guest does not request them. Fewer TLB misses, but the VM consumes more than the guest uses.
 - Excludes overhead (transparent to the guest) and swapped memory (not readily usable).
-- Compressed: the freed part of a compressed page (for example 0.75 KB of a 4 KB page compressed to 1 KB) is excluded.
+- Compressed: the freed part of a compressed page (for example 3 KB of a 4 KB page compressed to 1 KB) is excluded.
 - Includes touched reserved memory; untouched reserved memory is not counted.
 - Capped by a limit. Can reach, not exceed, configured memory.
 - vCenter Guest | Memory Usage is the same as Consumed. Do not use it.
