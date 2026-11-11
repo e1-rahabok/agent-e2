@@ -15,21 +15,21 @@ Host RAM (GB)  = VM memory + RAM kept for infrastructure
 - Infrastructure share: non-business work on every host, such as vSAN with deduplication, NSX, vSphere Replication, and kernel processing for IO-heavy VMs. Book example: 8 cores and 64 GB per host.
 - The basis of the CPU overcommit ratio changes the answer by 2x with Hyper-Threading: 4:1 per core is 2:1 per physical thread. The knowledge base states overcommit per physical thread (`sp5-framework/performance/noisy-neighbour`); the book's examples here state it per core.
 
-## Silver: cost optimized (book example)
+## Example 1: overcommit
 - Host: 64 cores. Kept for infrastructure: 8 cores, 64 GB. Left: 56 cores.
 - CPU overcommit 2:1 per physical thread: 56 × 4 = 224 vCPU.
 - 224 vCPU × 4 GB = 896 GB. Memory overcommit 2:1: 448 GB for VMs.
 - Host RAM: 448 + 64 = 512 GB.
 - Specification: 64 cores, 512 GB.
 
-## Gold: performance optimized (book example)
+## Example 2: performance optimized
 - No CPU or memory overcommit: 1 vCPU per core.
 - 64 cores → 64 vCPU × 4 GB = 256 GB.
 - A host with 1 TB would leave 768 GB unsold.
 - The book's Gold example keeps no cores or RAM for infrastructure. With the Silver share (8 cores, 64 GB) it becomes 56 vCPU, 224 + 64 = 288 GB.
 
-## Silver at 3:1 CPU, no memory overcommit
-- Average VM: 1 vCPU, 4 GB. CPU overcommit 3:1 per core, memory 1:1.
+## Example 3: 3:1 CPU, no memory overcommit
+- Average VM: 1 vCPU, 4 GB. CPU overcommit 1.5:1 per physical thread, memory 1:1.
 - Each core sells 3 vCPU × 4 GB = 12 GB of RAM.
 - 64 cores: 64 × 12 = 768 GB.
 - The book picks 64 cores to make full use of the vSphere license. That held under per-CPU licensing (up to 32 cores per CPU license, so 2 × 32). VCF 9 is licensed per core, with a minimum of 16 cores per CPU: core count no longer has a license sweet spot above 16 per CPU.
