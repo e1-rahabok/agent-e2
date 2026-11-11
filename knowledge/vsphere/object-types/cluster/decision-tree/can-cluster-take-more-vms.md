@@ -115,6 +115,7 @@ internal_derive:
 - vsphere/technology/memory/concepts/host-memory-states
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 related:
+- vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out
 - vsphere/object-types/cluster/health-check/cluster-health-check
 - sp5-framework/concepts/health-check
 - sp5-framework/capacity/class-of-service-planning

@@ -68,12 +68,14 @@
 | Can this cluster take more VMs? | Running, short term | `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms` |
 | Is the cluster closed for business? | Running, short term | `vsphere/object-types/cluster/models/close-for-business` |
 | Does this ESXi host have CPU headroom? | Running, short term | `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom` |
+| Can this cluster take a host out (maintenance, upgrade)? | Running, short term | `vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out` |
+| Will this datastore run out of space? | Running | `vsphere/technology/storage/decision-tree/datastore-space-headroom` |
 | When does the cluster run out? | Running, long term | `sp5-framework/capacity/forecasting`; `vcf-operations/features/capacity-forecast` |
 | What can be reclaimed? | Running | `sp5-framework/capacity/reclamation`, `sp5-framework/capacity/unused-vm` |
 | Should this VM be resized? | Running | `sp5-framework/capacity/rightsizing`; `guest-os/system/concepts/guest-os-sizing`; `sp5-framework/capacity/vm-footprint-sizing` |
 | How are the results shown? | Running | `sp5-framework/outputs/capacity-dashboards` |
 
-- No decision tree yet for taking a host out (maintenance mode). Its effect on supply: `sp5-framework/capacity/supply`, section Total vs usable after host loss.
+- Network capacity has no file of its own yet: hosts with 50 Gb rarely hit the limit (`sp5-framework/capacity/supply`, section Private cloud components).
 
 ## Six steps
 ![Six steps: demand side 2 Control demand by the pricing model, 3 Optimize demand by reclamation, 4 Account for latent, potential and unmet demand, 5 Monitor demand by tracking excessive usage; supply side 1 Plan supply by class of service, 6 Monitor with demand or performance plus allocation together](images/capacity-management-six-steps-demand-and-supply-diagram.png)
@@ -186,6 +188,8 @@ related:
 - vsphere/object-types/cluster/models/close-for-business
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
+- vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out
+- vsphere/technology/storage/decision-tree/datastore-space-headroom
 - sp5-framework/capacity/host-spec-from-class-of-service
 - sp5-framework/capacity/vm-size
 - sp5-framework/capacity/unused-vm
