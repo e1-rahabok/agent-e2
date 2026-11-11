@@ -4,12 +4,13 @@ Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
-- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available. It beats frontier models on monitoring and troubleshooting because its agent, harness and knowledge base are purpose-built. That is how a 32B-parameter model beats far larger models.
-- That is the 1.0 minimum. Anything else is not a release blocker; it goes to a later release.
-- An open-weight model, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than the best frontier model.
+- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available.
+- The goal is to exceed frontier models on monitoring and troubleshooting because its agent, harness and knowledge base are purpose-built. That is how a 32B-parameter model delivers better answers than far larger models.
+- An open-weight model, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than  frontier models from leading players (Google, OpenAI, Anthropic).
 - Locally means on the customer's own infrastructure: no cloud AI service, and no customer data (questions, screenshots, files) leaving the customer network. No per-token fee.
-- Internet access: customers keep their data in, but their users browse the Internet for knowledge, so a question can include a URL. Agent E2 works without Internet access; public knowledge from the Internet is an addition, never a requirement.
-- Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer. Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
+- Users' prompt or question can include a URL. Agent E2 will browse and check the content. 
+- Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer.
+- Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
 - Release gate: final score at least 85% on the benchmark, each question scored on its worst of 5 runs. Target: 99%. Confident-wrong rate near 0.
 
 ## 2. What we can change
