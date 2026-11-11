@@ -115,6 +115,7 @@ Each entry has:
   - For you: nothing.
 - Partly settled by the author's edit (2026-11-11): host-spec-from-class-of-service now states overcommit per physical thread ((a)), and the noisy-neighbour memory table is removed ((c) no longer applies). Still open: (b) whether Gold keeps the infrastructure share; (d).
 - Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread.
+- Partly settled by the author's working model (Capacity Planning Stage.xlsx, 2026-11-11): (b) every class keeps the infrastructure share: hypervisor overhead (14 threads, 64 GB on a 64-core, 768 GB host) is subtracted per ESXi host before any class. Still open: (d).
 - Answer:
 
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
@@ -300,22 +301,6 @@ Each entry has:
 - Related (2026-11-11): the new file [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) says the size depends on the host's CPU and NUMA architecture, the direction of (c). Still open: (a), (b).
 - Answer:
 
-### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
-
-- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Demand).
-- Search 1: "Demand = Max (Utilization, Reservation)"
-- Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
-- Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
-- Written as now: both files as they are.
-- Proposed answer (expert call): yes, remove reservation from the usable capacity sentence. Reservation is demand, not supply.
-  - Demand = Max (Utilization, Reservation), per VM, then summed. Subtracting it from supply as well counts it twice. Example: 100 GHz usable; a VM uses 4 GHz with 5 GHz reserved. Demand side only: 95 GHz left. Both sides: 95 − 5 = 90; 5 GHz reserved takes 10 GHz of room.
-  - Same logic as the hypervisor in the utilization model: its load is in demand, so it is not subtracted from supply.
-  - Supply: Usable = Total − HA − Buffer; hypervisor overhead subtracted in the allocation model only. The pack's Usable Capacity leaves reservation out too.
-  - Reservation keeps its own dimension, reserved against capacity (admission control; Cluster Risk reservation rows). The cluster is full at the first of utilization, allocation or reservation.
-  - New text: "Capacity subtracts HA, buffer and hypervisor overhead from total capacity, and counts reservation in demand. Performance ignores all four."
-  - Change if accepted: performance-vs-capacity, Usable capacity exists only in capacity.
-  - For you: nothing.
-- Answer:
 
 ### Q128 · Glossary · Proposed terms from Capacity Management
 
@@ -715,9 +700,42 @@ Each entry has:
 - Question: (a) Bronze price: 0.33x (follows 1/3 overcommit) or keep 0.25x (a business choice, more margin pressure)? (b) Bronze CPU reservation: keep 12.5% or 1/6 (about 17%)? (c) Will you update the image?
 - Proposed answer (expert call): (a) 0.33x: price follows the overcommit, which is the reason the guideline gives. (b) Keep 12.5%: a reservation protects against starvation and is not tied to the ratio; a lower value keeps Bronze from reserving the cluster. (c) Yes; until then the correction stays.
 - For you: (a), (b), (c).
+- Partly settled by the author's working model (Capacity Planning Stage.xlsx, 2026-11-11): (b) Bronze CPU reservation stays 12.5% with CPU 3:1. (a) Its note says price follows overcommit ("Bronze is 4x cheaper than Gold because it has 4x overcommit"), which with 3:1 gives 0.33x; the note still says 4x (Q174). (c) open.
+- Answer:
+
+### Q174 · Capacity Planning Stage.xlsx · Conflicts with the knowledge base, and four formula errors
+- Files: [project/sources/Capacity Planning Stage.xlsx](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/Capacity%20Planning%20Stage.xlsx) (read-only); [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md).
+- Search: sheet Capacity Provider, cell C71 "Overcommit Ratio (against DRAM)"; sheet Capacity Consumer, cell B52 "Overall Planned Consumption"; sheet Read Me, cell B29 "How many VM will fit on a typical ESXi".
+- Written as now: the knowledge base gives memory overcommit Silver 1.5:1 and Bronze 2:1 (class image); the spreadsheet gives 1.2:1 and 1.4:1.
+- Question:
+  - (a) Memory overcommit: the spreadsheet (Gold 1:1, Silver 1.2:1, Bronze 1.4:1) or the knowledge base (1:1, 1.5:1, 2:1)?
+  - (b) Utilization model, rows Overall Planned Consumption (M52, N52, M61, N61, M70, N70): (demand + hypervisor overhead) / usable capacity. Usable capacity already excludes the overhead (114 = 128 − 14 threads; 704 = 768 − 64 GB), so the overhead is counted twice. Scenario 2 memory reads 102% instead of 93%; scenario 3 CPU 101% instead of 89%. Use demand / usable?
+  - (c) Read Me, the 6-number answer: G36 (memory reservation) and G37 (memory utilization) divide the allocation-model memory (E35, 844.8 GB with 1.2:1 overcommit) instead of the reservation and utilization usable memory (704 GB). Corrected: G36 = 704 / 16 = 44; G37 = 704 / 27.2 = 25.9. The answer becomes 25.9 VMs, bound by memory utilization, not 26.4 by memory allocation.
+  - (d) Capacity Provider B60 says Bronze is 4x cheaper because of 4x overcommit; F68 is 3.
+  - (e) Read Me C14-C15 and the closure diagram say "Performance SLA". The 2026-11-11 decision: no performance SLA; performance is managed by the KPI. Reword to the KPI?
+  - (f) The named range ESXi.CPU.Usable.Capacity.Allocation points to #REF! (unused).
+- Proposed answer (expert call): (a) the spreadsheet: it is the newest model and already carries Bronze 3:1; then class-of-service and class-of-service-planning change to 1.2:1 and 1.4:1, and the price example becomes Silver 67%, Bronze 52% of Gold. (b), (c), (d), (f): fix in the spreadsheet. (e) KPI.
+- For you: (a); fix the spreadsheet, since project/sources is read-only for Claude.
 - Answer:
 
 ## Resolved
+
+### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
+
+- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Demand).
+- Search 1: "Demand = Max (Utilization, Reservation)"
+- Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
+- Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
+- Written as now: both files as they are.
+- Proposed answer (expert call): yes, remove reservation from the usable capacity sentence. Reservation is demand, not supply.
+  - Demand = Max (Utilization, Reservation), per VM, then summed. Subtracting it from supply as well counts it twice. Example: 100 GHz usable; a VM uses 4 GHz with 5 GHz reserved. Demand side only: 95 GHz left. Both sides: 95 − 5 = 90; 5 GHz reserved takes 10 GHz of room.
+  - Same logic as the hypervisor in the utilization model: its load is in demand, so it is not subtracted from supply.
+  - Supply: Usable = Total − HA − Buffer; hypervisor overhead subtracted in the allocation model only. The pack's Usable Capacity leaves reservation out too.
+  - Reservation keeps its own dimension, reserved against capacity (admission control; Cluster Risk reservation rows). The cluster is full at the first of utilization, allocation or reservation.
+  - New text: "Capacity subtracts HA, buffer and hypervisor overhead from total capacity, and counts reservation in demand. Performance ignores all four."
+  - Change if accepted: performance-vs-capacity, Usable capacity exists only in capacity.
+  - For you: nothing.
+- Answer: From the author's working model (project/sources/Capacity Planning Stage.xlsx, 2026-11-11): reservation is its own model, compared against the reservable capacity (CPU 64 cores × 2.5 GHz − 10 GHz system reservation = 150 GHz; memory DRAM minus hypervisor = 704 GB), not subtracted from the supply of the utilization model. Applied: performance-vs-capacity, section Usable capacity exists only in capacity.
 
 ### Q062 · Operations flows · Is this host or cluster healthy right now
 
