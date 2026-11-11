@@ -1,0 +1,21 @@
+# Archived 2026-11-11 (Q116): the author withdrew the fixed utilization zones; they depend on the object type and on what is sized.
+- id: cluster-utilization-usable-wastage
+  metric: Cluster utilization against usable capacity
+  object: ClusterComputeResource
+  operator: <
+  value: 40
+  unit: '% of usable capacity'
+  meaning: Grey (wastage). Capacity given, and likely paid for, is not used.
+  source: knowledge-base
+  kb: sp5-framework/capacity/capacity-dimensions
+  quote: '| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |'
+- id: cluster-utilization-usable-best
+  metric: Cluster utilization against usable capacity
+  object: ClusterComputeResource
+  operator: '='
+  value: 80
+  unit: '% of usable capacity'
+  meaning: Best (target). 40-80% is green.
+  source: knowledge-base
+  kb: sp5-framework/capacity/capacity-dimensions
+  quote: '| 80% | Best | Target |'

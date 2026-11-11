@@ -2,7 +2,7 @@
 
 ## Which model applies
 
-![Planning stage: Overcommit? No → buffer, then allocation in operation, closed when allocation equals usable capacity. Yes → workload type Mono (one class) or Mix (Gold, Silver, Bronze); planning parameters buffer, utilization (expected concurrent peak), allocation (via VM price), reservation (mixed class). Operating stage: buffer, utilization against usable, contention as the brake, risk from imbalance and overcommit ratio, share as the QoS setting](images/capacity-model-planning-vs-operating-stage-diagram.png)
+![Planning stage, theory before workload: Overcommit? No (business value far exceeds infrastructure cost) → buffer, then allocation in operation. Yes (majority of cases) → workload type Mono (one class, equal treatment) or Mix (Gold, Silver, Bronze on the same infrastructure; same technique to mix Kubernetes and VMs). Planning parameters: buffer cluster wide, utilization as the expected concurrent peak, allocation through the VM price (overcommit ratio justifies pricing to the tenant), reservation in mixed-class planning. Operating stage, actual metrics for an automated system: Buffer (%), Consumption (%) as an average against usable, Contention (%) as the brake, Risk (%) from monster VM, imbalance, overcommit ratio and reservation; share replaces reservation as the QoS lever, because a reservation can starve a lower class. Most common path: overcommit, mixed workload, VMs given for free](images/capacity-model-planning-vs-operating-stage-diagram.png)
 
 - There are only 2 main models: overcommit or not-overcommit.
 - Automated capacity management requires a model: for each dimension, a formula for total capacity, usable capacity and consumption (`sp5-framework/capacity/capacity-model`).
@@ -50,31 +50,21 @@
 
 | Dimension | Role | Used for |
 |---|---|---|
-| Utilization | Primary metric | Against usable capacity, which holds availability and buffer |
+| Consumption | Primary metric | Against usable capacity, which holds availability and buffer |
 | Contention | Override | Stop provisioning: the main input to closing the cluster |
 | Allocation | Leading indicator | Protect the shared infrastructure from sudden demand |
 | Reservation | Guarantee | Planning. At run time use it sparingly; use shares |
 
-## Utilization
+## Consumption
 
+- Consumption consists of Utilization and Saturation.
 - Live use of the resource. High utilization means the cluster is full, even with overcommit ratio and reservation below target.
-- Ideal: 100% utilization, 0% contention, 0% risk.
+- Ideal: 100% utilization, 0% saturation.
 - Low utilization that stays low is wastage, unless the object is new and still growing, or holds DR protection.
 - Accounting:
   - relative utilization, against usable capacity: exclude the HA host;
   - keep the hypervisor overhead of the other hosts: it is part of the load.
 
-![Utilization against usable capacity in 10 chunks: 0-40% grey wastage zone, 40-80% green zone with 70-80% marked Best, 80-100% a gradient from yellow to red](images/cluster-utilization-against-usable-capacity-wastage-and-green-zones-diagram.png)
-
-
-| Utilization against usable capacity | Zone | Meaning |
-|---|---|---|
-| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |
-| 40-80% | Green | Consumed with enough buffer: no purchase yet |
-| 80% | Best | Target |
-| 80-100% | Yellow to red | No values given by the source |
-
-- Ten equal chunks of usable capacity: four grey, four green, two from yellow to red.
 
 ## Contention
 
@@ -131,6 +121,12 @@ Demand = Max (Utilization, Reservation)
 - CPU: per thread, not per core. Mind the Hyper-Threading penalty; do not promise a GHz speed (`sp5-framework/capacity/capacity-model`, section Overcommit).
 - Memory: overcommit is against physical DRAM. NVMe used by memory tiering is not counted as capacity (`vsphere/technology/memory/concepts/memory-tiering`).
 
+### Overcommit
+
+- The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.
+- A provider that does not overcommit may not compete on cost.
+- Overcommit ratios are written virtual : physical (3:1 = 3 vCPUs per thread). Per class: Gold 1:1, Silver 2:1, Bronze 3:1 (`sp5-framework/capacity/class-of-service-planning`).
+
 ### Invisible demand
 
 
@@ -158,12 +154,6 @@ Demand = Max (Utilization, Reservation)
 | Overhead ignored | vSAN keeps protection data on the same datastore: consumption doubles inside it |
 | IaaS workload counted | Agent VMs count as demand, though they often use a local datastore |
 
-## Overcommit
-
-- The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.
-- A provider that does not overcommit may not compete on cost.
-- Overcommit ratios are written virtual : physical (4:1 = 4 vCPUs per thread).
-
 ## Misconceptions
 
 - "We recommend 2:1 memory overcommit; going above is risky" → a ratio alone ignores utilization, VM size and class of service. Bronze can run 2:1 while Gold runs 1:1 (`sp5-framework/capacity/class-of-service-planning`).
@@ -172,7 +162,7 @@ Demand = Max (Utilization, Reservation)
 - "Each host should run in the high memory state" → High means much free memory: wastage for capacity. ESXi reclaims only near the top (`vsphere/technology/memory/concepts/host-memory-states`).
 - "Cluster XYZ is important, so 5:1 CPU overcommit is fine" → not wrong but misleading: it reduces capacity management to the allocation model, and the more important the cluster, the lower its ratio. It also omits the unit: a CPU ratio is per thread, not per core, because the CPU executes per thread.
 - "3:1 CPU gives buffer for spikes and HA" → not wrong but misleading: allocation alone ignores utilization and VM size; buffer and HA are in usable capacity, not in the ratio.
-- "Tier 3 can run 4:1 CPU" → not wrong but misleading: a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
+- "Tier 3 can run 4:1 CPU" → 4:1 per thread (8:1 per core) is above the highest class ratio, Bronze 3:1; and a ratio is a planning input tied to the VM price, not a capacity verdict; the running cluster is judged by consumption, performance and risk.
 - "UAT at 70% CPU is fine until 85%" → not wrong but misleading: utilization alone does not close a cluster; read contention and risk.
 - "Utilization is low, so the reservation does not matter" → demand is the higher of utilization and reservation; an unused reservation is still taken.
 - "Doubling the CPU shares halves CPU Ready" → no deterministic link between shares or reservation and contention.
@@ -215,11 +205,6 @@ images:
     product: [vsphere]
     object: [ClusterComputeResource]
     topic: 'Capacity model choice'
-    image_type: diagram
-  - path: images/cluster-utilization-against-usable-capacity-wastage-and-green-zones-diagram.png
-    product: [vsphere]
-    object: [ClusterComputeResource]
-    topic: 'Utilization zones'
     image_type: diagram
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

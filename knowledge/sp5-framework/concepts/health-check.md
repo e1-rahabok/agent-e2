@@ -48,6 +48,13 @@ flowchart TD
 - Within each pillar, the what before the why: establish the fact, then explain it.
 - Configuration and known bugs sit inside each pillar, not after them: a configuration issue or a bug can cause an outage, slowness or a security loophole.
 
+## Running the daily check
+- Top down: clusters first, worst first; then the hosts of a failing cluster; then its VMs. A parent's verdict tells where to look next.
+- Stop rule: an availability failure stops that object's check, because a down object has no performance or capacity to read. A performance failure opens its troubleshooting flow; the check then goes on to capacity.
+- Inside performance, the same order on every object: the KPI, the failing sub-metric, consumption, configuration.
+- About 5 minutes when there is no problem.
+- The VCF Operations dashboards for the daily check: after 1.0.
+
 ## How to read the result
 - Three verdicts, read separately: present health, risk (future health) and efficiency. Never one score (`sp5-framework/concepts/health-risk-efficiency`).
 - Each failed step names the KPI or model, its band, and the troubleshooting flow it opens.

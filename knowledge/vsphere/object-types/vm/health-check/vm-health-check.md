@@ -16,9 +16,10 @@ flowchart TD
   S3 --> S4[4. Memory contention]
   S4 --> S5[5. Storage contention]
   S5 --> S6[6. Network contention]
-  S2 -->|yes| S7[7. Configuration]
+  S2 -->|yes| S7[7. Consumption]
   S6 --> S7
-  S7 --> S8[8. Efficiency: sizing]
+  S7 --> S8[8. Configuration]
+  S8 --> S9[9. Efficiency: sizing]
 ```
 
 ## Principle
@@ -35,8 +36,9 @@ Order: availability, performance, security, capacity; within each pillar the wha
 4. Memory contention (VirtualMachine). Latency is the only true memory contention counter (`vsphere/technology/memory/metrics/virtual-motherboard/latency`). Then, in order: swap-in, decompression, host cache, balloon. Ballooned, swapped and compressed memory are past reclamation, not current waiting (`vsphere/technology/memory/metrics/comparisons/vm-memory-metrics`). High → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`. → step 5.
 5. Storage contention (VirtualMachine). Disk latency per virtual disk, read and write separately (`vsphere/technology/storage/metrics/virtual-motherboard/disk-latency`). Outstanding IO: queued IO adds latency at any load (`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`). Bus resets and commands aborted should stay at 0. High → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`. → step 6.
 6. Network contention (VirtualMachine). Dropped packets are the only network contention metric of a VM; vSphere has no network latency or retransmit counter (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`). Receive drops → `vsphere/technology/network/troubleshooting/vnic-rx-drops`. → step 7.
-7. Configuration (VirtualMachine). `vsphere/object-types/vm/configuration/vm-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Limits, shares and reservations explain contention the host does not cause (`vsphere/architecture/resource-controls`). vMotion stun time: `vsphere/object-types/vm/metrics/vmotion`. → step 8.
-8. Efficiency (VirtualMachine). Consumption sizes the VM:
+7. Consumption (VirtualMachine). CPU Run and Usage, memory Consumed, disk IOPS and throughput, network throughput (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Very high consumption can cause the contention of steps 3-6; with no contention, it explains the load. The same order as `sp5-framework/performance/troubleshooting/vm-slow`, step 5. → step 8.
+8. Configuration (VirtualMachine). `vsphere/object-types/vm/configuration/vm-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Limits, shares and reservations explain contention the host does not cause (`vsphere/architecture/resource-controls`). vMotion stun time: `vsphere/object-types/vm/metrics/vmotion`. → step 9.
+9. Efficiency (VirtualMachine). Consumption sizes the VM:
    - CPU: Run, Usage, Demand. Usage includes Turbo; compare with Run before upsizing (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Oversized: `vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`.
    - Memory: Consumed is the main counter; size the VM from Guest OS metrics, not VM metrics (`vsphere/technology/memory/metrics/virtual-motherboard/consumed`).
    - Storage: IOPS and throughput (`vsphere/technology/storage/metrics/virtual-motherboard/iops`). Network: throughput (`vsphere/technology/network/metrics/virtual-motherboard/throughput`).

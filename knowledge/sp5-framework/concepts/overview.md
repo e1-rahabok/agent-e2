@@ -12,7 +12,7 @@
 - Why a new framework instead of ITIL or COBIT: `sp5-framework/concepts/why-a-new-framework`.
 - Metric types per pillar (contention, consumption, context): `sp5-framework/observability/triple-see-method`.
 - Modelling a pillar into one number (KPI, risk): `sp5-framework/concepts/modelling`.
-- Day 2 → Day 0 → Day 1: `sp5-framework/concepts/purpose-driven-architecture`, section Plan from Day 2.
+- Day 2 → Day 0 → Day 1: `sp5-framework/concepts/purpose-driven-architecture`, section Begin with the end in mind.
 
 ## What a private cloud manages
 

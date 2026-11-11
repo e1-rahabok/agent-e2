@@ -22,4 +22,4 @@ What belongs here:
 - Ballooned, Zipped, Swapped are past tense. Above 0 does not mean pressure now; memory contention decides. See `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`.
 - A threshold holds only for its object, its level within the object, and its sample interval. A 5-minute average hides 20-second peaks. See `vcf-operations/features/peak-20-second-metrics`.
 - vSphere Cluster Admission control counts reservations, not usage. A host at low usage can refuse a power-on. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`.
-- CPU overcommit ratios are per thread, not per core. A vCPU runs on a physical thread; 4:1 per thread is 8:1 per core. See `sp5-framework/capacity/class-of-service-planning`.
+- CPU overcommit ratios are per thread, not per core. A vCPU runs on a physical thread; 3:1 per thread is 6:1 per core. See `sp5-framework/capacity/class-of-service-planning`.

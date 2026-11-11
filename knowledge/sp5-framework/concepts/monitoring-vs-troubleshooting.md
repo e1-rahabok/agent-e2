@@ -1,32 +1,41 @@
 # Monitoring vs troubleshooting
 
-## Monitor: what; troubleshoot: why
-- Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
-  - Example: VDI planned for 10,000 users. At 1,000 users they consume more than planned: scale down the rollout or add resources.
-- Act when reality is worse than plan, not when a complaint arrives. Troubleshooting done proactively has time and no one rushing it.
-- Troubleshooting is not the centre of operations. What can be troubleshot, and how, is planned in the architecture: what can go wrong, how it is detected, how it is remediated. Unplanned, each incident costs more than it should.
-
 | Item | Monitoring | Troubleshooting |
 |---|---|---|
-| Question | What is the problem? | Why does it happen? |
+| Question | What is the problem? | Why does it happen? What is the root cause?|
 | Nature | Proactive | Reactive |
 | Expertise | Low: repetitive, with dashboards and alerts | High: varied steps, needs the environment's context |
 | Metrics | Usually one, the KPI: primary, checked by SOP | Many, in layers: secondary, read when the primary nears its threshold |
 | Duration | A few minutes, about 5, when there is no problem | Can take days across teams |
-| Frequency | Daily; Gold more often than Bronze | On demand |
+| Frequency | Daily; Gold more often than Bronze | Rarely; On demand |
 | Timeline | Now and future: anticipate load | Now: put out the fire |
 | Logs | Required: logs stream continuously, not in 5-minute samples | Almost always; NetFlow for network |
 | KPI | KPIs, not single metrics | Starting point, then raw supporting metrics |
 
 - What is monitored decides the data. Logs stream continuously; metrics arrive per reporting interval.
 - Performance monitoring reports the 20-second peak within each 5-minute reporting interval. Exception: a mission-critical system, where 20-second visibility is worth the cost of monitoring.
-- Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
+
+
+## Primary and secondary metrics
+- Layer the troubleshooting metrics, events and properties so Level 1 Team can use them easily and quickly.
+- Primary metric: defines performance; the what. Always 0-100%, usually a hybrid of several metrics. Example: Kubernetes Cluster Performance (%).
+- Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
+- A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
+
+## Monitoring
+- Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
+  - Example: VDI planned for 10,000 users. At 1,000 users they consume more than planned: scale down the rollout or add resources.
+- Act when reality is worse than plan, not when a complaint arrives. Troubleshooting done proactively has time and no one rushing it.
+
 
 ## Troubleshooting
+- There are only 2 types of troubleshooting, as a system is either down or slow. 
+- An incident means something is dead, slow or breached. You perform availability troubleshooting, performance troubleshooting, or security forensic investigation. Capacity and cost are not considered troubleshooting.
+- Troubleshooting should not be the centre of operations. What can be troubleshot, and how, should be planned as part of the architecture. Document what can go wrong, how it is detected, how it is remediated. Unplanned incident gets added to the architecture.
 - An expert team troubleshoots. The same team sets the thresholds the Level 1 team uses.
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
-- An incident means something is dead, slow or breached. Availability, performance and security are troubleshot. Capacity and cost are not.
-- The aim is why, and a fix that prevents the next incident, not only the facts.
+- Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
+- Root Cause Analysis is mandatory to ensure future problem is detected promptly. Ideally it comes with a fix that prevents the next incident, not only setting up alerts to detect.
 - Order of the daily health check, each morning for the VMware administrator to review: availability, then performance, then security.
   - Availability: soft errors, vMotion stun time, lock-ups. Usually needs VCF Operations for logs.
   - Performance: contention is part of performance, its primary metric type.
@@ -38,13 +47,7 @@
 ![The book's earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the order above](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
 - VM-level flow: `sp5-framework/performance/troubleshooting/vm-slow`.
 
-## Primary and secondary metrics
-- Layer the troubleshooting metrics, events and properties so a less technical team can use them.
-- Primary metric: defines performance; the what. Always 0-100%, usually a hybrid of several metrics. Example: Kubernetes Cluster Performance (%).
-- Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
-- A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
-
-## First incident: forgivable once
+### First incident: forgivable once
 - The first time an issue happens: troubleshoot, write the RCA, set up an alert.
 - The second time: the same problem is known within minutes; a similar one is understood within an hour.
 - Process maturity:
@@ -52,12 +55,12 @@
   - optimized: KPI red or complaint → big picture on a shared dashboard → joint analysis with shared tools → RCA report → alert set up in VCF Operations;
   - ideal: early warning → preventive action → optimization.
 
-## Root cause analysis
+### Root cause analysis
 - The most important content of an RCA report is the corrective action that prevents a repeat, above all the alerts that flag signs of recurrence. Without them the issue cannot be caught before it returns.
 - The root cause often differs from the symptom: another object, a message that looks unrelated. It usually starts as a log message that never became an alarm in the UI.
 - An alert from a log message must not give false positives. Validate it before setting it up.
 
-## Validating a log message before alerting on it
+### Validating a log message before alerting on it
 - Example: VDI mass disconnect, more than 100 users at the same moment.
   - vmware.log: GuestRpc to the VDI agent timed out; second ping timeout, app assumed down.
   - vmkernel log, 0.4 s earlier: resuming traffic on DV port.

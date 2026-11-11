@@ -47,6 +47,8 @@ Started by a known problem: a complaint, an alert, or a failed health check step
 | Symptom | File |
 |---|---|
 | Users say the VM is slow | [`sp5-framework/performance/troubleshooting/vm-slow`](knowledge/sp5-framework/performance/troubleshooting/vm-slow.md) |
+| Windows is slow (step 1 of VM slow) | [`guest-os/system/troubleshooting/ms-windows-slow`](knowledge/guest-os/system/troubleshooting/ms-windows-slow.md) |
+| Linux is slow (step 1 of VM slow) | [`guest-os/system/troubleshooting/linux-os-slow`](knowledge/guest-os/system/troubleshooting/linux-os-slow.md) |
 | VM CPU Contention or Latency is high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
 | VM CPU Other Wait is high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | VM CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](knowledge/vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |

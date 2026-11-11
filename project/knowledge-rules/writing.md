@@ -68,4 +68,6 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 - Before writing from a vendor document, check that it is the current version and read its revision date; record version and revision in `source.document`.
 - A file written from an older version gets a `review_notes` line naming the newer version, and is re-checked before `status: reviewed`.
 - The author's book is cited as "Private Cloud Management by Iwan Rahabok (https://isvara.io/download)" in `source.document`, with the heading path in `source.path`. The working files in `project/sources/` (Part 1, 2, 3) are not named in `knowledge/`, and their page numbers are not used: Agent E2 knows the book, not its parts.
+- Theory and practice: theoretical advice covers the technology itself (Windows, Linux, Kubernetes), not only what VMware Tools or VCF Operations collects; practical advice states what each product can and cannot do (for example, which Guest OS counters VMware Tools collects).
+- Oldest release covered: no knowledge about outdated releases; Linux starts at 5.0. Keep the knowledge base compact.
 - `project/sources/` is read-only.

@@ -13,7 +13,7 @@
 
 ## Memory
 - Too many size variants.
-- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB per vCPU, so 64 cores with 128 threads take 512 GB (1 vCPU per thread).
+- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB of VM RAM per vCPU, so 64 cores with 128 threads maps to 512 GB (1 vCPU per thread).
 - Large pages: keep them on when performance matters more than memory savings.
 
 ## Power management
@@ -30,7 +30,7 @@
 - Unused devices (DVD-ROM, USB) not disabled.
 
 ## Capacity
-- A small host limits large VMs. A 2-socket, 32-core, 128 GB host can run a 30-vCPU, 100 GB VM, but the VM spans NUMA nodes.
+- A small host limits large VMs. A 2-socket, 32-core, 64 threads, 128 GB host can run a 30-vCPU, 100 GB VM, but the VM spans NUMA nodes.
 - Low core count limits large VMs.
 - Low memory and low network capacity: size them with vSAN ESA and NSX included.
 - Too many variants of all of the above.
