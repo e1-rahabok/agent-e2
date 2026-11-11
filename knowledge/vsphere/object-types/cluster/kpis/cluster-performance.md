@@ -8,14 +8,10 @@
 - Leading indicator of how close the cluster is to contention: `vsphere/object-types/cluster/models/cluster-risk`. Ballooning and swapping are scored there, not here.
 
 ## Design
-- Not the average of VM KPIs. A cluster serves VMs: guest contention matters little to it; ESXi physical network matters to it but not to a VM.
-- Two questions about the powered-on VMs of the cluster:
-  - How deep? The worst VM. Shows a problem that hits one VM hard.
-  - How broad? The 90th percentile across the VMs. Shows a problem that many VMs have.
-- Aggregate directly from VMs, not from hosts first: two-level aggregation misrepresents the VM population. Drill to hosts only when troubleshooting.
-- Breadth uses the 90th percentile: the average reacts too late; the 95th percentile suffers from host imbalance.
-- VM stats are 20-second peaks, not 5-minute averages, to catch short bursts. That makes the KPI a leading indicator. Limitation: outliers, for example one VM with a limit in a large cluster; the worst-VM rows have higher limits than the 90th-percentile rows for that reason.
+- Depth (the worst VM) and breadth (the 90th percentile) of the contention of the cluster's powered-on VMs, aggregated directly from the VMs, with VM stats at their 20-second peaks. Why this design, and why not the average of the VM KPIs: `sp5-framework/performance/performance-kpi-design`, section Depth and breadth.
+- Drill to hosts only when troubleshooting.
 - One ESXi row: the physical network matters to the cluster, not to a VM.
+- Limitation: outliers, for example one VM with a limit in a large cluster; the worst-VM rows have higher limits than the 90th-percentile rows for that reason.
 
 ## Thresholds
 - Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
@@ -95,6 +91,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- sp5-framework/performance/performance-management
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
 - vsphere/object-types/vm/kpis/vm-performance
 images:

@@ -1,11 +1,5 @@
 # KPI vs SLA
 
-## KPI means performance
-- In this knowledge base KPI is strictly about performance: "performance" has a specific meaning in enterprise IT infrastructure.
-- While capacity and availability can impact performance, they should not be mixed up. One name per pillar keeps monitoring unambiguous.
-- A KPI is one metric that quantifies the true performance of a logical entity.
-- A KPI is a baseline, the standard expectation maintained with effort, not a target still to reach. Provider and consumer each have their own KPI. The ideal, an ESXi host at 100% while no VM sees contention, is not realistic.
-
 ## The KPI is enough
 - Performance monitoring and troubleshooting use the KPI only. No performance SLA, no SLI, no SLO.
 - The SLA is a business contract between two parties (`sp5-framework/concepts/sla-metrics`). It is not an operations metric.
@@ -36,15 +30,12 @@
 - Reference:
   - KPI: reality, the absolute value: how bad. A score of 75% for one 5-minute interval on a development VM is acceptable; it is not a contract with a penalty.
   - SLA: relative to an agreed number, near 100%.
-- Two numbers each KPI has:
-  - actual: volatile, per object (the VM's score);
-  - target: steady, for many objects. One set of levels and one target for every VM: the KPI is never per class of service. A Gold VM still tends to score higher than a Silver VM, because its design (less overcommit) causes less contention.
-  - Daily KPI actual: the 99th percentile of the day's 288 scores, the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
+- Target and actual, and how a daily actual is read: `sp5-framework/performance/performance-kpi-design`, section Reading a KPI over time.
 - Cadence: KPI daily, in a technical meeting; a month is far too late. SLA monthly, in a business meeting.
 - Timing: KPI is a leading indicator, 5-minute window, 20-second accuracy, more metrics and events: the start of troubleshooting, before a complaint. An SLA is lagging, 30 days back.
 - Period: KPI is based on day, not date: a rolling window (last 1 hour), like live operations. An SLA uses a fixed calendar month.
 - KPIs fit when the infrastructure team owns VM sizing. Sizing the VM is sizing the Guest OS, so the team answers for Windows and Linux metrics too.
-- A KPI is colour coded (green, yellow, orange, red) so the reader reacts before the situation degrades. Scoring: `sp5-framework/performance/performance-kpi-design`.
+- A KPI is colour coded (green, yellow, orange, red) so the reader reacts before the situation degrades. What a KPI is, its design and scoring: `sp5-framework/performance/performance-kpi-design`.
 - KPIs per layer:
   - business (line of business): business metrics (transaction volume, concurrent customers) and IT metrics (page response time, error rate);
   - application (IT developers): custom code and packaged ISV software, such as web server, application server and database KPIs;
@@ -62,10 +53,7 @@
 - "Our performance SLA is met, so there is no performance problem" → ask which metric, object, target and window. Usually there is none, or it is on the wrong object. Read the KPI.
 - "Our SLA is Cluster Availability" → the application team cares about its VMs and pods, not the cluster. A cluster number hides the VM that was down.
 - "Track an SLI or SLO as the leading indicator" → the KPI is the leading indicator: 20-second accuracy, colour levels, alerts on it.
-- "The KPI target is higher for Gold" → the KPI has no class of service. Gold scores higher because it has less contention by design.
-- "A KPI of 75% is a failure" → one 5-minute score of 75% on a development VM is acceptable; the KPI is not a contract with a penalty.
 - "Cluster performance KPI includes host utilization" → it includes only the contention of the running VMs.
-- "KPI means any key indicator, availability included" → KPI is performance only: the P is performance. Availability has KAI (key availability indicator); security, compliance included, has KSI (key security indicator). In daily speech users say availability KPI, business KPI or marketing KPI for any key indicator: translate by the pillar it measures.
 
 ## Metadata
 
@@ -89,6 +77,7 @@ object:
 internal_derive:
 - sp5-framework/performance/performance-kpi-design
 related:
+- sp5-framework/performance/performance-management
 - sp5-framework/concepts/sla-metrics
 - vsphere/object-types/cluster/kpis/cluster-performance
 - vsphere/object-types/vm/kpis/vm-performance

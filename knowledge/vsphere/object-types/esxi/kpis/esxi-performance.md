@@ -8,11 +8,7 @@
 - Use: the first step of the ESXi health check (`vsphere/object-types/esxi/health-check/esxi-health-check`). When the score drops, open the 9 sub-metrics of that host.
 
 ## Design
-- Same 9 sub-metrics and the same limits as Cluster Performance (`vsphere/object-types/cluster/kpis/cluster-performance`), measured over the VMs of one host instead of the whole cluster.
-- Two questions about the powered-on VMs on the host:
-  - How deep? The worst VM. Shows a problem that hits one VM hard.
-  - How broad? The 90th percentile across the VMs. Shows a problem that many VMs on the host have.
-- VM stats are 20-second peaks, not 5-minute averages, to catch short bursts.
+- Same 9 sub-metrics and the same limits as Cluster Performance (`vsphere/object-types/cluster/kpis/cluster-performance`), measured over the VMs of one host instead of the whole cluster: depth (the worst VM) and breadth (the 90th percentile), at 20-second peaks (`sp5-framework/performance/performance-kpi-design`, section Depth and breadth).
 - A VM belongs to the host named in its `summary|parentHost` property; it counts only when `summary|runtime|powerState` is Powered On.
 
 ## Thresholds
@@ -70,6 +66,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- sp5-framework/performance/performance-management
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - vsphere/object-types/vm/kpis/vm-performance
 - vsphere/architecture/provider-consumer

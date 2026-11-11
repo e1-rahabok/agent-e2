@@ -49,10 +49,10 @@ kpi:
 - {object: HostSystem, metric: "ESXi (error + dropped) network packets (%)", group: "ESXi", direction: above, 5m: [0, 0.2, 0.4], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/esxi/kpis/esxi-performance}
 - {object: VirtualMachine, metric: "Peak CPU Co-stop among any vCPU (%)", group: "VM contention", direction: above, 5m: null, 20s: [1, 2, 4], 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
 - {object: VirtualMachine, metric: "Peak CPU Ready among any vCPU (%)", group: "VM contention", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
-- {object: VirtualMachine, metric: "Peak CPU Overlap (%)", group: "VM contention", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
+- {object: VirtualMachine, metric: "Peak CPU Overlap (%)", group: "VM contention", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, excluded_when_green: true, kb: vsphere/object-types/vm/kpis/vm-performance}
 - {object: VirtualMachine, metric: "Peak RAM Contention (%)", group: "VM contention", direction: above, 5m: null, 20s: [0.5, 1, 2], 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
 - {object: VirtualMachine, metric: "Peak read/write latency among vDisks (ms)", group: "VM contention", direction: above, 5m: null, 20s: [10, 20, 40], 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
-- {object: VirtualMachine, metric: "Peak network TX dropped packets (%)", group: "VM contention", direction: above, 5m: null, 20s: [0.25, 0.5, 1], 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
-- {object: VirtualMachine, metric: "CPU Net Run (%)", group: "VM utilization", direction: above, 5m: [95, 97, 99], 20s: null, 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
+- {object: VirtualMachine, metric: "Peak network TX dropped packets (%)", group: "VM contention", direction: above, 5m: null, 20s: [0, 0.5, 1], 2s: null, excluded_when_green: true, kb: vsphere/object-types/vm/kpis/vm-performance}
+- {object: VirtualMachine, metric: "CPU Net Run (%)", group: "VM utilization", direction: above, 5m: [95, 97, 99], 20s: null, 2s: null, excluded_when_green: true, kb: vsphere/object-types/vm/kpis/vm-performance}
 - {object: VirtualMachine, metric: "VM Memory Ballooned (%)", group: "IaaS high utilization", direction: above, 5m: [2, 4, 8], 20s: null, 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
 - {object: VirtualMachine, metric: "VM Memory Compressed + Swapped (%)", group: "IaaS high utilization", direction: above, 5m: [0.25, 0.5, 1], 20s: null, 2s: null, kb: vsphere/object-types/vm/kpis/vm-performance}
