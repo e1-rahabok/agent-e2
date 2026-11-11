@@ -17,9 +17,9 @@
 ## Generic guideline
 | Tier | Price | CPU overcommit | Performance penalty |
 |---|---|---|---|
-| 1 Gold | 1.00x | 1:1 | none |
-| 2 Silver | 0.50x | 2:1 | 5% |
-| 3 Bronze | 0.25x | 3:1 | 10% |
+| 1 Gold | 1.00x | 1:1 | lowest |
+| 2 Silver | 0.50x | 2:1 | around 2x relatively |
+| 3 Bronze | 0.33x | 3:1 | around 3x relatively |
 | 4 Free | 0 | maximum | no SLA |
 
 - Gold: performance guarantee for latency-sensitive, mission-critical applications. The guarantee is not literal for CPU: VM CPU Ready never reads 0.00%, even with no contention.
@@ -50,7 +50,7 @@
 | Price | 2x | 1x | Gold is priced 2x Silver |
 | Overcommit | CPU 1:1, RAM 1:1 | CPU 2:1, RAM 1.5:1 | Twice as many consumers in Silver (CPU) |
 | Availability SLA | 99.975% | 99.950% | Gold: half the downtime |
-| Compliance SLA | 100% | 100% | Perfect compliance for every class |
+| Security SLA | 100% | 100% | Perfect compliance for every class |
 
 - The SLA is the hard product, what is paid for, like the seat in an airline. Support, reports and backup are soft products.
 - Customers do not care about SSD type or memory brand; they buy the SLA.
