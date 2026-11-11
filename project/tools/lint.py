@@ -40,7 +40,11 @@ def main():
     EXEMPT_WORDS = {'knowledge/glossary.md'}  # defines the avoided words
     for f, (fm, body) in docs.items():
         expected = f[len('knowledge/'):-3]
-        if fm.get('id') != expected:
+        if f.endswith('/README.md'):  # a folder's main file: README.md opens on GitHub; its id keeps a descriptive name
+            if not (str(fm.get('id', '')).startswith(expected[:-len('README')]) and '/' not in fm['id'][len(expected) - len('README'):]
+                    and not fm['id'].endswith('/README')):
+                bad(f, f'id "{fm.get("id")}" of a README.md must be "{expected[:-len("README")]}<descriptive-name>"')
+        elif fm.get('id') != expected:
             bad(f, f'id "{fm.get("id")}" does not match path "{expected}"')
         for k in REQUIRED:
             if k not in fm: bad(f, f'missing field "{k}"')

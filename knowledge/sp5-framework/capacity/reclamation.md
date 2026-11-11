@@ -4,7 +4,7 @@
 
 - When VMs are free of charge, the infrastructure team have the right to reclaim.
 - When VMs are charged and are the main source of the IT budget, the application team owns VM cost; the infrastructure team has no authority to reclaim. Stocktake still applies to internal IT with chargeback ([`sp5-framework/capacity/unused-vm`](unused-vm.md), section Annual stocktake).
-- Reclamation is step 3 of the six steps ([`sp5-framework/capacity/capacity-management`](capacity-management.md)).
+- Reclamation is step 3 of the six steps ([`sp5-framework/capacity/capacity-management`](README.md)).
 - With VMs free of charge, the infrastructure team still should not force internal customers to cut consumption: developers outnumber administrators. Show the CFO the cost of waste. The CFO holds the hardware budget and makes each line of business optimize.
 
 ## Five areas, easiest to hardest

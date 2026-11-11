@@ -1288,7 +1288,7 @@ Each entry has:
 
 ### Q115 · Part 1 > Capacity Management > "Good" Advice · Why each statement is wrong
 
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md) (section Traps).
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Traps), [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/README.md) (section Traps).
 - Search 1: "Memory Active should not exceed 50-60%"
 - Search 2: "Memory should be running at high state"
 - Question: the book lists 9 statements as wrong but does not say why. Claude wrote one reason per statement as a trap. Confirm or correct each:
@@ -1307,7 +1307,7 @@ Each entry has:
 
 ### Q114 · Part 1 > Capacity Management > Stages and Capacity Model · Book text fixes
 
-- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-management.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Files: [Capacity management: demand, supply, phases and planning inputs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/README.md), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
 - Search 1: "e first place, by using progressive pricing"
 - Search 2: "They need to be reviewed as complimentary"
 - Search 3: "measured againsts usable"

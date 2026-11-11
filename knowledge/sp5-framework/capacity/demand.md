@@ -23,7 +23,7 @@
 
 ### Overcommit: several classes (Mix)
 
-- Planning uses utilization, allocation and reservation; running uses share. What each stage uses and why: [`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages.
+- Planning uses utilization, allocation and reservation; running uses share. What each stage uses and why: [`sp5-framework/capacity/capacity-management`](README.md), section Two stages.
 - Price per class follows the overcommit ratio ([`sp5-framework/capacity/overcommit`](overcommit.md), section Ratio and price).
 - Most common case: overcommit, mixed classes, VMs given for free (no chargeback). Common because of limited budget and physical constraints, not because it is the design.
 - The design is one class per cluster: shares and reservations inside one cluster give no predictable difference between classes ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), section Compute and storage design). Mixed classes are a compromise to plan and run with care.

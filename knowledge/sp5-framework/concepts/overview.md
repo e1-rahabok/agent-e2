@@ -62,11 +62,11 @@
 - The most important pillar in day-to-day operations. With HA designed in, part of the system can be down with no impact on performance or capacity.
 - Often confused with capacity: more work done is read as good performance. That reading makes idle look like poor performance.
 - The primary metric is contention. No contention, no performance problem. A common cause of contention: utilization reaching capacity or a limit. Details: [`sp5-framework/concepts/performance-vs-capacity`](performance-vs-capacity.md).
-- Its boundary with the peer pillars, its two processes (monitoring with KPIs, troubleshooting), its KPIs and where each question is answered: [`sp5-framework/performance/performance-management`](../performance/performance-management.md).
+- Its boundary with the peer pillars, its two processes (monitoring with KPIs, troubleshooting), its KPIs and where each question is answered: [`sp5-framework/performance/performance-management`](../performance/README.md).
 
 ## Capacity
 
-- Quantity: is there enough supply for the demand to come? Its two stages (planning, running), its horizons (short term: stop provisioning; long term: buy hardware), its boundary with the peer pillars and where each question is answered: [`sp5-framework/capacity/capacity-management`](../capacity/capacity-management.md).
+- Quantity: is there enough supply for the demand to come? Its two stages (planning, running), its horizons (short term: stop provisioning; long term: buy hardware), its boundary with the peer pillars and where each question is answered: [`sp5-framework/capacity/capacity-management`](../capacity/README.md).
 - Short-term capacity and performance depend on each other, which is why they are confused. A cluster that cannot serve its current demand is full, whatever its utilization: stop adding workload until the cause is known.
 - How reservation, commitment, allocation, share and utilization feed the pillars:
   - share → contention (quality of service); utilization causes contention; contention → performance;

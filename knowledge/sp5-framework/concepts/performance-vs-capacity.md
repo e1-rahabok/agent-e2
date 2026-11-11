@@ -1,7 +1,7 @@
 # Performance vs capacity
 
 ## Two pillars, two questions
-- Each pillar has its main file: [`sp5-framework/performance/performance-management`](../performance/performance-management.md), [`sp5-framework/capacity/capacity-management`](../capacity/capacity-management.md). This file holds where they meet.
+- Each pillar has its main file: [`sp5-framework/performance/performance-management`](../performance/README.md), [`sp5-framework/capacity/capacity-management`](../capacity/README.md). This file holds where they meet.
 - Performance: quality, speed. Are the consumers served well now?
 - Capacity: quantity, space. Is there enough supply for the demand to come?
 - They are intertwined:
