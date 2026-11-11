@@ -90,35 +90,6 @@ Each entry has:
   - For you: confirm the rule.
 - Answer:
 
-### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
-
-- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
-- Search 1: "If 1 CPU typically uses 4 GB RAM, then a 64-core ESXi host will only need 256 GB."
-- Search 2: "If you buy a 64-core ESXi, you have 56 cores left and you will be able to sell 224 vCPU."
-- Search 3: "For Silver, you plan to overcommit 4:1 for CPU and 2:1 for memory."
-- Search 4: "I’ve seen multiple customers having 32-node production clusters running 1K – 2K VMs."
-- Question:
-  - (a) Basis. Your Q079 answer: overcommit is per physical thread. Silver here is 4:1 per core (56 cores × 4 = 224 vCPU), which is 2:1 per thread. If Silver is meant as 4:1 per thread: 112 threads × 4 = 448 vCPU, 448 × 4 GB / 2 + 64 = 960 GB. Which is meant?
-  - (b) Gold keeps no cores or RAM for vSAN, NSX and replication; Silver keeps 8 cores and 64 GB. With the same share, Gold is 56 vCPU and 224 + 64 = 288 GB. Should Gold keep the share too? And is Gold 1 vCPU per core (as here) or per thread?
-  - (c) Silver memory overcommit is 2:1 here and 1.5:1 in the Noisy Neighbour table. Keep both as examples, or align them?
-  - (d) The 32-node clusters with 1,000-2,000 VMs: a counter-example to the cap of 300 VMs per cluster failure?
-- Written as now: the book's numbers, with the basis stated (4:1 per core = 2:1 per thread); Gold with the share shown as Claude's arithmetic; both memory ratios kept as examples; (d) stated without a verdict.
-- Proposed answer ((a) settled by Q079, Q115 e, Q151; (b)-(d) expert call):
-  - (a) Per thread. Keep the arithmetic, restate the ratio: 56 cores = 112 threads × 2:1 = 224 vCPU. 4:1 per core is 2:1 per thread.
-  - (b) Gold keeps the share: vSAN, NSX, replication and kernel IO run on every host. Gold is 1:1 per thread: 112 vCPU × 4 GB + 64 GB = 512 GB. Gold's protection is the reservation and the low expected Thread Utilization, not one vCPU per core. Drop 256 GB (per core, no share).
-  - (c) Align. This Silver is the non-production class ("Silver: suitable for non-production workloads"); its 4:1 per core and 2:1 memory are the capacity plan's Bronze. Same host (64 cores, 128 threads), share kept:
-    - Gold (CPU 1:1, RAM 1:1): 112 vCPU, 512 GB.
-    - Silver (2:1, 1.5:1): 224 vCPU, 661 GB.
-    - Bronze (4:1, 2:1): 448 vCPU, 960 GB.
-  - (d) Not a counter-example: 300 VMs per cluster failure is an example value, not a rule. 1,000-2,000 VMs per cluster means no blast-radius limit, traded for a smaller HA share (1 host in 32, not 1 in 5). At about 74 VMs per host (the 32-host, 2,357-VM cluster in cluster-utilization-vs-contention), a 300 cap means about 4 + 1 hosts. State the trade-off.
-  - Change if accepted: host-spec-from-class-of-service (per thread; the three-class list replaces the per-core examples; remove "(book example)" and "The book picks", Q159); purpose-driven-architecture Example 2 (trade-off line).
-  - For you: nothing.
-- Partly settled by the author's edit (2026-11-11): host-spec-from-class-of-service now states overcommit per physical thread ((a)), and the noisy-neighbour memory table is removed ((c) no longer applies). Still open: (b) whether Gold keeps the infrastructure share; (d).
-- Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread.
-- Partly settled by the author's working model (Capacity Planning Stage.xlsx, 2026-11-11): (b) every class keeps the infrastructure share: hypervisor overhead (14 threads, 64 GB on a 64-core, 768 GB host) is subtracted per ESXi host before any class. Still open: (d).
-- Settled 2026-11-11: (a), (b), (c) (memory ratios from the spreadsheet: 1:1, 1.2:1, 1.4:1). Still open: (d).
-- Answer:
-
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
 
 - Files: [Alerts, symptoms and insights: why alert-driven operations stay reactive](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/alerts-and-insights.md) (section Prevention window); [Cluster SLA and SLI, archived 2026-11-11](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/knowledge/cluster-sla-sli.md); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
@@ -664,7 +635,7 @@ Each entry has:
   - (a) Reservation shares: Gold 50%, Silver 25%, Bronze 12.5% CPU and 100%, 50%, 25% memory (the spreadsheet: "Gold VM is entitled to 4x reservation than Bronze") step 4x, 2x, 1x; the diagram says 3x, 2x, 1x.
   - (b) Maximum VM size: vm-size gives 1.0, 0.5 and 0.33 × logical CPUs at 1:1, 2:1, 3:1, which is 3x, 1.5x, 1x; the diagram says Silver 2x. The spreadsheet's typical VM (16, 8, 4 vCPU) steps 4x, 2x, 1x, but that is the average VM, not the maximum.
   - (c) Minimum VM Performance (%): 99.5%, 99%, 98% leave unmet demand of 0.5%, 1%, 2%, a 4x step; the diagram's contention steps 3x (Bronze 98.5% would match).
-  - (d) The class planning values image still shows Bronze CPU 4:1 and memory 1.5:1 and 2:1 (recorded in corrections).
+  - (d) Done 2026-11-11: the class planning values image is replaced with the spreadsheet values (typical VM, reservation, allocation, expected concurrent peak).
   - (e) Sample offering: the row is now "Security SLA 100%, perfect compliance for every class", while the Recommended SLA table keeps Compliance at 99.95% and says 100% allows no failed interval. Security and compliance are different pillars in the glossary.
 - Question: which values win for (a), (b), (c); will you update the image (d); is (e) a Compliance SLA or a Security SLA, and at which number?
 - Proposed answer (expert call): (a) keep 50%, 25%, 12.5% and 100%, 50%, 25%: the spreadsheet uses them and a reservation protects against starvation, not in step with the ratio; relabel the diagram row 4x, 2x, 1x. (b) vm-size wins (1.0, 0.5, 0.33): it follows the overcommit; the diagram row reads 3x, 1.5x, 1x. (c) Bronze 98.5%, so the minimum steps with contention. (d) yes. (e) Compliance SLA at 99.95%, as in the table; a security SLA has no measurable number.
@@ -672,6 +643,35 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
+
+- Files: [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md); [Purpose-driven architecture: Day 2 first, business context, automation last, two sides of VCF](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/purpose-driven-architecture.md) (section Day 2 → Day 0 → Day 1); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (sections Avoiding it, Maximum VM size).
+- Search 1: "If 1 CPU typically uses 4 GB RAM, then a 64-core ESXi host will only need 256 GB."
+- Search 2: "If you buy a 64-core ESXi, you have 56 cores left and you will be able to sell 224 vCPU."
+- Search 3: "For Silver, you plan to overcommit 4:1 for CPU and 2:1 for memory."
+- Search 4: "I’ve seen multiple customers having 32-node production clusters running 1K – 2K VMs."
+- Question:
+  - (a) Basis. Your Q079 answer: overcommit is per physical thread. Silver here is 4:1 per core (56 cores × 4 = 224 vCPU), which is 2:1 per thread. If Silver is meant as 4:1 per thread: 112 threads × 4 = 448 vCPU, 448 × 4 GB / 2 + 64 = 960 GB. Which is meant?
+  - (b) Gold keeps no cores or RAM for vSAN, NSX and replication; Silver keeps 8 cores and 64 GB. With the same share, Gold is 56 vCPU and 224 + 64 = 288 GB. Should Gold keep the share too? And is Gold 1 vCPU per core (as here) or per thread?
+  - (c) Silver memory overcommit is 2:1 here and 1.5:1 in the Noisy Neighbour table. Keep both as examples, or align them?
+  - (d) The 32-node clusters with 1,000-2,000 VMs: a counter-example to the cap of 300 VMs per cluster failure?
+- Written as now: the book's numbers, with the basis stated (4:1 per core = 2:1 per thread); Gold with the share shown as Claude's arithmetic; both memory ratios kept as examples; (d) stated without a verdict.
+- Proposed answer ((a) settled by Q079, Q115 e, Q151; (b)-(d) expert call):
+  - (a) Per thread. Keep the arithmetic, restate the ratio: 56 cores = 112 threads × 2:1 = 224 vCPU. 4:1 per core is 2:1 per thread.
+  - (b) Gold keeps the share: vSAN, NSX, replication and kernel IO run on every host. Gold is 1:1 per thread: 112 vCPU × 4 GB + 64 GB = 512 GB. Gold's protection is the reservation and the low expected Thread Utilization, not one vCPU per core. Drop 256 GB (per core, no share).
+  - (c) Align. This Silver is the non-production class ("Silver: suitable for non-production workloads"); its 4:1 per core and 2:1 memory are the capacity plan's Bronze. Same host (64 cores, 128 threads), share kept:
+    - Gold (CPU 1:1, RAM 1:1): 112 vCPU, 512 GB.
+    - Silver (2:1, 1.5:1): 224 vCPU, 661 GB.
+    - Bronze (4:1, 2:1): 448 vCPU, 960 GB.
+  - (d) Not a counter-example: 300 VMs per cluster failure is an example value, not a rule. 1,000-2,000 VMs per cluster means no blast-radius limit, traded for a smaller HA share (1 host in 32, not 1 in 5). At about 74 VMs per host (the 32-host, 2,357-VM cluster in cluster-utilization-vs-contention), a 300 cap means about 4 + 1 hosts. State the trade-off.
+  - Change if accepted: host-spec-from-class-of-service (per thread; the three-class list replaces the per-core examples; remove "(book example)" and "The book picks", Q159); purpose-driven-architecture Example 2 (trade-off line).
+  - For you: nothing.
+- Partly settled by the author's edit (2026-11-11): host-spec-from-class-of-service now states overcommit per physical thread ((a)), and the noisy-neighbour memory table is removed ((c) no longer applies). Still open: (b) whether Gold keeps the infrastructure share; (d).
+- Partly settled (author, 2026-11-11): CPU overcommit per class is final: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread.
+- Partly settled by the author's working model (Capacity Planning Stage.xlsx, 2026-11-11): (b) every class keeps the infrastructure share: hypervisor overhead (14 threads, 64 GB on a 64-core, 768 GB host) is subtracted per ESXi host before any class. Still open: (d).
+- Settled 2026-11-11: (a), (b), (c) (memory ratios from the spreadsheet: 1:1, 1.2:1, 1.4:1).
+- Answer: (d) settled by the author's edit of purpose-driven-architecture (2026-11-11): the cap is a policy, not a rule. One cluster failure may affect at most N mission-critical VMs; the architecture states N, because a cluster can host thousands of VMs. Closed.
 
 ### Q099 · Part 1 > Service Level Agreement > Price & SLA · Silver ratios, notation and the 64-core licence
 
