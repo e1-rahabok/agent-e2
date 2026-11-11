@@ -21,7 +21,6 @@
 | Vendor | Commercial software sizing; no support if changed |
 | Micro burst | CPU bursts of a few seconds vanish in 20-second averages |
 
-- Public cloud providers have no oversizing problem to fight: oversized instances earn them a higher margin.
 
 ## Oversized is relative
 

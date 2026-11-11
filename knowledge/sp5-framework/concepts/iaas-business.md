@@ -64,7 +64,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 - Troubleshooting pulls in every team (network, storage, server, OS, application). No shared process ends in a root cause analysis (RCA).
 - An RCA closes only when an alert is set up that detects the same issue earlier next time.
 - Many oversized VMs. The team works as a system builder: it sizes each application and argues with its owners, who are its customers.
-- A service provider does not block a purchase. It prices so that the right behaviour pays. A public cloud sells a 40-vCPU instance to a team whose job runs on 2. Why rightsizing still matters: `sp5-framework/capacity/rightsizing`.
+- A service provider does not block a purchase. It prices so that the right behaviour pays. Why rightsizing still matters: `sp5-framework/capacity/rightsizing`.
 - New hardware cannot be justified while utilization is low. Capacity is measured on utilization and performance: a cluster is full when it cannot serve its VMs well. Hardware takes time to buy, so contention must give early warning (`sp5-framework/concepts/performance-vs-capacity`).
 
 ## Common mistakes
