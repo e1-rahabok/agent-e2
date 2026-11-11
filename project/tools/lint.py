@@ -6,7 +6,7 @@ import glob, os, re, sys, yaml
 
 HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
 sys.path.insert(0, HARNESS)
-from kb import split  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
+from kb import split, NOT_INDEXED  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
 
 # Old id -> current id for moved knowledge files. A repository tool, not product: the harness never reads it.
 MOVED_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'moved.yaml')
@@ -28,7 +28,7 @@ def main():
     def bad(path, msg): problems.append(f'{path}: {msg}')
     linked_images = set()
 
-    files = [f for f in sorted(glob.glob('knowledge/**/*.md', recursive=True))]
+    files = [f for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)) if f not in NOT_INDEXED]  # up-front text: checked in check_terms
     docs = {}
     for f in files:
         fm, body = split(f)
@@ -259,9 +259,9 @@ def check_terminology(docs, bad):
             if t.lower() in seen: bad(g, f'term "{t}" has two entries')
             seen.add(t.lower())
             if e['file'] and e['file'] not in docs: bad(g, f'term "{t}": File {e["file"]} is not a knowledge id')
-    m = os.path.join(HARNESS, 'misreadings.md')
+    m = os.path.join('knowledge', 'misreadings.md')
     for ref in re.findall(r'See `([^`]+)`', open(m).read()):
-        if ref not in docs: bad('harness/misreadings.md', f'See `{ref}` is not a knowledge id')
+        if ref not in docs: bad('knowledge/misreadings.md', f'See `{ref}` is not a knowledge id')
 
 
 def check_moved(ids, bad):

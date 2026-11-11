@@ -45,7 +45,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 | # | Block | Content | Built from |
 |---|---|---|---|
 | 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids (folders) |
-| 2 | Level 300 misreadings (`harness/misreadings.md`) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | `harness/misreadings.md`, the lines under its first heading |
+| 2 | Level 300 misreadings (`knowledge/misreadings.md`) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | `knowledge/misreadings.md`, the lines under its first heading |
 | 3 | Confusable terms | 17 pairs that pass the tests of `KNOWLEDGE-ENGINEERING.md`, section 11.2: Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; KPI, SLA, SLI and model; alert and insight | `knowledge/glossary.md`, lines Not to confuse with |
 | 4 | Flow index by kind | One line per flow file: its name and id, grouped as health check (object), troubleshooting (symptom), decision tree (question) | `health-check/`, `troubleshooting/` and `decision-tree/` files |
 | 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |

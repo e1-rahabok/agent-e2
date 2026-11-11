@@ -2,7 +2,7 @@
 
 Each block is generated from the knowledge base at start, so it cannot drift from it:
   map        what each area holds, what each file kind answers, which tool serves it (from ids and retriever_guide)
-  rules      Level 300 misreadings and their corrections (harness/misreadings.md)
+  rules      Level 300 misreadings and their corrections (knowledge/misreadings.md)
   terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
   flows      flow index by kind (every health-check, troubleshooting and decision-tree file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
@@ -15,7 +15,7 @@ from collections import Counter, defaultdict
 
 BLOCKS = ('map', 'rules', 'terms', 'flows', 'procedure')
 BUDGET_TOKENS = 3000          # all five blocks together; lint checks it
-MISREADINGS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'misreadings.md')
+MISREADINGS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge', 'misreadings.md')
 
 KINDS = {  # folder kind -> what it answers and which tool serves it
     'concepts': ('how it works, why a value behaves so', 'search, read_file'),
@@ -68,7 +68,7 @@ def map_block(docs):
 
 
 def rules_block(docs):
-    """The bullet lines of harness/misreadings.md under its first '## ' heading, whatever that heading says."""
+    """The bullet lines of knowledge/misreadings.md under its first '## ' heading, whatever that heading says."""
     if not os.path.exists(MISREADINGS):
         return ''
     with open(MISREADINGS) as f:

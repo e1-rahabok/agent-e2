@@ -94,7 +94,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Flows: health checks, troubleshooting, decision trees | The expert's order of checks and the branch at each step: the what (health check of one object), the why (troubleshooting), the choice to act (decision tree) | `health-check/`, `troubleshooting/` and `decision-tree/` files |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb, esxtop state sums) | `harness/calc.py`, formulas in files |
 | Images with text twins | The author's diagrams and charts | `images/` folders |
-| Terminology | The agent's vocabulary: one entry per concept, with its other names and the term it is confused with (section 11.2). Wrong beliefs: `harness/misreadings.md`. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
+| Terminology | The agent's vocabulary: one entry per concept, with its other names and the term it is confused with (section 11.2). Wrong beliefs: `knowledge/misreadings.md`. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
 | Provenance | Source document and version, what is still to check, status | metadata |
 | Rules as code | Architecture and writing rules, checked before merge (project, not deployed) | `project/tools/lint.py`, `project/tools/tags.yaml` |
 | Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` |
@@ -179,20 +179,20 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 ## 5. Where the knowledge lives
 
 ### 5.1 Across the product
-- Agent E2 is purpose-built: its domain knowledge is not only in `knowledge/`. The harness and the agent's instructions carry VMware knowledge too. All of it is product, deployed to the site, and all of it is reviewed by the author.
+- Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is product, deployed to the site, and all of it is reviewed by the author.
 - The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:
 
 | Path | Holds | Home | Why this path |
 |---|---|---|---|
 | Retrieved when a question needs it | Mechanisms, metrics, traps, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
-| Given up front, every question | Misreadings, confusable pairs, flow index, map | `harness/misreadings.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
+| Given up front, every question | Misreadings, confusable pairs, flow index, map | `knowledge/misreadings.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
 | Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
 | Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | `harness/modes.py` (system prompts), `harness/primer.py` (procedure) | Conduct for every answer, not a fact about one metric |
 
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each misreading line ends with `See <id>`.
 - Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong misreading or prompt rule therefore costs more than a wrong metric file, and its review comes first.
-- `harness/misreadings.md` is VMware knowledge outside `knowledge/`. It is kept out of the index on purpose: search must return the file with the mechanism, not the one-line summary. Whether it should move into `knowledge/`: Q170.
+- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. `knowledge/misreadings.md` is given up front and kept out of the index (`harness/kb.py`, `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
 - Not product: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge; they are not deployed and hold nothing the agent reads.
 
 ### 5.2 The knowledge base folder
@@ -204,6 +204,7 @@ knowledge/                           # what the model reads (indexed)
 ├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
 │                                    # aggregation, units, thresholds, naming, accounting
 ├── glossary.md                      # the agent's vocabulary: one entry per term, other names, confusable term (all products)
+├── misreadings.md                   # Level 300 wrong beliefs and their corrections; given up front, not indexed
 ├── sp5-framework/                   # operations management across products and technologies: the SP5 Framework
 │   ├── concepts/                    # the framework across pillars: overview, why not ITIL, Triple See Method,
 │   │                                # SLAs, class of service, health, monitoring vs troubleshooting
@@ -436,7 +437,7 @@ Agent E2 has four jobs with words. Each has one home, so a fact is written once.
 | Recognize the user's word | Search misses the file ("steal time", "%RDY", "uptime KPI") | Glossary, Also called; the term map (`knowledge/catalog/user-terms.yaml`) for phrases | Query terms, files and notes before search |
 | Know what a term means here | The public meaning wins (ESXi CPU Demand read where capacity Demand is meant) | Glossary entry; the file for a metric | Search, `read_file` |
 | Keep two terms apart | The answer uses the wrong one of two real terms | Glossary, Not to confuse with | Up-front block `terms` |
-| Drop a wrong belief | A confident rule of thumb, never looked up | `harness/misreadings.md` | Up-front block `rules` |
+| Drop a wrong belief | A confident rule of thumb, never looked up | `knowledge/misreadings.md` | Up-front block `rules` |
 
 Glossary entry (`knowledge/glossary.md`, read by `harness/kb.py`, checked by lint):
 - `- **Term**: meaning`, then optional lines `  - Also called: a, b`, `  - Not to confuse with Other term: difference.`, ``  - File: `id` ``. Grouped by area under `###` headings, alphabetical within each. Not `##`: the glossary must stay one chunk, so search never ranks this summary above the files that hold the mechanism (retrieval check 2026-11-11: with `##` areas the glossary entered 18 of 95 classic contexts instead of 3, and 2 questions lost a needed file).
@@ -451,7 +452,7 @@ A confusable pair passes all four tests:
 4. Not already a misreading. One home per fact.
 - Written once, under the term users misuse; the difference names both terms, so the line reads alone.
 
-Misreading (`harness/misreadings.md`):
+Misreading (`knowledge/misreadings.md`):
 - A wrong belief a frontier model applies without being asked: what is a problem, which metric decides, what to add or size by.
 - Level 300: a VMware administrator with hands-on vSphere knowledge still holds it. Not a definition, not a swap of two terms (those are glossary entries).
 - One line: the correct reading, then `See` the file with the mechanism.
