@@ -743,16 +743,16 @@ Each entry has:
 - For you: the 8.x behaviour from field experience.
 - Answer:
 
+## Resolved
+
 ### Q170 · KNOWLEDGE-ENGINEERING.md, section 5.1 · Home of the misreadings
 - Files: [harness/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/misreadings.md); [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md), section 5.1; [ARCHITECTURE.md](https://github.com/e1-rahabok/agent-e2/blob/main/ARCHITECTURE.md), section 8, Ingest.
 - Search: not from the book.
 - Written as now: the 12 misreadings are VMware knowledge, given to the agent up front, and live in `harness/` since 2026-11-07, so that search never returns the one-line summary in place of the file with the mechanism.
-- Question: should the misreadings move into `knowledge/`, so all the domain knowledge you review has one home? (a) move to `knowledge/misreadings.md`, with ingest skipping that one file; (b) keep in `harness/`, documented as knowledge in section 5.1 (done).
+- Question: should the misreadings move into `knowledge/`, so all the domain knowledge you review has one home? (a) move to [knowledge/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misreadings.md), with ingest skipping that one file; (b) keep in `harness/`, documented as knowledge in section 5.1 (done).
 - Proposed answer (expert call): (a). Your review scope is `knowledge/`; a misreading reaches every answer, so it needs that review more than any metric file. `knowledge/` already holds content that is not indexed as prose (the catalog), so "in `knowledge/`" does not have to mean "searched". Cost: one ingest exclusion in [harness/kb.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/kb.py), the primer path, lint, docs; retrieval check before and after (expected unchanged, since the file stays out of the index).
 - For you: accept (a), or keep (b).
-- Answer:
-
-## Resolved
+- Answer: Author (2026-11-11): yes, move into `knowledge/`. Applied: [knowledge/misreadings.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misreadings.md), skipped by ingest ([harness/kb.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/kb.py), `NOT_INDEXED`).
 
 ### Q169 · KNOWLEDGE-ENGINEERING.md, sections 5 and 10 · Single-pillar flows filed as health checks
 - Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md), [Does this ESXi host have CPU headroom?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md), [Downsizing a large, idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md); rule: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md), section 5 (Placement rules, Flows) and section 10; concept: [Health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-check.md).

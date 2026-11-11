@@ -67,9 +67,16 @@ class Chunk:
         self.text = f'{doc.title} ({doc.id}) > {heading}\n{text}'
 
 
+# Knowledge given up front, not through search: indexing the one-line summaries would let search return them
+# in place of the files that hold the mechanism (KNOWLEDGE-ENGINEERING.md, section 5.1).
+NOT_INDEXED = ('knowledge/misreadings.md',)
+
+
 def load(root=ROOT):
     docs = {}
     for f in sorted(glob.glob(os.path.join(root, 'knowledge', '**', '*.md'), recursive=True)):
+        if os.path.relpath(f, root) in NOT_INDEXED:
+            continue
         meta, body = split(f)
         if meta is None:
             continue

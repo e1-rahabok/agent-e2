@@ -1,6 +1,6 @@
 # Level 300 misreadings
 
-Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a correction to what public Internet text misteaches. It documents the correct understanding. Not knowledge: not indexed, so search never returns this summary instead of the file. Built by `harness/primer.py`.
+Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a correction to what public Internet text misteaches. It documents the correct understanding. Not indexed (`harness/kb.py`, NOT_INDEXED), so search never returns this summary instead of the file. Built by `harness/primer.py`.
 
 What belongs here:
 - A wrong belief that a frontier model applies with confidence, so it never looks it up: what is a problem, which metric decides, what to add or size by. Level 300: a VMware administrator who knows the basics still holds it.
