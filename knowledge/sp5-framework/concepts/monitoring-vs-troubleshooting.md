@@ -22,7 +22,7 @@
 - Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
 - A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
 
-## Monitor: what; troubleshoot: why
+## Monitoring
 - Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
   - Example: VDI planned for 10,000 users. At 1,000 users they consume more than planned: scale down the rollout or add resources.
 - Act when reality is worse than plan, not when a complaint arrives. Troubleshooting done proactively has time and no one rushing it.
