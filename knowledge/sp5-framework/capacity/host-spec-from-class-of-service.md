@@ -1,8 +1,8 @@
 # ESXi host specification from class of service
 
 ## Why Day 2 sets the hardware
-- The host specification cannot be chosen without two Day 2 inputs: the average VM profile (RAM per vCPU) and the overcommit ratio planned for each class of service.
-- RAM is sold together with vCPU. RAM beyond what the sellable vCPUs bring stays unsold: there is no vCPU left to sell with it.
+- The host specification is best chosen with two Day 2 inputs: the average VM profile (RAM per vCPU) and the overcommit ratio planned for each class of service.
+- RAM, CPU, Storage are sold together as a VM consumes all 3. Unequal sizes of these 3 create unsold capacity.
 - Day 2 → Day 0 → Day 1: `sp5-framework/concepts/purpose-driven-architecture`.
 
 ## Method
