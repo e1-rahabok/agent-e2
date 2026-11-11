@@ -40,7 +40,7 @@ flowchart LR
 ```
 
 - Product: what runs at the customer site.
-  - `knowledge/`: Level 400 mechanisms, metrics, traps and flows (health checks, troubleshooting, decision trees), plus exact data in `knowledge/catalog/`. Up-front text and domain code in `harness/` act on it (`KNOWLEDGE-ENGINEERING.md`, section 5.1). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
+  - `knowledge/`: Level 400 mechanisms, metrics, traps and flows (health checks, troubleshooting, decision trees), plus exact data in `knowledge/catalog/`. Up-front text and domain code in `harness/` act on it (`KNOWLEDGE-ENGINEERING.md`, section 2). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
   - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code (`harness/agent.py`, up-front blocks in `harness/primer.py`); what it is told and how it decides: `harness/AGENT.md`.
   - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
@@ -164,7 +164,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
-8. Not indexed but deployed: `knowledge/misreadings.md` and the confusable pairs of `knowledge/glossary.md` reach the model as up-front blocks (`harness/primer.py`), not through search. All five paths by which knowledge reaches the model: `KNOWLEDGE-ENGINEERING.md`, section 5.1.
+8. Not indexed but deployed: `knowledge/misreadings.md` and the confusable pairs of `knowledge/glossary.md` reach the model as up-front blocks (`harness/primer.py`), not through search. All five paths by which knowledge reaches the model: `KNOWLEDGE-ENGINEERING.md`, section 2.
 
 ### Query
 0. Map the user's words (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misreading the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).

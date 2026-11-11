@@ -8,7 +8,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [README.md](README.md) | What Agent E2 is, in one page |
 | [MISSION.md](MISSION.md) | Why a small local model can win; requirements; risks |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The whole system: repository, parts, modes, query flow |
-| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How knowledge is written, placed and tagged |
+| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and traps. Rules: `project/knowledge-rules/` |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 | [CLAUDE.md](CLAUDE.md) | How Claude works in this repository |
 | [SECURITY.md](SECURITY.md) | Security policy |
@@ -16,7 +16,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 ## Product: deployed to the site
 | Folder | Holds |
 |---|---|
-| `knowledge/` | What Agent E2 reads. The only indexed folder. Placement rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 5 |
+| `knowledge/` | What Agent E2 reads. The only indexed folder. Placement rules: [project/knowledge-rules/placement.md](project/knowledge-rules/placement.md) |
 | `knowledge/catalog/` | Exact data in YAML, read by code: vCenter counters, esxtop fields, object model, thresholds (performance KPI, capacity models and decisions, alerts), user terms |
 | `knowledge/observability/` | How to read any metric, any product: input types, collection interval, aggregation, units, thresholds |
 | `knowledge/sp5-framework/` | How operations are managed, across products. `concepts/`: the framework across pillars (overview, health check, health-risk-efficiency, monitoring vs troubleshooting, proactive operations, class of service, SLAs). `alerts/`: alert architecture. `performance/`: KPI design, noisy neighbour, the VM slow flow. `capacity/`: capacity model, dimensions, sizing, reclamation |
@@ -27,7 +27,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/vcf-operations/` | VCF Operations itself: `concepts/` (role, channels), `features/`, `dashboards/`, `reports/`, `alerts/` (alert definitions). Metrics it computes about vSphere objects live with those objects |
 | `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it |
 | `knowledge/glossary.md` | The agent's vocabulary |
-| `knowledge/misreadings.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 5.1 |
+| `knowledge/misreadings.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
 | `harness/` | Retrieval, catalog, calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
@@ -87,6 +87,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | `project/review-*.md` | Dated reviews of the mission, architecture and benchmark |
 | `project/vocabulary.md`, `project/terms.md` | Writing vocabulary; repository terms |
 | `project/sources/` | Source documents. Read-only |
+| `project/knowledge-rules/` | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
 | `project/templates/` | Templates for knowledge files: concept, metric, configuration, screen, and the three flow kinds (health check, troubleshooting, decision tree) |
 | `project/tools/` | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py` |
 | `project/archive/` | Retired documents |

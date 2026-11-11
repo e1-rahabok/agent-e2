@@ -458,7 +458,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 4. Catalog tables, lookup with verdicts, `catalog` tool arguments, classic facts, unit tests.
 5. Up-front block, clarifying triggers, verifier check.
 6. `thresholds-availability.yaml` with its two rows.
-7. `KNOWLEDGE-ENGINEERING.md`, section 9: the threshold files of this design.
+7. `project/knowledge-rules/thresholds.md`: the threshold files of this design.
 8. Benchmark: questions for U4, U5, U9, and a clarifying set (asked when it should, did not ask when it should not).
 9. Alert definitions: a thin block (id, criticality, any or all, symptom ids, persona) for the recommended alerts. Without it Agent E2 cannot answer "why did this alert fire".
 10. Cancel cycles of the recommended alerts set by section 9, once approved.

@@ -136,4 +136,4 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - most of the hundreds of screens are configuration, not performance or capacity;
   - extra files compete in retrieval and push out the files that matter (ranking shifted when 2 files were added);
   - each file needs the author's review.
-- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: `KNOWLEDGE-ENGINEERING.md`, section 5. Kept only if the retrieval check on screenshot questions improves. Not started.
+- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: `project/knowledge-rules/placement.md`. Kept only if the retrieval check on screenshot questions improves. Not started.

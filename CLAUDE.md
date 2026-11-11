@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-How Claude works in this repository. Read at the start of every session. The rules for the knowledge itself are in `KNOWLEDGE-ENGINEERING.md`; this file does not repeat them.
+How Claude works in this repository. Read at the start of every session. The design of the knowledge is in `KNOWLEDGE-ENGINEERING.md`, its rules in `project/knowledge-rules/`; this file does not repeat them.
 
 ## Start of every session
 - Read `project/plan.md` first: mission, milestones, decisions, what we are not doing, open work.
@@ -13,7 +13,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 
 ## Rules for knowledge files
-- All in `KNOWLEDGE-ENGINEERING.md`, Part B: layout and placement (section 5), metadata (section 8), thresholds (section 9), flows (section 10), writing rules including no AI-speak (section 11), images (section 12), versions and sources (section 13).
+- Design (where knowledge lives, forms, Level 400 and traps): `KNOWLEDGE-ENGINEERING.md`. Rules, one module each in `project/knowledge-rules/`: placement, flows, metadata, thresholds, writing (including no AI-speak, images, versions and sources), terminology.
 - Architecture rule to keep in mind: a VM is a virtual motherboard; the Guest OS is a separate layer. Decide a metric's home by the layer that produces it, not by the object that stores it.
 - When a repository rule conflicts with the author's architecture, raise it in `project/author-questions.md`; do not resolve it silently.
 
