@@ -137,7 +137,7 @@ Preferred, not required:
 
 ## 5. Frontier reference
 - One frontier model, scored the same way with and without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Web search on, as Claude has it; effort capped at medium, for the cost of the author's subscription.
-- No benchmark run until development is done: M1 and M2 complete (Q163).
+- No benchmark run until development is done: the benchmark is M4 and starts only after M1 (knowledge base), M2 (questions) and M3 (retrieval) are complete (Q163).
 - The claim ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5 --concurrency 3` (it rate-limits at 12).
 
