@@ -166,6 +166,7 @@ internal_derive:
 - sp5-framework/performance/noisy-neighbour
 - sp5-framework/capacity/host-spec-from-class-of-service
 related:
+- sp5-framework/capacity/vm-size
 - sp5-framework/concepts/iaas-business
 - sp5-framework/capacity/rightsizing
 - vsphere/architecture/resource-controls

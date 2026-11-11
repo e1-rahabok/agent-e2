@@ -85,8 +85,7 @@
 - Pricing policy:
   - a function of the overcommit ratio: half price means twice as many tenants to break even;
   - progressive tiers: a 64-vCPU VM costs more than 64 × a 1-vCPU VM.
-- Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size.
-- Tell customers the quality of each class through its overcommit:
+- Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size (`sp5-framework/capacity/vm-size`). Tell customers the quality of each class through its overcommit.
 
 - No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class (`sp5-framework/performance/kpi-vs-sla`).
 
@@ -126,6 +125,7 @@ object:
 internal_derive:
 - vsphere/architecture/resource-controls
 related:
+- sp5-framework/capacity/vm-size
 - vsphere/object-types/resource-pool/configuration/scalable-shares
 - sp5-framework/capacity/capacity-model
 - sp5-framework/concepts/performance-vs-capacity
