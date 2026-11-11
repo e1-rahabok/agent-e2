@@ -50,29 +50,21 @@
 
 | Dimension | Role | Used for |
 |---|---|---|
-| Utilization | Primary metric | Against usable capacity, which holds availability and buffer |
+| Consumption | Primary metric | Against usable capacity, which holds availability and buffer |
 | Contention | Override | Stop provisioning: the main input to closing the cluster |
 | Allocation | Leading indicator | Protect the shared infrastructure from sudden demand |
 | Reservation | Guarantee | Planning. At run time use it sparingly; use shares |
 
-## Utilization
+## Consumption
 
+- Consumption consists of Utilization and Saturation.
 - Live use of the resource. High utilization means the cluster is full, even with overcommit ratio and reservation below target.
-- Ideal: 100% utilization, 0% contention, 0% risk.
+- Ideal: 100% utilization, 0% saturation.
 - Low utilization that stays low is wastage, unless the object is new and still growing, or holds DR protection.
 - Accounting:
   - relative utilization, against usable capacity: exclude the HA host;
   - keep the hypervisor overhead of the other hosts: it is part of the load.
 
-![Utilization against usable capacity in 10 chunks: 0-40% grey wastage zone, 40-80% green zone with 70-80% marked Best, 80-100% a gradient from yellow to red](images/cluster-utilization-against-usable-capacity-wastage-and-green-zones-diagram.png)
-
-
-| Utilization against usable capacity | Zone | Meaning |
-|---|---|---|
-| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |
-| 40-80% | Green | Consumed with enough buffer: no purchase yet |
-| 80% | Best | Target |
-| 80-100% | Yellow to red | No values given by the source |
 
 ## Contention
 
