@@ -74,8 +74,6 @@
 | 80% | Best | Target |
 | 80-100% | Yellow to red | No values given by the source |
 
-- Ten equal chunks of usable capacity: four grey, four green, two from yellow to red.
-
 ## Contention
 
 - When the cluster cannot serve its current workload, remaining capacity is 0 in practice: provisioning stops.
