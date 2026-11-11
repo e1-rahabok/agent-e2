@@ -36,7 +36,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
    - Cluster Consumption: utilization and saturation (`vsphere/object-types/cluster/models/cluster-consumption`).
    - Cluster Risk: highest host, reservation, overcommit, monster VMs; higher is worse (`vsphere/object-types/cluster/models/cluster-risk`).
    - HA and admission control reserve capacity that utilization does not show (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`). Memory: `vsphere/technology/memory/metrics/cluster/consumed`.
-   - Capacity model across products: `sp5-framework/capacity/capacity-model`. → step 6.
+   - Capacity across products: `sp5-framework/capacity/capacity-management`. → step 6.
 6. Closed for new VMs (ClusterComputeResource). The decision from the KPI and the two models: `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`. The vCommunity management pack publishes it every period as Close for Business (`vsphere/object-types/cluster/models/close-for-business`). → step 7.
 7. Capacity, inventory and efficiency (ClusterComputeResource, VirtualMachine). Inventory: hosts, VMs and vCPUs over time, against the plan (`sp5-framework/concepts/health-risk-efficiency`, section Inventory over time). Efficiency: Waste that can be returned: idle, oversized and unused VMs, snapshots, unmapped space (`sp5-framework/capacity/reclamation`, `vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`, `vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`).
 - Not checked in 1.0: security and compliance (future phase).
@@ -93,7 +93,7 @@ related:
 - sp5-framework/concepts/health-check
 - vsphere/object-types/vm/health-check/vm-health-check
 - vsphere/object-types/esxi/health-check/esxi-health-check
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/capacity-management
 - sp5-framework/capacity/reclamation
 source:
   document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation)

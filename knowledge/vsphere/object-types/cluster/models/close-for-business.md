@@ -80,7 +80,7 @@ same_meaning: []
 related:
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 - vsphere/object-types/cluster/health-check/cluster-health-check
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 source:
   document: VCF-vCommunity-Adapter documentation, Periodic Cluster Check and Capacity Management concept
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/periodic-cluster-check.md; docs/concepts/capacity-management.md, section Closing the cluster

@@ -66,7 +66,7 @@ object:
 internal_derive:
 - vsphere/technology/memory/concepts/memory-layers
 related:
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - vsphere/technology/memory/metrics/host/utilization
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
 source:

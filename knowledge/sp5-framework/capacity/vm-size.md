@@ -4,7 +4,7 @@
 - The right size of a VM depends on the ESXi host it runs on and on the CPU and NUMA architecture of that host, not on the VM alone.
 - A large VM is harder to schedule: its vCPUs compete for threads at the same time, and a VM larger than a NUMA node spans nodes and reads remote memory (`vsphere/technology/cpu/concepts/numa`, `vsphere/technology/cpu/concepts/virtual-numa`).
 - A VM large against its host raises contention even at low utilization: the monster VM of Cluster Risk (`vsphere/object-types/cluster/models/cluster-risk`, section Monster VM).
-- CPU Overcommit ratio is per physical thread, not core (`sp5-framework/capacity/capacity-model`, section Overcommit).
+- The CPU overcommit ratio is per physical thread, not per core (`sp5-framework/capacity/overcommit`).
 
 ## Maximum VM size
 | Overcommit Ratio | Maximum VM size |
@@ -19,7 +19,7 @@
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
 
 ## Size as a class of service fence
-- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one. Mixed clusters are common but a compromise: the design is one class per cluster (`sp5-framework/capacity/capacity-dimensions`, section Overcommit: several classes).
+- In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one. Mixed clusters are common but a compromise: the design is one class per cluster (`sp5-framework/capacity/demand`, section Overcommit: several classes).
 - Technique: Gold is entitled to larger VM configurations; Bronze is kept small. A small Bronze VM cannot take a large share of a host's threads at once, so its peaks hurt Gold less.
 - The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from its ratio in the table above (`sp5-framework/concepts/class-of-service`, `sp5-framework/performance/noisy-neighbour`).
 
@@ -49,7 +49,7 @@ object:
 internal_derive:
 - vsphere/technology/cpu/concepts/numa
 - vsphere/object-types/cluster/models/cluster-risk
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/overcommit
 related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/performance/noisy-neighbour

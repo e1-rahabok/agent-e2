@@ -43,7 +43,7 @@
   - Compliance raises cost: more requirements, more overhead to manage and measure them.
   - Cost and price drive capacity and performance.
   - Capacity → performance is non-linear: as capacity remaining falls, performance holds; below 0% it drops suddenly.
-  - Availability impacts capacity: an availability problem, such as a host down, reduces the capacity available. The planned part (the HA host) is already taken out of usable capacity (`sp5-framework/capacity/capacity-model`); an outage beyond the design takes more.
+  - Availability impacts capacity: an availability problem, such as a host down, reduces the capacity available. The planned part (the HA host) is already taken out of usable capacity (`sp5-framework/capacity/supply`); an outage beyond the design takes more.
   - Availability impacts performance, above all when it is intermittent: an object flapping between on and off, or a cluster flapping between its passive and active nodes.
 - A line without an arrow means a relationship without impact: inventory and configuration do not impact each other.
 - Below the pillars: the pillars feed inventory, configuration and sustainability; configuration impacts sustainability.
@@ -166,7 +166,7 @@ object:
 internal_derive:
 - sp5-framework/concepts/sla-metrics
 - sp5-framework/concepts/performance-vs-capacity
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 related:
 - sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/modelling

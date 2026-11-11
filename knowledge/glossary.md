@@ -148,7 +148,7 @@ A metric with its own file is an entry only when it has another name or a confus
   - File: `vsphere/object-types/cluster/models/cluster-risk`
 - **Demand (capacity)**: Per VM, the higher of utilization and reservation.
   - Not to confuse with ESXi CPU Demand: ESXi CPU Demand is the runtime the VMs demand; capacity demand also counts reservations.
-  - File: `sp5-framework/capacity/capacity-dimensions`
+  - File: `sp5-framework/capacity/demand`
 - **Guest OS sizing**: Sizing vCPU and memory from Guest OS counters (inside).
   - Also called: VM rightsizing (inside the guest)
   - Not to confuse with VM footprint: VM footprint sizes from vSphere counters (outside); two jobs, two formulas.

@@ -62,7 +62,7 @@ related:
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/object-types/cluster/concepts/dpm
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/concepts/health-risk-efficiency
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

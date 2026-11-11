@@ -3,7 +3,7 @@
 ## What it answers
 - Quantity: is there enough supply for the demand to come, at the lowest cost? Performance asks quality: are the consumers served well now?
 - Supply is the provider side (ESXi hosts, clusters, datastores). Demand is the consumer side (VMs, pods).
-- The unit of capacity is the vSphere cluster (section Cluster is the unit of capacity).
+- The unit of capacity is the vSphere cluster (section Cluster is the unit of capacity). Supply: `sp5-framework/capacity/supply`. Demand: `sp5-framework/capacity/demand`.
 - Balance demand and supply: meet demand at the lowest cost while staying compliant with security and availability practice.
 - Optimized capacity: what was bought is fully consumed, without wastage and without a performance compromise.
 - Simple goals alone are easy: performance equal to physical (no overcommit, or 100% reservation), monster VMs (many cores per host), high availability (more HA hosts, higher vSAN FTT across racks, more NSX Edges). The work is to meet cost, performance, security and availability together.
@@ -18,7 +18,7 @@
 | Performance | Cluster Performance (%): the override | Overcommit, VM size, imbalance: the chance of contention | Contention metrics, KPI design, noisy neighbour |
 | Value | The price, which sets the overcommit ratio | Waste: the efficiency verdict | Cost, price, chargeback |
 
-- Availability: the planned part (HA host, DR, maintenance) is subtracted from total capacity as availability protection (`sp5-framework/capacity/capacity-model`, section Usable capacity). Admission control and cluster state are availability mechanisms that capacity reads as a gate (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`). Actual and Operational Availability (%) are availability metrics (`sp5-framework/concepts/sla-metrics`).
+- Availability: the planned part (HA host, DR, maintenance) is subtracted from total capacity as availability protection (`sp5-framework/capacity/supply`, section Usable capacity). Admission control and cluster state are availability mechanisms that capacity reads as a gate (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`). Actual and Operational Availability (%) are availability metrics (`sp5-framework/concepts/sla-metrics`).
 - Performance: a cluster that cannot serve its current VMs is full, whatever its utilization. Capacity reads the KPI; its design and its contention metrics stay in performance (`sp5-framework/performance/performance-kpi-design`, `sp5-framework/performance/noisy-neighbour`).
 - How each of the two pillars reads the same utilization: `sp5-framework/concepts/performance-vs-capacity`.
 - Cluster Risk (%) is a leading indicator for both pillars: overcommit, monster VM, reservation, the hottest host (`vsphere/object-types/cluster/models/cluster-risk`).
@@ -39,7 +39,7 @@
 
 - Reservation in the planning stage becomes share in the running stage.
 - The overcommit ratio is a planning input tied to the VM price, not to the Cluster Risk (%) score. Running, a Bronze cluster is expected to score a higher Cluster Risk than a Gold cluster.
-- The calculator and its six numbers: `sp5-framework/capacity/class-of-service-planning`, section Planning calculator. Which model applies (overcommit or not, one class or several): `sp5-framework/capacity/capacity-dimensions`.
+- The calculator and its six numbers: `sp5-framework/capacity/class-of-service-planning`, section Planning calculator. Which model applies (overcommit or not, one class or several): `sp5-framework/capacity/demand`.
 - The running stage has two horizons:
 
 | Item | Short term | Long term |
@@ -62,17 +62,18 @@
 | Overcommit, reservation and expected peak per class? | Planning | `sp5-framework/capacity/class-of-service-planning` |
 | Which host specification? | Planning | `sp5-framework/capacity/host-spec-from-class-of-service` |
 | Largest VM per class? | Planning | `sp5-framework/capacity/vm-size` |
-| Total, usable, buffer, HA? | Both | `sp5-framework/capacity/capacity-model` |
-| Which demand model, and why? | Both | `sp5-framework/capacity/capacity-dimensions` |
+| Total, usable, buffer, HA? | Both | `sp5-framework/capacity/supply` |
+| Which demand model, and why? | Both | `sp5-framework/capacity/demand` |
+| Overcommit ratio per resource and class? | Both | `sp5-framework/capacity/overcommit` |
 | Can this cluster take more VMs? | Running, short term | `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms` |
 | Is the cluster closed for business? | Running, short term | `vsphere/object-types/cluster/models/close-for-business` |
 | Does this ESXi host have CPU headroom? | Running, short term | `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom` |
-| When does the cluster run out? | Running, long term | `sp5-framework/capacity/capacity-model`, sections Projection, Capacity Remaining (%) and Time Remaining (days) |
+| When does the cluster run out? | Running, long term | `sp5-framework/capacity/forecasting`; `vcf-operations/features/capacity-forecast` |
 | What can be reclaimed? | Running | `sp5-framework/capacity/reclamation`, `sp5-framework/capacity/unused-vm` |
 | Should this VM be resized? | Running | `sp5-framework/capacity/rightsizing`; `guest-os/system/concepts/guest-os-sizing`; `sp5-framework/capacity/vm-footprint-sizing` |
 | How are the results shown? | Running | `sp5-framework/outputs/capacity-dashboards` |
 
-- No decision tree yet for taking a host out (maintenance mode). Its effect on supply: `sp5-framework/capacity/capacity-model`, section Total vs usable after host loss.
+- No decision tree yet for taking a host out (maintenance mode). Its effect on supply: `sp5-framework/capacity/supply`, section Total vs usable after host loss.
 
 ## Six steps
 ![Six steps: demand side 2 Control demand by the pricing model, 3 Optimize demand by reclamation, 4 Account for latent, potential and unmet demand, 5 Monitor demand by tracking excessive usage; supply side 1 Plan supply by class of service, 6 Monitor with demand or performance plus allocation together](images/capacity-management-six-steps-demand-and-supply-diagram.png)
@@ -146,33 +147,9 @@ Capacity planning starts from a business plan: which class of service serves whi
 - Example: cluster A low on memory and disk but high on CPU (wastage), cluster B low on CPU and disk, cluster C low on CPU and memory. Each cluster has low capacity remaining and low time remaining; an average across the three shows plenty of every resource.
 - Example estate: 2 physical locations, 18 clusters; 7 for business workload, 2 for non-business load (overhead).
 
-## Private cloud components
-| Component | Covers | Note |
-|---|---|---|
-| Compute | ESXi, cluster, resource pool, server | Most attention; a good start with 1:1 compute to storage |
-| Storage | Datastore, datastore cluster, vSAN, RDM, array, backup | Equal weight with many-to-many cluster to datastore, or vSAN HCI Mesh |
-| Network | Virtual and physical: switch, router, firewall, load balancer | Usually the network architect's; 50 Gb per host is common |
-
-- Storage capacity differs from compute: its shape varies (datastore, vSAN; local datastore and RDM are rare), and thin provisioning exists at both the virtual and the array layer. vSAN adds FTT and depends on compute.
-- Network: hosts with 50 Gb rarely hit the limit, unless high-bandwidth VMs (network appliances, web servers) share the same hosts.
-
-## Optimize the provider layer
-| Area | Action |
-|---|---|
-| Compute | Larger clusters; remove host-VM affinity; DRS fully automated |
-| Compute | Technology refresh: more supply at the same cost |
-| Compute | No CPU pinning |
-| Storage | Larger datastores: fewer islands of buffer |
-| Storage | Local datastores for agent VMs and applications without HA |
-| Storage | Consolidate datastores with low utilization |
-| Network | Larger pipes: 2 × 100 Gb instead of 4 × 10 Gb; load-based teaming |
-| Network | Remove unused networks: VLAN or VXLAN sprawl makes management and security harder |
-
-- Pockets of resource are the common cause: affinity rules, pinning and small clusters or datastores each hold a buffer that others cannot use.
-
 ## Misconceptions
 - "The data center has 40% CPU, memory and disk left on average, so there is room" → capacity is per cluster; each cluster can be short of a different resource while the average looks fine.
-- "Cluster utilization is 25%, plenty of capacity left, good" → utilization that stays low is wastage, not health, unless the cluster is new and growing or holds DR protection (`sp5-framework/capacity/capacity-dimensions`, section Consumption).
+- "Cluster utilization is 25%, plenty of capacity left, good" → utilization that stays low is wastage, not health, unless the cluster is new and growing or holds DR protection (`sp5-framework/capacity/demand`, section Consumption).
 - "Plan capacity per host" → HA, DRS and DPM make the cluster the unit.
 - "Optimize capacity once a year at budget time" → reclamation and rightsizing run weekly; supply decisions run twice a year.
 - "No overcommit means good capacity management" → good or bad is relative to the plan; no overcommit can be wastage.
@@ -214,9 +191,11 @@ related:
 - sp5-framework/capacity/unused-vm
 - sp5-framework/capacity/vm-footprint-sizing
 - sp5-framework/outputs/capacity-dashboards
-- sp5-framework/capacity/capacity-dimensions
+- sp5-framework/capacity/demand
+- sp5-framework/capacity/overcommit
+- sp5-framework/capacity/forecasting
 - sp5-framework/capacity/class-of-service-planning
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/capacity/reclamation
 - sp5-framework/capacity/rightsizing
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms

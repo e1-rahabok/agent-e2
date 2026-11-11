@@ -35,7 +35,7 @@ technology: [system]
 input: [text]
 task: explain-mechanism
 knowledge:
-  - sp5-framework/capacity/capacity-model
+  - sp5-framework/concepts/performance-vs-capacity
   - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
   - sp5-framework/observability/metric-perspectives
 attachments: []

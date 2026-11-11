@@ -25,7 +25,8 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
 │   │                                # accounting, thresholds, Triple See Method
 │   ├── outputs/                     # how insight reaches people: alerts, dashboards, reports, NOC live screen
 │   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for flows across technologies
-│   └── capacity/                    # capacity model, sizing, reclamation; decision-tree/ for questions across technologies
+│   └── capacity/                    # capacity-management (main file: boundary, stages, question map), supply, demand,
+│                                    # overcommit, forecasting, planning, sizing, reclamation; decision-tree/ across technologies
 ├── vsphere/
 │   ├── architecture/                # vSphere-wide design that every metric depends on: provider/consumer,
 │   │                                # VM vs Guest OS, kernel worlds, overhead, resource controls, metric sources

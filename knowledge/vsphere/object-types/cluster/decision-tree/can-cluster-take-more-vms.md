@@ -29,12 +29,12 @@ flowchart TD
 
 ## Checks, in order
 1. Goal (ClusterComputeResource). Ask whether the customer runs the cluster to its limit, maximizing utilization.
-   - No → the basic answer is VCF Operations' own Capacity Remaining (%) and Time Remaining (days) for the cluster (`sp5-framework/capacity/capacity-model`, section Capacity Remaining (%) and Time Remaining (days)). Give them with what they mean: Capacity Remaining is a 3-day projection; Time Remaining is the days until the forecast crosses usable capacity.
+   - No → the basic answer is VCF Operations' own Capacity Remaining (%) and Time Remaining (days) for the cluster (`sp5-framework/capacity/forecasting`, section Reading the two numbers; how they are computed: `vcf-operations/features/capacity-forecast`). Give them with what they mean: Capacity Remaining is a 3-day projection; Time Remaining is the days until the forecast crosses usable capacity.
    - No, and the customer does not trust these numbers → why they differ from the customer's expectation is a VCF Operations product question, outside Agent E2 1.0: say so.
-   - Yes → the closure model of the SP5 Framework (`sp5-framework/capacity/capacity-dimensions`) → step 2.
+   - Yes → the closure model of the SP5 Framework (`sp5-framework/capacity/demand`) → step 2.
 2. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA no longer meets its failover capacity → no; fix the state first. Admission control counts reservations, not usage. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`. Green → step 3.
 3. Overcommit (ClusterComputeResource). Cluster planned without overcommit (1:1) → step 4. Overcommitted → step 5.
-4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; `sp5-framework/capacity/capacity-model`). Allocation reaches usable capacity → no: closed. Below → step 7.
+4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; `sp5-framework/capacity/supply`). Allocation reaches usable capacity → no: closed. Below → step 7.
 5. Consumption and performance (ClusterComputeResource). Both read at the 95th percentile of the last 24 hours, with the same thresholds for production and non-production. Either one red → no: closed.
    - Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.
    - Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
@@ -53,14 +53,14 @@ flowchart TD
    - What the new VMs change, at their CPU and memory concurrent peak: Cluster Risk (%) moves most (monster VM, overcommit ratio, the highest ESXi utilization prorated among hosts, reservation); Cluster Consumption (%) moves with ESXi CPU thread utilization and memory consumed; Cluster Performance (%) cannot be modelled reliably, so it is kept unchanged. Not considered: DRS rules (VM-VM anti-affinity, VM-host should or must), HA admission control, vSAN or datastore capacity.
    ![Impact of additional workload, assuming CPU and memory concurrent peak: biggest impact on Risk (%) (monster VM, overcommit ratio, highest ESXi utilization prorated among hosts, reservation); Consumption (%) (ESXi CPU thread utilization, ESXi memory consumed); Contention (%): reliable modelling is not possible, the score is kept unchanged. Not considered: DRS rules, HA admission control, vSAN or datastore capacity](../images/cluster-new-workload-impact-on-risk-consumption-contention-diagram.png)
    - Any no → no, or change the VM design. All fit → step 8.
-8. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room (`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`). Then answer yes, with the resource that fills first and the time remaining from the projection (`sp5-framework/capacity/capacity-model`, section Capacity Remaining and Time Remaining).
+8. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room (`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`). Then answer yes, with the resource that fills first and the time remaining from the projection (`sp5-framework/capacity/forecasting`).
 
 ![Closure thresholds, all at the 95th percentile of the last 24 hours. Consumption (%): red above 80%, orange above 60%, production and non-production. Performance (%): red below 20%, orange below 40%, production and non-production. Risk (%): production orange above 60%; non-production red above 80%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
 
 ## Why this order
 - The goal first: a customer who does not run clusters to the limit has a sufficient answer in VCF Operations' own capacity metrics; the closure model is for running to the limit.
 - State first: in yellow or red, reservations are not met; any capacity number is built on a broken base.
-- Overcommit next: without overcommit, utilization, reservation and contention do not decide; allocation against usable capacity is the only input (`sp5-framework/capacity/capacity-dimensions`).
+- Overcommit next: without overcommit, utilization, reservation and contention do not decide; allocation against usable capacity is the only input (`sp5-framework/capacity/demand`, section No overcommit).
 - Capacity and performance before risk: either one red is enough to close. Risk is a leading indicator that buys time; it decides only the grey case where both are orange.
 - Production closes on a lower risk than non-production: a critical cluster has a lower risk threshold.
 - Contention overrides utilization: a cluster that cannot serve its current VMs has no remaining capacity, whatever utilization says.
@@ -105,10 +105,12 @@ object:
 internal_derive:
 - vsphere/object-types/cluster/models/close-for-business
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
-- sp5-framework/capacity/capacity-dimensions
+- sp5-framework/capacity/demand
 - vsphere/object-types/cluster/kpis/cluster-performance
 - vsphere/object-types/cluster/models/cluster-risk
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
+- sp5-framework/capacity/forecasting
+- vcf-operations/features/capacity-forecast
 - vsphere/object-types/cluster/models/cluster-consumption
 - vsphere/technology/memory/concepts/host-memory-states
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance

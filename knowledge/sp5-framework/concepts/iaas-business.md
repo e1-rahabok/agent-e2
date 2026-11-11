@@ -51,7 +51,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 
 - Performance has no SLA and no SLI: the KPI is enough (`sp5-framework/performance/kpi-vs-sla`).
 - Definitions, formulas and the time window of each SLA: `sp5-framework/concepts/sla-metrics`. Numbers per class: `sp5-framework/concepts/class-of-service`.
-- Usable capacity: `sp5-framework/capacity/capacity-model`.
+- Usable capacity: `sp5-framework/capacity/supply`.
 
 ## A complete, correct and accurate SLA
 - Complete: compliance as well as availability; performance through the KPI.
@@ -133,7 +133,7 @@ related:
 - sp5-framework/concepts/purpose-driven-architecture
 - sp5-framework/outputs/alerts-and-insights
 - sp5-framework/capacity/host-spec-from-class-of-service
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/capacity/rightsizing
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/concepts/realms-and-layers

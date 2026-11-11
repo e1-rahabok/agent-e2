@@ -40,7 +40,7 @@ input: [table]
 knowledge:
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
   - vsphere/technology/storage/concepts/snapshot-impact
-  - sp5-framework/capacity/capacity-model
+  - sp5-framework/capacity/overcommit
 attachments:
   - 0080/datastore-space-200-datastores.xlsx
 origin: synthetic

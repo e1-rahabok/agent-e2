@@ -62,7 +62,7 @@
 ## Planning calculator
 - At the planning stage there is no workload, so the plan is a simulation. What the planning and running stages each use: `sp5-framework/capacity/capacity-management`, section Two stages. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
 - Inputs: per host the cores, base GHz, DRAM, Hyper-Threading, hypervisor overhead (threads and GB), system CPU reservation, memory tiering; the number of hosts and HA hosts; per class the typical VM (vCPU, GB per vCPU), overcommit, reservation and expected concurrent peak.
-- Supply per host, by model (usable capacity: `sp5-framework/capacity/capacity-model`):
+- Supply per host, by model (usable capacity: `sp5-framework/capacity/supply`):
   - utilization: threads - hypervisor threads; DRAM - hypervisor GB + tiering;
   - allocation: the utilization supply × the class overcommit (memory: DRAM part × overcommit + tiering);
   - reservation: CPU cores × base GHz - system reservation, because a reservation is capped at the base clock; memory as in utilization.
@@ -103,8 +103,9 @@ object:
 - ClusterComputeResource
 - ResourcePool
 internal_derive:
-- sp5-framework/capacity/capacity-model
-- sp5-framework/capacity/capacity-dimensions
+- sp5-framework/capacity/supply
+- sp5-framework/capacity/demand
+- sp5-framework/capacity/overcommit
 related:
 - sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/class-of-service

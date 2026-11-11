@@ -109,7 +109,7 @@ internal_derive:
 related:
 - sp5-framework/concepts/sla-metrics
 - sp5-framework/outputs/capacity-dashboards
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 - sp5-framework/outputs/system-engagement
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

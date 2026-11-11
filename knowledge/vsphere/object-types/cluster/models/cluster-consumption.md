@@ -31,7 +31,7 @@ same_meaning: []
 related:
 - vsphere/object-types/cluster/models/cluster-risk
 - vsphere/object-types/cluster/kpis/cluster-performance
-- sp5-framework/capacity/capacity-model
+- sp5-framework/capacity/supply
 images:
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
