@@ -1,11 +1,12 @@
 # Level 300 misreadings
 
-Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a reading that public Internet text teaches, corrected in one sentence, with the knowledge file that holds the mechanism. Not knowledge: not indexed, so search never returns this summary instead of the file. Built by `harness/primer.py`.
+Up-front block for the agent (switch `agent_primer.rules`, off until the benchmark shows a gain). Each line is a correction to what public Internet text misteaches. It documents the correct understanding. Not knowledge: not indexed, so search never returns this summary instead of the file. Built by `harness/primer.py`.
 
 ## Misreadings Correction
 
 - A VM is just the virtual motherboard layer. A VM does not include the Guest OS running above the motherboard. Guest OS is a separate layer. A counter belongs to the layer that produces it, not to the object that stores it. See `vsphere/architecture/vm-vs-guest-os`.
-- Metrics with the same, but on different objects may have different formula. For example, Linux CPU Usage, VM CPU Usage and ESXi CPU Usage differ in formula and meaning. Check the `same_name` links before answering. See `vsphere/technology/cpu/metrics/virtual-motherboard/usage`.
+- Metrics with identical name, but on different objects, may not have the same meaning. For example, Linux CPU Usage, VM CPU Usage and ESXi CPU Usage differ in formula and meaning. Check the `same_name` links before answering. See `vsphere/technology/cpu/metrics/virtual-motherboard/usage`.
+- ESXi CPU Utilization is the metric for ESXi capacity, not ESXi Core Utilization, nor ESXi CPU Usage.
 - Saturation is simply high utilization. It is not a peer to utilization. High Utilization may lead to contention but not always, so saturation and contention are 2 different metrics. Performance problem only happens when contention happens. See `vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention`.
 - Provider and consumer see from different perspective. ESXi supplies, the VM consumes; CPU Ready applies to the VM, never to ESXi. The values at provider is just an aggregation of its consumers. See `vsphere/architecture/provider-consumer`.
 - CPU Latency is not always a problem: lower frequency raises it without any actual contention. Memory Latency and Disk Latency do mean the VM waits. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`.
