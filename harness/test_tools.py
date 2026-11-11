@@ -97,7 +97,7 @@ class CatalogTest(unittest.TestCase):
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'alert', 'decision', 'rule'})
-        self.assertEqual(CAT.stats()['thresholds'], 38)
+        self.assertEqual(CAT.stats()['thresholds'], 36)  # 2 capacity rule rows archived 2026-11-11 (Q116)
         self.assertEqual(CAT.stats()['bands'], 18)
         self.assertEqual(CAT.stats()['kpi'], 31)
 

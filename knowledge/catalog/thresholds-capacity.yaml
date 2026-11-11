@@ -350,26 +350,6 @@ rules:
   kb: vsphere/object-types/cluster/models/cluster-risk
   quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
   interval: 5m
-- id: cluster-utilization-usable-wastage
-  metric: Cluster utilization against usable capacity
-  object: ClusterComputeResource
-  operator: <
-  value: 40
-  unit: '% of usable capacity'
-  meaning: Grey (wastage). Capacity given, and likely paid for, is not used.
-  source: knowledge-base
-  kb: sp5-framework/capacity/capacity-dimensions
-  quote: '| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |'
-- id: cluster-utilization-usable-best
-  metric: Cluster utilization against usable capacity
-  object: ClusterComputeResource
-  operator: '='
-  value: 80
-  unit: '% of usable capacity'
-  meaning: Best (target). 40-80% is green.
-  source: knowledge-base
-  kb: sp5-framework/capacity/capacity-dimensions
-  quote: '| 80% | Best | Target |'
 - id: class-gold-min-vm-performance
   metric: VM Performance (%), minimum for the class
   object: VirtualMachine

@@ -37,7 +37,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections: []
-review_notes:
-- 'To check: Section ''Thresholds (book)'': Part 1 puts 40-80% of usable capacity in green and 80% as best, with 0-40% grey (sp5-framework/capacity/capacity-dimensions). Which governs, and whether a grey band applies here: (Q116).'
+review_notes: []
 status: draft
 ```

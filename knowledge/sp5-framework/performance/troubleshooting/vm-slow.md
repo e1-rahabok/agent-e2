@@ -2,55 +2,60 @@
 
 ## Symptom
 - Users or the application owner report that a VM (and its application) is slow. A complaint starts the reactive process: no health check first.
-- No metric has been named yet. Establish the facts first, then explain them; do not jump to a cause.
+- No metric has been named yet, and users rarely tell the Guest OS from the VM. Establish the facts first, then explain them; do not jump to a cause.
+- Unreachable or failing is down: the availability process, not this flow.
 
 ## Flow
 ```mermaid
 flowchart TD
-  S1[1. Time window known?] --> S2[2. Many VMs slow?]
-  S2 -->|yes| E2[Cluster flow]
-  S2 -->|no| S3[3. Contention in the window?]
-  S3 -->|CPU| E3a[CPU flow]
-  S3 -->|memory| E3b[Memory flow]
-  S3 -->|storage| E3c[Storage flow]
-  S3 -->|network| E3d[Network flow]
-  S3 -->|none| S4[4. Consumption: VM and Guest OS]
-  E3a & E3b & E3c & E3d --> S4
-  S4 --> S5[5. Configuration]
-  S5 --> S6[6. Known bug]
-  S6 --> S7[7. Log: events in the window]
-  S7 -->|nothing found| E7[Cause outside the VM: say so]
+  S1[1. Quantify in the Guest OS] -->|Windows| G1[Windows flow]
+  S1 -->|Linux| G2[Linux flow]
+  G1 & G2 -->|wait inside the Guest OS| E1[Guest OS or application]
+  G1 & G2 -->|points to the VM| S2[2. Time window from step 1]
+  S2 --> S3[3. Many VMs slow?]
+  S3 -->|yes| E3[Cluster flow]
+  S3 -->|no| S4[4. VM contention in the window?]
+  S4 -->|CPU| E4a[CPU flow]
+  S4 -->|memory| E4b[Memory flow]
+  S4 -->|storage| E4c[Storage flow]
+  S4 -->|network| E4d[Network flow]
+  S4 -->|none| S5[5. VM consumption]
+  E4a & E4b & E4c & E4d --> S5
+  S5 --> S6[6. Configuration]
+  S6 --> S7[7. Known bug]
+  S7 --> S8[8. Log: events in the window]
+  S8 -->|nothing found| E8[Cause outside the VM: say so]
 ```
 
 ## Checks, in order
-1. Time window (VirtualMachine). Ask when the slowness happens (a time, a schedule, all the time). Read every counter below at the 20-second peak within that window, not the 5-minute or daily average (`vcf-operations/features/peak-20-second-metrics`). → step 2.
-2. Breadth (ClusterComputeResource). Several VMs on the same cluster or host slow in the same window → the cause is likely shared → `vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`. One VM → step 3.
-3. Contention (VirtualMachine), the what. Start from the KPI: VM Performance (%) and its colour bands (`vsphere/object-types/vm/kpis/vm-performance`). Then the counter that pulls it down:
+1. Quantify in the Guest OS (Guest OS layer). Ask the application team to quantify the slowness in the counters they can see: Windows or Linux, not vSphere or Kubernetes. Which transaction, how slow, and when. Windows → `guest-os/system/troubleshooting/ms-windows-slow`; Linux → `guest-os/system/troubleshooting/linux-os-slow`. The Guest OS flow returns the time window and one of two verdicts: the wait is inside the Guest OS (the Guest OS or the application; this flow stops after a check of VM contention in step 4) or it points to the VM → step 2.
+2. Time window (VirtualMachine). Use the window from step 1. Read every VM counter below at the 20-second peak within that window, not the 5-minute or daily average (`vcf-operations/features/peak-20-second-metrics`). → step 3.
+3. Breadth (ClusterComputeResource). Several VMs on the same cluster or host slow in the same window → the cause is likely shared → `vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`. One VM → step 4.
+4. Contention (VirtualMachine), the what. Start from the KPI: VM Performance (%) and its colour bands (`vsphere/object-types/vm/kpis/vm-performance`). Then the counter that pulls it down:
    - CPU: Ready and Co-stop, read against Run → `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.
    - Memory: Latency (VCF Operations: Memory Contention) → `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
    - Storage: disk latency per virtual disk, read and write, with outstanding IO → `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`.
    - Network: dropped packets → `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
-   - Contention or not → step 4: consumption tells whether the VM's own demand explains it.
-4. Consumption (VirtualMachine, then the Guest OS layer).
-   - VM: CPU Run and Usage, memory Consumed, disk IOPS and throughput, network throughput (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Very high consumption can cause the contention found in step 3.
-   - Guest OS: CPU run queue, memory page-out rate, disk queue (`guest-os/system/metrics/guest-os-performance`). High queues while the VM has no contention → the VM gets what it demands; the Guest OS or the application waits on its own queues (`guest-os/system/concepts/guest-os-sizing`).
-   - → step 5.
-5. Configuration (VirtualMachine), the first why. Always checked, also when contention was found: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations (`vsphere/architecture/resource-controls`); VMware Tools, virtual hardware and Guest OS versions; settings that are outdated or incompatible (`vsphere/object-types/vm/configuration/vm-configuration-review`). → step 6.
-6. Known bug (VirtualMachine, HostSystem). Check the versions in the window against known issues of that release: VMware Tools, virtual hardware, ESXi build, drivers. Known bugs are mostly configuration (an older version, an incompatible setting); the current list is outside the knowledge base, so search vendor documentation and KB articles. → step 7.
-7. Log (VirtualMachine). Events in the window that counters do not show: a snapshot taken or consolidated (`vsphere/technology/storage/concepts/snapshot-impact`), a vMotion and its stun (`vsphere/object-types/vm/metrics/vmotion`), VMware Tools or Guest OS errors, an HA restart. Nothing in steps 3-7 → the cause is outside the VM and its host: the application, a dependency, or the network beyond the host. Say so; vSphere has no counter for it.
+   - Contention or not → step 5: consumption tells whether the VM's own demand explains it.
+5. Consumption (VirtualMachine). CPU Run and Usage, memory Consumed, disk IOPS and throughput, network throughput (`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`). Very high consumption can cause the contention found in step 4. Guest OS counters are not read here: the Guest OS is a separate realm, read in step 1. → step 6.
+6. Configuration (VirtualMachine), the first why. Always checked, also when contention was found: a setting can cause the contention or the slowness. A CPU or memory limit, shares and reservations (`vsphere/architecture/resource-controls`); VMware Tools, virtual hardware and Guest OS versions; settings that are outdated or incompatible (`vsphere/object-types/vm/configuration/vm-configuration-review`). → step 7.
+7. Known bug (VirtualMachine, HostSystem). Check the versions in the window against known issues of that release: VMware Tools, virtual hardware, ESXi build, drivers. Known bugs are mostly configuration (an older version, an incompatible setting); the current list is outside the knowledge base, so search vendor documentation and KB articles. → step 8.
+8. Log (VirtualMachine). Events in the window that counters do not show: a snapshot taken or consolidated (`vsphere/technology/storage/concepts/snapshot-impact`), a vMotion and its stun (`vsphere/object-types/vm/metrics/vmotion`), VMware Tools or Guest OS errors, an HA restart. Nothing in steps 4-8 → the cause is outside the VM and its host: the application, a dependency, or the network beyond the host. Say so; vSphere has no counter for it.
 
 ## Why this order
-- The window first: a counter read outside the complaint window, or averaged over a day, misses the wait.
+- The Guest OS first: the application team sees Windows or Linux counters, not vSphere. Quantifying the slowness in their terms gives the time window and tells whether the wait is inside the Guest OS at all.
+- The window next: a counter read outside the complaint window, or averaged over a day, misses the wait.
 - Breadth before depth: many slow VMs point to a shared cause; tuning one VM would not help.
 - The what before the why: contention and consumption establish what happened; configuration, known bugs and logs explain it. This is the order of the performance step of every health check.
 - Contention before consumption: contention is the performance metric; consumption explains it or rules out the platform.
+- VM counters only after step 1: the Guest OS and the VM are separate realms, so each is read in its own flow.
 - The KPI: it has the 20-second view and shows how bad. A contract number, if the customer has one, is monthly, lagging and often on the wrong object.
 - Configuration always: a limit or an outdated setting can cause the contention itself.
 - Log last: logs explain short events (snapshots, stuns) once the counters have placed the problem in time.
 
 ## How to read the result
 - Contention on one resource → that resource's flow, then configuration, known bug and log for the cause.
-- No contention, Guest OS queues high → the guest is short of vCPU or memory, or the application is the bottleneck.
+- No VM contention, and step 1 found a wait inside the Guest OS → the Guest OS is short of vCPU or memory, or the application is the bottleneck.
 - Contention and a configuration finding (a limit, an old version) → fix the configuration first.
 - No contention, queues normal, configuration clean, no known bug, nothing in the logs → not a vSphere cause.
 
@@ -92,8 +97,8 @@ internal_derive:
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 - vsphere/technology/network/troubleshooting/vnic-rx-drops
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
-- guest-os/system/metrics/guest-os-performance
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/troubleshooting/ms-windows-slow
+- guest-os/system/troubleshooting/linux-os-slow
 - vsphere/architecture/resource-controls
 - vsphere/technology/storage/concepts/snapshot-impact
 - vsphere/object-types/vm/metrics/vmotion
@@ -106,6 +111,6 @@ source:
 corrections:
 - 'Step 5: every performance flow, this one included, checks configuration; known bugs are mostly configuration.'
 review_notes:
-- 'To check: Order of checks, from field practice: drafted from the files in internal_derive and vsphere/object-types/vm/health-check/vm-health-check (architecture review 2026-11-06, section 3.3) (Q060).'
+- 'To check: Steps 2-8, from field practice (Q060). Step 1 from the author, 2026-11-11.'
 status: draft
 ```

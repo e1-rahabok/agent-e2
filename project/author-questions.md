@@ -18,49 +18,7 @@ Each entry has:
 
 ## Open
 
-### Q060 · Operations flows · Users say the VM is slow: your order of checks
 
-- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/troubleshooting/vm-slow.md) (sections Checks, in order; Why this order). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
-- Search: not from the book. Drafted from the VM overview file and the per-resource flows.
-- Question:
-  1. Is this the order you follow in the field: time window, breadth (many VMs?), VM contention per resource, Guest OS queues, then context (limits, snapshots, vMotion)?
-  2. What do you check that is missing, for example the application team's own evidence, or a recent change?
-  3. Is the SLI bar (Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped 0%) the right first bar for one VM, or do you use other values?
-- Written as now: 5 steps, status draft. It hands over to the existing CPU, memory, storage, network and cluster flows.
-- Proposed answer (updated 2026-11-11: no SLA, no SLI; (1) settled by the 2026-11-09 rewrite; (3) by your 2026-11-11 decision; (2) expert call):
-  - (1) Settled. vm-slow now runs: time window, breadth, contention (KPI), consumption (VM and Guest OS), configuration, known bug, log.
-  - (3) Settled: no SLI. The first bar for one VM is the VM KPI: VM Performance (%) and the sub-metric that pulls it down, at the 20-second peak in the complaint window (VirtualMachine rows of `kpi` in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml): Ready, Co-stop and Overlap of the worst vCPU, memory contention, disk latency of the worst virtual disk, transmit dropped packets). The SLI rows and the Performance SLA are removed from the catalog. If the user cites an SLA, ask its metric and object: it does not change the bar, and it is often on the wrong object (the cluster, not the VM).
-  - (2) Additions:
-    - Step 1 adds "since when, and what changed": change records in the window, vCenter tasks and events (reconfigure, vMotion, upgrade, snapshot), against the same window on a normal day. Today a recent change surfaces only at step 7 (log), yet it is the cheapest lead.
-    - Step 2 (breadth) adds the other tiers of the same application: an application is as slow as its worst tier, active node only (Q092). The VM the user names is often not the slow tier.
-    - Symptom: unreachable or failing is down, the availability process, not this flow (Q105 c).
-    - The application team's evidence (which transaction, its response time, its errors) is input to step 1.
-  - Change if accepted: vm-slow (Symptom, steps 1 and 2, trap "the VM the user names is the slow one"); delete the review note.
-  - For you: what you ask the application team first.
-- Answer: I ask the application team to quantify the slowness, using diagram such as 
-
-### Q061 · Operations flows · Can this cluster take more VMs: your order of checks
-
-- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (sections Checks, in order; Why this order).
-- Search: not from the book. Drafted from the capacity model, Cluster Performance, Cluster Risk, Cluster Consumption, admission control and host memory states.
-- Question:
-  1. Is this your order: cluster state and HA, contention today, Cluster Risk, room after HA and buffer, fit of the new VMs (reservations, overcommit, monster size), balance?
-  2. Which resource do you find fills first in practice, and does that change the order?
-  3. How do you state the answer to the requester: a yes/no, a number of VMs, or a date?
-- Written as now: 6 steps, status draft.
-- Proposed answer (steps 2-5 settled by Q120-Q122; the rest expert call):
-  - (1) Order: steps 2-5 settled. Step 1 (cluster state, HA) stays first: if HA failover capacity is not met, usable capacity is wrong and every later number with it. Add a planning gate before step 2: a cluster with no running history uses the class-of-service overcommit ratios tied to price, not Cluster Risk (Q120). Step 6 adds storage (new VMs' provisioned disks against datastore free space): the flow tags storage but no step reads it. Balance stays last.
-  - (2) Corrected 2026-11-11. The earlier answer ("memory, in most enterprise server clusters") read utilization as fullness: a Level 300 mistake. Memory is a cache: high Consumed is expected and wanted, and an ESXi host can show ballooned, compressed and swapped memory with 0% memory contention. A resource is full when its contention rises, not when its utilization or its reclamation counters do.
-    - Overcommitted cluster: the binding resource is the one whose contention worsens first in Cluster Performance (%): CPU Ready and Co-stop, memory contention, disk latency, dropped packets. Not Consumed, ballooned or swapped memory.
-    - Expected (expert call): CPU contention shows first. Ready and Co-stop appear as soon as vCPUs compete for threads; memory contention appears only when a reclaimed page is touched again.
-    - Cluster without overcommit (1:1, Gold): allocation and reservation fill first, by design; utilization does not decide (step 3). Memory binds first here only because it is allocated, not because it is used.
-    - Storage: datastore space and disk latency (vSAN after 1.0).
-    - The order of steps does not change: each step reads all resources; the answer names the binding resource and the dimension (allocation or contention).
-  - (3) State: yes or no; the number of VMs of the requested profile (vCPU, memory, disk, class) that fit before the binding resource reaches its limit, against usable capacity; the limiting resource and dimension; Time Remaining as a date (it ignores committed demand); what changes the answer (hosts, reclamation, VM design). In 1.0 the count comes from usable capacity arithmetic, not a what-if of the scores (2026-11-10).
-  - Applied 2026-11-11: trap in can-cluster-take-more-vms (ballooned, compressed or swapped memory is not a full cluster).
-  - Change if accepted: can-cluster-take-more-vms (planning gate, storage in step 6, How to read the result).
-  - For you: which contention counter you see move first in your customers' overcommitted clusters.
-- Answer:
 
 ### Q062 · Operations flows · Is this host or cluster healthy right now
 
@@ -321,22 +279,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-### Q116 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
-
-- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
-- Search: "I divide the capacity into 10 equal chunks"
-- Question: the book puts 40-80% of usable capacity in green and 80% as best. Cluster Consumption (%) has CPU green 0-55, yellow 55-70, orange 70-85, red 85-100, and memory green 0-70. A 10-host N+1 cluster at the best 80% of usable is 72% of total: orange on CPU in Cluster Consumption. (a) Is Cluster Consumption measured against total or usable capacity? (b) Which governs? (c) Give values for yellow, orange and red above 80%. (d) Should Cluster Consumption get a grey band (0-40%) for wastage? The plan lists grey values for capacity bands as open.
-- Written as now: zones as rules (grey below 40%, best 80%); Cluster Consumption bands unchanged.
-- Proposed answer ((a) settled by the pack's Cluster Consumption page; (b)-(d) expert call):
-  - (a) Usable. Usable = Total − HA − Buffer; CPU in threads, memory in DRAM. 80% of usable reads 80, not 72.
-  - The bands quoted are the sub-metric rows (catalog `cluster-consumption-*`), matching the pack. The score has its own bands: pack 25/50/75; closure since Q121 orange above 60, red above 80 (see Q132).
-  - (b) In a running cluster, the pack's sub-metric bands set the colour. At 80% of usable: CPU orange, memory at the yellow edge. The 80% best fits memory (capacity plan: Gold RAM about 80%), not CPU threads (Gold about 50%, Silver below 70%). Keep 80% in prose; drop catalog row `cluster-utilization-usable-best` (two verdicts for one value).
-  - (c) No new numbers: the pack has them. Memory orange 80-90, red 90-100. CPU threads orange 70-85, red 85-100.
-  - (d) Yes, on the two utilization rows, not the score: below 40% of usable is dark grey (Q148). The score blends in saturation, so no score value means 40%. Exceptions: a growing new cluster, DR capacity. Grey is an efficiency reading; the pack still shows green.
-  - Also: benchmark question 0076 computes 99% × 11/12 against total; the row is against usable.
-  - Change if accepted: cluster-consumption (usable; score vs sub-metric bands); catalog (grey below 40 on the two utilization rows; remove `cluster-utilization-usable-best`); capacity-dimensions Utilization; question 0076.
-  - For you: how long utilization stays below 40% before it counts as wastage; whether the 80% row leaves the catalog.
-- Answer:
 
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
@@ -769,7 +711,77 @@ Each entry has:
 - Answer:
 
 
+### Q172 · Guest OS · Linux pressure stall information vs "no memory latency"
+- Files: [Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md) (section Reasons); [Windows memory management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/memory/concepts/windows-memory.md) (section Free memory guidance); [Linux is slow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/troubleshooting/linux-os-slow.md) (steps 2, 4, 5).
+- Search: "Linux and Windows track memory space, throughput and IOPS, but not memory latency"
+- Written as now: the Guest OS files say Windows and Linux do not measure how long work waits for memory. Linux since kernel 4.20 has pressure stall information (/proc/pressure/cpu, memory, io): the share of time tasks stalled on CPU, memory or IO (https://docs.kernel.org/accounting/psi.html). The new Linux flow uses it; VMware Tools does not collect it, so VCF Operations does not show it.
+- Question: (a) keep the statement for Windows only and add pressure stall information as the Linux exception, not collected by VMware Tools; (b) other.
+- Proposed answer (expert call): (a).
+- For you: whether your customers' Linux teams read pressure stall information, and whether the Linux counters in the new flow match what they use.
+- Answer:
+
 ## Resolved
+
+### Q116 · Part 1 > 4 Dimensions of Capacity > Utilization · Zones vs Cluster Consumption bands
+
+- Files: [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Utilization), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows cluster-utilization-usable-wastage, cluster-utilization-usable-best).
+- Search: "I divide the capacity into 10 equal chunks"
+- Question: the book puts 40-80% of usable capacity in green and 80% as best. Cluster Consumption (%) has CPU green 0-55, yellow 55-70, orange 70-85, red 85-100, and memory green 0-70. A 10-host N+1 cluster at the best 80% of usable is 72% of total: orange on CPU in Cluster Consumption. (a) Is Cluster Consumption measured against total or usable capacity? (b) Which governs? (c) Give values for yellow, orange and red above 80%. (d) Should Cluster Consumption get a grey band (0-40%) for wastage? The plan lists grey values for capacity bands as open.
+- Written as now: zones as rules (grey below 40%, best 80%); Cluster Consumption bands unchanged.
+- Proposed answer ((a) settled by the pack's Cluster Consumption page; (b)-(d) expert call):
+  - (a) Usable. Usable = Total − HA − Buffer; CPU in threads, memory in DRAM. 80% of usable reads 80, not 72.
+  - The bands quoted are the sub-metric rows (catalog `cluster-consumption-*`), matching the pack. The score has its own bands: pack 25/50/75; closure since Q121 orange above 60, red above 80 (see Q132).
+  - (b) In a running cluster, the pack's sub-metric bands set the colour. At 80% of usable: CPU orange, memory at the yellow edge. The 80% best fits memory (capacity plan: Gold RAM about 80%), not CPU threads (Gold about 50%, Silver below 70%). Keep 80% in prose; drop catalog row `cluster-utilization-usable-best` (two verdicts for one value).
+  - (c) No new numbers: the pack has them. Memory orange 80-90, red 90-100. CPU threads orange 70-85, red 85-100.
+  - (d) Yes, on the two utilization rows, not the score: below 40% of usable is dark grey (Q148). The score blends in saturation, so no score value means 40%. Exceptions: a growing new cluster, DR capacity. Grey is an efficiency reading; the pack still shows green.
+  - Also: benchmark question 0076 computes 99% × 11/12 against total; the row is against usable.
+  - Change if accepted: cluster-consumption (usable; score vs sub-metric bands); catalog (grey below 40 on the two utilization rows; remove `cluster-utilization-usable-best`); capacity-dimensions Utilization; question 0076.
+  - For you: how long utilization stays below 40% before it counts as wastage; whether the 80% row leaves the catalog.
+- Answer: Author (2026-11-11): capacity-dimensions fixed by the author: no 10 equal chunks, because zones depend on the object type and, within it, on what is sized (CPU, memory, storage); utilization renamed consumption (utilization and saturation); diagrams replaced. Applied: the zones image archived; catalog rows cluster-utilization-usable-wastage and cluster-utilization-usable-best archived (project/archive/catalog-rows-cluster-utilization-usable-2026-11-11.yaml); the planning and operating diagram and the closure diagram replaced; the stale review note in cluster-consumption deleted. Closed: (b) to (d) no longer apply; question 0076 computes the memory HA ceiling against host memory, which is correct for ballooning.
+
+### Q061 · Operations flows · Can this cluster take more VMs: your order of checks
+
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (sections Checks, in order; Why this order).
+- Search: not from the book. Drafted from the capacity model, Cluster Performance, Cluster Risk, Cluster Consumption, admission control and host memory states.
+- Question:
+  1. Is this your order: cluster state and HA, contention today, Cluster Risk, room after HA and buffer, fit of the new VMs (reservations, overcommit, monster size), balance?
+  2. Which resource do you find fills first in practice, and does that change the order?
+  3. How do you state the answer to the requester: a yes/no, a number of VMs, or a date?
+- Written as now: 6 steps, status draft.
+- Proposed answer (steps 2-5 settled by Q120-Q122; the rest expert call):
+  - (1) Order: steps 2-5 settled. Step 1 (cluster state, HA) stays first: if HA failover capacity is not met, usable capacity is wrong and every later number with it. Add a planning gate before step 2: a cluster with no running history uses the class-of-service overcommit ratios tied to price, not Cluster Risk (Q120). Step 6 adds storage (new VMs' provisioned disks against datastore free space): the flow tags storage but no step reads it. Balance stays last.
+  - (2) Corrected 2026-11-11. The earlier answer ("memory, in most enterprise server clusters") read utilization as fullness: a Level 300 mistake. Memory is a cache: high Consumed is expected and wanted, and an ESXi host can show ballooned, compressed and swapped memory with 0% memory contention. A resource is full when its contention rises, not when its utilization or its reclamation counters do.
+    - Overcommitted cluster: the binding resource is the one whose contention worsens first in Cluster Performance (%): CPU Ready and Co-stop, memory contention, disk latency, dropped packets. Not Consumed, ballooned or swapped memory.
+    - Expected (expert call): CPU contention shows first. Ready and Co-stop appear as soon as vCPUs compete for threads; memory contention appears only when a reclaimed page is touched again.
+    - Cluster without overcommit (1:1, Gold): allocation and reservation fill first, by design; utilization does not decide (step 3). Memory binds first here only because it is allocated, not because it is used.
+    - Storage: datastore space and disk latency (vSAN after 1.0).
+    - The order of steps does not change: each step reads all resources; the answer names the binding resource and the dimension (allocation or contention).
+  - (3) State: yes or no; the number of VMs of the requested profile (vCPU, memory, disk, class) that fit before the binding resource reaches its limit, against usable capacity; the limiting resource and dimension; Time Remaining as a date (it ignores committed demand); what changes the answer (hosts, reclamation, VM design). In 1.0 the count comes from usable capacity arithmetic, not a what-if of the scores (2026-11-10).
+  - Applied 2026-11-11: trap in can-cluster-take-more-vms (ballooned, compressed or swapped memory is not a full cluster).
+  - Change if accepted: can-cluster-take-more-vms (planning gate, storage in step 6, How to read the result).
+  - For you: which contention counter you see move first in your customers' overcommitted clusters.
+- Answer: Author (2026-11-11): the flow depends on whether the customer maximizes utilization. Not maximizing: VCF Operations' built-in Capacity Remaining (%) and Time Remaining (days) are sufficient, the first and basic answer. Not maximizing and not trusting these numbers: why they differ is a VCF Operations product topic, outside Agent E2 1.0. Maximizing: the model in sp5-framework/capacity/capacity-dimensions. Applied: can-cluster-take-more-vms step 1 (goal); old steps 1-7 are steps 2-8; the new closure diagram and the impact of additional workload added to step 7.
+
+### Q060 · Operations flows · Users say the VM is slow: your order of checks
+
+- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/troubleshooting/vm-slow.md) (sections Checks, in order; Why this order). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Search: not from the book. Drafted from the VM overview file and the per-resource flows.
+- Question:
+  1. Is this the order you follow in the field: time window, breadth (many VMs?), VM contention per resource, Guest OS queues, then context (limits, snapshots, vMotion)?
+  2. What do you check that is missing, for example the application team's own evidence, or a recent change?
+  3. Is the SLI bar (Ready 2.5%, memory contention 1%, disk latency 10 ms, transmit dropped 0%) the right first bar for one VM, or do you use other values?
+- Written as now: 5 steps, status draft. It hands over to the existing CPU, memory, storage, network and cluster flows.
+- Proposed answer (updated 2026-11-11: no SLA, no SLI; (1) settled by the 2026-11-09 rewrite; (3) by your 2026-11-11 decision; (2) expert call):
+  - (1) Settled. vm-slow now runs: time window, breadth, contention (KPI), consumption (VM and Guest OS), configuration, known bug, log.
+  - (3) Settled: no SLI. The first bar for one VM is the VM KPI: VM Performance (%) and the sub-metric that pulls it down, at the 20-second peak in the complaint window (VirtualMachine rows of `kpi` in [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml): Ready, Co-stop and Overlap of the worst vCPU, memory contention, disk latency of the worst virtual disk, transmit dropped packets). The SLI rows and the Performance SLA are removed from the catalog. If the user cites an SLA, ask its metric and object: it does not change the bar, and it is often on the wrong object (the cluster, not the VM).
+  - (2) Additions:
+    - Step 1 adds "since when, and what changed": change records in the window, vCenter tasks and events (reconfigure, vMotion, upgrade, snapshot), against the same window on a normal day. Today a recent change surfaces only at step 7 (log), yet it is the cheapest lead.
+    - Step 2 (breadth) adds the other tiers of the same application: an application is as slow as its worst tier, active node only (Q092). The VM the user names is often not the slow tier.
+    - Symptom: unreachable or failing is down, the availability process, not this flow (Q105 c).
+    - The application team's evidence (which transaction, its response time, its errors) is input to step 1.
+  - Change if accepted: vm-slow (Symptom, steps 1 and 2, trap "the VM the user names is the slow one"); delete the review note.
+  - For you: what you ask the application team first.
+- Answer: Author (2026-11-11): users rarely tell the Guest OS from the VM, so the first step is to ask the application team to quantify the slowness in the Windows or Linux counters they can see; developers have no access to vSphere or Kubernetes metrics. Guest OS counters belong outside the VM, so they leave step 4 (consumption). Applied: vm-slow step 1 hands over to two new flows, guest-os/system/troubleshooting/ms-windows-slow and guest-os/system/troubleshooting/linux-os-slow; VM consumption reads VM counters only; 8 steps.
 
 ### Q171 · Scope · Generic public cloud in the SP5 Framework
 - Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/capacity-dimensions.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Business, application and IaaS layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
