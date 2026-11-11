@@ -2,7 +2,7 @@
 
 ## Which model applies
 
-![Planning stage: Overcommit? No → buffer, then allocation in operation, closed when allocation equals usable capacity. Yes → workload type Mono (one class) or Mix (Gold, Silver, Bronze); planning parameters buffer, utilization (expected concurrent peak), allocation (via VM price), reservation (mixed class). Operating stage: buffer, utilization against usable, contention as the brake, risk from imbalance and overcommit ratio, share as the QoS setting](images/capacity-model-planning-vs-operating-stage-diagram.png)
+![Planning stage, theory before workload: Overcommit? No (business value far exceeds infrastructure cost) → buffer, then allocation in operation. Yes (majority of cases) → workload type Mono (one class, equal treatment) or Mix (Gold, Silver, Bronze on the same infrastructure; same technique to mix Kubernetes and VMs). Planning parameters: buffer cluster wide, utilization as the expected concurrent peak, allocation through the VM price (overcommit ratio justifies pricing to the tenant), reservation in mixed-class planning. Operating stage, actual metrics for an automated system: Buffer (%), Consumption (%) as an average against usable, Contention (%) as the brake, Risk (%) from monster VM, imbalance, overcommit ratio and reservation; share replaces reservation as the QoS lever, because a reservation can starve a lower class. Most common path: overcommit, mixed workload, VMs given for free](images/capacity-model-planning-vs-operating-stage-diagram.png)
 
 - There are only 2 main models: overcommit or not-overcommit.
 - Automated capacity management requires a model: for each dimension, a formula for total capacity, usable capacity and consumption (`sp5-framework/capacity/capacity-model`).
@@ -205,11 +205,6 @@ images:
     product: [vsphere]
     object: [ClusterComputeResource]
     topic: 'Capacity model choice'
-    image_type: diagram
-  - path: images/cluster-utilization-against-usable-capacity-wastage-and-green-zones-diagram.png
-    product: [vsphere]
-    object: [ClusterComputeResource]
-    topic: 'Utilization zones'
     image_type: diagram
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
