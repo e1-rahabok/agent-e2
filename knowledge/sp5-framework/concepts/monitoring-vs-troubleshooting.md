@@ -7,7 +7,7 @@
 | Expertise | Low: repetitive, with dashboards and alerts | High: varied steps, needs the environment's context |
 | Metrics | Usually one, the KPI: primary, checked by SOP | Many, in layers: secondary, read when the primary nears its threshold |
 | Duration | A few minutes, about 5, when there is no problem | Can take days across teams |
-| Frequency | Daily; Gold more often than Bronze | On demand |
+| Frequency | Daily; Gold more often than Bronze | Rarely; On demand |
 | Timeline | Now and future: anticipate load | Now: put out the fire |
 | Logs | Required: logs stream continuously, not in 5-minute samples | Almost always; NetFlow for network |
 | KPI | KPIs, not single metrics | Starting point, then raw supporting metrics |
@@ -17,7 +17,7 @@
 
 
 ## Primary and secondary metrics
-- Layer the troubleshooting metrics, events and properties so a less technical team can use them.
+- Layer the troubleshooting metrics, events and properties so Level 1 Team can use them easily and quickly.
 - Primary metric: defines performance; the what. Always 0-100%, usually a hybrid of several metrics. Example: Kubernetes Cluster Performance (%).
 - Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
 - A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
