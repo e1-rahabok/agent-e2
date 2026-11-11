@@ -22,7 +22,7 @@
 ![Day 2 Operate → Day 0 Plan (high-level architecture and operations model) → Day 1 Design (low-level architecture and deployment); a major upgrade or migration loops back to Day 2](images/day2-day0-day1-sequence-diagram.png)
 - Example 1: the class of service and the average VM profile fix the ESXi host specification (`sp5-framework/capacity/host-spec-from-class-of-service`).
 - Example 2: business continuity caps cluster size.
-  - Policy: one cluster failure may affect at most N production VMs. Book example: 300.
+  - Policy: one cluster failure may affect at most N number of mission critical VMs. Specify this as part of architecture as a cluster can easily host thousands of VMs.
   - Size the cluster so its VMs stay under N. A larger cluster cannot be filled without breaking the policy.
   - Seen in the field: 32-node production clusters running 1,000-2,000 VMs.
   - Gold adds availability zones, because it hosts mission-critical services.
