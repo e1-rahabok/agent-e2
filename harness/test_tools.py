@@ -152,7 +152,7 @@ class FlowTest(unittest.TestCase):
         self.assertEqual((out['of'], out['next'], out['refers_to']), (6, '5', ['2']))
 
     def test_lettered_steps(self):
-        out = flows.run(DOCS, 'vsphere/technology/memory/troubleshooting/overcommit-indicators')
+        out = flows.run(DOCS, 'vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm')
         self.assertEqual(len(out['steps']), 4)
         self.assertTrue(out['steps'][0].startswith('a. '))
 

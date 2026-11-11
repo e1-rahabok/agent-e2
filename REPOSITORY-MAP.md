@@ -52,7 +52,6 @@ Started by a known problem: a complaint, an alert, or a failed health check step
 | VM CPU Other Wait is high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | VM CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](knowledge/vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |
 | VM memory latency (contention) is high | [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](knowledge/vsphere/technology/memory/troubleshooting/vm-memory-latency-high.md) |
-| Overcommit indicators | [`vsphere/technology/memory/troubleshooting/overcommit-indicators`](knowledge/vsphere/technology/memory/troubleshooting/overcommit-indicators.md) |
 | VM storage performance: what to check | [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](knowledge/vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md) |
 | ESXi storage latency is high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
 | vNIC receive drops | [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](knowledge/vsphere/technology/network/troubleshooting/vnic-rx-drops.md) |
@@ -67,6 +66,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | Can this cluster take more VMs? | [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) |
 | Does this ESXi host have CPU headroom? | [`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](knowledge/vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md) |
 | Should this large, idle VM be downsized? | [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](knowledge/vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md) |
+| Is memory overcommit affecting this VM? | [`vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`](knowledge/vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md) |
 
 ## Proof: not deployed
 | Folder | Holds |

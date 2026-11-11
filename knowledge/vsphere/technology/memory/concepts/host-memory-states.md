@@ -35,7 +35,7 @@
 - Swap to host cache starts when compression does not keep VM memory usage low enough, if a host cache is configured.
 - Regular host-level swapping starts when the host cache is full or none is configured.
 - Sharing, ballooning, compression and swap to host cache allow significant overcommitment, usually with little or no performance impact. Regular host-level swapping can degrade performance significantly.
-- Avoid overcommitting memory to the point where regular host-level swapping swaps out active pages. Indicators: see `vsphere/technology/memory/troubleshooting/overcommit-indicators`.
+- Avoid overcommitting memory to the point where regular host-level swapping swaps out active pages. Indicators: see `vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`.
 - Details per mechanism: `vsphere/technology/memory/concepts/page-sharing`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/concepts/swap-and-compression`.
 
 ## HA headroom
