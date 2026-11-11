@@ -12,12 +12,10 @@
 | 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
 | 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
 | 4:1 | 0.25 × logical CPUs |
-| 8:1 | 0.125 × logical CPUs; lab, dev, simple VDI |
 
 - 1:1: mind the Hyper-Threading throughput penalty and NUMA.
 - 2:1: two large VMs on one host each demand whole cores, and both get the 37.5% Hyper-Threading penalty.
 - 4:1: four medium VMs on a 2-socket host, each the size of a socket: two compete for each socket.
-- 8:1 per thread is 16:1 per core, because a core has two threads. For 2-vCPU desktops. On 96 threads the maximum is 12 vCPU; keep most VMs at 4-6 vCPU so they fit across the cluster.
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
 
 ## Size as a class of service fence
