@@ -12,7 +12,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
-from kb import MOVED  # noqa: E402
+from lint import MOVED  # noqa: E402
 
 BASE = 'https://github.com/e1-rahabok/agent-e2/blob/main/'
 DOCS = ['project/author-questions.md', 'project/plan.md', 'MISSION.md', 'benchmark/design.md', 'benchmark/README.md',

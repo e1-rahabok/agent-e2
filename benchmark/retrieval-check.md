@@ -15,7 +15,7 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 - For each question it runs the same retrieval classic mode uses, on the same `## Prompt` text the model sees, options included:
   1. Search: the top 6 files (`--k`, default 6).
   2. Classic context: the search hits (`classic_k: 6`), plus the troubleshooting flow first when the question reads as troubleshooting (`route_troubleshooting`), plus the `same_name`, `related` and `internal_derive` links of the top 2 hits, cut to the context budget (`context_tokens: 16000`). Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml).
-- It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [knowledge/moved.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/moved.yaml).
+- It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved.yaml).
 
 ```bash
 python3 benchmark/runner/retrieval_eval.py                       # keyword (BM25), offline

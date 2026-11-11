@@ -1,6 +1,6 @@
 # Knowledge engineering
 
-What the knowledge base holds, in what form, and how to write it. For human reviewers and writers. Not indexed.
+What Agent E2 knows, where each kind of knowledge lives (knowledge base, harness, agent instructions), in what form, and how to write it. For human reviewers and writers. Not indexed.
 Why the system can win: [MISSION.md](MISSION.md). How the parts run, including ingest and indexing: [ARCHITECTURE.md](ARCHITECTURE.md). What the agent is told about the knowledge base: [harness/AGENT.md](harness/AGENT.md). Plan and open gaps: [project/plan.md](project/plan.md).
 
 ## From expertise to knowledge the model reads
@@ -96,7 +96,7 @@ Part A says what the knowledge is (sections 1-4). Part B gives the rules for wri
 | Images with text twins | The author's diagrams and charts | `images/` folders |
 | Terminology | The agent's vocabulary: one entry per concept, with its other names and the term it is confused with (section 11.2). Wrong beliefs: `harness/misreadings.md`. Words to avoid when writing: `project/vocabulary.md` | `knowledge/glossary.md` |
 | Provenance | Source document and version, what is still to check, status | metadata |
-| Rules as code | Architecture and writing rules | `project/tools/lint.py`, `project/tools/tags.yaml` |
+| Rules as code | Architecture and writing rules, checked before merge (project, not deployed) | `project/tools/lint.py`, `project/tools/tags.yaml` |
 | Executable expectations | What an expert answers to a hard question, and the trap a non-expert falls into | `benchmark/questions/` |
 
 Reason for each form, and its readers:
@@ -109,10 +109,10 @@ Reason for each form, and its readers:
 | Links | Encodes the expert's mental map: which facts must be read together | Harness, model |
 | Folder hierarchy | One browsable tree in the order the author reviews | Human |
 | Catalog | Exact values must not depend on retrieval luck or model memory | Harness tools |
-| Troubleshooting flows | Small models skip steps; an ordered, executable form keeps them on the path | Harness (flow tool), model |
+| Flows | Small models skip steps; an ordered, executable form keeps them on the path | Harness (flow tool), model |
 | Formulas and calculator | Arithmetic is where models slip; code does it exactly | Harness |
 | Images with text twins | Diagrams carry expert insight; the text twin makes them usable by a text-only model | Model, human, vision model |
-| Terminology | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA, the SP5 SLI vs the SRE SLI) | Model, harness, human, lint |
+| Terminology | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA, Core vs Thread Utilization) | Model, harness, human, lint |
 | Provenance | Every fact must be traceable and challengeable | Human |
 | Rules as code | A rule that a script checks cannot drift | Lint |
 | Executable expectations | Shows that the knowledge changes answers | Benchmark |
@@ -176,7 +176,26 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 
 # Part B. Writing rules
 
-## 5. Layout
+## 5. Where the knowledge lives
+
+### 5.1 Across the product
+- Agent E2 is purpose-built: its domain knowledge is not only in `knowledge/`. The harness and the agent's instructions carry VMware knowledge too. All of it is product, deployed to the site, and all of it is reviewed by the author.
+- The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:
+
+| Path | Holds | Home | Why this path |
+|---|---|---|---|
+| Retrieved when a question needs it | Mechanisms, metrics, traps, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
+| Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
+| Given up front, every question | Misreadings, confusable pairs, flow index, map | `harness/misreadings.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
+| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
+| Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | `harness/modes.py` (system prompts), `harness/primer.py` (procedure) | Conduct for every answer, not a fact about one metric |
+
+- One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each misreading line ends with `See <id>`.
+- Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong misreading or prompt rule therefore costs more than a wrong metric file, and its review comes first.
+- `harness/misreadings.md` is VMware knowledge outside `knowledge/`. It is kept out of the index on purpose: search must return the file with the mechanism, not the one-line summary. Whether it should move into `knowledge/`: Q170.
+- Not product: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge; they are not deployed and hold nothing the agent reads.
+
+### 5.2 The knowledge base folder
 
 ```text
 knowledge/                           # what the model reads (indexed)
@@ -240,7 +259,7 @@ knowledge/                           # what the model reads (indexed)
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
   - `sp5-framework/` holds only content that applies across products or technologies. Product-specific pillar content stays with the product's object and is linked from there.
-  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across products (VM slow) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `troubleshooting` (the why: down or slow) or `decision-tree` (one operational question). `health-check` lives only under `object-types/<object>/` (and `vcf-operations/` for VCF Operations itself): a health check is on an object type, never on a technology or a pillar.
+  - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across products (VM slow) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `troubleshooting` (the why: down or slow) or `decision-tree` (one operational question). `health-check` lives only with an object type: `object-types/<object>/`, `vcf-operations/` for VCF Operations itself, and later `guest-os/` for the Guest OS as its own object. Never on a technology or a pillar.
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.
 - Three levels of general content, different scope (names say what the content is, not that it is basic):
@@ -305,7 +324,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 
 | Field | Meaning |
 |---|---|
-| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `knowledge/moved.yaml` (old id → new id, kept forever): old references still resolve, and lint flags an old id still used in an active file. |
+| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `project/tools/moved.yaml` (old id → new id): lint names the current id when an old one is still used, and `link_refs.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
 | `retriever_guide` | See section 7. |
 | `scope` | vendor-neutral (applies across VCF 9 components), sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
@@ -345,7 +364,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
   - `knowledge/catalog/thresholds-capacity.yaml`: `models` (capacity and risk model inputs with grey for wastage, green, yellow, orange, red), `decisions` (close for business), `rules` (planning and sizing).
   - `knowledge/catalog/thresholds-alerts.yaml`: `alerts`, one row per alert and criticality (`criticality`: red or orange, no yellow; `pillar`: performance or capacity). Alerts are set apart from the KPI: different purpose, set separately.
   - Ids are unique across the three files. The Harness loads them into its catalog at start-up and shows a file's rows whenever the file is in the context (classic facts, agentic `read_file`).
-  - Still to move (a `quote` marks a row whose number is also in prose; lint checks the copy until it goes): alert values in the alert files; capacity flow steps (can-cluster-take-more-vms, host-cpu-capacity-headroom); class of service planning; monster VM sizes.
+  - Still to move (a `quote` marks a row whose number is also in prose; lint checks the copy until it goes): alert values in the alert files; decision tree steps (can-cluster-take-more-vms, host-cpu-capacity-headroom); class of service planning; monster VM sizes.
 - No invented thresholds: a threshold goes in only with a source. Row field `source`: `knowledge-base`, or a vendor document with its version (`vsphere-9.1-docs`, `performance-best-practices-9.1`, `microsoft`), because vendor values can go stale and the newer official document wins.
 - The rule for the model is in `observability/thresholds` (Interval rule, Instance rule). The catalog has `interval` and `instance` fields, filled only where a source states them.
 
@@ -355,16 +374,15 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
   - Framework: how IT operations are managed (SP5). `sp5-framework/concepts/overview`.
   - Model: how one pillar of one object is quantified into a number and a decision (capacity model, availability model, security model). Files in `vsphere/object-types/<object>/models/` and `sp5-framework/capacity/`.
   - KPI: a model of performance only (the P in KPI). Files in `vsphere/object-types/<object>/kpis/`, plus `guest-os/system/metrics/guest-os-performance`.
-  - Health check: the what. Is the object healthy, at risk, or wasteful? Always on one object type (VM, host, cluster, datastore), never on a technology (CPU, memory) and never on one pillar (author, 2026-11-11). A parent's health includes its children's, unless a realm separates them: Guest OS slowness is not ESXi or VM health, because the hypervisor neither sees nor controls it. Read in the order of `sp5-framework/concepts/health-risk-efficiency`. Monitoring belongs here. Explained to the agent in `sp5-framework/concepts/health-check`.
+  - Health check: the what. Is the object healthy, at risk, or wasteful? Always on one object type (VM, host, cluster, datastore), never on a technology (CPU, memory) and never on one pillar (author, 2026-11-11). A parent's health includes its children's, unless a realm separates them: Guest OS slowness is not ESXi or VM health, because the hypervisor neither sees nor controls it. Its order of checks is below; the health grouping (present health, risk, efficiency) defines the verdicts, not the order (`sp5-framework/concepts/health-risk-efficiency`). Monitoring belongs here. Explained to the agent in `sp5-framework/concepts/health-check`.
   - Troubleshooting: the why, in the reactive process. It starts from a complaint, an alert, or a failed health check step. Two types only: down (availability) and slow (performance). A security breach gets a forensic investigation, not troubleshooting. Each type uses the same order of checks as its pillar in the health check.
-  - Two processes: reactive (troubleshooting, forensic investigation) and proactive (the health check, daily, with weekly and monthly analysis). The health check is a superset of reactive, because nobody knows yet whether there is a problem.
+  - Two processes: reactive (troubleshooting, forensic investigation) and proactive (the health check, daily, with weekly and monthly analysis). The health check is a superset of reactive, because nobody knows yet whether there is a problem. Proactive findings arrive as insight, typically anomaly detection read with business context.
   - Decision tree: answers one operational question (can this cluster take more VMs, should this VM be downsized) and ends in a choice to act, with its reason. Not a health check, even when a health check step reads its result. Not a decision record: a decision records what was done; a decision tree decides what to do.
   - Most operational questions are neither a health check nor troubleshooting. A flow for one is a decision tree; a question answered by reading, not by a branching order of checks, is a concept or metric file.
   - Not used: diagnosis (troubleshooting), what to monitor (health check), verification (health check).
 - A health check step names the KPI or model, its band, and the flow to open when it fails: `→ <troubleshooting id>`.
 - Order: is it up (availability: log, saturation, configuration, known bug), is it fast (performance: contention, consumption, configuration, known bug, log), is it secure (security: configuration, known bug, log), will it be enough (capacity: consumption, configuration, contention, inventory). Within each pillar the what comes before the why: establish the fact, then explain it; do not jump to a conclusion. Known bugs are checked per pillar, because a bug can cause an outage, slowness or a security loophole. Efficiency is part of capacity. Contention is part of performance. Every performance troubleshooting flow checks configuration.
 - The health check reads VCF Operations KPIs and models. It does not fall back to vSphere alone: VCF always includes VCF Operations, and other health check tools are outside the scope of Agent E2.
-- Reactive: after an alert, an incident (outage, breach) or a complaint. Proactive: insight, typically anomaly detection, read with business context.
 - One flow per file. Template: `project/templates/health-check.md`, `troubleshooting.md` or `decision-tree.md`. Order: purpose (health check: nothing is wrong yet, so no symptom), symptom (troubleshooting) or question (decision tree), Mermaid flowchart, numbered steps (`## Checks, in order`), why this order, how to read the result, traps, metadata.
 - The numbered steps are what the LLM follows. The Mermaid chart is a second, text-readable view; GitHub renders it for review.
 - Each step states: the metric (exact name, matching the metric file title), the object, the threshold with its source, and the next step for each outcome.
@@ -416,7 +434,7 @@ Agent E2 has four jobs with words. Each has one home, so a fact is written once.
 | Job | Failure it prevents | Home | Reaches the model |
 |---|---|---|---|
 | Recognize the user's word | Search misses the file ("steal time", "%RDY", "uptime KPI") | Glossary, Also called; the term map (`knowledge/catalog/user-terms.yaml`) for phrases | Query terms, files and notes before search |
-| Know what a term means here | The public meaning wins (SLI as the SRE indicator) | Glossary entry; the file for a metric | Search, `read_file` |
+| Know what a term means here | The public meaning wins (ESXi CPU Demand read where capacity Demand is meant) | Glossary entry; the file for a metric | Search, `read_file` |
 | Keep two terms apart | The answer uses the wrong one of two real terms | Glossary, Not to confuse with | Up-front block `terms` |
 | Drop a wrong belief | A confident rule of thumb, never looked up | `harness/misreadings.md` | Up-front block `rules` |
 

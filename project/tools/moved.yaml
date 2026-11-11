@@ -1,6 +1,6 @@
-# Moved knowledge ids: old id -> current id. Kept forever, so old references still resolve.
-# kb.resolve() follows it; lint flags an old id still used in an active file.
-# Built from git history on 2026-11-07; add a line with every move. Not indexed.
+# Moved knowledge ids: old id -> current id. A repository tool, not deployed: the harness never reads it.
+# lint.py flags an old id still used in an active file and names the current one; link_refs.py rewrites
+# links to moved files in the author documents. Add a line with every move.
 
 glossary/terminology: glossary
 vsphere/cluster-resource-management/concepts/admission-control-and-cluster-state: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state

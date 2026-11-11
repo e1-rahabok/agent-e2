@@ -40,7 +40,7 @@ flowchart LR
 ```
 
 - Product: what runs at the customer site.
-  - `knowledge/`: Level 400 mechanisms, metrics, traps and troubleshooting flows, plus exact data in `knowledge/catalog/`. Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
+  - `knowledge/`: Level 400 mechanisms, metrics, traps and flows (health checks, troubleshooting, decision trees), plus exact data in `knowledge/catalog/`. Not the only home of domain knowledge: up-front text and domain code sit in `harness/` (`KNOWLEDGE-ENGINEERING.md`, section 5.1). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
   - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code (`harness/agent.py`, up-front blocks in `harness/primer.py`); what it is told and how it decides: `harness/AGENT.md`.
   - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark (`benchmark/models.md`). Not stored here.
@@ -55,7 +55,7 @@ flowchart LR
 ## 1. Parts
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
-| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog) | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
+| Knowledge | Level 400 facts, mechanisms, traps, flows (markdown) and exact data (YAML catalog); up-front misreadings | `knowledge/`; `harness/misreadings.md` | Nothing. It is the first source; where it speaks, it wins. |
 | Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only (`harness/AGENT.md`) | the loop in `harness/agent.py` (`agentic`), up-front blocks in `harness/primer.py`, the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, the loop's rules, the answer verifier | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
 | Model | An open-weight vision LLM on one local GPU (at most 96 GB; `benchmark/models.md`) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
@@ -93,7 +93,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 | Mixes the VM and ESXi meaning of one label | One object per metric file; `same_name` links; a reminder before answering | Knowledge + harness |
 | Calls a Guest OS metric a VM metric | Separate `guest-os/` layer; `layer` tag; lint rule | Knowledge |
 | Gets a unit, rollup, statistics level or arithmetic wrong | Catalog lookup and calculator | Harness |
-| Skips troubleshooting steps or jumps to a conclusion | Flow tool serves the troubleshooting steps in order | Knowledge + harness |
+| Skips steps or jumps to a conclusion | Flow tool serves the steps of a health check, troubleshooting flow or decision tree in order | Knowledge + harness |
 | Invents a threshold | Rule: quote a threshold only with its source; thresholds catalog; verifier flags numbers not in the text | Knowledge + harness |
 | Guesses when unsure | Unsure option and the rule that a wrong answer is worse than Unsure | Agent (prompt) |
 | Answers from memory where the knowledge base speaks | Prompt rule: knowledge base first, and it wins on conflict; override rate measured (`benchmark/models.md`) | Agent (prompt) |
@@ -164,6 +164,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
+8. Not indexed but deployed: `harness/misreadings.md` and the confusable pairs of `knowledge/glossary.md` reach the model as up-front blocks (`harness/primer.py`), not through search. All five paths by which knowledge reaches the model: `KNOWLEDGE-ENGINEERING.md`, section 5.1.
 
 ### Query
 0. Map the user's words (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misreading the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).
@@ -185,15 +186,15 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Quote a threshold only when a file states it with its source.
 - One clarifying round (`harness/clarify.py`, `modes.converse`; rules in MISSION.md, section 5). The shipped assistant runs the conversation kind `chat`: the model may reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
 
-### Troubleshooting questions (`troubleshooting`)
-- Retrieve the matching `troubleshooting/` file first. Retrieve its `internal_derive` metric files with it.
+### Flow questions (`health-check`, `troubleshooting`, `decision-tree`)
+- Retrieve the matching flow file first: the object's health check, the troubleshooting flow for the symptom, or the decision tree for the question. Retrieve its `internal_derive` metric files with it.
 - Follow the numbered steps in `## Checks, in order`, from step 1. Do not skip to a later step.
 - At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives.
 - Use the Mermaid flow only to confirm the branch. The numbered steps win if they differ.
 - When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
 - Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
-- No troubleshooting file matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
-- Contention before consumption before context, unless the file states another order.
+- No flow matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
+- Troubleshooting: contention before consumption before context, unless the file states another order.
 
 ### Trace
 Recorded for every answer (`traces.jsonl` in the benchmark; the answer log at the site).
