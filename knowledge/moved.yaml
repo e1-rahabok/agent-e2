@@ -131,9 +131,9 @@ vsphere/memory/concepts/windows-memory: guest-os/memory/concepts/windows-memory
 vsphere/memory/configuration/host-level-swapping: vsphere/technology/memory/configuration/host-level-swapping
 vsphere/memory/configuration/memory-hardware: vsphere/technology/memory/configuration/memory-hardware
 vsphere/memory/configuration/memory-sizing: vsphere/technology/memory/configuration/memory-sizing
-vsphere/memory/diagnosis/overcommit-indicators: vsphere/technology/memory/troubleshooting/overcommit-indicators
+vsphere/memory/diagnosis/overcommit-indicators: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 vsphere/memory/diagnosis/vm-memory-latency-high: vsphere/technology/memory/troubleshooting/vm-memory-latency-high
-vsphere/memory/interpretation/overcommit-indicators: vsphere/technology/memory/troubleshooting/overcommit-indicators
+vsphere/memory/interpretation/overcommit-indicators: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 vsphere/memory/metrics/cluster/consumed: vsphere/technology/memory/metrics/cluster/consumed
 vsphere/memory/metrics/cluster/usage: vsphere/technology/memory/metrics/cluster/usage
 vsphere/memory/metrics/comparisons/esxtop-memory: vsphere/tools/esxtop/memory
@@ -299,7 +299,7 @@ vsphere/object-types/cluster/diagnosis/vm-insufficient-resources-in-drs-cluster:
 vsphere/technology/cpu/diagnosis/vm-cpu-contention-high: vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 vsphere/technology/cpu/diagnosis/vm-other-wait-high: vsphere/technology/cpu/troubleshooting/vm-other-wait-high
 vsphere/technology/cpu/diagnosis/run-vs-used-gap: vsphere/technology/cpu/troubleshooting/run-vs-used-gap
-vsphere/technology/memory/diagnosis/overcommit-indicators: vsphere/technology/memory/troubleshooting/overcommit-indicators
+vsphere/technology/memory/diagnosis/overcommit-indicators: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 vsphere/technology/memory/diagnosis/vm-memory-latency-high: vsphere/technology/memory/troubleshooting/vm-memory-latency-high
 vsphere/technology/network/diagnosis/vnic-rx-drops: vsphere/technology/network/troubleshooting/vnic-rx-drops
 vsphere/technology/storage/diagnosis/host-storage-latency: vsphere/technology/storage/troubleshooting/host-storage-latency
@@ -438,3 +438,4 @@ vsphere/object-types/cluster/kpis/cluster-sla-sli: vsphere/object-types/cluster/
 sp5-framework/capacity/health-check/can-cluster-take-more-vms: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 vsphere/technology/cpu/health-check/host-cpu-capacity-headroom: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
 vsphere/technology/cpu/health-check/oversized-vm-downsizing: vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
+vsphere/technology/memory/troubleshooting/overcommit-indicators: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm

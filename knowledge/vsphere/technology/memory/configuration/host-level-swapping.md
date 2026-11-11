@@ -68,7 +68,7 @@ internal_derive: []
 related:
 - vsphere/technology/memory/concepts/host-memory-states
 - vsphere/technology/memory/concepts/memory-overhead
-- vsphere/technology/memory/troubleshooting/overcommit-indicators
+- vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)

@@ -39,7 +39,7 @@ level: 400
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/technology/memory/troubleshooting/overcommit-indicators
+  - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
   - vsphere/technology/memory/concepts/ballooning
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []

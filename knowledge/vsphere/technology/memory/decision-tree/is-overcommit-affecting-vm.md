@@ -1,4 +1,9 @@
-# Overcommit indicators
+# Is memory overcommit affecting this VM?
+
+## Question
+- Is host memory overcommit affecting this VM now?
+- The answer is yes or no, with the indicator that shows it: ballooning, host swap or compression, or Guest OS swap.
+- An operational question, answered by a decision tree; not troubleshooting. When the VM is already slow and memory is the suspect, start at `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
 
 ## Principle
 - The point where overcommitment starts to affect a workload depends on the workload.
@@ -33,8 +38,8 @@
 
 ## Metadata
 ```yaml
-id: vsphere/technology/memory/troubleshooting/overcommit-indicators
-retriever_guide: troubleshooting
+id: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
+retriever_guide: decision-tree
 scope: vsphere
 technology:
 - memory

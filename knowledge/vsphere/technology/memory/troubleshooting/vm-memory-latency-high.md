@@ -43,7 +43,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 - vsphere/technology/memory/metrics/virtual-motherboard/compressed
-- vsphere/technology/memory/troubleshooting/overcommit-indicators
+- vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 source:
   document: PART 3 - Counters.docx
   path: Memory > VM > Contention Metrics > Latency
