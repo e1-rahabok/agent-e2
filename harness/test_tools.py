@@ -166,6 +166,16 @@ class CapacityPlanTest(unittest.TestCase):
         four = self.C.consumption({'silver': 100}, hosts=5, ha_hosts=1, **self.HOST)['consumption_pct']['utilization memory']
         self.assertEqual(one, four)
 
+    def test_host_spec(self):
+        want = {'gold': (7.12, 'allocation cpu', 64.0, 520), 'silver': (28.5, 'allocation cpu', 27.2, 839),
+                'bronze': (43.85, 'utilization cpu', 13.6, 660)}
+        for c, (fit, binding, need, ram) in want.items():
+            r = self.C.host_spec(c, cores=64, ghz=2.5)
+            self.assertEqual((r['fit'], r['cpu_binding'], max(r['memory_per_vm_gb'].values()), r['ram_gb']), (fit, binding, need, ram))
+        self.assertEqual(self.C.plan({'cores': 64, 'ghz': 2.5, 'vm_class': 'silver'})['ram_gb'], 839)
+        # the matching RAM makes memory bind together with CPU
+        self.assertAlmostEqual(self.C.vms_per_host('silver', cores=64, ghz=2.5, ram_gb=839.2)['exact'], 28.5, places=1)
+
     def test_tool_entry_and_errors(self):
         self.assertEqual(self.C.plan({'cores': 64, 'ghz': 2.5, 'ram_gb': 768, 'vm_class': 'silver'})['fit'], 25)
         self.assertIn('error', self.C.plan({'cores': 64, 'ghz': 2.5}))
