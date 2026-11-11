@@ -37,7 +37,7 @@ Each entry has:
     - The application team's evidence (which transaction, its response time, its errors) is input to step 1.
   - Change if accepted: vm-slow (Symptom, steps 1 and 2, trap "the VM the user names is the slow one"); delete the review note.
   - For you: what you ask the application team first.
-- Answer: I ask the application team to quantify the slowness, using
+- Answer: I ask the application team to quantify the slowness, using diagram such as 
 
 ### Q061 · Operations flows · Can this cluster take more VMs: your order of checks
 
