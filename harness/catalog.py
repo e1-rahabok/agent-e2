@@ -7,7 +7,10 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  rules and colour bands from knowledge/catalog/thresholds-performance.yaml and thresholds-capacity.yaml
+  thresholds  one-value tests, labelled by use: sla, sli (thresholds-performance.yaml), alert (thresholds-alerts.yaml),
+              decision, rule (thresholds-capacity.yaml)
+  bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
+  kpi         KPI colour levels, the one copy (thresholds-performance.yaml, kpi)
   metrics     one row per knowledge metric file, from its metadata
   objects, relations   object model (knowledge/catalog/objects.yaml)
 """
@@ -84,14 +87,15 @@ class Catalog:
           CREATE TABLE counters (counter TEXT, name TEXT, grp TEXT, object TEXT, shows TEXT, chart TEXT, label TEXT, unit TEXT,
                                  stat_type TEXT, rollup TEXT, level INT, minmax_level INT, description TEXT, page INT, kb TEXT);
           CREATE TABLE esxtop (panel TEXT, field TEXT, key TEXT, description TEXT, page INT);
-          CREATE TABLE thresholds (id TEXT, metric TEXT, object TEXT, layer TEXT, operator TEXT, value REAL, value_high REAL, unit TEXT,
+          CREATE TABLE thresholds (id TEXT, use TEXT, criticality TEXT, class TEXT, pillar TEXT, metric TEXT, object TEXT, layer TEXT,
+                                   instance TEXT, interval TEXT, operator TEXT, value REAL, value_high REAL, unit TEXT,
                                    condition TEXT, meaning TEXT, source TEXT, kb TEXT);
           CREATE TABLE bands (kb TEXT, grp TEXT, metric TEXT, object TEXT, grey TEXT, green TEXT, yellow TEXT, orange TEXT, red TEXT, source TEXT, pillar TEXT, interval TEXT);
           CREATE TABLE metrics (id TEXT, title TEXT, object TEXT, layer TEXT, technology TEXT, metric_class TEXT, instance TEXT,
                                 same_name TEXT, same_meaning TEXT, status TEXT);
           CREATE TABLE objects (type TEXT, role TEXT, layer TEXT, supplies TEXT, charts INT, note TEXT, kb TEXT);
           CREATE TABLE relations (src TEXT, dst TEXT, kind TEXT, cardinality TEXT);
-          CREATE TABLE levels (object TEXT, metric TEXT, grp TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, excluded INT, src TEXT);
+          CREATE TABLE kpi (object TEXT, metric TEXT, grp TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, excluded INT, src TEXT);
           CREATE TABLE formulas (formula TEXT, source TEXT);
         ''')
         for r in load_yaml('vcenter-api-counters.yaml')['rows']:
@@ -112,20 +116,25 @@ class Catalog:
             c.execute('INSERT INTO esxtop VALUES (?,?,?,?,?)', (r['panel'], r['field'], _esx_key(r['field']), r['description'], r.get('page')))
         for f in es.get('formulas') or []:
             c.execute('INSERT INTO formulas VALUES (?,?)', (f['formula'], f'esxtop {f["panel"]} panel, {doc}, p. {f["page"]}'))
-        for pillar in ('performance', 'capacity'):
-            for r in load_yaml(f'thresholds-{pillar}.yaml')['rows']:
-                if r['kind'] == 'rule':
-                    c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                              (r['id'], r['metric'], r.get('object'), r.get('layer'), r['operator'], r['value'], r.get('value_high'),
-                               r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb']))
-                else:
-                    b = r['bands']
-                    c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                              (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
-                               b['orange'], b['red'], r['source'], pillar, r.get('interval')))
+        # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
+        perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
+        tests = [(perf, 'sla', 'performance'), (perf, 'sli', 'performance'), (al, 'alerts', None),
+                 (cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity')]
+        for data, section, pillar in tests:
+            use = {'alerts': 'alert', 'decisions': 'decision', 'rules': 'rule'}.get(section, section)
+            for r in data.get(section) or []:
+                c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                          (r['id'], use, r.get('criticality'), r.get('class'), r.get('pillar') or pillar, r['metric'], r.get('object'),
+                           r.get('layer'), r.get('instance'), r.get('interval'), r['operator'], r['value'], r.get('value_high'),
+                           r.get('unit'), r.get('condition'), r.get('meaning'), r['source'], r['kb']))
+        for r in cap.get('models') or []:
+            b = r['bands']
+            c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+                      (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
+                       b['orange'], b['red'], r['source'], 'capacity', r.get('interval')))
         # KPI levels: the one place for performance colour levels; no knowledge file repeats them.
-        for lv in load_yaml('thresholds-performance.yaml').get('levels') or []:
-            c.execute('INSERT INTO levels VALUES (?,?,?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv.get('group'), lv['direction'],
+        for lv in perf.get('kpi') or []:
+            c.execute('INSERT INTO kpi VALUES (?,?,?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv.get('group'), lv['direction'],
                       *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')),
                       int(bool(lv.get('excluded_when_green'))), lv['kb']))
         for d in self.docs.values():
@@ -221,7 +230,7 @@ class Catalog:
             if s:
                 bd.append((s, r))
         lv = []
-        for r in self._q('SELECT * FROM levels'):
+        for r in self._q('SELECT * FROM kpi'):
             s = 40 if r['src'] in kb_ids else 0
             s += _score(key, words, exact=[r['metric'].lower()], text=r['metric'].lower(), desc='') if key else 0
             if obj and r['object'] != obj:
@@ -229,9 +238,10 @@ class Catalog:
             if s:
                 lv.append((s, r))
         th, bd, lv = _best(th, limit), _best(bd, limit), _best(lv, limit)
-        return {'thresholds': [_compact(r, ('metric', 'object', 'operator', 'value', 'value_high', 'unit', 'condition', 'meaning', 'source', 'kb')) for r in th],
+        return {'thresholds': [_compact(r, ('use', 'criticality', 'class', 'metric', 'object', 'instance', 'interval', 'operator', 'value',
+                                            'value_high', 'unit', 'condition', 'meaning', 'source', 'kb')) for r in th],
                 'bands': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd],
-                'levels': [_level(r) for r in lv]}
+                'kpi': [_kpi(r) for r in lv]}
 
     def object_info(self, type_):
         t = norm_object(type_)
@@ -282,9 +292,10 @@ class Catalog:
         for r in self._q(f'SELECT * FROM thresholds WHERE kb IN ({marks})', tuple(ids)):
             hi = f"-{r['value_high']:g}" if r['value_high'] is not None else ''
             cond = f" with {r['condition']}" if r['condition'] else ''
-            lines.append(f"- Threshold: {r['metric']} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
+            iv = f" ({r['interval']})" if r['interval'] else ''
+            lines.append(f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
                          f"(source: {r['source']}) [{r['kb']}]")
-        for r in self._q(f'SELECT * FROM levels WHERE src IN ({marks})', tuple(ids)):
+        for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
             worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
             vals = '; '.join(f"{iv} {r[col].replace('/', ', ') if r[col] else 'no value'}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
             ex = '; left out of the score while green' if r['excluded'] else ''
@@ -298,7 +309,7 @@ class Catalog:
 
     def stats(self):
         return {t: self._q(f'SELECT COUNT(*) AS n FROM {t}')[0]['n']
-                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'bands', 'metrics', 'objects', 'relations')}
+                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'bands', 'kpi', 'metrics', 'objects', 'relations')}
 
 
 def _esx_key(s):
@@ -331,7 +342,16 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-def _level(r):
+USE_LABELS = {'sla': 'SLA', 'sli': 'SLI', 'alert': 'Alert', 'decision': 'Capacity decision', 'rule': 'Capacity rule'}
+
+
+def _use_label(r):
+    """What the number is for, first in every line: an SLI test, an alert and a KPI level for one metric differ."""
+    extra = r['class'] or r['criticality']
+    return USE_LABELS.get(r['use'], r['use']) + (f', {extra}' if extra else '')
+
+
+def _kpi(r):
     return {'object': r['object'], 'metric': r['metric'], 'group': r['grp'], 'worse': r['direction'],
             **{iv: (f'yellow/orange/red {r[col]}' if r[col] else 'no value') for iv, col in (('5m', 'm5'), ('20s', 's20'), ('2s', 's2'))},
             **({'excluded_when_green': True} if r['excluded'] else {}), 'kb': r['src']}

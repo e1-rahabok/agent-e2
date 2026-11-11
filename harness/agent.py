@@ -42,7 +42,7 @@ TOOLS = [
     {'type': 'function', 'function': {
         'name': 'catalog',
         'description': ('Exact facts from the metric catalog. name = a vCenter counter (cpu.ready.summation), chart label (Ready), '
-                        'esxtop field (%RDY, DAVG) or metric title: returns unit, rollup, statistics level, thresholds with source, '
+                        'esxtop field (%RDY, DAVG) or metric title: returns unit, rollup, statistics level, thresholds by use (SLA, SLI, alert, KPI, capacity) with source, '
                         'and the knowledge file. name = an object type (VirtualMachine, HostSystem, Datastore, ...): returns its role '
                         'and relations; add "to" for the path between two object types.'),
         'parameters': {'type': 'object', 'properties': {
@@ -120,7 +120,7 @@ def _run_tool(retriever, name, args, state):
             out = cat.object_info(nm)
         else:
             out = cat.lookup(nm, args.get('object'))
-            if not any(out[k] for k in ('counters', 'api', 'esxtop', 'metric_files', 'thresholds', 'bands')):
+            if not any(out[k] for k in ('counters', 'api', 'esxtop', 'metric_files', 'thresholds', 'bands', 'kpi')):
                 out['note'] = 'No catalog entry. Use search.'
         return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
     if name == 'calculate':

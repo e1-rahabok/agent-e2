@@ -1,57 +1,32 @@
 meta:
   id: catalog/thresholds-capacity
-  title: 'Capacity thresholds: utilization, saturation, reservation, allocation, rightsizing'
+  title: 'Capacity thresholds: models, decisions, planning rules'
+  sections:
+    models: Capacity and risk model inputs with colour bands (grey for wastage, green, yellow, orange, red).
+    decisions: 'Close for business: when a cluster takes no more VMs. Reads model and KPI scores over 24 hours.'
+    rules: 'Planning and sizing rules: one value, above X means Y.'
   fields:
     id: Stable key.
-    kind: 'rule (one value: above X means Y) or bands (colour bands).'
     metric: Metric as the knowledge file names it.
     object: Managed object type.
-    layer: Layer that produces the metric (rules).
+    layer: Layer that produces the metric.
     instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
-    operator: 'rules: >, >=, <, <=, =, range.'
-    value: 'rules: the number compared against; range: low end, value_high the high end.'
+    operator: '>, >=, <, <=, =, range.'
+    value: 'The number compared against; range: low end, value_high the high end.'
     unit: Unit of value.
-    condition: 'rules: another condition that must hold at the same time.'
-    meaning: 'rules: what the knowledge file says the value means.'
-    group: 'bands: the group column of the source table (for example Utilization, Depth).'
+    condition: Another condition that must hold at the same time.
+    meaning: What the knowledge file says the value means.
+    group: 'models: the group column of the source table (for example Utilization, Depth).'
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: Knowledge file that states and explains the threshold.
-    quote: 'rules: text copied from the kb file; lint checks it is still there.'
+    quote: Text copied from the kb file; lint checks it is still there.
     interval: 'Usually empty: capacity reads sustained values.'
     bands: 'grey (below green: wastage), green, yellow, orange, red. Grey is empty until a source gives it.'
   review_notes:
-  - Every row restates a threshold written in its kb file. Band rows must match the colour-band table of the kb file; lint checks both ways.
-  - Merged 2026-11-06 from catalog/thresholds.yaml and the KPI band tables (one place for thresholds).
-  - 'Intervals of KPI and SLI rows: a VCF Operations metric named ''peak'' is the highest of the 15 20-second averages in the 5-minute
-    cycle (20s); every KPI and SLI is reported every 5 minutes (5m). The SLA is a lagging, monthly indicator.'
+  - 'To check: grey (wastage) band values, empty until a source gives them.'
   status: draft
-rows:
-- kind: rule
-  id: monster-vm-cpu
-  metric: VM vCPU count relative to host physical cores
-  object: VirtualMachine
-  operator: '>'
-  value: 50
-  unit: '% of physical cores (not threads)'
-  meaning: Monster VM (vCommunity adapter default). Cores, not threads.
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-  quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
-  interval: 5m
-- kind: rule
-  id: monster-vm-memory
-  metric: VM memory relative to host physical RAM
-  object: VirtualMachine
-  operator: '>'
-  value: 40
-  unit: '% of host DRAM, or 256 GB, whichever is smaller'
-  meaning: Monster VM (vCommunity adapter default). DRAM only; NVMe tiering does not count.
-  source: knowledge-base
-  kb: vsphere/object-types/cluster/models/cluster-risk
-  quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
-  interval: 5m
-- kind: bands
-  id: guest-os-sizing-guest-os-memory-utilization-for-sizing
+models:
+- id: guest-os-sizing-guest-os-memory-utilization-for-sizing
   metric: Guest OS memory utilization, for sizing (%)
   group: null
   object: null
@@ -64,8 +39,7 @@ rows:
     red: 95-100
   source: knowledge-base
   kb: guest-os/system/concepts/guest-os-sizing
-- kind: bands
-  id: cluster-consumption-cluster-wide-esxi-cpu-thread-utilization
+- id: cluster-consumption-cluster-wide-esxi-cpu-thread-utilization
   metric: Cluster-wide ESXi CPU thread utilization (%)
   group: Utilization
   object: ClusterComputeResource
@@ -78,8 +52,7 @@ rows:
     red: 85-100
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
-- kind: bands
-  id: cluster-consumption-cluster-wide-esxi-memory-consumed
+- id: cluster-consumption-cluster-wide-esxi-memory-consumed
   metric: Cluster-wide ESXi memory consumed (%)
   group: Utilization
   object: ClusterComputeResource
@@ -92,8 +65,7 @@ rows:
     red: 90-100
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
-- kind: bands
-  id: cluster-consumption-cluster-memory-tiering-consumption
+- id: cluster-consumption-cluster-memory-tiering-consumption
   metric: Cluster memory tiering consumption (%)
   group: Saturation
   object: ClusterComputeResource
@@ -106,8 +78,7 @@ rows:
     red: 16-32
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
-- kind: bands
-  id: cluster-consumption-cluster-wide-esxi-memory-ballooned
+- id: cluster-consumption-cluster-wide-esxi-memory-ballooned
   metric: Cluster-wide ESXi memory ballooned (%)
   group: Saturation
   object: ClusterComputeResource
@@ -120,8 +91,7 @@ rows:
     red: 4-8
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
-- kind: bands
-  id: cluster-consumption-cluster-wide-esxi-swapped-zipped-memory
+- id: cluster-consumption-cluster-wide-esxi-swapped-zipped-memory
   metric: Cluster-wide ESXi swapped + zipped memory (%)
   group: Saturation
   object: ClusterComputeResource
@@ -134,8 +104,7 @@ rows:
     red: 1-2
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
-- kind: bands
-  id: cluster-risk-highest-esxi-cpu-thread-utilization
+- id: cluster-risk-highest-esxi-cpu-thread-utilization
   metric: Highest ESXi CPU thread utilization (%)
   group: Utilization
   object: ClusterComputeResource
@@ -148,8 +117,7 @@ rows:
     red: 90-95
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-worst-esxi-cpu-imbalance-ratio
+- id: cluster-risk-worst-esxi-cpu-imbalance-ratio
   metric: Worst ESXi CPU imbalance (ratio)
   group: Utilization
   object: ClusterComputeResource
@@ -162,8 +130,7 @@ rows:
     red: 1.6-2
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-esxi-memory-consumed
+- id: cluster-risk-highest-esxi-memory-consumed
   metric: Highest ESXi memory consumed (%)
   group: Utilization
   object: ClusterComputeResource
@@ -176,8 +143,7 @@ rows:
     red: 95-100
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-worst-esxi-memory-ballooned
+- id: cluster-risk-worst-esxi-memory-ballooned
   metric: Worst ESXi memory ballooned (%)
   group: Saturation
   object: ClusterComputeResource
@@ -190,8 +156,7 @@ rows:
     red: 4-8
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-worst-esxi-swapped-zipped-memory
+- id: cluster-risk-worst-esxi-swapped-zipped-memory
   metric: Worst ESXi swapped + zipped memory (%)
   group: Saturation
   object: ClusterComputeResource
@@ -204,8 +169,7 @@ rows:
     red: 1-2
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-worst-esxi-memory-tiering-latency-s
+- id: cluster-risk-worst-esxi-memory-tiering-latency-s
   metric: Worst ESXi memory tiering latency (µs)
   group: Saturation
   object: ClusterComputeResource
@@ -218,8 +182,7 @@ rows:
     red: 450-600
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-esxi-cpu-reservation
+- id: cluster-risk-highest-esxi-cpu-reservation
   metric: Highest ESXi CPU reservation (%)
   group: Reservation
   object: ClusterComputeResource
@@ -232,8 +195,7 @@ rows:
     red: 60-80
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-esxi-memory-reservation
+- id: cluster-risk-highest-esxi-memory-reservation
   metric: Highest ESXi memory reservation (%)
   group: Reservation
   object: ClusterComputeResource
@@ -246,8 +208,7 @@ rows:
     red: 60-80
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-esxi-cpu-overcommit-ratio
+- id: cluster-risk-highest-esxi-cpu-overcommit-ratio
   metric: Highest ESXi CPU overcommit ratio
   group: Allocation
   object: ClusterComputeResource
@@ -260,8 +221,7 @@ rows:
     red: 3-4
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-esxi-memory-overcommit-ratio
+- id: cluster-risk-highest-esxi-memory-overcommit-ratio
   metric: Highest ESXi memory overcommit ratio
   group: Allocation
   object: ClusterComputeResource
@@ -274,8 +234,7 @@ rows:
     red: 1.8-2.2
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-cpu-monster-vm-host-ratio
+- id: cluster-risk-highest-cpu-monster-vm-host-ratio
   metric: 'Highest CPU monster VM : host ratio'
   group: Monster VM
   object: ClusterComputeResource
@@ -288,8 +247,7 @@ rows:
     red: 3-4
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: bands
-  id: cluster-risk-highest-memory-monster-vm-host-ratio
+- id: cluster-risk-highest-memory-monster-vm-host-ratio
   metric: 'Highest memory monster VM : host ratio'
   group: Monster VM
   object: ClusterComputeResource
@@ -302,30 +260,8 @@ rows:
     red: 3-4
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- kind: rule
-  id: cluster-utilization-usable-wastage
-  metric: Cluster utilization against usable capacity
-  object: ClusterComputeResource
-  operator: <
-  value: 40
-  unit: '% of usable capacity'
-  meaning: Grey (wastage). Capacity given, and likely paid for, is not used.
-  source: knowledge-base
-  kb: sp5-framework/capacity/capacity-dimensions
-  quote: '| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |'
-- kind: rule
-  id: cluster-utilization-usable-best
-  metric: Cluster utilization against usable capacity
-  object: ClusterComputeResource
-  operator: '='
-  value: 80
-  unit: '% of usable capacity'
-  meaning: Best (target). 40-80% is green.
-  source: knowledge-base
-  kb: sp5-framework/capacity/capacity-dimensions
-  quote: '| 80% | Best | Target |'
-- kind: rule
-  id: closure-cluster-consumption-red
+decisions:
+- id: closure-cluster-consumption-red
   metric: Cluster Consumption (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: '>'
@@ -336,8 +272,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
   quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
-- kind: rule
-  id: closure-cluster-consumption-orange
+- id: closure-cluster-consumption-orange
   metric: Cluster Consumption (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: '>'
@@ -348,8 +283,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
   quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
-- kind: rule
-  id: closure-cluster-performance-red
+- id: closure-cluster-performance-red
   metric: Cluster Performance (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: <
@@ -360,8 +294,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
   quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
-- kind: rule
-  id: closure-cluster-performance-orange
+- id: closure-cluster-performance-orange
   metric: Cluster Performance (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: <
@@ -372,8 +305,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
   quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
-- kind: rule
-  id: closure-cluster-risk-prod
+- id: closure-cluster-risk-prod
   metric: Cluster Risk (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: '>'
@@ -384,8 +316,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
   quote: 'production: above 60% (orange) → no: closed;'
-- kind: rule
-  id: closure-cluster-risk-nonprod
+- id: closure-cluster-risk-nonprod
   metric: Cluster Risk (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource
   operator: '>'
@@ -396,8 +327,50 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/health-check/can-cluster-take-more-vms
   quote: 'non-production: above 80% (red) → no: closed.'
-- kind: rule
-  id: class-gold-min-vm-performance
+rules:
+- id: monster-vm-cpu
+  metric: VM vCPU count relative to host physical cores
+  object: VirtualMachine
+  operator: '>'
+  value: 50
+  unit: '% of physical cores (not threads)'
+  meaning: Monster VM (vCommunity adapter default). Cores, not threads.
+  source: knowledge-base
+  kb: vsphere/object-types/cluster/models/cluster-risk
+  quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
+  interval: 5m
+- id: monster-vm-memory
+  metric: VM memory relative to host physical RAM
+  object: VirtualMachine
+  operator: '>'
+  value: 40
+  unit: '% of host DRAM, or 256 GB, whichever is smaller'
+  meaning: Monster VM (vCommunity adapter default). DRAM only; NVMe tiering does not count.
+  source: knowledge-base
+  kb: vsphere/object-types/cluster/models/cluster-risk
+  quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
+  interval: 5m
+- id: cluster-utilization-usable-wastage
+  metric: Cluster utilization against usable capacity
+  object: ClusterComputeResource
+  operator: <
+  value: 40
+  unit: '% of usable capacity'
+  meaning: Grey (wastage). Capacity given, and likely paid for, is not used.
+  source: knowledge-base
+  kb: sp5-framework/capacity/capacity-dimensions
+  quote: '| 0-40% | Grey | Wastage: capacity given, and likely paid for, is not used |'
+- id: cluster-utilization-usable-best
+  metric: Cluster utilization against usable capacity
+  object: ClusterComputeResource
+  operator: '='
+  value: 80
+  unit: '% of usable capacity'
+  meaning: Best (target). 40-80% is green.
+  source: knowledge-base
+  kb: sp5-framework/capacity/capacity-dimensions
+  quote: '| 80% | Best | Target |'
+- id: class-gold-min-vm-performance
   metric: VM Performance (%), minimum for the class
   object: VirtualMachine
   operator: '>='
@@ -408,8 +381,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
   quote: '- Gold: ≥ 99.5%'
-- kind: rule
-  id: class-silver-min-vm-performance
+- id: class-silver-min-vm-performance
   metric: VM Performance (%), minimum for the class
   object: VirtualMachine
   operator: '>='
@@ -420,8 +392,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
   quote: '- Silver: ≥ 99%'
-- kind: rule
-  id: class-bronze-min-vm-performance
+- id: class-bronze-min-vm-performance
   metric: VM Performance (%), minimum for the class
   object: VirtualMachine
   operator: '>='
@@ -432,8 +403,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
   quote: '- Bronze: ≥ 98%'
-- kind: rule
-  id: idle-vm-cpu
+- id: idle-vm-cpu
   metric: VM CPU consumption per day (Idle VM policy)
   object: VirtualMachine
   operator: <=
@@ -445,8 +415,7 @@ rows:
   kb: vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm
   quote: '| Within each day it consumes no more than | 100 MHz CPU |'
   interval: 5m
-- kind: rule
-  id: datastore-mission-critical-vm-concentration
+- id: datastore-mission-critical-vm-concentration
   metric: Mission-critical VMs per datastore
   object: Datastore
   operator: <
@@ -456,8 +425,7 @@ rows:
   source: knowledge-base
   kb: sp5-framework/capacity/capacity-management-process
   quote: 'concentration risk: fewer than 250 mission-critical VMs per datastore'
-- kind: rule
-  id: large-vm-fleet-average-cpu-oversized
+- id: large-vm-fleet-average-cpu-oversized
   metric: Average CPU workload among large VMs (super metric)
   object: VirtualMachine
   operator: <
@@ -469,46 +437,7 @@ rows:
   kb: sp5-framework/capacity/rightsizing
   quote: '| Average CPU workload among the VMs | About 40% | Below 20% all month: all large VMs oversized |'
   interval: 5m
-- kind: rule
-  id: alert-esxi-cpu-thread-utilization-red
-  metric: ESXi CPU Thread Utilization
-  object: HostSystem
-  layer: hypervisor
-  operator: '>'
-  value: 40
-  unit: '%'
-  condition: ESXi CPU Core Utilization above 80%, for 10 minutes; cluster when more than 25% of hosts
-  meaning: Red infrastructure CPU consumption alert.
-  source: knowledge-base
-  kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: ESXi CPU Thread Utilization above 40%;
-- kind: rule
-  id: alert-esxi-memory-consumed-red
-  metric: ESXi Memory Consumed
-  object: HostSystem
-  layer: hypervisor
-  operator: '>'
-  value: 95
-  unit: '%'
-  condition: ESXi Memory Ballooned above 10 MB, for 10 minutes; cluster when 50% of hosts
-  meaning: Red infrastructure memory consumption alert.
-  source: knowledge-base
-  kb: vsphere/technology/memory/configuration/memory-alerts
-  quote: ESXi Memory Consumed above 95%.
-- kind: rule
-  id: alert-datastore-used-space-red
-  metric: Datastore Used Space
-  object: Datastore
-  layer: physical
-  operator: '>'
-  value: 90
-  unit: '%'
-  meaning: Red datastore consumption alert.
-  source: knowledge-base
-  kb: vsphere/technology/storage/configuration/storage-alerts
-  quote: 'Datastore, red: used space above 90%.'
-- kind: rule
-  id: host-cpu-cores-free
+- id: host-cpu-cores-free
   metric: ESXi Core Utilization
   object: HostSystem
   layer: hypervisor
@@ -520,8 +449,7 @@ rows:
   source: knowledge-base
   kb: vsphere/technology/cpu/health-check/host-cpu-capacity-headroom
   quote: 'Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free.'
-- kind: rule
-  id: host-cpu-thread-utilization-target
+- id: host-cpu-thread-utilization-target
   metric: ESXi Thread Utilization
   object: HostSystem
   layer: hypervisor

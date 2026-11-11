@@ -1,7 +1,7 @@
 # VM Performance (%) (VCF Operations KPI)
 
 ## Thresholds (book)
-- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `levels`. They are shown with this file; this file holds the reasons.
+- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
 
 ## Reasons
 - CPU uses 4 metrics (Co-stop, Ready, Overlap, Net Run). They do not peak in the same 20-second period, so they cannot be combined. Known limitation: CPU weight is larger.
