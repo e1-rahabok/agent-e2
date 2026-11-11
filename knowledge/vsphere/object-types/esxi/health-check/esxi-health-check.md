@@ -4,8 +4,8 @@
 - Is this ESXi (ESX) host healthy? Which metrics matter most on a host, in what order?
 - Which host metrics show performance, and which show capacity.
 
-## Symptom
-- None. A scheduled or on-demand check of one host: the what. A failed step opens a troubleshooting flow: the why.
+## Purpose
+- A scheduled or on-demand check of one host across every pillar: the what. What a health check is: `sp5-framework/concepts/health-check`. A failed step opens a troubleshooting flow: the why.
 
 ## Flow
 ```mermaid
@@ -103,6 +103,7 @@ internal_derive:
 - vsphere/technology/storage/troubleshooting/host-storage-latency
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
 related:
+- sp5-framework/concepts/health-check
 - vsphere/object-types/vm/health-check/vm-health-check
 - vsphere/object-types/cluster/health-check/cluster-health-check
 - vsphere/architecture/provider-consumer

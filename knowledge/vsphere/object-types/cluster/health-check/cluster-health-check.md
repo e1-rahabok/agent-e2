@@ -4,8 +4,8 @@
 - Is this vSphere cluster healthy? Which metrics matter most on a cluster, in what order: availability, performance, capacity, configuration, efficiency.
 - Can it take more VMs: step 4.
 
-## Symptom
-- None. A scheduled or on-demand check of one cluster: the what. A failed step opens a troubleshooting flow: the why.
+## Purpose
+- A scheduled or on-demand check of one cluster across every pillar: the what. What a health check is: `sp5-framework/concepts/health-check`. A failed step opens a troubleshooting flow: the why.
 
 ## Flow
 ```mermaid
@@ -93,6 +93,7 @@ internal_derive:
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
 related:
+- sp5-framework/concepts/health-check
 - vsphere/object-types/vm/health-check/vm-health-check
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - sp5-framework/capacity/capacity-model
