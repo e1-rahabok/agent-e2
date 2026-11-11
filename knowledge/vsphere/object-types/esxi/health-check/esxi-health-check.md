@@ -41,6 +41,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 6. Capacity, storage, network and GPU consumption (HostSystem). Device, adapter and path throughput and IOPS (`vsphere/technology/storage/metrics/host/disk`, `vsphere/technology/storage/metrics/host/adapter-and-path`). Network throughput per vmnic (`vsphere/technology/network/metrics/host/throughput`). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level (`vsphere/technology/gpu/concepts/gpu-monitoring`). → step 7.
 7. Configuration (HostSystem). `vsphere/object-types/esxi/configuration/esxi-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means (`vsphere/technology/cpu/configuration/host-power-management`, `vsphere/object-types/esxi/configuration/bios-settings`). Hypervisor overhead (vSAN, NSX, kernel): `vsphere/architecture/overhead`. .
 
+- Efficiency (wastage, reclamation) is not part of ESXi host health check as host is transient due to vSphere Cluster DRS and HA.
 - Not checked in 1.0: security and compliance (future phase).
 
 ## Why this order
