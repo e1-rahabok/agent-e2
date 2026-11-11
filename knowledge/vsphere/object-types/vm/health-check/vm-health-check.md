@@ -4,8 +4,8 @@
 - Is this VM (virtual machine) healthy? Which VM metrics matter most, in what order: CPU, memory, storage, network.
 - Which VM metrics show performance, and which only show consumption.
 
-## Symptom
-- None. A scheduled or on-demand check of one VM: the what. A failed step opens a troubleshooting flow: the why.
+## Purpose
+- A scheduled or on-demand check of one VM across every pillar: the what. What a health check is: `sp5-framework/concepts/health-check`. A failed step opens a troubleshooting flow: the why.
 - A user complaint ("the VM is slow") is reactive: skip the health check and start at `sp5-framework/performance/troubleshooting/vm-slow`.
 
 ## Flow
@@ -97,6 +97,7 @@ internal_derive:
 - vsphere/technology/network/metrics/comparisons/vm-network-metrics
 - vsphere/object-types/vm/kpis/vm-performance
 related:
+- sp5-framework/concepts/health-check
 - sp5-framework/performance/troubleshooting/vm-slow
 - vsphere/object-types/esxi/health-check/esxi-health-check
 - vsphere/object-types/cluster/health-check/cluster-health-check

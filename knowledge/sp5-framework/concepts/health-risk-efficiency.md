@@ -4,7 +4,7 @@
 - IT uses the word health everywhere and rarely defines it. Trying to cover everything makes the definition too broad.
 - What counts as healthy depends on the object, the aspect and the scope. A score that covers everything drops when anything is imperfect, so it reads low while the environment runs well.
 - The same holds outside IT. A person can be physically fit and still ill in another sense; a country can be a strong economy and weak in some of its provinces. A health statement needs its aspect and its scope.
-- So there is no single health score. The definition of health (present health, risk, efficiency, below) is separate from the action of checking it: the health check runs availability, performance, security, capacity, with configuration as the drill-down (`vsphere/object-types/cluster/health-check/cluster-health-check`).
+- So there is no single health score. The definition of health (present health, risk, efficiency, below) is separate from the action of checking it: the health check runs availability, performance, security, capacity on one object, with configuration as the drill-down (`sp5-framework/concepts/health-check`).
 - The book maps health to the pillars of operations and splits it into three metrics: present health, risk (future health) and efficiency.
 - Inventory is left out: it describes the environment, not its health.
 ![Environment: inventory. Health: performance, availability, security. Risk: capacity, configuration, compliance. Efficiency: cost, sustainability](images/health-risk-efficiency-pillar-grouping-diagram.png)
@@ -73,6 +73,7 @@ object:
 internal_derive:
 - sp5-framework/concepts/overview
 related:
+- sp5-framework/concepts/health-check
 - sp5-framework/alerts/alerts-and-insights
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/proactive-operations

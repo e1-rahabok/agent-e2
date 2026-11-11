@@ -1,8 +1,9 @@
 # Can this cluster take more VMs?
 
-## Symptom
+## Purpose
 - A request to place N new VMs, or a project, on an existing vSphere cluster; or to upsize a VM on it.
 - The answer is yes or no, with the resource that limits it and the reason.
+- A capacity decision, not a health check: a health check covers every pillar of the cluster (`sp5-framework/concepts/health-check`). This decision is step 4 of `vsphere/object-types/cluster/health-check/cluster-health-check`.
 - A closed cluster accepts no new VM and no VM upsize. Once capacity, performance and risk metrics exist, the decision can be automated: self-driving capacity management.
 
 ## Flow
@@ -104,6 +105,7 @@ internal_derive:
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 related:
 - vsphere/object-types/cluster/health-check/cluster-health-check
+- sp5-framework/concepts/health-check
 - sp5-framework/capacity/class-of-service-planning
 images:
   - path: ../images/cluster-closure-decision-flow-diagram.png

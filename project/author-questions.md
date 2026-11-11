@@ -765,6 +765,15 @@ Each entry has:
 - For you: the 8.x behaviour from field experience.
 - Answer:
 
+### Q169 · KNOWLEDGE-ENGINEERING.md, sections 5 and 10 · Single-pillar flows filed as health checks
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/health-check/can-cluster-take-more-vms.md), [Does this ESXi host have CPU headroom?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/health-check/host-cpu-capacity-headroom.md), [Downsizing a large, idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/health-check/oversized-vm-downsizing.md); rule: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md), section 5 (Placement rules, Flows) and section 10; concept: [Health check](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-check.md).
+- Search: not from the book. Follows your statement of 2026-11-11: a health check is done on a system or object, never on one pillar.
+- Written as now: the repository rule (section 5, Flows) lets `health-check/` hold single-pillar flows ("is it full, is it wasteful"). The three files above are capacity or efficiency only, so their folder calls them health checks. can-cluster-take-more-vms now says it is a capacity decision used by the cluster health check, not a health check. The Harness finds flows by the folder names `health-check/` and `troubleshooting/` (harness/flows.py, primer flow index, lint flow map).
+- Question: where do single-pillar flows go? (a) a third flow kind, folder `decision/` (for example `sp5-framework/capacity/decision/can-cluster-take-more-vms`), run by the flow tool like the other two; (b) keep them in `health-check/` and accept the name; (c) fold each into its object health check as a step.
+- Proposed answer (expert call): (a). The folder name is read by the Harness and shown to the model in the flow index: a capacity question labelled health check teaches the wrong concept. (c) loses the standalone question ("can this cluster take 20 more VMs?"), which users ask on its own. Cost of (a): 3 ids moved (moved.yaml), `decision` added to tags.yaml and the flow folders, a retrieval check before and after.
+- For you: accept (a), or choose (b) or (c).
+- Answer:
+
 ## Resolved
 
 ### Q095 · Part 1 > Service Level Agreement > SLA Calculation · Pass scored as 0%, and partial VM scores
