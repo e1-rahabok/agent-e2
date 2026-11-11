@@ -3,6 +3,7 @@
 ## Symptom
 - The application team says an application on Linux is slow. They see Linux tools (top, vmstat, iostat, sar), not vSphere or Kubernetes metrics, and they usually do not tell the Guest OS from the VM.
 - First quantify the slowness in counters they can see. The Guest OS is a separate realm: it cannot see the VM's waits, and the VM cannot see Linux's queues.
+- Written for Linux 5.0 and later.
 - Started from `sp5-framework/performance/troubleshooting/vm-slow`, step 1. It ends with one of two verdicts: the wait is inside Linux, or it points below Linux to the VM.
 
 ## Flow
@@ -21,7 +22,7 @@ flowchart TD
 
 ## Checks, in order
 1. Quantify (Guest OS). Ask which transaction is slow, how slow (response time against normal), and when (a time, a schedule, all the time). The window found here is the window of every later step, in Linux and in vSphere. Read the counters at their highest resolution in that window (sar history, or vmstat and iostat at 1-5 seconds while it happens). → step 2.
-2. CPU queue (Guest OS). Run queue: `r` in vmstat (`guest-os/cpu/metrics/run-queue`). Linux includes running threads, so compare it with the vCPU count: above it, threads wait for a vCPU. Load average counts runnable tasks plus tasks in uninterruptible sleep (state D, usually waiting for IO): a high load with idle vCPUs points to IO, not CPU. Pressure stall information, where the kernel has it: `/proc/pressure/cpu` gives the share of time at least one task waited for a CPU. Queue above vCPU count → step 3. Otherwise → step 4.
+2. CPU queue (Guest OS). Run queue: `r` in vmstat (`guest-os/cpu/metrics/run-queue`). Linux includes running threads, so compare it with the vCPU count: above it, threads wait for a vCPU. Load average counts runnable tasks plus tasks in uninterruptible sleep (state D, usually waiting for IO): a high load with idle vCPUs points to IO, not CPU. Pressure stall information: `/proc/pressure/cpu` gives the share of time at least one task waited for a CPU. Queue above vCPU count → step 3. Otherwise → step 4.
 3. Why the queue (Guest OS). Per vCPU user and system time (mpstat), the context switch rate (`cs` in vmstat; `guest-os/cpu/metrics/context-switch`).
    - Queue high, vCPUs not all busy, or one vCPU busy and the rest idle → locks, threads that cannot run in parallel, kernel work: the application or the configuration, not the vCPU count.
    - Queue high, every vCPU busy → the workload demands more runtime than Linux gets. Before adding vCPUs, check VM CPU contention in `sp5-framework/performance/troubleshooting/vm-slow`, step 4: a vCPU waiting for a physical thread is invisible to Linux (`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`).
@@ -31,7 +32,7 @@ flowchart TD
    - Pressure stall information: `/proc/pressure/memory` gives the share of time tasks stalled on memory (reclaim, swap-in, refault). Unlike Windows, Linux with pressure stall information measures this wait; VMware Tools does not collect it, so VCF Operations does not show it.
    - Low free memory alone is normal: Linux uses free memory as page cache. Read MemAvailable, not MemFree.
    - → step 5.
-5. Disk (Guest OS). Queue size (`aqu-sz`) and wait per request (`r_await`, `w_await`) in iostat; `/proc/pressure/io` where present (`guest-os/storage/metrics/disk-queue`).
+5. Disk (Guest OS). Queue size (`aqu-sz`) and wait per request (`r_await`, `w_await`) in iostat; `/proc/pressure/io` (`guest-os/storage/metrics/disk-queue`).
    - Wait high in Linux, VM disk latency low → the IO waits inside Linux (queue, IO scheduler, filesystem): it never reached the VM.
    - Wait high in Linux and VM disk latency high → the wait is below Linux: the VM and its storage.
    - → step 6.

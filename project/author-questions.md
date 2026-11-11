@@ -714,11 +714,11 @@ Each entry has:
 ### Q172 · Guest OS · Linux pressure stall information vs "no memory latency"
 - Files: [Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/metrics/guest-os-performance.md) (section Reasons); [Windows memory management](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/memory/concepts/windows-memory.md) (section Free memory guidance); [Linux is slow](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/troubleshooting/linux-os-slow.md) (steps 2, 4, 5).
 - Search: "Linux and Windows track memory space, throughput and IOPS, but not memory latency"
-- Written as now: the Guest OS files say Windows and Linux do not measure how long work waits for memory. Linux since kernel 4.20 has pressure stall information (/proc/pressure/cpu, memory, io): the share of time tasks stalled on CPU, memory or IO (https://docs.kernel.org/accounting/psi.html). The new Linux flow uses it; VMware Tools does not collect it, so VCF Operations does not show it.
+- Written as now: the Guest OS files say Windows and Linux do not measure how long work waits for memory. Linux has pressure stall information (/proc/pressure/cpu, memory, io): the share of time tasks stalled on CPU, memory or IO (https://docs.kernel.org/accounting/psi.html). The new Linux flow uses it; VMware Tools does not collect it, so VCF Operations does not show it.
 - Question: (a) keep the statement for Windows only and add pressure stall information as the Linux exception, not collected by VMware Tools; (b) other.
 - Proposed answer (expert call): (a).
 - For you: whether your customers' Linux teams read pressure stall information, and whether the Linux counters in the new flow match what they use.
-- Answer:
+- Answer: Author (2026-11-11): deferred to after 1.0, as Linux is after 1.0. Two kinds of knowledge: theory is not limited by VMware Tools (Linux, Windows, Kubernetes); practical advice follows what each product can do, so Agent E2 must know exactly what VMware Tools collects. Linux knowledge starts at release 5.0; no older releases.
 
 ## Resolved
 
