@@ -121,6 +121,12 @@ Demand = Max (Utilization, Reservation)
 - CPU: per thread, not per core. Mind the Hyper-Threading penalty; do not promise a GHz speed (`sp5-framework/capacity/capacity-model`, section Overcommit).
 - Memory: overcommit is against physical DRAM. NVMe used by memory tiering is not counted as capacity (`vsphere/technology/memory/concepts/memory-tiering`).
 
+### Overcommit
+
+- The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.
+- A provider that does not overcommit may not compete on cost.
+- Overcommit ratios are written virtual : physical (4:1 = 4 vCPUs per thread).
+
 ### Invisible demand
 
 
@@ -147,12 +153,6 @@ Demand = Max (Utilization, Reservation)
 | Utilization ignored | Only configured size counts; extra load makes allocation report less consumption than real |
 | Overhead ignored | vSAN keeps protection data on the same datastore: consumption doubles inside it |
 | IaaS workload counted | Agent VMs count as demand, though they often use a local datastore |
-
-## Overcommit
-
-- The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.
-- A provider that does not overcommit may not compete on cost.
-- Overcommit ratios are written virtual : physical (4:1 = 4 vCPUs per thread).
 
 ## Misconceptions
 
