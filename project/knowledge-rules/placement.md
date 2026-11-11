@@ -24,7 +24,8 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
 │   ├── observability/               # how to read telemetry: input types, interval, aggregation, units, naming,
 │   │                                # accounting, thresholds, Triple See Method
 │   ├── outputs/                     # how insight reaches people: alerts, dashboards, reports, NOC live screen
-│   ├── performance/                 # KPI design, noisy neighbour; troubleshooting/ for flows across technologies
+│   ├── performance/                 # performance-management (main file: boundary, processes, KPI map, question map),
+│   │                                # KPI design, KPI vs SLA, noisy neighbour; troubleshooting/ for flows across technologies
 │   └── capacity/                    # capacity-management (main file: boundary, stages, question map), supply, demand,
 │                                    # overcommit, forecasting, planning, sizing, reclamation; decision-tree/ across technologies
 ├── vsphere/
