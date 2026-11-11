@@ -55,7 +55,7 @@ class CatalogTest(unittest.TestCase):
 
     def test_thresholds_have_source(self):
         r = CAT.lookup('VM CPU Ready')
-        self.assertTrue(any(t['value'] == 2.5 and t['source'] == 'knowledge-base' for t in r['thresholds']))
+        self.assertTrue(any(t['value'] == 8 and t['source'] == 'knowledge-base' for t in r['thresholds']))
 
     def test_capacity_bands_from_catalog(self):
         bands = CAT.thresholds(name='Worst ESXi memory ballooned')['bands']
@@ -71,7 +71,6 @@ class CatalogTest(unittest.TestCase):
         f = CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/ready'])
         self.assertIn('cpu.ready', f)
         self.assertIn('statistics level 1', f)
-        self.assertIn('SLI:', CAT.facts_for(['sp5-framework/concepts/sla-metrics']))
         self.assertIn('Bands:', CAT.facts_for(['vsphere/object-types/cluster/models/cluster-risk']))
 
     def test_facts_for_kpi_levels(self):
@@ -92,27 +91,23 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual(r['kpi'][0]['kb'], 'vsphere/object-types/vm/kpis/vm-performance')
 
     def test_thresholds_carry_their_use(self):
-        # One metric, three uses: the SLI test, the orange alert and the red alert must not look alike.
+        # One metric, two uses: the orange alert and the red alert must not look alike; no SLA or SLI rows (2026-11-11).
         rows = {r['use'] + '/' + r.get('criticality', ''): r for r in CAT.thresholds(name='VM CPU Ready', limit=20)['thresholds']
                 if r['metric'] == 'VM CPU Ready'}
-        self.assertEqual((rows['sli/']['value'], rows['sli/']['interval']), (2.5, '5m'))
         self.assertEqual(rows['alert/red']['value'], 8)
         self.assertEqual(rows['alert/orange']['value'], 4)
-        sla = [r for r in CAT.thresholds(name='Performance SLA', limit=20)['thresholds'] if r['use'] == 'sla']
-        self.assertEqual({r['class']: r['value'] for r in sla}, {'gold': 99.9, 'silver': 99.8, 'bronze': 99.6})
+        self.assertNotIn('sli/', rows)
 
     def test_facts_label_the_use(self):
-        self.assertIn('- SLI: VM CPU Ready (5m) > 2.5', CAT.facts_for(['sp5-framework/concepts/sla-metrics']))
         f = CAT.facts_for(['vsphere/technology/cpu/configuration/cpu-alerts'])
         self.assertIn('- Alert, red: VM CPU Ready > 8', f)
         self.assertIn('- Alert, orange: VM CPU Ready > 4', f)
-        self.assertIn('- SLA, gold: Performance SLA (Gold class) >= 99.9', CAT.facts_for(['sp5-framework/performance/noisy-neighbour']))
         self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['sp5-framework/capacity/health-check/can-cluster-take-more-vms']))
 
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
-        self.assertEqual(uses, {'sla', 'sli', 'alert', 'decision', 'rule'})
-        self.assertEqual(CAT.stats()['thresholds'], 45)
+        self.assertEqual(uses, {'alert', 'decision', 'rule'})
+        self.assertEqual(CAT.stats()['thresholds'], 38)
         self.assertEqual(CAT.stats()['bands'], 18)
         self.assertEqual(CAT.stats()['kpi'], 31)
 

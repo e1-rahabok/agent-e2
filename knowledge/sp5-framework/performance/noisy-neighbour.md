@@ -87,7 +87,7 @@
   - a function of the overcommit ratio: half price means twice as many tenants to break even;
   - progressive tiers: a 64-vCPU VM costs more than 64 × a 1-vCPU VM.
 - Without chargeback, use class of service: a lower class has a higher overcommit ratio and a smaller maximum VM size.
-- Tell customers the quality of each class. Memory overcommit and the Performance SLA per class:
+- Tell customers the quality of each class through its overcommit:
 
 | Class | Memory overcommit |
 |---|---|
@@ -95,7 +95,7 @@
 | Silver | 1.5:1 |
 | Bronze | 2:1 |
 
-- 100% is not realistic: the cost escalates. Performance SLA targets per class: `catalog/thresholds-performance`, rows `performance-sla-*`. A lower class has a lower target.
+- No contention at all is not realistic: the cost escalates. A lower class sees contention more often; its VM KPI shows how much. The KPI levels are the same for every class (`sp5-framework/performance/kpi-vs-sla`).
 
 ### Maximum VM size
 | Overcommit | Maximum VM size |

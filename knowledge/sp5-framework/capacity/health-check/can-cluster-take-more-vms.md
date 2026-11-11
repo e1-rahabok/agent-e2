@@ -31,7 +31,7 @@ flowchart TD
 3. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; `sp5-framework/capacity/capacity-model`). Allocation reaches usable capacity → no: closed. Below → step 6.
 4. Consumption and performance (ClusterComputeResource). Both read at the 95th percentile of the last 24 hours, with the same thresholds for production and non-production. Either one red → no: closed.
    - Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.
-   - Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%. This is the cluster KPI; it is not related to the VM Performance SLA or to the class-of-service minimum VM Performance (%).
+   - Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
    - The vCommunity management pack automates this step and step 5 with one band set for every cluster: `vsphere/object-types/cluster/models/close-for-business`.
    - Neither red → step 5.
 5. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours (`vsphere/object-types/cluster/models/cluster-risk`):
@@ -64,9 +64,10 @@ flowchart TD
 
 ## Traps
 - "Cluster Performance below the Gold minimum of 99.5% closes the cluster" → the closure reads the cluster KPI (red below 20%); the class minimum is for each VM. Different metrics.
-- "Our SLA says 99%" → without a written agreement it is a KPI, not an SLA.
+- "Our SLA says 99%" → an SLA is a business contract on the consumer's VMs and pods; the closure reads the KPI and the models.
 - "Cluster CPU at 40%, so there is room" → check contention, risk and HA headroom; one hot host can be full.
 - "Memory consumed at 85% means the cluster is full" → consumed is utilization; check saturation rows and contention, and the HA ceiling.
+- "Memory fills first: the hosts show ballooned, compressed and swapped memory" → memory is a cache; these can be non-zero with 0% memory contention. A resource is full when its contention rises: read the contention sub-metrics of Cluster Performance (%).
 - "Capacity Remaining is orange, so the cluster is closed" → orange alone does not close it; both capacity and performance orange sends the decision to risk.
 - "Risk is red, so close the cluster" → risk decides only when capacity and performance are both orange; risk alone is a warning.
 - "A cluster without overcommit closes on utilization" → without overcommit, only allocation against usable capacity closes it.

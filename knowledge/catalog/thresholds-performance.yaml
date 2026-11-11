@@ -1,9 +1,7 @@
 meta:
   id: catalog/thresholds-performance
-  title: 'Performance thresholds: SLA, SLI, KPI'
+  title: 'Performance thresholds: KPI'
   sections:
-    sla: 'Performance SLA: the contract. Monthly mean of SLI passes, per class of service (class: gold, silver, bronze). Lagging.'
-    sli: 'SLA Leading Indicator: pass or fail of one 5-minute interval against the contract. Same tests for every class.'
     kpi: 'KPI colour levels, the one place: no knowledge file repeats them. Internal target, proactive, no class of service.'
   fields:
     id: Stable key, unique across the threshold files.
@@ -11,7 +9,7 @@ meta:
     object: Managed object type.
     layer: Layer that produces the metric.
     instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
-    interval: '20s: a VCF Operations peak, the highest of the 15 20-second averages in the 5-minute cycle; 5m: 5-minute average; 2s: esxtop. Every KPI and SLI is reported every 5 minutes; the SLA is monthly.'
+    interval: '20s: a VCF Operations peak, the highest of the 15 20-second averages in the 5-minute cycle; 5m: 5-minute average; 2s: esxtop. Every KPI is reported every 5 minutes.'
     operator: '>, >=, <, <=, =, range.'
     value: 'The number compared against; range: low end, value_high the high end.'
     unit: Unit of value.
@@ -20,97 +18,12 @@ meta:
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: Knowledge file that states and explains the threshold.
     quote: Only on rows whose number is still also written in prose; text copied from the kb file; lint checks it is still there.
-    class: 'sla only: class of service.'
   kpi_fields: 'One line per object and metric: [yellow, orange, red] for 5m, 20s and 2s, entered by hand; null until entered; the 4x rule is a guide for choosing a 20-second value from a 5-minute one, not
     a formula: it never fills a cell. direction above: higher is worse; below: lower is worse. group: the KPI group. excluded_when_green: left out of the KPI score while green. kb: the KPI file that explains
     the metric; Agent E2 shows these values with it.'
   review_notes:
   - 'To check: kpi cells still null: yellow, orange, red to enter by hand for each of 5m, 20s and 2s (Q152).'
   status: draft
-sla:
-- id: performance-sla-gold
-  class: gold
-  metric: Performance SLA (Gold class)
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>='
-  value: 99.9
-  unit: '% (monthly mean of SLI)'
-  meaning: Performance SLA threshold for the Gold class of service.
-  source: knowledge-base
-  kb: sp5-framework/performance/noisy-neighbour
-- id: performance-sla-silver
-  class: silver
-  metric: Performance SLA (Silver class)
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>='
-  value: 99.8
-  unit: '% (monthly mean of SLI)'
-  meaning: Performance SLA threshold for the Silver class of service.
-  source: knowledge-base
-  kb: sp5-framework/performance/noisy-neighbour
-- id: performance-sla-bronze
-  class: bronze
-  metric: Performance SLA (Bronze class)
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>='
-  value: 99.6
-  unit: '% (monthly mean of SLI)'
-  meaning: Performance SLA threshold for the Bronze class of service.
-  source: knowledge-base
-  kb: sp5-framework/performance/noisy-neighbour
-sli:
-- id: vm-sli-cpu-ready
-  metric: VM CPU Ready
-  object: VirtualMachine
-  layer: virtual-motherboard
-  instance: aggregate (VM level, not per vCPU or per virtual disk)
-  interval: 5m
-  operator: '>'
-  value: 2.5
-  unit: '%'
-  meaning: CPU SLI fails for this 5-minute interval (Performance SLA counter).
-  source: knowledge-base
-  kb: sp5-framework/concepts/sla-metrics
-- id: vm-sli-memory-contention
-  metric: VM Memory Contention
-  object: VirtualMachine
-  layer: virtual-motherboard
-  instance: aggregate (VM level, not per vCPU or per virtual disk)
-  interval: 5m
-  operator: '>'
-  value: 1
-  unit: '%'
-  meaning: Memory SLI fails for this 5-minute interval (Performance SLA counter).
-  source: knowledge-base
-  kb: sp5-framework/concepts/sla-metrics
-- id: vm-sli-disk-latency
-  metric: VM Disk Latency
-  object: VirtualMachine
-  layer: virtual-motherboard
-  instance: aggregate (VM level, not per vCPU or per virtual disk)
-  interval: 5m
-  operator: '>'
-  value: 10
-  unit: ms
-  meaning: Disk SLI fails for this 5-minute interval (Performance SLA counter). Average of read and write.
-  source: knowledge-base
-  kb: sp5-framework/concepts/sla-metrics
-- id: vm-sli-network-tx-dropped
-  metric: VM Network Transmit Dropped Packets
-  object: VirtualMachine
-  layer: virtual-motherboard
-  instance: aggregate (VM level, not per vCPU or per virtual disk)
-  interval: 5m
-  operator: '>'
-  value: 0
-  unit: '%'
-  meaning: Network SLI fails for this 5-minute interval (Performance SLA counter). Received drops are excluded.
-  source: knowledge-base
-  kb: sp5-framework/concepts/sla-metrics
-
 kpi:
 - {object: Guest OS, metric: "Peak vCPU run queue length", group: "Guest OS contention", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null, kb: guest-os/system/metrics/guest-os-performance}
 - {object: Guest OS, metric: "Peak disk queue length (count)", group: "Guest OS contention", direction: above, 5m: null, 20s: [20, 40, 80], 2s: null, kb: guest-os/system/metrics/guest-os-performance}

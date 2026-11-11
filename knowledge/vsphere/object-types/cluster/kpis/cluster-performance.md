@@ -96,7 +96,6 @@ same_name: []
 same_meaning: []
 related:
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
-- vsphere/object-types/cluster/kpis/cluster-sla-sli
 - vsphere/object-types/vm/kpis/vm-performance
 images:
 source:

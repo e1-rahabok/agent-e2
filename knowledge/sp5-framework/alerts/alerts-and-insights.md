@@ -65,7 +65,7 @@
 
 ## Prevention window
 - Two points in time: when the operations team knows there is a problem (insight), and when customers would know if nothing were done (alert). The time between is the prevention window.
-- Alert examples: SLA metrics such as VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention.
+- Alert examples: VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention.
 - Insight examples: anomaly metrics; VM CPU Co-stop; VM CPU IO wait; read latency of an individual virtual disk; vMotion stun time; ESXi VMkernel queue time.
 - Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, `observability/thresholds`).
 ![Timeline: Insight (green) → prevention window (yellow to red) → Alert (red). Insight starts when you know it is a problem; alert starts when customers would know. Insight examples: anomaly metrics, VM CPU Co-stop, VM CPU IO wait, individual virtual disk read latency, vMotion stun time, ESXi VMkernel queue. Alert examples: SLA VM CPU Ready, SLA VM disk latency, cluster average CPU Ready, cluster average memory contention; each example with a threshold](images/insight-prevention-window-alert-timeline-diagram.png)
@@ -79,7 +79,7 @@
 | Technicality | Meaning simple, formula maybe not | Low level; deep technical knowledge |
 | Persona | Level 1 and help desk | Subject matter expert who knows the environment |
 
-- KPI and SLA by the same split: `sp5-framework/performance/kpi-vs-sla`.
+- The KPI serves both: the insight reads it early, the alert at red (`sp5-framework/performance/kpi-vs-sla`).
 
 ## What an alert is: rapid, real, rare
 - Rapid: the issue is urgent, so it must be known at once.
@@ -158,7 +158,6 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/object-types/vm/metrics/vmotion
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
-- vsphere/object-types/cluster/kpis/cluster-sla-sli
 images:
   - path: images/insight-prevention-window-alert-timeline-diagram.png
     product: [vsphere, vcf-operations]
@@ -181,7 +180,7 @@ source:
   path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert) (pp. 2, 16-21); SP5 Framework > Basic Terminology (pp. 45-46)'
 corrections: []
 review_notes:
-- 'To check: Section ''Prevention window'': the image gives a threshold for each example; not copied into the text or the threshold catalog until Q088 is answered: SLA VM CPU Ready above 5% vs the SLI value 2.5% (vsphere/object-types/cluster/kpis/cluster-sla-sli); Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as SLA alerts vs SLAs measured on each paying VM (Q088).'
+- 'To check: Section ''Prevention window'': the image gives a threshold for each example; not copied into the text or the threshold catalog until Q088 is answered: VM CPU Ready above 5% vs the alert rows in catalog/thresholds-alerts.yaml; Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as alerts vs the worst VM (Q088).'
 - 'To check: Section ''Prevention window'', last bullet before the image: the instance-rule example (not in the source).'
 - 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important.'
 - 'Not copied: the iceberg picture (decorative) and the colour legend (red: review today, the sooner the better; orange: review today; yellow: review tomorrow, could be a false positive; green: great), whose content is in the text.'

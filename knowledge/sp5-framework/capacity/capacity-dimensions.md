@@ -42,7 +42,7 @@
 ### VM price
 
 - A price helps even for internal customers: money is the simplest way to value a service.
-- VMs free of charge: VMs are added until someone complains. Put a Performance SLA in place to avoid complaint-based operations (`sp5-framework/performance/kpi-vs-sla`).
+- VMs free of charge: VMs are added until someone complains. Put a performance KPI in place to avoid complaint-based operations (`sp5-framework/performance/kpi-vs-sla`).
 - VMs not free of charge: the allocation model justifies why a Gold vCPU costs more than a Bronze vCPU on the same hardware. Bronze costs 4x less because it is overcommitted 4x; cost is covered.
 
 ## Four dimensions
@@ -146,7 +146,7 @@ Demand = Max (Utilization, Reservation)
 - New VMs are often idle for months, then grow fast.
 - Unmet demand has two parts:
   - inside the VM: an undersized VM queues inside the Guest OS; the infrastructure never sees it;
-  - outside the VM: contention, visible to the infrastructure and part of the IaaS KPI and SLA (`sp5-framework/performance/kpi-vs-sla`).
+  - outside the VM: contention, visible to the infrastructure and part of the IaaS KPI (`sp5-framework/performance/kpi-vs-sla`).
 
 ### Limitations of allocation
 

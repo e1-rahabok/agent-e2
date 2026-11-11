@@ -9,7 +9,7 @@
   - Dedicated binary: each customer has its own version, patch level and downtime schedule.
 - **PaaS**: common services for business applications (login, payment).
 - **DaaS**: desktops at a low price per user.
-  - All desktops run the same software, so one software change hits every desktop at once. A 10% CPU increase in the browser, on a heavily overcommitted host, can breach the Performance SLA. Application teams must be involved.
+  - All desktops run the same software, so one software change hits every desktop at once. A 10% CPU increase in the browser, on a heavily overcommitted host, can push every desktop's KPI into red. Application teams must be involved.
 - **K8aaS**: Kubernetes, on a dedicated or a shared cluster.
 - **IaaS**: three variants (VM, resource pool, hardware): `sp5-framework/concepts/iaas-business`.
 

@@ -35,7 +35,7 @@
 |---|---|
 | Performance profiling | 1-20 seconds for every counter |
 | Performance troubleshooting | 1-20 seconds for raw contention; 5 minutes for the rest |
-| Performance SLA | 5 minutes |
+| Performance KPI | 20-second peak and 5-minute average |
 | Capacity | 15 minutes, the average, not the peak |
 
 - Capacity does not require 15-minute points functionally. Operationally it is safer: a failed collection loses 15 minutes, not more.

@@ -11,7 +11,7 @@ Which VMs need a network investigation? Choose all that apply.
 
 - A. fw-01: check the vNIC receive ring with vsish on its host.
 - B. batch-07: it had a network outage.
-- C. app-12: transmit drops fail the network SLI, even without complaints.
+- C. app-12: transmit drops count against its VM KPI, even without complaints.
 - D. None: Packets Dropped (%) below 99% is normal.
 
 ## Input to supply
@@ -27,7 +27,7 @@ B: reading 95% dropped as an outage.
 - Answer: A, C.
 - fw-01: steady receive drops at peak packet rate on a network VM point to the receive ring; vsish shows the reason (running out of buffers, ring full). Consider a larger ring and NetQ RSS.
 - batch-07: Packets Dropped (%) = dropped / (dropped + delivered); at low throughput a few receive drops give a high percentage for a short time. Not an outage.
-- app-12: TCP retransmits hide transmit drops; the network SLI threshold for transmit dropped packets is 0%.
+- app-12: TCP retransmits hide transmit drops; transmit dropped packets is a contention sub-metric of the VM KPI (VM Performance).
 
 ## Notes
 - Previous id: question-0082 (renamed 2026-11-05).
@@ -45,7 +45,7 @@ input: [table]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
   - vsphere/technology/network/troubleshooting/vnic-rx-drops
-  - vsphere/object-types/cluster/kpis/cluster-sla-sli
+  - vsphere/object-types/vm/kpis/vm-performance
 attachments:
   - 0082/vm-network-400-vms.xlsx
 origin: synthetic

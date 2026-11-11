@@ -7,8 +7,7 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  one-value tests, labelled by use: sla, sli (thresholds-performance.yaml), alert (thresholds-alerts.yaml),
-              decision, rule (thresholds-capacity.yaml)
+  thresholds  one-value tests, labelled by use: alert (thresholds-alerts.yaml), decision, rule (thresholds-capacity.yaml)
   bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
   kpi         KPI colour levels, the one copy (thresholds-performance.yaml, kpi)
   metrics     one row per knowledge metric file, from its metadata
@@ -118,8 +117,7 @@ class Catalog:
             c.execute('INSERT INTO formulas VALUES (?,?)', (f['formula'], f'esxtop {f["panel"]} panel, {doc}, p. {f["page"]}'))
         # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
         perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
-        tests = [(perf, 'sla', 'performance'), (perf, 'sli', 'performance'), (al, 'alerts', None),
-                 (cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity')]
+        tests = [(al, 'alerts', None), (cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity')]
         for data, section, pillar in tests:
             use = {'alerts': 'alert', 'decisions': 'decision', 'rules': 'rule'}.get(section, section)
             for r in data.get(section) or []:
@@ -342,11 +340,11 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-USE_LABELS = {'sla': 'SLA', 'sli': 'SLI', 'alert': 'Alert', 'decision': 'Capacity decision', 'rule': 'Capacity rule'}
+USE_LABELS = {'alert': 'Alert', 'decision': 'Capacity decision', 'rule': 'Capacity rule'}
 
 
 def _use_label(r):
-    """What the number is for, first in every line: an SLI test, an alert and a KPI level for one metric differ."""
+    """What the number is for, first in every line: a KPI level, an alert and a capacity rule for one metric differ."""
     extra = r['class'] or r['criticality']
     return USE_LABELS.get(r['use'], r['use']) + (f', {extra}' if extra else '')
 

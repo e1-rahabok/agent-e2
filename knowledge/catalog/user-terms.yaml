@@ -213,6 +213,12 @@ rows:
   means: KPI KAI KSI key availability indicator key security indicator
   note: 'KPI is performance only. An availability KPI is a KAI (key availability indicator); a security or compliance KPI is a KSI. Business or marketing KPI in daily speech means any key indicator: name the pillar it measures.'
   files: [sp5-framework/performance/kpi-vs-sla]
+- id: sla-for-performance
+  premise: true
+  match: ['\b(performance|cluster|node|host) slas?\b', '\bsl[io]s?\b', 'service level (indicator|objective)', '\bour slas?\b']
+  means: KPI SLA business contract consumer object VM pod
+  note: 'Performance is managed by the KPI only: no performance SLA, SLI or SLO. An SLA is a business contract: ask which metric, object, target and window. A cluster or Kubernetes node is the wrong object: the application team owns the VM or pod.'
+  files: [sp5-framework/performance/kpi-vs-sla, sp5-framework/concepts/sla-metrics]
 - id: collect-everything
   premise: true
   match: ['collect (all|every|everything)\b', '(all|every) metrics?\b[^.?\n]{0,30}\b(collect|20.?sec)', 'collect them all']

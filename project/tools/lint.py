@@ -297,11 +297,11 @@ CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
 # Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.
 THRESHOLD_SECTIONS = {
-    'thresholds-performance.yaml': ('sla', 'sli', 'kpi'),
+    'thresholds-performance.yaml': ('kpi',),
     'thresholds-capacity.yaml': ('models', 'decisions', 'rules'),
     'thresholds-alerts.yaml': ('alerts',),
 }
-CLASSES = ('gold', 'silver', 'bronze')  # class of service; an SLA row always has one
+CLASSES = ('gold', 'silver', 'bronze')  # class of service
 ROW_CLASSES = CLASSES + ('all', 'production', 'non-production')
 
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
@@ -394,9 +394,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('operator') == 'range' and r.get('value_high') is None: bad(path, f'{w}: range needs value_high')
                     if r.get('object') and r['object'] not in objects: bad(path, f'{w}: object "{r["object"]}" not allowed')
                     if r.get('layer') and r['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{r["layer"]}" not allowed')
-                    if section == 'sla':
-                        if r.get('class') not in CLASSES: bad(path, f'{w}: class must be one of {", ".join(CLASSES)}')
-                    elif 'class' in r and r['class'] not in ROW_CLASSES: bad(path, f'{w}: class must be one of {", ".join(ROW_CLASSES)}')
+                    if 'class' in r and r['class'] not in ROW_CLASSES: bad(path, f'{w}: class must be one of {", ".join(ROW_CLASSES)}')
                     if section == 'alerts':
                         if r.get('criticality') not in ('red', 'orange'): bad(path, f'{w}: criticality must be red or orange (no yellow alert)')
                         if r.get('pillar') not in allowed['pillar']: bad(path, f'{w}: pillar "{r.get("pillar")}" not allowed')

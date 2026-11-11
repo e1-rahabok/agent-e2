@@ -4,9 +4,9 @@
 The screenshot is the VCF Operations chart of one VM over one day: the 20-second peak disk latency and the 5-minute average read and write latency. The attached table is a one-day export, in 5-minute samples, of the read and write latency of each of its 20 virtual disks.
 
 - At 02:15, the peak is about 10,000 ms; the highest 5-minute average of the VM is about 250 ms.
-- The application owner asks whether the peak is real, and whether it breaches the 10 ms disk SLI.
+- The application owner asks whether the peak is real, and how it affects the VM KPI.
 
-Is the peak real? What does it measure, where did it come from, and what do you use for the SLI?
+Is the peak real? What does it measure, where did it come from, and which reading does the VM KPI use?
 
 ## Input to supply
 - Screenshot: VCF Operations 9.1, VM > Metrics, the 20-second peak disk latency (Peak Latency within collection cycle) and the 5-minute read and write latency, one day.
@@ -21,7 +21,7 @@ Is the peak real? What does it measure, where did it come from, and what do you 
 - The peak is real: it is the highest of the 15 twenty-second points in the cycle, taken across all virtual disks, read and write. A VM with 20 virtual disks has 40 sets × 15 points = 600 values, and the peak is the highest.
 - The gap can exceed 15x: one or two bursts far above the average.
 - The table shows the source: the virtual disk named in the Notes, on writes, at 02:15.
-- Use the 5-minute average for the SLA or SLI; the peak is an early warning.
+- The VM KPI reads the 20-second peak of the worst virtual disk, so this peak pulls the VM Performance score down for that cycle; there is no SLI.
 - A one-off peak with a low average elsewhere is not a pattern: compare the peak with the average across the day.
 
 ## Notes
@@ -40,7 +40,7 @@ input: [table, screenshot]
 knowledge:
   - vcf-operations/features/peak-20-second-metrics
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
-  - vsphere/object-types/cluster/kpis/cluster-sla-sli
+  - vsphere/object-types/vm/kpis/vm-performance
 attachments:
   - 0089/vm-virtual-disk-latency-one-day.xlsx
   - 0089/vcf-operations-vm-peak-disk-latency.png
