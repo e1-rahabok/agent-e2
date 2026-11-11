@@ -794,6 +794,43 @@ Each entry has:
   - For you: which statistic, period and VM aggregation the class expectation is compared against.
 - Answer:
 
+### Q163 · Plan, Decisions 2026-11-06 · Benchmark before M1 and M2 are complete
+- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5).
+- What the knowledge base says now: no benchmark run until the 100 questions and the knowledge base are complete. Last run 2026-11-03, 17 questions.
+- Question: (a) run the 70 scorable questions now as a development signal: 1 candidate and the frontier reference, 3 modes, 5 runs, about US$ 20-40; (b) keep the 2026-11-06 decision.
+- Proposed answer: (a). Every change since 2026-11-03 is unmeasured.
+- Answer:
+
+### Q164 · benchmark/design.md, sections 1 and 8 · What "frontier model" means in the claim
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) (section 5).
+- What the knowledge base says now: one frontier reference, baseline mode, no web search, no extended thinking.
+- Question: (a) best of 3 vendors, as shipped (web search and thinking on), plus frontier with the E2 knowledge base as the ceiling; (b) keep one reference; (c) other.
+- Proposed answer: (a). One model without its product features invites the strawman charge.
+- Answer:
+
+### Q165 · benchmark/design.md, sections 3-5 and 10 · Sealed claim set and knowledge_class tag
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5).
+- What the knowledge base says now: 100 questions, 68 of 95 synthetic, 0 real tickets, held-out set not built. Superiority read on the full set.
+- Question: (a) a sealed claim set of 150-200 Level 300-400 questions, at least half from real tickets, written by you and 1-2 peers, never seen by Claude; tag `knowledge_class: public-mechanism | vendor-current | author-framework`; superiority claimed on public-mechanism; (b) current design; (c) other.
+- Proposed answer: (a). At 100 questions a 10-point gap is detected with about 50-70% power.
+- For you: names of peer authors; a source of real tickets.
+- Answer:
+
+### Q166 · ARCHITECTURE.md, section Troubleshooting questions · Code evaluates flow branches
+- Files: [harness/flows.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/flows.py), [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md).
+- What the knowledge base says now: the flow tool serves step text; the model compares values and picks the branch.
+- Question: (a) executable steps: the model extracts values into a case state, code compares them with catalog thresholds and picks the branch, the model explains; (b) keep as is.
+- Proposed answer: (a), for 1.0, starting with the VM slow flow.
+- Answer:
+
+### Q167 · MISSION.md, section 1 · Mission sentence and outcome metric
+- Files: [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission).
+- What the knowledge base says now: scope worded four ways; target 99% in the headline; no user-outcome metric.
+- Question: (a) one scope sentence; claim = beats frontier models used alone, stretch = matches frontier with the knowledge base; 99% moved to the 300-question plan; add one outcome metric (right root cause on real tickets in the live test); (b) keep.
+- Proposed answer: (a).
+- For you: the scope sentence.
+- Answer:
+
 ## Resolved
 
 ### Q161 · KPI vs SLA · The daily KPI actual
