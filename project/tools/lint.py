@@ -295,13 +295,36 @@ OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datast
 PILLAR_FOLDERS = ['concepts', 'alerts', 'performance', 'capacity']
 CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
+# Threshold files and their sections, named by use. A section name is the use the Harness shows with each value.
+THRESHOLD_SECTIONS = {
+    'thresholds-performance.yaml': ('sla', 'sli', 'kpi'),
+    'thresholds-capacity.yaml': ('models', 'decisions', 'rules'),
+    'thresholds-alerts.yaml': ('alerts',),
+}
+CLASSES = ('gold', 'silver', 'bronze')  # class of service; an SLA row always has one
+ROW_CLASSES = CLASSES + ('all', 'production', 'non-production')
+
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 
 
 def check_catalog(allowed, ids, bodies, bad, docs=None):
     """knowledge/catalog/*.yaml: parses, required fields, valid tags, existing knowledge ids; a quote, where a row still has one, is still in its file."""
     objects = set(allowed['object'])
-    seen_thresholds, levels_all = set(), []
+    seen_thresholds, kpi_all, seen_kpi = set(), [], set()
+    def check_kpi_line(path, w, lv):
+        """One KPI line: [yellow, orange, red] per interval, worsening in its direction; one line per metric."""
+        for k in ('object', 'metric', 'group', 'direction', 'kb'):
+            if not lv.get(k): bad(path, f'{w}: {k} missing')
+        if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
+        if lv.get('metric') in seen_kpi: bad(path, f'{w}: duplicate metric')
+        seen_kpi.add(lv.get('metric'))
+        for iv in ('5m', '20s', '2s'):
+            v = lv.get(iv, 'missing')
+            if v == 'missing': bad(path, f'{w}: {iv} missing (write null until a value is entered)')
+            elif v is not None and (not isinstance(v, list) or len(v) != 3): bad(path, f'{w}: {iv} needs [yellow, orange, red]')
+            elif v is not None:
+                x = [float(i) for i in v]
+                if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from yellow to red')
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')
@@ -341,51 +364,45 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             for n, r in enumerate(rows):
                 for k in ('panel', 'field', 'description', 'page'):
                     if r.get(k) in (None, ''): bad(path, f'row {n + 1}: {k} missing')
-        elif name in ('thresholds-performance.yaml', 'thresholds-capacity.yaml'):
-            for n, r in enumerate(rows):
-                w = f'row {n + 1} ({r.get("id")})'
-                if r.get('id') in seen_thresholds: bad(path, f'{w}: duplicate id (ids are unique across both threshold files)')
-                seen_thresholds.add(r.get('id'))
-                if r.get('kind') == 'bands':
-                    for k in ('id', 'metric', 'bands', 'source', 'kb'):
-                        if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
-                    bd = r.get('bands') or {}
-                    if any(bd.get(k) in (None, '') for k in ('green', 'yellow', 'orange', 'red')): bad(path, f'{w}: bands need green, yellow, orange, red')
-                    if bd.get('grey') and name == 'thresholds-performance.yaml': bad(path, f'{w}: grey (wastage) is a capacity band only')
+        elif name in THRESHOLD_SECTIONS:
+            # Sections are named by use; the section name is the use (no use field on the rows).
+            for k in data:
+                if k != 'meta' and k not in THRESHOLD_SECTIONS[name]:
+                    bad(path, f'section "{k}" not allowed: use {", ".join(THRESHOLD_SECTIONS[name])}')
+            for section in THRESHOLD_SECTIONS[name]:
+                for n, r in enumerate(data.get(section) or []):
+                    w = f'{section} row {n + 1} ({r.get("id") or r.get("metric")})'
+                    if section == 'kpi':
+                        check_kpi_line(path, w, r)
+                        kpi_all.append(r)
+                        continue
+                    if 'kind' in r: bad(path, f'{w}: kind is gone: the section is the use')
+                    if r.get('id') in seen_thresholds: bad(path, f'{w}: duplicate id (ids are unique across the threshold files)')
+                    seen_thresholds.add(r.get('id'))
                     if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
                     if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
                     kb_ok(path, w, r.get('kb'))
-                    continue
-                if r.get('kind') != 'rule': bad(path, f'{w}: kind must be rule or bands')
-                for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb'):
-                    if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
-                if r.get('interval') and r['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
-                if r.get('operator') not in OPERATORS: bad(path, f'{w}: operator "{r.get("operator")}" not allowed')
-                if r.get('operator') == 'range' and r.get('value_high') is None: bad(path, f'{w}: range needs value_high')
-                if r.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{r.get("source")}" not allowed')
-                if r.get('object') and r['object'] not in objects: bad(path, f'{w}: object "{r["object"]}" not allowed')
-                if r.get('layer') and r['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{r["layer"]}" not allowed')
-                kb_ok(path, w, r.get('kb'))
-                if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
-                    bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
-            if name == 'thresholds-performance.yaml':
-                if any(r.get('kind') == 'bands' for r in rows): bad(path, 'band rows are not allowed: KPI colour levels live in levels (one copy)')
-                seen_levels = set()
-                for n, lv in enumerate(data.get('levels') or []):
-                    w = f'levels row {n + 1} ({lv.get("metric")})'
-                    for k in ('object', 'metric', 'group', 'direction', 'kb'):
-                        if not lv.get(k): bad(path, f'{w}: {k} missing')
-                    if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
-                    if lv.get('metric') in seen_levels: bad(path, f'{w}: duplicate metric')
-                    seen_levels.add(lv.get('metric'))
-                    for iv in ('5m', '20s', '2s'):
-                        v = lv.get(iv, 'missing')
-                        if v == 'missing': bad(path, f'{w}: {iv} missing (write null until a value is entered)')
-                        elif v is not None and (not isinstance(v, list) or len(v) != 3): bad(path, f'{w}: {iv} needs [yellow, orange, red]')
-                        elif v is not None:
-                            x = [float(i) for i in v]
-                            if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from yellow to red')
-                    levels_all.append(lv)
+                    if section == 'models':
+                        for k in ('id', 'metric', 'bands', 'source', 'kb'):
+                            if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                        bd = r.get('bands') or {}
+                        if any(bd.get(k) in (None, '') for k in ('green', 'yellow', 'orange', 'red')): bad(path, f'{w}: bands need green, yellow, orange, red')
+                        continue
+                    for k in ('id', 'metric', 'operator', 'value', 'meaning', 'source', 'kb'):
+                        if r.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+                    if r.get('operator') not in OPERATORS: bad(path, f'{w}: operator "{r.get("operator")}" not allowed')
+                    if r.get('operator') == 'range' and r.get('value_high') is None: bad(path, f'{w}: range needs value_high')
+                    if r.get('object') and r['object'] not in objects: bad(path, f'{w}: object "{r["object"]}" not allowed')
+                    if r.get('layer') and r['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{r["layer"]}" not allowed')
+                    if section == 'sla':
+                        if r.get('class') not in CLASSES: bad(path, f'{w}: class must be one of {", ".join(CLASSES)}')
+                    elif 'class' in r and r['class'] not in ROW_CLASSES: bad(path, f'{w}: class must be one of {", ".join(ROW_CLASSES)}')
+                    if section == 'alerts':
+                        if r.get('criticality') not in ('red', 'orange'): bad(path, f'{w}: criticality must be red or orange (no yellow alert)')
+                        if r.get('pillar') not in allowed['pillar']: bad(path, f'{w}: pillar "{r.get("pillar")}" not allowed')
+                    elif 'criticality' in r: bad(path, f'{w}: criticality belongs to alert rows')
+                    if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
+                        bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
         elif name == 'user-terms.yaml':
             seen = set()
             for n, r in enumerate(rows):
@@ -420,8 +437,8 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
     import kb as _kb, catalog as _cat
     for b in _cat.bands_from_docs(_kb.load()[0]):
         bad(f'knowledge/{b["kb"]}.md', f'colour-band table row "{b["metric"]}": thresholds live only in knowledge/catalog/thresholds-*.yaml')
-    for lv in levels_all:
-        if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'levels line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
+    for lv in kpi_all:
+        if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'kpi line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
 
 def check_flows(docs, bad):
     """Diagnosis files must parse into steps for the flow tool (harness/flows.py); step references must exist."""

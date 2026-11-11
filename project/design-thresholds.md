@@ -1,6 +1,6 @@
 # Thresholds in Agent E2: design and implementation
 
-Status: design, with Q152-Q158 answered (2026-11-10) and the first step built: one copy of the KPI levels (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work.
+Status: design, with Q152-Q158 answered (2026-11-10). Built: one copy of the KPI levels (2026-11-10); sections named by use and alerts in their own file (2026-11-11) (section 3). Section 3 describes what is built; sections 4-14 the target; section 15 the work.
 Not indexed.
 
 ## 1. Goal
@@ -24,15 +24,17 @@ Not indexed.
 ### 3.1 Files
 | File | Content |
 |---|---|
-| `knowledge/catalog/thresholds-performance.yaml` | 24 rule rows: 3 SLA, 4 SLI, 17 alerts. 31 `levels` lines: yellow, orange, red for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
-| `knowledge/catalog/thresholds-capacity.yaml` | 21 rule rows, 18 band rows with a grey (wastage) band (2026-11-10: 7 vendor and default rows went back to prose) |
+| `knowledge/catalog/thresholds-performance.yaml` | `sla`: 3 rows, one per `class`. `sli`: 4 rows. `kpi`: 31 lines, yellow, orange, red for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
+| `knowledge/catalog/thresholds-capacity.yaml` | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
+| `knowledge/catalog/thresholds-alerts.yaml` | `alerts`: 20 rows, one per alert and `criticality` (red, orange), with `pillar` (17 performance, 3 capacity) |
 | Knowledge files | No colour-band table and no SLI or SLA number: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
-- Alert thresholds are rule rows with the wait time inside the `condition` text ("for 15 minutes"). Three of them sit in the capacity file.
+- The section name is the use (2026-11-11): rows carry no `kind` or `use` field; the Harness stores the use as a column and puts it first in every result.
+- Alert rows hold the main test, with the other tests and the wait time inside the `condition` text ("for 15 minutes"). Splitting them into symptoms is still to do (section 8.4).
 - Rows are joined by the metric's English name; no key.
 
 ### 3.2 How Agent E2 uses them
-1. Start-up: `harness/catalog.py` loads both files into an in-memory SQLite catalog: tables `thresholds` (rules), `levels`, and `bands` (capacity band rows, plus each KPI table joined to its `levels` line with the interval whose values it shows).
+1. Start-up: `harness/catalog.py` loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: sla, sli, alert, decision, rule; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
 2. Term map (`harness/terms.py`, `knowledge/catalog/user-terms.yaml`): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
 3. Classic mode: `Catalog.facts_for(ids)` adds up to 14 "Catalog facts (exact)" lines for the files in the context: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
 4. Agentic mode: the LLM may call the `catalog` tool with a name. `Catalog.lookup` scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
@@ -46,15 +48,15 @@ Not indexed.
 | # | Gap | Effect on an answer |
 |---|---|---|
 | G1 | Lookup by fuzzy name | "Ready" returns VM, ESXi and cluster rows mixed; the LLM picks |
-| G2 | Rule results leave out `interval` and `instance` | The LLM cannot tell a 20s peak threshold from a 5-minute one |
-| G3 | No use label on a row | A KPI band, an SLI test and an alert threshold look alike |
+| G2 | Fixed 2026-11-11: results and classic facts carry `interval` and `instance` where a row has them | - |
+| G3 | Fixed 2026-11-11: every value is labelled with its use ("SLI: VM CPU Ready (5m) > 2.5", "Alert, red: VM CPU Ready > 8") | - |
 | G4 | The LLM compares the value | Errors on ranges, open ends and lower-is-worse metrics |
-| G5 | Fixed 2026-11-10: lookups and classic facts return `levels` | - |
+| G5 | Fixed 2026-11-10: lookups and classic facts return the KPI levels (`kpi`) | - |
 | G6 | Fixed 2026-11-10: classic facts include the KPI levels of a KPI file in the context | - |
 | G7 | Wait cycles are free text inside `condition` | Agent E2 cannot compute when an alert fires or clears |
 | G8 | No signal that the answer depends on a missing fact | Asking is left to the LLM's judgment |
 | G9 | Ungrounded-number check is soft and reason-line only | A wrong threshold in the answer body passes |
-| G10 | Fixed 2026-11-10: `levels` is the one catalog copy; the Markdown table stays for retrieval, checked by lint | - |
+| G10 | Fixed 2026-11-10: `kpi` is the one catalog copy; the Markdown table stays for retrieval, checked by lint | - |
 
 ## 4. Use cases
 
@@ -127,7 +129,7 @@ reading key = (object, metric, instance, interval or window statistic)
 - So Agent E2 has its own key, one per reading, with a mapping to every external name and key.
 
 ### 7.2 Format
-- Readable slug from closed lists: `object.resource.measure.instance`. The interval is not in the key: one reading is seen at 5m, 20s and 2s, as the `levels` columns show; a rule row names its interval.
+- Readable slug from closed lists: `object.resource.measure.instance`. The interval is not in the key: one reading is seen at 5m, 20s and 2s, as the `kpi` columns show; a rule row names its interval.
   - `vm.cpu.ready.vcpu-max`: CPU Ready of the worst vCPU (VCF Operations "Peak CPU Ready among any vCPU" is its 20s value).
   - `vm.cpu.ready.total`: VM CPU Ready.
   - `cluster.mem.consumed.host-max`: Cluster Risk input.
@@ -171,21 +173,22 @@ reading key = (object, metric, instance, interval or window statistic)
 | Field | Values | Why |
 |---|---|---|
 | `id` | unique across all files | Reference from other files and from questions |
-| `use` | kpi, sli, sla, kai, ksi, model, decision, rule, symptom, alert | First filter of every lookup |
+| `use` | kpi, sli, sla, kai, ksi, model, decision, rule, symptom, alert | First filter of every lookup. Not a row field: the section name is the use (built 2026-11-11), so it cannot disagree with where the row sits |
 | `reading` | key from `readings.yaml` | The join across files and uses |
 | `direction` | above, below | Lower is worse for free memory, KPI scores, SLA |
-| `interval` or `window` + `statistic` | 2s, 20s, 5m; 24h p95; calendar month mean | What the number applies to; KPI rows carry all three intervals as `levels` columns |
+| `interval` or `window` + `statistic` | 2s, 20s, 5m; 24h p95; calendar month mean | What the number applies to; KPI rows carry all three intervals as `kpi` columns |
 | `class` | all, gold, silver, bronze, production, non-production | Thresholds per class of service |
 | `source` | `knowledge-base`, or a vendor document with its version | Which source wins: version-bound vendor facts can go stale |
 | `kb`, `quote` | knowledge file id; sentence copied from it | Citation; lint keeps the number tied to its text |
 
 ### 8.2 `thresholds-performance.yaml`
 ```yaml
-uses:
-  kpi: 'Proactive. Is it performing now? Rolling window, 20-second accuracy, no deadline. Yellow is read in the daily check.'
-  sli: 'Pass or fail of one 5-minute interval against the contract.'
-  sla: 'Monthly mean of SLI passes, per class of service. Lagging.'
-levels:          # KPI, the one copy (built 2026-11-10, without reading keys yet)
+meta:
+  sections:      # what each use means, for the author; the Harness labels values by section
+    kpi: 'Proactive. Is it performing now? Rolling window, 20-second accuracy, no deadline. Yellow is read in the daily check.'
+    sli: 'Pass or fail of one 5-minute interval against the contract.'
+    sla: 'Monthly mean of SLI passes, per class of service. Lagging.'
+kpi:             # the one copy (built 2026-11-10, renamed from levels 2026-11-11, without reading keys yet)
 - {object: VirtualMachine, metric: "Peak CPU Ready among any vCPU (%)", direction: above, 5m: null, 20s: [2, 4, 8], 2s: null}
 # target: reading: vm.cpu.ready.vcpu-max replaces object and metric
 sli:
@@ -421,7 +424,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 | Part | Today | Target |
 |---|---|---|
 | `knowledge/catalog/` | 2 threshold files, joined by name | 6 files (section 8), joined by reading key |
-| Catalog load (`harness/catalog.py`) | Tables `thresholds`, `levels`, `bands` (capacity rows; KPI tables joined to `levels`) | Tables `readings`, `reading_names`, `levels`, `tests` (sli, rule, symptom), `targets` (sla, kai, ksi), `models`, `model_inputs`, `decisions`, `alerts`, `alert_symptoms` |
+| Catalog load (`harness/catalog.py`) | Tables `thresholds` (with `use`), `kpi`, `bands` (capacity model rows) | Tables `readings`, `reading_names`, `kpi`, `tests` (sli, rule, symptom), `targets` (sla, kai, ksi), `models`, `model_inputs`, `decisions`, `alerts`, `alert_symptoms` |
 | Name to reading | Fuzzy score on English names | Exact match on `names` and external keys first; fuzzy only as fallback, marked as a guess |
 | Lookup | Returns rows | Extends the existing `catalog` tool with `value`, `use`, `class`: returns the verdict per use, `why`, "not comparable" for other readings, "depends on" for missing parts. One tool, not a new one: each tool costs prompt tokens and choice errors for a 32B LLM |
 | Comparison | By the LLM | In the catalog: levels and bands, direction, the boundary rule |
@@ -431,8 +434,8 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 | Up-front block (`harness/primer.py`) | Tool advice | The threshold frame of section 12 |
 | Clarifying rule (`harness/clarify.py`) | Object, layer, interval, version | Adds instance, use, class, the customer's own setting; reads "depends on" |
 | Verifier (`harness/verify.py`) | Soft check on numbers in the reason line | Every number with a unit in the whole answer checked against the returned rows; a threshold not returned triggers the repair turn after the benchmark shows it helps |
-| Lint (`project/tools/lint.py`) | Fields, quotes; `levels` one copy, values worsen yellow to red, each line matched to its Markdown band table by metric name, both ways; capacity band rows vs Markdown | Plus: `use` and `reading` on every row; reading exists; ids unique; no yellow alert; cancel cycles within R1-R6 (section 9) |
-| Tools | `levels_csv.py` | `levels_csv.py` on the new files; a migration script from the 2 files to the 6 |
+| Lint (`project/tools/lint.py`) | Sections by use, no other section; `class` on SLA rows; `criticality` red or orange on alert rows; fields, quotes; `kpi` one copy, values worsen yellow to red, each line matched to its Markdown band table by metric name, both ways; capacity band rows vs Markdown | Plus: `use` and `reading` on every row; reading exists; ids unique; no yellow alert; cancel cycles within R1-R6 (section 9) |
+| Tools | `kpi_csv.py` | `kpi_csv.py` on the new files; a migration script to the 6 files |
 | Tests (`harness/test_tools.py`) | Lookups return sourced rows | Verdicts per use, not-comparable cases, depends-on cases, alert timing, dominance |
 
 ## 14. Alternatives considered
@@ -440,7 +443,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 | Option | Pros | Cons | Verdict |
 |---|---|---|---|
 | A. One file for all thresholds | One join for U9 | 2,000+ lines; review hard | No |
-| B. One file per pillar plus alerts | Matches the `pillar` tag and the SP5 model; KPI and SLA of a reading together | Alerts span pillars; two shapes per file | Yes, with `use` and `reading` on every row |
+| B. One file per pillar plus alerts | Matches the `pillar` tag and the SP5 model; KPI and SLA of a reading together | Alerts span pillars; two shapes per file | Yes, with `use` from the section name and `reading` on every row |
 | C. One file per use | Matches the scoring | KPI and SLA of one reading in two files | No: `use` as a field gives the same query |
 | D. External key (VCF Operations or vCenter) | No mapping file | Neither covers esxtop, book metrics and derived metrics; renames break rows | No: own key plus mapping |
 | E. Full alert definitions now | U4 complete | 1,193 definitions wait on the overhaul (1.2) | Thin block now, full catalog at 1.2 |
@@ -451,7 +454,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ### 15.1 1.0, in order
 1. Done 2026-11-10: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and classic facts return them.
 2. `readings.yaml` for every reading that has a threshold today.
-3. Migration script: the 2 files to the performance, capacity and alerts files; lint; retrieval check before and after.
+3. Migration to the performance, capacity and alerts files. Done 2026-11-11: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Still to do: alert rows into symptoms with wait and cancel cycles; reading keys (step 2).
 4. Catalog tables, lookup with verdicts, `catalog` tool arguments, classic facts, unit tests.
 5. Up-front block, clarifying triggers, verifier check.
 6. `thresholds-availability.yaml` with its two rows.
@@ -474,7 +477,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## 16. Risks
 
 - Ten `use` values is the upper limit for a 32B LLM to keep apart; every result names its use.
-- Migration touches 4 SLI rows, 31 `levels` lines and 72 rule quotes: by script, then lint.
+- Migration touches 4 SLI rows, 31 `kpi` lines and 72 rule quotes: by script, then lint.
 - Most VCF Operations keys are unknown; until filled, screen names map to keys through `names`.
 - The catalog is not chunked, so retrieval should not move; the retrieval check runs before and after anyway.
 

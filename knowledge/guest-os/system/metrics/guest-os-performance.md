@@ -5,7 +5,7 @@
 - VMware Tools collects this counter inside the Guest OS and vCenter and VCF Operations store it on the VirtualMachine object. That is a data path, not ownership: the counter belongs to the Guest OS.
 
 ## Thresholds (book)
-- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `levels`. They are shown with this file; this file holds the reasons.
+- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
 
 ## Reasons
 - Guest OS metrics with no VM equivalent, which change the course of troubleshooting.
