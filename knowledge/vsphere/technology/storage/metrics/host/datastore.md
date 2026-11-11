@@ -26,7 +26,7 @@
 - A host sending unmap regularly is normal on thin-provisioned arrays. Unmap Size near 0 for weeks on a thin datastore with deletions: check that space reclamation is on.
 - Space left to reclaim in a VM: compare Guest OS used space with virtual disk used space (`sp5-framework/capacity/reclamation`, section TRIM and unmap).
 
-## Traps
+## Misconceptions
 - "Host datastore IOPS = datastore total" → one host's share only.
 - "Write latency high, read low is odd" → expected when reads are served by cache.
 - "Unmap IO is IO load like reads and writes" → it moves no data; it releases blocks on the array.

@@ -55,7 +55,7 @@
 - After a change, take each physical NIC down and up again: `esxcli network nic down -n vmnicX`, then `esxcli network nic up -n vmnicX`.
 - Once activated, `NetSchedHClkMaxHwQueue` determines how many hardware transmit queues can be used.
 
-## Traps
+## Misconceptions
 - "NetIOC limits receive traffic" → NetIOC controls transmit only.
 - "A reservation can be set to the full adapter capacity" → total reservations are limited to 75% of the adapter capacity.
 - "A share guarantees bandwidth" → shares divide the link only among consumers that want bandwidth. Reservations are the guarantee.

@@ -61,7 +61,7 @@ Free   = Total Capacity - Consumed
 - Overcommitted host at 100%: inactive granted pages cause no ballooning at first. When Active rises, Consumed rises and ballooning starts. When Active falls, ESXi deflates the balloon.
 ![Overcommitted host: balloon follows Active](../images/esxi-memory-overcommit-balloon-follows-active.png)
 
-## Traps
+## Misconceptions
 - "Ballooning starts at 90% host memory" → about 99%.
 - "Host with balloon has VMs in contention" → example: 7 days of constant balloon, worst VM contention below 1%.
 

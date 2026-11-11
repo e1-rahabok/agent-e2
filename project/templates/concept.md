@@ -11,7 +11,7 @@
 <plain-text formula, if any>
 ```
 
-## Traps
+## Misconceptions
 - Wrong conclusion → correct conclusion, with the reason.
 
 ## Metadata

@@ -19,7 +19,7 @@
 - Which component caused a drop is a troubleshooting question the counters alone do not settle. For vNIC receive drops, see `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
 - A drop count means little without the packet count of the same scope: read it as a share of `net.throughput` packets. See `vsphere/technology/network/metrics/distributed-switch/packets`.
 
-## Traps
+## Misconceptions
 - "No dropped packets at the switch, so no VM drops packets" → the switch total hides one port; check per DVPort and per vNIC.
 - "Drops at level 1 history" → these counters are level 3; the default history holds none.
 

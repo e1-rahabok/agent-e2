@@ -7,7 +7,7 @@
 ## Use
 - Ignore it. It mixes idle time.
 
-## Traps
+## Misconceptions
 - "High host Wait means the host waits for IO" → it is the sum of VM Wait, mostly idle.
 
 ## Metadata

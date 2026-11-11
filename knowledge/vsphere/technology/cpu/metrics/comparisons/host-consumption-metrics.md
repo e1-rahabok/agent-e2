@@ -49,7 +49,7 @@
 - Capacity (ESXi-centric): use all resources, including Hyper-Threading.
 - See `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`.
 
-## Traps
+## Misconceptions
 - "Usage (%) 100% means the host is full" → check Core and Thread Utilization.
 - "Thread Utilization 50% means half the capacity is left" → all cores can be busy.
 

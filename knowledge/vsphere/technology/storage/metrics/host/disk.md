@@ -25,7 +25,7 @@
 - Waking to D0/PS0 adds 50-100 ms to the first IO.
 ![NVMe memory-tier device: high latency at near-zero activity](../../images/nvme-memory-tier-device-high-latency-at-near-zero-io.png)
 
-## Traps
+## Misconceptions
 - "High latency on an idle NVMe tier device is a problem" → wake-up penalty on sporadic IO.
 
 ## Metadata

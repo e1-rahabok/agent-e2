@@ -11,7 +11,7 @@
 ## Use
 - Higher than Guest OS used on thin disks: run unmap (trim) to reclaim unmapped blocks.
 
-## Traps
+## Misconceptions
 - "Virtual Disk Used includes snapshots" → it excludes them.
 
 ## Metadata

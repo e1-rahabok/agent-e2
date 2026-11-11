@@ -21,7 +21,7 @@
 - NSX: version compatible with the other components; NSX Manager redundancy as planned; Edge configuration per practice.
 - Encryption: vMotion and similar networks encrypted; hardware offload such as AES-NI used.
 
-## Traps
+## Misconceptions
 - "An unused port group is harmless" → nobody watches it, and it is still a path into the network.
 - "Jumbo frames set on the switch, so the path uses them" → every hop must match, including switches outside your control.
 - "Limit the noisy VM's network" → shares handle contention without wasting idle bandwidth.

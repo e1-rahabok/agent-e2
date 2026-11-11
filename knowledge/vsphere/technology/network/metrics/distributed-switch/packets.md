@@ -24,7 +24,7 @@
 - LAG counts show whether traffic spreads across the uplinks of a link aggregation group.
 - VCF Operations shows distributed port group metrics aggregated over all hosts. vCenter itself keeps none on the port group. See `vsphere/technology/network/concepts/network-observability`.
 
-## Traps
+## Misconceptions
 - "No chart for the distributed switch, so vCenter has no switch data" → the counters exist at level 3, through the API.
 - "Distributed port group has its own counters in vCenter" → it has none; port data sits on the switch, per DVPort.
 - "Switch packets = sum of vmnic packets" → the switch also counts VM-to-VM traffic that never leaves the host.
@@ -59,7 +59,7 @@ source:
 corrections: []
 review_notes:
 - 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the vCenter 9.1.0 API export. The distributed port group returned no counters (same README).'
-- 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Reading it'' and the third trap: inferred from the counter scopes, not from a document.'
+- 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Reading it'' and the third misconception: inferred from the counter scopes, not from a document.'
 - 'Section ''Reading it'': VCF Operations port group metrics aggregated over all hosts restates network-observability (book).'
 status: draft
 ```

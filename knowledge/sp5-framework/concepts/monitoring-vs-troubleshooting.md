@@ -67,7 +67,7 @@
 - Result: more than 1,000 occurrences in 5 working days, on many hosts, with a pattern that follows office hours. The message is routine; an alert on it would be a false positive.
 - Rule: a message is a valid alert trigger only if it is rare on healthy objects and appears with the incident.
 
-## Traps
+## Misconceptions
 - "Monitoring needs per-second data" → performance monitoring reports the 20-second peak of each 5-minute interval; 20-second visibility only for mission-critical systems. Per-second data is for troubleshooting, and only when it changes the remediation.
 - "Monitoring needs no logs" → logs are monitored too: they stream continuously.
 - "Configuration is a separate check after performance" → it is the drill-down under availability, performance and security.

@@ -62,7 +62,7 @@
 - vSphere has no network latency counter. The documentation points to external tools. See `vsphere/technology/network/concepts/network-observability`.
 - Documentation checks: VMs per physical NIC; VMs on the same host that talk to each other on the same virtual switch (no physical hop); separate physical NICs per traffic type (VM, iSCSI, vMotion); physical NIC speed and duplex as expected (a 1 Gbps NIC reset to 100 Mbps by an older switch; half duplex); vmxnet3; TCP Segmentation Offload and jumbo frames.
 
-## Traps
+## Misconceptions
 - "Host memory usage 94%, so add memory" → only when balloon, swap-in or VM Memory Latency are also high.
 - "VM CPU Ready below 20%, so CPU is fine" → read Ready against Run; check Co-stop and limits.
 - "DAVG 10 ms is healthy because the documentation allows 15 ms" → 15 ms reflects spinning disks; compare with the array baseline.

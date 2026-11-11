@@ -14,7 +14,7 @@
 - Latency near 0% with high Ready: a limit (Latency excludes Max Limited).
 - Contention rises when Demand rises and Usage falls: the VM demanded more CPU than it got.
 
-## Traps
+## Misconceptions
 - "Contention above 37.5% means CPU starvation" → it can be Hyper-Threading and frequency alone. Check Ready and Co-stop.
 - "Use Latency as the KPI" → too volatile. Use Ready.
 

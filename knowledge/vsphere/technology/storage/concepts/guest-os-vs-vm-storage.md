@@ -24,7 +24,7 @@
 - VM-level storage metrics average all virtual disks. A slow data disk can be hidden.
 - Watch the disk that matters, for example the data disk of a large database.
 
-## Traps
+## Misconceptions
 - "VM disk used = Guest OS disk used" → thick and RDM disks show 100%.
 - "VM latency fine, so the data disk is fine" → check per virtual disk.
 

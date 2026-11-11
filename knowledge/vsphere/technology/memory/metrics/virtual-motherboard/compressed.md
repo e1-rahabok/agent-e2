@@ -19,7 +19,7 @@
   - The VM hit its limit.
 - The Consumed pages taken can hold a lot of cache. So it does not always result in VM Memory Latency.
 
-## Traps
+## Misconceptions
 - "Compressed > 0 means the VM is slow now" → only decompression on access causes latency.
 - "Compressed > 0 means the host cannot satisfy the VM" → the cause is high ESXi Consumed or a limit, and the pages can be cache.
 

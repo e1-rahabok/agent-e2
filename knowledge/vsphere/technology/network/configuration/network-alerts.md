@@ -24,7 +24,7 @@
 ## Distributed switch
 - No alert: a distributed switch is a group of ESXi hosts and port groups, already covered by their alerts.
 
-## Traps
+## Misconceptions
 - "4% dropped is low" → it is 1 packet in 25; it is set high only because it is read over 20 seconds.
 - "Every dropped packet hurts users" → TCP retransmits; that is why only red is set.
 - "Alert on network utilization" → there is no clear 100% for a network.

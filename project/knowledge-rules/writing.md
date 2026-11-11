@@ -18,7 +18,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 - One vSphere object type per metric file.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
-- Every metric file ends its body with `## Traps`, written in the trap format of KNOWLEDGE-ENGINEERING.md, section 4.
+- Every metric file ends its body with `## Misconceptions`, written in the misconception format of KNOWLEDGE-ENGINEERING.md, section 4.
 - CPU scheduling language: a vCPU is a thread in the scheduler. It demands runtime. The kernel decides how much runtime it gets. Avoid "need", "want", "wish".
 - Quotation marks only for verbatim text. Paraphrase without quotes, so the author can search the book for real quotes.
 
@@ -28,7 +28,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 2. One fact per bullet, with its reason: "X, because Y". The reason lets the model apply the fact to a new case.
 3. Exact names: metric and term names as in the metric files and the glossary, with the object ("VM CPU Ready", not "Ready"). A typo in a name breaks search; a typo in prose costs little.
 4. One name per concept. A new name needs the glossary first; another name users say goes into the Also called line of its entry, not into the text.
-5. Misreadings go in `## Traps`, in the user's words: "wrong belief" → correct reading. Search finds a misreading through those words.
+5. Misconceptions go in `## Misconceptions`, in the user's words: "wrong belief" → correct reading. Search finds a misconception through those words.
 6. A number comes with unit, object, interval and source. A threshold in prose also needs a row in the threshold catalog.
 7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
 8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
@@ -44,7 +44,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 | One fact per bullet | Small, single-topic chunks | A mistake is one line to fix |
 | Mechanism before metric name | The model learns why, not only what | Matches how an expert explains |
 | Metadata at the end of the file | Parsed separately, never embedded as text | The body reads like a page |
-| Wrong conclusion → correct reading | The misconception retrieves its correction | The trap is explicit and reviewable |
+| Wrong conclusion → correct reading | The misconception retrieves its correction | The misconception is explicit and reviewable |
 | Tables only when simple | Rows survive chunking | Scannable |
 | Exact data in YAML, prose in markdown | Lookups are exact; prose stays short | Data is reviewable as a table |
 | Mermaid plus text for diagrams | Text-only models read the steps | GitHub renders the chart |

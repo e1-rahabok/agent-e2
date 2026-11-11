@@ -20,7 +20,7 @@ Net Run = Run - Overlap
 - High utilization: Usage (%) over-reports, due to Turbo Boost.
 - Low utilization: Usage (%) under-reports, due to power saving.
 
-## Traps
+## Misconceptions
 - "Usage above Net Run means more work than possible" → Turbo raises Usage. Net Run caps at 100%.
 
 ## Metadata

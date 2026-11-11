@@ -77,7 +77,7 @@ Unneeded = Free + Reserve Cache + Normal Priority Cache
 - 10 GB VM: available 0 → 10 GB; available 2 GB → 8.5 GB; available 8 GB → 2.5 GB.
 - Low free memory alone does not mean more memory is required: check other metrics case by case.
 
-## Traps
+## Misconceptions
 - "In Use is the minimum Windows requires" → Windows compresses In Use pages it does not use.
 - "Page-in means memory shortage" → binaries, mapped files and prefetch cause page-in.
 

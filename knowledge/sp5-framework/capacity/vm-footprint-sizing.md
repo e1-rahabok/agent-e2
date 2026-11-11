@@ -36,7 +36,7 @@ VM Memory Needed = Consumed + Overhead + Swapped + Compressed + Ballooned
 - TPS effects likely persist after vMotion and are included. Intra-VM and inter-VM sharing cannot be separated.
 - Memory contention is excluded: it measures speed, not space.
 
-## Traps
+## Misconceptions
 - "Footprint = Guest OS size" → the footprint adds HT, frequency, contention and overhead.
 
 ## Metadata

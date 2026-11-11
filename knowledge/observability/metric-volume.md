@@ -29,7 +29,7 @@ every minute, per day ≈ 134 million metrics
 - 20-second visibility does not need 20-second collection: VCF Operations keeps the 20-second peak of each 5-minute cycle as its own metric (`vcf-operations/features/peak-20-second-metrics`).
 - Answering "why" after an incident depends on the right data, not all data: the metrics of the component that can fail, at the resolution that shows it, plus events, tasks and logs.
 
-## Traps
+## Misconceptions
 - "Collect every metric, at 20 seconds, so any incident can be explained" → 30x the data for metrics no output uses. Work backwards from what can go down or slow; take 20-second peaks where bursts matter.
 
 ## Metadata

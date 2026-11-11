@@ -19,7 +19,7 @@
 - Virtual disk metrics exclude snapshot IO and space.
 - Datastore metrics include them.
 
-## Traps
+## Misconceptions
 - "Datastore IOPS above virtual disk IOPS means another VM" → check for snapshots on this VM.
 
 ## Metadata

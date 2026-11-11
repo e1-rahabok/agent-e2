@@ -23,7 +23,7 @@
   - vMotion: bandwidth lower than expected, downtime longer than expected, or some clusters with many more vMotions than usual.
 - vMotion is a leading indicator of a larger performance problem. Metric: `vsphere/object-types/vm/metrics/vmotion`.
 
-## Traps
+## Misconceptions
 - "The alert list is the morning check" → alerts show objects above a threshold, one at a time. The daily dashboard shows insight and the whole environment.
 - "Metrics cover the daily check" → many changes, security events and failed tasks exist only in logs. Read the log dashboard beside the metrics dashboard.
 - "Troubleshoot the VM first" → check the overall picture first; the problem may be the whole environment.

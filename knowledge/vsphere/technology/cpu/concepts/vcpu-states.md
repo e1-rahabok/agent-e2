@@ -126,7 +126,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 
 - Ready on one vCPU can cause Co-stop on its sibling.
 
-## Traps
+## Misconceptions
 - "Ready + Co-stop + Run + Wait is 100% for the VM" → it is 100% per vCPU. Sum over vCPUs for the VM total in ms.
 - "Ready 5% is always worse than Ready 2%" → read against Run.
 - "A smaller VM reduces only Co-stop" → it usually reduces Ready too. Fewer shares can work the other way.

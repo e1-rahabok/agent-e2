@@ -95,7 +95,7 @@ flowchart LR
 - Special packets (for example ping) are smaller and should be a small share.
 - Track packet sizes against expectation.
 
-## Traps
+## Misconceptions
 - "vmnic traffic = sum of VM traffic" → in-host VM-to-VM traffic and kernel traffic break that.
 - "Distributed port group metrics are per host" → aggregated over all hosts.
 - "Guest OS sees no drops, so the network is fine" → application protocols can still lose packets.

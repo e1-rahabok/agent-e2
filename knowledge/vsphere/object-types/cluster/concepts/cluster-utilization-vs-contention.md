@@ -26,7 +26,7 @@
 - The book's guess: a limit, directly or via a resource pool.
 ![Highest VM memory contention on a host with plenty of free memory](../images/esxi-worst-vm-memory-contention-with-free-memory.png)
 
-## Traps
+## Misconceptions
 - "Low cluster utilization means no performance problem" → check worst VM contention.
 - "No ballooning, so no memory contention" → past compression can cause contention now.
 

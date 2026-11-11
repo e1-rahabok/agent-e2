@@ -14,7 +14,7 @@ Average Latency = Average Outstanding IO / Average IOPS
 - Less useful alone: its value rises with IOPS, and the goal is maximum IOPS at minimum latency.
 - vSAN guidance on expected values: Broadcom KB 2150017.
 
-## Traps
+## Misconceptions
 - "High Outstanding IO means a problem" → check latency.
 
 ## Metadata

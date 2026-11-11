@@ -66,7 +66,7 @@
 | Storage bus resets and aborts | - |
 | vMotion count | Counts migrations, not downtime. See section vMotion is not part of the KPI. |
 
-## Traps
+## Misconceptions
 - "Cluster KPI = average VM KPI" → different purpose and metrics: depth and breadth across VMs, plus the host network.
 - "Cluster Performance is green, so no VM suffers" → the worst-VM rows tolerate more than the percentile rows; open the sub-metrics.
 - "Many vMotions lowered Cluster Performance" → vMotion is not in the KPI; check the maximum stun time instead.

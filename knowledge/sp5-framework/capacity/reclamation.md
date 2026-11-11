@@ -106,7 +106,7 @@
 - Estimate the space to reclaim per VM: Guest OS used space against virtual disk used space.
 - ESXi metrics: `vsphere/technology/storage/metrics/host/datastore`, section Unmap.
 
-## Traps
+## Misconceptions
 
 - "The VM is idle, so its memory is already free" → Consumed stays; only power-off returns it.
 - "Powering off an idle 10-vCPU VM frees 10 vCPUs of CPU cycles" → idle vCPUs used almost no cycles; it frees allocation and memory only.

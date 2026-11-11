@@ -33,7 +33,7 @@
 - Reports the peak 20-second value of any vCPU.
 - Example: a 68-vCPU VM with 20,000 ms of Overlap: low for its size, but one vCPU worth of interruption.
 
-## Traps
+## Misconceptions
 - "Run includes the interruption, so Run equals work done" → Run does not see Overlap. Use Net Run or Used.
 - "Overlap comes from this VM's IO" → it can come from host IO or other VMs.
 - "Ready covers all time a vCPU was not running" → Overlap happens inside the Run state.

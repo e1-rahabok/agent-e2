@@ -22,7 +22,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
-- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: trap answer on 16% of answers (benchmark 20261103-093742).
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 16% of answers (benchmark 20261103-093742).
 - Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
 - Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
 
@@ -45,10 +45,10 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - General knowledge benchmarks (trivia, exams) are not a selection signal. Basic vSphere knowledge is tested directly (below).
 
 ### How the benchmark tests it
-- Override rate (report table `Final score`): share of knowledge base answers that state the trap although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
+- Override rate (report table `Final score`): share of knowledge base answers that state the misconception although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
 - Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
 - Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
-- Trap rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.7).
+- Misconception rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.7).
 - A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
   1. final score higher by more than the margin;
   2. override rate not higher.

@@ -85,7 +85,7 @@
 
 - Do not add VM CPU contention to consumption; track performance explicitly.
 
-## Traps
+## Misconceptions
 - "ESXi CPU = sum of VM CPU + kernel CPU" → different vantage points. The sum does not hold.
 - "esxtop shows 200% on a core, so the core does 2x the work" → each thread reports its own 100%. Read Core Utilization.
 - "Core Utilization 50% when one of two threads runs" → the core registers 100%.

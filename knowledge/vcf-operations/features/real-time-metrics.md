@@ -36,7 +36,7 @@ cpu.ready.HOST{feature='TROUBLESHOOTING'} 20-second
 ## Cost
 - 2-second data is 10x the volume of 20-second data. Limit collection (book: about 1,000 data points) so the monitored system is not loaded.
 
-## Traps
+## Misconceptions
 - "The 20-second tier is real time" → the UI calls it real time; each point is a 20-second average. Only the 2-second tier sees a burst of 1-3 seconds (`observability/real-time-metrics`).
 - "The cluster chart shows the 2-second peak" → cluster and datacenter stop at 60 seconds; read hosts and VMs.
 - "Top N lists the 2-second spikes" → Top N uses 20-second data only.

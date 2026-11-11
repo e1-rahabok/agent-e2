@@ -35,7 +35,7 @@ Imbalance = High hosts / Low hosts
 - A 12-host cluster has 169 possible values.
 ![Cluster CPU imbalance score table for a 12-host cluster: all 169 values by count of high and low hosts](../../images/cluster-cpu-imbalance-score-table-by-count-of-high-and-low-hosts.png)
 
-## Traps
+## Misconceptions
 - "Imbalance 0 means every host is idle" → 0 also means no high hosts while some hosts are well used.
 
 ## Metadata

@@ -18,7 +18,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 
 | Lever | What it is | What we change | Where |
 |---|---|---|---|
-| Knowledge base | Level 400 facts, mechanisms, traps, flows, exact data | Content, structure, links, catalog | `knowledge/` |
+| Knowledge base | Level 400 facts, mechanisms, misconceptions, flows, exact data | Content, structure, links, catalog | `knowledge/` |
 | Harness | The software around the model: retrieval, tools, verifier, rules, budgets | Code, tool design, retrieval settings | `harness/` |
 | Agent | The model plus the tool loop: what it is told up front, its rules for choosing tools | System prompt, up-front knowledge, tool rules | `harness/` (`AGENT.md`) |
 | Model choice | Which frozen model we ship | Swap in a better open model when one appears | [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) |
@@ -33,15 +33,15 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 Six mechanisms, in order of weight.
 
 1. **Open-book exam.** A frontier model wins on breadth of memorised knowledge plus reasoning depth. In one narrow domain, retrieval supplies the knowledge. What remains is reading 5-10 retrieved files and applying their rules: reading comprehension plus a short reasoning chain. On that task, current 27-32B dense models are close to frontier models.
-2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation, which repeat the misconceptions the author's books correct: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS". Measured: the frontier model without the knowledge base gave the trap answer on 16% of answers (benchmark 20261103-093742).
+2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation, which repeat the misconceptions the author's books correct: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS". Measured: the frontier model without the knowledge base gave the misconception answer on 16% of answers (benchmark 20261103-093742).
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters) is newer than most training data. The knowledge base is written from the current release by rule.
 4. **Exactness from tools.** Models of every size slip on arithmetic, units and lookups (ms summation to %, KB vs kb, rollups). A calculator and a metric catalog return exact values; the model only chooses the tool.
-5. **Knowledge built for a small reader.** One fact per bullet, one object per metric file, same-name traps linked, layers separated, metadata for filtering. Most enterprise retrieval fails on messy documents; this corpus is written to be retrieved.
+5. **Knowledge built for a small reader.** One fact per bullet, one object per metric file, same-name misconceptions linked, layers separated, metadata for filtering. Most enterprise retrieval fails on messy documents; this corpus is written to be retrieved.
 6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, confident-wrong rate, worst of 5 runs).
 
 ### What it is not
 - Not a smarter model: the model's reasoning is unchanged. The system moves the hard parts (knowing, computing, looking up, ordering the checks) out of the model.
-- Not a chatbot over documentation: a documentation chatbot retrieves definitions. This system retrieves the mechanism, the trap and the order of checks an expert applies.
+- Not a chatbot over documentation: a documentation chatbot retrieves definitions. This system retrieves the mechanism, the misconception and the order of checks an expert applies.
 
 ### Risks
 | Risk | Why it matters | Guard |
@@ -79,7 +79,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - A question that makes sense is answered without asking why.
   - Ask when the question is odd or illogical: a wrong premise usually shows a gap in product knowledge, so name the premise and ask what problem the user saw. Example: "Should I add vCPUs because CPU Ready is high?"
   - Ask when the text and an attachment disagree (the text says CPU Usage, the screenshot shows CPU Utilization), or when one missing fact (object, layer, interval) changes the answer.
-  - Ask when a term is used for different things: "Do you mean A, B or C?". Jargon is often used interchangeably although the meanings differ ("cluster risk" can mean Cluster Risk (%), capacity runway or availability risk). A frontier model picks one silently and answers the wrong question; knowing the common misreadings, Agent E2 asks.
+  - Ask when a term is used for different things: "Do you mean A, B or C?". Jargon is often used interchangeably although the meanings differ ("cluster risk" can mean Cluster Risk (%), capacity runway or availability risk). A frontier model picks one silently and answers the wrong question; knowing the common misconceptions, Agent E2 asks.
   - But answering is the default; asking is the exception, so a VMware administrator is not irritated. Ask only when all three hold: the term has several meanings, they lead to different answers, and nothing in the question or an attachment tells which. Otherwise answer the most likely meaning, name it in the first sentence, and add one line for the other ("If you meant capacity runway: ..."). Never more than one round.
   - Measured both ways: the clarifying set has questions where asking is right and questions where asking is wrong, and scores both.
   - Otherwise answer and state the assumption first.
@@ -102,7 +102,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
   - The product can be newer than its own documentation: the VCF Operations 9.1 manuals are out of date in places (example: the VM Contention dashboard, deprecated in the product). A knowledge file that records the product's behaviour wins over the manual.
 - Exact values come from the catalog and the calculator, and are shown as such.
 - Unsure is an answer: "The knowledge base does not settle this; here is what it does say."
-- Every fact cited. Linked files shown with their link type, so the same-name trap guard is visible.
+- Every fact cited. Linked files shown with their link type, so the same-name misconception guard is visible.
 
 ### Non-functional
 | Area | Requirement |
@@ -127,13 +127,13 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - Question: does adding every screenshot of vSphere and VCF Operations, with an explanation, improve the system's product knowledge?
 - The model is frozen: screenshots in the knowledge base do not train it.
 - Retrieval matches text, not pixels. An image without a written explanation is never found.
-- So the value is the text twin of each screen: which tool and screen, which object, which counters with unit, interval and rollup, how to read it, and its traps.
+- So the value is the text twin of each screen: which tool and screen, which object, which counters with unit, interval and rollup, how to read it, and its misconceptions.
 - Where it helps:
   - an uploaded screenshot (release 1.0) is matched to its screen file, which says what the screen shows and how to read it;
-  - tool confusion, one of the 12 trap types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
+  - tool confusion, one of the 12 misconception types: the same counter name reads differently in esxtop, vCenter and VCF Operations.
 - The image itself helps only when the agent fetches it for a vision model at answer time; each costs about 1,500 prompt tokens.
 - Why not every screen:
   - most of the hundreds of screens are configuration, not performance or capacity;
   - extra files compete in retrieval and push out the files that matter (ranking shifted when 2 files were added);
   - each file needs the author's review.
-- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: `project/knowledge-rules/placement.md`. Kept only if the retrieval check on screenshot questions improves. Not started.
+- Decision: a screen library of the 30-50 screens operators read daily for performance and capacity, starting with the screens of the 25 screenshot questions. Template: [project/templates/screen.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/screen.md); location: [project/knowledge-rules/placement.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/placement.md). Kept only if the retrieval check on screenshot questions improves. Not started.

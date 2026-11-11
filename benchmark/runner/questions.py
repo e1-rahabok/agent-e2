@@ -1,7 +1,7 @@
 """Questions: load, shuffle options, render, parse and score answers.
 
 Only `## Prompt` and attachments are ever shown to the model under test. The answer key
-(metadata `answer`, `trap`; sections `## Expected key points`, `## Likely wrong answer`) is read here
+(metadata `answer`, `misconception`; sections `## Expected key points`, `## Likely wrong answer`) is read here
 for scoring only: letters by the runner, key points by the judge (judge.py).
 
 Sub-scores (benchmark/design.md, section 3): answer type (deterministic: letters; judged: free text),
@@ -41,7 +41,7 @@ class Question:
         self.level = self.meta.get('level', '')
         self.answer_type = self.meta.get('answer_type', 'judged')
         self.answer = [str(a) for a in (self.meta.get('answer') or [])]
-        self.trap = [str(a) for a in (self.meta.get('trap') or [])]
+        self.misconception = [str(a) for a in (self.meta.get('misconception') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
         self.attachments = [os.path.join(ROOT, 'benchmark', 'questions', a) for a in (self.meta.get('attachments') or [])]
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
@@ -162,13 +162,13 @@ def parse(text, mapping):
 
 
 def score(question, picked):
-    """Exact match, partial credit, trap hit, and points: +1 exact, 0 Unsure, -1 anything else.
+    """Exact match, partial credit, misconception picked, and points: +1 exact, 0 Unsure, -1 anything else.
 
     Unsure counts only when chosen alone; Unsure mixed with other letters is a hedge and scores as wrong.
     An unparseable answer scores as wrong: the user would get no usable answer.
     """
     if picked is None:
-        return {'exact': 0, 'partial': 0.0, 'trap': 0, 'not_covered': 0, 'unsure': 0, 'points': POINTS['wrong'], 'parse_ok': 0}
+        return {'exact': 0, 'partial': 0.0, 'misconception': 0, 'not_covered': 0, 'unsure': 0, 'points': POINTS['wrong'], 'parse_ok': 0}
     correct, chosen = set(question.answer), set(picked)
     unsure = int(chosen == {'UN'})
     exact = int(chosen == correct)
@@ -176,7 +176,7 @@ def score(question, picked):
     return {
         'exact': exact,
         'partial': round(max(0, hits - wrong) / len(correct), 3),
-        'trap': int(bool(chosen & set(question.trap))),
+        'misconception': int(bool(chosen & set(question.misconception))),
         'not_covered': int('NC' in chosen),
         'unsure': unsure,
         'points': POINTS['exact'] if exact else POINTS['unsure'] if unsure else POINTS['wrong'],

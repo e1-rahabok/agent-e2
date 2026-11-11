@@ -48,7 +48,7 @@ sequenceDiagram
 - Recovery is TCP in the guest: no acknowledgement returns, the retransmission timer expires (or duplicate acknowledgements arrive), and the guest sends the payload again in a new frame.
 - vSphere metrics cannot show this drop. Evidence: TCP retransmissions in the Guest OS, and the switch's discard counters (network team).
 
-## Traps
+## Misconceptions
 - "The Guest OS shows no dropped packets, so the network is clean" → on transmit, a drop at the top-of-rack switch is invisible to ESXi and to the guest; look at TCP retransmissions and the switch counters.
 - "A receive drop on the VM means the physical network dropped it" → a full guest receive ring drops it inside the host; check the guest's CPU, the vCPU's Ready and the ring size.
 - "The hypervisor cannot see a VMXNET3 ring drop" → it counts it at the port and the VM (%DRPRX, droppedRx); the guest sees it too.

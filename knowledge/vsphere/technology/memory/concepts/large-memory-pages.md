@@ -31,7 +31,7 @@
 - 1 GB page VMs are excluded from memory tiering.
 - The guest gains most when it also uses large pages. Hypervisor-only large pages still reduce TLB misses.
 
-## Traps
+## Misconceptions
 - "Large pages in ESX are enough" → the guest OS and applications must use large pages for the full benefit.
 - "Large pages make page sharing more effective" → ESX does not share large pages.
 

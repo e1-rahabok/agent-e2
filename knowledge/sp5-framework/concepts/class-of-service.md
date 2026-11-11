@@ -123,7 +123,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
   - a class per virtual disk means tagging and reporting each disk of each VM;
   - troubleshooting: a VM with Bronze compute and Gold storage can show disk latency caused by CPU contention.
 
-## Traps
+## Misconceptions
 - "Gold has no overcommit, so the contract can promise its performance" → the provider controls compute only; storage and network sit in the path. Performance is managed by the KPI, not the contract.
 - "Bronze tolerates 10% CPU Ready" → the 10% is a price-position penalty, not a threshold. Every class uses the same KPI levels; Bronze scores lower more often.
 - "Give Silver its own looser threshold" → one set of KPI levels for every class. Separate levels cannot be justified by price and let Silver outscore Gold.

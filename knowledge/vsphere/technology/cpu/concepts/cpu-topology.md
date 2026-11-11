@@ -27,7 +27,7 @@
 - Intel Xeon 6 test: local L3 cache latency 33 ns.
 - Remote L3 cache (further away on the die): 80 ns.
 
-## Traps
+## Misconceptions
 - "A vCPU can use Hyper-Threading" → a virtual core has no hyper-threads. Hyper-Threading is a property of the physical core.
 - "All cores in a socket are equal distance from each other" → CCD and L3 boundaries create locality inside a socket.
 - "NUMA node = socket" → NUMA node = package or a sub-socket domain (Cluster-on-Die, NPS4, SNC).

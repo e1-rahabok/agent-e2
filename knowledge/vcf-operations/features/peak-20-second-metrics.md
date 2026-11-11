@@ -35,7 +35,7 @@
 - No pattern within the 300 seconds: one point. Compare with the average: a large gap means a one-off.
 - Peaks of different metrics can come from different 20-second blocks. High utilization cannot be tied to the contention in the same 5 minutes.
 
-## Traps
+## Misconceptions
 - "Peak 15x the average is the maximum gap" → it can be far larger.
 - "Use the peak for the SLA" → use the 5-minute average; the peak is a warning.
 

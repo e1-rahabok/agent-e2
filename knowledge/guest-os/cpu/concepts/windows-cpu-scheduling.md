@@ -64,7 +64,7 @@
 - Runaway process: one CPU flat at 100% (example: Diagnostic Policy Service in an infinite loop) while the OS stays responsive. Track the highest CPU, not only the total.
 ![CPU0 flat out from a runaway service](../images/windows-cpu0-flat-out-from-runaway-service.png)
 
-## Traps
+## Misconceptions
 - "Task Manager, Resource Monitor and PerfMon agree" → different names and calculations.
 - "Windows 100% means the VM is at 100%" → HT and frequency differ by layer.
 

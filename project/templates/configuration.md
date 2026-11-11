@@ -9,7 +9,7 @@
 ## When not to
 - Conditions where the setting hurts.
 
-## Traps
+## Misconceptions
 - Wrong conclusion → correct conclusion.
 
 ## Metadata

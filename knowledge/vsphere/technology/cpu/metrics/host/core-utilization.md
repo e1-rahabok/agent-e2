@@ -20,7 +20,7 @@
 - Core Utilization below 2 × Thread Utilization: some cores run 2 threads while others are idle.
 - ESXi Usage (%) is based on Core Utilization, not Thread Utilization.
 
-## Traps
+## Misconceptions
 - "Core Utilization 100% means both threads are busy" → it is 100% with one busy thread too.
 - "Core Utilization 70%, so 70% of the host's capacity is used" → for capacity count threads: Thread Utilization.
 

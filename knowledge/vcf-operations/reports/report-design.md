@@ -64,7 +64,7 @@
 - Past data needs the period hard-coded in each widget.
 - Availability and performance need data across time, so Scoreboard and Heat Map do not suit them.
 
-## Traps
+## Misconceptions
 - "Export a Summary List to CSV for analysis" → it lacks detail; only View List suits CSV.
 - "Colour the CSV" → plain CSV drops colour.
 - "Use the maximum for utilization in a CSV" → it shows outliers; the 95th percentile serves the goal of serving everyone almost all the time.
@@ -106,6 +106,6 @@ corrections: []
 review_notes:
 - 'Section ''PDF or CSV'', context columns: the source says the folder column groups the VM by cluster; written as folder.'
 - 'To check: Section ''PDF or CSV'': the 50-column limit is from the source (VCF Operations 9.1 documentation).'
-- 'To check: Section ''Traps'', pie chart for performance: the reason (judged against absolute values) is a reading of the source, which says relative distribution makes it less suitable for performance.'
+- 'To check: Section ''Misconceptions'', pie chart for performance: the reason (judged against absolute values) is a reading of the source, which says relative distribution makes it less suitable for performance.'
 status: draft
 ```

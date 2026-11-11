@@ -39,7 +39,7 @@
 - The guest OS must have enough swap space configured.
 - Ballooning needs VMware Tools running: without the driver, ESXi cannot ask the guest for memory and can only compress or swap, blind to which pages the guest uses.
 
-## Traps
+## Misconceptions
 - "ESXi can balloon any VM" → only a VM with VMware Tools running; without it, the host swaps instead.
 - "Ballooned 10 GB, so the guest is slow" → only requested pages cause a hit. Check Latency.
 - "Balloon frees exactly its size in ESXi" → shared pages free less.

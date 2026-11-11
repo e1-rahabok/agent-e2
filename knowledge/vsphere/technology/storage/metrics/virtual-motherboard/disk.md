@@ -13,7 +13,7 @@
 - Throughput: read and write.
 - No block size counter. The maximum block size in the period would help.
 
-## Traps
+## Misconceptions
 - "Highest Latency is an average" → it is the latest value.
 
 ## Metadata

@@ -6,6 +6,12 @@ import os
 from collections import Counter, defaultdict
 
 
+def _mc(r):
+    """The misconception flag of one answer row; results before 2026-11-11 call the column trap."""
+    v = r.get('misconception', r.get('trap'))
+    return float(v) if v not in (None, '') else 0
+
+
 def _rows(run_dir):
     return [r for r in csv.DictReader(open(os.path.join(run_dir, 'answers.csv'))) if not r['error']]
 
@@ -85,14 +91,14 @@ def final(rows):
 
 
 def override(rows):
-    """Share of answers that state the trap although every needed knowledge file was in the context.
+    """Share of answers that state the misconception although every needed knowledge file was in the context.
 
     The knowledge base gave the correct reading, and the model answered from its own (Level 300) belief instead.
     Knowledge base modes only; nan when no answer had full retrieval recall.
     """
     full = [r for r in rows if r['mode'] != 'baseline' and r.get('retrieval_recall') not in ('', None)
             and float(r['retrieval_recall']) >= 1]
-    return _mean(int(r.get('trap') or 0) for r in full) if full else float('nan')
+    return _mean(int(_mc(r) or 0) for r in full) if full else float('nan')
 
 
 def aggregate(rows):
@@ -126,7 +132,7 @@ def aggregate(rows):
             'stable_unsure': _mean(stable_unsure),
             'confident_wrong': _mean(int(not int(r['exact']) and not int(r.get('unsure') or 0)) for r in rs),
             'unsure': _mean(r.get('unsure') for r in rs), 'answered_accuracy': _mean(r['exact'] for r in answered),
-            'trap': _mean(r['trap'] for r in rs), 'not_covered': _mean(r['not_covered'] for r in rs),
+            'misconception': _mean(int(_mc(r) or 0) for r in rs), 'not_covered': _mean(r['not_covered'] for r in rs),
             'parse_fail': 1 - _mean(r['parse_ok'] for r in rs),
             'recall': _mean(r['retrieval_recall'] for r in rs),
             'fallback': _mean(r['fallback'] for r in rs), 'steps': _mean(r['steps'] for r in rs),
@@ -167,18 +173,18 @@ def write(run_dir):
           '- Question credit = the worst of its runs. Deterministic: 1 if the letters are exact in every run, else 0. Judged: lowest judge score / 3.',
           '- Sub-scores: the same mean within one group. By answer type, by input type (a question counts for every input it includes), by level.',
           '- Luck: share of questions whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (judged: score 0, not unsure).',
-          '- Override: share of answers in knowledge base modes that state the trap although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
+          '- Override: share of answers in knowledge base modes that state the misconception although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
           '- Method: `benchmark/design.md`, sections 3 and 7.4.', '']
     conv = [r for r in all_scored if not _choice(r)]
     if conv:
-        L += ['## Judged answers', '', '| Model | Mode | Mean score 0-3 | Score 3 | Score 0 | Trap | Unsure |', '|---|---|---|---|---|---|---|']
+        L += ['## Judged answers', '', '| Model | Mode | Mean score 0-3 | Score 3 | Score 0 | Misconception | Unsure |', '|---|---|---|---|---|---|---|']
         g = defaultdict(list)
         for r in conv:
             g[(r['model'], r['mode'])].append(r)
         for (m, mode), rs in sorted(g.items()):
             sc = [int(r['judge_score']) for r in rs]
             L.append(f'| {m} | {mode} | {sum(sc) / len(sc):.2f} | {_pct(_mean(int(x == 3) for x in sc))} | '
-                     f'{_pct(_mean(int(x == 0) for x in sc))} | {_pct(_mean(r["trap"] for r in rs))} | {_pct(_mean(r["unsure"] for r in rs))} |')
+                     f'{_pct(_mean(int(x == 0) for x in sc))} | {_pct(_mean(int(_mc(r) or 0) for r in rs))} | {_pct(_mean(r["unsure"] for r in rs))} |')
         L.append('')
     L += ['## Deterministic answers: luck-free scores', '',
          '| Model | Mode | Track | Stable correct | ± margin | Luck | Stable unsure | Confident wrong | Unsure | Accuracy when answered |',
@@ -192,11 +198,11 @@ def write(run_dir):
           '- Confident wrong: share of answers that are wrong and not Unsure (wrong letters, partly right, Unsure mixed with other letters, unparseable). The answers that mislead an operator. Target: near 0.',
           '- Accuracy when answered: exact share among answers that were not Unsure.', '',
          '## Deterministic answers: scores', '',
-         '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Trap | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',
+         '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Misconception | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',
          '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['majority'])):
         L.append(f'| {m} | {mode} | {tr} | {_pct(s["exact"])} | {_pct(s["partial"])} | {_pct(s["majority"])} | {_pct(s["margin"])} | '
-                 f'{_pct(s["consistency"])} | {_pct(s["trap"])} | {_pct(s["parse_fail"])} | {_pct(s["recall"])} | {_pct(s["fallback"])} | '
+                 f'{_pct(s["consistency"])} | {_pct(s["misconception"])} | {_pct(s["parse_fail"])} | {_pct(s["recall"])} | {_pct(s["fallback"])} | '
                  f'{"-" if math.isnan(s["steps"]) else round(s["steps"], 1)} | {int(s["tokens"]) if not math.isnan(s["tokens"]) else "-"} | '
                  f'{"-" if math.isnan(s["latency"]) else round(s["latency"], 1)} | {s["cost"]:.3f} |')
     L += ['', '- Exact and Partial: mean over all runs. Majority: most common answer per question. Margin: 95% interval on Majority from the number of questions.',

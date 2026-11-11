@@ -55,7 +55,7 @@
 - Cluster: fires when more than 25% of its ESXi hosts meet the condition.
 - Metrics: `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/core-utilization`.
 
-## Traps
+## Misconceptions
 - "High VM CPU usage: add vCPUs" → check contention first; adding vCPUs to a VM with contention makes it worse.
 - "CPU Ready above 8% alone is red" → the VM alert also requires Peak vCPU Ready, CPU Contention and at least 1 GHz of usage.
 - "Use CPU Usage % to filter idle VMs" → a small % of a monster VM is a large load; use GHz.

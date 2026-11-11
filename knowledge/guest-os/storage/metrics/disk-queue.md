@@ -36,7 +36,7 @@
 | Reclamation | From free space. Hard: partitions must shrink. |
 | Performance | Queue, read and write latency, IOPS, throughput. |
 
-## Traps
+## Misconceptions
 - "VM latency is fine, so the guest sees no storage delay" → IO stuck in the guest queue is invisible to the VM.
 
 ## Metadata

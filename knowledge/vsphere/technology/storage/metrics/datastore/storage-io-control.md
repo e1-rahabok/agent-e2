@@ -30,7 +30,7 @@ Normalized Latency = sum(device latency x IO count) / sum(IO count), adjusted fo
 - When congestion crosses the SIOC threshold, SIOC lowers the device queue depth of each host by shares. Host Maximum Queue Depth per datastore then changes over time. See `vsphere/technology/storage/metrics/host/datastore`.
 - Activity above 0 means SIOC was throttling. Shares decided which VMs got the IO; a VM with low shares sees its own latency rise.
 
-## Traps
+## Misconceptions
 - "Normalized Latency is low, so VMs see low latency" → it excludes kernel queuing. Compare with VM observed latency.
 - "Normalized Latency equals the host DAVG" → it is size-adjusted and weighted over all hosts.
 - "All SIOC charts at 0, so no congestion" → check whether SIOC is enabled and the statistics level is 3 or higher.

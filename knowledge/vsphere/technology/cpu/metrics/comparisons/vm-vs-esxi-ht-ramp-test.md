@@ -34,7 +34,7 @@
 | ESXi Usage (%) | Capacity: conservative. Not for performance: cannot show remaining room. |
 | ESXi Thread Utilization (%) | Performance: tracks the ramp. Capacity: 100% means a performance hit; the HT effect starts at 50%. |
 
-## Traps
+## Misconceptions
 - "VM Usage 62.5%, so 37.5% headroom" → the VM is already at 100% Run.
 - "ESXi Usage 100%, so the host is full" → threads may still be free. Check Utilization.
 - "VM aware of HT means ESXi Usage is too" → VM Usage (%) is HT-aware; ESXi Usage (%) is not.

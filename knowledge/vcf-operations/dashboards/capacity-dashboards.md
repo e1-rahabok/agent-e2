@@ -28,7 +28,7 @@
 - Provider: the shared infrastructure, because a shortage hits many consumers (`sp5-framework/capacity/capacity-model`).
 - Special clusters change the capacity model. A stretched cluster gets its own model and view: one object or custom group per site, shown side by side.
 
-## Traps
+## Misconceptions
 - "High remaining capacity is good" → it can be wastage, and low use can hide a bottleneck elsewhere.
 - "One capacity number for a stretched cluster" → each site gets its own group and view.
 - "Capacity dashboards replace the built-in pages" → they complement them with buckets, trends and customization.

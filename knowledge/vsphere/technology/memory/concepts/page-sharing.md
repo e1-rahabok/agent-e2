@@ -25,7 +25,7 @@
 - ESX does not share 2 MB large pages. See `vsphere/technology/memory/concepts/large-memory-pages`.
 - Page sharing can start only when overcommitment is high enough to break large pages into small pages.
 
-## Traps
+## Misconceptions
 - "Page sharing shares pages between all VMs by default" → since vSphere 6.0, the default is sharing within a VM only.
 - "Page sharing saves significant memory in most deployments" → the source says the effect is little in most deployments. Benefit is large in small-page environments such as VDI.
 - "Setting one salt for all VMs is harmless" → the source describes it as a single pool, which recreates the pre-6.0 default. Review the security implications (KB 2080735, 2097593).

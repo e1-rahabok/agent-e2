@@ -16,7 +16,7 @@
 
 - Under a limit, Demand equals Usage: the kernel does not see the limited time as demand.
 
-## Traps
+## Misconceptions
 - "Run is low, so the VM has headroom" → check Ready. Under a limit, Run stays low.
 - "Add vCPUs to speed up" → when Used is far below Run, the cause is frequency or SMT.
 

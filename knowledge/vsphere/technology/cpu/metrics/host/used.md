@@ -17,7 +17,7 @@
 - A thread running alone can reach 20,000 ms.
 - See `vsphere/technology/cpu/concepts/hyper-threading`.
 
-## Traps
+## Misconceptions
 - "Used above 100% is a data error" → the % form includes frequency effects and can exceed 100%.
 
 ## Metadata

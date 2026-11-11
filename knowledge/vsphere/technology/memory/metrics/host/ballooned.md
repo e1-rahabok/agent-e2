@@ -13,7 +13,7 @@
 - Balloon does not mean contention. Example: constant, significant balloon for 7 days; worst VM contention below 1%; most of 19 VMs had none.
 ![Host balloon for 7 days with almost no VM contention](../../images/esxi-memory-balloon-7-days-without-vm-contention.png)
 
-## Traps
+## Misconceptions
 - "Host balloon means VMs are slow" → check Max VM Memory Contention.
 
 ## Metadata

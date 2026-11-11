@@ -20,7 +20,7 @@
 ![ESXi storage adapter latency: 99th and 95th percentile read and write, sorted by write latency](../../images/esxi-storage-adapter-latency-99th-vs-95th-percentile-sorted.png)
 ![Highest adapter read and write latency across 192 hosts](../../images/esxi-storage-adapter-read-write-latency-worst-vs-average-across-hosts.png)
 
-## Traps
+## Misconceptions
 - "Highest latency = worst read or write" → it averages read and write per adapter first.
 - "Maximum shows the problem hosts" → one outlier dominates. Use the 95th or 99th percentile.
 

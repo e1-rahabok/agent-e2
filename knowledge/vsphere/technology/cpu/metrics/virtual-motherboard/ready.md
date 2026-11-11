@@ -59,7 +59,7 @@
 - Ready above 50% with high Usage results in poor performance.
 ![Worst and 99th percentile 20-second Ready across 3,937 VMs](../../images/vm-cpu-ready-20-second-worst-vs-99th-percentile-across-vms.png)
 
-## Traps
+## Misconceptions
 - "Host-level Ready is the host waiting for CPU" → Ready is a consumer metric. See `vsphere/architecture/provider-consumer`.
 - "Ready 2% is always low" → read it against Run.
 - "Ready is always caused by ESXi" → shares, vMotion and limits are VM-side causes.
@@ -109,7 +109,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture (pp. 52-78) > State of a VM vCPU; State Across Time; State Across Multiple vCPU; CPU > VM (pp. 78-118) > Contention Metrics > Ready; Best Practice; Ready | Readiness
 corrections: []
 review_notes:
-- Sections Mechanism, Read against Run, Units, and the last 2 traps: from CPU > Architecture.
+- Sections Mechanism, Read against Run, Units, and the last 2 misconceptions: from CPU > Architecture.
 - 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
 - 'Section ''Observed values'': the 50% statement is the book''s observation on a 16-vCPU VM, not a stated threshold.'
 - 'To check: Section ''Larger VMs'': ''Shares scale with vCPU count by default''; not in the book.'

@@ -33,7 +33,7 @@
 - Compare dynamics with expectations. In production these numbers should be low.
 - Shutdowns should match change requests and happen in the maintenance window. Exceptions: for example, scheduled VDI reboots.
 
-## Traps
+## Misconceptions
 - "Counts are per interval" → raw counters are cumulative.
 
 ## Metadata

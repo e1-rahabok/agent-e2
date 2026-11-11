@@ -2,7 +2,7 @@
 
 Each block is generated from the knowledge base at start, so it cannot drift from it:
   map        what each area holds, what each file kind answers, which tool serves it (from ids and retriever_guide)
-  rules      Level 300 misreadings and their corrections (knowledge/misreadings.md)
+  rules      Level 300 misconceptions and their corrections (knowledge/misconceptions.md)
   terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
   flows      flow index by kind (every health-check, troubleshooting and decision-tree file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
@@ -15,7 +15,7 @@ from collections import Counter, defaultdict
 
 BLOCKS = ('map', 'rules', 'terms', 'flows', 'procedure')
 BUDGET_TOKENS = 3000          # all five blocks together; lint checks it
-MISREADINGS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge', 'misreadings.md')
+MISCONCEPTIONS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge', 'misconceptions.md')
 
 KINDS = {  # folder kind -> what it answers and which tool serves it
     'concepts': ('how it works, why a value behaves so', 'search, read_file'),
@@ -68,14 +68,14 @@ def map_block(docs):
 
 
 def rules_block(docs):
-    """The bullet lines of knowledge/misreadings.md under its first '## ' heading, whatever that heading says."""
-    if not os.path.exists(MISREADINGS):
+    """The bullet lines of knowledge/misconceptions.md under its first '## ' heading, whatever that heading says."""
+    if not os.path.exists(MISCONCEPTIONS):
         return ''
-    with open(MISREADINGS) as f:
+    with open(MISCONCEPTIONS) as f:
         t = f.read()
     m = re.search(r'^## .*$', t, re.M)
     lines = [l for l in t[m.end():].split('\n') if l.startswith('- ')] if m else []
-    return '\n'.join(['## Level 300 misreadings'] + lines) if lines else ''
+    return '\n'.join(['## Level 300 misconceptions'] + lines) if lines else ''
 
 
 def terms_block(docs):

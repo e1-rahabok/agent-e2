@@ -10,7 +10,7 @@
 Average packet size = throughput / packet count
 ```
 
-## Traps
+## Misconceptions
 - "KBps and Mbps values disagree" → vCenter uses kilobytes, esxtop megabits.
 
 ## Metadata

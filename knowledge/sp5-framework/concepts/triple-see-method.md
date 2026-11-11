@@ -63,7 +63,7 @@
 - None of the three has a context type. In VCF many questions are "it depends" questions (configuration, inventory, vMotion counts), answered only by context metrics.
 - None maps its metric types to the pillars of operations, so none tells which team acts on a metric.
 
-## Traps
+## Misconceptions
 
 - "Apply the USE Method: high utilization means a problem" → utilization is consumption, a good thing when the load is useful. Check contention first.
 - "Monitor the four Golden Signals on the VMs" → they are request metrics for services. A VM has no request latency; read contention (Ready, Co-stop, memory and disk latency) per VM.

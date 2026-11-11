@@ -97,7 +97,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 - Performance charts do not exist for network objects (switches, port groups). The distributed switch still has API counters at level 3 (switch, port, LAG); the distributed port group has none. See `vsphere/technology/network/metrics/distributed-switch/packets`.
 - Overview and advanced charts show a subset of the counters. The vSphere API reference lists all counters.
 
-## Traps
+## Misconceptions
 - "An API value of 4,194,304 for VM Consumed is 4 TB" → the API unit is KB: 4 GB.
 - "The Real-time chart shows real-time data" → it shows 20-second averages, the label is the UI's. A burst of 1-3 seconds needs esxtop or the 2-second tier of VCF Operations 9.1.
 - "The 1 Week chart shows the peak" → it shows 30-minute averages. Use real-time or esxtop for bursts.

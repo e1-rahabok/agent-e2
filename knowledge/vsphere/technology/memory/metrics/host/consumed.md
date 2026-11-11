@@ -33,7 +33,7 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Evacuated host: Consumed fell from 400 GB to 32 GB (vSAN), not 0. Kernel usage stayed nearly constant; kernel reservation did not change.
 ![ESXi Consumed = VM consumed + kernel](../../images/esxi-memory-consumed-equals-vm-consumed-plus-kernel.png)
 
-## Traps
+## Misconceptions
 - Summing VM Consumed and expecting ESXi Consumed.
 - "Host Consumed near 100% is a problem" → memory is cache. Check balloon, swap-in and VM contention.
 - "Host with no VMs should show 0 Consumed" → kernel, vSAN and NSX consume memory.

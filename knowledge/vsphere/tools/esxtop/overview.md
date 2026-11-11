@@ -37,7 +37,7 @@
 ## Export
 - Avoid CSV export of everything: over 100 MB and more than 10,000 metrics (example: 16,384). Limit metrics and duration.
 
-## Traps
+## Misconceptions
 - "esxtop shows guest metrics" → VM and kernel only.
 
 ## Metadata

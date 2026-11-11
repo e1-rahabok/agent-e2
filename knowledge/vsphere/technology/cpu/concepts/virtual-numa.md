@@ -42,7 +42,7 @@
 - The guest then sees one vNUMA node.
 - See `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`.
 
-## Traps
+## Misconceptions
 - "corespersocket sets the NUMA layout" → from vSphere 6.5 it does not. It sets the guest socket presentation.
 - "vNUMA is on for every VM" → by default it is on only for VMs with more than 8 vCPUs.
 

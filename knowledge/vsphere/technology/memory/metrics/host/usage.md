@@ -9,7 +9,7 @@
 Usage (%) = Consumed / Total Capacity
 ```
 
-## Traps
+## Misconceptions
 - "Host Usage at 95% means the host is short of memory" → Usage is Consumed, not Active. Check contention metrics.
 
 ## Metadata

@@ -43,7 +43,7 @@
 - Incidents (the website is down) come from problems (a rare bug in the core routers, incompatible configuration). Fewer availability, performance, compliance, configuration and capacity problems means fewer incidents.
 - Pillars of SP5: `sp5-framework/concepts/overview`, section The five pillars.
 
-## Traps
+## Misconceptions
 - "Adopt ITIL capacity and performance management as one practice" → in VCF they are two disciplines with different teams, metrics and time frames.
 - "Manage the SLA" → manage availability, performance and compliance; the SLA follows.
 - "Alerting is a discipline next to monitoring" → alerts are one way monitoring talks to people, with dashboards and reports.

@@ -55,7 +55,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - In classic mode the answer can be no better than its context. Roughly: answer accuracy ≈ (questions with every needed file) × (share the model gets right when it has them) + a little from the model's own knowledge.
 - The model is not perfect even with the right files. If it gets 95% right with complete context, 85% needs about 90% of questions complete (0.90 × 0.95 ≈ 0.85).
 - So the retrieval bar sits above the release bar, not at it.
-- A missing file also drives confident-wrong answers: the model answers from Level 300 public knowledge, the very trap the knowledge base exists to correct.
+- A missing file also drives confident-wrong answers: the model answers from Level 300 public knowledge, the very misconception the knowledge base exists to correct.
 
 ### Proposed levels (classic mode, BM25 and hybrid both reported)
 | Level | Complete questions | Context recall | Meaning |
@@ -75,7 +75,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
   - Overfitting: the last few percent are reached by tuning files and links to these 90 prompts. That raises this number without helping a real user's question. The held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) would expose it.
   - The budget is finite: a question that needs 7 files competes for 16K tokens; cutting other context to fit it can hurt elsewhere.
   - Real users phrase questions in ways no set covers; a perfect score here does not carry over.
-- Perfect is the right goal for one thing: no question should miss its main file (the file that holds the trap or the answer). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.
+- Perfect is the right goal for one thing: no question should miss its main file (the file that holds the misconception or the answer). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.
 - Watch the held-out set: when it scores clearly below the visible set, retrieval is being fitted, not improved.
 
 ## When the score is bad
@@ -87,7 +87,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 | Cause | Sign | Fix |
 |---|---|---|
 | Wrong or stale `knowledge` id in the question | The listed file does not hold the fact; a better file is in context | Fix the question's `knowledge` list |
-| The file does not use the user's words | Prompt words absent from the file (a counter name, an esxtop field, a screen label) | Add the term to the file, a trap line in the user's words, or a glossary synonym |
+| The file does not use the user's words | Prompt words absent from the file (a counter name, an esxtop field, a screen label) | Add the term to the file, a misconception line in the user's words, or a glossary synonym |
 | The fact sits in a long file on another topic | Right file, rank 7-15 | Move the fact to the file whose topic matches, or split the file |
 | A new file outranks the right one | Miss started after a change set; the new file is in context instead | Make the new file specific, or link the right file from it (`related`, `internal_derive`) |
 | Files that belong together are not linked | One file in context, its partner missing | Add `same_name`, `related` or `internal_derive` links |

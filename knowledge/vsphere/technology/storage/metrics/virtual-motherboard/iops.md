@@ -22,7 +22,7 @@
 - A limit shows as latency in the Guest OS, not in VM metrics: IO that passes is not delayed. Same as any problem above the VM layer, such as a guest LSI Logic or PVSCSI driver issue.
 - VCF Operations per virtual disk: IOPS Limit property, IOPS per GB metric.
 
-## Traps
+## Misconceptions
 - "VM latency normal, so an IOPS limit is not hurting" → the latency shows in the Guest OS.
 
 ## Metadata

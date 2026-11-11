@@ -21,7 +21,7 @@
 - Example profile: more than 63 million data points (2,400 VMs × 3 months).
 ![Virtual disk latency profile across 2,400 VMs](../../images/vm-virtual-disk-latency-distribution-across-vms.png)
 
-## Traps
+## Misconceptions
 - "Total latency = average of read and write latency" → it is weighted by command count.
 
 ## Metadata

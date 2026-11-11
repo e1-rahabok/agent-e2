@@ -21,7 +21,7 @@
 - Not capped at 100%.
 ![ESXi CPU Demand chart](../../images/esxi-cpu-demand-chart.png)
 
-## Traps
+## Misconceptions
 - "ESXi Demand = VM usage + kernel usage" → wrong. Demand counts VM demand and reservations, not usage.
 - "Demand above 300% means the host is 3x overloaded" → Demand sums VM demand and reservations. Check contention.
 - "Host with no VMs has 0 Demand" → it can be 0, or flat at the kernel reservation. Either way Usage is not 0: kernel work is in Usage, not in Demand.

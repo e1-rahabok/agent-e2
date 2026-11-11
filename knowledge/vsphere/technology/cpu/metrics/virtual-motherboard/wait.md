@@ -29,7 +29,7 @@ Wait = Idle + Swap Wait + Other Wait
 - Wait mixes consumption (Idle) and contention (Swap Wait, Other Wait). The book groups it separately.
 - The Guest OS does not see Swap Wait or Other Wait. It experiences a freeze.
 
-## Traps
+## Misconceptions
 - "High CPU Wait means the VM waits for disk or memory" → wrong. Mostly idle time.
 - "VM Wait equals Guest OS IO Wait" → Guest OS IO wait can show as VM Run or VM Wait.
 
@@ -66,7 +66,7 @@ source:
 corrections: []
 review_notes:
 - 'To check: metric_class: set to context; the book groups Wait separately from contention and consumption.'
-- Sections Mechanism and the last trap: from CPU > Architecture.
+- Sections Mechanism and the last misconception: from CPU > Architecture.
 - 'Section Sub-metrics: from CPU > VM. The IO wait and memory wait cases in vsphere/technology/cpu/concepts/vcpu-states map to Other Wait and Swap Wait.'
 status: draft
 ```

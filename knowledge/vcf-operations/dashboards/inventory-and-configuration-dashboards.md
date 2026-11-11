@@ -28,7 +28,7 @@
 - With a larger screen, add checks or legends to the pie charts.
 - In a large environment, add a filter by class of service (Gold, Silver, Bronze), defaulting to Gold, so less critical workloads do not clutter the view.
 
-## Traps
+## Misconceptions
 - "Alert on inventory changes" → inventory has no good or bad; watch changes on dashboards.
 - "Show every setting" → show what needs attention first; completeness costs page speed and space.
 - "Configuration dashboards without a standard" → drift has no meaning until the standard is documented.

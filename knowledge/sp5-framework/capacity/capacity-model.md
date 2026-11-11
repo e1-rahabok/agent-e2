@@ -99,7 +99,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 
 - Total Capacity counts only hosts connected to vCenter. A disconnected host's value goes blank.
 
-## Traps
+## Misconceptions
 - "Buffer = HA" → buffer applies after HA.
 - "Capacity Remaining is current free capacity" → it is a 3-day projection.
 

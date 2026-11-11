@@ -11,7 +11,7 @@
 - A provider must account for reservations: they cannot be overcommitted.
 - Memory reservation is sticky. CPU has only 1 reservation counter: CPU reservation is transient.
 
-## Traps
+## Misconceptions
 - "Reserved = used" → check Reservation consumed.
 
 ## Metadata

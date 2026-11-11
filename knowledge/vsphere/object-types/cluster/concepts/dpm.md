@@ -73,7 +73,7 @@
 - Effect: additional VMs might not be admitted even when the cluster seems to have available resources. HA reserves this capacity.
 - If HA is active and one or more VMs are powered on, DPM keeps at least two hosts powered on. This applies even when HA admission control is deactivated.
 
-## Traps
+## Misconceptions
 - "DPM saves power with no effect on capacity" → DPM keeps excess capacity and HA capacity powered on. Fewer hosts go into standby than the raw load suggests.
 - "Scheduled DPM deactivation keeps standby hosts off" → deactivating DPM with Scheduled Tasks powers on all standby hosts.
 

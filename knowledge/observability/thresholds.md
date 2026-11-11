@@ -54,7 +54,7 @@ threshold = (metric, object, instance reading, sample interval, time window) -> 
 - Read and write latency may require different thresholds.
 - Reference: https://learn.microsoft.com/en-us/troubleshoot/sql/database-engine/performance/troubleshoot-sql-io-performance
 
-## Traps
+## Misconceptions
 - "The band from the 20-second chart applies to the 1-week chart" → the interval differs; longer intervals read lower.
 - "VM CPU Ready is low, so no vCPU waits" → the VM value averages the vCPUs; check the worst vCPU.
 - Using an application-layer threshold (e.g. 15 ms) directly as a VM-layer alert → too high.

@@ -48,7 +48,7 @@
 - The rules above apply to the part projected on the wall. The NOC operators can open the same dashboard on their desktop and use keyboard and mouse to drill down.
 - Visitors, such as IT leaders, are not the audience. If a CIO drops by for 10 minutes a day, prepare a dashboard for that visit and bring it up only then; it does not stay on the wall for the other 23 hours 50 minutes.
 
-## Traps
+## Misconceptions
 - "Show capacity on the wall screen" → capacity stays the same for hours. It belongs to longer-cadence dashboards.
 - "A red tile keeps attention on a known issue" → a tile that stays red is ignored. Show only what can be fixed the same day.
 - "Design the wall screen on a 24-inch monitor" → large fonts leave the space of a 14-inch screen.

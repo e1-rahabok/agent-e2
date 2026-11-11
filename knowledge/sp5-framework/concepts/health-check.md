@@ -65,7 +65,7 @@ flowchart TD
 - ESXi host: `vsphere/object-types/esxi/health-check/esxi-health-check`.
 - vSphere cluster: `vsphere/object-types/cluster/health-check/cluster-health-check`.
 
-## Traps
+## Misconceptions
 - "Run a capacity health check on this cluster" → there is no capacity health check. Name the operational question (can it take more VMs, how long until full) and answer it with its decision tree; say the other pillars were not checked.
 - "Run a CPU health check" → a health check is on an object type, not a technology. Check the VM, host or cluster; CPU is a step inside it.
 - "The application inside the VM is slow, so the ESXi host is unhealthy" → the Guest OS is a separate realm. Check host and VM contention; if both are green, the cause is inside the Guest OS.

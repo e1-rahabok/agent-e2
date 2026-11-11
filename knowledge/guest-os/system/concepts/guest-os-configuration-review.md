@@ -28,7 +28,7 @@
   - Too many setting options in the corporate standard.
   - Screen saver off: irrelevant on a server OS.
 
-## Traps
+## Misconceptions
 - "The Guest OS type in vCenter says Windows Server 2016, so that is what runs" → it is the value set at creation. Compare with the type VMware Tools reports.
 - "The VM is named web01, so it runs a web server" → discover the processes and connections.
 - "Give the JVM more heap than the Guest OS has free, for headroom" → memory the application cannot use is wasted, and the Guest OS starts paging.
@@ -64,6 +64,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Drivers'': the book links a networking driver best-practice page; the link target is not in the source text.'
-- 'To check: Section ''Applications'', JVM: the trap statement ''the Guest OS starts paging'' is not in the book.'
+- 'To check: Section ''Applications'', JVM: the misconception statement ''the Guest OS starts paging'' is not in the book.'
 status: draft
 ```

@@ -49,7 +49,7 @@
   - configure the VM with the maximum vCPU count the workload might require.
 - Unused vCPUs cost a small amount of overhead, and can cause poor guest scheduling decisions.
 
-## Traps
+## Misconceptions
 - "Idle vCPUs cost nothing" → idle vCPUs still cost timer interrupts (some guests), memory-view upkeep, and busy-wait loops (some guests).
 - "More vCPUs is always safer" → extra vCPUs add overhead and can degrade scheduling in the guest.
 

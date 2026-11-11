@@ -47,7 +47,7 @@
 - A 1-hour window has 12 samples; 5% of 12 rounds down to 0, so the single worst sample decides.
 - Also published per window: Worst Cluster Performance, Worst Cluster Risk, Worst Cluster Consumption. One point per period, not every 5 minutes.
 
-## Traps
+## Misconceptions
 - "Cluster Risk is red, so the cluster is closed" → Risk decides only when Performance and Consumption are both orange.
 - "Close for Business uses the latest value" → it uses the worst end of the window, ignoring the worst 5% by default.
 - "Performance of 25 is red" → a value on a limit takes the better band: orange.
@@ -86,7 +86,7 @@ source:
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/periodic-cluster-check.md; docs/concepts/capacity-management.md, section Closing the cluster
 corrections: []
 review_notes:
-- 'To check: Section Traps, last trap: which thresholds Agent E2 applies, the pack thresholds or the book closure thresholds in can-cluster-take-more-vms (Q132).'
+- 'To check: Section Misconceptions, last misconception: which thresholds Agent E2 applies, the pack thresholds or the book closure thresholds in can-cluster-take-more-vms (Q132).'
 - 'To check: Section The rule: the adapter pages call Cluster Risk and Cluster Consumption KPIs; written as models (Q131).'
 status: draft
 ```

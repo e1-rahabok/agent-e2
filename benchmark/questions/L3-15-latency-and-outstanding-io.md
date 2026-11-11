@@ -38,6 +38,6 @@ source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1
 answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [B]
-trap: [A,D]
+misconception: [A,D]
 status: draft
 ```

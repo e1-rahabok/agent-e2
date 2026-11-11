@@ -42,7 +42,7 @@ Run (VM) = sum of Run (vCPU)
 - Input for Guest OS sizing. Remove Overlap first: Net Run = Run - Overlap.
 - Run higher than Used: the gap comes from power management, Hyper-Threading or both. Run cannot tell which.
 
-## Traps
+## Misconceptions
 - "Run 100% means full performance" → Run is time. Throughput depends on frequency and Hyper-Threading.
 - "Compare Run (ms) across VMs" → ms scales with vCPU count. Use %.
 - "Run includes the hypervisor IO done for the VM" → System is not in Run.
@@ -84,7 +84,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture (pp. 52-78) > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency; CPU > VM (pp. 78-118) > Consumption Metrics > Run | Net Run
 corrections: []
 review_notes:
-- Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 traps: from CPU > Architecture.
+- Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 misconceptions: from CPU > Architecture.
 - 'Sections Not included in Run, Instance, Use: from CPU > VM.'
 status: draft
 ```

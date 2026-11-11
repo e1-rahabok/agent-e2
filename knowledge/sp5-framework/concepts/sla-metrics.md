@@ -122,7 +122,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
   - Service: against the best possible service.
 - A different benchmark per class cannot be explained by price, and lets a lower class score better than a higher one. Numbers per class: `sp5-framework/concepts/class-of-service`.
 
-## Traps
+## Misconceptions
 - "Our SLA is Cluster Availability 99.95%" → wrong object. The application team cares about its own VMs and pods; a cluster can be up while their VM is down. Measure the consumer's object.
 - "Our Kubernetes SLA is node availability" → the node is often the SRE team's object; developers own the pod.
 - "We have a performance SLA" → ask for the metric, object, target and window. Usually there is none, or the metric is wrong. Operations use the KPI.

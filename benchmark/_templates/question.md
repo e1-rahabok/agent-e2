@@ -13,7 +13,7 @@
 <!-- one image link per attachment, with alt text, so a reviewer sees it on GitHub. Delete the section when there are none. Never sent to the model: the runner sends the files themselves. -->
 
 ## Likely wrong answer
-<The trap a generic AI falls into.>
+<The Level 300 misconception a generic AI holds.>
 
 ## Expected key points
 - <One point per bullet. Scoring checks these.>
@@ -40,6 +40,6 @@ attachments: []                   # paths relative to benchmark/questions/, e.g.
 origin: book                      # book | quiz | real-ticket | synthetic
 source_path: "<heading path in the source document>"
 answer: [B]                       # deterministic only
-trap: [A]                         # deterministic only
+misconception: [A]                         # deterministic only
 status: draft                     # draft | reviewed | retired
 ```

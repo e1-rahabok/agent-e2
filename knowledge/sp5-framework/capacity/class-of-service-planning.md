@@ -61,7 +61,7 @@
 ## Planning tool
 - The capacity planning spreadsheet on isvara.io implements this model. First input: the ESXi host size. Its defaults balance cost and host size.
 
-## Traps
+## Misconceptions
 - "Our Bronze plan of 4:1 shows red overcommit in Cluster Risk, so the plan is wrong" → the ratio is a planning input tied to price; Cluster Risk reads the running cluster, where Bronze is expected to score higher than Gold.
 - "Keep exactly 2x on every row" → the 2x gap is a goal, not a rule.
 - "Gold gets 2x the performance of Silver" → Gold gets half the chance of contention; speed is not doubled.

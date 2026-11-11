@@ -72,7 +72,7 @@
 - To keep GPUs free for large profiles: the same vGPU profile on all VMs of a cluster, GPU consolidation on hosts, or manual migration.
 - DRS migrates a vGPU VM automatically only when its estimated stun time is below the vMotion stun time limit (default 100 seconds). The VM is paused while the GPU state copies, so large frame buffers mean long stuns.
 
-## Traps
+## Misconceptions
 - "GPU memory 90% used, so the VMs are busy" → vGPU frame buffers are reserved at power-on. Check GPU utilization.
 - "The 1-week chart shows no GPU data, so the GPU was idle" → per-device host GPU counters are level 4; default history holds none. Use the cluster or resource pool GPU counters, which are level 1.
 - "GPU memory reserved is high, so the workloads are busy" → compare with `gpu.mem.used` and utilization.

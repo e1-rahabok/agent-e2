@@ -37,7 +37,7 @@
 - The vSphere Datacenter is a good boundary: storage, network and compute rarely extend beyond it.
 - Performance problems tend to stay in one physical site, unless the WAN link between sites is the cause. A problem in country A rarely causes one in country B when they share little.
 
-## Traps
+## Misconceptions
 - "Troubleshoot the slow VM first" → clear the infrastructure first; if it fails most VMs, one VM is not the problem.
 - "Infrastructure health from host metrics" → judge it by how well it serves its VMs.
 - "High utilization is red" → contention is coloured; utilization is not, and a busy VM with no contention is healthy.

@@ -80,7 +80,7 @@
 - The performance target depends on the class of service: Gold must perform better than the free tier. The KPI carries it: one set of levels for every class; Gold scores higher because its design causes less contention (`sp5-framework/performance/kpi-vs-sla`).
 ![Cluster Utilization (%) rising from 0% toward 100%; Cluster Performance (%) flat near 100% until overcommit above 1, then falling below 95%](images/cluster-utilization-vs-cluster-performance-pattern-timeline.png)
 
-## Traps
+## Misconceptions
 - "Host CPU at 95%, so the VMs are slow" → utilization is consumption. Read VM contention (Ready, Co-stop, memory and disk latency). 100% with no queue is the most work done.
 - "Utilization is low, so performance is fine" → unmet demand at low utilization is common: imbalance, limits, wrong cluster configuration. Check contention.
 - "The host is ballooning and swapping, so its VMs have a memory problem" → host reclamation is not VM contention. Read each VM's memory contention.

@@ -69,7 +69,7 @@
 - Linear mapping inside a range. Queueing delay (CPU scheduler, vSAN and NVMe queues, NUMA interconnect) grows steeply near saturation: 10% to 12% vCPU Ready hurts more than 0% to 2%. The linear map under-weights it near the limit. Kept linear: easier to read, and the fix is the same.
 - Many metrics dilute each weight; mixed static and dynamic metrics. Both are solved by multiple tables.
 
-## Traps
+## Misconceptions
 - "KPI at 75%, so 25% of the VMs are slow" → 75% is the top of yellow; the scale is scores, not shares.
 - "Aim for a 100% KPI" → 100% is unreachable; 75-100 is green.
 - "One red metric makes the KPI red" → one worst red among 8 greens scores about 33, orange; read the score and the sub-metrics.

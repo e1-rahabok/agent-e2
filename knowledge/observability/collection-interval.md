@@ -49,7 +49,7 @@
 - Higher resolution also helps where a contention metric does not exist. A VM has no network latency or retransmit metric, only dropped packets; read packets per second and throughput at high resolution instead.
 - 2-second data in VCF Operations 9.1: `vcf-operations/features/real-time-metrics`.
 
-## Traps
+## Misconceptions
 - "CPU Ready 3,000 ms in a 5-minute VCF Operations point is 1%" → the base is 20,000 ms: 15%.
 - "No alert in VCF Operations, so there was no 5-minute spike" → a spike split across two collections may never show whole; it may have to last 10 minutes.
 - "Raise the vCenter statistics level to get more in VCF Operations" → the level does not apply; VCF Operations uses its policy.

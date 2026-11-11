@@ -42,7 +42,7 @@
 - Predictive DRS can receive predictions from VMware vRealize Operations and use them for vMotion decisions.
 - Requires vRealize Operations 6.4 or later, per the source.
 
-## Traps
+## Misconceptions
 - "A Cluster DRS Score of 85% and one of 95% differ in performance" → the source says the range matters, not the exact value. Scores above 80% indicate no performance impact.
 - "DRS Level 3 reacts to every spike" → Level 3 is tuned for mostly stable workloads. Bursty or dynamic workloads are served by Level 4 or 5.
 

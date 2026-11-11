@@ -1,7 +1,7 @@
 # Benchmark design
 
 For human experts who check that the benchmark is valid and complete. Not indexed.
-Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Question format: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Trap definition: `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
+Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Question format: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Misconception definition: `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 ## 1. Claim
 - Claim: a local open-weight model on one GPU ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
@@ -20,7 +20,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Measured | Not measured (and where it is measured instead) |
 |---|---|
 | Correct reading of metrics: mechanism, vantage point, unit, rollup | Installation, configuration steps, UI navigation (out of scope for the product) |
-| Resistance to traps (see `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400) | Writing style of judged answers (the judge scores facts only, section 14) |
+| Resistance to misconceptions (see `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400) | Writing style of judged answers (the judge scores facts only, section 14) |
 | Combining several facts, tables and screenshots in one answer, including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
 | Reading one or more screenshots (esxtop, vCenter UI, VCF Operations UI) and tables (spreadsheet exports) | Multi-turn conversation with clarifying questions (a separate set, later) |
@@ -48,7 +48,7 @@ The product is a narrow expert for one reader: a VMware administrator. The admin
 - Each task maps to a `retriever_guide` value of the knowledge base: metric-meaning, health-check, troubleshooting, how-it-works, what-to-set. Capacity decisions use metric-meaning and health-check.
 
 ### 3.2 By level
-Levels follow `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400.
+Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 | Level | The expert can | Share of 100 | Example |
 |---|---|---|---|
@@ -146,7 +146,7 @@ Level against input type (questions that include it):
 ### 3.7 Coverage constraints
 | Constraint | Minimum |
 |---|---|
-| Each trap type in `KNOWLEDGE-ENGINEERING.md`, section Traps and Level 400 (12 types) | 3 questions each |
+| Each misconception type in `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400 (12 types) | 3 questions each |
 | Same-name pairs: one label asked on two objects (VM vs ESXi, ESXi vs cluster) | 5 pairs |
 | Questions about the VM / ESXi / cluster / datastore | 30 / 20 / 10 / 5 |
 | Questions outside the knowledge base (answered from the model's own knowledge) | 5 |
@@ -157,7 +157,7 @@ Level against input type (questions that include it):
 | Table questions with at least 100 rows | 5 |
 | Long, complex questions: many screenshots and tables, many key points, as close as one prompt gets to a long troubleshooting discussion | 1 |
 
-- Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `trap_type` to be added; tags: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md), section Metadata tags), so coverage is counted by a script, not by eye.
+- Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `knowledge`; `misconception_type` to be added; tags: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md), section Metadata tags), so coverage is counted by a script, not by eye.
 
 ### 3.8 Answer-key shape (deterministic)
 - Options: 4-8 written options, plus Unsure appended to every question. No Not covered option since 2026-11-05 (Q038).
@@ -190,7 +190,7 @@ The headline score is a share of questions. Its precision depends on the number 
 
 ## 5. Set design
 The set must measure one thing (Level 400 operations knowledge) evenly, so the total has meaning.
-- Coverage: the blueprint (section 3) makes every area, object, layer and trap type count. No area can carry the score alone.
+- Coverage: the blueprint (section 3) makes every area, object, layer and misconception type count. No area can carry the score alone.
 - Balance of difficulty: Level 100-200 questions anchor the scale. If they fail, the problem is the model's basics or retrieval, and Level 400 failures are not interpreted (section 3.2).
 - Paired questions: the same concept on two objects. A model that answers both right understands the vantage point; one that answers one right was lucky or pattern-matched.
 - Independence: no question gives away another's answer. No two questions test the same single fact.
@@ -203,7 +203,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
   - similar length and style, so length gives no hint;
   - no "all of the above", no double negatives;
   - every wrong option is wrong for a reason the knowledge base states;
-  - one option is the trap: the conclusion a Level 300 reader would draw. It is named in `## Likely wrong answer`.
+  - one option is the misconception: the conclusion a Level 300 reader would draw. It is named in `## Likely wrong answer`.
 - Wording: paraphrased, never copied from the knowledge base. The benchmark checks reasoning, not string matching.
 - Key: `answer` letters, and `## Expected key points` with the reason for every option and the knowledge file ids.
 - Sources: the author's books and quizzes first; then real tickets and field questions; then synthetic questions drafted by Claude. A synthetic question needs the author's approval before it counts.
@@ -252,7 +252,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Luck | How much of a model's score is unstable. |
 | Confident-wrong rate | Answers that would mislead an operator. |
 | Unsure rate, accuracy when answered | A cautious model with gaps vs a reckless one. |
-| Trap rate | How often the trap option is picked. The core Level 400 signal. |
+| Misconception rate | How often the misconception option is picked. The core Level 400 signal. |
 | Not-covered accuracy | Guessing outside the knowledge base. |
 | Retrieval recall | Whether the right files were found; separates retrieval from reasoning. |
 | Tools used, verifier flags | Whether the harness tools were used (agentic mode). |
@@ -292,7 +292,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Threat | Guard |
 |---|---|
 | Wrong answer key | Every wrong answer from the best model is checked by the author: model error, knowledge gap, or key error. Keys cite knowledge ids. |
-| Knowledge base fitted to the benchmark (Claude edits the knowledge base and can read the questions) | A held-out set of about 20% of the questions, kept by the author outside the repository and run only before releases. Fixes to the knowledge base must be general (a fact or a trap), never a question-specific answer. |
+| Knowledge base fitted to the benchmark (Claude edits the knowledge base and can read the questions) | A held-out set of about 20% of the questions, kept by the author outside the repository and run only before releases. Fixes to the knowledge base must be general (a fact or a misconception), never a question-specific answer. |
 | Questions written by the knowledge base's own author favour its wording | Paraphrased stems; questions from real tickets and field forums; frontier baseline as an outside reference. |
 | Synthetic questions drafted by Claude mirror Claude's view | The author reviews every question one by one; no cap on the share. What matters is the allocation and distribution. |
 | Ambiguous options | A question with a disputed option is fixed or removed, and the benchmark is re-scored. |
@@ -306,14 +306,14 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 For each question:
 1. Is the situation realistic for an operator of vSphere 9.1?
 2. Is every option decidable from the cited knowledge files, and is the key right?
-3. Is the trap option a mistake a competent Level 300 operator would plausibly make?
+3. Is the misconception option a mistake a competent Level 300 operator would plausibly make?
 4. Does any option give the answer away by wording, length or count?
 5. Does it duplicate another question's fact?
 6. Does it test operations knowledge, not trivia (UI clicks, product history, prices)?
 
 For the set:
 7. Do the counts match the blueprint in section 3?
-8. Is every trap type covered at least 3 times?
+8. Is every misconception type covered at least 3 times?
 9. Are at least 20% of questions from sources other than the author's books?
 
 ## 12. Status (2026-11-05)
@@ -324,7 +324,7 @@ For the set:
 - Technology (a question can carry several): cpu 26, system 26, storage 22, memory 21, network 15.
 - Origin: 63 synthetic (drafted by Claude), 17 quiz, 10 book. No cap on the synthetic share: the author reviews every question (Q058).
 - Remaining: 1 question at Level 200 and 9 at Level 300. Fill the tasks below allocation first: decide-capacity, troubleshoot, judge-setting, explain-mechanism; no more read-metric.
-- Next: `trap_type` per question; a coverage script that prints these counts; the held-out set.
+- Next: `misconception_type` per question; a coverage script that prints these counts; the held-out set.
 
 ## 13. Screenshot questions
 - Purpose: administrators upload screenshots and ask the agent to explain the problem. Often several at once, from different tools: esxtop, the vCenter UI, the VCF Operations UI.
@@ -340,7 +340,7 @@ For the set:
 - Typical size: dozens of columns, hundreds of rows. Excel or CSV.
 - The model does not read the whole table. The harness converts it to CSV and gives the agent a table tool: list the columns, filter, sort, aggregate, top-N. The model reasons over the results. Reason: hundreds of rows do not fit a 32K context, and models misread long tables.
 - Every column name must map to a metric the knowledge base defines (catalog lookup), so the reading follows the knowledge base, not the column header's English.
-- Not built yet: the table tool, the export formats and their traps (plan, M2), table attachments in the runner. Table questions are written now and scored once the tool exists.
+- Not built yet: the table tool, the export formats and their misconceptions (plan, M2), table attachments in the runner. Table questions are written now and scored once the tool exists.
 - Images and tables can be combined in one question (section 3.4).
 
 ## 14. Judged questions and the judge
@@ -365,10 +365,10 @@ For the set:
 | 3 | As 2, and states what to check next, or covers every key point. |
 
 - Judge rules (in its prompt): judge facts, not style or length; a contradiction of a key point caps the score at 0; the key points are the truth even where general IT practice differs; reward nothing the key points do not contain.
-- Reply: one JSON object (`score`, `trap`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
+- Reply: one JSON object (`score`, `misconception`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
 - Each run of a question is judged separately. The question credit is the lowest score / 3 (section 7.4).
 - Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 6.
-- Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `trap`, `unsure`, and the answer text.
+- Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `misconception`, `unsure`, and the answer text.
 - Checks on the judge:
   - the author reviews every score 0 and every question where runs disagree by 2 or more points;
   - an author score overrides the judge: correct the key points, then re-score;
@@ -398,6 +398,6 @@ For the set:
 - A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1.
 
 ## 17. Outputs
-- [benchmark/results/results.csv](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/results.csv): one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, trap, retrieval_recall, steps, tokens, parse_ok).
+- [benchmark/results/results.csv](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/results.csv): one row per answer (add columns: mode, run, provider, temperature, options_order, answer_letters, exact, partial, misconception, retrieval_recall, steps, tokens, parse_ok).
 - A short report per run in [benchmark/results](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results): score matrix, consistency, worst cases, trace links.
 - Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a plan item or an author question.

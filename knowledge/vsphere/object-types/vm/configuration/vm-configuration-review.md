@@ -40,7 +40,7 @@
 - **VM to datastore**: avoid VMs spanning datastores. M:N mapping complicates troubleshooting and capacity planning.
 - **RDM**: keep few. RDMs cause LUN sprawl and leave unused RDM objects on the array. Look for RDMs used where a VMDK would do, unused or hardly used, and oversized.
 
-## Traps
+## Misconceptions
 - "The VM has 48 vCPUs and the host has 48 logical processors, so it fits" → count physical cores. 48 vCPUs on 24 cores with Hyper-Threading competes for cores.
 - "16 vCPUs on a 32-core AMD EPYC socket stay in one NUMA node" → the socket has several L3 cache domains; 16 vCPUs span two 8-core chiplets.
 - "Enable CPU hot add on every VM for flexibility" → it deactivates vNUMA; large VMs lose memory locality.
@@ -87,6 +87,6 @@ review_notes:
 - 'To check: Section ''Compute'', relative size: physical cores here; sp5-framework/performance/noisy-neighbour sizes by logical CPUs. (Q111).'
 - 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols.'
 - 'To check: Section ''Compute'', chiplets: 8-core blocks hold for AMD EPYC, not Intel Xeon (Q125).'
-- 'To check: Traps 1 and 2: examples derived from the book''s rules.'
+- 'To check: Misconceptions 1 and 2: examples derived from the book''s rules.'
 status: draft
 ```

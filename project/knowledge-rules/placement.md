@@ -19,7 +19,7 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
 ├── observability/                   # vendor-neutral rules for reading metrics: input types, collection interval,
 │                                    # aggregation, units, thresholds, naming, accounting
 ├── glossary.md                      # the agent's vocabulary: one entry per term, other names, confusable term (all products)
-├── misreadings.md                   # Level 300 wrong beliefs and their corrections; given up front, not indexed
+├── misconceptions.md                   # Level 300 wrong beliefs and their corrections; given up front, not indexed
 ├── sp5-framework/                   # operations management across products and technologies: the SP5 Framework
 │   ├── concepts/                    # the framework across pillars: overview, why not ITIL, Triple See Method,
 │   │                                # SLAs, class of service, health, monitoring vs troubleshooting
@@ -88,5 +88,5 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
 - A VM is a virtual motherboard, not a complete machine. Its raw metrics live in `metrics/virtual-motherboard/` (`object: VirtualMachine`, `layer: virtual-motherboard`). The folder name is in every file id, so the model reads it with every VM chunk.
 - Guest OS knowledge (Windows, Linux) is a separate layer and not a Broadcom product. It lives in `knowledge/guest-os/<technology>/` with `scope: guest-os`, `layer: guest-os` and no VM object, even though VMware Tools stores some counters on the VM object. Boundary files comparing Guest OS and VM stay in `knowledge/vsphere/`. A VCF Operations KPI over Guest OS counters (Guest OS Performance) stays in `guest-os/` by this rule.
 - Screen library (release 1.1): one file per screen type, in `vsphere/tools/<ui>/screens/` (vSphere Client, esxtop) or `vcf-operations/<features|dashboards|reports>/screens/` (VCF Operations), with a screenshot, a full text twin, the metrics it shows (`metrics_shown`), UI and version (`ui`, `ui_version`). Template: `project/templates/screen.md`.
-- Indexed: every `knowledge/**/*.md` except `knowledge/misreadings.md` (given up front); the catalog is loaded, not chunked. Writing templates live in `project/templates/`; source documents in `project/sources/` (read-only). How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
+- Indexed: every `knowledge/**/*.md` except `knowledge/misconceptions.md` (given up front); the catalog is loaded, not chunked. Writing templates live in `project/templates/`; source documents in `project/sources/` (read-only). How files are ingested: `ARCHITECTURE.md`, section Local LLM use.
 - `project/tools/lint.py` enforces the folder and tag rules.

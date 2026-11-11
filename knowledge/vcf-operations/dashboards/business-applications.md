@@ -36,7 +36,7 @@
 - An application object holds its tiers; a tier holds its VMs.
 - Limit: tiers are added by hand. They have no dynamic membership, as custom groups have.
 
-## Traps
+## Misconceptions
 - "Mirror the full organisation chart in vSphere folders" → every reorganisation becomes folder renames, moves and deletions. Two levels give enough context.
 - "Folder names only need to be unique per vCenter" → VCF Operations reads several vCenter instances; prefix with the application name so names are unique across all.
 - "A business application lives under a vSphere object" → it can hold non-VMware objects, so it sits under Entire Enterprise Applications.

@@ -156,7 +156,7 @@ reading key = (object, metric, instance, interval or window statistic)
 ```
 - Threshold rows hold only the key and the threshold; names, units and external keys live here once.
 - `names` maps a screen label to a key and an interval; `hints` let Agent E2 infer instance and interval from an attachment (section 11).
-- `dominates` records section 6's reading rules for explanations; `same_name` carries the existing trap guard (same label, other object).
+- `dominates` records section 6's reading rules for explanations; `same_name` carries the existing misconception guard (same label, other object).
 
 ## 8. Threshold files
 
@@ -337,7 +337,7 @@ Proposal. Values are design values for the recommended alert set, to tune from e
 - R6. Red and orange on one metric are separate alert definitions. When red clears and orange still holds, the orange alert stays; the cancel cycle of the red symptom does not hold red for orange's sake.
 
 ### 9.4 Incident layer
-- Red (urgent and important, pushed to the phone): the alert cancelling does not close the ticket. The ticket records the recovery; a person closes it with the cause. This matches the trap in `sp5-framework/alerts/alerts-and-insights`: alerts that close themselves breed "no open alert means no problem".
+- Red (urgent and important, pushed to the phone): the alert cancelling does not close the ticket. The ticket records the recovery; a person closes it with the cause. This matches the misconception in `sp5-framework/alerts/alerts-and-insights`: alerts that close themselves breed "no open alert means no problem".
 - Orange (urgent, not important): the ticket may close with the alert, with the recovery recorded; the end-of-day review reads the closed ones.
 - Re-trigger within a debounce window (proposal: 30 minutes) appends to the open ticket and sends no new page.
 - Two topologies:

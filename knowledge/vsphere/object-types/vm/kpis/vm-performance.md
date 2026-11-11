@@ -15,7 +15,7 @@
 - Network: vCenter has no latency or retransmit, so transmit dropped packets are used. Threshold not low: drops are retransmitted and often unnoticed.
 - Known limitation: dropped packets use the 20-second peak, but packets transmitted uses the period average (which of the 15 points to take is unknown).
 
-## Traps
+## Misconceptions
 - "CPU Run 70% lowers the score" → below 95% is green; below 60% scores 100.
 
 ## Metadata

@@ -60,7 +60,7 @@
 - Regular host-level swapping starts when the host cache is full or none is configured. High access latency can degrade VM performance significantly.
 - Host-level swapping is transparent to the guest OS and distinct from swapping inside the guest OS.
 
-## Traps
+## Misconceptions
 - "Swapped = Swap in - Swap out" → in and out run in parallel on different pages.
 - "Swap out means contention" → only swap in is contention.
 - "Swapped 0 means no reclamation" → pages may all be compressed.

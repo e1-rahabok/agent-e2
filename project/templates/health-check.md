@@ -40,7 +40,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 ## How to read the result
 - Present health, risk and efficiency are read separately, never as one score.
 
-## Traps
+## Misconceptions
 - Wrong conclusion → correct conclusion.
 
 ## Metadata

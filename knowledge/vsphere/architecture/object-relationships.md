@@ -10,7 +10,7 @@
 - Totals across VM, datastore, ESXi, cluster and data center do not reconcile when viewed together.
 - Each value is correct from its own vantage point.
 
-## Trap
+## Misconceptions
 - "VM totals ≠ datastore totals ≠ cluster totals, so a metric is wrong" → wrong. Different vantage points over many-to-many relationships.
 
 ## Metadata

@@ -30,7 +30,7 @@
 - **Site Recovery cluster**: protected VMs from the other site must be counted in capacity.
 - Cluster size cap from business continuity: `sp5-framework/concepts/purpose-driven-architecture`.
 
-## Traps
+## Misconceptions
 - "HA is off but every host runs, so availability is fine" → availability today is fine; the risk is in future health. Each application must now protect itself.
 - "DRS manual mode is safer" → recommendations expire within minutes; without automation every host must keep its own peak buffer.
 - "Three small clusters are safer than one large one" → 3 × (6+1) uses one more host than 18+2 and tolerates fewer failures per cluster.

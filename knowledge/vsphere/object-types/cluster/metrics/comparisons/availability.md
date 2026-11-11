@@ -44,7 +44,7 @@
 | Worst cluster operational availability | Practical with a few dozen clusters. |
 | Count of clusters below 100% | Best with hundreds of clusters. |
 
-## Traps
+## Misconceptions
 - "Cluster availability = average host availability" → HA changes it.
 
 ## Metadata

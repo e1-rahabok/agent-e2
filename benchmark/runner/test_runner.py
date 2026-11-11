@@ -21,7 +21,7 @@ def row(question, answer_type, inp, level, credit, run, track='text', exact=None
 
 class JudgeParseTest(unittest.TestCase):
     def test_json_with_text_around(self):
-        v = J.parse('Here: {"score": 2, "trap": false, "unsure": false, "missed": "", "reason": "ok"} done')
+        v = J.parse('Here: {"score": 2, "misconception": false, "unsure": false, "missed": "", "reason": "ok"} done')
         self.assertEqual(v['score'], 2)
 
     def test_rejects_bad_score(self):
@@ -67,11 +67,11 @@ class PromptSplitTest(unittest.TestCase):
 
 
 class OverrideTest(unittest.TestCase):
-    def test_trap_with_full_recall_counts(self):
-        rows = [{'mode': 'classic', 'retrieval_recall': '1.0', 'trap': '1'},
-                {'mode': 'classic', 'retrieval_recall': '1.0', 'trap': '0'},
-                {'mode': 'classic', 'retrieval_recall': '0.5', 'trap': '1'},   # file missing: not an override
-                {'mode': 'baseline', 'retrieval_recall': '', 'trap': '1'}]     # no knowledge base: not an override
+    def test_misconception_with_full_recall_counts(self):
+        rows = [{'mode': 'classic', 'retrieval_recall': '1.0', 'misconception': '1'},
+                {'mode': 'classic', 'retrieval_recall': '1.0', 'misconception': '0'},
+                {'mode': 'classic', 'retrieval_recall': '0.5', 'misconception': '1'},   # file missing: not an override
+                {'mode': 'baseline', 'retrieval_recall': '', 'misconception': '1'}]     # no knowledge base: not an override
         self.assertEqual(report.override(rows), 0.5)
 
 

@@ -30,7 +30,7 @@
 - IO-intensive VMs such as NSX Edge: System is noticeable (Broadcom KB 59640). Adding vCPUs makes performance worse.
 - The System counter in Linux differs from System in vSphere.
 
-## Traps
+## Misconceptions
 - "System is charged to vCPU 0" → it is charged at VM level only.
 - "VM Used should equal the sum of vCPU Used" → VM Used also holds System, so it is higher.
 - "Add vCPUs to a high-System VM" → for NSX Edge it makes performance worse.

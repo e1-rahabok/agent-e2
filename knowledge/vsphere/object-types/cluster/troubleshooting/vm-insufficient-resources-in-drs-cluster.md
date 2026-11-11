@@ -46,7 +46,7 @@ flowchart TD
 - Contention on all hosts → cluster capacity or shares (step 3).
 - Contention on one VM only, host not busy → limit (step 2) or the VM itself (step 6).
 
-## Traps
+## Misconceptions
 - "DRS is enabled, so it balances" → rules, mounted devices, overrides, incompatibility and the threshold can all stop it.
 - "The cluster DRS Score is fine, so this VM is fine" → the cluster score is a weighted average of VM scores; check the VM's own DRS score.
 - "A limit only matters when the host is busy" → a limit caps the VM even when resources are idle.
@@ -85,6 +85,6 @@ corrections: []
 review_notes:
 - 'Whole file: the order of steps 1-5 follows the documentation section Insufficient CPU or Memory Resources (cluster yellow or red, limit too restrictive, cluster overloaded, host overloaded). Step 6 and the symptom metrics link to existing knowledge-base files.'
 - 'Section ''Checks'': the DRS blockers combine the documentation lists for load imbalance, DRS seldom migrating, and DRS not moving VMs from a host.'
-- 'Section ''Traps'': cluster DRS Score as a weighted average of VM DRS Scores is from the documentation (DRS Migration Threshold > DRS Score, p. 1896).'
+- 'Section ''Misconceptions'': cluster DRS Score as a weighted average of VM DRS Scores is from the documentation (DRS Migration Threshold > DRS Score, p. 1896).'
 status: draft
 ```

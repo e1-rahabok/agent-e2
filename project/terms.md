@@ -35,7 +35,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | test | A code test only: `harness/test_tools.py`, `benchmark/runner/test_runner.py` | the benchmark |
 | retrieval check | `benchmark/runner/retrieval_eval.py`: are the files each question needs found, without a model. Guide: `benchmark/retrieval-check.md` | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
-| answer key | `answer` and `trap` letters, `## Expected key points`, `## Likely wrong answer` | key (alone) |
+| answer key | `answer` and `misconception` letters, `## Expected key points`, `## Likely wrong answer` | key (alone) |
 | answer type | How a question is scored: deterministic (option letters) or judged (free text, by the judge) | kind, format, multiple choice vs conversation |
 | input type | What the administrator gives besides the prompt: text, table, screenshot | input kind |
 | level | 100, 200, 300 or 400 (`benchmark/design.md`, section 3.2) | recall, multi-hop |

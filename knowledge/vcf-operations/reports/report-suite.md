@@ -44,7 +44,7 @@
 | Capacity | VM Capacity; Reclaimable Capacity | vSphere Compute Capacity; vSphere Storage Capacity |
 | Configuration | Guest OS Configuration; VM Configuration; VM Size Distribution | ESXi Hardware Configuration; ESXi Software Configuration; vSphere Cluster Configuration; vSphere Network Configuration |
 
-## Traps
+## Misconceptions
 - "Run one report on its own" → the suite avoids overlap; one report alone misses what another holds.
 - "VM count is cluster configuration" → configuration groups clusters by host count; VM count is inventory.
 - "Executives read the summary report alone" → it is designed to be presented by someone who knows the environment.

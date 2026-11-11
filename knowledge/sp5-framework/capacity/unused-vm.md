@@ -76,7 +76,7 @@ Configuration is easier to read than utilization: clearer rules.
   - 95th percentile utilization over the last 3 months;
   - any other context that helps them recognize it.
 
-## Traps
+## Misconceptions
 - "CPU is busy, so the VM is in use" → unused VMs keep running IT and batch work; check configuration, owner, login and process signs.
 - "One sign is enough to power it off" → each sign can be a false positive; require several, then owner verification.
 - "Nobody answered, so power it off" → disconnect the network or apply a CPU limit first; power-off can leave the VM unable to start.

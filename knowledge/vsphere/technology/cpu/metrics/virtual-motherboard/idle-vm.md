@@ -25,7 +25,7 @@
 - Reclaimable Idle alone can be stale: it is daily, and a VM that became busy today still shows 1 until the next daily value. Idleness Indicator shows the recent activity.
 - Tightening the threshold (for example 100 MHz to 50 MHz) restarts the count from day 1: past days are not recomputed, because recomputation costs performance. A VM that was idle under both thresholds waits a full window again. With a 2-week window, 2 weeks.
 
-## Traps
+## Misconceptions
 - "Reclaimable Idle = 1, so power it off" → check Idleness Indicator (recent activity) and the VM creation date.
 - "The threshold was lowered and idle VMs disappeared, so they became busy" → the count restarted from day 1 after the change.
 - "A VM idle 6 days of 7 is idle" → every day of the window must be idle.

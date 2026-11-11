@@ -53,7 +53,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 - Present health, risk and efficiency are read separately, never as one score.
 - VM Performance green and the application slow → the VM gets what it demands; the wait is inside the Guest OS (`guest-os/system/metrics/guest-os-performance`).
 
-## Traps
+## Misconceptions
 - "VM CPU Usage is 95%, so the VM is short of CPU" → Usage includes Turbo and is consumption. Check Ready, Co-stop and Run.
 - "Ballooned memory above 0, so the VM is slow" → balloon is reclamation. Check memory Latency.
 - "The 5-minute average is low, so the VM did not wait" → check the 20-second peak.

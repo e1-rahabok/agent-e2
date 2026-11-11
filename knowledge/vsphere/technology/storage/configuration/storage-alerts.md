@@ -37,7 +37,7 @@
 - Datastore, red: used space above 90%.
 - Datastore cluster: not implemented. It should fire when a member datastore is above 90% used; remediation is to run Storage DRS.
 
-## Traps
+## Misconceptions
 - "One latency alert for read and write" → causes differ; separate them.
 - "VM disk latency above 20 ms is red" → this set uses 80 ms average and 320 ms peak for standard production; lower values in theory draw no complaints in practice.
 - "Alert on latency at any load" → require at least 1 GHz CPU and 100 IOPS; low activity has negligible impact.

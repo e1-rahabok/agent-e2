@@ -8,7 +8,7 @@
 5. Read vs write: write-only latency is expected when reads hit cache.
 6. NVMe memory-tier device: high latency at near-zero IO is a wake-up penalty, not a fault.
 
-## Traps
+## Misconceptions
 - "Kernel latency should correlate with device latency" → when both are healthy they need not.
 
 ## Metadata

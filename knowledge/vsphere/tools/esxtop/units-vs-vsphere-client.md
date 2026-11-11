@@ -4,7 +4,7 @@
 - esxtop shows network counters in megabits.
 - vSphere Client shows network counters in kilobytes.
 
-## Traps
+## Misconceptions
 - Comparing values from the two tools without converting bits to bytes and mega to kilo.
 
 ## Metadata

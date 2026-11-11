@@ -63,7 +63,7 @@ flowchart TD
 - No at steps 3 to 5 → the cluster is closed: name the dimension (allocation, capacity remaining, performance, risk) and the resource (CPU, memory, storage).
 - Yes → give the limiting resource and how long the room lasts.
 
-## Traps
+## Misconceptions
 - "Cluster Performance below the Gold minimum of 99.5% closes the cluster" → the closure reads the cluster KPI (red below 20%); the class minimum is for each VM. Different metrics.
 - "Our SLA says 99%" → an SLA is a business contract on the consumer's VMs and pods; the closure reads the KPI and the models.
 - "Cluster CPU at 40%, so there is room" → check contention, risk and HA headroom; one hot host can be full.

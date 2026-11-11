@@ -50,7 +50,7 @@
   - the workload is highly NUMA-optimized,
   - the VMs can be pinned or affinitized.
 
-## Traps
+## Misconceptions
 - "NUMA settings are always better tuned manually" → the source says the default ESX NUMA scheduling is intelligent and adaptive. Manual controls are for specific cases.
 
 ## Metadata

@@ -23,7 +23,7 @@
 - Reality overwrites projection. In compute, capacity remaining is projected from the past. In storage, 0 bytes left overrides any projection.
 - Focus on reclamation: the reclaimable amount tends to be large.
 
-## Traps
+## Misconceptions
 - "A 95% full datastore is slow" → space does not affect speed on SSD. It threatens availability.
 - "IOPS and space are the same capacity" → separate dimensions.
 

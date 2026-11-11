@@ -42,7 +42,7 @@ ESXi Usage = sum over physical cores (not sum of VMs + kernel)
 - vCenter: no longer capped (Broadcom KB 417702, KB 431027).
 - VCF Operations: no longer capped since Aria Operations 8.18.
 
-## Traps
+## Misconceptions
 - "ESXi CPU Usage cannot exceed 100%" → the cap is removed. Above 100% means Turbo above nominal frequency.
 - "A flat 100% line means the host is at its limit" → on older releases the value was capped.
 - "ESXi Usage = sum of VM Usage + kernel" → it is summed over physical cores.

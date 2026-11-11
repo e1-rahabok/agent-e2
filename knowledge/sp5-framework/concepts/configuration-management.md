@@ -81,7 +81,7 @@
 - Storage: `vsphere/technology/storage/configuration/storage-configuration-review`.
 - Network: `vsphere/technology/network/configuration/network-configuration-review`.
 
-## Traps
+## Misconceptions
 - "Reality differs from the standard, so fix the setting" → one of the two is wrong; the standard may be outdated.
 - "Every component runs the latest version, so the stack is fine" → each can be current and the combination still unsupported. Check compatibility, not only version.
 - "Jumbo frames are set on ESXi and the distributed switch, so they work" → every physical switch in the path must match; check end to end.

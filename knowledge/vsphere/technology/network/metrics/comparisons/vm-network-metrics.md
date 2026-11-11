@@ -31,7 +31,7 @@
 ## Avoid the non-Total variant
 - Where two metrics share a name and one has the prefix Total, use the Total one. The other is averaged over 15 data points and reads 15x lower.
 
-## Traps
+## Misconceptions
 - "VM network latency is in vSphere" → no such metric.
 
 ## Metadata

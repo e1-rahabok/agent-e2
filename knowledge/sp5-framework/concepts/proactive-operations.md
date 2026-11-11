@@ -111,7 +111,7 @@
 - Changes: size changes need approval, because they affect capacity and performance. Update shares and reservations to match.
 - Retire: delete the VM and remove it from inventory.
 
-## Traps
+## Misconceptions
 - "Proactive operations means proactive alerts" → reacting to an alert is reactive. Proactive is the scheduled health check, insight, modelling and baselining.
 - "An anomaly is a problem" → anomaly detection lacks business context: what looks abnormal can be normal, and the reverse.
 - "Troubleshooting automation needs AI" → the rules are finite and the usual remediation is moving VMs out of a cluster; rules and automation do it.

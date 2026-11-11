@@ -21,7 +21,7 @@
 - The same workload reads higher at 2 seconds than at 20 seconds, and higher at 20 seconds than at 5 minutes. A band set on one interval does not apply to another (`observability/thresholds`, Interval rule).
 - A spike seen at 2 seconds and absent at 20 seconds lasted less than 20 seconds.
 
-## Traps
+## Misconceptions
 - "The vSphere Client Real-time chart is real time" → it shows 20-second averages; the label is the UI's.
 - "Real-time data replaces 5-minute data" → it adds to it; 5-minute data carries monitoring, capacity and KPI history over months.
 - "Collect 2-second data on everything" → 10x the volume of 20-second data; limit it to the metrics and objects being troubleshot.

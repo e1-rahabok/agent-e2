@@ -20,7 +20,7 @@ Host memory savings from sharing = Shared - Shared Common
 - With TPS limited to within a VM by default, shared values should be much smaller. Salting allows sharing only when salt and content match.
 ![Shared Common above half of Shared](../../images/esxi-memory-shared-common-above-half-of-shared.png)
 
-## Traps
+## Misconceptions
 - "Shared = savings" → savings = Shared - Shared Common.
 
 ## Metadata

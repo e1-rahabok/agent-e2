@@ -32,7 +32,7 @@
 - A metric computed by summation (not average) can exceed 100%.
 - vSphere example: VM CPU Ready, and many VM-level values in esxtop. See `vsphere/technology/cpu/metrics/virtual-motherboard/ready`.
 
-## Traps
+## Misconceptions
 - "The 128 GB drive shows 116 GB, so 12 GB is lost" → the vendor counts 1000, Windows counts 1024.
 - "30 MBps in VCF Operations is 30,000 KBps" → VCF Operations uses 1024 for network: about 31,550 KBps.
 - "KB in VCF Operations means 1,000 bytes" → it means 1,024 bytes, labelled KB, not KiB.

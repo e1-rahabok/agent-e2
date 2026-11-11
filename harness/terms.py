@@ -4,7 +4,7 @@ Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time c
 (knowledge/catalog/user-terms.yaml) turns each hit into three things, all deterministic:
   - knowledge-base terms added to the search query;
   - knowledge files pulled into the context;
-  - one note per hit for the model: the misreading the words carry and what to read instead.
+  - one note per hit for the model: the misconception the words carry and what to read instead.
 """
 import os
 import re

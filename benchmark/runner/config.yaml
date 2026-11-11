@@ -53,7 +53,7 @@ context_window: 32000         # the deployed model's window (MISSION.md, section
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model
 agent_primer:                 # up-front blocks for the agent (harness/primer.py, harness/AGENT.md section 3); off until the benchmark shows a gain
   map: false                  # what each area holds, what each file kind answers
-  rules: false                # Level 300 misreadings (knowledge/misreadings.md)
+  rules: false                # Level 300 misconceptions (knowledge/misconceptions.md)
   terms: false                # confusable pairs (knowledge/glossary.md)
   flows: false                # symptom -> flow index
   procedure: false            # how to use the tools

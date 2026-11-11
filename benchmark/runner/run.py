@@ -31,7 +31,7 @@ from llm import GatewayClient, LLMError, MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
 FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'answer_type', 'input', 'technology', 'task', 'level', 'run', 'temperature',
-          'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'trap', 'not_covered', 'unsure', 'points', 'parse_ok',
+          'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
           'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text']
@@ -169,7 +169,7 @@ def main():
                 trace.append({'step': len(trace) + 1, 'action': 'judge', 'input': judge.model, 'output': v,
                               'prompt_tokens': jres.get('prompt_tokens'), 'completion_tokens': jres.get('completion_tokens')})
                 row.update({'judge_model': judge.model, 'judge_score': v['score'], 'judge_missed': v['missed'],
-                            'reason': v['reason'], 'trap': int(v['trap']), 'unsure': int(v['unsure']),
+                            'reason': v['reason'], 'misconception': int(v['misconception']), 'unsure': int(v['unsure']),
                             'exact': int(v['score'] == 3), 'credit': round(v['score'] / 3, 3),
                             'confident_wrong': int(v['score'] == 0 and not v['unsure']), 'parse_ok': 1,
                             'answer_text': (res['content'] or '')[:2000]})

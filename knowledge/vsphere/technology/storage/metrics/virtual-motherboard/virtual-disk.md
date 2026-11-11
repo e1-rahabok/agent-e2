@@ -36,7 +36,7 @@
 - Disk Space | Active Not Shared (GB) = Disk Space | Not Shared (GB) - Disk Space | Snapshot Space (GB). Space of VMDKs and RDMs owned only by this VM. Snapshots count as non-active.
 ![Passive VM in a multi-writer pair shows 0 IOPS](../../images/vm-disk-multi-writer-passive-vm-shows-zero-iops.png)
 
-## Traps
+## Misconceptions
 - "VM disk totals should match datastore totals" → RDM and many-to-many relationships break that. See `vsphere/architecture/object-relationships`.
 
 ## Metadata

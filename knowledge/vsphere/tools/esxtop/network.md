@@ -53,7 +53,7 @@
 
 - RDMA counters are not in vSphere Client.
 
-## Traps
+## Misconceptions
 - "Receive drops mean the physical network drops" → often between the vSwitch and the guest driver.
 - "MbTX/s matches vSphere Client KBps" → bits vs bytes.
 

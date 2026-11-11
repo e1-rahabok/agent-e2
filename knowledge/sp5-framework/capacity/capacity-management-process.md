@@ -99,7 +99,7 @@ Capacity planning starts from a business plan: which class of service serves whi
 
 - Pockets of resource are the common cause: affinity rules, pinning and small clusters or datastores each hold a buffer that others cannot use.
 
-## Traps
+## Misconceptions
 - "The data center has 40% CPU, memory and disk left on average, so there is room" → capacity is per cluster; each cluster can be short of a different resource while the average looks fine.
 - "Cluster utilization is 25%, plenty of capacity left, good" → below 40% of usable capacity is wastage, not health (`sp5-framework/capacity/capacity-dimensions`, section Utilization).
 - "Plan capacity per host" → HA, DRS and DPM make the cluster the unit.

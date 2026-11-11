@@ -61,7 +61,7 @@
 | Idle or spare capacity | C6 or C6-P | PC6 | Maximize power savings |
 
 
-## Traps
+## Misconceptions
 - "BIOS defaults are optimal" → the source says defaults might not be the best choice for performance.
 - "Turn NUMA off in BIOS for better performance" → in most cases the source recommends leaving NUMA active by deactivating node interleaving.
 

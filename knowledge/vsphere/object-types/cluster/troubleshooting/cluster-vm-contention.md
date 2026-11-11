@@ -16,7 +16,7 @@
 | vSAN CPU Ready | Kernel scheduling | Only changeable through ESXi advanced settings. |
 | ESXi error packets | NIC | Check vmnic driver and firmware. |
 
-## Traps
+## Misconceptions
 - "Few VMs affected means the cluster is fine" → depth matters: one VM can be badly hit.
 
 ## Metadata

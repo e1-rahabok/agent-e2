@@ -46,7 +46,7 @@ Usage (%) = (sum of Usage (MHz) of each vCPU + VM-level load) / VM static CPU sp
 - VMs with Usage above 90% and Run below 90% are likely to be upsized without reason.
 ![Usage vs Run across 1,102 VMs](../../images/vm-cpu-usage-vs-run-scatter-across-vms.png)
 
-## Traps
+## Misconceptions
 - "VM shows 62.5%, so the metric is wrong" → wrong. Different vantage point from the host.
 - "Each VM gets only 62.5% of what it demands" → the 62.5% is an accounting charge for sharing a core.
 - "Use Usage for capacity" → it includes frequency. Use Run for capacity.
@@ -102,7 +102,7 @@ corrections:
 - '2026-11-02: Hyper-Threading scenario (section: Hyper-Threading) rewritten; the uploaded document sentence is truncated.'
 review_notes:
 - 'To check: the 37.5% Hyper-Threading penalty; not found in Performance Best Practices for VMware vSphere 9.1.'
-- Sections Throughput, Masked degradation, and the last trap: from CPU > Architecture.
+- Sections Throughput, Masked degradation, and the last misconception: from CPU > Architecture.
 - 'Sections Formula, Turbo example, Usage vs Run at scale: from CPU > VM.'
 status: draft
 ```

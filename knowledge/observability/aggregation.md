@@ -66,7 +66,7 @@ Disparity (%) = (highest - lowest) / total capacity
 - Divided by total, not by the highest value. Dividing by the highest gives a large number when the gap is small in absolute terms (useful only in application profiling).
 - VM example: `vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`.
 
-## Traps
+## Misconceptions
 - "Cluster average CPU Ready is low, so no VM is waiting" → average hides the few that wait; read the worst VM and the 90th percentile.
 - "ESXi CPU Ready of 149,116 ms is very high" → it is a sum over 195 vCPUs: divide by 20,000 ms × running vCPUs.
 - "Cluster peak utilization 80%, so every host stayed below 80%" → the average of hosts at each point hides a host near 100%.

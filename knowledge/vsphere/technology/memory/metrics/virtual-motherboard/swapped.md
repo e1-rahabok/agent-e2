@@ -19,7 +19,7 @@
 - It does not mean the host failed to serve the VM. The Consumed pages taken can hold a lot of cache.
 - So it does not always result in VM Memory Latency. Check Latency for unmet demand.
 
-## Traps
+## Misconceptions
 - "Swapped > 0, so the host cannot satisfy the VM's memory" → not always. The pages taken can be guest cache. Check Latency.
 - See `vsphere/technology/memory/concepts/swap-and-compression`.
 

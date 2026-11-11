@@ -9,7 +9,7 @@
 - Shape matters: an acute burst differs from a slow, sustained rate with the same total.
 - Example: summed rate × 300 s ≈ 4,059 MB, close to 4,157 MB Swapped.
 
-## Traps
+## Misconceptions
 - "Swap out means the VM is slow" → only swap in makes the guest wait.
 
 ## Metadata

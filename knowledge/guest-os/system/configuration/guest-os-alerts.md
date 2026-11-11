@@ -36,7 +36,7 @@
   - Free memory consistently near 0 MB with moderate or heavy paging: ask the owner whether performance suffers. Benchmark the application before and after adding memory, because too much memory can reduce performance.
   - Low disk space: not implemented. Some partitions, such as swap, are always near 100%. It cannot be done at the VM virtual disk layer either.
 
-## Traps
+## Misconceptions
 - "Guest OS alerts go to the infrastructure team" → they go to the application team; infrastructure has its own VM and host alerts.
 - "Run queue above 20 is always a CPU shortage" → check the VM CPU contention and consumption alerts first; if neither fired, the application creates too many threads.
 - "Alert on the run queue alone" → the counter gives false positives; require Net Run above 75% and wait 15 minutes.

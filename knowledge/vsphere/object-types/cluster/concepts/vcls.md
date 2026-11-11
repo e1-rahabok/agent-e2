@@ -51,7 +51,7 @@
 - Exceeding the VMware Configuration Maximums for a DRS cluster is not supported.
 - Source: even when it seems to work, exceeding the maximums can adversely affect vCenter Server or DRS performance.
 
-## Traps
+## Misconceptions
 - "vCLS is required for DRS in vCenter 9.0 and later" → KB 312147 says DRS and HA do not depend on vCLS in 9.0 and later. The 9.0 performance document says otherwise. KB overrides it.
 - "vCLS is available in vCenter 9.1" → it is deprecated. Third-party sources say it is off by default and cannot be re-enabled. Verify against official 9.1 notes.
 - "vCLS VMs are a large cost to cluster capacity" → the 9.0 document describes the footprint as minimal, with a 100 MHz CPU reservation per VM.

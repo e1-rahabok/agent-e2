@@ -32,7 +32,7 @@
 - Workload = Utilization / Usable.
 ![Host Usage, Machine Demand, Utilization, Consumed across hosts](../../images/esxi-memory-usage-demand-utilization-consumed-across-hosts.png)
 
-## Traps
+## Misconceptions
 - "Use host Latency for performance" → it is an average. Use the worst VM.
 - "Consumed and Utilization should match" → Consumed includes cache and inactive pages.
 

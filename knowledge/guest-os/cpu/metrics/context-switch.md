@@ -31,7 +31,7 @@
 - Can rise with vCPU usage disparity even for a single-threaded agent (example: 78% disparity on a 4-vCPU VDI VM running a security agent).
 - Thread ping-pong: an idle 10-vCPU VM whose vCPUs take turns being busy.
 
-## Traps
+## Misconceptions
 - "High context switch means CPU shortage" → check the run queue.
 
 ## Metadata

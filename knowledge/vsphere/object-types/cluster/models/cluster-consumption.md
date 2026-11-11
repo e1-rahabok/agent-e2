@@ -6,7 +6,7 @@
 ## Meaning
 - Saturation is not contention: no slowness yet. It is real consumption, tracked with dedicated metrics.
 
-## Traps
+## Misconceptions
 - "Saturation means VMs are slow" → check Cluster Performance (%).
 
 ## Metadata

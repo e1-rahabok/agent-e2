@@ -174,7 +174,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 - The cycle-based counters are volatile: typically 15%-40% upward from Turbo Boost.
 ![Time taken vs distance travelled for VM and ESXi CPU metrics](../images/cpu-metrics-time-taken-vs-work-done-vm-and-esxi.png)
 
-## Traps
+## Misconceptions
 - "Hyper-Threading doubles CPU capacity" → the source gives a slight to significant gain, not a doubling.
 - "Pin each vCPU to a logical processor for isolation" → pinning both threads of one core can cause poor performance.
 - "Run 50% means the VM got 50% of a core" → Run ignores the shared core. Used shows 40.625%.

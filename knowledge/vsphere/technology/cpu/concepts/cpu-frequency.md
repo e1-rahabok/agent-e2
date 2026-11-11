@@ -125,7 +125,7 @@
 - A VM can run 100% for hours while the work it completes varies by the second. This is why VM performance feels unpredictable.
 - CPU Usage (%) masks this degradation.
 
-## Traps
+## Misconceptions
 - "Base frequency is the capacity" → the CPU runs above base most of the time. Base understates capacity.
 - "Turbo can be turned off in ESXi" → no direct setting. Use the power policy or BIOS.
 - "BIOS static high performance means no Turbo" → Turbo was observed at 129% (%A/MPERF).

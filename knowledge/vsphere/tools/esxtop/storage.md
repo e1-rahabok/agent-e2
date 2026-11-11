@@ -75,7 +75,7 @@
 - Counters: ROLE (DOM role: client, owner, component manager); READS/s, MBREAD/s; WRITES/s, MBWRITE/s; RECOWR/s, MBRECOWR/s; UNMAPS/s, GBUNMAP/s; RECOUN/s, GBRECOUN/s; AVGLAT, SDLAT.
 - Excessive unmap can hurt performance.
 
-## Traps
+## Misconceptions
 - "DAVG/cmd low, so writes are fine" → check DAVG/wr.
 - "High KAVG with VAAI is a problem" → expected with offloads.
 

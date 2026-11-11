@@ -5,7 +5,7 @@
 - Non-zero: the hypervisor has asked the VM to give back memory.
 - The Guest OS performs the reallocation. So Balloon Target can be 0 while Ballooned is above 0.
 
-## Traps
+## Misconceptions
 - "Balloon Target 0, so Ballooned must be 0" → the guest releases pages on its own schedule.
 
 ## Metadata

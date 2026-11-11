@@ -47,7 +47,7 @@
 ## Settings
 - NUMA controls, sizing, snoop modes and processor-specific settings: see `vsphere/technology/cpu/configuration/numa-settings`.
 
-## Traps
+## Misconceptions
 - "A VM with more vCPUs than cores per node is as fast as one that fits" → wide VMs can access remote memory and have higher average memory latency.
 
 ## Metadata

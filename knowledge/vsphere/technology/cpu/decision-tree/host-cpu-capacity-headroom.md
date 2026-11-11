@@ -29,7 +29,7 @@
 ## Example: lightly loaded host
 - Core Utilization 48%. Usage below Core Utilization: the kernel clocked cores down to save power.
 
-## Traps
+## Misconceptions
 - "Demand 130% and Usage 100%, so the host is overloaded" → check Core Utilization, Thread Utilization and Ready.
 - "Thread Utilization below 50% means half the capacity is free" → cores may already be busy.
 

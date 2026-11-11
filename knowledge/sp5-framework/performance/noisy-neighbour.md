@@ -33,7 +33,7 @@
   - the higher the overcommit, the less a reservation can guarantee: at 4:1 per physical thread, at most 0.25 thread per vCPU across the environment, on average.
 - Share:
   - shares are per VM, not per vCPU. A larger VM has more shares in total, shared among its vCPUs;
-  - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 trap;
+  - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 point;
   - shares are charged against CPU Used, not CPU Run. Used includes System time, the hypervisor's work for the VM (network packets, disk commands). A VM with heavy IO uses up its shares and can see CPU Ready.
   - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): `vsphere/tools/esxtop/cpu`.
 ![VM 1 has one busy vCPU; VM 2 has a busy vCPU 1 and an idle vCPU 2](images/vm-shares-busy-vcpu-vs-idle-vcpu-diagram.png)
@@ -111,7 +111,7 @@
 - 8:1 per thread (4:1 per core with HT): for 2-vCPU desktops. On 96 threads the maximum is 12 vCPU; keep most VMs at 4-6 vCPU so they fit across the cluster.
 - The problem is not specific to vSphere: it follows from overcommit on shared resources (Microsoft Azure noisy neighbour antipattern).
 
-## Traps
+## Misconceptions
 - "Find the villain VM" → the villain can be a schedule or an external system, and the damage can travel through a shared path (replication link). Look for a common time and path, not a VM.
 - "Reserve CPU for every VM to stop noisy neighbours" → at 4:1 overcommit a reservation covers at most 25% of each VM; reserving the first vCPU of 400 VMs uses the whole cluster.
 - "A CPU limit on the VM is a safe cap" → the Guest OS cannot see it, and it is in GHz, so its effect changes with frequency. Rightsize instead.
