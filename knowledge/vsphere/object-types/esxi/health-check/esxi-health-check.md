@@ -22,8 +22,9 @@ flowchart TD
 
 ## Principle
 - ESXi is a provider. It has no contention of its own: its Ready and Co-stop are sums of its VMs. See `vsphere/architecture/provider-consumer`.
-- Host performance is read from the contention of its VMs, at the worst VM and the 90th percentile: ESXi Performance (%). Host-level contention counters average all VMs: lagging, and they hide the VM that suffers. See `vsphere/technology/cpu/metrics/comparisons/host-contention-metrics`.
-- Host utilization is capacity, not performance. A host can run at high utilization with no VM waiting, and VMs can wait on a lightly used host.
+- Host performance is read from the contention of its VMs, at the worst VM and the 90th percentile: ESXi Performance (%).
+- By default, Host-level contention counters average all VMs. Average is a lagging indicator as it hides the VM that suffers. See `vsphere/technology/cpu/metrics/comparisons/host-contention-metrics`.
+- Host utilization is capacity, not performance. A host can run at high utilization with no VM waiting, and VMs can wait on a lightly utilized host.
 
 ## Checks, in order
 Order: availability, performance, security, capacity; within each pillar the what before the why (`sp5-framework/concepts/health-check`).
@@ -38,8 +39,8 @@ Order: availability, performance, security, capacity; within each pillar the wha
 4. Capacity, CPU (HostSystem). Core Utilization and Thread Utilization are primary; complement with Usage (MHz) (`vsphere/technology/cpu/metrics/host/core-utilization`, `vsphere/technology/cpu/metrics/host/utilization`). Usage and Demand can exceed 100% (Turbo; Demand sums VM demand): not an overload signal on their own (`vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics`). Hot cores and NUMA nodes: Peak Core Usage and Imbalance (`vsphere/technology/cpu/metrics/host/peak-core-usage`). Headroom: `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`. → step 5.
 5. Capacity, memory (HostSystem). Consumed is the main capacity counter; it holds guest cache, so high Consumed alone is not a problem (`vsphere/technology/memory/metrics/host/consumed`). Leading warnings: Balloon and State. Past contention: Swap and Compressed (`vsphere/technology/memory/metrics/comparisons/host-memory-metrics`). Memory tiering hosts: active memory against DRAM, NVMe latency (`vsphere/technology/memory/concepts/memory-tiering`). → step 6.
 6. Capacity, storage, network and GPU consumption (HostSystem). Device, adapter and path throughput and IOPS (`vsphere/technology/storage/metrics/host/disk`, `vsphere/technology/storage/metrics/host/adapter-and-path`). Network throughput per vmnic (`vsphere/technology/network/metrics/host/throughput`). GPU utilization, memory and temperature are statistics level 4 counters: no history at the default level (`vsphere/technology/gpu/concepts/gpu-monitoring`). → step 7.
-7. Configuration (HostSystem). `vsphere/object-types/esxi/configuration/esxi-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means (`vsphere/technology/cpu/configuration/host-power-management`, `vsphere/object-types/esxi/configuration/bios-settings`). Hypervisor overhead (vSAN, NSX, kernel): `vsphere/architecture/overhead`. → step 8.
-8. Efficiency (HostSystem). A host is sized as part of its cluster: reclamation and rightsizing are read on the cluster and its VMs (`vsphere/object-types/cluster/health-check/cluster-health-check`).
+7. Configuration (HostSystem). `vsphere/object-types/esxi/configuration/esxi-configuration-review`. Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Power management and BIOS settings change what utilization means (`vsphere/technology/cpu/configuration/host-power-management`, `vsphere/object-types/esxi/configuration/bios-settings`). Hypervisor overhead (vSAN, NSX, kernel): `vsphere/architecture/overhead`. .
+
 - Not checked in 1.0: security and compliance (future phase).
 
 ## Why this order
