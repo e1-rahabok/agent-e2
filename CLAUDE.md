@@ -60,5 +60,7 @@ How Claude works in this repository. Read at the start of every session. The rul
 ## Git
 - Work on the branch named for the session.
 - Merge the session branch to `main` through a pull request after each change set, with a merge commit so each change stays visible.
+- Always land the work on `main`: merge the pull request yourself in the same session, with no open pull request or side branch left behind. Before ending, check that `main` holds the change.
+- Delete the branch on GitHub right after its pull request is merged. Also delete any older merged branch you find. The author reads only `main`.
 - Commit messages and PR text describe the change, in plain words. No model names.
 - Do not delete files unless the author asks. Archive them in `project/archive/`; git history keeps the rest.
