@@ -12,7 +12,7 @@
 ## Swap file size
 - At first power-on, ESX creates a swap file for each VM.
 - Size of the swap file: configured memory of the VM minus the memory reservation of the VM.
-- Disk space must be at least this large, plus the space for VMX swap. See `vsphere/technology/memory/concepts/memory-overhead`.
+- Disk space must be at least this large, plus the space for VMX swap. See [`vsphere/technology/memory/concepts/memory-overhead`](../concepts/memory-overhead.md).
 
 ## Swap to host cache
 - Optional. Configured on an SSD, if one is installed.
@@ -40,7 +40,7 @@
 - A reservation is a guaranteed lower bound on the physical memory ESX reserves for the VM.
 - Set through vSphere Client: right-click the VM, Edit Settings, Virtual Hardware tab, expand Memory, set the reservation.
 - Trade-off: reservations reduce the number of VMs that can run on a host, cluster or resource pool. ESX keeps enough memory for all reservations, so it does not power on a VM if that would reduce available memory below the reserved amount.
-- See `vsphere/object-types/vm/configuration/resource-settings-guidance` for reservation guidance.
+- See [`vsphere/object-types/vm/configuration/resource-settings-guidance`](../../../object-types/vm/configuration/resource-settings-guidance.md) for reservation guidance.
 
 ## Misconceptions
 - "Swap file size equals configured memory" → size is configured memory minus reservation.

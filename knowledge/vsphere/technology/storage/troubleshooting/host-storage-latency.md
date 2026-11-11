@@ -2,7 +2,7 @@
 
 ## Symptom
 - ESXi disk latency (GAVG) is high on a host, the disk rows of ESXi Performance (%) are yellow or worse, or many VMs on one host or datastore show disk latency.
-- Entered from `vsphere/object-types/esxi/health-check/esxi-health-check` (step 3) or `vsphere/technology/storage/troubleshooting/vm-storage-performance-checks` (step 5).
+- Entered from [`vsphere/object-types/esxi/health-check/esxi-health-check`](../../../object-types/esxi/health-check/esxi-health-check.md) (step 3) or [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](vm-storage-performance-checks.md) (step 5).
 
 ## Flow
 ```mermaid
@@ -18,13 +18,13 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Split GAVG into KAVG and DAVG (HostSystem) (`vsphere/technology/storage/concepts/esxi-storage-latency-stack`). KAVG above 0.5 ms → step 2. DAVG high → step 3.
+1. Split GAVG into KAVG and DAVG (HostSystem) ([`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../concepts/esxi-storage-latency-stack.md)). KAVG above 0.5 ms → step 2. DAVG high → step 3.
 2. Kernel queue (HostSystem). QAVG and the queue depths at each level of the stack. → step 4.
 3. Device (HostSystem). Healthy DAVG is well within 5 ms. DAVG high: check the array. Array latency low: the fabric or HBA configuration. → step 4.
-4. Per adapter and path (HostSystem) (`vsphere/technology/storage/metrics/host/adapter-and-path`). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
+4. Per adapter and path (HostSystem) ([`vsphere/technology/storage/metrics/host/adapter-and-path`](../metrics/host/adapter-and-path.md)). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
 5. Read vs write (HostSystem). Write-only latency is expected when reads hit cache. → step 6.
 6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up penalty, not a fault. → step 7.
-7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window (`sp5-framework/performance/troubleshooting/vm-slow`, its known bug and log checks).
+7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Why this order
 - The split first: kernel and device latency have different owners, the ESXi host and the array.
@@ -36,7 +36,7 @@ flowchart TD
 - KAVG high, DAVG low: queuing inside ESXi; queue depths or a saturated adapter.
 - DAVG high, array latency low: the fabric or the HBA configuration.
 - DAVG high, array latency high: the array.
-- Thresholds of the vSphere documentation differ: `vsphere/tools/vsphere-client/performance-guidance`.
+- Thresholds of the vSphere documentation differ: [`vsphere/tools/vsphere-client/performance-guidance`](../../../tools/vsphere-client/performance-guidance.md).
 
 ## Misconceptions
 - "Kernel latency should correlate with device latency" → when both are healthy they need not.

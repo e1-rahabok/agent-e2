@@ -15,9 +15,9 @@
 - No vSphere Client chart: read them through the API or a tool that reads it.
 
 ## Reading it
-- Each component counts its own drops: the distributed port, the VM vNIC (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`), the LAG and the host vmnic (`vsphere/technology/network/metrics/host/packets-dropped`). Read each counter for its own component.
-- Which component caused a drop is a troubleshooting question the counters alone do not settle. For vNIC receive drops, see `vsphere/technology/network/troubleshooting/vnic-rx-drops`.
-- A drop count means little without the packet count of the same scope: read it as a share of `net.throughput` packets. See `vsphere/technology/network/metrics/distributed-switch/packets`.
+- Each component counts its own drops: the distributed port, the VM vNIC ([`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`](../virtual-motherboard/packets-dropped.md)), the LAG and the host vmnic ([`vsphere/technology/network/metrics/host/packets-dropped`](../host/packets-dropped.md)). Read each counter for its own component.
+- Which component caused a drop is a troubleshooting question the counters alone do not settle. For vNIC receive drops, see [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](../../troubleshooting/vnic-rx-drops.md).
+- A drop count means little without the packet count of the same scope: read it as a share of `net.throughput` packets. See [`vsphere/technology/network/metrics/distributed-switch/packets`](packets.md).
 
 ## Misconceptions
 - "No dropped packets at the switch, so no VM drops packets" → the switch total hides one port; check per DVPort and per vNIC.

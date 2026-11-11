@@ -2,7 +2,7 @@
 
 ## Symptom
 - Receive drops on a VM vNIC: droppedRx above 0 on its port, packet loss reported inside the Guest OS, or a network VM (firewall, router) losing traffic.
-- The VM KPI scores transmit drops; receive drops on a VMXNET3 ring are caused and fixed in the Guest OS driver, so they are the Guest OS owner's to fix (`sp5-framework/concepts/realms-and-layers`, section Consumer and provider metric types).
+- The VM KPI scores transmit drops; receive drops on a VMXNET3 ring are caused and fixed in the Guest OS driver, so they are the Guest OS owner's to fix ([`sp5-framework/concepts/realms-and-layers`](../../../../sp5-framework/concepts/realms-and-layers.md), section Consumer and provider metric types).
 
 ## Flow
 ```mermaid
@@ -16,7 +16,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Port statistics for the vNIC port (VirtualMachine, HostSystem) (`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`):
+1. Port statistics for the vNIC port (VirtualMachine, HostSystem) ([`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`](../metrics/virtual-motherboard/packets-dropped.md)):
 ```text
 vsish -e get /net/portsets/DvsPortset-0/ports/<port>/clientStats
 ```
@@ -29,9 +29,9 @@ vsish -e get /net/portsets/DvsPortset-0/ports/<port>/vmxnet3/rxSummary
    - # of times the 1st ring is full: example 354.
    - 1st ring size and 2nd ring size: example 512 each.
    - Other reasons (fail to map, rx queue stopped, copy failures, large headers, MTU exceeded) at 0 rule them out. → step 3.
-3. Consumption (VirtualMachine). Network VMs (firewalls, routers) or VMs expecting high packet rates (`vsphere/technology/network/metrics/virtual-motherboard/packets`). → step 4.
-4. Configuration (VirtualMachine). Receive ring size in the Guest OS driver; whether the VM requests NetQ RSS (`vsphere/technology/network/configuration/rss-and-interrupt-coalescing`). → step 5.
-5. Known bug and log (VirtualMachine, HostSystem). VMXNET3 can lose packets in very high bursts when buffers run out (KB 2039495); events in the window (`sp5-framework/performance/troubleshooting/vm-slow`, its known bug and log checks).
+3. Consumption (VirtualMachine). Network VMs (firewalls, routers) or VMs expecting high packet rates ([`vsphere/technology/network/metrics/virtual-motherboard/packets`](../metrics/virtual-motherboard/packets.md)). → step 4.
+4. Configuration (VirtualMachine). Receive ring size in the Guest OS driver; whether the VM requests NetQ RSS ([`vsphere/technology/network/configuration/rss-and-interrupt-coalescing`](../configuration/rss-and-interrupt-coalescing.md)). → step 5.
+5. Known bug and log (VirtualMachine, HostSystem). VMXNET3 can lose packets in very high bursts when buffers run out (KB 2039495); events in the window ([`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Why this order
 - Confirm the drops at the port first: Guest OS loss can come from elsewhere in the path.

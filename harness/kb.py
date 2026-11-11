@@ -4,6 +4,7 @@
 - Split each file at '## Metadata'; the yaml block becomes filter fields, never text.
 - Chunk the body by '## ' heading; prefix each chunk with title and id.
 - Leave out Mermaid charts: they repeat the numbered steps for GitHub.
+- Keep only the id of a file link: [`id`](path.md) becomes `id`. The path is for reviewers on GitHub.
 """
 import glob
 import os
@@ -29,6 +30,9 @@ def split(path):
 # A Mermaid chart repeats the numbered steps for GitHub; the model reads the steps (project/knowledge-rules/flows.md).
 MERMAID = re.compile(r'\n```mermaid\n.*?\n```[ \t]*(?=\n)', re.S)
 
+# A file link [`id`](relative/path.md) is clickable on GitHub; the model reads only the id.
+FILE_LINK = re.compile(r'\[(`[^`\n]+`)\]\([^)\s]+\.md\)')
+
 LINK_TYPES = ['related', 'internal_derive', 'same_name', 'same_meaning']
 FILTER_FIELDS = ['product', 'object', 'technology', 'pillar', 'retriever_guide']
 
@@ -40,7 +44,7 @@ class Doc:
         self.meta = meta
         lines = body.strip().split('\n')
         self.title = lines[0].lstrip('# ').strip() if lines else self.id
-        self.body = MERMAID.sub('', body).strip()
+        self.body = FILE_LINK.sub(r'\1', MERMAID.sub('', body)).strip()
         self.status = meta.get('status', 'draft')
         self.links = {t: list(meta.get(t) or []) for t in LINK_TYPES}
         self.images = list(meta.get('images') or [])

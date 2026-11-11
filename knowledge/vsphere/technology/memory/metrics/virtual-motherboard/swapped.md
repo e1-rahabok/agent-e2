@@ -21,7 +21,7 @@
 
 ## Misconceptions
 - "Swapped > 0, so the host cannot satisfy the VM's memory" → not always. The pages taken can be guest cache. Check Latency.
-- See `vsphere/technology/memory/concepts/swap-and-compression`.
+- See [`vsphere/technology/memory/concepts/swap-and-compression`](../../concepts/swap-and-compression.md).
 
 ## Metadata
 ```yaml

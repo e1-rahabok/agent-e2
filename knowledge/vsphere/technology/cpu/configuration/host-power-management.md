@@ -51,7 +51,7 @@
 - Turbo Boost or Turbo Core activated: C1E and deep halt states (C3, C6) can sometimes increase performance of lightly threaded workloads, which leave hardware threads idle.
 - Results vary between processor vendors and generations.
 
-- Intel Granite Rapids C-state recommendations by workload: see `vsphere/object-types/esxi/configuration/bios-settings`.
+- Intel Granite Rapids C-state recommendations by workload: see [`vsphere/object-types/esxi/configuration/bios-settings`](../../../object-types/esxi/configuration/bios-settings.md).
 
 ## Misconceptions
 - "Deactivate C-states for better performance everywhere" → the source names only a few latency-sensitive multithreaded workloads that gain from it. Activating all C-states gives the best performance per watt.

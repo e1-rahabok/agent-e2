@@ -2,11 +2,11 @@
 
 ## Supply and demand
 - Supply: total capacity and usable capacity. It is the provider side: ESXi hosts, clusters, datastores, networks.
-- Demand is the consumer side: utilization, reservation, allocation, unmet demand (`sp5-framework/capacity/demand`).
+- Demand is the consumer side: utilization, reservation, allocation, unmet demand ([`sp5-framework/capacity/demand`](demand.md)).
 - The hypervisor affects both supply and demand: avoid double counting.
-- CPU, memory, storage and network differ in nature (`sp5-framework/observability/resource-nature`).
+- CPU, memory, storage and network differ in nature ([`sp5-framework/observability/resource-nature`](../observability/resource-nature.md)).
 - Total and usable capacity should be constants: a stable 100% anchors capacity management and cost accounting.
-- Units: CPU in physical threads, because a vCPU runs on a thread; GHz only for reservation. Memory in DRAM. A ratio of demand to supply is the overcommit ratio (`sp5-framework/capacity/overcommit`).
+- Units: CPU in physical threads, because a vCPU runs on a thread; GHz only for reservation. Memory in DRAM. A ratio of demand to supply is the overcommit ratio ([`sp5-framework/capacity/overcommit`](overcommit.md)).
 
 ## Total capacity
 - Fixed unless changed on purpose.
@@ -33,8 +33,8 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | Reservation | Included | - | Included |
 
 - Included: subtracted from total capacity in that model.
-- Utilization, running stage: the hypervisor is not subtracted. Its load is in the measured utilization, and it is too volatile to fix as a constant. Planning stage: nothing is measured yet, so the calculator subtracts it from supply (`sp5-framework/capacity/capacity-management`, section Two stages).
-- Reservation: CPU supply is cores × base clock, because a reservation is capped at the base clock; memory supply is DRAM (`sp5-framework/capacity/class-of-service-planning`, section Planning calculator).
+- Utilization, running stage: the hypervisor is not subtracted. Its load is in the measured utilization, and it is too volatile to fix as a constant. Planning stage: nothing is measured yet, so the calculator subtracts it from supply ([`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages).
+- Reservation: CPU supply is cores × base clock, because a reservation is capped at the base clock; memory supply is DRAM ([`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md), section Planning calculator).
 
 ## Buffer
 - A business decision. Optional.
@@ -72,7 +72,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | 2 | Maintenance mode | 10 | 8 |
 
 - 10-host cluster with 1 HA host. DPM takes hosts out of total capacity; maintenance mode keeps them in total and takes them out of usable capacity.
-- The same events read as availability (Actual and Operational Availability of the hosts): `sp5-framework/concepts/sla-metrics`, section Availability SLA.
+- The same events read as availability (Actual and Operational Availability of the hosts): [`sp5-framework/concepts/sla-metrics`](../concepts/sla-metrics.md), section Availability SLA.
 
 - Total Capacity counts only hosts connected to vCenter. A disconnected host's value goes blank.
 

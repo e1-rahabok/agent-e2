@@ -32,7 +32,7 @@
 ## ESXi memory management
 | Mechanism | Facts |
 |---|---|
-| Transparent Page Sharing (TPS) | Runs even when ESXi has plenty of RAM. Not a sign of unmet demand. Scope (intra-VM vs inter-VM): see `vsphere/technology/memory/concepts/page-sharing`. |
+| Transparent Page Sharing (TPS) | Runs even when ESXi has plenty of RAM. Not a sign of unmet demand. Scope (intra-VM vs inter-VM): see [`vsphere/technology/memory/concepts/page-sharing`](page-sharing.md). |
 | Memory tiering | Transparent to the VM. ESXi moves inactive pages to NVMe. |
 | Balloon | The first sign of memory pressure, not of unmet demand. Proactive: starts before ESXi fails to meet demand. Reduces guest cache. |
 | Compress / swap | Proactive. Means ESXi Consumed is very high, not that VMs contend for RAM. Consumed can hold a lot of cache. Host cache is used first if present. |

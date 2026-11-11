@@ -17,8 +17,8 @@
   - VM CPU Contention above 8%;
   - VM CPU Usage above 1 GHz.
 - CPU Usage is in GHz, not %: a small percentage of a monster VM is still a sizable load.
-- The application team gets red only, at a higher CPU Ready than the infrastructure team (8% against 6%), so infrastructure acts first (`sp5-framework/outputs/alert-design`).
-- Remediation: open `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`.
+- The application team gets red only, at a higher CPU Ready than the infrastructure team (8% against 6%), so infrastructure acts first ([`sp5-framework/outputs/alert-design`](../../../../sp5-framework/outputs/alert-design.md)).
+- Remediation: open [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../troubleshooting/vm-cpu-contention-high.md).
 
 ## Infrastructure CPU contention
 - Objects: ESXi, resource pool, cluster. Not Datacenter: its clusters can serve different purposes.
@@ -42,7 +42,7 @@
 - The Guest OS CPU Queue shows a real bottleneck, not a VM running at full speed by design.
 - Remediation:
   1. Find the nature of the application. A batch job can hold Net Run above 95% for the whole run; if it finishes within its window, that is healthy. Exclude it from the alert.
-  2. Ask the application team which application or transaction metrics show queueing and latency. If they match the infrastructure numbers, add vCPUs, keeping the VM NUMA-aligned (`vsphere/technology/cpu/configuration/numa-settings`).
+  2. Ask the application team which application or transaction metrics show queueing and latency. If they match the infrastructure numbers, add vCPUs, keeping the VM NUMA-aligned ([`vsphere/technology/cpu/configuration/numa-settings`](numa-settings.md)).
 
 ## Infrastructure CPU consumption
 - Red, for 10 minutes, all of:
@@ -53,7 +53,7 @@
 - The thresholds are low to leave room for HA. Ideally the HA buffer is added to the threshold dynamically. With too much noise, raise them to 50% and 100%.
 - Not set for resource pools: their use varies.
 - Cluster: fires when more than 25% of its ESXi hosts meet the condition.
-- Metrics: `vsphere/technology/cpu/metrics/host/utilization`, `vsphere/technology/cpu/metrics/host/core-utilization`.
+- Metrics: [`vsphere/technology/cpu/metrics/host/utilization`](../metrics/host/utilization.md), [`vsphere/technology/cpu/metrics/host/core-utilization`](../metrics/host/core-utilization.md).
 
 ## Misconceptions
 - "High VM CPU usage: add vCPUs" → check contention first; adding vCPUs to a VM with contention makes it worse.

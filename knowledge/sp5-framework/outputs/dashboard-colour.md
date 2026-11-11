@@ -16,7 +16,7 @@
   - orange = 2x yellow;
   - red = 2x orange, so red is 8x green.
 - The scale fails when the range is small. Example: a Horizon user has 1-4 desktops and rarely more, so the bounds are yellow 2, orange 3, red 4.
-- Colour thresholds per channel can differ; see `sp5-framework/outputs/system-engagement`. KPI bands: `knowledge/catalog/thresholds-performance.yaml`.
+- Colour thresholds per channel can differ; see [`sp5-framework/outputs/system-engagement`](system-engagement.md). KPI bands: `knowledge/catalog/thresholds-performance.yaml`.
 
 ## Gradient
 - A gradient suits widgets where the relative comparison among many objects matters.

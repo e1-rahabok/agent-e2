@@ -2,7 +2,7 @@
 
 ## Principle
 - Use Reservation, Shares and Limits only where the environment requires them.
-- Each setting has its own job. Set each for its purpose. See `vsphere/architecture/resource-controls`.
+- Each setting has its own job. Set each for its purpose. See [`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md).
 
 ## Shares vs reservation
 - Use Shares, not Reservation, to allocate resources fairly when total available resources change often.
@@ -26,7 +26,7 @@
 - Use resource pools for delegated resource management.
 - To isolate a resource pool fully, set its resource pool type to Fixed, and use Reservation and Limit.
 - Group the VMs of a multi-tier service into one resource pool. Resources are then assigned to the service as a whole.
-- For resource pool and sibling design, see `vsphere/object-types/resource-pool/configuration/scalable-shares`.
+- For resource pool and sibling design, see [`vsphere/object-types/resource-pool/configuration/scalable-shares`](../../resource-pool/configuration/scalable-shares.md).
 
 ## Review: how each control affects operations
 - Shares, reservation and limit sit in one dialog and are learned together, but they affect operations differently. Over years in a large environment they drift out of consistency.
@@ -74,7 +74,7 @@
 
 ## Review: resource pools
 - Use them sparingly: when selling resource pools as a service. Read pool and VM shares and reservations together, more so with Scalable Shares.
-- Children: without Scalable Shares, the pool's shares are divided among its VMs; the more VMs, the less each gets. Scalable Shares fixes this (`vsphere/object-types/resource-pool/configuration/scalable-shares`).
+- Children: without Scalable Shares, the pool's shares are divided among its VMs; the more VMs, the less each gets. Scalable Shares fixes this ([`vsphere/object-types/resource-pool/configuration/scalable-shares`](../../resource-pool/configuration/scalable-shares.md)).
 - Pool settings are cluster-wide while a VM runs on one host: in a large cluster, a pool limit or share setting can hurt its VMs in ways hard to see.
 - Siblings:
   - a pool with VMs as siblings is a common mistake; one pool alone makes no operational sense (it is not a folder). Create at least two;

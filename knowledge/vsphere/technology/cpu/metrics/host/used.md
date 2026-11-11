@@ -6,7 +6,7 @@
 - The % form is affected by CPU frequency and can exceed 100%.
 
 ## Why
-- ESXi is the metric source. vCenter converts or adds metrics, and formulas do not match in every case. See `vsphere/architecture/metric-sources`.
+- ESXi is the metric source. vCenter converts or adds metrics, and formulas do not match in every case. See [`vsphere/architecture/metric-sources`](../../../../architecture/metric-sources.md).
 
 ## Notes
 - CPU Used is buggy. Do not build conclusions on it alone.
@@ -15,7 +15,7 @@
 - Calculated from Non-Halted Core Cycles (NHCC), a hardware counter. Higher clock speed, more cycles: Used rises with Turbo.
 - Per thread: when both threads of a core run, Used charges 10,000 ms to each, not 20,000 ms. Normalized back at host level.
 - A thread running alone can reach 20,000 ms.
-- See `vsphere/technology/cpu/concepts/hyper-threading`.
+- See [`vsphere/technology/cpu/concepts/hyper-threading`](../../concepts/hyper-threading.md).
 
 ## Misconceptions
 - "Used above 100% is a data error" → the % form includes frequency effects and can exceed 100%.

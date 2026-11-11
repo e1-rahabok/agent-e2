@@ -199,6 +199,12 @@ class FlowTest(unittest.TestCase):
         self.assertNotIn('```mermaid', d.body)
         self.assertIn('## Checks, in order', d.body)
 
+    def test_file_links_reduced_to_id(self):
+        d = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high']
+        self.assertIn('](', open(d.path).read().split('## Metadata')[0])
+        self.assertNotIn('.md)', d.body)
+        self.assertIn('`sp5-framework/performance/troubleshooting/vm-slow`', d.body)
+
     def test_lettered_steps(self):
         out = flows.run(DOCS, 'vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm')
         self.assertEqual(len(out['steps']), 4)

@@ -2,7 +2,7 @@
 
 ## Meaning
 - Indicates a performance problem. A primary counter for how well the VM is served.
-- Contrast: CPU Latency does not always indicate a performance problem. See `vsphere/technology/cpu/metrics/virtual-motherboard/latency`.
+- Contrast: CPU Latency does not always indicate a performance problem. See [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../../../cpu/metrics/virtual-motherboard/latency.md).
 
 ## Unit
 - Percentage of time, not of memory space.

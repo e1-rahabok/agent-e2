@@ -3,7 +3,7 @@
 ## Question
 - Can this ESXi host run more vCPUs without its VMs waiting?
 - The answer is yes or no, with the free cores or threads and the contention that confirms it.
-- An operational question, answered by a decision tree; not a health check. The ESXi health check reads it in its capacity step (`vsphere/object-types/esxi/health-check/esxi-health-check`, step 8).
+- An operational question, answered by a decision tree; not a health check. The ESXi health check reads it in its capacity step ([`vsphere/object-types/esxi/health-check/esxi-health-check`](../../../object-types/esxi/health-check/esxi-health-check.md), step 8).
 
 ## Checks, in order
 1. Contention first: VM Ready and Co-stop on the host's VMs, per vCPU.

@@ -2,7 +2,7 @@
 
 ## Purpose
 - A leading indicator: it warns before the VMs feel contention. It covers capacity and performance.
-- Cluster Performance shows contention happening now (`vsphere/object-types/cluster/kpis/cluster-performance`). Cluster Risk shows how close the cluster is to it.
+- Cluster Performance shows contention happening now ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)). Cluster Risk shows how close the cluster is to it.
 - Higher is worse: 0 is no risk, 100 is maximum risk. The only score of the pack read this way.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - Not built into VCF Operations: a metric of the vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
@@ -55,7 +55,7 @@ Per host, then the worst host is kept.
 - Monster VMs cause contention despite low utilization, reservation and allocation.
 
 ## Scoring
-- The sub-metrics are scored and combined as for every KPI and model of the pack (`sp5-framework/performance/performance-kpi-design`, section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
+- The sub-metrics are scored and combined as for every KPI and model of the pack ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
 - Bands are the mirror of the performance KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
 - Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
@@ -73,7 +73,7 @@ Per host, then the worst host is kept.
 
 ## Not used
 - Inter-host imbalance: partly covered by highest host utilization; complex; field validation that it changes remediation is pending.
-- vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health (`vsphere/object-types/cluster/kpis/cluster-performance`, section vMotion is not part of the KPI).
+- vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md), section vMotion is not part of the KPI).
 
 ## Misconceptions
 - "The CPU overcommit row reads 3, so the Bronze 3:1 plan is met" → the row is per core; 3 per core is 1.5 per thread with Hyper-Threading. The plan is per thread: Bronze 3:1 reads 6 per core.

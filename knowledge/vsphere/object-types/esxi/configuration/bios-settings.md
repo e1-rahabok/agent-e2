@@ -9,14 +9,14 @@
 - Activate all populated processor sockets.
 - Activate all cores in each socket.
 - Activate Turbo Boost if the processors support it.
-- Activate hyper-threading if the processors support it. See `vsphere/technology/cpu/concepts/hyper-threading`.
+- Activate hyper-threading if the processors support it. See [`vsphere/technology/cpu/concepts/hyper-threading`](../../../technology/cpu/concepts/hyper-threading.md).
 - Node interleaving:
   - some NUMA-capable systems offer an option that deactivates NUMA by activating node interleaving,
   - in most cases, the best performance comes from deactivating node interleaving, which leaves NUMA active.
-  - See `vsphere/technology/cpu/concepts/numa`.
+  - See [`vsphere/technology/cpu/concepts/numa`](../../../technology/cpu/concepts/numa.md).
 - Activate the hardware-assisted virtualization features: VT-x, AMD-V, EPT, RVI, and similar.
 - Some systems require a full power-down before these changes take effect.
-- Make sure the snoop mode selection is appropriate for the environment. See `vsphere/technology/cpu/concepts/numa`.
+- Make sure the snoop mode selection is appropriate for the environment. See [`vsphere/technology/cpu/concepts/numa`](../../../technology/cpu/concepts/numa.md).
 - Deactivate devices in the BIOS that will not be used. Examples: serial, USB, or network ports.
 - If the BIOS allows the memory scrubbing rate to be set, leave it at the manufacturer default.
 
@@ -46,7 +46,7 @@
   - Open Adaptive: typically best for energy efficiency, server-side Java, and workloads sensitive to idle memory latency,
   - Closed Page: typically best for I/O-intensive workloads, OLTP, and HPC.
 ### AMD processors
-- AMD EPYC NUMA settings: see `vsphere/technology/cpu/concepts/numa`.
+- AMD EPYC NUMA settings: see [`vsphere/technology/cpu/concepts/numa`](../../../technology/cpu/concepts/numa.md).
 
 ## C-states for Intel Granite Rapids
 - Disable deep C-states (C6) for latency-sensitive workloads.

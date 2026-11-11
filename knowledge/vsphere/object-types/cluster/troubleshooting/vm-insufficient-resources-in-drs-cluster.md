@@ -19,7 +19,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Cluster state (ClusterComputeResource). Yellow or red: capacity no longer covers all configured reservations; this VM may be one not getting its reservation → fix the cluster state first. See `vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`. Green → step 2.
+1. Cluster state (ClusterComputeResource). Yellow or red: capacity no longer covers all configured reservations; this VM may be one not getting its reservation → fix the cluster state first. See [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md). Green → step 2.
 2. Limits (VirtualMachine, then every parent ResourcePool up to the cluster). VM demand equal to or above a configured limit → the limit causes the contention; esxtop %MLMTD confirms a CPU limit. Raise or remove the limit. No limit reached → step 3.
 3. Cluster demand vs capacity (ClusterComputeResource). Demand above capacity → the cluster is overloaded; shares decide who gets what, and this VM's shares give others more. Add capacity, or raise this VM's shares or reservation. Capacity sufficient → step 4.
 4. Host statistics (HostSystem where the VM runs). Host oversubscribed while the cluster has room → step 5. Host not oversubscribed → step 6.
@@ -33,7 +33,7 @@ flowchart TD
    - the migration threshold is conservative, so only mandatory moves happen;
    - the load is unstable or vMotion cost exceeds the expected gain.
    Remove the blocker, or move the migration threshold toward Aggressive and check again. If no blocker exists for this VM, look for the same blockers on the other VMs of the host.
-6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See `vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high` and `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
+6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../../technology/cpu/troubleshooting/vm-cpu-contention-high.md) and [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](../../../technology/memory/troubleshooting/vm-memory-latency-high.md).
 
 ## Why this order
 - Cluster state first: in yellow or red, reservations themselves are not met, so the rest of the analysis is built on wrong assumptions.

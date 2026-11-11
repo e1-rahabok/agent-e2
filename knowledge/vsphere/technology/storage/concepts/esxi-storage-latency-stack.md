@@ -21,7 +21,7 @@ GAVG = KAVG + DAVG
 - The bulk of latency should come from the device.
 
 ## NFS
-- An NFS datastore has no SCSI device and no HBA. In esxtop it is an {NFS} pseudo-device: `vsphere/tools/esxtop/storage`.
+- An NFS datastore has no SCSI device and no HBA. In esxtop it is an {NFS} pseudo-device: [`vsphere/tools/esxtop/storage`](../../../tools/esxtop/storage.md).
 
 ```text
 DAVG (NFS) = network latency + remote NAS processing time

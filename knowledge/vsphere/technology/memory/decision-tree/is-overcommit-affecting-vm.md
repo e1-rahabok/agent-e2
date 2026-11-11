@@ -3,7 +3,7 @@
 ## Question
 - Is host memory overcommit affecting this VM now?
 - The answer is yes or no, with the indicator that shows it: ballooning, host swap or compression, or Guest OS swap.
-- An operational question, answered by a decision tree; not troubleshooting. When the VM is already slow and memory is the suspect, start at `vsphere/technology/memory/troubleshooting/vm-memory-latency-high`.
+- An operational question, answered by a decision tree; not troubleshooting. When the VM is already slow and memory is the suspect, start at [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](../troubleshooting/vm-memory-latency-high.md).
 
 ## Principle
 - The point where overcommitment starts to affect a workload depends on the workload.
@@ -32,7 +32,7 @@
   - the guest memory size is too small.
 
 ## Misconceptions
-- "Ballooned memory above zero means the VM is short of memory now" → some ballooning is normal, and ballooning can reflect earlier reclamation. See `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`.
+- "Ballooned memory above zero means the VM is short of memory now" → some ballooning is normal, and ballooning can reflect earlier reclamation. See [`vsphere/technology/memory/metrics/virtual-motherboard/ballooned`](../metrics/virtual-motherboard/ballooned.md).
 - "No ballooning means no memory problem" → the indicator is valid only when the balloon driver works. Check Swapped and Compressed too.
 - "Guest swap activity proves host overcommitment" → guest swap can have other causes. Check the host indicators first.
 

@@ -3,7 +3,7 @@
 ## Definition
 - vNUMA exposes the NUMA topology of the host to the guest OS.
 - A NUMA-aware guest OS and applications can use the hardware NUMA architecture more efficiently.
-- Benefit: can be significant for wide VMs. See `vsphere/technology/cpu/concepts/numa`.
+- Benefit: can be significant for wide VMs. See [`vsphere/technology/cpu/concepts/numa`](numa.md).
 - Size of the benefit depends on how far the guest OS and applications are NUMA-optimized.
 
 ## Requirements and defaults
@@ -35,12 +35,12 @@
 - Size wide VMs to fit within one physical NUMA node where possible.
 - Example from the source: a host with six cores per NUMA node suits VMs of no more than six vCPUs.
 - If a VM must be larger than one node, size it to split evenly across as few physical NUMA nodes as possible.
-- A VM vCPU count above the physical core count uses hyper-threads. This can create contention. See `vsphere/technology/cpu/concepts/hyper-threading`.
+- A VM vCPU count above the physical core count uses hyper-threads. This can create contention. See [`vsphere/technology/cpu/concepts/hyper-threading`](hyper-threading.md).
 
 ## CPU Hot Add
 - Adding vCPUs with CPU Hot Add deactivates vNUMA for that VM.
 - The guest then sees one vNUMA node.
-- See `vsphere/technology/cpu/concepts/idle-and-unused-vcpus`.
+- See [`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`](idle-and-unused-vcpus.md).
 
 ## Misconceptions
 - "corespersocket sets the NUMA layout" → from vSphere 6.5 it does not. It sets the guest socket presentation.

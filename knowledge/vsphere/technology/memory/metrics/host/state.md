@@ -4,7 +4,7 @@
 - One of 5 states: High, Clear, Soft, Hard, Low. Each is a multiple of Free Memory Minimum.
 - Soft: ballooning starts. Hard: compression and swapping start. Low: execution is blocked.
 - Keep hosts in High or Clear.
-- See `vsphere/technology/memory/concepts/host-memory-states`.
+- See [`vsphere/technology/memory/concepts/host-memory-states`](../../concepts/host-memory-states.md).
 
 ## Related counter
 - Low Free Threshold (KB): the free-memory level below which ESXi reclaims from VMs.

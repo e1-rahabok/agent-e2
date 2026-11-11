@@ -46,7 +46,7 @@
 ## NUMA and hyper-threads
 - A VM with more vCPUs than cores per NUMA node, but fewer than logical processors per NUMA node, can use logical processors with local memory.
 - Setting: `numa.vcpu.preferHT`, per VM.
-- Details: see `vsphere/technology/cpu/concepts/numa`.
+- Details: see [`vsphere/technology/cpu/concepts/numa`](numa.md).
 
 ## Hyper-Threading accounting: Mechanism
 - SMT (Intel: Hyper-Threading) raises the total throughput of a core.

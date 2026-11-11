@@ -41,7 +41,7 @@
   - Past or future: users ask for history while their intent is the future. Work out which.
   - The period is hard-coded per widget; a report has no date control at report level.
 - Personas:
-  - IT senior management: the most common reader (`sp5-framework/outputs/it-leaders-dashboards`).
+  - IT senior management: the most common reader ([`sp5-framework/outputs/it-leaders-dashboards`](it-leaders-dashboards.md)).
   - Auditor: most needs are better met by dashboards. Wants to know the environment is secure, and whether privileged users (the system administrators) made unauthorised changes. Weekly to monthly.
   - Capacity planning team: most needs are better met by dashboards. Reports keep history for years for long-term planning: a record per data centre, cluster and datastore, as simple CSV files. Weekly to monthly.
   - Finance: prefers a spreadsheet for its own analysis. Cares about assets, so hardware only: for example ESXi hosts with purchase date, warranty end and cost. Weekly to quarterly.

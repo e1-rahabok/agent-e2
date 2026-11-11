@@ -2,7 +2,7 @@
 
 ## Choice problem
 - Several metrics measure similar things. Two watches showing different times leave you unsure which is right.
-- vSphere example: 5 VM CPU "consumption" metrics and 7 ESXi CPU "consumption" metrics. See `vsphere/technology/cpu/metrics/comparisons/consumption-metrics`.
+- vSphere example: 5 VM CPU "consumption" metrics and 7 ESXi CPU "consumption" metrics. See [`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`](../../vsphere/technology/cpu/metrics/comparisons/consumption-metrics.md).
 
 ## Volume problem (vCenter example)
 - Per VM: 17 CPU metrics at VM level. 12 of them also exist per vCPU. 28 memory metrics.
@@ -26,7 +26,7 @@ every minute, per day ≈ 134 million metrics
 - 2x the metrics at 20 seconds instead of 5 minutes = 2 × 15 = 30x the data points. A jump of that size has to justify its benefit.
 - Begin with the end in mind. For each piece of hardware and software, each product and service that can go wrong (down or slow), list the metrics needed to tell it. Work backwards from there: the list is far shorter, and every metric collected serves a purpose.
 - Input, Process, Output: a metric is an input. If no output (alert, dashboard, report, troubleshooting step) needs it in its processing, collecting it wastes resources.
-- 20-second visibility does not need 20-second collection: VCF Operations keeps the 20-second peak of each 5-minute cycle as its own metric (`vcf-operations/features/peak-20-second-metrics`).
+- 20-second visibility does not need 20-second collection: VCF Operations keeps the 20-second peak of each 5-minute cycle as its own metric ([`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md)).
 - Answering "why" after an incident depends on the right data, not all data: the metrics of the component that can fail, at the resolution that shows it, plus events, tasks and logs.
 
 ## Misconceptions

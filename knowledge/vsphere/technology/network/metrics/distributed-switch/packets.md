@@ -20,9 +20,9 @@
 - The counter summaries call them a rate of packets; the API stat type is absolute. Read a value as packets per sample interval unless the tool states otherwise.
 
 ## Reading it
-- Most traffic should be unicast. A high multicast or broadcast share explains receive drops and wasted CPU on every VM in the broadcast domain. See `vsphere/technology/network/metrics/comparisons/vm-network-metrics`.
+- Most traffic should be unicast. A high multicast or broadcast share explains receive drops and wasted CPU on every VM in the broadcast domain. See [`vsphere/technology/network/metrics/comparisons/vm-network-metrics`](../comparisons/vm-network-metrics.md).
 - LAG counts show whether traffic spreads across the uplinks of a link aggregation group.
-- VCF Operations shows distributed port group metrics aggregated over all hosts. vCenter itself keeps none on the port group. See `vsphere/technology/network/concepts/network-observability`.
+- VCF Operations shows distributed port group metrics aggregated over all hosts. vCenter itself keeps none on the port group. See [`vsphere/technology/network/concepts/network-observability`](../../concepts/network-observability.md).
 
 ## Misconceptions
 - "No chart for the distributed switch, so vCenter has no switch data" → the counters exist at level 3, through the API.

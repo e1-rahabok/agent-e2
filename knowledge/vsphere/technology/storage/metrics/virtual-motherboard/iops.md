@@ -1,7 +1,7 @@
 # VM Disk IOPS
 
 ## Under-reporting
-- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See `vsphere/architecture/vm-vs-guest-os`, area A.
+- IO queued inside the Guest OS has not reached the hypervisor. VM-level IOPS does not include it. See [`vsphere/architecture/vm-vs-guest-os`](../../../../architecture/vm-vs-guest-os.md), area A.
 
 ## Limits
 - A disk IOPS limit exists.

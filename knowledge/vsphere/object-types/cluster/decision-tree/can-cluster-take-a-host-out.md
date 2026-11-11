@@ -3,7 +3,7 @@
 ## Question
 - Can one ESXi host leave this vSphere cluster for maintenance, a patch or an upgrade, without its VMs waiting and without losing the failover the cluster is designed for?
 - The answer is yes, yes with a stated risk for the window, or no, with the resource or rule that blocks it.
-- An operational question, answered by a decision tree; not a health check. Short-term capacity: a host taken out lowers usable capacity, not total capacity (`sp5-framework/capacity/supply`, section Total vs usable after host loss).
+- An operational question, answered by a decision tree; not a health check. Short-term capacity: a host taken out lowers usable capacity, not total capacity ([`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md), section Total vs usable after host loss).
 
 ## Flow
 ```mermaid
@@ -24,7 +24,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA errors → no: fix the state first (`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`). Green → step 2.
+1. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA errors → no: fix the state first ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md)). Green → step 2.
 2. DRS automation level (ClusterComputeResource). Fully automated: DRS runs the evacuation itself. Partially automated or manual: DRS only shows recommendations, so the moves are applied by hand → step 3 either way.
 3. VMs that cannot move (VirtualMachine). Any of:
    - a required VM-Host rule ("must run on"): DRS never violates a required rule, so it does not evacuate those VMs, and the host does not enter maintenance mode;
@@ -33,8 +33,8 @@ flowchart TD
    Found → no, or power those VMs off for the window, or change the rule to a preferential "should run on" rule. None → step 4.
 4. Remaining capacity (ClusterComputeResource). Spread the load of the cluster over the hosts that remain:
    - CPU: threads in use on all hosts ÷ threads of the remaining hosts. Keep it below the red band of Cluster Consumption (%) CPU thread utilization (`catalog/thresholds-capacity`).
-   - Memory: consumed memory of all hosts ÷ DRAM of the remaining hosts. Ballooning starts only near 99% of a host, so a high value is a risk, not slowness; keep the hosts out of the low memory state (`vsphere/technology/memory/concepts/host-memory-states`).
-   - Cluster Performance (%) already orange or red → no: one host fewer adds contention (`vsphere/object-types/cluster/kpis/cluster-performance`).
+   - Memory: consumed memory of all hosts ÷ DRAM of the remaining hosts. Ballooning starts only near 99% of a host, so a high value is a risk, not slowness; keep the hosts out of the low memory state ([`vsphere/technology/memory/concepts/host-memory-states`](../../../technology/memory/concepts/host-memory-states.md)).
+   - Cluster Performance (%) already orange or red → no: one host fewer adds contention ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)).
    - Fits → step 5. Does not fit → no; move or power off workload first, or wait for a quieter window.
 5. HA admission control (ClusterComputeResource). vSphere HA counts only hosts that are connected, not in maintenance mode, and without HA errors. Admission control refuses actions that break its failover constraint, migrations included, so the evacuation can stall. With the cluster resources percentage policy, at least two HA hosts must remain besides the one entering maintenance mode.
    - Still met with one host fewer (a cluster sized N+2, or one with spare capacity) → step 6.
@@ -61,7 +61,7 @@ flowchart TD
 - No at step 4 → name the resource (CPU threads, memory) and how far over it would go.
 - Yes with reduced failover at step 5 → state the window and the risk; the decision is the owner's.
 - Yes → the binding resource, the window, and for vSAN the mode and its risk.
-- A cluster that can never take a host out without reduced failover is sized without a maintenance host: plan N+1 for maintenance on top of HA (`sp5-framework/capacity/supply`, section Usable capacity).
+- A cluster that can never take a host out without reduced failover is sized without a maintenance host: plan N+1 for maintenance on top of HA ([`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md), section Usable capacity).
 
 ## Misconceptions
 - "The cluster is at 50%, so any host can go into maintenance" → the remaining hosts carry the whole load: a 4-host cluster at 50% runs its 3 remaining hosts at 67%; and HA, rules and pinned VMs decide too.

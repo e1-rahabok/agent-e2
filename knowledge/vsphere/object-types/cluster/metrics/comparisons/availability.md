@@ -21,7 +21,7 @@
 ## Restarts: sys.uptime
 - vCenter stores `sys.uptime` on every VM and ESXi host at level 1: seconds since the last start, rollup latest.
 - Uptime falls back toward 0 at every restart. A drop between two samples marks a reboot or power cycle, even when the object was down for less than one sample.
-- The VM counter restarts with the VM (power cycle, reset, HA restart). A Guest OS reboot without a VM power cycle is a Guest OS event. See `vsphere/object-types/cluster/metrics/vm-operations`.
+- The VM counter restarts with the VM (power cycle, reset, HA restart). A Guest OS reboot without a VM power cycle is a Guest OS event. See [`vsphere/object-types/cluster/metrics/vm-operations`](../vm-operations.md).
 
 ## Cluster availability
 - Not the average of hosts: HA matters.

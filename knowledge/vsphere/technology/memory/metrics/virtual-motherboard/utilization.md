@@ -12,7 +12,7 @@ Utilization (KB) = Guest Needed Memory (KB)
 - Guest metrics from VMware Tools not collected: falls back to Consumed (KB). A mixed source makes the value fluctuate.
 - Guest Physically Usable Memory below configured memory. Example: 58 GB usable on an 80 GB VM.
 - Low utilization: 5% of total memory is added, not 5% of used. A 128 GB VM shows 6.4 GB extra.
-- The 5% is a hardcoded buffer inside Guest Needed Memory, the first term of the formula: Needed = physical - max(0, Unneeded - 5% of physical). See `guest-os/memory/concepts/windows-memory`, section Needed Memory.
+- The 5% is a hardcoded buffer inside Guest Needed Memory, the first term of the formula: Needed = physical - max(0, Unneeded - 5% of physical). See [`guest-os/memory/concepts/windows-memory`](../../../../../guest-os/memory/concepts/windows-memory.md), section Needed Memory.
 - Excessive paging is added. Excessive is relative.
 - Linux Available and Windows Cache are included, to be conservative.
 

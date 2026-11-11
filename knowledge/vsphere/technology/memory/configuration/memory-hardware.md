@@ -5,8 +5,8 @@
 - Avoid memory asymmetry across sockets.
 
 ## Related
-- Memory tiering hardware (NVMe devices, write rate, endurance, capacity): see `vsphere/technology/memory/concepts/memory-tiering`.
-- BIOS settings that affect memory: see `vsphere/object-types/esxi/configuration/bios-settings`.
+- Memory tiering hardware (NVMe devices, write rate, endurance, capacity): see [`vsphere/technology/memory/concepts/memory-tiering`](../concepts/memory-tiering.md).
+- BIOS settings that affect memory: see [`vsphere/object-types/esxi/configuration/bios-settings`](../../../object-types/esxi/configuration/bios-settings.md).
 
 ## Misconceptions
 - "Uneven population across channels is acceptable" → the source says balance across all channels in most environments.

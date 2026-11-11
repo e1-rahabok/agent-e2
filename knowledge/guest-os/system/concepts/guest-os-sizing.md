@@ -22,7 +22,7 @@
   - Migrating from classic VMFS to vSAN → VM footprint: the hypervisor metric adjusts for the vSAN FTT policy.
   - Converting virtual disks from thin to thick → VM footprint: guest consumption is irrelevant, the disk inflates to its configured size.
 - After the demand is known, project it from past data and adjust the new size to fit NUMA.
-- CPU, RAM and storage each use a different approach. VM footprint: see `sp5-framework/capacity/vm-footprint-sizing`.
+- CPU, RAM and storage each use a different approach. VM footprint: see [`sp5-framework/capacity/vm-footprint-sizing`](../../../sp5-framework/capacity/vm-footprint-sizing.md).
 
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.

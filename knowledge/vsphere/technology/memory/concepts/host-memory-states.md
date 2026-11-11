@@ -35,15 +35,15 @@
 - Swap to host cache starts when compression does not keep VM memory usage low enough, if a host cache is configured.
 - Regular host-level swapping starts when the host cache is full or none is configured.
 - Sharing, ballooning, compression and swap to host cache allow significant overcommitment, usually with little or no performance impact. Regular host-level swapping can degrade performance significantly.
-- Avoid overcommitting memory to the point where regular host-level swapping swaps out active pages. Indicators: see `vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`.
-- Details per mechanism: `vsphere/technology/memory/concepts/page-sharing`, `vsphere/technology/memory/concepts/ballooning`, `vsphere/technology/memory/concepts/swap-and-compression`.
+- Avoid overcommitting memory to the point where regular host-level swapping swaps out active pages. Indicators: see [`vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`](../decision-tree/is-overcommit-affecting-vm.md).
+- Details per mechanism: [`vsphere/technology/memory/concepts/page-sharing`](page-sharing.md), [`vsphere/technology/memory/concepts/ballooning`](ballooning.md), [`vsphere/technology/memory/concepts/swap-and-compression`](swap-and-compression.md).
 
 ## HA headroom
 - Example: 12 hosts, sized for 11 (one for HA or maintenance).
 - Target 99% during HA or maintenance → 99% × 11 / 12 = 90.75% in normal operation.
 - At that level hosts do not reach the balloon state, so VMs are not swapped.
 - Balloon in such a cluster points to a VM-level cause such as a limit, not host pressure.
-- A limit does not cause balloon directly. It causes Compressed or Swapped when Consumed tries to grow beyond it. See `vsphere/technology/memory/metrics/virtual-motherboard/ballooned`.
+- A limit does not cause balloon directly. It causes Compressed or Swapped when Consumed tries to grow beyond it. See [`vsphere/technology/memory/metrics/virtual-motherboard/ballooned`](../metrics/virtual-motherboard/ballooned.md).
 
 ## Low Free Threshold
 - Counter: Low Free Threshold (KB). The free-memory level below which ESXi reclaims memory from VMs.

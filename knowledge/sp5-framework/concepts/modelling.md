@@ -17,8 +17,8 @@
 | Metric type | Contention, plus saturation (compressed, swapped) | Consumption: allocation, utilization and imbalance, reservation; count of monster VMs |
 | Low value | Bad | Good |
 
-- Both assume configuration is already optimized and availability is handled separately, so the models read only contention and consumption (`sp5-framework/observability/triple-see-method`).
-- Implementations: `vsphere/object-types/vm/kpis/vm-performance`, `vsphere/object-types/cluster/kpis/cluster-performance`, `vsphere/object-types/cluster/models/cluster-risk`.
+- Both assume configuration is already optimized and availability is handled separately, so the models read only contention and consumption ([`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md)).
+- Implementations: [`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md), [`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md), [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md).
 
 ## Scale 0-100%
 - 100% is the best achievable, not a theoretical perfect: disk latency is never 0, so 100.00% does not occur.
@@ -27,7 +27,7 @@
 - Four equal bands: green 75-100, yellow 50-75, orange 25-50, red 0-25. Four splits evenly (three gives 33.33 and 66.67), and yellow gives a leading indicator.
 - Equal bands keep metric thresholds easy to set. Green at 95-100 would force unequal bands and harder thresholds.
 - Thresholds are the hardest part. A metric whose threshold cannot be defended is left out of the KPI.
-- Scoring, weights and the formula: `sp5-framework/performance/performance-kpi-design`, section Scoring. In short: five limits per metric, a straight line inside each band, and a weight that grows smoothly with a worse score, from 1 at 100 to 16 at 0.
+- Scoring, weights and the formula: [`sp5-framework/performance/performance-kpi-design`](../performance/performance-kpi-design.md), section Scoring. In short: five limits per metric, a straight line inside each band, and a weight that grows smoothly with a worse score, from 1 at 100 to 16 at 0.
 
 ## Three ways to combine the colours
 | Question | Weighted average by colour | Weighted sum by colour | Worst colour |
@@ -43,7 +43,7 @@
 - Performance and capacity combine, not take the worst: contention adds up (a VM waiting for CPU, memory and disk is hurt more than one waiting for CPU); leading indicators combine (two orange risk factors bring contention closer than one); and an orange metric is a level, not a failure.
 - Availability takes the worst: one failed component can take a host down. It uses two tables, partial failures component by component, and failures that alone take the host down. The score is the minimum of the two: a dead host scores as dead.
 - Weights by rank (ordered weighted average, Yager 1988: worst 8x, second 4x, third 2x, fourth 1x) were considered and rejected. Ranking throws away the vSphere meaning of each colour: a second red counts half only because it is second, a fifth counts nothing.
-- Known effect of the weighted average: when the KPI is already bad, a metric that gets worse can make it look better (`vsphere/object-types/cluster/models/cluster-risk`, section A worse sub-metric can lower Cluster Risk). Close for Business reads Risk at orange, so a cluster just inside orange can drop to yellow after VMs are deployed and open again.
+- Known effect of the weighted average: when the KPI is already bad, a metric that gets worse can make it look better ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section A worse sub-metric can lower Cluster Risk). Close for Business reads Risk at orange, so a cluster just inside orange can drop to yellow after VMs are deployed and open again.
 
 ## Setting thresholds
 - Scientifically, a VM does not care what stops it (Ready, Co-stop or Overlap), so all would share one threshold. Practically, healthy production shows different scales per metric. Take the lower of the two: the goal is proactive monitoring.

@@ -2,14 +2,14 @@
 
 ## Scope
 - Every network component of VCF: distributed switches and port groups, NSX, physical switches and general settings. One list, for the discussion with the network team.
-- Host-side links (NIC redundancy, negotiated speed, VMkernel separation, addressing): `vsphere/object-types/esxi/configuration/esxi-configuration-review`.
+- Host-side links (NIC redundancy, negotiated speed, VMkernel separation, addressing): [`vsphere/object-types/esxi/configuration/esxi-configuration-review`](../../../object-types/esxi/configuration/esxi-configuration-review.md).
 
 ## Distributed switch and port groups
 - Version: outdated switch versions.
 - Network I/O Control configured.
 - Unused port groups: a security risk. They tend not to be monitored, yet anyone can use the path.
 - Traffic shaping used where it fits.
-- Shares per traffic type set correctly: `sp5-framework/performance/noisy-neighbour`.
+- Shares per traffic type set correctly: [`sp5-framework/performance/noisy-neighbour`](../../../../sp5-framework/performance/noisy-neighbour.md).
 - Limits: can shares replace them? Shares are more flexible for contention.
 - MTU mismatch hurts performance.
 - Jumbo frames: on the right networks, end to end. For segments outside your control, detect changes with a discovery protocol (CDP or LLDP).

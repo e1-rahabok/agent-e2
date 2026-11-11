@@ -40,7 +40,7 @@
 ## Past vs present
 - The present value depends on when you look. At 08:00, the 08:00 value does not say what happened overnight.
 - The past has more than one point per object, so it is harder to show. A line chart shows the trend; one number, such as the maximum or the average, hides whether it is going up or down and how long the peak lasted. A line chart takes space.
-- With many objects or metrics, summarize. Show two numbers where one is an average, such as the average and the worst (`sp5-framework/observability/aggregation`).
+- With many objects or metrics, summarize. Show two numbers where one is an average, such as the average and the worst ([`sp5-framework/observability/aggregation`](../observability/aggregation.md)).
 
 ## Summary, list, detail
 - Large environments have many items (Kubernetes pods, cloud instances). Summarize, work on a subset, then pick the item.

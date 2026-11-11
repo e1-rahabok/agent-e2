@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM memory Latency (VCF Operations: Memory Contention) is high, or the memory row of VM Performance (%) is yellow or worse.
-- Entered from `sp5-framework/performance/troubleshooting/vm-slow` (step 4), a health check performance step, or an alert.
+- Entered from [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md) (step 4), a health check performance step, or an alert.
 
 ## Flow
 ```mermaid
@@ -18,12 +18,12 @@ flowchart TD
 ```
 
 ## Checks, in order
-1. Latency (VirtualMachine) (`vsphere/technology/memory/metrics/virtual-motherboard/latency`). The only counter that shows a VM waiting for memory; it excludes balloon. Low → stop. High → step 2.
-2. Swap-in rate and decompression rate (VirtualMachine): the source of the wait (`vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate`). → step 3.
-3. Consumption against a limit (VirtualMachine, ResourcePool). Consumed flat near a limit on the VM or on its resource pool: the limit is the cause (`vsphere/architecture/resource-controls`). → step 4.
+1. Latency (VirtualMachine) ([`vsphere/technology/memory/metrics/virtual-motherboard/latency`](../metrics/virtual-motherboard/latency.md)). The only counter that shows a VM waiting for memory; it excludes balloon. Low → stop. High → step 2.
+2. Swap-in rate and decompression rate (VirtualMachine): the source of the wait ([`vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate`](../metrics/virtual-motherboard/swap-in-rate.md)). → step 3.
+3. Consumption against a limit (VirtualMachine, ResourcePool). Consumed flat near a limit on the VM or on its resource pool: the limit is the cause ([`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md)). → step 4.
 4. Configuration (VirtualMachine). Shares and reservation compared with the other VMs; in a resource pool, whether the pool has enough for all its VMs. → step 5.
-5. Host memory pressure (HostSystem). Swap out, compressed and ballooned memory on the other VMs of the host (`vsphere/technology/memory/concepts/swap-and-compression`). Swap out without swap in: past pressure, no wait yet. → step 6.
-6. Known bug and log (VirtualMachine, HostSystem): `sp5-framework/performance/troubleshooting/vm-slow`, its known bug and log checks.
+5. Host memory pressure (HostSystem). Swap out, compressed and ballooned memory on the other VMs of the host ([`vsphere/technology/memory/concepts/swap-and-compression`](../concepts/swap-and-compression.md)). Swap out without swap in: past pressure, no wait yet. → step 6.
+6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks.
 
 ## Why this order
 - Latency first: it is the only memory wait; ballooned, swapped and compressed memory are past reclamation, not a wait.
@@ -44,7 +44,7 @@ flowchart TD
 
 ## Misconceptions
 - "Balloon is in Latency" → Latency excludes balloon.
-- "The host has free memory, so the VM cannot wait for memory" → a limit, or pages swapped or compressed in the past, cause a wait on a host with free memory (`vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention`).
+- "The host has free memory, so the VM cannot wait for memory" → a limit, or pages swapped or compressed in the past, cause a wait on a host with free memory ([`vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention`](../../../object-types/cluster/concepts/cluster-utilization-vs-contention.md)).
 
 ## Metadata
 ```yaml

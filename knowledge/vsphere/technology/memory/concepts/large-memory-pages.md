@@ -16,11 +16,11 @@
 ## Effect
 - Large pages significantly reduce TLB misses.
 - This improves the performance of most workloads, especially workloads with large active memory working sets.
-- Large pages can slightly reduce the per-VM memory overhead. See `vsphere/technology/memory/concepts/memory-overhead`.
-- Background on TLB misses in nested paging: see `vsphere/technology/cpu/concepts/hardware-assisted-virtualization`.
+- Large pages can slightly reduce the per-VM memory overhead. See [`vsphere/technology/memory/concepts/memory-overhead`](memory-overhead.md).
+- Background on TLB misses in nested paging: see [`vsphere/technology/cpu/concepts/hardware-assisted-virtualization`](../../cpu/concepts/hardware-assisted-virtualization.md).
 
 ## Interaction with page sharing
-- ESX does not share large pages. See `vsphere/technology/memory/concepts/page-sharing`.
+- ESX does not share large pages. See [`vsphere/technology/memory/concepts/page-sharing`](page-sharing.md).
 - Large pages can change sharing behaviour. Page sharing might not occur until overcommitment is high enough to force large pages to break into small pages.
 
 ## 1 GB pages

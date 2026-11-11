@@ -7,7 +7,7 @@
 - Users: the platform team.
 - Frequency: mostly ad hoc; daily for VM inventory changes.
 - Features: the relationships between objects shown visually; fast traversal of the inventory hierarchy; the count of objects at each level, ideally with their movement over time.
-- Inventory gets no alert: it is an account of what exists, not good or bad. Changes are watched on the NOC screen (`sp5-framework/outputs/alert-design`).
+- Inventory gets no alert: it is an account of what exists, not good or bad. Changes are watched on the NOC screen ([`sp5-framework/outputs/alert-design`](alert-design.md)).
 
 ## Configuration dashboards
 - Goals: fix configuration issues before they cause impact; when an issue occurs, check whether configuration plays a part.
@@ -18,7 +18,7 @@
 - Features:
   - what needs attention first, then the overall configuration, so the dashboard drives action;
   - a balance between ease of use, page load time and completeness. Not every setting of every object fits; screen space is the other limit.
-- What to review per object: `sp5-framework/concepts/configuration-management` and the object review lists, such as `vsphere/object-types/vm/configuration/vm-configuration-review`.
+- What to review per object: [`sp5-framework/concepts/configuration-management`](../concepts/configuration-management.md) and the object review lists, such as [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../vsphere/object-types/vm/configuration/vm-configuration-review.md).
 
 ## The configuration dashboard set
 - VM Configuration and VM Storage Configuration work together. The second was split out because one dashboard was too large to use.

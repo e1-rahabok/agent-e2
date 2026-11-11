@@ -57,7 +57,7 @@
   - actual: volatile, per object (the VM's score);
   - target: steady, for many objects. One set of levels and one target for every VM: the KPI is never per class of service. A Gold VM still tends to score higher than a Silver VM, because its design (less overcommit) causes less contention.
   - Daily KPI actual: the 99th percentile of the day's 288 scores, the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
-- Cadence: daily, in a technical meeting; a month is far too late (`sp5-framework/performance/kpi-vs-sla`).
+- Cadence: daily, in a technical meeting; a month is far too late ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md)).
 
 ## VM DRS Score
 ```text
@@ -83,12 +83,12 @@ weight = 2 ^ ((100 - score) / 25)
 - Green given as a single value (for example 0%): only that value scores 100; any other value starts in yellow at 75.
 - Excluded green: a metric whose green range says nothing about health (rare dropped packets, low utilization) is left out of the KPI while green, so it does not add a free 100. Once it leaves green it counts. If every metric with data is excluded, the KPI is 100.
 - Missing data: a metric with no data is left out, never counted as 0, because 0 usually means perfect. With no data at all, the KPI is not published.
-- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: `vsphere/object-types/cluster/models/cluster-risk`, section A worse sub-metric can lower Cluster Risk.
-- Excluded green on the VM KPI: CPU Net Run below 95%, CPU Overlap below 0.5%, Network Dropped Tx at exactly 0 (`vsphere/object-types/vm/kpis/vm-performance`).
+- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section A worse sub-metric can lower Cluster Risk.
+- Excluded green on the VM KPI: CPU Net Run below 95%, CPU Overlap below 0.5%, Network Dropped Tx at exactly 0 ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)).
 - Guest OS Free Memory is descending: more is better. 1 GB or more scores 100; green ends at 512 MB. KB is converted to MB.
 - Free Memory uses the latest value, not the lowest 20-second value: it measures space, and the latest value matters.
 - Swapped + Compressed has no built-in metric: the pack computes it as Memory Zip Swap.
-- Why four equal ranges, thresholds and validation: `sp5-framework/concepts/modelling`.
+- Why four equal ranges, thresholds and validation: [`sp5-framework/concepts/modelling`](../concepts/modelling.md).
 
 ## Misconceptions
 - "Add IOPS to the KPI" → no universal range; it masks real problems.

@@ -1,10 +1,10 @@
 # Forecasting capacity
 
 ## What is forecast
-- The long-term horizon of the running stage: when must hardware be bought? Procurement takes months, so the answer must come before the shortage (`sp5-framework/capacity/capacity-management`, section Two stages).
-- Supply is a chosen constant (`sp5-framework/capacity/supply`). What is forecast is demand: utilization against usable capacity.
-- Compute is projected from its past. Storage space is not: 0 bytes left stops IO, and that reality overrides any projection (`vsphere/technology/storage/concepts/storage-dimensions`).
-- Demand that is not yet visible is in no projection: new projects, DR tests and real DR, new VMs not yet at full load. Add it on top (`sp5-framework/capacity/demand`, section Invisible demand).
+- The long-term horizon of the running stage: when must hardware be bought? Procurement takes months, so the answer must come before the shortage ([`sp5-framework/capacity/capacity-management`](capacity-management.md), section Two stages).
+- Supply is a chosen constant ([`sp5-framework/capacity/supply`](supply.md)). What is forecast is demand: utilization against usable capacity.
+- Compute is projected from its past. Storage space is not: 0 bytes left stops IO, and that reality overrides any projection ([`vsphere/technology/storage/concepts/storage-dimensions`](../../vsphere/technology/storage/concepts/storage-dimensions.md)).
+- Demand that is not yet visible is in no projection: new projects, DR tests and real DR, new VMs not yet at full load. Add it on top ([`sp5-framework/capacity/demand`](demand.md), section Invisible demand).
 
 ## Projection or percentile
 - With a clear trend, a projection beats a percentile.
@@ -14,11 +14,11 @@
 - Momentary one-off peaks should barely move a projection; periodic peaks (month-end, quarter-end) must be kept in it.
 
 ## Reading the two numbers
-- VCF Operations gives two numbers per cluster: Capacity Remaining (%), the short horizon, and Time Remaining (days), the long horizon. How it computes them: `vcf-operations/features/capacity-forecast`.
+- VCF Operations gives two numbers per cluster: Capacity Remaining (%), the short horizon, and Time Remaining (days), the long horizon. How it computes them: [`vcf-operations/features/capacity-forecast`](../../vcf-operations/features/capacity-forecast.md).
 - Read both together. Ideal: low capacity remaining with high time remaining. The cluster is well used, and its growth is slow.
-- Low capacity remaining with low time remaining: buy now, or close the cluster (`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`).
+- Low capacity remaining with low time remaining: buy now, or close the cluster ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../../vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md)).
 - High capacity remaining with high time remaining for months: wastage, unless the cluster is new or holds DR protection.
-- Both numbers read utilization against usable capacity. Neither reads contention: a cluster with time remaining can still be full because its VMs wait (`sp5-framework/concepts/performance-vs-capacity`).
+- Both numbers read utilization against usable capacity. Neither reads contention: a cluster with time remaining can still be full because its VMs wait ([`sp5-framework/concepts/performance-vs-capacity`](../concepts/performance-vs-capacity.md)).
 
 ## Misconceptions
 - "Capacity Remaining is current free capacity" → it is a projection, 3 days ahead.

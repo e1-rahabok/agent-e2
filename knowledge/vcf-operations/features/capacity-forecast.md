@@ -5,7 +5,7 @@
 - Projection window: 1 year into the future.
 - Uses 6+ months of history when available. Recent data weighs more (exponential decay), so a projection can look visually odd.
 - Momentary one-off peaks barely affect the projection. Sustained non-periodic peaks fade over time. Periodic peaks (hourly, daily, weekly, month-end, overlapping) are detected; 5-minute data is required as input.
-- Usable capacity in the engine: total capacity minus what vSphere HA admission control reserves for failover, minus the buffer set in the policy. Buffer properties: cpu|demand|bufferSetting (%), mem|demand|bufferSetting (%); default 0% (`sp5-framework/capacity/supply`, section Buffer).
+- Usable capacity in the engine: total capacity minus what vSphere HA admission control reserves for failover, minus the buffer set in the policy. Buffer properties: cpu|demand|bufferSetting (%), mem|demand|bufferSetting (%); default 0% ([`sp5-framework/capacity/supply`](../../sp5-framework/capacity/supply.md), section Buffer).
 
 ## Risk level
 - Set per policy.

@@ -16,14 +16,14 @@
 | "Wide" VM: vCPUs > cores per physical NUMA node | Two or more NUMA nodes | Preferentially local to those nodes | Some vCPUs may access remote memory. Higher average memory access latency. |
 
 - A VM with no more vCPUs than cores per NUMA node can have a slight performance advantage.
-- Wide VM latency increase can be reduced with vNUMA. See `vsphere/technology/cpu/concepts/virtual-numa`.
+- Wide VM latency increase can be reduced with vNUMA. See [`vsphere/technology/cpu/concepts/virtual-numa`](virtual-numa.md).
 
 ## Scheduler mechanics
 - Each VM gets a home node at power-on, chosen to balance CPU and memory load across nodes. Its vCPUs run only on that node; new memory comes from that node.
 - Wide VMs are split into NUMA clients, each managed as a normal single-node client. ESXi measures inter-node latency at boot and places a wide VM's clients on nodes close to each other.
 - Every 2 seconds (default) the rebalancer checks node loads. It can move a VM to a less loaded node, preferring a VM that already has memory there, or swap VMs between nodes to improve locality.
 - After a move, ESXi migrates the VM's memory to the new home node page by page (4 KB), at a controlled rate. Memory is not moved if the VM stays only briefly.
-- Until migration completes, the VM runs with remote memory: esxtop N%L below 100%, NRMEM above 0. NMIG counts the moves. See `vsphere/tools/esxtop/memory`.
+- Until migration completes, the VM runs with remote memory: esxtop N%L below 100%, NRMEM above 0. NMIG counts the moves. See [`vsphere/tools/esxtop/memory`](../../../tools/esxtop/memory.md).
 - After a large workload change (many VMs started) placement settles within seconds to minutes.
 - Page sharing is per node: each node keeps its own copy of a shared page, so shared pages never force remote access.
 - A VM with manual CPU affinity or memory affinity is no longer managed by the NUMA scheduler: no rebalancing, no memory migration. NUMA node affinity (numa.nodeAffinity) keeps NUMA management but limits the nodes.
@@ -45,7 +45,7 @@
   - Windows Server, PowerShell: `Get-NetAdapterRss -Name <AdapterName>`, shows the closest NUMA node.
 
 ## Settings
-- NUMA controls, sizing, snoop modes and processor-specific settings: see `vsphere/technology/cpu/configuration/numa-settings`.
+- NUMA controls, sizing, snoop modes and processor-specific settings: see [`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md).
 
 ## Misconceptions
 - "A VM with more vCPUs than cores per node is as fast as one that fits" → wide VMs can access remote memory and have higher average memory latency.

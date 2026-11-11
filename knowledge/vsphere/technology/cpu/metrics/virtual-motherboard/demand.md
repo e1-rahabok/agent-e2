@@ -34,7 +34,7 @@ Demand (%) = Demand (MHz) / Total Capacity (MHz) × 100
 
 ## Misconceptions
 - "Demand - Usage = unmet demand" → a limit leaves Demand equal to Usage. Check Ready.
-- "Demand above 100% means add vCPUs" → Turbo raises Demand above 100%. See `vsphere/technology/cpu/concepts/cpu-frequency`.
+- "Demand above 100% means add vCPUs" → Turbo raises Demand above 100%. See [`vsphere/technology/cpu/concepts/cpu-frequency`](../../concepts/cpu-frequency.md).
 - "Usage above Demand is impossible" → Demand is smoothed over a longer window.
 
 ## Metadata

@@ -11,7 +11,7 @@
 
 ## Complexity
 - ITIL 4 has 34 management practices: 17 service management, 3 technical management, 14 general management. With 34 practices, the team ends up managing the management.
-- ITIL merges capacity and performance into one practice. In a VCF private cloud they are separate disciplines, with different personas and processes (`sp5-framework/concepts/performance-vs-capacity`).
+- ITIL merges capacity and performance into one practice. In a VCF private cloud they are separate disciplines, with different personas and processes ([`sp5-framework/concepts/performance-vs-capacity`](performance-vs-capacity.md)).
 
 ## Terms that are not peers
 | Pair in frameworks | SP5 reading |
@@ -26,7 +26,7 @@
 
 - A monitoring result is one of three: troubleshoot (broken or wrong), optimize (not broken, but cost or performance can improve), or nothing to do.
 - Events can be neutral or positive, unlike alerts. An event accounts for an activity, as a metric accounts for utilization or contention.
-- Metrics, properties, events, logs and network flows are inputs, not things managed: their meaning comes from the pillar that reads them (`sp5-framework/observability/input-types`).
+- Metrics, properties, events, logs and network flows are inputs, not things managed: their meaning comes from the pillar that reads them ([`sp5-framework/observability/input-types`](../observability/input-types.md)).
 - Governance covers risk (availability, capacity, security) and control (compliance with approved configuration, clear accountability per role, cost kept within budget).
 
 ## Practices that are not pillars
@@ -41,7 +41,7 @@
 | Continual improvement | A culture (Kaizen), realized as processes, policies and structures |
 
 - Incidents (the website is down) come from problems (a rare bug in the core routers, incompatible configuration). Fewer availability, performance, compliance, configuration and capacity problems means fewer incidents.
-- Pillars of SP5: `sp5-framework/concepts/overview`, section The five pillars.
+- Pillars of SP5: [`sp5-framework/concepts/overview`](overview.md), section The five pillars.
 
 ## Misconceptions
 - "Adopt ITIL capacity and performance management as one practice" → in VCF they are two disciplines with different teams, metrics and time frames.

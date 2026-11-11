@@ -14,7 +14,7 @@
 - Size a VM to stay within one physical NUMA node.
 - If a VM must be larger than one node, size it to split evenly across as few nodes as possible.
 - Example from the source (p. 55): six cores per NUMA node means a VM of six vCPUs or fewer fits one node.
-- vCPU counts above the physical core count use hyper-threads. See `vsphere/technology/cpu/concepts/hyper-threading`.
+- vCPU counts above the physical core count use hyper-threads. See [`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md).
 
 ## Snoop modes
 - 9.1 document (p. 30): no mode list. The best mode depends on the workload and the hardware.

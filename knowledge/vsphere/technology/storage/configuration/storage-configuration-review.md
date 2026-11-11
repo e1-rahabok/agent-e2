@@ -2,7 +2,7 @@
 
 ## Scope
 - Every storage component of VCF: datastores, datastore clusters, RDM, vVols, vSAN, the physical array and general settings. One list, for the discussion with the storage team.
-- VM-level storage settings (virtual disks, snapshots, RDM use, VM-to-datastore mapping): `vsphere/object-types/vm/configuration/vm-configuration-review`. Host paths and zoning: `vsphere/object-types/esxi/configuration/esxi-configuration-review`.
+- VM-level storage settings (virtual disks, snapshots, RDM use, VM-to-datastore mapping): [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../../object-types/vm/configuration/vm-configuration-review.md). Host paths and zoning: [`vsphere/object-types/esxi/configuration/esxi-configuration-review`](../../../object-types/esxi/configuration/esxi-configuration-review.md).
 
 ## Architecture variants
 - Too many variants: VMFS over FC, VMFS over iSCSI, NFS, vSAN, vVols, physical RDM, virtual RDM.
@@ -25,7 +25,7 @@
 - NFS: current security for authentication.
 - vVols: inventory matches expectation.
 - Physical array: firmware compatible with the ESXi version.
-- Queue depth: mismatches along the stack. Calibrate from the VM down to the array (`vsphere/technology/storage/concepts/esxi-storage-latency-stack`).
+- Queue depth: mismatches along the stack. Calibrate from the VM down to the array ([`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../concepts/esxi-storage-latency-stack.md)).
 - VAAI: configured per practice.
 - vSAN Max: no VMs in the storage cluster. It is meant as an array (simple, more than two controllers); running VMs on it adds a server dimension, like running VMs on your array.
 

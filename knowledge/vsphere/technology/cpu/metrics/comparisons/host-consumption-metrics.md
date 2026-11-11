@@ -47,7 +47,7 @@
 ## Purpose decides
 - Performance (VM-centric): give VMs the best resource, without Hyper-Threading sharing.
 - Capacity (ESXi-centric): use all resources, including Hyper-Threading.
-- See `vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`.
+- See [`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](../../decision-tree/host-cpu-capacity-headroom.md).
 
 ## Misconceptions
 - "Usage (%) 100% means the host is full" → check Core and Thread Utilization.

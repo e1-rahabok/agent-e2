@@ -27,7 +27,7 @@ Normalized Latency = sum(device latency x IO count) / sum(IO count), adjusted fo
 ## Why
 - SIOC detects congestion from the device latency of the whole datastore, not of one host. One host cannot see the IO of the others.
 - Weighting by IO count stops an idle host with a few slow IOs from dominating the value.
-- When congestion crosses the SIOC threshold, SIOC lowers the device queue depth of each host by shares. Host Maximum Queue Depth per datastore then changes over time. See `vsphere/technology/storage/metrics/host/datastore`.
+- When congestion crosses the SIOC threshold, SIOC lowers the device queue depth of each host by shares. Host Maximum Queue Depth per datastore then changes over time. See [`vsphere/technology/storage/metrics/host/datastore`](../host/datastore.md).
 - Activity above 0 means SIOC was throttling. Shares decided which VMs got the IO; a VM with low shares sees its own latency rise.
 
 ## Misconceptions

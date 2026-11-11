@@ -3,9 +3,9 @@
 ## Purpose
 - Size what the VM costs the underlying ESXi: its footprint.
 - A narrow use case: useful mainly when the VM migrates to a different ESXi host or cluster.
-- For the usual sizing question (how many vCPU and how much memory the workload demands), size the Guest OS (Windows or Linux) instead: `guest-os/system/concepts/guest-os-sizing`.
+- For the usual sizing question (how many vCPU and how much memory the workload demands), size the Guest OS (Windows or Linux) instead: [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md).
 
-- One of two sizing jobs. The other is Guest OS sizing (Windows or Linux demand). There is no single "VM rightsizing": see `guest-os/system/concepts/guest-os-sizing`, section No such thing as VM rightsizing.
+- One of two sizing jobs. The other is Guest OS sizing (Windows or Linux demand). There is no single "VM rightsizing": see [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md), section No such thing as VM rightsizing.
 - Examples: migration to faster or slower CPUs, VMFS to vSAN (FTT policy), thin to thick disks.
 
 ## CPU

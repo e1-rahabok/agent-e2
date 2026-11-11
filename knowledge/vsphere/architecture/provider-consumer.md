@@ -48,7 +48,7 @@
 
 ## Misconceptions
 - "ESXi CPU Ready is high, so the host waits for CPU" → Ready measures a consumer waiting to be scheduled; a physical core or thread is always ready. A Ready value on ESXi is an aggregate of its VMs: read the VMs, starting with the worst.
-- "ESXi CPU Demand = VM usage + kernel usage" → wrong. It is VM demand only; kernel work is in Usage. See `vsphere/technology/cpu/metrics/host/demand`.
+- "ESXi CPU Demand = VM usage + kernel usage" → wrong. It is VM demand only; kernel work is in Usage. See [`vsphere/technology/cpu/metrics/host/demand`](../technology/cpu/metrics/host/demand.md).
 
 ## Metadata
 ```yaml

@@ -8,18 +8,18 @@
 - Red: transmitted packets dropped above 4%.
 - 4% is high: 1 packet in 25 dropped. It is set high because it is measured within a 20-second period.
 - Planned change: make the threshold relative to the packets transmitted.
-- Metric: `vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`.
+- Metric: [`vsphere/technology/network/metrics/virtual-motherboard/packets-dropped`](../metrics/virtual-motherboard/packets-dropped.md).
 
 ## ESXi dropped packets
 - Red: more than 50 transmitted packets dropped on the virtual network.
 - Red: more than 50 transmitted packets dropped on the physical network.
-- Metric: `vsphere/technology/network/metrics/host/packets-dropped`.
+- Metric: [`vsphere/technology/network/metrics/host/packets-dropped`](../metrics/host/packets-dropped.md).
 
 ## Distributed port group dropped packets
 - Red: dropped packets above 10%.
 - Orange: not set; it gave false positives.
 - Planned change: count transmitted packets only.
-- Metric: `vsphere/technology/network/metrics/distributed-switch/packets-dropped`.
+- Metric: [`vsphere/technology/network/metrics/distributed-switch/packets-dropped`](../metrics/distributed-switch/packets-dropped.md).
 
 ## Distributed switch
 - No alert: a distributed switch is a group of ESXi hosts and port groups, already covered by their alerts.

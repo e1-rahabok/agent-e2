@@ -14,7 +14,7 @@
   - system calls per second.
 - A VM introduces its own metrics and properties.
 - Resources consumed by the Guest OS ≠ resources consumed by the VM. Power management and CPU SMT add to the difference.
-- See `vsphere/architecture/vm-vs-guest-os` for what each layer can and cannot see.
+- See [`vsphere/architecture/vm-vs-guest-os`](vm-vs-guest-os.md) for what each layer can and cannot see.
 
 ## Two realms
 - VM (virtual motherboard) and Guest OS are 2 different realms. Each has its own kernel and its own metrics.

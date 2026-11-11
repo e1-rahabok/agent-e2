@@ -81,7 +81,7 @@ flowchart LR
 ![Superseded book diagram: distributed switch direction from physical switch to VM](../images/distributed-switch-ingress-egress-direction-physical-switch-to-vm.png)
 
 ## vCenter counters on switches and port groups
-- The distributed switch has API counters at level 3: packets (all, multicast, broadcast) and drops, at switch, distributed port (DVPort) and LAG scope. See `vsphere/technology/network/metrics/distributed-switch/packets` and `vsphere/technology/network/metrics/distributed-switch/packets-dropped`.
+- The distributed switch has API counters at level 3: packets (all, multicast, broadcast) and drops, at switch, distributed port (DVPort) and LAG scope. See [`vsphere/technology/network/metrics/distributed-switch/packets`](../metrics/distributed-switch/packets.md) and [`vsphere/technology/network/metrics/distributed-switch/packets-dropped`](../metrics/distributed-switch/packets-dropped.md).
 - The distributed port group has no vCenter performance counters. Port-level data sits on the switch object, per DVPort.
 - The vSphere Client shows no performance charts for either.
 

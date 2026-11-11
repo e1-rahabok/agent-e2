@@ -3,11 +3,11 @@
 ## Why Day 2 sets the hardware
 - The host specification is best chosen with two Day 2 inputs: the typical VM of each class (vCPU, GB per vCPU) and the planning settings of the class (overcommit, reservation, expected concurrent peak).
 - CPU, memory and storage are sold together: a VM consumes all three. A host with more of one than the others can sell leaves capacity unsold.
-- Day 2 → Day 0 → Day 1: `sp5-framework/concepts/purpose-driven-architecture`.
-- One class per cluster is the design, so each class gets its own host specification (`sp5-framework/capacity/demand`, section Overcommit: several classes).
+- Day 2 → Day 0 → Day 1: [`sp5-framework/concepts/purpose-driven-architecture`](../concepts/purpose-driven-architecture.md).
+- One class per cluster is the design, so each class gets its own host specification ([`sp5-framework/capacity/demand`](demand.md), section Overcommit: several classes).
 
 ## Method
-- CPU decides how many VMs of the class fit on the host: the first of its three CPU numbers to reach 100% (`sp5-framework/capacity/class-of-service-planning`, section Planning calculator).
+- CPU decides how many VMs of the class fit on the host: the first of its three CPU numbers to reach 100% ([`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md), section Planning calculator).
 - Memory is bought to match those VMs. Each VM needs the largest of its three memory needs.
 
 ```text
@@ -18,8 +18,8 @@ Memory per VM  = max(configured GB / memory overcommit,
 Host RAM (GB)  = VMs per host × memory per VM + hypervisor memory
 ```
 - CPU allocation = (threads − hypervisor threads) × CPU overcommit / vCPU per VM. CPU reservation = (cores × base GHz − system reservation) / (vCPU × reserved share × base GHz). CPU utilization = (threads − hypervisor threads) / (vCPU × expected CPU concurrent peak).
-- Overcommit is per physical thread, not per core: with Hyper-Threading the two differ by 2x (`sp5-framework/capacity/overcommit`).
-- Hypervisor share: VMkernel, vSAN, NSX, vSphere Replication and kernel IO work run on every host. Planning default: 14 threads and 64 GB per host (catalog rows `planning-hypervisor-*`); measure the real value (`vsphere/architecture/overhead`).
+- Overcommit is per physical thread, not per core: with Hyper-Threading the two differ by 2x ([`sp5-framework/capacity/overcommit`](overcommit.md)).
+- Hypervisor share: VMkernel, vSAN, NSX, vSphere Replication and kernel IO work run on every host. Planning default: 14 threads and 64 GB per host (catalog rows `planning-hypervisor-*`); measure the real value ([`vsphere/architecture/overhead`](../../vsphere/architecture/overhead.md)).
 - 4 GB per vCPU is a planning guideline. Customers may buy more or less memory per vCPU: measure the real ratio in VCF Operations.
 - Memory tiering is not counted here: how it combines with the class memory ratio is still open.
 - The `capacity_plan` tool computes it: give cores, base GHz and the class, without RAM.

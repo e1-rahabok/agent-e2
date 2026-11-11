@@ -7,7 +7,7 @@
 |---|---|
 | MEM overcommit avg | 1, 5, 15-minute exponentially weighted averages. Ratio of total requested memory to managed memory, minus 1. Requested = VM configured memory (or limit) + user world memory + reserved overhead. Above 0 (ratio above 1): requested exceeds physical; fine with ballooning and sharing. The book prefers configured VM memory alone for capacity. |
 | PMEM | Physical memory. Total (from BIOS) = vmk + other + free. vmk: kernel code, data, heap, management. Other: VMs and non-VM user worlds. |
-| VMKMEM | Managed (slightly below total; allocatable to VMs, user worlds, kernel), minfree (kept free for critical use; inside Free), reserved (group reservations + overhead reservations + minfree), unreserved (available for reservation), state (keep High). 5 states: high (no pressure), clear, soft, hard, low (under pressure). See `vsphere/technology/memory/concepts/host-memory-states`. |
+| VMKMEM | Managed (slightly below total; allocatable to VMs, user worlds, kernel), minfree (kept free for critical use; inside Free), reserved (group reservations + overhead reservations + minfree), unreserved (available for reservation), state (keep High). 5 states: high (no pressure), clear, soft, hard, low (under pressure). See [`vsphere/technology/memory/concepts/host-memory-states`](../../technology/memory/concepts/host-memory-states.md). |
 | NUMA | Per node: total and free. Sum is slightly below total. Cluster-on-Die doubles the nodes. |
 | PSHARE | shared (VM memory shared), common (machine memory common across worlds), saving (machine memory saved). shared = common + saving. |
 | SWAP | Sum of VM swapped. rclmtgt: target MB to swap. |
