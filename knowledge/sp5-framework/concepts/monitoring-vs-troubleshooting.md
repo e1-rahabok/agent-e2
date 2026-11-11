@@ -2,7 +2,7 @@
 
 | Item | Monitoring | Troubleshooting |
 |---|---|---|
-| Question | What is the problem? | Why does it happen? |
+| Question | What is the problem? | Why does it happen? What is the root cause?|
 | Nature | Proactive | Reactive |
 | Expertise | Low: repetitive, with dashboards and alerts | High: varied steps, needs the environment's context |
 | Metrics | Usually one, the KPI: primary, checked by SOP | Many, in layers: secondary, read when the primary nears its threshold |
@@ -14,7 +14,7 @@
 
 - What is monitored decides the data. Logs stream continuously; metrics arrive per reporting interval.
 - Performance monitoring reports the 20-second peak within each 5-minute reporting interval. Exception: a mission-critical system, where 20-second visibility is worth the cost of monitoring.
-- Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
+
 
 ## Primary and secondary metrics
 - Layer the troubleshooting metrics, events and properties so a less technical team can use them.
@@ -32,6 +32,7 @@
 - Troubleshooting is not the centre of operations. What can be troubleshot, and how, is planned in the architecture: what can go wrong, how it is detected, how it is remediated. Unplanned, each incident costs more than it should.
 - An expert team troubleshoots. The same team sets the thresholds the Level 1 team uses.
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
+- Troubleshooting may need per-second data, but not every counter: if the remediation is the same, the extra detail adds nothing.
 - An incident means something is dead, slow or breached. Availability, performance and security are troubleshot. Capacity and cost are not.
 - The aim is why, and a fix that prevents the next incident, not only the facts.
 - Order of the daily health check, each morning for the VMware administrator to review: availability, then performance, then security.
