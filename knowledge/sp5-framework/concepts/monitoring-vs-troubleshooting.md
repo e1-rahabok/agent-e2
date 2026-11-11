@@ -1,11 +1,5 @@
 # Monitoring vs troubleshooting
 
-## Monitor: what; troubleshoot: why
-- Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
-  - Example: VDI planned for 10,000 users. At 1,000 users they consume more than planned: scale down the rollout or add resources.
-- Act when reality is worse than plan, not when a complaint arrives. Troubleshooting done proactively has time and no one rushing it.
-- Troubleshooting is not the centre of operations. What can be troubleshot, and how, is planned in the architecture: what can go wrong, how it is detected, how it is remediated. Unplanned, each incident costs more than it should.
-
 | Item | Monitoring | Troubleshooting |
 |---|---|---|
 | Question | What is the problem? | Why does it happen? |
@@ -28,7 +22,14 @@
 - Secondary metrics: explain the primary; the why. Aim for 0-100% too. Example: highest ESXi Memory Consumed (%) in a cluster.
 - A metric that cannot be colour coded, such as VM Disk IOPS, is hard for Level 1: its meaning depends on context.
 
+## Monitor: what; troubleshoot: why
+- Monitoring compares plan with actual. The goal must be defined; if reality differs from what the architecture should deliver, adjust the plan. Plan and monitor form a loop.
+  - Example: VDI planned for 10,000 users. At 1,000 users they consume more than planned: scale down the rollout or add resources.
+- Act when reality is worse than plan, not when a complaint arrives. Troubleshooting done proactively has time and no one rushing it.
+
+
 ## Troubleshooting
+- Troubleshooting is not the centre of operations. What can be troubleshot, and how, is planned in the architecture: what can go wrong, how it is detected, how it is remediated. Unplanned, each incident costs more than it should.
 - An expert team troubleshoots. The same team sets the thresholds the Level 1 team uses.
 - Logs are needed: many systems emit incomplete metrics, and one common problem has many causes. The root cause can be far from the symptom.
 - An incident means something is dead, slow or breached. Availability, performance and security are troubleshot. Capacity and cost are not.
