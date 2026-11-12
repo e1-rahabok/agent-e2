@@ -4,18 +4,17 @@
 - Use Reservation, Shares and Limits only where the environment requires them.
 - Each setting has its own job. Set each for its purpose. See [`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md).
 
-## Shares vs reservation
-- Use Shares, not Reservation, to allocate resources fairly when total available resources change often.
-- Reason: after a hardware change, a VM keeps the same relative priority (same share count), even though each share now represents a larger amount of memory or CPU.
-- Reservation is not affected by the same change. It stays a fixed absolute amount.
+## Shares
+- Use Shares, not Reservation, to protect higher Class of Service load (e.g. Gold relative to Silver) in an overcommit environment.
+- Warning: after a hardware change, a VM keeps the same relative priority (same share count), even though each share now represents a larger amount of memory or CPU. Adjust accordingly.
 
-## Reservation: minimum, not desired amount
-- Use Reservation to set the minimum acceptable amount of CPU or memory for a VM.
+## Reservation
+- It is a hard guarantee. That's why it cannot be overcommitted. 
+- Reservation impacts vSphere Cluster HA and DRS. Avoid usage unless share is not sufficient.
 - Resources above the reservations are allocated by shares, within the limits of the VM.
-- Reservations give the minimum reserved CPU and memory for each VM. They do not change when VMs are added or removed.
-- Do not set reservations too high. A reservation that is too high can limit the number of VMs that can be powered on in a resource pool, cluster, or host.
+- Reservations give the minimum reserved CPU and memory for each VM. They do not change when VMs are added or removed, although it cannot be more than configured amount.
 
-## Headroom
+### Headroom
 - When setting reservations, leave headroom for:
   - memory virtualization overhead,
   - migration overhead.
