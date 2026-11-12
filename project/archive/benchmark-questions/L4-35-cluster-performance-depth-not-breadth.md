@@ -31,6 +31,7 @@ B: reading the worst VM as a cluster-wide storage problem.
 - Next: open the worst VM, check per virtual disk, read vs write, outstanding IO and the host KAVG and DAVG.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): vCommunity metric Cluster Performance (fairness); the concept returns on native counters.
 - Previous id: question-0075 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -52,5 +53,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 misconception: [B]
-status: awaiting-input
+status: retired
 ```

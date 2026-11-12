@@ -1970,15 +1970,15 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Answer: I was wrong. Memory is also on demand. So both are. I verified on a live vCenter.
 - Done 2026-11-06: question L3-07 key and the resource controls file: memory reservation is also on demand.
 
-### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-48
+### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-42
 
-- Files: https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (L4-14 to L4-48); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
+- Files: https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (L4-14 to L4-42); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
 - Search: not from the book.
 - Context: the Level 400 allocation (37 questions) is now drafted by Claude from the knowledge base. Synthetic questions are 63 of 90 (70%), against the cap of about 30% in section 10.
 - Question:
   1. Keep the cap? If yes, which synthetic questions should be replaced by book, quiz or real-ticket questions, or should the cap rise?
   2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
-  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-47-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-17-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
+  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-33-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-34-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-41-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-17-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
 - Answer: no need to keep cap as I'm reviewing every question one by one. What is important is the allocation and distribution. The source (book versus Claude) is less important.
 - Done 2026-11-06: synthetic cap removed from benchmark/design.md (sections 10 and 12).
@@ -2044,7 +2044,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
   - [VM availability](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-08-vm-availability.md) (judged, text): 300
   - [Provider vs consumer metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-09-provider-consumer-ready-demand.md) (judged, text): 300
   - [What counts as overhead](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-10-overhead-classification.md) (judged, text): 300
-  - [VM (virtual motherboard) vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-is-a-virtual-motherboard.md) (deterministic, text): 400
+  - [VM (virtual motherboard) vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md) (deterministic, text): 400
   - [Performance vs capacity view of utilization](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-11-performance-vs-capacity-view-of-utilization.md) (deterministic, text): 300
   - [Memory usage: VM vs ESXi](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-09-usage-vm-vs-esxi.md) (judged, text): 400
   - [Which counter to size VM memory](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-12-which-counter-to-size-vm-memory.md) (deterministic, text): 300

@@ -33,9 +33,9 @@ What is the most likely cause of the slowness? Weigh the evidence for and agains
 - Network: receive drops on app-03 alone are a separate, local issue (check its receive ring); they do not explain a slow ERP across all users.
 - Check order: confirm the snapshot and its chain; datastore vs virtual disk IOPS; per virtual disk read and write latency; then Co-stop and Other Wait after the snapshot is gone; check Broadcom KB 85393 if Other Wait stays high.
 - Tonight: delete or consolidate the snapshot, off-peak, and fix the backup job that left it. Consolidation stuns the VM briefly.
-- Secondary: erp-db is a wide VM (24 vCPUs on 16-core nodes) with 30% remote memory (N%L 70%). It is also a CPU monster (above 50% of 32 cores) and a memory monster (above 256 GB). Size it to one NUMA node only if the Guest OS demand allows.
+- Secondary: erp-db is a wide VM (24 vCPUs on 16-core nodes) with 30% remote memory (N%L 70%). Size it to one NUMA node only if the Guest OS demand allows.
 - Do not add 8 vCPUs: more vCPUs raise Co-stop and spread the VM further across NUMA nodes.
-- Do not add a host: Ready is low, core utilization 55%, thread utilization 35%; Cluster Performance is driven by Co-stop of one VM, not by breadth.
+- Do not add a host: Ready is low, core utilization 55%, thread utilization 35%; the problem is the Co-stop of one VM, not a cluster short of CPU.
 
 ## Notes
 - Previous id: question-0090 (renamed 2026-11-05).

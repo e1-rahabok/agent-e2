@@ -11,7 +11,7 @@ What about the VM Performance dashboard? What's the difference?
 
 ## Expected key points
 - No: VM Contention is deprecated in VCF Operations 9.1, marked (DEP); VM Performance supersedes it. The linked 9.1 page is out of date.
-- There is no supply vs demand split. Performance means contention; VM Performance (%) is a KPI of contention counters. Utilization is context on the same dashboard.
+- There is no supply vs demand split. Performance means contention: the dashboard leads with contention counters (CPU Ready, Co-stop, Memory Contention, Disk Latency). Utilization is context on the same dashboard.
 - VCF Operations shows VM CPU Ready and Co-stop per 5 minutes with 20-second peaks, not esxtop %RDY and %CSTP.
 - Active Memory is not a performance metric.
 - No contention and high usage is not a reason to add vCPUs by itself: check the Guest OS run queue (a batch job runs at 100% by design).
@@ -31,11 +31,13 @@ input: [text]
 task: troubleshoot
 knowledge:
   - vcf-operations/dashboards/vm-performance-dashboard
-  - vsphere/object-types/vm/vm-performance
+  - vcf-operations/features/peak-20-second-metrics
+knowledge_main: vcf-operations/dashboards/vm-performance-dashboard
 attachments: []
-origin: synthetic
+origin: real-ticket
 source_path: "Author's Gemini exchange, 2026-11-09"
 answer_type: judged
 level: 200
+misconception_type: [consumption-as-contention]
 status: draft
 ```

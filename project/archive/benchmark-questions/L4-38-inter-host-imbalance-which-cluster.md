@@ -31,6 +31,7 @@ B: reading the value as a percentage; D: reading 0 as idle.
 - Q at 1 (orange): high hosts equal low hosts. R at 0 (green): no high host while hosts are used; 0 does not mean idle.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): vCommunity metric inter-host imbalance (fairness).
 - Previous id: question-0078 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -51,5 +52,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
 answer: [A, C]
 misconception: [B, D]
-status: awaiting-input
+status: retired
 ```

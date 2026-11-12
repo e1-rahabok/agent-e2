@@ -1,7 +1,7 @@
 # Is the datastore full: provisioned vs used space
 
 ## Prompt
-- The attached table is a VCF Operations export of every VM on datastore DS01: one row per VM.
+- [The attached table](0046/datastore-ds01-vm-disk-space.csv) is a VCF Operations export of every VM on datastore DS01: one row per VM.
 - DS01 has a capacity of 10 TB.
 
 Is DS01 out of space already, meaning you cannot provision new VM? Choose all the correct statements.

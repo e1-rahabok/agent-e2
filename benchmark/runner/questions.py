@@ -22,6 +22,10 @@ UNSURE = 'Unsure: the information available does not settle this question.'
 # Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
 POINTS = {'exact': 1, 'unsure': 0, 'wrong': -1}
 TABLE_EXT = ('.csv', '.xlsx', '.xls')
+IMAGE_EXT = ('.png', '.jpg', '.jpeg', '.webp')
+# A prompt links each attachment by its path, e.g. [the attached chart](0004/chart.png), so a reviewer can open it on GitHub.
+# The model reads only the link text: the target is stripped, as kb.FILE_LINK does for knowledge links (no token cost).
+ATTACH_LINK = re.compile(r'\[([^\]\n]+)\]\((\d{4}/[^)\s]+)\)')
 OPTION = re.compile(r'^(?:[-*]\s+)?([A-H])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
 ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 
@@ -46,7 +50,8 @@ class Question:
         self.knowledge_main = str(self.meta.get('knowledge_main') or '')  # the file that holds the answer or the misconception (Q130)
         self.attachments = [os.path.join(ROOT, 'benchmark', 'questions', a) for a in (self.meta.get('attachments') or [])]
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
-        self.prompt = m.group(1).strip() if m else ''
+        self.prompt = ATTACH_LINK.sub(r'\1', m.group(1).strip()) if m else ''
+        self.tables = self._tables()
         self.stem, self.options, self.footer = self._split_prompt(self.prompt)
         self.key_points = _section(body, 'Expected key points')
         self.likely_wrong = _section(body, 'Likely wrong answer')
@@ -80,8 +85,8 @@ class Question:
 
     @property
     def scorable(self):
-        if self.meta.get('status') in ('awaiting-input', 'retired'):
-            return False  # the author has not supplied the screenshot or table yet, or the question is retired
+        if self.meta.get('status') in ('awaiting-input', 'retired', 'deferred'):
+            return False  # input not supplied yet, retired, or deferred to a later release (screenshot set after 1.0)
         if self.choice:
             return bool(self.options) and bool(self.answer)
         return bool(self.prompt) and bool(self.key_points)
@@ -102,7 +107,20 @@ class Question:
 
     @property
     def has_images(self):
-        return any(a.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')) for a in self.attachments)
+        return any(a.lower().endswith(IMAGE_EXT) for a in self.attachments)
+
+    def _tables(self):
+        """CSV attachments as text, appended to the prompt: '<file name>:' then the CSV in a fence.
+        1.0 tables are small (benchmark/design.md, section 13.1), so they are read in the context; a table tool is after 1.0."""
+        out = []
+        for a in self.attachments:
+            if a.lower().endswith('.csv') and os.path.exists(a):
+                out.append(f'Attachment {os.path.basename(a)}:\n```csv\n{open(a, encoding="utf-8-sig").read().strip()}\n```')
+        return '\n\n'.join(out)
+
+    def open_text(self):
+        """The text a judged question sends: the prompt, then its tables."""
+        return self.prompt + ('\n\n' + self.tables if self.tables else '')
 
     def render(self, rng):
         """Shuffle options, append Unsure, return (text, map shown_letter -> original).
@@ -119,7 +137,7 @@ class Question:
         un = letters[len(opts)]
         mapping[un] = 'UN'
         lines.append(f'{un}. {UNSURE}')
-        parts = [self.stem, '', '\n'.join(lines)]
+        parts = [self.stem] + (['', self.tables] if self.tables else []) + ['', '\n'.join(lines)]
         if self.footer:
             parts += ['', self.footer]
         # Same instruction for every question: the number of correct options is never revealed.
@@ -129,6 +147,8 @@ class Question:
     def image_parts(self):
         out = []
         for a in self.attachments:
+            if not a.lower().endswith(IMAGE_EXT):
+                continue  # tables go in the text (self.tables)
             mime = mimetypes.guess_type(a)[0] or 'image/png'
             data = base64.b64encode(open(a, 'rb').read()).decode()
             out.append({'type': 'image_url', 'image_url': {'url': f'data:{mime};base64,{data}'}})

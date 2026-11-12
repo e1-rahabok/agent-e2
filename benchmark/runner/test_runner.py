@@ -30,6 +30,34 @@ class JudgeParseTest(unittest.TestCase):
         self.assertIsNone(J.parse('{"score": "high"}'))
 
 
+class AttachmentTest(unittest.TestCase):
+    """A CSV attachment reaches the model as text; a link to an attachment reaches it as its words only."""
+    def _question(self):
+        import tempfile
+        body = ('# T\n\n## Prompt\n- [The attached table](0046/datastore-ds01-vm-disk-space.csv) lists the VMs.\n\n'
+                'Which is right?\n\n- A. One\n- B. Two\n\n## Expected key points\n- Answer: A.\n\n## Metadata\n```yaml\n'
+                'id: "9999"\nanswer_type: deterministic\nanswer: [A]\nattachments: [0046/datastore-ds01-vm-disk-space.csv]\n```\n')
+        d = tempfile.mkdtemp()
+        path = os.path.join(d, 'L2-99-t.md')
+        open(path, 'w').write(body)
+        return C.Question(path)
+
+    def test_link_target_stripped(self):
+        q = self._question()
+        self.assertIn('The attached table lists the VMs.', q.prompt)
+        self.assertNotIn('0046/', q.prompt)
+
+    def test_csv_in_text_not_in_images(self):
+        import random
+        q = self._question()
+        text, _ = q.render(random.Random(0))
+        self.assertIn('```csv', text)
+        self.assertIn('Provisioned Space', text)
+        self.assertIn('Provisioned Space', q.open_text())
+        self.assertEqual(q.image_parts(), [])
+        self.assertEqual(q.input_types, ['table'])
+
+
 class FinalScoreTest(unittest.TestCase):
     def test_worst_run_counts_and_groups_average(self):
         rows = [row('a', 'deterministic', 'text', 100, 1, 1), row('a', 'deterministic', 'text', 100, 1, 2),        # stable: 1

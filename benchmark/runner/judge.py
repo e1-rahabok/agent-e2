@@ -32,7 +32,7 @@ SYSTEM = ('You grade answers to VMware vSphere and VCF operations questions agai
 
 
 def _user(question, answer, images):
-    text = (f'Question:\n{question.prompt}\n\nExpected key points (the answer key):\n{question.key_points}\n\n'
+    text = (f'Question:\n{question.open_text()}\n\nExpected key points (the answer key):\n{question.key_points}\n\n'
             f'Likely wrong answer:\n{question.likely_wrong or "(none given)"}\n\nAnswer to grade:\n{answer or "(empty)"}')
     if not images:
         return {'role': 'user', 'content': text}

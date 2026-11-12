@@ -1,7 +1,7 @@
 # Contention counters in a vCenter host network chart
 
 ## Prompt
-The attached screenshot is a vCenter performance chart of one ESXi host, metric group Network.
+[The attached screenshot](0042/vcenter-esxi-network-chart.png) is a vCenter performance chart of one ESXi host, metric group Network.
 
 Which counters in the chart show contention, and what value do you expect from them on a healthy host? Choose all that apply.
 
@@ -31,6 +31,7 @@ C: reading host network Usage as a sign of trouble.
 - Receive drops are far more common than transmit drops; a pattern goes to the network team.
 
 ## Notes
+- Deferred 2026-11-12: screenshot question, kept for the screenshot set after 1.0 (benchmark/design.md, section 13).
 - Previous id: question-0042 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -52,5 +53,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A, B]
 misconception: [C]
-status: draft
+status: deferred
 ```

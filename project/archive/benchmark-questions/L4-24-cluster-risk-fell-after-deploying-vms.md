@@ -18,6 +18,7 @@ Is the manager right? Explain.
 - Read the sub-metrics before acting on a falling Cluster Risk; a cluster just above orange (50) can drop to yellow after VMs are deployed.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): vCommunity metric Cluster Risk (fairness).
 - Previous id: question-0064 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -36,5 +37,5 @@ knowledge:
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-status: draft
+status: retired
 ```

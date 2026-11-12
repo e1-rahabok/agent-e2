@@ -18,6 +18,7 @@ Picks one meaning of "risk" without saying so: risk as Time Remaining (days) fro
 - Time Remaining is the capacity model's projection: a different question.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): needs a vCommunity model (Cluster Risk), not public (fairness, design.md section 6.1).
 - Author's prompt to Gemini 3.1 Pro (high effort), 2026-11-10. Gemini answered risk as Time Remaining (days); author: it seems to use an older copy of the vRealize Operations manual or a blog.
 - The prompt carries a wrong premise and an ambiguous term: a candidate that names both scores higher. The benchmark is single turn, so asking is scored as naming the meanings.
 - Drafted by Claude 2026-11-10 from the knowledge files listed in `knowledge`. Counts only after author approval.
@@ -39,5 +40,5 @@ origin: synthetic
 source_path: "Author's prompt and Gemini 3.1 Pro exchange, 2026-11-10"
 answer_type: judged
 level: 300
-status: draft
+status: retired
 ```

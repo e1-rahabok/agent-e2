@@ -16,6 +16,29 @@ image_type: [diagram, table, timeline, distribution, scatter, screenshot]
 avoid_in_cpu_files: ['\bneeds?\b', '\bneeded\b', '\bwants?\b', '\bwish(es)?\b', 'uses only .* of what it needs']
 # Metric names from the book that contain an avoided word. Case-sensitive. Removed before the check above.
 allow_in_cpu_files: ['Guest OS (CPU )?Needed( Memory)?', 'VM (CPU|Memory) Needed', 'Needed Memory']
+# Benchmark questions (benchmark/README.md, section Metadata tags).
+question_status: [draft, awaiting-input, reviewed, retired, deferred]
+# The 12 misconception types of KNOWLEDGE-ENGINEERING.md, section Misconceptions and Level 400. A question lists the ones it tests.
+misconception_type: [same-name-other-object, layer-confusion, consumption-as-contention, average-hides-worst, rollup-and-interval, unit-and-normalization, frequency-and-hyper-threading, provider-vs-consumer, cumulative-vs-current, threshold-transplanted, reclamation-as-contention, tool-confusion]
+# Question tags for the coverage count (benchmark/design.md, section 3.7). A list each.
+question_object: [vm, esxi, cluster, resource-pool, datastore, network, guest-os]
+question_tool: [vcenter, vcf-operations, esxtop, guest-os-tools, none]
+# Fairness (benchmark/design.md, section 6.1): Agent E2 terms and vCommunity management pack metrics that a frontier model cannot know.
+# Rejected in the title, prompt, likely wrong answer and expected key points of every question that runs (not retired, deferred or awaiting input).
+question_fairness:
+  '(?i)\bSP5\b': 'Agent E2 framework name'
+  '(?i)triple[- ]see': 'Agent E2 method name'
+  '\bKPIs?\b': 'Agent E2 score; name the counter'
+  '(?i)vcommunity': 'management pack, not public'
+  '(?i)virtual motherboard': 'VM'
+  '\bCluster (Performance|Consumption|Risk)\b': 'vCommunity model; use native counters'
+  '(?i)close for business': 'vCommunity model'
+  '(?i)\b(VM|Guest OS|ESXi) Performance \(%\)': 'vCommunity score'
+  '(?i)inter-host imbalance': 'vCommunity metric'
+  '(?i)IaaS high utili[sz]ation': 'Agent E2 grouping'
+  '(?i)\brealms?\b': 'Agent E2 term; say layer'
+# Size cap of a CSV attachment in 1.0: the runner puts it in the prompt (benchmark/design.md, section 13.1). About 3,000 tokens.
+question_csv_max_chars: 12000
 # Prompt-injection guard: rejected in every knowledge file (body and metadata) and every benchmark prompt.
 injection_patterns: ['<!--', '[\u200b-\u200f\u2060\ufeff]', '(?i)ignore (all |any )?(previous|prior|above) instructions', '(?i)disregard (the )?(above|previous|prior)', '(?i)you are now (a|an|the)\b', '(?i)new instructions:', '(?i)system prompt']
 # Phrases rejected in body text of every knowledge file.

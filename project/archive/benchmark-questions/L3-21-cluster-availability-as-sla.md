@@ -15,6 +15,7 @@ Accepts Cluster Availability as the SLA metric and answers with nines: raise the
 - Probe any claimed SLA: which metric, on which object, which target, which window, which penalty.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): the answer is an Agent E2 method (KPI instead of an SLA), not public (fairness).
 - From the author's field experience, 2026-11-11: customers claim an SLA; probed for the metric, they state the wrong one (Cluster Availability) or none.
 - Drafted by Claude 2026-11-11 from the knowledge files listed in `knowledge`. Counts only after author approval.
 
@@ -34,5 +35,5 @@ origin: synthetic
 source_path: "Author's statement on SLA and KPI, 2026-11-11"
 answer_type: judged
 level: 300
-status: draft
+status: retired
 ```

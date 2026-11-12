@@ -9,7 +9,7 @@ Is the VM available? How would you measure VM availability vs Guest OS availabil
 "No, the VM is down."
 
 ## Expected key points
-- A VM is a **virtual motherboard**, not a complete machine and not the OS.
+- A VM is the virtual hardware, not a complete machine and not the OS.
 - VM is unavailable in only 2 states: **powered off**, or **frozen** (clock paused, e.g. vMotion switchover, ~0.2 s when healthy).
 - So the VM is available. The **Guest OS** is not.
 - Guest OS availability needs OS-level checks, e.g. `sc query RpcSs` (Windows), `systemctl is-system-running` (Linux).
@@ -17,7 +17,7 @@ Is the VM available? How would you measure VM availability vs Guest OS availabil
 
 ## Notes
 - Previous id: vsphere-foundations-002 (renamed 2026-11-05).
-- Tests: Principle: a VM is a virtual motherboard, not the OS.
+- Tests: Principle: a VM is the virtual hardware, not the OS.
 
 ## Metadata
 ```yaml
