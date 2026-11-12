@@ -2,7 +2,7 @@
 
 ## Symptom
 - VM disk latency is high, or the disk row of VM Performance (%) is yellow or worse.
-- Entered from [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md) (step 4), a health check performance step, or an alert.
+- Entered from [`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md) (step 4), a health check performance step, or an alert.
 
 ## Flow
 ```mermaid
@@ -21,7 +21,7 @@ flowchart TD
 3. Consumption (VirtualMachine). IOPS and throughput, with outstanding IO ([`vsphere/technology/storage/metrics/virtual-motherboard/iops`](../metrics/virtual-motherboard/iops.md), [`vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io`](../metrics/virtual-motherboard/outstanding-io.md)). Latency with low IOPS: queues in one of the layers. → step 4.
 4. Backing device ratio (Datastore): LUN IOPS / datastore IOPS. Above 1: array-side IO (replication, snapshots). → step 5.
 5. Configuration (VirtualMachine, HostSystem). Snapshots on the VM add IO and latency ([`vsphere/technology/storage/concepts/snapshot-impact`](../concepts/snapshot-impact.md)). Latency on many VMs of one host or datastore → [`vsphere/technology/storage/troubleshooting/host-storage-latency`](host-storage-latency.md) to split kernel and device latency. → step 6.
-6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks.
+6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks.
 
 ## Why this order
 - Latency per disk first: a VM aggregate hides the one slow disk, and read and write often have different causes.
@@ -61,7 +61,7 @@ internal_derive:
 - vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
 - vsphere/technology/storage/concepts/snapshot-impact
 - vsphere/technology/storage/troubleshooting/host-storage-latency
-- sp5-framework/performance/troubleshooting/vm-slow
+- sp5-framework/performance/vm-slow
 related:
 - sp5-framework/performance/performance-management
 source:

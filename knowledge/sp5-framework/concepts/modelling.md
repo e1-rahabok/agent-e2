@@ -18,7 +18,7 @@
 | Low value | Bad | Good |
 
 - Both assume configuration is already optimized and availability is handled separately, so the models read only contention and consumption ([`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md)).
-- Implementations: [`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md), [`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md), [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md).
+- Implementations: [`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md), [`vsphere/object-types/cluster/cluster-performance`](../../vsphere/object-types/cluster/cluster-performance.md), [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md).
 
 ## Scale 0-100%
 - 100% is the best achievable, not a theoretical perfect: disk latency is never 0, so 100.00% does not occur.
@@ -99,7 +99,7 @@ internal_derive:
 related:
 - sp5-framework/observability/triple-see-method
 - sp5-framework/outputs/alerts-and-insights
-- vsphere/object-types/vm/kpis/vm-performance
+- vsphere/object-types/vm/vm-performance
 - vsphere/object-types/cluster/models/cluster-risk
 source:
   document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download); VCF-vCommunity-Adapter documentation, KPI Scoring Models (fetched 2026-11-08)'

@@ -33,7 +33,7 @@ flowchart TD
    - the migration threshold is conservative, so only mandatory moves happen;
    - the load is unstable or vMotion cost exceeds the expected gain.
    Remove the blocker, or move the migration threshold toward Aggressive and check again. If no blocker exists for this VM, look for the same blockers on the other VMs of the host.
-6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../../technology/cpu/troubleshooting/vm-cpu-contention-high.md) and [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](../../../technology/memory/troubleshooting/vm-memory-latency-high.md).
+6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../../technology/cpu/troubleshooting/vm-cpu-contention-high.md) and [`vsphere/technology/memory/vm-memory-latency-high`](../../../technology/memory/vm-memory-latency-high.md).
 
 ## Why this order
 - Cluster state first: in yellow or red, reservations themselves are not met, so the rest of the analysis is built on wrong assumptions.
@@ -76,7 +76,7 @@ internal_derive:
 related:
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
-- vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+- vsphere/technology/memory/vm-memory-latency-high
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)

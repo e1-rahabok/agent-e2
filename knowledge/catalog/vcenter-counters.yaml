@@ -701,7 +701,7 @@ rows:
   level: 4
   description: The utilization of a GPU in percentages.
   page: 2065
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.utilization
   object: HostSystem
   shows: GPU device
@@ -713,7 +713,7 @@ rows:
   level: 4
   description: The utilization of a GPU in percentages.
   page: 2066
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.temperature
   object: HostSystem
   shows: GPU device
@@ -725,7 +725,7 @@ rows:
   level: 4
   description: The temperature of a GPU in degrees Celsius.
   page: 2067
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: mem.vmmemctl
   object: HostSystem
   chart: Memory (Balloon)

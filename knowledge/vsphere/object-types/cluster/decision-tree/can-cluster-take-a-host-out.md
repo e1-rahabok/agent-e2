@@ -34,7 +34,7 @@ flowchart TD
 4. Remaining capacity (ClusterComputeResource). Spread the load of the cluster over the hosts that remain:
    - CPU: threads in use on all hosts ÷ threads of the remaining hosts. Keep it below the red band of Cluster Consumption (%) CPU thread utilization (`catalog/thresholds-capacity`).
    - Memory: consumed memory of all hosts ÷ DRAM of the remaining hosts. Ballooning starts only near 99% of a host, so a high value is a risk, not slowness; keep the hosts out of the low memory state ([`vsphere/technology/memory/concepts/host-memory-states`](../../../technology/memory/concepts/host-memory-states.md)).
-   - Cluster Performance (%) already orange or red → no: one host fewer adds contention ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)).
+   - Cluster Performance (%) already orange or red → no: one host fewer adds contention ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)).
    - Fits → step 5. Does not fit → no; move or power off workload first, or wait for a quieter window.
 5. HA admission control (ClusterComputeResource). vSphere HA counts only hosts that are connected, not in maintenance mode, and without HA errors. Admission control refuses actions that break its failover constraint, migrations included, so the evacuation can stall. With the cluster resources percentage policy, at least two HA hosts must remain besides the one entering maintenance mode.
    - Still met with one host fewer (a cluster sized N+2, or one with spare capacity) → step 6.
@@ -96,7 +96,7 @@ object:
 internal_derive:
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/object-types/cluster/models/cluster-consumption
-- vsphere/object-types/cluster/kpis/cluster-performance
+- vsphere/object-types/cluster/cluster-performance
 - vsphere/technology/memory/concepts/host-memory-states
 - sp5-framework/capacity/supply
 related:

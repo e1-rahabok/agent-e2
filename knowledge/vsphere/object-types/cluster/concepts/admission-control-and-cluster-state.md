@@ -78,7 +78,7 @@ internal_derive:
 - vsphere/architecture/resource-controls
 related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
-- vsphere/object-types/resource-pool/configuration/resource-pool-design
+- vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 - vsphere/technology/memory/concepts/memory-overhead
 source:

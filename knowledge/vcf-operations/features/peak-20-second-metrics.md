@@ -64,8 +64,8 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
-- vsphere/object-types/vm/kpis/vm-performance
-- guest-os/system/metrics/guest-os-performance
+- vsphere/object-types/vm/vm-performance
+- guest-os/system/guest-os-performance
 images:
   - path: images/vm-disk-latency-20-second-peak-vs-300-second-average.png
     product: [vsphere]

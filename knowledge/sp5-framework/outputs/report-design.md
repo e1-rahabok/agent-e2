@@ -98,7 +98,7 @@ internal_derive:
 - sp5-framework/observability/aggregation
 related:
 - sp5-framework/outputs/dashboard-design
-- vcf-operations/reports/report-suite
+- vcf-operations/report-suite
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Reports > Technical Considerations (Output, Context, Widgets); Functional Considerations'

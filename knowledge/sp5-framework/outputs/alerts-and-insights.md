@@ -71,7 +71,7 @@
 - Insight examples: anomaly metrics; VM CPU Co-stop; VM CPU Other Wait; read latency of an individual virtual disk; the maximum vMotion stun time across the environment (healthy below 0.2 second); the queue time of an ESXi device (QAVG). An insight reads the KPI levels early; it does not need a lower number than the alert, only an earlier signal.
 - Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, [`sp5-framework/observability/thresholds`](../observability/thresholds.md)).
 ![Timeline: Insight (green) → Prevention Window (yellow to orange) → Alert (red). Insight starts at the point when you know it is a problem; Alert starts at the point when your customers know it is a problem if you do nothing. Insight types: secondary metrics, consumers not yet affected; primary metrics, but low grade or infrequent with no pattern; rising total consumption, higher than expected; higher than expected undesirable security events. Alert examples: primary metric at an urgent threshold; lagging indicator threshold breached; availability event (for example VM reset)](images/insight-prevention-window-alert-types-examples-diagram.png)
-- Metric files: [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../../vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`](../../vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md), [`vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk`](../../vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk.md), [`vsphere/object-types/vm/metrics/vmotion`](../../vsphere/object-types/vm/metrics/vmotion.md), [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
+- Metric files: [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../../vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`](../../vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md), [`vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk`](../../vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk.md), [`vsphere/object-types/vm/vmotion`](../../vsphere/object-types/vm/vmotion.md), [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
 
 ## Lagging and leading indicators
 | Item | Lagging indicator | Leading indicator |
@@ -158,7 +158,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
-- vsphere/object-types/vm/metrics/vmotion
+- vsphere/object-types/vm/vmotion
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 images:
   - path: images/insight-prevention-window-alert-types-examples-diagram.png

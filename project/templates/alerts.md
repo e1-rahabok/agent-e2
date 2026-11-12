@@ -20,7 +20,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/object-types/<object>/alerts/<object>-alerts   # Guest OS: guest-os/system/alerts/guest-os-alerts
+id: vsphere/object-types/<object>/<object>-alerts   # Guest OS: guest-os/guest-os-alerts
 retriever_guide: what-to-set
 scope: vsphere
 technology: [cpu, memory]

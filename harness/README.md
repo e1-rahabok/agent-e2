@@ -28,7 +28,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 - At start, `kb.py` loads every indexed file: the metadata block becomes filter fields and links; the body is chunked by `##` heading, each chunk prefixed with the file title and id.
 - `retrieval.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
 - `catalog.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
-- `flows.py` reads the numbered steps of each `health-check/`, `troubleshooting/` and `decision-tree/` file directly; there is no second copy.
+- `flows.py` reads the numbered steps of each health-check, troubleshooting and decision-tree file (its `retriever_guide`, wherever it sits) directly; there is no second copy.
 - So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the agent finds files: `AGENT.md`, section 3. How the knowledge is shaped for this: `KNOWLEDGE-ENGINEERING.md` and its rule modules in `project/knowledge-rules/`. Full ingest, query and answer contract: `ARCHITECTURE.md`, section Local LLM use.
 
 ## 4. Modules

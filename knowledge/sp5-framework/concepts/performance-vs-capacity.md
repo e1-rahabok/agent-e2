@@ -114,7 +114,7 @@ related:
 - sp5-framework/capacity/capacity-management
 - sp5-framework/performance/kpi-vs-sla
 - sp5-framework/concepts/realms-and-layers
-- vsphere/object-types/cluster/kpis/cluster-performance
+- vsphere/object-types/cluster/cluster-performance
 - vsphere/architecture/provider-consumer
 images:
   - path: images/performance-vs-capacity-total-vs-usable-range-diagram.png

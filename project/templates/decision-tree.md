@@ -28,7 +28,7 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: vsphere/object-types/<object>/decision-tree/<slug>   # one technology: vsphere/technology/<tech>/decision-tree/<slug>
+id: vsphere/object-types/<object>/decision-tree/<slug>   # one technology: vsphere/technology/<tech>/decision-tree/<slug>; no decision-tree/ folder while it would hold 1 file
 retriever_guide: decision-tree
 scope: vsphere
 technology: [cpu, memory]

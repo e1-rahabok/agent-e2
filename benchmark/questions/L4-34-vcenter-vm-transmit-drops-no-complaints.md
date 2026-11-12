@@ -44,7 +44,7 @@ answer_type: deterministic
 input: [screenshot]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-  - vsphere/object-types/vm/kpis/vm-performance
+  - vsphere/object-types/vm/vm-performance
 attachments:
   - 0074/vcenter-vm-network-dropped.png
 origin: synthetic

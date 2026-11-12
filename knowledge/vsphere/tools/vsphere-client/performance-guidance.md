@@ -56,7 +56,7 @@
 
 ## Network
 - Dropped packets indicate a network bottleneck. Check droppedTx and droppedRx in vCenter, or %DRPTX and %DRPRX in esxtop.
-- Drops at the virtual switch port: increase the vNIC driver ring buffers. See [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](../../technology/network/troubleshooting/vnic-rx-drops.md).
+- Drops at the virtual switch port: increase the vNIC driver ring buffers. See [`vsphere/technology/network/vnic-rx-drops`](../../technology/network/vnic-rx-drops.md).
 - No drops but a slow receive rate: host or VM CPU cannot keep up with the packet rate.
 - Small packets: more packets per byte, so more CPU per byte. Large packets: fewer packets and less CPU, but possibly higher latency.
 - vSphere has no network latency counter. The documentation points to external tools. See [`vsphere/technology/network/concepts/network-observability`](../../technology/network/concepts/network-observability.md).
@@ -96,9 +96,9 @@ internal_derive:
 related:
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
-- vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+- vsphere/technology/memory/vm-memory-latency-high
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
-- vsphere/technology/network/troubleshooting/vnic-rx-drops
+- vsphere/technology/network/vnic-rx-drops
 - sp5-framework/observability/thresholds
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)

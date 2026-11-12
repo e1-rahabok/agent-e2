@@ -65,7 +65,7 @@ object:
 internal_derive: []
 related:
 - vsphere/object-types/cluster/concepts/drs-overview
-- vsphere/object-types/resource-pool/configuration/resource-pool-design
+- vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/object-types/cluster/concepts/dpm
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)

@@ -84,7 +84,7 @@ TOOLS = [
         'description': ('Health check or troubleshooting flow, one step at a time. Without step: all steps in order. '
                         'With step: that step, the next step, and the metric files to read.'),
         'parameters': {'type': 'object', 'properties': {
-            'id': {'type': 'string', 'description': 'Flow file id (health-check/, troubleshooting/ or decision-tree/), e.g. vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'},
+            'id': {'type': 'string', 'description': 'Flow file id (retriever_guide health-check, troubleshooting or decision-tree), e.g. vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'},
             'step': {'type': 'string'}}, 'required': ['id']}}},
 ]
 WEB_TOOLS = [
@@ -194,7 +194,7 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
         res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
         tcs = res['tool_calls'] if tools else []
         if not tcs:
-            metric_reads = [r for r in state['read'] if '/metrics/' in r and '/comparisons/' not in r]
+            metric_reads = [r for r in state['read'] if (retriever.docs.get(r) and retriever.docs[r].meta.get('same_name'))]
             unchecked = [r for r in metric_reads if r not in state['same_name_checked']]
             if unchecked and not reminded and tools:
                 reminded = True

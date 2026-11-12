@@ -28,7 +28,7 @@ task: explain-mechanism
 knowledge:
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
-  - guest-os/memory/concepts/windows-memory
+  - guest-os/memory/windows-memory
 attachments: []
 origin: synthetic
 source_path: "Author's prompt and Gemini 3.1 Pro exchange, 2026-11-10"

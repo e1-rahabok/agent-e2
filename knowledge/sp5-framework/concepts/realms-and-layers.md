@@ -128,7 +128,7 @@ internal_derive:
 related:
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/performance/kpi-vs-sla
-- sp5-framework/performance/troubleshooting/vm-slow
+- sp5-framework/performance/vm-slow
 images:
   - path: images/three-realms-layers-sample-metrics-table.png
     product: [vsphere]

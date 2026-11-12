@@ -34,10 +34,10 @@
 | Layer | Object | KPI | How it reads its consumers | File |
 |---|---|---|---|---|
 | Business | Application | Business application KPI | Tier: average of members; application: worst tier | [`sp5-framework/performance/business-application-kpi`](business-application-kpi.md) |
-| Guest OS | Windows, Linux | Guest OS Performance (%) | One operating system | [`guest-os/system/metrics/guest-os-performance`](../../guest-os/system/metrics/guest-os-performance.md) |
-| Consumer | VM | VM Performance (%) | One virtual motherboard | [`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md) |
-| Provider | ESXi host | ESXi Performance (%) | Worst VM and 90th percentile; host bad packets | [`vsphere/object-types/esxi/kpis/esxi-performance`](../../vsphere/object-types/esxi/kpis/esxi-performance.md) |
-| Provider | Cluster | Cluster Performance (%) | Worst VM and 90th percentile; worst host bad packets | [`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md) |
+| Guest OS | Windows, Linux | Guest OS Performance (%) | One operating system | [`guest-os/system/guest-os-performance`](../../guest-os/system/guest-os-performance.md) |
+| Consumer | VM | VM Performance (%) | One virtual motherboard | [`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md) |
+| Provider | ESXi host | ESXi Performance (%) | Worst VM and 90th percentile; host bad packets | [`vsphere/object-types/esxi/esxi-performance`](../../vsphere/object-types/esxi/esxi-performance.md) |
+| Provider | Cluster | Cluster Performance (%) | Worst VM and 90th percentile; worst host bad packets | [`vsphere/object-types/cluster/cluster-performance`](../../vsphere/object-types/cluster/cluster-performance.md) |
 
 - Design shared by every KPI (which metrics qualify, 20-second peaks, scoring, the daily actual): [`sp5-framework/performance/performance-kpi-design`](performance-kpi-design.md). Colour levels: `catalog/thresholds-performance`.
 - KPI vs SLA, and KPIs per layer of the business: [`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md).
@@ -46,21 +46,21 @@
 ## Where each question is answered
 | Question or signal | Start with |
 |---|---|
-| Users say the VM is slow | [`sp5-framework/performance/troubleshooting/vm-slow`](troubleshooting/vm-slow.md) |
+| Users say the VM is slow | [`sp5-framework/performance/vm-slow`](vm-slow.md) |
 | Windows or Linux is slow | [`guest-os/system/troubleshooting/ms-windows-slow`](../../guest-os/system/troubleshooting/ms-windows-slow.md), [`guest-os/system/troubleshooting/linux-os-slow`](../../guest-os/system/troubleshooting/linux-os-slow.md) |
-| VM Performance (%) yellow or worse | [`vsphere/object-types/vm/health-check/vm-health-check`](../../vsphere/object-types/vm/health-check/vm-health-check.md), steps 2-6 |
-| ESXi Performance (%) yellow or worse | [`vsphere/object-types/esxi/health-check/esxi-health-check`](../../vsphere/object-types/esxi/health-check/esxi-health-check.md), step 3 |
+| VM Performance (%) yellow or worse | [`vsphere/object-types/vm/vm-health-check`](../../vsphere/object-types/vm/vm-health-check.md), steps 2-6 |
+| ESXi Performance (%) yellow or worse | [`vsphere/object-types/esxi/esxi-health-check`](../../vsphere/object-types/esxi/esxi-health-check.md), step 3 |
 | Cluster Performance (%) yellow or worse | [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](../../vsphere/object-types/cluster/troubleshooting/cluster-vm-contention.md) |
 | A VM gets less than it demands in a DRS cluster | [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](../../vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
 | CPU Ready, Co-stop or Contention high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
 | CPU Other Wait high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](../../vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](../../vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |
-| Memory latency high | [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](../../vsphere/technology/memory/troubleshooting/vm-memory-latency-high.md) |
+| Memory latency high | [`vsphere/technology/memory/vm-memory-latency-high`](../../vsphere/technology/memory/vm-memory-latency-high.md) |
 | Is memory tiering slowing this host? | [`vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`](../../vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md) |
 | Is memory overcommit hurting this VM? | [`vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`](../../vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md) |
 | VM disk latency high | [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](../../vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md) |
 | ESXi storage latency high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
-| vNIC receive drops | [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](../../vsphere/technology/network/troubleshooting/vnic-rx-drops.md) |
+| vNIC receive drops | [`vsphere/technology/network/vnic-rx-drops`](../../vsphere/technology/network/vnic-rx-drops.md) |
 | One VM hurts the others | [`sp5-framework/performance/noisy-neighbour`](noisy-neighbour.md) |
 | Which metric is primary, which secondary? | [`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md) |
 | How the results are shown and alerted | [`sp5-framework/outputs/performance-dashboards`](../outputs/performance-dashboards.md), [`sp5-framework/outputs/alert-design`](../outputs/alert-design.md) |
@@ -100,14 +100,14 @@ internal_derive:
 related:
 - sp5-framework/performance/performance-kpi-design
 - sp5-framework/performance/kpi-vs-sla
-- sp5-framework/performance/troubleshooting/vm-slow
+- sp5-framework/performance/vm-slow
 - sp5-framework/performance/noisy-neighbour
 - sp5-framework/capacity/capacity-management
 - sp5-framework/concepts/health-check
-- vsphere/object-types/vm/kpis/vm-performance
-- vsphere/object-types/esxi/kpis/esxi-performance
-- vsphere/object-types/cluster/kpis/cluster-performance
-- guest-os/system/metrics/guest-os-performance
+- vsphere/object-types/vm/vm-performance
+- vsphere/object-types/esxi/esxi-performance
+- vsphere/object-types/cluster/cluster-performance
+- guest-os/system/guest-os-performance
 - sp5-framework/performance/business-application-kpi
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

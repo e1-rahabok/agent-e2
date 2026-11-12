@@ -125,7 +125,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
   - Every option keeps the rule: no customer data leaves the site.
 - The benchmark uses the Vercel AI Gateway to reach the same open-weight models; at a customer site, `harness/llm.py` points at the local server instead. The harness code is the same.
 - One VM with a GPU (passthrough or vGPU) on the customer's own VCF. VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation).
-- The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/concepts/gpu-monitoring.md`.
+- The assistant's own GPU VM is monitored by the same rules: `knowledge/vsphere/technology/gpu/gpu-monitoring.md`.
 
 ## 6. Harness checks
 - The harness is checked on its own. In the final score, a retrieval miss and a reasoning error look the same.

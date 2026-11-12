@@ -119,7 +119,7 @@ flowchart LR
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | The expert's mental map: which facts are read together |
 | Folder hierarchy | The method (SP5 Framework) and the product (VCF 9.x) apart; inside the product, metrics by technology and KPIs by object | `knowledge/` | One tree in the order the author reviews; links and tags give the other views |
 | Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
-| Flows | Order of checks: health check, troubleshooting, decision tree | `health-check/`, `troubleshooting/`, `decision-tree/` | Small models skip steps; the flow tool keeps them on the path |
+| Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree | Small models skip steps; the flow tool keeps them on the path |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | `harness/calc.py`, formulas in files | Arithmetic is where models slip |
 | Images with text twins | The author's diagrams and charts | `images/` folders | The text twin makes a diagram usable by a text-only model |
 | Terminology | Vocabulary, confusable pairs | `knowledge/glossary.md` | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |

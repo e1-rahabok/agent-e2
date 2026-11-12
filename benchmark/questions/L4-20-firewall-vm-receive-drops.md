@@ -32,7 +32,7 @@ level: 400
 answer_type: judged
 input: [text]
 knowledge:
-  - vsphere/technology/network/troubleshooting/vnic-rx-drops
+  - vsphere/technology/network/vnic-rx-drops
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
   - vsphere/technology/network/configuration/rss-and-interrupt-coalescing
 attachments: []

@@ -40,7 +40,7 @@ input: [table, screenshot]
 knowledge:
   - vcf-operations/features/peak-20-second-metrics
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
-  - vsphere/object-types/vm/kpis/vm-performance
+  - vsphere/object-types/vm/vm-performance
 attachments:
   - 0089/vm-virtual-disk-latency-one-day.xlsx
   - 0089/vcf-operations-vm-peak-disk-latency.png

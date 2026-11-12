@@ -319,7 +319,7 @@ decisions:
   meaning: Red. Cluster closed for new VMs and VM upsize.
   source: knowledge-base
   kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
-  quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
+  quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/cluster-performance`): red below 20%, orange below 40%.'
 - id: closure-cluster-performance-orange
   metric: Cluster Performance (%), 5th percentile of the last 24 hours (higher is better)
   object: ClusterComputeResource
@@ -330,7 +330,7 @@ decisions:
   meaning: Orange. With Cluster Consumption also orange, the risk check decides.
   source: knowledge-base
   kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
-  quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
+  quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/cluster-performance`): red below 20%, orange below 40%.'
 - id: closure-cluster-risk-prod
   metric: Cluster Risk (%), 95th percentile of the last 24 hours
   object: ClusterComputeResource

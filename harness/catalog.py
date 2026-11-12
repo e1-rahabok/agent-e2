@@ -158,7 +158,7 @@ class Catalog:
                       *(None if lv.get(k) is None else '/'.join(str(x) for x in lv[k]) for k in ('5m', '20s', '2s')),
                       int(bool(lv.get('excluded_when_green'))), lv['kb']))
         for d in self.docs.values():
-            if not any(f in d.id for f in ('/metrics/', '/kpis/', '/models/')):  # metric files, KPIs and models
+            if d.meta.get('retriever_guide') != 'metric-meaning' or '/tools/' in d.id:  # metric files, KPIs and models
                 continue
             m = d.meta
             c.execute('INSERT INTO metrics VALUES (?,?,?,?,?,?,?,?,?,?)',

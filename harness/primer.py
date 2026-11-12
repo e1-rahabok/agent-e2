@@ -17,17 +17,13 @@ BLOCKS = ('map', 'rules', 'terms', 'flows', 'procedure')
 BUDGET_TOKENS = 3000          # all five blocks together; lint checks it
 MISCONCEPTIONS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge', 'misconceptions.md')
 
-KINDS = {  # folder kind -> what it answers and which tool serves it
-    'concepts': ('how it works, why a value behaves so', 'search, read_file'),
-    'metrics': ('what a counter means on one object', 'catalog, read_file, follow_links(same_name)'),
-    'configuration': ('what a setting does', 'search, read_file'),
-    'alerts': ('the alerts of one object type, and why (values come with the file)', 'read_file, catalog'),
+KINDS = {  # retriever_guide -> what it answers and which tool serves it. The kind is metadata, not a folder (2026-11-12).
+    'how-it-works': ('how it works, why a value behaves so; how to design and read (method)', 'search, read_file'),
+    'metric-meaning': ('what a counter, KPI or model means on one object; in vsphere/tools/, how esxtop or the vSphere Client shows it', 'catalog, read_file, follow_links(same_name)'),
+    'what-to-set': ('what a setting does; <object>-alerts: the alerts of one object type and why (values come with the file)', 'search, read_file, catalog'),
     'health-check': ('is this object healthy, on every pillar: the what', 'flow'),
     'troubleshooting': ('why is it down or slow: from a complaint, alert or failed health check step', 'flow'),
     'decision-tree': ('can it, should it, how much: one operational question, ending in a choice to act', 'flow'),
-    'kpis': ('a performance KPI: sub-metrics, bands, scoring', 'catalog, read_file'),
-    'models': ('a capacity or risk model: sub-metrics, bands, decision', 'catalog, read_file'),
-    'tools': ('how esxtop or the vSphere Client shows the counters', 'read_file'),
 }
 
 PROCEDURE = """## Procedure
@@ -47,21 +43,19 @@ def _area(doc_id):
     return parts[0] if len(parts) > 1 else 'glossary'
 
 
-def _kind(doc_id):
-    for k in KINDS:
-        if f'/{k}/' in f'/{doc_id}/':
-            return k
-    return 'other'
+def _kind(doc):
+    k = doc.meta.get('retriever_guide')
+    return k if k in KINDS else 'other'
 
 
 def map_block(docs):
     areas = defaultdict(Counter)
-    for i in docs:
-        areas[_area(i)][_kind(i)] += 1
+    for i, d in docs.items():
+        areas[_area(i)][_kind(d)] += 1
     lines = ['## Map of the knowledge base',
-             'File kinds (folder name in the id):']
-    lines += [f'- {k}/: {q}. Tool: {t}.' for k, (q, t) in KINDS.items()]
-    lines += ['- other: overviews, comparisons, observability rules.', 'Areas (files by kind):']
+             'File kinds (retriever_guide, also a search filter):']
+    lines += [f'- {k}: {q}. Tool: {t}.' for k, (q, t) in KINDS.items()]
+    lines += ['- other: the glossary.', 'Areas (files by kind):']
     for a in sorted(areas):
         c = areas[a]
         lines.append(f'- {a}: ' + ', '.join(f'{c[k]} {k}' for k in list(KINDS) + ['other'] if c[k]))
@@ -96,7 +90,7 @@ def flows_block(docs):
              'decision-tree': 'Decision trees (question -> flow id)'}
     lines = []
     for k, head in heads.items():
-        rows = sorted((d.title, d.id) for i, d in docs.items() if _kind(i) == k)
+        rows = sorted((d.title, d.id) for i, d in docs.items() if _kind(d) == k)
         if rows:
             lines += [f'## {head}'] + [f'- {t}: {i}' for t, i in rows]
     return '\n'.join(lines)

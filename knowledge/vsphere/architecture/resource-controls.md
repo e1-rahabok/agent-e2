@@ -145,7 +145,7 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/object-types/vm/configuration/resource-settings-guidance
-- vsphere/object-types/resource-pool/configuration/resource-pool-design
+- vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/technology/network/concepts/netioc
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

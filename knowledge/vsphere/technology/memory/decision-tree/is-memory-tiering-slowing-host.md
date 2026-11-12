@@ -75,7 +75,7 @@ internal_derive:
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 related:
 - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
-- vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+- vsphere/technology/memory/vm-memory-latency-high
 - vsphere/object-types/cluster/models/cluster-risk
 - vsphere/object-types/cluster/models/cluster-consumption
 source:

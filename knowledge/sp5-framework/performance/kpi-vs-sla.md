@@ -45,7 +45,7 @@
 - VM KPI: stops at Windows or Linux. The application or service inside the Guest OS is excluded: the infrastructure team stops at the OS.
 - Guest OS KPI: when central IT owns the Guest OS.
 - Business application KPI: three levels. The business transaction first (user login). Below expectation → the application software KPI (Apache web server) and the infrastructure KPI (the VM KPI).
-- vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: [`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md).
+- vSphere cluster KPI: only the contention metrics of the running VMs. Utilization is excluded: it has no direct link to cluster performance. A vSAN cluster adds vSAN performance metrics. Implementation: [`vsphere/object-types/cluster/cluster-performance`](../../vsphere/object-types/cluster/cluster-performance.md).
 - vSAN KPI: disk latency of every VM using the vSAN datastore, from the same or another cluster.
 - NSX KPI: many-to-many with vSphere clusters, so not tied to one cluster.
 
@@ -79,8 +79,8 @@ internal_derive:
 related:
 - sp5-framework/performance/performance-management
 - sp5-framework/concepts/sla-metrics
-- vsphere/object-types/cluster/kpis/cluster-performance
-- vsphere/object-types/vm/kpis/vm-performance
+- vsphere/object-types/cluster/cluster-performance
+- vsphere/object-types/vm/vm-performance
 - sp5-framework/concepts/performance-vs-capacity
 - sp5-framework/concepts/realms-and-layers
 images: []

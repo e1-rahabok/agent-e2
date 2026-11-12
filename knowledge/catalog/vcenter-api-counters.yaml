@@ -123,7 +123,7 @@ rows:
   unit: second
   level: 1
   summary: Total time elapsed, in seconds, since last system startup
-  kb: vsphere/object-types/cluster/metrics/comparisons/availability
+  kb: vsphere/object-types/cluster/metrics/availability
 - counter: clusterServices.vmDrsScore
   object: VirtualMachine
   rollup: latest
@@ -267,7 +267,7 @@ rows:
   unit: second
   level: 1
   summary: Total time elapsed, in seconds, since last system startup
-  kb: vsphere/object-types/cluster/metrics/comparisons/availability
+  kb: vsphere/object-types/cluster/metrics/availability
 - counter: clusterServices.cpufairness
   object: HostSystem
   rollup: latest
@@ -538,7 +538,7 @@ rows:
   unit: percent
   level: 1
   summary: The compute utilization of a GPU in percentage
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.mem.used
   object: ClusterComputeResource
   rollup: average
@@ -546,7 +546,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: The amount of GPU memory used by workloads in kilobytes
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.mem.reserved
   object: ClusterComputeResource
   rollup: latest
@@ -554,7 +554,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: The amount of GPU memory consumed by virtual GPUs in kilobytes
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.power.used
   object: ClusterComputeResource
   rollup: latest
@@ -562,7 +562,7 @@ rows:
   unit: watt
   level: 1
   summary: The power used by a GPU in watts
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.temperature
   object: ClusterComputeResource
   rollup: average
@@ -570,7 +570,7 @@ rows:
   unit: celsius
   level: 1
   summary: The temperature of a GPU in degrees Celsius
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.mem.total
   object: ClusterComputeResource
   rollup: latest
@@ -578,7 +578,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: The total amount of GPU memory in kilobytes
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: disk.numberReadAveraged
   object: Datastore
   rollup: average
@@ -676,7 +676,7 @@ rows:
   unit: percent
   level: 1
   summary: The compute utilization of a GPU in percentage
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.mem.used
   object: ResourcePool
   rollup: average
@@ -684,7 +684,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: The amount of GPU memory used by workloads in kilobytes
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.mem.reserved
   object: ResourcePool
   rollup: latest
@@ -692,7 +692,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: The amount of GPU memory consumed by virtual GPUs in kilobytes
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.power.used
   object: ResourcePool
   rollup: latest
@@ -700,7 +700,7 @@ rows:
   unit: watt
   level: 1
   summary: The power used by a GPU in watts
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.temperature
   object: ResourcePool
   rollup: average
@@ -708,7 +708,7 @@ rows:
   unit: celsius
   level: 1
   summary: The temperature of a GPU in degrees Celsius
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: gpu.mem.total
   object: ResourcePool
   rollup: latest
@@ -716,7 +716,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: The total amount of GPU memory in kilobytes
-  kb: vsphere/technology/gpu/concepts/gpu-monitoring
+  kb: vsphere/technology/gpu/gpu-monitoring
 - counter: vmop.numPoweron
   object: Datacenter
   rollup: latest

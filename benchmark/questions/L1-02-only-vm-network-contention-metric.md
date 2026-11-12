@@ -31,7 +31,7 @@ answer_type: deterministic
 input: [text]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-  - vsphere/technology/network/metrics/comparisons/vm-network-metrics
+  - vsphere/technology/network/metrics/vm-network-metrics
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"

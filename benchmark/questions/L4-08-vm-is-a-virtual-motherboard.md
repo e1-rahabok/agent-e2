@@ -49,7 +49,7 @@ input: [text]
 task: troubleshoot
 knowledge:
   - vsphere/architecture/vm-vs-guest-os
-  - guest-os/storage/metrics/disk-queue
+  - guest-os/storage/disk-queue
   - guest-os/cpu/metrics/run-queue
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
