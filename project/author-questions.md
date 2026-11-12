@@ -144,7 +144,7 @@ Each entry has:
 - Written as now:
   - Plan and design.md: final score at least 85%, target 99%, confident-wrong rate "near 0" (no number). Superiority: the local configuration beats the frontier baseline "by more than the margin" (no number). Sub-scores are diagnostic only.
   - Frontier reference (Q164): Claude Opus 5.5, web search on, effort capped at medium, no knowledge base.
-  - Last measured (2026-11-03, 17 questions, old set, no web search): frontier baseline 75%, frontier agentic 67%; best local model 58% (classic). Frontier misconception rate without the knowledge base: 16% of answers.
+  - No current run: the runs of 2026-11-03 are outdated (old set, old harness) and are not used here (author, 2026-11-12). The frontier score below is an expert estimate.
   - Paired power at 100 questions (review, section 5): 68% at a 10-point gap, 91% at 15, 98% at 20.
   - retrieval-check.md: proposal in counts of 90 questions, not agreed. Latest retrieval (2026-11-11): search 60%, classic context 78%, 61 of 95 complete. No question has a main-file key. Retrieval check paused (2026-11-12) until the question bank revamp.
 - Final answer (2026-11-12, revised the same day; expert call):
@@ -155,7 +155,7 @@ Each entry has:
     |---|---|---|
     | Final score | at least 85% | Margin ±7 at 100 questions; below 85 an operator stops trusting the answers. Kept from the plan |
     | Level 400 sub-score | at least 80% | About 50 questions (margin about ±10). The mission is Level 400; Level 100-300 can carry the total, and any frontier model is near perfect there |
-    | Confident-wrong rate | at most 3% (3 of 100) | "Near 0" cannot be tested. A wrong answer said with confidence is what the operator acts on; a wrong answer marked Unsure is not. The frontier model gave the misconception on 16% |
+    | Confident-wrong rate | at most 3% (3 of 100) | "Near 0" cannot be tested. A wrong answer said with confidence is what the operator acts on; a wrong answer marked Unsure is not. |
     | Misconceptions in [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | 0 stated as true | They are given up front; stating one is a harness or model defect, not a gap |
     | Sealed set (Q165) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
 
@@ -163,16 +163,28 @@ Each entry has:
     - Why not 90% as the gate: at 100 questions, 85 and 90 overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
   - (b) Gap to the frontier model (Opus 5.5, web search on, medium effort, no knowledge base), on the same questions, paired:
     - At least 15 points on the final score, and a one-sided paired McNemar test significant at α 0.05.
-    - Effective bar: Agent E2 at least the larger of 85% and frontier + 15. If the frontier model scores 80% with web search, Agent E2 needs 95%.
+    - Effective bar: Agent E2 at least the larger of 85% and frontier + 15.
+    - Expected frontier score (expert estimate, by the blueprint of design.md section 3.2 and the scoring of section 7.4: exact letters, stable over 5 runs, lowest judge score):
+
+      | Level | Share | Frontier expected | Why |
+      |---|---|---|---|
+      | 100 | 10 | about 95% | Public counter names; a slip is a format or stability miss |
+      | 200 | 15 | about 90% | Public definitions; multi-select exact match costs a few |
+      | 300 | 25 | about 80% | Public practice is its home ground, but some published thresholds are the ones the knowledge base corrects |
+      | 400, public mechanism | about 30 | about 60% | Knows the mechanism in isolation; misses the vantage point, the combination of several readings, and picks the Level 300 rule of thumb when it conflicts. Web search returns the same Level 300 pages |
+      | 400, author framework and current VCF Operations | about 20 | about 25% | SP5 Framework, VM Performance (%), Close for Business, deprecated dashboards: not in public text, or wrong there |
+      | Total | 100 | about 65% (range 60-72) | |
+
+      - So in the expected case the 85% gate binds (gap about 20). The 15-point gap binds only if the frontier model does better than expected (above 70%). The two bars cover each other: the gate protects the operator, the gap protects the claim.
+      - Confident-wrong: expected high for the frontier model on Level 400 (it answers the rule of thumb with confidence, rarely Unsure), roughly 15-25% of answers. Measured in M4, not assumed.
     - Reasons:
       - 10 points equals the margin and has 68% power: one run in three would fail to show a real win. 15 points has 91%.
-      - The frontier baseline measured 75% without web search; web search raises it. At a 10-point gap the gap bar and the 85% gate would say the same thing, so the gap would add nothing.
+      - Expected frontier score about 65%, up to about 72%: a 10-point gap could then be met below the 85% gate, so the claim would rest on a configuration not fit to ship.
       - "Better than a frontier model" is the mission, not "at least 85%". A tie goes to the frontier model in the customer's eyes: it needs no GPU.
     - Where the claim is read:
       - author-framework questions (SP5 Framework, VM Performance (%), Close for Business): a frontier model cannot know them; a win there proves the knowledge base, not the agent. Reported apart.
       - The superiority claim is read on public-mechanism questions (Q165 `knowledge_class`): at least 10 points, paired significant. On the development set this class is too small for significance (about 50 questions: 35% power at 10 points); the sealed set of 150-200 carries it.
-    - Confident-wrong rate: Agent E2 at most half the frontier model's, on the same questions.
-    - Ceiling, not a gate: Opus 5.5 in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. On 2026-11-03 the frontier model scored lower with the knowledge base (67%) than without (75%): if that holds on the new set, the knowledge base or harness misleads a strong model, and that is fixed before any gap is read.
+    - Ceiling, not a gate: Opus 5.5 in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. If the frontier model scores lower with the knowledge base than without it, the knowledge base or the harness misleads a strong model: fixed before any gap is read.
   - (c) Retrieval levels, classic mode, in percent (the count moves from 95 to 100); BM25 and hybrid both reported. Diagnostic floor for agentic mode, read again when the retrieval check is reactivated.
     - Release gate: the main file in context for 100% of the visible questions (each miss is a defect, fixed or explained); context recall at least 95%; complete questions at least 90%.
     - Target: 97% complete, 98% recall.
@@ -180,7 +192,7 @@ Each entry has:
     - Reason: 0.90 × 0.95 ≈ 0.85: with a model right on 95% of questions whose files it has, 90% complete is the least that leaves room for the 85% gate. Agentic mode can fetch what classic missed, so the classic floor is conservative for the agentic score. A missing main file drives confident-wrong answers, so it gets its own number.
   - (d) Yes, an explicit key, `knowledge_main` (also listed in `knowledge`; lint checks it). Not the list order: on 2026-11-10, 10 questions missed their first-listed file, but first was never written to mean main. The retrieval check reports main-file misses as a fourth number.
   - Change if accepted: plan Mission (release gate with the five rows and the gap) and M3 exit criteria; benchmark/design.md sections 1, 7.4, 8 and Release criteria (gap of 15 points, paired test, confident-wrong limit, Level 400 gate, ceiling); retrieval-check.md (levels in percent); report.py (Level 400 gate, confident-wrong rate, McNemar test against the reference); question template and lint (`knowledge_main`); retrieval_eval.py; project/terms.md (`knowledge_main` as a proposal).
-  - For you: (1) whether a 15-point gap is the bar you want to publish; (2) the main file of each question, during the one-go question review.
+  - For you: (1) whether a 15-point gap is the bar you want to publish, and whether the frontier estimate (about 65%) matches your experience of frontier answers at Level 400; (2) the main file of each question, during the one-go question review.
 - Answer:
 
 ### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
