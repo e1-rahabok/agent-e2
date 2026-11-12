@@ -54,6 +54,39 @@ class FinalScoreTest(unittest.TestCase):
         self.assertEqual(report.final(rows)[('m', 'classic')]['final'], 1)
 
 
+class ReleaseGateTest(unittest.TestCase):
+    def test_gap_and_paired_test_against_reference(self):
+        rows = []
+        for i in range(10):  # the model right on all 10, the reference on 2
+            q = f'q{i}'
+            rows.append(dict(row(q, 'deterministic', 'text', 400, 1, 1), model='e2', mode='agentic'))
+            rows.append(dict(row(q, 'deterministic', 'text', 400, int(i < 2), 1), model=report.REFERENCE[0], mode=report.REFERENCE[1]))
+        fin = report.final(rows)
+        b, c, p = report.mcnemar(rows, 'e2', 'agentic')
+        self.assertEqual((b, c), (8, 0))
+        self.assertAlmostEqual(p, 1 / 256)
+        g = {name.split(' (')[0]: ok for name, _, _, ok in report.gate(fin, rows, 'e2')}
+        self.assertTrue(all(g.values()), g)
+
+    def test_fails_below_final_score(self):
+        rows = [dict(row(f'q{i}', 'deterministic', 'text', 400, int(i < 8), 1), model='e2', mode='agentic') for i in range(10)]
+        g = {name: ok for name, _, _, ok in report.gate(report.final(rows), rows, 'e2')}
+        self.assertFalse(g['Final score'])
+        self.assertNotIn('Gap to the frontier model', g)
+
+
+class RetrievalSummaryTest(unittest.TestCase):
+    def test_main_file_misses_are_counted(self):
+        import retrieval_eval as R
+        rows = [('0001', ['a', 'b'], ['a'], ['a', 'b'], 'a'),
+                ('0002', ['c', 'd'], ['c'], ['c'], 'd'),
+                ('0003', ['e'], [], [], '')]
+        s = R.summary(rows)
+        self.assertEqual(s['complete'], 1)
+        self.assertEqual((s['main_keyed'], s['main_missed']), (2, ['0002']))
+        self.assertAlmostEqual(s['context'], 3 / 5)
+
+
 class PromptSplitTest(unittest.TestCase):
     def test_bullet_options_and_blank_lines(self):
         stem, opts, footer = C.Question._split_prompt('- Fact one.\n- Fact two.\n\nChoose:\n\n- A. one\n- B. two\n\n- C. three\n\nHint: x')

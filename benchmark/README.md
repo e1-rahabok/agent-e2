@@ -56,6 +56,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `technology` | Every technology area the question touches. A list. The per-area report counts each one | `cpu`, `memory`, `storage`, `network`, `system` (the object as a whole: KPIs, capacity, availability, DRS, provider/consumer, rollups) |
 | `task` | What the administrator is trying to do: one of the five tasks of the blueprint ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.1) | `read-metric`, `troubleshoot`, `decide-capacity`, `explain-mechanism`, `judge-setting` |
 | `knowledge` | The knowledge files the correct answer depends on. A list of knowledge ids. The retrieval check measures whether the harness finds them; every id must exist | Knowledge ids, e.g. [VM CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/wait.md) |
+| `knowledge_main` | The one file that holds the answer or the misconception. Also listed in `knowledge` (lint checks it). Not the list order. The retrieval check reports a missing main file as a defect ([retrieval-check.md](retrieval-check.md)). Set by the author in the question review (Q130) | One knowledge id |
 
 **How hard it is and how it is scored**
 

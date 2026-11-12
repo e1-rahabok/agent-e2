@@ -43,6 +43,7 @@ class Question:
         self.answer = [str(a) for a in (self.meta.get('answer') or [])]
         self.misconception = [str(a) for a in (self.meta.get('misconception') or [])]
         self.knowledge = list(self.meta.get('knowledge') or [])
+        self.knowledge_main = str(self.meta.get('knowledge_main') or '')  # the file that holds the answer or the misconception (Q130)
         self.attachments = [os.path.join(ROOT, 'benchmark', 'questions', a) for a in (self.meta.get('attachments') or [])]
         m = re.search(r'## Prompt\n(.*?)(?=\n## )', body, re.S)
         self.prompt = m.group(1).strip() if m else ''
