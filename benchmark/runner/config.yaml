@@ -20,6 +20,7 @@ max_tokens: 4000              # reasoning models spend tokens before the ANSWER 
 concurrency: 12               # proven parallel requests per model: 12 tested OK (benchmark 20261103-081849). The floor: the runner never goes below it
 concurrency_by_model:         # the proven value of a model that rate-limits earlier than 12
   anthropic/claude-opus-5.5: 3   # HTTP 429 at 12, 0 errors at 3 (benchmark/runner/README.md, section Concurrency)
+max_minutes: null              # stop cleanly after this many minutes (exit code 3, then --resume). A Claude Code cloud background command stops after 120: use --max-minutes 110 there
 adaptive_concurrency:         # probe above the proven value, one model at a time (benchmark/runner/governor.py)
   enabled: true
   step: 2                     # levels: proven, proven + 2, proven + 4 (12, 14, 16)

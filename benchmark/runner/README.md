@@ -122,7 +122,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Requests sent to the gateway at the same time, per model. Cost does not change with concurrency: the same tokens are sent, only in parallel.
 - Measured in benchmark 20261103-081849 (one model, all modes): 4 gave about 25 answers per minute, 0 errors in 128 answers; 12 gave about 54, 0 errors in 2032 answers. At 12 the full matrix of 2160 answers took about 38 minutes.
 - Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; found by trial. Above it, providers return HTTP 429. The client retries 429, 408 and 5xx; an answer that still fails is listed, and `--resume` retries it.
-- Limit: a Claude Code cloud background command stops after 2 hours. `--resume` continues a stopped run and keeps saved answers; always pass the same `--models`, because a resume without it runs every model of `config.yaml` into the folder.
+- Limit: a Claude Code cloud background command stops after 2 hours (see Long runs below).
 
 **Adaptive concurrency** ([governor.py](governor.py), `adaptive_concurrency` in `config.yaml`; `--no-adaptive` turns it off):
 - Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3, because it returned HTTP 429 at 12). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
@@ -133,6 +133,13 @@ python3 benchmark/runner/retrieval_eval.py
 - Tasks run model by model, so one model probes at a time; the others wait at their proven value.
 - The console prints each decision (`concurrency <model>: 14 kept, 36.2 answers/min is 1.12x the 32.3 at 12`) and, every 25 answers, the current level of each model.
 - Tested offline (a fake clock, [test_runner.py](test_runner.py), class GovernorTest). The first live run is the real test: watch the decision lines.
+
+### Long runs: stop and resume
+- `--max-minutes N` (or `max_minutes` in `config.yaml`): after N minutes the runner starts no new answer, lets the running ones finish, prints `Resume: python3 benchmark/runner/run.py --resume <folder>` and exits with code 3. It writes no `report.md` and no `results.csv` rows: a stopped run is not a result. Exit code 0 = finished, 3 = stopped at the limit.
+- In a Claude Code cloud session start every long run with `--max-minutes 110`: the 2-hour limit kills a command in the middle of an answer; this stops it clean, a few minutes earlier.
+- `--resume <folder>` needs no other flag: models, modes, runs, temperature, questions, judge and primer are read from the folder's `config.json`, so a resume cannot change what the run measures (a resume without `--models` once ran every model of `config.yaml` into the folder). A flag you pass still overrides. Saved answers are kept; answers that failed are retried. `config.json` keeps the original `started` time and lists each resume in `resumed`.
+- Cannot be done inside the process: a command cannot extend the 2-hour limit of the session that started it. The relaunch is a new command: when a run exits with code 3 (or its process is gone and the folder has fewer answers than the matrix), start `python3 benchmark/runner/run.py --resume <folder> --max-minutes 110` again. The 15-minute progress check does this on its own: it counts the rows of `answers.csv` by `model` and relaunches a dead run.
+- `index_version` in `config.json` is the commit at the last resume; each row of `answers.csv` keeps the commit of its own answer. A resume after a change to the knowledge base mixes two versions in one run: stop edits to `knowledge/` during a run.
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
