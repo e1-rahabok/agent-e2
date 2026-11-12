@@ -20,7 +20,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - At most 8 words for a title, 9 for a heading. No list of contents after a colon. Words in parentheses (an alias, a counter name) do not count.
   - Exceptions, because these titles are the words users type: a metric file title is the metric name; a troubleshooting title is the symptom ("VM disk latency is high"); a decision tree title is the question as users ask it ("Can this cluster take more VMs?").
   - Fixed section names (templates in `project/templates/`): `Definition`, `Reason`, `Impact`, `Checks, in order` (read by `harness/flows.py`), `Order rationale`, `Interpretation`, `Not alerted`.
-  - The review checks these rules; lint does not (2026-11-10).
+  - Lint checks the word limits, a list after a colon in a title, and the openers How, Why, What, When, Where, Which, Who (decision tree titles exempt). The review checks commands, claims and slogans: no pattern finds them.
 - Write full sentences. No slogans ("Three sides, three metrics."), no aphorisms in place of the mechanism, no "X, not Y" where a plain statement says it.
 - One vSphere object type per metric file.
 - Refer to another knowledge file as a link with its id: [`id`](relative/path.md). GitHub makes it clickable for review; the harness keeps only `id` for the model (`ARCHITECTURE.md`, section Ingest). The same in every Markdown file of the repository, `knowledge/glossary.md` and `knowledge/misconceptions.md` included: their parsers keep only `id` as well. `project/tools/link_refs.py` adds missing links; lint fails on a bare id.
@@ -40,7 +40,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 6. A number comes with unit, object, interval and source. A threshold in prose also needs a row in the threshold catalog.
 7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
 8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
-9. Titles and headings are noun phrases: no question, command or claim. Headings at most 9 words, titles at most 8 (section Rules).
+9. Titles and headings are noun phrases: no question, command or claim. Headings at most 9 words, titles at most 8 (lint).
 10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check and merges.
 
 ## Format choices
