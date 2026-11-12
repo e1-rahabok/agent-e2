@@ -1,4 +1,4 @@
-# Cluster Performance (%) (vCommunity KPI)
+# Cluster Performance (%)
 
 ## What it is
 - One score per vSphere cluster, 0-100%. 100 is perfect.
