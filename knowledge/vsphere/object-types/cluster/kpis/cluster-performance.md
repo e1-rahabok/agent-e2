@@ -42,12 +42,6 @@
 - Co-stop, Overlap and Other Wait have the same VM impact as Ready, but practically lower values. The same range would inflate the score.
 - Dropped and error packets are rare. Take the worst host, not a sum (a sum becomes an average). Low threshold, as many hosts have 25 Gb NICs.
 
-## vMotion is not part of the KPI
-- The vMotion counter counts migrations. It does not measure the downtime of each one.
-- In a healthy environment each vMotion stuns the VM for less than 0.2 seconds, which the Guest OS does not notice.
-- Monitor vMotion separately, with the other broad infrastructure capabilities: NSX Edge, vSAN resync, the physical network.
-- For vMotion, track the maximum stun time across all vMotions in the whole environment. A rising maximum is a leading indicator of performance degradation.
-
 ## Not used
 | Metric | Reason |
 |---|---|
@@ -60,7 +54,13 @@
 | CPU Other Wait | False positives seen. |
 | CPU Overlap | Values so low they could mask other problems. |
 | Storage bus resets and aborts | - |
-| vMotion count | Counts migrations, not downtime. See section vMotion is not part of the KPI. |
+| vMotion count | Counts migrations, not downtime. See below |
+
+### vMotion Count
+- The vMotion counter counts migrations. It does not measure the downtime of each one.
+- In a healthy environment each vMotion stuns the VM for less than 0.2 seconds, which the Guest OS does not notice.
+- Monitor vMotion separately, with the other broad infrastructure capabilities: NSX Edge, vSAN resync, the physical network.
+- For vMotion, track the maximum stun time across all vMotions in the whole environment. A rising maximum is a leading indicator of performance degradation.
 
 ## Misconceptions
 - "Cluster KPI = average VM KPI" → different purpose and metrics: depth and breadth across VMs, plus the host network.
