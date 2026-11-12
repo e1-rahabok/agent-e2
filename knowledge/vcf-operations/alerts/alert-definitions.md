@@ -16,7 +16,7 @@
   - contention: 5 minutes; 10 minutes where the metric tends to give false positives;
   - consumption: 15 minutes.
 - VCF Operations collects every 5 minutes, so 5, 10 and 15 minutes are 1, 2 and 3 collection cycles.
-- Wait cycle and threshold together: a 20-second peak above 4x the 5-minute threshold, plus the 5-minute average above the threshold, catches an issue that is both acute and sustained ([`sp5-framework/outputs/alert-design`](../../sp5-framework/outputs/alert-design.md)).
+- Wait cycle and threshold together: a 20-second peak above about 4x the 5-minute threshold (a guide that depends on how volatile the metric is), plus the 5-minute average above the threshold, catches an issue that is both acute and sustained ([`sp5-framework/outputs/alert-design`](../../sp5-framework/outputs/alert-design.md)).
 
 ## Recommendations
 - A recommendation is advice attached to an alert; it changes nothing. A remediation action runs a change.

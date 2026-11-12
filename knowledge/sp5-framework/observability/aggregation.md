@@ -6,13 +6,17 @@
 
 ## Divide summed counters correctly
 - ESXi CPU Ready (ms) = sum of VM CPU Ready; VM CPU Ready = sum of its vCPU Ready.
-- Example: a host with 149,116 ms Ready runs 67 VMs with 195 vCPUs. Each vCPU can reach 20,000 ms, so the number means nothing until divided:
+- Each vCPU's states add up to the sample length, so the summed number means nothing until divided by the sample length and the vCPU count:
 
 ```text
-ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs)
+ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of running VMs) × 100
 ```
 
-- Divide by running vCPUs, not by physical cores.
+- Sample length: vCenter real time and VCF Operations 20,000 ms (a VCF Operations 5-minute point averages the 15 20-second values); vCenter rollups are sums: 300,000 ms (past day), 1,800,000 ms (past week), 7,200,000 ms (past month), 86,400,000 ms (past year).
+- Example: a host with 149,116 ms Ready in a 20-second sample runs 67 VMs with 195 vCPUs: 149,116 / (20,000 × 195) × 100 = 3.8%.
+- Divide by running vCPUs, not by physical cores or threads: Ready is a state of each vCPU.
+- A VM powered on or moved in during the sample counts only part of it, so the result is slightly low.
+- The result is an average that hides the worst VM; read ESXi Performance (%), which takes the worst VM and the 90th percentile.
 - Ready is not spread evenly: larger VMs tend to show more, as they have more vCPUs.
 
 ## Leading and lagging
@@ -97,9 +101,9 @@ related:
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
   path: Metric Mastery > Aggregation; The Problem with Average; Lagging vs Leading Indicators; "Peak" Utilization; Depth vs Breadth; Usage Disparity
-corrections: []
+corrections:
+- 'Section ''Divide summed counters correctly'': the book writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs), which gives ms per vCPU. The denominator needs the sample length (https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html).'
 review_notes:
-- 'To check: Section ''Summed counters'': the 20,000 ms factor in the formula is not in the book, which writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs) (Q137).'
 - 'Section ''Techniques'': the book table "Count / Worst 5th Percentile / Exclusion" lists 10 → 9.50, 0.50 and so on; written as members excluded.'
 status: draft
 ```

@@ -116,8 +116,8 @@ A metric with its own file is an entry only when it has another name or a confus
 ### Performance, SLA and KPI
 
 - **Actual Availability (%)**: Availability as it happened. Same scope as the Availability SLA: the Guest OS. Usually lower than Operational Availability.
-- **Class of service**: Gold, Silver, Bronze: each with its own price, overcommit ratio, maximum VM size and availability SLA.
-  - Also called: Tier
+- **Class of service**: Gold, Silver, Bronze: classes of the data centre infrastructure a VM runs on, each with its own price, overcommit ratio, maximum VM size and availability SLA. Gold is mission critical, Silver standard production and DR, Bronze test and development or non-production.
+  - Also called: Tier, standard production (Silver), test and development (Bronze), non-production (Bronze)
 - **Crown jewels**: The critical business applications, strategic to the core business: few VMs, essential to revenue, profit or image. Each gets a KPI at the infrastructure layer.
   - Also called: Mission-critical applications
   - File: [`sp5-framework/performance/business-application-kpi`](sp5-framework/performance/business-application-kpi.md)

@@ -59,7 +59,6 @@ corrections: []
 review_notes:
 - 'Section ''Where colours change'': the Horizon bounds (yellow 2, orange 3, red 4) are read from the source screenshot of the widget colour settings (coloring: above).'
 - 'To check: Section ''Gradient'': vSAN disk groups exist in the vSAN Original Storage Architecture; vSAN ESA uses a storage pool per host. The point about gradients holds either way.'
-- 'To check: Section ''Where colours change'': the 2x per colour scale differs from the alert scale in sp5-framework/outputs/alert-design (red worse than orange by threshold, population or time). (Q140).'
 - 'Not copied: the gradient heat maps and the compliance dashboard screenshot.'
 status: draft
 ```

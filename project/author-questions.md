@@ -70,104 +70,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-### Q135 · Why a New Framework? > Complexity · ITIL 4 or ITIL 5
-
-- Files: [Why SP5 and not ITIL](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/why-a-new-framework.md) (section Complexity).
-- Search: "ITIL 5 has 34 management practices"
-- Question: the 34 practices are ITIL 4 (the linked list is ITIL 4). Is "ITIL 5" a typo, or does ITIL 5 keep the same 34?
-- Written as now: "ITIL 4 has 34 management practices: 17 service management, 3 technical management, 14 general management." "ITIL merges capacity and performance into one practice."
-- Final answer (2026-11-12; expert call, from PeopleCert):
-  - Not a typo any more: ITIL (Version 5) exists. Foundation exam since February 2026; PeopleCert plans to retire the ITIL 4 modules on 31 December 2027.
-  - It keeps 34 practices: "For ITIL (Version 5), the 34 ITIL management practices will remain largely the same" (https://www.peoplecert.org/help-and-support/faq-itil).
-  - The grouping changed: ITIL 4 had service (17), technical (3), general (14); ITIL (Version 5) has product and service management, and general management (22 and 12 per a secondary source; the full list is for PeopleCert Plus members).
-  - Capacity and performance management is still one practice, so the Complexity point stands.
-  - Text: "ITIL (Version 5), like ITIL 4, has 34 management practices, in two groups: product and service management, general management." Drop the 17/3/14 split or label it ITIL 4.
-  - Change if accepted: why-a-new-framework (Complexity; PeopleCert source); delete the review note.
-  - For you: nothing.
-- Answer:
-
-### Q136 · Part 3 > Modelling > Calculation · KPI colours and a timeline
-
-- Files: [Modelling a pillar into one number](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md) (sections Setting thresholds, Misconceptions); [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alerts-and-insights.md).
-- Search: "The threshold maps to a timeline."
-- Question: the book maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow). Your Q089 answer: alert colours have a timeline, KPI colours do not. Remove the timeline from Modelling?
-- Written as now: modelling, Setting thresholds: "Red is not an emergency: look within hours." Misconception: "Red means drop everything" → look within hours. alerts-and-insights: "an alert colour is a deadline … A KPI colour band is proactive and carries no deadline", and the same misconception "Red means drop everything" → red is attended within 1-2 hours. One misconception, two answers.
-- Final answer (2026-11-12; settled by Q089):
-  - Remove the timeline. An alert colour carries a deadline because time has started (red within 1-2 hours, orange by the end of the day); a KPI or model colour is proactive and carries none.
-  - Setting thresholds: replace the bullet with "A KPI or model colour says how bad, not by when. The daily health check reads red first, then orange, then how often a value enters red and its trend."
-  - Misconceptions: replace "Red means drop everything → look within hours" with "KPI red: act within hours" → a KPI colour has no deadline; the alert carries it. "Red means drop everything" stays only in alerts-and-insights, where it is about alerts.
-  - The same holds for the models (Cluster Consumption, Cluster Risk).
-  - Change if accepted: modelling (Setting thresholds, Misconceptions); delete the review note.
-  - For you: nothing.
-- Answer:
-
-### Q137 · Metric Mastery > Aggregation > The Problem with Average · ESXi CPU Ready (%)
-
-- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/aggregation.md) (section Divide summed counters correctly).
-- Search: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs)"
-- Question: the formula divides milliseconds by a vCPU count, which gives ms per vCPU, not %. Correct to ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs)?
-- Written as now: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs)"; example 149,116 ms, 67 VMs, 195 vCPUs, no result given; "Divide by running vCPUs, not by physical cores."
-- Final answer (2026-11-12; expert call; Broadcom KB 306576 confirms):
-  - Yes. The denominator needs the sample length.
-  - General form: ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of running VMs) × 100.
-  - Sample length: vCenter real time 20,000 ms; VCF Operations 20,000 ms, also for its 5-minute points (it averages the 15 20-second values); vCenter rollups are sums: 300,000 (past day), 1,800,000 (past week), 7,200,000 (past month), 86,400,000 (past year).
-  - Divide by vCPUs, not cores or threads: Ready is a state of each vCPU, and each vCPU's states add up to the sample length.
-  - Example result: 149,116 / (20,000 × 195) × 100 = 3.8%.
-  - Limits: a VM powered on or moved in during the sample counts only part of it. The result is an average that hides the worst VM; read ESXi Performance (%) (worst VM and 90th percentile).
-  - Sources: https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html
-  - Change if accepted: aggregation (general formula, sample lengths, example result); delete the review note (it cites the old section name Summed counters).
-  - For you: nothing.
-- Answer:
-
-### Q139 · Part 2 > Proactive Operations > Business Applications > vSphere Folder Structure · Diagram label
-
-- Files: [Business applications in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/business-applications.md) (section vSphere folder structure, image).
-- Search: "This is why I only have 2 levels of organisation in the above"
-- Question: in the folder diagram, the third application under Department 2 is labelled C.3: Application C. Should it be C.2: Application C?
-- Written as now: the image still shows C.3; the alt text says Department 2 owns Applications A, B and C.
-- Final answer (2026-11-12; expert call): C.2: Application C.
-  - Every label starts with the business unit letter and the department number ("C.2: Application A", "C.2.B: Web Tier"). C.3 would sit under Department 3; its arrow comes from Department 2.
-  - Agent E2 reads the alt text, which is already right.
-  - Change if accepted: business-applications, delete the review note; relabel the image when convenient.
-  - For you: nothing.
-- Answer:
-
-### Q140 · Part 2 > Proactive Operations > Alert > Threshold Design · Red vs orange scale
-
-- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (sections Threshold design, What not to alert); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md).
-- Search 1: "For example, Red is always 4x of orange. You can make red 2x as bad by modifying any 2 of the following"
-- Search 2: "going up from the usual 0.2s to 0.6x second"
-- Question: (a) is red 4x orange (two factors doubled) or 2x orange (one factor doubled)? (b) 0.2 s to 0.6 s is 3x as long; the text says 300% longer. Which is right?
-- Written as now: alert-design: "Set the acute threshold at 4x the sustained one"; three ways to make red worse than orange (2x threshold, 2x population, 2x time); "3x as long over 12 hours (0.2 s to 0.6 s)". No "4x orange" and no "300%". alert-definitions: "a 20-second peak above 4x the 5-minute threshold".
-- Final answer (2026-11-12; expert call; the 4x part settled by Q152):
-  - (a) Red = 2x orange, on every threshold of a set (thresholds-alerts.yaml, peak / average):
-    - infrastructure CPU: orange 12% / 3%, red 24% / 6%;
-    - VM memory: orange 12% / 3%, red 24% / 6%;
-    - infrastructure memory: orange 8% / 2%, red 16% / 4%;
-    - VM disk: orange 160 / 40 ms, red 320 / 80 ms.
-  - Exception: VM CPU orange keeps the red peak and contention (Q144). VM network has red only.
-  - Doubling peak and average together is one factor: an episode twice as bad crosses both. "Red is always 4x of orange" reads as the peak-to-average guide (about 4x inside one colour) put in the wrong place.
-  - 4x inside a colour is a guide for choosing the 20-second value, never a formula (Q152). alert-design ("Set the acute threshold at 4x the sustained one") and alert-definitions ("above 4x the 5-minute threshold") state it as a rule: reword both to a guide.
-  - (b) Done: 3x as long, 0.2 s to 0.6 s (200% longer). "0.6x second" means 0.6 second.
-  - Change if accepted: alert-design, Threshold design: "In the recommended set red is 2x orange on every threshold. Inside one colour the 20-second peak is set near 4x the 5-minute value: a guide, not a formula." alert-definitions, one line. Delete both review notes.
-  - For you: nothing.
-- Answer:
-
-### Q141 · Part 2 > Proactive Operations > Alert > Class of Service: The What · Class names
-
-- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (sections Class of service, What to alert); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Class of service, Crown jewels).
-- Search: "Mission Critical: VM Disk Latency > 30 ms for 5 minutes."
-- Question: Part 2 names the classes mission critical, standard production, test and development; Part 1 names them Gold, Silver, Bronze. Map them one to one? Are 30, 60, 120 ms per class the same idea as a performance SLA per class?
-- Written as now: alert-design: "Use 3 classes: mission critical, standard production, test and development", example 30 ms / 5 min, 60 ms / 10 min, 120 ms / 10 min; "Align with the KPI levels, the internal baseline." class-of-service: "Gold: … mission-critical applications"; "Silver: most production workloads. Bronze: test and development." Glossary: Class of service (Also called: Tier); "Mission-critical applications" is an Also called of Crown jewels. The two SLA lines were fixed on 2026-11-11.
-- Final answer (2026-11-12; settled by class-of-service, Q089, Q106, the 2026-11-10 and 2026-11-11 decisions):
-  - Mapping: Gold = mission critical, Silver = standard production, Bronze = test and development. Write Gold, Silver, Bronze in alert-design.
-  - Glossary: add "standard production" (Silver) and "test and development" (Bronze) to the Also called line of Class of service. Do not make "mission critical" a name of Gold: it is already a name of Crown jewels, which always run in Gold (2026-11-09) but are not all of Gold.
-  - 30/60/120 ms: an alert threshold per class is allowed, because an alert colour is urgency plus importance (Q089). The KPI has no class (2026-11-10), and there is no performance SLA (2026-11-11). An alert scores nothing, so the KPI objection does not apply.
-  - alert-design "Align with the KPI levels, the internal baseline" contradicts "KPI and alert are independent" (2026-11-10): reword to "Alerts read KPI metrics with their own values; KPI levels and alert values are set apart."
-  - Change if accepted: alert-design (class names; the KPI line); glossary (Class of service, Also called); delete the review note.
-  - For you: nothing.
-- Answer:
-
 ### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
 
 - Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Design the alerts as a set); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/configuration/guest-os-alerts.md); [Storage alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-alerts.md).
@@ -359,6 +261,110 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q135 · Why a New Framework? > Complexity · ITIL 4 or ITIL 5
+
+- Files: [Why SP5 and not ITIL](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/why-a-new-framework.md) (section Complexity).
+- Search: "ITIL 5 has 34 management practices"
+- Question: the 34 practices are ITIL 4 (the linked list is ITIL 4). Is "ITIL 5" a typo, or does ITIL 5 keep the same 34?
+- Written as now: "ITIL 4 has 34 management practices: 17 service management, 3 technical management, 14 general management." "ITIL merges capacity and performance into one practice."
+- Final answer (2026-11-12; expert call, from PeopleCert):
+  - Not a typo any more: ITIL (Version 5) exists. Foundation exam since February 2026; PeopleCert plans to retire the ITIL 4 modules on 31 December 2027.
+  - It keeps 34 practices: "For ITIL (Version 5), the 34 ITIL management practices will remain largely the same" (https://www.peoplecert.org/help-and-support/faq-itil).
+  - The grouping changed: ITIL 4 had service (17), technical (3), general (14); ITIL (Version 5) has product and service management, and general management (22 and 12 per a secondary source; the full list is for PeopleCert Plus members).
+  - Capacity and performance management is still one practice, so the Complexity point stands.
+  - Text: "ITIL (Version 5), like ITIL 4, has 34 management practices, in two groups: product and service management, general management." Drop the 17/3/14 split or label it ITIL 4.
+  - Change if accepted: why-a-new-framework (Complexity; PeopleCert source); delete the review note.
+  - For you: nothing.
+- Answer: Agree. Proceed to update and close.
+- Applied 2026-11-12: why-a-new-framework, Complexity: ITIL (Version 5), like ITIL 4, has 34 practices in two groups (product and service management, general management); the 17/3/14 split labelled ITIL 4; capacity and performance still one practice; PeopleCert FAQ added to the source; review note deleted. Closed.
+
+### Q136 · Part 3 > Modelling > Calculation · KPI colours and a timeline
+
+- Files: [Modelling a pillar into one number](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md) (sections Setting thresholds, Misconceptions); [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alerts-and-insights.md).
+- Search: "The threshold maps to a timeline."
+- Question: the book maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow). Your Q089 answer: alert colours have a timeline, KPI colours do not. Remove the timeline from Modelling?
+- Written as now: modelling, Setting thresholds: "Red is not an emergency: look within hours." Misconception: "Red means drop everything" → look within hours. alerts-and-insights: "an alert colour is a deadline … A KPI colour band is proactive and carries no deadline", and the same misconception "Red means drop everything" → red is attended within 1-2 hours. One misconception, two answers.
+- Final answer (2026-11-12; settled by Q089):
+  - Remove the timeline. An alert colour carries a deadline because time has started (red within 1-2 hours, orange by the end of the day); a KPI or model colour is proactive and carries none.
+  - Setting thresholds: replace the bullet with "A KPI or model colour says how bad, not by when. The daily health check reads red first, then orange, then how often a value enters red and its trend."
+  - Misconceptions: replace "Red means drop everything → look within hours" with "KPI red: act within hours" → a KPI colour has no deadline; the alert carries it. "Red means drop everything" stays only in alerts-and-insights, where it is about alerts.
+  - The same holds for the models (Cluster Consumption, Cluster Risk).
+  - Change if accepted: modelling (Setting thresholds, Misconceptions); delete the review note.
+  - For you: nothing.
+- Answer: KPI is not about time. It is about severity. Logically, there is a relationship between worse KPI and higher urgency. However, do not create a hard association that a Red KPI = Red Alert. Red KPI does not mean look at this today. Color depends on the context. The same metric may have different color depending on where it's used (alert, NOC live screen, daily report, dashboard).
+- Applied 2026-11-12: modelling, Setting thresholds: a KPI or model colour is severity, not a deadline; worse KPI usually means more urgency, no fixed link to alert red; colour thresholds depend on the channel (alert, NOC live screen, daily report, dashboard; link to system-engagement). Misconceptions: "KPI red: act today, like a red alert" and "A metric has one colour scale everywhere" replace "Red means drop everything". alerts-and-insights misconception: "They are not related" replaced by the severity reading. Review note deleted. Closed.
+
+### Q137 · Metric Mastery > Aggregation > The Problem with Average · ESXi CPU Ready (%)
+
+- Files: [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/aggregation.md) (section Divide summed counters correctly).
+- Search: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs)"
+- Question: the formula divides milliseconds by a vCPU count, which gives ms per vCPU, not %. Correct to ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs)?
+- Written as now: "ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (20,000 ms × vCPUs of running VMs)"; example 149,116 ms, 67 VMs, 195 vCPUs, no result given; "Divide by running vCPUs, not by physical cores."
+- Final answer (2026-11-12; expert call; Broadcom KB 306576 confirms):
+  - Yes. The denominator needs the sample length.
+  - General form: ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of running VMs) × 100.
+  - Sample length: vCenter real time 20,000 ms; VCF Operations 20,000 ms, also for its 5-minute points (it averages the 15 20-second values); vCenter rollups are sums: 300,000 (past day), 1,800,000 (past week), 7,200,000 (past month), 86,400,000 (past year).
+  - Divide by vCPUs, not cores or threads: Ready is a state of each vCPU, and each vCPU's states add up to the sample length.
+  - Example result: 149,116 / (20,000 × 195) × 100 = 3.8%.
+  - Limits: a VM powered on or moved in during the sample counts only part of it. The result is an average that hides the worst VM; read ESXi Performance (%) (worst VM and 90th percentile).
+  - Sources: https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html
+  - Change if accepted: aggregation (general formula, sample lengths, example result); delete the review note (it cites the old section name Summed counters).
+  - For you: nothing.
+- Answer: Agree. Proceed to update and close.
+- Applied 2026-11-12: aggregation, Divide summed counters correctly: general formula with the sample length, sample lengths for vCenter real time, rollups and VCF Operations, example result 3.8%, partial-sample and worst-VM limits; the book formula recorded in corrections with the Broadcom KB and API sources; review note deleted. Closed.
+
+### Q139 · Part 2 > Proactive Operations > Business Applications > vSphere Folder Structure · Diagram label
+
+- Files: [Business applications in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/business-applications.md) (section vSphere folder structure, image).
+- Search: "This is why I only have 2 levels of organisation in the above"
+- Question: in the folder diagram, the third application under Department 2 is labelled C.3: Application C. Should it be C.2: Application C?
+- Written as now: the image still shows C.3; the alt text says Department 2 owns Applications A, B and C.
+- Final answer (2026-11-12; expert call): C.2: Application C.
+  - Every label starts with the business unit letter and the department number ("C.2: Application A", "C.2.B: Web Tier"). C.3 would sit under Department 3; its arrow comes from Department 2.
+  - Agent E2 reads the alt text, which is already right.
+  - Change if accepted: business-applications, delete the review note; relabel the image when convenient.
+  - For you: nothing.
+- Answer: Update with attached (new diagram).
+- Applied 2026-11-12: business-applications: the folder image replaced with the author's diagram (Business Units B, C, D; C.2: Application A, B, C; C.2.B tiers); alt text updated; review note deleted. Closed.
+
+### Q140 · Part 2 > Proactive Operations > Alert > Threshold Design · Red vs orange scale
+
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (sections Threshold design, What not to alert); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md).
+- Search 1: "For example, Red is always 4x of orange. You can make red 2x as bad by modifying any 2 of the following"
+- Search 2: "going up from the usual 0.2s to 0.6x second"
+- Question: (a) is red 4x orange (two factors doubled) or 2x orange (one factor doubled)? (b) 0.2 s to 0.6 s is 3x as long; the text says 300% longer. Which is right?
+- Written as now: alert-design: "Set the acute threshold at 4x the sustained one"; three ways to make red worse than orange (2x threshold, 2x population, 2x time); "3x as long over 12 hours (0.2 s to 0.6 s)". No "4x orange" and no "300%". alert-definitions: "a 20-second peak above 4x the 5-minute threshold".
+- Final answer (2026-11-12; expert call; the 4x part settled by Q152):
+  - (a) Red = 2x orange, on every threshold of a set (thresholds-alerts.yaml, peak / average):
+    - infrastructure CPU: orange 12% / 3%, red 24% / 6%;
+    - VM memory: orange 12% / 3%, red 24% / 6%;
+    - infrastructure memory: orange 8% / 2%, red 16% / 4%;
+    - VM disk: orange 160 / 40 ms, red 320 / 80 ms.
+  - Exception: VM CPU orange keeps the red peak and contention (Q144). VM network has red only.
+  - Doubling peak and average together is one factor: an episode twice as bad crosses both. "Red is always 4x of orange" reads as the peak-to-average guide (about 4x inside one colour) put in the wrong place.
+  - 4x inside a colour is a guide for choosing the 20-second value, never a formula (Q152). alert-design ("Set the acute threshold at 4x the sustained one") and alert-definitions ("above 4x the 5-minute threshold") state it as a rule: reword both to a guide.
+  - (b) Done: 3x as long, 0.2 s to 0.6 s (200% longer). "0.6x second" means 0.6 second.
+  - Change if accepted: alert-design, Threshold design: "In the recommended set red is 2x orange on every threshold. Inside one colour the 20-second peak is set near 4x the 5-minute value: a guide, not a formula." alert-definitions, one line. Delete both review notes.
+  - For you: nothing.
+- Answer: The 4x is a general guideline, not a rule you must strictly follow. It depends on the metric. Some metrics are flatter (needs <4x multiplier), while other metrics are more volatile (needs >4x multiplier).
+- Applied 2026-11-12: alert-design, Threshold design: the 20-second peak near 4x the 5-minute value is a guide that depends on the metric (flat less, volatile more); red is 2x orange in the recommended set; new misconception "Red is always 4x orange". alert-definitions and cpu-alerts: rule reworded to guide. Review notes deleted in alert-design and dashboard-colour. Closed.
+
+### Q141 · Part 2 > Proactive Operations > Alert > Class of Service: The What · Class names
+
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (sections Class of service, What to alert); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Class of service, Crown jewels).
+- Search: "Mission Critical: VM Disk Latency > 30 ms for 5 minutes."
+- Question: Part 2 names the classes mission critical, standard production, test and development; Part 1 names them Gold, Silver, Bronze. Map them one to one? Are 30, 60, 120 ms per class the same idea as a performance SLA per class?
+- Written as now: alert-design: "Use 3 classes: mission critical, standard production, test and development", example 30 ms / 5 min, 60 ms / 10 min, 120 ms / 10 min; "Align with the KPI levels, the internal baseline." class-of-service: "Gold: … mission-critical applications"; "Silver: most production workloads. Bronze: test and development." Glossary: Class of service (Also called: Tier); "Mission-critical applications" is an Also called of Crown jewels. The two SLA lines were fixed on 2026-11-11.
+- Final answer (2026-11-12; settled by class-of-service, Q089, Q106, the 2026-11-10 and 2026-11-11 decisions):
+  - Mapping: Gold = mission critical, Silver = standard production, Bronze = test and development. Write Gold, Silver, Bronze in alert-design.
+  - Glossary: add "standard production" (Silver) and "test and development" (Bronze) to the Also called line of Class of service. Do not make "mission critical" a name of Gold: it is already a name of Crown jewels, which always run in Gold (2026-11-09) but are not all of Gold.
+  - 30/60/120 ms: an alert threshold per class is allowed, because an alert colour is urgency plus importance (Q089). The KPI has no class (2026-11-10), and there is no performance SLA (2026-11-11). An alert scores nothing, so the KPI objection does not apply.
+  - alert-design "Align with the KPI levels, the internal baseline" contradicts "KPI and alert are independent" (2026-11-10): reword to "Alerts read KPI metrics with their own values; KPI levels and alert values are set apart."
+  - Change if accepted: alert-design (class names; the KPI line); glossary (Class of service, Also called); delete the review note.
+  - For you: nothing.
+- Answer: Mapping: Gold = mission critical, Silver = standard production and DR, Bronze = test and development, or non-production. Write Gold, Silver, Bronze in alert-design. The use of color is convenient as it's a short English word. However, it must be applied to data center infrastructure.
+- Applied 2026-11-12: alert-design, Class of service: Gold, Silver, Bronze with the mapping; a class belongs to the data centre infrastructure, not the application; the table uses Gold, Silver, Bronze; per-class alert thresholds allowed (no class in the KPI, no performance SLA); "Align with the KPI levels" reworded. class-of-service: Silver includes DR, Bronze non-production, class of the infrastructure. Glossary, Class of service: definition and Also called (standard production, test and development, non-production). Review note deleted. Closed.
 
 ### Q132 · VCF-vCommunity-Adapter vs Part 1 > Cluster Closure · Which closure thresholds does Agent E2 apply
 
