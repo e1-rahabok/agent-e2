@@ -295,9 +295,9 @@ class Catalog:
                          f"(source: {r['source']}) [{r['kb']}]")
         for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
             worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
-            vals = '; '.join(f"{iv} {r[col].replace('/', ', ') if r[col] else 'no value'}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
+            vals = '; '.join(f"{iv} {_ranges(r[col])}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
             ex = '; left out of the score while green' if r['excluded'] else ''
-            lines.append(f"- KPI levels (yellow, orange, red): {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
+            lines.append(f"- KPI levels: {r['object']} {r['metric']} ({r['grp']}), {worse}: {vals}{ex}. [{r['src']}]")
         for r in self._q(f'SELECT * FROM bands WHERE kb IN ({marks})', tuple(ids)):
             grey = f"grey {r['grey']}, " if r['grey'] else ''
             lines.append(f"- Bands: {r['metric']} ({r['grp']}): {grey}green {r['green']}, yellow {r['yellow']}, orange {r['orange']}, red {r['red']}. [{r['kb']}]")
@@ -349,9 +349,18 @@ def _use_label(r):
     return USE_LABELS.get(r['use'], r['use']) + (f', {extra}' if extra else '')
 
 
+def _ranges(cell):
+    """'0/2/4/8/16' -> 'green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16'. Score 100, 75, 50, 25, 0 at the five limits, linear between."""
+    if not cell:
+        return 'no value'
+    v = cell.split('/')
+    cols = [f'{c} {a}' if a == b else f'{c} {a}-{b}' for c, a, b in zip(('green', 'yellow', 'orange', 'red'), v, v[1:])]
+    return ', '.join(cols) + f', score 0 beyond {v[4]}'
+
+
 def _kpi(r):
     return {'object': r['object'], 'metric': r['metric'], 'group': r['grp'], 'worse': r['direction'],
-            **{iv: (f'yellow/orange/red {r[col]}' if r[col] else 'no value') for iv, col in (('5m', 'm5'), ('20s', 's20'), ('2s', 's2'))},
+            **{iv: _ranges(r[col]) for iv, col in (('5m', 'm5'), ('20s', 's20'), ('2s', 's2'))},
             **({'excluded_when_green': True} if r['excluded'] else {}), 'kb': r['src']}
 
 

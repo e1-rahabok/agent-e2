@@ -361,7 +361,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
     objects = set(allowed['object'])
     seen_thresholds, kpi_all, seen_kpi = set(), [], set()
     def check_kpi_line(path, w, lv):
-        """One KPI line: [yellow, orange, red] per interval, worsening in its direction; one line per metric."""
+        """One KPI line: [green, yellow, orange, red, zero] per interval, worsening in its direction; one line per metric."""
         for k in ('object', 'metric', 'group', 'direction', 'kb'):
             if not lv.get(k): bad(path, f'{w}: {k} missing')
         if lv.get('direction') not in ('above', 'below'): bad(path, f'{w}: direction must be above or below')
@@ -370,10 +370,10 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         for iv in ('5m', '20s', '2s'):
             v = lv.get(iv, 'missing')
             if v == 'missing': bad(path, f'{w}: {iv} missing (write null until a value is entered)')
-            elif v is not None and (not isinstance(v, list) or len(v) != 3): bad(path, f'{w}: {iv} needs [yellow, orange, red]')
+            elif v is not None and (not isinstance(v, list) or len(v) != 5): bad(path, f'{w}: {iv} needs [green, yellow, orange, red, zero]')
             elif v is not None:
                 x = [float(i) for i in v]
-                if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from yellow to red')
+                if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from green to zero')
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')

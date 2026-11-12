@@ -69,7 +69,7 @@ VM DRS score = Performance Goodness × 0.8 / CPU Demand
 
 ## Scoring
 - Each metric maps to a score: green 100-75, yellow 75-50, orange 50-25, red 25-0.
-- Five limits per metric: the values where the score is 100, 75, 50, 25 and 0. Inside a range the score falls in a straight line. Past the 0 limit it stays 0; before the best limit it stays 100.
+- Five limits per metric: the values where the score is 100, 75, 50, 25 and 0. Inside a range the score falls in a straight line. Past the 0 limit it stays 0; before the best limit it stays 100. In `catalog/thresholds-performance`, section `kpi`, each cell holds them as [green, yellow, orange, red, zero]: where each colour starts, and where red ends. Red is a range, not open ended: without the zero limit no score can be computed.
 - Combine as a weighted average where a worse score weighs more:
 
 ```text
@@ -85,7 +85,7 @@ weight = 2 ^ ((100 - score) / 25)
 - Missing data: a metric with no data is left out, never counted as 0, because 0 usually means perfect. With no data at all, the KPI is not published.
 - Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section A worse sub-metric can lower Cluster Risk.
 - Excluded green on the VM KPI: CPU Net Run below 95%, CPU Overlap below 0.5%, Network Dropped Tx at exactly 0 ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)).
-- Guest OS Free Memory is descending: more is better. 1 GB or more scores 100; green ends at 512 MB. KB is converted to MB.
+- Guest OS Free Memory is descending: more is better, so its limits go down and its green limit is not 0. KB is converted to MB.
 - Free Memory uses the latest value, not the lowest 20-second value: it measures space, and the latest value matters.
 - Swapped + Compressed has no built-in metric: the pack computes it as Memory Zip Swap.
 - Why four equal ranges, thresholds and validation: [`sp5-framework/concepts/modelling`](../concepts/modelling.md).

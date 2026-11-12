@@ -13,7 +13,7 @@ meta:
     instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
     operator: '>, >=, <, <=, =, range.'
     value: 'The number compared against; range: low end, value_high the high end.'
-    unit: Unit of value.
+    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit.'
     condition: Another condition that must hold at the same time.
     meaning: What the knowledge file says the value means.
     group: 'models: the group column of the source table (for example Utilization, Depth).'
@@ -426,7 +426,7 @@ rules:
   object: Datastore
   operator: <
   value: 250
-  unit: VMs
+  unit: count
   meaning: Concentration risk cap (example policy).
   source: knowledge-base
   kb: sp5-framework/capacity/capacity-management
@@ -529,11 +529,11 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-vcpu
-  metric: Typical VM size
+  metric: Typical VM size, vCPU
   object: VirtualMachine
   operator: '='
   value: 16
-  unit: vCPU
+  unit: count
   condition: Gold class of service, planning stage
   meaning: Average VM of the class for planning, not its maximum size; memory = vCPU × planning-gb-per-vcpu.
   source: knowledge-base
@@ -599,11 +599,11 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-vcpu
-  metric: Typical VM size
+  metric: Typical VM size, vCPU
   object: VirtualMachine
   operator: '='
   value: 8
-  unit: vCPU
+  unit: count
   condition: Silver class of service, planning stage
   meaning: Average VM of the class for planning, not its maximum size; memory = vCPU × planning-gb-per-vcpu.
   source: knowledge-base
@@ -669,11 +669,11 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-vcpu
-  metric: Typical VM size
+  metric: Typical VM size, vCPU
   object: VirtualMachine
   operator: '='
   value: 4
-  unit: vCPU
+  unit: count
   condition: Bronze class of service, planning stage
   meaning: Average VM of the class for planning, not its maximum size; memory = vCPU × planning-gb-per-vcpu.
   source: knowledge-base
@@ -689,11 +689,11 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-hypervisor-threads
-  metric: Hypervisor overhead, CPU
+  metric: Hypervisor overhead, CPU threads
   object: HostSystem
   operator: '='
   value: 14
-  unit: threads per host
+  unit: count
   condition: Planning stage default
   meaning: 'ESXi, vSAN (with deduplication and compression) and NSX on a 64-core host; NSX Enhanced Data Path adds 2-4 cores. Example value: set per design.'
   source: knowledge-base
