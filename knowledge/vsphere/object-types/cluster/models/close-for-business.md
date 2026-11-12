@@ -1,8 +1,7 @@
-# Close for Business (capacity model decision, vCommunity management pack for VCF Operations)
+# Close for Business 
 
 ## What it is
-- The capacity model's decision for one vSphere cluster: 1 = closed for business (full: place no new VM), 0 = open.
-- Published by the vCommunity management pack once per period (default every 24 hours) on every cluster, under `vCommunity|Periodic Cluster Check`.
+- The capacity model's automatic decision for one vSphere cluster: 1 = closed for business (full: place no new VM), 0 = open.
 - Built from three 0-100% scores: Cluster Performance (KPI, [`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)), Cluster Consumption (capacity model, [`vsphere/object-types/cluster/models/cluster-consumption`](cluster-consumption.md)), Cluster Risk (risk model, [`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md)).
 - It implements the overcommit path of the book's closure logic, with one rule for every cluster. The full decision, including the no-overcommit path and the fit of new VMs: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md).
 
