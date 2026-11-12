@@ -35,7 +35,7 @@
 - Advice to the VMware admin: keep two settings. Production focuses on performance and closes at Risk orange. Non-production focuses on cost: it runs fuller and closes at Risk red ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md), step 6).
 - Not published when one of the three scores has no data in the window.
 
-| Worst Performance | Worst Risk | Worst Consumption | Close for Business |
+| Performance | Risk | Consumption | Close for Business |
 |---|---|---|---|
 | 20 | 10 | 30 | 1 (rule 1: Performance red) |
 | 90 | 10 | 80 | 1 (rule 1: Consumption red) |
