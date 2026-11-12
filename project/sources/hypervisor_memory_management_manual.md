@@ -1,6 +1,6 @@
-# Level 400 Technical Manual: Hypervisor Memory Management & SLAT Mechanics
+# Hypervisor Memory Management & SLAT Mechanics
 
-## 1. Executive Summary & Architectural Scope
+## 1. Architectural Scope
 
 Modern Type-1 hypervisors—including VMware vSphere ESXi, Linux KVM, and Microsoft Hyper-V—rely on hardware-assisted virtualization to manage system memory. Through hardware mechanisms such as **Intel EPT** (Extended Page Tables) or **AMD RVI** (Rapid Virtualization Indexing), the hypervisor abstracts physical host memory while maintaining performance near bare-metal speeds.
 
