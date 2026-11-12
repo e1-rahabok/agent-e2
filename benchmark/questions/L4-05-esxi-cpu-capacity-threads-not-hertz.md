@@ -51,14 +51,18 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: decide-capacity
+object: [esxi]
+tool: [none]
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-measurement-levels
   - sp5-framework/capacity/overcommit
   - vsphere/technology/cpu/concepts/cpu-frequency
+knowledge_main: vsphere/technology/cpu/concepts/cpu-measurement-levels
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESXi Total Capacity"
 answer_type: judged
 level: 400                      # author 2026-11-05
+misconception_type: [frequency-and-hyper-threading]
 status: draft
 ```

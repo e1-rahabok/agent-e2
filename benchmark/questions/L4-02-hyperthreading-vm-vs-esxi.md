@@ -27,14 +27,18 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: read-metric
+object: [vm, esxi]
+tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
   - vsphere/technology/cpu/metrics/host/usage
   - vsphere/technology/cpu/metrics/host/core-utilization
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/usage
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
 answer_type: judged
 level: 400                      # author 2026-11-05
+misconception_type: [same-name-other-object, frequency-and-hyper-threading]
 status: draft
 ```

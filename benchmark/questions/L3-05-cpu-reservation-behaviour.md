@@ -38,10 +38,13 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: judge-setting
+object: [vm, resource-pool, esxi]
+tool: [none]
 knowledge:
   - vsphere/architecture/resource-controls
   - vsphere/technology/cpu/metrics/host/reserved-capacity
   - vsphere/architecture/overhead
+knowledge_main: vsphere/architecture/resource-controls
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"
@@ -49,5 +52,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A,B,C,D]
 misconception: [E,F,G]
+misconception_type: [provider-vs-consumer]
 status: draft
 ```

@@ -346,8 +346,10 @@ For the set:
 10. Is every misconception type covered at least 5 times?
 
 ## 12. Status
-- Rebuilding to the blueprint of section 3 (2026-11-12). The slots and progress: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2. Counts: `python3 project/tools/coverage.py`.
-- 2026-11-12, start of the rebuild: 84 questions in the folder (28 by the author, 51 synthetic to revise, 5 deferred screenshot questions); 11 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
+- 2026-11-12: 150 questions run, at the allocation of section 3 (`python3 project/tools/coverage.py`; tasks within 2 of target: decide-capacity 31, explain-mechanism 24). Plus 5 deferred screenshot questions; 11 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
+- Origin: 35 by the author (17 quiz, 10 book, 8 from the author's samples of 2026-11-12), 3 real exchanges, 112 synthetic. 35 carry a CSV; 1 a screenshot.
+- Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Open points: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), Q182-Q191. Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
+- Status draft: each question counts after the author's review (section 6.2).
 
 ## 13. Screenshot questions (after 1.0)
 - Purpose: administrators upload screenshots and ask the agent to explain the problem, often several at once, from different tools.

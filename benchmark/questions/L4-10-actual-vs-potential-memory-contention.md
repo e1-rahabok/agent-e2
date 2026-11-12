@@ -36,6 +36,9 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
   - vsphere/technology/memory/metrics/virtual-motherboard/swapped
   - vsphere/technology/memory/vm-memory-latency-high
+object: [vm]
+tool: [none]
+knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q3 VM Memory Contention"
@@ -43,5 +46,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [C]
 misconception: [A,B]
+misconception_type: [reclamation-as-contention]
 status: draft
 ```

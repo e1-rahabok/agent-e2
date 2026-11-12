@@ -32,6 +32,9 @@ knowledge:
   - vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
   - vsphere/technology/storage/metrics/virtual-motherboard/iops
+object: [vm]
+tool: [none]
+knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Storage > Q1 Latency vs OIO"
@@ -39,5 +42,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [B]
 misconception: [A,D]
+misconception_type: [unit-and-normalization]
 status: draft
 ```

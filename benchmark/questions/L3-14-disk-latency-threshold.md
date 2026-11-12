@@ -28,10 +28,14 @@ input: [text]
 task: judge-setting
 knowledge:
   - sp5-framework/observability/thresholds
+object: [vm]
+tool: [vcenter]
+knowledge_main: sp5-framework/observability/thresholds
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Interpretation Challenge."
 answer_type: judged
 level: 300                      # author 2026-11-05
+misconception_type: [threshold-transplanted]
 status: draft
 ```

@@ -63,7 +63,9 @@ def main():
     print(line('text only', sum(1 for _, fm in run if (fm.get('input') or ['text']) == ['text']), INPUT['text'], False))
     print(line('table', c['table'], INPUT['table'], False)); print(line('screenshot', c['screenshot'], INPUT['screenshot'], False))
     c = collections.Counter(fm.get('task') for _, fm in run)
-    print('Task:'); [print(line(k, c[k], v)) for k, v in TASK.items()]
+    print('Task (within 2):')
+    for k, v in TASK.items():
+        print(f'  {k:<34} {c[k]:>4} / {v}' + ('' if abs(c[k] - v) <= 2 else '  <<'))
     c = collections.Counter(x for _, fm in run for x in (fm.get('technology') or []))
     print('Technology touched (at least):'); [print(line(k, c[k], v)) for k, v in TECHNOLOGY.items()]
     print(line('Guest OS layer (windows, linux)', sum(1 for _, fm in run if {'windows', 'linux'} & set(fm.get('product') or [])), GUEST_OS))

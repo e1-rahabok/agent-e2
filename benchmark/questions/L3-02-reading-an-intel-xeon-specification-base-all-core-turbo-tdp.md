@@ -40,11 +40,14 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: explain-mechanism
+object: [esxi]
+tool: [none]
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-frequency
   - vsphere/technology/cpu/concepts/power-states
   - vsphere/technology/cpu/configuration/host-power-management
   - vsphere/object-types/esxi/configuration/bios-settings
+knowledge_main: vsphere/technology/cpu/concepts/cpu-frequency
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q4 ESXi CPU Frequency"
@@ -52,5 +55,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A]
 misconception: [B,C,D]
+misconception_type: [frequency-and-hyper-threading]
 status: draft
 ```

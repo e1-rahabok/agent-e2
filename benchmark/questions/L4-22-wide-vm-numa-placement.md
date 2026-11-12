@@ -38,6 +38,8 @@ task: decide-capacity
 level: 400
 answer_type: deterministic
 input: [text]
+object: [vm, esxi]
+tool: [none]
 knowledge:
   - vsphere/technology/cpu/concepts/numa
   - vsphere/technology/cpu/concepts/virtual-numa

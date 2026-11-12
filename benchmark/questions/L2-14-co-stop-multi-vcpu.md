@@ -3,7 +3,7 @@
 ## Prompt
 Which statements about VM CPU Co-stop are correct? Choose all that apply.
 
-- A. It is time a vCPU is held back because a sibling vCPU of the same VM is too far behind.
+- A. It is time a vCPU is held back because a sibling vCPU of the same VM has fallen too far behind.
 - B. It applies only to VMs with more than one vCPU.
 - C. It is time the vCPU waits for disk IO.
 - D. While a vCPU is in Co-stop, its physical thread can run another VM.
@@ -30,12 +30,17 @@ task: explain-mechanism
 level: 200
 answer_type: deterministic
 input: [text]
+object: [vm]
+tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/concepts/vcpu-states
+  - vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A, B, D]
 misconception: [C]
+misconception_type: []
 status: draft
 ```

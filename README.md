@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
   <img src="https://img.shields.io/badge/knowledge%20files-277-6e7781?labelColor=3d444d" alt="Knowledge files: 277">
-  <img src="https://img.shields.io/badge/benchmark%20questions-95-6e7781?labelColor=3d444d" alt="Benchmark questions: 95">
+  <img src="https://img.shields.io/badge/benchmark%20questions-150-6e7781?labelColor=3d444d" alt="Benchmark questions: 150">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 

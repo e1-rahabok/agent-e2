@@ -1,0 +1,12 @@
+Name,Type,Parent,Power state,CPU reservation (MHz),CPU expandable reservation,CPU limit (MHz),CPU shares,Memory reservation (MB),Memory expandable reservation
+RP-MOM,Resource pool,cluster prod-cl07,,6000,No,Unlimited,Normal,0,Yes
+vm-mom-app01,VM,RP-MOM,Powered on,1500,,Unlimited,Normal,0,
+vm-mom-app02,VM,RP-MOM,Powered on,1500,,Unlimited,Normal,0,
+vm-mom-web01,VM,RP-MOM,Powered on,0,,Unlimited,Normal,0,
+RP-KID,Resource pool,RP-MOM,,2000,Yes,Unlimited,Normal,0,Yes
+vm-kid-db01,VM,RP-KID,Powered on,2000,,Unlimited,Normal,8192,
+vm-kid-db02,VM,RP-KID,Powered off,2000,,Unlimited,Normal,0,
+RP-OPS,Resource pool,cluster prod-cl07,,10000,Yes,Unlimited,Normal,0,Yes
+vm-ops-mon01,VM,RP-OPS,Powered on,2000,,Unlimited,Normal,4096,
+vm-ops-log01,VM,RP-OPS,Powered on,1000,,Unlimited,Normal,0,
+vm-ops-bak01,VM,RP-OPS,Powered on,0,,Unlimited,Normal,0,

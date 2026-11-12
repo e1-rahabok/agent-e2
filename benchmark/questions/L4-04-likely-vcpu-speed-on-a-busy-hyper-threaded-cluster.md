@@ -43,12 +43,14 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: decide-capacity
+object: [cluster, esxi, vm]
+tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-frequency
   - vsphere/technology/cpu/concepts/hyper-threading
-  - vsphere/technology/cpu/concepts/cpu-frequency
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
   - vsphere/technology/cpu/configuration/host-power-management
+knowledge_main: vsphere/technology/cpu/concepts/cpu-frequency
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q2 VM CPU Speed"
@@ -56,5 +58,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [C]
 misconception: [B,D]
+misconception_type: [frequency-and-hyper-threading]
 status: draft
 ```

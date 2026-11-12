@@ -27,12 +27,16 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: read-metric
+object: [vm]
+tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/wait
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/wait
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Confusing name)."
 answer_type: judged
 level: 300                      # author 2026-11-05
+misconception_type: [layer-confusion]
 status: draft
 ```

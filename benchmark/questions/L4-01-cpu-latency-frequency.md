@@ -28,14 +28,18 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: read-metric
+object: [vm, esxi]
+tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/latency
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/architecture/vm-vs-guest-os
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/latency
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."
 answer_type: judged
 level: 400                      # author 2026-11-05
+misconception_type: [frequency-and-hyper-threading]
 status: draft
 ```

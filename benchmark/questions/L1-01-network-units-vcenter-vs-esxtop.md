@@ -1,7 +1,7 @@
 # Network units in the vSphere Client and esxtop
 
 ## Prompt
-Which units do the two tools use for VM network throughput?
+Which units do the vSphere Client performance charts and esxtop use for VM network throughput?
 
 - A. Both show kilobytes per second.
 - B. The vSphere Client shows kilobytes per second; esxtop shows megabits per second.
@@ -25,6 +25,8 @@ id: "0029"
 title: "Network units in the vSphere Client and esxtop"
 product: [vsphere]
 technology: [network]
+object: [vm]
+tool: [vcenter, esxtop]
 task: read-metric
 level: 100
 answer_type: deterministic
@@ -32,10 +34,12 @@ input: [text]
 knowledge:
   - vsphere/tools/esxtop/units-vs-vsphere-client
   - vsphere/technology/network/metrics/virtual-motherboard/throughput
+knowledge_main: vsphere/tools/esxtop/units-vs-vsphere-client
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [B]
 misconception: [A]
+misconception_type: [tool-confusion, unit-and-normalization]
 status: draft
 ```

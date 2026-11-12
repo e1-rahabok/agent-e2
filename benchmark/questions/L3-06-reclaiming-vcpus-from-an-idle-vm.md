@@ -34,11 +34,14 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: decide-capacity
+object: [vm]
+tool: [vcf-operations]
 knowledge:
   - sp5-framework/capacity/reclamation
   - vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
   - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
   - vsphere/technology/memory/concepts/memory-as-storage
+knowledge_main: sp5-framework/capacity/reclamation
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q11 Reclamation"
@@ -46,5 +49,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [C,D]
 misconception: [B,E]
+misconception_type: [unit-and-normalization]
 status: draft
 ```

@@ -1,9 +1,9 @@
 # How the esxtop storage latencies add up
 
 ## Prompt
-In esxtop, the disk panels show GAVG, KAVG, QAVG and DAVG.
+- In esxtop, one device shows GAVG/cmd 3.1 ms, KAVG/cmd 2.1 ms, QAVG/cmd 1.6 ms and DAVG/cmd 1.0 ms.
 
-How do they relate?
+How do the four counters relate?
 
 - A. GAVG = KAVG + DAVG. QAVG is part of KAVG.
 - B. GAVG = KAVG + QAVG + DAVG.
@@ -15,12 +15,15 @@ B: adding QAVG on top of KAVG, counting the queue time twice.
 
 ## Expected key points
 - Answer: A.
-- GAVG (total seen from the VMM) = KAVG (time in the VMkernel) + DAVG (device).
-- QAVG is the queue part of the kernel time, so it is already inside KAVG. QAVG can even exceed KAVG, because QAVG covers kernel IO too.
+- GAVG (total seen from the VM monitor) = KAVG (time in the VMkernel) + DAVG (device): 2.1 + 1.0 = 3.1 ms.
+- QAVG is the queue part of the kernel time, so it is already inside KAVG.
+- B is wrong: it counts the queue time twice (4.7 ms).
+- C (-1.1 ms) and D (2.6 ms) do not match the values shown.
 
 ## Notes
 - Previous id: question-0043 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
+
 ## Metadata
 ```yaml
 id: "0043"
@@ -31,12 +34,16 @@ task: explain-mechanism
 level: 200
 answer_type: deterministic
 input: [text]
+object: [esxi]
+tool: [esxtop]
 knowledge:
   - vsphere/technology/storage/concepts/esxi-storage-latency-stack
+knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 misconception: [B]
+misconception_type: [unit-and-normalization]
 status: draft
 ```

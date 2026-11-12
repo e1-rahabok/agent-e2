@@ -18,6 +18,95 @@ Each entry has:
 
 ## Open
 
+### Q182 · Chapter 3 Memory > VM · Limit and balloon, again (reopens Q014)
+
+- Files: [VM Memory Ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md) (lines 18-22); [Host memory states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/host-memory-states.md); question [Does a memory limit cause ballooning?](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-56-does-a-limit-cause-ballooning.md) (your docx sample).
+- Search: "Does limit result in Balloon?"
+- Question: your Q014 answer is "not directly". The vendor documents say a limit does cause ballooning first. Which wins?
+- Written as now: "a limit does not cause ballooning directly" (ballooned.md, host-memory-states.md). Against it:
+  - vSphere 9.1 Monitoring and Performance, memory troubleshooting: "If free memory is available on the hosts and the virtual machines are experiencing high swap or balloon memory, the virtual machine (or resource pool) has reached its resource limit."
+  - Broadcom KB 326270: with a limit below the configured memory, "The VMkernel first tries to reclaim memory by inflating the Balloon Driver", then compresses, then swaps.
+  - The knowledge base itself: performance-guidance.md line 31 and memory-capacity.md line 15 say the same as the vendor.
+  - Your sample: the balloon is flat at 63.66% of 16 GB, just under the Mem.CtlMaxPercent default of 65%. A balloon held at its cap by a constant limit is also flat.
+- In the meantime: the question no longer has the disputed options; it is keyed on what both readings agree.
+- Answer:
+
+### Q183 · Benchmark · Thick VMs in the datastore DS01 export
+
+- Files: question [Is the datastore full: provisioned vs used space](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-08-datastore-provisioned-vs-used.md) and its CSV (your export).
+- Question: 4 VMs marked thick (002, 005, 013, 017) show Virtual Machine Used below Provisioned Space. A thick disk on VMFS uses all its provisioned space. Are those 4 VMs thin, or do they have a mix of disks? The header also has a typo ("Virtual Machine Used (GB") and an empty last column: may I fix them?
+- Written as now: CSV unchanged; no key line relies on the thick rows.
+- Answer:
+
+### Q184 · Benchmark · The VM Contention page returns 404
+
+- Files: question [Which dashboard for VM contention](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-15-vm-contention-dashboard-deprecated.md).
+- Question: on 2026-11-12 the linked TechDocs page returned HTTP 404 from this environment. Keep the URL (Agent E2 must answer without the page), replace it with the current page, or change the key point "the linked 9.1 page is out of date" to "no longer published"?
+- Written as now: unchanged; a line in Notes says to re-check before scoring.
+- Answer:
+
+### Q185 · Benchmark · Keys of your questions that a reviewer doubts
+
+- Files: [What counts as overhead](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-10-overhead-classification.md); [Memory reservation vs CPU reservation](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-07-reservation-cpu-vs-memory.md); [Utilization 50% and Core Utilization 50%](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-07-utilization-50-and-core-utilization-50.md); [Relationship between VM and Guest OS memory metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md); [Memory reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-11-memory-reservation-behaviour.md).
+- Question: your text stays as written. Confirm or change each item:
+  - (a) Overhead: the bonus point "swapped pages become regular pages after vMotion". With the default swap file in the VM folder on shared storage, the destination keeps the same swap file; only a host-local swap file is moved (vSphere 9.1 Resource Management, Swap File Location). Medium confidence.
+  - (b) Reservation CPU vs memory: "CPU near 0 at the BIOS screen" assumes the firmware halts the vCPU when idle. Some firmware polls in a loop. Low confidence.
+  - (c) Utilization 50% and Core Utilization 50%: option A ("half the cores run two threads, the other half idle") is unlikely, because ESXi fills idle cores before sibling threads. The key's reason is right; the option may read as a straw man.
+  - (d) VM and Guest OS memory: option A ("neither layer considers the other") is keyed correct, but option D's balloon driver is ESXi asking the guest for memory.
+  - (e) Memory reservation behaviour: does option D ("reserved memory must be used first") mean physical pages, or admission control? For admission control, a reservation counts whether used or not. Option E's reason runs against the vSAN host in [Host Consumed with no VMs](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-15-host-consumed-with-no-vms.md), where the kernel reservation is above use.
+- Answer:
+
+### Q186 · Benchmark · Keys that rest on your definitions (fairness)
+
+- Files: [ESXi CPU capacity: threads, not hertz](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-05-esxi-cpu-capacity-threads-not-hertz.md); [Which counter to size VM CPU](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-06-which-counter-to-size-vm-cpu.md).
+- Question: fairness rule F3 (benchmark/design.md, section 6.1) asks that a strong expert can answer from public knowledge. vSphere reports host capacity as cores × base MHz; Broadcom KB 433568 says VCF Operations sizes on CPU Demand by design and calls Net Run a diagnostic metric. Do you keep these two keys as written (your expertise against the vendor default), or add one line to each prompt that states the premise?
+- Written as now: unchanged.
+- Answer:
+
+### Q187 · CPU > Demand · Demand under a CPU limit
+
+- Files: [VM CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/demand.md) (section Not unmet demand; section Demand vs Usage vs Contention); [VM CPU Ready](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) (line 35); questions [A 1-vCPU VM under a CPU limit: Demand, Usage and Max Limited](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-47-limit-demand-equals-usage.md) and [Demand up, Usage down, Latency up](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-46-demand-up-usage-down.md) (your docx samples).
+- Question:
+  - (a) Does VM Demand include time held back by a limit? The vSphere API defines cpu.demand as "the amount of CPU resources a virtual machine would use if there were no CPU contention or CPU limit". ready.md line 35 has a 4 GHz limit with Demand at 6.6 GHz. demand.md says Demand is not unmet demand. Your sample has Demand equal to Usage under a 2 GHz limit.
+  - (b) Your sample "Demand jumped while Usage dropped" uses VCF Operations CPU Contention and says it counts frequency and Hyper-Threading. Since VCF Operations 8.18, Contention is Overlap + Co-stop + Ready + Other Wait (contention.md; Broadcom KB 398528). The question now uses the vCenter CPU Latency counter instead. Agree?
+- Written as now: the questions read Max Limited and CPU Latency, so they do not depend on (a) or on the old Contention formula.
+- Answer:
+
+### Q188 · Memory > ESXi · High state and large pages
+
+- Files: [Host memory states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/host-memory-states.md); [Page sharing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/page-sharing.md).
+- Question: is the High state 300% or 400% of minFree, and does ESXi break large pages between High and Clear? The file says 300% and no action at High or Clear. Public posts (Duncan Epping's corrected vSphere 6.0 post) give 400%. Performance Best Practices for vSphere 9.1 says only that sharing "might not occur until memory overcommitment is high enough to require the large pages to be broken".
+- Written as now: 300%; the questions accept 300-400%.
+- Answer:
+
+### Q189 · CPU > Overlap · Overlap and Linux steal time
+
+- Files: [VM CPU Overlap](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/overlap.md) (section Names); [VM CPU Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md) (section Contrast with Linux Steal Time); [Guest OS vs VM CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md) (line 26).
+- Question:
+  - (a) Both files say Linux steal time excludes Overlap. overlap.md also says some VMware documents call Overlap "Stolen", and that the book says Linux tracks it as stolen time. Which holds?
+  - (b) Steal time on ESXi needs the VM's steal clock (`stealclock.enable`, hardware version 13 or later, kernel support); Broadcom KB 434983 says Linux guests are often unaware of the wait by default. May I add that to guest-os-vs-vm-cpu?
+- Written as now: [Linux steal time and Windows busy time on a busy host](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-87-linux-steal-time-and-windows-busy-time.md) leaves Overlap out and states the steal clock in the prompt.
+- Answer:
+
+### Q190 · Windows memory · 500 MB: Free or Available?
+
+- Files: [Windows memory](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/memory/windows-memory.md) (section Free memory guidance).
+- Search: "Keep above 500 MB for server VMs"
+- Question: the same file says low Free is fine with high Standby, and near-zero Free is ideal. Does the 500 MB guidance apply to Available?
+- Written as now: "Keep above 500 MB for server VMs". [Windows free memory alert on a file server](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-85-windows-free-low-standby-high.md) states its own 300 MB alert, so it does not depend on the answer.
+- Answer:
+
+### Q191 · Field checks the documents do not settle
+
+- Files: listed per item.
+- Question: each needs a look at a real system. Answer the ones you can; the questions avoid depending on them meanwhile.
+  - (a) esxtop 9.1, disk device panel: does an NFS datastore's row show DAVG and KAVG, with the queue columns blank? The knowledge base says yes; community posts say only GAVG; Broadcom KB 427727 reads DAVG and KAVG for NFS. ([NFS datastore latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-67-nfs-datastore-latency-in-esxtop.md))
+  - (b) vCenter storage adapter Highest latency: a simple mean of read and write per adapter, then the worst adapter, or weighted by commands? The API text says only "highest latency across adapters". ([Highest latency below the worst read latency](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-29-vcenter-adapter-highest-latency.md); [ESXi storage adapter and path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md))
+  - (c) Windows in a VM: does Task Manager's CPU (Processor Utility) differ from Performance Monitor's % Processor Time under host power saving? ESXi does not advertise APERF/MPERF to guests (Linux commit 9a6c2c3c7a73), and the evidence image in windows-cpu-scheduling is from a laptop. ([Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md), line 51)
+  - (d) VCF Operations VM memory "Effective limit": does it include the VM overhead (2 GB limit shown as about 2.12 GB)? ([Swapped and Compressed moving in opposite directions](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-55-memory-limit-swap-and-compress.md))
+  - (e) esxtop NMIG: cumulative since power-on (esxtop/memory.md line 42), or migrations between two samples (public definitions)? ([Remote memory in the esxtop NUMA columns](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-25-esxtop-numa-remote-memory.md))
+- Answer:
+
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
@@ -1978,7 +2067,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Question:
   1. Keep the cap? If yes, which synthetic questions should be replaced by book, quiz or real-ticket questions, or should the cap rise?
   2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
-  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-33-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-34-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-41-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-17-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
+  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-33-memory-reclaim-from-40-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-34-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-41-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-17-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
 - Answer: no need to keep cap as I'm reviewing every question one by one. What is important is the allocation and distribution. The source (book versus Claude) is less important.
 - Done 2026-11-06: synthetic cap removed from benchmark/design.md (sections 10 and 12).

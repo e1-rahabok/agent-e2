@@ -47,12 +47,15 @@ product: [vsphere, windows]
 technology: [system]
 input: [text]
 task: troubleshoot
+object: [guest-os, vm]
+tool: [vcf-operations, guest-os-tools]
 knowledge:
   - vsphere/architecture/vm-vs-guest-os
   - guest-os/storage/disk-queue
   - guest-os/cpu/metrics/run-queue
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
   - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
+knowledge_main: vsphere/architecture/vm-vs-guest-os
 attachments: []
 origin: synthetic
 source_path: "Author's book, opening chapter: Think virtual motherboard, not virtual machine. Author instruction 2026-11-03."
@@ -60,5 +63,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [A, C, E]
 misconception: [B, D]
+misconception_type: [layer-confusion]
 status: reviewed
 ```

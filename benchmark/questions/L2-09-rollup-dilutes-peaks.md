@@ -1,7 +1,7 @@
 # How much a rollup dilutes a 20-second peak
 
 ## Prompt
-- A VM has one 20-second burst of CPU Ready.
+- A VM has one 20-second burst of CPU Usage.
 - You look at it in the vCenter 1 Day chart.
 
 By how much is the burst diluted in that chart?
@@ -39,5 +39,9 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [B]
 misconception: [C]
+object: [vm]
+tool: [vcenter]
+knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
+misconception_type: [rollup-and-interval]
 status: draft
 ```
