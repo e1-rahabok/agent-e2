@@ -27,7 +27,7 @@
 
 ## Names
 - Some VMware documentation calls Overlap "Stolen".
-- The book states that Linux tracks it as stolen time.
+- Linux steal time does not include Overlap (author, Q189), whatever a document calls Overlap.
 
 ## VCF Operations
 - Reports the peak 20-second value of any vCPU.

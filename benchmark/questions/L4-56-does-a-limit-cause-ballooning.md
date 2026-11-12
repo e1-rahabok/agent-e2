@@ -7,8 +7,8 @@
 
 Which statements are correct?
 
-- A. Consumed stays a little under the effective limit of 2.12 GB, which includes the VM's overhead.
-- B. Granted at about 2.9 GB, above the effective limit, shows that ESXi does not enforce the limit on this VM at all.
+- A. Consumed stays flat just above 2 GB all week: the limit caps the memory ESXi gives the VM.
+- B. Granted at about 2.9 GB, above the limit, shows that ESXi does not enforce the limit on this VM at all.
 - C. Granted counts every mapped VM page, shared and zero pages included, so it can sit above the limit.
 - D. About 10.2 GB of the 13.5 GB Needed Memory are pages the balloon driver holds inside Linux, counted as used.
 - E. Ballooned pages are counted in Consumed, and that is why Consumed stays pinned near the limit all week.
@@ -18,8 +18,8 @@ B: Granted above the limit read as the limit not working. Or E: ballooned memory
 
 ## Expected key points
 - Answer: A, C, D.
-- A: under a limit, Consumed sits just below the limit plus the VM overhead (2 GB shows as 2.12 GB).
-- B is wrong: the limit caps the physical memory ESXi gives the VM, which is Consumed. Consumed never passes 2.12 GB.
+- A: under a limit, Consumed sits at the limit and cannot grow past it.
+- B is wrong: the limit caps the physical memory ESXi gives the VM, which is Consumed. Consumed stays at the limit.
 - C: Granted is the VM's view of mapped pages; shared and zero pages cost little physical memory. It ignores the limit; Consumed does not.
 - D: the balloon driver is a kernel driver inside Linux, so its 63.66% of 16 GB (about 10.2 GB) counts as used in the Guest OS counters. Exclude it when sizing the guest.
 - E is wrong: ballooned pages have no ESXi page behind them, so they are not in Consumed.

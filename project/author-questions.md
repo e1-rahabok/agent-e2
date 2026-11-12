@@ -18,26 +18,6 @@ Each entry has:
 
 ## Open
 
-### Q189 · CPU > Overlap · Overlap and Linux steal time
-
-- Files: [VM CPU Overlap](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/overlap.md) (section Names); [VM CPU Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md) (section Contrast with Linux Steal Time); [Guest OS vs VM CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md) (line 26).
-- Question:
-  - (a) Both files say Linux steal time excludes Overlap. overlap.md also says some VMware documents call Overlap "Stolen", and that the book says Linux tracks it as stolen time. Which holds?
-  - (b) Steal time on ESXi needs the VM's steal clock (`stealclock.enable`, hardware version 13 or later, kernel support); Broadcom KB 434983 says Linux guests are often unaware of the wait by default. May I add that to guest-os-vs-vm-cpu?
-- Written as now: [Linux steal time and Windows busy time on a busy host](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-87-linux-steal-time-and-windows-busy-time.md) leaves Overlap out and states the steal clock in the prompt.
-- Answer:
-
-### Q191 · Field checks the documents do not settle
-
-- Files: listed per item.
-- Question: each needs a look at a real system. Answer the ones you can; the questions avoid depending on them meanwhile.
-  - (a) esxtop 9.1, disk device panel: does an NFS datastore's row show DAVG and KAVG, with the queue columns blank? The knowledge base says yes; community posts say only GAVG; Broadcom KB 427727 reads DAVG and KAVG for NFS. ([NFS datastore latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-67-nfs-datastore-latency-in-esxtop.md))
-  - (b) vCenter storage adapter Highest latency: a simple mean of read and write per adapter, then the worst adapter, or weighted by commands? The API text says only "highest latency across adapters". ([Highest latency below the worst read latency](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-29-vcenter-adapter-highest-latency.md); [ESXi storage adapter and path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md))
-  - (c) Windows in a VM: does Task Manager's CPU (Processor Utility) differ from Performance Monitor's % Processor Time under host power saving? ESXi does not advertise APERF/MPERF to guests (Linux commit 9a6c2c3c7a73), and the evidence image in windows-cpu-scheduling is from a laptop. ([Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md), line 51)
-  - (d) VCF Operations VM memory "Effective limit": does it include the VM overhead (2 GB limit shown as about 2.12 GB)? ([Swapped and Compressed moving in opposite directions](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-55-memory-limit-swap-and-compress.md))
-  - (e) esxtop NMIG: cumulative since power-on (esxtop/memory.md line 42), or migrations between two samples (public definitions)? ([Remote memory in the esxtop NUMA columns](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-25-esxtop-numa-remote-memory.md))
-- Answer:
-
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
@@ -111,6 +91,28 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q189 · CPU > Overlap · Overlap and Linux steal time
+
+- Files: [VM CPU Overlap](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/overlap.md) (section Names); [VM CPU Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/latency.md) (section Contrast with Linux Steal Time); [Guest OS vs VM CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md) (line 26).
+- Question:
+  - (a) Both files say Linux steal time excludes Overlap. overlap.md also says some VMware documents call Overlap "Stolen", and that the book says Linux tracks it as stolen time. Which holds?
+  - (b) Steal time on ESXi needs the VM's steal clock (`stealclock.enable`, hardware version 13 or later, kernel support); Broadcom KB 434983 says Linux guests are often unaware of the wait by default. May I add that to guest-os-vs-vm-cpu?
+- Written as now: [Linux steal time and Windows busy time on a busy host](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-87-linux-steal-time-and-windows-busy-time.md) leaves Overlap out and states the steal clock in the prompt.
+- Answer (2026-11-12): Linux steal time excludes Overlap.
+- Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
+
+### Q191 · Field checks the documents do not settle
+
+- Files: listed per item.
+- Question: each needs a look at a real system. Answer the ones you can; the questions avoid depending on them meanwhile.
+  - (a) esxtop 9.1, disk device panel: does an NFS datastore's row show DAVG and KAVG, with the queue columns blank? The knowledge base says yes; community posts say only GAVG; Broadcom KB 427727 reads DAVG and KAVG for NFS. ([NFS datastore latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-67-nfs-datastore-latency-in-esxtop.md))
+  - (b) vCenter storage adapter Highest latency: a simple mean of read and write per adapter, then the worst adapter, or weighted by commands? The API text says only "highest latency across adapters". ([Highest latency below the worst read latency](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-29-vcenter-adapter-highest-latency.md); [ESXi storage adapter and path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/adapter-and-path.md))
+  - (c) Windows in a VM: does Task Manager's CPU (Processor Utility) differ from Performance Monitor's % Processor Time under host power saving? ESXi does not advertise APERF/MPERF to guests (Linux commit 9a6c2c3c7a73), and the evidence image in windows-cpu-scheduling is from a laptop. ([Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md), line 51)
+  - (d) VCF Operations VM memory "Effective limit": does it include the VM overhead (2 GB limit shown as about 2.12 GB)? ([Swapped and Compressed moving in opposite directions](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-55-memory-limit-swap-and-compress.md))
+  - (e) esxtop NMIG: cumulative since power-on (esxtop/memory.md line 42), or migrations between two samples (public definitions)? ([Remote memory in the esxtop NUMA columns](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-25-esxtop-numa-remote-memory.md))
+- Answer (2026-11-12): (a) yes. (b) simply the highest among all the adapters; weighting by commands is illogical, the counter is about which adapter suffers. (c) two screenshots from a Windows 11 laptop (Task Manager 7% at 3.23 GHz against a 2.90 GHz base; Performance Monitor Processor Information % Processor Time average 8.1%): not a VM. (d) not important: Effective Limit is rarely used; exclude from the benchmark; after 1.0. (e) unsure; exclude from the benchmark; after 1.0.
+- Applied 2026-11-12: (a), (b) the knowledge base and questions 0186 and 0072 already say so. (c) stays a lab check in a VM, after 1.0. (d) 0141 no longer uses the effective limit or the overhead; 0140 keeps it in Notes only. (e) 0067 no longer shows NMIG. (c), (d), (e) in project/plan.md, After 1.0.
 
 ### Q182 · Chapter 3 Memory > VM · Limit and balloon, again (reopens Q014)
 
