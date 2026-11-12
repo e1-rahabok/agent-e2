@@ -2,6 +2,9 @@
 
 ## Admission control
 - At power-on, and at every reservation or resource pool change, the system checks that all reservations can still be guaranteed.
+- Host and DRS admission control run at every power-on, reservation change and pool change, and cannot be turned off. Only HA admission control can be disabled.
+- HA admission control keeps failover capacity for the reservations. With it off, VMs power on into that capacity; after a host failure HA restarts a VM only where its CPU, memory and vNIC reservations plus overhead fit, so reserved VMs are the first to stay down.
+- HA slot policy: the largest CPU and the largest memory reservation (plus overhead) set one slot size for every VM, so one large reservation cuts the slot count (cap with das.slotcpuinmhz, das.slotmeminmb). Cluster resource percentage, the default policy: reservations are summed against the failover capacity, each costing its own size. A memory tiering cluster does not use the slot policy.
 - It compares the VM's reservation with the unreserved capacity of its host, resource pool or cluster. Not enough → the power-on fails with Insufficient Resources.
 - Admission control counts reservations, not usage. A host at 10% CPU usage can refuse a VM if its capacity is already reserved.
 - Per-VM overhead memory counts as reserved, on top of the memory reservation.
@@ -45,6 +48,7 @@
 - The documentation advises leaving at least 10% of capacity unreserved.
 - Near 100% reserved, reservation changes and resource pool edits fail admission control.
 - Reservations that fully commit a host or the cluster stop DRS from migrating VMs: no destination can admit them.
+- Leave headroom for per-VM memory virtualization overhead and for migration overhead, both reserved on top of the VMs' reservations.
 
 ## Misconceptions
 - "The host is at 30% CPU, so the VM will power on" → admission control checks unreserved capacity, not usage.
@@ -74,7 +78,7 @@ internal_derive:
 - vsphere/architecture/resource-controls
 related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
-- vsphere/object-types/resource-pool/configuration/scalable-shares
+- vsphere/object-types/resource-pool/configuration/resource-pool-design
 - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 - vsphere/technology/memory/concepts/memory-overhead
 source:
@@ -82,6 +86,7 @@ source:
   path: vSphere Resource Management > Admission Control in vSphere, Resource Allocation Settings Suggestions, Potential Issues with CPU Affinity, Resource Pool Admission Control, Expandable Reservations Examples, DRS Cluster Validity, DRS Troubleshooting > Cluster Problems (pp. 1825-1826, 1831, 1891-1892, 1908-1911, 1950)
 corrections: []
 review_notes:
+- 'Section Admission control: host and DRS admission control always on, HA restart rule and slot policy from the vSphere 9.1 documentation (Admission Control; vSphere HA Admission Control; Cluster Resources Percentage; Slot Size Calculation) (Q110 a, b).'
 - 'To check: Section ''Admission control'': the example (losing the largest host costs more).'
 - 'Section ''Admission control'': the failover counter, level and summary from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'

@@ -42,7 +42,7 @@
 - 500 Mbps or 250 Mbps cannot be allocated in the guest.
 - Physical bandwidth is shared and typically oversubscribed.
 - A network-intensive VM can exceed 1 Gbps each way. Example: a Hadoop worker receiving more than 5 Gbps several times.
-- NIOC and traffic shaping exist, but are not VM configuration properties.
+- Network I/O Control gives each VM network adapter shares, a reservation and a limit, set in the VM's adapter settings; traffic shaping is a port group policy ([`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md), section Controls per resource). Neither sets the vNIC speed the Guest OS sees.
 
 ## Contention metrics
 | Metric | In vSphere |

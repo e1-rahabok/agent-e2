@@ -126,7 +126,7 @@ related:
 - sp5-framework/performance/performance-management
 - sp5-framework/capacity/overcommit
 - sp5-framework/capacity/vm-size
-- vsphere/object-types/resource-pool/configuration/scalable-shares
+- vsphere/object-types/resource-pool/configuration/resource-pool-design
 - sp5-framework/capacity/supply
 - sp5-framework/concepts/performance-vs-capacity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
