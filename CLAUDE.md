@@ -55,7 +55,7 @@ How Claude works in this repository. Read at the start of every session. The des
 ## Validation
 - Before every commit: `python3 project/tools/lint.py` reports 0 problems, `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Check the result itself, not only that the command ran: a pipe into `grep` or `tail` hides a failure.
 - Allowed tag values and avoided phrases live in `project/tools/tags.yaml`. Change them there, not in the script.
-- A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark.
+- A change to structure or retrieval needs a before and after number from the retrieval check or the benchmark. Paused (author, 2026-11-12) until the question bank is revamped: the questions and their `knowledge` lists are changing, so the number would measure an outdated set. Do not run the retrieval check until the author reactivates it.
 
 ## Git
 - Work on the branch named for the session.

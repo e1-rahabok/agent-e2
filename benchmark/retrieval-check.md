@@ -9,6 +9,7 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 - It caps classic mode. A model cannot use a file it never sees: if 75% of the needed files reach the context, classic mode answers from at most those files, however good the model is.
 - It catches regressions. Every new knowledge file changes word statistics and ranking. A file added for one chapter can push another question's file out of the top results. Without this check, the drop would surface only in the next benchmark, mixed with model noise.
 - It keeps changes honest. Rule (`CLAUDE.md`, Validation): a change to structure or retrieval needs a before and after number. This check gives that number for every change set.
+- Paused (author, 2026-11-12) until the whole question bank is revamped: the questions and their needed files are changing. Reactivated after the revamp, with a new baseline.
 
 ## What it does
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
