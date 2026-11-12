@@ -198,7 +198,7 @@ A metric with its own file is an entry only when it has another name or a confus
 - **Symptom**: A test on one metric, property or event (VCF Operations). A symptom definition is reusable across alert definitions; a condition is the same test written inside one alert definition. Triggered alone, it is a minor, non-urgent issue, read in the daily health check; when its alert's set of symptoms holds, the issue has become urgent: an alert.
   - Also called: Condition
   - File: [`sp5-framework/outputs/alerts-and-insights`](sp5-framework/outputs/alerts-and-insights.md)
-- **Triple See Method**: The SP5 Framework's observability method for VCF: read contention, consumption and context metrics as one set before concluding. Not based on the USE, RED or Golden Signals.
+- **Triple See Method**: The SP5 Framework's observability method for VCF: read contention, consumption and context metrics as one set before concluding.
   - Also called: Triple See
   - File: [`sp5-framework/observability/triple-see-method`](sp5-framework/observability/triple-see-method.md)
 - **Troubleshooting**: The reactive process for an object that is down or slow: why, and the fix, in the order of checks of its pillar. A security breach gets a forensic investigation instead; compliance is drift detection.

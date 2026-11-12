@@ -50,26 +50,6 @@ Each entry has:
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
 - Answer:
 
-### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
-
-- Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/triple-see-method.md) (section Why not USE, RED or Golden Signals); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Triple See Method).
-- Search: "Based on their strengths and weaknesses, I came up with The Triple See Method"
-- Question: the book does not say what each method lacks. The knowledge base says: USE starts from utilization, which does not show who waits in an overcommitted cluster; RED and the Golden Signals are request-centric and a VM has no request to time; none has a context type; none maps metric types to pillars. Correct, and anything to add?
-- Written as now: the section as above, unchanged. Misconceptions: "Apply the USE Method: high utilization means a problem"; "Monitor the four Golden Signals on the VMs". The file opens "Designed for Broadcom VCF by Iwan 'e1' Rahabok, after studying the USE Method …". The glossary entry says "Not based on the USE, RED or Golden Signals", against the file's "after studying".
-- Final answer (2026-11-12; expert call: two corrections, three additions):
-  - Correction 1: USE has a wait type: saturation is queue length, and USE is applied to hypervisor limits in the cloud. The real gaps: USE reads saturation per resource inside one OS; inside the Guest OS it cannot see Ready (the vCPU's frozen time is invisible to the guest run queue); at ESXi, saturation averages the VMs and hides the victim. Contention per consumer is what USE lacks.
-  - Correction 2: "a VM has no request to time" is wrong for storage. The virtual disk is request-shaped (IOPS, latency, aborted commands), and RED fits it. CPU and memory are time-shared: Ready and memory contention are shares of time, with no request.
-  - Add: RED and the Golden Signals belong to the application layer (realms-and-layers); there they are right, and Triple See does not replace them.
-  - Add: none of the three has allocation or reservation as kinds of consumption, by which overcommitted capacity is managed.
-  - Add: the Golden Signals do separate symptom from cause (Google SRE book, Monitoring Distributed Systems, "Symptoms Versus Causes"), the same idea as primary vs secondary metrics. Do not claim otherwise.
-  - Keep "no context type", and "no pillar mapping" as scope, not a flaw.
-  - Glossary: "Not based on" → built after studying their strengths and weaknesses.
-  - The author's name in the file's first line is a who-said-it tag (repository rule): drop it; `source.document` cites the book.
-  - Sources: brendangregg.com/usemethod.html; sre.google/sre-book/monitoring-distributed-systems/; grafana.com/blog/2018/08/02/the-red-method-how-to-instrument-your-services/.
-  - Change if accepted: triple-see-method (section, first line, new misconception "apply USE inside the Guest OS"); glossary entry; delete the review note.
-  - For you: nothing.
-- Answer:
-
 ### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
 
 - Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Design the alerts as a set); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/configuration/guest-os-alerts.md); [Storage alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-alerts.md).
@@ -261,6 +241,13 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
+
+- Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/triple-see-method.md) (section Why not USE, RED or Golden Signals); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Triple See Method).
+- Search: "Based on their strengths and weaknesses, I came up with The Triple See Method"
+- Question: why not USE, RED or Golden Signals.
+- Answer: (2026-11-12) The book does not mention USE, RED or the Golden Signals. Agent E2 does not cover competitor methods (politically sensitive). Comparison, related misconceptions and the glossary clause removed.
 
 ### Q135 · Why a New Framework? > Complexity · ITIL 4 or ITIL 5
 
