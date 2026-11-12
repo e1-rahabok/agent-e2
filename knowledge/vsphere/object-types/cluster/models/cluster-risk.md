@@ -73,7 +73,7 @@ Per host, then the worst host is kept.
 
 ## Not used
 - Inter-host imbalance: partly covered by highest host utilization; complex; field validation that it changes remediation is pending.
-- vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md), section vMotion is not part of the KPI).
+- vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md), section vMotion Count).
 
 ## Misconceptions
 - "The CPU overcommit row reads 3, so the Bronze 3:1 plan is met" → the row is per core; 3 per core is 1.5 per thread with Hyper-Threading. The plan is per thread: Bronze 3:1 reads 6 per core.
@@ -115,7 +115,7 @@ corrections:
 - 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
 - 'Section ''Monster VM'': the adapter definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
-- 'To check: Memory tiering rows: Broadcom bands for NVMe read latency are 200 and 400 µs, active memory against DRAM (50/75%) is the documented leading signal, and latency without reads is a wake-up penalty (Q178).'
+- 'To check: Memory tiering rows: active memory against DRAM added (author, Q178 a); NVMe read latency re-banded 100, 200, 400, 800 µs and counted only while the host reads from NVMe (proposal, Q179).'
 - 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread; the pack counts per core and must be fixed (plan, after 1.0).'
 - 'To check: Section ''Monster VM'': the 8-core CCD statement for Xeon (Q125).'
 status: draft
