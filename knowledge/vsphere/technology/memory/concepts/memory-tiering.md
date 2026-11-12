@@ -148,7 +148,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - "NVMe tiering behaves like swap" → tiering selects cold pages by age on a dedicated device; swap picks random pages.
 - "Writes do not hurt: only reads come from NVMe" → a guest write to a cold page waits for the page to come back from NVMe; only demotion writes are off the vCPU's path.
 - "Swap and compression wait until the NVMe tier is full" → not stated by Broadcom; non-tiered VMs without a full reservation and memory limits are reclaimed while tier 1 has room.
-- "Tier 1 consumed is memory pressure" → it holds cold pages by design; the pressure signals are active memory against DRAM and NVMe reads.
+- "Tier 1 consumed means the VMs are slow" → it holds cold pages: it is saturation, memory spilled beyond DRAM, not contention. On a tiered host it replaces compression and swap as the saturation signal; the performance signals are active memory against DRAM and NVMe reads.
 - "HA admission control is green, so the VMs will restart" → before 9.1.1 it counted NVMe as if it were DRAM; restarts need DRAM.
 - "NVMe read latency of 900 µs on an idle device is a problem" → with almost no reads it is a wake-up penalty; read latency matters with read bandwidth.
 

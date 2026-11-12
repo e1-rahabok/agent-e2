@@ -79,7 +79,7 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - If one VM may be the size of the host, overcommit with good performance is not possible.
 
 - CPU cap per class, by logical CPUs and the overcommit ratio: [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), section Maximum VM size.
-- Memory cap per class: none set. The book's caps (512, 128 and 32 GB for Tiers 1-3) were per socket and were withdrawn with the socket rule.
+- Size per class, CPU and memory (Gold up to 2 CCDs or compute tiles, Silver 1, Bronze 0.5; 4 GB per vCPU): [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), section Size per class.
 - Free tier: 1 vCPU, 4 GB, 100 GB disk.
 
 ## Soft products
@@ -183,7 +183,6 @@ review_notes:
 - 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of the book''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Section ''Compute and storage design'': the book says Gold is charged 200% more for 2x; written as twice the price. Storage I/O Control: deprecated in VCF 9.'
 - 'Section ''Soft products'': the book''s Service SLA text says Gold tickets go to Level 3; its service table says Level 2, bypassing Level 1. Written as bypassing the first level.'
-- 'To check: Section ''Size limit per class'': memory cap per class after the socket caps were withdrawn (Q176).'
 - 'Not copied: class of service input diagram (text in Price/performance), mix-and-match diagrams (text), size limit image (table), generic tables (text).'
 status: draft
 ```

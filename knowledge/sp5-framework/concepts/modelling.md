@@ -49,6 +49,8 @@
 - Scientifically, a VM does not care what stops it (Ready, Co-stop or Overlap), so all would share one threshold. Practically, healthy production shows different scales per metric. Take the lower of the two: the goal is proactive monitoring.
 - Match the thresholds to the weights, which double per band (1, 2, 4, 8 at the band limits, 16 at 0): each range limit doubles. Example: VM disk latency 20, 40, 80, 160 ms.
 - Red is not an emergency: look within hours. The time to look also shows how often the value enters red and the trend.
+- Four bands need five numbers per metric: where it scores 100, and where green, yellow and orange end, and where it scores 0. Vendor guidance with three zones (good, potential issue, impact) is not enough: convert it, do not copy it. Example: NVMe read latency, Broadcom's good below 200 µs and impact above 400 µs become 100, 200, 400 and 800 µs, with red from 400.
+- A metric that cannot be quantified into its bands ([grey], green, yellow, orange, red) is not used. Real-world data is not reliable because it is real: check its quality first, then collect enough of it to rule out outliers.
 - Single-value green: green = 0 means one dropped packet already scores yellow. Anything above 0 red: set green, yellow and orange to 0.
 
 ## Rare and rarely-green metrics

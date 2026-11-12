@@ -613,15 +613,57 @@ Each entry has:
 - For you: (a)-(e).
 - Answer:
 
-### Q176 · Part 1 > Service Level Agreement > Size Limit · Memory cap per class after the socket rule
-- Files: [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Size limit per class); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) (section Maximum VM size); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (section Monster VM).
-- Search: "Capping the size at each tier is a good way to prevent monster VMs"
-- Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
-- Written as now: your Q100 answer removed the socket basis. The CPU cap moved to vm-size (logical CPUs × 1, 0.5, 0.33 at 1:1, 2:1, 3:1). The memory caps (512, 128, 32 GB) were per socket, so they are withdrawn and no memory cap per class is stated. Cluster Risk still flags a monster VM above 40% of host DRAM or 256 GB, whichever is smaller.
-- Question: what is the memory cap per class? (A) the same step as CPU: host DRAM × 1, 0.5, 0.33; (B) one rule for every class, below the Cluster Risk monster size; (C) the CPU cap × the class's GB per vCPU (4 GB in the plan); (D) no memory cap per class.
-- Proposed answer (expert call): (C), bounded by (B). Memory is sold with vCPUs (host-spec-from-class-of-service), so the cap follows the CPU cap: 4 GB per vCPU gives Bronze 0.33 × 128 threads × 4 = 170 GB on a 64-core host. (B) keeps every class below the size Cluster Risk calls a monster (256 GB on that host), so Gold is capped by memory before CPU. (A) ignores that memory is sold with vCPUs; (D) leaves Bronze unbounded.
-- For you: pick (A)-(D), or give the field rule.
+### Q179 · Memory tiering rows for Cluster Consumption, Cluster Performance and Cluster Risk · Proposal for review
+- Files: [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); [Modelling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md) (section Setting thresholds).
+- Search: not from the book; follows Q178.
+- Every row has five numbers. Values are % unless stated; higher is worse.
+- Cluster Consumption (cluster-wide, against usable capacity):
+
+| Group | Sub-metric | Score 100 at | Green ends at | Yellow ends at | Orange ends at | Score hits 0 at | Change |
+|---|---|---|---|---|---|---|---|
+| Utilization | ESXi CPU Thread Utilization | 0 | 55 | 70 | 85 | 100 | None |
+| Utilization | ESXi Memory Consumed, hosts without tiering (% of usable DRAM) | 0 | 70 | 80 | 90 | 100 | None |
+| Utilization | ESXi DRAM Consumed, tiered hosts (tier 0, % of usable DRAM) | 0 | 80 | 85 | 90 | 100 | New: tiering starts at 80% of DRAM by design, so green runs to 80 |
+| Saturation | Memory Tiering Consumption (tier 1, % of usable NVMe tier) | 0 | 25 | 50 | 75 | 100 | Was 4, 8, 16, 32 |
+| Saturation | ESXi Memory Ballooned (% of usable DRAM) | 0 | 1 | 2 | 4 | 8 | None; on a tiered host any value is a configuration finding |
+| Saturation | ESXi Memory Zip Swap (% of usable DRAM) | 0 | 0.25 | 0.5 | 1 | 2 | None; same |
+
+- Cluster Performance (powered-on VMs; worst VM and 90th percentile):
+
+| Sub-metric | Unit | Score 100 at | Green ends at | Yellow ends at | Orange ends at | Score hits 0 at | Change |
+|---|---|---|---|---|---|---|---|
+| Worst VM CPU Ready | % | 0 | 4 | 8 | 16 | 32 | None |
+| Worst VM CPU Co-Stop | % | 0 | 2 | 4 | 8 | 16 | None |
+| Worst VM Memory Wait (Memory Latency + NVMe Wait) | % | 0 | 1 | 2 | 4 | 8 | Was Memory Latency only |
+| Worst VM Disk Latency | ms | 0 | 40 | 80 | 160 | 320 | None |
+| 90th Percentile VM CPU Ready | % | 0 | 1 | 2 | 4 | 8 | None |
+| 90th Percentile VM CPU Co-Stop | % | 0 | 0.5 | 1 | 2 | 4 | None |
+| 90th Percentile VM Memory Wait (Memory Latency + NVMe Wait) | % | 0 | 0.5 | 1 | 2 | 4 | Was Memory Latency only |
+| 90th Percentile VM Disk Latency | ms | 0 | 20 | 40 | 60 | 80 | None |
+| Highest ESXi Bad Network Packets | % | 0 | Excluded (exactly 0) | 0.2 | 0.4 | 0.8 | None |
+
+- Cluster Risk (worst host; tiering rows only):
+
+| Sub-metric | Unit | Score 100 at | Green ends at | Yellow ends at | Orange ends at | Score hits 0 at | Change |
+|---|---|---|---|---|---|---|---|
+| Worst ESXi Active Memory, tiered hosts | % of DRAM | 0 | 50 (excluded while green) | 62.5 | 75 | 100 | New (Q178 a); replaces NVMe consumed ÷ DRAM consumed |
+| Worst ESXi NVMe Read Latency | µs | 0 | 100 | 200 | 400 | 800 | Was 150, 300, 450, 600; counted only while the host reads at least 1 MB/s from NVMe |
+
+- Reasons:
+  - DRAM consumed on a tiered host: Memory Consumed covers both tiers and goes above 100% of DRAM by design, so the tiered row reads tier 0 only. DRAM sits near 80% whenever the tier is in use, so green runs to 80; above that, hot pages are filling DRAM.
+  - Tier consumption is saturation (Q178 d), measured against the usable NVMe tier. Linear bands, like the utilization rows: the tier is filled with cold pages on purpose, so its fill is the room left before swap. At the default 1:1 ratio, Broadcom's example at 2x VM density (1,600 GB of 2 TB) puts the tier near 60%, orange, as a host without tiering at 80% sits at the yellow-orange line. The stricter option, doubling like the other saturation rows (12.5, 25, 50, 100), turns designed use red.
+  - Memory Wait: the VM does not care where it waits for memory (Modelling). NVMe Wait estimates the share of vCPU time a VM waits for pages fetched from NVMe (Little's law): NVMe Wait (%) = VM tier-1 read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. Same bands as Memory Latency, so it reuses a scale that is already quantified.
+  - NVMe read latency: doubling, as Setting thresholds asks; red starts at Broadcom's impact point (400 µs); Broadcom's "potential issues" zone (200-400 µs) is orange; its "good" zone splits into green and yellow. The read floor removes the wake-up penalty of an idle device.
+  - Active memory: Broadcom's 50% (recommended) and 75% (significant loss) are the ends of green and orange; 62.5% splits the testing zone; 100% is active memory equal to DRAM. Excluded while green, like the other leading indicators of Cluster Risk.
+- Data quality before use (your rule in Q178 c):
+  - NVMe Wait rests on three assumptions to validate on a tiered lab host: each fetch is one 4 KB page (large pages are off on tiered hosts) and blocks one vCPU; reads include no prefetch; Memory Latency (%LAT_M) does not already count the fetches (if it does, the sum double counts and NVMe Wait is dropped). Until validated, show it and leave it out of the score.
+  - Metric keys in VCF Operations for tier-0 consumed, per-VM tier-1 read bandwidth and host tier-1 read bandwidth: not yet found (vCenter: tier.consumed, bandwidth.read per tier, level 2; latency.read level 3).
+  - The 1 MB/s read floor is a proposal: 256 fetches a second keep a device awake.
+- Question: accept each table row, or give your numbers; and which tier-consumption bands (linear 25/50/75/100 or doubling 12.5/25/50/100)?
+- For you: the three tables.
 - Answer:
+
+## Resolved
 
 ### Q178 · Memory tiering in the capacity and performance models · Review of the three closure conditions
 - Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); [Is memory tiering slowing this host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md); VCF-vCommunity-Adapter docs/reference/metrics/cluster-risk.md and cluster-consumption.md.
@@ -654,9 +696,19 @@ Each entry has:
   - (C) What floor of NVMe reads, and what per-VM read bandwidth bands? No source gives them; they need your field data.
   - (D) Cluster Consumption against DRAM + NVMe on tiered hosts?
 - For you: (A)-(D). The pack's thresholds stay as built until you decide.
-- Answer:
+- Answer: (a) Yes. (b) Broadcom bands not used on purpose: operations need 4 bands, so 5 numbers per metric; Broadcom gives 3 zones. (c) A metric that cannot be quantified into [grey], green, yellow, orange is not used; real-world data is not reliable because it is real: quality first, then enough quantity to rule out outliers. (d) In the SP5 Framework, Consumption = Utilization + Saturation, more than the Memory Consumed counter. NVMe consumed must be measured explicitly as Saturation, as zip and swap become 0. Propose the model by improving the Cluster Consumption and Cluster Performance tables.
+- Applied 2026-11-12: modelling (Setting thresholds): five numbers for four bands, convert vendor zones; quantify or leave out, data quality before quantity. cluster-consumption: on a tiered host the tier is the saturation signal. memory-tiering and the tiering decision tree: tier 1 consumed is saturation, not contention. Proposal: Q179.
 
-## Resolved
+### Q176 · Part 1 > Service Level Agreement > Size Limit · Memory cap per class after the socket rule
+- Files: [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (section Size limit per class); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) (section Maximum VM size); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (section Monster VM).
+- Search: "Capping the size at each tier is a good way to prevent monster VMs"
+- Image text (not searchable): "Tier 1 ≤ 1 socket 32 vCPU, 512 GB RAM", "Tier 2 ≤ 50% of a socket", "Tier 3 ≤ 25% of a socket".
+- Written as now: your Q100 answer removed the socket basis. The CPU cap moved to vm-size (logical CPUs × 1, 0.5, 0.33 at 1:1, 2:1, 3:1). The memory caps (512, 128, 32 GB) were per socket, so they are withdrawn and no memory cap per class is stated. Cluster Risk still flags a monster VM above 40% of host DRAM or 256 GB, whichever is smaller.
+- Question: what is the memory cap per class? (A) the same step as CPU: host DRAM × 1, 0.5, 0.33; (B) one rule for every class, below the Cluster Risk monster size; (C) the CPU cap × the class's GB per vCPU (4 GB in the plan); (D) no memory cap per class.
+- Proposed answer (expert call): (C), bounded by (B). Memory is sold with vCPUs (host-spec-from-class-of-service), so the cap follows the CPU cap: 4 GB per vCPU gives Bronze 0.33 × 128 threads × 4 = 170 GB on a 64-core host. (B) keeps every class below the size Cluster Risk calls a monster (256 GB on that host), so Gold is capped by memory before CPU. (A) ignores that memory is sold with vCPUs; (D) leaves Bronze unbounded.
+- For you: pick (A)-(D), or give the field rule.
+- Answer: None of (A)-(D) as a fixed number: VM size per class depends on the CPU architecture. After 1.0, Agent E2 should have a VM size calculator (roadmap). General advice meanwhile: Gold up to 2x an EPYC CCD or Xeon compute tile in vCPUs, Silver 1x, Bronze 0.5x; RAM 4 GB per vCPU. NUMA optimization aligns vCPU threads with the nearest memory controllers; crossing a die boundary for remote memory wastes cycles on the fabric. Example: AMD EPYC 9996 (256 cores, 8 CCDs of 32 cores, 2 IODs, 16 DDR5 channels, NPS2): a 32 vCPU VM fits one CCD; a 64 vCPU VM spans two CCDs behind the same IOD, memory within the NUMA node, no vNUMA topology.
+- Applied 2026-11-12: vm-size: section Size per class (table, NUMA reason, L3 domain unit, EPYC 9996 example); class-of-service: size limit points to it; plan.md After 1.0: VM size calculator. Two wording changes in the example, for the author to check: the unit is the L3 cache domain (on Zen 4c a 16-core CCD holds two 8-core CCX); and "memory fetches within the same CCD are instantaneous" is written as L3 hits stay inside the CCD while data shared between CCDs moves through the IOD (DRAM is always behind the IOD).
 
 ### Q177 · Capacity Planning Stage.xlsx · Memory tiering on top of the memory overcommit ratio
 - Files: [Overcommit ratio](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/overcommit.md) (section Per resource); [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (sections Example implementation, Planning calculator); [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md) (section Capacity management); [harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py) (functions vms_per_host, consumption).

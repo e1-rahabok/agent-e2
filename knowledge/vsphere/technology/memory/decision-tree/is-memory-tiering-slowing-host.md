@@ -48,7 +48,7 @@ flowchart TD
 - Balloon, compression or swap on a tiered host: a configuration problem first (non-tiered VM without reservation, limit, overcommit).
 
 ## Misconceptions
-- "Tier 1 consumed is high, so the host is short of memory" → tier 1 holds cold pages by design; read active memory and NVMe reads.
+- "Tier 1 consumed is high, so the VMs are slow" → tier 1 holds cold pages: saturation, not contention. Read active memory and NVMe reads.
 - "NVMe latency is 900 µs, so tiering hurts" → with almost no reads it is a wake-up penalty.
 - "Latency is below 200 µs, so tiering costs nothing" → each fetch still costs about 1,000x a DRAM access; many fetches slow the VM.
 - "Only reads come from NVMe, so write-heavy VMs are safe" → a write to a cold page waits for the page to come back first.
