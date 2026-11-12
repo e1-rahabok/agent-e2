@@ -348,7 +348,7 @@ THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-pra
 THRESHOLD_SECTIONS = {
     'thresholds-performance.yaml': ('kpi',),
     'thresholds-capacity.yaml': ('models', 'decisions', 'rules'),
-    'thresholds-alerts.yaml': ('alerts',),
+    'thresholds-alerts.yaml': ('symptoms', 'alerts'),
 }
 CLASSES = ('gold', 'silver', 'bronze')  # class of service
 ROW_CLASSES = CLASSES + ('all', 'production', 'non-production')
@@ -374,6 +374,71 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             elif v is not None:
                 x = [float(i) for i in v]
                 if x != sorted(x, reverse=lv.get('direction') == 'below'): bad(path, f'{w}: {iv} values must worsen from green to zero')
+    def check_alerts(path, data):
+        """Symptoms (one test each, written once) and alert definitions that refer to them by id."""
+        def objs(o): return o if isinstance(o, list) else [o]
+        sym, tests = {}, set()
+        for n, s in enumerate(data.get('symptoms') or []):
+            w = f'symptoms row {n + 1} ({s.get("id")})'
+            for k in ('id', 'object', 'metric', 'operator', 'value', 'source', 'kb'):
+                if s.get(k) in (None, ''): bad(path, f'{w}: {k} missing')
+            if not str(s.get('id', '')).startswith('sym-'): bad(path, f'{w}: id must start with sym-')
+            if s.get('id') in seen_thresholds: bad(path, f'{w}: duplicate id (ids are unique across the threshold files)')
+            seen_thresholds.add(s.get('id'))
+            sym[s.get('id')] = s
+            for o in objs(s.get('object')):
+                if o not in objects: bad(path, f'{w}: object "{o}" not allowed')
+            if s.get('layer') and s['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{s["layer"]}" not allowed')
+            if s.get('operator') not in OPERATORS or s.get('operator') == 'range': bad(path, f'{w}: operator "{s.get("operator")}" not allowed')
+            if s.get('interval') and s['interval'] not in ('2s', '20s', '5m', '1d'): bad(path, f'{w}: interval must be 2s, 20s, 5m or 1d')
+            if s.get('role', 'issue') not in ('issue', 'gate'): bad(path, f'{w}: role must be issue or gate')
+            if s.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{s.get("source")}" not allowed')
+            for k in ('condition', 'criticality', 'meaning', 'value_high'):
+                if k in s: bad(path, f'{w}: {k} does not belong on a symptom: one test each; the alert combines them')
+            key = (tuple(objs(s.get('object'))), s.get('metric'), s.get('interval'), s.get('operator'), s.get('value'))
+            if key in tests: bad(path, f'{w}: same test as another symptom: refer to that one')
+            tests.add(key)
+            kb_ok(path, w, s.get('kb'))
+            if s.get('kb') in bodies and s.get('quote') and s['quote'] not in bodies[s['kb']]:
+                bad(path, f'{w}: quote no longer in {s["kb"]}: update the symptom or the file')
+        used = set()
+        for n, a in enumerate(data.get('alerts') or []):
+            w = f'alerts row {n + 1} ({a.get("id")})'
+            for k in ('id', 'name', 'criticality', 'pillar', 'object', 'match', 'sets', 'wait_cycles', 'source', 'kb'):
+                if a.get(k) in (None, '', []): bad(path, f'{w}: {k} missing')
+            if not str(a.get('id', '')).startswith('alert-'): bad(path, f'{w}: id must start with alert-')
+            if a.get('id') in seen_thresholds: bad(path, f'{w}: duplicate id (ids are unique across the threshold files)')
+            seen_thresholds.add(a.get('id'))
+            for k in ('metric', 'operator', 'value', 'unit', 'condition'):
+                if k in a: bad(path, f'{w}: {k} belongs on a symptom, not on the alert')
+            if a.get('criticality') not in ('red', 'orange'): bad(path, f'{w}: criticality must be red or orange (no yellow alert)')
+            if a.get('pillar') not in allowed['pillar']: bad(path, f'{w}: pillar "{a.get("pillar")}" not allowed')
+            if a.get('match') not in ('all', 'any'): bad(path, f'{w}: match must be all or any')
+            if not isinstance(a.get('wait_cycles'), int) or a['wait_cycles'] < 1: bad(path, f'{w}: wait_cycles must be a whole number, 1 or more')
+            if a.get('source') not in THRESHOLD_SOURCES: bad(path, f'{w}: source "{a.get("source")}" not allowed')
+            for o in objs(a.get('object')):
+                if o not in objects: bad(path, f'{w}: object "{o}" not allowed')
+            kb_ok(path, w, a.get('kb'))
+            for m, st in enumerate(a.get('sets') or []):
+                ws = f'{w} set {m + 1}'
+                if st.get('match') not in ('all', 'any'): bad(path, f'{ws}: match must be all or any')
+                if st.get('relation') == 'self':
+                    if 'population' in st or 'object' in st: bad(path, f'{ws}: object and population only for relation: child')
+                    on = objs(a.get('object'))
+                elif st.get('relation') == 'child':
+                    if st.get('object') not in objects: bad(path, f'{ws}: relation child needs object')
+                    if not re.fullmatch(r'(>|>=) \d+%', str(st.get('population', ''))): bad(path, f'{ws}: population must read "> 25%" or ">= 50%"')
+                    on = [st.get('object')]
+                else:
+                    bad(path, f'{ws}: relation must be self or child'); on = []
+                if not st.get('symptoms'): bad(path, f'{ws}: symptoms missing')
+                for sid in st.get('symptoms') or []:
+                    used.add(sid)
+                    if sid not in sym: bad(path, f'{ws}: symptom "{sid}" does not exist'); continue
+                    miss = [o for o in on if o not in objs(sym[sid].get('object'))]
+                    if miss: bad(path, f'{ws}: symptom "{sid}" is not defined on {", ".join(miss)}')
+        for sid in sym:
+            if sid not in used: bad(path, f'symptom "{sid}" is used by no alert')
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')
@@ -418,6 +483,9 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             for k in data:
                 if k != 'meta' and k not in THRESHOLD_SECTIONS[name]:
                     bad(path, f'section "{k}" not allowed: use {", ".join(THRESHOLD_SECTIONS[name])}')
+            if name == 'thresholds-alerts.yaml':
+                check_alerts(path, data)
+                continue
             for section in THRESHOLD_SECTIONS[name]:
                 for n, r in enumerate(data.get(section) or []):
                     w = f'{section} row {n + 1} ({r.get("id") or r.get("metric")})'
@@ -444,10 +512,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if r.get('object') and r['object'] not in objects: bad(path, f'{w}: object "{r["object"]}" not allowed')
                     if r.get('layer') and r['layer'] not in allowed['layer']: bad(path, f'{w}: layer "{r["layer"]}" not allowed')
                     if 'class' in r and r['class'] not in ROW_CLASSES: bad(path, f'{w}: class must be one of {", ".join(ROW_CLASSES)}')
-                    if section == 'alerts':
-                        if r.get('criticality') not in ('red', 'orange'): bad(path, f'{w}: criticality must be red or orange (no yellow alert)')
-                        if r.get('pillar') not in allowed['pillar']: bad(path, f'{w}: pillar "{r.get("pillar")}" not allowed')
-                    elif 'criticality' in r: bad(path, f'{w}: criticality belongs to alert rows')
+                    if 'criticality' in r: bad(path, f'{w}: criticality belongs to alert rows')
                     if r.get('kb') in bodies and r.get('quote') and r['quote'] not in bodies[r['kb']]:
                         bad(path, f'{w}: quote no longer in {r["kb"]}: update the row or the file')
         elif name == 'user-terms.yaml':

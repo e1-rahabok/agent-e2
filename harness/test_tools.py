@@ -45,7 +45,7 @@ class CatalogTest(unittest.TestCase):
 
     def test_thresholds_have_source(self):
         r = CAT.lookup('VM CPU Ready')
-        self.assertTrue(any(t['value'] == 8 and t['source'] == 'knowledge-base' for t in r['thresholds']))
+        self.assertTrue(any('VM CPU Ready > 8 %' in a['rule'] and a['source'] == 'knowledge-base' for a in r['alerts']))
 
     def test_capacity_bands_from_catalog(self):
         bands = CAT.thresholds(name='Worst ESXi memory ballooned')['bands']
@@ -80,24 +80,37 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual(r['kpi'][0]['20s'], 'green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16')
         self.assertEqual(r['kpi'][0]['kb'], 'vsphere/object-types/vm/kpis/vm-performance')
 
-    def test_thresholds_carry_their_use(self):
-        # One metric, two uses: the orange alert and the red alert must not look alike; no SLA or SLI rows (2026-11-11).
-        rows = {r['use'] + '/' + r.get('criticality', ''): r for r in CAT.thresholds(name='VM CPU Ready', limit=20)['thresholds']
-                if r['metric'] == 'VM CPU Ready'}
-        self.assertEqual(rows['alert/red']['value'], 8)
-        self.assertEqual(rows['alert/orange']['value'], 4)
-        self.assertNotIn('sli/', rows)
+    def test_alert_comes_with_all_its_symptoms(self):
+        # An alert is a set of symptoms, not one metric with a free-text condition (2026-11-12).
+        al = {a['id']: a for a in CAT.thresholds(name='VM CPU Ready', limit=20)['alerts']}
+        red, orange = al['alert-vm-cpu-contention-red'], al['alert-vm-cpu-contention-orange']
+        self.assertEqual(red['rule'], 'all of: VM Peak vCPU Ready (20s) > 32 %; VM CPU Ready > 8 %; VM CPU Contention > 8 %; VM CPU Usage > 1 GHz (gate)')
+        self.assertIn('VM CPU Ready > 4 %', orange['rule'])
+        self.assertNotIn('thresholds', [k for k, v in CAT.thresholds(name='VM CPU Ready').items() if any(r.get('use') == 'alert' for r in v)])
+
+    def test_alert_on_children_and_any(self):
+        al = {a['id']: a for a in CAT.thresholds(name='ESXi CPU Thread Utilization', limit=20)['alerts']}
+        self.assertTrue(al['alert-cluster-cpu-consumption-red']['rule'].startswith('on its HostSystem children, > 25% of them: all of:'))
+        self.assertEqual(al['alert-cluster-cpu-consumption-red']['wait'], 'for 2 cycles (10 minutes)')
+        net = CAT.thresholds(name='ESXi Network Transmitted Packets Dropped', limit=20)['alerts']
+        self.assertTrue(any(a['rule'].startswith('any of:') for a in net))
+
+    def test_one_symptom_many_alerts(self):
+        n = CAT._q("SELECT COUNT(*) AS n FROM alert_symptoms WHERE symptom = 'sym-vm-cpu-usage-above-1ghz'")[0]['n']
+        self.assertEqual(n, 10)  # disk queue 2, CPU contention 2, memory contention 2, disk latency 4
 
     def test_facts_label_the_use(self):
         f = CAT.facts_for(['vsphere/technology/cpu/configuration/cpu-alerts'])
-        self.assertIn('- Alert, red: VM CPU Ready > 8', f)
-        self.assertIn('- Alert, orange: VM CPU Ready > 4', f)
+        self.assertIn('- Alert, red: VM CPU contention (VirtualMachine), all of: VM Peak vCPU Ready (20s) > 32 %', f)
+        self.assertIn('- Alert, orange: VM CPU contention (VirtualMachine)', f)
         self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms']))
 
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
-        self.assertEqual(uses, {'alert', 'decision', 'rule'})
-        self.assertEqual(CAT.stats()['thresholds'], 61)  # 36 + 25 planning defaults (capacity calculator, 2026-11-11)
+        self.assertEqual(uses, {'decision', 'rule'})
+        self.assertEqual(CAT.stats()['thresholds'], 41)  # 16 + 25 planning defaults (capacity calculator, 2026-11-11)
+        self.assertEqual(CAT.stats()['symptoms'], 40)
+        self.assertEqual(CAT.stats()['alerts'], 24)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
         self.assertEqual(CAT.stats()['kpi'], 31)
 

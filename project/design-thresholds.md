@@ -28,7 +28,7 @@ Not indexed.
 |---|---|
 | `knowledge/catalog/thresholds-performance.yaml` | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
 | `knowledge/catalog/thresholds-capacity.yaml` | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
-| `knowledge/catalog/thresholds-alerts.yaml` | `alerts`: 20 rows, one per alert and `criticality` (red, orange), with `pillar` (17 performance, 3 capacity) |
+| `knowledge/catalog/thresholds-alerts.yaml` | `symptoms`: 40, one test each; `alerts`: 24 definitions (2026-11-12; were 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
 | Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
 - The section name is the use (2026-11-11): rows carry no `kind` or `use` field; the Harness stores the use as a column and puts it first in every result.
@@ -165,7 +165,7 @@ reading key = (object, metric, instance, interval or window statistic)
 | `readings.yaml` | Reading keys and mapping | Yes |
 | `thresholds-performance.yaml` | KPI levels (9 values per metric), SLI tests, SLA targets, performance rules | Yes |
 | `thresholds-capacity.yaml` | Capacity and risk models, decisions, planning and sizing rules | Yes |
-| `thresholds-alerts.yaml` | Symptoms (one test each, with wait and cancel cycles); alert definitions to do (section 15) | Yes, symptoms |
+| `thresholds-alerts.yaml` | Symptoms (one test each) and alert definitions (built 2026-11-12); cancel cycles to do (section 9) | Yes |
 | `thresholds-availability.yaml` | KAI (internal target) and SLA (contract) | Two rows (99.95%, 100%); rest open to contributors |
 | `thresholds-security.yaml` | KSI (security and compliance internal target) and SLA | Open to contributors |
 
@@ -255,6 +255,14 @@ rules: []          # overcommit per class, monster VM, idle VM, Guest OS sizing 
 - 1.0: Agent E2 reads the scores the vCommunity pack publishes; the parameters serve explanation. Recomputing is after 1.0 (section 15.3).
 
 ### 8.4 `thresholds-alerts.yaml`
+Built 2026-11-12. As built, it differs from the proposal below in three points:
+- Wait cycles are on the alert (`wait_cycles`), as the knowledge files state them ("for 15 minutes, all of"). A shared symptom (VM CPU Usage above 1 GHz, in 10 alerts) is used with different waits; on the symptom it would need one copy per wait. Broadcom's advice (delay on the symptom) stays a review note.
+- Symptom sets: `sets`, each with `relation` (self, or child with `object` and `population`), `match` and `symptoms`; the alert's `match` combines the sets. Covers "cluster when more than 25% of hosts". The key is not `on`: YAML reads `on` as true.
+- No `type`, `reading`, `class`, `persona` or cancel cycles yet: no row needs them, and section 9 is not approved.
+- Fixes found during the migration: VM disk latency is four alerts (read and write separate, as storage-alerts says), not two; infrastructure contention alerts are on ESXi, resource pool and cluster, not on the cluster only; the 3 capacity alerts carry their population.
+- Lint: every symptom used, every reference exists, a symptom is defined on the alert's object, no two symptoms with the same test, no `condition` anywhere.
+
+Proposal (2026-11-10):
 ```yaml
 cycle: 5m        # VCF Operations collection cycle: wait 3 = 15 minutes
 symptoms:
@@ -454,13 +462,13 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ### 15.1 1.0, in order
 1. Done 2026-11-10: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and classic facts return them.
 2. `readings.yaml` for every reading that has a threshold today.
-3. Migration to the performance, capacity and alerts files. Done 2026-11-11: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Still to do: alert rows into symptoms with wait and cancel cycles; reading keys (step 2).
+3. Migration to the performance, capacity and alerts files. Done 2026-11-11: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Alert rows into symptoms and alert definitions: done 2026-11-12 (section 8.4). Still to do: cancel cycles (step 10); reading keys (step 2).
 4. Catalog tables, lookup with verdicts, `catalog` tool arguments, classic facts, unit tests.
 5. Up-front block, clarifying triggers, verifier check.
 6. `thresholds-availability.yaml` with its two rows.
 7. `project/knowledge-rules/thresholds.md`: the threshold files of this design.
 8. Benchmark: questions for U4, U5, U9, and a clarifying set (asked when it should, did not ask when it should not).
-9. Alert definitions: a thin block (id, criticality, any or all, symptom ids, persona) for the recommended alerts. Without it Agent E2 cannot answer "why did this alert fire".
+9. Done 2026-11-12: alert definitions (id, name, criticality, pillar, match, symptom sets, wait cycles) for the recommended alerts; persona not added.
 10. Cancel cycles of the recommended alerts set by section 9, once approved.
 
 ### 15.2 Open to contributors
