@@ -24,7 +24,8 @@ Per host, then the worst host is kept.
 | Memory consumed | Consumed, as % of host DRAM | `mem\|consumed_average` |
 | Memory ballooned | Ballooned, as % of host DRAM | `mem\|vmmemctl_average` |
 | Swapped + zipped | (Compressed + swapped), as % of host DRAM | `mem\|compressed_average`, `mem\|swapout_average` |
-| Memory tiering latency | Read latency of the NVMe memory tier. Left out on hosts without memory tiering | `mem:NVMe\|latency.read_latest` |
+| Active memory, tiered hosts | Active memory as % of host DRAM. Excluded while green (below 50%). Left out on hosts without memory tiering | vCenter `mem.active`; DRAM `mem:DRAM\|memory_tier_total_capacity` |
+| NVMe read latency | Read latency of the NVMe memory tier, at all times: a device waking from a power-saving state explains a high reading, it does not remove the wait. Left out on hosts without memory tiering | `mem:NVMe\|latency.read_latest` (µs) |
 | CPU reservation | Reserved CPU, as % of host CPU capacity | `cpu\|reservedCapacity_average` / `cpu\|totalCapacity_average` |
 | Memory reservation | Reserved memory, as % of host DRAM | `mem\|reservedCapacity_average` |
 | CPU overcommit | vCPUs of powered-on VMs per physical core (to be fixed: per thread) | `cpu\|vcpus_allocated_on_all_powered_on_vms`, `hardware\|cpuInfo\|numCpuCores` |
@@ -112,10 +113,11 @@ source:
   document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for reasons and monster VM factors
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md; formula/cluster-risk.png; Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections:
+- 'Section ''How each sub-metric is calculated'': the adapter documentation has NVMe read latency 150/300/450/600 µs and no active memory row; the author set 100/200/400/800 and added active memory 50/62.5/75/100 (2026-11-12, Q179). The pack follows after it is updated.'
 - 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
 - 'Section ''Monster VM'': the adapter definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
-- 'To check: Memory tiering rows: active memory against DRAM added (author, Q178 a); NVMe read latency re-banded 100, 200, 400, 800 µs and counted only while the host reads from NVMe (proposal, Q179).'
+- 'Memory tiering rows decided by the author (Q178 a, Q179, 2026-11-12): active memory 50/62.5/75/100% of DRAM, from Broadcom''s 50% recommended and 75% significant loss; NVMe read latency 100/200/400/800 µs, doubling, red from Broadcom''s 400 µs impact point.'
 - 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread; the pack counts per core and must be fixed (plan, after 1.0).'
 - 'To check: Section ''Monster VM'': the 8-core CCD statement for Xeon (Q125).'
 status: draft

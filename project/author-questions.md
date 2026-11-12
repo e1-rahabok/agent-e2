@@ -613,6 +613,8 @@ Each entry has:
 - For you: (a)-(e).
 - Answer:
 
+## Resolved
+
 ### Q179 · Memory tiering rows for Cluster Consumption, Cluster Performance and Cluster Risk · Proposal for review
 - Files: [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); [Modelling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md) (section Setting thresholds).
 - Search: not from the book; follows Q178.
@@ -663,9 +665,8 @@ Each entry has:
 - For you: the three tables.
 - Answer (partial, 2026-11-12): tier consumption bands linear 25/50/75/100. The metric is in between utilization and saturation: utilization starts green at a high number, saturation starts green at a low number and doubles quickly; linear blends the two natures.
 - Applied 2026-11-12: catalog row cluster-consumption-cluster-memory-tiering-consumption 25/50/75/100; cluster-consumption reason and correction entry. Still open: the other rows of the three tables.
-- Answer:
-
-## Resolved
+- Answer: accepted as proposed (2026-11-12).
+- Applied 2026-11-12: catalog thresholds-capacity (tiered DRAM consumed row 80/85/90/100; active memory 50/62.5/75/100; NVMe read latency 100/200/400/800 µs) and thresholds-performance (cluster memory wait rows); cluster-consumption, cluster-performance (memory wait, NVMe wait formula, validation before scoring), cluster-risk (rows, correction entry), memory-tiering (section In the cluster models). The vCommunity pack follows (plan.md, After 1.0). Closed.
 
 ### Q178 · Memory tiering in the capacity and performance models · Review of the three closure conditions
 - Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); [Is memory tiering slowing this host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md); VCF-vCommunity-Adapter docs/reference/metrics/cluster-risk.md and cluster-consumption.md.

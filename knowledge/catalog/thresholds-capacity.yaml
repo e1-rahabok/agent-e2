@@ -65,6 +65,19 @@ models:
     red: 90-100
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
+- id: cluster-consumption-cluster-wide-esxi-dram-consumed-tiered
+  metric: Cluster-wide ESXi DRAM consumed, tiered hosts (tier 0, %)
+  group: Utilization
+  object: ClusterComputeResource
+  interval: 5m
+  bands:
+    grey: null
+    green: 0-80
+    yellow: 80-85
+    orange: 85-90
+    red: 90-100
+  source: knowledge-base
+  kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-memory-tiering-consumption
   metric: Cluster memory tiering consumption (%)
   group: Saturation
@@ -169,17 +182,30 @@ models:
     red: 1-2
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
-- id: cluster-risk-worst-esxi-memory-tiering-latency-s
-  metric: Worst ESXi memory tiering latency (µs)
+- id: cluster-risk-worst-esxi-active-memory-tiered
+  metric: Worst ESXi active memory, tiered hosts (% of DRAM)
   group: Saturation
   object: ClusterComputeResource
   interval: 5m
   bands:
     grey: null
-    green: 0-150
-    yellow: 150-300
-    orange: 300-450
-    red: 450-600
+    green: 0-50
+    yellow: 50-62.5
+    orange: 62.5-75
+    red: 75-100
+  source: knowledge-base
+  kb: vsphere/object-types/cluster/models/cluster-risk
+- id: cluster-risk-worst-esxi-memory-tiering-latency-s
+  metric: Worst ESXi NVMe read latency (µs)
+  group: Saturation
+  object: ClusterComputeResource
+  interval: 5m
+  bands:
+    grey: null
+    green: 0-100
+    yellow: 100-200
+    orange: 200-400
+    red: 400-800
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
 - id: cluster-risk-highest-esxi-cpu-reservation

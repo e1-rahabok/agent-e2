@@ -24,7 +24,7 @@
 |---|---|
 | Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` |
 | Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` |
-| Memory latency (worst, 90th percentile) | VM `mem\|20_sec_peak_host_contentionPct` |
+| Memory wait (worst, 90th percentile) | Memory latency, VM `mem\|20_sec_peak_host_contentionPct`, plus NVMe wait on hosts with memory tiering (below) |
 | Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` |
 | Bad network packets | Per host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle; the highest host |
 
@@ -32,6 +32,9 @@
 - 90th percentile: sort the VMs; take the one at position 90% of the count, rounded up. With fewer than 10 VMs it equals the worst VM.
 - Bad packets are never averaged or summed over a longer time: that hides a spike. Packets Received and Transmitted totals are deactivated by default in VCF Operations; activate them in the policy first.
 - One VM with 200 ms disk latency and the others at 0: the worst-VM row is orange to red; the 90th percentile stays 0. One VM is not a broad problem.
+
+- NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM tier-1 read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of memory latency. On a host without tiering, NVMe wait is 0.
+- Before NVMe wait is scored, validate on a tiered host: one 4 KB page per fetch blocking one vCPU, no prefetch, and memory latency not already counting the fetches. Until then it is shown and left out of the score.
 
 ## Scoring
 - Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: [`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.

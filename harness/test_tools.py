@@ -98,7 +98,7 @@ class CatalogTest(unittest.TestCase):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'alert', 'decision', 'rule'})
         self.assertEqual(CAT.stats()['thresholds'], 61)  # 36 + 25 planning defaults (capacity calculator, 2026-11-11)
-        self.assertEqual(CAT.stats()['bands'], 18)
+        self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
         self.assertEqual(CAT.stats()['kpi'], 31)
 
 
