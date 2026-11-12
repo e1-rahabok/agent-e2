@@ -5,12 +5,11 @@
 - Built from three 0-100% scores: Cluster Performance (KPI, [`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)), Cluster Consumption (capacity model, [`vsphere/object-types/cluster/models/cluster-consumption`](cluster-consumption.md)), Cluster Risk (risk model, [`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md)).
 - It implements the overcommit path of the book's closure logic, with one rule for every cluster. The full decision, including the no-overcommit path and the fit of new VMs: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md).
 
-## Worst end of the period, not the latest value
-- Each score is summarized by its worst end over the window: the value with only the Worst Percent (default 5%) of the samples worse than it.
+## Logic
+- It runs periodically. Ideally once a day so the full day peak is considered. 
+- Each of the 3 scores is summarized by its worst end over the window: the value with only the Worst Percent (default 5%) of the samples worse than it.
 - Cluster Performance (higher is better): the 5th percentile. Cluster Risk and Cluster Consumption (higher is worse): the 95th percentile.
 - 24-hour window, 288 five-minute samples, 5%: the 14 worst samples (70 minutes) are ignored. A cluster bad for an hour a day is not fine for new VMs; one short spike does not close it.
-- Worst Percent 0 = the single worst sample decides. 50 = the median; the maximum allowed.
-- The percentile is computed by the pack: VCF Operations rollups have average, maximum, minimum and sum, but no percentile. An estimate from maximum and average is driven by one spike.
 
 ## The rule
 - Bands, the same scale for all three scores:
@@ -26,6 +25,11 @@
 - Closed (1) when either rule matches:
   - Rule 1: Consumption is red, or Performance is red. The cluster is full, or its VMs already suffer.
   - Rule 2: Consumption and Performance are both orange, and Risk is orange or red. Busy and slow at once, and heading the wrong way.
+- To be sure, the values cannot be borderline.
+  - Red Performance is < 20%, not < 25%
+  - Orange Performance is < 40%, not < 50%
+  - Red Consumption or Red Risk is > 80%, not > 75%
+  - Orange Consumption or Red Risk is > 60%, not > 50%
 - Risk never closes a cluster on its own: it is a leading indicator that buys time.
 - The pack cannot tell a production cluster from a non-production one, so it applies the more conservative production setting to every cluster: Risk orange closes.
 - Advice to the VMware admin: keep two settings. Production focuses on performance and closes at Risk orange. Non-production focuses on cost: it runs fuller and closes at Risk red ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md), step 6).
