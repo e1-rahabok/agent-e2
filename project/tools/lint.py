@@ -135,7 +135,7 @@ def main():
             m = re.search(r'/metrics/(virtual-motherboard|host|cluster|datastore|distributed-switch)/', f)
             if m and len(fm.get('object') or []) != 1:
                 bad(f, f'a metric file in metrics/{m.group(1)}/ has exactly one object type')
-        # Writing style (audit markers, words to avoid, AI-speak, title length) is the review's job, not lint's (2026-11-10).
+        # Writing style (audit markers, words to avoid, AI-speak) is the review's job, not lint's (2026-11-10). Titles and headings: check_titles (Q181).
 
     seen_ids, level_numbers = {}, {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
@@ -225,6 +225,7 @@ def main():
     check_terminology(pdocs, bad)
     check_catalog(allowed, ids, {fm.get('id'): FILE_LINK.sub(r'\1', body) for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
+    check_titles(bad)  # titles and headings are machine input: harness/kb.py puts both in front of every chunk (Q181)
 
     # every image file must be linked from a knowledge file, so the AI gets its context
     for img in glob.glob('knowledge/**/images/*.png', recursive=True):
@@ -326,8 +327,11 @@ def check_flow_map(bad):
 
 def check_titles(bad):
     """Short titles and headings: the title is prefixed to every chunk (harness/kb.py), so a list of contents in it repeats in every chunk."""
+    opener = re.compile(r'(How|Why|What|When|Where|Which|Who)\b')
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
-        for i, line in enumerate(open(f).read().split('\n'), 1):
+        text = open(f).read()
+        question_title = 'retriever_guide: decision-tree' in text  # a decision tree title is the question users ask
+        for i, line in enumerate(text.split('\n'), 1):
             m = re.match(r'(#{1,3}) (.*)', line)
             if not m:
                 continue
@@ -336,6 +340,8 @@ def check_titles(bad):
                 bad(f, f'line {i}: heading of {words} words; at most {limit}: name the topic, put details in the body')
             if m.group(1) == '#' and ': ' in m.group(2) and m.group(2).split(': ', 1)[1].count(',') >= 2:
                 bad(f, f'line {i}: title lists its contents after a colon; name the topic only')
+            if opener.match(m.group(2)) and not (m.group(1) == '#' and question_title):
+                bad(f, f'line {i}: heading starts with "{opener.match(m.group(2)).group(1)}": a noun phrase names the topic (project/knowledge-rules/writing.md)')
 
 
 def check_tables(bad):

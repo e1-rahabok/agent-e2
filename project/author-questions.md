@@ -18,19 +18,6 @@ Each entry has:
 
 ## Open
 
-### Q181 · Writing rules · Lint for titles and headings
-
-- Files: [project/knowledge-rules/writing.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/writing.md) (section Rules, titles and headings); [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) (function `check_titles`).
-- Search: not from the book.
-- Question: should lint check titles and headings again (word limits, no list after a colon, no question opener), although writing style left lint on 2026-11-10?
-- Written as now: the rule is in writing.md and the review checks it. `check_titles` is still in lint.py but is not called since 2026-11-10. Run by hand on 2026-11-12, after the title and heading pass: 0 problems.
-- Final answer (2026-11-12; expert call):
-  - Call `check_titles` again, and add the question openers (How, Why, What, When, Where, Which, Who) for `##` and `###` headings; decision tree titles stay questions.
-  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: `harness/kb.py` puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
-  - Change if accepted: lint.py (one call, one pattern); writing.md (the review checks the rest).
-  - For you: nothing.
-- Answer:
-
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
@@ -88,10 +75,10 @@ Each entry has:
 
 ### Q150 · URL questions · Pages with known Level 300 errors
 
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 3.4, URL questions); [L4-50, the first URL question](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-50-vm-contention-dashboard-deprecated.md).
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 3.4, URL questions); [L2-15, the first URL question](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-15-vm-contention-dashboard-deprecated.md).
 - Search: not from the book.
 - Question: list 5-10 public pages (Broadcom KB or TechDocs, VMware blogs, community posts, third-party blogs) that you know are wrong, each with the error. Each becomes a URL question where a frontier model tends to agree with the page.
-- Written as now: one URL question (L4-50, id 0091, the VM Contention dashboard page). Plan M2 lists the page list as yours to do.
+- Written as now: one URL question (L2-15, id 0091, the VM Contention dashboard page). Plan M2 lists the page list as yours to do.
 - Final answer (2026-11-12; expert call for two pages; the rest needs you):
   - Two pages verified (fetched 2026-11-10):
     - Broadcom KB 419238, Troubleshooting VM performance (https://knowledge.broadcom.com/external/article/419238): %RDY ≥ 10 for a VM, with no per-vCPU normalisation and no Run; MCTLSZ, CACHEUSD, SWCUR ≥ 1 read as current problems (they are past tense); ZIP/s and UNZIP/s both read as overcommitment (only UNZIP/s and SWR/s mean the VM waits now); %DRPTX and %DRPRX above 0 read as high network utilization (received drops usually mean the Guest OS did not drain the ring); "Increase the amount of CPU and memory" (more vCPUs can raise Ready and Co-stop).
@@ -104,6 +91,20 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q181 · Writing rules · Lint for titles and headings
+
+- Files: [project/knowledge-rules/writing.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/writing.md) (section Rules, titles and headings); [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) (function `check_titles`).
+- Search: not from the book.
+- Question: should lint check titles and headings again (word limits, no list after a colon, no question opener), although writing style left lint on 2026-11-10?
+- Written as now: the rule is in writing.md and the review checks it. `check_titles` is still in lint.py but is not called since 2026-11-10. Run by hand on 2026-11-12, after the title and heading pass: 0 problems.
+- Final answer (2026-11-12; expert call):
+  - Call `check_titles` again, and add the question openers (How, Why, What, When, Where, Which, Who) for `##` and `###` headings; decision tree titles stay questions.
+  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: `harness/kb.py` puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
+  - Change if accepted: lint.py (one call, one pattern); writing.md (the review checks the rest).
+  - For you: nothing.
+- Answer: accepted (2026-11-12).
+- Applied 2026-11-12: lint.py calls check_titles again, with the question openers; writing.md says what lint checks and what the review checks.
 
 ### Q162 · Class of service · Minimum VM Performance (%) per class
 
@@ -1969,15 +1970,15 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 - Answer: I was wrong. Memory is also on demand. So both are. I verified on a live vCenter.
 - Done 2026-11-06: question L3-07 key and the resource controls file: memory reservation is also on demand.
 
-### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-49
+### Q058 · Benchmark · Synthetic share and review of L4-14 to L4-48
 
-- Files: https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (L4-14 to L4-49); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
+- Files: https://github.com/e1-rahabok/agent-e2/tree/main/benchmark/questions (L4-14 to L4-48); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 10, synthetic cap; section 12, status).
 - Search: not from the book.
 - Context: the Level 400 allocation (37 questions) is now drafted by Claude from the knowledge base. Synthetic questions are 63 of 90 (70%), against the cap of about 30% in section 10.
 - Question:
   1. Keep the cap? If yes, which synthetic questions should be replaced by book, quiz or real-ticket questions, or should the cap rise?
   2. Review the 37: answer letters and key points per question (each `## Expected key points`), and the `## Input to supply` of the 24 awaiting-input questions (0066 to 0089).
-  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-47-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-48-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
+  3. [Which VMs to reclaim memory from](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-39-memory-reclaim-from-300-vms.md), [Which datastores run out of space first](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-40-datastores-running-out-of-space.md), [Bad network packets: find the host and the cause](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-47-bad-packets-which-host.md), [Disk latency peak 40 times the average](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-17-disk-latency-peak-vs-average.md): the key names rows of the table you supply. Record the names in each question's Notes.
 - Written as now: all 37 are `origin: synthetic`, status draft or awaiting-input; none counts until approved.
 - Answer: no need to keep cap as I'm reviewing every question one by one. What is important is the allocation and distribution. The source (book versus Claude) is less important.
 - Done 2026-11-06: synthetic cap removed from benchmark/design.md (sections 10 and 12).
