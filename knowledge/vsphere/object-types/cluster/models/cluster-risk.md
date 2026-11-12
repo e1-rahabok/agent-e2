@@ -3,7 +3,7 @@
 ## Purpose
 - A leading indicator: it warns before the VMs feel contention or consumption can suddenly rise. It covers capacity and performance.
 - Cluster Performance shows actual contention happening now ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)). Cluster Risk shows potential contention.
-- Higher is worse: 0 is no risk, 100 is maximum risk. The only score of the pack read this way.
+- Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - Not built into VCF Operations: a metric of the vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
 
@@ -52,7 +52,7 @@ Per host, then the worst host is kept.
 - The ratio compares the largest VM with that size: 1 is exactly the monster size; above 1 it is a monster.
 - The three numbers (50%, 40%, 256 GB) are defaults, settable per adapter instance. The ratio limits (1, 2, 3, 4) do not change.
 - Horizontal risk: more monster VMs, unevenly spread across hosts. Vertical risk: bigger VMs. One 96-vCPU VM is riskier than four 24-vCPU VMs.
-- Factors: NUMA (most Xeon and EPYC use 8-core CCDs; a 16-vCPU threshold would flag too many VMs), Hyper-Threading, hypervisor overhead (vSAN + NSX + VMkernel can take more than 10% CPU).
+- Factors: NUMA and L3 domains (their size depends on the CPU generation: AMD CCDs hold 8 to 32 cores, Intel Xeon has compute tiles; a fixed 16-vCPU threshold would flag too many VMs), Hyper-Threading, hypervisor overhead (vSAN + NSX + VMkernel can take more than 10% CPU).
 - Monster VMs cause contention despite low utilization, reservation and allocation.
 
 ## Scoring
@@ -62,7 +62,7 @@ Per host, then the worst host is kept.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
 
 ## A worse sub-metric can lower Cluster Risk
-- The weight of a sub-metric rises as its score falls. When the score is already high, a sub-metric that gets worse but is still better than the ones driving the KPI pulls the weighted average up, so Cluster Risk goes down.
+- The weight of a sub-metric rises as its score falls. When the score is already high, a sub-metric that gets worse but is still better than the ones driving the score pulls the weighted average up, so Cluster Risk goes down.
 - An Excluded row that leaves green enters at weight 2 at once: the same effect.
 - Example: Cluster Risk 67.9; new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow and Cluster Risk falls to 64.5. Only from about 2.7 does it raise Cluster Risk above 67.9.
 - Read the sub-metrics before acting on a falling Cluster Risk. A cluster just above orange (50) can drop to yellow after VMs are deployed.
@@ -119,6 +119,5 @@ corrections:
 review_notes:
 - 'Memory tiering rows decided by the author (Q178 a, Q179, 2026-11-12): active memory 50/62.5/75/100% of DRAM, from Broadcom''s 50% recommended and 75% significant loss; NVMe read latency 100/200/400/800 µs, doubling, red from Broadcom''s 400 µs impact point.'
 - 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread; the pack counts per core and must be fixed (plan, after 1.0).'
-- 'To check: Section ''Monster VM'': the 8-core CCD statement for Xeon (Q125).'
 status: draft
 ```

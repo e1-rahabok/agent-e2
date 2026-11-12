@@ -22,7 +22,7 @@ A metric with its own file is an entry only when it has another name or a confus
   - Also called: All Core Boost (AMD)
 - **Base frequency**: Nominal frequency. vSphere uses it as total capacity.
   - Also called: Nominal frequency, base clock speed
-- **CCD**: Core Complex Die. A group of cores sharing one L3 cache inside an AMD socket.
+- **CCD**: Core Complex Die: a die of cores inside an AMD socket. On most generations one CCD is one L3 domain; on Zen 4c a CCD holds two 8-core CCX, each its own L3 domain.
 - **Co-stop**: vCPU state: held back because a sibling vCPU of the same VM is too far behind.
   - Also called: Co-Stop, CoStop
 - **Contention (VCF Operations)**: Overlap + Co-stop + Ready + Other Wait (when below 1%). Before VCF Operations 8.18 (July 2024): mapped to CPU Latency.
@@ -140,14 +140,18 @@ A metric with its own file is an entry only when it has another name or a confus
 
 ### Capacity
 
-- **Closed cluster**: A cluster that accepts no new VM and no VM upsize, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%).
-  - Also called: Stop provisioning
-  - File: `vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`
-- **Cluster Risk (%)**: How close the worst ESXi host of a cluster is to contention: a leading indicator, 0 no risk, 100 maximum risk.
+- **Close for Business**: The cluster decision: 1 = closed (no new VM, no VM upsize), 0 = open, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%).
+  - Also called: Closed cluster, Stop provisioning
+  - File: `vsphere/object-types/cluster/models/close-for-business`
+- **Cluster Consumption (%)**: How much of a cluster's usable capacity is consumed: utilization plus saturation, a model, not a KPI. 0 nothing consumed, 100 fully consumed.
+  - Also called: Cluster Consumption KPI
+  - File: `vsphere/object-types/cluster/models/cluster-consumption`
+- **Cluster Risk (%)**: How close the worst ESXi host of a cluster is to contention: a leading indicator and a model, not a KPI. 0 no risk, 100 maximum risk.
+  - Also called: Cluster Risk KPI
   - Not to confuse with Time Remaining: Cluster Risk reads the running cluster now (short-term capacity: stop provisioning, no projection); Time Remaining is the long-term runway, days until the forecast crosses usable capacity (buy hardware).
   - File: `vsphere/object-types/cluster/models/cluster-risk`
 - **Demand (capacity)**: Per VM, the higher of utilization and reservation.
-  - Not to confuse with ESXi CPU Demand: ESXi CPU Demand is the runtime the VMs demand; capacity demand also counts reservations.
+  - Not to confuse with CPU Demand (VM and ESXi): the runtime a VM or the VMs of a host demand; capacity demand also counts reservations. A third use: the VCF Operations capacity setting Capacity Buffer (Demand).
   - File: `sp5-framework/capacity/demand`
 - **Guest OS sizing**: Sizing vCPU and memory from Guest OS counters (inside).
   - Also called: VM rightsizing (inside the guest)

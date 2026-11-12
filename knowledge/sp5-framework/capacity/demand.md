@@ -58,7 +58,7 @@
 - When the cluster cannot serve its current workload, remaining capacity is 0 in practice: provisioning stops.
 - Two metrics:
   - Performance (%): the actual performance ([`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md));
-  - Stop Provisioning (yes or no): the cluster is closed for new VMs or pods, decided from Performance (%), Capacity Remaining (%) and Risk (%). Flow: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../../vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md).
+  - Stop Provisioning (yes or no): the cluster is closed for new VMs or pods, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%) ([`vsphere/object-types/cluster/models/close-for-business`](../../vsphere/object-types/cluster/models/close-for-business.md)). Flow: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../../vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md).
 - A leading indicator would let VMs already in the queue be provisioned, or give a week of notice. Performance and risk do not project well: a projection of them can be wrong.
 
 ## Reservation and share

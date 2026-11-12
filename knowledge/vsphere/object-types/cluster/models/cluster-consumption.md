@@ -92,6 +92,5 @@ source:
 corrections:
 - 'Section ''Sub-metrics'': the adapter documentation gives Memory Tiering Consumption bands 4, 8, 16, 32; the author set 25, 50, 75, 100 and added the tiered-host DRAM Consumed row, 80, 85, 90, 100 (2026-11-12, Q179). The pack follows after it is updated.'
 review_notes:
-- 'To check: Section ''Sub-metrics'': the adapter page calls Cluster Consumption a KPI; written as a model (Q131).'
 status: draft
 ```

@@ -18,55 +18,6 @@ Each entry has:
 
 ## Open
 
-### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
-
-- Files: [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alerts-and-insights.md) (section Prevention window); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [VM CPU Other Wait](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
-- Search 1: "In the following example, the alerts use the SLA metrics and threshold."
-- Search 2: "Correct means the SLA is measured on each paying VM, and not at the infrastructure level."
-- Image text (not searchable): "SLA: VM CPU Ready > 5%", "SLA: VM Disk Latency > 10 ms", "Cluster average CPU Ready.", "VM CPU Co-Stop > 2.5%", "VM CPU IO Wait > 1%", "ESXi VMkernel queue > 1 ms", "vMotion stun time > 0.2 second".
-- Question:
-  - (a) SLA VM CPU Ready above 5%: which is the threshold?
-  - (b) Co-stop 2.5% as an insight threshold; the Co-stop file says below 1% in a high-performing environment. Is 2.5% right?
-  - (c) VMkernel queue above 1 ms: QAVG or KAVG?
-  - (d) Cluster average CPU Ready and memory contention as alerts: cluster worst VM, or provider-side alerts?
-  - (e) VM CPU IO Wait: VM Other Wait (vCenter), or Guest OS IO wait?
-- Written as now: the text dropped "SLA" ("Alert examples: VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention"). It still says "VM CPU IO wait" and "cluster average". The alt text still says "SLA VM CPU Ready, SLA VM disk latency" and the image metadata lists "VM CPU IO Wait". No image number is in the text or the catalog.
-- Final answer (2026-11-12; (a) settled by the 2026-11-11 SLA decision and Q106; (e) by the other-wait file; vMotion by Q030; (b)-(d) expert call):
-  - (a) Neither. Operations use no SLA (2026-11-11); an alert reads a KPI metric with its own values (Q106). The shipped VM alert rows: VM CPU Ready orange 4%, red 8%; VM disk latency orange 40 ms, red 80 ms (thresholds-alerts.yaml). The image's 5% and 10 ms are not used.
-  - (b) Drop 2.5%. "Insight before alert" means earlier in time, not a lower number. The insight reads the KPI row VM Peak CPU Co-stop (20 s): yellow 1%, orange 2%, red 4%, which matches the Co-stop file. Comparing Co-stop with Ready says nothing: on a wide VM one vCPU in Ready co-stops its siblings, so Co-stop can exceed Ready.
-  - (c) QAVG (vSphere Client: Queue command latency): the time a command waits in a full device or adapter queue inside the VMkernel. Block storage only; NFS has no QAVG. The earlier draft argued that KAVG contains QAVG; the latency stack file states QAVG can exceed KAVG (QAVG covers VM and kernel IO, KAVG VM IO only), so that argument is dropped. No catalog row: 1 ms has no five-number band yet (modelling, Setting thresholds).
-  - (d) Provider-side alerts, read on the VM population, not an average: the infrastructure CPU alert fires when 25% of the cluster's VMs are above a per-VM value (cpu-alerts). An average hides the victim; the worst VM is the VM alert's job.
-  - (e) VM CPU Other Wait, once labelled IO Wait (other-wait file). Not the Guest OS iowait. 1% is not kept: it would catch the accounting issue of Broadcom KB 85393.
-  - vMotion stun time above 0.2 second matches your Q030 answer (cluster-performance, section vMotion): keep it as the insight example.
-  - Change if accepted: alerts-and-insights, Prevention window: "VM CPU IO wait" → VM CPU Other Wait; "cluster average CPU Ready; cluster average memory contention" → share of the cluster's VMs above a per-VM value; alt text without "SLA" and with Other Wait; image metadata `VM CPU IO Wait` → `VM CPU Other Wait`; delete the review note. The image stays (Agent E2 reads the alt text).
-  - For you: nothing.
-- Answer:
-
-### Q111 · Part 1 > Configuration Management > Compute-related, ESXi · Cores or threads, and 48 or 64 cores
-
-- Files: [VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (section Compute); [ESXi configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/configuration/esxi-configuration-review.md) (sections Memory, Capacity); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md). Related: Q079, Q099, Q100, Q125, Q176.
-- Search 1: "do not count the logical processors"
-- Search 2: "So a machine with 64 cores 128 threads get 512 GB of RAM"
-- Search 3: "Aim for 48 to maximise software license"
-- Question: (a) maximum VM size by physical cores or by logical CPUs? (b) host RAM per core or per thread? (c) 48 cores here, 64 in Price & SLA, both to maximize the licence: drop both?
-- Written as now:
-  - vm-size: technical maximum at 1:1 = ESXi physical threads − hypervisor overhead, ÷ 2 at 2:1, ÷ 3 at 3:1; size per class (Q176) counted in physical cores of one CCD or compute tile: Gold 2×, Silver 1×, Bronze 0.5×, 4 GB per vCPU. Its last section still says "the maximum VM size of a class follows from its ratio in the table above". class-of-service lists both: "CPU cap per class, by logical CPUs and the overcommit ratio" and "Size per class … Gold up to 2 CCDs".
-  - vm-configuration-review: "count physical cores, not logical processors"; "Keep it within a socket"; "A VM above 8 vCPUs spans chiplets".
-  - esxi-configuration-review: "64 cores with 128 threads maps to 512 GB (1 vCPU per thread)", with a pointer to host-spec. Licence reason removed from the body.
-  - host-spec: 16-core licence minimum per CPU; "No core count above 16 per CPU has a licence advantage; keep Hyper-Threading on". 64 cores, 2.5 GHz: Gold 520 GB, Silver 839 GB, Bronze 660 GB.
-- Final answer (2026-11-12; (a) settled by Q176; (b) by Q079, Q174 and the six-number model; (c) expert call):
-  - (a) Two limits, both already in vm-size. The technical maximum counts threads (what ESXi can schedule). The class size counts physical cores of one CCD or compute tile (Q176: "Cores, not threads"). The class size binds far below the technical maximum, so no separate ceiling at the physical cores is needed. Two lines contradict this and change: vm-size, Size as a class of service fence ("follows from its ratio in the table above" → follows from Size per class); class-of-service, Size limit ("CPU cap per class by logical CPUs" → the technical ceiling; the class size is Size per class).
-  - vm-configuration-review: "count physical cores" stays (it matches Q176). "Keep it within a socket" → within one NUMA node, and within one CCD or compute tile where the class allows (Q100, Q176). "A VM above 8 vCPUs spans chiplets" → Q125.
-  - (b) Settled: per thread, 4 GB per vCPU, and the host RAM from the six-number model in host-spec (Gold 520 GB, Silver 839 GB, Bronze 660 GB on 64 cores). The 512 GB line in esxi-configuration-review ignores the hypervisor share and the class: replace it with the pointer to host-spec. The 768 GB host in class-of-service-planning and host-spec is the spreadsheet's example host, not a rule; it stays.
-  - (c) Drop 48 and 64. The licence floor is written in host-spec. Above the floor the core count per host is decided by:
-    - cost per sellable vCPU (hardware and licence);
-    - failure domain: VMs lost per host failure, and the HA share of a cluster of few large hosts;
-    - the class size against the host's CCDs or compute tiles (Q176);
-    - per-core application licences (Windows Server Datacenter, SQL Server, Oracle): a dedicated cluster with fewer, faster cores.
-  - Change if accepted: vm-size (fence section line); class-of-service (Size limit wording); vm-configuration-review (Compute); esxi-configuration-review (Memory: pointer only; Capacity: the four reasons); delete the Q111 review notes in vm-size, esxi-configuration-review and vm-configuration-review.
-  - For you: nothing.
-- Answer:
-
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
@@ -84,43 +35,6 @@ Each entry has:
   - For you: in a live VCF Operations 9.1, confirm the Datastore object has no unmap metric, and give the Host System metric keys.
 - Answer:
 
-### Q125 · Part 1 > Rightsizing > Best Practices · 8-core block, 8 and 16 vCPU
-
-- Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (section Practices); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (section Monster VM); [VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (section Compute); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (CCD). Related: Q111, Q176.
-- Search: "AMD EPYC and Intel Xeon use an 8-core block"
-- Question: (a) limit the 8-core block to AMD? (b) why does a VM above 8 vCPU risk the Hyper-Threading effect? (c) is above 16 vCPU about the CCD (L3) effect inside a socket, not NUMA?
-- Written as now:
-  - rightsizing: "a VM above 8 vCPU risks the Hyper-Threading effect; above 16 vCPU risks the NUMA effect. Both depend on the host CPU".
-  - cluster-risk, Monster VM: "most Xeon and EPYC use 8-core CCDs; a 16-vCPU threshold would flag too many VMs".
-  - vm-configuration-review: "a 64-core CPU of 8 chiplets of 8 cores … A VM above 8 vCPUs spans chiplets"; misconception "16 vCPUs span two 8-core chiplets".
-  - vm-size (Q176): class size counted in physical cores of one AMD CCD or Intel compute tile; the unit is the L3 cache domain (on Zen 4c the 8-core CCX); "Aim to run within the physical CPU package (AMD EPYC CCD or Intel Xeon Compute Tile) to avoid NUMA".
-  - numa-settings: defaults are NPS-1 with CCX as NUMA Domain off. Glossary CCD: "A group of cores sharing one L3 cache inside an AMD socket".
-- Final answer (2026-11-12; (a), (c) settled by Q176; (b) expert call):
-  - (a) Settled: there is no fixed 8-core block. The unit is the host's CPU building block (Q176): an AMD L3 domain (the CCD; the CCX on Zen 4c) or an Intel compute tile. Two precisions for vm-size:
-    - Zen 5c: one 16-core CCX per CCD, so the CCD is the unit again.
-    - Intel: a compute tile is its own L3 domain and NUMA node only with sub-NUMA clustering (SNC) on. With SNC off the socket shares one L3 and one NUMA node, so the tile is a softer boundary than an AMD CCD. To check against the Intel Xeon 6 documentation before it is written.
-  - (b) Remove the 8-vCPU Hyper-Threading rule. VM size against a CCD does not cause the Hyper-Threading effect. A vCPU pays it when its sibling thread is busy: under host load, or when the VM has more vCPUs than its NUMA node has cores (numa.vcpu.preferHT). vm-size already states the mechanism ("a vCPU on a busy sibling thread pays the Hyper-Threading penalty"). Above the L3 domain a VM pays a cache cost instead.
-  - (c) Settled: the 16-vCPU NUMA rule goes. With the default BIOS (NPS-1, CCX as NUMA off) an AMD NUMA node is the whole socket, up to 128 cores (Zen 5) or 192 (Zen 5c). Rule: above the L3 domain → cache cost; above the cores of the NUMA node → remote memory. Both are read from the host, not fixed at 8 and 16. vm-size "to avoid NUMA" → "to stay within one L3 domain and one NUMA node": at default the CCD is an L3 boundary, not a NUMA boundary.
-  - Sources: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), BIOS and NUMA sections, preferHT; vSphere 9.1 documentation (llc.multiLLCPerSocket, llc.size.vcpu); AMD EPYC 9005 Architecture Overview (doc 58462).
-  - Change if accepted: rightsizing (Practices: the two host-derived limits, link vm-size); vm-configuration-review (Compute and its misconception); cluster-risk (Monster VM: CCDs hold 8 to 32 cores by generation, Xeon has none); vm-size (Zen 5c, Intel SNC, "to avoid NUMA"); glossary CCD (on Zen 4c a CCD holds two CCX, each its own L3); delete the Q125 review notes in the four files.
-  - For you: nothing, unless the 8-vCPU rule came from a test you ran: then its setup.
-- Answer:
-
-### Q128 · Glossary · Proposed terms from Capacity Management
-
-- Files: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Capacity); [Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
-- Search: "Stop Provisioning (Yes/No)"
-- Question: three glossary proposals: (a) "Closed cluster" (also called stop provisioning); (b) pair "Demand (capacity) vs ESXi CPU Demand"; (c) pair "Idle vs oversized vs unused VM". Keep, rename or drop?
-- Written as now: glossary entry **Closed cluster** ("A cluster that accepts no new VM and no VM upsize, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%)"; Also called: Stop provisioning; File: can-cluster-take-more-vms). Entry **Demand (capacity)** with "Not to confuse with ESXi CPU Demand". (c) removed by your glossary edit of 2026-11-11. demand.md still says "Stop Provisioning (yes or no): … decided from Performance (%), Capacity Remaining (%) and Risk (%)".
-- Final answer (2026-11-12; (c) settled by your edit; (a), (b) expert call):
-  - (a) Rename the entry to **Close for Business**: 1 = closed (no new VM, no VM upsize), 0 = open, decided from Cluster Consumption, Cluster Performance and Cluster Risk. Also called: Closed cluster, Stop provisioning. File: close-for-business, then can-cluster-take-more-vms. Reason: one word per concept, and the pack metric (`vCommunity|Periodic Cluster Check|Close for Business`), the file title and the plan already use it.
-  - Fix demand.md: Cluster Consumption replaced Capacity Remaining in the closure (Q121).
-  - (b) Keep, and widen Not to confuse with to CPU Demand (VM and ESXi): VM CPU Demand is the same confusion. A third use exists: VCF Operations names a capacity setting Capacity Buffer (Demand) (cluster-consumption).
-  - (c) Settled: you removed the pair. Nothing to do.
-  - Change if accepted: glossary (Close for Business entry; Demand entry); demand.md (Stop Provisioning line).
-  - For you: nothing.
-- Answer:
-
 ### Q129 · VCF Operations 9.1 · Prometheus access for scripts
 
 - Files: [Real-time metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/real-time-metrics.md).
@@ -134,20 +48,6 @@ Each entry has:
   - Auth: POST `/suite-api/api/auth/token/acquire` → OpsToken; read the integration services list and take the service of type VCF_VODAP; POST `/suite-api/api/auth/token/exchange` → JWT, sent as Bearer.
   - Change if accepted: real-time-metrics, new section API for scripts (endpoints, sourceId, auth, URL); delete the review note; keep the corrections entry (the Workbench page still omits the API).
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
-- Answer:
-
-### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
-
-- Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md).
-- Search: adapter docs/reference/metrics/README.md: "KPIs: Cluster Performance, Cluster Risk, Cluster Consumption, ESXi Performance, VM Performance, Guest OS Performance"; periodic-cluster-check.md: "the three cluster KPIs".
-- Question: KPI is strictly performance; capacity and risk are models (2026-11-08). (a) The adapter documentation still lists Cluster Risk and Cluster Consumption as KPIs: rename them there, or keep a synonym in the knowledge base? (b) Where does Cluster SLA and SLI go?
-- Written as now: both models in `vsphere/object-types/cluster/models/`. Glossary: Cluster Risk (%) entry without an Also called line; no Cluster Consumption entry; the Model entry says "Cluster Risk is a model, not a KPI". cluster-risk Purpose: "The only score of the pack read this way" (higher is worse), while cluster-consumption says "The same direction as Cluster Risk (%)"; cluster-risk also says "the ones driving the KPI".
-- Final answer (2026-11-12; (a) settled for the knowledge base by the 2026-11-08 decision; (b) settled 2026-11-11):
-  - (a) Both. In the knowledge base now: Also called "Cluster Risk KPI" on the Cluster Risk (%) entry; a new entry Cluster Consumption (%), Also called "Cluster Consumption KPI", "a model, not a KPI". Users read the pack pages and will keep saying KPI. In the adapter: rename the pages with the other pack fixes after 1.0 (Q151, Q179).
-  - Fix cluster-risk: Cluster Consumption is higher-is-worse too, so "the only score of the pack read this way" goes; "driving the KPI" → "driving the score".
-  - (b) Settled: no SLA or SLI in operations (2026-11-11); cluster-sla-sli is archived and its old ids point to Cluster Performance. Nothing to move.
-  - Change if accepted: glossary (two Also called lines, one new entry); cluster-risk (Purpose, one line); plan After 1.0 (adapter page names with the pack fixes); delete the Q131 review notes in cluster-consumption and close-for-business.
-  - For you: whether the adapter pages are renamed with the after-1.0 pack fixes.
 - Answer:
 
 ### Q132 · VCF-vCommunity-Adapter vs Part 1 > Cluster Closure · Which closure thresholds does Agent E2 apply
@@ -171,6 +71,9 @@ Each entry has:
     - The decision-tree review notes move to the new step numbers (Risk is step 6).
   - Change if accepted: can-cluster-take-more-vms (steps 5-6, image alt text, review notes); the 6 closure-* rows; close-for-business (misconception, review note); plan After 1.0 (pack: Risk split by environment). With the score colours, your closure table image is replaced.
   - For you: which set wins (score colours 25/50/75, or Q121 20/40/60/80); whether the pack gets the non-production Risk split.
+- Answer (partial, 2026-11-12): the vCommunity management pack does not know if a cluster is production or non-production; it uses the more conservative setting, production. Agent E2 advises the VMware admin to keep two separate settings: production focuses on performance, non-production on cost.
+- Applied 2026-11-12: close-for-business (the pack applies the production setting; advice to keep two settings; the misconception quoting the retired book table replaced); can-cluster-take-more-vms (step 5: Performance at the 5th percentile; step 6: two settings); catalog rows closure-cluster-performance-* read the 5th percentile.
+- Still open: the band edges. The pack and close-for-business use the score colours (25, 50, 75); can-cluster-take-more-vms and the catalog use your Q121 table (Consumption 60/80, Performance 40/20, Risk 60/80). Which set?
 - Answer:
 
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
@@ -482,6 +385,111 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
+
+- Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md).
+- Search: adapter docs/reference/metrics/README.md: "KPIs: Cluster Performance, Cluster Risk, Cluster Consumption, ESXi Performance, VM Performance, Guest OS Performance"; periodic-cluster-check.md: "the three cluster KPIs".
+- Question: KPI is strictly performance; capacity and risk are models (2026-11-08). (a) The adapter documentation still lists Cluster Risk and Cluster Consumption as KPIs: rename them there, or keep a synonym in the knowledge base? (b) Where does Cluster SLA and SLI go?
+- Written as now: both models in `vsphere/object-types/cluster/models/`. Glossary: Cluster Risk (%) entry without an Also called line; no Cluster Consumption entry; the Model entry says "Cluster Risk is a model, not a KPI". cluster-risk Purpose: "The only score of the pack read this way" (higher is worse), while cluster-consumption says "The same direction as Cluster Risk (%)"; cluster-risk also says "the ones driving the KPI".
+- Final answer (2026-11-12; (a) settled for the knowledge base by the 2026-11-08 decision; (b) settled 2026-11-11):
+  - (a) Both. In the knowledge base now: Also called "Cluster Risk KPI" on the Cluster Risk (%) entry; a new entry Cluster Consumption (%), Also called "Cluster Consumption KPI", "a model, not a KPI". Users read the pack pages and will keep saying KPI. In the adapter: rename the pages with the other pack fixes after 1.0 (Q151, Q179).
+  - Fix cluster-risk: Cluster Consumption is higher-is-worse too, so "the only score of the pack read this way" goes; "driving the KPI" → "driving the score".
+  - (b) Settled: no SLA or SLI in operations (2026-11-11); cluster-sla-sli is archived and its old ids point to Cluster Performance. Nothing to move.
+  - Change if accepted: glossary (two Also called lines, one new entry); cluster-risk (Purpose, one line); plan After 1.0 (adapter page names with the pack fixes); delete the Q131 review notes in cluster-consumption and close-for-business.
+  - For you: whether the adapter pages are renamed with the after-1.0 pack fixes.
+- Answer: The author updated the files (2026-11-12): titles without the pack name; Cluster Risk Purpose (potential vs actual contention); Close for Business as the model's automatic decision.
+- Applied 2026-11-12: glossary (new entry Cluster Consumption (%), Also called Cluster Consumption KPI; Cluster Risk (%) Also called Cluster Risk KPI; both a model, not a KPI); cluster-risk (Cluster Consumption is higher-is-worse too; "driving the score"); Q131 review notes deleted. README: Agent E2, Isvara.io and the vCommunity management pack as three parts of one body of knowledge. Closed.
+
+### Q128 · Glossary · Proposed terms from Capacity Management
+
+- Files: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Capacity); [Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Search: "Stop Provisioning (Yes/No)"
+- Question: three glossary proposals: (a) "Closed cluster" (also called stop provisioning); (b) pair "Demand (capacity) vs ESXi CPU Demand"; (c) pair "Idle vs oversized vs unused VM". Keep, rename or drop?
+- Written as now: glossary entry **Closed cluster** ("A cluster that accepts no new VM and no VM upsize, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%)"; Also called: Stop provisioning; File: can-cluster-take-more-vms). Entry **Demand (capacity)** with "Not to confuse with ESXi CPU Demand". (c) removed by your glossary edit of 2026-11-11. demand.md still says "Stop Provisioning (yes or no): … decided from Performance (%), Capacity Remaining (%) and Risk (%)".
+- Final answer (2026-11-12; (c) settled by your edit; (a), (b) expert call):
+  - (a) Rename the entry to **Close for Business**: 1 = closed (no new VM, no VM upsize), 0 = open, decided from Cluster Consumption, Cluster Performance and Cluster Risk. Also called: Closed cluster, Stop provisioning. File: close-for-business, then can-cluster-take-more-vms. Reason: one word per concept, and the pack metric (`vCommunity|Periodic Cluster Check|Close for Business`), the file title and the plan already use it.
+  - Fix demand.md: Cluster Consumption replaced Capacity Remaining in the closure (Q121).
+  - (b) Keep, and widen Not to confuse with to CPU Demand (VM and ESXi): VM CPU Demand is the same confusion. A third use exists: VCF Operations names a capacity setting Capacity Buffer (Demand) (cluster-consumption).
+  - (c) Settled: you removed the pair. Nothing to do.
+  - Change if accepted: glossary (Close for Business entry; Demand entry); demand.md (Stop Provisioning line).
+  - For you: nothing.
+- Answer: Agree (2026-11-12).
+- Applied 2026-11-12: glossary entry Close for Business (Also called: Closed cluster, Stop provisioning; File: close-for-business); Demand (capacity) not to confuse with CPU Demand (VM and ESXi), plus Capacity Buffer (Demand); demand.md Stop Provisioning line reads Cluster Consumption, Performance and Risk. Closed.
+
+### Q125 · Part 1 > Rightsizing > Best Practices · 8-core block, 8 and 16 vCPU
+
+- Files: [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (section Practices); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) (section Monster VM); [VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (section Compute); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (CCD). Related: Q111, Q176.
+- Search: "AMD EPYC and Intel Xeon use an 8-core block"
+- Question: (a) limit the 8-core block to AMD? (b) why does a VM above 8 vCPU risk the Hyper-Threading effect? (c) is above 16 vCPU about the CCD (L3) effect inside a socket, not NUMA?
+- Written as now:
+  - rightsizing: "a VM above 8 vCPU risks the Hyper-Threading effect; above 16 vCPU risks the NUMA effect. Both depend on the host CPU".
+  - cluster-risk, Monster VM: "most Xeon and EPYC use 8-core CCDs; a 16-vCPU threshold would flag too many VMs".
+  - vm-configuration-review: "a 64-core CPU of 8 chiplets of 8 cores … A VM above 8 vCPUs spans chiplets"; misconception "16 vCPUs span two 8-core chiplets".
+  - vm-size (Q176): class size counted in physical cores of one AMD CCD or Intel compute tile; the unit is the L3 cache domain (on Zen 4c the 8-core CCX); "Aim to run within the physical CPU package (AMD EPYC CCD or Intel Xeon Compute Tile) to avoid NUMA".
+  - numa-settings: defaults are NPS-1 with CCX as NUMA Domain off. Glossary CCD: "A group of cores sharing one L3 cache inside an AMD socket".
+- Final answer (2026-11-12; (a), (c) settled by Q176; (b) expert call):
+  - (a) Settled: there is no fixed 8-core block. The unit is the host's CPU building block (Q176): an AMD L3 domain (the CCD; the CCX on Zen 4c) or an Intel compute tile. Two precisions for vm-size:
+    - Zen 5c: one 16-core CCX per CCD, so the CCD is the unit again.
+    - Intel: a compute tile is its own L3 domain and NUMA node only with sub-NUMA clustering (SNC) on. With SNC off the socket shares one L3 and one NUMA node, so the tile is a softer boundary than an AMD CCD. To check against the Intel Xeon 6 documentation before it is written.
+  - (b) Remove the 8-vCPU Hyper-Threading rule. VM size against a CCD does not cause the Hyper-Threading effect. A vCPU pays it when its sibling thread is busy: under host load, or when the VM has more vCPUs than its NUMA node has cores (numa.vcpu.preferHT). vm-size already states the mechanism ("a vCPU on a busy sibling thread pays the Hyper-Threading penalty"). Above the L3 domain a VM pays a cache cost instead.
+  - (c) Settled: the 16-vCPU NUMA rule goes. With the default BIOS (NPS-1, CCX as NUMA off) an AMD NUMA node is the whole socket, up to 128 cores (Zen 5) or 192 (Zen 5c). Rule: above the L3 domain → cache cost; above the cores of the NUMA node → remote memory. Both are read from the host, not fixed at 8 and 16. vm-size "to avoid NUMA" → "to stay within one L3 domain and one NUMA node": at default the CCD is an L3 boundary, not a NUMA boundary.
+  - Sources: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), BIOS and NUMA sections, preferHT; vSphere 9.1 documentation (llc.multiLLCPerSocket, llc.size.vcpu); AMD EPYC 9005 Architecture Overview (doc 58462).
+  - Change if accepted: rightsizing (Practices: the two host-derived limits, link vm-size); vm-configuration-review (Compute and its misconception); cluster-risk (Monster VM: CCDs hold 8 to 32 cores by generation, Xeon has none); vm-size (Zen 5c, Intel SNC, "to avoid NUMA"); glossary CCD (on Zen 4c a CCD holds two CCX, each its own L3); delete the Q125 review notes in the four files.
+  - For you: nothing, unless the 8-vCPU rule came from a test you ran: then its setup.
+- Answer: Agree (2026-11-12). The NUMA example in rightsizing was removed (duplicate of numa and virtual-numa).
+- Applied 2026-11-12: rightsizing (Practices: no fixed 8 and 16 vCPU rule; the Hyper-Threading penalty depends on the busy sibling thread; the dangling pointer to the removed example now links vm-size); vm-size (Zen 5c, Intel compute tile with SNC, the two host-derived limits, "to avoid NUMA" reworded); vm-configuration-review (Compute and misconception); cluster-risk (Monster VM factors); glossary CCD (Zen 4c CCX); Q125 review notes deleted. Closed.
+
+### Q111 · Part 1 > Configuration Management > Compute-related, ESXi · Cores or threads, and 48 or 64 cores
+
+- Files: [VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (section Compute); [ESXi configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/configuration/esxi-configuration-review.md) (sections Memory, Capacity); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md). Related: Q079, Q099, Q100, Q125, Q176.
+- Search 1: "do not count the logical processors"
+- Search 2: "So a machine with 64 cores 128 threads get 512 GB of RAM"
+- Search 3: "Aim for 48 to maximise software license"
+- Question: (a) maximum VM size by physical cores or by logical CPUs? (b) host RAM per core or per thread? (c) 48 cores here, 64 in Price & SLA, both to maximize the licence: drop both?
+- Written as now:
+  - vm-size: technical maximum at 1:1 = ESXi physical threads − hypervisor overhead, ÷ 2 at 2:1, ÷ 3 at 3:1; size per class (Q176) counted in physical cores of one CCD or compute tile: Gold 2×, Silver 1×, Bronze 0.5×, 4 GB per vCPU. Its last section still says "the maximum VM size of a class follows from its ratio in the table above". class-of-service lists both: "CPU cap per class, by logical CPUs and the overcommit ratio" and "Size per class … Gold up to 2 CCDs".
+  - vm-configuration-review: "count physical cores, not logical processors"; "Keep it within a socket"; "A VM above 8 vCPUs spans chiplets".
+  - esxi-configuration-review: "64 cores with 128 threads maps to 512 GB (1 vCPU per thread)", with a pointer to host-spec. Licence reason removed from the body.
+  - host-spec: 16-core licence minimum per CPU; "No core count above 16 per CPU has a licence advantage; keep Hyper-Threading on". 64 cores, 2.5 GHz: Gold 520 GB, Silver 839 GB, Bronze 660 GB.
+- Final answer (2026-11-12; (a) settled by Q176; (b) by Q079, Q174 and the six-number model; (c) expert call):
+  - (a) Two limits, both already in vm-size. The technical maximum counts threads (what ESXi can schedule). The class size counts physical cores of one CCD or compute tile (Q176: "Cores, not threads"). The class size binds far below the technical maximum, so no separate ceiling at the physical cores is needed. Two lines contradict this and change: vm-size, Size as a class of service fence ("follows from its ratio in the table above" → follows from Size per class); class-of-service, Size limit ("CPU cap per class by logical CPUs" → the technical ceiling; the class size is Size per class).
+  - vm-configuration-review: "count physical cores" stays (it matches Q176). "Keep it within a socket" → within one NUMA node, and within one CCD or compute tile where the class allows (Q100, Q176). "A VM above 8 vCPUs spans chiplets" → Q125.
+  - (b) Settled: per thread, 4 GB per vCPU, and the host RAM from the six-number model in host-spec (Gold 520 GB, Silver 839 GB, Bronze 660 GB on 64 cores). The 512 GB line in esxi-configuration-review ignores the hypervisor share and the class: replace it with the pointer to host-spec. The 768 GB host in class-of-service-planning and host-spec is the spreadsheet's example host, not a rule; it stays.
+  - (c) Drop 48 and 64. The licence floor is written in host-spec. Above the floor the core count per host is decided by:
+    - cost per sellable vCPU (hardware and licence);
+    - failure domain: VMs lost per host failure, and the HA share of a cluster of few large hosts;
+    - the class size against the host's CCDs or compute tiles (Q176);
+    - per-core application licences (Windows Server Datacenter, SQL Server, Oracle): a dedicated cluster with fewer, faster cores.
+  - Change if accepted: vm-size (fence section line); class-of-service (Size limit wording); vm-configuration-review (Compute); esxi-configuration-review (Memory: pointer only; Capacity: the four reasons); delete the Q111 review notes in vm-size, esxi-configuration-review and vm-configuration-review.
+  - For you: nothing.
+- Answer: Agree (2026-11-12).
+- Applied 2026-11-12: vm-size (Maximum VM size is the technical ceiling in threads; the class size follows Size per class); class-of-service (Size limit: the logical-CPU cap is the ceiling, not the class size); vm-configuration-review (Compute: NUMA node and L3 domain, read from the host); esxi-configuration-review (Memory: pointer to host-spec without the 512 GB rule; Capacity: core count above the licence floor by cost, failure domain, class size and per-core application licences); Q111 review notes deleted. Closed.
+
+### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
+
+- Files: [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alerts-and-insights.md) (section Prevention window); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [VM CPU Other Wait](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
+- Search 1: "In the following example, the alerts use the SLA metrics and threshold."
+- Search 2: "Correct means the SLA is measured on each paying VM, and not at the infrastructure level."
+- Image text (not searchable): "SLA: VM CPU Ready > 5%", "SLA: VM Disk Latency > 10 ms", "Cluster average CPU Ready.", "VM CPU Co-Stop > 2.5%", "VM CPU IO Wait > 1%", "ESXi VMkernel queue > 1 ms", "vMotion stun time > 0.2 second".
+- Question:
+  - (a) SLA VM CPU Ready above 5%: which is the threshold?
+  - (b) Co-stop 2.5% as an insight threshold; the Co-stop file says below 1% in a high-performing environment. Is 2.5% right?
+  - (c) VMkernel queue above 1 ms: QAVG or KAVG?
+  - (d) Cluster average CPU Ready and memory contention as alerts: cluster worst VM, or provider-side alerts?
+  - (e) VM CPU IO Wait: VM Other Wait (vCenter), or Guest OS IO wait?
+- Written as now: the text dropped "SLA" ("Alert examples: VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention"). It still says "VM CPU IO wait" and "cluster average". The alt text still says "SLA VM CPU Ready, SLA VM disk latency" and the image metadata lists "VM CPU IO Wait". No image number is in the text or the catalog.
+- Final answer (2026-11-12; (a) settled by the 2026-11-11 SLA decision and Q106; (e) by the other-wait file; vMotion by Q030; (b)-(d) expert call):
+  - (a) Neither. Operations use no SLA (2026-11-11); an alert reads a KPI metric with its own values (Q106). The shipped VM alert rows: VM CPU Ready orange 4%, red 8%; VM disk latency orange 40 ms, red 80 ms (thresholds-alerts.yaml). The image's 5% and 10 ms are not used.
+  - (b) Drop 2.5%. "Insight before alert" means earlier in time, not a lower number. The insight reads the KPI row VM Peak CPU Co-stop (20 s): yellow 1%, orange 2%, red 4%, which matches the Co-stop file. Comparing Co-stop with Ready says nothing: on a wide VM one vCPU in Ready co-stops its siblings, so Co-stop can exceed Ready.
+  - (c) QAVG (vSphere Client: Queue command latency): the time a command waits in a full device or adapter queue inside the VMkernel. Block storage only; NFS has no QAVG. The earlier draft argued that KAVG contains QAVG; the latency stack file states QAVG can exceed KAVG (QAVG covers VM and kernel IO, KAVG VM IO only), so that argument is dropped. No catalog row: 1 ms has no five-number band yet (modelling, Setting thresholds).
+  - (d) Provider-side alerts, read on the VM population, not an average: the infrastructure CPU alert fires when 25% of the cluster's VMs are above a per-VM value (cpu-alerts). An average hides the victim; the worst VM is the VM alert's job.
+  - (e) VM CPU Other Wait, once labelled IO Wait (other-wait file). Not the Guest OS iowait. 1% is not kept: it would catch the accounting issue of Broadcom KB 85393.
+  - vMotion stun time above 0.2 second matches your Q030 answer (cluster-performance, section vMotion): keep it as the insight example.
+  - Change if accepted: alerts-and-insights, Prevention window: "VM CPU IO wait" → VM CPU Other Wait; "cluster average CPU Ready; cluster average memory contention" → share of the cluster's VMs above a per-VM value; alt text without "SLA" and with Other Wait; image metadata `VM CPU IO Wait` → `VM CPU Other Wait`; delete the review note. The image stays (Agent E2 reads the alt text).
+  - For you: nothing.
+- Answer: Replace the image under Prevention window with the new one (insight types, alert examples, no thresholds). Close (2026-11-12).
+- Applied 2026-11-12: alerts-and-insights, Prevention window: new image and alt text (old image archived); insight types and alert types as text; alert examples per VM and, on a cluster, the share of VMs above a per-VM value (not a cluster average); insight examples with VM CPU Other Wait (not IO wait), the maximum vMotion stun time (healthy below 0.2 second) and the device queue time (QAVG); no image number in text or catalog; review note deleted. Closed.
 
 ### Q130 · Benchmark · Release score, gap to the frontier model, retrieval levels
 

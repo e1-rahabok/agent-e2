@@ -74,11 +74,11 @@ price vs Gold = 0.5 × (1 / CPU overcommit) + 0.5 × (1 / memory overcommit)
 - Progressive pricing: a 64-vCPU VM must cost more than 64x a 1-vCPU VM. A straight-line price gives no reason to size small, and rightsizing then happens in production, which is slow and costly.
 
 ## Size limit per class
-- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Cap by logical CPUs ([`sp5-framework/capacity/vm-size`](../capacity/vm-size.md)) and keep a VM within one NUMA node where it can ([`vsphere/technology/cpu/configuration/numa-settings`](../../vsphere/technology/cpu/configuration/numa-settings.md)).
+- Do not cap by socket: many ESXi servers are single socket, and NUMA now happens inside a socket, which is built from several CCDs (AMD EPYC) or compute tiles (Intel Xeon). Size by the host's CPU building block ([`sp5-framework/capacity/vm-size`](../capacity/vm-size.md)) and keep a VM within one NUMA node where it can ([`vsphere/technology/cpu/configuration/numa-settings`](../../vsphere/technology/cpu/configuration/numa-settings.md)).
 - Overcommit risks contention. A cap on VM size stops monster VMs from dominating overcommitted hosts.
 - If one VM may be the size of the host, overcommit with good performance is not possible.
 
-- CPU cap per class, by logical CPUs and the overcommit ratio: [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), section Maximum VM size.
+- Technical ceiling, by logical CPUs and the overcommit ratio: [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), section Maximum VM size. It is not the class size.
 - Size per class, CPU and memory (Gold up to 2 CCDs or compute tiles, Silver 1, Bronze 0.5; 4 GB per vCPU): [`sp5-framework/capacity/vm-size`](../capacity/vm-size.md), section Size per class.
 - Free tier: 1 vCPU, 4 GB, 100 GB disk.
 
