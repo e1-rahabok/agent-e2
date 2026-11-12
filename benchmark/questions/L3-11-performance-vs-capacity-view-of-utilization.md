@@ -45,5 +45,9 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A,B,C,D,E]
 misconception: []
+object: [esxi, cluster]
+tool: [none]
+knowledge_main: sp5-framework/concepts/performance-vs-capacity
+misconception_type: [consumption-as-contention]
 status: draft
 ```

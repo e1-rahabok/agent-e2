@@ -1,48 +1,47 @@
 # iSCSI: network bytes do not match storage bytes
 
 ## Prompt
-The attached table is a one-week export, in 5-minute samples, of one ESXi host that uses iSCSI only, on a dedicated 10 GbE VMkernel port with MTU 9,000: storage read and write IOPS and bytes, and network receive and transmit packets and bytes of the iSCSI vmnic.
-
+- ESXi host esx-21 uses iSCSI only, through software iSCSI adapter vmhba64 on a dedicated 10 GbE VMkernel port with MTU 9,000, carried by vmnic4.
 - The workload is almost all 8 KB reads.
-- In the busiest sample the host read 1,000,000 IOs of 8 KB.
-- The storage team asks why network receive bytes are higher than storage read bytes, and why there are transmit packets at all during a read-only workload.
+- [The attached export](0084/esx-21-iscsi-storage-and-vmnic4.csv) joins two vCenter charts of esx-21 for 4 hours of 5-minute samples: the storage adapter chart (read and write requests per second, read and write rates) and the vmnic4 network chart (packets as a sum per sample, data rates). KB is 1,024 bytes in this export.
+- The storage team asks two things: why vmnic4 receives more data than the adapter reads, and why vmnic4 transmits millions of packets per sample during a read-only workload.
 
-Explain the difference. Work out the expected network receive and transmit bytes and packets for the busiest sample.
-
-## Input to supply
-- Source: VCF Operations 9.1 export, one host, 7 days, 5-minute samples (2,016 rows).
-- Columns: time, storage read IOPS, storage write IOPS, storage read bytes, storage write bytes, network packets received, network packets transmitted, network bytes received, network bytes transmitted (iSCSI vmnic only).
-- Condition for the key: a host with iSCSI over MTU 9,000 and an 8 KB read workload; the busiest sample holds about 1,000,000 reads. If the real numbers differ, record them in the Notes and the key is recalculated.
-- Save as `benchmark/questions/84/host-iscsi-network-vs-storage-week.xlsx`.
+Explain both. Then, for the busiest sample, estimate the network receive and transmit data rates and packet counts you expect, and compare them with the export.
 
 ## Likely wrong answer
-"Reads go out as network Transmit, because the host sends the read."
+"Reads go out as network transmit, because the host sends the data request; the extra receive bytes are retransmissions or a counter error."
 
 ## Expected key points
-- Storage counters measure the logical payload; network counters measure whole frames: headers and acknowledgements in both directions.
-- Per 8 KB read with MTU 9,000: Transmit 2 packets, 170 bytes (the read command 106 bytes + the ACK of the data 64 bytes); Receive 2 packets, 8,362 bytes (the ACK of the command 64 bytes + the data frame 8,298 bytes).
-- Busiest sample: storage read 8,192,000,000 bytes; network receive about 8,362,000,000 bytes and 2,000,000 packets; transmit about 170,000,000 bytes and 2,000,000 packets.
-- A read is mostly Receive; Transmit carries only the command and the acknowledgement. A write reverses the pattern.
-- With MTU 9,000 the 8 KB block fits one frame; with 1,500 it takes several frames, each with its own headers.
+- Storage counters measure the logical payload. Network counters measure whole frames: headers on every frame, and acknowledgements in both directions.
+- A read is mostly receive: the data comes back from the array. Transmit carries only the read command and the acknowledgement of the data. A write reverses the pattern.
+- Per 8 KB read with MTU 9,000: one data frame of about 8.3 KB comes back (8 KB fits one jumbo frame), plus 1-2 small frames each way for the command and the acknowledgements (TCP can combine or delay them). Each frame carries about 54 bytes of Ethernet, IP and TCP headers plus the iSCSI header.
+- Busiest sample, 10:00: about 3,333 reads per second (26,666 KBps). Expected receive about 2% above the read rate, about 27,200 KBps, and about 2 packets per read; transmit only about 550 KBps, also about 2 packets per read, about 2 million packets per sample each way. The export matches.
+- With MTU 1,500 each 8 KB read would need several frames, each with its own headers: more packets and more overhead per IO.
 
 ## Notes
 - Previous id: question-0084 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Revised 2026-11-12 (question set 1.0): the 2,016-row workbook became a 48-row CSV; after the independent review, packets are sums per sample, as vCenter shows them, and the key accepts 1-2 packets per read each way. The CSV is synthetic, generated with a fixed seed from the frame model of ip-storage-network-accounting, with ±0.2% noise.
+
 ## Metadata
 ```yaml
 id: "0084"
 title: "iSCSI: network bytes do not match storage bytes"
 product: [vsphere]
 technology: [network, storage]
+object: [esxi, network]
+tool: [vcenter]
 task: explain-mechanism
 level: 400
 answer_type: judged
 input: [table]
 knowledge:
   - vsphere/technology/storage/concepts/ip-storage-network-accounting
+knowledge_main: vsphere/technology/storage/concepts/ip-storage-network-accounting
 attachments:
-  - 0084/host-iscsi-network-vs-storage-week.xlsx
+  - 0084/esx-21-iscsi-storage-and-vmnic4.csv
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-status: awaiting-input
+misconception_type: [unit-and-normalization]
+status: draft
 ```

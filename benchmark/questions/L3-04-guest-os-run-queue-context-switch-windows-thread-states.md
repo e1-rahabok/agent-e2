@@ -37,11 +37,14 @@ product: [vsphere, windows]
 technology: [cpu]
 input: [text]
 task: read-metric
+object: [guest-os]
+tool: [guest-os-tools]
 knowledge:
   - guest-os/cpu/windows-cpu-scheduling
   - guest-os/cpu/metrics/run-queue
   - guest-os/cpu/metrics/context-switch
   - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
+knowledge_main: guest-os/cpu/windows-cpu-scheduling
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q7 Guest OS CPU"
@@ -49,5 +52,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [D,E,F]
 misconception: [A,B,C]
+misconception_type: [layer-confusion, frequency-and-hyper-threading]
 status: draft
 ```

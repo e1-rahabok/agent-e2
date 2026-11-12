@@ -37,5 +37,9 @@ origin: book
 source_path: "The World of Metrics > Metrics Nuances: Virtualization Impact; Architecture Complexity (VM vs ESXi; ESXi ≠ VMs + Kernel)."
 answer_type: judged
 level: 300                      # author 2026-11-05
+object: [esxi, vm]
+tool: [none]
+knowledge_main: vsphere/architecture/provider-consumer
+misconception_type: [provider-vs-consumer]
 status: draft
 ```

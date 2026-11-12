@@ -2,15 +2,15 @@
 
 ## Prompt
 - A fully automated DRS cluster has 6 hosts.
-- VMs on host esx03 show high CPU Ready. The other 5 hosts are lightly used.
+- For a week, VMs on host esx03 show CPU Ready of 6-9% per vCPU at the 20-second peak. The other 5 hosts are lightly used, and their VMs show Ready below 0.5%.
 - The cluster state is green. No VM has a CPU limit.
 
 What is the most likely cause?
 
-- A. A DRS blocker: for example a VM/Host rule, a mounted CD-ROM or USB device, a DRS override on the VMs, or a conservative migration threshold.
-- B. The cluster is short of CPU capacity: add a host.
-- C. The VMs' CPU shares are too low.
-- D. esx03 has a faulty CPU.
+- A. Something stops DRS from moving VMs off esx03, such as a rule or a DRS override.
+- B. The cluster is short of CPU: add a host to spread the load.
+- C. The VMs on esx03 have CPU shares set too low for this host.
+- D. A failing CPU on esx03 slows the VMs that run on it.
 
 ## Likely wrong answer
 B: concluding that the cluster is short when only one host is hot.
@@ -34,13 +34,17 @@ task: troubleshoot
 level: 400
 answer_type: deterministic
 input: [text]
+object: [cluster, esxi, vm]
+tool: [vcenter]
 knowledge:
   - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
   - vsphere/object-types/cluster/concepts/drs-overview
+knowledge_main: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 misconception: [B]
+misconception_type: [average-hides-worst]
 status: draft
 ```

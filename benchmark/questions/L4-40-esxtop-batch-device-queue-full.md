@@ -1,39 +1,34 @@
 # Device queue full in esxtop batch data
 
 ## Prompt
-The attached table is one hour of esxtop batch output (esxtop -b, 10-second samples) of one ESXi host. The screenshot is the esxtop disk device panel (u) of the same host during the busiest minute.
-
-- One device shows LOAD above 1, QUED above 0 and %USD at 100.
-- On that device, KAVG/cmd is above 0.5 ms and DAVG/cmd stays low.
+- The application on VMs whose disks sit on LUN naa.624a9370a1 reports slow transactions between 10:20 and 10:40.
+- [The attached CSV](0086/esx-07-esxtop-batch-disk-devices-1-hour.csv) is one hour of esxtop batch output of host esx-07 (`esxtop -b -d 60`), reduced to two LUNs and the fields of the disk device panel.
+- From 10:20 to 10:40, naa.624a9370a1 shows ACTV equal to DQLEN, QUED above 0, %USD 100 and LOAD near 3. KAVG/cmd rises above 2 ms while DAVG/cmd stays near 1 ms.
 
 Where is the latency added, and what do you check?
 
-- A. In the kernel: the device queue is full, so commands wait in the kernel. Check the queue depths along the stack, and whether Storage I/O Control lowered the device queue depth.
-- B. In the array: DAVG is the array latency.
-- C. In the Guest OS queue.
-- D. Nowhere: LOAD above 1 is normal for a busy device.
-
-## Input to supply
-- Table: esxtop batch mode (esxtop -b -d 10 -n 360) of one ESXi 9.1 host, CSV, 360 rows. Keep the disk device columns; other columns may stay.
-- Screenshot: esxtop disk device panel (press u) of the same host in the busiest minute, with QSTATS fields (DQLEN, ACTV, QUED, %USD, LOAD) and latency fields (DAVG, KAVG, GAVG, QAVG).
-- Condition for the key: one device with LOAD above 1, QUED above 0, %USD 100, KAVG/cmd above 0.5 ms, DAVG/cmd low (well within 5 ms).
-- How to produce it: lower the device queue depth on a lab LUN and run a high-outstanding-IO load.
-- Mask device names if they reveal the customer.
-- Save as `benchmark/questions/86/esxtop-batch-one-hour.csv` and `benchmark/questions/86/esxtop-disk-device-queue.png`.
+- A. In the ESXi kernel: the device queue is full, so commands wait before the array.
+- B. In the array: DAVG, the time from the HBA to the array and back, is the cause.
+- C. In the Guest OS: the VMs queue the IO inside Windows and Linux before sending it.
+- D. Nowhere: a LOAD above 1 is normal for any busy device and needs no action.
+- E. Compare the queue depth of 32 with the HBA and the array's per-LUN guidance.
 
 ## Likely wrong answer
-B: blaming the array when DAVG is low.
+B: blaming the array.
 
 ## Expected key points
-- Answer: A.
-- %USD = ACTV / queue length: 100% means the queue is full, so outstanding IO and latency rise. LOAD above 1 with QUED above 0: commands are queued in the kernel.
-- KAVG above 0.5 ms points to kernel queues; check QAVG and the queue depths at each level of the stack.
-- When SIOC is active, it lowers the device queue depth of each host by shares: the host Maximum Queue Depth then changes over time.
-- B is wrong: DAVG is low. C is wrong: esxtop does not see the Guest OS queue.
+- Answer: A, E.
+- A: %USD = ACTV / DQLEN = 100% means the device queue is full. LOAD = (ACTV + QUED) / DQLEN near 3: about twice as many commands wait in the kernel as the device accepts. KAVG (and QAVG inside it) carries the added time: GAVG ≈ 3 ms = KAVG 2 ms + DAVG 1 ms.
+- E: the device queue depth is the limit here, and queue depths must match along the stack (HBA, device, array). Spreading the busy disks over more LUNs also gives more device queues.
+- B is wrong: DAVG stays near 1 ms through the window. The array serves each command as fast as before; the commands wait before they get there.
+- C is wrong: esxtop does not see the Guest OS queues.
+- D is wrong: LOAD above 1 means commands are queued in the kernel.
+- The other LUN, naa.624a9370b2, has no queue at the same time: the host and its adapters are not the limit.
 
 ## Notes
 - Previous id: question-0086 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot removed; the batch output reduced to two devices, one-minute samples and the panel's field names; the Storage I/O Control option removed (deprecated in VCF 9.0). Counts only after author approval.
+
 ## Metadata
 ```yaml
 id: "0086"
@@ -43,17 +38,21 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-input: [table, screenshot]
+input: [table]
+object: [esxi]
+tool: [esxtop]
 knowledge:
   - vsphere/tools/esxtop/storage
   - vsphere/technology/storage/troubleshooting/host-storage-latency
-  - vsphere/technology/storage/metrics/datastore/storage-io-control
+  - vsphere/technology/storage/concepts/esxi-storage-latency-stack
+  - vsphere/technology/storage/storage-configuration-review
+knowledge_main: vsphere/tools/esxtop/storage
 attachments:
-  - 0086/esxtop-batch-one-hour.csv
-  - 0086/esxtop-disk-device-queue.png
+  - 0086/esx-07-esxtop-batch-disk-devices-1-hour.csv
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-answer: [A]
+answer: [A, E]
 misconception: [B]
-status: awaiting-input
+misconception_type: [layer-confusion]
+status: draft
 ```

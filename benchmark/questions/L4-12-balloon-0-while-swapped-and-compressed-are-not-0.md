@@ -40,6 +40,9 @@ knowledge:
   - vsphere/technology/memory/metrics/host/compressed
   - vsphere/technology/memory/concepts/swap-and-compression
   - vsphere/technology/memory/concepts/host-memory-states
+object: [esxi]
+tool: [none]
+knowledge_main: vsphere/technology/memory/concepts/swap-and-compression
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q5 ESXi Memory Utilisation"
@@ -47,5 +50,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [B,C]
 misconception: [A,D]
+misconception_type: [cumulative-vs-current, reclamation-as-contention]
 status: draft
 ```

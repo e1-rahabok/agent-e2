@@ -38,6 +38,9 @@ knowledge:
   - vsphere/technology/memory/concepts/ballooning
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/architecture/vm-vs-guest-os
+object: [vm, guest-os]
+tool: [vcf-operations]
+knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 VM vs Guest OS"
@@ -45,5 +48,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A,B,D,E]
 misconception: [C]
+misconception_type: [layer-confusion]
 status: draft
 ```

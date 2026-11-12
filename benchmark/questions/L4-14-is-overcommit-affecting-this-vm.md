@@ -1,51 +1,61 @@
-# Is memory overcommitment affecting this VM?
+# Is memory overcommit affecting this VM?
 
 ## Prompt
-- A 32 GB VM runs on an ESXi host that is overcommitted on memory.
-- Last hour, from the vCenter real-time charts:
-  - Ballooned memory: 4 GB, flat.
-  - Consumed memory: 28 GB. Active memory: 6 GB.
-  - Swapped: 0. Compressed: 0.
-  - Memory Latency: 0%.
-- The application team reports no slowness.
+- A 32 GB Linux VM runs a Java application on an ESXi host whose VMs are configured with 1.5 times its physical memory.
+- vSphere Client, last 24 hours, for the VM:
+  - Ballooned memory: rose from 0 to 6 GB at 09:00, flat since.
+  - Swapped: 0. Compressed: 0. Swap in rate: 0.
+  - Memory Latency: 0% the whole day.
+- Inside Linux, from 09:00: major page faults per second rose from near 0 to about 400, and swap used grew from 0 to 3 GB.
+- Since 09:00, users see response times double.
 
-Which statements are correct? Choose all that apply.
+Which statements are correct?
 
-- A. Overcommitment is not affecting this VM now: some ballooning is normal, Consumed is above Active, and there is no host swapping, compression or latency.
-- B. The VM is short of memory: ballooning above 0 means it cannot get what it asks for.
-- C. Add 4 GB to the VM to cancel the balloon.
-- D. If users later report slowness, check swap activity inside the Guest OS next: ballooning may then be starting to affect the guest.
+- A. Overcommit is not affecting this VM: Memory Latency is 0%, and nothing is swapped or compressed at host level.
+- B. The balloon took 6 GB inside Linux; Linux then paged part of the Java memory out to its own swap, and the threads wait for those page-ins.
+- C. VM Memory Latency counts waits for ESXi to bring back swapped or compressed pages; it cannot see paging inside the Guest OS.
+- D. Linux gave the balloon its free and cache pages first; it paged out used memory only when those ran short.
+- E. Adding 8 GB to the VM fixes it, because the balloon would then take the extra memory first and Java keeps its pages.
+- F. Swapped and Compressed at 0 prove the host has enough physical memory, since ESXi would compress before it balloons.
 
 ## Likely wrong answer
-B: reading balloon above 0 as the VM being short of memory.
+A: Memory Latency is 0%, so memory is not the cause.
 
 ## Expected key points
-- Answer: A, D.
-- The overcommit indicators, in order: ballooning, Consumed vs Active, host swapping and compression, Guest OS swap. Some ballooning is normal; Consumed above Active means the guest gets what it uses now; Swapped, Compressed and Latency at 0 mean no pressure on this VM.
-- C is wrong: adding memory to a VM on a pressured host adds to the pressure; the balloon follows the host, not the VM size.
-- Guest OS swap is the next indicator if impact appears.
+- Answer: B, C, D.
+- The overcommit indicators, in order: ballooning, host swap and compression, then swap inside the Guest OS. Here the last one is active: the balloon is now hurting the guest.
+- B: the balloon driver allocates memory inside Linux. When free and cache pages are not enough, Linux pages out used memory; every page-in is a wait the application feels.
+- C: VM Memory Latency is the share of time a vCPU waits for ESXi to bring a page back (swap-in, decompression). Guest paging happens above ESXi; ESXi cannot see it.
+- D: the Guest OS hands the balloon free pages first, then cache, then modified and in-use pages. Paging of used memory starts only when the first two run short.
+- A is wrong: Latency 0% rules out host-level waits only.
+- E is wrong: the balloon follows host pressure, not the VM's size; more configured memory adds to the overcommit.
+- F is wrong: ballooning comes before compression and swap; 0 there does not mean there is no pressure.
 
 ## Notes
-- Previous id: question-0054 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Revised 2026-11-12 (question set 1.0): the earlier version repeated "balloon above 0 is normal" (also in L2-13); now the indicator that matters is the last one, guest paging.
+
 ## Metadata
 ```yaml
 id: "0054"
-title: "Is memory overcommitment affecting this VM?"
-product: [vsphere]
+title: "Is memory overcommit affecting this VM?"
+product: [vsphere, linux]
 technology: [memory]
 task: troubleshoot
 level: 400
 answer_type: deterministic
 input: [text]
+object: [vm, guest-os]
+tool: [vcenter, guest-os-tools]
 knowledge:
   - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
   - vsphere/technology/memory/concepts/ballooning
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
+knowledge_main: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-answer: [A, D]
-misconception: [B]
+answer: [B, C, D]
+misconception: [A]
+misconception_type: [layer-confusion, reclamation-as-contention]
 status: draft
 ```

@@ -12,7 +12,7 @@ Choose the most accurate counter from the list.
 - D. VM CPU Demand (%)
 - E. VM CPU Run - Overlap. In VCF Operations this is CPU Net Run (%).
 
-Hint: since a VM is a motherboard, what you size is the Guest OS, not the VM. You size Windows or Linux, not a piece of hardware.
+Hint: since a VM is virtual hardware, what you size is the Guest OS, not the VM. You size Windows or Linux, not a piece of hardware.
 
 ## Likely wrong answer
 C or D (Demand), because it includes unmet demand; or A/B (Usage).
@@ -34,12 +34,15 @@ product: [vsphere, windows]
 technology: [cpu]
 input: [text]
 task: decide-capacity
+object: [vm]
+tool: [vcenter, vcf-operations]
 knowledge:
   - sp5-framework/capacity/rightsizing
   - guest-os/system/concepts/guest-os-sizing
   - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/net-run
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q5 VM CPU Rightsize"
@@ -47,5 +50,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [E]
 misconception: [C,D]
+misconception_type: [frequency-and-hyper-threading]
 status: draft
 ```

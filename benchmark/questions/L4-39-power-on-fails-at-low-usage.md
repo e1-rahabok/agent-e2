@@ -1,49 +1,50 @@
 # Power-on fails at 30% usage
 
 ## Prompt
-The attached table is an export of the resource pool tree of a DRS cluster: per pool and per VM, the CPU and memory reservation, reservation type, limit and shares. The screenshot is the vSphere Client error when a VM in pool RP-KID is powered on.
+- DRS cluster prod-cl07: 4 hosts, 640 GHz of CPU. Cluster CPU usage is about 30%.
+- You power on vm-kid-db02 in resource pool RP-KID. It has a CPU reservation of 2,000 MHz.
+- The vSphere Client shows: "Power On virtual machine vm-kid-db02: Insufficient resources. The available CPU resources in the parent resource pool are insufficient for the operation."
+- [The attached export](0085/resource-pool-tree.csv) lists the resource pools and VMs of the cluster with their reservations, limits and shares.
 
-- Cluster CPU usage is about 30%.
-- The VM has a CPU reservation of 2 GHz.
-
-Why does the power-on fail? What do you change, and what do you advise for the reservation design?
-
-## Input to supply
-- Table: export of the resource pool tree (PowerCLI or vSphere Client), one row per pool and per VM: name, parent, CPU reservation (GHz), memory reservation (GB), reservation type (Fixed or Expandable), limit, shares.
-- Condition for the key: parent RP-MOM has a fixed 6 GHz reservation and runs VMs with 3 GHz reserved; child RP-KID is expandable with 2 GHz reserved, already used by a running VM. The new VM in RP-KID reserves 2 GHz.
-- Screenshot: vSphere Client 9.1 power-on error "Insufficient resources" for that VM.
-- Save as `benchmark/questions/85/resource-pool-tree.xlsx` and `benchmark/questions/85/vcenter-insufficient-resources.png`.
+Why does the power-on fail when the cluster is at 30%? What do you change, and what do you advise for the reservation design?
 
 ## Likely wrong answer
-"The cluster is at 30% CPU, so it is a bug: retry or restart vCenter."
+"The cluster is at 30% CPU, so it is a glitch: retry, or restart vCenter." Or "The cluster is short of CPU: add a host."
 
 ## Expected key points
-- Admission control counts reservations, not usage: 30% usage does not matter.
-- RP-KID is expandable: its own 2 GHz is used, so the VM borrows from RP-MOM. RP-MOM has 6 - 3 - 2 = 1 GHz unreserved, less than 2 GHz: the power-on fails.
-- The VM overhead memory also counts as reserved, on top of its memory reservation.
-- Fix: raise the RP-MOM reservation, lower other reservations, or remove the reservation from the new VM if it is not justified.
-- Design: leave at least 10% of capacity unreserved; near 100% reserved, power-ons and pool edits fail and DRS cannot migrate VMs. Expandable reservations give flexibility but lose isolation between sibling pools.
+- Admission control checks unreserved capacity, not usage: 30% usage does not matter.
+- RP-KID reserves 2,000 MHz and vm-kid-db01 already uses all of it. RP-KID is expandable, so vm-kid-db02 asks its parent, RP-MOM, for the 2,000 MHz.
+- RP-MOM has a fixed (not expandable) reservation of 6,000 MHz: its VMs reserve 3,000 MHz and RP-KID takes 2,000 MHz, so 1,000 MHz is unreserved. 1,000 < 2,000: the power-on fails.
+- The cluster root has plenty unreserved, but a fixed reservation stops the walk up the tree: RP-MOM cannot borrow from the root.
+- Fix, one of: raise RP-MOM to at least 7,000 MHz; make RP-MOM expandable (it then borrows from the root, and no longer isolates its VMs); lower other reservations in RP-MOM; or lower or remove the reservation of vm-kid-db02 if it is not justified.
+- Design: a fixed reservation isolates a pool and caps what its children can borrow; an expandable one is flexible, but one child can take all of the parent's spare reservation. Keep part of the capacity unreserved (the documentation advises at least 10%).
 
 ## Notes
-- Previous id: question-0085 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Revised 2026-11-12 (question set 1.0): the tree as a CSV export, the error as text; no screenshot.
+- Expandable reservations walk up the tree while each ancestor is expandable (vSphere 9.1 Resource Management, Expandable Reservations Example).
+- Admission control questions test different facts: L2-10 (reservations, not usage), L4-30 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
+
 ## Metadata
 ```yaml
 id: "0085"
 title: "Power-on fails at 30% usage"
 product: [vsphere]
-technology: [system]
+technology: [system, cpu]
 task: judge-setting
 level: 400
 answer_type: judged
-input: [table, screenshot]
+input: [table]
+object: [resource-pool, cluster, vm]
+tool: [vcenter]
 knowledge:
   - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
+  - vsphere/object-types/resource-pool/resource-pool-design
   - vsphere/architecture/resource-controls
+knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 attachments:
-  - 0085/resource-pool-tree.xlsx
-  - 0085/vcenter-insufficient-resources.png
+  - 0085/resource-pool-tree.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-status: awaiting-input
+source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation; revised 2026-11-12 (question set 1.0)"
+misconception_type: [consumption-as-contention]
+status: draft
 ```

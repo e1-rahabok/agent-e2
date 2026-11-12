@@ -9,7 +9,7 @@ Choose the most accurate counter to rightsize a VM.
 - D. VM Memory Active + Balloon + Swapped + Zipped
 - E. Guest OS Memory Used. In some cases, add the cache.
 
-Hint: think of the VM as the hardware, like a physical server's motherboard with its parts. What you size is the OS running on it.
+Hint: the VM is virtual hardware. What you size is the OS running on it.
 
 ## Likely wrong answer
 A or B (VM-level counters), or D (mixing VM and Guest OS layers).
@@ -38,6 +38,9 @@ knowledge:
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
   - vsphere/technology/memory/metrics/virtual-motherboard/active
+object: [vm, guest-os]
+tool: [none]
+knowledge_main: guest-os/system/concepts/guest-os-sizing
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"
@@ -45,5 +48,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [E]
 misconception: [A,B,D]
+misconception_type: [layer-confusion]
 status: draft
 ```

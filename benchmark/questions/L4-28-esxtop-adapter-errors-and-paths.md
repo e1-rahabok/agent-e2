@@ -1,32 +1,32 @@
 # Errors and paths in the esxtop disk adapter panel
 
 ## Prompt
-The attached screenshot is the esxtop disk adapter panel (d) of one ESXi host, with the error and path columns shown.
-
-- By design, each host has 4 paths to every LUN through 2 HBAs.
+- Host esx-22 reaches 10 FC LUNs. By design, each LUN has 4 paths: 2 through each of its 2 HBAs. The path selection policy is Round Robin on every LUN.
 - Latency on this host is normal in the vSphere Client charts.
+- The esxtop disk adapter panel (d), with the error and path fields added, shows:
+
+```text
+ADAPTR  NPTH   CMDS/s  DAVG/cmd  KAVG/cmd  FCMDS/s  ABRTS/s  RESETS/s
+vmhba2    20  4150.3      0.82      0.01     0.00     0.00      0.00
+vmhba3    10  2071.8      0.85      0.01     3.40     0.20      0.00
+```
 
 What do you conclude from the panel, and what do you check next?
-
-## Input to supply
-- Tool: esxtop on one ESXi 9.1 host with Fibre Channel or iSCSI storage, disk adapter panel (press d), error and path fields added (press f).
-- Must show the columns ADAPTR, NPTH, CMDS/s, DAVG/cmd, KAVG/cmd, FCMDS/s, ABRTS/s, RESETS/s for every vmhba.
-- Condition for the key: one vmhba shows NPTH below the design (for example 2 instead of 4 per LUN, or half of the other HBA), and FCMDS/s or ABRTS/s above 0 on that adapter. Latency columns are normal.
-- Mask WWNs and IQNs.
-- Save as `benchmark/questions/70/esxtop-disk-adapter-errors.png`.
 
 ## Likely wrong answer
 "Latency is normal, so the storage is healthy: nothing to do."
 
 ## Expected key points
-- Failed commands (FCMDS/s) above 0 need investigation; ABRTS/s and RESETS/s should be 0. These counters are not in the vSphere Client, so normal latency charts do not rule out a fault.
-- NPTH below the design means paths are missing on that adapter: the host has lost redundancy, even while IO still flows on the other paths.
-- Next: check the path state per LUN, the HBA driver and firmware, the cable and the fabric switch port or the iSCSI network of that adapter.
-- Normal latency now does not mean normal under failure: with half the paths, one more failure stops IO.
+- vmhba3 has 10 paths where the design gives 20: half its paths to the LUNs are gone. The host has lost redundancy, while IO still flows on the remaining paths.
+- vmhba3 carries about half the commands of vmhba2: with Round Robin over the remaining paths, consistent with fewer paths, not with a lighter load.
+- Failed commands (FCMDS/s 3.40) and aborts (ABRTS/s 0.20) on vmhba3 need investigation: they should be 0. Failed commands are esxtop-only, and the vSphere Client has no per-adapter abort counter (only Commands aborted per device), so normal latency charts do not rule out a fault.
+- Normal latency now does not mean safe: redundancy is reduced. Check per LUN which paths remain: a LUN left with paths on one HBA only stops if that HBA or its fabric fails.
+- Next: path state per LUN on vmhba3, the HBA driver and firmware, the cable, the SFP and the fabric switch port of that adapter, and the zoning.
 
 ## Notes
 - Previous id: question-0070 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot replaced by an esxtop excerpt in text. Counts only after author approval.
+
 ## Metadata
 ```yaml
 id: "0070"
@@ -36,13 +36,17 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: judged
-input: [screenshot]
+input: [text]
+object: [esxi]
+tool: [esxtop]
 knowledge:
   - vsphere/tools/esxtop/storage
   - vsphere/technology/storage/metrics/host/adapter-and-path
-attachments:
-  - 0070/esxtop-disk-adapter-errors.png
+  - vsphere/technology/storage/concepts/storage-layers
+knowledge_main: vsphere/tools/esxtop/storage
+attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-status: awaiting-input
+misconception_type: [average-hides-worst]
+status: draft
 ```

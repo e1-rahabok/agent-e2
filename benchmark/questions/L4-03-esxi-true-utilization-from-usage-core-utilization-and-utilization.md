@@ -48,12 +48,15 @@ product: [vsphere]
 technology: [cpu]
 input: [screenshot]
 task: read-metric
+object: [esxi]
+tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/metrics/host/usage
   - vsphere/technology/cpu/metrics/host/core-utilization
   - vsphere/technology/cpu/metrics/host/utilization
   - vsphere/technology/cpu/concepts/hyper-threading
   - vsphere/technology/cpu/concepts/cpu-measurement-levels
+knowledge_main: vsphere/technology/cpu/metrics/host/utilization
 attachments: 
   - 0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png
   - 0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png
@@ -63,5 +66,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [C]
 misconception: [A,B]
+misconception_type: [same-name-other-object, frequency-and-hyper-threading]
 status: draft
 ```

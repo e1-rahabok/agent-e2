@@ -39,6 +39,9 @@ knowledge:
   - vsphere/technology/memory/metrics/host/reservation
   - vsphere/technology/memory/concepts/memory-as-storage
   - vsphere/architecture/overhead
+object: [vm, esxi, resource-pool]
+tool: [none]
+knowledge_main: vsphere/architecture/resource-controls
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q4 Memory Reservation"
@@ -46,5 +49,6 @@ answer_type: deterministic
 level: 400                      # author 2026-11-05
 answer: [A,B]
 misconception: [C,D]
+misconception_type: [provider-vs-consumer]
 status: draft
 ```

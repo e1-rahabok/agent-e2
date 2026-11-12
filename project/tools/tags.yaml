@@ -30,7 +30,7 @@ question_fairness:
   '(?i)triple[- ]see': 'Agent E2 method name'
   '\bKPIs?\b': 'Agent E2 score; name the counter'
   '(?i)vcommunity': 'management pack, not public'
-  '(?i)virtual motherboard': 'VM'
+  '(?i)motherboard': 'VM (the virtual hardware)'
   '\bCluster (Performance|Consumption|Risk)\b': 'vCommunity model; use native counters'
   '(?i)close for business': 'vCommunity model'
   '(?i)\b(VM|Guest OS|ESXi) Performance \(%\)': 'vCommunity score'

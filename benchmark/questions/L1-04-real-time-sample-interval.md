@@ -36,5 +36,9 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [B]
 misconception: [C]
+object: [esxi, vm]
+tool: [vcenter]
+knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
+misconception_type: [rollup-and-interval]
 status: draft
 ```

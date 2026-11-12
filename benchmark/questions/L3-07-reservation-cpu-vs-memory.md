@@ -32,5 +32,9 @@ origin: book
 source_path: "The World of Metrics > Metrics Nuances: Resource Management."
 answer_type: judged
 level: 300                      # author 2026-11-05
+object: [vm]
+tool: [vcenter]
+knowledge_main: vsphere/architecture/resource-controls
+misconception_type: [same-name-other-object]
 status: draft
 ```

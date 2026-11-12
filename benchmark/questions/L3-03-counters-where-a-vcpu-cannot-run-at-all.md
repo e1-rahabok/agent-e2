@@ -34,6 +34,8 @@ product: [vsphere]
 technology: [cpu]
 input: [text]
 task: read-metric
+object: [vm]
+tool: [vcenter]
 knowledge:
   - vsphere/architecture/vm-vs-guest-os
   - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
@@ -42,6 +44,7 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
   - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
+knowledge_main: vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q6 VM CPU Contention"
@@ -49,5 +52,6 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A,B,C,D]
 misconception: [G]
+misconception_type: [consumption-as-contention]
 status: draft
 ```

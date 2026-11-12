@@ -1,37 +1,40 @@
 # Which VMs wait for memory now?
 
 ## Prompt
-The attached screenshot is the esxtop memory panel (m) of an overcommitted ESXi host, with the compression and swap columns shown.
+- An ESXi 9.1 host has been in the hard memory state for 20 minutes.
+- esxtop, memory panel (m) with the balloon, compression and swap fields added, MB and MB/s:
 
-- VM-A shows ZIP/s and SWW/s above 0, and UNZIP/s and SWR/s at 0.
-- VM-B shows UNZIP/s and SWR/s above 0.
+```text
+NAME      MEMSZ   MCTLSZ  SWCUR  SWR/s  SWW/s  ZIP/s  UNZIP/s  CACHEUSD
+vm-a      32768   2100    3400   0.00   18.40  6.20   0.00     610
+vm-b      16384   900     2800   9.60   0.00   0.00   4.10     420
+vm-c      65536   0       0      0.00   0.00   0.00   0.00     0
+vm-d      8192    1500    6100   0.00   0.00   0.00   0.00     0
+```
 
-Which statements are correct? Choose all that apply.
+Which statements are correct?
 
-- A. VM-B waits for memory now: its pages are read back from the compression cache and the swap file.
-- B. VM-A waits for memory now, because the host compresses its pages.
-- C. VM-A shows a capacity signal: the host is short of RAM and moves its pages out, which costs the VM nothing until it touches them again.
-- D. SWCUR shows the swap activity of the last second.
-
-## Input to supply
-- Tool: esxtop on one ESXi 9.1 host under memory pressure, memory panel (press m), compression and swap fields added (press f).
-- Must show the columns MCTLSZ, SWCUR, SWR/s, SWW/s, ZIP/s, UNZIP/s, CACHEUSD for at least 4 VMs.
-- Condition for the key: one VM (label it VM-A) has ZIP/s and SWW/s above 0 with UNZIP/s and SWR/s at 0; another VM (VM-B) has UNZIP/s and SWR/s above 0.
-- How to produce it: overcommit a lab host until it reaches the hard state, then start a memory load inside VM-B.
-- Save as `benchmark/questions/68/esxtop-memory-compression-swap.png`.
+- A. vm-b waits for memory now: it reads pages back from its swap file and from its compression cache.
+- B. vm-a waits for memory now: ESXi compresses and swaps its pages out, and each page written out stalls a vCPU.
+- C. vm-a shows the host short of memory: its pages go out, which costs vm-a no wait until it touches them again.
+- D. vm-d is the slowest VM on the host: it holds the most memory in its swap file, 6,100 MB of its 8 GB.
+- E. vm-a's compressed pages still take host memory: CACHEUSD sits in DRAM, each page at a quarter or half its size.
+- F. For vm-b, a page read back from the compression cache costs far less time than one read from the swap file.
 
 ## Likely wrong answer
-B: reading ZIP/s as the VM waiting.
+B: reading compression and swap-out as the VM waiting. Or D: the largest SWCUR read as the slowest VM.
 
 ## Expected key points
-- Answer: A, C.
-- UNZIP/s and SWR/s are reads back into memory: the vCPU waits for them, so the VM has memory contention.
-- ZIP/s and SWW/s move pages out: a capacity problem of the host. Unused pages that are zipped or swapped cause no contention.
-- D is wrong: SWCUR is the current swapped amount, usually of inactive pages, not a rate.
+- Answer: A, C, E, F.
+- A: SWR/s and UNZIP/s bring pages back into memory. The vCPU that touched the page waits for it: memory contention.
+- B is wrong and C is right: ZIP/s and SWW/s move pages out. That is the host's capacity problem; a page that is not touched again costs the VM no wait.
+- D is wrong: SWCUR is the amount in the swap file, not activity. With SWR/s and UNZIP/s at 0, vm-d does not wait now.
+- E: the compression cache is host memory in use. Compression frees 2 or 3 KB of each 4 KB page; the compressed result stays in DRAM, inside host Consumed.
+- F: decompression is in DRAM and costs far less than a swap-in from disk; that is why ESXi compresses before it swaps.
 
 ## Notes
-- Previous id: question-0068 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Revised 2026-11-12 (question set 1.0): the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text.
+
 ## Metadata
 ```yaml
 id: "0068"
@@ -41,15 +44,19 @@ technology: [memory]
 task: read-metric
 level: 400
 answer_type: deterministic
-input: [screenshot]
+input: [text]
+object: [vm, esxi]
+tool: [esxtop]
 knowledge:
   - vsphere/tools/esxtop/memory
   - vsphere/technology/memory/concepts/swap-and-compression
-attachments:
-  - 0068/esxtop-memory-compression-swap.png
+  - vsphere/technology/memory/metrics/host/compressed
+knowledge_main: vsphere/tools/esxtop/memory
+attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-answer: [A, C]
-misconception: [B]
-status: awaiting-input
+answer: [A, C, E, F]
+misconception: [B, D]
+misconception_type: [reclamation-as-contention, cumulative-vs-current]
+status: draft
 ```

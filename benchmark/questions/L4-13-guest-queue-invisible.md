@@ -32,10 +32,14 @@ task: troubleshoot
 knowledge:
   - vsphere/architecture/vm-vs-guest-os
   - vsphere/technology/storage/metrics/virtual-motherboard/iops
+object: [vm, guest-os]
+tool: [vcenter, guest-os-tools]
+knowledge_main: vsphere/architecture/vm-vs-guest-os
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Visibility (layers A–D diagram)."
 answer_type: judged
 level: 400                      # author 2026-11-05
+misconception_type: [layer-confusion]
 status: draft
 ```

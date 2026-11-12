@@ -33,10 +33,14 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/technology/memory/metrics/host/usage
   - sp5-framework/observability/resource-nature
+object: [vm, esxi]
+tool: [vcenter]
+knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Architecture Complexity (Memory)."
 answer_type: judged
 level: 400                      # author 2026-11-05
+misconception_type: [same-name-other-object, consumption-as-contention]
 status: draft
 ```

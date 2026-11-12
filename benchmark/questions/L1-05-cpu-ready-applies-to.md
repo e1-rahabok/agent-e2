@@ -1,41 +1,49 @@
-# Which object has CPU Ready
+# Which object owns CPU Ready
 
 ## Prompt
-CPU Ready measures a consumer waiting to be scheduled. Which object does it apply to?
+- The vSphere Client shows a CPU Ready counter on a VM and on an ESXi host.
 
-- A. A VM
-- B. An ESXi host
-- C. A physical core
-- D. A cluster
+On which object does Ready measure that object's own wait for a physical CPU?
+
+- A. The VM: a vCPU waits for a physical thread.
+- B. The ESXi host: the host waits for its physical cores.
+- C. Both: each object waits for its own CPU.
+- D. Neither: Ready is a DRS value of the cluster.
 
 ## Likely wrong answer
-B: reading a host-level Ready value as the host waiting.
+B or C: reading the host-level Ready as the host waiting.
 
 ## Expected key points
 - Answer: A.
-- Ready applies to a consumer: a VM (per vCPU).
-- A physical core or thread is always ready, so Ready does not apply to ESXi; a host or cluster value is a sum of its VMs.
+- Ready applies to a consumer: a vCPU of a VM that wants to run and has no physical thread to run on.
+- A physical core or thread is always ready, so the host has no Ready of its own. The host-level value is a sum of its VMs' Ready.
+- D is wrong: Ready is measured by the ESXi scheduler per vCPU, not by DRS.
 
 ## Notes
 - Previous id: question-0036 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Revised 2026-11-12: the stem no longer gives the answer away ("a consumer waiting"); option D replaces the cluster, which has no Ready counter in the vSphere Client.
+
 ## Metadata
 ```yaml
 id: "0036"
-title: "Which object has CPU Ready"
+title: "Which object owns CPU Ready"
 product: [vsphere]
 technology: [system, cpu]
 task: read-metric
 level: 100
 answer_type: deterministic
 input: [text]
+object: [vm, esxi]
+tool: [vcenter]
 knowledge:
   - vsphere/architecture/provider-consumer
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6); revised 2026-11-12"
 answer: [A]
-misconception: [B]
+misconception: [B, C]
+misconception_type: [provider-vs-consumer]
 status: draft
 ```

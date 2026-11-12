@@ -34,5 +34,9 @@ origin: book
 source_path: "The World of Metrics > Metrics Nuances: What, exactly, is a VM?"
 answer_type: judged
 level: 300                      # author 2026-11-05
+object: [vm, guest-os]
+tool: [none]
+knowledge_main: vsphere/architecture/vm-vs-guest-os
+misconception_type: [layer-confusion]
 status: draft
 ```

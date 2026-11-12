@@ -177,6 +177,9 @@ def main():
             v = (fm or {}).get(k)
             if v is not None and (not isinstance(v, list) or any(x not in allowed[allowed_k] for x in v)):
                 bad(f, f'{k} must be a list of {", ".join(allowed[allowed_k])}')
+        if st in ('draft', 'reviewed'):  # coverage tags on every question that runs (benchmark/design.md, section 3.7)
+            for k in ('object', 'tool', 'knowledge_main', 'misconception_type'):
+                if k not in (fm or {}): bad(f, f'{k} is missing (benchmark/README.md, section Metadata tags)')
         mt = (fm or {}).get('misconception_type') or []
         if not isinstance(mt, list): bad(f, 'misconception_type must be a list')
         else:
