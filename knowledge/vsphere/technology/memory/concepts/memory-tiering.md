@@ -84,6 +84,11 @@
 - Software mirroring: a new feature in 9.1, also configured at cluster level.
 - Hosts go into maintenance mode for the changes to take effect. A reboot is not necessary.
 
+## In the cluster models
+- Cluster Consumption: DRAM consumed on tiered hosts (green to 80%), and tier 1 consumption as saturation, 25/50/75/100% of the usable tier ([`vsphere/object-types/cluster/models/cluster-consumption`](../../../object-types/cluster/models/cluster-consumption.md)).
+- Cluster Performance: memory wait = memory latency + NVMe wait, per VM ([`vsphere/object-types/cluster/kpis/cluster-performance`](../../../object-types/cluster/kpis/cluster-performance.md)).
+- Cluster Risk: active memory 50/62.5/75/100% of DRAM; NVMe read latency 100/200/400/800 µs ([`vsphere/object-types/cluster/models/cluster-risk`](../../../object-types/cluster/models/cluster-risk.md)).
+
 ## Performance thresholds (from the source)
 - Active memory, as % of host DRAM:
   - 50% or lower: green, recommended;

@@ -12,7 +12,8 @@
 | Group | Sub-metric | Cluster-wide value |
 |---|---|---|
 | Utilization | ESXi CPU Thread Utilization | Threads in use on all hosts ÷ CPU usable capacity in threads |
-| Utilization | ESXi Memory Consumed | Consumed memory of all hosts ÷ usable DRAM |
+| Utilization | ESXi Memory Consumed, hosts without tiering | Consumed memory of all hosts ÷ usable DRAM |
+| Utilization | ESXi DRAM Consumed, tiered hosts | Tier 0 consumed of all tiered hosts ÷ their usable DRAM. Memory Consumed covers both tiers and passes 100% of DRAM by design; tiering starts at 80% of DRAM, so green runs to 80 |
 | Saturation | Memory Tiering Consumption | NVMe tier in use on all hosts ÷ usable NVMe tier |
 | Saturation | ESXi Memory Ballooned | Ballooned memory of all hosts ÷ usable DRAM |
 | Saturation | ESXi Memory Zip Swap | Compressed plus swapped memory of all hosts ÷ usable DRAM |
@@ -89,9 +90,8 @@ source:
   document: VCF-vCommunity-Adapter documentation, Cluster Consumption KPI and Capacity Management Model (read 2026-11-11); Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-consumption.md; docs/concepts/capacity-management.md; Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections:
-- 'Section ''Sub-metrics'': the adapter documentation gives Memory Tiering Consumption bands 4, 8, 16, 32; the author set 25, 50, 75, 100 (2026-11-12, Q179). The pack follows after it is updated.'
+- 'Section ''Sub-metrics'': the adapter documentation gives Memory Tiering Consumption bands 4, 8, 16, 32; the author set 25, 50, 75, 100 and added the tiered-host DRAM Consumed row, 80, 85, 90, 100 (2026-11-12, Q179). The pack follows after it is updated.'
 review_notes:
-- 'To check: On a tiered host, Memory Consumed ÷ DRAM goes above 100% by design; tier usage stays saturation, because zip and swap read 0 on a tiered host (author, Q178 d); tier bands 25/50/75/100 decided (Q179); the other tiering rows proposed in Q179.'
 - 'To check: Section ''Sub-metrics'': the adapter page calls Cluster Consumption a KPI; written as a model (Q131).'
 status: draft
 ```
