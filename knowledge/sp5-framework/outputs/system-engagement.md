@@ -22,7 +22,7 @@
 | Item | Alert | Dashboard | Report |
 |---|---|---|---|
 | Nature | Reactive | Proactive | Passive |
-| Good for | Exceptions | Exceptions and analysis | Exceptions |
+| Good for | Exceptions | Exceptions and analysis | Important exceptions and trends |
 | Depth | Detail | Detail and summary | Summary |
 | Use case | Troubleshooting | Troubleshooting, monitoring, optimizing | Export to spreadsheet or slides |
 | Time | Minutes; focus is now | Daily to monthly; focus is days | Weekly onwards; focus is weeks |
@@ -90,7 +90,6 @@ source:
 corrections:
 - 'Section ''Three dashboard cadences'', time spent on the daily health check: the source table says screen time 10 minutes; written as a few minutes (about 5 minutes when there is no problem).'
 review_notes:
-- 'To check: Section ''Alerts, dashboards and reports compared'': the source table lists Good for as Exception for all three; the report column lists Exception, written as is. (Q138).'
 - 'Section ''Four channels'': the source says four ways and its diagram shows three (alert, dashboard, report); the live screen is the fourth, from the text.'
 - 'Not copied: the hexagon picture of NOC requirements (decorative; its content is in sp5-framework/outputs/noc-live-screen).'
 status: draft

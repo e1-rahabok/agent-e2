@@ -74,7 +74,7 @@ TOOLS = [
             'hosts': {'type': 'integer', 'description': 'Hosts in the cluster, HA hosts included (default 1)'},
             'ha_hosts': {'type': 'integer', 'description': 'Hosts kept for HA (default 0)'},
             'hypervisor_threads': {'type': 'number'}, 'hypervisor_memory_gb': {'type': 'number'},
-            'system_reservation_ghz': {'type': 'number'}, 'memory_tiering_gb': {'type': 'number'},
+            'system_reservation_ghz': {'type': 'number'},
             'vm_class': {'type': 'string', 'enum': ['gold', 'silver', 'bronze']},
             'vms': {'type': 'object', 'description': 'VM count per class, e.g. {"gold": 2, "silver": 20, "bronze": 4}'},
             'classes': {'type': 'object', 'description': 'Overrides per class, e.g. {"silver": {"vcpu": 4, "memory_gb": 24}}'}},

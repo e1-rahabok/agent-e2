@@ -396,21 +396,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
-
-- Files: [How VCF Operations reaches its users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/system-engagement.md) (section Alerts, dashboards and reports compared).
-- Search: "Export to spreadsheet or PowerPoint"
-- Question: the Good For row reads Exception for alerts, Exception and Analysis for dashboards, and Exception for reports. Is Exception right for reports, or did you mean Summary or Trend?
-- Written as now: Exceptions for reports, as in the source.
-- Proposed answer (expert call): Trends.
-  - The report is a passive channel, weekly or longer, read by IT leaders and finance. They read trends over weeks.
-  - Depth already says Summary; Summary in Good for would repeat it.
-  - An exception needs action within the day. One found in a weekly report can be 7 days old; the daily dashboard covers it.
-  - Audit exception lists are covered by the row "Dashboard + Report work together".
-  - Change if accepted: system-engagement table, Good for / Report = Trends; delete the review note.
-  - For you: confirm Trends is what the row meant.
-- Answer:
-
 ### Q139 · Part 2 > Proactive Operations > Business Applications > vSphere Folder Structure · Diagram label
 
 - Files: [Business applications in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/dashboards/business-applications.md) (section vSphere folder structure, image).
@@ -614,20 +599,6 @@ Each entry has:
 - For you: names of peer authors; a source of real tickets.
 - Answer:
 
-### Q166 · ARCHITECTURE.md, section Troubleshooting questions · Code evaluates flow branches
-
-- Files: [harness/flows.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/flows.py), [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md).
-- What the knowledge base says now: the flow tool serves step text; the model compares values and picks the branch.
-- Question: (a) executable steps: the model extracts values into a case state, code compares them with catalog thresholds and picks the branch, the model explains; (b) keep as is.
-- Proposed answer: (a), for 1.0, starting with the VM slow flow.
-- Answer:
-
-
-
-
-
-
-
 ### Q175 · Class of service · New relative-value diagram vs the reservation shares, VM size and minimum performance
 - Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (sections Promise vs technique, Example implementation); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md) (table); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (Sample offering); project/sources/Capacity Planning Stage.xlsx.
 - Search: not from the book; the new diagram of 2026-11-11 (Relative Contention 1x 2x 3x).
@@ -652,6 +623,41 @@ Each entry has:
 - For you: pick (A)-(D), or give the field rule.
 - Answer:
 
+### Q178 · Memory tiering in the capacity and performance models · Review of the three closure conditions
+- Files: [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); [Is memory tiering slowing this host?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md); VCF-vCommunity-Adapter docs/reference/metrics/cluster-risk.md and cluster-consumption.md.
+- Search: not from the book; your note of 2026-11-12 (three conditions that close capacity on a tiered cluster).
+- Sources read 2026-11-12: Memory Tiering Performance, VMware Cloud Foundation 9.0 (performance study, July 2025), section Using and monitoring Memory Tiering; vSphere 9.1 documentation, Memory Tiering over NVMe and Memory Tiering and HA Admission Control; blogs by Broadcom staff and yellow-bricks.com. Written into the two knowledge files above.
+- What the models do now:
+  - Cluster Risk: Worst ESXi Memory Tiering Latency, NVMe read latency, bands 150/300/450/600 µs.
+  - Cluster Consumption: Memory Tiering Consumption in the Saturation group, NVMe in use ÷ usable NVMe tier, bands 4/8/16/32%. Memory Consumed ÷ usable DRAM.
+  - Cluster Performance: no tiering row.
+- Review of your three conditions:
+  - (1) NVMe read latency: right, and Broadcom gives the bands: below 200 µs good, 200-400 µs potential issues, above 400 µs workload impact. The pack's 150/300/450/600 differ. Latency alone gives false positives: an idle device shows high latency on sporadic reads (wake-up penalty, already in the knowledge base). Score it only while the host reads from NVMe.
+  - (2) Reads from NVMe: right, and the most direct signal: each fetch is a vCPU waiting about 1,000x a DRAM access, at any latency. Broadcom gives 200 MB/s per host as the point to start watching latency, not an impact limit; per-VM read bandwidth shows which VMs pay. Writes: you are right for device writes (demotion of cold pages runs in the background, off the vCPU's path; it costs endurance, and heavy writes can raise read latency through garbage collection). Not for guest writes: a write to a cold page must bring the page back to DRAM first, so it waits like a read and shows as NVMe read bandwidth. Inferred from the architecture (NVMe is not byte-addressable); no Broadcom page states it.
+  - (3) NVMe consumed ÷ DRAM consumed as risk: right that tier 1 is not actual consumption, since it holds cold pages. Weak as a risk signal: at the default 1:1 ratio a host used as designed sits near 1 and stays fast while its working set is small (VDI). The documented leading signal is active memory as % of DRAM: 50% or lower green, 50-75% test and monitor, above 75% significant loss.
+- Missing from the three:
+  - (a) Active memory ÷ DRAM, as above.
+  - (b) DRAM for HA restart: a VM needs DRAM to power on. Before vSphere 9.1.1, admission control counted NVMe as DRAM and could stay green while a restart would fail. 9.1.1 reserves DRAM separately (cluster resource percentage and dedicated failover hosts policies; not the slot policy).
+  - (c) Memory Consumed ÷ DRAM goes above 100% by design on a tiered host (consumed covers both tiers): Cluster Consumption scores a healthy tiered cluster red. Tier usage in the Saturation group at 4/8/16/32% does the same.
+  - (d) Reclamation on a tiered host means a configuration problem: a non-tiered VM without a full reservation, a limit, or overcommit on top of tiering. The existing ballooned and swapped + zipped rows catch it.
+  - (e) Large VMs: the performance study says no VMs above 32 vCPUs and 512 GB with tiering; the documentation says 64 vCPUs and 512 GB.
+  - (f) Unknown: whether VM Memory Contention (%LAT_M) counts the wait for NVMe fetches. If not, no VM KPI sees tiering today.
+  - (g) Your question on swap and compression: they can run while tier 1 has free space (non-tiered VMs without reservation, limits). Broadcom does not state that host-wide reclamation now waits until tier 1 is full; the host's total memory is tier 0 + tier 1 and new pages go to tier 1 after DRAM reaches 80%, so host-wide reclamation should start only when both are nearly full. Unverified.
+- Proposed model (expert call):
+  - Cluster Performance, actual: add NVMe read latency of the worst host, scored only while that host reads from NVMe above a floor; bands green below 200, yellow 200-300, orange 300-400, red from 400, 0 at 600 µs. Add worst-VM and 90th-percentile NVMe read bandwidth once you have field ranges. Tiering then closes a cluster through the existing rule (Performance red).
+  - Cluster Risk, leading: replace condition (3) with active memory ÷ DRAM of the worst host: green to 50%, yellow 50-62.5%, orange 62.5-75%, red from 75%, 0 at 100%. Move the latency row to Cluster Performance. Add a DRAM failover check for clusters below 9.1.1, as configuration rather than a score.
+  - Cluster Consumption, quantity: on tiered hosts, memory consumed ÷ (usable DRAM + usable NVMe tier). Drop Memory Tiering Consumption from the Saturation group, or score it with the memory consumed bands (70/80/90). Ballooned and swapped + zipped stay against DRAM.
+  - Planning: no change; tiering stays out of the plan (Q177).
+- Question:
+  - (A) Replace (3) with active memory ÷ DRAM in Cluster Risk, at the bands above?
+  - (B) Move NVMe read latency to Cluster Performance, gated by reads, at Broadcom's 200/400 bands?
+  - (C) What floor of NVMe reads, and what per-VM read bandwidth bands? No source gives them; they need your field data.
+  - (D) Cluster Consumption against DRAM + NVMe on tiered hosts?
+- For you: (A)-(D). The pack's thresholds stay as built until you decide.
+- Answer:
+
+## Resolved
+
 ### Q177 · Capacity Planning Stage.xlsx · Memory tiering on top of the memory overcommit ratio
 - Files: [Overcommit ratio](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/overcommit.md) (section Per resource); [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (sections Example implementation, Planning calculator); [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md) (section Capacity management); [harness/capacity.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/capacity.py) (functions vms_per_host, consumption).
 - Search: not from the book; the spreadsheet input "memory tiering" and the knowledge base line "Memory tiering serves memory beyond 1:1".
@@ -659,9 +665,33 @@ Each entry has:
 - Question: with tiering on, which is meant? (A) the class ratio is served by tiering: allocation supply = max(DRAM × ratio, DRAM + tiering), no overcommit on top; (B) the ratio applies to DRAM and tiering adds on top (the calculator today); (C) tiering hosts run the class at 1:1 against DRAM + tiering.
 - Proposed answer (expert call): (A). The tier replaces the ESXi reclamation that a ratio above 1:1 would otherwise need, so it is the same memory counted once. (B) counts the beyond-1:1 memory twice and goes against the vendor guidance; (C) drops the class difference.
 - For you: (A), (B) or (C).
-- Answer:
+- Answer: None of (A)-(C). Memory tiering is not part of the overcommit ratio: NVMe is much slower hardware, likely 1,000x slower than DRAM. Tiering is not used in the capacity planning stage, but must be used in the actual (running) stage.
+- Applied 2026-11-12: overcommit (Per resource), class-of-service-planning (allocation text, calculator inputs, misconception, image note "RAM against DRAM. Memory tiering is not in the ratio."), host-spec-from-class-of-service, capacity README (Two stages row), memory-tiering (Capacity management); harness/capacity.py and the capacity_plan tool no longer take memory_tiering_gb. The running-stage model: Q178.
 
-## Resolved
+### Q166 · ARCHITECTURE.md, section Troubleshooting questions · Code evaluates flow branches
+
+- Files: [harness/flows.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/flows.py), [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md).
+- What the knowledge base says now: the flow tool serves step text; the model compares values and picks the branch.
+- Question: (a) executable steps: the model extracts values into a case state, code compares them with catalog thresholds and picks the branch, the model explains; (b) keep as is.
+- Proposed answer: (a), for 1.0, starting with the VM slow flow.
+- Answer: Yes, (a) for 1.0.
+- Applied 2026-11-12: Recorded in project/plan.md, M1 open work: executable flow steps (the model extracts values into a case state, code compares them with catalog thresholds and picks the branch), starting with the VM slow flow.
+
+### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
+
+- Files: [How VCF Operations reaches its users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/system-engagement.md) (section Alerts, dashboards and reports compared).
+- Search: "Export to spreadsheet or PowerPoint"
+- Question: the Good For row reads Exception for alerts, Exception and Analysis for dashboards, and Exception for reports. Is Exception right for reports, or did you mean Summary or Trend?
+- Written as now: Exceptions for reports, as in the source.
+- Proposed answer (expert call): Trends.
+  - The report is a passive channel, weekly or longer, read by IT leaders and finance. They read trends over weeks.
+  - Depth already says Summary; Summary in Good for would repeat it.
+  - An exception needs action within the day. One found in a weekly report can be 7 days old; the daily dashboard covers it.
+  - Audit exception lists are covered by the row "Dashboard + Report work together".
+  - Change if accepted: system-engagement table, Good for / Report = Trends; delete the review note.
+  - For you: confirm Trends is what the row meant.
+- Answer: IT leaders deal with urgency and the big picture, not with urgent items. The exception in a report is the important type: "important exception". They also read trends: add Trends.
+- Applied 2026-11-12: system-engagement, table row Good for, Report column: Important exceptions and trends; review note deleted.
 
 ### Q087 · Part 1 > Purpose-Driven Architecture > Day 0 | Day 1 | Day 2 · Host specification example
 
