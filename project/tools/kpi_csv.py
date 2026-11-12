@@ -3,15 +3,16 @@
   python3 project/tools/kpi_csv.py export [file.csv]   # default project/kpi.csv
   python3 project/tools/kpi_csv.py import [file.csv]   # writes the kpi section back, then run lint
 
-Columns: object, metric, direction, 5m yellow/orange/red, 20s yellow/orange/red, 2s yellow/orange/red.
-An empty cell means no value entered yet. A row interval is kept only when all three cells are filled.
+Columns: object, metric, direction, then green, yellow, orange, red, zero for each of 5m, 20s, 2s.
+Each value is where the colour starts; zero is where red ends (score 0). An empty cell means no value entered yet.
+An interval is kept only when all five cells are filled.
 """
 import csv, json, os, sys
 import yaml
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 YAML = os.path.join(ROOT, 'knowledge', 'catalog', 'thresholds-performance.yaml')
-IVS, LVS = ('5m', '20s', '2s'), ('yellow', 'orange', 'red')
+IVS, LVS = ('5m', '20s', '2s'), ('green', 'yellow', 'orange', 'red', 'zero')
 HEAD = ['object', 'metric', 'direction'] + [f'{i} {l}' for i in IVS for l in LVS]
 
 
@@ -27,7 +28,7 @@ def export(path):
         w.writerow(HEAD)
         for r in rows:
             w.writerow([r['object'], r['metric'], r['direction']]
-                       + [('' if r.get(i) is None else r[i][n]) for i in IVS for n in range(3)])
+                       + [('' if r.get(i) is None else r[i][n]) for i in IVS for n in range(len(LVS))])
     print(f'{len(rows)} rows written to {path}')
 
 
@@ -40,7 +41,7 @@ def load(path):
         for i in IVS:
             cells = [(r.get(f'{i} {l}') or '').strip().replace(',', '') for l in LVS]
             if any(cells) and not all(cells):
-                sys.exit(f'{line["metric"]}: {i} needs all of yellow, orange, red, or none')
+                sys.exit(f'{line["metric"]}: {i} needs all of green, yellow, orange, red, zero, or none')
             line[i] = [_num(c) for c in cells] if all(cells) else None
         out.append(line)
     return out

@@ -66,18 +66,18 @@ class CatalogTest(unittest.TestCase):
     def test_facts_for_kpi_levels(self):
         f = CAT.facts_for(['vsphere/object-types/vm/kpis/vm-performance'])
         self.assertIn('KPI levels', f)
-        self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s 2, 4, 8; 5m no value', f)
+        self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16; 5m no value', f)
 
     def test_read_file_shows_catalog_values(self):
         import agent
         class R: docs = DOCS
         out = agent._run_tool(R(), 'read_file', {'id': 'vsphere/object-types/vm/kpis/vm-performance'}, {'read': []})
         self.assertIn('KPI levels', out)
-        self.assertIn('20s 2, 4, 8', out)
+        self.assertIn('red 8-16, score 0 beyond 16', out)
 
     def test_lookup_returns_kpi(self):
         r = CAT.thresholds(name='Peak CPU Ready among any vCPU')
-        self.assertEqual(r['kpi'][0]['20s'], 'yellow/orange/red 2/4/8')
+        self.assertEqual(r['kpi'][0]['20s'], 'green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16')
         self.assertEqual(r['kpi'][0]['kb'], 'vsphere/object-types/vm/kpis/vm-performance')
 
     def test_thresholds_carry_their_use(self):

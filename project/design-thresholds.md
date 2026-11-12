@@ -26,7 +26,7 @@ Not indexed.
 ### 3.1 Files
 | File | Content |
 |---|---|
-| `knowledge/catalog/thresholds-performance.yaml` | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), yellow, orange, red for 5m, 20s and 2s, entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
+| `knowledge/catalog/thresholds-performance.yaml` | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
 | `knowledge/catalog/thresholds-capacity.yaml` | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
 | `knowledge/catalog/thresholds-alerts.yaml` | `alerts`: 20 rows, one per alert and `criticality` (red, orange), with `pillar` (17 performance, 3 capacity) |
 | Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
@@ -209,7 +209,7 @@ sla:
   quote: 'Performance SLA thresholds: Gold 99.9%, Silver 99.8%, Bronze 99.6%.'
 rules: []
 ```
-- Nine values per metric: yellow, orange, red for 5m, 20s and 2s, entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell.
+- Fifteen values per metric (nine until 2026-11-12): green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell.
 - The green start and the red end stay in the KPI file's Markdown table; Agent E2 reads the vCommunity pack's published score in 1.0 and does not recompute it.
 - The why comes from the KPI file, which the lookup names.
 - One boundary rule: a value on an edge belongs to the better band (as Close for Business does).

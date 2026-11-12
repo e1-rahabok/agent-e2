@@ -12,7 +12,7 @@ meta:
     interval: 20s (20-second peak), 5m (5-minute average), 2s (esxtop), 1d; empty until a source states it.
     operator: '>, >=, <, <=, =, range.'
     value: 'The number compared against; range: low end, value_high the high end.'
-    unit: Unit of value.
+    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit.'
     condition: Another condition that must hold at the same time.
     meaning: What the knowledge file says the value means.
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
@@ -33,7 +33,7 @@ alerts:
   layer: guest-os
   operator: '>'
   value: 20
-  unit: threads
+  unit: count
   condition: VM CPU Net Run above 75%, for 15 minutes
   meaning: Red alert (application team).
   source: knowledge-base
@@ -47,7 +47,7 @@ alerts:
   layer: guest-os
   operator: '>'
   value: 10000
-  unit: outstanding I/O
+  unit: count
   condition: VM CPU Usage above 1 GHz, for 5 minutes
   meaning: Red alert (application team).
   source: knowledge-base
@@ -62,7 +62,7 @@ alerts:
   layer: guest-os
   operator: '>'
   value: 5000
-  unit: outstanding I/O
+  unit: count
   condition: VM CPU Usage above 1 GHz, for 5 minutes
   meaning: Orange alert (application team).
   source: knowledge-base
@@ -247,7 +247,7 @@ alerts:
   layer: hypervisor
   operator: '>'
   value: 50
-  unit: packets
+  unit: count
   condition: virtual or physical network, each
   meaning: Red ESXi network alert.
   source: knowledge-base
