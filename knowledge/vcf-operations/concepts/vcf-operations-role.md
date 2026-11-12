@@ -28,7 +28,7 @@
   - `reports/`: report design and the report suite, such as [`sp5-framework/outputs/report-design`](../../sp5-framework/outputs/report-design.md);
   - `alerts/`: how alert definitions are built (bottom up), [`vcf-operations/alerts/alert-definitions`](../alerts/alert-definitions.md).
 - Later: its own sizing, health and performance troubleshooting.
-- Alert architecture across products (top down): [`sp5-framework/outputs/alert-design`](../../sp5-framework/outputs/alert-design.md). Alert thresholds live with the resource they watch, such as [`vsphere/technology/cpu/configuration/cpu-alerts`](../../vsphere/technology/cpu/configuration/cpu-alerts.md).
+- Alert architecture across products (top down): [`sp5-framework/outputs/alert-design`](../../sp5-framework/outputs/alert-design.md). The recommended alerts live with the object type they fire on, such as [`vsphere/object-types/vm/alerts/vm-alerts`](../../vsphere/object-types/vm/alerts/vm-alerts.md); their values are in the threshold catalog.
 
 ## Misconceptions
 - "vCenter and VCF Operations show the same counter name, so the values match" → rollup and interval can differ. Check the source file and [`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md).

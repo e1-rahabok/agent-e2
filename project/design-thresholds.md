@@ -28,8 +28,8 @@ Not indexed.
 |---|---|
 | `knowledge/catalog/thresholds-performance.yaml` | `kpi`: 31 lines (2026-11-11: `sla` and `sli` removed), green, yellow, orange, red, zero for 5m, 20s and 2s (2026-11-12: green and zero added), entered by hand, with `group`, `kb`, `excluded_when_green` (2026-11-10: one place; 20 rows that served no use case went back to prose; 2 capacity rows moved) |
 | `knowledge/catalog/thresholds-capacity.yaml` | `models`: 18 rows with a grey (wastage) band. `decisions`: 6 close-for-business rows. `rules`: 12 planning and sizing rows (2026-11-10: 7 vendor and default rows went back to prose) |
-| `knowledge/catalog/thresholds-alerts.yaml` | `symptoms`: 40, one test each; `alerts`: 24 definitions (2026-11-12; were 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
-| Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files and capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
+| `knowledge/catalog/thresholds-alerts.yaml` | `symptoms`: 40, one test each; `alerts`: 33 definitions, one object type each (2026-11-12; were 24 with object lists, and before that 20 rows with a free-text `condition`), each with `criticality`, `pillar`, `match`, symptom `sets` (self or children with a population) and `wait_cycles` |
+| Knowledge files | No colour-band table: the file holds the reasons; Agent E2 shows the catalog values with it. Alert files hold no values (2026-11-12): one file per object type, each alert explained under a heading with its catalog name. Capacity flow steps still carry their numbers (marked by `quote` in the row) until they move |
 
 - The section name is the use (2026-11-11): rows carry no `kind` or `use` field; the Harness stores the use as a column and puts it first in every result.
 - Alert rows hold the main test, with the other tests and the wait time inside the `condition` text ("for 15 minutes"). Splitting them into symptoms is still to do (section 8.4).
@@ -261,6 +261,7 @@ Built 2026-11-12. As built, it differs from the proposal below in three points:
 - No `type`, `reading`, `class`, `persona` or cancel cycles yet: no row needs them, and section 9 is not approved.
 - Fixes found during the migration: VM disk latency is four alerts (read and write separate, as storage-alerts says), not two; infrastructure contention alerts are on ESXi, resource pool and cluster, not on the cluster only; the 3 capacity alerts carry their population.
 - Lint: every symptom used, every reference exists, a symptom is defined on the alert's object, no two symptoms with the same test, no `condition` anywhere.
+- Restructured 2026-11-12 (author: an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/alerts/<object>-alerts`, [`guest-os/system/alerts/guest-os-alerts`](../knowledge/guest-os/system/alerts/guest-os-alerts.md)), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention stays on the object until Q145 (c).
 
 Proposal (2026-11-10):
 ```yaml
@@ -386,7 +387,7 @@ Lookup result, about 120 tokens (the `why` text is illustrative until the files 
 Reading: vm.cpu.ready.vcpu-max (Peak CPU Ready among any vCPU, VM, 20-second peak). Value 6.1 %.
 - KPI (proactive, no deadline): ORANGE. Edges yellow 2, orange 4, red 8. Why: one waiting vCPU stalls a multi-threaded job. [vsphere/object-types/vm/kpis/vm-performance]
 - SLI: not comparable. The SLI reads vm.cpu.ready.total (VM total, 5-minute). Fail above 2.5. [sp5-framework/concepts/sla-metrics]
-- Alert: not comparable. Alerts read vm.cpu.ready.total: orange above 4, red above 8, with gates. [vsphere/technology/cpu/configuration/cpu-alerts]
+- Alert: not comparable. Alerts read vm.cpu.ready.total: orange above 4, red above 8, with gates. [vsphere/object-types/vm/alerts/vm-alerts]
 Values: recommended (Agent E2). Depends on: nothing missing.
 ```
 

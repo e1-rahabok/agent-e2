@@ -469,3 +469,8 @@ sp5-framework/capacity/capacity-management-process: sp5-framework/capacity/capac
 sp5-framework/capacity/capacity-model: sp5-framework/capacity/supply
 sp5-framework/capacity/capacity-dimensions: sp5-framework/capacity/demand
 vsphere/object-types/resource-pool/configuration/scalable-shares: vsphere/object-types/resource-pool/configuration/resource-pool-design
+vsphere/technology/cpu/configuration/cpu-alerts: vsphere/object-types/vm/alerts/vm-alerts
+vsphere/technology/memory/configuration/memory-alerts: vsphere/object-types/vm/alerts/vm-alerts
+vsphere/technology/storage/configuration/storage-alerts: vsphere/object-types/vm/alerts/vm-alerts
+vsphere/technology/network/configuration/network-alerts: vsphere/object-types/vm/alerts/vm-alerts
+guest-os/system/configuration/guest-os-alerts: guest-os/system/alerts/guest-os-alerts

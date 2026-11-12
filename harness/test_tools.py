@@ -92,15 +92,25 @@ class CatalogTest(unittest.TestCase):
         al = {a['id']: a for a in CAT.thresholds(name='ESXi CPU Thread Utilization', limit=20)['alerts']}
         self.assertTrue(al['alert-cluster-cpu-consumption-red']['rule'].startswith('on its HostSystem children, > 25% of them: all of:'))
         self.assertEqual(al['alert-cluster-cpu-consumption-red']['wait'], 'for 2 cycles (10 minutes)')
-        net = CAT.thresholds(name='ESXi Network Transmitted Packets Dropped', limit=20)['alerts']
-        self.assertTrue(any(a['rule'].startswith('any of:') for a in net))
+        net = {a['name'] for a in CAT.thresholds(name='ESXi Network Transmitted Packets Dropped', limit=20)['alerts']}
+        self.assertEqual(net, {'ESXi virtual network dropped packets', 'ESXi physical network dropped packets'})  # 2 alerts, as the count table had
+
+    def test_alert_file_brings_its_own_alerts_only(self):
+        # Alerts fire on one object type; the object's alert file brings its alerts, a metric file brings none (2026-11-12).
+        f = CAT.facts_for(['vsphere/object-types/cluster/alerts/cluster-alerts'])
+        self.assertIn('- Alert, red: Cluster CPU contention (ClusterComputeResource), on its VirtualMachine children, > 25% of them: all of: '
+                      'VM Peak vCPU Ready (20s) > 24 %; VM CPU Contention > 6 %', f)
+        self.assertNotIn('(HostSystem)', f)
+        self.assertNotIn('Alert,', CAT.facts_for(['vsphere/technology/cpu/metrics/virtual-motherboard/usage']))
+        objs = [r['object'] for r in CAT._q('SELECT object FROM alerts')]
+        self.assertTrue(all(', ' not in o for o in objs))
 
     def test_one_symptom_many_alerts(self):
         n = CAT._q("SELECT COUNT(*) AS n FROM alert_symptoms WHERE symptom = 'sym-vm-cpu-usage-above-1ghz'")[0]['n']
         self.assertEqual(n, 10)  # disk queue 2, CPU contention 2, memory contention 2, disk latency 4
 
     def test_facts_label_the_use(self):
-        f = CAT.facts_for(['vsphere/technology/cpu/configuration/cpu-alerts'])
+        f = CAT.facts_for(['vsphere/object-types/vm/alerts/vm-alerts'])
         self.assertIn('- Alert, red: VM CPU contention (VirtualMachine), all of: VM Peak vCPU Ready (20s) > 32 %', f)
         self.assertIn('- Alert, orange: VM CPU contention (VirtualMachine)', f)
         self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms']))
@@ -110,7 +120,7 @@ class CatalogTest(unittest.TestCase):
         self.assertEqual(uses, {'decision', 'rule'})
         self.assertEqual(CAT.stats()['thresholds'], 41)  # 16 + 25 planning defaults (capacity calculator, 2026-11-11)
         self.assertEqual(CAT.stats()['symptoms'], 40)
-        self.assertEqual(CAT.stats()['alerts'], 24)
+        self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)
         self.assertEqual(CAT.stats()['kpi'], 31)
 

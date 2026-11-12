@@ -85,31 +85,11 @@
 - Then validate:
   - consistency: walk each object type through all 4 resources;
   - bottom-up scenarios: check every case is caught.
-- Result: an alert count per object. Some objects have 2 alerts for one resource because the problems differ, such as read and write latency.
-- Alert count, top 5 objects (Guest OS and VM consume; resource pool, ESXi and cluster provide):
-
-| Type | Resource | Guest OS | VM | Resource pool | ESXi | Cluster |
-|---|---|---|---|---|---|---|
-| Contention | CPU | 1 | 1 | 1 | 1 | 1 |
-| Contention | Memory | Not yet | 1 | 1 | 1 | 1 |
-| Contention | Disk | 1 | 2 | N/A | Not yet | Not yet |
-| Contention | Network | Not yet | 1 | N/A | 2 | Not yet |
-| Consumption | CPU | Not yet | 1 | N/A | 1 | 1 |
-| Consumption | Memory | Not yet | N/A (Guest OS) | N/A | 1 | 1 |
-| Consumption | Disk | 1 | N/A (Guest OS) | N/A | N/A | N/A |
-| Consumption | Network | Not yet | Not yet | N/A | Not yet | N/A |
-
-- Alert count, storage and network providers (Datacenter is only a group for alert design):
-
-| Type | Resource | Datastore | Datastore cluster | vSwitch | Port group |
-|---|---|---|---|---|---|
-| Contention | Disk | 0 | 2 | N/A | N/A |
-| Contention | Network | N/A | N/A | N/A | 1 |
-| Consumption | Disk | 1 | Not yet | N/A | N/A |
-| Consumption | Network | N/A | N/A | N/A | N/A |
-
-- Not yet: not implemented in the recommended set; some Guest OS alerts require the Telegraf agent. N/A: the daily check or the NOC screen serves better.
-- The definitions: [`guest-os/system/configuration/guest-os-alerts`](../../guest-os/system/configuration/guest-os-alerts.md), [`vsphere/technology/cpu/configuration/cpu-alerts`](../../vsphere/technology/cpu/configuration/cpu-alerts.md), [`vsphere/technology/memory/configuration/memory-alerts`](../../vsphere/technology/memory/configuration/memory-alerts.md), [`vsphere/technology/storage/configuration/storage-alerts`](../../vsphere/technology/storage/configuration/storage-alerts.md), [`vsphere/technology/network/configuration/network-alerts`](../../vsphere/technology/network/configuration/network-alerts.md).
+- Result: an alert set per object type. For each object type, what it alerts on, and for each resource left out, why: not yet in the set, or the daily check or the NOC screen serves better. Some objects have 2 alerts for one resource because the problems differ, such as read and write latency.
+- The recommended set, one file per object type, values in [`catalog/thresholds-alerts.yaml`](../../catalog/thresholds-alerts.yaml):
+  - consumers: [`guest-os/system/alerts/guest-os-alerts`](../../guest-os/system/alerts/guest-os-alerts.md), [`vsphere/object-types/vm/alerts/vm-alerts`](../../vsphere/object-types/vm/alerts/vm-alerts.md);
+  - compute providers: [`vsphere/object-types/esxi/alerts/esxi-alerts`](../../vsphere/object-types/esxi/alerts/esxi-alerts.md), [`vsphere/object-types/resource-pool/alerts/resource-pool-alerts`](../../vsphere/object-types/resource-pool/alerts/resource-pool-alerts.md), [`vsphere/object-types/cluster/alerts/cluster-alerts`](../../vsphere/object-types/cluster/alerts/cluster-alerts.md);
+  - storage and network providers: [`vsphere/object-types/datastore/alerts/datastore-alerts`](../../vsphere/object-types/datastore/alerts/datastore-alerts.md), [`vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts`](../../vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts.md).
 
 ## Generic vs specific alerts
 - Generic alert: symptom oriented; many possible causes. Example: a VM did not get the CPU time it asked for.
@@ -196,19 +176,19 @@ related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/performance/kpi-vs-sla
 - vcf-operations/alerts/alert-definitions
-- guest-os/system/configuration/guest-os-alerts
-- vsphere/technology/cpu/configuration/cpu-alerts
-- vsphere/technology/memory/configuration/memory-alerts
-- vsphere/technology/storage/configuration/storage-alerts
-- vsphere/technology/network/configuration/network-alerts
+- guest-os/system/alerts/guest-os-alerts
+- vsphere/object-types/vm/alerts/vm-alerts
+- vsphere/object-types/esxi/alerts/esxi-alerts
+- vsphere/object-types/resource-pool/alerts/resource-pool-alerts
+- vsphere/object-types/cluster/alerts/cluster-alerts
+- vsphere/object-types/datastore/alerts/datastore-alerts
+- vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts'
 corrections: []
 review_notes:
 - 'To check: Section ''Recommendation vs remediation'': VKS (vSphere Kubernetes Service) as the current name for the source''s Tanzu and K8.'
-- 'To check: Section ''Design the alerts as a set'', first table: the source table shows Guest OS Disk consumption 1, while Guest OS Alerts > Consumption says no alert is defined (Q142).'
-- 'To check: Section ''Design the alerts as a set'': the source counts Datastore disk contention 0 and Datastore Cluster 2; Storage Alerts > Infrastructure Contention says not yet implemented for the datastore (Q142).'
 - 'To check: Section ''Threshold design'': the wait-time link to the VCF Operations setting (not in the source).'
 status: draft
 ```

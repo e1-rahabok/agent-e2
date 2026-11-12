@@ -50,22 +50,6 @@ Each entry has:
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
 - Answer:
 
-### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
-
-- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Design the alerts as a set); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/configuration/guest-os-alerts.md); [Storage alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-alerts.md).
-- Search 1: "Not yet = I’ve not implemented it yet."
-- Search 2: "There is no alert defined, as it could result in false positive."
-- Search 3: "Not yet implemented. The reason is the many:many relationship"
-- Question: the count table shows (a) Guest OS disk consumption 1, but the Guest OS section says no alert; (b) datastore cluster disk contention 2, but the storage section says not implemented. Which is current?
-- Written as now: count table: Guest OS disk consumption 1; disk contention datastore 0, datastore cluster 2. guest-os-alerts, Consumption: daily checks, no alert: "Low disk space: not implemented". storage-alerts, Datastore latency: "Not implemented. VMs and datastores are many-to-many". The catalog has no Guest OS disk-space row and no datastore latency row.
-- Final answer (2026-11-12; expert call, one item needs you):
-  - Rule: where a table cell and a section disagree, the section that gives a reason wins. The table summarises the sections.
-  - (a) No Guest OS disk consumption alert: swap partitions sit near 100%, and low disk space cannot be read at the virtual disk layer. Cell → Not yet.
-  - (b) No datastore latency alert: VMs and datastores are many-to-many, and a datastore cluster is the same (a VM's disks can sit on several). Cells datastore and datastore cluster → Not yet. The datastore cluster consumption alert (above 90% used) is a different row and stays.
-  - Change if accepted: alert-design, three table cells; delete the Q142 review notes in alert-design, guest-os-alerts and storage-alerts.
-  - For you: whether your shipped set has a Guest OS disk-space alert or datastore cluster latency alerts. If yes, the sections change instead.
-- Answer:
-
 ### Q143 · Part 2 > Proactive Operations > Alert > Threshold Design > Conditions · Condition vs symptom
 
 - Files: [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md) (section Symptom and condition: one test, two names); [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (section 9).
@@ -84,66 +68,66 @@ Each entry has:
 
 ### Q144 · Part 2 > Proactive Operations > Alert > CPU Alerts > VM Contention · Orange values and the missing diagram
 
-- Files: [CPU alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/cpu-alerts.md) (sections VM CPU contention, Infrastructure CPU contention); [VM CPU contention is high](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md).
+- Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/alerts/vm-alerts.md) (sections Coverage and receivers, VM CPU contention); [ESXi alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/alerts/esxi-alerts.md) (section ESXi CPU contention); thresholds-alerts.yaml rows alert-vm-cpu-contention-red and -orange; [VM CPU contention is high](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md).
 - Search 1: "Peak vCPU Ready > 32%"
 - Search 2: "This is complex. See the diagram at the start of CPU Alert section."
 - Question: (a) orange keeps Peak vCPU Ready above 32% and CPU Contention above 8%, the same as red; only CPU Ready drops to 4%. Should orange be 16% and 4%? (b) the diagram at the start of CPU Alerts is not in the document: link vm-cpu-contention-high instead?
 - Written as now:
-  - cpu-alerts and catalog row `alert-vm-cpu-ready-orange`: orange CPU Ready above 4% with Peak vCPU Ready above 32%, CPU Contention above 8%, CPU Usage above 1 GHz (the red conditions). cpu-alerts: the VM owner gets an alert "at a higher CPU Ready than the infrastructure team (8% against 6%)", while the infrastructure alert's 6% is CPU Contention.
+  - Catalog row `alert-vm-cpu-contention-orange` (since 2026-11-12 the values are only in the catalog; vm-alerts gives the reasons): orange CPU Ready above 4% with Peak vCPU Ready above 32%, CPU Contention above 8%, CPU Usage above 1 GHz (the red symptoms). vm-alerts, Coverage and receivers: the application team gets red only; the infrastructure team watches the same VMs through the ESXi, resource pool and cluster contention alerts with lower per-VM values. The "8% against 6%" line is gone from the text; its review note stays.
   - vm-cpu-contention-high: Mermaid chart present (2026-11-11). Step 1 still stops when Contention is not above 37.5%; Ready is read only after that. No resource pool limits or shares, no VM size against the host, no DRS.
 - Final answer (2026-11-12; (b) diagram done; the rest expert call, one item needs you):
   - (a) Yes: orange = Peak vCPU Ready above 16%, CPU Ready above 4%, CPU Contention above 4%, CPU Usage above 1 GHz. Every other set halves each threshold from red to orange (Q140). As written, orange needs a red-level burst and red-level contention, so it fires almost only when red does.
   - Contention beside Ready: from VCF Operations 8.18, VM CPU Contention = Overlap + Co-stop + Ready + Other Wait (when below 1%), so Contention ≥ Ready. A Contention condition at the Ready value adds nothing. Drop it, or give it its own value if it is meant to catch Co-stop and Overlap.
   - cpu-alerts "8% against 6%" compares VM CPU Ready with the infrastructure alert's CPU Contention: name both metrics.
   - (b) The flow has its diagram. What remains is the flow logic: step 1 tests Contention against 37.5% (CPU Latency logic before 8.18), so a VM raised by the 8% Ready alert stops at step 1. Fix: step 1 reads Contention with the 8.18 formula against the KPI levels; add a Ready branch: VM limit, resource pool limits and shares, vCPU-to-thread overcommit at the time, VM size against the host (Co-stop), DRS.
-  - Change if accepted: cpu-alerts (orange values; the 8% against 6% line); catalog row `alert-vm-cpu-ready-orange` (condition); vm-cpu-contention-high (step 1, Ready branch, chart); delete the Q144 review notes.
+  - Change if accepted: catalog row `alert-vm-cpu-contention-orange` (symptoms); vm-cpu-contention-high (step 1, Ready branch, chart); delete the Q144 review notes in vm-alerts.
   - For you: what your shipped orange definition holds; whether Contention stays beside Ready after 8.18.
 - Answer:
 
 ### Q145 · Part 2 > Proactive Operations > Alert > Memory Alerts · Wait, example and instance
 
-- Files: [Memory alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/configuration/memory-alerts.md); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md); [ESXi Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/latency.md).
+- Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/alerts/vm-alerts.md) (section Memory contention: why the cause is hard to trace); [ESXi alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/alerts/esxi-alerts.md) (sections ESXi memory contention, ESXi memory consumption); [Resource pool alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/alerts/resource-pool-alerts.md); [Cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/alerts/cluster-alerts.md); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alerts/alert-definitions.md); [ESXi Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/latency.md).
 - Search 1: "10 minutes is used instead of 5 to reduce false positive. Take note this means you get notified later."
 - Search 2: "VM 001 has 51% memory contention"
 - Question: (a) the infrastructure consumption red has no duration in its condition; is the wait 10 minutes? (b) the 51% example lists 5 MB, 1 MB, 2 MB and shares; MB values cannot make 51%. Keep it as an illustration? (c) for ESXi and cluster, is Peak Memory Contention the worst VM, and Memory Contention the average of VMs?
-- Written as now: (a) "Wait 10 minutes instead of 5 to reduce false positives" under Memory consumption; alert-design and alert-definitions still say "consumption: 15 minutes". (b) the 51% example with 5 MB, 1 MB, 2 MB. (c) infrastructure contention on ESXi, resource pool, cluster ("Cluster: measured on its VMs"); no instance, no population rule. Catalog rows `alert-infra-memory-contention-*`: no `instance`, no `interval`. ESXi Memory Latency is "a normalized average of the Memory Latency of the running VMs … Use the maximum VM Memory Contention across the host's VMs instead."
+- Written as now: (a) esxi-alerts, ESXi memory consumption: "A longer wait than a contention alert"; catalog row `alert-esxi-memory-consumption-red`: 2 cycles (10 minutes); alert-design still says "consumption 15 minutes"; alert-definitions now links alert-design for the waits. (b) vm-alerts: the 51% example with 5 MB, 1 MB, 2 MB. (c) one alert per object type since 2026-11-12: catalog rows `alert-esxi-memory-contention-*`, `alert-resource-pool-memory-contention-*`, `alert-cluster-memory-contention-*` test the object itself (relation self); no instance, no population. cluster-alerts: "Measured on its VMs". The CPU rows now read a share of the member VMs (> 25%), as the source states for CPU. ESXi Memory Latency is "a normalized average of the Memory Latency of the running VMs … Use the maximum VM Memory Contention across the host's VMs instead."
 - Final answer (2026-11-12; (a), (b) expert call; (c) needs your confirmation):
   - (a) 10 minutes: the design note on this alert says so. Infrastructure CPU consumption also waits 10 minutes, VM CPU consumption 15. Write the wait on each alert; the general line in alert-design and alert-definitions becomes "consumption: 10-15 minutes, per alert".
   - (b) Keep the idea, drop the numbers. MB and % of time are different units: Memory Contention is the share of time a vCPU waits on memory (Q015, Q097). 1 MB of hot swapped pages can stall a VM more than 10 GB of cold ones. Rewrite: a limit, swap-in, decompression and low shares can act at once; the metric gives the total wait, not each cause's share.
   - (c) Neither worst VM nor average. Both are per-VM readings on each VM of the ESXi host, resource pool or cluster: Peak Memory Contention is the VM's highest 20-second value in the 5-minute interval (Q048); Memory Contention its 5-minute value. The alert fires on the population, as the CPU alert does (25% of VMs). Not the host's own Memory Latency: it is a normalized average of the running VMs and hides the victim. This is why the per-VM values (16% / 4%) sit below the VM alert's (24% / 6%).
-  - Change if accepted: memory-alerts (three sections); the wait line in alert-design and alert-definitions; `instance` on the `alert-infra-memory-*` rows; delete the Q145 review notes.
+  - Change if accepted: vm-alerts (example); esxi-alerts, resource-pool-alerts, cluster-alerts (memory contention reads the VMs); the 6 memory contention rows to relation child VirtualMachine with a population, as the CPU rows; the wait line in alert-design; delete the Q145 review notes.
   - For you: confirm the infrastructure memory alert uses 25% of VMs, as the CPU alert does.
 - Answer:
 
 ### Q146 · Part 2 > Proactive Operations > Alert > Storage Alerts > VM Contention · 80 ms vs class of service
 
-- Files: [Storage alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/configuration/storage-alerts.md) (section VM disk latency); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Class of service); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml).
+- Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/alerts/vm-alerts.md) (section VM disk read latency and VM disk write latency); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Class of service); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml).
 - Search: "Average Read Latency > 80 ms"
 - Question: the VM disk latency alert is red above 80 ms average (orange 40 ms), while the class example gives standard production 60 ms for 10 minutes. Which class is the 80 ms alert for?
-- Written as now: storage-alerts: "These are the standard production values" and the misconception "this set uses 80 ms average and 320 ms peak for standard production". alert-design: example 30 / 60 / 120 ms per class. Catalog alert rows have no class field.
+- Written as now: vm-alerts: "The values are for standard production"; the misconception now reads "the set alerts far higher, on the 5-minute average and the 20-second peak together" (values only in the catalog since 2026-11-12). alert-design: example 30 / 60 / 120 ms per class. Catalog alert rows have no class field.
 - Final answer (2026-11-12; expert call, one item needs you):
   - The 80 ms alert belongs to no class. It is the recommended set for one policy over all VMs, set from field reality (the design note raises the value and waits 10 minutes because lower values draw hardly any complaints).
   - It matches no class anyway: orange 40 ms is below the standard production 60 ms and red 80 ms above it. The shape also differs: average plus a 20-second peak plus the 1 GHz and 100 IOPS gates, against one average and a duration.
   - 30/60/120 ms is an example of the step between classes (each 2x the one above). A site with classes makes one VCF Operations policy per class and sets each class's values.
   - Remove "These are the standard production values" and "for standard production" in the misconception: no source supports them.
   - The earlier draft's `class: all` on alert rows is dropped: alert rows have no class field. One line in the thresholds-alerts meta says the alert rows are one policy for every VM.
-  - Change if accepted: storage-alerts (VM disk latency, misconception); alert-design (Class of service: an example, not shipped values); thresholds-alerts meta; delete the review note.
+  - Change if accepted: vm-alerts (the standard production line); alert-design (Class of service: an example, not shipped values); thresholds-alerts meta; delete the review note.
   - For you: whether your shipped set has per-class policies. If yes, their values are needed; none are in the knowledge base.
 - Answer:
 
 ### Q147 · Part 2 > Proactive Operations > Alert > Network Alerts · VM dropped packets
 
-- Files: [Network alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/configuration/network-alerts.md); [VM Network Packets Dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md).
+- Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/alerts/vm-alerts.md) (section VM dropped packets); [Distributed switch and port group alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts.md) (section Distributed port group dropped packets); [VM Network Packets Dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md).
 - Search 1: "Transmitted packet drop > 4% and"
 - Search 2: "So the ratio is always 100%."
 - Question: (a) the condition ends with "and": is a second condition missing? (b) 4% is 1 in 25, not 1 in 40. (c) what does "the ratio is always 100%" mean? (d) port group: does "change to transmit only" mean received drops gave the false positives?
-- Written as now: "Red: transmitted packets dropped above 4%" (no second condition); "1 packet in 25 dropped … measured within a 20-second period"; "Dropped packets are usually retransmitted, so users rarely feel a problem"; "Planned change: count transmitted packets only" (no reason). Catalog row `alert-vm-network-tx-dropped-red`: 4%, 20s, no condition. packets-dropped: the % "can jump above 95% for under 15 minutes. Driven by low throughput"; receive drops are left out of the VM KPI.
+- Written as now: catalog row `alert-vm-network-tx-dropped-red`: transmitted packets dropped above 4%, no second symptom; vm-alerts: "The value is set high because it is read within a 20-second period" (the 1 in 25 line left with the values, 2026-11-12); "Dropped packets are usually retransmitted, so users rarely feel a problem"; "Planned change: count transmitted packets only" (no reason). Catalog row `alert-vm-network-tx-dropped-red`: 4%, 20s, no condition. packets-dropped: the % "can jump above 95% for under 15 minutes. Driven by low throughput"; receive drops are left out of the VM KPI.
 - Final answer (2026-11-12; (b) done; (c), (d) expert call; (a) needs you):
   - (a) A condition is missing. Every other VM contention alert has an activity gate (CPU Usage above 1 GHz; disk adds IOPS above 100). A drop ratio over few packets is unstable: 1 drop in 20 packets is 5%, and packets-dropped records jumps above 95% at low throughput. Likely gate: a floor of packets transmitted per second, or CPU Usage above 1 GHz.
   - (b) Done: 1 in 25.
   - (c) Read as: the data delivered reaches 100% in the end, because TCP resends dropped segments. The cost is time, not data: each loss cuts the congestion window or waits for a retransmit timeout. UDP is not resent. Rewrite the retransmission line and its misconception that way; do not copy "the ratio is always 100%".
   - (d) Yes. Received drops include packets not meant for the port and VMXNET3 receive-ring drops, a Guest OS problem (Q070, Q085). The VM KPI leaves receive drops out for the same reason (packets-dropped, vm-performance). Transmit only keeps the alert on what the infrastructure team owns. Write this reason under the planned change. (The earlier draft said "why the SLA excludes them": no SLA since 2026-11-11.)
-  - Change if accepted: network-alerts (condition, retransmission line, port group reason, misconception); catalog row `alert-vm-network-tx-dropped-red` (condition); delete the Q147 review notes.
+  - Change if accepted: vm-alerts (retransmission line, misconception); distributed-switch-alerts (port group reason); catalog row `alert-vm-network-tx-dropped-red` (condition); delete the Q147 review notes.
   - For you: the missing condition and its value; whether (c) meant the delivery ratio.
 - Answer:
 
@@ -241,6 +225,23 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
+
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Design the alerts as a set; the count tables were removed 2026-11-12, each cell is now a line in its object's alert file); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/alerts/guest-os-alerts.md); [Datastore and datastore cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/datastore/alerts/datastore-alerts.md).
+- Search 1: "Not yet = I’ve not implemented it yet."
+- Search 2: "There is no alert defined, as it could result in false positive."
+- Search 3: "Not yet implemented. The reason is the many:many relationship"
+- Question: the count table shows (a) Guest OS disk consumption 1, but the Guest OS section says no alert; (b) datastore cluster disk contention 2, but the storage section says not implemented. Which is current?
+- Written as now: count table: Guest OS disk consumption 1; disk contention datastore 0, datastore cluster 2. guest-os-alerts, Consumption: daily checks, no alert: "Low disk space: not implemented". storage-alerts, Datastore latency: "Not implemented. VMs and datastores are many-to-many". The catalog has no Guest OS disk-space row and no datastore latency row.
+- Final answer (2026-11-12; expert call, one item needs you):
+  - Rule: where a table cell and a section disagree, the section that gives a reason wins. The table summarises the sections.
+  - (a) No Guest OS disk consumption alert: swap partitions sit near 100%, and low disk space cannot be read at the virtual disk layer. Cell → Not yet.
+  - (b) No datastore latency alert: VMs and datastores are many-to-many, and a datastore cluster is the same (a VM's disks can sit on several). Cells datastore and datastore cluster → Not yet. The datastore cluster consumption alert (above 90% used) is a different row and stays.
+  - Change if accepted: alert-design, three table cells; delete the Q142 review notes in alert-design, guest-os-alerts and storage-alerts.
+  - For you: whether your shipped set has a Guest OS disk-space alert or datastore cluster latency alerts. If yes, the sections change instead.
+- Answer: Author (2026-11-12): parked after 1.0. The scope of 1.0 does not include VCF Operations alert mastery; the shipped alert set is reviewed with the VMW-Alerts-Overhaul work (plan, After 1.0).
+- Applied 2026-11-12: nothing changed in the alerts themselves. The count tables left alert-design with the per-object restructure; the two disagreements stay as review notes in guest-os-alerts (section Consumption: daily checks, no alert) and datastore-alerts (sections Datastore latency and Datastore cluster), marked parked after 1.0. Closed for 1.0.
 
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
 
@@ -1209,7 +1210,7 @@ Each entry has:
 
 ### Q157 · Threshold design · VM CPU Net Run alert at KPI yellow
 
-- Files: [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (ids `alert-vm-cpu-net-run-red`, levels line CPU Net Run); [CPU alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/cpu-alerts.md).
+- Files: [knowledge/catalog/thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (ids `alert-vm-cpu-net-run-red`, levels line CPU Net Run); [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/alerts/vm-alerts.md).
 - Search: "VM CPU Net Run above 95%"
 - What the knowledge base says now: red alert above 95% with Guest OS CPU Queue above 4 for 15 minutes; VM KPI CPU Net Run is yellow 95, orange 97, red 99.
 - Question: an alert fires at the KPI yellow edge. (a) intended: the queue condition and 15 minutes make it urgent, and lint allows a lower value when a second issue symptom is required; (b) the alert value moves to 99 or above.
