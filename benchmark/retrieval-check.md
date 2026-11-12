@@ -35,10 +35,11 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 | Classic context | Needed files in the context the model receives |
 | Missed in context | The needed files that did not arrive |
 
-- Summary line, three numbers:
+- Summary line, four numbers:
   - **Recall@6 search**: share of all needed files found by search alone. It measures ranking.
   - **Recall classic context**: share of all needed files that reach the model. The number that caps classic mode.
-  - **Questions with every needed file in context**: questions where nothing is missing. The strictest number: a question missing one of three files can still be answered wrong.
+  - **Questions with every needed file in context**: questions where nothing is missing. A question missing one of three files can still be answered wrong.
+  - **Main file missing from context**: questions whose `knowledge_main` did not arrive, out of the questions that have one. Each is a defect.
 - Read the context numbers first. A search drop with no context drop means link expansion still brings the file; the model sees the same files. Example 2026-11-07: search recall@6 fell from 65% to 64% (questions 0062 and 0067 each lost one file from the top 6), context stayed at 75% and 55 of 90: no effect on answers.
 - Compare against the previous run, question by question, not only the totals. Two questions can swap (one gains, one loses) with no change in the total. Save both outputs and `diff` them.
 - Agentic mode is not measured: the agent searches several times with its own queries. A file missed here can still be found there, but classic mode is the floor.
@@ -49,26 +50,30 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 
 ## What is a good number
-- Short answer for today: bad. 53-57 of 90 complete (59-63%) and 72-75% context recall are far below what a release needs. No target is agreed yet; the values below are a proposal for the author (Q130).
+- Levels agreed by the author (Q130, 2026-11-12). Last numbers before the pause (2026-11-11, 95 questions): classic context recall 78%, 61 of 95 complete (64%): bad.
 
 ### Why the retrieval number must be higher than the release score
-- Release gate ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), Mission): final score at least 85%, target 99%, confident-wrong rate near 0.
+- Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% in agentic mode, Level 400 at least 80%, confident-wrong at most 3%.
 - In classic mode the answer can be no better than its context. Roughly: answer accuracy ≈ (questions with every needed file) × (share the model gets right when it has them) + a little from the model's own knowledge.
 - The model is not perfect even with the right files. If it gets 95% right with complete context, 85% needs about 90% of questions complete (0.90 × 0.95 ≈ 0.85).
 - So the retrieval bar sits above the release bar, not at it.
 - A missing file also drives confident-wrong answers: the model answers from Level 300 public knowledge, the very misconception the knowledge base exists to correct.
 
-### Proposed levels (classic mode, BM25 and hybrid both reported)
-| Level | Complete questions | Context recall | Meaning |
-|---|---|---|---|
-| Bad | below 80% (below 72 of 90) | below 90% | The model is starved; a benchmark run mostly measures retrieval |
-| Good enough to release | at least 90% (81 of 90) | at least 95% | Leaves room for the 85% gate after model errors |
-| Target | at least 97% (87 of 90) | at least 98% | Matches the 99% answer target |
-| Perfect | 100% (90 of 90) | 100% | Not a goal; see below |
+### Levels (classic mode, BM25 and hybrid both reported)
+| Level | Main file in context | Complete questions | Context recall | Meaning |
+|---|---|---|---|---|
+| Bad | below 100% | below 80% | below 90% | The model is starved; a benchmark mostly measures retrieval |
+| Good enough to release | 100% (each miss fixed or explained) | at least 90% | at least 95% | Leaves room for the 85% gate after model errors |
+| Target | 100% | at least 97% | at least 98% | Matches the 99% answer target |
+| Perfect | 100% | 100% | 100% | Not a goal; see below |
+
+- Percent, not counts: the number of questions moves.
+- Main file: the question's `knowledge_main` ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)), the file that holds the answer or the misconception. The check prints it as the fourth number, over the questions that have one.
+- Sealed set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10): within 5 points of the visible set.
 
 - Search recall@6 has no gate: it is a diagnostic for ranking. Context is what the model reads.
-- Agentic mode searches again and can fetch what classic missed. It is measured by the benchmark, not here. Classic mode is the floor and the fallback, so it carries the gate.
-- Read the sample in the plan this way: "73%, 53 of 90" means about 1 question in 4 lacks at least one needed file. With hybrid search, 57 of 90 (63%): still in the Bad band, 24 questions short of release.
+- Agentic mode, the shipped mode, searches again and can fetch what classic missed. It is measured by the benchmark, not here. Classic mode is the floor and the fallback, so it carries these levels; they are conservative for the agentic score.
+- Read the last numbers this way: 61 of 95 complete (64%) means about 1 question in 3 lacks at least one needed file: the Bad band, about 25 points short of release.
 
 ### Is perfect applicable?
 - No, as a target. 100% is possible on paper and still not the aim:
@@ -76,7 +81,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
   - Overfitting: the last few percent are reached by tuning files and links to these 90 prompts. That raises this number without helping a real user's question. The held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) would expose it.
   - The budget is finite: a question that needs 7 files competes for 16K tokens; cutting other context to fit it can hurt elsewhere.
   - Real users phrase questions in ways no set covers; a perfect score here does not carry over.
-- Perfect is the right goal for one thing: no question should miss its main file (the file that holds the misconception or the answer). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.
+- Perfect is the right goal for one thing, and it is the gate: no question misses its main file (`knowledge_main`). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.
 - Watch the held-out set: when it scores clearly below the visible set, retrieval is being fitted, not improved.
 
 ## When the score is bad

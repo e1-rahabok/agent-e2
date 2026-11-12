@@ -8,6 +8,7 @@ models:                       # candidates; all must read screenshots (vision). 
 
 # Grades free-text and compound answers 0-3 (benchmark/runner/judge.py). Never a candidate.
 # Other vendor than the frontier reference (anthropic/claude-opus-5.5), so no model grades its own family.
+# Release gate limits and the reference: benchmark/runner/report.py, GATE and REFERENCE (benchmark/design.md, section 7.5).
 judge_model: openai/gpt-5.6-sol
 judge_temperature: 0
 judge_max_tokens: 1500

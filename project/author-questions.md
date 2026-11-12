@@ -136,65 +136,6 @@ Each entry has:
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
 - Answer:
 
-### Q130 · Benchmark · Release score, gap to the frontier model, retrieval levels
-
-- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate; M3 exit criteria); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 4, 7.4, 8, 10 Release criteria); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5, power table).
-- Search: not from the book.
-- Question: (a) the passing score of Agent E2 in agentic mode; (b) the gap Agent E2 must show over the frontier model without the knowledge base; (c) the retrieval levels for classic mode; (d) should each question mark its main file, so the check reports main-file misses separately?
-- Written as now:
-  - Plan and design.md: final score at least 85%, target 99%, confident-wrong rate "near 0" (no number). Superiority: the local configuration beats the frontier baseline "by more than the margin" (no number). Sub-scores are diagnostic only.
-  - Frontier reference (Q164): Claude Opus 5.5, web search on, effort capped at medium, no knowledge base.
-  - No current run: the runs of 2026-11-03 are outdated (old set, old harness) and are not used here (author, 2026-11-12). The frontier score below is an expert estimate.
-  - Paired power at 100 questions (review, section 5): 68% at a 10-point gap, 91% at 15, 98% at 20.
-  - retrieval-check.md: proposal in counts of 90 questions, not agreed. Latest retrieval (2026-11-11): search 60%, classic context 78%, 61 of 95 complete. No question has a main-file key. Retrieval check paused (2026-11-12) until the question bank revamp.
-- Final answer (2026-11-12, revised the same day; expert call):
-  - Scope: the release score is Agent E2 in agentic mode, on the local model and the deployment profile ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 8). The earlier draft called classic the shipped mode: wrong. Classic stays the floor and the fallback, so it carries the retrieval levels in (c).
-  - (a) Passing score. All five must hold; one number alone can be carried by easy questions or bought with confident guesses.
-
-    | Gate | Development set (100) | Why |
-    |---|---|---|
-    | Final score | at least 85% | Margin ±7 at 100 questions; below 85 an operator stops trusting the answers. Kept from the plan |
-    | Level 400 sub-score | at least 80% | About 50 questions (margin about ±10). The mission is Level 400; Level 100-300 can carry the total, and any frontier model is near perfect there |
-    | Confident-wrong rate | at most 3% (3 of 100) | "Near 0" cannot be tested. A wrong answer said with confidence is what the operator acts on; a wrong answer marked Unsure is not. |
-    | Misconceptions in [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | 0 stated as true | They are given up front; stating one is a harness or model defect, not a gap |
-    | Sealed set (Q165) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
-
-    - Target stays 99%, as a direction. 100 questions cannot prove it (a perfect score shows at least 96.3%); the 300-question set after 1.0 can.
-    - Why not 90% as the gate: at 100 questions, 85 and 90 overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
-  - (b) Gap to the frontier model (Opus 5.5, web search on, medium effort, no knowledge base), on the same questions, paired:
-    - At least 15 points on the final score, and a one-sided paired McNemar test significant at α 0.05.
-    - Effective bar: Agent E2 at least the larger of 85% and frontier + 15.
-    - Expected frontier score (expert estimate, by the blueprint of design.md section 3.2 and the scoring of section 7.4: exact letters, stable over 5 runs, lowest judge score):
-
-      | Level | Share | Frontier expected | Why |
-      |---|---|---|---|
-      | 100 | 10 | about 95% | Public counter names; a slip is a format or stability miss |
-      | 200 | 15 | about 90% | Public definitions; multi-select exact match costs a few |
-      | 300 | 25 | about 80% | Public practice is its home ground, but some published thresholds are the ones the knowledge base corrects |
-      | 400, public mechanism | about 30 | about 60% | Knows the mechanism in isolation; misses the vantage point, the combination of several readings, and picks the Level 300 rule of thumb when it conflicts. Web search returns the same Level 300 pages |
-      | 400, author framework and current VCF Operations | about 20 | about 25% | SP5 Framework, VM Performance (%), Close for Business, deprecated dashboards: not in public text, or wrong there |
-      | Total | 100 | about 65% (range 60-72) | |
-
-      - So in the expected case the 85% gate binds (gap about 20). The 15-point gap binds only if the frontier model does better than expected (above 70%). The two bars cover each other: the gate protects the operator, the gap protects the claim.
-      - Confident-wrong: expected high for the frontier model on Level 400 (it answers the rule of thumb with confidence, rarely Unsure), roughly 15-25% of answers. Measured in M4, not assumed.
-    - Reasons:
-      - 10 points equals the margin and has 68% power: one run in three would fail to show a real win. 15 points has 91%.
-      - Expected frontier score about 65%, up to about 72%: a 10-point gap could then be met below the 85% gate, so the claim would rest on a configuration not fit to ship.
-      - "Better than a frontier model" is the mission, not "at least 85%". A tie goes to the frontier model in the customer's eyes: it needs no GPU.
-    - Where the claim is read:
-      - author-framework questions (SP5 Framework, VM Performance (%), Close for Business): a frontier model cannot know them; a win there proves the knowledge base, not the agent. Reported apart.
-      - The superiority claim is read on public-mechanism questions (Q165 `knowledge_class`): at least 10 points, paired significant. On the development set this class is too small for significance (about 50 questions: 35% power at 10 points); the sealed set of 150-200 carries it.
-    - Ceiling, not a gate: Opus 5.5 in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. If the frontier model scores lower with the knowledge base than without it, the knowledge base or the harness misleads a strong model: fixed before any gap is read.
-  - (c) Retrieval levels, classic mode, in percent (the count moves from 95 to 100); BM25 and hybrid both reported. Diagnostic floor for agentic mode, read again when the retrieval check is reactivated.
-    - Release gate: the main file in context for 100% of the visible questions (each miss is a defect, fixed or explained); context recall at least 95%; complete questions at least 90%.
-    - Target: 97% complete, 98% recall.
-    - Sealed set within 5 points of the visible set.
-    - Reason: 0.90 × 0.95 ≈ 0.85: with a model right on 95% of questions whose files it has, 90% complete is the least that leaves room for the 85% gate. Agentic mode can fetch what classic missed, so the classic floor is conservative for the agentic score. A missing main file drives confident-wrong answers, so it gets its own number.
-  - (d) Yes, an explicit key, `knowledge_main` (also listed in `knowledge`; lint checks it). Not the list order: on 2026-11-10, 10 questions missed their first-listed file, but first was never written to mean main. The retrieval check reports main-file misses as a fourth number.
-  - Change if accepted: plan Mission (release gate with the five rows and the gap) and M3 exit criteria; benchmark/design.md sections 1, 7.4, 8 and Release criteria (gap of 15 points, paired test, confident-wrong limit, Level 400 gate, ceiling); retrieval-check.md (levels in percent); report.py (Level 400 gate, confident-wrong rate, McNemar test against the reference); question template and lint (`knowledge_main`); retrieval_eval.py; project/terms.md (`knowledge_main` as a proposal).
-  - For you: (1) whether a 15-point gap is the bar you want to publish, and whether the frontier estimate (about 65%) matches your experience of frontier answers at Level 400; (2) the main file of each question, during the one-go question review.
-- Answer:
-
 ### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
 
 - Files: [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md), [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md), [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md).
@@ -541,6 +482,66 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q130 · Benchmark · Release score, gap to the frontier model, retrieval levels
+
+- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate; M3 exit criteria); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 4, 7.4, 8, 10 Release criteria); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5, power table).
+- Search: not from the book.
+- Question: (a) the passing score of Agent E2 in agentic mode; (b) the gap Agent E2 must show over the frontier model without the knowledge base; (c) the retrieval levels for classic mode; (d) should each question mark its main file, so the check reports main-file misses separately?
+- Written as now:
+  - Plan and design.md: final score at least 85%, target 99%, confident-wrong rate "near 0" (no number). Superiority: the local configuration beats the frontier baseline "by more than the margin" (no number). Sub-scores are diagnostic only.
+  - Frontier reference (Q164): Claude Opus 5.5, web search on, effort capped at medium, no knowledge base.
+  - No current run: the runs of 2026-11-03 are outdated (old set, old harness) and are not used here (author, 2026-11-12). The frontier score below is an expert estimate.
+  - Paired power at 100 questions (review, section 5): 68% at a 10-point gap, 91% at 15, 98% at 20.
+  - retrieval-check.md: proposal in counts of 90 questions, not agreed. Latest retrieval (2026-11-11): search 60%, classic context 78%, 61 of 95 complete. No question has a main-file key. Retrieval check paused (2026-11-12) until the question bank revamp.
+- Final answer (2026-11-12, revised the same day; expert call):
+  - Scope: the release score is Agent E2 in agentic mode, on the local model and the deployment profile ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 8). The earlier draft called classic the shipped mode: wrong. Classic stays the floor and the fallback, so it carries the retrieval levels in (c).
+  - (a) Passing score. All five must hold; one number alone can be carried by easy questions or bought with confident guesses.
+
+    | Gate | Development set (100) | Why |
+    |---|---|---|
+    | Final score | at least 85% | Margin ±7 at 100 questions; below 85 an operator stops trusting the answers. Kept from the plan |
+    | Level 400 sub-score | at least 80% | About 50 questions (margin about ±10). The mission is Level 400; Level 100-300 can carry the total, and any frontier model is near perfect there |
+    | Confident-wrong rate | at most 3% (3 of 100) | "Near 0" cannot be tested. A wrong answer said with confidence is what the operator acts on; a wrong answer marked Unsure is not. |
+    | Misconceptions in [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | 0 stated as true | They are given up front; stating one is a harness or model defect, not a gap |
+    | Sealed set (Q165) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
+
+    - Target stays 99%, as a direction. 100 questions cannot prove it (a perfect score shows at least 96.3%); the 300-question set after 1.0 can.
+    - Why not 90% as the gate: at 100 questions, 85 and 90 overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
+  - (b) Gap to the frontier model (Opus 5.5, web search on, medium effort, no knowledge base), on the same questions, paired:
+    - At least 15 points on the final score, and a one-sided paired McNemar test significant at α 0.05.
+    - Effective bar: Agent E2 at least the larger of 85% and frontier + 15.
+    - Expected frontier score (expert estimate, by the blueprint of design.md section 3.2 and the scoring of section 7.4: exact letters, stable over 5 runs, lowest judge score):
+
+      | Level | Share | Frontier expected | Why |
+      |---|---|---|---|
+      | 100 | 10 | about 95% | Public counter names; a slip is a format or stability miss |
+      | 200 | 15 | about 90% | Public definitions; multi-select exact match costs a few |
+      | 300 | 25 | about 80% | Public practice is its home ground, but some published thresholds are the ones the knowledge base corrects |
+      | 400, public mechanism | about 30 | about 60% | Knows the mechanism in isolation; misses the vantage point, the combination of several readings, and picks the Level 300 rule of thumb when it conflicts. Web search returns the same Level 300 pages |
+      | 400, author framework and current VCF Operations | about 20 | about 25% | SP5 Framework, VM Performance (%), Close for Business, deprecated dashboards: not in public text, or wrong there |
+      | Total | 100 | about 65% (range 60-72) | |
+
+      - So in the expected case the 85% gate binds (gap about 20). The 15-point gap binds only if the frontier model does better than expected (above 70%). The two bars cover each other: the gate protects the operator, the gap protects the claim.
+      - Confident-wrong: expected high for the frontier model on Level 400 (it answers the rule of thumb with confidence, rarely Unsure), roughly 15-25% of answers. Measured in M4, not assumed.
+    - Reasons:
+      - 10 points equals the margin and has 68% power: one run in three would fail to show a real win. 15 points has 91%.
+      - Expected frontier score about 65%, up to about 72%: a 10-point gap could then be met below the 85% gate, so the claim would rest on a configuration not fit to ship.
+      - "Better than a frontier model" is the mission, not "at least 85%". A tie goes to the frontier model in the customer's eyes: it needs no GPU.
+    - Where the claim is read:
+      - author-framework questions (SP5 Framework, VM Performance (%), Close for Business): a frontier model cannot know them; a win there proves the knowledge base, not the agent. Reported apart.
+      - The superiority claim is read on public-mechanism questions (Q165 `knowledge_class`): at least 10 points, paired significant. On the development set this class is too small for significance (about 50 questions: 35% power at 10 points); the sealed set of 150-200 carries it.
+    - Ceiling, not a gate: Opus 5.5 in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. If the frontier model scores lower with the knowledge base than without it, the knowledge base or the harness misleads a strong model: fixed before any gap is read.
+  - (c) Retrieval levels, classic mode, in percent (the count moves from 95 to 100); BM25 and hybrid both reported. Diagnostic floor for agentic mode, read again when the retrieval check is reactivated.
+    - Release gate: the main file in context for 100% of the visible questions (each miss is a defect, fixed or explained); context recall at least 95%; complete questions at least 90%.
+    - Target: 97% complete, 98% recall.
+    - Sealed set within 5 points of the visible set.
+    - Reason: 0.90 × 0.95 ≈ 0.85: with a model right on 95% of questions whose files it has, 90% complete is the least that leaves room for the 85% gate. Agentic mode can fetch what classic missed, so the classic floor is conservative for the agentic score. A missing main file drives confident-wrong answers, so it gets its own number.
+  - (d) Yes, an explicit key, `knowledge_main` (also listed in `knowledge`; lint checks it). Not the list order: on 2026-11-10, 10 questions missed their first-listed file, but first was never written to mean main. The retrieval check reports main-file misses as a fourth number.
+  - Change if accepted: plan Mission (release gate with the five rows and the gap) and M3 exit criteria; benchmark/design.md sections 1, 7.4, 8 and Release criteria (gap of 15 points, paired test, confident-wrong limit, Level 400 gate, ceiling); retrieval-check.md (levels in percent); report.py (Level 400 gate, confident-wrong rate, McNemar test against the reference); question template and lint (`knowledge_main`); retrieval_eval.py; project/terms.md (`knowledge_main` as a proposal).
+  - For you: (1) whether a 15-point gap is the bar you want to publish, and whether the frontier estimate (about 65%) matches your experience of frontier answers at Level 400; (2) the main file of each question, during the one-go question review.
+- Answer: accept (2026-11-12).
+- Applied 2026-11-12: release gate in benchmark/design.md, new section 7.5 (with the frontier estimate); sections 1, 8, 15 and 16 (agentic is the shipped mode, classic the floor); report.py table Release gate (`gate`, `mcnemar`); retrieval-check.md levels in percent with the main file; `knowledge_main` in the template, benchmark/README.md, lint and retrieval_eval.py (fourth number); project/terms.md (main file, release gate, proposals); plan Mission and M3. Still to do: you set `knowledge_main` on each question in the question review; the retrieval check stays paused.
 
 ### Q180 · Resource controls · One home for share, limit and reservation
 

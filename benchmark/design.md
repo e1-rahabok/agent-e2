@@ -10,10 +10,10 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
 - Baseline mode (the model alone) is the zero point: system minus baseline is what our work adds.
-- Release gate: final score at least 85%. Target: 99%. Final score: section 7.4.
+- Release gate: section 7.5 (final score at least 85%, Level 400 at least 80%, confident-wrong at most 3%, at least 15 points over the frontier model). Target: 99%. Final score: section 7.4.
 - The benchmark must:
   1. rank candidate models and answer modes against each other;
-  2. show whether a configuration clears 85%;
+  2. show whether a configuration clears the release gate (section 7.5);
   3. show how close it is to 99%, and state what the number proves.
 
 ## 2. Scope
@@ -274,13 +274,45 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 - Margin: 95% interval on the final score from the number of questions (section 4). Sub-scores have wider margins (20 questions: about ±16 points) and are diagnostic.
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), function `final`. Report table `Final score`.
 
+### 7.5 Release gate
+- Read on Agent E2 as shipped: the local model in agentic mode, with the deployment profile (section 8). Classic mode is the floor and the fallback; it carries the retrieval levels (section 9).
+- All must hold. One number alone can be carried by easy questions or bought with confident guesses.
+
+| Gate | Limit | Why |
+|---|---|---|
+| Final score, development set (100) | at least 85% | Margin ±7 at 100 questions (section 4); below 85 an operator stops trusting the answers |
+| Level 400 sub-score | at least 80% | About 50 questions (margin about ±10): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
+| Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
+| Misconceptions of `knowledge/misconceptions.md` | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
+| Sealed set (Q165; until then the held-out set, section 10) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
+| Gap to the frontier model (section 8) | at least 15 points, paired test significant | The claim of section 1 |
+
+- Effective bar: Agent E2 at least the larger of 85% and frontier + 15.
+- Why 85%, not 90%: at 100 questions 85 and 90 overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
+- Why 15 points: 10 points equals the margin and has 68% paired power at 100 questions (one benchmark in three would miss a real win); 15 points has 91% ([project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md), section 5). With the frontier model near 72%, a 10-point win could land below 85%: the claim would rest on a configuration not fit to ship.
+- Expected frontier score (expert estimate, 2026-11-12; replaced by the first M4 benchmark): about 65%, range 60-72%.
+
+| Level | Share | Frontier expected | Why |
+|---|---|---|---|
+| 100 | 10 | about 95% | Public counter names |
+| 200 | 15 | about 90% | Public definitions; exact multi-select costs a few |
+| 300 | 25 | about 80% | Public practice, but some published thresholds are the ones the knowledge base corrects |
+| 400, public mechanism | about 30 | about 60% | Knows each mechanism alone; misses the vantage point and the combination of readings, and picks the Level 300 rule of thumb. Web search returns the same Level 300 pages |
+| 400, author framework and current VCF Operations | about 20 | about 25% | Not in public text, or wrong there |
+
+- So in the expected case the 85% gate binds; the 15-point gap binds when the frontier model scores above 70%.
+- Superiority is claimed on public-mechanism questions of the sealed set: at least 10 points, paired significant. author-framework questions are reported apart: a frontier model cannot know them, so a win there proves the knowledge base, not the agent.
+- Ceiling, not a gate: the frontier model in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. If the frontier model scores lower with the knowledge base than without, the knowledge base or the harness misleads a strong model: fixed before any gap is read.
+- Target: 99%, a direction. 100 questions cannot prove it (section 4).
+- Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400, confident-wrong, gap and paired test. The misconception check and the sealed set are read outside the report.
+
 ## 8. Comparison design
 - Reasons for running both modes and for the call limit: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), sections 8 and 9.
 - The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 8, Benchmark and deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md).
-- Reference: the best frontier model in baseline mode. The claim in section 1 is met when a local configuration's final score exceeds it by more than the margin.
+- Reference: the frontier model in baseline mode: Claude Opus 5.5, web search on, effort capped at medium, no knowledge base (Q164). The claim in section 1 is met when Agent E2 exceeds it by at least 15 points and a one-sided exact McNemar test on the questions is significant at α 0.05 (section 7.5).
 - Paired comparison: models are compared question by question on the same set, not only by totals.
-- A gap smaller than the margin is a tie; the smaller model wins a tie.
+- Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap below 15 points does not support the claim.
 - Run matrix at 100 questions: 10 models x 3 modes x 100 questions x 5 runs = 15,000 answers, about US$ 25-40 and 2-4 hours (re-check prices and rate limits before each run).
 
 ## 9. Retrieval check
@@ -378,7 +410,7 @@ For the set:
 ## 15. Target history
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
 - Target: 99% final score on the question set (chosen mode). See section 7.4. (Before 2026-11-05: Stable correct on multiple-choice questions only.)
-- Minimum: 85% final score. A model below 85% is not usable.
+- Minimum: the release gate, section 7.5 (Q130, 2026-11-12).
 - mistral/ministral-8b dropped from future runs: 29-40% exact in benchmark 20261103-081849.
 - The other candidates stay until the question set reaches 100; 3 were added on 2026-11-04 (10 in total). No model is dropped on the 17-question results: the margin (about ±20-24 points) is too wide.
 - Reference point: the best frontier model in baseline mode (no knowledge base). Measured in each benchmark.
@@ -389,7 +421,7 @@ For the set:
 - Status at benchmark 20261103-081849: best small model 58% exact (classic). Gap: 41 points.
 
 ## 16. Decision rules
-- Pick the mode: agentic must beat classic RAG by more than the margin on the same model, or classic RAG stays the default (simpler, cheaper).
+- Mode: agentic is the shipped mode and carries the release gate (Q130, 2026-11-12). Classic stays as the floor and the fallback; it is reported in every benchmark.
 - Pick the model: highest final score in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
 - Agentic is dropped for a model with more than 10% fallbacks.
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.

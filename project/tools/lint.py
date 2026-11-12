@@ -170,6 +170,9 @@ def main():
             bad(f, 'awaiting-input question needs a ## Input to supply section describing the screenshot or table')
         if not (fm or {}).get('knowledge'):
             bad(f, 'knowledge must list at least one knowledge id')
+        km = (fm or {}).get('knowledge_main')
+        if km is not None and km not in ((fm or {}).get('knowledge') or []):
+            bad(f, f'knowledge_main "{km}" must also be listed in knowledge (benchmark/README.md)')
         at = (fm or {}).get('answer_type')
         if at not in ('deterministic', 'judged'):
             bad(f, f'answer_type "{at}" must be deterministic or judged (benchmark/design.md, section 3.3)')

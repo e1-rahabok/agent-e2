@@ -5,7 +5,8 @@ For every question with `knowledge` ids, run the classic-mode retrieval on the p
 (the same `## Prompt` the model sees, options included) and report:
   - recall@k of plain search (top k files),
   - recall of the classic context (search + same_name/related expansion, within the token budget),
-  - which needed files were missed.
+  - which needed files were missed,
+  - questions whose main file (`knowledge_main`) is missing from the classic context: each one is a defect.
 A miss here is a harness or knowledge problem, never a model problem.
 
 Examples:
@@ -62,22 +63,33 @@ def main():
         question = c.render(random.Random(0))[0] if c.options else c.prompt
         top = [h['id'] for h in ret.search(question, k=a.k)]
         _, ctx, _ = modes.classic_context(ret, question, cfg)
-        rows.append((c.id, need, top, ctx))
+        rows.append((c.id, need, top, ctx, c.knowledge_main))
     print(f"| Question | Needed | Search top {a.k} | Classic context | Missed in context |")
     print('|---|---|---|---|---|')
-    s_hit = c_hit = n = 0
-    for cid, need, top, ctx in rows:
+    for cid, need, top, ctx, main_id in rows:
         sh = sum(i in top for i in need)
         ch = sum(i in ctx for i in need)
-        s_hit += sh
-        c_hit += ch
-        n += len(need)
-        miss = ', '.join(f'`{i}`' for i in need if i not in ctx) or '-'
+        miss = ', '.join(f'`{i}`' + (' (main)' if i == main_id else '') for i in need if i not in ctx) or '-'
         print(f'| {cid} | {len(need)} | {sh}/{len(need)} | {ch}/{len(need)} | {miss} |')
-    full = sum(all(i in ctx for i in need) for _, need, _, ctx in rows)
-    print(f'\nQuestions: {len(rows)}. Recall@{a.k} search: {s_hit / n:.0%}. Recall classic context: {c_hit / n:.0%}. '
-          f'Questions with every needed file in context: {full}/{len(rows)}. Mode: {"hybrid" if a.embeddings else "BM25 only"}{" + rerank" if cfg.get("rerank") else ""}.')
+    s = summary(rows)
+    print(f"\nQuestions: {s['questions']}. Recall@{a.k} search: {s['search']:.0%}. Recall classic context: {s['context']:.0%}. "
+          f"Questions with every needed file in context: {s['complete']}/{s['questions']} ({s['complete'] / s['questions']:.0%}). "
+          f"Main file missing from context: {len(s['main_missed'])} of {s['main_keyed']} questions with a main file"
+          f"{' (' + ', '.join(s['main_missed']) + ')' if s['main_missed'] else ''}. "
+          f"Mode: {'hybrid' if a.embeddings else 'BM25 only'}{' + rerank' if cfg.get('rerank') else ''}.")
+    print('Release levels (benchmark/retrieval-check.md): main file 100%, context recall at least 95%, complete at least 90%.')
 
+
+def summary(rows):
+    """The four numbers of the check, from rows (id, needed, search top k, classic context, main id or '')."""
+    n = sum(len(need) for _, need, _, _, _ in rows)
+    keyed = [(cid, main_id, ctx) for cid, _, _, ctx, main_id in rows if main_id]
+    return {'questions': len(rows),
+            'search': sum(i in top for _, need, top, _, _ in rows for i in need) / n if n else 0,
+            'context': sum(i in ctx for _, need, _, ctx, _ in rows for i in need) / n if n else 0,
+            'complete': sum(all(i in ctx for i in need) for _, need, _, ctx, _ in rows),
+            'main_keyed': len(keyed),
+            'main_missed': [cid for cid, main_id, ctx in keyed if main_id not in ctx]}
 
 if __name__ == '__main__':
     main()

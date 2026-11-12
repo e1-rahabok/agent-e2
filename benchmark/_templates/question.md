@@ -36,6 +36,7 @@ answer_type: deterministic        # deterministic | judged
 input: [text]                     # text | table | screenshot; from the attachments
 knowledge:                        # knowledge ids the answer depends on
   - vsphere/technology/cpu/metrics/virtual-motherboard/ready
+knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/ready   # the file that holds the answer or the misconception; also in knowledge
 attachments: []                   # paths relative to benchmark/questions/, e.g. <id>/<file>.png
 origin: book                      # book | quiz | real-ticket | synthetic
 source_path: "<heading path in the source document>"

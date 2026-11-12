@@ -90,6 +90,48 @@ def final(rows):
     return out
 
 
+# Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 in agentic mode.
+# Not computed here: no misconception of knowledge/misconceptions.md stated as true (author check of each answer),
+# and the sealed set within 5 points of the development set (a separate run).
+GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03, 'gap': 0.15, 'alpha': 0.05}
+REFERENCE = ('anthropic/claude-opus-5.5', 'baseline')  # frontier model without the knowledge base (Q164)
+
+
+def mcnemar(rows, model, mode, ref=REFERENCE):
+    """Paired one-sided exact McNemar test of (model, mode) against the reference, on the questions both answered.
+
+    A question is correct when its credit is 1 (exact in every run; judged: score 3 in every run).
+    b = questions only the model gets right, c = questions only the reference gets right.
+    Returns (b, c, p): p = P(X >= b) for X ~ Binomial(b + c, 0.5). nan when there is no discordant question.
+    """
+    credit = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        credit[(r['model'], r['mode'])][r['question_id']].append(_credit(r))
+    a, z = credit.get((model, mode), {}), credit.get(ref, {})
+    common = set(a) & set(z)
+    b = sum(min(a[q]) == 1 and min(z[q]) < 1 for q in common)
+    c = sum(min(a[q]) < 1 and min(z[q]) == 1 for q in common)
+    n = b + c
+    p = sum(math.comb(n, k) for k in range(b, n + 1)) / 2 ** n if n else float('nan')
+    return b, c, p
+
+
+def gate(fin, rows, model, mode='agentic', ref=REFERENCE):
+    """Release gate rows for (model, mode): (name, value, limit, passed). Gap and test are against the reference."""
+    s = fin[(model, mode)]
+    out = [('Final score', s['final'], f'at least {GATE["final"]:.0%}', s['final'] >= GATE['final']),
+           ('Level 400', s['level:400'], f'at least {GATE["level:400"]:.0%}',
+            not math.isnan(s['level:400']) and s['level:400'] >= GATE['level:400']),
+           ('Confident wrong', s['confident_wrong'], f'at most {GATE["confident_wrong"]:.0%}',
+            not math.isnan(s['confident_wrong']) and s['confident_wrong'] <= GATE['confident_wrong'])]
+    if ref in fin:
+        gap = s['final'] - fin[ref]['final']
+        b, c, p = mcnemar(rows, model, mode, ref)
+        out += [('Gap to the frontier model', gap, f'at least {GATE["gap"]:.0%}', gap >= GATE['gap']),
+                (f'Paired test (b {b}, c {c})', p, f'p below {GATE["alpha"]}', not math.isnan(p) and p < GATE['alpha'])]
+    return out
+
+
 def override(rows):
     """Share of answers that state the misconception although every needed knowledge file was in the context.
 
@@ -163,6 +205,16 @@ def write(run_dir):
     for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
         L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["luck"])} | '
                  f'{_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
+    cands = [k for k in fin if k[1] == 'agentic' and k != REFERENCE]
+    if cands:
+        L += ['', '## Release gate', '', f'Agentic mode. Reference: {REFERENCE[0]}, {REFERENCE[1]} mode'
+              + ('' if REFERENCE in fin else ' (not in this benchmark: gap not read)') + '.', '',
+              '| Model | Gate | Value | Limit | Pass |', '|---|---|---|---|---|']
+        for m, mode in sorted(cands):
+            for name, v, lim, ok in gate(fin, all_scored, m, mode):
+                val = f'{v:.3f}' if name.startswith('Paired') and not math.isnan(v) else _pct(v)
+                L.append(f'| {m} | {name} | {val} | {lim} | {"yes" if ok else "no"} |')
+        L += ['', '- Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check), and the sealed set within 5 points (separate run). Method: `benchmark/design.md`, section 7.5.']
     L += ['', '## Sub-scores', '',
           '| Model | Mode | Deterministic | Judged | Text | Table | Screenshot | Level 100 | Level 200 | Level 300 | Level 400 |',
           '|---|---|---|---|---|---|---|---|---|---|---|']
