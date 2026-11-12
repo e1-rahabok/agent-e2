@@ -1,4 +1,4 @@
-# Alerts, symptoms and insights
+# Alerts and insights
 
 ## Why alert storms happen
 - Operations that start from alerts are reactive by construction.
@@ -7,8 +7,8 @@
 - Alerts are set to close automatically when the symptom disappears. Then no alert is read as no problem: lazy operations.
 - Root cause: alerts used as a to-do list or a reminder, so that nothing is missed.
 
-## Observability is built in
-- Observability is built into the architecture, not added later: every component can be monitored, down to the smallest. A system that cannot be monitored does not go into production.
+## Observability & Architecture
+- Observability should be built into the system architecture, not added later: every component can be monitored, down to the smallest. A system that cannot be monitored does not go into production.
 - Many applications, software and hardware leave no trail for post-mortem analysis.
 - Observability is a property of the system. Monitoring is an action by an actor.
 - Peers: observability with debuggability; monitoring with troubleshooting.
