@@ -1,6 +1,6 @@
-# VMware ESXi 9.1 Memory Reclamation & State Machine Technical Manual
+# ESXi 9.1 Memory State & Reclamation
 
-## 1. Executive Summary & Overview
+## 1.  Overview
 
 VMware ESXi relies on the VMkernel memory manager (`VMKMEM`) to handle host physical memory allocation and reclamation dynamically. To prevent hypervisor thrashing and ensure stable virtual machine performance, ESXi enforces a state-driven memory reclamation model based on threshold percentages of the minimum free memory limit ($\text{minFree}$).
 
