@@ -19,6 +19,14 @@
   - infrastructure team, the main persona, with sub-personas such as the network team and the storage team;
   - security team, which looks at both, from the security side only.
 
+### Application team vs infrastructure team
+- Guest OS alerts go to the application team, not the infrastructure team.
+- In an overcommitted environment a VM can see contention. Let the infrastructure team act before the application team is alerted; this reduces blame:
+  - give the application team red only; keep orange for the infrastructure team as a heads-up;
+  - give the application team a higher threshold, such as VM CPU Ready above 8%, against 6% for the infrastructure team.
+- Infrastructure-level alerts, such as on ESXi, are not relevant to the application team.
+- Shared infrastructure alerts look at the population, not a few VMs: use 25% of the VM population as the overall threshold, with a lower per-VM threshold because 25% can mean hundreds of VMs. Applies to ESXi, resource pool and cluster; not Datacenter, whose clusters can serve different purposes.
+
 ## Class of service: which workload
 - Workloads are not equal: a mission-critical application matters more than its development copy.
 - Use the 3 classes of service: Gold (mission critical), Silver (standard production and DR), Bronze (test and development, non-production). More than 3 complicates operations.
@@ -140,14 +148,6 @@
 - A good recommendation is clear, lists its assumptions and gives the reason.
 - Root cause analysis today is mostly elimination and requires human knowledge of the architecture. Example: troubleshooting VKS requires knowledge of Kubernetes, vSphere and the VKS implementation.
 - Elimination is the method because a lower layer does not carry the identity of the upper layer: ESXi SCSI commands cannot be traced to a VM.
-
-## Application team vs infrastructure team
-- Guest OS alerts go to the application team, not the infrastructure team.
-- In an overcommitted environment a VM can see contention. Let the infrastructure team act before the application team is alerted; this reduces blame:
-  - give the application team red only; keep orange for the infrastructure team as a heads-up;
-  - give the application team a higher threshold, such as VM CPU Ready above 8%, against 6% for the infrastructure team.
-- Infrastructure-level alerts, such as on ESXi, are not relevant to the application team.
-- Shared infrastructure alerts look at the population, not a few VMs: use 25% of the VM population as the overall threshold, with a lower per-VM threshold because 25% can mean hundreds of VMs. Applies to ESXi, resource pool and cluster; not Datacenter, whose clusters can serve different purposes.
 
 ## Misconceptions
 - "Alert on everything so nothing is missed" → an alert nobody must act on today is noise. Use the daily dashboard.
