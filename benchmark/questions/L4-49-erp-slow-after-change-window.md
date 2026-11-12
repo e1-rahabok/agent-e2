@@ -17,7 +17,7 @@
   - erp-db NUMA, in esxtop: NHN 0,1; N%L 70%.
   - esx02: Core Utilization 55%, Thread Utilization 35%.
   - app-03: receive packets dropped 0.5%. The other application VMs: 0.
-  - Cluster Performance: 61, driven by Worst VM CPU Co-Stop.
+
 - The infrastructure manager proposes two changes for tonight: add 8 vCPUs to erp-db, and add a ninth host to the cluster.
 
 What is the most likely cause of the slowness? Weigh the evidence for and against CPU, memory, storage and network. Give the checks in order, what you change tonight, and what you do not change, with reasons.
