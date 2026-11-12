@@ -36,6 +36,6 @@ attachments: []
 origin: synthetic
 source_path: "Author's Gemini exchange, 2026-11-09"
 answer_type: judged
-level: 400
+level: 200
 status: draft
 ```
