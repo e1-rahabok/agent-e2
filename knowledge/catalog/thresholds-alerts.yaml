@@ -1,309 +1,768 @@
 meta:
   id: catalog/thresholds-alerts
-  title: 'Alert thresholds: performance and capacity'
+  title: 'Alert thresholds: symptoms and alert definitions'
   sections:
-    alerts: 'Reactive guard rails, intra-day. One row per alert and criticality: the main test, with the other tests and the wait time in condition. Independent of the KPI levels.'
+    symptoms: 'One test each: object, metric, operator, value, unit. Written once; alerts refer to it by id. A symptom is not an alert.'
+    alerts: 'Reactive guard rails, intra-day. One alert definition per alert and criticality: which symptoms, how they combine, on which objects, for how long. Independent of the KPI levels.'
   fields:
-    id: Stable key, unique across the threshold files.
-    metric: Metric as the knowledge file names it.
-    object: Managed object type.
+    id: Stable key, unique across the threshold files. Symptoms start with sym-, alerts with alert-.
+    object: 'Managed object type. A list means one definition per type in VCF Operations (ESXi, resource pool, cluster).'
     layer: Layer that produces the metric.
-    instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
+    metric: Metric as the knowledge file names it.
     interval: 20s (20-second peak), 5m (5-minute average), 2s (esxtop), 1d; empty until a source states it.
-    operator: '>, >=, <, <=, =, range.'
-    value: 'The number compared against; range: low end, value_high the high end.'
+    operator: '>, >=, <, <=, =.'
+    value: The number compared against.
     unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. Blank for a ratio or fraction: what it is a ratio of is in the metric name.'
-    condition: Another condition that must hold at the same time.
-    meaning: What the knowledge file says the value means.
+    role: 'issue (default): the problem itself. gate: not a problem; keeps the alert off idle objects (CPU Usage above 1 GHz, IOPS above 100).'
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
     kb: Knowledge file that states and explains the threshold.
-    quote: Only on rows whose number is still also written in prose; text copied from the kb file; lint checks it is still there.
+    quote: Text copied from the kb file; lint checks it is still there.
+    name: The alert as the knowledge file names it; red and orange of one alert share the name.
     criticality: red (VCF Operations Critical) or orange (Immediate). No yellow alert.
     pillar: performance or capacity. A capacity alert means a bug or a hardware availability issue took capacity away.
+    match: 'all or any: how the symptom sets of the alert combine.'
+    sets: 'Symptom sets. relation: self (the alert object) or child (its children of type object, with population, the share of them that must match, > 25% or >= 50%). match: all or any, inside the set. symptoms: ids.'
+    wait_cycles: 'Collection cycles (5 minutes) the sets must hold before the alert fires: the "for 15 minutes" of the knowledge file. 1 when the file states no wait.'
+
   review_notes:
-  - 'To do (project/design-thresholds.md, sections 8.4 and 15): split each row into symptoms with wait and cancel cycles, and add alert definitions (criticality, any or all, symptom ids). Today the wait
-    time is free text in condition.'
+  - 'To do (project/design-thresholds.md, section 9): cancel cycles, once approved. Today every symptom and alert clears after 1 cycle.'
+  - 'To check: wait cycles sit on the alert, as the knowledge files state them ("for 15 minutes, all of"). Broadcom advises the delay on the symptom (Alert Definition Best Practices, techdocs.broadcom.com); a shared symptom (CPU Usage above 1 GHz) is used with different waits, so moving it means one symptom per wait.'
   status: draft
-alerts:
-- id: alert-guest-os-cpu-queue-red
-  criticality: red
-  pillar: performance
-  metric: Guest OS Peak CPU Queue
+symptoms:
+- id: sym-guest-os-cpu-queue-above-20
   object: VirtualMachine
   layer: guest-os
+  metric: Guest OS Peak CPU Queue
+  interval: 20s
   operator: '>'
   value: 20
   unit: count
-  condition: VM CPU Net Run above 75%, for 15 minutes
-  meaning: Red alert (application team).
   source: knowledge-base
   kb: guest-os/system/configuration/guest-os-alerts
-  quote: 'Red: for 15 minutes, Guest OS Peak CPU Queue above 20 and VM CPU Net Run above 75%.'
-- id: alert-guest-os-disk-queue-red
-  criticality: red
-  pillar: performance
-  metric: Guest OS Disk Queue (20-second peak)
+  quote: "Guest OS Peak CPU Queue above 20"
+- id: sym-vm-cpu-net-run-above-75
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM CPU Net Run
+  operator: '>'
+  value: 75
+  unit: '%'
+  source: knowledge-base
+  kb: guest-os/system/configuration/guest-os-alerts
+  quote: "VM CPU Net Run above 75%"
+- id: sym-guest-os-disk-queue-above-10000
   object: VirtualMachine
   layer: guest-os
+  metric: Guest OS Disk Queue
+  interval: 20s
   operator: '>'
   value: 10000
   unit: count
-  condition: VM CPU Usage above 1 GHz, for 5 minutes
-  meaning: Red alert (application team).
   source: knowledge-base
   kb: guest-os/system/configuration/guest-os-alerts
-  quote: 'Red: for 5 minutes, 20-second peak Guest OS disk queue above 10,000 and VM CPU Usage above 1 GHz.'
-  interval: 20s
-- id: alert-guest-os-disk-queue-orange
-  criticality: orange
-  pillar: performance
-  metric: Guest OS Disk Queue (20-second peak)
+  quote: "Guest OS disk queue above 10,000"
+- id: sym-guest-os-disk-queue-above-5000
   object: VirtualMachine
   layer: guest-os
+  metric: Guest OS Disk Queue
+  interval: 20s
   operator: '>'
   value: 5000
   unit: count
-  condition: VM CPU Usage above 1 GHz, for 5 minutes
-  meaning: Orange alert (application team).
   source: knowledge-base
   kb: guest-os/system/configuration/guest-os-alerts
-  quote: 'Orange: for 5 minutes, 20-second peak Guest OS disk queue above 5,000 and VM CPU Usage above 1 GHz.'
-  interval: 20s
-- id: alert-vm-cpu-ready-red
-  criticality: red
-  pillar: performance
-  metric: VM CPU Ready
+  quote: "Guest OS disk queue above 5,000"
+- id: sym-vm-cpu-usage-above-1ghz
   object: VirtualMachine
   layer: virtual-motherboard
+  metric: VM CPU Usage
+  operator: '>'
+  value: 1
+  unit: GHz
+  role: gate
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "VM CPU Usage above 1 GHz"
+- id: sym-vm-peak-vcpu-ready-above-32
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Peak vCPU Ready
+  interval: 20s
+  operator: '>'
+  value: 32
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "VM Peak vCPU Ready above 32%"
+- id: sym-vm-cpu-ready-above-8
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM CPU Ready
   operator: '>'
   value: 8
   unit: '%'
-  condition: Peak vCPU Ready above 32%, CPU Contention above 8%, CPU Usage above 1 GHz
-  meaning: Red VM CPU contention alert.
   source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: VM CPU Ready above 8%;
-- id: alert-vm-cpu-ready-orange
-  criticality: orange
-  pillar: performance
-  metric: VM CPU Ready
+  quote: "VM CPU Ready above 8%"
+- id: sym-vm-cpu-ready-above-4
   object: VirtualMachine
   layer: virtual-motherboard
+  metric: VM CPU Ready
   operator: '>'
   value: 4
   unit: '%'
-  condition: Peak vCPU Ready above 32%, CPU Contention above 8%, CPU Usage above 1 GHz
-  meaning: Orange VM CPU contention alert.
   source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: VM CPU Ready above 4%;
-- id: alert-infra-cpu-peak-vcpu-ready-red
-  criticality: red
-  pillar: performance
-  metric: Peak vCPU Ready
-  object: ClusterComputeResource
+  quote: "VM CPU Ready above 4%"
+- id: sym-vm-cpu-contention-above-8
+  object: VirtualMachine
   layer: virtual-motherboard
+  metric: VM CPU Contention
+  operator: '>'
+  value: 8
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "VM CPU Contention above 8%"
+- id: sym-infra-peak-vcpu-ready-above-24
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  layer: virtual-motherboard
+  metric: Peak vCPU Ready
+  interval: 20s
   operator: '>'
   value: 24
   unit: '%'
-  condition: CPU Contention above 6%
-  meaning: Red infrastructure CPU contention alert (ESXi, resource pool, cluster).
   source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: Peak vCPU Ready above 24%;
-  interval: 20s
-- id: alert-infra-cpu-peak-vcpu-ready-orange
-  criticality: orange
-  pillar: performance
-  metric: Peak vCPU Ready
-  object: ClusterComputeResource
+  quote: "Peak vCPU Ready above 24%"
+- id: sym-infra-peak-vcpu-ready-above-12
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
   layer: virtual-motherboard
+  metric: Peak vCPU Ready
+  interval: 20s
   operator: '>'
   value: 12
   unit: '%'
-  condition: CPU Contention above 3%
-  meaning: Orange infrastructure CPU contention alert (ESXi, resource pool, cluster).
   source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: Peak vCPU Ready above 12%;
-  interval: 20s
-- id: alert-vm-cpu-net-run-red
-  criticality: red
-  pillar: performance
-  metric: VM CPU Net Run
-  object: VirtualMachine
+  quote: "Peak vCPU Ready above 12%"
+- id: sym-infra-cpu-contention-above-6
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
   layer: virtual-motherboard
-  operator: '>'
-  value: 95
-  unit: '%'
-  condition: Guest OS CPU Queue above 4, for 15 minutes
-  meaning: Red VM CPU consumption alert.
-  source: knowledge-base
-  kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: VM CPU Net Run above 95%;
-- id: alert-vm-memory-contention-red
-  criticality: red
-  pillar: performance
-  metric: VM Memory Contention
-  object: VirtualMachine
-  layer: virtual-motherboard
+  metric: CPU Contention
   operator: '>'
   value: 6
   unit: '%'
-  condition: Peak Memory Contention above 24%, CPU Usage above 1 GHz
-  meaning: Red VM memory contention alert.
   source: knowledge-base
-  kb: vsphere/technology/memory/configuration/memory-alerts
-  quote: VM Memory Contention above 6%;
-- id: alert-vm-memory-contention-orange
-  criticality: orange
-  pillar: performance
-  metric: VM Memory Contention
-  object: VirtualMachine
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "CPU Contention above 6%"
+- id: sym-infra-cpu-contention-above-3
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
   layer: virtual-motherboard
+  metric: CPU Contention
   operator: '>'
   value: 3
   unit: '%'
-  condition: Peak Memory Contention above 12%, CPU Usage above 1 GHz
-  meaning: Orange VM memory contention alert.
-  source: knowledge-base
-  kb: vsphere/technology/memory/configuration/memory-alerts
-  quote: VM Memory Contention above 3%;
-- id: alert-infra-memory-contention-red
-  criticality: red
-  pillar: performance
-  metric: Memory Contention
-  object: ClusterComputeResource
-  layer: virtual-motherboard
-  operator: '>'
-  value: 4
-  unit: '%'
-  condition: Peak Memory Contention above 16%
-  meaning: Red infrastructure memory contention alert (ESXi, resource pool, cluster).
-  source: knowledge-base
-  kb: vsphere/technology/memory/configuration/memory-alerts
-  quote: Memory Contention above 4%.
-- id: alert-infra-memory-contention-orange
-  criticality: orange
-  pillar: performance
-  metric: Memory Contention
-  object: ClusterComputeResource
-  layer: virtual-motherboard
-  operator: '>'
-  value: 2
-  unit: '%'
-  condition: Peak Memory Contention above 8%
-  meaning: Orange infrastructure memory contention alert (ESXi, resource pool, cluster).
-  source: knowledge-base
-  kb: vsphere/technology/memory/configuration/memory-alerts
-  quote: Memory Contention above 2%.
-- id: alert-vm-disk-latency-red
-  criticality: red
-  pillar: performance
-  metric: VM Disk Read or Write Latency (average)
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>'
-  value: 80
-  unit: ms
-  condition: Peak Disk Latency above 320 ms, CPU Usage above 1 GHz, IOPS of that direction above 100, for 10 minutes
-  meaning: Red VM disk latency alert.
-  source: knowledge-base
-  kb: vsphere/technology/storage/configuration/storage-alerts
-  quote: VM Disk Read Latency (average) above 80 ms;
-- id: alert-vm-disk-latency-orange
-  criticality: orange
-  pillar: performance
-  metric: VM Disk Read or Write Latency (average)
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>'
-  value: 40
-  unit: ms
-  condition: Peak Disk Latency above 160 ms, CPU Usage above 1 GHz, IOPS of that direction above 100, for 10 minutes
-  meaning: Orange VM disk latency alert.
-  source: knowledge-base
-  kb: vsphere/technology/storage/configuration/storage-alerts
-  quote: VM Disk Read Latency (average) above 40 ms;
-- id: alert-vm-network-tx-dropped-red
-  criticality: red
-  pillar: performance
-  metric: VM Network Transmitted Packets Dropped
-  object: VirtualMachine
-  layer: virtual-motherboard
-  operator: '>'
-  value: 4
-  unit: '%'
-  meaning: Red VM network alert.
-  source: knowledge-base
-  kb: vsphere/technology/network/configuration/network-alerts
-  quote: 'Red: transmitted packets dropped above 4%.'
-  interval: 20s
-- id: alert-esxi-network-tx-dropped-red
-  criticality: red
-  pillar: performance
-  metric: ESXi Network Transmitted Packets Dropped
-  object: HostSystem
-  layer: hypervisor
-  operator: '>'
-  value: 50
-  unit: count
-  condition: virtual or physical network, each
-  meaning: Red ESXi network alert.
-  source: knowledge-base
-  kb: vsphere/technology/network/configuration/network-alerts
-  quote: 'Red: more than 50 transmitted packets dropped on the virtual network.'
-- id: alert-dpg-dropped-red
-  criticality: red
-  pillar: performance
-  metric: Distributed Port Group Packets Dropped
-  object: DistributedVirtualPortgroup
-  layer: hypervisor
-  operator: '>'
-  value: 10
-  unit: '%'
-  meaning: Red distributed port group alert.
-  source: knowledge-base
-  kb: vsphere/technology/network/configuration/network-alerts
-  quote: 'Red: dropped packets above 10%.'
-- id: alert-esxi-cpu-thread-utilization-red
-  criticality: red
-  pillar: capacity
-  metric: ESXi CPU Thread Utilization
-  object: HostSystem
-  layer: hypervisor
-  operator: '>'
-  value: 40
-  unit: '%'
-  condition: ESXi CPU Core Utilization above 80%, for 10 minutes; cluster when more than 25% of hosts
-  meaning: Red infrastructure CPU consumption alert.
   source: knowledge-base
   kb: vsphere/technology/cpu/configuration/cpu-alerts
-  quote: ESXi CPU Thread Utilization above 40%;
-- id: alert-esxi-memory-consumed-red
-  criticality: red
-  pillar: capacity
-  metric: ESXi Memory Consumed
-  object: HostSystem
-  layer: hypervisor
+  quote: "CPU Contention above 3%"
+- id: sym-vm-cpu-net-run-above-95
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM CPU Net Run
   operator: '>'
   value: 95
   unit: '%'
-  condition: ESXi Memory Ballooned above 10 MB, for 10 minutes; cluster when 50% of hosts
-  meaning: Red infrastructure memory consumption alert.
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "VM CPU Net Run above 95%"
+- id: sym-guest-os-cpu-queue-above-4
+  object: VirtualMachine
+  layer: guest-os
+  metric: Guest OS CPU Queue
+  operator: '>'
+  value: 4
+  unit: count
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "Guest OS CPU Queue above 4"
+- id: sym-esxi-cpu-thread-utilization-above-40
+  object: HostSystem
+  layer: hypervisor
+  metric: ESXi CPU Thread Utilization
+  operator: '>'
+  value: 40
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "ESXi CPU Thread Utilization above 40%"
+- id: sym-esxi-cpu-core-utilization-above-80
+  object: HostSystem
+  layer: hypervisor
+  metric: ESXi CPU Core Utilization
+  operator: '>'
+  value: 80
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+  quote: "ESXi CPU Core Utilization above 80%"
+- id: sym-vm-peak-memory-contention-above-24
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Peak Memory Contention
+  interval: 20s
+  operator: '>'
+  value: 24
+  unit: '%'
   source: knowledge-base
   kb: vsphere/technology/memory/configuration/memory-alerts
-  quote: ESXi Memory Consumed above 95%.
-- id: alert-datastore-used-space-red
-  criticality: red
-  pillar: capacity
-  metric: Datastore Used Space
+  quote: "VM Peak Memory Contention above 24%"
+- id: sym-vm-peak-memory-contention-above-12
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Peak Memory Contention
+  interval: 20s
+  operator: '>'
+  value: 12
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "VM Peak Memory Contention above 12%"
+- id: sym-vm-memory-contention-above-6
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Memory Contention
+  operator: '>'
+  value: 6
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "VM Memory Contention above 6%"
+- id: sym-vm-memory-contention-above-3
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Memory Contention
+  operator: '>'
+  value: 3
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "VM Memory Contention above 3%"
+- id: sym-infra-peak-memory-contention-above-16
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  layer: virtual-motherboard
+  metric: Peak Memory Contention
+  interval: 20s
+  operator: '>'
+  value: 16
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "Peak Memory Contention above 16%"
+- id: sym-infra-peak-memory-contention-above-8
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  layer: virtual-motherboard
+  metric: Peak Memory Contention
+  interval: 20s
+  operator: '>'
+  value: 8
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "Peak Memory Contention above 8%"
+- id: sym-infra-memory-contention-above-4
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  layer: virtual-motherboard
+  metric: Memory Contention
+  operator: '>'
+  value: 4
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "Memory Contention above 4%"
+- id: sym-infra-memory-contention-above-2
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  layer: virtual-motherboard
+  metric: Memory Contention
+  operator: '>'
+  value: 2
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "Memory Contention above 2%"
+- id: sym-esxi-memory-ballooned-above-10mb
+  object: HostSystem
+  layer: hypervisor
+  metric: ESXi Memory Ballooned
+  operator: '>'
+  value: 10
+  unit: MB
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "ESXi Memory Ballooned above 10 MB"
+- id: sym-esxi-memory-consumed-above-95
+  object: HostSystem
+  layer: hypervisor
+  metric: ESXi Memory Consumed
+  operator: '>'
+  value: 95
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+  quote: "ESXi Memory Consumed above 95%"
+- id: sym-vm-disk-read-latency-above-80
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Disk Read Latency (average)
+  interval: 5m
+  operator: '>'
+  value: 80
+  unit: ms
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Disk Read Latency (average) above 80 ms"
+- id: sym-vm-disk-read-latency-above-40
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Disk Read Latency (average)
+  interval: 5m
+  operator: '>'
+  value: 40
+  unit: ms
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Disk Read Latency (average) above 40 ms"
+- id: sym-vm-disk-write-latency-above-80
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Disk Write Latency (average)
+  interval: 5m
+  operator: '>'
+  value: 80
+  unit: ms
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Disk Write Latency above 80 ms"
+- id: sym-vm-disk-write-latency-above-40
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Disk Write Latency (average)
+  interval: 5m
+  operator: '>'
+  value: 40
+  unit: ms
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Disk Write Latency above 40 ms"
+- id: sym-vm-peak-disk-latency-above-320
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Peak Disk Latency (read or write)
+  interval: 20s
+  operator: '>'
+  value: 320
+  unit: ms
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Peak Disk Latency (read or write) above 320 ms"
+- id: sym-vm-peak-disk-latency-above-160
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Peak Disk Latency (read or write)
+  interval: 20s
+  operator: '>'
+  value: 160
+  unit: ms
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Peak Disk Latency (read or write) above 160 ms"
+- id: sym-vm-disk-read-iops-above-100
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Disk Read IOPS
+  operator: '>'
+  value: 100
+  unit: IOPS
+  role: gate
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Disk Read IOPS above 100"
+- id: sym-vm-disk-write-iops-above-100
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Disk Write IOPS
+  operator: '>'
+  value: 100
+  unit: IOPS
+  role: gate
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+  quote: "VM Disk Write IOPS above 100"
+- id: sym-datastore-used-space-above-90
   object: Datastore
   layer: physical
+  metric: Datastore Used Space
   operator: '>'
   value: 90
   unit: '%'
-  meaning: Red datastore consumption alert.
   source: knowledge-base
   kb: vsphere/technology/storage/configuration/storage-alerts
-  quote: 'Datastore, red: used space above 90%.'
+  quote: "used space above 90%"
+- id: sym-vm-network-tx-dropped-above-4
+  object: VirtualMachine
+  layer: virtual-motherboard
+  metric: VM Network Transmitted Packets Dropped
+  interval: 20s
+  operator: '>'
+  value: 4
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts
+  quote: "transmitted packets dropped above 4%"
+- id: sym-esxi-vnet-tx-dropped-above-50
+  object: HostSystem
+  layer: hypervisor
+  metric: ESXi Network Transmitted Packets Dropped, virtual network
+  operator: '>'
+  value: 50
+  unit: count
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts
+  quote: "more than 50 transmitted packets dropped on the virtual network"
+- id: sym-esxi-pnet-tx-dropped-above-50
+  object: HostSystem
+  layer: hypervisor
+  metric: ESXi Network Transmitted Packets Dropped, physical network
+  operator: '>'
+  value: 50
+  unit: count
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts
+  quote: "more than 50 transmitted packets dropped on the physical network"
+- id: sym-dpg-dropped-above-10
+  object: DistributedVirtualPortgroup
+  layer: hypervisor
+  metric: Distributed Port Group Packets Dropped
+  operator: '>'
+  value: 10
+  unit: '%'
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts
+  quote: "dropped packets above 10%"
+alerts:
+- id: alert-guest-os-cpu-queue-red
+  name: Guest OS CPU run queue
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-guest-os-cpu-queue-above-20, sym-vm-cpu-net-run-above-75]
+  wait_cycles: 3
+  source: knowledge-base
+  kb: guest-os/system/configuration/guest-os-alerts
+- id: alert-guest-os-disk-queue-red
+  name: Guest OS disk queue
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-guest-os-disk-queue-above-10000, sym-vm-cpu-usage-above-1ghz]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: guest-os/system/configuration/guest-os-alerts
+- id: alert-guest-os-disk-queue-orange
+  name: Guest OS disk queue
+  criticality: orange
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-guest-os-disk-queue-above-5000, sym-vm-cpu-usage-above-1ghz]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: guest-os/system/configuration/guest-os-alerts
+- id: alert-vm-cpu-contention-red
+  name: VM CPU contention
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-peak-vcpu-ready-above-32, sym-vm-cpu-ready-above-8, sym-vm-cpu-contention-above-8, sym-vm-cpu-usage-above-1ghz]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-vm-cpu-contention-orange
+  name: VM CPU contention
+  criticality: orange
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-peak-vcpu-ready-above-32, sym-vm-cpu-ready-above-4, sym-vm-cpu-contention-above-8, sym-vm-cpu-usage-above-1ghz]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-infra-cpu-contention-red
+  name: Infrastructure CPU contention
+  criticality: red
+  pillar: performance
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-infra-peak-vcpu-ready-above-24, sym-infra-cpu-contention-above-6]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-infra-cpu-contention-orange
+  name: Infrastructure CPU contention
+  criticality: orange
+  pillar: performance
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-infra-peak-vcpu-ready-above-12, sym-infra-cpu-contention-above-3]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-vm-cpu-consumption-red
+  name: VM CPU consumption
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-cpu-net-run-above-95, sym-guest-os-cpu-queue-above-4]
+  wait_cycles: 3
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-esxi-cpu-consumption-red
+  name: ESXi CPU consumption
+  criticality: red
+  pillar: capacity
+  object: HostSystem
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-esxi-cpu-thread-utilization-above-40, sym-esxi-cpu-core-utilization-above-80]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-cluster-cpu-consumption-red
+  name: Cluster CPU consumption
+  criticality: red
+  pillar: capacity
+  object: ClusterComputeResource
+  match: all
+  sets:
+  - relation: child
+    object: HostSystem
+    population: '> 25%'
+    match: all
+    symptoms: [sym-esxi-cpu-thread-utilization-above-40, sym-esxi-cpu-core-utilization-above-80]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/cpu/configuration/cpu-alerts
+- id: alert-vm-memory-contention-red
+  name: VM memory contention
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-peak-memory-contention-above-24, sym-vm-memory-contention-above-6, sym-vm-cpu-usage-above-1ghz]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+- id: alert-vm-memory-contention-orange
+  name: VM memory contention
+  criticality: orange
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-peak-memory-contention-above-12, sym-vm-memory-contention-above-3, sym-vm-cpu-usage-above-1ghz]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+- id: alert-infra-memory-contention-red
+  name: Infrastructure memory contention
+  criticality: red
+  pillar: performance
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-infra-peak-memory-contention-above-16, sym-infra-memory-contention-above-4]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+- id: alert-infra-memory-contention-orange
+  name: Infrastructure memory contention
+  criticality: orange
+  pillar: performance
+  object: [HostSystem, ResourcePool, ClusterComputeResource]
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-infra-peak-memory-contention-above-8, sym-infra-memory-contention-above-2]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+- id: alert-esxi-memory-consumption-red
+  name: ESXi memory consumption
+  criticality: red
+  pillar: capacity
+  object: HostSystem
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-esxi-memory-ballooned-above-10mb, sym-esxi-memory-consumed-above-95]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+- id: alert-cluster-memory-consumption-red
+  name: Cluster memory consumption
+  criticality: red
+  pillar: capacity
+  object: ClusterComputeResource
+  match: all
+  sets:
+  - relation: child
+    object: HostSystem
+    population: '>= 50%'
+    match: all
+    symptoms: [sym-esxi-memory-ballooned-above-10mb, sym-esxi-memory-consumed-above-95]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/memory/configuration/memory-alerts
+- id: alert-vm-disk-read-latency-red
+  name: VM disk read latency
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-disk-read-latency-above-80, sym-vm-peak-disk-latency-above-320, sym-vm-cpu-usage-above-1ghz, sym-vm-disk-read-iops-above-100]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+- id: alert-vm-disk-write-latency-red
+  name: VM disk write latency
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-disk-write-latency-above-80, sym-vm-peak-disk-latency-above-320, sym-vm-cpu-usage-above-1ghz, sym-vm-disk-write-iops-above-100]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+- id: alert-vm-disk-read-latency-orange
+  name: VM disk read latency
+  criticality: orange
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-disk-read-latency-above-40, sym-vm-peak-disk-latency-above-160, sym-vm-cpu-usage-above-1ghz, sym-vm-disk-read-iops-above-100]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+- id: alert-vm-disk-write-latency-orange
+  name: VM disk write latency
+  criticality: orange
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-disk-write-latency-above-40, sym-vm-peak-disk-latency-above-160, sym-vm-cpu-usage-above-1ghz, sym-vm-disk-write-iops-above-100]
+  wait_cycles: 2
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+- id: alert-datastore-used-space-red
+  name: Datastore consumption
+  criticality: red
+  pillar: capacity
+  object: Datastore
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-datastore-used-space-above-90]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/storage/configuration/storage-alerts
+- id: alert-vm-network-tx-dropped-red
+  name: VM dropped packets
+  criticality: red
+  pillar: performance
+  object: VirtualMachine
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-vm-network-tx-dropped-above-4]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts
+- id: alert-esxi-network-tx-dropped-red
+  name: ESXi dropped packets
+  criticality: red
+  pillar: performance
+  object: HostSystem
+  match: all
+  sets:
+  - relation: self
+    match: any
+    symptoms: [sym-esxi-vnet-tx-dropped-above-50, sym-esxi-pnet-tx-dropped-above-50]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts
+- id: alert-dpg-dropped-red
+  name: Distributed port group dropped packets
+  criticality: red
+  pillar: performance
+  object: DistributedVirtualPortgroup
+  match: all
+  sets:
+  - relation: self
+    match: all
+    symptoms: [sym-dpg-dropped-above-10]
+  wait_cycles: 1
+  source: knowledge-base
+  kb: vsphere/technology/network/configuration/network-alerts

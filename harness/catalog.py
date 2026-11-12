@@ -7,7 +7,8 @@ Tables:
   counters    vCenter chart counters (knowledge/catalog/vcenter-counters.yaml)
   api_counters  counters as the vCenter API returns them, with API units (knowledge/catalog/vcenter-api-counters.yaml)
   esxtop      esxtop panel fields (knowledge/catalog/esxtop-fields.yaml)
-  thresholds  one-value tests, labelled by use: alert (thresholds-alerts.yaml), decision, rule (thresholds-capacity.yaml)
+  thresholds  one-value tests, labelled by use: decision, rule (thresholds-capacity.yaml)
+  symptoms, alerts, alert_symptoms   alert definitions: one test per symptom, alerts combine them (thresholds-alerts.yaml)
   bands       capacity model inputs with colour bands (thresholds-capacity.yaml, models)
   kpi         KPI colour levels, the one copy (thresholds-performance.yaml, kpi)
   metrics     one row per knowledge metric file, from its metadata
@@ -96,6 +97,10 @@ class Catalog:
           CREATE TABLE relations (src TEXT, dst TEXT, kind TEXT, cardinality TEXT);
           CREATE TABLE kpi (object TEXT, metric TEXT, grp TEXT, direction TEXT, m5 TEXT, s20 TEXT, s2 TEXT, excluded INT, src TEXT);
           CREATE TABLE formulas (formula TEXT, source TEXT);
+          CREATE TABLE symptoms (id TEXT, object TEXT, layer TEXT, metric TEXT, interval TEXT, operator TEXT, value REAL, unit TEXT,
+                                 role TEXT, source TEXT, kb TEXT, test TEXT);
+          CREATE TABLE alerts (id TEXT, name TEXT, criticality TEXT, pillar TEXT, object TEXT, wait INT, rule TEXT, source TEXT, kb TEXT);
+          CREATE TABLE alert_symptoms (alert TEXT, symptom TEXT);
         ''')
         for r in load_yaml('vcenter-api-counters.yaml')['rows']:
             c.execute('INSERT INTO api_counters VALUES (?,?,?,?,?,?,?,?,?)',
@@ -117,9 +122,9 @@ class Catalog:
             c.execute('INSERT INTO formulas VALUES (?,?)', (f['formula'], f'esxtop {f["panel"]} panel, {doc}, p. {f["page"]}'))
         # Threshold files are split by use: the section name is the use (one place; no use field on the rows).
         perf, cap, al = (load_yaml(f'thresholds-{n}.yaml') for n in ('performance', 'capacity', 'alerts'))
-        tests = [(al, 'alerts', None), (cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity')]
+        tests = [(cap, 'decisions', 'capacity'), (cap, 'rules', 'capacity')]
         for data, section, pillar in tests:
-            use = {'alerts': 'alert', 'decisions': 'decision', 'rules': 'rule'}.get(section, section)
+            use = {'decisions': 'decision', 'rules': 'rule'}.get(section, section)
             for r in data.get(section) or []:
                 c.execute('INSERT INTO thresholds VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                           (r['id'], use, r.get('criticality'), r.get('class'), r.get('pillar') or pillar, r['metric'], r.get('object'),
@@ -130,6 +135,23 @@ class Catalog:
             c.execute('INSERT INTO bands VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
                       (r['kb'], r.get('group') or '', r['metric'], r.get('object') or '', b.get('grey'), b['green'], b['yellow'],
                        b['orange'], b['red'], r['source'], 'capacity', r.get('interval')))
+        # Alerts: a symptom is one test, written once; an alert definition combines symptoms (all or any, on itself or its children).
+        tests_by_id = {}
+        for s in al.get('symptoms') or []:
+            tests_by_id[s['id']] = _test(s)
+            c.execute('INSERT INTO symptoms VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+                      (s['id'], _objs(s['object']), s.get('layer'), s['metric'], s.get('interval'), s['operator'], s['value'],
+                       s.get('unit'), s.get('role', 'issue'), s['source'], s['kb'], tests_by_id[s['id']]))
+        for a in al.get('alerts') or []:
+            parts = []
+            for st in a['sets']:
+                where = '' if st['relation'] == 'self' else f"on its {st['object']} children, {st['population']} of them: "
+                parts.append(where + f"{st['match']} of: " + '; '.join(tests_by_id[x] for x in st['symptoms']))
+                for x in st['symptoms']:
+                    c.execute('INSERT INTO alert_symptoms VALUES (?,?)', (a['id'], x))
+            rule = f" {a['match'].upper()} ".join(parts)
+            c.execute('INSERT INTO alerts VALUES (?,?,?,?,?,?,?,?,?)', (a['id'], a['name'], a['criticality'], a['pillar'], _objs(a['object']),
+                      a['wait_cycles'], rule, a['source'], a['kb']))
         # KPI levels: the one place for performance colour levels; no knowledge file repeats them.
         for lv in perf.get('kpi') or []:
             c.execute('INSERT INTO kpi VALUES (?,?,?,?,?,?,?,?,?)', (lv['object'], lv['metric'], lv.get('group'), lv['direction'],
@@ -235,11 +257,22 @@ class Catalog:
                 s //= 2
             if s:
                 lv.append((s, r))
-        th, bd, lv = _best(th, limit), _best(bd, limit), _best(lv, limit)
+        # Alerts: through their symptoms (metric name) or their file. All symptoms of an alert come with it.
+        al = {}
+        for r in self._q('SELECT s.metric, s.object AS sobj, s.kb AS skb, a.* FROM symptoms s JOIN alert_symptoms x ON x.symptom = s.id '
+                         'JOIN alerts a ON a.id = x.alert'):
+            s = 50 if r['kb'] in kb_ids or r['skb'] in kb_ids else 0
+            s += _score(key, words, exact=[r['metric'].lower()], text=r['metric'].lower(), desc='') if key else 0
+            if obj and obj not in r['object'].split(', ') and obj not in r['sobj'].split(', '):
+                s //= 2
+            if s and s > al.get(r['id'], (0, None))[0]:
+                al[r['id']] = (s, r)
+        th, bd, lv, al = _best(th, limit), _best(bd, limit), _best(lv, limit), _best(list(al.values()), limit)
         return {'thresholds': [_compact(r, ('use', 'criticality', 'class', 'metric', 'object', 'instance', 'interval', 'operator', 'value',
                                             'value_high', 'unit', 'condition', 'meaning', 'source', 'kb')) for r in th],
                 'bands': [_compact(r, ('metric', 'grp', 'grey', 'green', 'yellow', 'orange', 'red', 'interval', 'pillar', 'kb')) for r in bd],
-                'kpi': [_kpi(r) for r in lv]}
+                'kpi': [_kpi(r) for r in lv],
+                'alerts': [_alert(r) for r in al]}
 
     def object_info(self, type_):
         t = norm_object(type_)
@@ -293,6 +326,10 @@ class Catalog:
             iv = f" ({r['interval']})" if r['interval'] else ''
             lines.append(f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
                          f"(source: {r['source']}) [{r['kb']}]")
+        for r in self._q(f'SELECT DISTINCT a.* FROM alerts a JOIN alert_symptoms x ON x.alert = a.id JOIN symptoms s ON s.id = x.symptom '
+                         f'WHERE a.kb IN ({marks}) OR s.kb IN ({marks})', tuple(ids) * 2):
+            a = _alert(r)
+            lines.append(f"- Alert, {a['criticality']}: {a['name']} ({a['object']}), {a['rule']}; {a['wait']}. [{a['kb']}]")
         for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
             worse = 'higher is worse' if r['direction'] == 'above' else 'lower is worse'
             vals = '; '.join(f"{iv} {_ranges(r[col])}" for iv, col in (('20s', 's20'), ('5m', 'm5'), ('2s', 's2')))
@@ -307,7 +344,7 @@ class Catalog:
 
     def stats(self):
         return {t: self._q(f'SELECT COUNT(*) AS n FROM {t}')[0]['n']
-                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'bands', 'kpi', 'metrics', 'objects', 'relations')}
+                for t in ('counters', 'api_counters', 'esxtop', 'thresholds', 'symptoms', 'alerts', 'bands', 'kpi', 'metrics', 'objects', 'relations')}
 
 
 def _esx_key(s):
@@ -340,13 +377,32 @@ def _best(scored, limit, keep=0.6):
     return [r for s, r in scored if s >= top * keep][:limit]
 
 
-USE_LABELS = {'alert': 'Alert', 'decision': 'Capacity decision', 'rule': 'Capacity rule'}
+USE_LABELS = {'decision': 'Capacity decision', 'rule': 'Capacity rule'}
 
 
 def _use_label(r):
     """What the number is for, first in every line: a KPI level, an alert and a capacity rule for one metric differ."""
     extra = r['class'] or r['criticality']
     return USE_LABELS.get(r['use'], r['use']) + (f', {extra}' if extra else '')
+
+
+def _objs(o):
+    return ', '.join(o) if isinstance(o, list) else o
+
+
+def _test(s):
+    """One symptom as text: 'VM Peak vCPU Ready (20s) > 32 %'; a gate is marked."""
+    iv = f" ({s['interval']})" if s.get('interval') else ''
+    unit = f" {s['unit']}" if s.get('unit') else ''
+    gate = ' (gate)' if s.get('role') == 'gate' else ''
+    return f"{s['metric']}{iv} {s['operator']} {s['value']:g}{unit}{gate}"
+
+
+def _alert(r):
+    w = r['wait']
+    wait = f"for {w} cycles ({w * 5} minutes)" if w > 1 else 'fires after 1 cycle (5 minutes)'
+    return {'id': r['id'], 'name': r['name'], 'criticality': r['criticality'], 'pillar': r['pillar'], 'object': r['object'],
+            'rule': r['rule'], 'wait': wait, 'source': r['source'], 'kb': r['kb']}
 
 
 def _ranges(cell):
