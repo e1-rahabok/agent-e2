@@ -26,8 +26,18 @@ Consumed = Granted - savings (sharing)
 - Capped by a limit. Can reach, not exceed, configured memory.
 - vCenter Guest | Memory Usage is the same as Consumed. Do not use it.
 
+## Mechanism: second-level page tables
+- Three address spaces: guest virtual (the application's), guest physical (the memory the VM presents to the Guest OS) and machine pages (ESXi's physical memory).
+- The CPU translates guest physical to machine pages in hardware, through second-level page tables (Intel EPT, AMD RVI). The Guest OS keeps its own page tables for guest virtual to guest physical.
+- First touch: the guest writes a guest physical page with no mapping. The CPU raises an EPT violation, the VMkernel allocates a machine page, writes the mapping and resumes the vCPU. Consumed grows by 4 KB, or 2 MB with large pages.
+- The mapping stays until ESXi reclaims the page (sharing, balloon, compression, swap). Nothing else removes it.
+- An idle guest does not shrink Consumed: halting or waiting vCPUs do not touch the page tables, and with free host memory ESXi has no reason to reclaim.
+- The same holds on KVM and Hyper-V: memory is mapped on demand and kept, unless the guest reports free pages through a cooperating driver.
+
 ## Consumed after the guest frees memory
 - A guest that frees a page only updates its free list. The hypervisor does not see the list, so the ESXi page stays mapped.
+- The free list is ordinary guest memory, already mapped, so updating it causes no VM exit. Freed pages are not zeroed or handed back.
+- When the guest later gives those pages to a new process, the existing mapping is reused: no EPT violation, no ESXi work, no swap and no balloon. Consumed does not move. VMware Tools plays no part here.
 - So Consumed is higher than Guest OS In Use and stays high after Active has dropped.
 - Consumed and Guest OS In Use are managed independently. They do not match.
 - Consumed below Guest OS Used: check Shared and Zero pages.
@@ -64,7 +74,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed; section Mechanism from the author's hypervisor memory management manual (project/sources/hypervisor_memory_management_manual.md)
 corrections: []
 review_notes:
 - 'Section ''View'': from Memory > Architecture.'

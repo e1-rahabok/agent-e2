@@ -14,13 +14,13 @@ Why did page sharing jump now and not before? How much memory does it save, and 
 
 ## Expected key points
 - ESXi backs VM memory with 2 MB large pages whenever it can, and it does not share large pages. That is why sharing stayed tiny for weeks.
-- As free memory fell below the high-state threshold (a multiple of minFree; sources give 300% or 400%, about 25-33 GB here, with minFree about 8 GB), ESXi breaks large pages so that page sharing can collapse identical 4 KB pages. By default only pages within each VM are shared (salting).
+- Free memory fell below 300% of minFree (about 25 GB here, with minFree about 8 GB): the host left the high state for the clear state. In clear, ESXi stops backing new memory with large pages and breaks existing ones, so page sharing can collapse identical 4 KB pages. By default only pages within each VM are shared (salting).
 - The saving is Shared minus Shared common: about 42 GB, which matches Consumed falling from about 755 to 713 GB. Shared counts the pages that point to a shared page; Shared common counts the shared pages themselves.
 - The jump is a leading signal: free memory fell far enough for ESXi to start working for memory. The next steps down are ballooning (soft state), then compression and swap. Plan now (move VMs or add capacity) rather than wait for them.
 - Broken large pages cost the VMs some TLB efficiency.
 
 ## Notes
-- High at 400% of minFree, and large pages broken between high and clear: Duncan Epping, yellow-bricks.com (memory states in vSphere 6.0, corrected from 300%); the knowledge base says 300%. The key accepts either. Large pages not shared, and sharing that appears only when overcommitment breaks them: Performance Best Practices for vSphere 9.1, Memory Page Sharing and Large Memory Pages. Saving = Shared - Shared common: the knowledge base, ESXi Memory Shared and Shared Common.
+- Clear entered below 300% of minFree, back to high only above 400%; large pages broken in clear: author answer Q188 (ESXi 9.1 memory reclamation manual, project/sources) and the knowledge base, ESXi memory states. Large pages not shared, and sharing that appears only when overcommitment breaks them: Performance Best Practices for vSphere 9.1, Memory Page Sharing and Large Memory Pages. Saving = Shared - Shared common: the knowledge base, ESXi Memory Shared and Shared Common.
 - minFree for 768 GB: about 899 MB for the first 28 GB plus 1% of the rest, about 8.3 GB (Frank Denneman, Mem.MinFreePct sliding scale).
 
 ## Metadata

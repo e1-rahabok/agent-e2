@@ -32,7 +32,7 @@
 - Ready includes time held back by a limit. The effect on the vCPU is the same.
 - Under a limit the vCPU sits in the limbo queue. vCenter also reports this part as Max Limited (ms).
 - Resource pools can apply limits unintentionally.
-- Example: 4-vCPU VM on a 2.7 GHz CPU (10.77 GHz capacity) with a 4 GHz limit. Usage stopped at 3.95 GHz, Demand reached 6.6 GHz, Ready spiked to 40%.
+- Example: 4-vCPU VM on a 2.7 GHz CPU (10.77 GHz capacity) with a 4 GHz limit. Usage stopped at 3.95 GHz and Ready spiked to 40%. Demand does not show the held-back time: see [`vsphere/technology/cpu/metrics/virtual-motherboard/demand`](demand.md), section Not unmet demand.
 
 ## Floor and size
 - Ready includes CPU scheduling cost (normally microseconds). It is not a flat 0 on an idle VM.

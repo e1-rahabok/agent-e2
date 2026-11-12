@@ -152,6 +152,12 @@ rows:
   means: overcommit allocation ratio contention
   note: 'Only allocation can be overcommitted. A ratio says nothing about performance by itself; contention does.'
   files: [sp5-framework/capacity/overcommit, vsphere/architecture/resource-controls]
+- id: vm-sizing
+  match: ['\bsiz(e|ing) (the |a |this |my )?(vm|virtual machine)s?\b', '\b(vm|virtual machine) (cpu |memory )?siz(e|ing)\b', 'counter to (size|right-?size)']
+  means: Guest OS sizing Net Run run queue
+  note: 'VM sizing almost always means Guest OS sizing: Windows or Linux, from Net Run and the Guest OS run queue and memory counters, not VM Demand or Usage. Name that reading; the other meaning is the VM footprint ESXi gives it.'
+  files: [guest-os/system/concepts/guest-os-sizing, vsphere/technology/cpu/metrics/virtual-motherboard/net-run, vsphere/architecture/vm-vs-guest-os]
+  premise: true
 - id: rightsizing
   match: ['right-?siz', 'oversized', 'undersized', 'downsiz']
   means: Guest OS sizing VM footprint rightsizing

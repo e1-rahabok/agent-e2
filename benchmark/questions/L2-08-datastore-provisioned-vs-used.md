@@ -17,14 +17,14 @@ A: reading provisioned space as used space.
 ## Expected key points
 - Answer: B, C.
 - B: Virtual Machine Used adds up to about 6.2 TB (6,177 GB), under the 10 TB capacity.
-- C: Provisioned Space counts thin disks at their full configured size (14,100 GB, about 14 TB). 25 of the 29 VMs are thin: the datastore is overcommitted, a risk if the disks grow.
+- C: Provisioned Space counts thin disks at their full configured size (14,100 GB, about 14 TB). All 29 VMs are thin: the datastore is overcommitted, a risk if the disks grow.
 - A is wrong: provisioned space is not space in use.
 - D is wrong: provisioned space measures what the disks may claim, the input of an overcommit ratio, not the space in use. Whether DS01 is full is read from used space against capacity.
 
 ## Notes
 - Previous id: question-0046 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- CSV supplied by the author 2026-11-05 (VM names masked): Provisioned 14,100 GB, Virtual Machine Used 6,177.23 GB, snapshots 128.99 GB; 25 of 29 VMs thin.
+- CSV supplied by the author 2026-11-05 (VM names masked): Provisioned 14,100 GB, Virtual Machine Used 6,177.23 GB, snapshots 128.99 GB. 2026-11-12 (author, Q183): every disk thin (4 rows were marked thick with used below provisioned, which a thick disk cannot show); header typo and empty last column fixed.
 
 ## Metadata
 ```yaml

@@ -6,17 +6,21 @@
 - Contention happens at hypervisor level. VMs feel its side effects. The degree per VM depends on shares, reservation and utilization.
 
 ## States
-| State | Threshold (% of minFree) | Free memory (1 TB host) | Action |
-|---|---|---|---|
-| High | 300% | 32.4 GB | None. |
-| Clear | 100% | 10.8 GB | None. |
-| Soft | 64% | 6.9 GB | Ballooning starts. |
-| Hard | 32% | 3.5 GB | Compression and swapping start. |
-| Low | 16% | 1.7 GB | VM execution is blocked. |
+- Five states, each a share of minFree. Entering a state takes a lower free level than leaving it (hysteresis), so a short allocation spike does not make the state flap.
+
+| State | Enter when free falls to (% of minFree) | Leave upward when free rises above | Free memory to enter (1 TB host, minFree 10.8 GB) | Action |
+|---|---|---|---|---|
+| High | | | above 32.4 GB | None. New memory is backed by 2 MB large pages. |
+| Clear | 300% | 400% (back to High at 43.2 GB) | 32.4 GB | Stops backing new memory with large pages; breaks existing large pages into 4 KB pages so page sharing can collapse identical pages. |
+| Soft | 64% | 100% | 6.9 GB | Ballooning inflates in the VMs. |
+| Hard | 32% | 48% | 3.5 GB | Compression and host swapping start; ballooning stops inflating. |
+| Low | 16% | 24% | 1.7 GB | All of the above; new VM memory allocations are blocked. |
 
 ![ESXi memory State counter](../images/esxi-memory-state-counter.png)
 
-- Keep hosts in High or Clear. Unless high utilization is the goal, hosts sit in High.
+- Keep hosts in High. A host that keeps 400% of minFree free keeps the 2 MB backing and its performance benefit. Unless high utilization is the goal, hosts sit in High.
+- Clear is not idle: large-page breaking and page sharing work there. That is why Shared memory can jump while free memory is still far above the balloon point.
+- minFree is computed at boot from host RAM, non-linearly: about 890 MB for the first 4 GB, then 1-2% of the rest up to caps; about 10.8 GB on a 1 TB host. Read it with `vsish -e get /memory/memInfo` (Min free, State) or in the esxtop memory panel header (`state:`).
 
 ## Ballooning start point
 | | 512 GB host | 1 TB host | 1.5 TB host |
@@ -64,6 +68,8 @@ Free   = Total Capacity - Consumed
 ## Misconceptions
 - "Ballooning starts at 90% host memory" → about 99%.
 - "Host with balloon has VMs in contention" → example: 7 days of constant balloon, worst VM contention below 1%.
+- "Clear state means ESXi does nothing" → in Clear, ESXi breaks 2 MB pages into 4 KB pages and page sharing starts; only High is idle.
+- "The host goes back to High as soon as free memory passes 300% of minFree" → it returns at 400% (hysteresis); between 300% and 400% it stays in Clear.
 
 ## Metadata
 ```yaml
@@ -105,11 +111,10 @@ images:
     image_type: timeline
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
-  path: Memory > ESXi > Contention Metrics > Balloon
+  path: Memory > ESXi > Contention Metrics > Balloon; states, hysteresis and actions per state from the author's ESXi 9.1 memory reclamation manual (project/sources/esxi_memory_reclamation_manual.md)
 corrections: []
 review_notes:
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Section ''States'': the minFree rule (899 MB for the first 28 GB, then 1% of the rest), which gives about 10.8 GB for 1 TB as the book states (calculator cited by the book, third-party: https://blogs.virtualmaestro.in/2020/06/02/vmware-vsphere-7-x-memory-reclamation-part-2-mem-memminfreepct/).'
 - 'Section ''Ballooning start point'': book typo ''993.1 BB'' written as GB.'
 status: draft
 ```

@@ -17,6 +17,7 @@ What about the VM Performance dashboard? What's the difference?
 - No contention and high usage is not a reason to add vCPUs by itself: check the Guest OS run queue (a batch job runs at 100% by design).
 
 ## Notes
+- Retired 2026-11-12 (author, Q184): the author had the official manual fixed, so the page no longer carries the error the question tested.
 - Real exchange: the author's prompt and follow-up to Gemini (Pro, high effort), 2026-11-09. The author built VM Performance to supersede VM Contention.
 - URL question (benchmark/design.md, section 3.4). The page is live; check that it still describes VM Contention as current before scoring. Page checked: 2026-11-09 (author).
 - Two turns joined into one prompt; the runner is single turn.
@@ -42,5 +43,5 @@ level: 200
 misconception_type: [consumption-as-contention]
 object: [vm]
 tool: [vcf-operations]
-status: draft
+status: retired
 ```

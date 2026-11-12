@@ -23,7 +23,7 @@
 
 ## Interaction with large pages
 - ESX does not share 2 MB large pages. See [`vsphere/technology/memory/concepts/large-memory-pages`](large-memory-pages.md).
-- Page sharing can start only when overcommitment is high enough to break large pages into small pages.
+- Page sharing can start only when overcommitment is high enough to break large pages into small pages: ESXi breaks them when the host enters the Clear state, free memory below 300% of minFree. See [`vsphere/technology/memory/concepts/host-memory-states`](host-memory-states.md).
 
 ## Misconceptions
 - "Page sharing shares pages between all VMs by default" → since vSphere 6.0, the default is sharing within a VM only.
