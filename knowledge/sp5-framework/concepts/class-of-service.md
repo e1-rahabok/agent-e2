@@ -4,6 +4,7 @@
 - With one class and a promise of good service, every customer expects first-class service.
 - A comparison sets value: a Gold offer that few buy makes Silver look like a good deal (pricing psychology), and customers who see only Silver and Bronze ask where Gold is.
 - If a class is not offered, give customers and management the reason.
+- Each class brings complexity. 4 classes not needed as the difference becomes minor and not clear.
 
 ## Price/performance
 - Cheap, good, fast: pick two. In IaaS:
