@@ -12,7 +12,7 @@
 ## Per resource
 - CPU: per physical thread, not per core, because the CPU executes per thread. With Hyper-Threading a ratio per core is twice the ratio per thread: 3:1 per thread is 6:1 per core.
 - CPU: a vCPU maps to a thread, not to a fixed speed. A thread on a shared 1 GHz core gets 625 MHz; 1.6 GHz restores 1 GHz per thread. Tenants buying 4 GHz expect 4 GHz; with Hyper-Threading, state 2.5 GHz. Do not promise a GHz speed ([`vsphere/technology/cpu/concepts/hyper-threading`](../../vsphere/technology/cpu/concepts/hyper-threading.md)).
-- Memory: against physical DRAM. Memory tiering serves the memory beyond 1:1 of the higher classes ([`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md)); the NVMe tier is not a second ratio on top ([`vsphere/technology/memory/concepts/memory-tiering`](../../vsphere/technology/memory/concepts/memory-tiering.md)).
+- Memory: against physical DRAM. Memory tiering is not part of the ratio: NVMe is about 1,000x slower than DRAM, so its pages are not memory of the same class. The plan leaves tiering out; the running stage measures it with its own signals: active memory against DRAM, NVMe read rate and NVMe read latency ([`vsphere/technology/memory/concepts/memory-tiering`](../../vsphere/technology/memory/concepts/memory-tiering.md)). Broadcom: do not combine memory overcommit with tiering.
 - Disk: count only virtual disks; exclude snapshots and swap. On vSAN, exclude FTT protection and lower the ratio to match: FTT that doubles space halves the ratio.
 - Network: exclude inter-switch links; count only ESXi ports used by VMs.
 
@@ -89,6 +89,5 @@ source:
   path: 'Provider Objects > Capacity > Key Metrics (Overcommit); Capacity Management > Capacity Model (VM Price; Allocation; Overcommit)'
 corrections: []
 review_notes:
-- 'To check: Section ''Per resource'', memory: the planning calculator adds the tiering capacity on top of DRAM × the class ratio, while memory-tiering says not to overcommit on top of tiering (Q177).'
 status: draft
 ```

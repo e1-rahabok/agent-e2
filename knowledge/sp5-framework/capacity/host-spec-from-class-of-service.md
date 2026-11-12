@@ -21,7 +21,7 @@ Host RAM (GB)  = VMs per host × memory per VM + hypervisor memory
 - Overcommit is per physical thread, not per core: with Hyper-Threading the two differ by 2x ([`sp5-framework/capacity/overcommit`](overcommit.md)).
 - Hypervisor share: VMkernel, vSAN, NSX, vSphere Replication and kernel IO work run on every host. Planning default: 14 threads and 64 GB per host (catalog rows `planning-hypervisor-*`); measure the real value ([`vsphere/architecture/overhead`](../../vsphere/architecture/overhead.md)).
 - 4 GB per vCPU is a planning guideline. Customers may buy more or less memory per vCPU: measure the real ratio in VCF Operations.
-- Memory tiering is not counted here: how it combines with the class memory ratio is still open.
+- Memory tiering is not counted: the plan sizes DRAM. Tiering belongs to the running stage ([`sp5-framework/capacity/overcommit`](overcommit.md), section Per resource).
 - The `capacity_plan` tool computes it: give cores, base GHz and the class, without RAM.
 
 ## Example: 64 cores, 2.5 GHz, Hyper-Threading on
@@ -85,7 +85,6 @@ source:
 corrections:
 - 'Section ''Method'': the book sizes RAM from the vCPUs sold at the allocation ratio (Silver 4:1 per core, memory 2:1: 512 GB). The class settings are now per thread with three models; the RAM follows the binding CPU model.'
 review_notes:
-- 'To check: Section ''Method'': memory tiering left out until Q177 is answered.'
 - 'Section ''Reading the example'', licensing: per-core licensing with a 16-core minimum per CPU, Broadcom KB 313548 (https://knowledge.broadcom.com/external/article/313548) and the VCF 9.0 Licensing Model page (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html).'
 status: draft
 ```

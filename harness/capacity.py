@@ -6,7 +6,7 @@ knowledge/sp5-framework/capacity/class-of-service-planning.md, section Planning 
 Per ESXi host, three models (allocation, reservation, utilization) for each of CPU and memory: six numbers.
 The host is full at the first of the six to reach 100%. Mixed classes are compared in the allocation model by
 dividing each class's demand by its overcommit ratio. HA hosts are added on top: capacity counts the hosts that
-carry load (hosts - ha_hosts).
+carry load (hosts - ha_hosts). Memory is DRAM only: memory tiering is not part of the plan (Q177).
 
 Host specification: with no RAM given, the CPU side decides how many VMs of one class fit, and the RAM that
 matches them is returned (knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md).
@@ -47,7 +47,7 @@ def _classes(overrides, d):
 
 
 def supply(cores, ghz, ram_gb, ht=True, hypervisor_threads=None, hypervisor_memory_gb=None,
-           system_reservation_ghz=None, memory_tiering_gb=0, root=ROOT):
+           system_reservation_ghz=None, root=ROOT):
     """Usable capacity of one ESXi host per model. CPU in threads (allocation, utilization) or GHz (reservation)."""
     h = defaults(root)['host']
     hv_t = h['hypervisor-threads'] if hypervisor_threads is None else hypervisor_threads
@@ -57,8 +57,7 @@ def supply(cores, ghz, ram_gb, ht=True, hypervisor_threads=None, hypervisor_memo
     dram = ram_gb - hv_m
     return {'threads': threads, 'cpu_threads': threads - hv_t,
             'cpu_reservable_ghz': cores * ghz - sys_r,  # reservation is capped at the base clock, per core
-            'memory_dram_gb': dram, 'memory_tiering_gb': memory_tiering_gb,
-            'memory_gb': dram + memory_tiering_gb, 'ghz': ghz,
+            'memory_dram_gb': dram, 'memory_gb': dram, 'ghz': ghz,
             'note': 'Usable = total - hypervisor overhead. HA is not subtracted per host: HA hosts are added to the cluster.'}
 
 
@@ -71,7 +70,7 @@ def vms_per_host(vm_class, cores, ghz, ram_gb, ht=True, classes=None, **host):
     vcpu, mem = cls['vcpu'], cls['memory-gb']
     six = {
         ('allocation', 'cpu'): cls['cpu-overcommit'] * s['cpu_threads'] / vcpu,
-        ('allocation', 'memory'): (s['memory_dram_gb'] * cls['memory-overcommit'] + s['memory_tiering_gb']) / mem,
+        ('allocation', 'memory'): s['memory_dram_gb'] * cls['memory-overcommit'] / mem,
         ('reservation', 'cpu'): s['cpu_reservable_ghz'] / (vcpu * cls['cpu-reservation'] * ghz),
         ('reservation', 'memory'): s['memory_gb'] / (mem * cls['memory-reservation']),
         ('utilization', 'cpu'): s['cpu_threads'] / (vcpu * cls['cpu-concurrent-peak']),
@@ -86,13 +85,12 @@ def vms_per_host(vm_class, cores, ghz, ram_gb, ht=True, classes=None, **host):
 def host_spec(vm_class, cores, ghz, ht=True, classes=None, **host):
     """RAM that matches the CPU of one host for one class. The CPU side (allocation, reservation, utilization)
     decides how many VMs fit; each VM needs the largest of its three memory needs; RAM = VMs x need + hypervisor.
-    Memory tiering is not counted (Q177)."""
+    Memory tiering is not counted: the plan sizes DRAM (Q177)."""
     root = host.pop('root', ROOT)
     d = defaults(root)
     cls = _classes(classes, d)[vm_class]
     hv_m = host.pop('hypervisor_memory_gb', None)
     hv_m = d['host']['hypervisor-memory-gb'] if hv_m is None else hv_m
-    host.pop('memory_tiering_gb', None)
     s = supply(cores, ghz, 0, ht, root=root, **host)
     vcpu, mem = cls['vcpu'], cls['memory-gb']
     cpu = {'allocation': cls['cpu-overcommit'] * s['cpu_threads'] / vcpu,
@@ -132,7 +130,7 @@ def consumption(vms, cores, ghz, ram_gb, ht=True, hosts=1, ha_hosts=0, classes=N
         ('allocation', 'cpu'): tot(lambda k: k['vcpu'] * b['cpu-overcommit'] / k['cpu-overcommit'])
         / (b['cpu-overcommit'] * s['cpu_threads'] * carrying),
         ('allocation', 'memory'): tot(lambda k: k['memory-gb'] * b['memory-overcommit'] / k['memory-overcommit'])
-        / ((s['memory_dram_gb'] * b['memory-overcommit'] + s['memory_tiering_gb']) * carrying),
+        / (s['memory_dram_gb'] * b['memory-overcommit'] * carrying),
         ('reservation', 'cpu'): tot(lambda k: k['vcpu'] * k['cpu-reservation'] * ghz) / (s['cpu_reservable_ghz'] * carrying),
         ('reservation', 'memory'): tot(lambda k: k['memory-gb'] * k['memory-reservation']) / (s['memory_gb'] * carrying),
         ('utilization', 'cpu'): tot(lambda k: k['vcpu'] * k['cpu-concurrent-peak']) / (s['cpu_threads'] * carrying),
@@ -148,12 +146,12 @@ def consumption(vms, cores, ghz, ram_gb, ht=True, hosts=1, ha_hosts=0, classes=N
 
 def plan(args):
     """Tool entry point. args: cores, ghz, ram_gb, optional ht, hosts, ha_hosts, hypervisor_threads,
-    hypervisor_memory_gb, system_reservation_ghz, memory_tiering_gb, classes (overrides per class);
+    hypervisor_memory_gb, system_reservation_ghz, classes (overrides per class);
     then either vm_class (how many fit per host) or vms (a mix {'gold': n, 'silver': n, 'bronze': n}).
     vm_class without ram_gb: the host specification (RAM that matches the CPU)."""
     a = dict(args)
     extra = {k: a.pop(k) for k in ('ht', 'classes', 'hypervisor_threads', 'hypervisor_memory_gb',
-                                    'system_reservation_ghz', 'memory_tiering_gb') if k in a}
+                                    'system_reservation_ghz') if k in a}
     if 'ram_gb' not in a and 'vm_class' in a and 'cores' in a and 'ghz' in a:
         try:
             return host_spec(a['vm_class'], a['cores'], a['ghz'], **extra)

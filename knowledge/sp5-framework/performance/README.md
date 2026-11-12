@@ -56,6 +56,7 @@
 | CPU Other Wait high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](../../vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](../../vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |
 | Memory latency high | [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](../../vsphere/technology/memory/troubleshooting/vm-memory-latency-high.md) |
+| Is memory tiering slowing this host? | [`vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`](../../vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host.md) |
 | Is memory overcommit hurting this VM? | [`vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm`](../../vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm.md) |
 | VM disk latency high | [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](../../vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md) |
 | ESXi storage latency high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](../../vsphere/technology/storage/troubleshooting/host-storage-latency.md) |

@@ -115,6 +115,7 @@ corrections:
 - 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
 - 'Section ''Monster VM'': the adapter definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
+- 'To check: Memory tiering rows: Broadcom bands for NVMe read latency are 200 and 400 µs, active memory against DRAM (50/75%) is the documented leading signal, and latency without reads is a wake-up penalty (Q178).'
 - 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread; the pack counts per core and must be fixed (plan, after 1.0).'
 - 'To check: Section ''Monster VM'': the 8-core CCD statement for Xeon (Q125).'
 status: draft

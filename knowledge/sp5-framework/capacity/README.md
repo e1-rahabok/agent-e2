@@ -35,6 +35,7 @@
 | Utilization | Input: the expected concurrent peak | A result: consumption, measured |
 | Hypervisor overhead | Subtracted from supply: no load is measured yet | Already in the measured load: not subtracted again |
 | Contention | Cannot be modelled | The override: it decides closure |
+| Memory tiering | Not in the plan: the ratio is against DRAM | Measured: active memory against DRAM, NVMe read rate and latency |
 | Verdict | The first of six numbers to reach 100% | Can the cluster take more VMs; how long until it is full |
 
 - Reservation in the planning stage becomes share in the running stage.

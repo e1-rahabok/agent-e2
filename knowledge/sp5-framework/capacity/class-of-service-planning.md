@@ -27,7 +27,7 @@
 | VM to ESXi overcommit ratio | 1x | 2x | 3x |
 
 ## Example implementation
-![Planning values per class, Gold, Silver, Bronze. Typical VM (average for planning, not the maximum; 4 GB RAM per vCPU): 16 vCPU 64 GB, 8 vCPU 32 GB, 4 vCPU 16 GB. Reservation (relative to VM configured size, set at resource pool): 50% CPU 100% RAM, 25% CPU 50% RAM, 12.5% CPU 25% RAM. Allocation (thread, usable capacity; memory tiering beyond 1:1): CPU 1:1 RAM 1:1, CPU 2:1 RAM 1.2:1, CPU 3:1 RAM 1.4:1. Utilization, expected concurrent peak of the VMs: CPU 35% RAM 85%, CPU 50% RAM 85%, CPU 65% RAM 85%](images/class-of-service-planning-values-vm-reservation-allocation-utilization-table.png)
+![Planning values per class, Gold, Silver, Bronze. Typical VM (average for planning, not the maximum; 4 GB RAM per vCPU): 16 vCPU 64 GB, 8 vCPU 32 GB, 4 vCPU 16 GB. Reservation (relative to VM configured size, set at resource pool): 50% CPU 100% RAM, 25% CPU 50% RAM, 12.5% CPU 25% RAM. Allocation (thread, usable capacity; RAM against DRAM, memory tiering not in the ratio): CPU 1:1 RAM 1:1, CPU 2:1 RAM 1.2:1, CPU 3:1 RAM 1.4:1. Utilization, expected concurrent peak of the VMs: CPU 35% RAM 85%, CPU 50% RAM 85%, CPU 65% RAM 85%](images/class-of-service-planning-values-vm-reservation-allocation-utilization-table.png)
 
 - **Typical VM** (the average for planning, not the maximum size; 4 GB RAM per vCPU)
   - Gold: 16 vCPU, 64 GB
@@ -42,7 +42,7 @@
   - Gold: CPU 1:1, RAM 1:1
   - Silver: CPU 2:1, RAM 1.2:1
   - Bronze: CPU 3:1, RAM 1.4:1
-  - CPU per thread, not per core. 3:1 is the highest CPU overcommit of any class: 6:1 per core with Hyper-Threading. Against usable capacity, not total capacity. Memory tiering serves memory beyond 1:1.
+  - CPU per thread, not per core. 3:1 is the highest CPU overcommit of any class: 6:1 per core with Hyper-Threading. Against usable capacity, not total capacity. RAM is against DRAM: memory tiering is not part of the ratio and not part of the plan ([`sp5-framework/capacity/overcommit`](overcommit.md)).
 - **Contention: minimum VM Performance (%)**
   - Gold: ≥ 99.5%
   - Silver: ≥ 99%
@@ -61,10 +61,10 @@
 
 ## Planning calculator
 - At the planning stage there is no workload, so the plan is a simulation. What the planning and running stages each use: [`sp5-framework/capacity/capacity-management`](README.md), section Two stages. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
-- Inputs: per host the cores, base GHz, DRAM, Hyper-Threading, hypervisor overhead (threads and GB), system CPU reservation, memory tiering; the number of hosts and HA hosts; per class the typical VM (vCPU, GB per vCPU), overcommit, reservation and expected concurrent peak.
+- Inputs: per host the cores, base GHz, DRAM, Hyper-Threading, hypervisor overhead (threads and GB), system CPU reservation; the number of hosts and HA hosts; per class the typical VM (vCPU, GB per vCPU), overcommit, reservation and expected concurrent peak.
 - Supply per host, by model (usable capacity: [`sp5-framework/capacity/supply`](supply.md)):
-  - utilization: threads - hypervisor threads; DRAM - hypervisor GB + tiering;
-  - allocation: the utilization supply × the class overcommit (memory: DRAM part × overcommit + tiering);
+  - utilization: threads - hypervisor threads; DRAM - hypervisor GB;
+  - allocation: the utilization supply × the class overcommit;
   - reservation: CPU cores × base GHz - system reservation, because a reservation is capped at the base clock; memory as in utilization.
 - Demand per model: allocation = configured size; reservation = configured size × reserved share; utilization = configured size × expected concurrent peak.
 - Six numbers per host: three models × CPU and memory. The host is full at the first to reach 100%; it decides how many VMs fit and which resource binds.
@@ -81,7 +81,7 @@
 - "A Bronze cluster at 90% CPU is overloaded" → a mostly Bronze cluster is planned to run near 100% of its usable threads; contention decides: read Cluster Performance (%).
 - "Overcommit ratio per core" → the plan counts threads, not cores; 3:1 per thread is 6:1 per core with Hyper-Threading.
 - "The host fits as many VMs as its allocation allows" → allocation is one of six numbers; at planning, memory utilization or CPU reservation often binds first.
-- "Gold memory at 1:1 means no memory tiering" → tiering serves memory beyond 1:1; Gold stays at 1:1 against DRAM.
+- "Memory tiering lets Silver and Bronze reach their memory ratio" → the ratio is against DRAM; NVMe is about 1,000x slower and is left out of the plan. Tiering is measured in the running stage, with its own risk and performance signals ([`vsphere/technology/memory/concepts/memory-tiering`](../../vsphere/technology/memory/concepts/memory-tiering.md)).
 
 ## Metadata
 ```yaml

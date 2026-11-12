@@ -88,6 +88,7 @@ source:
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-consumption.md; docs/concepts/capacity-management.md; Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections: []
 review_notes:
+- 'To check: On a tiered host, Memory Consumed ÷ DRAM goes above 100% by design, and tier usage scored as saturation (4/8/16/32%) marks tiering used as designed as red (Q178).'
 - 'To check: Section ''Sub-metrics'': the adapter page calls Cluster Consumption a KPI; written as a model (Q131).'
 status: draft
 ```
