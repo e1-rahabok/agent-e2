@@ -6,7 +6,8 @@ Examples:
   python3 benchmark/runner/run.py --mock --runs 2
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --questions L4-04
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
-  python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>
+  python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs, questions and judge come from the folder
+  python3 benchmark/runner/run.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
 """
 import argparse
 import csv
@@ -16,6 +17,7 @@ import os
 import random
 import sys
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import yaml
@@ -53,17 +55,33 @@ def main():
     ap.add_argument('--judge', help='judge model id (default: config judge_model)')
     ap.add_argument('--primer', help='agent up-front blocks to switch on, comma-separated: map,rules,terms,flows,procedure, or all (default: config agent_primer)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
-    ap.add_argument('--resume', help='existing run folder to continue')
+    ap.add_argument('--resume', help='existing run folder to continue; models, modes, runs, temperature, questions, judge and primer are read from its config.json unless you pass them')
+    ap.add_argument('--max-minutes', type=float, help='stop starting new answers after this many minutes, let the running ones finish, '
+                    'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
     ap.add_argument('--no-summary-csv', action='store_true', help='do not append to benchmark/results/results.csv')
     a = ap.parse_args()
 
     cfg = yaml.safe_load(open(a.config))
+    # A resumed run continues with its own settings: a resume without --models once ran every model of the config into the folder.
+    saved = {}
+    if a.resume and os.path.exists(os.path.join(a.resume, 'config.json')):
+        saved = json.load(open(os.path.join(a.resume, 'config.json')))
+        for k in ('runs', 'temperature'):
+            if getattr(a, k) is None and saved.get(k) is not None:
+                cfg[k] = saved[k]
+        if not a.primer and saved.get('agent_primer') is not None:
+            cfg['agent_primer'] = saved['agent_primer']
+        if not a.questions and saved.get('questions'):
+            a.questions = ','.join(saved['questions'])
+        print(f'Resuming {a.resume}: settings from its config.json.')
     for k in ('runs', 'temperature', 'concurrency'):
         if getattr(a, k) is not None:
             cfg[k] = getattr(a, k)
-    models_ = a.models.split(',') if a.models else cfg['models']
-    modes_ = a.modes.split(',') if a.modes else cfg['modes']
+    models_ = a.models.split(',') if a.models else (list(saved['models']) if saved.get('models') else cfg['models'])
+    modes_ = a.modes.split(',') if a.modes else (saved.get('modes') or cfg['modes'])
+    limit = a.max_minutes if a.max_minutes is not None else cfg.get('max_minutes')
+    deadline = time.monotonic() + limit * 60 if limit is not None else None
     # Concurrency per model: the proven value is the floor; the governor probes above it (governor.py).
     by_model = {} if a.concurrency is not None else (cfg.get('concurrency_by_model') or {})
     ac = cfg.get('adaptive_concurrency') or {}
@@ -82,7 +100,7 @@ def main():
     if a.primer:
         on = {'map', 'rules', 'terms', 'flows', 'procedure'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
         cfg['agent_primer'] = {b: b in on for b in ('map', 'rules', 'terms', 'flows', 'procedure')}
-    judge_model = a.judge or cfg.get('judge_model')
+    judge_model = a.judge or saved.get('judge_model') or cfg.get('judge_model')   # a resume never switches the judge
     needs_judge = any(not c.choice for c in questions_)
     if needs_judge and judge_model in models_:
         sys.exit(f'The judge {judge_model} is also a candidate. The judge must never grade its own answers.')
@@ -132,7 +150,9 @@ def main():
         print(f'Embeddings unavailable ({e}); using BM25 only.')
         embed, retriever = None, Retriever(docs, chunks, expand=cfg.get('query_expansion', False))
     sha = kb.git_sha()
-    json.dump({'benchmark_id': benchmark_id, 'started': dt.datetime.now().isoformat(timespec='seconds'), 'index_version': sha,
+    now_s = dt.datetime.now().isoformat(timespec='seconds')
+    json.dump({'benchmark_id': benchmark_id, 'started': saved.get('started', now_s), 'resumed': (saved.get('resumed') or []) + ([now_s] if saved else []),
+               'index_version': sha,
                'agent_primer': cfg.get('agent_primer'),
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
@@ -206,25 +226,40 @@ def main():
             ft.flush()
         return row
 
+    def late():
+        return deadline is not None and time.monotonic() >= deadline
+
     def one(task):
+        if late():
+            return None             # past --max-minutes: do not start it; it stays for the resume
         gov.acquire(task[0])    # at most gov.limit_of(model) answers of one model at a time
         try:
+            if late():
+                return None
             row = answer_one(task)
         finally:
             gov.release(task[0])
         gov.record(task[0], task[1], row['error'])
         return row
 
-    n, errors = 0, 0
+    n, errors, left = 0, 0, 0
     with ThreadPoolExecutor(max_workers=gov.max_workers) as ex:
         for f in as_completed([ex.submit(one, t) for t in tasks]):
             row = f.result()
             n += 1
+            if row is None:
+                left += 1
+                continue
             errors += bool(row['error'])
             if n % 25 == 0 or n == len(tasks):
-                print(f'  {n}/{len(tasks)} done, {errors} errors, concurrency {gov.summary()}')
+                print(f'  {n - left}/{len(tasks)} done, {errors} errors, concurrency {gov.summary()}')
     fa.close()
     ft.close()
+    if left:
+        # Not a finished run: no report and no summary rows, which would score a partial run.
+        print(f'Stopped at the {limit:g}-minute limit: {len(tasks) - left} answers done, {left} to go, {errors} errors.')
+        print(f'Resume: python3 benchmark/runner/run.py --resume {run_dir}')
+        sys.exit(3)
 
     path = report.write(run_dir)
     print(f'Report: {path}')

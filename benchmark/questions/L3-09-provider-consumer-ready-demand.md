@@ -6,19 +6,20 @@
 For each, is it a provider metric or a sum of the VMs' metrics? Can a physical core itself have Ready time?
 
 ## Likely wrong answer
-"Both are the host's own values" — or "Demand comes from the VMs, so ESXi Demand is the sum of VM Demand".
+"Both are the host's own measurements": Ready as the host's cores waiting for work, and Demand as the host's load including the VMkernel. Or: "Demand is a provider metric, so it is not related to the VMs' demand."
 
 ## Expected key points
-- Virtualization splits the stack into **provider** and **consumer**.
-- Provider has 2 kinds of metrics: true **provider metrics** (don't exist on the consumer) and **sum of consumer** metrics.
-- Ready is a consumer concept. A physical core/thread is always ready. Host-level Ready can only be an aggregate of its VMs.
-- ESXi CPU Demand is a **provider metric**. It is not the sum of VM + VMkernel worlds. It is the CPU scheduler's internal value for the ideal total demand had there been no contention.
+- Virtualization splits the stack into **provider** and **consumer**. A provider has 2 kinds of metrics: a true **provider metric** (it has no consumer equivalent) and a **sum-of-consumer metric** (the provider adds up what its consumers report).
+- Both are sum-of-consumer metrics, held at ESXi. Neither is a provider metric.
+- Ready is a consumer concept: a VM waits to be scheduled. A physical core or thread is always ready, so a core itself has no Ready time. Host-level Ready is only the VMs' Ready added up.
+- ESXi CPU Demand is the sum over the VMs of the demand they would have with no contention, an internal value of the CPU scheduler. It is not the sum of VM worlds plus VMkernel worlds: kernel work is in Usage, not in Demand (a host with no VMs shows Demand flat at 0 while Usage is not 0).
 - The metric name does not say which kind it is. You must know the mechanism.
-- ESXi ≠ sum of VMs + kernel. Host metrics are more complex than a sum.
+- Do not read a host figure as VMs plus kernel by default: Usage includes the kernel, Demand does not.
 
 ## Notes
 - Previous id: vsphere-foundations-003 (renamed 2026-11-05).
 - Tests: Principle: provider vs consumer; provider metric vs sum-of-consumer metric.
+- Key corrected 2026-11-12. It read ESXi CPU Demand as a provider metric. The knowledge base (host/demand, provider-consumer) and the author's answer to Q009 settle it: the value at ESXi is the summation over the VMs, a sum-of-consumer metric held at the provider. A candidate that said "sum of consumers" was scored 0 against the old key in all runs of 20261112 (see project/plan.md).
 
 ## Metadata
 ```yaml

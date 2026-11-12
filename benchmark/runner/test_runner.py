@@ -247,5 +247,42 @@ class GovernorTest(unittest.TestCase):
         self.assertEqual(g.max_workers, 12)
 
 
+class StopAndResumeTest(unittest.TestCase):
+    """--max-minutes stops cleanly; --resume continues with the settings saved in the folder. Offline (--mock)."""
+
+    RUN = os.path.join(os.path.dirname(__file__), 'run.py')
+
+    def run_py(self, *args):
+        import subprocess
+        return subprocess.run([sys.executable, self.RUN, '--mock', *args], capture_output=True, text=True, timeout=300)
+
+    def test_stop_at_the_limit_then_resume_without_flags(self):
+        import csv
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as out:
+            r = self.run_py('--models', 'x/one,x/two', '--modes', 'classic', '--runs', '1', '--questions', 'L1-01',
+                            '--out', out, '--max-minutes', '0')
+            self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+            self.assertIn('--resume', r.stdout)
+            folder = os.path.join(out, os.listdir(out)[0])
+            self.assertFalse(os.path.exists(os.path.join(folder, 'report.md')))       # a partial run gets no report
+            with open(os.path.join(folder, 'answers.csv')) as fh:
+                self.assertEqual(len(list(csv.DictReader(fh))), 0)
+            started = json.load(open(os.path.join(folder, 'config.json')))['started']
+
+            r = self.run_py('--resume', folder)                                         # no --models, --modes, --runs
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+            with open(os.path.join(folder, 'answers.csv')) as fh:
+                rows = list(csv.DictReader(fh))
+            self.assertEqual(sorted(x['model'] for x in rows), ['x/one', 'x/two'])      # only the run's own models
+            self.assertEqual({x['mode'] for x in rows}, {'classic'})
+            self.assertTrue(os.path.exists(os.path.join(folder, 'report.md')))
+            cfg = json.load(open(os.path.join(folder, 'config.json')))
+            self.assertEqual(cfg['started'], started)                                   # the original start is kept
+            self.assertEqual(len(cfg['resumed']), 1)
+            self.assertEqual(list(cfg['models']), ['x/one', 'x/two'])
+
+
 if __name__ == '__main__':
     unittest.main()
