@@ -45,14 +45,6 @@
 - Risk of NUMA effect: see the example below.
   ![Usage (MHz) per vCPU](images/vm-cpu-usage-mhz-per-vcpu.png)
 
-## NUMA example
-
-- Host: 2 sockets × 16 cores. VM: 16 vCPU at 90%, fits one socket.
-- Linux run queue below 2 per vCPU 95% of the time: busy but serving all processes.
-- Sizing on CPU Usage, which runs 25% higher due to Turbo: 16 × 90% × 125% = 18 vCPU.
-- 18 vCPU spans 2 NUMA nodes (9 + 9 or 10 + 8). Rounding up to 20 for buffer spreads vCPUs and memory over 2 sockets: NUMA effect.
-- With CCDs inside a socket, a smaller NUMA effect exists within a socket too.
-
 ## What to optimize in the consumer layer
 
 
