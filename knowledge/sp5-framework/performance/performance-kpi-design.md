@@ -1,9 +1,9 @@
-# Performance KPI design
+# KPI design
 
 ## What a KPI is
 - KPI is strictly about performance: "performance" has a specific meaning in enterprise IT infrastructure.
 - While capacity and availability can impact performance, they should not be mixed up. One name per pillar keeps monitoring unambiguous.
-- A KPI is one metric that quantifies the true performance of a logical entity.
+- A KPI is one metric that quantifies the true performance of an object.
 - A KPI is a baseline, the standard expectation maintained with effort, not a target still to reach. Provider and consumer each have their own KPI. The ideal, an ESXi host at 100% while no VM sees contention, is not realistic.
 
 ## Why a KPI
