@@ -11,7 +11,7 @@
   - the backup product took a snapshot of erp-db before patching. It is still present.
   - esx05 entered maintenance mode and came back.
 - Monday, 09:00-10:00, users report the ERP is slow. VCF Operations and esxtop show:
-  - erp-db CPU: Ready 1.5%, Co-stop 6%, Other Wait 12%, System higher than last week.
+  - erp-db CPU: Ready 1.5%, Co-stop 6%, Other Wait 12%, System higher than last week. CPU Run Queue 2. CPU Run 85%
   - erp-db memory: Contention 0%, Ballooned 0, Swapped 0.
   - erp-db storage: disk latency 30 ms, mostly reads. Datastore read IOPS of the VM is 1.8 times its virtual disk read IOPS, with the same throughput.
   - erp-db NUMA, in esxtop: NHN 0,1; N%L 70%.
