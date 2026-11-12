@@ -74,7 +74,8 @@ def rules_block(docs):
     with open(MISCONCEPTIONS) as f:
         t = f.read()
     m = re.search(r'^## .*$', t, re.M)
-    lines = [l for l in t[m.end():].split('\n') if l.startswith('- ')] if m else []
+    import kb
+    lines = [kb.FILE_LINK.sub(r'\1', l) for l in t[m.end():].split('\n') if l.startswith('- ')] if m else []
     return '\n'.join(['## Level 300 misconceptions'] + lines) if lines else ''
 
 

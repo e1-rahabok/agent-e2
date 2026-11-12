@@ -33,7 +33,7 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 
 ## Notes
 - Previous id: vsphere-cpu-005 (renamed 2026-11-05).
-- Author confirmed the key (Q034, 2026-11-03). Knowledge: `vsphere/technology/cpu/concepts/cpu-frequency`, section Likely vCPU speed on a busy cluster.
+- Author confirmed the key (Q034, 2026-11-03). Knowledge: [`vsphere/technology/cpu/concepts/cpu-frequency`](../../knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md), section Likely vCPU speed on a busy cluster.
 
 ## Metadata
 ```yaml

@@ -198,7 +198,9 @@ def main():
         if sorted(ns) != list(range(1, len(ns) + 1)):
             bad('benchmark/questions', f'level {lv} file numbers must run 01..{len(ns):02d} without gaps; run project/tools/renumber_questions.py')
     sys.path.insert(0, 'project/tools')
-    from link_refs import DOCS as LINKED_DOCS
+    from link_refs import DOCS as LINKED_DOCS, others, bare_ids
+    for f in others():
+        for r in bare_ids(f): bad(f, f'`{r}` should be a link [`{r}`](relative/path.md) (run project/tools/link_refs.py)')
     for d in LINKED_DOCS:
         for ref in re.findall(r'benchmark/questions/(L\d-\d+-[\w-]+\.md)', open(d).read()):
             if not os.path.exists(os.path.join('benchmark', 'questions', ref)): bad(d, f'link to a question that does not exist: {ref}')
@@ -268,7 +270,7 @@ def check_terminology(docs, bad):
             seen.add(t.lower())
             if e['file'] and e['file'] not in docs: bad(g, f'term "{t}": File {e["file"]} is not a knowledge id')
     m = os.path.join('knowledge', 'misconceptions.md')
-    for ref in re.findall(r'See `([^`]+)`', open(m).read()):
+    for ref in re.findall(r'See `([^`]+)`', FILE_LINK.sub(r'\1', open(m).read())):
         if ref not in docs: bad('knowledge/misconceptions.md', f'See `{ref}` is not a knowledge id')
 
 

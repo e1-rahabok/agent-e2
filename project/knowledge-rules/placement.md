@@ -5,9 +5,9 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 ## Slices
 The author's books describe metrics from three perspectives: technology, object, and operations management (pillar). A folder tree holds one; tags and links hold the others.
 - Example: VM CPU Ready.
-  - Technology: `vsphere/technology/cpu/metrics/virtual-motherboard/ready` (folder), `technology: cpu` (tag).
-  - Object: `object: VirtualMachine` (tag), listed in `vsphere/object-types/vm/health-check/vm-health-check` (link), part of the VM Performance KPI.
-  - Operations management: `pillar: performance` (tag), used by `sp5-framework/performance/performance-kpi-design` and the cluster KPI (links).
+  - Technology: [`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) (folder), `technology: cpu` (tag).
+  - Object: `object: VirtualMachine` (tag), listed in [`vsphere/object-types/vm/health-check/vm-health-check`](../../knowledge/vsphere/object-types/vm/health-check/vm-health-check.md) (link), part of the VM Performance KPI.
+  - Operations management: `pillar: performance` (tag), used by [`sp5-framework/performance/performance-kpi-design`](../../knowledge/sp5-framework/performance/performance-kpi-design.md) and the cluster KPI (links).
 - Retrieval filters on any tag. The model follows any link. A website can show any slice without moving a file.
 
 ## The knowledge base folder
@@ -75,8 +75,8 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
     - a derived metric of one technology: `vsphere/technology/<tech>/metrics/<object>/` (VM CPU Contention, VM Disk Space);
     - a KPI or model of one object: `vsphere/object-types/<object>/kpis/` or `models/` (VM Performance, Cluster Risk, Close for Business);
     - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS. `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
-  - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), the dashboards and reports as built in it, alert definitions, and later its own sizing, health and performance troubleshooting. See `vcf-operations/concepts/vcf-operations-role`. How to design a dashboard, report or alert is method: `sp5-framework/outputs/`.
-  - A concept is a general idea; a file that documents an actual implementation is not a concept. In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the idea in `sp5-framework/`, the implementation in `vcf-operations/` (example: `sp5-framework/observability/real-time-metrics` and `vcf-operations/features/real-time-metrics`).
+  - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), the dashboards and reports as built in it, alert definitions, and later its own sizing, health and performance troubleshooting. See [`vcf-operations/concepts/vcf-operations-role`](../../knowledge/vcf-operations/concepts/vcf-operations-role.md). How to design a dashboard, report or alert is method: `sp5-framework/outputs/`.
+  - A concept is a general idea; a file that documents an actual implementation is not a concept. In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the idea in `sp5-framework/`, the implementation in `vcf-operations/` (example: [`sp5-framework/observability/real-time-metrics`](../../knowledge/sp5-framework/observability/real-time-metrics.md) and [`vcf-operations/features/real-time-metrics`](../../knowledge/vcf-operations/features/real-time-metrics.md)).
   - Alerts have two parts. Top down, the alert architecture (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/outputs/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.

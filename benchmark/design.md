@@ -283,7 +283,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Final score, development set (100) | at least 85% | Margin ±7 at 100 questions (section 4); below 85 an operator stops trusting the answers |
 | Level 400 sub-score | at least 80% | About 50 questions (margin about ±10): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
 | Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
-| Misconceptions of `knowledge/misconceptions.md` | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
+| Misconceptions of [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
 | Sealed set (Q165; until then the held-out set, section 10) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
 | Gap to the frontier model (section 8) | at least 15 points, paired test significant | The claim of section 1 |
 
