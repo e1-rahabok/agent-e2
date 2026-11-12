@@ -1,4 +1,4 @@
-# Cluster Consumption (%) (capacity model, vCommunity management pack for VCF Operations)
+# Cluster Consumption (%)
 
 ## What it measures
 - One 0-100% value for a vSphere cluster: actual utilization and saturation of the cluster as a whole, against its usable capacity. Higher is worse: 0 is nothing consumed, 100 is fully consumed. The same direction as Cluster Risk (%).
