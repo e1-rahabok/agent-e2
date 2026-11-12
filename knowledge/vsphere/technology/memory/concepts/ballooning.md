@@ -33,7 +33,8 @@
 - Reason: past pressure. Compressed and swapped data is not brought back until requested (it costs CPU). The balloon deflates proactively when pressure ends.
 
 ## Trigger and requirement
-- Trigger: host memory begins to get low and the VM's memory usage approaches its memory target.
+- Trigger: host memory begins to get low and the VM's memory usage approaches its memory target. The balloon inflates when the host enters the Soft state (free memory at 64% of minFree; see [`vsphere/technology/memory/concepts/host-memory-states`](host-memory-states.md)).
+- No host pressure, no balloon: a VM inside its configured memory on a host with free memory is never ballooned, with or without VMware Tools. It reuses its own mapped pages.
 - The `vmmemctl` module (VMware Tools) makes the guest OS give up the pages it considers least valuable.
 - Performance closely matches a native system under similar memory constraints.
 - The guest OS must have enough swap space configured.
@@ -44,6 +45,7 @@
 - "Ballooned 10 GB, so the guest is slow" → only requested pages cause a hit. Check Latency.
 - "Balloon frees exactly its size in ESXi" → shared pages free less.
 - "Include ballooned memory in Guest OS sizing" → exclude it.
+- "A VM that frees memory and then needs it again gets swapped or ballooned to make room" → no: the guest reuses pages it already has mapped; ESXi is not involved unless the host is under pressure.
 
 ## Metadata
 ```yaml

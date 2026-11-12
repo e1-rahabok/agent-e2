@@ -21,7 +21,7 @@
 
 ## Interaction with page sharing
 - ESX does not share large pages. See [`vsphere/technology/memory/concepts/page-sharing`](page-sharing.md).
-- Large pages can change sharing behaviour. Page sharing might not occur until overcommitment is high enough to force large pages to break into small pages.
+- Large pages can change sharing behaviour. Page sharing might not occur until overcommitment is high enough to force large pages to break into small pages. ESXi breaks them in the Clear state (free memory below 300% of minFree) and backs new memory with large pages again only back in High (above 400%). See [`vsphere/technology/memory/concepts/host-memory-states`](host-memory-states.md).
 
 ## 1 GB pages
 - ESXi backs VM memory with 2 MB pages by default. 1 GB pages are opt-in per VM: sched.mem.lpage.enable1GPage = TRUE, set while powered off.

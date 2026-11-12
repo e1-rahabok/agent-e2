@@ -21,11 +21,12 @@
 - Turbo Boost: Demand (MHz) and Usage (MHz) can exceed 100% of total capacity. Total capacity is based on base clock speed.
 - Example: a 32-vCPU Hadoop worker, the only VM on a host with more than 32 cores. Demand and Usage were identical and exceeded total capacity several times.
 
-## Demand vs Usage vs Contention
+## Demand vs Usage vs Latency
 - Demand jumps and Usage drops: the VM demanded more CPU, and the extra demand was not met.
-- Contention can exceed Demand - Usage.
-- Example: Demand 25%, Usage 15%, Contention about 20%.
-- Reason: Contention includes both frequency and Hyper-Threading. Demand - Usage includes only Hyper-Threading.
+- CPU Latency can exceed Demand - Usage.
+- Example: Demand 25%, Usage 15%, Latency about 20%.
+- Reason: Latency includes both frequency and Hyper-Threading. Demand - Usage includes only Hyper-Threading.
+- Older vRealize Operations CPU Contention behaved like Latency here. Since VCF Operations 8.18, CPU Contention is its own sum of Ready, Co-stop, Overlap and Other Wait, without frequency and Hyper-Threading. See [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](contention.md).
 
 ## Formula (VCF Operations)
 ```text
@@ -34,6 +35,7 @@ Demand (%) = Demand (MHz) / Total Capacity (MHz) × 100
 
 ## Misconceptions
 - "Demand - Usage = unmet demand" → a limit leaves Demand equal to Usage. Check Ready.
+- "Demand includes the time a limit held the VM back" → no. Under a limit Demand stays at Usage; the held-back time shows in Ready and Max Limited.
 - "Demand above 100% means add vCPUs" → Turbo raises Demand above 100%. See [`vsphere/technology/cpu/concepts/cpu-frequency`](../../concepts/cpu-frequency.md).
 - "Usage above Demand is impossible" → Demand is smoothed over a longer window.
 

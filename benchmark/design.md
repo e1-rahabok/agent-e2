@@ -89,7 +89,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 - 1.0 has no new screenshots (author, 2026-11-12). A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set follows 1.0 (section 13).
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]` or `[screenshot]`, derived from `attachments` and checked by lint.
-- URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. Example: [Which dashboard for VM contention](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-15-vm-contention-dashboard-deprecated.md). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
+- URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
 
 ### 3.5 By area
 Each question has one primary area for the allocation, and lists every area it touches in `technology` (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml)). The Guest OS layer is counted by `product` (windows, linux).
@@ -346,9 +346,9 @@ For the set:
 10. Is every misconception type covered at least 5 times?
 
 ## 12. Status
-- 2026-11-12: 150 questions run, at the allocation of section 3 (`python3 project/tools/coverage.py`; tasks within 2 of target: decide-capacity 31, explain-mechanism 24). Plus 5 deferred screenshot questions; 11 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
-- Origin: 35 by the author (17 quiz, 10 book, 8 from the author's samples of 2026-11-12), 3 real exchanges, 112 synthetic. 35 carry a CSV; 1 a screenshot.
-- Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Open points: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), Q182-Q191. Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
+- 2026-11-12: 150 questions run, at the allocation of section 3 (`python3 project/tools/coverage.py`; tasks within 2 of target: decide-capacity 31, explain-mechanism 24). Plus 5 deferred screenshot questions; 12 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
+- Origin: 35 by the author (17 quiz, 10 book, 8 from the author's samples of 2026-11-12), 2 real exchanges, 113 synthetic. 35 carry a CSV; 1 a screenshot.
+- Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Open points: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), Q189 and Q191. Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
 - Status draft: each question counts after the author's review (section 6.2).
 
 ## 13. Screenshot questions (after 1.0)
