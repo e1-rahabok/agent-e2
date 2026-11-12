@@ -3,7 +3,7 @@
 ## What it is
 - The capacity model's automatic decision for one vSphere cluster: 1 = closed for business (full: place no new VM), 0 = open.
 - Built from three 0-100% scores: Cluster Performance (KPI, [`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)), Cluster Consumption (capacity model, [`vsphere/object-types/cluster/models/cluster-consumption`](cluster-consumption.md)), Cluster Risk (risk model, [`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md)).
-- It implements the overcommit path of the book's closure logic, with one rule for every cluster. The full decision, including the no-overcommit path and the fit of new VMs: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md).
+- It implements the overcommit path of the book's closure logic. The full decision, including the no-overcommit path and the fit of new VMs: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md).
 
 ## Logic
 - It runs periodically. Ideally once a day so the full day peak is considered. 
@@ -33,8 +33,7 @@
   - Rule 1: Consumption is red, or Performance is red. The cluster is full, or its VMs already suffer.
   - Rule 2: Consumption and Performance are both orange, and Risk is orange or red. Busy and slow at once, and heading the wrong way.
 - Risk never closes a cluster on its own: it is a leading indicator that buys time.
-- The pack cannot tell a production cluster from a non-production one, so it applies the more conservative production setting to every cluster: Risk orange closes.
-- Advice to the VMware admin: keep two settings. Production focuses on performance and closes at Risk orange. Non-production focuses on cost: it runs fuller and closes at Risk red ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md), step 6).
+- Keep two settings. Production focuses on performance and closes at Risk orange. Non-production focuses on cost: it runs fuller and closes at Risk red ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md), step 6). With one setting for every cluster, use production: it is the more conservative.
 - Not published when one of the three scores has no data in the window.
 
 | Performance | Risk | Consumption | Close for Business |
@@ -60,7 +59,7 @@
 - "Close for Business uses the latest value" → it uses the worst end of the window, ignoring the worst 5% by default.
 - "The score shows red, so the cluster is closed" → closure needs a value clearly inside the band: Performance below 20, Consumption above 80. A Consumption of 78 shows red and leaves the cluster open.
 - "Close for Business is blank, so the cluster is open" → one of the three scores had no data; the decision was not made.
-- "The pack's closure suits non-production clusters too" → the pack applies the production setting (Risk orange) to every cluster, because it cannot tell them apart. A non-production cluster focuses on cost and can run until Risk is red: keep a separate setting for it.
+- "One closure setting suits every cluster" → production closes at Risk orange. A non-production cluster focuses on cost and can run until Risk is red: keep a separate setting for it.
 
 ## Metadata
 ```yaml
@@ -90,8 +89,8 @@ related:
 - vsphere/object-types/cluster/cluster-health-check
 - sp5-framework/capacity/supply
 source:
-  document: VCF-vCommunity-Adapter documentation, Periodic Cluster Check and Capacity Management concept
-  path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/periodic-cluster-check.md; docs/concepts/capacity-management.md, section Closing the cluster
+  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the closure logic
+  path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
 review_notes:
 status: draft

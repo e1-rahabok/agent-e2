@@ -37,13 +37,13 @@ flowchart TD
 4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; [`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md)). Allocation reaches usable capacity → no: closed. Below → step 7.
 5. Consumption and performance (ClusterComputeResource). Both read at the worst end of the last 24 hours: the 95th percentile for Consumption, the 5th percentile for Performance (higher is better). Same thresholds for production and non-production. Either one red → no: closed.
    - Cluster Consumption (%) ([`vsphere/object-types/cluster/models/cluster-consumption`](../models/cluster-consumption.md)): red above 80%, orange above 60%.
-   - Cluster Performance (%) ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
-   - The vCommunity management pack automates this step and step 6 with one band set for every cluster: [`vsphere/object-types/cluster/models/close-for-business`](../models/close-for-business.md).
+   - Cluster Performance (%) ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)): red below 20%, orange below 40%. This is the cluster KPI, the same for every class of service.
+   - Close for Business automates this step and step 6: [`vsphere/object-types/cluster/models/close-for-business`](../models/close-for-business.md).
    - Neither red → step 6.
 6. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md)):
    - production: above 60% (orange) → no: closed;
    - non-production: above 80% (red) → no: closed.
-   - Production focuses on performance, non-production on cost: keep the two settings apart. The vCommunity management pack cannot tell them apart and applies the production setting to every cluster.
+   - Production focuses on performance, non-production on cost: keep the two settings apart.
    - Read the sub-metrics, not only the score: a worse sub-metric can lower the score.
    - Below the limit, or consumption and performance not both orange → open → step 7.
 7. Fit of the new VMs (ClusterComputeResource, VirtualMachine).
@@ -74,7 +74,7 @@ flowchart TD
 - Yes → give the limiting resource and how long the room lasts.
 
 ## Misconceptions
-- "Cluster Performance below the Gold minimum of 99.5% closes the cluster" → the closure reads the cluster KPI (red below 20%); the class minimum is for each VM. Different metrics.
+- "A Gold cluster closes earlier on Cluster Performance" → the Performance thresholds are the same for every cluster (red below 20%); the class shows in the overcommit, and production clusters (Gold, Silver) close earlier on Risk.
 - "Our SLA says 99%" → an SLA is a business contract on the consumer's VMs and pods; the closure reads the KPI and the models.
 - "Cluster CPU at 40%, so there is room" → check contention, risk and HA headroom; one hot host can be full.
 - "Memory consumed at 85% means the cluster is full" → consumed is utilization; check saturation rows and contention, and the HA ceiling.

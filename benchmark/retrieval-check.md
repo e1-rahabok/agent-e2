@@ -69,7 +69,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 
 - Percent, not counts: the number of questions moves.
 - Main file: the question's `knowledge_main` ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)), the file that holds the answer or the misconception. The check prints it as the fourth number, over the questions that have one.
-- Sealed set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10): within 5 points of the visible set.
+- Held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10): within 5 points of the visible set.
 
 - Search recall@6 has no gate: it is a diagnostic for ranking. Context is what the model reads.
 - Agentic mode, the shipped mode, searches again and can fetch what classic missed. It is measured by the benchmark, not here. Classic mode is the floor and the fallback, so it carries these levels; they are conservative for the agentic score.

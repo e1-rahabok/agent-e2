@@ -37,7 +37,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
    - Cluster Risk: highest host, reservation, overcommit, monster VMs; higher is worse ([`vsphere/object-types/cluster/models/cluster-risk`](models/cluster-risk.md)).
    - HA and admission control reserve capacity that utilization does not show ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](concepts/admission-control-and-cluster-state.md)). Memory: [`vsphere/technology/memory/metrics/cluster/consumed`](../../technology/memory/metrics/cluster/consumed.md).
    - Capacity across products: [`sp5-framework/capacity/capacity-management`](../../../sp5-framework/capacity/README.md). → step 6.
-6. Closed for new VMs (ClusterComputeResource). The decision from the KPI and the two models: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](decision-tree/can-cluster-take-more-vms.md). The vCommunity management pack publishes it every period as Close for Business ([`vsphere/object-types/cluster/models/close-for-business`](models/close-for-business.md)). → step 7.
+6. Closed for new VMs (ClusterComputeResource). The decision from the KPI and the two models: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](decision-tree/can-cluster-take-more-vms.md). Close for Business gives it every period ([`vsphere/object-types/cluster/models/close-for-business`](models/close-for-business.md)). → step 7.
 7. Capacity, inventory and efficiency (ClusterComputeResource, VirtualMachine). Inventory: hosts, VMs and vCPUs over time, against the plan ([`sp5-framework/concepts/health-risk-efficiency`](../../../sp5-framework/concepts/health-risk-efficiency.md), section Inventory over time). Efficiency: Waste that can be returned: idle, oversized and unused VMs, snapshots, unmapped space ([`sp5-framework/capacity/reclamation`](../../../sp5-framework/capacity/reclamation.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../technology/cpu/metrics/virtual-motherboard/idle-vm.md), [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../technology/cpu/decision-tree/oversized-vm-downsizing.md)).
 - Not checked in 1.0: security and compliance (future phase).
 
@@ -96,7 +96,7 @@ related:
 - sp5-framework/capacity/capacity-management
 - sp5-framework/capacity/reclamation
 source:
-  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation; VCF-vCommunity-Adapter documentation)
+  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation)
   path: Linked files in each step
 corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; KPI is performance only (Cluster Consumption and Cluster Risk are models); availability flows, security and compliance are future, after 1.0.'

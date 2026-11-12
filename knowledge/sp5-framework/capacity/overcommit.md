@@ -33,7 +33,7 @@
 ## Ratio and contention
 - A ratio says nothing about performance by itself; contention does. Below 1:1 contention cannot come from the ratio; above it, contention becomes possible, first on the hottest host ([`sp5-framework/concepts/performance-vs-capacity`](../concepts/performance-vs-capacity.md), section Pattern difference).
 - The same ratio gives different contention with different VM sizes: monster VMs raise contention at a ratio that small VMs run well at ([`sp5-framework/capacity/demand`](demand.md), section Limitations of allocation).
-- In the running cluster, the overcommit rows of Cluster Risk (%) read the ratio per host ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md)). The vCommunity pack counts CPU per core: halve its row to compare with a per-thread plan.
+- In the running cluster, the overcommit rows of Cluster Risk (%) read the ratio per host ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md)).
 - A higher class gets a lower ratio, so it sees contention less often. The KPI levels stay the same for every class ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 ## Misconceptions

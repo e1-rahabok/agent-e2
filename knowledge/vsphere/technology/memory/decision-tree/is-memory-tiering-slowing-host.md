@@ -83,6 +83,6 @@ source:
   path: 'performance study > Using and monitoring Memory Tiering (pp. 34-39); vSphere Resource Management > Memory Tiering over NVMe (pp. 1844-1873); vSphere Availability > Memory Tiering and HA Admission Control'
 corrections: []
 review_notes:
-- 'To check: Step 4: whether VCF Operations exposes the NVMe tier read latency and read bandwidth per host and per VM, and their metric keys (the vCommunity pack reads mem:NVMe|latency.read_latest).'
+- 'To check: Step 4: whether VCF Operations exposes the NVMe tier read latency and read bandwidth per host and per VM, and their metric keys (candidate key: mem:NVMe|latency.read_latest).'
 status: draft
 ```

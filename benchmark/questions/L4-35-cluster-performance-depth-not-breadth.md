@@ -1,7 +1,7 @@
 # Cluster Performance: depth without breadth
 
 ## Prompt
-The attached screenshot is the VCF Operations metric view of one cluster: Cluster Performance Score and its 9 sub-metrics (vCommunity management pack).
+The attached screenshot is the VCF Operations metric view of one cluster: Cluster Performance Score and its 9 sub-metrics.
 
 - Worst VM Disk Latency is in the red range.
 - 90th Percentile VM Disk Latency is green.

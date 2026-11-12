@@ -13,7 +13,7 @@ Each entry has:
 
 - Section: book chapter and Heading 3.
 - Files: knowledge-base files affected.
-- Search: verbatim strings to find in the book.
+- Search: verbatim strings to find in the book, only for a question about the book. A question about this repository links its files instead.
 - Written as now: what the knowledge base currently says.
 
 ## Open
@@ -90,60 +90,40 @@ Each entry has:
   - For you: 3-8 more pages (blogs, community posts) you know to be wrong.
 - Answer:
 
-### Q162 · Class of service planning · "KPI (%), not SLA (%)" per class
-
-- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (Contention); [Performance KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md) (section Scoring); [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (Misconceptions); [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows class-*-min-vm-performance). Related: Q175 (c).
-- Search: your table image in Part 1, Capacity Management: row "Contention: Minimum Performance (%) threshold. KPI (%), not SLA (%)."
-- Question: your table gives Gold ≥ 99.5%, Silver ≥ 99%, Bronze ≥ 98% and labels it KPI. On 2026-11-10 you said the KPI is never per class of service. (a) The reword is right: a capacity design expectation per class, read on VM Performance (%); the KPI itself has no class. (b) The KPI has a target per class after all. (c) Other.
-- Written as now: class-of-service-planning, Contention: minimum VM Performance (%) Gold ≥ 99.5%, Silver ≥ 99%, Bronze ≥ 98%, "a capacity design expectation that sets the overcommit of the class. The KPI itself has no class of service"; and "The minimum Performance (%) leaves unmet demand of 0.5%, 1% and 2%." The image with "KPI (%), not SLA (%)" was archived on 2026-11-11; the new planning image has no contention row. Catalog rows give no interval or statistic. can-cluster-take-more-vms misconception: "the Gold minimum of 99.5%".
-- Final answer (2026-11-12; expert call, needs your choice): (a), with a scale correction.
-  - (a) holds: the KPI has no class (2026-11-10). The image question is moot (archived).
-  - The numbers are not on the scale of today's VM Performance (%). It is a banded score: green 100-75, a straight line inside each band, worse scores weigh more (performance-kpi-design, Scoring). 99.5, 99 and 98 all sit in the top tenth of green. Example: one sub-metric at score 95 among six at 100 gives a KPI of about 99.2, a fail for Gold, while every metric is green.
-  - "Leaves unmet demand of 0.5%, 1% and 2%" reads the score as 100 minus the share of time a VM waits. That was the scale of the older Performance (%). On today's score it is the modelling misconception "KPI at 75%, so 25% of the VMs are slow": scores, not shares.
-  - Proposal: state the class expectation as unmet demand, not as a VM Performance (%) value: the share of time a VM waits for CPU or memory, at most Gold 0.5%, Silver 1%, Bronze 1.5%. Bronze 1.5% steps with the relative contention 1x, 2x, 3x of your new diagram (Q175 c); 2% would be 4x.
-  - Reading it in the running stage: per VM, the monthly mean of VM CPU Contention (%) and VM Memory Contention (%), each against the class value. A design expectation, not an alert or a KPI band.
-  - Change if accepted: class-of-service-planning (Contention: unmet demand per class; the unmet-demand line); catalog rows renamed `class-*-max-unmet-demand` with interval and statistic; can-cluster-take-more-vms misconception ("Gold design expectation"); delete the review note.
-  - For you: (1) restate the class values as unmet demand, or keep them as VM Performance (%) scores with new numbers on the 0-100 score; (2) Bronze 1.5% or 2%; (3) the statistic and period (proposal: monthly mean per VM).
-- Answer:
-
-### Q165 · benchmark/design.md, sections 3-5 and 10 · Sealed claim set and knowledge_class tag
-
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md); [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5); [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md).
-- Question: (a) a sealed claim set of 150-200 Level 300-400 questions, at least half from real tickets, written by you and 1-2 peers, never seen during development; tag `knowledge_class: public-mechanism | vendor-current | author-framework`; superiority claimed on public-mechanism; (b) current design; (c) other.
-- Written as now: 95 questions: 68 synthetic, 17 quiz, 10 book, 0 real tickets; 71 draft, 23 awaiting input, 1 reviewed. design.md keeps a held-out set of about 20% kept by you; no sealed set, no `knowledge_class`; its status section is dated 2026-11-05 (90 questions). Since the review: no benchmark until M1-M3 are done (Q163); the frontier reference is Claude Opus 5.5 only, web search on, effort capped at medium (Q164).
-- Final answer (2026-11-12; expert call): (a), adjusted to Q163 and Q164.
-  - One sealed set replaces the 20% held-out cut: 150-200 questions, Level 300-400, at least half from real tickets, by you and 1-2 peers, never seen during development. Two separate holdbacks would split too few questions.
-  - `knowledge_class` on every question. Superiority is claimed on public-mechanism, the class a frontier model can know. author-framework is scored and reported apart: a frontier model cannot know the SP5 Framework, so a win there proves the knowledge base, not the agent's reasoning.
-  - Why: at 100 questions a 10-point gap is detected with about 68% power (review, section 5). With one frontier family as the reference (Q164) and 68 of 95 questions synthetic, questions written by people matter more.
-  - The development set (the 100 questions) keeps its job: the release gate and M3.
-  - Change if accepted: benchmark/design.md (sections 3-5 and 10; status section with today's counts); question template (`knowledge_class`); project/terms.md (proposal); plan M2.
-  - For you: names of the peer authors; a source of real tickets.
-- Answer:
-
-### Q175 · Class of service · New relative-value diagram vs the reservation shares, VM size and minimum performance
-
-- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (sections Promise vs technique, Example implementation); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (sections Recommended SLA per class, Sample offering, Size limit per class); [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section Compliance SLA).
-- Search: not from the book; your relative-value diagram of 2026-11-11.
-- Question: which values win for (a) reservation, (b) maximum VM size, (c) minimum VM Performance; will you update the planning image (d); is the Sample offering's (e) a Compliance SLA or a Security SLA, and at which number?
-- Written as now:
-  - Diagram and table: contention 1x, 2x, 3x; maximum VM size 3x, 2x, 1x; reservation 3x, 2x, 1x; share 4-8x, 2-4x, 1x; overcommit 1x, 2x, 3x. "The steps are a goal, not a rule."
-  - (a) Reservation 50%, 25%, 12.5% CPU and 100%, 50%, 25% memory: 4x, 2x, 1x. You kept 12.5% for Bronze (Q173 b).
-  - (b) Q176: class size Gold 2 × the cores of one CCD or compute tile, Silver 1 ×, Bronze 0.5 ×: 4x, 2x, 1x. vm-size and class-of-service still also call the technical maximum (threads ÷ ratio) the class cap.
-  - (c) 99.5%, 99%, 98%: see Q162.
-  - (d) Done 2026-11-11.
-  - (e) Sample offering: "Security SLA | 100% | 100% | Perfect compliance for every class". Recommended SLA table: Compliance 99.95% for every class. sla-metrics: "do not put 100% in it; the contract value is 99.95%. The internal KSI is 100%". Glossary: Security SLA is the preferred term, also called Compliance SLA.
-- Final answer (2026-11-12; (a), (b) settled by Q173 and Q176, the diagram follows; (c) in Q162; (e) settled by sla-metrics and the glossary):
-  - (a) The values stay (Q173 b, the spreadsheet): a reservation guards against starvation and does not have to step with the ratio. The diagram row reads 4x, 2x, 1x.
-  - (b) The values stay (Q176): 2, 1 and 0.5 CCDs or compute tiles. The diagram row reads 4x, 2x, 1x. Two lines change so that the technical maximum is not called the class cap: vm-size, fence section; class-of-service, Size limit (Q111).
-  - So the diagram: contention 1x, 2x, 3x; overcommit 1x, 2x, 3x; reservation 4x, 2x, 1x; maximum VM size 4x, 2x, 1x; share 4-8x, 2-4x, 1x. The steps stay a goal, not a rule.
-  - (c) Q162: restate as unmet demand; Bronze 1.5% steps with contention 3x.
-  - (d) Done.
-  - (e) A Security SLA (the glossary's term) at 99.95%, as the Recommended SLA table and sla-metrics state; 100% is the internal KSI. Sample offering row → "Security SLA | 99.95% | 99.95% | Same for every class; the internal KSI is 100%". The Recommended SLA table header "Compliance" → "Security", one word per concept.
-  - Change if accepted: your diagram (two rows) and its alt text and table in class-of-service-planning; vm-size and class-of-service (cap wording); class-of-service (Sample offering row; table header); delete the Q175 review note.
-  - For you: relabel the two diagram rows, or tell which value should change instead.
-- Answer:
-
 ## Resolved
+
+### Q162 · Class of service · Minimum VM Performance (%) per class
+
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md); [KPI design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/performance-kpi-design.md); [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md); [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml).
+- Question: class-of-service-planning gave each class a minimum VM Performance (%): Gold 99.5%, Silver 99%, Bronze 98%. The KPI has no class of service (2026-11-10). Which one holds?
+- Answer (2026-11-12): try to answer it. KPI design is an overall design; keep it as design.
+- Decision (expert call): no minimum KPI per class. The numbers are removed.
+  - The KPI has one set of levels for every object of a type. A minimum per class is a per-class KPI target by another name.
+  - The numbers do not fit today's score. VM Performance (%) is banded: 100-75 is green. 99.5, 99 and 98 all sit in the top tenth of green; one sub-metric at 95 among six at 100 already fails Gold.
+  - Contention cannot be modelled at planning. The class promise is relative: contention 1x, 2x, 3x, kept by overcommit, reservation, shares and VM size.
+  - In the running stage the class shows in the result: group the VMs per class and compare each group's KPI. Gold should score above Silver, Silver above Bronze (kpi-vs-sla, Two steps of maturity).
+  - Not restated as unmet demand (the earlier proposal): Bronze 1.5% and a monthly mean would be new numbers with no source.
+- Applied 2026-11-12: class-of-service-planning (contention row and unmet-demand line removed; relative promise stated; the book numbers kept as a corrections entry); performance-kpi-design (section Reading a KPI over time: class shows in the result, compare class groups; misconception); can-cluster-take-more-vms (step 5 and misconception); class-of-service (pointer line); 3 catalog rows archived in project/archive/catalog-rows-class-min-vm-performance-2026-11-12.yaml.
+- Applied with it: performance-kpi-design is now the overall KPI design. VM and Guest OS details moved to their KPI files: the metrics not used (vm-performance and guest-os-performance, section Not used), VM DRS Score, the excluded-green list, Guest OS free memory. Added from the scoring model: direction of the limits, best limit not always 0, the green test reads the value, noise below 0.005 counts as 0, the same scoring serves the capacity models. modelling keeps the three ways to combine colours and links to the rules. Closed.
+
+### Q165 · benchmark/design.md · Sealed claim set and knowledge_class tag
+
+- Question: a sealed set of 150-200 questions, half from real tickets, and a `knowledge_class` tag.
+- Answer (2026-11-12): benchmark questions need not come from the real world. The author has seen enough to know what can happen and what is unrealistic. Close as irrelevant.
+- Applied 2026-11-12: no change to benchmark/design.md. Closed.
+
+### Q175 · Class of service · Relative value per class vs reservation, VM size and SLA
+
+- Files: [Class of service in capacity planning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/class-of-service-planning.md) (section Promise vs technique); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (sections Recommended SLA per class, Sample offering).
+- Question: the relative-value diagram said reservation 3x, 2x, 1x and maximum VM size 3x, 2x, 1x; the values in the knowledge base step 4x, 2x, 1x. The Sample offering said Security SLA 100%; the SLA files say 99.95%.
+- Answer (2026-11-12): try to answer it.
+- Decision (expert call):
+  - The values win, the diagram follows. Reservation 50%, 25%, 12.5% (Q173) and VM size 2, 1, 0.5 CPU building blocks (Q176) both step 4x, 2x, 1x.
+  - The diagram is a simple table. A simple table needs no image (author, Q108): the text table in the file is now the only copy, with the two rows corrected. The image is archived (project/archive/knowledge/images/class-of-service-relative-value-gold-silver-bronze-table.png).
+  - Contention stays 1x, 2x, 3x, the promise (Q162).
+  - Security SLA 99.95% for every class, as sla-metrics states; 100% is the internal KSI. The Recommended SLA table header reads Security, the glossary's term.
+  - VM size wording (technical ceiling vs class size) was already fixed with Q176.
+- Applied 2026-11-12: class-of-service-planning (table rows, two lines on why reservation and size step 4x, image removed, review note deleted); class-of-service (Sample offering row, table header). Closed.
 
 ### Q143 · Part 2 > Proactive Operations > Alert > Threshold Design > Conditions · Condition vs symptom
 

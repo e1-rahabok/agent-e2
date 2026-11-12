@@ -9,8 +9,6 @@
 - Price, SLA numbers per class, size limits and soft products: [`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md). This file holds the capacity settings.
 
 ## Promise vs technique
-![Relative value per class, Gold, Silver, Bronze: relative contention 1x, 2x, 3x; maximum VM size 3x, 2x, 1x; VM reservation 3x, 2x, 1x; VM share 4-8x, 2-4x, 1x; VM to ESXi overcommit ratio 1x, 2x, 3x](images/class-of-service-relative-value-gold-silver-bronze-table.png)
-
 - What is sold: a Gold VM has the lowest chance of contention; Silver about 2x Gold's, Bronze about 3x.
 - Contention cannot be guaranteed directly. So the provider proves the promise with four techniques, each stepping with the class:
   - a lower overcommit ratio;
@@ -21,10 +19,14 @@
 | Relative value | Gold | Silver | Bronze |
 |---|---|---|---|
 | Relative contention | 1x | 2x | 3x |
-| Maximum VM size | 3x | 2x | 1x |
-| VM reservation | 3x | 2x | 1x |
+| Maximum VM size | 4x | 2x | 1x |
+| VM reservation | 4x | 2x | 1x |
 | VM share | 4-8x | 2-4x | 1x |
 | VM to ESXi overcommit ratio | 1x | 2x | 3x |
+
+- Maximum VM size steps 4x, 2x, 1x: 2, 1 and 0.5 CPU building blocks ([`sp5-framework/capacity/vm-size`](vm-size.md), section Size per class).
+- Reservation steps 4x, 2x, 1x: 50%, 25%, 12.5% CPU and 100%, 50%, 25% memory (section Example implementation). A reservation guards against starvation; it does not have to step with the overcommit ratio.
+- Contention is promised as a relative step, not as an absolute number per class. The KPI levels are the same for every class; Gold scores higher because it has less contention by design ([`sp5-framework/performance/performance-kpi-design`](../performance/performance-kpi-design.md), section Reading a KPI over time).
 
 ## Example implementation
 ![Planning values per class, Gold, Silver, Bronze. Typical VM (average for planning, not the maximum; 4 GB RAM per vCPU): 16 vCPU 64 GB, 8 vCPU 32 GB, 4 vCPU 16 GB. Reservation (relative to VM configured size, set at resource pool): 50% CPU 100% RAM, 25% CPU 50% RAM, 12.5% CPU 25% RAM. Allocation (thread, usable capacity; RAM against DRAM, memory tiering not in the ratio): CPU 1:1 RAM 1:1, CPU 2:1 RAM 1.2:1, CPU 3:1 RAM 1.4:1. Utilization, expected concurrent peak of the VMs: CPU 35% RAM 85%, CPU 50% RAM 85%, CPU 65% RAM 85%](images/class-of-service-planning-values-vm-reservation-allocation-utilization-table.png)
@@ -43,21 +45,15 @@
   - Silver: CPU 2:1, RAM 1.2:1
   - Bronze: CPU 3:1, RAM 1.4:1
   - CPU per thread, not per core. 3:1 is the highest CPU overcommit of any class: 6:1 per core with Hyper-Threading. Against usable capacity, not total capacity. RAM is against DRAM: memory tiering is not part of the ratio and not part of the plan ([`sp5-framework/capacity/overcommit`](overcommit.md)).
-- **Contention: minimum VM Performance (%)**
-  - Gold: ≥ 99.5%
-  - Silver: ≥ 99%
-  - Bronze: ≥ 98%
-  - The VM Performance (%) a cluster sized to the class is expected to keep: a capacity design expectation that sets the overcommit of the class. The KPI itself has no class of service ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 - **Utilization: expected concurrent peak of the VMs**
   - Gold: CPU 35%, RAM 85%
   - Silver: CPU 50%, RAM 85%
   - Bronze: CPU 65%, RAM 85%
   - The share of configured size busy at the same time across the VMs of a class. Against ESXi physical threads, not cores; against usable capacity, not total.
 
-- Reservation, allocation and contention are the settings and promises. Utilization is the expected demand; the host utilization it produces is a result.
+- Reservation and allocation are the settings; relative contention is the promise they keep. Utilization is the expected demand; the host utilization it produces is a result.
 - Gold fills on CPU allocation, well before its threads are busy: on a 64-core, 768 GB host (Hyper-Threading on), 7 Gold VMs reach 98% CPU allocation and 93% CPU reservation at 34% CPU utilization.
 - Bronze fills on CPU utilization: on the same host, 43 Bronze VMs reach 98% CPU utilization at 50% CPU allocation. Its threads are planned to be busy; above that, contention risk rises.
-- The minimum Performance (%) leaves unmet demand of 0.5%, 1% and 2%.
 
 ## Planning calculator
 - At the planning stage there is no workload, so the plan is a simulation. What the planning and running stages each use: [`sp5-framework/capacity/capacity-management`](README.md), section Two stages. Agent E2 runs it with the `capacity_plan` tool; the model gathers the inputs and explains the result. Defaults per class are catalog rows `planning-*`.
@@ -77,6 +73,7 @@
 - "Our Bronze plan of 3:1 shows red overcommit in Cluster Risk, so the plan is wrong" → the ratio is a planning input tied to price; Cluster Risk reads the running cluster, where Bronze is expected to score higher than Gold.
 - "Keep exactly the same step on every row" → the step is a goal, not a rule.
 - "Gold gets 2x the performance of Silver" → Gold gets about half the chance of contention; speed is not doubled.
+- "Each class has a minimum VM Performance (%)" → the promise is relative contention (1x, 2x, 3x). One set of KPI levels for every class; compare the class groups.
 - "Set the Gold reservation on each VM" → set it on the resource pool; VM-level reservation changes HA admission control and restart.
 - "A Bronze cluster at 90% CPU is overloaded" → a mostly Bronze cluster is planned to run near 100% of its usable threads; contention decides: read Cluster Performance (%).
 - "Overcommit ratio per core" → the plan counts threads, not cores; 3:1 per thread is 6:1 per core with Hyper-Threading.
@@ -116,11 +113,6 @@ related:
 - vsphere/object-types/cluster/models/cluster-risk
 - vsphere/object-types/vm/vm-performance
 images:
-  - path: images/class-of-service-relative-value-gold-silver-bronze-table.png
-    product: [vsphere]
-    object: [ClusterComputeResource]
-    topic: 'Class of service relative value'
-    image_type: table
   - path: images/class-of-service-planning-values-vm-reservation-allocation-utilization-table.png
     product: [vsphere]
     object: [ClusterComputeResource, ResourcePool]
@@ -129,10 +121,9 @@ images:
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); Capacity Planning Stage (spreadsheet, 2026-11-11)
   path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template'
-corrections: []
+corrections:
+- 'Section ''Example implementation'': the book table gives a minimum Performance (%) per class (Gold 99.5%, Silver 99%, Bronze 98%), labelled KPI, not SLA. Not used: the KPI has no class of service, and the numbers sit on the older Performance (%) scale (100 minus the share of time waiting), not on the banded score (Q162).'
 review_notes:
 - 'Section ''Example implementation'': Silver 2:1 and Bronze 3:1 per thread are 4 and 6 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, so a Bronze cluster built to this plan scores red on the CPU overcommit row. Memory 1.4:1 stays below the memory red band (1.8-2.2).'
-- 'To check: Sections ''Promise vs technique'' and ''Example implementation'': the relative-value table steps reservation 3x/2x/1x and contention 1x/2x/3x, while the reservation shares (50%, 25%, 12.5%) and the unmet demand (0.5%, 1%, 2%) step 4x/2x/1x (Q175).'
-- 'To check: section Contention: class minimum VM Performance (%) read as a capacity design expectation; the author''s table says KPI (Q162).'
 status: draft
 ```

@@ -1,10 +1,10 @@
-# ESXi Performance (%) (vCommunity management pack KPI for VCF Operations)
+# ESXi Performance (%)
 
 ## What it is
 - One score per ESXi host, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
 - ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See [`vsphere/architecture/provider-consumer`](../../architecture/provider-consumer.md).
-- Not built into VCF Operations: a metric of the vCommunity management pack, published on the host object under `vCommunity|ESXi Performance|ESXi Performance Score`, with its 9 sub-metrics beside it.
+- Not a built-in VCF Operations metric. 9 sub-metrics.
 - Use: the first step of the ESXi health check ([`vsphere/object-types/esxi/esxi-health-check`](esxi-health-check.md)). When the score drops, open the 9 sub-metrics of that host.
 
 ## Design
@@ -30,7 +30,7 @@
 - It replaces the former "ESXi Bad Network Packets" super metric.
 
 ## Scoring
-- Each sub-metric scores 100-0 against its limits; the KPI is a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: [`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
+- Each sub-metric scores 100-0 against its limits; the KPI is a weighted average where a worse score weighs more. Rule shared by every KPI: [`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
 - Nothing wrong: bad packets 0 (excluded), the other 8 score 100. KPI = 100.
 - One VM with 200 ms disk latency: the worst-VM disk row is a quarter into red (160-320 ms) and scores 18.75 with weight 9.51. The 90th percentile stays 0: one VM is not a broad problem. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2.
 - A host with no powered-on VMs: no VM sub-metric has data; bad packets 0 are left out. KPI = 100.
@@ -72,12 +72,11 @@ related:
 - vsphere/architecture/provider-consumer
 images:
 source:
-  document: VCF-vCommunity-Adapter documentation, ESXi Performance KPI
-  path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/esxi-performance.md; formula/esxi-performance.png
+  document: Knowledge base
+  path: 'ESXi Performance (%): the Cluster Performance design applied to the VMs of one host'
 corrections: []
 review_notes:
-- 'Whole file: from the adapter documentation and formula image. Metric names follow Cluster Performance, with "on the host" added.'
-- 'To check: Section Thresholds, interval: the Cluster Performance memory rows carry interval 5m in the catalog; every VM sub-metric here is a 20-second peak (adapter documentation, including mem|20_sec_peak_host_contentionPct).'
+- 'To check: Section Thresholds, interval: the Cluster Performance memory rows carry interval 5m in the catalog; every VM sub-metric here is a 20-second peak, including mem|20_sec_peak_host_contentionPct.'
 - 'To check: Section Misconceptions: derived from the design text.'
 status: draft
 ```

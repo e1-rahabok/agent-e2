@@ -3,7 +3,7 @@
 ## Prompt
 - An ESXi host has 64 cores, 128 threads, 768 GB of DRAM and a 768 GB NVMe memory tier.
 - A new VM is planned with 40 vCPUs and 300 GB of memory.
-- The monster VM defaults of the vCommunity Cluster Risk metric apply.
+- The monster VM defaults of Cluster Risk (%) apply.
 
 Which statements are correct? Choose all that apply.
 

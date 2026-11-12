@@ -1,7 +1,7 @@
 # Cluster Risk fell after deploying VMs
 
 ## Prompt
-- A cluster's Cluster Risk (vCommunity management pack) was 67.9, driven by one busy host.
+- A cluster's Cluster Risk (%) was 67.9, driven by one busy host.
 - The team deployed ten idle 4-vCPU VMs. The CPU overcommit ratio of the hosts rose from 0.5 to about 1.1.
 - Cluster Risk is now 64.5.
 - The capacity manager says the deployment lowered the risk.
