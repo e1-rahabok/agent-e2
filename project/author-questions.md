@@ -647,18 +647,18 @@ Each entry has:
 | Sub-metric | Unit | Score 100 at | Green ends at | Yellow ends at | Orange ends at | Score hits 0 at | Change |
 |---|---|---|---|---|---|---|---|
 | Worst ESXi Active Memory, tiered hosts | % of DRAM | 0 | 50 (excluded while green) | 62.5 | 75 | 100 | New (Q178 a); replaces NVMe consumed ÷ DRAM consumed |
-| Worst ESXi NVMe Read Latency | µs | 0 | 100 | 200 | 400 | 800 | Was 150, 300, 450, 600; counted only while the host reads at least 1 MB/s from NVMe |
+| Worst ESXi NVMe Read Latency | µs | 0 | 100 | 200 | 400 | 800 | Was 150, 300, 450, 600; no read floor (revised 2026-11-12) |
 
 - Reasons:
   - DRAM consumed on a tiered host: Memory Consumed covers both tiers and goes above 100% of DRAM by design, so the tiered row reads tier 0 only. DRAM sits near 80% whenever the tier is in use, so green runs to 80; above that, hot pages are filling DRAM.
   - Tier consumption is saturation (Q178 d), measured against the usable NVMe tier. Linear bands, like the utilization rows: the tier is filled with cold pages on purpose, so its fill is the room left before swap. At the default 1:1 ratio, Broadcom's example at 2x VM density (1,600 GB of 2 TB) puts the tier near 60%, orange, as a host without tiering at 80% sits at the yellow-orange line. The stricter option, doubling like the other saturation rows (12.5, 25, 50, 100), turns designed use red.
   - Memory Wait: the VM does not care where it waits for memory (Modelling). NVMe Wait estimates the share of vCPU time a VM waits for pages fetched from NVMe (Little's law): NVMe Wait (%) = VM tier-1 read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. Same bands as Memory Latency, so it reuses a scale that is already quantified.
-  - NVMe read latency: doubling, as Setting thresholds asks; red starts at Broadcom's impact point (400 µs); Broadcom's "potential issues" zone (200-400 µs) is orange; its "good" zone splits into green and yellow. The read floor removes the wake-up penalty of an idle device.
+  - NVMe read latency: doubling, as Setting thresholds asks; red starts at Broadcom's impact point (400 µs); Broadcom's "potential issues" zone (200-400 µs) is orange; its "good" zone splits into green and yellow. No read floor (revised after your remark): a device waking from a power-saving state is the why; the VM that read waited all the same.
   - Active memory: Broadcom's 50% (recommended) and 75% (significant loss) are the ends of green and orange; 62.5% splits the testing zone; 100% is active memory equal to DRAM. Excluded while green, like the other leading indicators of Cluster Risk.
 - Data quality before use (your rule in Q178 c):
   - NVMe Wait rests on three assumptions to validate on a tiered lab host: each fetch is one 4 KB page (large pages are off on tiered hosts) and blocks one vCPU; reads include no prefetch; Memory Latency (%LAT_M) does not already count the fetches (if it does, the sum double counts and NVMe Wait is dropped). Until validated, show it and leave it out of the score.
   - Metric keys in VCF Operations for tier-0 consumed, per-VM tier-1 read bandwidth and host tier-1 read bandwidth: not yet found (vCenter: tier.consumed, bandwidth.read per tier, level 2; latency.read level 3).
-  - The 1 MB/s read floor is a proposal: 256 fetches a second keep a device awake.
+  - Revised 2026-11-12: the 1 MB/s read floor is withdrawn. It removed a real wait because of its cause (the why), and the SP5 Framework scores the what. Memory Wait (reads × latency) already weighs a wake-up by how many reads it hit.
 - Question: accept each table row, or give your numbers; and which tier-consumption bands (linear 25/50/75/100 or doubling 12.5/25/50/100)?
 - For you: the three tables.
 - Answer:

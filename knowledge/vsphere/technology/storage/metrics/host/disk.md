@@ -26,7 +26,7 @@
 ![NVMe memory-tier device: high latency at near-zero activity](../../images/nvme-memory-tier-device-high-latency-at-near-zero-io.png)
 
 ## Misconceptions
-- "High latency on an idle NVMe tier device is a problem" → wake-up penalty on sporadic IO.
+- "High latency on an idle NVMe tier device is harmless" → the read that woke the device waited that long; how much the VMs lost depends on how many reads hit it. The wake-up is the why, not a reason to ignore the what.
 
 ## Metadata
 ```yaml

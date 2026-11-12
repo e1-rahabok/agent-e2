@@ -23,7 +23,7 @@ flowchart TD
 3. Device (HostSystem). Healthy DAVG is well within 5 ms. DAVG high: check the array. Array latency low: the fabric or HBA configuration. → step 4.
 4. Per adapter and path (HostSystem) ([`vsphere/technology/storage/metrics/host/adapter-and-path`](../metrics/host/adapter-and-path.md)). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
 5. Read vs write (HostSystem). Write-only latency is expected when reads hit cache. → step 6.
-6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up penalty, not a fault. → step 7.
+6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up from a power-saving state: the cause, not a reason to discard the reading. The VMs that read then did wait; their NVMe Wait shows how much. → step 7.
 7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks).
 
 ## Why this order
