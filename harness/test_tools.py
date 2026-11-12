@@ -329,6 +329,13 @@ class PrimerTest(unittest.TestCase):
         self.assertNotIn('What belongs here', t)
         self.assertNotIn('Correction', t)
 
+    def test_rules_and_glossary_keep_only_the_id_of_a_file_link(self):
+        t = self.P.rules_block(DOCS)
+        self.assertNotIn('.md)', t)
+        self.assertIn('See `vsphere/architecture/vm-vs-guest-os`', t)
+        files = [e['file'] for e in kb.glossary(DOCS) if e['file']]
+        self.assertTrue(files and all(f in DOCS for f in files))
+
     def test_flow_index_lists_every_flow_file(self):
         t = self.P.flows_block(DOCS)
         for i in DOCS:

@@ -1,7 +1,7 @@
 # <Object>: health check
 
 ## Purpose
-- A scheduled or on-demand check of one object across every pillar: is it healthy, at risk, or wasteful? The what, not the why. What a health check is: `sp5-framework/concepts/health-check`.
+- A scheduled or on-demand check of one object across every pillar: is it healthy, at risk, or wasteful? The what, not the why. What a health check is: [`sp5-framework/concepts/health-check`](../../knowledge/sp5-framework/concepts/health-check.md).
 
 ## Flow
 ```mermaid
@@ -26,7 +26,7 @@ flowchart TD
 ```
 
 ## Checks, in order
-Order: availability, performance, security, capacity; within each pillar the what before the why (`sp5-framework/concepts/health-check`).
+Order: availability, performance, security, capacity; within each pillar the what before the why ([`sp5-framework/concepts/health-check`](../../knowledge/sp5-framework/concepts/health-check.md)).
 1. Availability. <What is checked, or: future, after 1.0.> → step 2.
 2. Performance: <KPI> (<object>). Green → step 3. Otherwise → `<troubleshooting id>`.
 3. Capacity: <model> (<object>). <Band, with source> → step 4.

@@ -2,6 +2,7 @@
 
 A backticked knowledge id (`vsphere/architecture/resource-controls`) becomes [<its # title>](URL).
 A backticked repository path that exists (`benchmark/design.md`) becomes [path](URL).
+Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md).
     python3 project/tools/link_refs.py          # rewrite DOCS
     python3 project/tools/link_refs.py --check  # list unlinked references; exit 1 if any (used by lint)
 """
@@ -67,6 +68,32 @@ def rewrite(text):
     return _prose(text, lambda t: TICK.sub(lambda m: (lambda x: f'[{x[0]}]({x[1]})' if x else m.group(0))(target(m.group(1))), t))
 
 
+# Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md), the form knowledge files use
+# (project/knowledge-rules/writing.md). The harness keeps only `id` (kb.FILE_LINK), so the model reads no path.
+SKIP = ('project/sources/', 'project/archive/')
+BARE_ID = re.compile(r'(?<!\[)`([\w./-]+)`(?!\]\()')
+
+
+def others():
+    return [f for f in sorted(glob.glob('**/*.md', recursive=True)) if f not in DOCS and not f.startswith(SKIP) and tracked(f)]
+
+
+def _rel(path, ref):
+    ref = MOVED.get(ref.rstrip('/'), ref.rstrip('/'))
+    k = f'knowledge/{ref}.md'
+    return os.path.relpath(k, os.path.dirname(path) or '.') if '/' in ref and os.path.isfile(k) else None
+
+
+def rewrite_relative(path, text):
+    return _prose(text, lambda t: BARE_ID.sub(lambda m: (lambda r: f'[`{m.group(1)}`]({r})' if r else m.group(0))(_rel(path, m.group(1))), t))
+
+
+def bare_ids(path):
+    found = []
+    _prose(open(path).read(), lambda t: found.extend(m.group(1) for m in BARE_ID.finditer(t) if _rel(path, m.group(1))) or t)
+    return found
+
+
 def unlinked(path):
     found = []
     _prose(open(path).read(), lambda t: found.extend(m.group(1) for m in TICK.finditer(t) if target(m.group(1))) or t)
@@ -78,7 +105,14 @@ if __name__ == '__main__':
         bad = {d: unlinked(d) for d in DOCS}
         for d, refs in bad.items():
             for r in refs: print(f'{d}: `{r}` should be a link (run project/tools/link_refs.py)')
+        bad.update({f: bare_ids(f) for f in others()})
+        for d, refs in bad.items():
+            if d not in DOCS:
+                for r in refs: print(f'{d}: `{r}` should be a link (run project/tools/link_refs.py)')
         sys.exit(1 if any(bad.values()) else 0)
     for d in DOCS:
         t = open(d).read(); u = rewrite(t)
         if u != t: open(d, 'w').write(u); print('updated', d)
+    for f in others():
+        t = open(f).read(); u = rewrite_relative(f, t)
+        if u != t: open(f, 'w').write(u); print('updated', f)

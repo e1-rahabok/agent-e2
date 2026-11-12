@@ -24,7 +24,7 @@ D (reservation assumed to block memory before use) or C.
 
 ## Notes
 - Previous id: vsphere-memory-005 (renamed 2026-11-05).
-- The knowledge base (`vsphere/architecture/overhead`) says kernel memory reservation stays steady even when kernel use drops 90%. Check E's key against it during review.
+- The knowledge base ([`vsphere/architecture/overhead`](../../knowledge/vsphere/architecture/overhead.md)) says kernel memory reservation stays steady even when kernel use drops 90%. Check E's key against it during review.
 
 ## Metadata
 ```yaml
