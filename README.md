@@ -2,18 +2,19 @@
   <img src="https://img.shields.io/badge/Agent%20E2-Level%20400%20private%20cloud%20operations%20management%20expertise-6e7781?style=for-the-badge&labelColor=3d444d" alt="Agent E2: Level 400 operations management expertise">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/-vSphere-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSphere">
-  <img src="https://img.shields.io/badge/-VCF-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="VCF">
-  <img src="https://img.shields.io/badge/-vSAN-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="vSAN">
-  <img src="https://img.shields.io/badge/-NSX-6e7781?logo=vmware&logoColor=white&labelColor=3d444d" alt="NSX">
-  <img src="https://img.shields.io/badge/-Kubernetes-6e7781?logo=kubernetes&logoColor=white&labelColor=3d444d" alt="Kubernetes">
-  <img src="https://img.shields.io/badge/-Windows-6e7781?labelColor=3d444d" alt="Windows">
-  <img src="https://img.shields.io/badge/-Linux-6e7781?logo=linux&logoColor=white&labelColor=3d444d" alt="Linux">
+  <img src="https://img.shields.io/badge/-vSphere-6e7781?style=for-the-badge&logo=vmware&logoColor=white&logoSize=auto&labelColor=3d444d" alt="vSphere">
+  <img src="https://img.shields.io/badge/-VCF-6e7781?style=for-the-badge&logo=vmware&logoColor=white&logoSize=auto&labelColor=3d444d" alt="VCF">
+  <img src="https://img.shields.io/badge/-vSAN-6e7781?style=for-the-badge&logo=vmware&logoColor=white&logoSize=auto&labelColor=3d444d" alt="vSAN">
+  <img src="https://img.shields.io/badge/-NSX-6e7781?style=for-the-badge&logo=vmware&logoColor=white&logoSize=auto&labelColor=3d444d" alt="NSX">
+  <br>
+  <img src="https://img.shields.io/badge/-Kubernetes-6e7781?style=for-the-badge&logo=kubernetes&logoColor=white&labelColor=3d444d" alt="Kubernetes">
+  <img src="https://img.shields.io/badge/-Windows-6e7781?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTAgMy40NSA5Ljc1IDIuMXY5LjQ1SDB6TTEwLjk1IDEuOTUgMjQgMHYxMS40SDEwLjk1ek0wIDEyLjZoOS43NXY5LjQ1TDAgMjAuN3pNMTAuOTUgMTIuNkgyNFYyNGwtMTMuMDUtMS44eiIvPjwvc3ZnPgo=&logoColor=white&labelColor=3d444d" alt="Windows">
+  <img src="https://img.shields.io/badge/-Linux-6e7781?style=for-the-badge&logo=linux&logoColor=white&labelColor=3d444d" alt="Linux">
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
-  <img src="https://img.shields.io/badge/knowledge%20files-277-6e7781?labelColor=3d444d" alt="Knowledge files: 277">
+  <img src="https://img.shields.io/badge/knowledge%20files-281-6e7781?labelColor=3d444d" alt="Knowledge files: 281">
   <img src="https://img.shields.io/badge/benchmark%20questions-150-6e7781?labelColor=3d444d" alt="Benchmark questions: 150">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
