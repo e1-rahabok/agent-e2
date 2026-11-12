@@ -13,7 +13,7 @@ meta:
     instance: 'Which reading: object aggregate, worst instance, percentile. Empty until a source states it.'
     operator: '>, >=, <, <=, =, range.'
     value: 'The number compared against; range: low end, value_high the high end.'
-    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit.'
+    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. Blank for a ratio or fraction: what it is a ratio of is in the metric name.'
     condition: Another condition that must hold at the same time.
     meaning: What the knowledge file says the value means.
     group: 'models: the group column of the source table (for example Utilization, Depth).'
@@ -469,61 +469,55 @@ rules:
   kb: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
   quote: Keep it around 80%-90% per host
 - id: planning-gold-cpu-overcommit
-  metric: CPU overcommit ratio (allocation)
+  metric: CPU overcommit ratio (allocation), vCPU per physical thread
   object: VirtualMachine
   operator: '='
   value: 1
-  unit: vCPU per physical thread
   condition: Gold class of service, planning stage
   meaning: 'Allocation model: vCPU sold per physical thread, against usable threads.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-memory-overcommit
-  metric: Memory overcommit ratio (allocation)
+  metric: Memory overcommit ratio (allocation), GB of VM memory per GB of usable DRAM
   object: VirtualMachine
   operator: '='
   value: 1
-  unit: GB of VM memory per GB of usable DRAM
   condition: Gold class of service, planning stage
   meaning: 'Allocation model: VM memory sold per GB of usable DRAM; memory tiering is added on top.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-cpu-reservation
-  metric: CPU reservation
+  metric: CPU reservation, fraction of configured vCPU × base GHz
   object: VirtualMachine
   operator: '='
   value: 0.5
-  unit: fraction of configured vCPU × base GHz
   condition: Gold class of service, planning stage
   meaning: 'Reservation model: share of each VM CPU reserved at the resource pool, at the base clock.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-memory-reservation
-  metric: Memory reservation
+  metric: Memory reservation, fraction of configured memory
   object: VirtualMachine
   operator: '='
   value: 1.0
-  unit: fraction of configured memory
   condition: Gold class of service, planning stage
   meaning: 'Reservation model: share of each VM memory reserved at the resource pool.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-cpu-concurrent-peak
-  metric: Expected concurrent peak CPU utilization of a VM
+  metric: Expected concurrent peak CPU utilization of a VM, fraction of configured vCPU
   object: VirtualMachine
   operator: '='
   value: 0.35
-  unit: fraction of configured vCPU
   condition: Gold class of service, planning stage
   meaning: 'Utilization model: the share of configured vCPU busy at the same time across the VMs of the class.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-gold-memory-concurrent-peak
-  metric: Expected concurrent peak memory utilization of a VM
+  metric: Expected concurrent peak memory utilization of a VM, fraction of configured memory
   object: VirtualMachine
   operator: '='
   value: 0.85
-  unit: fraction of configured memory
   condition: Gold class of service, planning stage
   meaning: 'Utilization model: the share of configured memory in use at the same time.'
   source: knowledge-base
@@ -539,61 +533,55 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-cpu-overcommit
-  metric: CPU overcommit ratio (allocation)
+  metric: CPU overcommit ratio (allocation), vCPU per physical thread
   object: VirtualMachine
   operator: '='
   value: 2
-  unit: vCPU per physical thread
   condition: Silver class of service, planning stage
   meaning: 'Allocation model: vCPU sold per physical thread, against usable threads.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-memory-overcommit
-  metric: Memory overcommit ratio (allocation)
+  metric: Memory overcommit ratio (allocation), GB of VM memory per GB of usable DRAM
   object: VirtualMachine
   operator: '='
   value: 1.2
-  unit: GB of VM memory per GB of usable DRAM
   condition: Silver class of service, planning stage
   meaning: 'Allocation model: VM memory sold per GB of usable DRAM; memory tiering is added on top.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-cpu-reservation
-  metric: CPU reservation
+  metric: CPU reservation, fraction of configured vCPU × base GHz
   object: VirtualMachine
   operator: '='
   value: 0.25
-  unit: fraction of configured vCPU × base GHz
   condition: Silver class of service, planning stage
   meaning: 'Reservation model: share of each VM CPU reserved at the resource pool, at the base clock.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-memory-reservation
-  metric: Memory reservation
+  metric: Memory reservation, fraction of configured memory
   object: VirtualMachine
   operator: '='
   value: 0.5
-  unit: fraction of configured memory
   condition: Silver class of service, planning stage
   meaning: 'Reservation model: share of each VM memory reserved at the resource pool.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-cpu-concurrent-peak
-  metric: Expected concurrent peak CPU utilization of a VM
+  metric: Expected concurrent peak CPU utilization of a VM, fraction of configured vCPU
   object: VirtualMachine
   operator: '='
   value: 0.5
-  unit: fraction of configured vCPU
   condition: Silver class of service, planning stage
   meaning: 'Utilization model: the share of configured vCPU busy at the same time across the VMs of the class.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-silver-memory-concurrent-peak
-  metric: Expected concurrent peak memory utilization of a VM
+  metric: Expected concurrent peak memory utilization of a VM, fraction of configured memory
   object: VirtualMachine
   operator: '='
   value: 0.85
-  unit: fraction of configured memory
   condition: Silver class of service, planning stage
   meaning: 'Utilization model: the share of configured memory in use at the same time.'
   source: knowledge-base
@@ -609,61 +597,55 @@ rules:
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-cpu-overcommit
-  metric: CPU overcommit ratio (allocation)
+  metric: CPU overcommit ratio (allocation), vCPU per physical thread
   object: VirtualMachine
   operator: '='
   value: 3
-  unit: vCPU per physical thread
   condition: Bronze class of service, planning stage
   meaning: 'Allocation model: vCPU sold per physical thread, against usable threads.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-memory-overcommit
-  metric: Memory overcommit ratio (allocation)
+  metric: Memory overcommit ratio (allocation), GB of VM memory per GB of usable DRAM
   object: VirtualMachine
   operator: '='
   value: 1.4
-  unit: GB of VM memory per GB of usable DRAM
   condition: Bronze class of service, planning stage
   meaning: 'Allocation model: VM memory sold per GB of usable DRAM; memory tiering is added on top.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-cpu-reservation
-  metric: CPU reservation
+  metric: CPU reservation, fraction of configured vCPU × base GHz
   object: VirtualMachine
   operator: '='
   value: 0.125
-  unit: fraction of configured vCPU × base GHz
   condition: Bronze class of service, planning stage
   meaning: 'Reservation model: share of each VM CPU reserved at the resource pool, at the base clock.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-memory-reservation
-  metric: Memory reservation
+  metric: Memory reservation, fraction of configured memory
   object: VirtualMachine
   operator: '='
   value: 0.25
-  unit: fraction of configured memory
   condition: Bronze class of service, planning stage
   meaning: 'Reservation model: share of each VM memory reserved at the resource pool.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-cpu-concurrent-peak
-  metric: Expected concurrent peak CPU utilization of a VM
+  metric: Expected concurrent peak CPU utilization of a VM, fraction of configured vCPU
   object: VirtualMachine
   operator: '='
   value: 0.65
-  unit: fraction of configured vCPU
   condition: Bronze class of service, planning stage
   meaning: 'Utilization model: the share of configured vCPU busy at the same time across the VMs of the class.'
   source: knowledge-base
   kb: sp5-framework/capacity/class-of-service-planning
 - id: planning-bronze-memory-concurrent-peak
-  metric: Expected concurrent peak memory utilization of a VM
+  metric: Expected concurrent peak memory utilization of a VM, fraction of configured memory
   object: VirtualMachine
   operator: '='
   value: 0.85
-  unit: fraction of configured memory
   condition: Bronze class of service, planning stage
   meaning: 'Utilization model: the share of configured memory in use at the same time.'
   source: knowledge-base

@@ -12,7 +12,7 @@ meta:
     interval: 20s (20-second peak), 5m (5-minute average), 2s (esxtop), 1d; empty until a source states it.
     operator: '>, >=, <, <=, =, range.'
     value: 'The number compared against; range: low end, value_high the high end.'
-    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit.'
+    unit: 'Unit of value. count for a number of things (threads, I/Os, packets, VMs, vCPU): the VCF Operations unit. Blank for a ratio or fraction: what it is a ratio of is in the metric name.'
     condition: Another condition that must hold at the same time.
     meaning: What the knowledge file says the value means.
     source: 'knowledge-base, or a vendor document with its version: vsphere-9.1-docs, performance-best-practices-9.1, microsoft. Vendor values can go stale; the newer official document wins.'
