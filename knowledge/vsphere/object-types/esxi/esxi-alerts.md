@@ -5,7 +5,7 @@
 - Alerted: CPU contention and consumption, memory contention and consumption, dropped packets on the virtual and on the physical network.
 - Every value (threshold, population, wait) is in the alert rows of [`catalog/thresholds-alerts.yaml`](../../../catalog/thresholds-alerts.yaml), shown with this file. This file says why each symptom is in the alert.
 - Contention is read on the host's VMs, where the application feels it. Consumption is read on the host itself.
-- Consumption alerts are red only: an orange consumption alert adds false positives; early warning belongs to the daily dashboard. A capacity alert means something took capacity away: a bug or a hardware availability issue ([`sp5-framework/outputs/alert-design`](../../../sp5-framework/outputs/alert-design.md), section What to alert, by pillar).
+- Consumption alerts are red only: an orange consumption alert adds false positives; early warning belongs to the daily dashboard. A capacity alert means something took capacity away: a bug or a hardware availability issue ([`sp5-framework/outputs/alert-design`](../../../sp5-framework/outputs/alert-design.md), section Alerts by pillar).
 
 ## ESXi CPU contention
 - Detects: a share of the host's VMs did not get the CPU time they asked for.
@@ -41,7 +41,7 @@
 - Detects: transmitted packets dropped on the host's physical network adapters (vmnic) ([`vsphere/technology/network/metrics/host/packets-dropped`](../../technology/network/metrics/host/packets-dropped.md)).
 - One alert per side, so the alert names where the drop happened.
 
-## Not alerted, and why
+## Not alerted
 - Disk contention: not yet in the set.
 - Network consumption: not yet in the set. A network has no clear 100%, so the ceiling is hard to set.
 - Disk consumption: not alerted on the host; the daily check or the NOC screen serves better. Datastore space: [`vsphere/object-types/datastore/datastore-alerts`](../datastore/datastore-alerts.md).

@@ -20,12 +20,12 @@ flowchart TD
 3. Configuration, host (HostSystem). The host power management policy and the actual frequency (esxtop %A/MPERF) ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). → step 4.
 4. Hyper-Threading (HostSystem). Whether sibling threads are busy ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)).
 
-## Why this order
+## Order rationale
 - Contention first: a VM that waits has a different problem, with its own flow.
 - System and Overlap next: work charged to the VM explains Used above Run without any hardware effect.
 - Frequency before Hyper-Threading: power management is a setting that can be checked and changed; a busy sibling depends on the other VMs.
 
-## How to read the result
+## Interpretation
 | Pattern | Meaning | Next step |
 |---|---|---|
 | Used higher than Run | Turbo raises Used. System, VMX, MKS and Helper add to VM-level Used. | Check frequency and System. |

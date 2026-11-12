@@ -5,7 +5,7 @@
 - VM aggregate: includes System time.
 - Pattern: same name, same object, different formula.
 
-## Why
+## Reason
 - System time is charged at VM level. It does not exist at vCPU level.
 - See [`vsphere/architecture/kernel-worlds`](../../../../architecture/kernel-worlds.md) for work charged to the VM rather than to a vCPU.
 

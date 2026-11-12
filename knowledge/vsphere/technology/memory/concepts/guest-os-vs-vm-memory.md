@@ -19,11 +19,11 @@
 | Utilization | Compressed | None |
 | Utilization | None | Swapped or Compressed |
 
-## What ESXi cannot see
+## ESXi blind spots
 - How the Guest OS classifies pages: In Use, Modified, Cache, Free.
 - The Guest OS page file.
 
-## What ESXi can see
+## ESXi visibility
 - Reads and writes by the Guest OS.
 - So the main VM metrics are:
   - Active: memory active recently.

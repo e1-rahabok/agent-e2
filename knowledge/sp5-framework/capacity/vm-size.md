@@ -1,6 +1,6 @@
 # VM size
 
-## Size is set by the host
+## Host limits on VM size
 - The right size of a VM depends on the ESXi host it runs on and on the CPU and NUMA architecture of that host, not on the VM alone.
 - A large VM is harder to schedule: its vCPUs compete for threads at the same time, and a VM larger than a NUMA node spans nodes and reads remote memory ([`vsphere/technology/cpu/concepts/numa`](../../vsphere/technology/cpu/concepts/numa.md), [`vsphere/technology/cpu/concepts/virtual-numa`](../../vsphere/technology/cpu/concepts/virtual-numa.md)).
 - A VM large against its host raises contention even at low utilization: the monster VM of Cluster Risk ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section Monster VM).

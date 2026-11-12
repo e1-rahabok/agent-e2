@@ -28,7 +28,7 @@ reservation is guaranteed; utilization may be < reservation
 | Cluster | Siblings under the same parent in the cluster resource pool hierarchy (VMs and resource pools). |
 | Host | Other VMs running on the same ESXi host. Used for Entitlement. |
 
-## Which metric types apply per resource
+## Metric types per resource
 | Resource | Utilization | Reservation | Allocation |
 |---|---|---|---|
 | CPU | Yes (unit: thread and Hertz) | Yes (unit: Hertz) | Yes (unit: vCPU) |
@@ -98,7 +98,7 @@ Usage <= Entitlement   (at any point in time)
 - Healthy host (enough resources for all VMs, with headroom) and a highly utilized VM → Entitlement ≈ Usage.
 - Low-utilized VM → Entitlement much higher than Usage.
 
-### How memory entitlement is set under overcommit
+### Memory entitlement under overcommit
 - Without overcommit, a VM gets all the memory it touches, up to its configured size. The configured size is an implicit limit: a 1 GB VM with a 2 GB limit never gets more than 1 GB.
 - Under overcommit, each VM gets an amount between its reservation and its limit, set from two inputs:
   - its shares (a modified proportional-share policy);
@@ -106,7 +106,7 @@ Usage <= Entitlement   (at any point in time)
 - The working-set estimate rises fast and falls slowly, so a VM whose idle memory was reclaimed can ramp back up quickly.
 - Idle memory tax: idle pages are charged more than active ones, progressively as the idle-to-active ratio rises. A VM with many shares but little activity loses idle memory first. Changing Mem.IdleTax is rarely appropriate.
 
-### Why Usage can appear slightly above Entitlement
+### Usage slightly above Entitlement
 - Reporting technique, not a real violation.
 - vCenter reports Usage in % as the average over the sample period.
 - vCenter reports Entitlement in MHz as the latest value in the sample period.
@@ -157,7 +157,7 @@ corrections:
 - '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
 review_notes:
 - 'Section ''Shares'': default values from the vSphere Web Services API, SharesInfo.Level, and vSphere 9.1 documentation, Create a Resource Pool; the pool-weight explanation and the example (Q108) are not in the book. Section ''Controls per resource'', network: vSphere 9.1 documentation (What is vSphere Network I/O Control; Defining Bandwidth Requirements for a Virtual Machine; Traffic Shaping Policy; Factors Considered for Virtual Machine Restarts) (Q109).'
-- 'Section ''How memory entitlement is set under overcommit'' is from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839).'
+- 'Section ''Memory entitlement under overcommit'' is from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839).'
 - 'To check: Section ''Two scheduler levels'', Cluster row: cluster-level shares scope (siblings under the same parent resource pool).'
 status: draft
 ```

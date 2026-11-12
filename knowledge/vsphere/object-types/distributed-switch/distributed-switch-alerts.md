@@ -4,7 +4,7 @@
 - A distributed switch is a network provider: its alerts would go to the infrastructure team, above all the network team.
 - No alert in the set.
 
-## Not alerted, and why
+## Not alerted
 - Contention: a distributed switch is a group of ESXi hosts and port groups, already covered by their alerts ([`vsphere/object-types/esxi/esxi-alerts`](../esxi/esxi-alerts.md), [`vsphere/object-types/distributed-port-group/distributed-port-group-alerts`](../distributed-port-group/distributed-port-group-alerts.md)).
 - Consumption: a network has no clear 100%, so the ceiling is hard to set.
 

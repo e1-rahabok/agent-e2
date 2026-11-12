@@ -1,6 +1,6 @@
 # NOC live screen design
 
-## Who it is for
+## Audience
 - The live screen runs on the wall of the Network Operations Center (NOC). The NOC team consumes it, so design it with them: what they need, what you need from them, the entry and exit criteria of each screen.
 - Its life is real time, so it needs a different design from a laptop dashboard.
 - Requirements: zero interaction, large numbers, now, colour, the 5-second test, action, auto-rotate.

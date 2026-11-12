@@ -1,6 +1,6 @@
 # Resource pool design
 
-## When to use a pool
+## Pool use cases
 - Use resource pools sparingly. A pool divides resources; it is not a folder for VMs.
 - Delegated resource management: a pool sold as a service, where the tenant's contract sets the pool's reservation and limit. A tenant that bought 1 TB of RAM with no burst gets a 1 TB limit.
 - A multi-tier service: group its VMs in one pool, so resources go to the service as a whole.
@@ -8,7 +8,7 @@
 - Reservation and shares on the parent pool are easier to keep consistent than per-VM values for the VMs of one application.
 - Read pool and VM shares and reservations together; with Scalable Shares, more so.
 
-## Pool settings are cluster-wide
+## Cluster-wide pool settings
 - A pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host. In a large cluster a pool limit or share setting can hurt its VMs in ways hard to see from one host.
 - Fixed vs expandable reservation is a design choice: Fixed isolates the pool (only its own reservation is admitted); expandable is flexible, but one child pool can take all of the parent's spare reservation. To isolate a pool fully, set it to Fixed with a reservation and a limit. How the admission check walks the tree: [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../cluster/concepts/admission-control-and-cluster-state.md).
 

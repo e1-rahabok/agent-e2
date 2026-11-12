@@ -24,7 +24,7 @@ Normalized Latency = sum(device latency x IO count) / sum(IO count), adjusted fo
 - Normalized Latency discounts high latency caused by large IOs, so large-block workloads do not make the datastore look slower than it is.
 - VM observed latency includes what sits between the VM and the device, so it is higher than Normalized Latency on a congested host.
 
-## Why
+## Reason
 - SIOC detects congestion from the device latency of the whole datastore, not of one host. One host cannot see the IO of the others.
 - Weighting by IO count stops an idle host with a few slow IOs from dominating the value.
 - When congestion crosses the SIOC threshold, SIOC lowers the device queue depth of each host by shares. Host Maximum Queue Depth per datastore then changes over time. See [`vsphere/technology/storage/metrics/host/datastore`](../host/datastore.md).
@@ -69,7 +69,7 @@ review_notes:
 - 'Section ''Meaning'': SIOC deprecation from the vSphere 9.1 documentation, vSphere Resource Management > Manage Storage I/O Resources with vSphere (p. 1886).'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Formula'': the plain-text formula restates the documentation text (IO count as weight, adjusted for IO size). The exact size adjustment is not published.'
-- 'To check: Section ''Why'': SIOC lowers per-host device queue depth by shares when the congestion threshold is crossed; the documentation says only that queue depth can change over time when congestion is detected at the array.'
+- 'To check: Section ''Reason'': SIOC lowers per-host device queue depth by shares when the congestion threshold is crossed; the documentation says only that queue depth can change over time when congestion is detected at the array.'
 - 'To check: Section ''Includes / excludes'': VM observed latency is higher than Normalized Latency on a congested host, inferred from the two definitions. It may explain the gap the book leaves unexplained in vsphere/technology/storage/metrics/host/datastore.'
 status: draft
 ```

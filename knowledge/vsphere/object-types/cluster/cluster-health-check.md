@@ -41,13 +41,13 @@ Order: availability, performance, security, capacity; within each pillar the wha
 7. Capacity, inventory and efficiency (ClusterComputeResource, VirtualMachine). Inventory: hosts, VMs and vCPUs over time, against the plan ([`sp5-framework/concepts/health-risk-efficiency`](../../../sp5-framework/concepts/health-risk-efficiency.md), section Inventory over time). Efficiency: Waste that can be returned: idle, oversized and unused VMs, snapshots, unmapped space ([`sp5-framework/capacity/reclamation`](../../../sp5-framework/capacity/reclamation.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../technology/cpu/metrics/virtual-motherboard/idle-vm.md), [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../technology/cpu/decision-tree/oversized-vm-downsizing.md)).
 - Not checked in 1.0: security and compliance (future phase).
 
-## Why this order
+## Order rationale
 - Availability first: a cluster in red state has broken reservations; every later number stands on a broken base.
 - Performance before capacity: contention overrides utilization. A cluster that cannot serve its VMs has no capacity left.
 - Balance and configuration inside performance: a hot host, a resource pool or a limit explains contention that load does not.
 - Efficiency last: work done when there is no problem and no risk.
 
-## How to read the result
+## Interpretation
 - Present health, risk and efficiency are read separately, never as one score.
 - Cluster Performance red with low Cluster Consumption → contention from imbalance, limits, resource pools or storage; not from load. Step 5, then the cluster flow.
 - Cluster Risk red alone does not close the cluster: it is a leading indicator.
@@ -102,6 +102,6 @@ corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; KPI is performance only (Cluster Consumption and Cluster Risk are models); availability flows, security and compliance are future, after 1.0.'
 review_notes:
 - 'To check: Section ''Checks, in order'': the placement of steps 5 and 7; the order of the pillars follows health-risk-efficiency (book) (Q062).'
-- 'To check: Sections ''Why this order'' and ''How to read the result'': written from the linked files.'
+- 'To check: Sections ''Order rationale'' and ''Interpretation'': written from the linked files.'
 status: draft
 ```

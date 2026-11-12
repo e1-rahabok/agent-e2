@@ -1,6 +1,6 @@
 # Business applications in VCF Operations
 
-## Why business views
+## Business views
 - Business owners ask about logical business units: services, applications, departments, divisions, teams.
 - Performance, capacity and cost reported per business unit mean more to business leaders than per cluster. A service or application can span private, hybrid and public infrastructure.
 - Typical questions from a business owner:

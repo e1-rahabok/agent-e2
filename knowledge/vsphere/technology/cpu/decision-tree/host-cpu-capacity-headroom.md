@@ -12,7 +12,7 @@
 4. Usage (MHz), for performance.
 5. Peak Core Usage and Imbalance.
 
-## How to read the result
+## Interpretation
 - Primary counters: Core Utilization and Thread Utilization. Complement with Usage (MHz) for performance.
 - Core Utilization below 100% or Thread Utilization below 50%: physical cores are still free. New VMs can go on.
 - Core Utilization at 100% (Thread Utilization at least 50%): watch Thread Utilization. Keep it around 80%-90% per host; cluster level is lower because of the HA host. Check contention.
@@ -63,6 +63,6 @@ source:
   path: CPU > ESXi > Consumption Metrics > Summary > Recommendation; Real World Samples
 corrections: []
 review_notes:
-- 'Section ''How to read the result'': the 80%-90% Thread Utilization level is field practice from the book, not a vendor threshold.'
+- 'Section ''Interpretation'': the 80%-90% Thread Utilization level is field practice from the book, not a vendor threshold.'
 status: draft
 ```

@@ -14,7 +14,7 @@
 - The excluded green ends where yellow starts: thread utilization below 60%, memory consumed below 80%, reservation below 10%, overcommit below 1.
 - CPU imbalance is green only at exactly 1 (one running thread per running core). Any imbalance is yellow.
 
-## How each sub-metric is calculated
+## Sub-metric formulas
 Per host, then the worst host is kept.
 
 | Sub-metric | Per host | Source (VCF Operations) |
@@ -34,7 +34,7 @@ Per host, then the worst host is kept.
 
 - Threads = 2 × cores when Hyper-Threading is available and active, else the cores.
 
-## Host memory is DRAM only
+## DRAM as the memory base
 - Every memory % and ratio is against the host's DRAM (the DIMMs). A memory tier such as NVMe is never added.
 - Reason: VMs run in DRAM; NVMe holds only cold pages. A % of DRAM + NVMe looks smaller than the real pressure. There is no use case, in risk or performance, for the expanded capacity.
 - Source: host `mem:DRAM\|memory_tier_total_capacity`; fallback `mem\|host_provisioned`. With neither, the host's memory rows are left out, never scored against a guess.
@@ -60,7 +60,7 @@ Per host, then the worst host is kept.
 - Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
 
-## A worse sub-metric can lower Cluster Risk
+## Sub-metric weight in Cluster Risk
 - The weight of a sub-metric rises as its score falls. When the score is already high, a sub-metric that gets worse but is still better than the ones driving the score pulls the weighted average up, so Cluster Risk goes down.
 - An Excluded row that leaves green enters at weight 2 at once: the same effect.
 - Example: Cluster Risk 67.9; new idle VMs raise the CPU overcommit ratio from 0.5 to 1.125. The row enters yellow and Cluster Risk falls to 64.5. Only from about 2.7 does it raise Cluster Risk above 67.9.
@@ -112,7 +112,7 @@ source:
   document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for reasons and monster VM factors
   path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections:
-- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': the book table is outdated. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
+- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''DRAM as the memory base'', ''Scoring'', ''Known limitation'': the book table is outdated. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
 - 'Section ''Monster VM'': the definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
 - 'Memory tiering rows decided by the author (Q178 a, Q179, 2026-11-12): active memory 50/62.5/75/100% of DRAM, from Broadcom''s 50% recommended and 75% significant loss; NVMe read latency 100/200/400/800 µs, doubling, red from Broadcom''s 400 µs impact point.'

@@ -1,6 +1,6 @@
 # Class of service
 
-## Why several classes
+## Reason for several classes
 - With one class and a promise of good service, every customer expects first-class service.
 - A comparison sets value: a Gold offer that few buy makes Silver look like a good deal (pricing psychology), and customers who see only Silver and Bronze ask where Gold is.
 - If a class is not offered, give customers and management the reason.

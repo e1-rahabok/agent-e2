@@ -1,11 +1,11 @@
-# Host-level swapping and swap placement
+# Host-level swapping
 
 ## Bounded overcommit
 - ESX supports a bounded amount of memory overcommitment without host-level swapping.
 - If overcommitment is so large that the other reclamation techniques are not enough, ESX uses host-level swapping.
 - Host-level swapping can have a significant impact on VM performance.
 
-## Keep the other techniques active
+## Other reclamation techniques
 - Do not deactivate page sharing, ballooning or memory compression.
 - These techniques reduce the need for host-level swapping.
 

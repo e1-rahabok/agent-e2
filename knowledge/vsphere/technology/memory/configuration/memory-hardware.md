@@ -1,4 +1,4 @@
-# Memory hardware: general considerations
+# Memory hardware
 
 ## Guidance (9.1 p. 14)
 - In most environments, balance memory population across all channels.

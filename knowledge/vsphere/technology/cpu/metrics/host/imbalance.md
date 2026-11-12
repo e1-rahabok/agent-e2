@@ -11,7 +11,7 @@ ESXi CPU Imbalance = count of running threads / count of running cores
 Cluster ESXi CPU Imbalance = average (ESXi CPU Imbalance)
 ```
 
-## Why
+## Reason
 - All cores should be used before 2 threads share a core.
 - With Hyper-Threading the worst score is 2.0.
 - While cores are idle, no core should run 2 threads. The ideal is 1.0 until Core Utilization reaches 100%.

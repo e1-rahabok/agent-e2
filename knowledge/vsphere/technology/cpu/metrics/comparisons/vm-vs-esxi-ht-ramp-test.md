@@ -17,7 +17,7 @@
 | ESXi Usage (%) | 100% | 100% |
 | ESXi Thread Utilization (%) | 50% | 100% |
 
-## Why
+## Reason
 - VM Run counts time per vCPU: 20,000 ms × 24 at the end.
 - VM Used rises only 1.25x: Hyper-Threading delivers 1.25x per core. Used (ms) tracks Usage (%).
 - VM Usage (%) is aware of Hyper-Threading. Each vCPU gets 62.5% on average.

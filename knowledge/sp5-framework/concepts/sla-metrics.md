@@ -1,4 +1,4 @@
-# SLA: a business contract, not an operations metric
+# Service level agreement (SLA)
 
 ## SLA in the contract
 - An SLA is one section of a business contract between a consuming entity (pays) and a providing entity (supplies). The contract also holds clauses, context and other agreements (confidentiality, payment terms, non-compete, marketing).
@@ -7,7 +7,7 @@
 - An SLA is always between two parties. Internal objects (management cluster, vCenter, NSX Edge) have no SLA.
 - Operations do not run on the SLA. Performance monitoring and troubleshooting use the KPI only: no performance SLA, no SLI, no SLO ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)). Availability is monitored with KAI, security with KSI.
 
-## When a customer says "our SLA"
+## Customer claims of an SLA
 - Common: VMware customers say they have an SLA. Probed for the metrics that define it, they state a wrong metric, or they have none.
 - Probe with five questions: which metric, on which object, which target, over which window, with which penalty. No metric and no number: it is an intention, not an SLA. Work from the KPI.
 - The object must be one the consumer owns. Application teams care about their own VMs and Kubernetes pods, not the infrastructure under them.
@@ -15,7 +15,7 @@
 - The Kubernetes node is often owned by the SRE team, not the developers; developers may not care about it either. Their object is the pod.
 - Provider objects (cluster, ESXi host, Kubernetes node, datastore, NSX Edge) carry a KPI and a KAI, never an SLA.
 
-## What an IaaS contract can hold
+## IaaS contract contents
 - Public providers commit to availability only: it is binary and the easiest to measure.
 - Each SLA measures time in a bad state and expresses the month as 0-100%, 100% being perfect against the contract.
 

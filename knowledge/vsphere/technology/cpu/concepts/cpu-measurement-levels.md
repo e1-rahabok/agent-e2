@@ -1,6 +1,6 @@
 # CPU measurement levels
 
-## ESXi is not VM + kernel
+## ESXi vs VMs plus kernel
 ![VM sees 2 vCPUs; ESXi sees 1 core with 2 threads](../images/vm-sees-2-vcpus-vs-esxi-sees-1-core-2-threads.png)
 - VM and ESXi metrics come from different vantage points. They measure different things.
 - So an ESXi CPU counter is not the sum of its VM counters plus the kernel.

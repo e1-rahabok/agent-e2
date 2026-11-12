@@ -1,11 +1,11 @@
 # VM Performance dashboard
 
-## Which dashboard to use
+## Dashboard choice
 - In VCF Operations 9.1, the VM Performance dashboard is the dashboard for VM performance monitoring and troubleshooting.
 - It supersedes the VM Contention dashboard. In 9.1 the old dashboard is renamed with the suffix (DEP): deprecated, kept for a transition period.
 - The VCF Operations 9.1 documentation still describes VM Contention as current. The documentation was not updated; the product was. When the two differ, the product is the newer source.
 
-## What it shows
+## Dashboard content
 - Performance means contention: the VM did not get the CPU, memory, disk or network service it demanded. VM Performance (%) is a KPI built from contention counters ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md), [`sp5-framework/performance/performance-kpi-design`](../../sp5-framework/performance/performance-kpi-design.md)).
 - Contention first and colour coded; utilization second, as context, not colour coded; then the configuration that can affect performance ([`sp5-framework/outputs/performance-dashboards`](../../sp5-framework/outputs/performance-dashboards.md)).
 - Counters are VCF Operations metrics on the VM object (VM CPU Ready, Co-stop, Memory Contention, Disk Latency), reported every 5 minutes as an average and as the 20-second peak ([`vcf-operations/features/peak-20-second-metrics`](../features/peak-20-second-metrics.md)). They are not esxtop fields.
@@ -49,9 +49,9 @@ source:
   document: Knowledge base
   path: 'Conversation on the VM Contention dashboard: VM Performance supersedes VM Contention, which is marked (DEP) in VCF Operations 9.1; the 9.1 documentation was not updated'
 corrections:
-- 'Section ''Which dashboard to use'': VM Contention deprecated, superseded by VM Performance. The VCF Operations 9.1 documentation (TechDocs, Performance Dashboards > VM Contention Dashboard) still describes it as current.'
+- 'Section ''Dashboard choice'': VM Contention deprecated, superseded by VM Performance. The VCF Operations 9.1 documentation (TechDocs, Performance Dashboards > VM Contention Dashboard) still describes it as current.'
 review_notes:
-- 'To check: Section ''What it shows'': widget detail, after the dashboard overhaul; the layout follows sp5-framework/outputs/performance-dashboards (Part 2).'
+- 'To check: Section ''Dashboard content'': widget detail, after the dashboard overhaul; the layout follows sp5-framework/outputs/performance-dashboards (Part 2).'
 - 'To check: Section ''Misconceptions'': written from a Gemini answer of 2026-11-09 (benchmark question 0091); check each misconception.'
 status: draft
 ```

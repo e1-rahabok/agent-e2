@@ -10,7 +10,7 @@
 - Host cache (if designed on fast SSD) is faster than disk swap.
 - Compressed and swapped data stays out until the guest requests it. Bringing it back costs CPU.
 
-## When ESXi swaps instead of ballooning
+## Swap instead of ballooning
 - Host swapping is the fallback when the balloon driver cannot reclaim:
   - VMware Tools (balloon driver) never installed;
   - balloon driver deactivated;
@@ -107,7 +107,7 @@ source:
 corrections: []
 review_notes:
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Section ''When ESXi swaps instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
+- 'Section ''Swap instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
 - 'Section ''Mechanism'': the book''s sentence on why there is no 3:1 compression is incomplete. Left out.'
 status: draft
 ```

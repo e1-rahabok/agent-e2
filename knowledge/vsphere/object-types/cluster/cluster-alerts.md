@@ -25,7 +25,7 @@
 - Detects: a share of the cluster's ESXi hosts meet the ESXi memory consumption condition (ballooning with high Consumed).
 - The share of hosts is larger than for CPU. Most clusters have fewer than 20 hosts, and memory works as a cache, so high consumption does not mean slow.
 
-## Not alerted, and why
+## Not alerted
 - Disk contention and network contention: not yet in the set.
 - Disk and network consumption: the daily check or the NOC screen serves better.
 

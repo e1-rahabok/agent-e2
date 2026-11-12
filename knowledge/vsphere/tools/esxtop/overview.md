@@ -1,4 +1,4 @@
-# esxtop: how to read it
+# esxtop overview
 
 ## Nature
 - esxtop has no Guest OS metrics, although its manual says "guest". Guest OS and VM are different realms.

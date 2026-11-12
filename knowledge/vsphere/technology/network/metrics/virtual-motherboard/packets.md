@@ -10,7 +10,7 @@
 Packets transmitted per second = Total Packets Transmitted / 300   (VCF Operations 5-minute interval)
 ```
 
-## Why it matters
+## Impact
 - Each packet costs CPU. Bandwidth can remain while packets per second saturate.
 - Example outage: 700,000 packets per second used only 800 Mbps. The broadcast packets were 60 bytes, not 1,500.
 ![Packets transmitted excludes dropped packets](../../images/network-packets-transmitted-excludes-dropped.png)

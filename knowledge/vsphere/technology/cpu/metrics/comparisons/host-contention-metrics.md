@@ -10,7 +10,7 @@
 - Averaged over all running VMs. By the time they are high, the problem is serious.
 - Leading indicators are covered at cluster level (book: vSphere Cluster chapter).
 
-## Consumption and contention do not correlate
+## Consumption vs contention
 - Physical vs virtual: ESXi metrics look at physical CPU; contention metrics look at vCPUs.
 - Hyper-Threading and power management.
 - Imbalance: many VMs on one host have different experiences.

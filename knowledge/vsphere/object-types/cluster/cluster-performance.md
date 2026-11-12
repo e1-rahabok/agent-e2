@@ -1,6 +1,6 @@
 # Cluster Performance (%)
 
-## What it is
+## Definition
 - One score per vSphere cluster, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
 - Not a built-in VCF Operations metric. 9 sub-metrics.
@@ -19,7 +19,7 @@
 - The red range ends where the sub-metric scores 0.
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100 that hides the other rows. Any bad packet is yellow and counts.
 
-## How each sub-metric is calculated
+## Sub-metric formulas
 | Sub-metric | Source (VCF Operations) |
 |---|---|
 | Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` |
@@ -102,7 +102,7 @@ source:
   document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the design and threshold reasons
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections:
-- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
+- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''Scoring'': the book table and text are outdated: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
 - 'Section ''vMotion Count'': vMotion is excluded; the book text says both included and not included.'
 review_notes:
 - 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the book, whose text is outdated; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'

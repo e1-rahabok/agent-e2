@@ -9,7 +9,7 @@ Machine Demand = sum of running VM Utilization
 - So the two forms in the book are the same: sum of running VM Utilization + kernel reservation.
 - Equals ESX System Usage on a host with no running VMs.
 
-## Why
+## Reason
 - Consumed is too conservative: mostly cache.
 - Active is too aggressive: not designed for sizing.
 - Utilization sits between them.

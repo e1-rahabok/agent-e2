@@ -36,7 +36,7 @@
 - Answers the "it depends" questions by accounting for inventory or configuration.
 - Useful only to a reader who can derive insight from it. Example: the number of vMotions is high or normal only against expectation; a cluster live migration after office hours should reach the theoretical limit.
 
-## Why contention comes first
+## Priority of contention
 
 - Contention is what users feel. Consumption gets the attention because it is easier to monitor and explain.
 - Many systems do not scale linearly. In a parallel database, adding nodes can lower total throughput: nodes spend more time keeping integrity, so CPU utilization rises on overhead work. Measure the overhead and the throughput, not CPU utilization.

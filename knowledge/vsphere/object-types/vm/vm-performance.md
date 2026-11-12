@@ -1,6 +1,6 @@
 # VM Performance (%)
 
-## What it is
+## Definition
 - One 0-100% score per VM. 100 is perfect.
 - It scores the VM as a virtual motherboard: is ESXi giving it the CPU, memory, disk and network it asks for? What happens inside Windows or Linux is scored by Guest OS Performance (%) ([`guest-os/system/guest-os-performance`](../../../guest-os/system/guest-os-performance.md)).
 - Not a built-in VCF Operations metric. Scored on every powered-on VM; a powered-off VM gets no score: its stats are old.

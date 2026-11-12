@@ -1,6 +1,6 @@
 # The VCF Operations report suite
 
-## One suite, run as a set
+## Reports as a set
 - The reports were designed together, with as little overlap as possible, so none stands alone. Run them as a set.
 - Inventory, configuration and capacity together give full coverage:
   - inventory is about count: which sizes and types exist and which are common; the goal is to know the variation;

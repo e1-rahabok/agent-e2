@@ -10,7 +10,7 @@
 - If collecting and processing a sample takes a few seconds (large data volume, busy system), samples drift against the wall clock over time.
 - Correct collection logic accounts for the time taken to collect and process.
 
-## Observer slower than the observed
+## Observer speed vs CPU speed
 - CPU operates in nanoseconds. Observability code operates in milliseconds.
 - Values describing fast CPU activity are approximations.
 - Example: thread counts per thread state in Windows or Linux can vary by ~5%.

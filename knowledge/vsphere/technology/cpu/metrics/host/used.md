@@ -5,7 +5,7 @@
 - vCenter shows Used in ms.
 - The % form is affected by CPU frequency and can exceed 100%.
 
-## Why
+## Reason
 - ESXi is the metric source. vCenter converts or adds metrics, and formulas do not match in every case. See [`vsphere/architecture/metric-sources`](../../../../architecture/metric-sources.md).
 
 ## Notes

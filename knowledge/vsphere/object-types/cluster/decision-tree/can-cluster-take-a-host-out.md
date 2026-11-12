@@ -48,14 +48,14 @@ flowchart TD
    - The Confirm Maintenance Mode dialog shows whether capacity is enough, how much data moves, and how many objects become non-compliant or inaccessible.
    - Enough capacity for the chosen mode → yes. Not enough → no, or another mode with its stated risk.
 
-## Why this order
+## Order rationale
 - State first: in yellow or red, reservations are not met; any capacity number is built on a broken base.
 - Rules and pinned VMs before capacity: a must rule or a passthrough device blocks the evacuation whatever the free capacity.
 - Capacity before HA: if the remaining hosts cannot carry the load, failover does not matter.
 - HA before vSAN: HA decides whether the window runs with reduced failover; vSAN decides whether the data stays protected.
 - vSAN last: it applies only to vSAN clusters, and its capacity check is shown by the dialog itself.
 
-## How to read the result
+## Interpretation
 - No at step 1 → about the current state, not the maintenance.
 - No at step 3 → name the VMs and the rule or device that pins them.
 - No at step 4 → name the resource (CPU threads, memory) and how far over it would go.

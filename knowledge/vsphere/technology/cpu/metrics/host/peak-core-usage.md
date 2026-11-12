@@ -3,7 +3,7 @@
 ## Meaning
 - The highest CPU Usage among the physical cores of the host.
 
-## Why
+## Reason
 - ESXi-level utilization is an average. A host with 72 cores has 144 threads. One hot core is invisible in the average.
 - Example: 3 threads above 90% while the host total hovered around 1,100% of a possible 5,600% (56 threads): about 20%.
 - Imbalance among cores is normal: a VM runs on as few cores as possible, which takes fewer context switches.

@@ -4,7 +4,7 @@
 - Maps to Active: what the VM is physically using. Related to performance.
 - VCF Operations uses Guest OS data for VM memory Usage. It falls back to Active when Guest OS data is not available.
 
-## Why it differs from ESXi and cluster Usage
+## Difference from ESXi and cluster Usage
 - Two-level memory hierarchy in virtualization.
 - ESXi and cluster Usage map to Consumed, which is related to capacity.
 

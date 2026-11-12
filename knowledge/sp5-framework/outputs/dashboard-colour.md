@@ -10,7 +10,7 @@
 - Provide another cue for users who cannot tell all colours apart, so they keep the function.
 - If a whole dashboard is green, there is no need to read the numbers. Example: a compliance dashboard.
 
-## Where colours change
+## Colour boundaries
 - Use one consistent scale so it is easy to remember:
   - yellow = 2x green;
   - orange = 2x yellow;
@@ -57,7 +57,7 @@ source:
   path: 'Overall Design Approach > Design Consideration > Color as Meaning (Threshold, Gradient, Example Implementation)'
 corrections: []
 review_notes:
-- 'Section ''Where colours change'': the Horizon bounds (yellow 2, orange 3, red 4) are read from the source screenshot of the widget colour settings (coloring: above).'
+- 'Section ''Colour boundaries'': the Horizon bounds (yellow 2, orange 3, red 4) are read from the source screenshot of the widget colour settings (coloring: above).'
 - 'To check: Section ''Gradient'': vSAN disk groups exist in the vSAN Original Storage Architecture; vSAN ESA uses a storage pool per host. The point about gradients holds either way.'
 - 'Not copied: the gradient heat maps and the compliance dashboard screenshot.'
 status: draft

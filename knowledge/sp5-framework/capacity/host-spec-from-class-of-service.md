@@ -1,6 +1,6 @@
 # ESXi host specification from class of service
 
-## Why Day 2 sets the hardware
+## Day 2 inputs to the hardware
 - The host specification is best chosen with two Day 2 inputs: the typical VM of each class (vCPU, GB per vCPU) and the planning settings of the class (overcommit, reservation, expected concurrent peak).
 - CPU, memory and storage are sold together: a VM consumes all three. A host with more of one than the others can sell leaves capacity unsold.
 - Day 2 → Day 0 → Day 1: [`sp5-framework/concepts/purpose-driven-architecture`](../concepts/purpose-driven-architecture.md).

@@ -1,6 +1,6 @@
 # Reclamation
 
-## When reclamation is the provider's job
+## Provider's right to reclaim
 
 - When VMs are free of charge, the infrastructure team have the right to reclaim.
 - When VMs are charged and are the main source of the IT budget, the application team owns VM cost; the infrastructure team has no authority to reclaim. Stocktake still applies to internal IT with chargeback ([`sp5-framework/capacity/unused-vm`](unused-vm.md), section Annual stocktake).
@@ -26,7 +26,7 @@
 - Orphaned RDM: check on the array whether any ESXi host still mounts the LUN. Requires a management pack (adapter) for that array.
 - Snapshot: not a backup. Kept for long, it slows the VM ([`vsphere/technology/storage/concepts/snapshot-impact`](../../vsphere/technology/storage/concepts/snapshot-impact.md)). Keep it only to protect a change; remove it once the change is validated. VCF Operations lists snapshots separately because they are easy to reclaim.
 
-## What each area frees
+## Capacity freed per area
 
 
 | Area | Free up | Does not free up |

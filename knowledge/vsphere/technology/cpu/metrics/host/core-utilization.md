@@ -5,7 +5,7 @@
 - Also reports 100% when both threads run.
 - To tell the two cases apart, check Thread Utilization.
 
-## Why
+## Reason
 - The core does the work, not the thread. A core running one thread is fully busy.
 - Thread Utilization reports 200% for a core when both threads are busy (esxtop). Core Utilization stays at 100%.
 - Core Utilization is a static metric: it ignores frequency.
@@ -53,9 +53,9 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization
 corrections:
-- 'Section ''Why'': Core Utilization is not the capacity reading under Hyper-Threading. The book calls it a capacity metric because it ignores frequency.'
+- 'Section ''Reason'': Core Utilization is not the capacity reading under Hyper-Threading. The book calls it a capacity metric because it ignores frequency.'
 review_notes:
-- Sections Why: from CPU > Architecture.
+- Sections Reason: from CPU > Architecture.
 - 'Section Rollup: from CPU > ESXi.'
 status: draft
 ```

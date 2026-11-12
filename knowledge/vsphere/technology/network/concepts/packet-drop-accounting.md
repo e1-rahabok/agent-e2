@@ -1,6 +1,6 @@
 # Packet drop accounting
 
-## Receive drop: the guest's receive ring is full
+## Receive drop: full guest receive ring
 - Causes:
   - a microburst larger than the guest's receive ring buffer;
   - the guest does not empty the ring in time: CPU busy inside the guest, or the vCPU waiting on the hypervisor (Ready, Co-stop).
@@ -18,7 +18,7 @@
 - Windows: the driver maps it to inbound discards: Packets Received Discarded (Performance Monitor), ReceivedDiscardedPackets (PowerShell).
 - So the drop is visible to the hypervisor and to the guest. It is caused and fixed in the guest (larger ring, CPU), which is why the Guest OS owner fixes it.
 
-## Transmit drop: the top-of-rack switch is congested
+## Transmit drop: congested top-of-rack switch
 - Ethernet does not acknowledge frames. Unless 802.3x PAUSE flow control holds it back, ESXi counts a frame as sent once the physical NIC has put it on the wire.
 - A frame dropped by a congested top-of-rack switch is counted only in that switch.
 

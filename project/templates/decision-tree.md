@@ -17,10 +17,10 @@ flowchart TD
 1. <Metric, KPI or model> (<object>). <Threshold, with source> → step 2. Otherwise → no: <reason>.
 2. <Next check> (<object>). <Band> → <answer>.
 
-## Why this order
+## Order rationale
 - <Reason for each step's position: what an earlier step rules out.>
 
-## How to read the result
+## Interpretation
 - <Where the tree stopped> → <what the answer means and what to do>.
 
 ## Misconceptions

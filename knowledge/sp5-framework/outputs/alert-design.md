@@ -44,7 +44,7 @@
 
 - Classes of service: [`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md).
 
-## What to alert, by pillar
+## Alerts by pillar
 - Define the problem types of each pillar; for each type, decide whether it gets an alert.
 - Availability:
   - Replace hardware before its manufacturing limit. Example: an SSD has a write endurance limit, as each write wears it. With thousands of disks, track the limit on a weekly dashboard and schedule replacement; no alert.
@@ -65,7 +65,7 @@
 - An alert does not replace operations practice. Outdated VMware Tools is not urgent: a daily SOP lists the VMs with outdated Tools and the list is kept empty. An alert would make the team reactive and noisy.
 - Trigger the alert on every affected object, victims and cause. A failure at the bottom ripples up. Example: a physical disk fails in a vSAN cluster; the disk group can go down; a host with one disk group loses its storage.
 
-## What not to alert
+## Not alerted
 - Anything that can be reviewed the next day: a daily dashboard shows it with the big picture.
 - Availability: one failed backup. With 1,000 VMs backed up nightly and 1 failure, last night's backup still exists; no reason to troubleshoot at night. Many failures are the exception.
 - Value: nothing in cost is urgent.
@@ -79,7 +79,7 @@
   - vMotion taking 3x as long over 12 hours (0.2 s to 0.6 s) in 10 large clusters running 10,000 production VMs, unnoticed by application owners: not urgent; important because it can grow into a large problem.
   - A performance problem that hits random VMs for under 5 minutes, a few times a day for days: each owner is rarely hit and does not complain; adding VMs is now risky.
 
-## Design the alerts as a set
+## Alerts as a set
 - Start from the 4 resources: CPU, memory, disk, network. Each behaves differently.
 - For each resource, design top down over every monitored object, consumers and providers together.
 - For each object, cover both metric types: contention and consumption.

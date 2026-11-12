@@ -6,7 +6,7 @@
 - Its activity is IT work, business work, or both.
 - The hardest reclamation area: the infrastructure team lacks the business context, and the pattern differs per VM. What identifies VM 00001 may not apply to VM 10000.
 
-## Why its CPU is not low
+## Background CPU of an unused VM
 - IT work: Guest OS upgrade, Guest OS patches, application patches (three workloads, three patterns); VMware Tools updates; antivirus and intrusion detection scans; agent-based backup. High-security estates run many security agents, or agentless scans over the network.
 - Business work: batch jobs, reports and monitoring that keep running with no user, such as a report emailed to someone who ignores it. Harder to spot than pure IT work: each case is unique.
 
@@ -54,7 +54,7 @@ Configuration is easier to read than utilization: clearer rules.
 
 - At night a VM can be slow for an hour unnoticed: the performance sign holds only in business hours.
 
-## When unsure
+## Uncertain cases
 - The VM was announced for deletion repeatedly and nobody claimed it. Powering it off stops running processes and closes open files, and a powered-off VM may not come back cleanly.
 - Two safer actions:
   - disconnect it from the network: the application keeps running, and an owner notices;

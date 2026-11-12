@@ -31,14 +31,14 @@
   - second 1-2: the hypervisor halts the vCPU. Windows is unaware.
   - Windows sampling every 2 seconds reports 100%. vSphere reports 50%.
 
-## What each layer cannot see
+## Blind spots per layer
 | Layer | Blind spot |
 |---|---|
 | Guest OS | Hyper-Threading. The ESXi VMM does not pass this information to the guest. |
 | Guest OS | CPU frequency scaling, in some Guest OS versions. The real-time frequency comes from the BIOS or the VMM layer. It varies per core and over time. |
 | ESXi | How the Guest OS schedules its processes. ESXi sees only what the guest sends out. |
 
-## What only the VM layer includes
+## VM-only components
 - When the vCPU shares a physical core with a running sibling thread, VM CPU Usage drops by 37.5%.
 - VM CPU Usage includes IO processing done by the hypervisor on behalf of the VM. Significant for heavy databases and NSX Edge.
 
@@ -140,7 +140,7 @@ source:
   path: CPU > Architecture > Guest OS vs VM
 corrections: []
 review_notes:
-- 'To check: Section ''What each layer cannot see'': how often ESXi updates the guest on per-core frequency; the book is unsure.'
+- 'To check: Section ''Blind spots per layer'': how often ESXi updates the guest on per-core frequency; the book is unsure.'
 - "Section 'Frozen time': reference paper from the book: https://dl.acm.org/doi/10.1145/2668930.2695524"
 - "Section 'Windows vs Linux accounting': Steal Time source from the book: https://github.com/torvalds/linux/blob/master/kernel/sched/cputime.c"
 status: draft

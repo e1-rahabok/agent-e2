@@ -1,13 +1,13 @@
 # KPI design
 
-## What a KPI is
+## KPI definition
 - KPI is strictly about performance: "performance" has a specific meaning in enterprise IT infrastructure.
 - While capacity and availability can impact performance, they should not be mixed up. One name per pillar keeps monitoring unambiguous.
 - A KPI is one metric that quantifies the true performance of an object.
 - A KPI is a baseline, the standard expectation maintained with effort, not a target still to reach. Provider and consumer each have their own KPI. The ideal, an ESXi host at 100% while no VM sees contention, is not realistic.
 - The KPIs per object (business application, Guest OS, VM, ESXi, cluster): [`sp5-framework/performance/performance-management`](README.md), section KPIs. Each KPI file lists its sub-metrics, its limits and what it leaves out.
 
-## Why a KPI
+## Reason for a KPI
 - 5,000 VMs every 5 minutes over 24 hours is too many trend charts. One score per object makes monitoring at scale possible.
 
 ## One KPI per realm
@@ -17,7 +17,7 @@
 - For the application team the two are one entity: report the VM GOS KPI, the average of VM Performance (%) and Guest OS Performance (%).
 ![Guest OS and VM metrics used in the KPIs](images/guest-os-and-vm-performance-kpi-metrics.png)
 
-## Which metrics qualify
+## Metric qualification
 - A metric qualifies only if its values map to the 4 ranges (green, yellow, orange, red) for every object of the type. Otherwise it distorts the KPI.
 - So most utilization metrics (disk IOPS, network throughput) are excluded: no universal mapping fits all objects.
 - A consumer KPI reads only the consumer's own metrics. Provider metrics (ESXi, resource pool, datastore, cluster) are averages of their consumers: less visibility, and derivable from the consumer metrics. You troubleshoot VMs, not infrastructure.
@@ -61,7 +61,7 @@ weight = 2 ^ ((100 - score) / 25)
 - Green given as a single value (for example 0%): only that value scores 100; any other value starts in yellow at 75.
 - Excluded green: a metric whose green range says nothing about health (rare dropped packets, low utilization) is left out of the KPI while green, so it does not add a free 100. Once it leaves green it counts. The test reads the value against the green limit, not the weight. If every metric with data is excluded, the KPI is 100.
 - Missing data: a metric with no data is left out, never counted as 0, because 0 usually means perfect. With no data at all, the KPI is not published.
-- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section A worse sub-metric can lower Cluster Risk.
+- Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section Sub-metric weight in Cluster Risk.
 - The same scoring serves the capacity models (Cluster Consumption, Cluster Risk), which publish 100 minus the weighted average.
 - Why four equal ranges, thresholds and validation: [`sp5-framework/concepts/modelling`](../concepts/modelling.md).
 

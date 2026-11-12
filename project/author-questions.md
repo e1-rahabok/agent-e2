@@ -18,6 +18,19 @@ Each entry has:
 
 ## Open
 
+### Q181 · Writing rules · Lint for titles and headings
+
+- Files: [project/knowledge-rules/writing.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/writing.md) (section Rules, titles and headings); [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) (function `check_titles`).
+- Search: not from the book.
+- Question: should lint check titles and headings again (word limits, no list after a colon, no question opener), although writing style left lint on 2026-11-10?
+- Written as now: the rule is in writing.md and the review checks it. `check_titles` is still in lint.py but is not called since 2026-11-10. Run by hand on 2026-11-12, after the title and heading pass: 0 problems.
+- Final answer (2026-11-12; expert call):
+  - Call `check_titles` again, and add the question openers (How, Why, What, When, Where, Which, Who) for `##` and `###` headings; decision tree titles stay questions.
+  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: `harness/kb.py` puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
+  - Change if accepted: lint.py (one call, one pattern); writing.md (the review checks the rest).
+  - For you: nothing.
+- Answer:
+
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).
@@ -127,7 +140,7 @@ Each entry has:
 
 ### Q143 · Part 2 > Proactive Operations > Alert > Threshold Design > Conditions · Condition vs symptom
 
-- Files: [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md) (section Symptom and condition: one test, two names); [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (section 9).
+- Files: [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md) (section Symptom and condition); [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md) (section 9).
 - Search: "Do not use Symptoms. Instead, use Conditions."
 - Question: is a condition a test written inside the alert definition, as opposed to a reusable symptom definition? Is the reason only that symptoms are reserved for minor issues, or also a technical one?
 - Written as now: rewritten after Q154: "A symptom and a condition are the same thing"; "A symptom definition is stored on its own and reused … A condition is written inside one alert definition"; "A symptom that triggers without its alert is a minor issue". The book's advice (use conditions, not symptoms) is no longer stated; cycles and the isolation reason are not written. design-thresholds section 9 (a proposal waiting for approval) puts wait and cancel cycles on symptoms only.
@@ -161,7 +174,7 @@ Each entry has:
 - Applied 2026-11-12: catalog rows alert-vm-cpu-contention-red and -orange without the Contention symptom, orange on the new symptom sym-vm-peak-vcpu-ready-above-16; vm-alerts (why no Contention symptom, orange halves red, a misconception; corrections entry); alert-design (the application team's higher threshold named against the per-VM values of the infrastructure alerts, no 8% against 6%); vm-cpu-contention-high rewritten: step 1 reads Ready, Co-stop and Overlap against the KPI levels; Ready branch (VM and pool limit and shares, host overcommit, DRS placement), Co-stop branch (VM size, NUMA, snapshots), Latency-only branch (power management, Hyper-Threading); the 37.5% test is a corrections entry. Closed.
 ### Q145 · Part 2 > Proactive Operations > Alert > Memory Alerts · Wait, example and instance
 
-- Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-alerts.md) (section Memory contention: why the cause is hard to trace); [ESXi alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-alerts.md) (sections ESXi memory contention, ESXi memory consumption); [Resource pool alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-alerts.md); [Cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-alerts.md); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md); [ESXi Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/latency.md).
+- Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-alerts.md) (section Memory contention: mixed causes); [ESXi alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-alerts.md) (sections ESXi memory contention, ESXi memory consumption); [Resource pool alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-alerts.md); [Cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-alerts.md); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md); [ESXi Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/latency.md).
 - Search 1: "10 minutes is used instead of 5 to reduce false positive. Take note this means you get notified later."
 - Search 2: "VM 001 has 51% memory contention"
 - Question: (a) the infrastructure consumption red has no duration in its condition; is the wait 10 minutes? (b) the 51% example lists 5 MB, 1 MB, 2 MB and shares; MB values cannot make 51%. Keep it as an illustration? (c) for ESXi and cluster, is Peak Memory Contention the worst VM, and Memory Contention the average of VMs?
@@ -208,7 +221,7 @@ Each entry has:
 - Applied 2026-11-12: catalog row alert-vm-network-tx-dropped-red gained sym-vm-cpu-usage-above-1ghz; vm-alerts (gate, transmit only, retransmission line, misconception; corrections entry); distributed-port-group-alerts (the reason for transmit only: received drops include packets not destined for the VM and full receive rings, a Guest OS cause). Closed.
 ### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
 
-- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Design the alerts as a set; the count tables were removed 2026-11-12, each cell is now a line in its object's alert file); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md); [Datastore and datastore cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/datastore/datastore-alerts.md).
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Alerts as a set; the count tables were removed 2026-11-12, each cell is now a line in its object's alert file); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md); [Datastore and datastore cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/datastore/datastore-alerts.md).
 - Search 1: "Not yet = I’ve not implemented it yet."
 - Search 2: "There is no alert defined, as it could result in false positive."
 - Search 3: "Not yet implemented. The reason is the many:many relationship"
@@ -221,7 +234,7 @@ Each entry has:
   - Change if accepted: alert-design, three table cells; delete the Q142 review notes in alert-design, guest-os-alerts and storage-alerts.
   - For you: whether your shipped set has a Guest OS disk-space alert or datastore cluster latency alerts. If yes, the sections change instead.
 - Answer: Author (2026-11-12): parked after 1.0. The scope of 1.0 does not include VCF Operations alert mastery; the shipped alert set is reviewed with the VMW-Alerts-Overhaul work (plan, After 1.0).
-- Applied 2026-11-12: nothing changed in the alerts themselves. The count tables left alert-design with the per-object restructure; the two disagreements stay as review notes in guest-os-alerts (section Consumption: daily checks, no alert), datastore-alerts (section Datastore latency: not implemented) and datastore-cluster-alerts (section Not alerted, and why), marked parked after 1.0. Closed for 1.0.
+- Applied 2026-11-12: nothing changed in the alerts themselves. The count tables left alert-design with the per-object restructure; the two disagreements stay as review notes in guest-os-alerts (section Consumption: daily checks, no alert), datastore-alerts (section Datastore latency: not implemented) and datastore-cluster-alerts (section Not alerted), marked parked after 1.0. Closed for 1.0.
 
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
 
@@ -232,7 +245,7 @@ Each entry has:
 
 ### Q135 · Why a New Framework? > Complexity · ITIL 4 or ITIL 5
 
-- Files: [Why SP5 and not ITIL](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/why-a-new-framework.md) (section Complexity).
+- Files: [SP5 vs ITIL](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/why-a-new-framework.md) (section Complexity).
 - Search: "ITIL 5 has 34 management practices"
 - Question: the 34 practices are ITIL 4 (the linked list is ITIL 4). Is "ITIL 5" a typo, or does ITIL 5 keep the same 34?
 - Written as now: "ITIL 4 has 34 management practices: 17 service management, 3 technical management, 14 general management." "ITIL merges capacity and performance into one practice."
@@ -298,7 +311,7 @@ Each entry has:
 
 ### Q140 · Part 2 > Proactive Operations > Alert > Threshold Design · Red vs orange scale
 
-- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (sections Threshold design, What not to alert); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md).
+- Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (sections Threshold design, Not alerted); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md).
 - Search 1: "For example, Red is always 4x of orange. You can make red 2x as bad by modifying any 2 of the following"
 - Search 2: "going up from the usual 0.2s to 0.6x second"
 - Question: (a) is red 4x orange (two factors doubled) or 2x orange (one factor doubled)? (b) 0.2 s to 0.6 s is 3x as long; the text says 300% longer. Which is right?
@@ -528,7 +541,7 @@ Each entry has:
 
 ### Q180 · Resource controls · One home for share, limit and reservation
 
-- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (1,338 words, cited by 6 questions); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (1,617 words); [Resource pool design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-design.md), formerly scalable-shares (356 words). Neighbours: [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
+- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (1,338 words, cited by 6 questions); [VM resource settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (1,617 words); [Resource pool design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-design.md), formerly scalable-shares (356 words). Neighbours: [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md); [Cluster admission control](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
 - Search: not from the book; your request of 2026-11-12.
 - Written as now (review, top down):
   - Mechanism is written three times. "Shares act only under contention" and "a reservation is a guarantee, so it cannot be overcommitted": in all three files. Default CPU shares: resource-controls (1:2:4 per vCPU) and resource-settings-guidance (table). A VM's shares split among its vCPUs: resource-controls and noisy-neighbour.
@@ -552,7 +565,7 @@ Each entry has:
 
 ### Q110 · Part 1 > Configuration Management > Reservation, Cluster, Resource Pool · Admission control, slot size and siblings
 
-- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Resource pool design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-design.md), formerly scalable-shares.
+- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [VM resource settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Cluster admission control](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Resource pool design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-design.md), formerly scalable-shares.
 - Search 1: "Reservation is respected only when Admission Control is enabled"
 - Search 2: "this will impact the HA Slot Size"
 - Search 3: "Resource Pool with VM as sibling is a common mistake"
@@ -574,7 +587,7 @@ Each entry has:
 
 ### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
 
-- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Network); [Network characteristics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/network-characteristics.md) (section Coarse allocation).
+- Files: [VM resource settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Network); [Network characteristics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/network-characteristics.md) (section Coarse allocation).
 - Search: "There is no network limit"
 - Question: with Network I/O Control each VM network adapter has share, reservation and limit, and port groups have traffic shaping. Change to: a network limit exists per vNIC but is not recommended?
 - Written as now: resource-settings-guidance: "VM limits exist for CPU, memory and disk IOPS". noisy-neighbour: "Each VM network adapter has share, reservation and limit"; the 8 Gb/s limit and 100 Mb/s reservation withdrawn (Q083). network-characteristics: "NIOC and traffic shaping exist, but are not VM configuration properties."
@@ -595,7 +608,7 @@ Each entry has:
 
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
 
-- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
+- Files: [VM resource settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
 - Search 1: "10 per GB" (default VM memory shares table)
 - Search 2: "per VM GB of RAM = 10240"
 - Search 3: "Both VMs want to consume 10 GHz"
@@ -800,7 +813,7 @@ Each entry has:
 
 ### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
 
-- Files: [How VCF Operations reaches its users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/system-engagement.md) (section Alerts, dashboards and reports compared).
+- Files: [VCF Operations channels to users](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/system-engagement.md) (section Alerts, dashboards and reports compared).
 - Search: "Export to spreadsheet or PowerPoint"
 - Question: the Good For row reads Exception for alerts, Exception and Analysis for dashboards, and Exception for reports. Is Exception right for reports, or did you mean Summary or Trend?
 - Written as now: Exceptions for reports, as in the source.
@@ -912,7 +925,7 @@ Each entry has:
 
 ### Q127 · Part 1 > Performance | Capacity vs Capacity Model > Demand · Reservation: supply or demand side
 
-- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity exists only in capacity), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Demand).
+- Files: [Performance vs capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/performance-vs-capacity.md) (section Usable capacity: a capacity term), [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Demand).
 - Search 1: "Demand = Max (Utilization, Reservation)"
 - Search 2: Performance Management chapter, Performance | Capacity, the usable capacity diagram.
 - Question: performance-vs-capacity says capacity subtracts HA, buffer, hypervisor overhead and reservation from total capacity. This chapter puts reservation on the demand side: demand = Max (utilization, reservation), per VM, against usable capacity. Subtracting it from supply as well counts it twice. Remove reservation from the usable capacity sentence?
@@ -966,7 +979,7 @@ Each entry has:
 
 ### Q061 · Operations flows · Can this cluster take more VMs: your order of checks
 
-- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (sections Checks, in order; Why this order).
+- Files: [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (sections Checks, in order; Order rationale).
 - Search: not from the book. Drafted from the capacity model, Cluster Performance, Cluster Risk, Cluster Consumption, admission control and host memory states.
 - Question:
   1. Is this your order: cluster state and HA, contention today, Cluster Risk, room after HA and buffer, fit of the new VMs (reservations, overcommit, monster size), balance?
@@ -989,7 +1002,7 @@ Each entry has:
 
 ### Q060 · Operations flows · Users say the VM is slow: your order of checks
 
-- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/vm-slow.md) (sections Checks, in order; Why this order). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/vm-slow.md) (sections Checks, in order; Order rationale). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
 - Search: not from the book. Drafted from the VM overview file and the per-resource flows.
 - Question:
   1. Is this the order you follow in the field: time window, breadth (many VMs?), VM contention per resource, Guest OS queues, then context (limits, snapshots, vMotion)?
@@ -1009,7 +1022,7 @@ Each entry has:
 - Answer: Author (2026-11-11): users rarely tell the Guest OS from the VM, so the first step is to ask the application team to quantify the slowness in the Windows or Linux counters they can see; developers have no access to vSphere or Kubernetes metrics. Guest OS counters belong outside the VM, so they leave step 4 (consumption). Applied: vm-slow step 1 hands over to two new flows, guest-os/system/troubleshooting/ms-windows-slow and guest-os/system/troubleshooting/linux-os-slow; VM consumption reads VM counters only; 8 steps.
 
 ### Q171 · Scope · Generic public cloud in the SP5 Framework
-- Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Business, application and IaaS layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
+- Files: [IaaS as a service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/iaas-business.md) (lines on cost target, consumer layer, provider layer); [Class of service](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/class-of-service.md) (free tier); [Rightsizing VMs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (cost row; public cloud providers and oversizing); [Capacity dimensions](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md) (section Overcommit, public cloud reference); [Health, risk and efficiency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/health-risk-efficiency.md) (section Efficiency, cost); [Realms and layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/realms-and-layers.md); [Dashboards for IT leaders](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/it-leaders-dashboards.md) (overcommit ratio).
 - Search 1: "Customers usually aim at half the public cloud price"
 - Search 2: "Public cloud free tiers are smaller"
 - Search 3: "Public cloud providers have no oversizing problem"
@@ -1224,7 +1237,7 @@ Each entry has:
 - Question: (a) the file holds VCF Operations symptom definitions (tests); the glossary splits "symptom definition" (product object) from "symptom" (SP5 minor issue), and the trap is rewritten; (b) the file holds conditions, named `conditions`, and the knowledge file stays; (c) other.
 - Recommendation: (a). Reuse across alert definitions needs a stored test; inline conditions cannot be reused. Also: are conditions in the 9.1 editor stored as symptom definitions internally?
 - Answer: Condition and symptom are two terms used only in VCF Operations. Symptoms are reusable; a condition is embedded in the alert. Agent E2 needs to know they mean the same thing.
-- Applied 2026-11-10: alert-definitions (section Symptom and condition: one test, two names; trap rewritten), glossary (Symptom row, Synonyms row), design.
+- Applied 2026-11-10: alert-definitions (section Symptom and condition; trap rewritten), glossary (Symptom row, Synonyms row), design.
 
 ### Q153 · Threshold design · KPI in availability and security files
 
@@ -1270,7 +1283,7 @@ Each entry has:
 
 ### Q123 · Part 1 > Capacity Management > Reclamation · Benefit table and scope
 
-- Files: [Reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/reclamation.md) (sections When reclamation is the provider's job, What each area frees).
+- Files: [Reclamation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/reclamation.md) (sections Provider's right to reclaim, Capacity freed per area).
 - Search 1: "Cluster RAM as idle RAM pages tend to occupy ESXi memory"
 - Search 2: "It is only applicable when VMs are free"
 - Question: (a) In the benefit table, cells seem shifted: Idle VM, Storage holds "Cluster RAM as idle RAM pages tend to occupy ESXi memory"; Oversized VM, Memory holds the context-switch text (a CPU benefit). Claude rewrote the table from the chapter text: unused VM frees real CPU and memory; oversized VM frees memory and performance, CPU in allocation only; idle VM frees memory, CPU in allocation only; storage only on delete. Correct? (b) The chapter starts with reclamation applying only when VMs are free, then applies the stocktake to internal IT with chargeback. Which scope is right?
@@ -1320,7 +1333,7 @@ Each entry has:
 
 ### Q101 · Part 1 > SP5 Framework: Pillars · Relationship lines and what is troubleshot
 
-- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/overview.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md) (section Who does which day).
+- Files: [SP5 framework and the five pillars of operations: scope, relationships, non-pillars](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/overview.md) (sections Relationships, Capacity); [Proactive operations: dual track, daily cadence, NOC screens and the VM life cycle](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/proactive-operations.md) (section Day 0, 1 and 2 owners).
 - Search 1: "Lines without arrowheads means there is relationship but not impact"
 - Search 2: "Availability and Capacity should not overlap"
 - Search 3: "Why isn’t there a line to Performance?"
@@ -1873,7 +1886,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q046 · Provider Objects > esxtop · HTQ and DTYP still in the 9.1 documentation
 
-- Files: [esxtop CPU, power and interrupt counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md), [esxtop network counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network.md)
+- Files: [esxtop CPU counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md), [esxtop network counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/network.md)
 - Search 1: "The column HTQ is no longer shown in ESXi 7.0"
 - Search 2: "does not seem to be available anymore"
 - Question: the vSphere 9.1 documentation still lists HTQ (CPU panel) and DTYP (network panel). Do they show on an ESXi 9.1 host?
@@ -1931,7 +1944,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q051 · vCenter API counters · clusterServices.failover
 
-- Files: [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
+- Files: [Cluster admission control](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
 - Search: not from the book. vCenter 9.1.0 API summary: "vSphere HA number of failures that can be tolerated".
 - Question: how does the value behave under each HA admission control policy (slot, percentage of cluster resources, dedicated failover hosts, disabled)? Any trap in reading it?
 - Written as now: the counter, its level and its summary; behaviour per policy left open.
@@ -2072,13 +2085,13 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q033 · MS Windows > CPU > Usage | Utilization | Time · VM CPU Run and Hyper-Threading
 
-- Files: [Windows CPU scheduling and thread states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md), [VM CPU Run](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/run.md)
+- Files: [Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md), [VM CPU Run](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/run.md)
 - Search 1 (MS Windows table): "Which VM counters can be used when you have no visibility into the Guest"
 - Search 2 (Chapter 2, Run | Net Run): "counter not affected by CPU frequency scaling and hyper threading"
 - Question: the MS Windows table marks VM CPU Run as Yes in the Hyperthreading column. Chapter 2 says Run is not affected by Hyper-Threading. Which is right?
 - Written as now: the table as in the book, marked with the conflict; `run` keeps the Chapter 2 statement.
 - Answer: Run and Net Run not affected by hyper threading
-- Done 2026-11-05: [Windows CPU scheduling and thread states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md) table: Run and Net Run marked not affected by Hyper-Threading; Demand marked affected (Q035).
+- Done 2026-11-05: [Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md) table: Run and Net Run marked not affected by Hyper-Threading; Demand marked affected (Q035).
 
 ### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
 
@@ -2356,7 +2369,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q012 · Chapter 3 Memory > Architecture · 3 levels
 
-- Files: [Memory layers and page mapping](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md)
+- Files: [Memory layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md)
 - Search: "ESXi uses 3 levels to manage memory"
 - Question: the list after it has 4 items (TPS, Tiered Memory, Balloon, Compress/Swap). Which are the 3 levels?
 - Written as now: 4 mechanisms listed, no level count.
@@ -2364,7 +2377,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q013 · Chapter 3 Memory > Architecture · Balloon and unmet demand
 
-- Files: [Memory layers and page mapping](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md), [VM Memory Ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md)
+- Files: [Memory layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md), [VM Memory Ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md)
 - Search: "The first sign of unmet demand"
 - Question: the next sentences say ballooning does not mean ESXi is unable to meet demand. Is balloon a sign of memory pressure rather than unmet demand?
 - Written as now: proactive, not unmet demand.
@@ -2394,7 +2407,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q016 · Chapter 3 Memory > VM · Meaning of Compressed and Swapped
 
-- Files: [VM Memory Swapped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/swapped.md), [Memory layers and page mapping](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md)
+- Files: [VM Memory Swapped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/swapped.md), [Memory layers](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-layers.md)
 - Search 1 (VM): "indicates that the host is unable to satisfy the VM memory requirement"
 - Search 2 (Architecture): "It does not mean VMs were contending for RAM"
 - Question: which holds?

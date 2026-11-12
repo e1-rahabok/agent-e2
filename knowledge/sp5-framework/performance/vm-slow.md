@@ -42,7 +42,7 @@ flowchart TD
 7. Known bug (VirtualMachine, HostSystem). Check the versions in the window against known issues of that release: VMware Tools, virtual hardware, ESXi build, drivers. Known bugs are mostly configuration (an older version, an incompatible setting); the current list is outside the knowledge base, so search vendor documentation and KB articles. → step 8.
 8. Log (VirtualMachine). Events in the window that counters do not show: a snapshot taken or consolidated ([`vsphere/technology/storage/concepts/snapshot-impact`](../../vsphere/technology/storage/concepts/snapshot-impact.md)), a vMotion and its stun ([`vsphere/object-types/vm/vmotion`](../../vsphere/object-types/vm/vmotion.md)), VMware Tools or Guest OS errors, an HA restart. Nothing in steps 4-8 → the cause is outside the VM and its host: the application, a dependency, or the network beyond the host. Say so; vSphere has no counter for it.
 
-## Why this order
+## Order rationale
 - The Guest OS first: the application team sees Windows or Linux counters, not vSphere. Quantifying the slowness in their terms gives the time window and tells whether the wait is inside the Guest OS at all.
 - The window next: a counter read outside the complaint window, or averaged over a day, misses the wait.
 - Breadth before depth: many slow VMs point to a shared cause; tuning one VM would not help.
@@ -53,7 +53,7 @@ flowchart TD
 - Configuration always: a limit or an outdated setting can cause the contention itself.
 - Log last: logs explain short events (snapshots, stuns) once the counters have placed the problem in time.
 
-## How to read the result
+## Interpretation
 - Contention on one resource → that resource's flow, then configuration, known bug and log for the cause.
 - No VM contention, and step 1 found a wait inside the Guest OS → the Guest OS is short of vCPU or memory, or the application is the bottleneck.
 - Contention and a configuration finding (a limit, an old version) → fix the configuration first.

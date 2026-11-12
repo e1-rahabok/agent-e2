@@ -1,4 +1,4 @@
-# Business, application and IaaS layers
+# Realms and layers
 
 ## Three realms of IT
 - Business, application and IaaS. Each has its own teams, responsibilities and skills.
@@ -43,7 +43,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Upper layers depend on lower ones, and the infrastructure layer is the usual source of contention. Check it first: it is horizontal and serves every application the same way.
 - The impact of infrastructure latency on an application is unknown in advance. The same software (SQL Server 2019) is hit differently by batch and OLTP use.
 
-## Context is lost at each layer boundary
+## Context loss at layer boundaries
 - Business layer: each transaction has an id; which user and which transaction were slow is known, and custom code can be traced per function call.
 - Packaged software (COTS): metrics no longer relate to users or transactions. A queue of 10,000 does not say whether the user's transaction was in it.
 - Guest OS: every application is a process. Per-process CPU, memory, disk and network; deeper metrics are system-wide. Packet loss does not say which process lost packets.
@@ -85,7 +85,7 @@ satisfied: t <= T    tolerating: T < t <= 4T    frustrated: t > 4T or HTTP 5xx
 - Source of the phrase: Mark Achtemichuk, https://blogs.vmware.com/vsphere/2015/11/vcpu-to-pcpu-ratios-are-they-still-relevant.html.
 ![Each layer from business application to physical resource has a contention and a utilization metric; contention leads to performance, utilization to capacity, contention feeds capacity and the layer above](images/consumer-provider-metric-types-to-operations-pillars-diagram.png)
 
-## Why optimized performance is hard
+## Limits of optimized performance
 - Best performance is at 100% utilization or throughput, when the system does the most work. Most loads have peaks, so the average sits well below 100%.
 - Four dependencies stand in the way:
   - vertical: a lower-layer problem reaches the upper layer;

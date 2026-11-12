@@ -1,4 +1,4 @@
-# DRS migration threshold levels and Cluster DRS Score
+# DRS migration threshold
 
 ## Migration threshold levels (since vSphere 7.0)
 - Before vSphere 7.0: one migration threshold controlled how aggressively fully automated DRS moved VMs.

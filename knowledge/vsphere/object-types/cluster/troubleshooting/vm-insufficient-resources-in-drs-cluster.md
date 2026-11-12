@@ -35,13 +35,13 @@ flowchart TD
    Remove the blocker, or move the migration threshold toward Aggressive and check again. If no blocker exists for this VM, look for the same blockers on the other VMs of the host.
 6. No cluster-level cause. Check the VM itself: vCPU or memory size, NUMA placement, in-guest load. See [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](../../../technology/cpu/troubleshooting/vm-cpu-contention-high.md) and [`vsphere/technology/memory/vm-memory-latency-high`](../../../technology/memory/vm-memory-latency-high.md).
 
-## Why this order
+## Order rationale
 - Cluster state first: in yellow or red, reservations themselves are not met, so the rest of the analysis is built on wrong assumptions.
 - Limits second: a limit throttles the VM even on an idle cluster, and no DRS move fixes it.
 - Cluster capacity before host: if the cluster as a whole is short, balancing cannot help.
 - DRS blockers last: they explain why an imbalance persists when capacity exists elsewhere.
 
-## How to read the result
+## Interpretation
 - Contention on one host only, other hosts idle → DRS blocker (step 5).
 - Contention on all hosts → cluster capacity or shares (step 3).
 - Contention on one VM only, host not busy → limit (step 2) or the VM itself (step 6).

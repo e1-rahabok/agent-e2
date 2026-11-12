@@ -1,6 +1,6 @@
 # Proactive operations
 
-## Who does which day
+## Day 0, 1 and 2 owners
 - Day 0 (plan) and Day 1 (design and build) belong to the architecture team; Day 2 (operate) to the operations team.
 - In a large estate Day 1 never stops. 6,000 ESXi hosts on a 5-year depreciation means about 100 hosts replaced a month, 25 a week.
 - Pillars per phase:
@@ -15,7 +15,7 @@
 
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 
-## Dual track: proactive first, reactive as fallback
+## Dual track: proactive and reactive
 - Two processes: reactive and proactive.
 - Reactive: starts from a complaint or an alert. A manual process for three types of problem, each with its own order of checks, the what before the why:
   - Down: log, saturation, configuration, known bug.

@@ -1,6 +1,6 @@
 # CPU topology: CPU vs vCPU
 
-## No Hyper-Threading inside a VM
+## Hyper-Threading inside a VM
 ![Physical CPU with threads vs vCPU with virtual sockets and cores](../images/physical-cpu-threads-vs-vcpu-virtual-sockets-and-cores.png)
 - vSphere exposes only virtual sockets and virtual cores to a VM.
 - A virtual core has no hyper-threads.

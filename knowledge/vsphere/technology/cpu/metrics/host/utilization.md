@@ -4,7 +4,7 @@
 - Static-frequency CPU utilization, from the host vantage point.
 - The VM equivalent is called Run. See [`vsphere/technology/cpu/metrics/virtual-motherboard/run`](../virtual-motherboard/run.md).
 
-## Why the names differ
+## Vantage points
 - Different vantage points: provider (ESXi) and consumer (VM).
 
 ## Mechanism

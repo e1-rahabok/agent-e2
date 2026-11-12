@@ -1,4 +1,4 @@
-# esxtop CPU, power and interrupt counters
+# esxtop CPU counters
 
 ## Summary lines (provider view)
 - Line 1: physical CPU load average over 1, 5 and 15 minutes.

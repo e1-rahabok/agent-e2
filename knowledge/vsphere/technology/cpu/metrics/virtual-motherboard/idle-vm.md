@@ -19,7 +19,7 @@
 - 100% of the time: any 5-minute period above the MHz threshold in a day makes that day not idle.
 - New VMs are excluded: they often wait before use.
 
-## Reading it
+## Interpretation
 - Idleness Indicator is rolling, so a VM is classified without waiting for a daily run.
 - Its value is stored only when it changes: the chart shows steps, which makes it easy to see when the state changed.
 - Reclaimable Idle alone can be stale: it is daily, and a VM that became busy today still shows 1 until the next daily value. Idleness Indicator shows the recent activity.

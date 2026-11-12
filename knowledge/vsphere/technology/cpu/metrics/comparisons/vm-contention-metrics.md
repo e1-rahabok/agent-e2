@@ -7,7 +7,7 @@
 ![vCenter VM CPU contention counters](../../images/vcenter-vm-cpu-contention-counters-table.png)
 ![vCenter VM CPU wait counters](../../images/vcenter-vm-cpu-wait-counters-table.png)
 
-## Which state each metric includes
+## States per metric
 | Component | Ready | Latency | Contention (VCF Operations, from July 2024) | Stable sum |
 |---|---|---|---|---|
 | Ready, not from limit | Yes | Yes | Yes | Yes |
@@ -85,6 +85,6 @@ source:
   path: CPU > VM > Contention Metrics; Wait Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''Which state each metric includes'': table assembled from the book''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the book.'
+- 'To check: Section ''States per metric'': table assembled from the book''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the book.'
 status: draft
 ```

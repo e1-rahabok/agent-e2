@@ -1,4 +1,4 @@
-# Why SP5 and not ITIL
+# SP5 vs ITIL
 
 ## Scope
 - IT management frameworks exist: ITSM, IT4IT, ITIL, COBIT, Microsoft Operations Framework. eTOM and BIAN are domain-specific (telecom, banking) and do not suit VCF.

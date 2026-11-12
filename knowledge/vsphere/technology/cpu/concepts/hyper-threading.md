@@ -1,4 +1,4 @@
-# Hyper-Threading: scheduling and accounting
+# Hyper-Threading
 
 ## Definition
 - Hyper-Threading (also called simultaneous multithreading, SMT) lets one physical core behave like two logical processors.
@@ -85,7 +85,7 @@ VM A Used = 25% × 0.625  (B also running)
 | Each VM runs half the time, half of it overlapping | 50% | 40.625% |
 | Both threads run all the time | 100% | 62.5% |
 
-## Provider has no contention
+## Provider contention
 - ESXi is the provider. A physical thread runs or is halted. It does not wait to be served.
 - The consumer (VM) faces contention. So ESXi consumption metrics come first; ESXi contention metrics are sums of VM metrics.
 

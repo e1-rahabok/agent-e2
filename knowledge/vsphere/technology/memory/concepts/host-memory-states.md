@@ -1,4 +1,4 @@
-# ESXi memory states and reclamation thresholds
+# ESXi memory states
 
 ## Mechanism
 - ESXi starts reclaiming when free memory runs low.
@@ -18,7 +18,7 @@
 
 - Keep hosts in High or Clear. Unless high utilization is the goal, hosts sit in High.
 
-## When ballooning starts
+## Ballooning start point
 | | 512 GB host | 1 TB host | 1.5 TB host |
 |---|---|---|---|
 | Balloon threshold (free) | 3.7 GB | 6.9 GB | 10.2 GB |
@@ -110,6 +110,6 @@ corrections: []
 review_notes:
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: Section ''States'': the minFree rule (899 MB for the first 28 GB, then 1% of the rest), which gives about 10.8 GB for 1 TB as the book states (calculator cited by the book, third-party: https://blogs.virtualmaestro.in/2020/06/02/vmware-vsphere-7-x-memory-reclamation-part-2-mem-memminfreepct/).'
-- 'Section ''When ballooning starts'': book typo ''993.1 BB'' written as GB.'
+- 'Section ''Ballooning start point'': book typo ''993.1 BB'' written as GB.'
 status: draft
 ```

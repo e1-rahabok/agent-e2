@@ -1,6 +1,6 @@
 # Guest OS configuration review
 
-## Why separate from the VM
+## Separation from the VM
 - The Guest OS and the VM have their own requirements, and in large organizations two teams own them. The VM review (virtual motherboard and VMware Tools): [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../../vsphere/object-types/vm/configuration/vm-configuration-review.md).
 
 ## Checks

@@ -1,6 +1,6 @@
 # Health, risk and efficiency
 
-## Why one score fails
+## Limits of one health score
 - IT uses the word health everywhere and rarely defines it. Trying to cover everything makes the definition too broad.
 - What counts as healthy depends on the object, the aspect and the scope. A score that covers everything drops when anything is imperfect, so it reads low while the environment runs well.
 - The same holds outside IT. A person can be physically fit and still ill in another sense; a country can be a strong economy and weak in some of its provinces. A health statement needs its aspect and its scope.

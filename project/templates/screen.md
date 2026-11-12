@@ -9,10 +9,10 @@ knowledge/vcf-operations/<features|dashboards|reports>/screens/<slug>.md for VCF
 ## Text twin
 - Every label, column and control on the screen, in reading order, so a text-only model loses nothing.
 
-## How to recognize it
+## Visual cues
 - Visual cues that tell this screen apart from similar ones: title, tabs, column headers, chart legend.
 
-## What each element shows
+## Elements
 | Element | Metric or property | Source file |
 |---|---|---|
 | <chart line or column> | <metric name, unit, rollup> | `<knowledge id>` |
@@ -20,7 +20,7 @@ knowledge/vcf-operations/<features|dashboards|reports>/screens/<slug>.md for VCF
 ## Interval and rollup
 - Default time range, data interval and rollup. What peaks this view hides.
 
-## Reading it
+## Interpretation
 - Healthy pattern vs problem pattern, with the knowledge files that explain why.
 
 ## Misconceptions

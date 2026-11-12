@@ -1,6 +1,6 @@
 # Performance management
 
-## What it answers
+## Scope
 - Quality: are the consumers served well now? Capacity asks quantity: is there enough supply for the demand to come ([`sp5-framework/capacity/capacity-management`](../capacity/README.md)).
 - Performance is contention: the time a consumer waited for a resource it demanded. No contention, no performance problem. Utilization is consumption: 100% with no queue is the most work done ([`sp5-framework/concepts/performance-vs-capacity`](../concepts/performance-vs-capacity.md)).
 - Measured on the consumer: the VM, the Guest OS, the pod. A provider (ESXi host, cluster) has no contention of its own: its performance is the contention of its consumers ([`vsphere/architecture/provider-consumer`](../../vsphere/architecture/provider-consumer.md)).
@@ -43,7 +43,7 @@
 - KPI vs SLA, and KPIs per layer of the business: [`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md).
 - Not built yet: a datastore KPI, a vSAN KPI (disk latency of every VM on the vSAN datastore), an NSX KPI.
 
-## Where each question is answered
+## Question map
 | Question or signal | Start with |
 |---|---|
 | Users say the VM is slow | [`sp5-framework/performance/vm-slow`](vm-slow.md) |

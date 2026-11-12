@@ -1,6 +1,6 @@
 # Real-time metrics (VCF Operations 9.1)
 
-## What it adds
+## Purpose and implementations
 - The purpose and the three implementations (esxtop, VCF Operations 2 seconds, 20-second data labelled real time): [`sp5-framework/observability/real-time-metrics`](../../sp5-framework/observability/real-time-metrics.md). This file is the VCF Operations 9.1 feature.
 - New in VCF Operations 9.1: live performance data, streamed from vCenter, ESX, NSX and vSAN into a real-time metrics store.
 - Two tiers on ESX hosts and VMs: 20-second (standard real-time interval) and 2-second (high-resolution, an esxtop subset of about 21 metrics).
@@ -22,7 +22,7 @@
 - 20-second standard tier: Large deployments only, activated on the vCenter object type. Essentials metrics are always on.
 - Without the component, dashboard charts that use real-time aggregates show empty values.
 
-## Where to read it
+## Location in the UI
 - Troubleshooting Workbench > Real Time Analysis: Overview, Top N, Custom Query.
 - Overview: select the ESX Top view explicitly to see 2-second data. A time range above 6 hours in that view gives an error.
 - Top N: always 20-second data, never 2-second.
@@ -73,9 +73,9 @@ source:
   document: VCF Operations 9.1 documentation (TechDocs, VCF 9.1.x), Real-time Data in the Workbench (updated 2026-10-29); Real-Time Metrics Details and Deploy Real-Time Metrics (updated 2026-11-05)
   path: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/troubleshooting-workbench-home-page/real-time-data-in-troubleshooting-workbench.html; .../configuring-policies/using-the-monitoring-policy-workspace/policy-workspace/real-time-metrics-policy-workspace.html; .../deploying-vcf-operations-for-real-time-data-service.html
 corrections:
-- 'Section ''What it adds'': designed for programmatic consumption, Prometheus compatibility for scripts.'
+- 'Section ''Purpose and implementations'': designed for programmatic consumption, Prometheus compatibility for scripts.'
 review_notes:
-- 'To check: Section ''What it adds'': a Prometheus endpoint or API route for external scripts; the docs show PromQL only in the Custom Query sub-tab (Q129).'
+- 'To check: Section ''Purpose and implementations'': a Prometheus endpoint or API route for external scripts; the docs show PromQL only in the Custom Query sub-tab (Q129).'
 - 'Docs conflict: the policy page says ESX Top view is for Virtual Machine types; the Workbench page says Host System and VM.'
 - 'To check: The list of the ~21 2-second metrics (VODAP-9.1-Metrics-List-Per-Provider.xlsx, not read).'
 - 'Section ''Cost'': 1,000 data points from the book; 10x volume is arithmetic.'

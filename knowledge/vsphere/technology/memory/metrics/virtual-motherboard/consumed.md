@@ -26,7 +26,7 @@ Consumed = Granted - savings (sharing)
 - Capped by a limit. Can reach, not exceed, configured memory.
 - vCenter Guest | Memory Usage is the same as Consumed. Do not use it.
 
-## Why Consumed stays high
+## Consumed after the guest frees memory
 - A guest that frees a page only updates its free list. The hypervisor does not see the list, so the ESXi page stays mapped.
 - So Consumed is higher than Guest OS In Use and stays high after Active has dropped.
 - Consumed and Guest OS In Use are managed independently. They do not match.
@@ -68,7 +68,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''View'': from Memory > Architecture.'
-- 'Sections Formula, Why Consumed stays high: from Memory > VM.'
+- 'Sections Formula, Consumed after the guest frees memory: from Memory > VM.'
 - 'To check: Section ''Formula'': whether Consumed includes the compressed remainder that stays in DIMM; the book is unsure.'
 status: draft
 ```

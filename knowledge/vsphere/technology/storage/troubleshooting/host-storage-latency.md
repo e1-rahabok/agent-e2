@@ -26,13 +26,13 @@ flowchart TD
 6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up from a power-saving state: the cause, not a reason to discard the reading. The VMs that read then did wait; their NVMe Wait shows how much. → step 7.
 7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
 
-## Why this order
+## Order rationale
 - The split first: kernel and device latency have different owners, the ESXi host and the array.
 - Per adapter and path after the split: one bad path hides in the host total.
 - Percentiles, not the maximum: one outlier sample is not a host problem.
 - Memory-tier devices last: their latency pattern looks like a fault and is not.
 
-## How to read the result
+## Interpretation
 - KAVG high, DAVG low: queuing inside ESXi; queue depths or a saturated adapter.
 - DAVG high, array latency low: the fabric or the HBA configuration.
 - DAVG high, array latency high: the array.

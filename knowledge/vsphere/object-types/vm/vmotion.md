@@ -1,4 +1,4 @@
-# VM vMotion metrics (downtime, stun time, copy bandwidth)
+# VM vMotion metrics
 
 ## Metrics, in order of importance
 | Metric | Type | Expected | Investigate |
