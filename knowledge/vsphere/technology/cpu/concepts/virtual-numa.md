@@ -14,7 +14,11 @@
 
 ## Topology initialization
 - The vNUMA topology is set at first power-on. It is based partly on the NUMA topology of the host.
-- The topology does not change unless the VM vCPU count changes.
+- The vendor statement: the topology does not change unless the VM vCPU count changes. The exception is `numa.autosize.once` set to FALSE (below).
+- A change of the configured vCPU count recalculates the topology.
+- `numa.autosize.once` sets what a power cycle does to the topology. TRUE: the topology stays the same at every power-on. FALSE: the topology is recalculated at every power-on, from the host the VM starts on.
+- The vendor page gives the default of `numa.autosize.once` as FALSE in its options table and as TRUE in its description, so a power cycle can rebuild the topology or not. Read the value in the advanced settings of the VM before saying which.
+- vMotion does not rebuild the topology. A VM first powered on a host with large NUMA nodes keeps the layout built for that host, so on a host with smaller nodes the VM can span two physical nodes while the guest keeps placing threads and memory for the first layout.
 - If a vNUMA VM moves to a host with a different NUMA topology, its vNUMA topology may no longer suit the host.
 - The result can be reduced performance.
 - Best results: clusters made entirely of hosts with matching NUMA architecture.
@@ -43,6 +47,8 @@
 - See [`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`](idle-and-unused-vcpus.md).
 
 ## Misconceptions
+- "vMotion rebuilds the vNUMA layout for the new host" → it does not. The layout built at first power-on stays through the move; a change of the vCPU count recalculates it.
+- "A power-off and power-on on the new host always rebuilds the layout" → only when `numa.autosize.once` is FALSE. With TRUE the layout stays. Check the value on the VM.
 - "corespersocket sets the NUMA layout" → from vSphere 6.5 it does not. It sets the guest socket presentation.
 - "vNUMA is on for every VM" → by default it is on only for VMs with more than 8 vCPUs.
 
@@ -65,10 +71,12 @@ related:
 - vsphere/technology/cpu/concepts/numa
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
-  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57)
+  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); vSphere 9.1 Resource Management, Virtual NUMA Controls and Using Virtual NUMA (Broadcom TechDocs, last updated 2026-11-09)
+  path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57); Using NUMA Systems with ESXi > Virtual NUMA Controls (option numa.autosize.once)
 corrections: []
 review_notes:
+- 'To check: Section ''Topology initialization'': the Virtual NUMA Controls page gives the default of numa.autosize.once as FALSE in the options table and as TRUE in the description (9.0, last updated 2026-10-19; 9.1, last updated 2026-11-09). Read the value on a real VM; author question Q192. URL: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/virtual-numa-controls.html'
+- 'Source URL for the vCPU count sentence: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html'
 - Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: KB 81383, the ''Virtual Machine vCPU and vNUMA Rightsizing'' blog and the Virtual Machine Compute Optimizer tool, referenced by the source; not read.'

@@ -102,6 +102,23 @@ Each entry has:
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
+### Q192 · Virtual NUMA · numa.autosize.once default and the power cycle
+
+- Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (section Topology initialization); [vNUMA after a move to an older host](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-53-vnuma-after-move-to-older-host.md).
+- Search 1: "numa.autosize.once"
+- Search 2 (vendor page): "If the value is set to FALSE, the virtual NUMA topology is updated every time it is powered on."
+- Question: the vSphere 9.0 and 9.1 Virtual NUMA Controls pages give the default of numa.autosize.once as FALSE in the options table and as TRUE in the description. What value does a new VM have on a 9.x host? Does a power-off and power-on on a host with a different NUMA layout rebuild the layout?
+- Written as now: both values stated; a power cycle rebuilds the layout only with FALSE; the Using Virtual NUMA 9.1 page says the layout does not change unless the vCPU count changes. The key of the question says the layout changes only with the vCPU count. With FALSE as the default, a power cycle on the old host is a valid fix and the key must say so.
+- Answer:
+
+### Q193 · Guest OS sizing · Lowering SQL Server max server memory in steps
+
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Applications that manage their own memory); [SQL Server holds its memory](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-89-sql-server-holds-its-memory.md).
+- Search: "Finding the size: lower"
+- Question: the section says to lower max server memory (MB) in steps, watch the SQL Server memory counters and the query times over a full business cycle, and resize the VM after that. The Microsoft page does not say it. Is this your method? Which counters do you watch, and how large is a step?
+- Written as now: the method, with no counter names and no step size; flagged in review_notes.
+- Answer:
+
 ### Q191 · Field checks the documents do not settle
 
 - Files: listed per item.
