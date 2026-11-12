@@ -4,7 +4,7 @@
 | Control | Nature |
 |---|---|
 | Reservation | Absolute. A guarantee (minimum). |
-| Limit | Absolute. A cap. |
+| Limit | Absolute. A cap (maximum). |
 | Shares | Relative. Applied at two scheduler levels: cluster and host. |
 | Entitlement | Dynamic. Determined by the hypervisor. See below. |
 
