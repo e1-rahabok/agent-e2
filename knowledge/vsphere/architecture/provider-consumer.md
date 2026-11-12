@@ -18,13 +18,13 @@
 - kind: sum-of-consumers metric: the sum over the VMs of what they would use with no contention, an internal metric of the CPU scheduler.
 - Not the sum of all VM worlds + VMkernel worlds: kernel work is in Usage, not in Demand. A host with no VMs shows Demand flat at 0 while Usage is not 0.
 
-## CPU Ready does not apply to ESXi
+## CPU Ready on ESXi
 - A VM is a consumer. Multiple VMs can share the same physical core, at a performance cost.
 - Ready measures a consumer waiting to be scheduled.
 - A physical core or thread is always ready. Ready does not apply to ESXi.
 - src: Complexity > Architecture Complexity
 
-## ESXi ≠ VMs + kernel
+## ESXi vs VMs plus kernel
 - ESXi metrics are more complex than the sum of its VMs plus the kernel.
 - src: Complexity > Architecture Complexity
 

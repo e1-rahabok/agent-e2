@@ -1,6 +1,6 @@
 # Purpose-driven architecture
 
-## Goals come from what is sold
+## Goals from what is sold
 - Architecture goals are business outcome as seen by whoever pays for the platform, and SLA as seen by whoever pays for the service.
 - The goals depend on what is sold: an application or infrastructure.
 - **SaaS**: no on-premises install. ISVs use it so customers do not run outdated versions.
@@ -13,7 +13,7 @@
 - **K8aaS**: Kubernetes, on a dedicated or a shared cluster.
 - **IaaS**: three variants (VM, resource pool, hardware): [`sp5-framework/concepts/iaas-business`](iaas-business.md).
 
-## Begin with the end in mind
+## Day 0 to Day 2 lifecycle
 - Day 0: plan. Business plan, high-level architecture, operations model.
 - Day 1: design and build. Low-level architecture, deployment, commissioning.
 - Day 2: operate. It starts at go-live and lasts the life of the platform.
@@ -27,7 +27,7 @@
   - Seen in the field: 32-node production clusters running 1,000-2,000 VMs.
   - Gold adds availability zones, because it hosts mission-critical services.
 
-## Reflect the business in the platform
+## Business context in the platform
 - The infrastructure team must know which business application each object serves, and what its failure costs.
 - CIO view: live information on how IT serves each business unit and its critical applications. The platform must map business units and applications to their VMs.
 - Tenant view: customers check their own VM health and how the platform serves their VMs. The platform must associate each tenant with its VMs; at least a structure to browse or find applications and VMs.
@@ -117,7 +117,7 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF)'
 corrections: []
 review_notes:
-- 'To check: Section ''Goals come from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the book.'
+- 'To check: Section ''Goals from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the book.'
 - 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: the book does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
 - 'Section ''Two sides of VCF'': the book text says workload means the customers'' VMs; its diagram lists IT appliances under Workloads. Pillar list differs from the pillar tag values.'
 - 'To check: Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not) (vSphere 9.1 availability documentation).'

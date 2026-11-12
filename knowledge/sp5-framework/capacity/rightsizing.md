@@ -1,6 +1,6 @@
 # Rightsizing VMs
 
-## What is rightsized
+## Rightsizing scope
 
 - VMs. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
 - Kubernetes nodes are sized as part of the Kubernetes cluster design, not one by one.
@@ -9,7 +9,7 @@
   - VM footprint: external, from vSphere counters; the total load the VM puts on the infrastructure; includes VM overhead, excludes the guest queue ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md)).
 - This file covers why VMs are oversized in a private cloud, what that costs the company, and how to get a downsize accepted and proven.
 
-## Why VMs are oversized
+## Causes of oversizing
 
 
 | Cause | Mechanism |
@@ -22,7 +22,7 @@
 | Micro burst | CPU bursts of a few seconds vanish in 20-second averages |
 
 
-## Oversized is relative
+## Oversized vs idle
 
 - A 64-vCPU VM running 7 vCPUs is oversized; an 8-vCPU VM running 7 is not. Idle, in contrast, is absolute ([`sp5-framework/capacity/reclamation`](reclamation.md), section Idle VM).
 - VCF Operations definitions:
@@ -45,7 +45,7 @@
 - Risk of NUMA and cache effects: a VM larger than its host's L3 domain or NUMA node ([`sp5-framework/capacity/vm-size`](vm-size.md), section Size per class).
   ![Usage (MHz) per vCPU](images/vm-cpu-usage-mhz-per-vcpu.png)
 
-## What to optimize in the consumer layer
+## Consumer-layer optimization
 
 
 | Resource | Rule |

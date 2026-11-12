@@ -5,7 +5,7 @@
 - Each set of symptoms or conditions is defined on an object, for example Self (the object the alert is for).
 - A set is met when Any, or All, of its symptoms or conditions are true. The recommended alerts use All: every symptom must hold at the same time, which narrows the alert. The catalog row of each alert gives its match.
 
-## Symptom and condition: one test, two names
+## Symptom and condition
 - A symptom and a condition are the same thing: a test on one metric, property or event, such as a metric above a value. The two names are a VCF Operations product detail.
 - A symptom definition is stored on its own and reused by many alert definitions. A condition is written inside one alert definition and cannot be reused.
 - A symptom that triggers without its alert is a minor issue: it belongs to the daily health check, not to an alert ([`sp5-framework/outputs/alerts-and-insights`](../sp5-framework/outputs/alerts-and-insights.md)).
@@ -57,6 +57,6 @@ corrections: []
 review_notes:
 - 'Section ''Parts of an alert definition'': the steps, Defined On Self and Any or All are read from the source screenshot of the Edit Alert Definition page (Pod object). Screenshot not copied.'
 - 'To check: Section ''Wait cycle'': collection every 5 minutes and wait cycle counted in collection cycles (VCF Operations 9.1 documentation on symptom definitions).'
-- 'To check: Section ''Symptom and condition: one test, two names'': a condition''s wait cycle, cancel cycle and severity are the fields waitCycles, cancelCycles and severity of the data structure alert-condition, VCF Operations API 9.1.1 (https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/data-structures/alert-condition/).'
+- 'To check: Section ''Symptom and condition'': a condition''s wait cycle, cancel cycle and severity are the fields waitCycles, cancelCycles and severity of the data structure alert-condition, VCF Operations API 9.1.1 (https://developer.broadcom.com/xapis/vcf-operations-api/9.1.1/data-structures/alert-condition/).'
 status: draft
 ```

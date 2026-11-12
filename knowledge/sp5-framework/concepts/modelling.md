@@ -1,6 +1,6 @@
 # Modelling a pillar into one number
 
-## Why model
+## Reasons to model
 | Reason | Effect |
 |---|---|
 | Persona | Level 1 operators cover wide, not deep; they cannot track many raw metrics, some of which need a specialist to read |
@@ -43,7 +43,7 @@
 - Performance and capacity combine, not take the worst: contention adds up (a VM waiting for CPU, memory and disk is hurt more than one waiting for CPU); leading indicators combine (two orange risk factors bring contention closer than one); and an orange metric is a level, not a failure.
 - Availability takes the worst: one failed component can take a host down. It uses two tables, partial failures component by component, and failures that alone take the host down. The score is the minimum of the two: a dead host scores as dead.
 - Weights by rank (ordered weighted average, Yager 1988: worst 8x, second 4x, third 2x, fourth 1x) were considered and rejected. Ranking throws away the vSphere meaning of each colour: a second red counts half only because it is second, a fifth counts nothing.
-- Known effect of the weighted average: when the KPI is already bad, a metric that gets worse can make it look better ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section A worse sub-metric can lower Cluster Risk). Close for Business reads Risk at orange, so a cluster just inside orange can drop to yellow after VMs are deployed and open again.
+- Known effect of the weighted average: when the KPI is already bad, a metric that gets worse can make it look better ([`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section Sub-metric weight in Cluster Risk). Close for Business reads Risk at orange, so a cluster just inside orange can drop to yellow after VMs are deployed and open again.
 
 ## Setting thresholds
 - Scientifically, a VM does not care what stops it (Ready, Co-stop or Overlap), so all would share one threshold. Practically, healthy production shows different scales per metric. Take the lower of the two: the goal is proactive monitoring.

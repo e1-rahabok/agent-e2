@@ -4,7 +4,7 @@
 - Includes idle time.
 - Most VMs do not run at 100%, so CPU Wait is naturally high.
 
-## Why the name is still correct
+## The name Wait
 - From the kernel scheduler's vantage point, an idle vCPU is waiting to be used.
 
 ## Mechanism

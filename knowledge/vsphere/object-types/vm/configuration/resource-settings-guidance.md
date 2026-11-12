@@ -1,4 +1,4 @@
-# Resource settings: when and how
+# VM resource settings
 
 ## Principle
 - Use reservation, shares and limits only where the environment requires them. Each has its own job; set each for its purpose.

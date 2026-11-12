@@ -13,7 +13,7 @@
 - Not counted as savings: decompression costs performance.
 - Windows also compresses its In Use pages inside the guest. Different counter.
 
-## What a non-zero value means
+## Non-zero value
 - VM Compressed happens for one of two reasons:
   - ESXi Consumed is very high.
   - The VM hit its limit.

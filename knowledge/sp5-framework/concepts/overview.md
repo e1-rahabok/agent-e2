@@ -12,9 +12,9 @@
 - Why a new framework instead of ITIL or COBIT: [`sp5-framework/concepts/why-a-new-framework`](why-a-new-framework.md).
 - Metric types per pillar (contention, consumption, context): [`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md).
 - Modelling a pillar into one number (KPI, risk): [`sp5-framework/concepts/modelling`](modelling.md).
-- Day 2 → Day 0 → Day 1: [`sp5-framework/concepts/purpose-driven-architecture`](purpose-driven-architecture.md), section Begin with the end in mind.
+- Day 2 → Day 0 → Day 1: [`sp5-framework/concepts/purpose-driven-architecture`](purpose-driven-architecture.md), section Day 0 to Day 2 lifecycle.
 
-## What a private cloud manages
+## Private cloud scope
 
 - Consumer side: tenants consume and pay for IaaS through a self-service portal and API: KPI and SLA reports, inventory, projects, troubleshooting, security, team, bill.
 - Provider side:
@@ -202,7 +202,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value).'
-- 'Section ''What a private cloud manages'': text twin of the capabilities diagram (book p. 44), not copied: the text carries its content.'
+- 'Section ''Private cloud scope'': text twin of the capabilities diagram (book p. 44), not copied: the text carries its content.'
 - 'Section ''Availability'': five nines at 10x the cost of four nines is the book''s rule of thumb, not a measured figure.'
 - 'Not copied: detailed pillar relationship diagram (p. 53), private cloud capabilities diagram.'
 status: draft

@@ -45,13 +45,13 @@ Order: availability, performance, security, capacity; within each pillar the wha
    - Idle VM: [`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../technology/cpu/metrics/virtual-motherboard/idle-vm.md).
 - Not checked in 1.0: security and compliance (future phase).
 
-## Why this order
+## Order rationale
 - Availability first: a VM that is down has no performance problem.
 - Contention before consumption: consumption sizes the VM; it does not show whether the VM suffers.
 - No Guest OS step: the Guest OS is a separate realm. The hypervisor neither sees nor controls its run queue, disk queue or page-outs, so they do not decide the health of the VM. The Guest OS is checked as its own object.
 - Efficiency last: sizing is done when there is no problem.
 
-## How to read the result
+## Interpretation
 - Present health, risk and efficiency are read separately, never as one score.
 - VM Performance green and the application slow → the VM gets what it demands; the wait is inside the Guest OS ([`guest-os/system/guest-os-performance`](../../../guest-os/system/guest-os-performance.md)).
 

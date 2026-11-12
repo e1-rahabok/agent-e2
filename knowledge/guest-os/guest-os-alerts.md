@@ -22,7 +22,7 @@
 - VM CPU Usage: the activity gate of the VM alerts.
 - Neither Windows nor Linux gives official guidance. The values are set high; adjust them to the environment. With too many false positives, disable orange.
 
-## Other contention: build your own
+## Other contention: custom alerts
 - Other Guest OS problems not caused by virtualization have thresholds that vary widely by application, so no alert is defined. Build your own for:
   - CPU context switches consistently high. Tell the developers it can slow the application. If VM CPU Net Run and the run queue are both low, reduce the vCPU count ([`guest-os/cpu/metrics/context-switch`](cpu/metrics/context-switch.md)).
   - Heavy memory paging with many page faults.

@@ -4,11 +4,11 @@
 - How unevenly the vCPUs of one VM are used.
 - Built from per-vCPU usage: Peak among vCPUs, Min among vCPUs, and Max - Min.
 
-## Why it exists
+## Purpose
 - To show owners of large VMs how their vCPUs are used, when cost and refund do not convince them to downsize.
 - Without it, the application team plots each vCPU one by one.
 
-## Reading it
+## Interpretation
 | Pattern | Meaning |
 |---|---|
 | All vCPUs balanced and low | The application cannot consume even one vCPU. Questions the vendor's vCPU request. Wastes software licenses. |

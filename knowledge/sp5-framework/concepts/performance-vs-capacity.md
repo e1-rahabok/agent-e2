@@ -9,7 +9,7 @@
   - infrastructure capacity aims for the highest utilization, and performance overrides it.
 - In large organizations two teams own them. Capacity looks at long-term supply, latent workload and future demand. Operations looks at what runs on the floor this hour.
 
-## Usable capacity exists only in capacity
+## Usable capacity: a capacity term
 - Capacity subtracts HA, buffer and hypervisor overhead from total capacity. What remains is usable capacity, and capacity is measured against it.
 - Reservation is not subtracted from supply: it is demand, read in its own model against the capacity that can be reserved (CPU at the base clock, memory at DRAM). Subtracting it from supply as well counts it twice ([`sp5-framework/capacity/demand`](../capacity/demand.md), section Demand).
 - Performance ignores all four. It measures what happens, against total capacity. These factors can cause a performance problem, but they are not inputs to a performance metric.

@@ -13,7 +13,7 @@
 | Group CPU Sample Count | rescpu.sampleCount.latest | - |
 | Group CPU Sample Period | rescpu.samplePeriod.latest | - |
 
-## Why
+## Reason
 - CPU Active equals CPU Demand.
 - VCF Operations averages 20-second and 1-minute values into its collection interval (default 5 minutes). A separate 1-minute metric adds nothing.
 - The 15-minute version has no use case: roll up the 5-minute values.

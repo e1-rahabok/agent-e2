@@ -40,7 +40,7 @@ VM Demand   = Min (Limit, Consumed + Ballooned + Zipped + Swapped)
 | Memory \| Memory Allocated on all Powered On Consumers | Sum of hosts. |
 | Memory \| Workload (%) | Possibly a normalized average of hosts. |
 
-## Storage: used can exceed allocated
+## Storage: used above allocated
 - vSAN protects in software. A 10 GB thick disk (vSAN policy) consumes 20 GB at the VMFS layer.
 
 ## Misconceptions

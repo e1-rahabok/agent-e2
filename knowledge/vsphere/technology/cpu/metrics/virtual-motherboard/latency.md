@@ -20,14 +20,14 @@
 - CPU Latency is the counter for throughput lost when the sibling thread runs.
 - Hyper-Threading changes CPU Latency by 0% to 37.5%.
 
-## What Latency includes
+## Latency components
 - esxtop counter: %LAT_C. Tracks time the vCPU could have run in an ideal case.
 - Includes: Overlap, Co-stop (also when caused by a limit), Ready excluding Max Limited, Hyper-Threading effect, power saving below nominal frequency.
 - Excludes: Max Limited, Other Wait, Swap Wait, Idle.
 - Hyper-Threading and frequency are effects, not metrics. esxtop %A/MPERF shows the frequency effect.
 ![Latency spans Overlap, Co-stop, Ready without Limit, plus HT and power-saving effects](../../images/vm-cpu-latency-components-overlap-costop-ready-ht-power.png)
 
-## Hyper-Threading
+## Hyper-Threading formula
 ```text
 Used + Latency = 100%
 ```
@@ -92,6 +92,6 @@ source:
 corrections: []
 review_notes:
 - Sections Hyper-Threading: from CPU > Architecture.
-- 'Sections What Latency includes, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram adapted from a Valentin Bondzio diagram.'
+- 'Sections Latency components, Hyper-Threading, Use, Historical issue: from CPU > VM. Latency diagram adapted from a Valentin Bondzio diagram.'
 status: draft
 ```

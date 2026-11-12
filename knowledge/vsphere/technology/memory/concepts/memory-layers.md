@@ -1,4 +1,4 @@
-# Memory layers and page mapping
+# Memory layers
 
 ## Four layers
 - Process → Guest OS → VM → ESXi. Virtualization adds the VM and ESXi layers. CPU has 3 layers; memory has 4.

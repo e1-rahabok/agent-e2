@@ -1,6 +1,6 @@
-# Demand: allocation, reservation, utilization
+# Capacity demand
 
-## Which model applies
+## Model choice
 
 ![Planning stage, theory before workload: Overcommit? No (business value far exceeds infrastructure cost) → buffer, then allocation in operation. Yes (majority of cases) → workload type Mono (one class, equal treatment) or Mix (Gold, Silver, Bronze on the same infrastructure; same technique to mix Kubernetes and VMs). Planning parameters: buffer cluster wide, utilization as the expected concurrent peak, allocation through the VM price (overcommit ratio justifies pricing to the tenant), reservation in mixed-class planning. Operating stage, actual metrics for an automated system: Buffer (%), Consumption (%) as an average against usable, Contention (%) as the brake, Risk (%) from monster VM, imbalance, overcommit ratio and reservation; share replaces reservation as the QoS lever, because a reservation can starve a lower class. Most common path: overcommit, mixed workload, VMs given for free](images/capacity-model-planning-vs-operating-stage-diagram.png)
 

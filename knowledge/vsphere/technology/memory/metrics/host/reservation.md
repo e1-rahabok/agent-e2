@@ -7,7 +7,7 @@
 | Reservation consumed | Actual consumption of reserved memory. Consistently below Reserved Capacity: over-reservation. |
 | Reservation available | Memory not reserved. Available for new reservations. |
 
-## Why 3 counters
+## Three reservation counters
 - A provider must account for reservations: they cannot be overcommitted.
 - Memory reservation is sticky. CPU has only 1 reservation counter: CPU reservation is transient.
 

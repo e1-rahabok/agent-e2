@@ -1,4 +1,4 @@
-# How VCF Operations reaches its users
+# VCF Operations channels to users
 
 ## Four channels
 - VCF Operations reaches people in four ways: live screen, alert, dashboard, report.
@@ -10,7 +10,7 @@
 - Use dashboards as much as possible. The other channels are narrower.
 ![VCF Operations pushes alerts to mobile phones (urgent, follow up without waiting for the next day) and reports to mailboxes (PDF or CSV, read offline); users pull dashboards by logging in on a laptop or desktop (highly interactive, richest functionality)](images/vcf-operations-alert-dashboard-report-engagement-diagram.png)
 
-## What a dashboard-first design gives
+## Dashboard-first design benefits
 - Fewer reports: users log in because a dashboard gives them more. Login-less dashboards on an intranet page cover users without an account.
 - More engagement from IT leaders: show them how a dashboard answers their questions; a login-less dashboard on a screen near their office keeps them involved.
 - Usage data: nobody can tell whether a report was read. Dashboard use can be tracked, even per interaction, with a third-party website tracker.

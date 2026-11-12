@@ -13,7 +13,7 @@
 | guest.disk.queue | Win32_PerfFormattedData_PerfDisk_PhysicalDisk _Total CurrentDiskQueueLength (point in time at the end of the collection period) |
 | guest.disk.queueAvg | Win32_PerfFormattedData_PerfDisk_PhysicalDisk _Total AvgDiskQueueLength (average over the period) |
 
-## Reading it
+## Interpretation
 - Windows documentation: queue length minus spindles should average below 2.
 - High guest queue with low VM IOPS: IO is stuck in the OS.
 - Compare with VM outstanding IO. They do not correlate: the VM tracks IO sent; the guest queue tracks IO not yet sent.

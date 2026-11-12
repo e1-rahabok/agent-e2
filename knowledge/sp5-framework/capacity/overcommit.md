@@ -1,6 +1,6 @@
 # Overcommit ratio
 
-## What it is
+## Definition
 - Allocation divided by supply: configured vCPU or memory of the powered-on VMs against physical capacity. Written virtual : physical (N:1): 3:1 is 3 vCPUs per physical thread.
 - Only allocation can be overcommitted. A reservation is a guarantee and cannot be; utilization and demand are results, not settings ([`vsphere/architecture/resource-controls`](../../vsphere/architecture/resource-controls.md), section Allocation vs reservation).
 - The main way to lower the cost of shared infrastructure. Acceptable while real and risk contention stay acceptable: queueing is normal in daily life.

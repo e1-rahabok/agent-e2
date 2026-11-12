@@ -30,14 +30,14 @@ flowchart TD
 6. Power management and Hyper-Threading (HostSystem). Power policy at maximum performance rules out frequency scaling ([`vsphere/technology/cpu/concepts/power-states`](../concepts/power-states.md)). More vCPUs than physical cores: Hyper-Threading shares a core between two threads ([`vsphere/technology/cpu/concepts/hyper-threading`](../concepts/hyper-threading.md)). → step 7.
 7. Known bug and log (VirtualMachine, HostSystem): versions against known issues, and events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
 
-## Why this order
+## Order rationale
 - The parts of Contention first: each names a different cause, so the part that is not green picks the branch. All green ends the flow, unless CPU Latency says the wait is frequency or Hyper-Threading.
 - Ready branch: settings on the VM and its pool before the host, because a limit or low shares explain one VM; then the host; then the cluster.
 - Co-stop branch: the VM's own shape (size, NUMA, snapshot) before placement.
 - Frequency and Hyper-Threading only when Latency alone is high: Contention does not count them.
 - Known bug and log last: they explain what the counters have placed in time.
 
-## How to read the result
+## Interpretation
 - High Ready with a limit: the VM is held back by design; remove or raise the limit, or accept it.
 - High Ready on many VMs of one host while other hosts idle: placement (DRS), not capacity.
 - High Co-stop on a wide VM: fewer vCPUs, or keep the VM within one NUMA node.

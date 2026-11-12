@@ -37,12 +37,12 @@
 - Unshared swapped page on the source can become a regular memory page on the destination → VM Memory Consumed increases.
 - Source and destination ESXi versions can use different memory compression algorithms → a compressed page can become a regular page → consumption increases.
 
-## Why "hypervisor"
+## The term hypervisor
 - More than the kernel: user-level processes run on top of it.
 - VMkernel traditionally excludes vSAN and NSX (vSAN processes sit under /opt).
 - Treated as capacity, not performance: the hypervisor has the highest priority. Per-process ready time is in esxtop.
 
-## Which metric to use for usable capacity
+## Metric for usable capacity
 | Metric | Problem |
 |---|---|
 | Utilization | Changes every second. Usable capacity cannot be volatile. |
@@ -58,7 +58,7 @@
 | Reservation | Minimum guaranteed so the hypervisor runs when VMs demand 100%. Memory is granted on demand, not up front; CPU is used only when running. Utilization can be below reservation. |
 | Allocation | Maximum (limit). Useful for VMs (overcommit). Not for non-VM worlds; some show blank or 0 limits. |
 
-## Why the size is unpredictable
+## Size variability
 - Some services have static values.
 - Some scale with host memory.
 - Some scale with the number of active VMs.
@@ -251,7 +251,7 @@ corrections:
 - '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
 review_notes:
 - '[from former vsphere/architecture/overhead] Section ''Resource groups'': the book lists 5 groups but says to plot only iofilters, system and vim for kernel consumption; host/opt (vSAN) is not in that list. Kept as written.'
-- '[from former vsphere/architecture/overhead] Section ''Why the size is unpredictable'': based on Host Resources Deep Dive (Denneman, Hagoort), p. 258, cited by the book.'
+- '[from former vsphere/architecture/overhead] Section ''Size variability'': based on Host Resources Deep Dive (Denneman, Hagoort), p. 258, cited by the book.'
 - '[from former vsphere/architecture/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation.'
 - '[from former vsphere/architecture/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Decide whether to replace the old threshold.'

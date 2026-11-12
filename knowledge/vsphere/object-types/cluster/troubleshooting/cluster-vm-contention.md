@@ -24,12 +24,12 @@ flowchart TD
 5. Kernel and network (HostSystem). vSAN CPU Ready; ESXi error packets ([`vsphere/technology/network/metrics/host/errors`](../../../technology/network/metrics/host/errors.md)). → step 6.
 6. Known bug and log (HostSystem): driver and firmware versions; events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
 
-## Why this order
+## Order rationale
 - Depth and breadth first: they tell a cluster problem from one VM's problem.
 - Hot hosts before configuration: cluster totals stay low while one host is full.
 - Configuration before kernel and network: resource pools, shares and rules cause contention that load does not explain.
 
-## How to read the result
+## Interpretation
 | Finding | Possible cause | Action |
 |---|---|---|
 | Many VMs affected | VMs that are siblings of a resource pool make pool VMs suffer | Fix the resource pool hierarchy. |

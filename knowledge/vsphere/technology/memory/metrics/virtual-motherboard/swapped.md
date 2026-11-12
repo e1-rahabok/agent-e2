@@ -12,7 +12,7 @@
 - Swapped pages stay out until the guest requests them.
 - A limit causes swapping and compression.
 
-## What a non-zero value means
+## Non-zero value
 - Compressed or Swapped happens for one of two reasons:
   - ESXi Consumed is very high.
   - The VM hit its limit.

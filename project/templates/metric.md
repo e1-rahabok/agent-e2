@@ -12,7 +12,7 @@
 - includes:
 - excludes:
 
-## Why
+## Reason
 - The mechanism behind the value.
 
 ## Misconceptions

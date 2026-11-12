@@ -34,10 +34,10 @@ Order: availability, performance, security, capacity; within each pillar the wha
 5. Efficiency: <waste check>.
 - Not checked in 1.0: security and compliance (future phase).
 
-## Why this order
+## Order rationale
 - Availability first: a system that is down has no performance problem. Then performance, then risk, then efficiency.
 
-## How to read the result
+## Interpretation
 - Present health, risk and efficiency are read separately, never as one score.
 
 ## Misconceptions

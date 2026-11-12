@@ -1,6 +1,6 @@
 # Cluster Consumption (%)
 
-## What it measures
+## Measurement
 - One 0-100% value for a vSphere cluster: actual utilization and saturation of the cluster as a whole, against its usable capacity. Higher is worse: 0 is nothing consumed, 100 is fully consumed. The same direction as Cluster Risk (%).
 - Against usable capacity, not total: Usable = Total − HA − Buffer. The capacity kept for a host failure and the policy buffer are not available to VMs ([`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md)). A cluster at 80% of its total capacity is full when 20% is HA and buffer.
 - Cluster-wide, not the worst host. Every sub-metric adds up the hosts of the cluster, so a big host counts more than a small one. Cluster Risk (%) is the opposite: it takes the worst host ([`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md)).
@@ -32,10 +32,10 @@
 - The same scoring as every KPI and model ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), then flipped: Cluster Consumption = 100 − weighted average.
 - Bands: green 0-25, yellow 25-50, orange 50-75, red 75-100.
 - Worked example: a host of 64 threads and 512 GB at 40% thread utilization, and a host of 32 threads and 256 GB at 70%; HA and buffer take 20%. Threads in use: 25.6 + 22.4 = 48 of 96 (50% of total; the average of 40% and 70% would be 55%). Against usable (76.8 threads): 62.5%. Memory consumed 486.4 of 614.4 GB usable: 79.17%. Cluster Consumption = 34.53.
-- A worse sub-metric can lower Cluster Consumption: its weight rises as its score falls, so a row that gets worse but stays below the rows driving the score lowers the weighted average. Same mechanism as Cluster Risk ([`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md), section A worse sub-metric can lower Cluster Risk).
+- A worse sub-metric can lower Cluster Consumption: its weight rises as its score falls, so a row that gets worse but stays below the rows driving the score lowers the weighted average. Same mechanism as Cluster Risk ([`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md), section Sub-metric weight in Cluster Risk).
 - Missing data: a row with no data is left out, never counted as 0, because 0 means nothing consumed.
 
-## Reading it
+## Interpretation
 - Read it with Cluster Performance (%). High consumption with green performance: the cluster is busy and serving its VMs; it closes on consumption only when red, or when consumption and performance are both orange and risk is high ([`vsphere/object-types/cluster/models/close-for-business`](close-for-business.md)).
 - Memory consumed high with green saturation rows is a cache doing its job: Windows and Linux keep pages they once touched. A memory shortage shows in the saturation rows first, then in VM memory contention.
 - On a host with memory tiering, compression and swap read 0: memory beyond DRAM goes to the NVMe tier first. The tier's consumption is then the saturation signal ([`vsphere/technology/memory/concepts/memory-tiering`](../../../technology/memory/concepts/memory-tiering.md)).

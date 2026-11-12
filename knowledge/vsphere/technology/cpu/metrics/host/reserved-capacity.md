@@ -5,7 +5,7 @@
 - Memory has 3 reservation counters. CPU has 1.
 - The reservable total is capped at base (nominal) clock speed × cores, not Turbo: ESXi guarantees only the frequency it can always deliver.
 
-## Why only one
+## One reservation counter
 - CPU reservation is transient. When a VM is not running, its reserved CPU can be used by other VMs.
 - Memory reservation is sticky: memory is a form of storage.
 

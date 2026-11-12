@@ -4,7 +4,7 @@
 - Includes RDM.
 - The term virtual disk covers both VMDK and RDM, because an RDM appears as a virtual disk when browsing the datastore directory. The RDM file is only a pointer to an external LUN.
 
-## Why it differs from Datastore Virtual Disk
+## Difference from Datastore Virtual Disk
 - Different vantage points. The RDM belongs to the VM, but its data is on an external LUN, not on the datastore.
 
 ## Scope

@@ -33,12 +33,12 @@ vsish -e get /net/portsets/DvsPortset-0/ports/<port>/vmxnet3/rxSummary
 4. Configuration (VirtualMachine). Receive ring size in the Guest OS driver; whether the VM requests NetQ RSS ([`vsphere/technology/network/configuration/rss-and-interrupt-coalescing`](configuration/rss-and-interrupt-coalescing.md)). → step 5.
 5. Known bug and log (VirtualMachine, HostSystem). VMXNET3 can lose packets in very high bursts when buffers run out (KB 2039495); events in the window ([`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
 
-## Why this order
+## Order rationale
 - Confirm the drops at the port first: Guest OS loss can come from elsewhere in the path.
 - The reason before any change: only rxSummary tells a full ring from the other causes.
 - Packet rate before ring size: a larger ring helps a burst, not a VM that is short of vCPU to drain it.
 
-## How to read the result
+## Interpretation
 - Drops = running out of buffers and ring full: the receive ring is too small. A ring of 2K instead of 512 is a field suggestion.
 - Network VMs (firewalls, routers) or VMs expecting high packet rates: check whether the VM requests NetQ RSS.
 - VMXNET3 can lose packets in very high bursts when buffers run out (KB 2039495).
@@ -74,6 +74,6 @@ source:
   path: Network > ESXi > Contention Metrics > Dropped Packet > vsish
 corrections: []
 review_notes:
-- 'Section ''How to read the result'': the 2K ring size is a field suggestion from the book, not a vendor value.'
+- 'Section ''Interpretation'': the 2K ring size is a field suggestion from the book, not a vendor value.'
 status: draft
 ```

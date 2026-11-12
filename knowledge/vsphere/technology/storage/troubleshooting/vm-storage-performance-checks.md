@@ -23,13 +23,13 @@ flowchart TD
 5. Configuration (VirtualMachine, HostSystem). Snapshots on the VM add IO and latency ([`vsphere/technology/storage/concepts/snapshot-impact`](../concepts/snapshot-impact.md)). Latency on many VMs of one host or datastore → [`vsphere/technology/storage/troubleshooting/host-storage-latency`](host-storage-latency.md) to split kernel and device latency. → step 6.
 6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks.
 
-## Why this order
+## Order rationale
 - Latency per disk first: a VM aggregate hides the one slow disk, and read and write often have different causes.
 - Errors next: drops and aborts are contention with an availability impact, and they explain latency at any load.
 - Consumption after: it tells the VM's own load from a queue elsewhere.
 - The array-side ratio before the host stack: IO the VM did not issue explains latency the VM did not cause.
 
-## How to read the result
+## Interpretation
 - Latency with low IOPS: queues in one of the layers ([`vsphere/technology/storage/concepts/storage-layers`](../concepts/storage-layers.md)).
 - Only read or only write affected: common. Look at that side only.
 - Latency on one VM only, with a snapshot: the snapshot first.

@@ -1,6 +1,6 @@
 # Daily health check dashboards
 
-## Who runs it
+## Owners
 - The daily health check is the second proactive view, after the NOC live screen. It is read at the start of each day.
 - Level 2 and Level 1 run it at first. As Level 1 gains confidence, they run it at the start of each shift; 24/7 operations have 2-3 shifts, so the dashboard is used several times a day.
 - It aims to reduce alerts by finding the issues underneath them. Reading it needs knowledge of how the private cloud performs and of what happens that day that can affect performance and security.

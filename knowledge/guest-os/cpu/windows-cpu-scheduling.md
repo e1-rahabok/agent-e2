@@ -1,4 +1,4 @@
-# Windows CPU scheduling and thread states
+# Windows CPU scheduling
 
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.

@@ -1,12 +1,12 @@
 # <Setting or practice>
 
-## What to set
+## Setting
 - Setting, value, scope (host, VM, cluster).
 
-## Why
+## Reason
 - Mechanism and trade-off.
 
-## When not to
+## Exceptions
 - Conditions where the setting hurts.
 
 ## Misconceptions

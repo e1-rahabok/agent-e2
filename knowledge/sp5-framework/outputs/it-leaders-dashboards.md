@@ -1,6 +1,6 @@
 # Dashboards for IT leaders
 
-## Know each layer of management
+## Layers of management
 - In a large organisation there are several layers between the operations team and the CIO, and each has its own needs. Find the need behind each request: the questions, the answers expected, the actions taken on them.
 - Decide what you want from them as well: they hold budget and resources. Live data proves a hardware request, and shows where wastage is and how large.
 - Show what supports the approval you need, without burying them in detail.

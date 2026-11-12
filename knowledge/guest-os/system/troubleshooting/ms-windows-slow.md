@@ -40,13 +40,13 @@ flowchart TD
    - A wait found inside Windows (queue, paging, disk queue with low VM IOPS, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Windows queues worse.
    - No wait inside Windows, or the signs point down (every vCPU busy, disk queue with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
 
-## Why this order
+## Order rationale
 - Quantify first: the application team describes the symptom in Windows terms; the time window and the slow transaction steer every later check.
 - CPU, memory, disk, network: the order of the Guest OS Performance (%) inputs; the run queue is the primary Guest OS CPU counter.
 - The why after the what: a queue is the fact; locks, kernel time and imbalance explain it.
 - Verdict last: only after every Windows queue is read can the wait be placed inside or below Windows.
 
-## How to read the result
+## Interpretation
 - Queue high with idle vCPUs → adding vCPUs makes it worse (more context switching).
 - Disk queue high, VM disk latency good → the delay is real for the application, but invisible to vSphere.
 - Nothing high in Windows, users still slow → the VM, or a dependency outside the VM: continue in vm-slow.

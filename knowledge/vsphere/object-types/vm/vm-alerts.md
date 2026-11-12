@@ -36,7 +36,7 @@
 - VM CPU Usage: the activity gate.
 - Remediation: [`vsphere/technology/memory/vm-memory-latency-high`](../../technology/memory/vm-memory-latency-high.md).
 
-## Memory contention: why the cause is hard to trace
+## Memory contention: mixed causes
 - A limit, swap-in, decompression and low shares can act at once. The metric gives the total wait, not each cause's share, so the flow checks each cause.
 - It is time, not memory: a few hot pages swapped out can stall a VM more than many cold ones.
 
@@ -56,7 +56,7 @@
 - The value is set high because it is read within a 20-second period.
 - Planned change: make the threshold relative to the packets transmitted.
 
-## Not alerted, and why
+## Not alerted
 - Memory consumption: a VM is a virtual motherboard. Whether its memory is enough is a Guest OS question, and the right value differs per application.
 - Disk space: a Guest OS question ([`guest-os/guest-os-alerts`](../../../guest-os/guest-os-alerts.md), section Consumption: daily checks, no alert).
 - Network consumption: not yet in the set. A network has no clear 100%, so the ceiling is hard to set.
@@ -122,7 +122,7 @@ source:
 corrections:
 - 'Section ''VM CPU contention'': the source''s red and orange also test VM CPU Contention above 8%. Dropped: Contention is never below Ready (VCF Operations 8.18 formula), so it adds nothing next to Ready. The source''s orange keeps the red Peak vCPU Ready (32%); halved to 16%, as red is 2x orange on every value of the set (Q140, Q144).'
 - 'Section ''VM dropped packets'': the source condition ends with "and", a second condition missing. The VM CPU Usage gate of the other VM contention alerts added (Q147).'
-- 'Section ''Memory contention: why the cause is hard to trace'': the source example (51% contention from 5 MB limited, 1 MB swapped, 2 MB compressed) dropped: contention is time, not memory size, so the MB values cannot add up to it (Q145).'
+- 'Section ''Memory contention: mixed causes'': the source example (51% contention from 5 MB limited, 1 MB swapped, 2 MB compressed) dropped: contention is time, not memory size, so the MB values cannot add up to it (Q145).'
 review_notes: []
 status: draft
 ```

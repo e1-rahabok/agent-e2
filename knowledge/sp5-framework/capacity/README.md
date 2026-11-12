@@ -1,9 +1,9 @@
 # Capacity management
 
-## What it answers
+## Scope
 - Quantity: is there enough supply for the demand to come, at the lowest cost? Performance asks quality: are the consumers served well now?
 - Supply is the provider side (ESXi hosts, clusters, datastores). Demand is the consumer side (VMs, pods).
-- The unit of capacity is the vSphere cluster (section Cluster is the unit of capacity). Supply: [`sp5-framework/capacity/supply`](supply.md). Demand: [`sp5-framework/capacity/demand`](demand.md).
+- The unit of capacity is the vSphere cluster (section Cluster as the capacity unit). Supply: [`sp5-framework/capacity/supply`](supply.md). Demand: [`sp5-framework/capacity/demand`](demand.md).
 - Balance demand and supply: meet demand at the lowest cost while staying compliant with security and availability practice.
 - Optimized capacity: what was bought is fully consumed, without wastage and without a performance compromise.
 - Simple goals alone are easy: performance equal to physical (no overcommit, or 100% reservation), monster VMs (many cores per host), high availability (more HA hosts, higher vSAN FTT across racks, more NSX Edges). The work is to meet cost, performance, security and availability together.
@@ -56,7 +56,7 @@
 - Short term: automation deploys, so it must be blocked when a deployment would cause a problem. Check the present and the projected state. A host taken out (ESXi maintenance mode, cluster upgrade) lowers usable capacity.
 - Long term: lead time follows procurement, months.
 
-## Where each question is answered
+## Question map
 | Question | Stage | File |
 |---|---|---|
 | How many VMs fit on a host or a cluster? | Planning | [`sp5-framework/capacity/class-of-service-planning`](class-of-service-planning.md) (tool `capacity_plan`) |
@@ -143,7 +143,7 @@ Capacity planning starts from a business plan: which class of service serves whi
 - The plan changes yearly: what worked last year may not work next year.
 - Do not add lanes for congestion that is short or rare. A revenue peak (annual sale, 1 day in 365) can be served by burst capacity in the cloud or on premises, by limiting, powering off or moving other workloads, or by borrowing hosts from other clusters for that day.
 
-## Cluster is the unit of capacity
+## Cluster as the capacity unit
 - A vSphere cluster is the smallest logical building block for capacity, because of HA, DRS and DPM. Plan and monitor capacity per cluster, not per host and not per data center.
 - Group operations by cluster or by group of interchangeable clusters.
 - A vCenter Data Center object can hold clusters with different purposes. One capacity remaining (%) for it is meaningless when its clusters are not interchangeable.
@@ -221,7 +221,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Planning inputs'': the cluster-splitting list is the text of the book image after Architecture Plan; the example estate (18 clusters) is the book image after Example. Neither image is copied: the text holds the facts.'
-- 'Section ''Cluster is the unit of capacity'': the three-cluster example is the book table image after The Planning Stage, restated as text.'
+- 'Section ''Cluster as the capacity unit'': the three-cluster example is the book table image after The Planning Stage, restated as text.'
 - 'To check: Section ''Four phases'': the reason for preventing oversized VMs before provisioning (reclaiming later is harder); not in the book.'
 status: draft
 ```

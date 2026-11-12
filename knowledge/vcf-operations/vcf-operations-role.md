@@ -8,13 +8,13 @@
   - computed: a formula over source metrics (KPIs, capacity, super metrics).
 - It is a thin layer. The meaning of a passed-through metric is set by the source, not by VCF Operations.
 
-## vCenter is not the operations tool
+## vCenter vs VCF Operations
 - vCenter is the administrative tool of vSphere: create VMs, configure switches, set reservations and limits.
 - Capacity planning and performance troubleshooting are done in VCF Operations, not in vCenter.
 - Admins often treat the two as interchangeable because VCF Operations is the main monitoring tool for vCenter. They are different tools with different jobs.
 - vCenter performance charts keep a short history and roll peaks away. See [`vsphere/tools/vsphere-client/vcenter-statistics`](../vsphere/tools/vsphere-client/vcenter-statistics.md).
 
-## Where its knowledge lives
+## Knowledge placement
 - VCF Operations is an observability tool. Without a system to manage it has nothing to show, so it is not a peer of vSphere, vSAN, NSX or the Guest OS.
 - A metric about a managed object is documented with that object, even when VCF Operations computes it:
   - VM CPU Contention: [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../vsphere/technology/cpu/metrics/virtual-motherboard/contention.md), beside VM CPU Ready;
@@ -59,6 +59,6 @@ source:
   path: Conversation on VCF Operations and vCenter roles
 corrections: []
 review_notes:
-- 'Section ''vCenter is not the operations tool'': short history and rolled-up peaks follow vsphere/tools/vsphere-client/vcenter-statistics.'
+- 'Section ''vCenter vs VCF Operations'': short history and rolled-up peaks follow vsphere/tools/vsphere-client/vcenter-statistics.'
 status: draft
 ```

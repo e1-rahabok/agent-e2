@@ -8,7 +8,7 @@ Utilization (KB) = Guest Needed Memory (KB)
 ```
 - Can exceed 100%.
 
-## High while the guest looks low
+## High value with a low guest
 - Guest metrics from VMware Tools not collected: falls back to Consumed (KB). A mixed source makes the value fluctuate.
 - Guest Physically Usable Memory below configured memory. Example: 58 GB usable on an 80 GB VM.
 - Low utilization: 5% of total memory is added, not 5% of used. A 128 GB VM shows 6.4 GB extra.

@@ -3,7 +3,7 @@
 ## Meaning
 - Rate of pages moved from DIMM to the swap file (KBps). Swap Out (KB) is the amount.
 
-## Why it matters
+## Impact
 - Swap out means ESXi was under memory pressure or the VM hit a limit.
 - Not contention by itself: the swapped page may never be requested.
 - Shape matters: an acute burst differs from a slow, sustained rate with the same total.

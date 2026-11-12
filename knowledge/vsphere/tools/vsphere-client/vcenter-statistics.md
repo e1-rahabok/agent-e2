@@ -1,4 +1,4 @@
-# vCenter statistics: sampling, rollup and levels
+# vCenter statistics
 
 ## Definition
 - ESXi samples performance counters every 20 seconds. The vSphere Client labels this interval Real-time. It is not real time: each point is a 20-second average ([`sp5-framework/observability/real-time-metrics`](../../../sp5-framework/observability/real-time-metrics.md)).
@@ -85,7 +85,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 - The API and the charts use different units for the same counter. The API returns memory in KB (mem.consumed, mem.vmmemctl, mem.overhead), swap rates in KBps, disk and network usage in KBps, and space in KB. The vSphere Client charts convert: memory to MB, space to GB, network usage to Mbps. A value exported through the API and read as MB is 1,024 times too large.
 - Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See [`vsphere/tools/esxtop/units-vs-vsphere-client`](../esxtop/units-vs-vsphere-client.md).
 
-## Where history is lost
+## History loss
 - Removing an object from vCenter and adding it again deletes its history.
 - vMotion across vCenter instances deletes the VM's chart history.
 - Objects moved to another site by protection and recovery lose history at the old site; it is not copied.

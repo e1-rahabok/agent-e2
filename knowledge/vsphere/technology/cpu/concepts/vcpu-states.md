@@ -71,7 +71,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 | Wait | Also covers wait caused by hypervisor IO. |
 | Wait (idle) | Idle = executing the idle loop. A CPU cannot stop executing instructions without powering down. The kernel runs a lowest-priority system thread: the idle task. |
 
-## Hyper-Threading is invisible to the states
+## Hyper-Threading and vCPU states
 - Ready, Co-stop and Wait do not register slowdown from Hyper-Threading.
 - A vCPU is not placed in Ready when its sibling thread is busy. Both threads execute at the same time.
 - Contention for shared core resources happens in hardware. The ESXi scheduler does not see it.
@@ -104,7 +104,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 - VCF Operations ms metrics are also not normalized by vCPU count. A 4-vCPU VM totals 80,000 ms.
 - Use the % versions. They are normalized by the number of vCPUs. Avoid the ms versions.
 
-## Read Ready and Co-stop in the context of Run
+## Ready and Co-stop relative to Run
 - Ready 5% with Run 95%: low.
 - Ready 2% with Run 10%: very high. Ready is 20% of Run (2 / 10).
 - Reason: Ready is runtime demanded and not given. Compare it with runtime given.

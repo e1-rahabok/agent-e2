@@ -47,4 +47,5 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | verification (of an object's state) | health check | A third word for the same thing. |
 | KPI (for capacity, risk, availability) | model | KPI is strictly performance: the P in KPI. Capacity, risk, availability and security are models. |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
+| a sentence or question as a title or heading ("How each sub-metric is calculated", "Why this order") | a noun phrase that names the topic ("Sub-metric formulas", "Order rationale") | Sentence headings are a habit of generated text. The title and heading go in front of every chunk, and question words name no topic (2026-11-12). Rule: `project/knowledge-rules/writing.md`. |
 | guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Keep the vendor term once in parentheses for retrieval. |

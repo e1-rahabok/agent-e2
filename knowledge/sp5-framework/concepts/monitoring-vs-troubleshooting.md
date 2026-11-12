@@ -53,7 +53,7 @@
 - The root cause often differs from the symptom: another object, a message that looks unrelated. It usually starts as a log message that never became an alarm in the UI.
 - An alert from a log message must not give false positives. Validate it before setting it up.
 
-### Validating a log message before alerting on it
+### Log message validation before alerting
 - Example: VDI mass disconnect, more than 100 users at the same moment.
   - vmware.log: GuestRpc to the VDI agent timed out; second ping timeout, app assumed down.
   - vmkernel log, 0.4 s earlier: resuming traffic on DV port.

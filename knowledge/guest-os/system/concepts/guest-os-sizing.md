@@ -2,7 +2,7 @@
 
 ![What to include and exclude in Guest OS sizing](../images/guest-os-sizing-what-to-include-and-exclude.png)
 
-## No such thing as VM rightsizing
+## VM rightsizing: two jobs
 - "VM rightsizing" mixes two different sizing jobs with two different formulas. Asking "what size should this VM be?" without saying which one leads to the wrong counters.
 
 - **Guest OS sizing (internal)**
@@ -159,7 +159,7 @@ corrections:
 - 'Section ''Memory'': balloon is included, to be conservative; the book text says exclude.'
 - 'Section ''Memory'': option 2 ranges 0-75-85-90-95-100%; the book gives no numbers for option 2.'
 review_notes:
-- 'To check: Section ''No such thing as VM rightsizing'': from the other book, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full book when it is provided.'
+- 'To check: Section ''VM rightsizing: two jobs'': from the other book, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full book when it is provided.'
 - 'Section ''Sizing rules'': Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Capacity Management > Rightsizing > Sizing Logic.'
 - 'To check: References from the book, not read: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html'
 status: draft

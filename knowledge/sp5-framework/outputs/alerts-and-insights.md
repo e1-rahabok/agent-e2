@@ -1,6 +1,6 @@
 # Alerts and insights
 
-## Why alert storms happen
+## Causes of alert storms
 - Operations that start from alerts are reactive by construction.
 - IT operations commonly carry more than 1,000 alert definitions across all monitored systems.
 - Thresholds are set conservatively to be warned early. The result is an alert storm.
@@ -83,7 +83,7 @@
 
 - The KPI serves both: the insight reads it early, the alert at red ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
-## What an alert is: rapid, real, rare
+## Alert criteria: rapid, real, rare
 - Rapid: the issue is urgent, so it must be known at once.
   - If time does not matter, a daily SOP with a dashboard works better: it shows the big picture.
   - Long-term work such as capacity management belongs on a dashboard.

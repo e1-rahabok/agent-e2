@@ -19,7 +19,7 @@
 - The vSphere Client has no performance charts for distributed switches or port groups. The counters are reachable through the API and the tools that read it.
 - The counter summaries call them a rate of packets; the API stat type is absolute. Read a value as packets per sample interval unless the tool states otherwise.
 
-## Reading it
+## Interpretation
 - Most traffic should be unicast. A high multicast or broadcast share explains receive drops and wasted CPU on every VM in the broadcast domain. See [`vsphere/technology/network/metrics/vm-network-metrics`](../vm-network-metrics.md).
 - LAG counts show whether traffic spreads across the uplinks of a link aggregation group.
 - VCF Operations shows distributed port group metrics aggregated over all hosts. vCenter itself keeps none on the port group. See [`vsphere/technology/network/concepts/network-observability`](../../concepts/network-observability.md).
@@ -59,7 +59,7 @@ source:
 corrections: []
 review_notes:
 - 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the vCenter 9.1.0 API export. The distributed port group returned no counters (same README).'
-- 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Reading it'' and the third misconception: inferred from the counter scopes, not from a document.'
-- 'Section ''Reading it'': VCF Operations port group metrics aggregated over all hosts restates network-observability (book).'
+- 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Interpretation'' and the third misconception: inferred from the counter scopes, not from a document.'
+- 'Section ''Interpretation'': VCF Operations port group metrics aggregated over all hosts restates network-observability (book).'
 status: draft
 ```

@@ -4,7 +4,7 @@
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
 - VMware Tools collects these counters inside the Guest OS, and vCenter and VCF Operations store them on the VirtualMachine object. That is a data path, not ownership: the counters belong to the Guest OS.
 
-## What it is
+## Definition
 - One 0-100% score for the operating system inside a VM. 100 is perfect. It answers: is the Guest OS getting the CPU, disk and memory it needs?
 - VM Performance (%) scores the virtual motherboard; this KPI scores what runs on it ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)). Their average is the VM Guest OS KPI, one score per VM for the application team.
 - Not a built-in VCF Operations metric. Scored on every powered-on VM with VMware Tools; without VMware Tools there is no score.

@@ -30,14 +30,14 @@ flowchart TD
 7. Growth (Datastore). Used space trend against the lead time to expand or reclaim ([`sp5-framework/capacity/forecasting`](../../../sp5-framework/capacity/forecasting.md)). Reality overrides the projection: a burst of writes or a new snapshot fills a datastore faster than any trend. → step 8.
 8. Reclaimable (Datastore, VirtualMachine). Unmapped blocks of thin disks (TRIM and unmap), orphaned VMDKs, powered-off VMs (space returns only when deleted), ISO files and templates ([`sp5-framework/capacity/reclamation`](../../../sp5-framework/capacity/reclamation.md)). → answer.
 
-## Why this order
+## Order rationale
 - vSAN first: its used space and its reserve follow different rules from VMFS and NFS.
 - Free space now before anything else: a full datastore is an outage in progress.
 - Snapshots before thin disks: they grow fastest and are the easiest to remove.
 - Thin disks before growth: unwritten thin space can fill a datastore with no trend in the history.
 - Reclaim last: what can be freed decides whether to reclaim or expand.
 
-## How to read the result
+## Interpretation
 - Act now: free space near 0, or vSAN above 80%. Reclaim the easiest space first (snapshots, unmap), then expand.
 - Watch: unwritten thin space larger than free space, large snapshots, or growth that fills the datastore before an expansion can arrive.
 - Fine: free space covers the unwritten thin space, the snapshots and the swap of the powered-off VMs.

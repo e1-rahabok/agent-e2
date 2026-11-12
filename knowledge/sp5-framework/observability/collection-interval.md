@@ -12,7 +12,7 @@
 - Some use cases require two numbers per metric: the average and the worst.
 - Most metrics reset to 0 every cycle. A running total is less useful in operations.
 
-## Time is the raw unit of CPU
+## Time as the raw unit of CPU
 - vSphere shows CPU in milliseconds, MHz and %. Milliseconds is the source; MHz and % are derived from it.
 - The kernel scheduler counts time and the cycles done in that time. A 2 GHz core completes twice the cycles of a 1 GHz core in the same time; a thread with a busy Hyper-Threading sibling completes fewer.
 - Read utilization, usage, demand and used as cycles completed in a time window.
@@ -21,7 +21,7 @@
 - A CPU value at 9:00:00 is the average of the previous cycle, not the state at that second.
 - MHz values only compare across hosts with the same static frequency. Mixed CPU generations in one cluster make MHz metrics hard to use as DRS moves VMs. One reason the cluster is the unit of capacity.
 
-## 5-minute collection misses short problems
+## Short problems in 5-minute collection
 - VCF Operations collects every 5 minutes by default. A problem shorter than 5 minutes can be missed.
 - Example: idle 08:00:00-08:02:30, busy 08:02:30-08:07:30, idle again. Collections at 08:00, 08:05 and 08:10 each average half busy, half idle. To appear whole in one point, a spike may have to last 10 minutes.
 - The 100% of any millisecond value in VCF Operations is 20,000 ms, not 300,000 ms: it averages the 15 20-second values. CPU Ready of 3,000 ms is 15%, not 1%.
@@ -84,7 +84,7 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Three ways to collect'': the book says "Tools choose the 1st choice"; read as VMware Tools.'
-- 'Section ''Time is the raw unit of CPU'': stat types (delta, rate, absolute) and rollups are in vsphere/tools/vsphere-client/vcenter-statistics, not repeated. The book notes some % counters have stat type rate without a reason; not written.'
+- 'Section ''Time as the raw unit of CPU'': stat types (delta, rate, absolute) and rollups are in vsphere/tools/vsphere-client/vcenter-statistics, not repeated. The book notes some % counters have stat type rate without a reason; not written.'
 - 'Section ''Granularity by use case'': cost, compliance, sustainability and inventory rows are empty in the book.'
 status: draft
 ```

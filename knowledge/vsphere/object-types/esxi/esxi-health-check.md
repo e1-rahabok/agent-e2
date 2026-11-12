@@ -46,13 +46,13 @@ Order: availability, performance, security, capacity; within each pillar the wha
 - Efficiency (wastage, reclamation) is not part of the ESXi health check: VMs move between hosts by DRS and HA, so waste is read on the cluster and its VMs ([`vsphere/object-types/cluster/cluster-health-check`](../cluster/cluster-health-check.md)).
 - Not checked in 1.0: security and compliance (future phase).
 
-## Why this order
+## Order rationale
 - Availability first: a host that is down has no performance problem. Then performance, then capacity; efficiency belongs to the cluster.
 - Performance from the KPI before raw counters: one score covers depth and breadth; the sub-metric points to the flow.
 - Consumption inside performance: it explains the contention found in steps 2-3; utilization alone does not show whether a VM waits.
 - Capacity last and short: a host is sized as part of its cluster, so only the memory state and a hot host are read here.
 
-## How to read the result
+## Interpretation
 - Present health, risk and efficiency are read separately, never as one score.
 - ESXi Performance red with low utilization → contention from something other than load: limits, NUMA placement, a noisy VM, storage below the host.
 - ESXi Performance green with high utilization → the host works hard and serves its VMs; a capacity question, not a performance one.
@@ -116,6 +116,6 @@ source:
 corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback.'
 review_notes:
-- 'To check: Section ''How to read the result'': derived from the Principle section.'
+- 'To check: Section ''Interpretation'': derived from the Principle section.'
 status: draft
 ```

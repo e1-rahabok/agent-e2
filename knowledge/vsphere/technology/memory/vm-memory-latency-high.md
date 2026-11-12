@@ -25,13 +25,13 @@ flowchart TD
 5. Host memory pressure (HostSystem). Swap out, compressed and ballooned memory on the other VMs of the host ([`vsphere/technology/memory/concepts/swap-and-compression`](concepts/swap-and-compression.md)). Swap out without swap in: past pressure, no wait yet. On a host with memory tiering, also the VM's NVMe read bandwidth: a fetch from NVMe is a wait that Latency may not count ([`vsphere/technology/memory/decision-tree/is-memory-tiering-slowing-host`](decision-tree/is-memory-tiering-slowing-host.md)). → step 6.
 6. Known bug and log (VirtualMachine, HostSystem): [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), its known bug and log checks.
 
-## Why this order
+## Order rationale
 - Latency first: it is the only memory wait; ballooned, swapped and compressed memory are past reclamation, not a wait.
 - The source of the wait next: swap-in and decompression say which reclamation the VM now pays for.
 - A limit before shares: a limit causes the wait on a host with free memory.
 - Host pressure after the VM settings: it explains why ESXi reclaimed from this VM.
 
-## How to read the result
+## Interpretation
 - Swap out without swap in: past pressure, no wait yet.
 - Latency with a flat Consumed near the limit: the limit is the cause.
 - Actions:

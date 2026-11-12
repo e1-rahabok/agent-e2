@@ -15,7 +15,7 @@
 - Does not work with nested resource pools.
 - Remediation: the VMs hit, by [`vsphere/technology/memory/vm-memory-latency-high`](../../technology/memory/vm-memory-latency-high.md).
 
-## Not alerted, and why
+## Not alerted
 - Consumption, all four resources: the use of a resource pool varies, so no consumption value fits.
 - Disk and network: a resource pool divides CPU and memory only.
 

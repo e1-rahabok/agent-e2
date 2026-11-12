@@ -1,6 +1,6 @@
 # Health check
 
-## What it is
+## Definition
 - A check of one object across every pillar: is it up, is it fast, is it secure, will it be enough. The what: is the object healthy, at risk, or wasteful.
 - Always on an object type: VM, ESXi host, cluster, datastore, vSAN cluster, VCF Operations itself. Never on a technology: CPU, memory, storage and network are parts of an object, read inside its health check (VM CPU contention is a step of the VM health check).
 - Never on one pillar. Health is a property of the object; a pillar is one aspect of it. A capacity-only check misses a cluster that has room for 50 VMs and has lost HA; a performance-only check misses a host that runs fast on an unsupported version.
@@ -55,12 +55,12 @@ flowchart TD
 - About 5 minutes when there is no problem.
 - The VCF Operations dashboards for the daily check: after 1.0.
 
-## How to read the result
+## Interpretation
 - Three verdicts, read separately: present health, risk (future health) and efficiency. Never one score ([`sp5-framework/concepts/health-risk-efficiency`](health-risk-efficiency.md)).
 - Each failed step names the KPI or model, its band, and the troubleshooting flow it opens.
 - Release 1.0 checks availability, performance and capacity. Security and compliance steps are a future phase: state them as not checked.
 
-## Not every operational question is a health check
+## Health checks vs other flows
 - Most questions in VCF operations are not health checks. Three kinds of question are answered by a flow, each in its own folder:
   - Health check (`health-check/`): is this object healthy? Starts from a schedule or a request, on one object type, every pillar.
   - Troubleshooting (`troubleshooting/`): why is it down or slow? Starts from a known problem: a complaint, an alert, a failed health check step.

@@ -33,14 +33,14 @@ flowchart TD
    - NVMe device health and wear (`esxcli nvme device log smart get`), mixed-use class with at least 3 DWPD.
    - HA: before vSphere 9.1.1, admission control does not reserve DRAM separately; restarts need DRAM ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../../../object-types/cluster/concepts/admission-control-and-cluster-state.md)).
 
-## Why this order
+## Order rationale
 - Tiering active first: with nothing on tier 1, nothing can wait on NVMe.
 - Active memory before the device: it is the leading signal. When the working set outgrows DRAM, NVMe reads rise.
 - Reads before latency: what the VMs lose is reads × latency. Few reads at a high latency, or many reads at a good latency, both cost wait time.
 - Host before VM: the host signals say whether to look; the per-VM reads say who pays.
 - Reclamation after tiering: on a tiered host it points to a configuration mistake, not to tiering.
 
-## How to read the result
+## Interpretation
 - No at step 1 or 3: tiering is not slowing the host.
 - Active memory above 50% with rising NVMe reads: at risk now; move VMs to hosts with more DRAM, or lower the DRAM:NVMe ratio.
 - NVMe reads with latency above 400 µs: yes; check the device class, wear and write load (garbage collection).

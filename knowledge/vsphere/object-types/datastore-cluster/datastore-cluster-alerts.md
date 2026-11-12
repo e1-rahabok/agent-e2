@@ -4,7 +4,7 @@
 - A datastore cluster is a storage provider: its alerts would go to the infrastructure team, above all the storage team.
 - No alert in the set. Its member datastores have their own alerts ([`vsphere/object-types/datastore/datastore-alerts`](../datastore/datastore-alerts.md)).
 
-## Not alerted, and why
+## Not alerted
 - Consumption: not implemented. It should fire when a member datastore meets the datastore consumption condition, because the cluster average hides a full member. Remediation: run Storage DRS.
 - Latency: not implemented. VMs and datastores are many-to-many, and a VM's disks can sit on several members.
 
@@ -36,7 +36,7 @@ source:
   path: 'Proactive Operations > Alert > Storage Alerts (Consumption Alerts); Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes:
-- 'Section ''Not alerted, and why'': the source''s alert count table shows Datastore Cluster disk contention 2, while Storage Alerts > Infrastructure Contention says not yet implemented. Parked after 1.0 (Q142).'
+- 'Section ''Not alerted'': the source''s alert count table shows Datastore Cluster disk contention 2, while Storage Alerts > Infrastructure Contention says not yet implemented. Parked after 1.0 (Q142).'
 - 'To check: Section ''Coverage and receivers'': the datastore cluster object type is StoragePod; not in the source.'
 status: draft
 ```

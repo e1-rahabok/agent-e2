@@ -1,4 +1,4 @@
-# Aggregation: summarizing many objects
+# Aggregation across objects
 
 ## No lossless summary
 - Aggregating to a parent object represents many values with one. Every technique loses detail: mean, median, maximum, minimum, percentile, sum, count.

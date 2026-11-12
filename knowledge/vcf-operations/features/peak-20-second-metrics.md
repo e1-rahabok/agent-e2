@@ -1,6 +1,6 @@
 # 20-second peak metrics vs 5-minute averages
 
-## Why
+## Reason
 - VCF Operations stores data every 5 minutes. Good for monitoring, too coarse for troubleshooting.
 - Problems can be microbursts. A 5-minute average hides them.
 - The 20-second peak is 15x sharper. Example: 10,370 ms disk latency at 20-second peak vs 257 ms at 300-second average.

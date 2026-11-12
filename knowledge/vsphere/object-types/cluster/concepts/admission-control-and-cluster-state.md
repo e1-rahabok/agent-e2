@@ -1,4 +1,4 @@
-# Admission control, expandable reservations and cluster state
+# Cluster admission control
 
 ## Admission control
 - At power-on, and at every reservation or resource pool change, the system checks that all reservations can still be guaranteed.

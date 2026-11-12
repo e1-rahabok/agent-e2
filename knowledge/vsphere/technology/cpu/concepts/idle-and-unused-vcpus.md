@@ -16,7 +16,7 @@
   - some guest OSes busy-wait instead: Windows 2000 (with certain HALs), Solaris 8 and 9, MS-DOS.
 - Busy-wait loops use resources that other VMs, the VMkernel and other tasks could use.
 
-## How ESX handles idle vCPUs
+## Idle vCPU handling in ESX
 - ESX detects HLT and MWAIT idle loops.
 - ESX de-schedules the idle vCPU.
 - Effect: lower CPU overhead.

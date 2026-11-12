@@ -41,13 +41,13 @@ flowchart TD
    - A wait found inside Linux (queue, memory stall, disk wait with low VM latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Linux queues worse.
    - No wait inside Linux, or the signs point down (every vCPU busy, disk wait with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
 
-## Why this order
+## Order rationale
 - Quantify first: the application team describes the symptom in Linux terms; the time window and the slow transaction steer every later check.
 - CPU, memory, disk, network: the order of the Guest OS Performance (%) inputs.
 - The why after the what: a queue is the fact; locks, kernel time and imbalance explain it.
 - Verdict last: only after every Linux queue is read can the wait be placed inside or below Linux.
 
-## How to read the result
+## Interpretation
 - Load average high, vCPUs idle → tasks wait for IO (state D): step 5, not more vCPUs.
 - Disk wait high in Linux, VM disk latency good → the delay is real for the application, but invisible to vSphere.
 - Nothing high in Linux, users still slow → the VM, or a dependency outside the VM: continue in vm-slow.

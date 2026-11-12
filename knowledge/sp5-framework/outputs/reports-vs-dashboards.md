@@ -1,6 +1,6 @@
-# When a report beats a dashboard
+# Reports vs dashboards
 
-## Where a report fits
+## Report use cases
 - A report is static. It complements dashboards where a dashboard cannot reach:
   - Offline: the user is travelling, such as on a plane. Typical audience: senior IT leaders. With limited bandwidth but a connection, a text-based AI chat can serve better than a report.
   - No access: the user has no network access or security clearance for VCF Operations. Typical audience: external users.
@@ -11,7 +11,7 @@
   - Historical copies: an external copy of the data, for capacity and compliance management. Fixed, regular periods (each week Monday 00:00 to Sunday 00:00, each month) compare more easily in reports. Use a simple CSV with a fixed layout so files compare in a spreadsheet; a format change breaks comparison.
   - Attachment: a file attaches easily to email or another system.
 
-## Where a report does not fit
+## Report limits
 - Daily use: an interactive dashboard gives more. Even for weekly use, a personalized dashboard adapts better as needs change.
 - Detail: large data that needs analysis is served by a set of interactive dashboards, unless free-form spreadsheet analysis is the goal.
 - Dynamic time period: a dashboard lets the user change the period; a report is fixed. Changing a report from 1 day to 1 week means editing each widget, with designer access.
@@ -31,7 +31,7 @@
 - Configuration: background on why there are configuration issues and what can be done.
 - Security: reporting only, not remediation.
 
-## Who reads reports
+## Report audience
 - A report is purpose-built for one persona and use case. A persona can need several reports, each with its own frequency and content; do not merge them into one. Find the real end reader and meet them.
 - VCF Operations ships building blocks and some sample reports; combining and customizing them is expected.
 - Questions for the reader:
@@ -84,6 +84,6 @@ source:
   path: 'Reports > Report | Dashboard (Suitability); Target Audience (Auditor, Capacity Planning Team, Finance Department, Tenant, Consultant)'
 corrections: []
 review_notes:
-- 'Section ''Who reads reports'': the source points to a Role-based Contents chapter for IT senior management; linked to sp5-framework/outputs/it-leaders-dashboards instead.'
+- 'Section ''Report audience'': the source points to a Role-based Contents chapter for IT senior management; linked to sp5-framework/outputs/it-leaders-dashboards instead.'
 status: draft
 ```

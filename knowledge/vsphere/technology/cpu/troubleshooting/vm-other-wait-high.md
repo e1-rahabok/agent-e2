@@ -19,13 +19,13 @@ flowchart TD
 3. Configuration (VirtualMachine). Snapshots on the VM ([`vsphere/technology/storage/concepts/snapshot-impact`](../../storage/concepts/snapshot-impact.md)). → step 4.
 4. Known bug (VirtualMachine, HostSystem). Broadcom KB 85393: a known accounting issue inflates Other Wait and esxtop %VMWait. Compare the ESXi, virtual hardware and VMware Tools builds with the fixed builds.
 
-## Why this order
+## Order rationale
 - Idle first: a low Run makes Other Wait large by accounting, with no wait at all.
 - Breadth before one VM: what affected VMs share points to the cause.
 - Snapshots before the known bug: they are a configuration that can be removed now.
 - The known bug last: it needs build numbers, and its fix is an update.
 
-## How to read the result
+## Interpretation
 - Actions:
   - vMotion the VM.
   - Remove snapshots.

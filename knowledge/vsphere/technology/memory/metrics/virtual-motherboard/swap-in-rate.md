@@ -4,7 +4,7 @@
 - Rate of pages moved from the swap file back into DIMM (KBps). Swap In (KB) is the amount.
 - Host cache has its own counter: Host cache swap in rate.
 
-## Why it matters
+## Impact
 - Swap in is contention: the guest requested a swapped page and waited.
 - Correlates highly with Memory Latency.
 - It does not mean the host is under pressure now. The pressure happened in the past.

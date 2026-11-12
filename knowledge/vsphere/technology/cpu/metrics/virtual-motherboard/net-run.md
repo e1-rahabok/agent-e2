@@ -9,7 +9,7 @@
 Net Run = Run - Overlap
 ```
 
-## Why
+## Reason
 - Run does not see Overlap, frequency or Hyper-Threading.
 - Run is the input for Guest OS sizing. The interrupted portion (Overlap) must be removed.
 - Net Run cannot exceed 100%.

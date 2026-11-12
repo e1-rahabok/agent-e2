@@ -1,6 +1,6 @@
 # ESXi Performance (%)
 
-## What it is
+## Definition
 - One score per ESXi host, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
 - ESXi is a provider: it has no contention of its own. The KPI reads the contention of the powered-on VMs running on the host, plus the host's own physical network. See [`vsphere/architecture/provider-consumer`](../../architecture/provider-consumer.md).
@@ -17,7 +17,7 @@
 - The red range ends where the sub-metric scores 0.
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100. Any bad packet is yellow and counts.
 
-## How each sub-metric is calculated
+## Sub-metric formulas
 | Sub-metric | Source (VCF Operations) |
 |---|---|
 | Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` |

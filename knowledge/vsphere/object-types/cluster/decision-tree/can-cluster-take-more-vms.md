@@ -58,7 +58,7 @@ flowchart TD
 
 ![Closure thresholds, all at the 95th percentile of the last 24 hours. Consumption (%): red above 80%, orange above 60%, production and non-production. Performance (%): red below 20%, orange below 40%, production and non-production. Risk (%): production orange above 60%; non-production red above 80%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
 
-## Why this order
+## Order rationale
 - The goal first: a customer who does not run clusters to the limit has a sufficient answer in VCF Operations' own capacity metrics; the closure model is for running to the limit.
 - State first: in yellow or red, reservations are not met; any capacity number is built on a broken base.
 - Overcommit next: without overcommit, utilization, reservation and contention do not decide; allocation against usable capacity is the only input ([`sp5-framework/capacity/demand`](../../../../sp5-framework/capacity/demand.md), section No overcommit).
@@ -67,7 +67,7 @@ flowchart TD
 - Contention overrides utilization: a cluster that cannot serve its current VMs has no remaining capacity, whatever utilization says.
 - Fit before balance: balance is fixed by DRS or by moving VMs; a VM that cannot fit is a design question.
 
-## How to read the result
+## Interpretation
 - No at step 1 → the answer is Capacity Remaining and Time Remaining, or a VCF Operations question outside 1.0.
 - No at step 2 → the answer is about the current state, not about the new VMs.
 - No at steps 4 to 6 → the cluster is closed: name the dimension (allocation, consumption, performance, risk) and the resource (CPU, memory, storage).

@@ -12,7 +12,7 @@
 4. Usage Disparity: Peak among vCPUs, Max - Min.
 5. Compare Usage with Run: Usage above 90% with Run below 90% is likely Turbo, not demand.
 
-## How to read the result
+## Interpretation
 - Example: 104-vCPU VM, Usage (%) never above 40% in 90 days, Demand marginally higher, Idle about 20%.
 - Guest Run Queue low. Reducing vCPUs raises it, which is worse for performance.
 - Context Switch high at times.

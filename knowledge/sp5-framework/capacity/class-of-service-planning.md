@@ -1,6 +1,6 @@
 # Class of service in capacity planning
 
-## Why a step per class
+## Step per class
 - Gold, Silver and Bronze require a relative value that tenants understand.
 - The step follows the CPU overcommit ratio, 1:1, 2:1, 3:1 per physical thread: Silver has 2 consumers per thread, Bronze 3. So Bronze has about 3x the chance of contention of Gold, and costs a third.
 - A step tied to one setting is easy to explain to senior leadership and application teams, and easy to run at scale.
