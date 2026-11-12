@@ -33,7 +33,7 @@ title: "Disk latency peak 40 times the average"
 product: [vcf-operations]
 technology: [storage]
 task: read-metric
-level: 400
+level: 300
 answer_type: judged
 input: [table, screenshot]
 knowledge:
