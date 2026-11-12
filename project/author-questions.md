@@ -661,6 +661,8 @@ Each entry has:
   - Revised 2026-11-12: the 1 MB/s read floor is withdrawn. It removed a real wait because of its cause (the why), and the SP5 Framework scores the what. Memory Wait (reads × latency) already weighs a wake-up by how many reads it hit.
 - Question: accept each table row, or give your numbers; and which tier-consumption bands (linear 25/50/75/100 or doubling 12.5/25/50/100)?
 - For you: the three tables.
+- Answer (partial, 2026-11-12): tier consumption bands linear 25/50/75/100. The metric is in between utilization and saturation: utilization starts green at a high number, saturation starts green at a low number and doubles quickly; linear blends the two natures.
+- Applied 2026-11-12: catalog row cluster-consumption-cluster-memory-tiering-consumption 25/50/75/100; cluster-consumption reason and correction entry. Still open: the other rows of the three tables.
 - Answer:
 
 ## Resolved

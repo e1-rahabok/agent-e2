@@ -72,10 +72,10 @@ models:
   interval: 5m
   bands:
     grey: null
-    green: 0-4
-    yellow: 4-8
-    orange: 8-16
-    red: 16-32
+    green: 0-25
+    yellow: 25-50
+    orange: 50-75
+    red: 75-100
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-consumption
 - id: cluster-consumption-cluster-wide-esxi-memory-ballooned
