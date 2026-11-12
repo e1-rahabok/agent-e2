@@ -1,4 +1,4 @@
-# VM Performance (%) (vCommunity management pack KPI for VCF Operations)
+# VM Performance (%) 
 
 ## What it is
 - One 0-100% score per VM. 100 is perfect.
