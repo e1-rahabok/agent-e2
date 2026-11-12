@@ -114,7 +114,7 @@ related:
 - sp5-framework/capacity/host-spec-from-class-of-service
 - sp5-framework/performance/kpi-vs-sla
 - vsphere/object-types/cluster/models/cluster-risk
-- vsphere/object-types/vm/kpis/vm-performance
+- vsphere/object-types/vm/vm-performance
 images:
   - path: images/class-of-service-relative-value-gold-silver-bronze-table.png
     product: [vsphere]

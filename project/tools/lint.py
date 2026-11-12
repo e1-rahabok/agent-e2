@@ -96,12 +96,10 @@ def main():
                 bad(f, f'object-types folder "{parts[3]}" not allowed. Allowed: {", ".join(OBJECT_FOLDERS)}')
             elif parts[2] == 'tools' and parts[3] not in allowed['ui']:
                 bad(f, f'tools folder "{parts[3]}" is not a ui tag value ({", ".join(allowed["ui"])})')
-        if '/alerts/' in f and not f.startswith('knowledge/vcf-operations/'):
+        if f.endswith('-alerts.md'):
             if not ALERT_FILE.fullmatch(f[len('knowledge/'):-3]):
-                bad(f, 'alert file must be <object>/alerts/<object>-alerts under vsphere/object-types/, or guest-os/system/alerts/guest-os-alerts: an alert fires on one object type')
+                bad(f, 'alert file must be vsphere/object-types/<object>/<object>-alerts, or guest-os/guest-os-alerts: an alert fires on one object type, never on a technology')
             if fm.get('retriever_guide') != 'what-to-set': bad(f, 'alert file must have retriever_guide: what-to-set')
-        elif re.search(r'-alerts\.md$', f):
-            bad(f, 'alert files live in an alerts/ folder of their object type, never under a technology or the method')
         if f.startswith('knowledge/sp5-framework/'):
             if fm.get('scope') != 'sp5-framework': bad(f, 'file in knowledge/sp5-framework/ must have scope: sp5-framework')
             if len(f.split('/')) > 3 and f.split('/')[2] not in PILLAR_FOLDERS: bad(f, f'pillar folder not allowed. Allowed: {", ".join(PILLAR_FOLDERS)}')
@@ -112,7 +110,7 @@ def main():
                 if r not in ids: bad(f, f'metrics_shown link "{r}" does not exist')
         if f.startswith('knowledge/vcf-operations/'):
             if fm.get('scope') != 'vcf-operations': bad(f, 'file in knowledge/vcf-operations/ must have scope: vcf-operations')
-            if f.split('/')[2] not in VCF_OPERATIONS_TOP: bad(f, f'knowledge/vcf-operations/ holds only {", ".join(VCF_OPERATIONS_TOP)}/')
+            if len(f.split('/')) > 3 and f.split('/')[2] not in VCF_OPERATIONS_TOP: bad(f, f'knowledge/vcf-operations/ holds files and only {", ".join(VCF_OPERATIONS_TOP)}/')
         # A VM is a virtual motherboard. The Guest OS (Windows, Linux) is not a Broadcom product and not part of the VM:
         # its knowledge lives in knowledge/guest-os/, outside knowledge/vsphere/.
         layer = fm.get('layer') or []
@@ -123,18 +121,20 @@ def main():
             if 'VirtualMachine' in (fm.get('object') or []): bad(f, 'Guest OS file must not have object VirtualMachine: the Guest OS is a layer, not the VM')
         else:
             # Boundary files (Guest OS vs VM, Guest OS sizing from VM data) stay in vSphere; Guest OS metrics never do.
-            if 'guest-os' in layer or fm.get('scope') == 'guest-os' or ('/metrics/' in f and title.startswith(('# Guest OS ', '# Windows', '# Linux'))):
+            if 'guest-os' in layer or fm.get('scope') == 'guest-os' or (fm.get('retriever_guide') == 'metric-meaning' and title.startswith(('# Guest OS ', '# Windows', '# Linux'))):
                 bad(f, 'Guest OS knowledge must live in knowledge/guest-os/, not under vSphere')
-        if '/metrics/' in f:
-            if fm.get('retriever_guide') != 'metric-meaning': bad(f, 'metric file must have retriever_guide: metric-meaning')
+        # The kind of a file is its retriever_guide, not its folder: a kind folder exists only with 2 or more files (2026-11-12).
+        if '/metrics/' in f and fm.get('retriever_guide') != 'metric-meaning': bad(f, 'file in metrics/ must have retriever_guide: metric-meaning')
+        if fm.get('retriever_guide') == 'metric-meaning' and '/tools/' not in f and not f.startswith('knowledge/sp5-framework/'):
             if f.startswith('knowledge/guest-os/'):
                 pass  # Guest OS metrics have no vSphere object; rules below
             elif not fm.get('object'): bad(f, 'metric file must have object')
             if '/metrics/virtual-motherboard/' in f and (fm.get('layer') or []) != ['virtual-motherboard']:
                 bad(f, 'VM metric file must have layer: [virtual-motherboard]')
             if not fm.get('metric_class'): bad(f, 'metric file must have metric_class')
-            if '/comparisons/' not in f and len(fm.get('object') or []) > 1:
-                bad(f, 'metric file must have exactly one object type (comparisons excepted)')
+            m = re.search(r'/metrics/(virtual-motherboard|host|cluster|datastore|distributed-switch)/', f)
+            if m and len(fm.get('object') or []) != 1:
+                bad(f, f'a metric file in metrics/{m.group(1)}/ has exactly one object type')
         # Writing style (audit markers, words to avoid, AI-speak, title length) is the review's job, not lint's (2026-11-10).
 
     seen_ids, level_numbers = {}, {}
@@ -310,12 +310,18 @@ def check_flow_map(bad):
     """REPOSITORY-MAP.md, section Flows, lists every flow file."""
     text = open('REPOSITORY-MAP.md').read() if os.path.exists('REPOSITORY-MAP.md') else ''
     for f in sorted(glob.glob('knowledge/**/*.md', recursive=True)):
-        if '/troubleshooting/' in f or '/health-check/' in f or '/decision-tree/' in f:
+        guide = (split(f)[0] or {}).get('retriever_guide')
+        if guide in ('health-check', 'troubleshooting', 'decision-tree'):
             if f'({f})' not in text:
                 bad('REPOSITORY-MAP.md', f'flow {f} not listed in section Flows')
-        if '/health-check/' in f and ('/technology/' in f or f.startswith('knowledge/sp5-framework/')):
+        if guide == 'health-check' and ('/technology/' in f or f.startswith('knowledge/sp5-framework/')):
             bad(f, 'a health check is on an object type, never on a technology or a pillar: '
-                   'use object-types/<object>/health-check/, or decision-tree/ for one operational question')
+                   'use object-types/<object>/<object>-health-check, or a decision tree for one operational question')
+    # A folder named for a file kind needs 2 or more files; with one, the file sits in the parent folder.
+    for d in sorted({p.rstrip('/') for p in glob.glob('knowledge/**/', recursive=True)}):
+        if os.path.basename(d) in KIND_FOLDERS:
+            n = len(glob.glob(f'{d}/**/*.md', recursive=True))
+            if n < 2: bad(d, f'kind folder "{os.path.basename(d)}/" holds {n} file: move the file to the parent folder (its kind is its retriever_guide)')
 
 
 def check_titles(bad):
@@ -351,7 +357,11 @@ def check_tables(bad):
 
 VSPHERE_TOP = ['architecture', 'technology', 'object-types', 'tools']
 VCF_OPERATIONS_TOP = ['concepts', 'features', 'dashboards', 'reports', 'alerts', 'troubleshooting', 'health-check']  # VCF Operations itself only (author, 2026-11-08)
-OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch']
+OBJECT_FOLDERS = ['vm', 'esxi', 'cluster', 'resource-pool', 'datastore', 'datastore-cluster', 'datacenter', 'vcenter', 'distributed-switch', 'distributed-port-group']
+# Folders named for a file kind. A kind folder holds 2 or more Markdown files; one file sits in its parent instead (2026-11-12).
+# Not kind folders: areas, technologies, object types, metrics/<object>/, images/.
+KIND_FOLDERS = ('concepts', 'metrics', 'configuration', 'health-check', 'troubleshooting', 'decision-tree', 'kpis', 'models',
+                'comparisons', 'alerts', 'features', 'dashboards', 'reports', 'screens')
 PILLAR_FOLDERS = ['concepts', 'observability', 'outputs', 'performance', 'capacity']  # SP5 Framework parts (2026-11-11)
 CATALOG = 'knowledge/catalog'
 THRESHOLD_SOURCES = ['knowledge-base', 'vsphere-9.1-docs', 'performance-best-practices-9.1', 'microsoft']
@@ -366,7 +376,7 @@ ROW_CLASSES = CLASSES + ('all', 'production', 'non-production')
 
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
 # Alerts fire on one object type, so the recommended alerts live with the object type (2026-11-12).
-ALERT_FILE = re.compile(r'vsphere/object-types/([a-z-]+)/alerts/\1-alerts|guest-os/system/alerts/guest-os-alerts')
+ALERT_FILE = re.compile(r'vsphere/object-types/([a-z-]+)/\1-alerts|guest-os/guest-os-alerts')
 ALERT_VALUE = re.compile(r'\d+(?:[.,]\d+)?\s?(?:%|ms|GHz|MHz|MB|GB|IOPS|minutes?|cycles?)(?![a-z])')
 
 
@@ -433,7 +443,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                 if o not in objects: bad(path, f'{w}: object "{o}" not allowed')
             kb_ok(path, w, a.get('kb'))
             if len(objs(a.get('object'))) != 1: bad(path, f'{w}: one object type per alert: an alert fires on one object type')
-            if a.get('kb') and not ALERT_FILE.fullmatch(a['kb']): bad(path, f'{w}: kb must be the alert file of its object type (<object>/alerts/<object>-alerts)')
+            if a.get('kb') and not ALERT_FILE.fullmatch(a['kb']): bad(path, f'{w}: kb must be the alert file of its object type (<object>/<object>-alerts)')
             elif a.get('kb') in bodies:
                 heads = [h.lower() for h in re.findall(r'^## (.+)$', bodies[a['kb']], re.M)]
                 if not any(str(a.get('name', '')).lower() in h for h in heads):

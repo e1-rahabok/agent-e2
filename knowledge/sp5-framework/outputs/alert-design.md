@@ -23,7 +23,7 @@
 - Guest OS alerts go to the application team, not the infrastructure team.
 - In an overcommitted environment a VM can see contention. Let the infrastructure team act before the application team is alerted; this reduces blame:
   - give the application team red only; keep orange for the infrastructure team as a heads-up;
-  - give the application team a higher threshold, such as VM CPU Ready above 8%, against 6% for the infrastructure team.
+  - give the application team a higher per-VM threshold: its VM alert fires at a higher CPU Ready than the per-VM values of the ESXi, resource pool and cluster alerts, which watch a share of the same VMs.
 - Infrastructure-level alerts, such as on ESXi, are not relevant to the application team.
 - Shared infrastructure alerts look at the population, not a few VMs: use 25% of the VM population as the overall threshold, with a lower per-VM threshold because 25% can mean hundreds of VMs. Applies to ESXi, resource pool and cluster; not Datacenter, whose clusters can serve different purposes.
 
@@ -39,6 +39,7 @@
 | Silver | 60 ms | 10 minutes |
 | Bronze | 120 ms | 10 minutes |
 
+- The table is an example of the step between classes (each 2x the one above), not values of the recommended set. The recommended set is one policy for every VM; a site with classes makes one VCF Operations policy per class and sets each class's values.
 - An alert threshold per class is allowed: an alert colour is urgency plus importance, and a Gold VM is more important. The KPI has no class, and there is no performance SLA ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
 
 - Classes of service: [`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md).
@@ -87,9 +88,10 @@
   - bottom-up scenarios: check every case is caught.
 - Result: an alert set per object type. For each object type, what it alerts on, and for each resource left out, why: not yet in the set, or the daily check or the NOC screen serves better. Some objects have 2 alerts for one resource because the problems differ, such as read and write latency.
 - The recommended set, one file per object type, values in [`catalog/thresholds-alerts.yaml`](../../catalog/thresholds-alerts.yaml):
-  - consumers: [`guest-os/system/alerts/guest-os-alerts`](../../guest-os/system/alerts/guest-os-alerts.md), [`vsphere/object-types/vm/alerts/vm-alerts`](../../vsphere/object-types/vm/alerts/vm-alerts.md);
-  - compute providers: [`vsphere/object-types/esxi/alerts/esxi-alerts`](../../vsphere/object-types/esxi/alerts/esxi-alerts.md), [`vsphere/object-types/resource-pool/alerts/resource-pool-alerts`](../../vsphere/object-types/resource-pool/alerts/resource-pool-alerts.md), [`vsphere/object-types/cluster/alerts/cluster-alerts`](../../vsphere/object-types/cluster/alerts/cluster-alerts.md);
-  - storage and network providers: [`vsphere/object-types/datastore/alerts/datastore-alerts`](../../vsphere/object-types/datastore/alerts/datastore-alerts.md), [`vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts`](../../vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts.md).
+  - consumers: [`guest-os/guest-os-alerts`](../../guest-os/guest-os-alerts.md), [`vsphere/object-types/vm/vm-alerts`](../../vsphere/object-types/vm/vm-alerts.md);
+  - compute providers: [`vsphere/object-types/esxi/esxi-alerts`](../../vsphere/object-types/esxi/esxi-alerts.md), [`vsphere/object-types/resource-pool/resource-pool-alerts`](../../vsphere/object-types/resource-pool/resource-pool-alerts.md), [`vsphere/object-types/cluster/cluster-alerts`](../../vsphere/object-types/cluster/cluster-alerts.md);
+  - storage and network providers: [`vsphere/object-types/datastore/datastore-alerts`](../../vsphere/object-types/datastore/datastore-alerts.md), [`vsphere/object-types/datastore-cluster/datastore-cluster-alerts`](../../vsphere/object-types/datastore-cluster/datastore-cluster-alerts.md), [`vsphere/object-types/distributed-switch/distributed-switch-alerts`](../../vsphere/object-types/distributed-switch/distributed-switch-alerts.md), [`vsphere/object-types/distributed-port-group/distributed-port-group-alerts`](../../vsphere/object-types/distributed-port-group/distributed-port-group-alerts.md).
+- An object type with no alert in the set still has its file, which says why.
 
 ## Generic vs specific alerts
 - Generic alert: symptom oriented; many possible causes. Example: a VM did not get the CPU time it asked for.
@@ -119,7 +121,7 @@
   - 2x the threshold: orange at 10 ms latency, red at 20 ms;
   - 2x the population: orange when 10% of VMs are hit, red at 20%;
   - 2x the time: orange for 5 minutes, red for 10 minutes. Not recommended.
-- Wait time before the alert fires: contention 5 minutes, 10 minutes for metrics with false positives; consumption 15 minutes. VCF Operations setting: [`vcf-operations/alerts/alert-definitions`](../../vcf-operations/alerts/alert-definitions.md).
+- Wait time before the alert fires: contention 5 minutes, 10 minutes for metrics with false positives; consumption 10-15 minutes. The wait of each recommended alert is in its catalog row. VCF Operations setting: [`vcf-operations/alert-definitions`](../../vcf-operations/alert-definitions.md).
 
 ## Recommendation vs remediation
 - A recommendation is advice; it changes nothing. A remediation runs a change in the environment. A recommendation is safer because it is not automated.
@@ -175,14 +177,16 @@ internal_derive:
 related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/performance/kpi-vs-sla
-- vcf-operations/alerts/alert-definitions
-- guest-os/system/alerts/guest-os-alerts
-- vsphere/object-types/vm/alerts/vm-alerts
-- vsphere/object-types/esxi/alerts/esxi-alerts
-- vsphere/object-types/resource-pool/alerts/resource-pool-alerts
-- vsphere/object-types/cluster/alerts/cluster-alerts
-- vsphere/object-types/datastore/alerts/datastore-alerts
-- vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts
+- vcf-operations/alert-definitions
+- guest-os/guest-os-alerts
+- vsphere/object-types/vm/vm-alerts
+- vsphere/object-types/esxi/esxi-alerts
+- vsphere/object-types/resource-pool/resource-pool-alerts
+- vsphere/object-types/cluster/cluster-alerts
+- vsphere/object-types/datastore/datastore-alerts
+- vsphere/object-types/distributed-switch/distributed-switch-alerts
+- vsphere/object-types/datastore-cluster/datastore-cluster-alerts
+- vsphere/object-types/distributed-port-group/distributed-port-group-alerts
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts'

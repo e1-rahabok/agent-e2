@@ -17,7 +17,7 @@
 
 ## How the KPI is built
 - Structure: application → tiers (web, application, database; or microservices, one pod set per function) → members (VMs, pods). In VCF Operations: [`vcf-operations/dashboards/business-applications`](../../vcf-operations/dashboards/business-applications.md).
-- Member: its own KPI, VM Performance (%) for a VM ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)).
+- Member: its own KPI, VM Performance (%) for a VM ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)).
 - Tier: the average of its members. Members serve requests in parallel behind a load balancer, so one slow member slows only its share; a good load balancer spreads both load and failures.
 - Spare members (4 or 5 web servers where 3 carry the load):
   - availability: count the spare; one member down does not reduce tier availability while the others carry the load;
@@ -53,7 +53,7 @@ object:
 - VirtualMachine
 internal_derive:
 - sp5-framework/concepts/realms-and-layers
-- vsphere/object-types/vm/kpis/vm-performance
+- vsphere/object-types/vm/vm-performance
 related:
 - sp5-framework/concepts/purpose-driven-architecture
 - sp5-framework/performance/kpi-vs-sla

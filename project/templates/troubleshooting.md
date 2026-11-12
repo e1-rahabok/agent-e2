@@ -26,7 +26,7 @@ flowchart TD
 
 ## Metadata
 ```yaml
-id: vsphere/technology/<technology>/troubleshooting/<slug>
+id: vsphere/technology/<technology>/troubleshooting/<slug>   # no troubleshooting/ folder while it would hold 1 file
 retriever_guide: troubleshooting
 scope: vsphere
 technology: [cpu]

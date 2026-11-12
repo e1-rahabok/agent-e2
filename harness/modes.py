@@ -128,7 +128,7 @@ def classic_context(retriever, question, cfg):
     ids = [h['id'] for h in hits]
     if cfg.get('route_troubleshooting') and TROUBLESHOOT.search(question):
         flows = [h for h in retriever.search(question, filters={'retriever_guide': 'troubleshooting'}, k=2, min_hits=1)
-                 if '/troubleshooting/' in h['id']]
+                 if retriever.docs.get(h['id']) and retriever.docs[h['id']].meta.get('retriever_guide') == 'troubleshooting']
         for h in reversed(flows[:1]):
             if h['id'] in ids:
                 ids.remove(h['id'])

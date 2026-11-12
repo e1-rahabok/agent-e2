@@ -45,7 +45,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 
 ## Metadata
 ```yaml
-id: vsphere/object-types/<object>/health-check/<object>-health-check
+id: vsphere/object-types/<object>/<object>-health-check
 retriever_guide: health-check
 scope: vsphere
 technology: [cpu, memory, storage, network]

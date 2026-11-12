@@ -1,6 +1,5 @@
-"""Flow executor: health checks, troubleshooting flows and decision trees (knowledge/**/health-check/*.md,
-knowledge/**/troubleshooting/*.md, knowledge/**/decision-tree/*.md),
-served one step at a time.
+"""Flow executor: health checks, troubleshooting flows and decision trees (retriever_guide health-check,
+troubleshooting or decision-tree, wherever the file sits), served one step at a time.
 
 The markdown file is the single source. Two step formats are read:
   - a '## Checks, in order' section with numbered lines (1. 2. 3. ...), continuation lines kept with their step;
@@ -35,21 +34,21 @@ def steps_of(doc):
     return out
 
 
-FLOW_FOLDERS = ('/health-check/', '/troubleshooting/', '/decision-tree/')
+FLOW_KINDS = ('health-check', 'troubleshooting', 'decision-tree')  # retriever_guide values: the kind is metadata, not a folder
 
 
-def is_flow(doc_id):
-    return any(f in doc_id for f in FLOW_FOLDERS)
+def is_flow(doc):
+    return bool(doc) and doc.meta.get('retriever_guide') in FLOW_KINDS
 
 
 def flow_ids(docs):
-    return sorted(i for i in docs if is_flow(i))
+    return sorted(i for i, d in docs.items() if is_flow(d))
 
 
 def run(docs, flow_id, step=None):
     """One call of the flow tool. step None: all steps in order. step N: that step and where to go next."""
     d = docs.get(flow_id or '')
-    if not d or not is_flow(d.id):
+    if not d or not is_flow(d):
         return {'error': f'unknown flow {flow_id!r}', 'flows': {i: docs[i].title for i in flow_ids(docs)}}
     steps = steps_of(d)
     if not steps:

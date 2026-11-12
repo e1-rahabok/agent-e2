@@ -78,7 +78,7 @@
 - Shares, reservations, limits, resource pools: [`vsphere/object-types/vm/configuration/resource-settings-guidance`](../../vsphere/object-types/vm/configuration/resource-settings-guidance.md).
 - ESXi: [`vsphere/object-types/esxi/configuration/esxi-configuration-review`](../../vsphere/object-types/esxi/configuration/esxi-configuration-review.md).
 - Cluster: [`vsphere/object-types/cluster/configuration/cluster-configuration-review`](../../vsphere/object-types/cluster/configuration/cluster-configuration-review.md).
-- Storage: [`vsphere/technology/storage/configuration/storage-configuration-review`](../../vsphere/technology/storage/configuration/storage-configuration-review.md).
+- Storage: [`vsphere/technology/storage/storage-configuration-review`](../../vsphere/technology/storage/storage-configuration-review.md).
 - Network: [`vsphere/technology/network/configuration/network-configuration-review`](../../vsphere/technology/network/configuration/network-configuration-review.md).
 
 ## Misconceptions
@@ -124,7 +124,7 @@ related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
-- vsphere/technology/storage/configuration/storage-configuration-review
+- vsphere/technology/storage/storage-configuration-review
 - vsphere/technology/network/configuration/network-configuration-review
 images:
   - path: images/configuration-review-time-architecture-operations-dimensions-diagram.png

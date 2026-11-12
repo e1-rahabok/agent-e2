@@ -59,7 +59,7 @@
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
 - Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
 - The VM CPU Ready chart shows the average of all vCPUs at level 1. Ready per vCPU appears only at level 3.
-- Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See [`vsphere/technology/gpu/concepts/gpu-monitoring`](../../technology/gpu/concepts/gpu-monitoring.md).
+- Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See [`vsphere/technology/gpu/gpu-monitoring`](../../technology/gpu/gpu-monitoring.md).
 - Levels 3 and 4 raise vCenter load significantly. If vpxd cannot write statistics to the database fast enough, its memory grows until it runs out of memory and crashes. After raising a level, watch the vpxd process size.
 
 ## Level 1 counters per object (vCenter 9.1 API)

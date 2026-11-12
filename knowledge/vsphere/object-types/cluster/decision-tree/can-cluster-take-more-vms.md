@@ -3,7 +3,7 @@
 ## Question
 - Can this vSphere cluster take N more VMs, a project, or a VM upsize?
 - The answer is yes or no, with the resource that limits it and the reason.
-- An operational question, answered by a decision tree; not a health check. The cluster health check reads the result of this tree in its capacity step ([`vsphere/object-types/cluster/health-check/cluster-health-check`](../health-check/cluster-health-check.md), step 6).
+- An operational question, answered by a decision tree; not a health check. The cluster health check reads the result of this tree in its capacity step ([`vsphere/object-types/cluster/cluster-health-check`](../cluster-health-check.md), step 6).
 - A closed cluster accepts no new VM and no VM upsize. Once capacity, performance and risk metrics exist, the decision can be automated: self-driving capacity management.
 
 ## Flow
@@ -37,7 +37,7 @@ flowchart TD
 4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; [`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md)). Allocation reaches usable capacity → no: closed. Below → step 7.
 5. Consumption and performance (ClusterComputeResource). Both read at the worst end of the last 24 hours: the 95th percentile for Consumption, the 5th percentile for Performance (higher is better). Same thresholds for production and non-production. Either one red → no: closed.
    - Cluster Consumption (%) ([`vsphere/object-types/cluster/models/cluster-consumption`](../models/cluster-consumption.md)): red above 80%, orange above 60%.
-   - Cluster Performance (%) ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
+   - Cluster Performance (%) ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
    - The vCommunity management pack automates this step and step 6 with one band set for every cluster: [`vsphere/object-types/cluster/models/close-for-business`](../models/close-for-business.md).
    - Neither red → step 6.
 6. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md)):
@@ -107,7 +107,7 @@ internal_derive:
 - vsphere/object-types/cluster/models/close-for-business
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - sp5-framework/capacity/demand
-- vsphere/object-types/cluster/kpis/cluster-performance
+- vsphere/object-types/cluster/cluster-performance
 - vsphere/object-types/cluster/models/cluster-risk
 - sp5-framework/capacity/supply
 - sp5-framework/capacity/forecasting
@@ -117,7 +117,7 @@ internal_derive:
 - vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
 related:
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out
-- vsphere/object-types/cluster/health-check/cluster-health-check
+- vsphere/object-types/cluster/cluster-health-check
 - sp5-framework/concepts/health-check
 - sp5-framework/capacity/class-of-service-planning
 images:

@@ -29,14 +29,14 @@ threshold(VM layer) < threshold(Guest OS layer) < threshold(application layer)
 - A threshold is valid only for the sample interval it was set on. The same workload reads higher at a short interval than at a long one: averaging over a longer window flattens peaks.
 - Order for the same metric: 2-second (esxtop) ≥ 20-second (real-time) ≥ 5-minute ≥ 1-day values.
 - Example: VM disk latency 10,370 ms at the 20-second peak vs 257 ms as the 300-second average. See [`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md).
-- So a threshold set on 20-second peaks must be higher than one set on 5-minute averages for the same tolerance. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks), although it is the less serious signal. See [`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md).
+- So a threshold set on 20-second peaks must be higher than one set on 5-minute averages for the same tolerance. Example: VM Compressed + Swapped (5-minute samples) has a lower band than VM Memory Contention (20-second peaks), although it is the less serious signal. See [`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md).
 - A threshold without its interval is incomplete.
 
 ## Instance rule
 - A metric with an instance breakdown (per vCPU, per virtual disk, per vNIC) has two readings: the object value (average or sum over instances) and the worst instance.
 - The worst instance is always at least the average. Example: a 64-vCPU VM can show a low VM-level Readiness (%), which is normalized over its vCPUs, while one vCPU is far higher; the normalization dilutes that vCPU by 64.
 - So a threshold must say which reading it applies to: "Peak CPU Ready among any vCPU" is not the same threshold as "VM CPU Ready".
-- The same rule applies one level up: a cluster threshold must say whether it applies to the worst VM (depth), a percentile of VMs (breadth), or the average. See [`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md).
+- The same rule applies one level up: a cluster threshold must say whether it applies to the worst VM (depth), a percentile of VMs (breadth), or the average. See [`vsphere/object-types/cluster/cluster-performance`](../../vsphere/object-types/cluster/cluster-performance.md).
 
 ## Threshold definition
 ```text

@@ -77,7 +77,7 @@ related:
 - vsphere/technology/cpu/concepts/virtual-numa
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 - vsphere/technology/storage/concepts/snapshot-impact
-- vsphere/technology/storage/configuration/storage-configuration-review
+- vsphere/technology/storage/storage-configuration-review
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration'

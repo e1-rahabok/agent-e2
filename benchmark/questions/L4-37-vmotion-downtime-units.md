@@ -40,7 +40,7 @@ level: 400
 answer_type: deterministic
 input: [screenshot]
 knowledge:
-  - vsphere/object-types/vm/metrics/vmotion
+  - vsphere/object-types/vm/vmotion
 attachments:
   - 0077/vcf-operations-logs-vmotion-downtime.png
 origin: synthetic

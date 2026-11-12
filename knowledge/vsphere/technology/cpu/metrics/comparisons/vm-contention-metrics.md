@@ -33,7 +33,7 @@
 - If VM utilization is low, reduce vCPUs, following NUMA best practice.
 
 ## Choice
-- VM KPI: Ready, Co-stop and Overlap, the peak among any vCPU ([`vsphere/object-types/vm/kpis/vm-performance`](../../../../object-types/vm/kpis/vm-performance.md)).
+- VM KPI: Ready, Co-stop and Overlap, the peak among any vCPU ([`vsphere/object-types/vm/vm-performance`](../../../../object-types/vm/vm-performance.md)).
 - Troubleshooting CPU-sensitive VMs: Contention or Latency.
 - Cluster performance: not Contention (includes limits). Not Latency alone (includes HT and frequency).
 

@@ -2,7 +2,7 @@
 
 ## Purpose
 - A leading indicator: it warns before the VMs feel contention or consumption can suddenly rise. It covers capacity and performance.
-- Cluster Performance shows actual contention happening now ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)). Cluster Risk shows potential contention.
+- Cluster Performance shows actual contention happening now ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)). Cluster Risk shows potential contention.
 - Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
 - Not built into VCF Operations: a metric of the vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
@@ -74,7 +74,7 @@ Per host, then the worst host is kept.
 
 ## Not used
 - Inter-host imbalance: partly covered by highest host utilization; complex; field validation that it changes remediation is pending.
-- vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md), section vMotion Count).
+- vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md), section vMotion Count).
 
 ## Misconceptions
 - "The CPU overcommit row reads 3, so the Bronze 3:1 plan is met" → the row is per core; 3 per core is 1.5 per thread with Hyper-Threading. The plan is per thread: Bronze 3:1 reads 6 per core.

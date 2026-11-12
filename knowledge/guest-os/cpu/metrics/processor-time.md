@@ -44,7 +44,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- guest-os/cpu/concepts/windows-cpu-scheduling
+- guest-os/cpu/windows-cpu-scheduling
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: MS Windows > CPU; DPC Time

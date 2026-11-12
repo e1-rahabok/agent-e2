@@ -55,9 +55,9 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- guest-os/cpu/concepts/windows-cpu-scheduling
+- guest-os/cpu/windows-cpu-scheduling
 - guest-os/system/concepts/guest-os-sizing
-- guest-os/system/metrics/guest-os-performance
+- guest-os/system/guest-os-performance
 images:
   - path: ../images/windows-run-queue-peak-vs-99th-percentile-scatter.png
     product: [windows]

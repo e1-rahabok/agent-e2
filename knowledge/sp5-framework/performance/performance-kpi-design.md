@@ -84,7 +84,7 @@ weight = 2 ^ ((100 - score) / 25)
 - Excluded green: a metric whose green range says nothing about health (rare dropped packets, low utilization) is left out of the KPI while green, so it does not add a free 100. Once it leaves green it counts. If every metric with data is excluded, the KPI is 100.
 - Missing data: a metric with no data is left out, never counted as 0, because 0 usually means perfect. With no data at all, the KPI is not published.
 - Limitation: because the weight grows as the score falls, a metric that gets worse can move the KPI the wrong way when other metrics are already worse. Example and effect: [`vsphere/object-types/cluster/models/cluster-risk`](../../vsphere/object-types/cluster/models/cluster-risk.md), section A worse sub-metric can lower Cluster Risk.
-- Excluded green on the VM KPI: CPU Net Run below 95%, CPU Overlap below 0.5%, Network Dropped Tx at exactly 0 ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)).
+- Excluded green on the VM KPI: CPU Net Run below 95%, CPU Overlap below 0.5%, Network Dropped Tx at exactly 0 ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)).
 - Guest OS Free Memory is descending: more is better, so its limits go down and its green limit is not 0. KB is converted to MB.
 - Free Memory uses the latest value, not the lowest 20-second value: it measures space, and the latest value matters.
 - Swapped + Compressed has no built-in metric: the pack computes it as Memory Zip Swap.
@@ -121,8 +121,8 @@ internal_derive:
 related:
 - sp5-framework/performance/performance-management
 - sp5-framework/performance/kpi-vs-sla
-- vsphere/object-types/vm/kpis/vm-performance
-- guest-os/system/metrics/guest-os-performance
+- vsphere/object-types/vm/vm-performance
+- guest-os/system/guest-os-performance
 - vcf-operations/features/peak-20-second-metrics
 images:
   - path: images/guest-os-and-vm-performance-kpi-metrics.png

@@ -31,7 +31,7 @@ input: [text]
 task: troubleshoot
 knowledge:
   - vcf-operations/dashboards/vm-performance-dashboard
-  - vsphere/object-types/vm/kpis/vm-performance
+  - vsphere/object-types/vm/vm-performance
 attachments: []
 origin: synthetic
 source_path: "Author's Gemini exchange, 2026-11-09"

@@ -68,16 +68,16 @@ flowchart TD
 - A health check may read the result of a decision tree as one of its steps: the cluster health check reads whether the cluster is closed. The decision tree is still not a health check.
 
 ## Object health checks
-- VM: [`vsphere/object-types/vm/health-check/vm-health-check`](../../vsphere/object-types/vm/health-check/vm-health-check.md).
-- ESXi host: [`vsphere/object-types/esxi/health-check/esxi-health-check`](../../vsphere/object-types/esxi/health-check/esxi-health-check.md).
-- vSphere cluster: [`vsphere/object-types/cluster/health-check/cluster-health-check`](../../vsphere/object-types/cluster/health-check/cluster-health-check.md).
+- VM: [`vsphere/object-types/vm/vm-health-check`](../../vsphere/object-types/vm/vm-health-check.md).
+- ESXi host: [`vsphere/object-types/esxi/esxi-health-check`](../../vsphere/object-types/esxi/esxi-health-check.md).
+- vSphere cluster: [`vsphere/object-types/cluster/cluster-health-check`](../../vsphere/object-types/cluster/cluster-health-check.md).
 
 ## Misconceptions
 - "Run a capacity health check on this cluster" → there is no capacity health check. Name the operational question (can it take more VMs, how long until full) and answer it with its decision tree; say the other pillars were not checked.
 - "Run a CPU health check" → a health check is on an object type, not a technology. Check the VM, host or cluster; CPU is a step inside it.
 - "The application inside the VM is slow, so the ESXi host is unhealthy" → the Guest OS is a separate realm. Check host and VM contention; if both are green, the cause is inside the Guest OS.
 - "Health check and troubleshooting are the same thing" → troubleshooting starts from a known problem and asks why; the health check first finds out whether there is a problem.
-- "The VM is slow: run its health check" → a complaint is reactive. Start the troubleshooting flow ([`sp5-framework/performance/troubleshooting/vm-slow`](../performance/troubleshooting/vm-slow.md)).
+- "The VM is slow: run its health check" → a complaint is reactive. Start the troubleshooting flow ([`sp5-framework/performance/vm-slow`](../performance/vm-slow.md)).
 - "No alert fired, so the object is healthy" → alerts are guard rails for what humans miss; most risk and waste never raise one.
 - "Performance is green, so the object is healthy" → availability, security and capacity are checked separately; up and fast today is not safe or enough tomorrow.
 - "Troubleshoot the capacity problem" → capacity is planned and monitored; only down and slow are troubleshot.
@@ -107,10 +107,10 @@ internal_derive:
 - sp5-framework/concepts/health-risk-efficiency
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 related:
-- vsphere/object-types/cluster/health-check/cluster-health-check
-- vsphere/object-types/vm/health-check/vm-health-check
-- vsphere/object-types/esxi/health-check/esxi-health-check
-- sp5-framework/performance/troubleshooting/vm-slow
+- vsphere/object-types/cluster/cluster-health-check
+- vsphere/object-types/vm/vm-health-check
+- vsphere/object-types/esxi/esxi-health-check
+- sp5-framework/performance/vm-slow
 - vsphere/architecture/vm-vs-guest-os
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 source:

@@ -44,8 +44,8 @@ answer_type: deterministic
 input: [table]
 knowledge:
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
-  - vsphere/technology/network/troubleshooting/vnic-rx-drops
-  - vsphere/object-types/vm/kpis/vm-performance
+  - vsphere/technology/network/vnic-rx-drops
+  - vsphere/object-types/vm/vm-performance
 attachments:
   - 0082/vm-network-400-vms.xlsx
 origin: synthetic

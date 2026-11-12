@@ -2,7 +2,7 @@
 
 ## Symptom
 - ESXi disk latency (GAVG) is high on a host, the disk rows of ESXi Performance (%) are yellow or worse, or many VMs on one host or datastore show disk latency.
-- Entered from [`vsphere/object-types/esxi/health-check/esxi-health-check`](../../../object-types/esxi/health-check/esxi-health-check.md) (step 3) or [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](vm-storage-performance-checks.md) (step 5).
+- Entered from [`vsphere/object-types/esxi/esxi-health-check`](../../../object-types/esxi/esxi-health-check.md) (step 3) or [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](vm-storage-performance-checks.md) (step 5).
 
 ## Flow
 ```mermaid
@@ -24,7 +24,7 @@ flowchart TD
 4. Per adapter and path (HostSystem) ([`vsphere/technology/storage/metrics/host/adapter-and-path`](../metrics/host/adapter-and-path.md)). Read and write latency separately. Use the 95th or 99th percentile, not the maximum. → step 5.
 5. Read vs write (HostSystem). Write-only latency is expected when reads hit cache. → step 6.
 6. NVMe memory-tier device (HostSystem). High latency at near-zero IO is a wake-up from a power-saving state: the cause, not a reason to discard the reading. The VMs that read then did wait; their NVMe Wait shows how much. → step 7.
-7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`sp5-framework/performance/troubleshooting/vm-slow`](../../../../sp5-framework/performance/troubleshooting/vm-slow.md), its known bug and log checks).
+7. Known bug and log (HostSystem): driver and firmware versions against the compatibility guide and known issues; events in the window ([`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md), its known bug and log checks).
 
 ## Why this order
 - The split first: kernel and device latency have different owners, the ESXi host and the array.
@@ -58,7 +58,7 @@ object:
 internal_derive:
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 - vsphere/technology/storage/metrics/host/adapter-and-path
-- sp5-framework/performance/troubleshooting/vm-slow
+- sp5-framework/performance/vm-slow
 related:
 - vsphere/technology/storage/metrics/host/disk
 - vsphere/technology/storage/metrics/host/datastore

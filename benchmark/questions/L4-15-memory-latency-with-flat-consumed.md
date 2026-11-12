@@ -35,7 +35,7 @@ level: 400
 answer_type: judged
 input: [text]
 knowledge:
-  - vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+  - vsphere/technology/memory/vm-memory-latency-high
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
   - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 attachments: []

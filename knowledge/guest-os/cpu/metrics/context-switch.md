@@ -53,7 +53,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- guest-os/cpu/concepts/windows-cpu-scheduling
+- guest-os/cpu/windows-cpu-scheduling
 - guest-os/cpu/metrics/run-queue
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 images:

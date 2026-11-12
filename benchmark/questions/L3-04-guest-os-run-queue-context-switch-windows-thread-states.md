@@ -38,7 +38,7 @@ technology: [cpu]
 input: [text]
 task: read-metric
 knowledge:
-  - guest-os/cpu/concepts/windows-cpu-scheduling
+  - guest-os/cpu/windows-cpu-scheduling
   - guest-os/cpu/metrics/run-queue
   - guest-os/cpu/metrics/context-switch
   - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu

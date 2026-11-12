@@ -12,7 +12,7 @@
 - In return the consumer never exceeds what it paid for, and a denial-of-service attack is contained. It cuts both ways: cost against performance.
 - Limits exist for CPU, memory, disk IOPS and network adapter bandwidth, plus traffic shaping per port group. Do not use them on VMs.
 - Matters more for containers, which have no ceiling by default.
-- Valid use: a resource pool sold as a service. A tenant that bought 1 TB of RAM with no burst in the contract gets a 1 TB limit on its pool ([`vsphere/object-types/resource-pool/configuration/resource-pool-design`](../../resource-pool/configuration/resource-pool-design.md)).
+- Valid use: a resource pool sold as a service. A tenant that bought 1 TB of RAM with no burst in the contract gets a 1 TB limit on its pool ([`vsphere/object-types/resource-pool/resource-pool-design`](../../resource-pool/resource-pool-design.md)).
 
 ## Reservation
 - A hard guarantee, so reserved capacity cannot be overcommitted: use is less efficient. Keep the total low against cluster capacity.
@@ -65,7 +65,7 @@ related:
 - sp5-framework/concepts/configuration-management
 - sp5-framework/concepts/class-of-service
 - vsphere/architecture/resource-controls
-- vsphere/object-types/resource-pool/configuration/resource-pool-design
+- vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/object-types/cluster/concepts/drs-overview
 - vsphere/object-types/cluster/concepts/dpm
 images:

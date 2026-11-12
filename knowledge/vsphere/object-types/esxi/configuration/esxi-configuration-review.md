@@ -102,7 +102,7 @@ related:
 - vsphere/technology/cpu/concepts/numa
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
 - vsphere/technology/network/configuration/network-configuration-review
-- vsphere/technology/storage/configuration/storage-configuration-review
+- vsphere/technology/storage/storage-configuration-review
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Configuration Management > Review List > Compute > ESXi; Management; Storage Related; Network Related; ESXi Consistency'

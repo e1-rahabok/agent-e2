@@ -79,7 +79,7 @@ same_meaning: []
 related:
 - vsphere/tools/esxtop/overview
 - vsphere/technology/network/metrics/host/packets-dropped
-- vsphere/technology/network/troubleshooting/vnic-rx-drops
+- vsphere/technology/network/vnic-rx-drops
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

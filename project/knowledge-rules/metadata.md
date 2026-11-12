@@ -5,13 +5,15 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 ## retriever_guide
 | Value | Question it answers | Folder | Template |
 |---|---|---|---|
-| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `sp5-framework/observability/`, `sp5-framework/outputs/`, `vsphere/architecture/`, `vcf-operations/` features, dashboards, reports, alerts | `concept.md` |
-| metric-meaning | What does this number mean on this object? | `metrics/`, `kpis/`, `models/`, `tools/` | `metric.md` |
+| how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `sp5-framework/observability/`, `sp5-framework/outputs/`, `vsphere/architecture/`, `vcf-operations/` (role, features, dashboards, reports, alert definitions) | `concept.md` |
+| metric-meaning | What does this number mean on this object? | `metrics/`, `models/`, `tools/`; `<object>-performance` (KPI) | `metric.md` |
 | term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
-| what-to-set | What should be configured, and why? Which alerts does this object type get, and why? | `configuration/`, `alerts/` (outside `vcf-operations/`) | `configuration.md` |
-| health-check | Is this object healthy? What do I check, in what order (the what)? | `health-check/` | `health-check.md` |
-| troubleshooting | It is down or slow (complaint, alert, failed health check step). Why? What do I check, in what order? | `troubleshooting/` | `troubleshooting.md` |
-| decision-tree | Can it, should it, how much? One operational question, ending in a choice to act | `decision-tree/` | `decision-tree.md` |
+| what-to-set | What should be configured, and why? Which alerts does this object type get, and why? | `configuration/`; `<object>-alerts` | `configuration.md`, `alerts.md` |
+| health-check | Is this object healthy? What do I check, in what order (the what)? | `<object>-health-check` | `health-check.md` |
+| troubleshooting | It is down or slow (complaint, alert, failed health check step). Why? What do I check, in what order? | `troubleshooting/`, or the parent folder for a single flow | `troubleshooting.md` |
+| decision-tree | Can it, should it, how much? One operational question, ending in a choice to act | `decision-tree/`, or the parent folder for a single tree | `decision-tree.md` |
+
+- `retriever_guide` is the kind of the file: the harness (flow tool, primer map, catalog, search filter) and lint read it, not the folder. A kind folder exists only with 2 or more files ([placement.md](placement.md)).
 
 ## Metadata fields (end of file)
 Every knowledge file and every benchmark question ends with a `## Metadata` section holding one yaml block. No front matter at the top.

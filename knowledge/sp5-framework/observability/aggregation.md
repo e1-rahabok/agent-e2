@@ -58,7 +58,7 @@ ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of runn
 - Isolated: look at the affected object. Widespread: look at what the affected VMs share (cluster, datastore, resource pool, host).
 - Breadth by threshold (share of members above it) requires a threshold per metric. Breadth by percentile works for any metric; use the 90th percentile.
 - Pattern of a cluster that cannot cope: maximum more than 10x the average, average flat, while one or two VMs at a time are not served. With equal treatment, VMs take turns to be hit; the worst VM line can be 60x the average.
-- Applied: Cluster Performance (%) uses worst VM for depth and 90th percentile for breadth ([`vsphere/object-types/cluster/kpis/cluster-performance`](../../vsphere/object-types/cluster/kpis/cluster-performance.md)).
+- Applied: Cluster Performance (%) uses worst VM for depth and 90th percentile for breadth ([`vsphere/object-types/cluster/cluster-performance`](../../vsphere/object-types/cluster/cluster-performance.md)).
 
 ## Disparity
 - Members meant to share load should be balanced: vCPUs of one VM, hosts in a cluster, RDS hosts in a farm, Horizon Connection Servers in a pod, disks in a vSAN disk group, web servers in a farm.
@@ -95,7 +95,7 @@ internal_derive: []
 related:
 - sp5-framework/observability/collection-interval
 - sp5-framework/observability/thresholds
-- vsphere/object-types/cluster/kpis/cluster-performance
+- vsphere/object-types/cluster/cluster-performance
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:

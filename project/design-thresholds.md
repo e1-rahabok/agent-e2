@@ -261,7 +261,7 @@ Built 2026-11-12. As built, it differs from the proposal below in three points:
 - No `type`, `reading`, `class`, `persona` or cancel cycles yet: no row needs them, and section 9 is not approved.
 - Fixes found during the migration: VM disk latency is four alerts (read and write separate, as storage-alerts says), not two; infrastructure contention alerts are on ESXi, resource pool and cluster, not on the cluster only; the 3 capacity alerts carry their population.
 - Lint: every symptom used, every reference exists, a symptom is defined on the alert's object, no two symptoms with the same test, no `condition` anywhere.
-- Restructured 2026-11-12 (author: an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/alerts/<object>-alerts`, [`guest-os/system/alerts/guest-os-alerts`](../knowledge/guest-os/system/alerts/guest-os-alerts.md)), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention stays on the object until Q145 (c).
+- Restructured 2026-11-12 (author: an alert fires on one object type, not on a technology): one alert definition per object type (the infrastructure contention rows split into ESXi, resource pool and cluster; ESXi dropped packets into virtual and physical network, as the source counts 2). Alert `kb` is the object type's alert file (`vsphere/object-types/<object>/<object>-alerts`, [`guest-os/guest-os-alerts`](../knowledge/guest-os/guest-os-alerts.md); one file per VCF Operations object type, no `alerts/` folder), which explains each alert under a `##` heading carrying its `name`; a symptom's `kb` is the file of the metric it tests. No `quote`: the alert files hold no values, and lint rejects a value in an alert's section or a misconception's correction. The harness shows an alert with its own file only (not with every metric file it tests). CPU contention on ESXi, resource pool and cluster now reads a share of the member VMs (child VirtualMachine, > 25%), as the source states; memory contention the same since Q145 (c). VM CPU contention without the Contention symptom and orange halved (Q144); VM dropped packets gated by VM CPU Usage (Q147).
 
 Proposal (2026-11-10):
 ```yaml
@@ -315,20 +315,20 @@ Proposal. Values are design values for the recommended alert set, to tune from e
 ### 9.1 Three states, kept apart
 | State | Owner | Question | Set by |
 |---|---|---|---|
-| Symptom | VCF Operations | Is the test true now? | Wait cycle and cancel cycle on the symptom |
+| Symptom or condition | VCF Operations | Is the test true now? | Wait cycle and cancel cycle on the symptom or condition |
 | Alert | VCF Operations | Is the issue still urgent? | The symptom set (all or any); alert-level cycles at 1 |
 | Incident | Event engine or ITSM (ServiceNow and the like) | Has a person dealt with it? | People and the event engine, never the metric |
 
-- The cancel cycle belongs to the symptom. Its only job: stop the alert flapping open and closed while the metric hovers near the threshold.
+- The cancel cycle belongs to the symptom or condition. Its only job: stop the alert flapping open and closed while the metric hovers near the threshold.
 - It is not a cooldown to keep an alert visible, and not the incident's closure. Closing a ticket is a human or event-engine decision.
 
 ### 9.2 Why VCF Operations needs a cancel cycle above 1
-- A VCF Operations symptom has one threshold: no separate clear threshold (state hysteresis). The cancel cycle is the only hysteresis it offers, in time instead of in value. Check against the VCF Operations 9.1 symptom definition page.
+- A VCF Operations symptom or condition has one threshold: no separate clear threshold (state hysteresis). The cancel cycle is the only hysteresis it offers, in time instead of in value. Check against the VCF Operations 9.1 symptom definition page.
 - Contention metrics are bursty. An episode that lasts an hour often dips below the threshold for one 5-minute cycle. With cancel 1, it becomes several alerts, each with its own notification: an alert storm made of one problem.
 - While an alert is open, VCF Operations does not raise it again for the same object. A long cancel cycle therefore hides a new episode behind an old alert: the suppression trap. That sets the upper limit.
 
 ### 9.3 Rules
-- R1. Cancel cycles live on symptoms; alert-level wait and cancel cycles stay at 1 (Broadcom advice).
+- R1. Cancel cycles live on symptoms or conditions (a condition has its own waitCycles, cancelCycles and severity: VCF Operations API 9.1.1, alert-condition); alert-level wait and cancel cycles stay at 1 (Broadcom advice). Build an alert's tests as conditions (Q143).
 - R2. By symptom type:
 
 | Symptom type | Behaviour | Cancel cycles | Time to clear |
@@ -385,9 +385,9 @@ Example: "Is 6% CPU Ready bad?" with a VCF Operations screenshot of a VM.
 Lookup result, about 120 tokens (the `why` text is illustrative until the files carry it):
 ```text
 Reading: vm.cpu.ready.vcpu-max (Peak CPU Ready among any vCPU, VM, 20-second peak). Value 6.1 %.
-- KPI (proactive, no deadline): ORANGE. Edges yellow 2, orange 4, red 8. Why: one waiting vCPU stalls a multi-threaded job. [vsphere/object-types/vm/kpis/vm-performance]
+- KPI (proactive, no deadline): ORANGE. Edges yellow 2, orange 4, red 8. Why: one waiting vCPU stalls a multi-threaded job. [vsphere/object-types/vm/vm-performance]
 - SLI: not comparable. The SLI reads vm.cpu.ready.total (VM total, 5-minute). Fail above 2.5. [sp5-framework/concepts/sla-metrics]
-- Alert: not comparable. Alerts read vm.cpu.ready.total: orange above 4, red above 8, with gates. [vsphere/object-types/vm/alerts/vm-alerts]
+- Alert: not comparable. Alerts read vm.cpu.ready.total: orange above 4, red above 8, with gates. [vsphere/object-types/vm/vm-alerts]
 Values: recommended (Agent E2). Depends on: nothing missing.
 ```
 
@@ -493,5 +493,5 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## Sources
 - Broadcom TechDocs, VCF 9.0: [Alert Definition Best Practices](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/infrastructure-operations/configuring-alerts-and-actions/defining-alerts-best-practices.html).
 - Broadcom TechDocs, VCF 9.1: [Add a Virtual Machine CPU Usage Symptom to the Alert Definition](https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/configuring-alerts-and-actions/create-a-problem-alert-definition/add-a-virtual-machine-cpu-usage-symptom-to-the-alert-definition.html).
-- Knowledge base: [`sp5-framework/performance/kpi-vs-sla`](../knowledge/sp5-framework/performance/kpi-vs-sla.md), [`sp5-framework/outputs/alert-design`](../knowledge/sp5-framework/outputs/alert-design.md), [`sp5-framework/outputs/alerts-and-insights`](../knowledge/sp5-framework/outputs/alerts-and-insights.md), [`vcf-operations/alerts/alert-definitions`](../knowledge/vcf-operations/alerts/alert-definitions.md), the cluster models, `close-for-business`, [`sp5-framework/observability/thresholds`](../knowledge/sp5-framework/observability/thresholds.md).
+- Knowledge base: [`sp5-framework/performance/kpi-vs-sla`](../knowledge/sp5-framework/performance/kpi-vs-sla.md), [`sp5-framework/outputs/alert-design`](../knowledge/sp5-framework/outputs/alert-design.md), [`sp5-framework/outputs/alerts-and-insights`](../knowledge/sp5-framework/outputs/alerts-and-insights.md), [`vcf-operations/alert-definitions`](../knowledge/vcf-operations/alert-definitions.md), the cluster models, `close-for-business`, [`sp5-framework/observability/thresholds`](../knowledge/sp5-framework/observability/thresholds.md).
 - Harness: `harness/catalog.py`, `harness/agent.py`, `harness/modes.py`, `harness/primer.py`, `harness/clarify.py`, `harness/verify.py`, `project/tools/lint.py`.

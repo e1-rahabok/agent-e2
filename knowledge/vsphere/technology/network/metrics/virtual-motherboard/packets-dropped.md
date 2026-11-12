@@ -58,7 +58,7 @@ internal_derive: []
 same_name: []
 same_meaning: []
 related:
-- vsphere/technology/network/metrics/comparisons/vm-network-metrics
+- vsphere/technology/network/metrics/vm-network-metrics
 - vsphere/technology/network/metrics/virtual-motherboard/packets
 images:
   - path: ../../images/vm-network-dropped-99th-percentile-vs-max-list-view.png

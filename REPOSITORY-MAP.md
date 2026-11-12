@@ -21,41 +21,41 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/sp5-framework/` | The method: how to operate VCF, the SP5 Framework (source: Private Cloud Management by Iwan Rahabok). `concepts/`: across pillars (overview, health check, health-risk-efficiency, class of service, modelling). `observability/`: how to read telemetry. `outputs/`: alerts, dashboards, reports, NOC live screen. `performance/`, `capacity/`: one pillar each |
 | `knowledge/vsphere/architecture/` | vSphere design every metric follows from: provider and consumer, VM vs Guest OS realms, overhead, resource controls |
 | `knowledge/vsphere/technology/` | One technology at a time (`cpu`, `memory`, `storage`, `network`, `gpu`): how it works, metrics per object, what to set, troubleshooting and decision trees within that technology |
-| `knowledge/vsphere/object-types/` | One object type at a time (`vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `distributed-switch`): what combines technologies, KPIs, models, the object's alerts (`alerts/`), its health check, troubleshooting and decision trees on that object |
+| `knowledge/vsphere/object-types/` | One folder per object type (`vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `datastore-cluster`, `distributed-switch`, `distributed-port-group`): what combines technologies, KPIs, models, the object's alerts (`<object>-alerts`), its health check (`<object>-health-check`), troubleshooting and decision trees on that object |
 | `knowledge/vsphere/tools/` | How esxtop and the vSphere Client show the counters |
-| `knowledge/vcf-operations/` | The product VCF Operations: `concepts/` (role), `features/`, `dashboards/` and `reports/` as built in it, `alerts/` (how an alert definition works). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
-| `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `system/alerts/` |
+| `knowledge/vcf-operations/` | The product VCF Operations: its role, `features/`, `dashboards/` and the report suite as built in it, and how an alert definition works (`alert-definitions`). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
+| `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `guest-os-alerts` |
 | `knowledge/glossary.md` | The agent's vocabulary |
 | `knowledge/misconceptions.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
 | `harness/` | Retrieval, catalog, calculator, planning calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
-A flow is an expert's order of checks, run step by step by the `flow` tool. Three kinds, each in a folder of that name; the harness finds them by the folder name and gives the agent one index, grouped by kind. What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md). Lint checks that these tables list every flow.
+A flow is an expert's order of checks, run step by step by the `flow` tool. Three kinds, named by `retriever_guide` (health-check, troubleshooting, decision-tree); the harness finds them by that metadata, wherever the file sits, and gives the agent one index, grouped by kind. What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md). Lint checks that these tables list every flow.
 
 ### Health checks: is this object healthy?
 Started by a schedule or a request, never by a problem. Always on one object type, never on a technology or a pillar; every pillar in order: availability, performance, security, capacity. The parent includes its children, except across a realm (the Guest OS is not part of the VM or host check). A failed step opens a troubleshooting flow.
 
 | Object | File |
 |---|---|
-| VM | [`vsphere/object-types/vm/health-check/vm-health-check`](knowledge/vsphere/object-types/vm/health-check/vm-health-check.md) |
-| ESXi host | [`vsphere/object-types/esxi/health-check/esxi-health-check`](knowledge/vsphere/object-types/esxi/health-check/esxi-health-check.md) |
-| vSphere cluster | [`vsphere/object-types/cluster/health-check/cluster-health-check`](knowledge/vsphere/object-types/cluster/health-check/cluster-health-check.md) |
+| VM | [`vsphere/object-types/vm/vm-health-check`](knowledge/vsphere/object-types/vm/vm-health-check.md) |
+| ESXi host | [`vsphere/object-types/esxi/esxi-health-check`](knowledge/vsphere/object-types/esxi/esxi-health-check.md) |
+| vSphere cluster | [`vsphere/object-types/cluster/cluster-health-check`](knowledge/vsphere/object-types/cluster/cluster-health-check.md) |
 
 ### Troubleshooting: why is it down or slow?
 Started by a known problem: a complaint, an alert, or a failed health check step. Start a performance complaint at the VM slow flow.
 
 | Symptom | File |
 |---|---|
-| Users say the VM is slow | [`sp5-framework/performance/troubleshooting/vm-slow`](knowledge/sp5-framework/performance/troubleshooting/vm-slow.md) |
+| Users say the VM is slow | [`sp5-framework/performance/vm-slow`](knowledge/sp5-framework/performance/vm-slow.md) |
 | Windows is slow (step 1 of VM slow) | [`guest-os/system/troubleshooting/ms-windows-slow`](knowledge/guest-os/system/troubleshooting/ms-windows-slow.md) |
 | Linux is slow (step 1 of VM slow) | [`guest-os/system/troubleshooting/linux-os-slow`](knowledge/guest-os/system/troubleshooting/linux-os-slow.md) |
 | VM CPU Contention or Latency is high | [`vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md) |
 | VM CPU Other Wait is high | [`vsphere/technology/cpu/troubleshooting/vm-other-wait-high`](knowledge/vsphere/technology/cpu/troubleshooting/vm-other-wait-high.md) |
 | VM CPU Run and Used differ | [`vsphere/technology/cpu/troubleshooting/run-vs-used-gap`](knowledge/vsphere/technology/cpu/troubleshooting/run-vs-used-gap.md) |
-| VM memory latency (contention) is high | [`vsphere/technology/memory/troubleshooting/vm-memory-latency-high`](knowledge/vsphere/technology/memory/troubleshooting/vm-memory-latency-high.md) |
+| VM memory latency (contention) is high | [`vsphere/technology/memory/vm-memory-latency-high`](knowledge/vsphere/technology/memory/vm-memory-latency-high.md) |
 | VM storage performance: what to check | [`vsphere/technology/storage/troubleshooting/vm-storage-performance-checks`](knowledge/vsphere/technology/storage/troubleshooting/vm-storage-performance-checks.md) |
 | ESXi storage latency is high | [`vsphere/technology/storage/troubleshooting/host-storage-latency`](knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
-| vNIC receive drops | [`vsphere/technology/network/troubleshooting/vnic-rx-drops`](knowledge/vsphere/technology/network/troubleshooting/vnic-rx-drops.md) |
+| vNIC receive drops | [`vsphere/technology/network/vnic-rx-drops`](knowledge/vsphere/technology/network/vnic-rx-drops.md) |
 | VMs in a cluster face contention | [`vsphere/object-types/cluster/troubleshooting/cluster-vm-contention`](knowledge/vsphere/object-types/cluster/troubleshooting/cluster-vm-contention.md) |
 | VM starved of resources in a DRS cluster | [`vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster`](knowledge/vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster.md) |
 

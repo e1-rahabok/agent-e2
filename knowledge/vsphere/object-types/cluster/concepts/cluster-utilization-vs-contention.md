@@ -53,7 +53,7 @@ object:
 internal_derive:
 - vsphere/architecture/provider-consumer
 related:
-- vsphere/object-types/cluster/kpis/cluster-performance
+- vsphere/object-types/cluster/cluster-performance
 - vsphere/object-types/cluster/troubleshooting/cluster-vm-contention
 images:
   - path: ../images/cluster-cpu-demand-low-timeline.png

@@ -70,7 +70,7 @@
 | Is the cluster closed for business? | Running, short term | [`vsphere/object-types/cluster/models/close-for-business`](../../vsphere/object-types/cluster/models/close-for-business.md) |
 | Does this ESXi host have CPU headroom? | Running, short term | [`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](../../vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md) |
 | Can this cluster take a host out (maintenance, upgrade)? | Running, short term | [`vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out`](../../vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out.md) |
-| Will this datastore run out of space? | Running | [`vsphere/technology/storage/decision-tree/datastore-space-headroom`](../../vsphere/technology/storage/decision-tree/datastore-space-headroom.md) |
+| Will this datastore run out of space? | Running | [`vsphere/technology/storage/datastore-space-headroom`](../../vsphere/technology/storage/datastore-space-headroom.md) |
 | When does the cluster run out? | Running, long term | [`sp5-framework/capacity/forecasting`](forecasting.md); [`vcf-operations/features/capacity-forecast`](../../vcf-operations/features/capacity-forecast.md) |
 | What can be reclaimed? | Running | [`sp5-framework/capacity/reclamation`](reclamation.md), [`sp5-framework/capacity/unused-vm`](unused-vm.md) |
 | Should this VM be resized? | Running | [`sp5-framework/capacity/rightsizing`](rightsizing.md); [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md); [`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md) |
@@ -190,7 +190,7 @@ related:
 - vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 - vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
 - vsphere/object-types/cluster/decision-tree/can-cluster-take-a-host-out
-- vsphere/technology/storage/decision-tree/datastore-space-headroom
+- vsphere/technology/storage/datastore-space-headroom
 - sp5-framework/capacity/host-spec-from-class-of-service
 - sp5-framework/capacity/vm-size
 - sp5-framework/capacity/unused-vm

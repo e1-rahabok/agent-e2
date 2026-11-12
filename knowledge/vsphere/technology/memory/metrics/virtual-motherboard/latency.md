@@ -59,7 +59,7 @@ related:
 - vsphere/technology/memory/concepts/memory-as-storage
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
-- vsphere/technology/memory/troubleshooting/vm-memory-latency-high
+- vsphere/technology/memory/vm-memory-latency-high
 - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
 images:
   - path: ../../images/vm-memory-contention-worst-value-distribution-across-vms.png

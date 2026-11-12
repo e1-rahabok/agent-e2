@@ -20,7 +20,7 @@ rows:
   match: ['\btriage\b', '\b(vm|virtual machine|server|application|app)s? (is|are|was|were|feels?|got|running|seems?) (very |really |so )?(slow|sluggish|laggy|unresponsive)', '\bslow (vm|virtual machine|server|application)', 'performance (issue|problem|degradation|complaint)']
   means: VM slow troubleshooting flow contention Guest OS
   note: 'A slow VM starts with the troubleshooting flow: Guest OS or VM (virtual motherboard), then contention before utilization, then configuration.'
-  files: [sp5-framework/performance/troubleshooting/vm-slow]
+  files: [sp5-framework/performance/vm-slow]
 - id: cpu-usage-high
   match: ['cpu (usage|utili[sz]ation|util|load|busy)\b[^.?\n]{0,30}\b(high|9\d ?%|100 ?%|maxed|pegged|spike)', '\bhigh cpu (usage|utili[sz]ation|load)']
   unless: '\b(esxi?|host)\b'
@@ -115,7 +115,7 @@ rows:
   match: ['disk queue', 'queue length', 'outstanding (io|i/o)']
   means: Guest OS Disk Queue VM outstanding IO
   note: 'Guest OS Disk Queue and VM outstanding IO are different layers; a queue matters with latency, not alone.'
-  files: [guest-os/storage/metrics/disk-queue, vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io]
+  files: [guest-os/storage/disk-queue, vsphere/technology/storage/metrics/virtual-motherboard/outstanding-io]
 - id: run-queue
   match: ['run ?queue', 'processor queue', 'cpu queue']
   means: Guest OS CPU Run Queue
@@ -191,7 +191,7 @@ rows:
   match: ['vmotion', 'v-motion', 'stun']
   means: vMotion stun time bandwidth
   note: 'Slower vMotion is a leading indicator of a larger performance problem; read stun time and bandwidth.'
-  files: [vsphere/object-types/vm/metrics/vmotion]
+  files: [vsphere/object-types/vm/vmotion]
 - id: noisy-neighbour
   match: ['noisy neighbou?r', 'one vm (is )?(affecting|impacting|hurting) (others|other vms)']
   means: noisy neighbour villain victim contention

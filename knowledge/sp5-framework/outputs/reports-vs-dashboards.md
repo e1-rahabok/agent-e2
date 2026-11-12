@@ -76,7 +76,7 @@ internal_derive:
 - sp5-framework/outputs/system-engagement
 related:
 - sp5-framework/outputs/report-design
-- vcf-operations/reports/report-suite
+- vcf-operations/report-suite
 - sp5-framework/outputs/it-leaders-dashboards
 - sp5-framework/capacity/reclamation
 source:

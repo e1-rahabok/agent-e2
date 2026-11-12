@@ -64,28 +64,28 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('Bands:', CAT.facts_for(['vsphere/object-types/cluster/models/cluster-risk']))
 
     def test_facts_for_kpi_levels(self):
-        f = CAT.facts_for(['vsphere/object-types/vm/kpis/vm-performance'])
+        f = CAT.facts_for(['vsphere/object-types/vm/vm-performance'])
         self.assertIn('KPI levels', f)
         self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16; 5m no value', f)
 
     def test_read_file_shows_catalog_values(self):
         import agent
         class R: docs = DOCS
-        out = agent._run_tool(R(), 'read_file', {'id': 'vsphere/object-types/vm/kpis/vm-performance'}, {'read': []})
+        out = agent._run_tool(R(), 'read_file', {'id': 'vsphere/object-types/vm/vm-performance'}, {'read': []})
         self.assertIn('KPI levels', out)
         self.assertIn('red 8-16, score 0 beyond 16', out)
 
     def test_lookup_returns_kpi(self):
         r = CAT.thresholds(name='Peak CPU Ready among any vCPU')
         self.assertEqual(r['kpi'][0]['20s'], 'green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16')
-        self.assertEqual(r['kpi'][0]['kb'], 'vsphere/object-types/vm/kpis/vm-performance')
+        self.assertEqual(r['kpi'][0]['kb'], 'vsphere/object-types/vm/vm-performance')
 
     def test_alert_comes_with_all_its_symptoms(self):
         # An alert is a set of symptoms, not one metric with a free-text condition (2026-11-12).
         al = {a['id']: a for a in CAT.thresholds(name='VM CPU Ready', limit=20)['alerts']}
         red, orange = al['alert-vm-cpu-contention-red'], al['alert-vm-cpu-contention-orange']
-        self.assertEqual(red['rule'], 'all of: VM Peak vCPU Ready (20s) > 32 %; VM CPU Ready > 8 %; VM CPU Contention > 8 %; VM CPU Usage > 1 GHz (gate)')
-        self.assertIn('VM CPU Ready > 4 %', orange['rule'])
+        self.assertEqual(red['rule'], 'all of: VM Peak vCPU Ready (20s) > 32 %; VM CPU Ready > 8 %; VM CPU Usage > 1 GHz (gate)')
+        self.assertEqual(orange['rule'], 'all of: VM Peak vCPU Ready (20s) > 16 %; VM CPU Ready > 4 %; VM CPU Usage > 1 GHz (gate)')  # red is 2x orange (Q144)
         self.assertNotIn('thresholds', [k for k, v in CAT.thresholds(name='VM CPU Ready').items() if any(r.get('use') == 'alert' for r in v)])
 
     def test_alert_on_children_and_any(self):
@@ -97,7 +97,7 @@ class CatalogTest(unittest.TestCase):
 
     def test_alert_file_brings_its_own_alerts_only(self):
         # Alerts fire on one object type; the object's alert file brings its alerts, a metric file brings none (2026-11-12).
-        f = CAT.facts_for(['vsphere/object-types/cluster/alerts/cluster-alerts'])
+        f = CAT.facts_for(['vsphere/object-types/cluster/cluster-alerts'])
         self.assertIn('- Alert, red: Cluster CPU contention (ClusterComputeResource), on its VirtualMachine children, > 25% of them: all of: '
                       'VM Peak vCPU Ready (20s) > 24 %; VM CPU Contention > 6 %', f)
         self.assertNotIn('(HostSystem)', f)
@@ -107,10 +107,10 @@ class CatalogTest(unittest.TestCase):
 
     def test_one_symptom_many_alerts(self):
         n = CAT._q("SELECT COUNT(*) AS n FROM alert_symptoms WHERE symptom = 'sym-vm-cpu-usage-above-1ghz'")[0]['n']
-        self.assertEqual(n, 10)  # disk queue 2, CPU contention 2, memory contention 2, disk latency 4
+        self.assertEqual(n, 11)  # disk queue 2, CPU contention 2, memory contention 2, disk latency 4, dropped packets 1 (Q147)
 
     def test_facts_label_the_use(self):
-        f = CAT.facts_for(['vsphere/object-types/vm/alerts/vm-alerts'])
+        f = CAT.facts_for(['vsphere/object-types/vm/vm-alerts'])
         self.assertIn('- Alert, red: VM CPU contention (VirtualMachine), all of: VM Peak vCPU Ready (20s) > 32 %', f)
         self.assertIn('- Alert, orange: VM CPU contention (VirtualMachine)', f)
         self.assertIn('- Capacity decision: Cluster Consumption', CAT.facts_for(['vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms']))
@@ -214,7 +214,9 @@ class FlowTest(unittest.TestCase):
 
     def test_step_and_reference(self):
         out = flows.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '2')
-        self.assertEqual((out['of'], out['next'], out['refers_to']), (7, '3', ['5', '3']))
+        self.assertEqual((out['of'], out['next'], out['refers_to']), (7, '3', ['3']))
+        first = flows.run(DOCS, 'vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high', '1')
+        self.assertEqual(first['refers_to'], ['6', '2', '4', '7'])  # branch by the part of Contention that is not green (Q144)
 
     def test_mermaid_left_out_of_model_text(self):
         d = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high']
@@ -226,7 +228,7 @@ class FlowTest(unittest.TestCase):
         d = DOCS['vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high']
         self.assertIn('](', open(d.path).read().split('## Metadata')[0])
         self.assertNotIn('.md)', d.body)
-        self.assertIn('`sp5-framework/performance/troubleshooting/vm-slow`', d.body)
+        self.assertIn('`sp5-framework/performance/vm-slow`', d.body)
 
     def test_lettered_steps(self):
         out = flows.run(DOCS, 'vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm')
@@ -348,9 +350,11 @@ class PrimerTest(unittest.TestCase):
 
     def test_flow_index_lists_every_flow_file(self):
         t = self.P.flows_block(DOCS)
-        for i in DOCS:
-            if '/troubleshooting/' in i or '/health-check/' in i or '/decision-tree/' in i:
-                self.assertIn(i, t)
+        flows_found = [i for i, d in DOCS.items() if d.meta.get('retriever_guide') in ('health-check', 'troubleshooting', 'decision-tree')]
+        self.assertGreater(len(flows_found), 15)
+        for i in flows_found:  # the kind is metadata: a flow outside a troubleshooting/ folder is still a flow
+            self.assertIn(i, t)
+        self.assertIn('sp5-framework/performance/vm-slow', t)
 
     def test_agentic_adds_primer_to_system_prompt(self):
         class Recorder(MockClient):
@@ -548,7 +552,7 @@ class RetrievalFixTest(unittest.TestCase):
     def test_route_puts_a_troubleshooting_file_first(self):
         cfg = dict(ModesTest.CFG, route_troubleshooting=True)
         ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'Users say the VM is slow. What do you check first?', cfg)
-        self.assertIn('/troubleshooting/', used[0])
+        self.assertEqual(DOCS[used[0]].meta['retriever_guide'], 'troubleshooting')
 
     def test_expand_derive_adds_linked_files(self):
         ret = Retriever(DOCS, CHUNKS)
