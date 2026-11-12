@@ -9,7 +9,7 @@ Never index this folder: it contains answer keys.
 benchmark/
 ├── questions/<id>-<slug>.md                          # one question per file, one flat folder
 ├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
-├── runner/                                       # Benchmark runner: run.py, questions.py, judge.py, report.py, config.yaml
+├── runner/                                       # Benchmark runner: run.py, questions.py, judge.py, report.py, governor.py, config.yaml
 ├── models.md                                     # candidate models, frontier reference, judge
 ├── live-test.md                                  # the system on an offline model: plan and pass criteria
 ├── results/results.csv                           # summary: one row per question, model and mode of each benchmark

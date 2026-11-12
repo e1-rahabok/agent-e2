@@ -8,6 +8,7 @@ import unittest
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
 import questions as C  # noqa: E402
+import governor as G  # noqa: E402
 import judge as J  # noqa: E402
 import report  # noqa: E402
 
@@ -144,6 +145,106 @@ class QuestionFieldsTest(unittest.TestCase):
             self.assertIn(str(c.level), report.LEVELS, c.id)
             if not c.choice:
                 self.assertTrue(c.key_points, c.id)
+
+
+class _Clock:
+    def __init__(self):
+        self.t = 0.0
+
+    def __call__(self):
+        return self.t
+
+
+class GovernorTest(unittest.TestCase):
+    """Concurrency per model: probe above the proven value, never below it. A fake clock stands in for time."""
+
+    def make(self, proven=None, **kw):
+        self.clock, self.lines = _Clock(), []
+        return G.Governor(proven or {'m': 12}, window=10, clock=self.clock, log=self.lines.append, **kw)
+
+    def drive(self, gov, n, rate_of, model='m', tag='classic', error=lambda i: ''):
+        """n answers finish; the time between two is 1 / rate_of(current limit) minutes."""
+        for i in range(n):
+            self.clock.t += 60.0 / rate_of(gov.limit_of(model))
+            gov.record(model, tag, error(i))
+            self.assertGreaterEqual(gov.limit_of(model), gov.proven[model])
+
+    def test_rate_rising_with_concurrency_reaches_the_top(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 3.0 * c)
+        self.assertEqual(g.limit_of('m'), 16)
+
+    def test_flat_rate_stays_at_the_proven_value(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 36.0)
+        self.assertEqual(g.limit_of('m'), 12)
+
+    def test_gain_below_half_of_the_ideal_is_rejected(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 10.0 * c ** 0.4)    # 12 -> 14 gives +6.4%, 8.3% needed
+        self.assertEqual(g.limit_of('m'), 12)
+
+    def test_gain_above_half_of_the_ideal_is_kept(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 10.0 * c ** 0.6)    # +9.7% and +8.3%
+        self.assertEqual(g.limit_of('m'), 16)
+
+    def test_429_while_probing_returns_to_proven_for_good(self):
+        g = self.make()
+        self.drive(g, 60, lambda c: 3.0 * c)
+        self.assertGreater(g.limit_of('m'), 12)
+        g.record('m', 'classic', 'HTTP 429: rate limited')
+        self.assertEqual(g.limit_of('m'), 12)
+        self.drive(g, 200, lambda c: 3.0 * c)
+        self.assertEqual(g.limit_of('m'), 12)
+
+    def test_429_after_the_probe_ended_returns_to_proven(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 3.0 * c)
+        self.assertEqual(g.limit_of('m'), 16)
+        g.record('m', 'classic', 'HTTP 429: x')
+        self.assertEqual(g.limit_of('m'), 12)
+
+    def test_429_at_the_proven_value_never_lowers_it(self):
+        g = self.make({'opus': 3})
+        g.record('opus', 'classic', 'HTTP 429: no access')
+        g.record('opus', 'classic', 'HTTP 429: no access')
+        self.assertEqual(g.limit_of('opus'), 3)
+        self.assertEqual(sum('proven value' in s for s in self.lines), 1)    # warned once
+
+    def test_other_error_in_the_window_rejects_the_step(self):
+        g = self.make()
+        self.drive(g, 200, lambda c: 3.0 * c, error=lambda i: 'HTTP 502: bad gateway' if 14 <= i <= 40 else '')
+        self.assertEqual(g.limit_of('m'), 12)
+
+    def test_window_across_two_modes_is_measured_again(self):
+        g = self.make()
+        self.drive(g, 25, lambda c: 10.0 * c, tag='baseline')       # fast mode
+        self.drive(g, 200, lambda c: 2.0 * c, tag='agentic')        # slow mode, same shape
+        self.assertEqual(g.limit_of('m'), 16)                       # not rejected for the slower mode
+        self.assertTrue(any('mode changed' in s for s in self.lines))
+
+    def test_each_model_has_its_own_proven_value_and_levels(self):
+        g = self.make({'a': 12, 'b': 3})
+        self.assertEqual((g.limit_of('a'), g.limit_of('b')), (12, 3))
+        self.assertEqual(g.max_workers, 16)
+        self.drive(g, 200, lambda c: 3.0 * c, model='b')
+        self.assertEqual(g.limit_of('b'), 7)                        # 3, 5, 7
+        self.assertEqual(g.limit_of('a'), 12)                       # the other model did not move
+
+    def test_slots_are_capped_per_model(self):
+        g = self.make({'m': 2, 'n': 1})
+        self.assertTrue(g.acquire('m', 0.01) and g.acquire('m', 0.01))
+        self.assertFalse(g.acquire('m', 0.01))
+        self.assertTrue(g.acquire('n', 0.01))                       # another model has its own slots
+        g.release('m')
+        self.assertTrue(g.acquire('m', 0.01))
+
+    def test_adaptive_off_keeps_the_proven_value(self):
+        g = self.make(adaptive=False)
+        self.drive(g, 200, lambda c: 3.0 * c)
+        self.assertEqual(g.limit_of('m'), 12)
+        self.assertEqual(g.max_workers, 12)
 
 
 if __name__ == '__main__':

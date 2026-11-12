@@ -27,6 +27,7 @@ import judge as J  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
 import report  # noqa: E402
+from governor import Governor  # noqa: E402
 from llm import GatewayClient, LLMError, MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
@@ -45,7 +46,8 @@ def main():
     ap.add_argument('--runs', type=int)
     ap.add_argument('--questions', help='comma-separated: an id or a file-name fragment, e.g. L4-04,L1-,esxtop')
     ap.add_argument('--temperature', type=float)
-    ap.add_argument('--concurrency', type=int)
+    ap.add_argument('--concurrency', type=int, help='proven parallel requests for every model (overrides concurrency and concurrency_by_model)')
+    ap.add_argument('--no-adaptive', action='store_true', help='keep every model at its proven concurrency: no probing upward')
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')
     ap.add_argument('--mock', action='store_true', help='offline: random answers, no API calls')
     ap.add_argument('--judge', help='judge model id (default: config judge_model)')
@@ -62,6 +64,13 @@ def main():
             cfg[k] = getattr(a, k)
     models_ = a.models.split(',') if a.models else cfg['models']
     modes_ = a.modes.split(',') if a.modes else cfg['modes']
+    # Concurrency per model: the proven value is the floor; the governor probes above it (governor.py).
+    by_model = {} if a.concurrency is not None else (cfg.get('concurrency_by_model') or {})
+    ac = cfg.get('adaptive_concurrency') or {}
+    gov = Governor({m: by_model.get(m, cfg['concurrency']) for m in models_},
+                   adaptive=bool(ac.get('enabled')) and not a.no_adaptive and not a.mock,
+                   step=ac.get('step', 2), max_probes=ac.get('max_probes', 2), window=ac.get('window', 40),
+                   gain_fraction=ac.get('gain_fraction', 0.5), log=lambda s: print(f'  {s}', flush=True))
 
     all_questions = C.load(a.questions)
     skipped = [c.id for c in all_questions if not c.scorable]
@@ -142,7 +151,7 @@ def main():
     ft = open(os.path.join(run_dir, 'traces.jsonl'), 'a')
     print(f'Benchmark folder: {run_dir}  ({len(tasks)} answers to go)')
 
-    def one(task):
+    def answer_one(task):
         m, mode, c, track, r = task
         rng = random.Random(f'{c.id}-{r}')  # same option order for every model and mode in run r
         if c.choice:
@@ -197,14 +206,23 @@ def main():
             ft.flush()
         return row
 
+    def one(task):
+        gov.acquire(task[0])    # at most gov.limit_of(model) answers of one model at a time
+        try:
+            row = answer_one(task)
+        finally:
+            gov.release(task[0])
+        gov.record(task[0], task[1], row['error'])
+        return row
+
     n, errors = 0, 0
-    with ThreadPoolExecutor(max_workers=cfg['concurrency']) as ex:
+    with ThreadPoolExecutor(max_workers=gov.max_workers) as ex:
         for f in as_completed([ex.submit(one, t) for t in tasks]):
             row = f.result()
             n += 1
             errors += bool(row['error'])
             if n % 25 == 0 or n == len(tasks):
-                print(f'  {n}/{len(tasks)} done, {errors} errors')
+                print(f'  {n}/{len(tasks)} done, {errors} errors, concurrency {gov.summary()}')
     fa.close()
     ft.close()
 
