@@ -12,8 +12,6 @@ Choose the most accurate counter from the list.
 - D. VM CPU Demand (%)
 - E. VM CPU Run - Overlap. In VCF Operations this is CPU Net Run (%).
 
-Hint: since a VM is virtual hardware, what you size is the Guest OS, not the VM. You size Windows or Linux, not a piece of hardware.
-
 ## Likely wrong answer
 C or D (Demand), because it includes unmet demand; or A/B (Usage).
 
