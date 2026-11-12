@@ -4,8 +4,8 @@
 
 - Thousands of metrics across a VCF private cloud are mastered by seeing what they have in common: every metric is one of three types.
 - The Triple See Method: see contention, consumption and context, and verify them as one set before concluding.
-- Designed for Broadcom VCF.
-- The three types are peers, each with its own purpose, and each maps to pillars of the SP5 framework ([`sp5-framework/concepts/overview`](../concepts/overview.md)).
+- Designed for Broadcom VCF. Purpose-built.
+- The three types are peers, each with its own purpose, and each maps to pillars of The SP5 Framework ([`sp5-framework/concepts/overview`](../concepts/overview.md)).
 
 ## Three types of metric
 
