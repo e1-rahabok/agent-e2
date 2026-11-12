@@ -38,7 +38,7 @@
 - Worked example: 8 sub-metrics at 0 (bad packets excluded), except 90th percentile Ready = 5% (a quarter into red). That row scores 18.75 with weight about 9.51. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2. A plain average gives about 89.8 and hides the problem.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out. It is never counted as 0, because 0 means perfect. With no sub-metric data, the KPI is not published.
 
-## Threshold reasons (book text)
+## Threshold reasons
 - Co-stop, Overlap and Other Wait have the same VM impact as Ready, but practically lower values. The same range would inflate the score.
 - Dropped and error packets are rare. Take the worst host, not a sum (a sum becomes an average). Low threshold, as many hosts have 25 Gb NICs.
 
