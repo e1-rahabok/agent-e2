@@ -210,7 +210,7 @@ sla:
 rules: []
 ```
 - Fifteen values per metric (nine until 2026-11-12): green, yellow, orange, red, zero for 5m, 20s and 2s, entered by hand; the 4x rule is a guide for choosing a 20-second value from a 5-minute one (a spike rarely lasts 300 seconds), not a formula: it never fills a cell.
-- The green start and the red end stay in the KPI file's Markdown table; Agent E2 reads the vCommunity pack's published score in 1.0 and does not recompute it.
+- The green start and the red end stay in the KPI file's Markdown table; Agent E2 reads the published score in 1.0 and does not recompute it.
 - The why comes from the KPI file, which the lookup names.
 - One boundary rule: a value on an edge belongs to the better band (as Close for Business does).
 - KPI has no `class`; SLA always has one.
@@ -252,7 +252,7 @@ rules: []          # overcommit per class, monster VM, idle VM, Guest OS sizing 
 - The reading key carries the difference: Cluster Consumption reads cluster-wide, Cluster Risk the worst host.
 - A KPI used by a decision is referenced by id, never copied.
 - Five bands with grey; no alert rows.
-- 1.0: Agent E2 reads the scores the vCommunity pack publishes; the parameters serve explanation. Recomputing is after 1.0 (section 15.3).
+- 1.0: Agent E2 reads the published scores; the parameters serve explanation. Recomputing is after 1.0 (section 15.3).
 
 ### 8.4 `thresholds-alerts.yaml`
 Built 2026-11-12. As built, it differs from the proposal below in three points:
@@ -479,7 +479,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 - Alert symptoms for configuration, compliance and inventory.
 
 ### 15.3 After 1.0
-- Capacity: Agent E2 recomputes Cluster Consumption, Cluster Risk and Close for Business from their inputs, for what-if questions and for clusters without the vCommunity pack.
+- Capacity: Agent E2 recomputes Cluster Consumption, Cluster Risk and Close for Business from their inputs, for what-if questions and for clusters where the scores are not published.
 - Full alert definition catalog from the overhaul (1.2), referencing symptom ids.
 - Live VCF Operations: configured thresholds and alert definitions read directly; U1 on live data.
 

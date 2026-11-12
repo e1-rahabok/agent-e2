@@ -1,0 +1,36 @@
+# Archived 2026-11-12 (Q162): class minimum VM Performance (%) rows removed from knowledge/catalog/thresholds-capacity.yaml.
+# The KPI has no class of service; the class promise is relative contention (1x, 2x, 3x). The numbers were on the older Performance (%) scale.
+
+- id: class-gold-min-vm-performance
+  metric: VM Performance (%), minimum for the class
+  object: VirtualMachine
+  operator: '>='
+  value: 99.5
+  unit: '%'
+  condition: Gold class of service
+  meaning: 'Expected VM Performance (%) of a cluster sized for Gold: a capacity design expectation. The KPI has no class of service.'
+  source: knowledge-base
+  kb: sp5-framework/capacity/class-of-service-planning
+  quote: '- Gold: ≥ 99.5%'
+- id: class-silver-min-vm-performance
+  metric: VM Performance (%), minimum for the class
+  object: VirtualMachine
+  operator: '>='
+  value: 99
+  unit: '%'
+  condition: Silver class of service
+  meaning: 'Expected VM Performance (%) of a cluster sized for Silver: a capacity design expectation. The KPI has no class of service.'
+  source: knowledge-base
+  kb: sp5-framework/capacity/class-of-service-planning
+  quote: '- Silver: ≥ 99%'
+- id: class-bronze-min-vm-performance
+  metric: VM Performance (%), minimum for the class
+  object: VirtualMachine
+  operator: '>='
+  value: 98
+  unit: '%'
+  condition: Bronze class of service
+  meaning: 'Expected VM Performance (%) of a cluster sized for Bronze: a capacity design expectation. The KPI has no class of service.'
+  source: knowledge-base
+  kb: sp5-framework/capacity/class-of-service-planning
+  quote: '- Bronze: ≥ 98%'

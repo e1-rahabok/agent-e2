@@ -1,4 +1,4 @@
-# Guest OS Performance (%) (vCommunity management pack KPI for VCF Operations)
+# Guest OS Performance (%)
 
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
@@ -7,7 +7,7 @@
 ## What it is
 - One 0-100% score for the operating system inside a VM. 100 is perfect. It answers: is the Guest OS getting the CPU, disk and memory it needs?
 - VM Performance (%) scores the virtual motherboard; this KPI scores what runs on it ([`vsphere/object-types/vm/vm-performance`](../../vsphere/object-types/vm/vm-performance.md)). Their average is the VM Guest OS KPI, one score per VM for the application team.
-- Published on every powered-on VM with VMware Tools as `vCommunity|Guest OS Performance|Guest OS Performance Score`. Without VMware Tools there is no score.
+- Not a built-in VCF Operations metric. Scored on every powered-on VM with VMware Tools; without VMware Tools there is no score.
 
 ## Sub-metrics
 | Group | Sub-metric | Source | Unit | Scores 100 at |
@@ -27,6 +27,15 @@
 - The run queue threshold is set higher than normal to reduce false positives.
 - Linux and Windows track memory space, throughput and IOPS, but not memory latency. A Guest OS memory performance metric is still missing.
 - Utilization metrics are included because the Guest OS has only 4 metrics: combining keeps it simple.
+
+## Not used
+| Metric | Reason |
+|---|---|
+| CPU context switch | Very wide band in profiling. |
+| Memory page-in | Can include application binaries and proactive fetch. More volatile in 3,300 VMs. |
+| Swap file free capacity | Effect of a low value on performance unknown. Correlates with free memory: double counting. |
+| Dead processes | Range values unknown; Windows and Linux require separate profiles. |
+| RAM page fault | VMware Tools does not provide it. |
 
 ## Scoring
 - The scoring shared by every KPI: [`sp5-framework/performance/performance-kpi-design`](../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
@@ -72,10 +81,10 @@ related:
 - sp5-framework/performance/performance-management
 images:
 source:
-  document: VCF-vCommunity-Adapter documentation, Guest OS Performance KPI (read 2026-11-11); Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the reasons
-  path: 'https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/guest-os-performance.md; Consumer Objects > Performance: VM & Guest OS > Guest OS Performance (%)'
+  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the reasons and the metrics not used
+  path: 'Consumer Objects > Performance: VM & Guest OS > Guest OS Performance (%); Metrics Not Used'
 corrections:
-- 'Section ''Sub-metrics'': from the adapter documentation. Free memory scores 100 from 1 GB (the earlier text: above 512 MB).'
+- 'Section ''Sub-metrics'': the book is outdated. Free memory scores 100 from 1 GB (the earlier text: above 512 MB).'
 review_notes: []
 status: draft
 ```

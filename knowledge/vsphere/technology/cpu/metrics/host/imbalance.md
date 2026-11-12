@@ -3,7 +3,7 @@
 ## Meaning
 - How many threads run per running core.
 - Use it together with Core Utilization.
-- Not a built-in VCF Operations metric. Published in the VCF vCommunity Adapter: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/tree/main/docs/reference/metrics
+- Not a built-in VCF Operations metric.
 
 ## Formula
 ```text

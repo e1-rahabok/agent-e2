@@ -39,7 +39,7 @@
 | Ranking many clusters | Good: rarely reaches 0 or 100 | Weak: bad clusters all show the end of the scale | Ties within a colour |
 | Best fit | Performance, consumption, risk: trends and ranking | A yes-or-no decision that must never go the wrong way | Availability |
 
-- The vCommunity management pack uses the weighted average by colour for Performance, Consumption and Risk.
+- Performance, Consumption and Risk use the weighted average by colour.
 - Performance and capacity combine, not take the worst: contention adds up (a VM waiting for CPU, memory and disk is hurt more than one waiting for CPU); leading indicators combine (two orange risk factors bring contention closer than one); and an orange metric is a level, not a failure.
 - Availability takes the worst: one failed component can take a host down. It uses two tables, partial failures component by component, and failures that alone take the host down. The score is the minimum of the two: a dead host scores as dead.
 - Weights by rank (ordered weighted average, Yager 1988: worst 8x, second 4x, third 2x, fourth 1x) were considered and rejected. Ranking throws away the vSphere meaning of each colour: a second red counts half only because it is second, a fifth counts nothing.
@@ -57,8 +57,7 @@
 
 ## Rare and rarely-green metrics
 - A metric that is green almost always (dropped packets) or whose green says nothing about health (low CPU or memory utilization) would add a free 100 every cycle and hide the others.
-- Implemented: skip when green. While such a metric is green it is left out of the KPI, as if it had no data; once it leaves green it counts like any other. If every metric with data was skipped, the KPI is 100.
-- Missing data is left out, never counted as 0: 0 usually means perfect.
+- So such a metric is skipped while green and counts once it leaves green; missing data is left out, never counted as 0. The rules: [`sp5-framework/performance/performance-kpi-design`](../performance/performance-kpi-design.md), section Scoring.
 - The book's alternatives are not implemented: a fixed weight per metric (CPU 40%, memory, disk, network 20% each), a second table that overrides the KPI to red for a rare serious metric, and a multi-table KPI for many equal metrics. Weight depends only on the score. Two tables exist only in availability, as above.
 
 ## Validation
@@ -102,10 +101,10 @@ related:
 - vsphere/object-types/vm/vm-performance
 - vsphere/object-types/cluster/models/cluster-risk
 source:
-  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download); VCF-vCommunity-Adapter documentation, KPI Scoring Models (fetched 2026-11-08)'
-  path: 'https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/concepts/kpi-scoring-models.md; The World of Metrics > Modelling (Actual | Potential; Calculation; Translation; Threshold; Progressive Weightage; Rare Metric; Limitation; Optional Features; Validation)'
+  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download); knowledge base'
+  path: 'The World of Metrics > Modelling (Actual | Potential; Calculation; Translation; Threshold; Progressive Weightage; Rare Metric; Limitation; Optional Features; Validation)'
 corrections:
-- 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the implementation wins over the book. The book weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the pack weights 2^((100 - score)/25), smooth, up to 16 at 0 (issue #18), so 9 green + 3 worst red is red. The book''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'
+- 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the knowledge base wins over the book. The book weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the knowledge base weights 2^((100 - score)/25), smooth, up to 16 at 0, so 9 green + 3 worst red is red. The book''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'
 review_notes: []
 status: draft
 ```

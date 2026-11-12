@@ -64,7 +64,7 @@
 - Memory rarely bursts like this.
 - Two ways to find these applications:
   - default no: the application team must declare short, sharp bursts;
-  - default yes: the infrastructure team scans the estate. No agent allowed, so esxtop, the 2-second real-time metrics of VCF Operations 9.1 ([`vcf-operations/features/real-time-metrics`](../../vcf-operations/features/real-time-metrics.md)), or a custom management pack (vCommunity). Limit collection to about 1,000 data points: 2-second data is heavy on the monitored system.
+  - default yes: the infrastructure team scans the estate. No agent allowed, so esxtop, the 2-second real-time metrics of VCF Operations 9.1 ([`vcf-operations/features/real-time-metrics`](../../vcf-operations/features/real-time-metrics.md)), or a custom management pack. Limit collection to about 1,000 data points: 2-second data is heavy on the monitored system.
 - Business transaction monitoring of the VM owner shows bursts that infrastructure metrics miss: work with the owner.
 
 ## Getting the downsize accepted

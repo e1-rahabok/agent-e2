@@ -12,7 +12,7 @@
   - Performance: utilization does not exist before the VM runs, so the overcommit ratio stands in. Twice the vCPUs on a cluster, each pays half: the cost is shared by all.
   - Compliance: the same for every class. A weak class is a jump box into the rest.
 - The class sets price (overcommit ratio and quality of service), capacity (overcommit ratio, maximum VM size) and the availability and compliance SLAs. Performance per class follows from the overcommit and is read with the KPI; it has no SLA ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).
-- Capacity settings per class (reservation, allocation per thread, minimum VM Performance (%), expected utilization): [`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md). This file holds price and SLA numbers.
+- Capacity settings per class (reservation, allocation per thread, expected utilization) and the relative value per class: [`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md). This file holds price and SLA numbers.
 - Overcommit ratios here are vCPU : physical thread and VM memory : physical memory (N:1). CPU overcommit per class: Gold 1:1, Silver 2:1, Bronze 3:1 per physical thread, never higher; per core with Hyper-Threading that is 2:1, 4:1 and 6:1 ([`sp5-framework/capacity/host-spec-from-class-of-service`](../capacity/host-spec-from-class-of-service.md)).
 
 ## Generic guideline
@@ -35,7 +35,7 @@
 - Cap the number of free VMs per customer as well as their size.
 
 ## Recommended SLA per class
-| Tier | Availability | Compliance |
+| Tier | Availability | Security |
 |---|---|---|
 | 1 Gold | 99.975% | 99.95% |
 | 2 Silver | 99.950% | 99.95% |
@@ -52,7 +52,7 @@
 | Price | 2x | 1x | Gold is priced 2x Silver |
 | Overcommit | CPU 1:1, RAM 1:1 | CPU 2:1, RAM 1.2:1 | Twice as many consumers in Silver (CPU) |
 | Availability SLA | 99.975% | 99.950% | Gold: half the downtime |
-| Security SLA | 100% | 100% | Perfect compliance for every class |
+| Security SLA | 99.95% | 99.95% | Same for every class; the internal KSI is 100% |
 
 - The SLA is the hard product, what is paid for, like the seat in an airline. Support, reports and backup are soft products.
 - Customers do not care about SSD type or memory brand; they buy the SLA.

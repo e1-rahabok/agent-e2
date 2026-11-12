@@ -118,7 +118,7 @@ class CatalogTest(unittest.TestCase):
     def test_every_threshold_section_loaded(self):
         uses = {r['use'] for r in CAT._q('SELECT DISTINCT use FROM thresholds')}
         self.assertEqual(uses, {'decision', 'rule'})
-        self.assertEqual(CAT.stats()['thresholds'], 41)  # 16 + 25 planning defaults (capacity calculator, 2026-11-11)
+        self.assertEqual(CAT.stats()['thresholds'], 38)  # 13 + 25 planning defaults (capacity calculator, 2026-11-11); 3 class minimum rows archived (Q162)
         self.assertEqual(CAT.stats()['symptoms'], 40)
         self.assertEqual(CAT.stats()['alerts'], 33)  # one alert per object type: ESXi, resource pool, cluster contention split; ESXi drops virtual and physical (2026-11-12)
         self.assertEqual(CAT.stats()['bands'], 20)  # + tiered DRAM consumed, active memory (Q179, 2026-11-12)

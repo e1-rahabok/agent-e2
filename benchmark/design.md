@@ -284,7 +284,7 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | Level 400 sub-score | at least 80% | About 50 questions (margin about ±10): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
 | Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
 | Misconceptions of [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
-| Sealed set (Q165; until then the held-out set, section 10) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
+| Held-out set (section 10) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
 | Gap to the frontier model (section 8) | at least 15 points, paired test significant | The claim of section 1 |
 
 - Effective bar: Agent E2 at least the larger of 85% and frontier + 15.
@@ -301,10 +301,10 @@ The set must measure one thing (Level 400 operations knowledge) evenly, so the t
 | 400, author framework and current VCF Operations | about 20 | about 25% | Not in public text, or wrong there |
 
 - So in the expected case the 85% gate binds; the 15-point gap binds when the frontier model scores above 70%.
-- Superiority is claimed on public-mechanism questions of the sealed set: at least 10 points, paired significant. author-framework questions are reported apart: a frontier model cannot know them, so a win there proves the knowledge base, not the agent.
+- No sealed set and no `knowledge_class` tag (Q165, closed 2026-11-12: questions need not come from real tickets). The gap is read on the development set and confirmed on the held-out set.
 - Ceiling, not a gate: the frontier model in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. If the frontier model scores lower with the knowledge base than without, the knowledge base or the harness misleads a strong model: fixed before any gap is read.
 - Target: 99%, a direction. 100 questions cannot prove it (section 4).
-- Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400, confident-wrong, gap and paired test. The misconception check and the sealed set are read outside the report.
+- Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400, confident-wrong, gap and paired test. The misconception check and the held-out set are read outside the report.
 
 ## 8. Comparison design
 - Reasons for running both modes and for the call limit: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), sections 8 and 9.

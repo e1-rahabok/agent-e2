@@ -92,7 +92,7 @@ def final(rows):
 
 # Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 in agentic mode.
 # Not computed here: no misconception of knowledge/misconceptions.md stated as true (author check of each answer),
-# and the sealed set within 5 points of the development set (a separate run).
+# and the held-out set within 5 points of the development set (a separate run).
 GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03, 'gap': 0.15, 'alpha': 0.05}
 REFERENCE = ('anthropic/claude-opus-5.5', 'baseline')  # frontier model without the knowledge base (Q164)
 
@@ -214,7 +214,7 @@ def write(run_dir):
             for name, v, lim, ok in gate(fin, all_scored, m, mode):
                 val = f'{v:.3f}' if name.startswith('Paired') and not math.isnan(v) else _pct(v)
                 L.append(f'| {m} | {name} | {val} | {lim} | {"yes" if ok else "no"} |')
-        L += ['', '- Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check), and the sealed set within 5 points (separate run). Method: `benchmark/design.md`, section 7.5.']
+        L += ['', '- Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check), and the held-out set within 5 points (separate run). Method: `benchmark/design.md`, section 7.5.']
     L += ['', '## Sub-scores', '',
           '| Model | Mode | Deterministic | Judged | Text | Table | Screenshot | Level 100 | Level 200 | Level 300 | Level 400 |',
           '|---|---|---|---|---|---|---|---|---|---|---|']

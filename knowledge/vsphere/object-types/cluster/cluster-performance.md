@@ -3,7 +3,7 @@
 ## What it is
 - One score per vSphere cluster, 0-100%. 100 is perfect.
 - It measures actual contention, not potential. It quantifies the problem; it does not explain the root cause.
-- Not built into VCF Operations: it is a metric of the vCommunity management pack, published on the cluster object under `vCommunity|Cluster Performance|Cluster Performance Score`, with its 9 sub-metrics beside it.
+- Not a built-in VCF Operations metric. 9 sub-metrics.
 - Use: watch many clusters at once; when the score drops, open the 9 sub-metrics of that cluster.
 - Leading indicator of how close the cluster is to contention: [`vsphere/object-types/cluster/models/cluster-risk`](models/cluster-risk.md). Ballooning and swapping are scored there, not here.
 
@@ -37,7 +37,7 @@
 - Before NVMe wait is scored, validate on a tiered host: one 4 KB page per fetch blocking one vCPU, no prefetch, and memory latency not already counting the fetches. Until then it is shown and left out of the score.
 
 ## Scoring
-- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI of the pack: [`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
+- Each sub-metric scores 100-0 against its limits, then the scores are combined in a weighted average where a worse score weighs more. Rule shared by every KPI: [`sp5-framework/performance/performance-kpi-design`](../../../sp5-framework/performance/performance-kpi-design.md), section Scoring.
 - Worked example: 8 sub-metrics at 0 (bad packets excluded), except 90th percentile Ready = 5% (a quarter into red). That row scores 18.75 with weight about 9.51. KPI = (7 × 100 + 18.75 × 9.51) / (7 + 9.51) ≈ 53.2. A plain average gives about 89.8 and hides the problem.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out. It is never counted as 0, because 0 means perfect. With no sub-metric data, the KPI is not published.
 
@@ -99,12 +99,12 @@ related:
 - vsphere/object-types/vm/vm-performance
 images:
 source:
-  document: VCF-vCommunity-Adapter documentation, Cluster Performance KPI; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the design and threshold reasons
-  path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-performance.md; formula/cluster-performance.png; Provider Objects > Performance > Cluster Performance (%)
+  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the design and threshold reasons
+  path: Provider Objects > Performance > Cluster Performance (%)
 corrections:
-- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated. Current source is the adapter documentation: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
+- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Scoring'': the book table and text are outdated: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
 - 'Section ''vMotion Count'': vMotion is excluded; the book text says both included and not included.'
 review_notes:
-- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the book, whose text is outdated; check against the adapter documentation. Rows that conflict with it were removed (disk latency, balloon reason).'
+- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the book, whose text is outdated; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'
 status: draft
 ```

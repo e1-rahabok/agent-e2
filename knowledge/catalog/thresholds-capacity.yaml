@@ -360,7 +360,7 @@ rules:
   operator: '>'
   value: 50
   unit: '% of physical cores (not threads)'
-  meaning: Monster VM (vCommunity adapter default). Cores, not threads.
+  meaning: Monster VM (default). Cores, not threads.
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
   quote: '| CPU | 50% of the host''s physical cores. Cores, not threads. |'
@@ -371,44 +371,11 @@ rules:
   operator: '>'
   value: 40
   unit: '% of host DRAM, or 256 GB, whichever is smaller'
-  meaning: Monster VM (vCommunity adapter default). DRAM only; NVMe tiering does not count.
+  meaning: Monster VM (default). DRAM only; NVMe tiering does not count.
   source: knowledge-base
   kb: vsphere/object-types/cluster/models/cluster-risk
   quote: '| Memory | 40% of the host''s DRAM, or 256 GB, whichever is smaller.'
   interval: 5m
-- id: class-gold-min-vm-performance
-  metric: VM Performance (%), minimum for the class
-  object: VirtualMachine
-  operator: '>='
-  value: 99.5
-  unit: '%'
-  condition: Gold class of service
-  meaning: 'Expected VM Performance (%) of a cluster sized for Gold: a capacity design expectation. The KPI has no class of service.'
-  source: knowledge-base
-  kb: sp5-framework/capacity/class-of-service-planning
-  quote: '- Gold: ≥ 99.5%'
-- id: class-silver-min-vm-performance
-  metric: VM Performance (%), minimum for the class
-  object: VirtualMachine
-  operator: '>='
-  value: 99
-  unit: '%'
-  condition: Silver class of service
-  meaning: 'Expected VM Performance (%) of a cluster sized for Silver: a capacity design expectation. The KPI has no class of service.'
-  source: knowledge-base
-  kb: sp5-framework/capacity/class-of-service-planning
-  quote: '- Silver: ≥ 99%'
-- id: class-bronze-min-vm-performance
-  metric: VM Performance (%), minimum for the class
-  object: VirtualMachine
-  operator: '>='
-  value: 98
-  unit: '%'
-  condition: Bronze class of service
-  meaning: 'Expected VM Performance (%) of a cluster sized for Bronze: a capacity design expectation. The KPI has no class of service.'
-  source: knowledge-base
-  kb: sp5-framework/capacity/class-of-service-planning
-  quote: '- Bronze: ≥ 98%'
 - id: idle-vm-cpu
   metric: VM CPU consumption per day (Idle VM policy)
   object: VirtualMachine

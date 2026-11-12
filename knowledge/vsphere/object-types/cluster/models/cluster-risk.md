@@ -5,7 +5,7 @@
 - Cluster Performance shows actual contention happening now ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)). Cluster Risk shows potential contention.
 - Higher is worse: 0 is no risk, 100 is maximum risk. Cluster Consumption reads the same way; Cluster Performance is higher-is-better.
 - Every sub-metric takes the worst ESXi host. One full host hurts its VMs while the cluster average looks fine. Many clusters have 8 hosts or fewer, so the worst warns early. Different sub-metrics can come from different hosts: fine for monitoring, not for troubleshooting.
-- Not built into VCF Operations: a metric of the vCommunity management pack, published on the cluster under `vCommunity|Cluster Risk|Cluster Risk Score`, with its 12 sub-metrics.
+- Not a built-in VCF Operations metric. 12 sub-metrics.
 
 ## Thresholds
 - Colour bands: `catalog/thresholds-capacity`, rows with this file as `kb`. They are shown with this file; this file holds the reasons.
@@ -28,7 +28,7 @@ Per host, then the worst host is kept.
 | NVMe read latency | Read latency of the NVMe memory tier, at all times: a device waking from a power-saving state explains a high reading, it does not remove the wait. Left out on hosts without memory tiering | `mem:NVMe\|latency.read_latest` (µs) |
 | CPU reservation | Reserved CPU, as % of host CPU capacity | `cpu\|reservedCapacity_average` / `cpu\|totalCapacity_average` |
 | Memory reservation | Reserved memory, as % of host DRAM | `mem\|reservedCapacity_average` |
-| CPU overcommit | vCPUs of powered-on VMs per physical core (to be fixed: per thread) | `cpu\|vcpus_allocated_on_all_powered_on_vms`, `hardware\|cpuInfo\|numCpuCores` |
+| CPU overcommit | vCPUs of powered-on VMs per physical thread | `cpu\|vcpus_allocated_on_all_powered_on_vms`, `hardware\|cpuInfo\|numCpuCores` (threads as below) |
 | Memory overcommit | Memory of powered-on VMs / host DRAM | `mem\|memory_allocated_on_all_powered_on_vms` |
 | Monster VM ratios | Size of the largest powered-on VM / monster size of its host | VM `config\|hardware\|numCpu`, `config\|hardware\|memoryKB` |
 
@@ -41,7 +41,6 @@ Per host, then the worst host is kept.
 
 ## CPU overcommit: per thread
 - The CPU overcommit ratio is per thread, because the CPU executes per thread. With Hyper-Threading, 4 vCPUs per thread is 8 per core.
-- The vCommunity pack counts vCPUs per physical core (`hardware|cpuInfo|numCpuCores`), so its row and bands use the wrong unit until the pack is fixed. With Hyper-Threading, halve the row to compare it with a per-thread plan.
 
 ## Monster VM
 | Resource | A VM is a monster when it has more than | Example |
@@ -56,7 +55,7 @@ Per host, then the worst host is kept.
 - Monster VMs cause contention despite low utilization, reservation and allocation.
 
 ## Scoring
-- The sub-metrics are scored and combined as for every KPI and model of the pack ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
+- The sub-metrics are scored and combined as for every KPI and model ([`sp5-framework/performance/performance-kpi-design`](../../../../sp5-framework/performance/performance-kpi-design.md), section Scoring), where 100 is best. The published value is flipped: Cluster Risk = 100 − weighted average.
 - Bands are the mirror of the performance KPIs: green 0-25, yellow 25-50, orange 50-75, red 75-100. An alert or widget on Cluster Risk must treat high as bad: red from 75.
 - Worked example: two hosts of 32 cores, 512 GB DRAM; host 1 at 90% thread and 100% core utilization, host 2 at 30% and 60%. Thread utilization 90% enters at the start of red (25, weight 8). Imbalance of host 1 is 57.6 running threads / 32 running cores = 1.8, halfway through red (12.5, weight 11.31). Cluster Risk ≈ 67.9.
 - Missing data: a sub-metric with no data, or data older than 10 minutes, is left out; never counted as 0, because 0 means no risk.
@@ -110,14 +109,13 @@ related:
 - vsphere/technology/cpu/concepts/cpu-measurement-levels
 images:
 source:
-  document: VCF-vCommunity-Adapter documentation, Cluster Risk KPI; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for reasons and monster VM factors
-  path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-risk.md; formula/cluster-risk.png; Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
+  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for reasons and monster VM factors
+  path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections:
-- 'Section ''How each sub-metric is calculated'': the adapter documentation has NVMe read latency 150/300/450/600 µs and no active memory row; the author set 100/200/400/800 and added active memory 50/62.5/75/100 (2026-11-12, Q179). The pack follows after it is updated.'
-- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': from the adapter documentation, replacing the book table. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
-- 'Section ''Monster VM'': the adapter definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
+- 'Sections ''Thresholds'', ''How each sub-metric is calculated'', ''Host memory is DRAM only'', ''Scoring'', ''Known limitation'': the book table is outdated. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
+- 'Section ''Monster VM'': the definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
 - 'Memory tiering rows decided by the author (Q178 a, Q179, 2026-11-12): active memory 50/62.5/75/100% of DRAM, from Broadcom''s 50% recommended and 75% significant loss; NVMe read latency 100/200/400/800 µs, doubling, red from Broadcom''s 400 µs impact point.'
-- 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread; the pack counts per core and must be fixed (plan, after 1.0).'
+- 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread.'
 status: draft
 ```
