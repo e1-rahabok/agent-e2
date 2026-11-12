@@ -18,53 +18,6 @@ Each entry has:
 
 ## Open
 
-### Q064 · Review · Which files to review first
-
-- Files: the 25 most-cited knowledge files below. Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.4.
-- Search: not applicable.
-- Question: 0 of 277 knowledge files are `status: reviewed`. Reviewing them in this order puts your review where the benchmark scores. Please confirm the rule, or name your own order.
-- Written as now (recount 2026-11-12): 95 questions cite 131 of 277 files; moved ids resolved. Up front: M = a `See` id in knowledge/misconceptions.md; G = a glossary entry with a Not to confuse with line (the `terms` block).
-
-| # | Cited by | Up front | File |
-|---|---|---|---|
-| 1 | 9 | M | [vsphere/architecture/vm-vs-guest-os](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/vm-vs-guest-os.md) |
-| 2 | 6 | | [vsphere/architecture/resource-controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) |
-| 3 | 6 | | [vsphere/technology/cpu/metrics/virtual-motherboard/ready](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) |
-| 4 | 6 | | [vsphere/technology/network/metrics/virtual-motherboard/packets-dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) |
-| 5 | 5 | | [vsphere/technology/storage/metrics/virtual-motherboard/disk-latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md) |
-| 6 | 4 | G | [vsphere/technology/cpu/metrics/host/core-utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md) |
-| 7 | 4 | G | [vsphere/object-types/cluster/models/cluster-risk](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) |
-| 8 | 4 | G | [vsphere/technology/memory/concepts/guest-os-vs-vm-memory](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/guest-os-vs-vm-memory.md) |
-| 9 | 4 | | [vsphere/technology/cpu/concepts/hyper-threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md) |
-| 10 | 4 | | [vsphere/object-types/vm/kpis/vm-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/kpis/vm-performance.md) |
-| 11 | 4 | | [vsphere/technology/memory/metrics/virtual-motherboard/latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md) |
-| 12 | 4 | | [vsphere/technology/storage/concepts/snapshot-impact](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/snapshot-impact.md) |
-| 13 | 4 | | [vsphere/architecture/overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) |
-| 14 | 4 | | [vsphere/technology/memory/concepts/ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md) |
-| 15 | 4 | | [vsphere/tools/esxtop/storage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md) |
-| 16 | 3 | M | [vcf-operations/features/peak-20-second-metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/peak-20-second-metrics.md) |
-| 17 | 3 | M | [vsphere/technology/cpu/metrics/virtual-motherboard/usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/usage.md) |
-| 18 | 3 | M | [vsphere/technology/cpu/metrics/host/utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md) |
-| 19 | 3 | M | [vsphere/object-types/cluster/concepts/admission-control-and-cluster-state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md) |
-| 20 | 3 | M | [vsphere/technology/memory/metrics/virtual-motherboard/ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md) |
-| 21 | 3 | | [vsphere/object-types/cluster/kpis/cluster-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md) |
-| 22 | 3 | | [vsphere/technology/cpu/concepts/cpu-frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md) |
-| 23 | 3 | | [vsphere/technology/network/troubleshooting/vnic-rx-drops](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/troubleshooting/vnic-rx-drops.md) |
-| 24 | 3 | | [vsphere/technology/storage/concepts/esxi-storage-latency-stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md) |
-| 25 | 3 | | [vsphere/technology/storage/troubleshooting/host-storage-latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
-
-- Just outside: memory/metrics/virtual-motherboard/active and storage/metrics/host/adapter-and-path (3 each). Then 28 files cited twice; three carry an up-front mark: vsphere/architecture/provider-consumer, sp5-framework/capacity/rightsizing, memory/metrics/virtual-motherboard/usage.
-- Size: about 17,700 words for the top 25.
-- Final answer (2026-11-12; expert call, you confirm the rule):
-  - Rule: sort by the number of questions that cite the file. Ties: first a file an up-front block points to (its error reaches every question), then inbound links (link expansion pulls it into other contexts).
-  - Item 0, before the table: knowledge/glossary.md and knowledge/misconceptions.md. No question cites them, yet every question reads them up front.
-  - After the first benchmark run, the files behind wrong answers sorted to "knowledge" come first.
-  - A substantive edit after review sets the file back to `status: draft`.
-  - Changed since the 2026-11-10 draft: capacity-model was split (its citations now go to supply, demand and overcommit); cluster-sla-sli was archived (its citations moved to cluster-performance); vm-performance is new at 4.
-  - Change if accepted: plan M1, exit criterion "the most-cited files reviewed", points to this rule and this table.
-  - For you: confirm the rule.
-- Answer:
-
 ### Q088 · Part 1 > Observability > Symptom | Alert | Insight · Thresholds in the prevention window image
 
 - Files: [Alerts, symptoms and insights](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alerts-and-insights.md) (section Prevention window); [VM CPU Co-stop](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md); [VM CPU Other Wait](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md); [ESXi storage latency stack: GAVG, KAVG, QAVG, DAVG](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
@@ -89,23 +42,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-### Q096 · Part 1 > Service Level Agreement > Availability SLA · The database restore in Actual Availability
-
-- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section Availability SLA, example).
-- Search 1: "the large database took 45 minutes to fully restore"
-- Search 2: "Actual Availability (%) = 717 / 720 = 99.58%"
-- Search 3: "If it takes the application 15 minutes to become fully operational"
-- Question: the definition counts the Guest OS only; application start-up is not counted. The example counts 15 minutes of Windows plus 45 minutes of database restore, 3 times: 99.58%. By the definition it is 3 × 15 = 45 minutes: 99.90%. Which is meant: (A) the IaaS Actual Availability is 99.90% and 99.58% is what the application owner sees; (B) 99.58%, because Actual Availability counts everything users see, including the application; (C) other?
-- Written as now: sla-metrics gives both numbers ("counting the Guest OS only: 45 minutes, 99.90%"; "counting until the database is restored: … 99.58%"), neither labelled as the SLA value. Glossary Actual Availability: "Availability as it happened. Usually lower than Operational Availability."
-- Final answer (2026-11-12; expert call): (A).
-  - Actual and Operational Availability measure the same thing, the Guest OS answering. They differ only in which downtime counts (scheduled, customer-caused), not in which layer must be up. If Actual counted the application, the gap between the two would mix two effects.
-  - IaaS Actual Availability: 3 × 15 = 45 of 43,200 minutes = 99.90%. Operational Availability: 100% (all three restarts inside the change window).
-  - 99.58% (3 × 60 minutes; 717 of 720 hours) is the application owner's view. Database recovery is application layer, like application start-up, which the definition already excludes. It belongs to the application team's KAI or an application SLA.
-  - fsck differs: it runs before the Guest OS is up, so it counts (sla-metrics misconception already says so).
-  - Change if accepted: sla-metrics, Availability SLA example: 99.90% is the IaaS Actual Availability; 99.58% is the application view, outside the IaaS SLA. Glossary Actual Availability: add "same scope as the Availability SLA: the Guest OS". Delete the review note.
-  - For you: nothing.
-- Answer:
-
 ### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
 
 - Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
@@ -124,6 +60,7 @@ Each entry has:
   - Sources: vSphere Web Services API, SharesInfo.Level; vSphere 9.1 documentation, Create a Resource Pool.
   - Change if accepted: resource-settings-guidance, Review: share values (new example; sibling line); delete the four Q108 review notes.
   - For you: nothing.
+- Image for (c), asked 2026-11-12: [knowledge/vsphere/object-types/vm/images/vm-limit-reservation-share-impact-table.png](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/images/vm-limit-reservation-share-impact-table.png). It renders in resource-settings-guidance, section Review: how each control affects operations. VM Share row, second bullet: "A 2000 worth of reservation depends on the value of other VMs reservation". Both "reservation" words should read share. The alt text already says "relative to other VMs".
 - Answer:
 
 ### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
@@ -623,7 +560,96 @@ Each entry has:
   - For you: relabel the two diagram rows, or tell which value should change instead.
 - Answer:
 
+### Q180 · Resource controls · One home for share, limit and reservation
+
+- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (1,338 words, cited by 6 questions); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (1,617 words); [Scalable Shares and resource pool siblings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/configuration/scalable-shares.md) (356 words). Neighbours: [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
+- Search: not from the book; your request of 2026-11-12.
+- Written as now (review, top down):
+  - Mechanism is written three times. "Shares act only under contention" and "a reservation is a guarantee, so it cannot be overcommitted": in all three files. Default CPU shares: resource-controls (1:2:4 per vCPU) and resource-settings-guidance (table). A VM's shares split among its vCPUs: resource-controls and noisy-neighbour.
+  - resource-settings-guidance holds two sources one after the other: Performance Best Practices 9.1 (Principle, Shares, Reservation, Headroom, Resource pools) and the book's review list (Review: three sections). The two halves repeat each other: reservation 3 times, resource pools 2 times, limit advice 2 times.
+  - Pool design sits in two files: resource-settings-guidance (Resource pools; Review: resource pools; siblings) and scalable-shares (siblings, Scalable Shares). They disagree on siblings (Q110 c).
+  - scalable-shares holds two generic sections that are not about pools: Reservations and shares; Reservations and limits in DRS.
+  - Reservation headroom and DRS: resource-settings-guidance (Headroom), scalable-shares (DRS section) and admission-control-and-cluster-state (Headroom, with the 10% figure). The last is the only one with a number.
+  - Missing in every file: the memory share defaults sit only in the guidance; the network limit (Q109); the slot policy condition (Q110 b).
+- Proposal (expert call): one home per fact, by layer. Mechanism once, advice once, pool design once.
+  - resource-controls (vsphere/architecture, how it works): what each control is and how ESXi applies it, for every resource. Gains: the default share tables (VM and pool, CPU and memory), what a Normal pool weighs, shares divide only what is left after reservations, resize recalculates default shares (vSphere Client only), network and disk controls exist (NIOC per vNIC, traffic shaping, disk IOPS limit; Q109). Keeps: entitlement, reservation CPU vs memory, limit, two scheduler levels.
+  - resource-settings-guidance (VM, what to set): advice only, one section per control, in the order Limit, Reservation, Share, then the audit. Merges the Best Practices half and the review half into one list each. Keeps the impact image and the share audit. Mechanism lines are replaced by one link to resource-controls. Headroom moves out. New share example (Q108 b). Pools move out. Expected size about 800 words.
+  - scalable-shares → renamed "Resource pool design" (resource-pool/configuration): when to use a pool (delegation, multi-tier service, sold as a service), Fixed vs expandable as a design choice (the mechanism stays in admission-control-and-cluster-state), siblings and Scalable Shares (Q110 c), cascading, pool settings are cluster-wide. Its two generic sections are deleted: they repeat resource-controls and admission-control-and-cluster-state. Id moves; moved.yaml maps the old id.
+  - admission-control-and-cluster-state: stays the home of admission, headroom and DRS migration limits. Gains: host and DRS admission control cannot be turned off; restart after a host failure (Q110 a); slot policy condition (Q110 b).
+  - noisy-neighbour: unchanged except one line. Its per-resource overcommit arithmetic stays; the busy-vCPU share point stays there and resource-controls links to it.
+  - Misconceptions follow their fact: each file keeps only the misconceptions of what it holds.
+  - Q108, Q109 and Q110 are applied in the same change if you accept them.
+- Measure: retrieval check before and after (resource-controls is the second most-cited file).
+- For you: accept, or name what stays where.
+- Answer:
+
 ## Resolved
+
+### Q096 · Part 1 > Service Level Agreement > Availability SLA · The database restore in Actual Availability
+
+- Files: [IaaS SLAs: what each measures and how it is computed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (section Availability SLA, example).
+- Search 1: "the large database took 45 minutes to fully restore"
+- Search 2: "Actual Availability (%) = 717 / 720 = 99.58%"
+- Search 3: "If it takes the application 15 minutes to become fully operational"
+- Question: the definition counts the Guest OS only; application start-up is not counted. The example counts 15 minutes of Windows plus 45 minutes of database restore, 3 times: 99.58%. By the definition it is 3 × 15 = 45 minutes: 99.90%. Which is meant: (A) the IaaS Actual Availability is 99.90% and 99.58% is what the application owner sees; (B) 99.58%, because Actual Availability counts everything users see, including the application; (C) other?
+- Written as now: sla-metrics gives both numbers ("counting the Guest OS only: 45 minutes, 99.90%"; "counting until the database is restored: … 99.58%"), neither labelled as the SLA value. Glossary Actual Availability: "Availability as it happened. Usually lower than Operational Availability."
+- Final answer (2026-11-12; expert call): (A).
+  - Actual and Operational Availability measure the same thing, the Guest OS answering. They differ only in which downtime counts (scheduled, customer-caused), not in which layer must be up. If Actual counted the application, the gap between the two would mix two effects.
+  - IaaS Actual Availability: 3 × 15 = 45 of 43,200 minutes = 99.90%. Operational Availability: 100% (all three restarts inside the change window).
+  - 99.58% (3 × 60 minutes; 717 of 720 hours) is the application owner's view. Database recovery is application layer, like application start-up, which the definition already excludes. It belongs to the application team's KAI or an application SLA.
+  - fsck differs: it runs before the Guest OS is up, so it counts (sla-metrics misconception already says so).
+  - Change if accepted: sla-metrics, Availability SLA example: 99.90% is the IaaS Actual Availability; 99.58% is the application view, outside the IaaS SLA. Glossary Actual Availability: add "same scope as the Availability SLA: the Guest OS". Delete the review note.
+  - For you: nothing.
+- Answer: Agree. Proceed (2026-11-12).
+- Applied 2026-11-12: sla-metrics, Availability SLA example (99.90% is the IaaS Actual Availability and the SLA value; 99.58% is the application owner's view, outside the IaaS SLA; Actual and Operational Availability share the Guest OS scope); glossary Actual Availability ("Same scope as the Availability SLA: the Guest OS"); review note deleted.
+
+### Q064 · Review · Which files to review first
+
+- Files: the 25 most-cited knowledge files below. Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.4.
+- Search: not applicable.
+- Question: 0 of 277 knowledge files are `status: reviewed`. Reviewing them in this order puts your review where the benchmark scores. Please confirm the rule, or name your own order.
+- Written as now (recount 2026-11-12): 95 questions cite 131 of 277 files; moved ids resolved. Up front: M = a `See` id in knowledge/misconceptions.md; G = a glossary entry with a Not to confuse with line (the `terms` block).
+
+| # | Cited by | Up front | File |
+|---|---|---|---|
+| 1 | 9 | M | [vsphere/architecture/vm-vs-guest-os](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/vm-vs-guest-os.md) |
+| 2 | 6 | | [vsphere/architecture/resource-controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) |
+| 3 | 6 | | [vsphere/technology/cpu/metrics/virtual-motherboard/ready](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/ready.md) |
+| 4 | 6 | | [vsphere/technology/network/metrics/virtual-motherboard/packets-dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md) |
+| 5 | 5 | | [vsphere/technology/storage/metrics/virtual-motherboard/disk-latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/virtual-motherboard/disk-latency.md) |
+| 6 | 4 | G | [vsphere/technology/cpu/metrics/host/core-utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md) |
+| 7 | 4 | G | [vsphere/object-types/cluster/models/cluster-risk](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md) |
+| 8 | 4 | G | [vsphere/technology/memory/concepts/guest-os-vs-vm-memory](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/guest-os-vs-vm-memory.md) |
+| 9 | 4 | | [vsphere/technology/cpu/concepts/hyper-threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md) |
+| 10 | 4 | | [vsphere/object-types/vm/kpis/vm-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/kpis/vm-performance.md) |
+| 11 | 4 | | [vsphere/technology/memory/metrics/virtual-motherboard/latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/latency.md) |
+| 12 | 4 | | [vsphere/technology/storage/concepts/snapshot-impact](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/snapshot-impact.md) |
+| 13 | 4 | | [vsphere/architecture/overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) |
+| 14 | 4 | | [vsphere/technology/memory/concepts/ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md) |
+| 15 | 4 | | [vsphere/tools/esxtop/storage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md) |
+| 16 | 3 | M | [vcf-operations/features/peak-20-second-metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/peak-20-second-metrics.md) |
+| 17 | 3 | M | [vsphere/technology/cpu/metrics/virtual-motherboard/usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/usage.md) |
+| 18 | 3 | M | [vsphere/technology/cpu/metrics/host/utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/utilization.md) |
+| 19 | 3 | M | [vsphere/object-types/cluster/concepts/admission-control-and-cluster-state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md) |
+| 20 | 3 | M | [vsphere/technology/memory/metrics/virtual-motherboard/ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md) |
+| 21 | 3 | | [vsphere/object-types/cluster/kpis/cluster-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md) |
+| 22 | 3 | | [vsphere/technology/cpu/concepts/cpu-frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md) |
+| 23 | 3 | | [vsphere/technology/network/troubleshooting/vnic-rx-drops](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/troubleshooting/vnic-rx-drops.md) |
+| 24 | 3 | | [vsphere/technology/storage/concepts/esxi-storage-latency-stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md) |
+| 25 | 3 | | [vsphere/technology/storage/troubleshooting/host-storage-latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/troubleshooting/host-storage-latency.md) |
+
+- Just outside: memory/metrics/virtual-motherboard/active and storage/metrics/host/adapter-and-path (3 each). Then 28 files cited twice; three carry an up-front mark: vsphere/architecture/provider-consumer, sp5-framework/capacity/rightsizing, memory/metrics/virtual-motherboard/usage.
+- Size: about 17,700 words for the top 25.
+- Final answer (2026-11-12; expert call, you confirm the rule):
+  - Rule: sort by the number of questions that cite the file. Ties: first a file an up-front block points to (its error reaches every question), then inbound links (link expansion pulls it into other contexts).
+  - Item 0, before the table: knowledge/glossary.md and knowledge/misconceptions.md. No question cites them, yet every question reads them up front.
+  - After the first benchmark run, the files behind wrong answers sorted to "knowledge" come first.
+  - A substantive edit after review sets the file back to `status: draft`.
+  - Changed since the 2026-11-10 draft: capacity-model was split (its citations now go to supply, demand and overcommit); cluster-sla-sli was archived (its citations moved to cluster-performance); vm-performance is new at 4.
+  - Change if accepted: plan M1, exit criterion "the most-cited files reviewed", points to this rule and this table.
+  - For you: confirm the rule.
+- Answer: Close as outdated. The plan is for Claude Opus to review all the synthetic questions and generate the rest (2026-11-12).
+- Closed 2026-11-12: no review order is applied; plan M2 records the question review.
 
 ### Q179 · Memory tiering rows for Cluster Consumption, Cluster Performance and Cluster Risk · Proposal for review
 - Files: [Cluster Consumption (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-consumption.md); [Cluster Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/kpis/cluster-performance.md); [Cluster Risk (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/cluster-risk.md); [Memory tiering](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-tiering.md); [Modelling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/modelling.md) (section Setting thresholds).

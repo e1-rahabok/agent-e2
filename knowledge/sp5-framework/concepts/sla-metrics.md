@@ -60,8 +60,9 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 ```
 - Example: weekly patch window Sunday 00:00-02:00. In June (30 days, 720 hours) a database VM is patched 3 times inside the window: each time the Guest OS is down 15 minutes and the database takes 45 minutes to be fully restored.
   - Operational Availability: 100%. All three are inside the scheduled window.
-  - Actual Availability counting the Guest OS only: 45 minutes, 99.90%.
-  - Actual Availability counting until the database is restored: 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%.
+  - IaaS Actual Availability counts the Guest OS only: 3 × 15 = 45 minutes, 99.90%. This is the value of the Availability SLA.
+  - Counting until the database is restored gives 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%. That is the application owner's view, outside the IaaS SLA: database recovery is the application layer, like application start-up. It belongs to the application team's KAI or an application SLA.
+  - Actual and Operational Availability share one scope, the Guest OS answering; they differ only in which downtime counts.
 - Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity ([`sp5-framework/capacity/supply`](../capacity/supply.md), section Total vs usable after host loss).
 
 | Hosts out | Event | Actual Availability | Operational Availability |
@@ -175,7 +176,6 @@ source:
 corrections:
 - 'Performance SLA, SLI and SLO removed (2026-11-11): the SLA is a business contract; performance is managed by the KPI only. The book''s Performance SLA, SLA calculation and Performance Quantification sections are not used.'
 review_notes:
-- 'To check: Section ''Availability SLA'', example: the book counts 3 hours (Guest OS plus database restore) = 99.58%; by the book''s own definition (Guest OS ping, application start-up not counted) it is 45 minutes = 99.90%. Both written as arithmetic; which the example means (Q096).'
 - 'To check: Section ''Availability SLA'', Operational Availability formula: derived from the definition; the book has a Formula heading with no formula.'
 - 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them.'
 status: draft
