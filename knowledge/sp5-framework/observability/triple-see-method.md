@@ -4,7 +4,7 @@
 
 - Thousands of metrics across a VCF private cloud are mastered by seeing what they have in common: every metric is one of three types.
 - The Triple See Method: see contention, consumption and context, and verify them as one set before concluding.
-- Designed for Broadcom VCF by Iwan 'e1' Rahabok, after studying the USE Method (Brendan Gregg), the RED Method (Weaveworks) and the Golden Signals (Google SRE).
+- Designed for Broadcom VCF.
 - The three types are peers, each with its own purpose, and each maps to pillars of the SP5 framework ([`sp5-framework/concepts/overview`](../concepts/overview.md)).
 
 ## Three types of metric
@@ -60,8 +60,6 @@
 
 ## Misconceptions
 
-- "Apply the USE Method: high utilization means a problem" → utilization is consumption, a good thing when the load is useful. Check contention first.
-- "Monitor the four Golden Signals on the VMs" → VMware does not talk about VM Golden Signals as it does not classify signals into golden or not golden.
 - "A metric with no threshold is useless" → context metrics have no colour; they answer "it depends".
 - "CPU utilization stands for performance" → a system busy on overhead shows high utilization with falling throughput.
 
@@ -97,7 +95,6 @@ source:
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''Why not USE, RED or Golden Signals'': the book names the three methods and says Triple See was built from their strengths and weaknesses, but does not list them; the comparison is a reading of the book (Q134). Sources: brendangregg.com/usemethod.html, weave.works RED Method blog, sre.google SRE book, Monitoring Distributed Systems.'
 - 'Section ''Three types of metric'': the book lists contention for performance only; availability for errors and drops follows from its Contention text.'
 status: draft
 ```
