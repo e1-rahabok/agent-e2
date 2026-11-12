@@ -136,21 +136,51 @@ Each entry has:
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
 - Answer:
 
-### Q130 · Benchmark · Retrieval check: what number is good enough to release
+### Q130 · Benchmark · Release score, gap to the frontier model, retrieval levels
 
-- Files: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (M3 exit criteria).
+- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate; M3 exit criteria); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 4, 7.4, 8, 10 Release criteria); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5, power table).
 - Search: not from the book.
-- Question: (a) the release levels for classic mode; (b) should each question mark its main file, so the check reports main-file misses separately?
-- Written as now: retrieval-check.md gives the proposal in counts of 90 questions ("bad. 53-57 of 90 complete"), marked as not agreed (Q130). Plan M3: "every needed file in the context for at least 90% of questions and context recall at least 95% (proposal, Q130)". Latest numbers (2026-11-11): search recall 60%, classic context recall 78%, 61 of 95 complete (64%). No question has a main-file key.
-- Final answer (2026-11-12; expert call):
-  - (a) Levels in percent, since the question count moves from 95 to 100. Classic mode, the shipped search mode; BM25 and hybrid both reported.
+- Question: (a) the passing score of Agent E2 in agentic mode; (b) the gap Agent E2 must show over the frontier model without the knowledge base; (c) the retrieval levels for classic mode; (d) should each question mark its main file, so the check reports main-file misses separately?
+- Written as now:
+  - Plan and design.md: final score at least 85%, target 99%, confident-wrong rate "near 0" (no number). Superiority: the local configuration beats the frontier baseline "by more than the margin" (no number). Sub-scores are diagnostic only.
+  - Frontier reference (Q164): Claude Opus 5.5, web search on, effort capped at medium, no knowledge base.
+  - Last measured (2026-11-03, 17 questions, old set, no web search): frontier baseline 75%, frontier agentic 67%; best local model 58% (classic). Frontier misconception rate without the knowledge base: 16% of answers.
+  - Paired power at 100 questions (review, section 5): 68% at a 10-point gap, 91% at 15, 98% at 20.
+  - retrieval-check.md: proposal in counts of 90 questions, not agreed. Latest retrieval (2026-11-11): search 60%, classic context 78%, 61 of 95 complete. No question has a main-file key. Retrieval check paused (2026-11-12) until the question bank revamp.
+- Final answer (2026-11-12, revised the same day; expert call):
+  - Scope: the release score is Agent E2 in agentic mode, on the local model and the deployment profile ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 8). The earlier draft called classic the shipped mode: wrong. Classic stays the floor and the fallback, so it carries the retrieval levels in (c).
+  - (a) Passing score. All five must hold; one number alone can be carried by easy questions or bought with confident guesses.
+
+    | Gate | Development set (100) | Why |
+    |---|---|---|
+    | Final score | at least 85% | Margin ±7 at 100 questions; below 85 an operator stops trusting the answers. Kept from the plan |
+    | Level 400 sub-score | at least 80% | About 50 questions (margin about ±10). The mission is Level 400; Level 100-300 can carry the total, and any frontier model is near perfect there |
+    | Confident-wrong rate | at most 3% (3 of 100) | "Near 0" cannot be tested. A wrong answer said with confidence is what the operator acts on; a wrong answer marked Unsure is not. The frontier model gave the misconception on 16% |
+    | Misconceptions in [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | 0 stated as true | They are given up front; stating one is a harness or model defect, not a gap |
+    | Sealed set (Q165) | within 5 points of the development set | A larger drop means the knowledge base or retrieval is fitted to the visible questions |
+
+    - Target stays 99%, as a direction. 100 questions cannot prove it (a perfect score shows at least 96.3%); the 300-question set after 1.0 can.
+    - Why not 90% as the gate: at 100 questions, 85 and 90 overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
+  - (b) Gap to the frontier model (Opus 5.5, web search on, medium effort, no knowledge base), on the same questions, paired:
+    - At least 15 points on the final score, and a one-sided paired McNemar test significant at α 0.05.
+    - Effective bar: Agent E2 at least the larger of 85% and frontier + 15. If the frontier model scores 80% with web search, Agent E2 needs 95%.
+    - Reasons:
+      - 10 points equals the margin and has 68% power: one run in three would fail to show a real win. 15 points has 91%.
+      - The frontier baseline measured 75% without web search; web search raises it. At a 10-point gap the gap bar and the 85% gate would say the same thing, so the gap would add nothing.
+      - "Better than a frontier model" is the mission, not "at least 85%". A tie goes to the frontier model in the customer's eyes: it needs no GPU.
+    - Where the claim is read:
+      - author-framework questions (SP5 Framework, VM Performance (%), Close for Business): a frontier model cannot know them; a win there proves the knowledge base, not the agent. Reported apart.
+      - The superiority claim is read on public-mechanism questions (Q165 `knowledge_class`): at least 10 points, paired significant. On the development set this class is too small for significance (about 50 questions: 35% power at 10 points); the sealed set of 150-200 carries it.
+    - Confident-wrong rate: Agent E2 at most half the frontier model's, on the same questions.
+    - Ceiling, not a gate: Opus 5.5 in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. On 2026-11-03 the frontier model scored lower with the knowledge base (67%) than without (75%): if that holds on the new set, the knowledge base or harness misleads a strong model, and that is fixed before any gap is read.
+  - (c) Retrieval levels, classic mode, in percent (the count moves from 95 to 100); BM25 and hybrid both reported. Diagnostic floor for agentic mode, read again when the retrieval check is reactivated.
     - Release gate: the main file in context for 100% of the visible questions (each miss is a defect, fixed or explained); context recall at least 95%; complete questions at least 90%.
     - Target: 97% complete, 98% recall.
-    - Held-out or sealed set (Q165) within 5 points of the visible set; a larger gap means retrieval is fitted to the visible questions.
-  - Reasons: 0.90 × 0.95 ≈ 0.85 ties the gate to the release score. "Complete" punishes multi-file questions hardest. A missing main file drives confident-wrong answers, so it gets its own number.
-  - (b) Yes, an explicit key, `knowledge_main` (also listed in `knowledge`; lint checks it). Not the list order: on 2026-11-10, 10 questions missed their first-listed file, but first was never written to mean main. The retrieval check reports main-file misses as a fourth number.
-  - Change if accepted: retrieval-check.md (levels in percent, today's numbers); plan M3 exit criteria; question template; retrieval_eval.py; lint; project/terms.md (`knowledge_main` as a proposal).
-  - For you: the main file of each question, during the one-go question review.
+    - Sealed set within 5 points of the visible set.
+    - Reason: 0.90 × 0.95 ≈ 0.85: with a model right on 95% of questions whose files it has, 90% complete is the least that leaves room for the 85% gate. Agentic mode can fetch what classic missed, so the classic floor is conservative for the agentic score. A missing main file drives confident-wrong answers, so it gets its own number.
+  - (d) Yes, an explicit key, `knowledge_main` (also listed in `knowledge`; lint checks it). Not the list order: on 2026-11-10, 10 questions missed their first-listed file, but first was never written to mean main. The retrieval check reports main-file misses as a fourth number.
+  - Change if accepted: plan Mission (release gate with the five rows and the gap) and M3 exit criteria; benchmark/design.md sections 1, 7.4, 8 and Release criteria (gap of 15 points, paired test, confident-wrong limit, Level 400 gate, ceiling); retrieval-check.md (levels in percent); report.py (Level 400 gate, confident-wrong rate, McNemar test against the reference); question template and lint (`knowledge_main`); retrieval_eval.py; project/terms.md (`knowledge_main` as a proposal).
+  - For you: (1) whether a 15-point gap is the bar you want to publish; (2) the main file of each question, during the one-go question review.
 - Answer:
 
 ### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
