@@ -17,7 +17,15 @@ modes: [baseline, classic, agentic]
 runs: 5                       # repeats per question per model per mode
 temperature: 0.2              # use the value the website will use; fixed for a whole run
 max_tokens: 4000              # reasoning models spend tokens before the ANSWER line
-concurrency: 12               # parallel requests; 12 tested OK (benchmark 20261103-081849); lower it on HTTP 429
+concurrency: 12               # proven parallel requests per model: 12 tested OK (benchmark 20261103-081849). The floor: the runner never goes below it
+concurrency_by_model:         # the proven value of a model that rate-limits earlier than 12
+  anthropic/claude-opus-5.5: 3   # HTTP 429 at 12, 0 errors at 3 (benchmark/runner/README.md, section Concurrency)
+adaptive_concurrency:         # probe above the proven value, one model at a time (benchmark/runner/governor.py)
+  enabled: true
+  step: 2                     # levels: proven, proven + 2, proven + 4 (12, 14, 16)
+  max_probes: 2
+  window: 40                  # answers measured at each level, one mode only
+  gain_fraction: 0.5          # a step must deliver this share of the ideal gain in answers per minute; HTTP 429 returns to proven
 
 embedding_model: alibaba/qwen3-embedding-0.6b   # null = BM25 only
 classic_k: 6                  # files from the search before link expansion

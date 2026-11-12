@@ -119,21 +119,20 @@ python3 benchmark/runner/retrieval_eval.py
 - Why hybrid: keyword search misses paraphrases; vector search misses rare exact terms. Fusing both is the common practice for technical text.
 
 ### Concurrency (speed)
-- `concurrency` in `config.yaml` = requests sent to the gateway at the same time. Default 12.
-- Cost does not change with concurrency: the same tokens are sent, only in parallel.
-- Tested in benchmark 20261103-081849:
+- Requests sent to the gateway at the same time, per model. Cost does not change with concurrency: the same tokens are sent, only in parallel.
+- Measured in benchmark 20261103-081849 (one model, all modes): 4 gave about 25 answers per minute, 0 errors in 128 answers; 12 gave about 54, 0 errors in 2032 answers. At 12 the full matrix of 2160 answers took about 38 minutes.
+- Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; found by trial. Above it, providers return HTTP 429. The client retries 429, 408 and 5xx; an answer that still fails is listed, and `--resume` retries it.
+- Limit: a Claude Code cloud background command stops after 2 hours. `--resume` continues a stopped run and keeps saved answers; always pass the same `--models`, because a resume without it runs every model of `config.yaml` into the folder.
 
-| Concurrency | Answers per minute | Errors |
-|---|---|---|
-| 4 | about 25 | 0 (128 answers) |
-| 12 | about 54 | 0 (2032 answers) |
-
-- At 12, the full matrix (2160 answers) took about 38 minutes.
-- Limit: a Claude Code cloud background command stops after 2 hours. `--resume` continues a stopped run; saved answers are kept.
-- Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; find it by trial.
-- Above the ceiling, providers return HTTP 429. The runner retries 429, 408 and 5xx. Answers still failing are listed; `--resume` retries them.
-- To try a higher value: `--concurrency 16` (or 20) on one benchmark. Keep it if errors stay at 0 and answers per minute rise.
-- Limits differ per model. anthropic/claude-opus-5.5 failed at 12 (HTTP 429 "No access to this model at this time"); 3 ran with 0 errors. Use `--concurrency 3` for frontier models.
+**Adaptive concurrency** ([governor.py](governor.py), `adaptive_concurrency` in `config.yaml`; `--no-adaptive` turns it off):
+- Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3, because it returned HTTP 429 at 12). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
+- It then probes upward in steps of 2, up to 2 steps (12, 14, 16). Each level is measured over a window of 40 answers (the first answers after a change are dropped).
+- A step is kept only if the window has no error and the answers per minute rise by at least half of the ideal gain (12 to 14: at least +8.3% of the ideal +16.7%; 14 to 16: at least +7.1%). A step that fails returns to the last level that held, and probing stops.
+- Any HTTP 429 returns the model to its proven value for the rest of the run. A 429 at the proven value changes nothing and prints a warning: that model's proven value is too high, so lower its entry in `concurrency_by_model` and resume.
+- A window holds one mode: baseline, classic and agentic answers take different times. A window that spans two modes is thrown away and the base level is measured again.
+- Tasks run model by model, so one model probes at a time; the others wait at their proven value.
+- The console prints each decision (`concurrency <model>: 14 kept, 36.2 answers/min is 1.12x the 32.3 at 12`) and, every 25 answers, the current level of each model.
+- Tested offline (a fake clock, [test_runner.py](test_runner.py), class GovernorTest). The first live run is the real test: watch the decision lines.
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
