@@ -58,17 +58,10 @@
 - Example: Capacity Remaining (%) is primary; CPU utilization, memory usable capacity and CPU allocation are secondary.
 - Example: VM Performance (%) is primary ([`vsphere/object-types/vm/kpis/vm-performance`](../../vsphere/object-types/vm/kpis/vm-performance.md)); peak vCPU Ready among the vCPUs, peak read/write latency among the virtual disks and Guest OS CPU context switch are secondary.
 
-## Why not USE, RED or Golden Signals
-
-- USE (utilization, saturation, errors) starts from utilization, a consumption metric. In a shared, overcommitted VCF cluster, utilization does not show who waits; contention per VM does.
-- RED (rate, errors, duration) and the Golden Signals (latency, traffic, errors, saturation) are request-centric: built for services and microservices. IaaS has no request to time at the VM level; it has vCPU, memory and disk waits.
-- None of the three has a context type. In VCF many questions are "it depends" questions (configuration, inventory, vMotion counts), answered only by context metrics.
-- None maps its metric types to the pillars of operations, so none tells which team acts on a metric.
-
 ## Misconceptions
 
 - "Apply the USE Method: high utilization means a problem" → utilization is consumption, a good thing when the load is useful. Check contention first.
-- "Monitor the four Golden Signals on the VMs" → they are request metrics for services. A VM has no request latency; read contention (Ready, Co-stop, memory and disk latency) per VM.
+- "Monitor the four Golden Signals on the VMs" → VMware does not talk about VM Golden Signals as it does not classify signals into golden or not golden.
 - "A metric with no threshold is useless" → context metrics have no colour; they answer "it depends".
 - "CPU utilization stands for performance" → a system busy on overhead shows high utilization with falling throughput.
 
