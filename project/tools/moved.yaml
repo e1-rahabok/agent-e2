@@ -6,7 +6,7 @@ glossary/terminology: glossary
 vsphere/cluster-resource-management/concepts/admission-control-and-cluster-state: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 vsphere/cluster-resource-management/concepts/dpm: vsphere/object-types/cluster/concepts/dpm
 vsphere/cluster-resource-management/concepts/drs-overview: vsphere/object-types/cluster/concepts/drs-overview
-vsphere/cluster-resource-management/concepts/scalable-shares: vsphere/object-types/resource-pool/configuration/scalable-shares
+vsphere/cluster-resource-management/concepts/scalable-shares: vsphere/object-types/resource-pool/configuration/resource-pool-design
 vsphere/cluster-resource-management/concepts/vcls: vsphere/object-types/cluster/concepts/vcls
 vsphere/cluster-resource-management/configuration/drs-migration-levels: vsphere/object-types/cluster/configuration/drs-migration-levels
 vsphere/cluster-resource-management/configuration/resource-settings-guidance: vsphere/object-types/vm/configuration/resource-settings-guidance
@@ -104,7 +104,7 @@ vsphere/cpu/resource-management/dpm: vsphere/object-types/cluster/concepts/dpm
 vsphere/cpu/resource-management/drs-migration-levels: vsphere/object-types/cluster/configuration/drs-migration-levels
 vsphere/cpu/resource-management/drs-overview: vsphere/object-types/cluster/concepts/drs-overview
 vsphere/cpu/resource-management/resource-settings-guidance: vsphere/object-types/vm/configuration/resource-settings-guidance
-vsphere/cpu/resource-management/scalable-shares: vsphere/object-types/resource-pool/configuration/scalable-shares
+vsphere/cpu/resource-management/scalable-shares: vsphere/object-types/resource-pool/configuration/resource-pool-design
 vsphere/cpu/resource-management/vcls: vsphere/object-types/cluster/concepts/vcls
 vsphere/foundations/esxtop: vsphere/tools/esxtop/overview
 vsphere/foundations/resource-management: vsphere/architecture/resource-controls
@@ -218,7 +218,7 @@ vsphere/resource-management/concepts/admission-control-and-cluster-state: vspher
 vsphere/resource-management/concepts/dpm: vsphere/object-types/cluster/concepts/dpm
 vsphere/resource-management/concepts/drs-overview: vsphere/object-types/cluster/concepts/drs-overview
 vsphere/resource-management/concepts/resource-controls: vsphere/architecture/resource-controls
-vsphere/resource-management/concepts/scalable-shares: vsphere/object-types/resource-pool/configuration/scalable-shares
+vsphere/resource-management/concepts/scalable-shares: vsphere/object-types/resource-pool/configuration/resource-pool-design
 vsphere/resource-management/concepts/vcls: vsphere/object-types/cluster/concepts/vcls
 vsphere/resource-management/configuration/drs-migration-levels: vsphere/object-types/cluster/configuration/drs-migration-levels
 vsphere/resource-management/configuration/resource-settings-guidance: vsphere/object-types/vm/configuration/resource-settings-guidance
@@ -376,7 +376,7 @@ vsphere/foundations/provider-consumer: vsphere/architecture/provider-consumer
 vsphere/foundations/resource-controls: vsphere/architecture/resource-controls
 vsphere/foundations/vm-vs-guest-os: vsphere/architecture/vm-vs-guest-os
 vsphere/foundations/noisy-neighbour: sp5-framework/performance/noisy-neighbour
-vsphere/foundations/scalable-shares: vsphere/object-types/resource-pool/configuration/scalable-shares
+vsphere/foundations/scalable-shares: vsphere/object-types/resource-pool/configuration/resource-pool-design
 metrics/aggregation: sp5-framework/observability/aggregation
 metrics/collection-interval: sp5-framework/observability/collection-interval
 metrics/input-types: sp5-framework/observability/input-types
@@ -468,3 +468,4 @@ vcf-operations/reports/reports-vs-dashboards: sp5-framework/outputs/reports-vs-d
 sp5-framework/capacity/capacity-management-process: sp5-framework/capacity/capacity-management
 sp5-framework/capacity/capacity-model: sp5-framework/capacity/supply
 sp5-framework/capacity/capacity-dimensions: sp5-framework/capacity/demand
+vsphere/object-types/resource-pool/configuration/scalable-shares: vsphere/object-types/resource-pool/configuration/resource-pool-design

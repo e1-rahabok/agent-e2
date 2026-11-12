@@ -84,7 +84,7 @@ object:
 internal_derive: []
 related:
 - vsphere/object-types/cluster/configuration/drs-migration-levels
-- vsphere/object-types/resource-pool/configuration/scalable-shares
+- vsphere/object-types/resource-pool/configuration/resource-pool-design
 - vsphere/object-types/cluster/concepts/vcls
 - vsphere/object-types/cluster/concepts/dpm
 - vsphere/object-types/vm/configuration/resource-settings-guidance

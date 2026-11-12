@@ -69,6 +69,5 @@ source:
   path: 'Configuration Management > Review List > Cluster; vSphere Cluster Variation'
 corrections: []
 review_notes:
-- 'To check: Section ''HA'': the book says reservation is respected only when admission control is enabled. Host admission control enforces reservations at power-on whatever the HA setting (vsphere/object-types/cluster/concepts/admission-control-and-cluster-state); HA admission control keeps failover capacity for them. Written that way. (Q110).'
 status: draft
 ```

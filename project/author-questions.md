@@ -42,68 +42,6 @@ Each entry has:
   - For you: nothing.
 - Answer:
 
-### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
-
-- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
-- Search 1: "10 per GB" (default VM memory shares table)
-- Search 2: "per VM GB of RAM = 10240"
-- Search 3: "Both VMs want to consume 10 GHz"
-- Search 4: "In this case, VM 1 gets 5 GHz and VM 1 gets 5 GHz"
-- Image text (not searchable): "A 2000 worth of reservation depends on the value of other VMs reservation" (VM Share row).
-- Question: (a) memory shares per GB or per MB? (b) a 1-vCPU VM cannot consume 10 GHz on 2-3 GHz cores: change the example or keep it with the cap? (c) "VM 1" twice should read VM 2; the image says reservation where it means share. (d) a resource pool is 4x a VM for CPU and 16x for memory: is it a Normal pool weighing as much as a Normal 4-vCPU, 16 GB VM?
-- Written as now: (a) per MB (5, 10, 20 per MB; 10,240 per GB at Normal). (b) "a 10 GHz host, a 1-vCPU VM (1,000 shares) and a 2-vCPU VM (2,000 shares) … 3.33 and 6.67 GHz, but a 1-vCPU VM cannot take more than one physical core's worth". (c) the text no longer names VM 1 twice; the alt text says share is relative to other VMs. (d) "A Normal resource pool weighs as much as a Normal VM with 4 vCPU and 16 GB."
-- Final answer (2026-11-12; (a), (c) settled by the 2026-11-08 rule that a wrong fact is fixed in the file; (b), (d) expert call):
-  - (a) Done: per MB. CPU 500, 1,000, 2,000 per vCPU.
-  - (b) Replace the example. With 2.5 GHz cores, a 1-vCPU VM tops out near 2.5 GHz and a 2-vCPU VM near 5 GHz: 7.5 of 10 GHz, no contention, so shares never act, and the example shows a cap instead of shares. New example: 4 cores × 2.5 GHz, Hyper-Threading off. VM A 2 vCPU (2,000 shares), VM B 4 vCPU (4,000 shares); both demand all their vCPUs (15 GHz). Split 1:2: 3.33 and 6.67 GHz, 1.67 GHz per vCPU for both. Default shares give every vCPU the same runtime; only custom shares per class change that. When total demand is 10 GHz or less, each VM gets its demand.
-  - (c) Done in the text and alt text. The image pixels still say reservation; the alt text is what Agent E2 reads.
-  - (d) Agree, and add one line: 4,000 = 4 × 1,000; 163,840 = 10 × 16,384 MB. "4x and 16x" holds only against a 1-vCPU, 1 GB VM. One 8-vCPU, 32 GB sibling VM carries twice a Normal pool's shares, and the pool's weight is split among all its VMs: why pools and VMs are not siblings (Q110 c).
-  - Sources: vSphere Web Services API, SharesInfo.Level; vSphere 9.1 documentation, Create a Resource Pool.
-  - Change if accepted: resource-settings-guidance, Review: share values (new example; sibling line); delete the four Q108 review notes.
-  - For you: nothing.
-- Image for (c), asked 2026-11-12: [knowledge/vsphere/object-types/vm/images/vm-limit-reservation-share-impact-table.png](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/images/vm-limit-reservation-share-impact-table.png). It renders in resource-settings-guidance, section Review: how each control affects operations. VM Share row, second bullet: "A 2000 worth of reservation depends on the value of other VMs reservation". Both "reservation" words should read share. The alt text already says "relative to other VMs".
-- Answer:
-
-### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
-
-- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Network); [Network characteristics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/network-characteristics.md) (section Coarse allocation).
-- Search: "There is no network limit"
-- Question: with Network I/O Control each VM network adapter has share, reservation and limit, and port groups have traffic shaping. Change to: a network limit exists per vNIC but is not recommended?
-- Written as now: resource-settings-guidance: "VM limits exist for CPU, memory and disk IOPS". noisy-neighbour: "Each VM network adapter has share, reservation and limit"; the 8 Gb/s limit and 100 Mb/s reservation withdrawn (Q083). network-characteristics: "NIOC and traffic shaping exist, but are not VM configuration properties."
-- Final answer (2026-11-12; settled: Q083 for the advice, vSphere 9.1 documentation for the fact):
-  - Yes. "There is no network limit" is wrong. Two controls exist:
-    - Network I/O Control v3 on a distributed switch: each VM network adapter has shares (1-100), a reservation (Mbps) and a limit, set in the VM's network adapter settings. This is a VM configuration property, so the network-characteristics line is wrong for NIOC.
-    - Traffic shaping per port group or port: average, peak, burst. A distributed switch shapes in and out; a standard switch outbound only. This one is a port group policy, not a VM property.
-    - The lower of the two wins: a 200 Mbps adapter limit under a 100 Mbps shaping average gives 100 Mbps.
-  - Advice (Q083): no limit or reservation on a VM, network included.
-  - Two more reasons: a vNIC reservation is checked by the distributed switch, DRS and HA admission control (HA restarts a VM only on a host that meets its vNIC reservation); a limit is invisible to the Guest OS, as with CPU.
-  - Edge cases: Network I/O Control is off when Network Offloads compatibility is on; SR-IOV is not available with Network I/O Control v3.
-  - Text: "VM limits exist for CPU, memory, disk IOPS and network adapter bandwidth, plus traffic shaping per port group. Do not use them on VMs."
-  - Sources: vSphere 9.1 documentation (What is vSphere Network I/O Control; Defining Bandwidth Requirements for a Virtual Machine; Traffic Shaping Policy; Factors Considered for Virtual Machine Restarts).
-  - Change if accepted: resource-settings-guidance (Limit); network-characteristics (Coarse allocation: NIOC per vNIC is a VM property, shaping a port group policy); delete the review note.
-  - For you: nothing.
-- Answer:
-
-### Q110 · Part 1 > Configuration Management > Reservation, Cluster, Resource Pool · Admission control, slot size and siblings
-
-- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Scalable Shares and resource pool siblings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/configuration/scalable-shares.md).
-- Search 1: "Reservation is respected only when Admission Control is enabled"
-- Search 2: "this will impact the HA Slot Size"
-- Search 3: "Resource Pool with VM as sibling is a common mistake"
-- Question: (a) reservations are enforced at power-on whether or not HA admission control is on: reword to "with HA admission control off, reservations are not protected after a host failure"? (b) reservations change the slot size only under the slot policy: add that condition? (c) with Scalable Shares, is a pool with VMs as siblings still a mistake?
-- Written as now:
-  - (a) cluster-configuration-review: "Admission control disabled: failover capacity for the VMs' reservations is no longer kept." admission-control-and-cluster-state covers power-on and reservation or pool changes; it does not say host and DRS admission control cannot be turned off, nor what happens at restart.
-  - (b) resource-settings-guidance: reservations "raise the HA slot size and narrow DRS placement", no policy condition. memory-tiering: do not use the slot policy on a tiered cluster.
-  - (c) scalable-shares: "resource pools and VMs can be siblings … without the dilution problem"; misconception "Resource pools and VMs can always be siblings → only with Scalable Shares active". resource-settings-guidance: "a pool with VMs as siblings is a common mistake". Default (on or off) not stated.
-- Final answer (2026-11-12; expert call from the vSphere 9.1 documentation):
-  - (a) Keep the current line and add the mechanism. Host and DRS admission control check reservations at every power-on, reservation change and pool change, and cannot be turned off. HA admission control only keeps failover capacity. With it off, VMs power on into that capacity; after a host failure HA restarts a VM only where its CPU, memory and vNIC reservations plus overhead fit, so the reserved VMs are the first to stay down.
-  - (b) Add the condition. Slot policy: the largest CPU and the largest memory reservation (plus overhead) set one slot size for every VM; one large reservation cuts the slot count (cap with das.slotcpuinmhz, das.slotmeminmb). Cluster resource percentage (the default): reservations are summed against the failover capacity; each costs only its own size. Tiered clusters: not the slot policy (memory-tiering, already written).
-  - (c) Keep the rule "pools and VMs are not siblings" with Scalable Shares on or off; only the reason changes. Off (the default; set per cluster or per pool, inherited): a sibling VM dilutes the pool. On: a pool's shares are the sum of its VMs' shares × 4, 2 or 1 (High, Normal, Low), so dilution inside the pool is gone; but a Normal pool's VMs then weigh twice a sibling Normal VM, and that weight moves with every VM added to the pool. Recommend Scalable Shares on for clusters with pools, and no siblings.
-  - The scalable-shares misconception reads siblings as fine once Scalable Shares is on; it is reworded to the reason above.
-  - Sources: vSphere 9.1 documentation (Admission Control; vSphere HA Admission Control; Cluster Resources Percentage; Slot Size Calculation; DRS Scalable Shares); Performance Best Practices for VMware vSphere 9.1 (revision 20260624), p. 77.
-  - Change if accepted: admission-control-and-cluster-state (host and DRS admission control always on; restart after a failure); resource-settings-guidance (Reservation: slot policy condition); scalable-shares (multiplier, default off, misconception); delete the Q110 review notes.
-  - For you: nothing. Optional: whether your designs turn Scalable Shares on by default.
-- Answer:
-
 ### Q111 · Part 1 > Configuration Management > Compute-related, ESXi · Cores or threads, and 48 or 64 cores
 
 - Files: [VM configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/vm-configuration-review.md) (section Compute); [ESXi configuration review](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/configuration/esxi-configuration-review.md) (sections Memory, Capacity); [VM size](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-size.md); [ESXi host specification from class of service and VM profile](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/host-spec-from-class-of-service.md). Related: Q079, Q099, Q100, Q125, Q176.
@@ -560,9 +498,11 @@ Each entry has:
   - For you: relabel the two diagram rows, or tell which value should change instead.
 - Answer:
 
+## Resolved
+
 ### Q180 · Resource controls · One home for share, limit and reservation
 
-- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (1,338 words, cited by 6 questions); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (1,617 words); [Scalable Shares and resource pool siblings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/configuration/scalable-shares.md) (356 words). Neighbours: [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
+- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (1,338 words, cited by 6 questions); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (1,617 words); [Resource pool design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/configuration/resource-pool-design.md), formerly scalable-shares (356 words). Neighbours: [Noisy neighbour](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md).
 - Search: not from the book; your request of 2026-11-12.
 - Written as now (review, top down):
   - Mechanism is written three times. "Shares act only under contention" and "a reservation is a guarantee, so it cannot be overcommitted": in all three files. Default CPU shares: resource-controls (1:2:4 per vCPU) and resource-settings-guidance (table). A VM's shares split among its vCPUs: resource-controls and noisy-neighbour.
@@ -581,9 +521,73 @@ Each entry has:
   - Q108, Q109 and Q110 are applied in the same change if you accept them.
 - Measure: retrieval check before and after (resource-controls is the second most-cited file).
 - For you: accept, or name what stays where.
-- Answer:
+- Answer: accept (2026-11-12).
+- Applied 2026-11-12: resource-controls holds the mechanism (new sections Shares, with the VM and pool default tables, the pool weight and the Q108 example; Controls per resource, with disk and network, Q109). resource-settings-guidance holds advice only (Principle, Limit, Reservation, Shares, Share audit; 1,617 to about 800 words); the impact table image is archived, its content is the text. scalable-shares renamed resource-pool-design (when to use a pool, cluster-wide settings, siblings and Scalable Shares, nested pools; its two generic sections removed). admission-control-and-cluster-state gained always-on host and DRS admission control, the HA restart rule, the slot policy (Q110 a, b) and overhead headroom. network-characteristics corrected (Q109). Retrieval unchanged: search 60%, classic context 78%, 61/95.
 
-## Resolved
+### Q110 · Part 1 > Configuration Management > Reservation, Cluster, Resource Pool · Admission control, slot size and siblings
+
+- Files: [Cluster configuration review: HA, DRS, DPM and cluster variants](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/configuration/cluster-configuration-review.md) (section HA); [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md); [Admission control, expandable reservations and cluster state](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/concepts/admission-control-and-cluster-state.md); [Resource pool design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/configuration/resource-pool-design.md), formerly scalable-shares.
+- Search 1: "Reservation is respected only when Admission Control is enabled"
+- Search 2: "this will impact the HA Slot Size"
+- Search 3: "Resource Pool with VM as sibling is a common mistake"
+- Question: (a) reservations are enforced at power-on whether or not HA admission control is on: reword to "with HA admission control off, reservations are not protected after a host failure"? (b) reservations change the slot size only under the slot policy: add that condition? (c) with Scalable Shares, is a pool with VMs as siblings still a mistake?
+- Written as now:
+  - (a) cluster-configuration-review: "Admission control disabled: failover capacity for the VMs' reservations is no longer kept." admission-control-and-cluster-state covers power-on and reservation or pool changes; it does not say host and DRS admission control cannot be turned off, nor what happens at restart.
+  - (b) resource-settings-guidance: reservations "raise the HA slot size and narrow DRS placement", no policy condition. memory-tiering: do not use the slot policy on a tiered cluster.
+  - (c) scalable-shares: "resource pools and VMs can be siblings … without the dilution problem"; misconception "Resource pools and VMs can always be siblings → only with Scalable Shares active". resource-settings-guidance: "a pool with VMs as siblings is a common mistake". Default (on or off) not stated.
+- Final answer (2026-11-12; expert call from the vSphere 9.1 documentation):
+  - (a) Keep the current line and add the mechanism. Host and DRS admission control check reservations at every power-on, reservation change and pool change, and cannot be turned off. HA admission control only keeps failover capacity. With it off, VMs power on into that capacity; after a host failure HA restarts a VM only where its CPU, memory and vNIC reservations plus overhead fit, so the reserved VMs are the first to stay down.
+  - (b) Add the condition. Slot policy: the largest CPU and the largest memory reservation (plus overhead) set one slot size for every VM; one large reservation cuts the slot count (cap with das.slotcpuinmhz, das.slotmeminmb). Cluster resource percentage (the default): reservations are summed against the failover capacity; each costs only its own size. Tiered clusters: not the slot policy (memory-tiering, already written).
+  - (c) Keep the rule "pools and VMs are not siblings" with Scalable Shares on or off; only the reason changes. Off (the default; set per cluster or per pool, inherited): a sibling VM dilutes the pool. On: a pool's shares are the sum of its VMs' shares × 4, 2 or 1 (High, Normal, Low), so dilution inside the pool is gone; but a Normal pool's VMs then weigh twice a sibling Normal VM, and that weight moves with every VM added to the pool. Recommend Scalable Shares on for clusters with pools, and no siblings.
+  - The scalable-shares misconception reads siblings as fine once Scalable Shares is on; it is reworded to the reason above.
+  - Sources: vSphere 9.1 documentation (Admission Control; vSphere HA Admission Control; Cluster Resources Percentage; Slot Size Calculation; DRS Scalable Shares); Performance Best Practices for VMware vSphere 9.1 (revision 20260624), p. 77.
+  - Change if accepted: admission-control-and-cluster-state (host and DRS admission control always on; restart after a failure); resource-settings-guidance (Reservation: slot policy condition); scalable-shares (multiplier, default off, misconception); delete the Q110 review notes.
+  - For you: nothing. Optional: whether your designs turn Scalable Shares on by default.
+- Answer: applied with Q180 (accepted 2026-11-12).
+- Applied 2026-11-12: (a), (b) admission-control-and-cluster-state, section Admission control; (c) resource-pool-design, section Siblings and Scalable Shares (default off and the multiplier kept as a review note to check). Review notes deleted in resource-settings-guidance and cluster-configuration-review.
+
+### Q109 · Part 1 > Configuration Management > Limit · Is there a network limit
+
+- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (section Limit); [Noisy neighbour: limit, reservation and share per resource](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/noisy-neighbour.md) (section Network); [Network characteristics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/concepts/network-characteristics.md) (section Coarse allocation).
+- Search: "There is no network limit"
+- Question: with Network I/O Control each VM network adapter has share, reservation and limit, and port groups have traffic shaping. Change to: a network limit exists per vNIC but is not recommended?
+- Written as now: resource-settings-guidance: "VM limits exist for CPU, memory and disk IOPS". noisy-neighbour: "Each VM network adapter has share, reservation and limit"; the 8 Gb/s limit and 100 Mb/s reservation withdrawn (Q083). network-characteristics: "NIOC and traffic shaping exist, but are not VM configuration properties."
+- Final answer (2026-11-12; settled: Q083 for the advice, vSphere 9.1 documentation for the fact):
+  - Yes. "There is no network limit" is wrong. Two controls exist:
+    - Network I/O Control v3 on a distributed switch: each VM network adapter has shares (1-100), a reservation (Mbps) and a limit, set in the VM's network adapter settings. This is a VM configuration property, so the network-characteristics line is wrong for NIOC.
+    - Traffic shaping per port group or port: average, peak, burst. A distributed switch shapes in and out; a standard switch outbound only. This one is a port group policy, not a VM property.
+    - The lower of the two wins: a 200 Mbps adapter limit under a 100 Mbps shaping average gives 100 Mbps.
+  - Advice (Q083): no limit or reservation on a VM, network included.
+  - Two more reasons: a vNIC reservation is checked by the distributed switch, DRS and HA admission control (HA restarts a VM only on a host that meets its vNIC reservation); a limit is invisible to the Guest OS, as with CPU.
+  - Edge cases: Network I/O Control is off when Network Offloads compatibility is on; SR-IOV is not available with Network I/O Control v3.
+  - Text: "VM limits exist for CPU, memory, disk IOPS and network adapter bandwidth, plus traffic shaping per port group. Do not use them on VMs."
+  - Sources: vSphere 9.1 documentation (What is vSphere Network I/O Control; Defining Bandwidth Requirements for a Virtual Machine; Traffic Shaping Policy; Factors Considered for Virtual Machine Restarts).
+  - Change if accepted: resource-settings-guidance (Limit); network-characteristics (Coarse allocation: NIOC per vNIC is a VM property, shaping a port group policy); delete the review note.
+  - For you: nothing.
+- Answer: applied with Q180 (accepted 2026-11-12).
+- Applied 2026-11-12: resource-controls, section Controls per resource (NIOC v3 per vNIC, traffic shaping, lower wins, edge cases, HA restart on vNIC reservation); resource-settings-guidance, Limit; network-characteristics corrected.
+
+### Q108 · Part 1 > Configuration Management > Resource Management, Share · Memory share unit and the share example
+
+- Files: [Resource settings: when and how](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/configuration/resource-settings-guidance.md) (sections Review: how each control affects operations, Review: share values).
+- Search 1: "10 per GB" (default VM memory shares table)
+- Search 2: "per VM GB of RAM = 10240"
+- Search 3: "Both VMs want to consume 10 GHz"
+- Search 4: "In this case, VM 1 gets 5 GHz and VM 1 gets 5 GHz"
+- Image text (not searchable): "A 2000 worth of reservation depends on the value of other VMs reservation" (VM Share row).
+- Question: (a) memory shares per GB or per MB? (b) a 1-vCPU VM cannot consume 10 GHz on 2-3 GHz cores: change the example or keep it with the cap? (c) "VM 1" twice should read VM 2; the image says reservation where it means share. (d) a resource pool is 4x a VM for CPU and 16x for memory: is it a Normal pool weighing as much as a Normal 4-vCPU, 16 GB VM?
+- Written as now: (a) per MB (5, 10, 20 per MB; 10,240 per GB at Normal). (b) "a 10 GHz host, a 1-vCPU VM (1,000 shares) and a 2-vCPU VM (2,000 shares) … 3.33 and 6.67 GHz, but a 1-vCPU VM cannot take more than one physical core's worth". (c) the text no longer names VM 1 twice; the alt text says share is relative to other VMs. (d) "A Normal resource pool weighs as much as a Normal VM with 4 vCPU and 16 GB."
+- Final answer (2026-11-12; (a), (c) settled by the 2026-11-08 rule that a wrong fact is fixed in the file; (b), (d) expert call):
+  - (a) Done: per MB. CPU 500, 1,000, 2,000 per vCPU.
+  - (b) Replace the example. With 2.5 GHz cores, a 1-vCPU VM tops out near 2.5 GHz and a 2-vCPU VM near 5 GHz: 7.5 of 10 GHz, no contention, so shares never act, and the example shows a cap instead of shares. New example: 4 cores × 2.5 GHz, Hyper-Threading off. VM A 2 vCPU (2,000 shares), VM B 4 vCPU (4,000 shares); both demand all their vCPUs (15 GHz). Split 1:2: 3.33 and 6.67 GHz, 1.67 GHz per vCPU for both. Default shares give every vCPU the same runtime; only custom shares per class change that. When total demand is 10 GHz or less, each VM gets its demand.
+  - (c) Done in the text and alt text. The image pixels still say reservation; the alt text is what Agent E2 reads.
+  - (d) Agree, and add one line: 4,000 = 4 × 1,000; 163,840 = 10 × 16,384 MB. "4x and 16x" holds only against a 1-vCPU, 1 GB VM. One 8-vCPU, 32 GB sibling VM carries twice a Normal pool's shares, and the pool's weight is split among all its VMs: why pools and VMs are not siblings (Q110 c).
+  - Sources: vSphere Web Services API, SharesInfo.Level; vSphere 9.1 documentation, Create a Resource Pool.
+  - Change if accepted: resource-settings-guidance, Review: share values (new example; sibling line); delete the four Q108 review notes.
+  - For you: nothing.
+- Image for (c), asked 2026-11-12: [knowledge/vsphere/object-types/vm/images/vm-limit-reservation-share-impact-table.png](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/images/vm-limit-reservation-share-impact-table.png). It renders in resource-settings-guidance, section Review: how each control affects operations. VM Share row, second bullet: "A 2000 worth of reservation depends on the value of other VMs reservation". Both "reservation" words should read share. The alt text already says "relative to other VMs".
+- Answer: (c) 2026-11-12: a simple table needs no image. (a), (b), (d) applied with Q180 (accepted 2026-11-12).
+- Applied 2026-11-12: the impact table is text in resource-settings-guidance (Principle and one section per control); the image is archived. resource-controls, section Shares: per MB, the pool weight with the 8-vCPU sibling, the new 4-core example. Review notes deleted.
 
 ### Q096 · Part 1 > Service Level Agreement > Availability SLA · The database restore in Actual Availability
 
