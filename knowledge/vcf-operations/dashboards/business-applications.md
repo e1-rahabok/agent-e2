@@ -23,7 +23,7 @@
   - A department owns several business applications.
   - An application has tiers, such as web, application and database.
   - A tier is a group of VMs with the same function, the same software and identical hardware configuration. Its VMs are either scale-out (a farm) or active/passive.
-![Folder tree: Business Units A to E; Business Unit C has Departments 1, 2 and 3; Department 2 owns Applications A, B and C; Application B has Web, App and DB tiers; the App tier holds VM 1, VM 2 and VM 3](images/vsphere-folder-business-unit-department-application-tier-diagram.png)
+![Folder tree: Business Units B, C and D; Business Unit C has Departments 1, 2 and 3; Department 2 owns Applications A, B and C (labels C.2: Application A, B, C); Application B has Web, App and DB tiers (labels C.2.B: Web Tier, App Tier, DB Tier); the App tier holds VM 1, VM 2 and VM 3](images/vsphere-folder-business-unit-department-application-tier-diagram.png)
 - Keep only 2 organisation levels (business unit, department). A reorganisation means renaming folders, moving them to new parents and deleting old ones. Example: Business Unit B merges into C under a new name; rename one folder and delete the other. The goal is context, not a copy of the organisation chart.
 - Naming:
   - the application name is unique; if not, prefix it with the department name;
@@ -81,7 +81,6 @@ source:
   path: 'Proactive Operations > Business Applications (The Crown Jewel, vSphere Folder Structure, Objects Design)'
 corrections: []
 review_notes:
-- 'To check: Section ''vSphere folder structure'', diagram: Application C under Department 2 is labelled C.3, not C.2. (Q139).'
 - 'Section ''Objects in VCF Operations'': the inventory path is read from the source screenshot (Inventory > Container > Entire Enterprise > Entire Enterprise Applications > Internet Banking, MS Active Directory, Shop Floor Control). Screenshot not copied.'
 - 'To check: Section ''Business application dashboard'': the KPI link is not in the source, which says detailed KPI, actual counters that define a VM KPI.'
 status: draft

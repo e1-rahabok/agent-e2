@@ -10,8 +10,8 @@
 - Proactive, insight-based operations require a small team of seasoned engineers with deep technical skill and knowledge of the business. They do not work with many teams across departments, each following rigid, siloed policies.
 
 ## Complexity
-- ITIL 4 has 34 management practices: 17 service management, 3 technical management, 14 general management. With 34 practices, the team ends up managing the management.
-- ITIL merges capacity and performance into one practice. In a VCF private cloud they are separate disciplines, with different personas and processes ([`sp5-framework/concepts/performance-vs-capacity`](performance-vs-capacity.md)).
+- ITIL (Version 5), like ITIL 4, has 34 management practices, in two groups: product and service management, and general management. ITIL 4 grouped them as 17 service management, 3 technical management, 14 general management. With 34 practices, the team ends up managing the management.
+- ITIL (Version 5) still merges capacity and performance into one practice. In a VCF private cloud they are separate disciplines, with different personas and processes ([`sp5-framework/concepts/performance-vs-capacity`](performance-vs-capacity.md)).
 
 ## Terms that are not peers
 | Pair in frameworks | SP5 reading |
@@ -72,11 +72,10 @@ related:
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/observability/input-types
 source:
-  document: '"Why a New Framework?" (Word document, deleted after use)'
+  document: '"Why a New Framework?" (Word document, deleted after use); PeopleCert ITIL FAQ, ITIL (Version 5) practices (https://www.peoplecert.org/help-and-support/faq-itil)'
   path: Why a New Framework?; Complexity; Duplication; Clarity
 corrections: []
 review_notes:
-- 'To check: Section ''Complexity'': the source says "ITIL 5 has 34 management practices" and links the ITIL 4 list. ITIL 4 has 34 practices; written as ITIL 4 (Q135).'
 - 'Section ''Practices that are not pillars'': the source gives no reason for service request management and problem management in their own rows; grouped with service desk and incident management.'
 status: draft
 ```

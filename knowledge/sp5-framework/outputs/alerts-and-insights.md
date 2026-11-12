@@ -114,7 +114,7 @@
 
 ## Misconceptions
 - "Yellow alert: deal with it tomorrow" → yellow is not an alert. Not urgent means it belongs in the daily health check as an insight.
-- "Alert colours and KPI colours mean the same" → an alert colour is a deadline, because time has started. A KPI colour band is proactive and carries no deadline. They are not related.
+- "Alert colours and KPI colours mean the same" → an alert colour is a deadline, because time has started. A KPI colour is severity: proactive, with no deadline. A worse KPI usually means more urgency, but KPI red is not a red alert.
 - "We have proactive alerts" → reacting to an alert is reactive, even before business impact. Proactive work is insight from the daily health check.
 - "No open alerts, so no problem" → alerts close themselves when the symptom fades, and a threshold sees only objects above it. Many objects sit just below.
 - "Lower the thresholds to catch problems earlier" → conservative thresholds cause alert storms. Early warning comes from leading indicators read as insights.

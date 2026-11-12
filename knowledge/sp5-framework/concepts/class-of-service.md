@@ -24,7 +24,8 @@
 | 4 Free | 0 | maximum | no SLA |
 
 - Gold: performance guarantee for latency-sensitive, mission-critical applications. The guarantee is not literal for CPU: VM CPU Ready never reads 0.00%, even with no contention.
-- Silver: most production workloads. Bronze: test and development. Free: temporary projects.
+- Silver: standard production and DR. Bronze: test and development, non-production. Free: temporary projects.
+- A class belongs to the data centre infrastructure (the cluster with its storage and network), not to the application: a VM is in Gold because it runs on Gold infrastructure.
 - Price follows the CPU overcommit: Silver half of Gold, Bronze a third. The relative penalty grows with the overcommit: consistent and fair.
 - The penalty column positions the business value. It is not a threshold: Bronze is not allowed 3x the CPU Ready of Gold. The KPI levels are the same for every class (`catalog/thresholds-performance`); a lower class scores lower more often because of its higher overcommit.
 

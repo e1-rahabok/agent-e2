@@ -48,7 +48,8 @@
 ## Setting thresholds
 - Scientifically, a VM does not care what stops it (Ready, Co-stop or Overlap), so all would share one threshold. Practically, healthy production shows different scales per metric. Take the lower of the two: the goal is proactive monitoring.
 - Match the thresholds to the weights, which double per band (1, 2, 4, 8 at the band limits, 16 at 0): each range limit doubles. Example: VM disk latency 20, 40, 80, 160 ms.
-- Red is not an emergency: look within hours. The time to look also shows how often the value enters red and the trend.
+- A KPI or model colour is severity: how bad, not by when. A worse KPI usually means more urgency, but there is no fixed link: KPI red is not a red alert and does not mean act today. The daily health check reads red first, then orange, then how often a value enters red and its trend.
+- The colour depends on where the metric is shown. The same metric can carry different colour thresholds in an alert, a NOC live screen, a daily report and a dashboard, as each channel has its own urgency ([`sp5-framework/outputs/system-engagement`](../outputs/system-engagement.md)).
 - Four bands need five numbers per metric: where it scores 100, and where green, yellow and orange end, and where it scores 0. Vendor guidance with three zones (good, potential issue, impact) is not enough: convert it, do not copy it. Example: NVMe read latency, Broadcom's good below 200 µs and impact above 400 µs become 100, 200, 400 and 800 µs, with red from 400.
 - Score the what, never filter it by the why. A reading is not discarded because its cause looks harmless (a device waking from a power-saving state): the consumer waited all the same. The cause belongs to troubleshooting.
 - A metric that cannot be quantified into its bands ([grey], green, yellow, orange, red) is not used. Real-world data is not reliable because it is real: check its quality first, then collect enough of it to rule out outliers.
@@ -76,7 +77,8 @@
 - "KPI at 75%, so 25% of the VMs are slow" → 75% is the top of yellow; the scale is scores, not shares.
 - "Aim for a 100% KPI" → 100% is unreachable; 75-100 is green.
 - "One red metric makes the KPI red" → one worst red among 8 greens scores about 33, orange; read the score and the sub-metrics.
-- "Red means drop everything" → look within hours.
+- "KPI red: act today, like a red alert" → a KPI colour is severity, not a deadline. The alert carries the deadline, with its own values.
+- "A metric has one colour scale everywhere" → its colour thresholds depend on the channel: alert, NOC live screen, daily report, dashboard.
 - "Use the worst colour for performance, like a vCenter alarm" → contention adds up across resources; worst colour fits availability only.
 - "Give the rare error metric a large weight" → weight depends only on the score; a rarely-red metric is skipped while green instead.
 
@@ -104,7 +106,6 @@ source:
   path: 'https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/concepts/kpi-scoring-models.md; The World of Metrics > Modelling (Actual | Potential; Calculation; Translation; Threshold; Progressive Weightage; Rare Metric; Limitation; Optional Features; Validation)'
 corrections:
 - 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the implementation wins over the book. The book weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the pack weights 2^((100 - score)/25), smooth, up to 16 at 0 (issue #18), so 9 green + 3 worst red is red. The book''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'
-review_notes:
-- 'To check: Section ''Setting thresholds'': the book maps KPI colours to a timeline (red within a few hours, orange today, yellow tomorrow), while alert colours and KPI colours are not related; kept as "look within hours" for red only (Q136).'
+review_notes: []
 status: draft
 ```
