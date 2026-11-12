@@ -1,4 +1,4 @@
-# VM (virtual motherboard) vs Guest OS metrics
+# VM vs Guest OS metrics
 
 ## Prompt
 - The application team complains that their Windows Server 2025 VM (8 vCPUs) was slow at 10:15 this morning.
@@ -30,7 +30,7 @@ Choose all the correct statements. There can be more than one.
 B (data stored on the VM object read as a VM metric) or D (Guest OS counters assumed to come from the hypervisor).
 
 ## Expected key points
-- A VM is a virtual motherboard. The Guest OS is a separate layer running on it.
+- A VM is the virtual hardware. The Guest OS is a separate layer running on it.
 - Guest OS counters come from inside Windows through VMware Tools; without Tools they do not exist.
 - Where a counter is stored (the VM object) does not decide which layer it belongs to.
 - Guest OS queues (Run Queue, Disk Queue) and VM contention (Ready, disk latency) are different queues at different layers.
@@ -42,7 +42,7 @@ B (data stored on the VM object read as a VM metric) or D (Guest OS counters ass
 ## Metadata
 ```yaml
 id: "0018"
-title: "VM (virtual motherboard) vs Guest OS metrics"
+title: "VM vs Guest OS metrics"
 product: [vsphere, windows]
 technology: [system]
 input: [text]

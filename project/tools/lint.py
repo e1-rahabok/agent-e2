@@ -170,8 +170,37 @@ def main():
             bad(f, 'task must be read-metric, troubleshoot, decide-capacity, explain-mechanism or judge-setting (benchmark/design.md, section 3.1)')
         if (fm or {}).get('origin') not in ('book', 'quiz', 'real-ticket', 'synthetic'):
             bad(f, 'origin must be book, quiz, real-ticket or synthetic')
-        if (fm or {}).get('status') not in ('draft', 'awaiting-input', 'reviewed', 'retired'):
-            bad(f, 'status must be draft, awaiting-input, reviewed or retired')
+        st = (fm or {}).get('status')
+        if st not in allowed['question_status']:
+            bad(f, f'status must be one of {", ".join(allowed["question_status"])}')
+        for k, allowed_k in (('object', 'question_object'), ('tool', 'question_tool')):
+            v = (fm or {}).get(k)
+            if v is not None and (not isinstance(v, list) or any(x not in allowed[allowed_k] for x in v)):
+                bad(f, f'{k} must be a list of {", ".join(allowed[allowed_k])}')
+        mt = (fm or {}).get('misconception_type') or []
+        if not isinstance(mt, list): bad(f, 'misconception_type must be a list')
+        else:
+            for x in mt:
+                if x not in allowed['misconception_type']: bad(f, f'misconception_type "{x}" not allowed')
+        prompt_m = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
+        prompt_t = prompt_m.group(1) if prompt_m else ''
+        if st not in ('retired', 'deferred', 'awaiting-input'):  # every question that runs
+            seen = '\n'.join([t.split('\n', 1)[0], prompt_t] + [m.group(1) for m in re.finditer(
+                r'^## (?:Likely wrong answer|Expected key points)\n(.*?)(?=^## |\Z)', t, re.S | re.M)])
+            for pat, hint in allowed['question_fairness'].items():
+                m = re.search(pat, seen)
+                if m: bad(f, f'fairness: "{m.group(0)}" is not public vocabulary ({hint}; benchmark/design.md, section 6.1)')
+        if st not in ('retired', 'awaiting-input'):
+            atts_q = [str(a) for a in (fm or {}).get('attachments') or []]
+            linked = re.findall(r'\]\((\d{4}/[^)\s]+)\)', prompt_t)
+            for a in atts_q:
+                if a not in linked: bad(f, f'attachment {a} is not linked in ## Prompt: link the words that refer to it, e.g. [the attached chart]({a})')
+                if a.lower().endswith('.csv') and os.path.exists(os.path.join('benchmark', 'questions', a)):
+                    n = len(open(os.path.join('benchmark', 'questions', a), encoding='utf-8-sig').read())
+                    if n > allowed['question_csv_max_chars']:
+                        bad(f, f'{a} has {n} characters, above {allowed["question_csv_max_chars"]}: the runner puts it in the prompt')
+            for a in linked:
+                if a not in atts_q: bad(f, f'## Prompt links {a}, which is not in attachments')
         if (fm or {}).get('status') == 'awaiting-input' and '\n## Input to supply\n' not in t:
             bad(f, 'awaiting-input question needs a ## Input to supply section describing the screenshot or table')
         if not (fm or {}).get('knowledge'):

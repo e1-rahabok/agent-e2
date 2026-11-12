@@ -17,6 +17,7 @@ B: reading high Usage as a network performance problem.
 - Usage, packets received and broadcast packets are consumption: they count work done, not work refused.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): duplicates the network drop questions.
 - Previous id: question-0030 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -37,5 +38,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 misconception: [B]
-status: draft
+status: retired
 ```

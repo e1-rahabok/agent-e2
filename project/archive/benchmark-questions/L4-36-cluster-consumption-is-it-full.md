@@ -27,6 +27,7 @@ The capacity manager wants to stop placing VMs on this cluster. Do you agree? Ex
 - The answer would change if any saturation row left green or Cluster Performance fell.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): vCommunity metric Cluster Consumption (fairness); the concept returns on native counters.
 - Previous id: question-0076 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -47,5 +48,5 @@ attachments:
   - 0076/vcf-operations-cluster-consumption.png
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-status: awaiting-input
+status: retired
 ```

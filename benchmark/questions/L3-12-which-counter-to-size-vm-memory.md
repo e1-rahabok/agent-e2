@@ -9,17 +9,17 @@ Choose the most accurate counter to rightsize a VM.
 - D. VM Memory Active + Balloon + Swapped + Zipped
 - E. Guest OS Memory Used. In some cases, add the cache.
 
-Hint: think of the VM as a virtual motherboard: a printed circuit board with hardware mounted on it. What you size is the OS running on it.
+Hint: think of the VM as the hardware, like a physical server's motherboard with its parts. What you size is the OS running on it.
 
 ## Likely wrong answer
-A or B (VM-level counters), or D (mixing VM and Guest OS realms).
+A or B (VM-level counters), or D (mixing VM and Guest OS layers).
 
 ## Expected key points
 - Answer: E.
 - A is wrong: a VM-level counter full of idle pages.
 - B is wrong: a VM-level counter, a sample of active pages taken regularly.
 - C is wrong: mixes two different concepts.
-- D is wrong: mixes the VM realm and the Guest OS realm.
+- D is wrong: mixes the VM layer and the Guest OS layer.
 - E is the base answer; variants exist (for example adding cache).
 
 ## Notes

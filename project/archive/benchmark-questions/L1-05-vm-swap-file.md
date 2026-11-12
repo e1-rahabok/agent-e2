@@ -17,6 +17,7 @@ C: .vmsn is the snapshot copy of the VM configuration, not swap.
 - .vmsd holds the snapshot metadata; .vmsn the VM configuration in a snapshot; .nvram the VM BIOS or UEFI settings.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): trivia (file extension).
 - Previous id: question-0033 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -36,5 +37,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 misconception: [C]
-status: draft
+status: retired
 ```

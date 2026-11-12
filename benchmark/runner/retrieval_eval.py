@@ -60,7 +60,7 @@ def main():
             sys.exit(f'{c.id}: unknown knowledge ids {unknown} (moved? use the current id: project/tools/moved.yaml maps old ids)')
         if not need:
             continue
-        question = c.render(random.Random(0))[0] if c.options else c.prompt
+        question = c.render(random.Random(0))[0] if c.options else c.open_text()
         top = [h['id'] for h in ret.search(question, k=a.k)]
         _, ctx, _ = modes.classic_context(ret, question, cfg)
         rows.append((c.id, need, top, ctx, c.knowledge_main))

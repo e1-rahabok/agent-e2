@@ -22,6 +22,7 @@ What is the most likely cause, how do you confirm it, and what do you change?
 - Balloon is not part of Memory Latency: Ballooned at 0 does not rule out the problem.
 
 ## Notes
+- Retired 2026-11-12 (question set 1.0): same fact as the author sample on a memory limit (Consumed flat, swap and compress).
 - Previous id: question-0055 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -41,5 +42,5 @@ knowledge:
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
-status: draft
+status: retired
 ```

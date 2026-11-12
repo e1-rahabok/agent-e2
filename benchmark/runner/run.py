@@ -148,7 +148,7 @@ def main():
         if c.choice:
             question, mapping = c.render(rng)
         else:
-            question, mapping = c.prompt, {}
+            question, mapping = c.open_text(), {}
         images = c.image_parts() if track == 'vision' else []
         row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
                'track': track, 'question_id': c.id, 'answer_type': c.answer_type, 'input': ' '.join(c.input_types), 'technology': ' '.join(c.technology), 'task': c.task, 'level': c.level, 'run': r,

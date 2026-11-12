@@ -1,9 +1,9 @@
 # ESXi utilization for capacity, from Usage, Core Utilization and Utilization
 
 ## Prompt
-- Study the attached vCenter chart (not VCF Operations) of a single ESXi host.
+- Study [the attached vCenter chart](0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png) (not VCF Operations) of a single ESXi host.
 - Hyper-Threading is enabled: each core runs 2 hardware threads.
-- The second attachment zooms into the start of the chart.
+- [The second attachment](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png) zooms into the start of the chart.
 
 At the end, where the counters spike:
 - ESXi CPU Usage is flat at 100%. (The host was ESXi 7. In ESXi 9 this counter is no longer capped and would exceed 100%.)

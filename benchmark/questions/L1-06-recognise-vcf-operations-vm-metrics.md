@@ -1,7 +1,7 @@
 # Recognise the tool and the object
 
 ## Prompt
-Look at the attached screenshot.
+Look at [the attached screenshot](0037/vcf-operations-vm-metrics-tab.png).
 
 Which tool shows it, and for which object type?
 
@@ -30,6 +30,7 @@ B: taking the VCF Operations metric tree for the vCenter performance chart.
 - vCenter is the administrative tool and shows Chart Options; VCF Operations is the operations tool.
 
 ## Notes
+- Deferred 2026-11-12: screenshot question, kept for the screenshot set after 1.0 (benchmark/design.md, section 13).
 - Previous id: question-0037 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -51,5 +52,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A]
 misconception: [B]
-status: draft
+status: deferred
 ```
