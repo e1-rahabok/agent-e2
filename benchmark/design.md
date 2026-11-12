@@ -348,7 +348,7 @@ For the set:
 ## 12. Status
 - 2026-11-12: 150 questions run, at the allocation of section 3 (`python3 project/tools/coverage.py`; tasks within 2 of target: decide-capacity 31, explain-mechanism 24). Plus 5 deferred screenshot questions; 12 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Origin: 35 by the author (17 quiz, 10 book, 8 from the author's samples of 2026-11-12), 2 real exchanges, 113 synthetic. 35 carry a CSV; 1 a screenshot.
-- Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Open points: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), Q189 and Q191. Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
+- Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
 - Status draft: each question counts after the author's review (section 6.2).
 
 ## 13. Screenshot questions (after 1.0)
