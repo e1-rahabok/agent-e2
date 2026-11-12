@@ -38,6 +38,7 @@
 - Read it with Cluster Performance (%). High consumption with green performance: the cluster is busy and serving its VMs; it closes on consumption only when red, or when consumption and performance are both orange and risk is high ([`vsphere/object-types/cluster/models/close-for-business`](close-for-business.md)).
 - Memory consumed high with green saturation rows is a cache doing its job: Windows and Linux keep pages they once touched. A memory shortage shows in the saturation rows first, then in VM memory contention.
 - On a host with memory tiering, compression and swap read 0: memory beyond DRAM goes to the NVMe tier first. The tier's consumption is then the saturation signal ([`vsphere/technology/memory/concepts/memory-tiering`](../../../technology/memory/concepts/memory-tiering.md)).
+- Its bands are linear, 25, 50, 75, 100% of the usable NVMe tier: the metric sits between utilization and saturation. A utilization row starts green at a high number; a saturation row starts green at a low number and doubles quickly. Tier pages are cold by design, yet each one is memory beyond DRAM; linear quarter steps blend the two natures.
 - Low consumption with red performance: contention comes from imbalance, limits, resource pools or storage, not from load ([`vsphere/object-types/cluster/health-check/cluster-health-check`](../health-check/cluster-health-check.md)).
 - Low consumption that stays low for months: wastage, unless the cluster is new or holds DR protection ([`sp5-framework/capacity/demand`](../../../../sp5-framework/capacity/demand.md), section Consumption).
 
@@ -87,9 +88,10 @@ images:
 source:
   document: VCF-vCommunity-Adapter documentation, Cluster Consumption KPI and Capacity Management Model (read 2026-11-11); Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/cluster-consumption.md; docs/concepts/capacity-management.md; Provider Objects > Other Metrics > Cluster Consumption (%)
-corrections: []
+corrections:
+- 'Section ''Sub-metrics'': the adapter documentation gives Memory Tiering Consumption bands 4, 8, 16, 32; the author set 25, 50, 75, 100 (2026-11-12, Q179). The pack follows after it is updated.'
 review_notes:
-- 'To check: On a tiered host, Memory Consumed ÷ DRAM goes above 100% by design; tier usage stays saturation, because zip and swap read 0 on a tiered host (author, Q178 d); new bands proposed in Q179.'
+- 'To check: On a tiered host, Memory Consumed ÷ DRAM goes above 100% by design; tier usage stays saturation, because zip and swap read 0 on a tiered host (author, Q178 d); tier bands 25/50/75/100 decided (Q179); the other tiering rows proposed in Q179.'
 - 'To check: Section ''Sub-metrics'': the adapter page calls Cluster Consumption a KPI; written as a model (Q131).'
 status: draft
 ```
