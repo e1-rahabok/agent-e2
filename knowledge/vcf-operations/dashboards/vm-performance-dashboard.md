@@ -16,7 +16,7 @@
 - "VM Contention shows supply, VM Performance shows demand" → there is no such split. Performance is contention; demand and utilization are consumption, read as context on the same dashboard.
 - "The dashboard shows %RDY and %CSTP" → those are esxtop fields, sampled every 2-5 seconds per world. VCF Operations shows VM CPU Ready (%) and Co-stop (%) per 5 minutes, with 20-second peaks; the values are not comparable.
 - "Active Memory is a performance metric" → Active is an estimate of recently touched pages, with no operational use ([`vsphere/technology/memory/metrics/virtual-motherboard/active`](../../vsphere/technology/memory/metrics/virtual-motherboard/active.md)).
-- "No contention and CPU at 100%: add vCPUs" → a batch job runs at 100% by design. Add vCPUs only when the Guest OS run queue shows a bottleneck ([`vsphere/technology/cpu/configuration/cpu-alerts`](../../vsphere/technology/cpu/configuration/cpu-alerts.md)).
+- "No contention and CPU at 100%: add vCPUs" → a batch job runs at 100% by design. Add vCPUs only when the Guest OS run queue shows a bottleneck ([`vsphere/object-types/vm/alerts/vm-alerts`](../../vsphere/object-types/vm/alerts/vm-alerts.md), section VM CPU consumption).
 - "The official page is current, so follow it" → for VCF Operations 9.1 dashboards, the documentation is out of date in places; the product names (DEP) dashboards.
 
 ## Metadata
@@ -43,7 +43,7 @@ related:
 - sp5-framework/performance/performance-kpi-design
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/active
-- vsphere/technology/cpu/configuration/cpu-alerts
+- vsphere/object-types/vm/alerts/vm-alerts
 - sp5-framework/performance/troubleshooting/vm-slow
 source:
   document: Knowledge base

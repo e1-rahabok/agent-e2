@@ -21,6 +21,7 @@ KINDS = {  # folder kind -> what it answers and which tool serves it
     'concepts': ('how it works, why a value behaves so', 'search, read_file'),
     'metrics': ('what a counter means on one object', 'catalog, read_file, follow_links(same_name)'),
     'configuration': ('what a setting does', 'search, read_file'),
+    'alerts': ('the alerts of one object type, and why (values come with the file)', 'read_file, catalog'),
     'health-check': ('is this object healthy, on every pillar: the what', 'flow'),
     'troubleshooting': ('why is it down or slow: from a complaint, alert or failed health check step', 'flow'),
     'decision-tree': ('can it, should it, how much: one operational question, ending in a choice to act', 'flow'),

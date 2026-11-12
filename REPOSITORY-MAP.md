@@ -21,10 +21,10 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | `knowledge/sp5-framework/` | The method: how to operate VCF, the SP5 Framework (source: Private Cloud Management by Iwan Rahabok). `concepts/`: across pillars (overview, health check, health-risk-efficiency, class of service, modelling). `observability/`: how to read telemetry. `outputs/`: alerts, dashboards, reports, NOC live screen. `performance/`, `capacity/`: one pillar each |
 | `knowledge/vsphere/architecture/` | vSphere design every metric follows from: provider and consumer, VM vs Guest OS realms, overhead, resource controls |
 | `knowledge/vsphere/technology/` | One technology at a time (`cpu`, `memory`, `storage`, `network`, `gpu`): how it works, metrics per object, what to set, troubleshooting and decision trees within that technology |
-| `knowledge/vsphere/object-types/` | One object type at a time (`vm`, `esxi`, `cluster`, `resource-pool`): what combines technologies, KPIs, models, the object's health check, troubleshooting and decision trees on that object |
+| `knowledge/vsphere/object-types/` | One object type at a time (`vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `distributed-switch`): what combines technologies, KPIs, models, the object's alerts (`alerts/`), its health check, troubleshooting and decision trees on that object |
 | `knowledge/vsphere/tools/` | How esxtop and the vSphere Client show the counters |
-| `knowledge/vcf-operations/` | The product VCF Operations: `concepts/` (role), `features/`, `dashboards/` and `reports/` as built in it, `alerts/` (alert definitions). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
-| `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it |
+| `knowledge/vcf-operations/` | The product VCF Operations: `concepts/` (role), `features/`, `dashboards/` and `reports/` as built in it, `alerts/` (how an alert definition works). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
+| `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `system/alerts/` |
 | `knowledge/glossary.md` | The agent's vocabulary |
 | `knowledge/misconceptions.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
 | `harness/` | Retrieval, catalog, calculator, planning calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
@@ -89,6 +89,6 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | `project/vocabulary.md`, `project/terms.md` | Writing vocabulary; repository terms |
 | `project/sources/` | Source documents. Read-only |
 | `project/knowledge-rules/` | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
-| `project/templates/` | Templates for knowledge files: concept, metric, configuration, screen, and the three flow kinds (health check, troubleshooting, decision tree) |
+| `project/templates/` | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
 | `project/tools/` | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py` |
 | `project/archive/` | Retired documents |

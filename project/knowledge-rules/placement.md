@@ -41,7 +41,7 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
 │   │       ├── troubleshooting/     # why flows within this technology
 │   │       └── images/
 │   ├── object-types/                # multi-technology content, by object (book route)
-│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, health-check/, troubleshooting/,
+│   │   └── vm/ esxi/ cluster/ ...   # concepts/, metrics/, configuration/, alerts/, health-check/, troubleshooting/,
 │   │                                # decision-tree/, images/
 │   └── tools/                       # how each tool shows the counters
 │       ├── esxtop/                  # panels, fields, units vs the vSphere Client
@@ -52,10 +52,11 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
 │   ├── features/                    # features as implemented (real-time metrics, 20-second peaks)
 │   ├── dashboards/                  # dashboards as shipped or as built in the product (VM Performance, business applications)
 │   ├── reports/                     # the report suite as built in the product
-│   ├── alerts/                      # alert definitions, bottom up: symptoms, conditions, cycles, recommendations
+│   ├── alerts/                      # how VCF Operations builds an alert definition: symptoms, conditions, cycles
 │   └── troubleshooting/             # later: VCF Operations' own health and troubleshooting
 └── guest-os/                        # Windows, Linux: a separate layer, not Broadcom products, not part of the VM
-    └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os)
+    └── <technology>/                # concepts/, metrics/, images/ (scope: guest-os, layer: guest-os);
+                                     # system/alerts/guest-os-alerts: the Guest OS alert set
 ```
 
 - The author's book sees metrics from 3 perspectives: technology, pillar of operations, product. A folder tree holds one hierarchy; tags (`technology`, `pillar`, `product`, `object`) hold the others, and retrieval and the website browse by any of them.
@@ -77,10 +78,14 @@ knowledge/                           # the domain knowledge Agent E2 uses (see K
     - how VCF Operations shows a counter (rollup, 20-second peak): `vcf-operations/features/`. VCF Operations is not a vSphere tool: it also monitors vSAN, NSX and the Guest OS. `vsphere/tools/` holds the vSphere tools only: esxtop and the vSphere Client.
   - `vcf-operations/` holds only VCF Operations itself: its role, features (real-time metrics), the dashboards and reports as built in it, alert definitions, and later its own sizing, health and performance troubleshooting. See [`vcf-operations/concepts/vcf-operations-role`](../../knowledge/vcf-operations/concepts/vcf-operations-role.md). How to design a dashboard, report or alert is method: `sp5-framework/outputs/`.
   - A concept is a general idea; a file that documents an actual implementation is not a concept. In `vcf-operations/`, `concepts/` holds only what the product is for; implementations go to `features/`, `dashboards/`, `reports/` or `alerts/`. A topic that is both gets two files: the idea in `sp5-framework/`, the implementation in `vcf-operations/` (example: [`sp5-framework/observability/real-time-metrics`](../../knowledge/sp5-framework/observability/real-time-metrics.md) and [`vcf-operations/features/real-time-metrics`](../../knowledge/vcf-operations/features/real-time-metrics.md)).
-  - Alerts have two parts. Top down, the alert architecture (taxonomy, routing, deduplication, escalation, design of the set): `sp5-framework/outputs/`. Bottom up, how one alert definition is built in VCF Operations (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs): `vcf-operations/alerts/`.
+  - Alerts have three parts, and each fact lives in one (2026-11-12):
+    - the method, top down: what an alert is, how to design the set, personas, threshold design (`sp5-framework/outputs/`);
+    - the recommended set, one file per object type, because an alert fires on one object type, not on a technology: `vsphere/object-types/<object>/alerts/<object>-alerts`, and [`guest-os/system/alerts/guest-os-alerts`](../../knowledge/guest-os/system/alerts/guest-os-alerts.md) for the Guest OS layer. Each alert is a `##` section under its catalog name: what it detects, why each symptom is in it, who receives it, which flow to open. A section per resource left out says why. No values: thresholds, populations and waits live only in `catalog/thresholds-alerts.yaml`, whose rows point to the file (`kb`) and come with it into the context. An object type with no alert of its own joins its family file as a section (datastore cluster in datastore-alerts, port group in distributed-switch-alerts);
+    - the product, bottom up: how VCF Operations builds and evaluates an alert definition (symptoms, conditions, wait and cancel cycles, meta tags, recommendations, management packs), and after 1.0 the alerts it ships: `vcf-operations/alerts/`.
+    - Never a `*-alerts` file under `technology/`: lint rejects it. The technology view (which alerts test VM CPU Ready) is a catalog query: each symptom's `kb` is its metric file.
   - The `product` tag still names `vcf-operations` on a file whose metric VCF Operations computes.
   - How a tool shows the counters (esxtop panels and fields, vCenter statistics levels and rollups, units per tool) goes in `vsphere/tools/<ui>/`. The metric's meaning stays in its metric file.
-  - A KPI, model or health check of one object is the method applied to that object: it stays with the object (`vsphere/object-types/<object>/`) and links to the method file.
+  - A KPI, model, alert set or health check of one object is the method applied to that object: it stays with the object (`vsphere/object-types/<object>/`) and links to the method file. This is not object-first folders (declined 2026-11-04 and 2026-11-06): metrics stay by technology.
   - Flows: one technology → `technology/<tech>/<kind>/`; one object, several technologies → `object-types/<object>/<kind>/`; across products (VM slow) → `sp5-framework/<pillar>/<kind>/`. `<kind>` is `troubleshooting` (the why: down or slow) or `decision-tree` (one operational question). `health-check` lives only with an object type: `object-types/<object>/`, `vcf-operations/` for VCF Operations itself, and later `guest-os/` for the Guest OS as its own object. Never on a technology or a pillar.
 - Storage, not disk. Datastores, adapters, paths and vSAN are storage but not disks; a disk is one layer. vCenter keeps separate counter groups per layer (`virtualDisk`, `disk`, `datastore`, `storageAdapter`, `storagePath`), and the same label means a different scope in each. One word for folder, tag and glossary: `storage`.
 - vCenter is the administrative tool (create VMs, configure switches). Capacity planning and performance troubleshooting are done in VCF Operations. The knowledge base never uses the two names interchangeably.

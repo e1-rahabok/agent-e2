@@ -96,6 +96,12 @@ def main():
                 bad(f, f'object-types folder "{parts[3]}" not allowed. Allowed: {", ".join(OBJECT_FOLDERS)}')
             elif parts[2] == 'tools' and parts[3] not in allowed['ui']:
                 bad(f, f'tools folder "{parts[3]}" is not a ui tag value ({", ".join(allowed["ui"])})')
+        if '/alerts/' in f and not f.startswith('knowledge/vcf-operations/'):
+            if not ALERT_FILE.fullmatch(f[len('knowledge/'):-3]):
+                bad(f, 'alert file must be <object>/alerts/<object>-alerts under vsphere/object-types/, or guest-os/system/alerts/guest-os-alerts: an alert fires on one object type')
+            if fm.get('retriever_guide') != 'what-to-set': bad(f, 'alert file must have retriever_guide: what-to-set')
+        elif re.search(r'-alerts\.md$', f):
+            bad(f, 'alert files live in an alerts/ folder of their object type, never under a technology or the method')
         if f.startswith('knowledge/sp5-framework/'):
             if fm.get('scope') != 'sp5-framework': bad(f, 'file in knowledge/sp5-framework/ must have scope: sp5-framework')
             if len(f.split('/')) > 3 and f.split('/')[2] not in PILLAR_FOLDERS: bad(f, f'pillar folder not allowed. Allowed: {", ".join(PILLAR_FOLDERS)}')
@@ -359,6 +365,9 @@ CLASSES = ('gold', 'silver', 'bronze')  # class of service
 ROW_CLASSES = CLASSES + ('all', 'production', 'non-production')
 
 OPERATORS = ['>', '>=', '<', '<=', '=', 'range']
+# Alerts fire on one object type, so the recommended alerts live with the object type (2026-11-12).
+ALERT_FILE = re.compile(r'vsphere/object-types/([a-z-]+)/alerts/\1-alerts|guest-os/system/alerts/guest-os-alerts')
+ALERT_VALUE = re.compile(r'\d+(?:[.,]\d+)?\s?(?:%|ms|GHz|MHz|MB|GB|IOPS|minutes?|cycles?)(?![a-z])')
 
 
 def check_catalog(allowed, ids, bodies, bad, docs=None):
@@ -382,7 +391,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
     def check_alerts(path, data):
         """Symptoms (one test each, written once) and alert definitions that refer to them by id."""
         def objs(o): return o if isinstance(o, list) else [o]
-        sym, tests = {}, set()
+        sym, tests, alert_names = {}, set(), {}
         for n, s in enumerate(data.get('symptoms') or []):
             w = f'symptoms row {n + 1} ({s.get("id")})'
             for k in ('id', 'object', 'metric', 'operator', 'value', 'source', 'kb'):
@@ -404,8 +413,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             if key in tests: bad(path, f'{w}: same test as another symptom: refer to that one')
             tests.add(key)
             kb_ok(path, w, s.get('kb'))
-            if s.get('kb') in bodies and s.get('quote') and s['quote'] not in bodies[s['kb']]:
-                bad(path, f'{w}: quote no longer in {s["kb"]}: update the symptom or the file')
+            if 'quote' in s: bad(path, f'{w}: no quote: alert values live only here; the knowledge files hold the reasons')
         used = set()
         for n, a in enumerate(data.get('alerts') or []):
             w = f'alerts row {n + 1} ({a.get("id")})'
@@ -424,6 +432,13 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
             for o in objs(a.get('object')):
                 if o not in objects: bad(path, f'{w}: object "{o}" not allowed')
             kb_ok(path, w, a.get('kb'))
+            if len(objs(a.get('object'))) != 1: bad(path, f'{w}: one object type per alert: an alert fires on one object type')
+            if a.get('kb') and not ALERT_FILE.fullmatch(a['kb']): bad(path, f'{w}: kb must be the alert file of its object type (<object>/alerts/<object>-alerts)')
+            elif a.get('kb') in bodies:
+                heads = [h.lower() for h in re.findall(r'^## (.+)$', bodies[a['kb']], re.M)]
+                if not any(str(a.get('name', '')).lower() in h for h in heads):
+                    bad(path, f'{w}: name "{a.get("name")}" is not a ## heading of {a["kb"]}: the file explains each alert under its name')
+                alert_names.setdefault(a['kb'], set()).add(str(a.get('name', '')).lower())
             for m, st in enumerate(a.get('sets') or []):
                 ws = f'{w} set {m + 1}'
                 if st.get('match') not in ('all', 'any'): bad(path, f'{ws}: match must be all or any')
@@ -444,6 +459,16 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
                     if miss: bad(path, f'{ws}: symptom "{sid}" is not defined on {", ".join(miss)}')
         for sid in sym:
             if sid not in used: bad(path, f'symptom "{sid}" is used by no alert')
+        # One place per number: a section that explains a catalog alert, and the correction of a misconception, hold no alert values.
+        for kb_id, names in alert_names.items():
+            section = ''
+            for line in bodies.get(kb_id, '').split('\n'):
+                if line.startswith('## '):
+                    section = line[3:].lower(); continue
+                text = line.split('→', 1)[1] if section == 'misconceptions' and '→' in line else line
+                checked = section == 'misconceptions' or any(n in section for n in names)
+                if checked and ALERT_VALUE.search(text):
+                    bad(f'knowledge/{kb_id}.md', f'section "{section}": alert value "{ALERT_VALUE.search(text).group(0)}" in prose: values live only in catalog/thresholds-alerts.yaml')
     def kb_ok(path, where, ref):
         if ref and ref not in ids and not ref.startswith('catalog/'):
             bad(path, f'{where}: kb "{ref}" does not exist')

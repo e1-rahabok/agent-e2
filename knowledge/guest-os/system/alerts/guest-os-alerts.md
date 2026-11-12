@@ -1,27 +1,26 @@
 # Guest OS alerts
 
-## What to set
+## Coverage and receivers
 - Guest OS alerts are for the application team: whoever runs the application on Windows or Linux. They are not for the infrastructure team.
 - The Guest OS is the layer closest to the application, and performance problems can start there without any virtualization cause.
 - Without application or transaction monitoring, the application team relies on complaints. A complaint is subjective and correlates weakly and unpredictably with technical counters. These alerts give a counter-based signal.
-- Each alert below fires only when all its conditions hold.
+- Alerted: CPU run queue, disk queue. VCF Operations stores the counters on the VM object, so the alerts are defined on the VM; they still watch the Guest OS layer.
+- Every value (threshold, wait, gate) is in the alert rows of [`catalog/thresholds-alerts.yaml`](../../../catalog/thresholds-alerts.yaml), shown with this file.
 
-## CPU run queue alert
+## Guest OS CPU run queue
 - Goal: catch a long CPU run queue, which is less known than CPU utilization. It is often independent of the virtualization layer: some applications spawn too many threads. It also shows the VM owner that the infrastructure team sees inside Windows and Linux.
-- Red: for 15 minutes, Guest OS Peak CPU Queue above 20 and VM CPU Net Run above 75%.
-- Orange: not set, to reduce noise. To set one: Guest OS Peak CPU Queue above 10 and VM CPU Net Run above 75%.
-- Why 15 minutes and Net Run: the queue counter gives false positives, so the wait is longer and Net Run confirms a real workload.
-- Use it with the VM CPU contention and VM CPU consumption alerts ([`vsphere/technology/cpu/configuration/cpu-alerts`](../../../vsphere/technology/cpu/configuration/cpu-alerts.md)). Remediation:
+- Guest OS Peak CPU Queue, 20-second: the queue itself ([`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md)).
+- VM CPU Net Run: confirms a real workload. The queue counter gives false positives, so Net Run is required and the wait is longer ([`vsphere/technology/cpu/metrics/virtual-motherboard/net-run`](../../../vsphere/technology/cpu/metrics/virtual-motherboard/net-run.md)).
+- Red only, to reduce noise. To add an orange, halve the queue value and keep Net Run: red is 2x orange in the set.
+- Use it with the VM CPU contention and VM CPU consumption alerts ([`vsphere/object-types/vm/alerts/vm-alerts`](../../../vsphere/object-types/vm/alerts/vm-alerts.md)). Remediation:
   1. VM CPU contention alert also fired → follow its remediation.
   2. VM CPU consumption alert also fired → follow its remediation.
   3. Neither → find why the application creates so many threads. Compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
-- Metrics: [`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/net-run`](../../../vsphere/technology/cpu/metrics/virtual-motherboard/net-run.md).
 
-## Disk queue alert
-- Red: for 5 minutes, 20-second peak Guest OS disk queue above 10,000 and VM CPU Usage above 1 GHz.
-- Orange: for 5 minutes, 20-second peak Guest OS disk queue above 5,000 and VM CPU Usage above 1 GHz.
+## Guest OS disk queue
+- Guest OS disk queue, 20-second peak: the queue itself ([`guest-os/storage/metrics/disk-queue`](../../storage/metrics/disk-queue.md)).
+- VM CPU Usage: the activity gate of the VM alerts.
 - Neither Windows nor Linux gives official guidance. The values are set high; adjust them to the environment. With too many false positives, disable orange.
-- Metric: [`guest-os/storage/metrics/disk-queue`](../../storage/metrics/disk-queue.md).
 
 ## Other contention: build your own
 - Other Guest OS problems not caused by virtualization have thresholds that vary widely by application, so no alert is defined. Build your own for:
@@ -39,14 +38,14 @@
 ## Misconceptions
 - "Guest OS alerts go to the infrastructure team" → they go to the application team; infrastructure has its own VM and host alerts.
 - "Run queue above 20 is always a CPU shortage" → check the VM CPU contention and consumption alerts first; if neither fired, the application creates too many threads.
-- "Alert on the run queue alone" → the counter gives false positives; require Net Run above 75% and wait 15 minutes.
+- "Alert on the run queue alone" → the counter gives false positives; the alert also requires Net Run and a longer wait.
 - "Alert on low free memory" → the Guest OS uses free memory as cache; check paging and benchmark the application.
-- "Alert on low disk space for every partition" → swap partitions sit near 100% by design.
-- "Disk queue thresholds come from Microsoft or Linux guidance" → neither publishes one; the values here are set high on purpose.
+- "Alert on low disk space for every partition" → swap partitions are nearly full by design.
+- "Disk queue thresholds come from Microsoft or Linux guidance" → neither publishes one; the values in the set are high on purpose.
 
 ## Metadata
 ```yaml
-id: guest-os/system/configuration/guest-os-alerts
+id: guest-os/system/alerts/guest-os-alerts
 retriever_guide: what-to-set
 scope: guest-os
 layer:
@@ -68,7 +67,7 @@ internal_derive:
 - guest-os/storage/metrics/disk-queue
 - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
 related:
-- vsphere/technology/cpu/configuration/cpu-alerts
+- vsphere/object-types/vm/alerts/vm-alerts
 - guest-os/cpu/metrics/context-switch
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - guest-os/system/metrics/guest-os-performance
@@ -77,9 +76,9 @@ source:
   path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption)'
 corrections: []
 review_notes:
-- 'Section ''CPU run queue alert'': the source thanks Darren Farrer for the collaboration on the remediation.'
-- 'To check: Section ''CPU run queue alert'', remediation: the link to vsphere/technology/cpu/configuration/cpu-alerts; the source refers to high VM CPU contention and high VM CPU consumption alerts.'
-- 'To check: Section ''Consumption'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. (Q142).'
-- 'Section ''Disk queue alert'': the source says CPU Usage above 1 GHz without naming the object; written as VM CPU Usage, as in the VM alerts.'
+- 'Section ''Guest OS CPU run queue'': the source thanks Darren Farrer for the collaboration on the remediation.'
+- 'Section ''Guest OS CPU run queue'': the source gives the optional orange as Peak CPU Queue above 10 with Net Run above 75%, half the red queue value; written as the 2x rule.'
+- 'Section ''Consumption: daily checks, no alert'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. Parked after 1.0 (Q142).'
+- 'Section ''Guest OS disk queue'': the source says CPU Usage above 1 GHz without naming the object; written as VM CPU Usage, as in the VM alerts.'
 status: draft
 ```

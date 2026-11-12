@@ -326,8 +326,9 @@ class Catalog:
             iv = f" ({r['interval']})" if r['interval'] else ''
             lines.append(f"- {_use_label(r)}: {r['metric']}{iv} {r['operator']} {r['value']:g}{hi} {r['unit'] or ''}{cond}: {r['meaning']} "
                          f"(source: {r['source']}) [{r['kb']}]")
-        for r in self._q(f'SELECT DISTINCT a.* FROM alerts a JOIN alert_symptoms x ON x.alert = a.id JOIN symptoms s ON s.id = x.symptom '
-                         f'WHERE a.kb IN ({marks}) OR s.kb IN ({marks})', tuple(ids) * 2):
+        # An alert comes with its object type's alert file only. A symptom's kb is the metric file: reading a metric
+        # does not pull every alert that tests it (the catalog lookup finds those by metric name).
+        for r in self._q(f'SELECT * FROM alerts WHERE kb IN ({marks})', tuple(ids)):
             a = _alert(r)
             lines.append(f"- Alert, {a['criticality']}: {a['name']} ({a['object']}), {a['rule']}; {a['wait']}. [{a['kb']}]")
         for r in self._q(f'SELECT * FROM kpi WHERE src IN ({marks})', tuple(ids)):
