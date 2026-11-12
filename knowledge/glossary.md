@@ -115,7 +115,7 @@ A metric with its own file is an entry only when it has another name or a confus
 
 ### Performance, SLA and KPI
 
-- **Actual Availability (%)**: Availability as it happened. Usually lower than Operational Availability.
+- **Actual Availability (%)**: Availability as it happened. Same scope as the Availability SLA: the Guest OS. Usually lower than Operational Availability.
 - **Class of service**: Gold, Silver, Bronze: each with its own price, overcommit ratio, maximum VM size and availability SLA.
   - Also called: Tier
 - **Crown jewels**: The critical business applications, strategic to the core business: few VMs, essential to revenue, profit or image. Each gets a KPI at the infrastructure layer.
