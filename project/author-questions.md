@@ -50,32 +50,6 @@ Each entry has:
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
 - Answer:
 
-### Q132 · VCF-vCommunity-Adapter vs Part 1 > Cluster Closure · Which closure thresholds does Agent E2 apply
-
-- Files: [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (steps 5 and 6); [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows closure-*). Related: Q121, Q122.
-- Search: book table after "Implementing the above with actual threshold"; adapter periodic-cluster-check.md, section The rule.
-- Question: (a) when a user asks "is this cluster closed", which set applies? (b) is the pack the current version of your table?
-- Written as now: two band sets live side by side.
-  - close-for-business (the pack): band edges 25, 50, 75 on each score; Performance read at the 5th percentile, Consumption and Risk at the 95th; Risk orange closes every cluster.
-  - can-cluster-take-more-vms steps 5-6 and the 6 catalog rows (your Q121 table): Consumption red above 80, orange above 60; Performance red below 20, orange below 40; Risk production above 60, non-production above 80; all at the 95th percentile of 24 hours.
-  - close-for-business misconception still quotes the retired book table (Performance 40 and 20, Risk 50 and 75). The decision-tree chart is fixed (no Capacity Remaining); its review notes use old step numbers.
-- Final answer (2026-11-12; expert call, needs your choice):
-  - (a) Agent E2 reads the pack's published Close for Business when present: 1.0 reads published scores (2026-11-10). It reports the rule that fired and the worst-end value of each score.
-  - (b) One band set, and the recommendation is the score colours: 25, 50, 75.
-    - Reason: Consumption, Performance and Risk are scores whose colours are fixed by the scoring model (green 100-75, yellow 75-50, orange 50-25, red 25-0; mirrored for the higher-is-worse scores). The Q121 edges cut across the colours the user sees: Consumption 78 shows red and is orange under Q121; Performance 22 shows red and is orange under Q121. A closure rule that disagrees with the colour of its own input must be explained every time.
-    - Keep from Q121 what the colours do not fix: the Risk split by environment (production closes at Risk orange, non-production at Risk red). The pack applies orange to every cluster: a pack change after 1.0, like Q151.
-    - If you keep the Q121 edges instead: the pack changes to them after 1.0, and close-for-business states the difference until then.
-  - Either way:
-    - Performance is higher-is-better, so its worst end is the 5th percentile, not the 95th: step 5 and the two Performance rows change.
-    - The close-for-business misconception quoting the retired book table is replaced.
-    - The decision-tree review notes move to the new step numbers (Risk is step 6).
-  - Change if accepted: can-cluster-take-more-vms (steps 5-6, image alt text, review notes); the 6 closure-* rows; close-for-business (misconception, review note); plan After 1.0 (pack: Risk split by environment). With the score colours, your closure table image is replaced.
-  - For you: which set wins (score colours 25/50/75, or Q121 20/40/60/80); whether the pack gets the non-production Risk split.
-- Answer (partial, 2026-11-12): the vCommunity management pack does not know if a cluster is production or non-production; it uses the more conservative setting, production. Agent E2 advises the VMware admin to keep two separate settings: production focuses on performance, non-production on cost.
-- Applied 2026-11-12: close-for-business (the pack applies the production setting; advice to keep two settings; the misconception quoting the retired book table replaced); can-cluster-take-more-vms (step 5: Performance at the 5th percentile; step 6: two settings); catalog rows closure-cluster-performance-* read the 5th percentile.
-- Still open: the band edges. The pack and close-for-business use the score colours (25, 50, 75); can-cluster-take-more-vms and the catalog use your Q121 table (Consumption 60/80, Performance 40/20, Risk 60/80). Which set?
-- Answer:
-
 ### Q134 · Part 3 > Metric Mastery > Triple See Method · Why not USE, RED, Golden Signals
 
 - Files: [Triple See Method](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/triple-see-method.md) (section Why not USE, RED or Golden Signals); [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (Triple See Method).
@@ -385,6 +359,33 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q132 · VCF-vCommunity-Adapter vs Part 1 > Cluster Closure · Which closure thresholds does Agent E2 apply
+
+- Files: [Close for Business](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/models/close-for-business.md); [Can this cluster take more VMs?](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md) (steps 5 and 6); [thresholds-capacity.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-capacity.yaml) (rows closure-*). Related: Q121, Q122.
+- Search: book table after "Implementing the above with actual threshold"; adapter periodic-cluster-check.md, section The rule.
+- Question: (a) when a user asks "is this cluster closed", which set applies? (b) is the pack the current version of your table?
+- Written as now: two band sets live side by side.
+  - close-for-business (the pack): band edges 25, 50, 75 on each score; Performance read at the 5th percentile, Consumption and Risk at the 95th; Risk orange closes every cluster.
+  - can-cluster-take-more-vms steps 5-6 and the 6 catalog rows (your Q121 table): Consumption red above 80, orange above 60; Performance red below 20, orange below 40; Risk production above 60, non-production above 80; all at the 95th percentile of 24 hours.
+  - close-for-business misconception still quotes the retired book table (Performance 40 and 20, Risk 50 and 75). The decision-tree chart is fixed (no Capacity Remaining); its review notes use old step numbers.
+- Final answer (2026-11-12; expert call, needs your choice):
+  - (a) Agent E2 reads the pack's published Close for Business when present: 1.0 reads published scores (2026-11-10). It reports the rule that fired and the worst-end value of each score.
+  - (b) One band set, and the recommendation is the score colours: 25, 50, 75.
+    - Reason: Consumption, Performance and Risk are scores whose colours are fixed by the scoring model (green 100-75, yellow 75-50, orange 50-25, red 25-0; mirrored for the higher-is-worse scores). The Q121 edges cut across the colours the user sees: Consumption 78 shows red and is orange under Q121; Performance 22 shows red and is orange under Q121. A closure rule that disagrees with the colour of its own input must be explained every time.
+    - Keep from Q121 what the colours do not fix: the Risk split by environment (production closes at Risk orange, non-production at Risk red). The pack applies orange to every cluster: a pack change after 1.0, like Q151.
+    - If you keep the Q121 edges instead: the pack changes to them after 1.0, and close-for-business states the difference until then.
+  - Either way:
+    - Performance is higher-is-better, so its worst end is the 5th percentile, not the 95th: step 5 and the two Performance rows change.
+    - The close-for-business misconception quoting the retired book table is replaced.
+    - The decision-tree review notes move to the new step numbers (Risk is step 6).
+  - Change if accepted: can-cluster-take-more-vms (steps 5-6, image alt text, review notes); the 6 closure-* rows; close-for-business (misconception, review note); plan After 1.0 (pack: Risk split by environment). With the score colours, your closure table image is replaced.
+  - For you: which set wins (score colours 25/50/75, or Q121 20/40/60/80); whether the pack gets the non-production Risk split.
+- Answer (partial, 2026-11-12): the vCommunity management pack does not know if a cluster is production or non-production; it uses the more conservative setting, production. Agent E2 advises the VMware admin to keep two separate settings: production focuses on performance, non-production on cost.
+- Applied 2026-11-12: close-for-business (the pack applies the production setting; advice to keep two settings; the misconception quoting the retired book table replaced); can-cluster-take-more-vms (step 5: Performance at the 5th percentile; step 6: two settings); catalog rows closure-cluster-performance-* read the 5th percentile.
+- Still open: the band edges. The pack and close-for-business use the score colours (25, 50, 75); can-cluster-take-more-vms and the catalog use your Q121 table (Consumption 60/80, Performance 40/20, Risk 60/80). Which set?
+- Answer: Follow the Q121 table: the value cannot sit on the band border; closure needs more certainty (2026-11-12). The author updated close-for-business.
+- Applied 2026-11-12: close-for-business: the score colours (25, 50, 75) are display bands; closure thresholds sit inside them: Performance red below 20, orange below 40; Consumption and Risk red above 80, orange above 60 (the author's line "Orange Consumption or Red Risk" read as orange Risk); a value on a closure threshold does not reach it; the example table moved off the borders and gained the two "shows red, stays open" cases (Performance 22, Consumption 78); the misconception "the score shows red, so the cluster is closed". can-cluster-take-more-vms and the closure-* catalog rows already held these values. The vCommunity pack follows after 1.0 (plan.md). Closed.
 
 ### Q131 · VCF-vCommunity-Adapter · KPI is performance only: names in the adapter documentation
 
