@@ -7,7 +7,7 @@
 - The CPU overcommit ratio is per physical thread, not per core ([`sp5-framework/capacity/overcommit`](overcommit.md)).
 
 ## Maximum VM size
-Below is what is technically possible. Aim to run within the physical CPU package (AMD EPYC CCD or Intel Xeon Compute Tile) to avoid NUMA.
+Below is what is technically possible. This is the technical ceiling, counted in threads. The size per class (section Size per class) binds far below it. Aim to run within one L3 domain and one NUMA node: at default BIOS settings an AMD CCD is an L3 boundary, not a NUMA boundary.
 | Overcommit Ratio | Maximum VM size |
 |---|---|
 | 1:1 | ESXi physical threads - hypervisor overhead |
@@ -32,7 +32,9 @@ Below is what is technically possible. Aim to run within the physical CPU packag
 
 - Memory stays within the memory of the VM's NUMA node; more fetches remote memory across the fabric.
 - Why: NUMA optimization keeps the vCPU threads next to the memory controllers they use. Threads that cross a die boundary to reach remote memory spend clock cycles crossing the fabric, and the application slows.
-- The unit is the L3 cache domain. On most EPYC generations one CCD is one L3 domain; on Zen 4c a 16-core CCD holds two 8-core L3 domains (CCX), so the CCX is the unit.
+- The unit is the L3 cache domain. On most EPYC generations one CCD is one L3 domain; on Zen 4c a 16-core CCD holds two 8-core L3 domains (CCX), so the CCX is the unit. On Zen 5c one 16-core CCX fills a CCD, so the CCD is the unit again.
+- Intel Xeon: a compute tile is its own L3 domain and NUMA node only with sub-NUMA clustering (SNC) on. With SNC off the socket shares one L3 and one NUMA node, so the tile is a softer boundary than an AMD CCD.
+- Two limits, both read from the host: above the L3 domain a VM pays a cache cost; above the cores of its NUMA node it reads remote memory. With NPS-1 an AMD NUMA node is the whole socket (up to 128 cores on Zen 5, 192 on Zen 5c).
 
 ### Example: AMD EPYC 9996 in NPS2
 - 256 cores per socket: 8 CCDs of 32 cores; 2 IODs; 16 DDR5 channels, 8 per IOD.
@@ -45,7 +47,7 @@ Below is what is technically possible. Aim to run within the physical CPU packag
 ## Size as a class of service fence
 - In a mixed cluster (Gold, Silver, Bronze on the same hosts), a lower class must not become the noisy neighbour of a higher one. Mixed clusters are common but a compromise: the design is one class per cluster ([`sp5-framework/capacity/demand`](demand.md), section Overcommit: several classes).
 - Technique: Gold is entitled to larger VM configurations; Bronze is kept small. A small Bronze VM cannot take a large share of a host's threads at once, so its peaks hurt Gold less.
-- The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from its ratio in the table above ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md)).
+- The class sets both the overcommit ratio and the maximum VM size, so the maximum VM size of a class follows from section Size per class, bounded by the technical ceiling of section Maximum VM size ([`sp5-framework/concepts/class-of-service`](../concepts/class-of-service.md), [`sp5-framework/performance/noisy-neighbour`](../performance/noisy-neighbour.md)).
 
 ## Misconceptions
 - "A VM can be as large as its host" → by count at 1:1, yes; but the VM then pays the Hyper-Threading penalty and spans NUMA nodes. Size it against the host's NUMA node.
@@ -88,9 +90,8 @@ source:
   path: 'Noisy Neighbour > Maximum VM size; Class of Service'
 corrections: []
 review_notes:
+- 'To check: Section ''Size per class'', Intel: compute tile as L3 domain and NUMA node only with SNC on, against the Intel Xeon 6 documentation.'
 - 'To check: Section ''Example: AMD EPYC 9996'': the CPU figures (8 CCDs of 32 cores, 2 IODs, 16 channels) against the AMD product specification.'
 - 'Section ''Size per class'': the author''s general advice (2026-11-12, Q176).'
-- 'To check: Section ''Maximum VM size'': the size is counted in logical CPUs (threads); whether a ceiling at the physical cores applies at 1:1 (Q111 a).'
-- 'To check: Section ''Size is set by the host'': the NUMA node and L3 domain limits per CPU family (Q125).'
 status: draft
 ```

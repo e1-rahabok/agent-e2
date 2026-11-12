@@ -35,7 +35,7 @@ flowchart TD
 2. Cluster state and HA (ClusterComputeResource). Yellow or red, or HA no longer meets its failover capacity → no; fix the state first. Admission control counts reservations, not usage. See [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../concepts/admission-control-and-cluster-state.md). Green → step 3.
 3. Overcommit (ClusterComputeResource). Cluster planned without overcommit (1:1) → step 4. Overcommitted → step 5.
 4. Allocation (ClusterComputeResource). Allocation of powered-on VMs, plus the new VMs, against usable capacity (total − HA − hypervisor − buffer; [`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md)). Allocation reaches usable capacity → no: closed. Below → step 7.
-5. Consumption and performance (ClusterComputeResource). Both read at the 95th percentile of the last 24 hours, with the same thresholds for production and non-production. Either one red → no: closed.
+5. Consumption and performance (ClusterComputeResource). Both read at the worst end of the last 24 hours: the 95th percentile for Consumption, the 5th percentile for Performance (higher is better). Same thresholds for production and non-production. Either one red → no: closed.
    - Cluster Consumption (%) ([`vsphere/object-types/cluster/models/cluster-consumption`](../models/cluster-consumption.md)): red above 80%, orange above 60%.
    - Cluster Performance (%) ([`vsphere/object-types/cluster/kpis/cluster-performance`](../kpis/cluster-performance.md)): red below 20%, orange below 40%. This is the cluster KPI; it is not the class-of-service minimum VM Performance (%).
    - The vCommunity management pack automates this step and step 6 with one band set for every cluster: [`vsphere/object-types/cluster/models/close-for-business`](../models/close-for-business.md).
@@ -43,6 +43,7 @@ flowchart TD
 6. Risk (ClusterComputeResource). Only when consumption and performance are both orange. Cluster Risk (%), 95th percentile of the last 24 hours ([`vsphere/object-types/cluster/models/cluster-risk`](../models/cluster-risk.md)):
    - production: above 60% (orange) → no: closed;
    - non-production: above 80% (red) → no: closed.
+   - Production focuses on performance, non-production on cost: keep the two settings apart. The vCommunity management pack cannot tell them apart and applies the production setting to every cluster.
    - Read the sub-metrics, not only the score: a worse sub-metric can lower the score.
    - Below the limit, or consumption and performance not both orange → open → step 7.
 7. Fit of the new VMs (ClusterComputeResource, VirtualMachine).
@@ -141,6 +142,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow the book (Cluster Closure, Logic) (Q061).'
-- 'Step 5: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open.'
+- 'Step 6: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open.'
 status: draft
 ```

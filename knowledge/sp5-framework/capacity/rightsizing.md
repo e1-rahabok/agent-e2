@@ -42,7 +42,7 @@
 - Faster snapshots, especially with memory.
 - Faster vMotion: Windows and Linux use memory as cache; more memory, more to copy.
 - Faster boot: without a reservation, vSphere creates a swap file the size of configured RAM; slow storage delays boot.
-- Risk of NUMA effect: see the example below.
+- Risk of NUMA and cache effects: a VM larger than its host's L3 domain or NUMA node ([`sp5-framework/capacity/vm-size`](vm-size.md), section Size per class).
   ![Usage (MHz) per vCPU](images/vm-cpu-usage-mhz-per-vcpu.png)
 
 ## What to optimize in the consumer layer
@@ -95,7 +95,7 @@
 | Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE |
 | Open | A public dashboard any owner can use: transparency builds trust |
 
-- Hardware sizes from the book: a VM above 8 vCPU risks the Hyper-Threading effect; above 16 vCPU risks the NUMA effect. Both depend on the host CPU (see review notes).
+- Hardware sizes: no fixed vCPU count. Above the host's L3 domain a VM pays a cache cost; above the cores of its NUMA node it reads remote memory ([`sp5-framework/capacity/vm-size`](vm-size.md)). The Hyper-Threading penalty depends on whether the sibling thread is busy (host load, or more vCPUs than the NUMA node has cores), not on VM size against a CCD.
 
 ## Monster VMs Capacity Management
 
@@ -200,7 +200,6 @@ source:
   path: 'Part 3: Consumer Objects > Capacity: Guest OS > Benefits. Part 1: Capacity Management > Rightsizing (Challenges; Micro Burst; Oversized Guest OS; Cost of Oversized; Optimization; Best Practices; The Big Picture; Progressive Pricing; Start Small?; Before vs After), pages 121-127.'
 corrections: []
 review_notes:
-- 'To check: Section ''Practices'': the book says AMD EPYC and Intel Xeon use an 8-core block, a VM above 8 vCPU risks the Hyper-Threading effect and above 16 vCPU the NUMA effect. EPYC CCDs are 8 cores (16 on Zen 4c and Zen 5c); Intel Xeon has no 8-core block. Kept as the book''s rule of thumb, attributed (Q125).'
 - 'To check: Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") explains the book image; not in the book text.'
 - 'Section ''Prevent oversizing'': the CPU Hot Add and vNUMA link is from Performance Best Practices (idle-and-unused-vcpus), not this chapter.'
 - 'Part 1, VM Footprint | Guest OS Sizing repeats the Part 3 text already in guest-os/system/concepts/guest-os-sizing; nothing added.'

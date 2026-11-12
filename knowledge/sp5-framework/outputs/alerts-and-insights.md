@@ -65,10 +65,12 @@
 
 ## Prevention window
 - Two points in time: when the operations team knows there is a problem (insight), and when customers would know if nothing were done (alert). The time between is the prevention window.
-- Alert examples: VM CPU Ready and VM disk latency; cluster average CPU Ready; cluster average memory contention.
-- Insight examples: anomaly metrics; VM CPU Co-stop; VM CPU IO wait; read latency of an individual virtual disk; vMotion stun time; ESXi VMkernel queue time.
+- Insight types: secondary metrics, while consumers are not yet affected; primary metrics at a low grade, or rare with no pattern; total consumption rising above what was expected; undesirable security events above what was expected.
+- Alert types: a primary metric at its urgent threshold; a lagging indicator above its threshold; an availability event (for example a VM reset).
+- Alert examples: VM CPU Ready and VM disk latency on each VM; on a cluster, the share of its VMs above a per-VM value (25% of VMs for the infrastructure CPU alert), not a cluster average, which hides the victim. Values: the alert rows of the threshold catalog.
+- Insight examples: anomaly metrics; VM CPU Co-stop; VM CPU Other Wait; read latency of an individual virtual disk; the maximum vMotion stun time across the environment (healthy below 0.2 second); the queue time of an ESXi device (QAVG). An insight reads the KPI levels early; it does not need a lower number than the alert, only an earlier signal.
 - Insights use finer metrics and supporting metrics. Example: the alert watches the VM's disk latency; the insight watches each virtual disk, whose worst instance is always at least the VM value (instance rule, [`sp5-framework/observability/thresholds`](../observability/thresholds.md)).
-![Timeline: Insight (green) → prevention window (yellow to red) → Alert (red). Insight starts when you know it is a problem; alert starts when customers would know. Insight examples: anomaly metrics, VM CPU Co-stop, VM CPU IO wait, individual virtual disk read latency, vMotion stun time, ESXi VMkernel queue. Alert examples: SLA VM CPU Ready, SLA VM disk latency, cluster average CPU Ready, cluster average memory contention; each example with a threshold](images/insight-prevention-window-alert-timeline-diagram.png)
+![Timeline: Insight (green) → Prevention Window (yellow to orange) → Alert (red). Insight starts at the point when you know it is a problem; Alert starts at the point when your customers know it is a problem if you do nothing. Insight types: secondary metrics, consumers not yet affected; primary metrics, but low grade or infrequent with no pattern; rising total consumption, higher than expected; higher than expected undesirable security events. Alert examples: primary metric at an urgent threshold; lagging indicator threshold breached; availability event (for example VM reset)](images/insight-prevention-window-alert-types-examples-diagram.png)
 - Metric files: [`vsphere/technology/cpu/metrics/virtual-motherboard/co-stop`](../../vsphere/technology/cpu/metrics/virtual-motherboard/co-stop.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/other-wait`](../../vsphere/technology/cpu/metrics/virtual-motherboard/other-wait.md), [`vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk`](../../vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk.md), [`vsphere/object-types/vm/metrics/vmotion`](../../vsphere/object-types/vm/metrics/vmotion.md), [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../vsphere/technology/storage/concepts/esxi-storage-latency-stack.md).
 
 ## Lagging and leading indicators
@@ -159,11 +161,10 @@ related:
 - vsphere/object-types/vm/metrics/vmotion
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 images:
-  - path: images/insight-prevention-window-alert-timeline-diagram.png
+  - path: images/insight-prevention-window-alert-types-examples-diagram.png
     product: [vsphere, vcf-operations]
     object: [VirtualMachine, ClusterComputeResource, HostSystem]
-    metric: [VM CPU Co-stop, VM CPU IO Wait, Virtual Disk Read Latency, vMotion stun time, VMkernel queue, VM CPU Ready, VM Disk Latency]
-    topic: 'Insight, prevention window and alert on one timeline, with example metrics'
+    topic: 'Insight, prevention window and alert on one timeline: insight types and alert examples'
     image_type: diagram
   - path: images/finding-issue-alert-insight-notification-flow-diagram.png
     product: [vcf-operations]
@@ -180,7 +181,6 @@ source:
   path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert); SP5 Framework > Basic Terminology'
 corrections: []
 review_notes:
-- 'To check: Section ''Prevention window'': the image gives a threshold for each example; not copied into the text or the threshold catalog until Q088 is answered: VM CPU Ready above 5% vs the alert rows in catalog/thresholds-alerts.yaml; Co-stop 2.5% vs below 1% in a high-performing environment (co-stop file); VMkernel queue 1 ms vs KAVG 0.5 ms; cluster averages as alerts vs the worst VM (Q088).'
 - 'To check: Section ''Prevention window'', last bullet before the image: the instance-rule example (not in the source).'
 - 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important.'
 - 'Not copied: the iceberg picture (decorative) and the colour legend (red: review today, the sooner the better; orange: review today; yellow: review tomorrow, could be a false positive; green: great), whose content is in the text.'

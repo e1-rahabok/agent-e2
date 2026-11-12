@@ -310,7 +310,7 @@ decisions:
   kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'Cluster Consumption (%) (`vsphere/object-types/cluster/models/cluster-consumption`): red above 80%, orange above 60%.'
 - id: closure-cluster-performance-red
-  metric: Cluster Performance (%), 95th percentile of the last 24 hours
+  metric: Cluster Performance (%), 5th percentile of the last 24 hours (higher is better)
   object: ClusterComputeResource
   operator: <
   value: 20
@@ -321,7 +321,7 @@ decisions:
   kb: vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
   quote: 'Cluster Performance (%) (`vsphere/object-types/cluster/kpis/cluster-performance`): red below 20%, orange below 40%.'
 - id: closure-cluster-performance-orange
-  metric: Cluster Performance (%), 95th percentile of the last 24 hours
+  metric: Cluster Performance (%), 5th percentile of the last 24 hours (higher is better)
   object: ClusterComputeResource
   operator: <
   value: 40

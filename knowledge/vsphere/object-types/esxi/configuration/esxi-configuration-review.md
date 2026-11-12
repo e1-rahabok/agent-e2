@@ -13,7 +13,7 @@
 
 ## Memory
 - Too many size variants.
-- CPU-to-memory ratio fits the workload. Rule of thumb: 4 GB of VM RAM per vCPU, so 64 cores with 128 threads maps to 512 GB (1 vCPU per thread). Per class of service, the RAM that matches the CPU: [`sp5-framework/capacity/host-spec-from-class-of-service`](../../../../sp5-framework/capacity/host-spec-from-class-of-service.md).
+- CPU-to-memory ratio fits the workload: 4 GB of VM RAM per vCPU, with the hypervisor share and the class ratios on top. Per class of service, the RAM that matches the CPU: [`sp5-framework/capacity/host-spec-from-class-of-service`](../../../../sp5-framework/capacity/host-spec-from-class-of-service.md).
 - Large pages: keep them on when performance matters more than memory savings.
 
 ## Power management
@@ -34,6 +34,7 @@
 - Low core count limits large VMs.
 - Low memory and low network capacity: size them with vSAN ESA and NSX included.
 - Too many variants of all of the above.
+- Core count per host: the VCF licence sets only a floor (16 cores per CPU; [`sp5-framework/capacity/host-spec-from-class-of-service`](../../../../sp5-framework/capacity/host-spec-from-class-of-service.md)). Above it, decide by cost per sellable vCPU (hardware and licence); failure domain (VMs lost per host failure, and the HA share of a cluster of few large hosts); the class size against the host's CCDs or compute tiles; per-core application licences (Windows Server Datacenter, SQL Server, Oracle), which favour a dedicated cluster with fewer, faster cores.
 
 ## Advanced settings and management
 - Advanced settings: as few as possible, each per the standard. No CPU affinity.
@@ -107,8 +108,6 @@ source:
   path: 'Configuration Management > Review List > Compute > ESXi; Management; Storage Related; Network Related; ESXi Consistency'
 corrections: []
 review_notes:
-- 'To check: Section ''Memory'': 64 cores, 128 threads, 512 GB at 4 GB per vCPU is 1 vCPU per thread; the Price & SLA example (768 GB) is per core. (Q111).'
-- 'To check: Section ''Capacity'': the book says aim for 48 cores to maximize the software license; Price & SLA says 64. VCF 9 is licensed per core with a 16-core minimum per CPU (Broadcom KB 313548). Dropped from the body. (Q111).'
 - 'To check: Section ''Capacity'', 30-vCPU VM spanning NUMA: 32 cores read as 2 sockets × 16 cores per socket.'
 - 'To check: Misconceptions 5 and 6: derived from the book''s rules, not stated in the book.'
 status: draft

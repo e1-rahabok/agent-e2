@@ -13,8 +13,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
-  <img src="https://img.shields.io/badge/knowledge%20files-205-6e7781?labelColor=3d444d" alt="Knowledge files: 205">
-  <img src="https://img.shields.io/badge/benchmark%20questions-90-6e7781?labelColor=3d444d" alt="Benchmark questions: 90">
+  <img src="https://img.shields.io/badge/knowledge%20files-277-6e7781?labelColor=3d444d" alt="Knowledge files: 277">
+  <img src="https://img.shields.io/badge/benchmark%20questions-95-6e7781?labelColor=3d444d" alt="Benchmark questions: 95">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -29,6 +29,16 @@
 - Name:
   - Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience available 24/7.
   - Designed to replace AskIO on isvara.io.
+
+**Three parts, one body of knowledge:**
+
+| Part | Role |
+|---|---|
+| Agent E2 (this repository) | The knowledge and the agent. Downloadable for private deployment: runs locally, customer data stays on site. |
+| [Isvara.io](https://isvara.io) | Where Agent E2 lives on the Internet. Try it there without installing anything. |
+| [vCommunity management pack](https://github.com/e1-rahabok/VCF-vCommunity-Adapter) | Implements the knowledge of Agent E2 as a VCF Operations adapter: the KPIs and models (Cluster Performance, Cluster Consumption, Cluster Risk, Close for Business) computed in the customer's VCF Operations. |
+
+- They reinforce each other: Agent E2 explains the scores the pack computes, and reads them; Isvara.io lets readers try Agent E2 before deploying it; the pack puts the same thresholds and models on the customer's screens.
 
 **Business problem:**
 

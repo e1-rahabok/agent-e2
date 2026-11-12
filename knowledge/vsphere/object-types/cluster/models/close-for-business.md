@@ -26,7 +26,9 @@
 - Closed (1) when either rule matches:
   - Rule 1: Consumption is red, or Performance is red. The cluster is full, or its VMs already suffer.
   - Rule 2: Consumption and Performance are both orange, and Risk is orange or red. Busy and slow at once, and heading the wrong way.
-- Risk never closes a cluster on its own: it is a leading indicator that buys time. The pack uses orange, the lower Risk threshold of a critical cluster, for every cluster.
+- Risk never closes a cluster on its own: it is a leading indicator that buys time.
+- The pack cannot tell a production cluster from a non-production one, so it applies the more conservative production setting to every cluster: Risk orange closes.
+- Advice to the VMware admin: keep two settings. Production focuses on performance and closes at Risk orange. Non-production focuses on cost: it runs fuller and closes at Risk red ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md), step 6).
 - Not published when one of the three scores has no data in the window.
 
 | Worst Performance | Worst Risk | Worst Consumption | Close for Business |
@@ -51,7 +53,7 @@
 - "Close for Business uses the latest value" → it uses the worst end of the window, ignoring the worst 5% by default.
 - "Performance of 25 is red" → a value on a limit takes the better band: orange.
 - "Close for Business is blank, so the cluster is open" → one of the three scores had no data; the decision was not made.
-- "The pack's thresholds are the book's closure thresholds" → the book closes production at Performance below 40% and non-production below 20%, with Risk at 50% and 75%; the pack uses one band set (25, 50, 75) for every cluster.
+- "The pack's closure suits non-production clusters too" → the pack applies the production setting (Risk orange) to every cluster, because it cannot tell them apart. A non-production cluster focuses on cost and can run until Risk is red: keep a separate setting for it.
 
 ## Metadata
 ```yaml
@@ -85,7 +87,5 @@ source:
   path: https://github.com/e1-rahabok/VCF-vCommunity-Adapter/blob/main/docs/reference/metrics/periodic-cluster-check.md; docs/concepts/capacity-management.md, section Closing the cluster
 corrections: []
 review_notes:
-- 'To check: Section Misconceptions, last misconception: which thresholds Agent E2 applies, the pack thresholds or the book closure thresholds in can-cluster-take-more-vms (Q132).'
-- 'To check: Section The rule: the adapter pages call Cluster Risk and Cluster Consumption KPIs; written as models (Q131).'
 status: draft
 ```
