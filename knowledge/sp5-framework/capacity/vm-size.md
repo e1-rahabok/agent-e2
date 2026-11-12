@@ -7,13 +7,15 @@
 - The CPU overcommit ratio is per physical thread, not per core ([`sp5-framework/capacity/overcommit`](overcommit.md)).
 
 ## Maximum VM size
+Below is what is technically possible. Aim to run within the physical CPU package (AMD EPYC CCD or Intel Xeon Compute Tile) to avoid NUMA.
 | Overcommit Ratio | Maximum VM size |
 |---|---|
-| 1:1 | ESXi logical CPUs (48 cores, 96 threads → 96) |
-| 2:1 | 0.5 × logical CPUs; 0.4 × for 20% headroom |
-| 3:1 | 0.33 × logical CPUs (96 threads → 32) |
+| 1:1 | ESXi physical threads - hypervisor overhead |
+| 2:1 | Above, divided by 2 |
+| 3:1 | Above, divided by 3 |
 
-- 1:1: mind the Hyper-Threading throughput penalty and NUMA.
+- Hypervisor includes kernel modules of vSAN and NSX.
+- 1:1: mind the Hyper-Threading throughput penalty and NUMA, as the VM vCPU will be sharing physical cores
 - 2:1: two large VMs on one host each demand whole cores, and both get the 37.5% Hyper-Threading penalty.
 - 3:1 is the highest CPU overcommit of any class (Bronze); higher ratios are not used.
 - These effects follow from overcommit on shared resources, not from a defect in vSphere.
