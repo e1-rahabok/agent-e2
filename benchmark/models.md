@@ -17,7 +17,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
   4. combine 3 or more files and follow a troubleshooting flow in order (multi-document reasoning);
   5. call tools correctly and in the right order (catalog, calculator, flow);
   6. read dense screenshots: esxtop tables, vCenter and VCF Operations charts (OCR of small UI text, chart reading);
-  7. run on one GPU at the customer site.
+  7. run on as little GPU as passes the release gate, at the customer site (one GPU is the stretch target, not a limit; MISSION.md, section 1).
 - Traits 1 and 2 pull against each other. Memory supplies the basics; part of the same memory holds the Level 300 rules of thumb the knowledge base corrects.
 
 ### The risk: prior override
@@ -95,14 +95,14 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 ## 3. Selection criteria
 Two limits decide:
 - Fit for the goal: the model knows vSphere basics and can become a narrow Level 400 VMware expert with this harness. Criteria 1, 4, 5 and 7 test this; the benchmark decides the rest.
-- Hardware cost: it runs on one GPU at the customer site. Criterion 3.
+- Hardware cost: the less GPU the better, weighed against the score. One GPU is the stretch target, not a cut-off (author, 2026-11-13). Criterion 3.
 
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
 
 All are required. A model that fails one is not a candidate.
 1. Vision: reads screenshots. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI. Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
 2. Open weights, with a licence that allows commercial on-premises use. Checked per model before deployment.
-3. Fits one GPU with at most 96 GB of memory: all weights at 4-bit or better, plus the KV cache for a 32K context.
+3. Runs on customer hardware: all weights at 4-bit or better, plus the KV cache for the context window. One GPU of at most 96 GB is the stretch target; two to four GPUs are acceptable when the score needs them.
    - Memory is set by total parameters, also for a mixture-of-experts (MoE) model: every expert must be loaded. Speed is set by active parameters.
    - A 4-bit model needs about 0.55 GB per billion total parameters; 8-bit about 1.05 GB. Add 5-10 GB for the KV cache and runtime.
    - Two tiers, reported separately so the author can weigh score against hardware cost:
@@ -112,7 +112,7 @@ All are required. A model that fails one is not a candidate.
 | A | 48 GB | dense up to about 70B at 4-bit or 35B at 8-bit; MoE up to about 70B total |
 | B | 96 GB | MoE up to about 150B total, for example 120B with 6-12B active |
 
-   - More than one GPU is out: the cost doubles for one model.
+   - Tier C, two to four GPUs: allowed since 2026-11-13. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
 4. Tool calling, for agentic retrieval and the calculator, catalog and flow tools.
 5. Context window of at least 32K tokens: system prompt + 8-12K retrieved text + images + answer.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
@@ -170,6 +170,8 @@ Preferred, not required:
 | mistral/ministral-8b | 2026-11-03 | Weakest of the first 8 candidates. |
 
 ## 8. Not chosen
+- Rows rejected only for size (more than one GPU) are open again since 2026-11-13: two to four GPUs are allowed (criterion 3, tier C). Re-check them for vision, tool use and licence before the next round.
+
 | Model | Reason |
 |---|---|
 | Llama 3.3 70B | 70B: twice the hardware; older generation; no vision. |

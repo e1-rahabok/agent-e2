@@ -102,6 +102,19 @@ Each entry has:
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
+### Q196 · Mission · What result proves that Agent E2 works?
+
+- Files: [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md) (section 1); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 1 and 7.5); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate).
+- Search 1: "A proof that Agent E2 works is the benchmark result"
+- Search 2: "at least 15 points over the frontier model"
+- Question: MISSION.md says the proof is a benchmark result that scores higher than frontier models. The author also said (2026-11-13) that the benchmark's goal is not to beat a frontier model but to prove that the mission works. Which bar is the proof?
+  - A. The absolute gate alone: final score at least 85%, Level 400 at least 80%, confident-wrong at most 3%. The frontier score is reported as context.
+  - B. The absolute gate plus higher than the frontier model by more than the margin (about 5 points), paired test significant.
+  - C. The absolute gate plus at least 15 points over the frontier model (design.md section 7.5 today).
+- Also: which frontier configuration is the reference? Prompt only (Opus 5.5, 67% on 150 questions), or as an administrator uses it, with web search (pilot 77%, 2 runs, not comparable)?
+- Written as now: design.md and the plan keep C; MISSION.md says "higher", which reads as B. "Higher" inside the plus or minus 5-point margin is not a proof.
+- Answer:
+
 ### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
 
 - Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question 0361 (Two queue limits on one virtual disk).

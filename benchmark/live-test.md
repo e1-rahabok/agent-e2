@@ -8,7 +8,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 |---|---|
 | Works without Internet | No outbound connection during the whole test, checked at the network, not assumed. Customer data never leaves the site; Internet access is optional |
 | Scores like the benchmark | The same questions, local weights at the deployed precision; final score compared with the gateway run of the same model |
-| Fits the hardware | One GPU of at most 96 GB; the 32K context window; no out-of-memory error |
+| Fits the hardware | The chosen hardware tier (one GPU is the stretch target, two to four allowed); the chosen context window; no out-of-memory error |
 | Fast enough to use | Time per answer and per model turn on the target GPU, in each mode |
 | An operator can use it | A session with the author: real questions and screenshots, judged by the author |
 | Can be updated offline | A new knowledge bundle is imported and served without a network |
@@ -21,7 +21,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 | Part | Choice | Notes |
 |---|---|---|
 | Host | One ESXi host on the author's lab VCF, or a rented GPU server for the first run | The lab matches the customer case; a rented server is faster to start |
-| GPU | One GPU, 48 GB (tier A) or 96 GB (tier B), to the VM by passthrough or vGPU | Tier from `models.md`, section 3 |
+| GPU | One GPU, 48 GB (tier A) or 96 GB (tier B), or two to four GPUs (tier C), to the VM by passthrough or vGPU | Tier from `models.md`, section 3 |
 | VM | Linux, the GPU, 16+ vCPU, 64+ GB memory, disk for weights and index | VMware Private AI Foundation with NVIDIA is the natural platform (to verify against current product documentation) |
 | Model server | vLLM, OpenAI-compatible API on the VM's network | llama.cpp as a fallback for 4-bit GGUF |
 | Model | The leading candidate, at the deployed precision (8-bit if the GPU allows, else 4-bit) | Weights checked by hash against the publisher's |
