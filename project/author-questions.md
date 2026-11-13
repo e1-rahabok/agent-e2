@@ -102,6 +102,15 @@ Each entry has:
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
+### Q194 · Guest OS disk queue · Above the driver, or below it?
+
+- Files: [Guest OS Disk Queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/storage/disk-queue.md) (section Meaning, Interpretation); questions [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md), [Slow Windows application, where to start](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-84-slow-windows-application-where-to-start.md), [VMware Tools not running](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-16-vmware-tools-not-running.md); new question 0311 (deferred).
+- Search 1: "above the SCSI driver"
+- Search 2: "IO in this queue has not reached the driver or the VM"
+- Question: the file says the Windows disk queue is above the SCSI driver and holds IO not yet sent. The Microsoft page on storage performance counters says Avg. Disk Queue Length is Disk Transfers/sec x Avg. Disk sec/Transfer (Little's Law) and that the requests may be in service, not necessarily waiting. With 3,000 transfers a second at 16 ms the counter is 48 even when nothing waits inside Windows. Which holds? If the Microsoft text, the three questions above and the file need review.
+- Written as now: the file keeps the book's reading. Question 0311 follows the Microsoft text and is deferred until you answer.
+- Answer:
+
 ### Q192 · Virtual NUMA · numa.autosize.once default and the power cycle
 
 - Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md) (section Topology initialization); [vNUMA after a move to an older host](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-53-vnuma-after-move-to-older-host.md).
