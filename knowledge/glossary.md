@@ -216,7 +216,7 @@ id: glossary
 retriever_guide: term-meaning
 scope: sp5-framework
 technology: [cpu, memory, storage, network, system]
-pillar: [availability, performance, compliance, capacity, value]
+pillar: [availability, performance, security, capacity, value]
 product: [vsphere, vcf-operations]
 internal_derive: []
 related:

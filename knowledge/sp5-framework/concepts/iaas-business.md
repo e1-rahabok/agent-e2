@@ -115,7 +115,7 @@ pillar:
 - availability
 - performance
 - capacity
-- compliance
+- security
 product:
 - vsphere
 - vcf-operations

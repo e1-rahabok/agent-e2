@@ -50,7 +50,7 @@ technology:
 pillar:
 - availability
 - performance
-- compliance
+- security
 - capacity
 - value
 product:

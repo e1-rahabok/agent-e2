@@ -75,7 +75,7 @@ pillar:
 - performance
 - capacity
 - availability
-- compliance
+- security
 - value
 product:
 - vsphere

@@ -111,7 +111,8 @@ Each entry has:
   - (a) Pillars. The `pillar` tag allows availability, performance, compliance, capacity, value (Q091, applied 2026-11-08). vocabulary.md says availability, performance, security, capacity, value. The health check order (REPOSITORY-MAP.md, flows.md, Q104) uses availability, performance, security, capacity. Is security a pillar (A: add it to the tag), is compliance (B: fix vocabulary.md and the health check order), or are the tag pillars and the health check steps two different lists (C: say so in vocabulary.md)?
   - (b) Order of the checks in a performance troubleshooting flow. flows.md: contention, consumption, configuration, known bug, log. The troubleshooting template: contention, configuration, consumption, context. Which one?
 - Written as now: unchanged. ARCHITECTURE.md now points to flows.md instead of restating the order.
-- Answer:
+- Answer (2026-11-13): (a) The five pillars of operations are availability, performance, security, capacity, value. A health check is the pillars of operations: is it up, is it fast, is it safe, will it be enough. (b) Two troubleshooting types: availability and performance. Performance: contention, consumption, then context (the Triple See Method); context is typically configuration.
+- Applied 2026-11-13: `pillar` tag (tags.yaml) and 34 knowledge files compliance to security; glossary, sp5-framework overview, metadata.md and the concept template; flows.md order (performance: contention, consumption, context; is it safe); troubleshooting template. Not changed: book passages that list other pillars in their own context (proactive-operations Day 1 table, why-a-new-framework, purpose-driven-architecture's seven-pillar diagram).
 
 ### Q196 · Mission · What result proves that Agent E2 works?
 

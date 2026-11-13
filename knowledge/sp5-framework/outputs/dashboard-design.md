@@ -76,7 +76,7 @@ pillar:
 - availability
 - performance
 - capacity
-- compliance
+- security
 product:
 - vcf-operations
 internal_derive:

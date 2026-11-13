@@ -66,7 +66,7 @@ technology:
 pillar:
 - availability
 - performance
-- compliance
+- security
 product:
 - vcf-operations
 internal_derive:

@@ -39,7 +39,7 @@ technology:
 - memory
 pillar:
 - capacity
-- compliance
+- security
 product:
 - vsphere
 object:
