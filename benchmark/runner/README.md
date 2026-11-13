@@ -94,15 +94,16 @@ python3 benchmark/runner/retrieval_eval.py
 |---|---|---|---|
 | Knowledge base | None | Yes | Yes |
 | Who looks up | Nobody | The runner | The model |
-| Lookups | 0 | 1, before the model starts | Up to `agent_max_calls` (8), chosen by the model |
-| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (16K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`, within `agent_tool_tokens` (12K) |
+| Lookups | 0 | 1, before the model starts | Up to `agent_max_calls` (8), chosen by the model. Option, off: the classic lookup first (primed start, `agent_seed_tokens`) |
+| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (16K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`, within `agent_tool_tokens` (12K) and the context window |
 | Can it go back for more | - | No | Yes |
 | What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
 
 - Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this benchmark's label, not an industry term.
 - Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), misconceptions, health check and troubleshooting files exist so a model can follow a chain across files.
 - Classic and agentic answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
-- Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well.
+- Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well. `--seed-tokens N` runs the primed start (the classic lookup as the first message), off since the sample of 2026-11-13 (harness/AGENT.md section 6).
+- Recall columns: Recall counts the needed files whose text reached the model (classic: the context; agentic: the first lookup and the files it read). Seen counts the needed files the model was shown at all, search results included (CSV `search_recall`). Seen above Recall: found but not read.
 - The agentic limits (8 calls, 12K tokens) are cost caps for the benchmark, not a design choice.
 
 ### Index version
@@ -191,7 +192,7 @@ python3 benchmark/runner/retrieval_eval.py
    - answers in the mode:
      - `baseline`: no knowledge base;
      - `classic`: one search, link expansion (`same_name`, `related`), 8K-token context;
-     - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. Falls back to classic after 2 tool-format errors;
+     - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. With `--seed-tokens N` (off by default) the classic lookup comes first. Falls back to classic after 2 tool-format errors;
    - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Not-covered pick, Unsure pick;
    - free text: the judge scores 0-3; credit = score / 3;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.

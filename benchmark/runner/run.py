@@ -41,7 +41,7 @@ FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'questio
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
-          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text', 'truncated']
+          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text', 'truncated', 'search_recall']
 
 
 def main():
@@ -59,6 +59,7 @@ def main():
     ap.add_argument('--judge', help='judge model id (default: config judge_model)')
     ap.add_argument('--primer', help='agent up-front blocks to switch on, comma-separated: map,rules,terms,flows,procedure, or all (default: config agent_primer)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
+    ap.add_argument('--seed-tokens', type=int, help='agentic: tokens of the first lookup given to the agent (0 = cold start; default: config agent_seed_tokens)')
     ap.add_argument('--resume', help='existing run folder to continue; models, modes, runs, temperature, questions, judge and primer are read from its config.json unless you pass them')
     ap.add_argument('--max-minutes', type=float, help='stop starting new answers after this many minutes, let the running ones finish, '
                     'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
@@ -79,6 +80,8 @@ def main():
                 cfg[k] = saved[k]
         if not a.primer and saved.get('agent_primer') is not None:
             cfg['agent_primer'] = saved['agent_primer']
+        if a.seed_tokens is None and saved.get('agent_seed_tokens') is not None:
+            cfg['agent_seed_tokens'] = saved['agent_seed_tokens']
         if not a.questions and saved.get('questions'):
             a.questions = ','.join(saved['questions'])
         print(f'Resuming {a.resume}: settings from its config.json.')
@@ -105,6 +108,8 @@ def main():
 
     params = _model_params(cfg, models_, a.params, saved)
     client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway']), params)
+    if a.seed_tokens is not None:
+        cfg['agent_seed_tokens'] = a.seed_tokens
     if a.primer:
         on = {'map', 'rules', 'terms', 'flows', 'procedure'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
         cfg['agent_primer'] = {b: b in on for b in ('map', 'rules', 'terms', 'flows', 'procedure')}
@@ -161,7 +166,7 @@ def main():
     now_s = dt.datetime.now().isoformat(timespec='seconds')
     json.dump({'benchmark_id': benchmark_id, 'started': saved.get('started', now_s), 'resumed': (saved.get('resumed') or []) + ([now_s] if saved else []),
                'index_version': sha,
-               'agent_primer': cfg.get('agent_primer'), 'term_map_agent': cfg.get('term_map_agent'), 'model_params': params,
+               'agent_primer': cfg.get('agent_primer'), 'term_map_agent': cfg.get('term_map_agent'), 'agent_seed_tokens': cfg.get('agent_seed_tokens', 0), 'model_params': params,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
                'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
@@ -224,6 +229,10 @@ def main():
             row['fallback'] = int(fb)
             row['ids_used'] = ' '.join(used)
             row['retrieval_recall'] = round(len(set(used) & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode != 'baseline') else ''
+            # retrieval_recall: needed files whose text reached the model. search_recall: needed files the model was shown
+            # at all, as a search result or in its context: a gap between the two is a file found but not read.
+            seen = set(used) | {i for s in trace if s['action'] in ('search', 'context', 'seed_search', 'seed') and isinstance(s['output'], list) for i in s['output']}
+            row['search_recall'] = round(len(seen & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode not in ('baseline', 'web')) else ''
             row['cost_usd'] = _cost(meta.get(m, {}), row['prompt_tokens'], row['completion_tokens'])
             row['error'] = ''
         except LLMError as e:

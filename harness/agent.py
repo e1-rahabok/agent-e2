@@ -14,7 +14,22 @@ import flows
 import primer
 import terms
 import web
-from modes import PROMPTS, _step, _tok, _user, _verified, over_window
+from modes import PROMPTS, _step, _tok, _user, _verified, classic_context, over_window
+
+# Primed start: the harness runs the classic lookup and gives its text to the agent in the first message.
+# The tools are then for what one lookup cannot do: follow links, exact values, arithmetic, flows, a missing file.
+SEED_RULE = ('- The question message holds the knowledge base text of a first lookup, done for you. Read it first. '
+             'Call tools only for what it does not settle: follow_links for a linked file, catalog for an exact value, '
+             'calculate for arithmetic, flow for troubleshooting steps, search or read_file for a file that is missing. '
+             'If it settles the question, answer without tools.\n')
+FIRST_RULE = '- Your first action must be search or catalog.\n'
+GROUND_RULE = '- Base the knowledge base part of the answer on text returned by read_file, catalog, flow and calculate.'
+
+
+def _seeded_system(system):
+    """The agent prompt for a primed start: the first-lookup rule replaces 'search first'; the seed text counts as read."""
+    assert FIRST_RULE in system and GROUND_RULE in system, 'agent prompt changed: update SEED_RULE'
+    return system.replace(FIRST_RULE, SEED_RULE).replace(GROUND_RULE, GROUND_RULE.replace('text returned by', 'the first lookup and text returned by'))
 
 
 TOOLS = [
@@ -127,6 +142,8 @@ def _run_tool(retriever, name, args, state):
         d = retriever.docs.get(args.get('id', ''))
         if not d:
             return json.dumps({'error': f'unknown id {args.get("id")}'})
+        if d.id in state.get('seed_full', ()):
+            return json.dumps({'note': f'{d.id} is already in full in the first lookup above. Use that text.'})
         state['read'].append(d.id)
         text = d.body
         if args.get('heading'):
@@ -175,11 +192,18 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     """Tool loop. Returns (final result, ids read). Raises FallbackNeeded on repeated format errors."""
     max_calls, budget = cfg['agent_max_calls'], cfg['agent_tool_tokens']
     system = PROMPTS[kind]['agent'].format(max_calls=max_calls)
+    seed_tokens = cfg.get('agent_seed_tokens') or 0
+    seed, seed_ids = '', []
+    if seed_tokens:
+        system = _seeded_system(system)
+        seed, seed_ids, hits = classic_context(retriever, question, cfg, budget=seed_tokens)
+        _step(trace, 'seed_search', question[:200], [h['id'] for h in hits])  # not tool calls: not counted as steps
+        _step(trace, 'seed', '', seed_ids)
     up_front = primer.build(retriever.docs, cfg.get('agent_primer') or {})
     if up_front:
         system += '\n\n' + up_front
         _step(trace, 'primer', sorted(k for k, v in (cfg.get('agent_primer') or {}).items() if v), f'{_tok(up_front)} tokens')
-    matched = terms.match(question) if cfg.get('term_map_agent') else []
+    matched = terms.match(question) if cfg.get('term_map_agent') and not seed else []  # a seed already carries the term notes
     if matched:
         system += '\n\n' + terms.block(matched)
         _step(trace, 'terms', [h['id'] for h in matched], terms.files(matched, retriever.docs, 6))
@@ -189,9 +213,13 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     pages = web.gather(question, wcfg) if wcfg.get('enabled') else []
     if pages:
         _step(trace, 'web', [p['url'] for p in pages], [p.get('error') or f"{_tok(p['text'])} tokens" for p in pages])
-    msgs = [{'role': 'system', 'content': system},
-            _user(question + ('\n\n' + web.block(pages) if pages else ''), images)]
-    state = {'read': [], 'same_name_checked': set(), 'searched': False, 'question': question, 'web': wcfg}
+    text = question + ('\n\n' + web.block(pages) if pages else '')
+    if seed:
+        text = f'Knowledge base (first lookup):\n{seed}\n\nQuestion:\n{text}'
+    msgs = [{'role': 'system', 'content': system}, _user(text, images)]
+    # A seed file counts as read; the last one may be cut at the budget, so read_file stays open for it.
+    state = {'read': list(seed_ids), 'seed_full': set(seed_ids[:-1]), 'same_name_checked': set(), 'searched': bool(seed),
+             'question': question, 'web': wcfg}
     seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
     po = cfg.get('provider_order', {}).get(model)
     while True:
@@ -204,7 +232,8 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
         res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
         tcs = res['tool_calls'] if tools else []
         if not tcs:
-            metric_reads = [r for r in state['read'] if (retriever.docs.get(r) and retriever.docs[r].meta.get('same_name'))]
+            # Same-name check on files the agent chose to read; the seed already expanded the same-name links of its top hits.
+            metric_reads = [r for r in state['read'][len(seed_ids):] if (retriever.docs.get(r) and retriever.docs[r].meta.get('same_name'))]
             unchecked = [r for r in metric_reads if r not in state['same_name_checked']]
             if unchecked and not reminded and tools:
                 reminded = True
@@ -213,10 +242,10 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
                 _step(trace, 'reminder', '', unchecked[:3], res)
                 continue
             _step(trace, 'answer', '', (res['content'] or '')[:400], res)
-            seen_text = '\n'.join(m['content'] for m in msgs if m['role'] == 'tool' and isinstance(m.get('content'), str))
+            seen_text = '\n'.join([seed] + [m['content'] for m in msgs if m['role'] == 'tool' and isinstance(m.get('content'), str)])
             if kind == 'choice':
                 res = _verified(client, model, msgs, res, question, seen_text, set(retriever.docs), cfg, trace, po)
-            return res, state['read']
+            return res, list(dict.fromkeys(state['read']))
         msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
         for n, tc in enumerate(tcs):
             r = res if n == 0 else None
