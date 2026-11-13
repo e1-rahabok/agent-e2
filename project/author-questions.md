@@ -18,13 +18,6 @@ Each entry has:
 
 ## Open
 
-### Q206 · Benchmark > Retrieval check · Restart it now
-
-- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 11); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md); [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Validation).
-- Question: the retrieval check is paused until the question bank is revamped (2026-11-12). The round of 2026-11-13 shows retrieval is the largest loss: 12 of the 22 points Muse loses in agentic mode, against 2 for the model. (A) keep it paused; (B) restart it now on the 196 questions as they are, and re-run it when the bank changes. It needs no model and no judge, so it costs nothing.
-- Written as now: paused. Recommended: B.
-- Answer:
-
 ### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
 
 - Files: [Swap and compression](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/swap-and-compression.md) (section Example: limit, swap and compress in opposite directions).
@@ -155,6 +148,13 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q206 · Benchmark > Retrieval check · Restart it now
+
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 11); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md); [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Validation).
+- Question: the retrieval check is paused until the question bank is revamped (2026-11-12). The round of 2026-11-13 shows retrieval is the largest loss: 12 of the 22 points Muse loses in agentic mode, against 2 for the model. (A) keep it paused; (B) restart it now on the 196 questions as they are, and re-run it when the bank changes. It needs no model and no judge, so it costs nothing.
+- Written as now: paused. Recommended: B.
+- Answer: Author (2026-11-13): B, do it. Applied: baseline in benchmark/results/retrieval-2026-11-13/ (hybrid 69% context recall, 91 of 196 complete); CLAUDE.md, retrieval-check.md, design.md section 9, plan M3.
 
 ### Q189 · CPU > Overlap · Overlap and Linux steal time
 

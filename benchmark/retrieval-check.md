@@ -9,7 +9,7 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 - It caps classic mode. A model cannot use a file it never sees: if 75% of the needed files reach the context, classic mode answers from at most those files, however good the model is.
 - It catches regressions. Every new knowledge file changes word statistics and ranking. A file added for one chapter can push another question's file out of the top results. Without this check, the drop would surface only in the next benchmark, mixed with model noise.
 - It keeps changes honest. Rule (`CLAUDE.md`, Validation): a change to structure or retrieval needs a before and after number. This check gives that number for every change set.
-- Paused (author, 2026-11-12) until the whole question bank is revamped: the questions and their needed files are changing. Reactivated after the revamp, with a new baseline.
+- Reactivated (author, 2026-11-13, Q206) on the 196 questions of the run set as they are. It was paused on 2026-11-12 until the question bank was revamped; the benchmark of 2026-11-13 showed retrieval is the largest loss (12 of 22 points), so it runs now and is re-baselined when the bank changes.
 
 ## What it does
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
@@ -50,7 +50,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 
 ## What is a good number
-- Levels agreed by the author (Q130, 2026-11-12). Last numbers before the pause (2026-11-11, 95 questions): classic context recall 78%, 61 of 95 complete (64%): bad.
+- Levels agreed by the author (Q130, 2026-11-12). Baseline 2026-11-13 (196 questions), hybrid (as in benchmark runs): search recall@6 60%, classic context recall 69%, 91 of 196 complete (46%), main file missing on 23. BM25: 49%, 62%, 86 of 196 (44%), main file missing on 42: bad. Before the pause (2026-11-11, 95 questions): 78%, 61 of 95 complete. Output: [benchmark/results/retrieval-2026-11-13/](../benchmark/results/retrieval-2026-11-13/hybrid.md).
 
 ### Why the retrieval number must be higher than the release score
 - Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% in agentic mode, Level 400 at least 80%, confident-wrong at most 3%.
