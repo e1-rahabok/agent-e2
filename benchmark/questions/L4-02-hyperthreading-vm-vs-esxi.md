@@ -16,7 +16,6 @@ Is each VM only getting 62.5% of what it demands? What does the host report for 
 - Core Utilization shows 100% whether 1 or 2 threads run. **Thread Utilization** tells which.
 
 ## Notes
-- Previous id: vsphere-cpu-003 (renamed 2026-11-05).
 - Tests: Same name, different meaning (consumer vs provider vantage point).
 
 ## Metadata

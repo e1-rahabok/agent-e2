@@ -44,7 +44,6 @@ B: a high %RDY read as a host short of CPU. Or F: more vCPUs for a VM that waits
 - F is wrong: more vCPUs would share the same limit.
 
 ## Notes
-- Previous id: question-0066 (renamed 2026-11-05).
 - Revised 2026-11-12: the screenshot it waited for became an esxtop excerpt typed in the prompt (no new screenshots in 1.0).
 - esxtop CPU panel fields (%MLMTD is counted inside %RDY; %RDY is summed over the worlds): vSphere 9.1 documentation, vSphere Monitoring and Performance > resxtop and esxtop > CPU Panel.
 

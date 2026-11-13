@@ -37,7 +37,6 @@ A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo o
 - F is wrong: hardware capacity is fixed.
 
 ## Notes
-- Previous id: vsphere-cpu-006 (renamed 2026-11-05).
 - The second hint pushes toward GHz on purpose. It is a distractor.
 - The quiz image holds the same two hosts and options as the prompt. It is not sent to the candidate: it is not a product screenshot (author, 2026-11-05).
 

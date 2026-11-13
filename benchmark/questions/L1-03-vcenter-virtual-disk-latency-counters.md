@@ -31,7 +31,6 @@ C or D: taking the rate (KBps) for latency.
 - Read rate and Write rate are in kilobytes per second: throughput, not latency.
 
 ## Notes
-- Previous id: question-0034 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). 
 
 ## Metadata

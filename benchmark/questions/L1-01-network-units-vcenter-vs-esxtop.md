@@ -17,7 +17,6 @@ A: assuming both tools use the same unit, then comparing the numbers directly.
 - esxtop shows them in megabits per second: convert bits to bytes and mega to kilo before comparing.
 
 ## Notes
-- Previous id: question-0029 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

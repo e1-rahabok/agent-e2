@@ -26,7 +26,6 @@ C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as press
 
 ## Notes
 - Revised 2026-11-12 (question set 1.0): numbers changed so that A is computed (51% of DRAM), option E added, tags added. Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (candidates, the 80% line, hypervisor overhead); Performance Best Practices for vSphere 9.1, Memory Tiering.
-- Previous id: question-0057 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

@@ -19,7 +19,6 @@ Is the network clean? If not, which host and port, what is the likely cause, and
 - Next: read the port's detail with `esxcli network nic stats get -n vmnic2` (CRC and receive errors; the counters are cumulative since boot, so read them twice to see the rate), compare with the switch port's error counters, move traffic off the port (standby) while the cable or transceiver is replaced, and check which VMs use that uplink.
 
 ## Notes
-- Previous id: question-0088 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): the management pack metric and the screenshot removed (fairness); the 256-row workbook became a 64-row CSV. The CSV is synthetic, generated with a fixed seed: one port with errors, one host with older firmware and no errors.
 

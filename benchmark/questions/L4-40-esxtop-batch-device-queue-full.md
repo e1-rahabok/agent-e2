@@ -26,7 +26,6 @@ B: blaming the array.
 - The other LUN, naa.624a9370b2, has no queue at the same time: the host and its adapters are not the limit.
 
 ## Notes
-- Previous id: question-0086 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot removed; the batch output reduced to two devices, one-minute samples and the panel's field names; the Storage I/O Control option removed (deprecated in VCF 9.0). Counts only after author approval.
 
 ## Metadata

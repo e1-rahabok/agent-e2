@@ -17,7 +17,6 @@ Is the VM now suffering a CPU performance problem?
 - Ready and Co-Stop being flat supports "no contention".
 
 ## Notes
-- Previous id: vsphere-cpu-002 (renamed 2026-11-05).
 - Tests: Same name, different meaning (CPU Latency vs Disk / Memory Latency).
 
 ## Metadata

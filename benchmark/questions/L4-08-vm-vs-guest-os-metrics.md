@@ -36,9 +36,6 @@ B (data stored on the VM object read as a VM metric) or D (Guest OS counters ass
 - Guest OS queues (Run Queue, Disk Queue) and VM contention (Ready, disk latency) are different queues at different layers.
 - F is false: Run Queue is threads waiting for a vCPU inside Windows; Ready is a vCPU waiting for a physical thread in ESXi.
 
-## Notes
-- Previous id: vsphere-foundations-005 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0018"

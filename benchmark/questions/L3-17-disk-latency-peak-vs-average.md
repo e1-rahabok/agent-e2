@@ -19,7 +19,6 @@ Is the peak real? How can it be 40 times the 5-minute value? What do you tell th
 - Check every virtual disk at 02:15, write side, and what ran then (a backup or a scheduled job).
 
 ## Notes
-- Previous id: question-0089 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot and the 40-column table replaced by one small export; the vCommunity KPI file removed from `knowledge`. Counts only after author approval.
 
 ## Metadata

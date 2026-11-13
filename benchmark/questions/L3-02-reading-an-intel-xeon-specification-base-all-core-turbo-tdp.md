@@ -25,7 +25,6 @@ B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance)
 - E is wrong: the relation is not that simple. At Single Core Turbo, total power can be below 210 W because other cores are idle.
 
 ## Notes
-- Previous id: vsphere-cpu-007 (renamed 2026-11-05).
 - The Intel web page image holds the same specification as the prompt. It is not sent to the candidate: it is not a product screenshot (author, 2026-11-05).
 
 ![Intel website specification of the Xeon 6 6520P: cores, threads, base, All Core Turbo and Max Turbo frequency, cache, TDP](0007/intel-xeon-6520p-specification.png)

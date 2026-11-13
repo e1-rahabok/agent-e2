@@ -16,7 +16,6 @@ Is the VM available? How would you measure VM availability vs Guest OS availabil
 - OS-level metrics (processes, threads, system calls) do not apply to a VM.
 
 ## Notes
-- Previous id: vsphere-foundations-002 (renamed 2026-11-05).
 - Tests: Principle: a VM is the virtual hardware, not the OS.
 
 ## Metadata

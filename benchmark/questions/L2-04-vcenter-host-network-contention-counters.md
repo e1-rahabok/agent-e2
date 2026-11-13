@@ -31,7 +31,6 @@ C: reading host network Usage as a sign of trouble.
 - Receive drops are far more common than transmit drops; a pattern goes to the network team.
 
 ## Notes
-- Previous id: question-0042 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

@@ -37,7 +37,6 @@ A (100%): reading CPU Usage as utilization. Or B (70%): treating Core Utilizatio
 - E is wrong: it mixes the consumer (VM) and provider (ESXi) perspectives.
 
 ## Notes
-- Previous id: vsphere-cpu-004 (renamed 2026-11-05).
 - Attachments: host names masked in the legend before commit.
 
 ## Metadata

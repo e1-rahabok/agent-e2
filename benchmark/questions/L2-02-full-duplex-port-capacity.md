@@ -19,7 +19,6 @@ A: treating the port speed as one pool for both directions.
 - So measure and size each direction separately. A host's usage rate adds receive and transmit, so it can read above the link speed without any fault.
 
 ## Notes
-- Previous id: question-0040 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

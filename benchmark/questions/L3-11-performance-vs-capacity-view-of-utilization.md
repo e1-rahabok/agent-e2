@@ -23,9 +23,6 @@ Rejecting A (100% utilization seen as a performance problem) or C.
 - D: provider vs consumer perspective.
 - E: the two pillars have different time horizons, although they are intertwined.
 
-## Notes
-- Previous id: vsphere-general-001 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0019"

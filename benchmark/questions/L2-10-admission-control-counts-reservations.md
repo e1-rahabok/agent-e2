@@ -21,7 +21,6 @@ C: expecting admission control to look at usage.
 - D is wrong: a VM with no reservation passes CPU and memory admission control (its overhead memory is still checked).
 
 ## Notes
-- Previous id: question-0048 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

@@ -23,9 +23,6 @@ B (vCPU x GHz counted as freed capacity) or E (IO assumed to cost no CPU).
 - D is correct: VM Consumed memory holds many idle pages; power-off releases them.
 - E is wrong: every IO incurs compute overhead across several layers, even with offload.
 
-## Notes
-- Previous id: vsphere-cpu-013 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0013"

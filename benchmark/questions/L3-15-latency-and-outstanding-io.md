@@ -17,9 +17,6 @@ A, or D (throughput instead of commands).
 - D is wrong: OIO counts commands, not data size.
 - Units: IOPS (per second) x latency (seconds) = commands in flight.
 
-## Notes
-- Previous id: vsphere-storage-003 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0028"

@@ -19,7 +19,6 @@ Explain both. Then, for the busiest sample, estimate the network receive and tra
 - With MTU 1,500 each 8 KB read would need several frames, each with its own headers: more packets and more overhead per IO.
 
 ## Notes
-- Previous id: question-0084 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): the 2,016-row workbook became a 48-row CSV; after the independent review, packets are sums per sample, as vCenter shows them, and the key accepts 1-2 packets per read each way. The CSV is synthetic, generated with a fixed seed from the frame model of ip-storage-network-accounting, with ±0.2% noise.
 

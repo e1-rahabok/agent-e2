@@ -18,7 +18,6 @@ C: confusing Co-stop with Wait.
 - C is Wait (IO or idle), not Co-stop.
 
 ## Notes
-- Previous id: question-0053 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml
