@@ -4,7 +4,7 @@ Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
-- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management pluggable by AI Operations Management software.
+- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available.
 - A proof that Agent E2 works is the benchmark result show it scored higher than frontier models from leading players (Google, OpenAI, Anthropic).
 - It achieves this with four parts working as one brain:
   - The Agent
