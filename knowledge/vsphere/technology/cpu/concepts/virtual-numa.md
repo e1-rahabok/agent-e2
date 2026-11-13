@@ -77,7 +77,6 @@ source:
   path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57); Using NUMA Systems with ESXi > Virtual NUMA Controls (option numa.autosize.once)
 corrections: []
 review_notes:
-- 'To check: Section ''Topology initialization'': the 9.1 Virtual NUMA Controls page (last updated 2026-11-09) still lists numa.autosize.once (default FALSE in its table, TRUE in its text) and does not name VPXD_PersistVnuma or the vNUMA Topology menu; the file follows the knowledge base (Q192). Check the cluster setting name against a vCenter 9.1 instance or a KB. URL: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/virtual-numa-controls.html'
 - 'Source URL for the vCPU count sentence: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html'
 - Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
