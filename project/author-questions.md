@@ -2212,7 +2212,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
 
-- Files: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (SYSTEM_KB, SYSTEM_AGENT); evidence in [benchmark/results/20261103-093742/report.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/20261103-093742/report.md), section Analysis.
+- Files: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (SYSTEM_KB, SYSTEM_AGENT); evidence in the report of the frontier reference run 20261103-093742, section Analysis (the run folder was deleted on 2026-11-13; it stays in git history).
 - Search: not from the book. Finding from the frontier reference run 20261103-093742.
 - Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
 - Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
