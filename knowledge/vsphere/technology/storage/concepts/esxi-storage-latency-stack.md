@@ -64,6 +64,7 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/storage/metrics/host/disk
+- vsphere/technology/storage/concepts/esxi-storage-io-path
 - vsphere/technology/storage/troubleshooting/host-storage-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 images:

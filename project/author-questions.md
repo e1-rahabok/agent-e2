@@ -102,6 +102,16 @@ Each entry has:
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
+### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
+
+- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question 0361 (Two queue limits on one virtual disk).
+- Search 1: "pvscsi queue depth"
+- Search 2: "The hypervisor software queues are throttling requests"
+- Question: the ESXi source file says high KAVG and QAVG (above 2 to 5 ms) with low DAVG usually occur when the concurrent requests of a VM exceed the configured queue depths, and names the pvscsi queue depth and Disk.SchedNumReqOutstanding. The knowledge file reads the two limits apart: a request that exceeds the Paravirtual SCSI queue depth (64 per device, 254 per adapter) waits in the Guest OS, before the virtual device takes it, and shows in the Guest OS counters, not in KAVG or QAVG; a request that exceeds the VMkernel device queue depth (DQLEN) waits in the VMkernel and shows as QUED and QAVG. Which holds? And what does Disk.SchedNumReqOutstanding limit, with what default, and when?
+- Also: the thresholds differ by source for KAVG and DAVG (the source file: KAVG under 1 ms ideal, high at 2 to 5 ms, DAVG high above 10 to 15 ms; Broadcom KB 344099: 10 ms for DAVG, KAVG and GAVG when sustained; the latency stack file from the book: KAVG within 0.5 ms, DAVG within 5 ms). Which values go in the threshold catalog?
+- Written as now: the two limits are read apart; no number for DSNRO; no threshold repeated; flagged in review_notes of the file.
+- Answer:
+
 ### Q194 · Guest OS disk queue · Above the driver, or below it?
 
 - Files: [Guest OS Disk Queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/storage/disk-queue.md) (section Meaning, Interpretation); questions [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md), [Slow Windows application, where to start](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-84-slow-windows-application-where-to-start.md), [VMware Tools not running](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-16-vmware-tools-not-running.md); new question 0311 (deferred).
