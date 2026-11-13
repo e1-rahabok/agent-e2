@@ -58,8 +58,9 @@ def _choice(r):
 def final(rows):
     """Per (model, mode): final score and sub-scores, 0-1.
 
-    Question credit = the lowest credit over its runs (the worst run counts, as Stable correct does for letters).
+    Question credit = the mean credit over its runs: what one ask gets, on average, as a user asks once (author, 2026-11-13).
     Final = mean question credit over all questions; each question weighs the same.
+    Worst run = the same mean with each question on its lowest credit over the runs: consistency, reported, not a gate.
     Sub-score = the same mean within one group: answer type, input type, level.
     A question with a vision track is scored on that track only.
     """
@@ -68,19 +69,19 @@ def final(rows):
         g[(r['model'], r['mode'])][r['question_id']].append(r)
     out = {}
     for key, by_question in g.items():
-        credit, groups, luck, cw = {}, {}, [], []
+        credit, worst, groups, luck, cw = {}, {}, {}, [], []
         for cid, crs in by_question.items():
             if any(r['track'] == 'vision' for r in crs):
                 crs = [r for r in crs if r['track'] == 'vision']
             cs = [_credit(r) for r in crs]
-            credit[cid], groups[cid] = min(cs), _groups(crs[0])
+            credit[cid], worst[cid], groups[cid] = sum(cs) / len(cs), min(cs), _groups(crs[0])
             luck.append(int(max(cs) > min(cs)))
             for r in crs:
                 v = r.get('confident_wrong')
                 cw.append(int(v) if v not in ('', None) else int(not int(r['exact']) and not int(r.get('unsure') or 0)))
         n = len(credit)
         f = sum(credit.values()) / n
-        s = {'final': f, 'margin': _margin(f, n), 'questions': n, 'luck': sum(luck) / n, 'confident_wrong': _mean(cw),
+        s = {'final': f, 'margin': _margin(f, n), 'questions': n, 'worst': sum(worst.values()) / n, 'luck': sum(luck) / n, 'confident_wrong': _mean(cw),
              'override': override([r for crs in by_question.values() for r in crs])}
         for k in [f'answer:{x}' for x in ANSWER_TYPES] + [f'input:{x}' for x in INPUT_TYPES] + [f'level:{x}' for x in LEVELS]:
             xs = [credit[c] for c in credit if k in groups[c]]
@@ -197,17 +198,17 @@ def write(run_dir):
     agg = aggregate(rows)
     sample = next(iter(fin.values()), {})
     L = [f'# Benchmark report: {cfg["benchmark_id"]}', '',
-         f'- Index version: `{cfg["index_version"][:12]}`. Retrieval: {cfg["retrieval"]}. Temperature: {cfg["temperature"]}. Runs: {cfg["runs"]}.',
+         f'- Index version: `{cfg["index_version"][:12]}`. Retrieval: {cfg["retrieval"]}. Sampling: {json.dumps(cfg.get("sampling")) if cfg.get("sampling") else cfg["temperature"]}. Runs: {cfg["runs"]}.',
          f'- Questions: {len(cfg["questions"])} (' + ', '.join(f'{k} {sample.get("answer:" + k + "_n", 0)}' for k in ANSWER_TYPES) + '; '
          + ', '.join(f'{k} {sample.get("input:" + k + "_n", 0)}' for k in INPUT_TYPES) + '; '
          + ', '.join(f'level {k}: {sample.get("level:" + k + "_n", 0)}' for k in LEVELS) + ').'
          f' Skipped: {", ".join(cfg["skipped_questions"]) or "none"}. Judge: {cfg.get("judge_model") or "none"}.',
          f'- Answers: {len(all_scored)} scored, {len(all_rows) - len(all_scored)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
          '', '## Final score', '',
-         '| Model | Mode | Final | ± margin | Luck | Confident wrong | Override |',
-         '|---|---|---|---|---|---|---|']
+         '| Model | Mode | Final | ± margin | Worst run | Luck | Confident wrong | Override |',
+         '|---|---|---|---|---|---|---|---|']
     for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
-        L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["luck"])} | '
+        L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["worst"])} | {_pct(s["luck"])} | '
                  f'{_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
     cands = [k for k in fin if k[1] == 'agentic' and k != REFERENCE]
     if cands:
@@ -226,7 +227,7 @@ def write(run_dir):
         keys = [f'answer:{x}' for x in ANSWER_TYPES] + [f'input:{x}' for x in INPUT_TYPES] + [f'level:{x}' for x in LEVELS]
         L.append(f'| {m} | {mode} | ' + ' | '.join(_pct(s[k]) for k in keys) + ' |')
     L += ['', '- Final: mean question credit over all questions, 0-100%. Every question weighs the same.',
-          '- Question credit = the worst of its runs. Deterministic: 1 if the letters are exact in every run, else 0. Judged: lowest judge score / 3.',
+          '- Question credit = the mean of its runs. Deterministic: share of runs with the exact letters. Judged: mean judge score / 3. Worst run: the same score with each question on its lowest run (consistency; not a gate).',
           '- Sub-scores: the same mean within one group. By answer type, by input type (a question counts for every input it includes), by level.',
           '- Luck: share of questions whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (judged: score 0, not unsure).',
           '- Override: share of answers in knowledge base modes that state the misconception although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',

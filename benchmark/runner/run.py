@@ -78,6 +78,8 @@ def main():
         for k in ('runs', 'temperature'):
             if getattr(a, k) is None and saved.get(k) is not None:
                 cfg[k] = saved[k]
+        if saved.get('sampling') is not None:
+            cfg['sampling'] = saved['sampling']
         if not a.primer and saved.get('agent_primer') is not None:
             cfg['agent_primer'] = saved['agent_primer']
         if a.seed_tokens is None and saved.get('agent_seed_tokens') is not None:
@@ -107,7 +109,11 @@ def main():
         sys.exit('No scorable questions matched.')
 
     params = _model_params(cfg, models_, a.params, saved)
-    client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway']), params)
+    # Sampling: each model's own card settings; --temperature replaces them for every model (an experiment, not the release run).
+    sampling = {m: (cfg.get('sampling') or {}).get(m, {'temperature': cfg.get('temperature')}) for m in models_}
+    if a.temperature is not None:
+        sampling = {m: {'temperature': a.temperature} for m in models_}
+    client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway']), params, sampling)
     if a.seed_tokens is not None:
         cfg['agent_seed_tokens'] = a.seed_tokens
     if a.primer:
@@ -166,7 +172,7 @@ def main():
     now_s = dt.datetime.now().isoformat(timespec='seconds')
     json.dump({'benchmark_id': benchmark_id, 'started': saved.get('started', now_s), 'resumed': (saved.get('resumed') or []) + ([now_s] if saved else []),
                'index_version': sha,
-               'agent_primer': cfg.get('agent_primer'), 'term_map_agent': cfg.get('term_map_agent'), 'agent_seed_tokens': cfg.get('agent_seed_tokens', 0), 'model_params': params,
+               'agent_primer': cfg.get('agent_primer'), 'term_map_agent': cfg.get('term_map_agent'), 'agent_seed_tokens': cfg.get('agent_seed_tokens', 0), 'model_params': params, 'sampling': sampling,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
                'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
@@ -195,7 +201,7 @@ def main():
         images = c.image_parts() if track == 'vision' else []
         row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
                'track': track, 'question_id': c.id, 'answer_type': c.answer_type, 'input': ' '.join(c.input_types), 'technology': ' '.join(c.technology), 'task': c.task, 'level': c.level, 'run': r,
-               'temperature': cfg['temperature'], 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
+               'temperature': sampling.get(m, {}).get('temperature', ''), 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
             res, used, trace, fb = modes.answer(mode, client, m, question, images, cfg, retriever,

@@ -15,7 +15,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 - Users' prompt or question can include a URL. Agent E2 will browse and check the content. 
 - Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer.
 - Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
-- Release gate: final score at least 85% on the benchmark, each question scored on its worst of 5 runs. Target: 99%. Confident-wrong rate near 0.
+- Release gate: final score at least 85% on the benchmark, each question scored on the mean of 5 runs. Target: 99%. Confident-wrong rate near 0.
 - Targets, not rules. Hardware (one GPU), the context window (32K) and the model size (about 30B) are stretch targets and design choices, not limits. When a target blocks the mission, change the target and say why: the smallest hardware that passes the release gate wins. Few rules hold in IT operations management; every assumption here, the author's included, is open to challenge with evidence.
 
 
@@ -40,7 +40,7 @@ Six mechanisms, in order of weight.
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters) is newer than most training data. The knowledge base is written from the current release by rule.
 4. **Exactness from tools.** Models of every size slip on arithmetic, units and lookups (ms summation to %, KB vs kb, rollups). A calculator and a metric catalog return exact values; the model only chooses the tool.
 5. **Knowledge built for a small reader.** One fact per bullet, one object per metric file, same-name misconceptions linked, layers separated, metadata for filtering. Most enterprise retrieval fails on messy documents; this corpus is written to be retrieved.
-6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, confident-wrong rate, worst of 5 runs).
+6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, confident-wrong rate, the mean of 5 runs with the worst run reported).
 
 ### What it is not
 - Not a smarter model: the model's reasoning is unchanged. The system moves the hard parts (knowing, computing, looking up, ordering the checks) out of the model.

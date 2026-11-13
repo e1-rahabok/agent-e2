@@ -15,7 +15,13 @@ judge_max_tokens: 1500
 
 modes: [baseline, classic, agentic]
 runs: 5                       # repeats per question per model per mode
-temperature: 0.2              # use the value the website will use; fixed for a whole run
+temperature: null             # models without a `sampling` entry: null = the provider's default
+sampling:                     # per model: the settings of its own card (generation_config.json on Hugging Face), which a local server
+                              # such as vLLM applies by default, so the benchmark sees what a user sees (author, 2026-11-13). Checked 2026-11-13
+  google/gemma-4-31b-it: {temperature: 1.0, top_p: 0.95, top_k: 64}
+  meta/muse-glimmer-30b: {temperature: 1.0, top_p: 0.95, top_k: 64}
+  alibaba/qwen3.8-27b: {temperature: 1.0, top_p: 0.95, top_k: 20}
+  anthropic/claude-opus-5.5: {}   # frontier reference: nothing sent, the provider's default, as a chat user meets it
 max_tokens: 4000              # per answer, thinking included: a reasoning model that thinks past it is cut off before the ANSWER line (the health check stops such a run)
 concurrency: 12               # proven parallel requests per model. The floor: the runner never goes below it
 concurrency_by_model:         # the proven value of a model that rate-limits earlier than 12
