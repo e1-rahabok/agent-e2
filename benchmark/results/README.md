@@ -1,5 +1,7 @@
 # Benchmark results: round of 2026-11-13
 
+Analysis, changes made and recommendations: [analysis-2026-11-13.md](analysis-2026-11-13.md). The tables below are generated; the analysis is written.
+
 - 4 runs, 196 questions, 5 runs per question, sampling {"google/gemma-4-31b-it": {"temperature": 1.0, "top_p": 0.95, "top_k": 64}}. Judge: openai/gpt-6.1-terra. Written by `benchmark/runner/summarize.py` from the run folders; every number below comes from them.
 - How to read a score: the exact value is read at plus or minus 5 points; the signal is the jump from baseline to a mode, read per model on the same questions. Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). Scores are not comparable with scores graded by another judge.
 

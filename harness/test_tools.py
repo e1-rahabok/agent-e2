@@ -318,6 +318,51 @@ class ModesTest(unittest.TestCase):
         self.assertNotIn('refused', [s['action'] for s in trace])
         self.assertIn(ready, used)
 
+    @staticmethod
+    def _scripted(replies):
+        """A client that answers in classic mode with the given replies in turn."""
+        class Scripted(MockClient):
+            calls = 0
+
+            def chat(self, model, messages, tools=None, **kw):
+                Scripted.calls += 1
+                return {'content': replies[min(Scripted.calls, len(replies)) - 1], 'tool_calls': [],
+                        'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+        return Scripted
+
+    def test_consensus_keeps_unanimous_letters(self):
+        cli = self._scripted(['ANSWER: A, B\nREASON: x', 'ANSWER: B, A\nREASON: y', 'ANSWER: A,B\nREASON: z'])
+        cfg = dict(self.CFG, consensus_samples=3)
+        res, used, trace, fb = modes.answer('classic', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertEqual(verify.answer_letters(res['content']), ['A', 'B'])
+        self.assertEqual(cli.calls, 3)
+        self.assertEqual(trace[-1]['action'], 'consensus')
+
+    def test_consensus_disagreement_is_unsure_and_stops_early(self):
+        cli = self._scripted(['ANSWER: A, B\nREASON: x', 'ANSWER: A\nREASON: y', 'ANSWER: A\nREASON: z'])
+        cfg = dict(self.CFG, consensus_samples=3)
+        res, used, trace, fb = modes.answer('classic', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertEqual(verify.answer_letters(res['content']), ['D'])   # D is the Unsure option of VerifyTest.Q
+        self.assertEqual(cli.calls, 2)                                   # the third sample cannot change the outcome
+        self.assertIn('disagreed', res['content'])
+
+    def test_consensus_off_for_baseline_and_open_answers(self):
+        cli = self._scripted(['ANSWER: A\nREASON: x'])
+        cfg = dict(self.CFG, consensus_samples=3)
+        modes.answer('baseline', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertEqual(cli.calls, 1)
+
+    def test_read_reminder_names_unread_top_hits(self):
+        import agent
+        ret = Retriever(DOCS, CHUNKS)
+        state = {'read': [], 'searched': False, 'hits': {}}
+        agent._run_tool(ret, 'search', {'query': 'cpu ready'}, state)
+        top = list(state['hits'])
+        self.assertTrue(0 < len(top) <= agent.READ_TOP)
+        state['read'].append(top[0])
+        self.assertNotIn(top[0], agent._unread(state))
+        self.assertEqual(agent._unread(state), [i for i in top[1:]][:agent.READ_REMIND])
+
     def test_primed_start_refuses_rereading_a_seed_file(self):
         import agent
         state = {'read': [], 'seed_full': {'vsphere/technology/cpu/metrics/virtual-motherboard/ready'}}

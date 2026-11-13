@@ -64,10 +64,31 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | fetch_url, web_search | A public web page trimmed to the question; vendor-site search results | Only with `web.enabled`: links in the question, and current facts (bugs, builds, maximums). |
 
 ## 6. Settings and checks
-- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` and `catalog_facts` (not in the file: their defaults in code are true; `catalog_facts` puts catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
+- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` and `catalog_facts` (not in the file: their defaults in code are true; `catalog_facts` puts catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `agent_read_reminder`, `consensus_samples`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
 - Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: [`benchmark/runner/README.md`](../benchmark/runner/README.md).
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.
+
+## 6a. Consensus
+- Setting `consensus_samples` (n). Multiple-choice questions in classic and agentic mode: the harness asks up to n samples. The letters stand only when every sample gives the same set. A disagreement, an Unsure or an unreadable reply makes the answer Unsure, with the reason "not settled". It stops at the first disagreement, so a split costs 2 samples, not n.
+- Code: `answer` and `_consensus` in [`modes.py`](modes.py). Baseline and web stay one sample: they measure the model alone. Open answers stay one sample: free text has no letters to compare.
+- Why (round of 2026-11-13, [`benchmark/results/analysis-2026-11-13.md`](../benchmark/results/analysis-2026-11-13.md)):
+  - The confident-wrong rate was 19-30% in the knowledge base modes against a gate of 3%.
+  - Unsure was chosen in only 1-6% of multiple-choice answers. The prompt rule "a wrong answer is worse than Unsure" does not make a 30B model abstain: it does not know what it does not know.
+  - 55-75% of the confident-wrong multiple-choice answers were partly right, and the same question got different letters in different runs (luck 48-63%). Disagreement between samples is the signal the model cannot give about itself.
+- Measured effect, projected exactly from the 5 recorded runs (`consensus` in [`benchmark/runner/report.py`](../benchmark/runner/report.py)), n = 3:
+
+| Model, mode | Final | Confident wrong, all | Confident wrong, multiple choice | Unsure, multiple choice |
+|---|---|---|---|---|
+| gemma-4-31b, agentic | 76% → 71% | 21% → 15% | 14% → 4% | 1% → 18% |
+| muse-glimmer-30b, agentic | 78% → 73% | 20% → 15% | 12% → 3% | 1% → 18% |
+| qwen3.8-27b, agentic | 63% → 49% | 30% → 16% | 22% → 0% | 6% → 52% |
+| gemma-4-31b, classic | 78% → 75% | 19% → 15% | 10% → 3% | 1% → 13% |
+
+- Trade-off: about 5 points of final score for about two thirds fewer wrong letters. The gate puts confident-wrong first ([`benchmark/design.md`](../benchmark/design.md), section 7.5: "the confident-wrong limit does more for the operator than 5 more points"). Qwen pays 14 points: its agent is too unstable (consistency 35%) for consensus to keep its right answers.
+- What it does not fix: judged (open) answers. Their confident-wrong rate stays 31-41%, so the overall rate stays near 15%. Next lever: Q199 in [`project/author-questions.md`](../project/author-questions.md) and the analysis file above.
+- Cost: up to n model passes per answer. On a local vLLM server the samples share the prompt cache and run as one batch, so latency rises little; in agentic mode each sample runs its own tool loop.
+- Benchmark: keeps `consensus_samples: 1` and reads the projection in `report.md` (section Consensus of 3, projected). The projection is the exact mean over all draws of 3 of the 5 runs, so it costs no model call. The deployed profile sets 3.
 
 ## 7. Planned
 - `draw_mermaid` tool: render a flow or layer diagram that no stored image shows.

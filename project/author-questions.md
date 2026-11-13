@@ -18,6 +18,20 @@ Each entry has:
 
 ## Open
 
+### Q200 · Benchmark > Mode · Agentic or classic as the shipped mode
+
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).
+- Question: Q130 made agentic the shipped mode. Round of 2026-11-13: agentic and classic tie for every model (-6, -3, +1 points, inside the margin), and agentic costs 2-3.5 times the tokens and about twice the latency. Proposal: (A) keep Q130; (B) the next round decides: agentic stays only if it beats classic outside the margin, else classic ships with consensus and agentic is an option; (C) ship classic now.
+- Written as now: agentic is the shipped mode (design.md, section 16). Recommended: B.
+- Answer:
+
+### Q199 · Benchmark > Release gate · Confident-wrong limit on open answers
+
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5); [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py) (RUBRIC); [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (OPEN_FORMAT); [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (sections 2 and 3).
+- Question: the gate allows 3% confident-wrong over all answers. With consensus, multiple choice reaches 3-4%, but judged answers stay at 31-41% (Opus with web search: 23%). A judged answer of up to 250 words scores 0 when one sentence contradicts a key point. Which way? (A) keep one 3% limit, and change the answer shape: shorter answers that state only what the knowledge base supports, the rest marked as not settled; (B) the judge grades each claim, and a contradicted side claim lowers the score instead of zeroing it; (C) two limits: 3% for multiple choice, a separate limit for judged answers set from the next round; (D) A and C together.
+- Written as now: one limit of 3% over all answers. Recommended: D. A is a harness change Claude can build and measure; C keeps the gate reachable while A is measured.
+- Answer:
+
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore
 
 - Files: [ESXi Datastore metrics (host view)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/metrics/host/datastore.md) (section Unmap); [esxtop storage counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/storage.md).

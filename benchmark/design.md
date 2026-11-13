@@ -226,6 +226,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - The -1 changed the model's behaviour through the prompt: told that a wrong answer costs a point, models chose Unsure instead of guessing. That behaviour is kept with a plain rule in the prompt ("a wrong answer is worse than Unsure").
 - Unsure means the sources do not decide the question. This can be checked against the cited files.
 - Check after the next benchmark: if models guess more under the plain rule (confident-wrong rate rises, Unsure rate falls), put the scoring sentence back in the prompt only. Grading stays as above either way.
+- Read on the round of 2026-11-13: the local models chose Unsure in 1-6% of multiple-choice answers and were confident wrong in 10-22% of them in knowledge base modes. A rule in the prompt does not make a 30B model abstain. The harness now abstains for it: consensus of samples (`consensus_samples`, [harness/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/README.md), section 6a). Analysis: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md).
 
 ### 7.2 Five runs
 - Hosted models do not answer the same way twice, even at the same temperature: sampling, batching on shared GPUs, provider routing, silent serving updates.
@@ -280,6 +281,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Misconceptions of [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
 | Held-out set (30) | at most 11 points below the development set | One-sided 95% for 150 against 30 questions at about 87%: a larger drop means the knowledge base or retrieval is fitted to the visible questions |
 
+- Consensus: the deployed profile sets `consensus_samples: 3`; the benchmark runs one sample and reads the projection next to the gate in each `report.md` (section Consensus of 3, projected), the exact mean over all draws of 3 of the 5 runs. Same result at a third of the cost.
 - The gap to the frontier model is not a gate. It is an outcome, reported next to the gate with its paired test (section 8). The benchmark is not designed to beat anyone: it is fair (section 6.1) and its questions are hard; a deeper knowledge base shows as a higher score.
 - Why 85%, not 90%: at 150 questions 85 and 90 still overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
 - Reading the gap: within the margin (about ±6 points at 150 questions) it is a tie; the paired test says whether a larger gap is more than luck.

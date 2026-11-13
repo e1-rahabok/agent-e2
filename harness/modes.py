@@ -205,9 +205,65 @@ def _verified(client, model, msgs, res, question, context, kb_ids, cfg, trace, p
     return res2
 
 
+CONSENSUS_MODES = ('classic', 'agentic')  # the shipped modes; baseline and web stay one sample: they measure the model alone
+
+
 def answer(mode, client, model, question, images, cfg, retriever, kind='choice'):
     """Run one question in one mode. kind: choice (letters) or open (free text).
+    With cfg consensus_samples n > 1 (choice questions, classic and agentic mode): n samples; the letters stand only
+    when every sample gives the same set, otherwise the answer is Unsure (harness/README.md, section Consensus).
     Returns (result, ids used, trace, fallback flag)."""
+    n = cfg.get('consensus_samples') or 1
+    if n > 1 and kind == 'choice' and mode in CONSENSUS_MODES:
+        return _consensus(n, mode, client, model, question, images, cfg, retriever)
+    return _answer_once(mode, client, model, question, images, cfg, retriever, kind)
+
+
+def _consensus(n, mode, client, model, question, images, cfg, retriever):
+    """Up to n samples, stopped at the first disagreement or Unsure: unanimous letters stand, anything else is Unsure.
+
+    Why: on the 2026-11-13 round, 55-75% of the confident-wrong multiple-choice answers in knowledge base modes were
+    partly right, and the same question got different letters in different runs. Disagreement between samples marks
+    the questions the model does not know; the Unsure rule in the prompt alone did not (Unsure 1-6% of answers).
+    """
+    _, unsure, _ = verify.options(question)
+    trace, used, fallback, first, first_letters = [], [], False, None, None
+    for i in range(n):
+        res, ids, tr, fb = _answer_once(mode, client, model, question, images, cfg, retriever, 'choice')
+        for s in tr:
+            s['sample'] = i + 1
+        trace += tr
+        used += [x for x in ids if x not in used]
+        fallback = fallback or fb
+        letters = sorted(set(verify.answer_letters(res.get('content') or '') or []))
+        if first is None:
+            first, first_letters = res, letters
+        if not letters or letters != first_letters or (unsure and letters == [unsure]):
+            break
+    else:
+        _step(trace, 'consensus', n, f'agreed: {",".join(first_letters)}')
+        return first, used, trace, fallback
+    if not unsure:  # no Unsure option to fall back to: keep the first answer, flag it
+        _step(trace, 'consensus', n, 'disagreed; no Unsure option, first answer kept')
+        return first, used, trace, fallback
+    seen = f'{",".join(first_letters) or "none"} then {",".join(letters) or "none"}'
+    if not letters:
+        why = 'a sample gave no readable letters'
+    elif letters == [unsure] or first_letters == [unsure]:
+        why = 'a sample chose Unsure'
+    else:
+        why = f'the samples disagreed ({seen})'
+    _step(trace, 'consensus', n, f'Unsure: {why}')
+    first_reason = next((ln.split(':', 1)[1].strip() for ln in (first.get('content') or '').split('\n')
+                         if ln.strip().upper().startswith('REASON:')), '')
+    out = dict(first)
+    # One ANSWER line only: the parser reads the last one, so the first sample's own ANSWER line is not repeated.
+    out['content'] = (f'ANSWER: {unsure}\nREASON: Not settled: {why}, so the knowledge read does not decide every option.'
+                      + (f' First sample\'s reason: {first_reason[:400]}' if first_reason else ''))
+    return out, used, trace, fallback
+
+
+def _answer_once(mode, client, model, question, images, cfg, retriever, kind='choice'):
     trace = []
     if mode == 'baseline':
         res, used = baseline(client, model, question, images, cfg, trace, kind)
