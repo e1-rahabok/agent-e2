@@ -203,12 +203,6 @@ rows:
   means: noisy neighbour villain victim contention
   note: 'Find the victims by contention first, then the villain by consumption on the same resource and time.'
   files: [sp5-framework/performance/noisy-neighbour]
-- id: vm-contention-dashboard
-  premise: true
-  match: ['contention dashboard', 'vm-contention-dashboard']
-  means: VM Performance dashboard deprecated VM Contention
-  note: 'The VM Contention dashboard is deprecated in VCF Operations 9.1 (DEP); VM Performance supersedes it. The 9.1 documentation still lists it as current.'
-  files: [vcf-operations/dashboards/vm-performance-dashboard]
 - id: business-application
   match: ['crown jewel', 'business application', '(application|app) (is|was|feels?) slow', 'application performance']
   means: business application KPI tier crown jewels
