@@ -113,7 +113,8 @@ Each entry has:
   - C. The absolute gate plus at least 15 points over the frontier model (design.md section 7.5 today).
 - Also: which frontier configuration is the reference? Prompt only (Opus 5.5, 67% on 150 questions), or as an administrator uses it, with web search (pilot 77%, 2 runs, not comparable)?
 - Written as now: design.md and the plan keep C; MISSION.md says "higher", which reads as B. "Higher" inside the plus or minus 5-point margin is not a proof.
-- Answer:
+- Answer (2026-11-13): A. Beating anyone is not a goal; it is an outcome. The benchmark is fair and the questions are hard; with deeper knowledge, Agent E2 scores higher as a result. The gap is reported, not gated. Open: which frontier configuration is shown next to it (prompt only or with web search).
+- Applied 2026-11-13: the 15-point gap removed from the gate in design.md (sections 1, 7.5, 8) and the plan; report and summary show the gap and the paired test as outcomes.
 
 ### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
 

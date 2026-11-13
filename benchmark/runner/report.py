@@ -93,7 +93,8 @@ def final(rows):
 # Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 in agentic mode.
 # Not computed here: no misconception of knowledge/misconceptions.md stated as true (author check of each answer),
 # and the held-out set within 5 points of the development set (a separate run).
-GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03, 'gap': 0.15, 'alpha': 0.05}
+GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03}
+ALPHA = 0.05  # paired test against the frontier model: reported as an outcome, not a gate (author, 2026-11-13)
 REFERENCE = ('anthropic/claude-opus-5.5', 'baseline')  # frontier model without the knowledge base (Q164)
 
 
@@ -117,7 +118,10 @@ def mcnemar(rows, model, mode, ref=REFERENCE):
 
 
 def gate(fin, rows, model, mode='agentic', ref=REFERENCE):
-    """Release gate rows for (model, mode): (name, value, limit, passed). Gap and test are against the reference."""
+    """Release gate rows for (model, mode): (name, value, limit, passed).
+
+    The gap to the reference and its paired test follow as outcome rows: passed is None, they gate nothing.
+    """
     s = fin[(model, mode)]
     out = [('Final score', s['final'], f'at least {GATE["final"]:.0%}', s['final'] >= GATE['final']),
            ('Level 400', s['level:400'], f'at least {GATE["level:400"]:.0%}',
@@ -127,8 +131,8 @@ def gate(fin, rows, model, mode='agentic', ref=REFERENCE):
     if ref in fin:
         gap = s['final'] - fin[ref]['final']
         b, c, p = mcnemar(rows, model, mode, ref)
-        out += [('Gap to the frontier model', gap, f'at least {GATE["gap"]:.0%}', gap >= GATE['gap']),
-                (f'Paired test (b {b}, c {c})', p, f'p below {GATE["alpha"]}', not math.isnan(p) and p < GATE['alpha'])]
+        out += [('Gap to the frontier model', gap, 'outcome, not a gate', None),
+                (f'Paired test (b {b}, c {c})', p, f'significant if p below {ALPHA}', None)]
     return out
 
 
@@ -213,7 +217,7 @@ def write(run_dir):
         for m, mode in sorted(cands):
             for name, v, lim, ok in gate(fin, all_scored, m, mode):
                 val = f'{v:.3f}' if name.startswith('Paired') and not math.isnan(v) else _pct(v)
-                L.append(f'| {m} | {name} | {val} | {lim} | {"yes" if ok else "no"} |')
+                L.append(f'| {m} | {name} | {val} | {lim} | {"-" if ok is None else "yes" if ok else "no"} |')
         L += ['', '- Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check), and the held-out set within 5 points (separate run). Method: `benchmark/design.md`, section 7.5.']
     L += ['', '## Sub-scores', '',
           '| Model | Mode | Deterministic | Judged | Text | Table | Screenshot | Level 100 | Level 200 | Level 300 | Level 400 |',

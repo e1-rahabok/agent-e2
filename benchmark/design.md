@@ -277,11 +277,10 @@ The frontier model must be able to answer every question from public knowledge. 
 | Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
 | Misconceptions of [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
 | Held-out set (30) | at most 11 points below the development set | One-sided 95% for 150 against 30 questions at about 87%: a larger drop means the knowledge base or retrieval is fitted to the visible questions |
-| Gap to the frontier model (section 8) | at least 15 points, paired test significant | The claim of section 1 |
 
-- Effective bar: Agent E2 at least the larger of 85% and frontier + 15.
+- The gap to the frontier model is not a gate. It is an outcome, reported next to the gate with its paired test (section 8). The benchmark is not designed to beat anyone: it is fair (section 6.1) and its questions are hard; a deeper knowledge base shows as a higher score.
 - Why 85%, not 90%: at 150 questions 85 and 90 still overlap inside the margin; the confident-wrong limit does more for the operator than 5 more points.
-- Why 15 points: 10 points is about twice the margin and has low paired power ([project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md), section 5); 15 points has 91% or more at 150 questions (section 4).
+- Reading the gap: within the margin (about ±6 points at 150 questions) it is a tie; the paired test says whether a larger gap is more than luck.
 - Held-out set:
   - 30 questions drawn at release from the same blueprint, in proportion (about 1 at Level 100, 3 at 200, 8 at 300, 18 at 400; 12 judged, 6 with a table).
   - Written by a session that does not edit the knowledge base, reviewed by the author, never committed to the repository. Run once, on the release configuration.
@@ -296,18 +295,18 @@ The frontier model must be able to answer every question from public knowledge. 
 | 300 | 40 | about 80% | Public practice, but some published thresholds are the ones the knowledge base corrects |
 | 400 | 90 | about 60% | Knows each mechanism alone; misses the vantage point and the combination of readings, and picks the Level 300 rule of thumb. Web search returns the same Level 300 pages |
 
-- So the 85% gate and the 15-point gap bind at about the same place. The author-framework row of the earlier estimate (about 25%) is gone with the fairness rules: the gap must be won on public mechanisms.
+- The author-framework row of the earlier estimate (about 25%) is gone with the fairness rules: the gap must be won on public mechanisms.
 - Ceiling, not a gate: the frontier model in agentic mode with the knowledge base. Agent E2 within 5 points of it shows the local model is not the bottleneck. If the frontier model scores lower with the knowledge base than without, the knowledge base or the harness misleads a strong model: fixed before any gap is read.
 - Target: 99%, a direction. 150 questions cannot prove it (section 4).
-- Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400, confident-wrong, gap and paired test. The misconception check and the held-out set are read outside the report.
+- Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400 and confident-wrong as the gate; the gap and the paired test as outcomes. The misconception check and the held-out set are read outside the report.
 
 ## 8. Comparison design
 - Reasons for running both modes and for the call limit: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), sections 8 and 9.
 - The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 8, Benchmark and deployment.
 - Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md).
-- Reference: the frontier model in baseline mode: Claude Opus 5.5, web search on, effort capped at medium, no knowledge base (Q164). The claim in section 1 is met when Agent E2 exceeds it by at least 15 points and a one-sided exact McNemar test on the questions is significant at α 0.05 (section 7.5).
+- Reference: the frontier model in baseline mode: Claude Opus 5.5, web search on, effort capped at medium, no knowledge base (Q164). The report gives the gap to it and a one-sided exact McNemar test at α 0.05: an outcome, not a gate (section 7.5).
 - Paired comparison: models are compared question by question on the same set, not only by totals.
-- Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap below 15 points does not support the claim.
+- Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap within the margin is a tie.
 - Run matrix of the final round: 3 candidates x 3 modes plus the frontier reference x 2 modes (baseline, web), 196 questions, 5 runs = 10,780 answers, about US$ 90 and 2-4 hours, from the preflight sample ([benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md)). Prices, rate limits and a model's thinking change both numbers: run the preflight before each round.
 
 ## 9. Retrieval check
