@@ -1,7 +1,7 @@
 # Slow every morning in a DPM cluster
 
 ## Prompt
-- Cluster vdi-ops-02: 10 hosts, DRS fully automated, Distributed Power Management (DPM) automatic at the default threshold.
+- Cluster vdi-operations-02: 10 hosts, DRS fully automated, Distributed Power Management (DPM) automatic at the default threshold.
 - Users complain every weekday between about 07:45 and 08:45. After 09:00 there are no complaints.
 - Cluster CPU demand over 24 hours averages 35%.
 - A typical weekday, from vCenter and VCF Operations:
@@ -31,7 +31,6 @@ What causes the morning slowness? Is more hardware the answer? What do you chang
 - Then check that Ready stays low from 07:30 to 09:00.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2).
 - DPM: vSphere 9.1 Resource Management, Managing Power Resources (DPM consolidates VMs and puts hosts in standby; powers hosts on when demand rises).
 
 ## Metadata
@@ -56,5 +55,5 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
 misconception_type: [average-hides-worst, provider-vs-consumer]
-status: draft
+status: reviewed
 ```
