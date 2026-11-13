@@ -3,7 +3,7 @@
 ## Prompt
 Review the following [The attached screenshot](0051/vcf-operations-vm-guest-and-cpu-metrics.png).
 
-Which of these metrics are Guest OS metrics, not VM metrics? Choose all that apply.
+Which of these metrics are Microsoft Windows or Linux metrics, not VMware VM metrics? Choose all that apply.
 
 - A. Guest | CPU Queue
 - B. CPU | Ready
