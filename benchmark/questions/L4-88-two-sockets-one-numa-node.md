@@ -1,7 +1,7 @@
 # Two sockets in Windows, one NUMA node
 
 ## Prompt
-- ESXi 9.1 host: 2 sockets, 20 cores per socket, 512 GB of DRAM per socket. One NUMA node per socket.
+- VMware ESXi 9.1 host: 2 sockets, 20 cores per socket, 512 GB of DRAM per socket. One NUMA node per socket.
 - A SQL Server VM on Windows Server 2022: 16 vCPUs, 128 GB of memory.
 - For licensing, the VM's cores per socket was set by hand to 8. Windows Task Manager shows 2 sockets and 16 logical processors.
 - esxtop, memory panel with the NUMA columns, VM row: NHN 1, N%L 100.
@@ -43,5 +43,5 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
 misconception_type: [layer-confusion]
-status: draft
+status: reviewed
 ```
