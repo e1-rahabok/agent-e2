@@ -44,7 +44,8 @@ How Claude works in this repository. Read at the start of every session. The des
 ## Evaluation
 - Never send `## Expected key points` or `## Likely wrong answer` to a candidate. Only the judge (`benchmark/runner/judge.py`) reads them.
 - Every candidate model must read screenshots (vision). Models and judge: `benchmark/models.md`.
-- Baseline runs use no knowledge base. Record model and effort in `benchmark/results/results.csv`.
+- Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
+- Run a benchmark round: `benchmark/RUN.md` (one prompt, the approvals to give up front, time and cost).
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.
 
 ## Repository layout

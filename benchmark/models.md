@@ -22,7 +22,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
-- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 16% of answers (benchmark 20261103-093742).
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 2% of multiple-choice answers and 4% of judged answers (benchmark 2026-11-13, 150 questions).
 - Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
 - Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
 
@@ -68,8 +68,8 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 - Add the KV cache for the retrieved context (8-12K tokens per question).
 - Only two limits count: fit for the goal, and hardware cost (one GPU, at most 96 GB). Parameter count is not a limit.
-- 8B-14B: too weak at multi-step reasoning and tool use. Measured: ministral-8b 29-40% exact; qwen-3-14b agentic 19%.
-- 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs (nemotron-3-nano-30b-a3b: 24-29% exact, almost no tool calls).
+- 8B-14B: too weak at multi-step reasoning and tool use.
+- 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs.
 
 ## 2. Gateway in the benchmark, local server at the site
 ### Two ways to reach a model
@@ -124,7 +124,7 @@ Preferred, not required:
 ## 4. Candidates
 | Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
-| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Best: 58% exact with one lookup (17 questions, old scoring) |
+| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Classic 67%, agentic 54% (benchmark 2026-11-12, 150 questions) |
 | alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Added 2026-11-04 |
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
 
@@ -134,12 +134,15 @@ Preferred, not required:
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
 - Licences checked on Hugging Face 2026-11-05. The Gemma licence allows commercial use; read it before deployment.
+- Request settings (`model_params` in `config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
 
 ## 5. Frontier reference
 - One frontier model, scored the same way with and without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Web search on, as Claude has it; effort capped at medium, for the cost of the author's subscription.
 - No benchmark run until development is done: the benchmark is M4 and starts only after M1 (knowledge base), M2 (questions) and M3 (retrieval) are complete (Q163).
 - The claim ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
-- Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); it rate-limits at 12.
+- Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); the provider rate-limits above that in a short trial, and the governor probes upward from 3.
+- Effort: `model_params` in `config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).
+- Modes in the final round: `baseline` (the prompt alone) and `web` (the baseline prompt plus open web search and page fetch, no knowledge base, no instruction to search: how an administrator's chat product behaves).
 
 ## 6. Judge
 - Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.
@@ -160,11 +163,11 @@ Preferred, not required:
 | nvidia/nemotron-3-nano-30b-a3b | 2026-11-05 | No vision (25%). |
 | zai/glm-4.7-flash | 2026-11-05 | No vision. Added 2026-11-04, never run. |
 | alibaba/qwen3.6-27b | 2026-11-05 | Previous generation of qwen3.8-27b: duplicate (rule 7). Added 2026-11-04, never run. |
-| google/gemma-4-26b-a4b-it | 2026-11-05 | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active; 45%). |
-| mistral/mistral-small | 2026-11-05 | Serves Mistral Small 4: 119B MoE, 6.5B active. Less compute per token than the dense candidates on twice the GPU memory (section 1). 51% on 17 questions (old scoring; served version then not recorded). |
+| google/gemma-4-26b-a4b-it | 2026-11-05 | Smaller sibling of gemma-4-31b-it: duplicate (rule 7). Was the speed option (26B MoE, 4B active). |
+| mistral/mistral-small | 2026-11-05 | Serves Mistral Small 4: 119B MoE, 6.5B active. Less compute per token than the dense candidates on twice the GPU memory (section 1). |
 | inclusionai/ling-3.0-flash-vl | 2026-11-05 | 125B MoE, MIT. Same reason. Added and removed the same day, never run. |
 | nvidia/nemotron-3.5-super-vl | 2026-11-05 | 120B MoE, 12B active, OpenMDW 1.1. Same reason. Added and removed the same day, never run. |
-| mistral/ministral-8b | 2026-11-03 | 29-40% exact in benchmark 20261103-081849. |
+| mistral/ministral-8b | 2026-11-03 | Weakest of the first 8 candidates. |
 
 ## 8. Not chosen
 | Model | Reason |

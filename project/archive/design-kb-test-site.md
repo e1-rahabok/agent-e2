@@ -69,7 +69,7 @@ flowchart LR
 | questions | text, mode (kb, baseline), user role, time |
 | answers | question, text, cited ids, retrieval trace, index version, model, latency |
 | ratings | answer, score 0-3, flag, comment, cause tag |
-| eval_runs | question id, mode, score, retrieval hit, index version, model; also appended to `benchmark/results/results.csv` |
+| eval_runs | question id, mode, score, retrieval hit, index version, model |
 
 - Question answer keys are read only by the runner and the author pages. Never sent to the LLM. Never shown to visitors.
 

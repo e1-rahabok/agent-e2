@@ -2,3 +2,9 @@ harness/.cache/
 benchmark/results/*/traces.jsonl
 __pycache__/
 project/kpi.csv
+project/archive/**/traces.jsonl
+benchmark/results/*/run.log
+project/archive/**/run.log
+benchmark/results/.round.json
+benchmark/results/.progress.txt
+benchmark/results/.preflight.json

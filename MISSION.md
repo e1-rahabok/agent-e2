@@ -34,7 +34,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 Six mechanisms, in order of weight.
 
 1. **Open-book exam.** A frontier model wins on breadth of memorised knowledge plus reasoning depth. In one narrow domain, retrieval supplies the knowledge. What remains is reading 5-10 retrieved files and applying their rules: reading comprehension plus a short reasoning chain. On that task, current 27-32B dense models are close to frontier models.
-2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation, which repeat the misconceptions the author's books correct: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS". Measured: the frontier model without the knowledge base gave the misconception answer on 16% of answers (benchmark 20261103-093742).
+2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation, which repeat the misconceptions the author's books correct: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS". Measured on 150 questions (benchmark 2026-11-13): the frontier model without the knowledge base gave the misconception answer on 2% of multiple-choice answers and 4% of judged answers, and was confidently wrong on 10% of answers.
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters) is newer than most training data. The knowledge base is written from the current release by rule.
 4. **Exactness from tools.** Models of every size slip on arithmetic, units and lookups (ms summation to %, KB vs kb, rollups). A calculator and a metric catalog return exact values; the model only chooses the tool.
 5. **Knowledge built for a small reader.** One fact per bullet, one object per metric file, same-name misconceptions linked, layers separated, metadata for filtering. Most enterprise retrieval fails on messy documents; this corpus is written to be retrieved.
@@ -57,8 +57,8 @@ Six mechanisms, in order of weight.
 - The best local configuration stays below the frontier baseline by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
 
 ### Status
-- Not achieved yet. On the first 17 questions (old scoring), the best local model with the knowledge base scored 58%; the frontier model without it, 75%.
-- Known causes, each tracked: knowledge gaps, answer-key errors, an old prompt rule (knowledge base only, since changed), weak agentic tool use, retrieval reaching 67% of needed files.
+- Not achieved yet. On the 150 questions (benchmark 2026-11-12), the best local model with the knowledge base scored 67% in classic mode and 56% in agentic mode; the frontier model without it, 67%.
+- Known causes, each tracked: knowledge gaps, answer-key errors, weak agentic tool use, retrieval reaching 67% of needed files.
 
 ## 4. Model size
 - Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.

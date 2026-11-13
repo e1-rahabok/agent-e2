@@ -42,8 +42,10 @@ class GatewayClient:
             time.sleep(delay + random.random())
             delay *= 2
 
-    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None):
+    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None):
         body = {'model': model, 'messages': messages, 'temperature': temperature, 'max_tokens': max_tokens}
+        if reasoning:
+            body['reasoning'] = reasoning       # gateway field, e.g. {'effort': 'none'} or {'enabled': False}; per model: models.md, section 5
         if tools:
             body['tools'] = tools
             body['tool_choice'] = 'auto'
@@ -54,6 +56,7 @@ class GatewayClient:
         usage = data.get('usage') or {}
         return {
             'content': msg.get('content') or '',
+            'finish_reason': data['choices'][0].get('finish_reason') or '',     # 'length': the answer was cut at max_tokens
             'tool_calls': msg.get('tool_calls') or [],
             'prompt_tokens': usage.get('prompt_tokens', 0),
             'completion_tokens': usage.get('completion_tokens', 0),
@@ -70,6 +73,37 @@ class GatewayClient:
         r = requests.get(self.base + '/models', timeout=60)
         r.raise_for_status()
         return {m['id']: m for m in r.json()['data']}
+
+    def credits(self):
+        """Account credit balance in US$ (the key's own budget is a separate limit and is not readable)."""
+        if not self.key:
+            raise LLMError('AI_GATEWAY_API_KEY is not set')
+        r = requests.get(self.base + '/credits', timeout=60, headers={'Authorization': f'Bearer {self.key}'})
+        if r.status_code != 200:
+            raise LLMError(f'HTTP {r.status_code}: {r.text[:200]}')
+        return float(r.json()['balance'])
+
+
+class ParamClient:
+    """Adds per-model request settings to every chat call: `reasoning` (the gateway's reasoning field) and `max_tokens`.
+
+    One wrapper instead of a parameter threaded through every mode: the same settings reach classic, agentic, web and the
+    answer repair. A model without an entry passes through unchanged (the judge, an embedding call).
+    """
+
+    def __init__(self, inner, params):
+        self.inner, self.params = inner, params or {}
+
+    def chat(self, model, messages, **kw):
+        p = self.params.get(model) or {}
+        if 'max_tokens' in p:
+            kw['max_tokens'] = p['max_tokens']
+        if p.get('reasoning'):
+            kw['reasoning'] = p['reasoning']
+        return self.inner.chat(model, messages, **kw)
+
+    def __getattr__(self, name):
+        return getattr(self.inner, name)
 
 
 def _provider(data, headers):
@@ -93,7 +127,7 @@ class MockClient:
     def __init__(self, seed=0):
         self.rng = random.Random(seed)
 
-    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None):
+    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None):
         last = messages[-1]
         tool_turns = sum(1 for m in messages if m['role'] == 'tool')
         if tools and tool_turns == 0:
@@ -112,12 +146,12 @@ class MockClient:
         text = json.dumps([m['content'] if isinstance(m['content'], str) else m['content'][0]['text'] for m in messages if m['role'] == 'user'])
         letters = sorted(set(re.findall(r'\\n([A-H])\. ', text)))
         pick = sorted(self.rng.sample(letters, k=1 if letters else 0)) or ['A']
-        return {'content': f'ANSWER: {", ".join(pick)}\nREASON: mock', 'tool_calls': [],
+        return {'content': f'ANSWER: {", ".join(pick)}\nREASON: mock', 'tool_calls': [], 'finish_reason': 'stop',
                 'prompt_tokens': 500, 'completion_tokens': 20, 'latency': 0.01,
                 'served_model': model, 'provider': 'mock'}
 
     def _tool(self, name, args):
-        return {'content': '', 'tool_calls': [{'id': f'call_{self.rng.randint(0, 10**9)}', 'type': 'function',
+        return {'content': '', 'finish_reason': 'tool_calls', 'tool_calls': [{'id': f'call_{self.rng.randint(0, 10**9)}', 'type': 'function',
                                                'function': {'name': name, 'arguments': json.dumps(args)}}],
                 'prompt_tokens': 400, 'completion_tokens': 30, 'latency': 0.01, 'served_model': 'mock', 'provider': 'mock'}
 

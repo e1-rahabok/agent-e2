@@ -46,13 +46,13 @@ flowchart LR
 Six mechanisms, in order of weight.
 
 1. **Open-book exam.** A frontier model's advantage is breadth of memorised knowledge plus reasoning depth. For one narrow domain, retrieval supplies the knowledge. What remains is reading 5-10 retrieved files and applying their rules: reading comprehension plus a short reasoning chain. On that task, current 27-32B dense models and 120B-class MoE models are close to frontier models.
-2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation. That corpus repeats the misconceptions the author's book corrects: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS", "VM rightsizing". A model trained on it answers confidently and wrongly. Measured: the frontier model without the knowledge base fell into the trap answer on 16% of answers (benchmark 20261103-093742).
+2. **The frontier model memorised the wrong answers.** Its vSphere knowledge comes from forums, blogs and old documentation. That corpus repeats the misconceptions the author's book corrects: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS", "VM rightsizing". A model trained on it answers confidently and wrongly. Measured on 150 questions (benchmark 2026-11-13): the frontier model without the knowledge base gave the misconception answer on 2% of multiple-choice answers and 4% of judged answers.
 3. **Currency.** vSphere 9.1 and VCF 9.1.1 behaviour (memory tiering, vHT, GPU counters at statistics level 4) is newer than most training data. The knowledge base is current by rule.
 4. **Exactness from tools.** Small and large models both slip on arithmetic and unit conversion (ms summation to %, GHz × vCPU, KB vs kb). A calculator tool and a metric catalog lookup return exact values; the model only chooses which tool to call.
 5. **Structure built for a small model.** One fact per bullet, one object per metric file, same-name traps linked, layers separated in folders and tags, metadata for filtering. Enterprise RAG usually fails on messy chunking; this corpus is written to be chunked.
 6. **Measured, not claimed.** Every change is scored on a fixed benchmark against the frontier model, with luck removed (Unsure option, confident-wrong rate, 5 runs must agree).
 
-- Honest status: not achieved yet. On 17 questions (old scoring), the best small model with the knowledge base scored 58%; the frontier model without it scored 75%. The gap is in specific questions (knowledge gaps, answer keys, the "ONLY the knowledge base" prompt rule, weak agentic tool use), each tracked in `project/author-questions.md` Q038-Q043 and `project/todo.md`.
+- Honest status: not achieved yet. The gap is in specific questions (knowledge gaps, answer keys, the "ONLY the knowledge base" prompt rule, weak agentic tool use), each tracked in `project/author-questions.md` Q038-Q043 and `project/todo.md`.
 
 ## 4. Why 32B, not 70B or 8B
 Decode speed and hardware are governed by memory: every generated token reads all active weights once.

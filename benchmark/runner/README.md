@@ -1,6 +1,7 @@
 # Benchmark runner
 
 Runs every question (multiple choice, screenshot, free text) against the candidate open-weight models through Vercel AI Gateway, scores them automatically (letters, or a judge model for free text), and writes a report with one final score.
+A whole round (four runs, preflight, recovery, summary) without anyone at the keyboard: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 Design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Not indexed.
 
 ## Setup
@@ -30,9 +31,16 @@ python3 benchmark/runner/run.py
 - Full matrix from `config.yaml`.
 
 ```bash
-python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>
+python3 benchmark/runner/run.py --resume benchmark/results/<run-folder>
 ```
 - Continue a benchmark; failed answers are retried.
+
+```bash
+python3 benchmark/runner/preflight.py
+python3 benchmark/runner/run_all.py --max-minutes 110
+python3 benchmark/runner/run_all.py --resume --max-minutes 110
+```
+- The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and `benchmark/RUN.md`.
 
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py
@@ -78,7 +86,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Reason and design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
-- Margin: 95% interval on Majority. Set by the number of questions: 17 questions gives about ±20-24 points.
+- Margin: 95% interval on Majority. Set by the number of questions: 150 questions give about ±8 points on the final score.
 
 ### Modes: baseline, classic, agentic
 
@@ -96,7 +104,6 @@ python3 benchmark/runner/retrieval_eval.py
 - Classic and agentic answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
 - Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well.
 - The agentic limits (8 calls, 12K tokens) are cost caps for the benchmark, not a design choice.
-- Benchmark 20261103-081849: agentic scored below classic for 7 of 8 small models. Cause: weak tool use (recall 0-50% vs 63% for classic; some models made almost no calls; one broke the answer format). A model problem, not a knowledge-base problem.
 
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
@@ -120,13 +127,11 @@ python3 benchmark/runner/retrieval_eval.py
 
 ### Concurrency (speed)
 - Requests sent to the gateway at the same time, per model. Cost does not change with concurrency: the same tokens are sent, only in parallel.
-- Benchmark folders 20261103-081849 and 20261103-093742 (the old 17-question set) were deleted on 2026-11-13; they stay in git history. Every mention of them in the documents is a past result, not a file to open.
-- Measured in benchmark 20261103-081849 (one model, all modes): 4 gave about 25 answers per minute, 0 errors in 128 answers; 12 gave about 54, 0 errors in 2032 answers. At 12 the full matrix of 2160 answers took about 38 minutes.
 - Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; found by trial. Above it, providers return HTTP 429. The client retries 429, 408 and 5xx; an answer that still fails is listed, and `--resume` retries it.
 - Limit: a Claude Code cloud background command stops after 2 hours (see Long runs below).
 
 **Adaptive concurrency** ([governor.py](governor.py), `adaptive_concurrency` in `config.yaml`; `--no-adaptive` turns it off):
-- Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3, because it returned HTTP 429 at 12). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
+- Each model starts at its proven value: `concurrency` (12), or its entry in `concurrency_by_model` (anthropic/claude-opus-5.5: 3; the provider rate-limits above that in a short trial; the governor kept 5 in the baseline run and 7 in the web run of 2026-11-13). The proven value is the floor: the runner never goes below it. `--concurrency N` sets one proven value for every model.
 - It then probes upward in steps of 2, up to 2 steps (12, 14, 16). Each level is measured over a window of 40 answers (the first answers after a change are dropped).
 - A step is kept only if the window has no error and the answers per minute rise by at least half of the ideal gain (12 to 14: at least +8.3% of the ideal +16.7%; 14 to 16: at least +7.1%). A step that fails returns to the last level that held, and probing stops.
 - Any HTTP 429 returns the model to its proven value for the rest of the run. A 429 at the proven value changes nothing and prints a warning: that model's proven value is too high, so lower its entry in `concurrency_by_model` and resume.
@@ -136,11 +141,35 @@ python3 benchmark/runner/retrieval_eval.py
 - Tested offline (a fake clock, [test_runner.py](test_runner.py), class GovernorTest). The first live run is the real test: watch the decision lines.
 
 ### Long runs: stop and resume
-- `--max-minutes N` (or `max_minutes` in `config.yaml`): after N minutes the runner starts no new answer, lets the running ones finish, prints `Resume: python3 benchmark/runner/run.py --resume <folder>` and exits with code 3. It writes no `report.md` and no `results.csv` rows: a stopped run is not a result. Exit code 0 = finished, 3 = stopped at the limit.
+- `--max-minutes N` (or `max_minutes` in `config.yaml`): after N minutes the runner starts no new answer, lets the running ones finish, prints `Resume: python3 benchmark/runner/run.py --resume <folder>` and exits with code 3. It writes no `report.md`: a stopped run is not a result. Exit code 0 = finished, 3 = stopped at the limit.
 - In a Claude Code cloud session start every long run with `--max-minutes 110`: the 2-hour limit kills a command in the middle of an answer; this stops it clean, a few minutes earlier.
 - `--resume <folder>` needs no other flag: models, modes, runs, temperature, questions, judge and primer are read from the folder's `config.json`, so a resume cannot change what the run measures (a resume without `--models` once ran every model of `config.yaml` into the folder). A flag you pass still overrides. Saved answers are kept; answers that failed are retried. `config.json` keeps the original `started` time and lists each resume in `resumed`.
 - Cannot be done inside the process: a command cannot extend the 2-hour limit of the session that started it. The relaunch is a new command: when a run exits with code 3 (or its process is gone and the folder has fewer answers than the matrix), start `python3 benchmark/runner/run.py --resume <folder> --max-minutes 110` again. The 15-minute progress check does this on its own: it counts the rows of `answers.csv` by `model` and relaunches a dead run.
 - `index_version` in `config.json` is the commit at the last resume; each row of `answers.csv` keeps the commit of its own answer. A resume after a change to the knowledge base mixes two versions in one run: stop edits to `knowledge/` during a run.
+
+### Request settings per model (reasoning)
+- A reasoning model spends tokens thinking before it writes the `ANSWER:` line. `max_tokens` counts the thinking. When the thinking uses all of it, the answer is cut off, no letter is found and the answer scores as wrong: the run measures the cap, not the model.
+- Measured on 2026-11-12 with the default settings: alibaba/qwen3.8-27b used 3,700-4,300 tokens per answer in every mode (85% of its baseline answers hit the 4,000 cap, 549 of its 1,350 multiple-choice answers had no readable letter) and took 25-38 s per answer; google/gemma-4-31b-it used 160-380 tokens and 9-20 s.
+- `model_params` in `config.yaml` lists, per model, the request settings in order of preference. Fields: `reasoning` (sent to the gateway as is: `{effort: none}`, `{enabled: false}`; the model's `reasoning_options` in the gateway `/v1/models` list what it accepts) and `max_tokens`. `run.py` without `--params` uses the first entry; `preflight.py` picks the first entry that answers cleanly. The choice is saved in the run folder's `config.json` under `model_params`, and a resume keeps it.
+- Measured live on 2026-11-13: `{effort: none}` cut a Qwen answer from 303 to 41 tokens; `{enabled: false}` removed Muse's thinking; Opus accepts `{effort: medium}`.
+- The setting is part of the measurement: a model with reasoning off may score differently from the same model with it on. The summary README lists the settings of every run.
+
+### Health check (during a run)
+- [health.py](health.py) watches the last 40 answers of each model. A bad answer is an API error, a multiple-choice answer with no readable letter, or an answer cut off at `max_tokens` (the gateway's `finish_reason` is `length`; column `truncated`). When 25% of them are bad (after 20 answers) the run stops starting new answers, writes no report and exits with code 5. The answers stay in the folder.
+- An HTTP 402 (credits or key budget) or 401 or 403 (key) stops the run at once with code 6: every further answer would fail the same way.
+- `--no-health` turns it off (the preflight uses that: it judges the sample itself). Tested in `test_runner.py`, class HealthTest.
+
+### Preflight (before a round)
+- [preflight.py](preflight.py) answers a sample (4 multiple-choice, 2 judged, 1 screenshot question) in every mode of every run of the round, through `run.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
+- It reads the credits (`/v1/credits`), projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
+- The projection is rough: seven questions per mode. Live on 2026-11-13: 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
+
+### A whole round: run_all.py
+- [run_all.py](run_all.py) runs `release.runs` of `config.yaml` (one run.py per model, all at once, each in `benchmark/results/<date>-<model>/`): preflight, runs, recovery, summary. Playbook, approvals and expectations: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
+- Recovery: a run that crashed (exit 1 and others) is relaunched with `--resume`, up to `release.retries` times; answers that failed are retried the same way. A run whose answers are invalid (exit 5) restarts from the beginning with the next entry of the model's `model_params`; the invalid folder is kept as evidence and moves to the archive at the end. A refused key (exit 6) stops the round.
+- State is in `benchmark/results/.round.json` (not in git). `--resume` continues a round after exit 3 or exit 6; without it a second start is refused while a round is in progress; `--new` discards the state.
+- When every run is complete it writes [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) with [summarize.py](summarize.py) (one analysis of all runs, every number from the run folders) and moves earlier run folders to `project/archive/benchmark-results-before-<date>/`. It does not commit or merge.
+- Exit codes ([exitcodes.py](exitcodes.py)): 0 done; 1 crashed; 3 stopped at `--max-minutes`, relaunch with `--resume`; 4 preflight failed; 5 invalid answers; 6 credits or key refused; 7 some runs done, others failed.
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
@@ -166,15 +195,17 @@ python3 benchmark/runner/retrieval_eval.py
    - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Not-covered pick, Unsure pick;
    - free text: the judge scores 0-3; credit = score / 3;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
-6. Writes the benchmark folder and appends one summary row per model, mode and question to [benchmark/results/results.csv](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/results.csv).
+6. Writes the benchmark folder: `answers.csv`, `config.json`, `traces.jsonl`, `report.md`.
 
-## Output: `benchmark/results/<benchmark-id>/`
+## Output: `benchmark/results/<date>-<model>/`
+- One folder per run, named for the day it started and the model (`20261114-gemma-4-31b-it`; a second folder of the same name gets `-2`). `benchmark/results/README.md` is the only file at that level: the analysis of all runs of a round.
 | File | Content | In git |
 |---|---|---|
-| `config.json` | Index version (git SHA), models with tags and prices, settings | Yes |
+| `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), agent blocks, judge and its price, settings | Yes |
 | `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
 | `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
+| `run.log` | Console output of the run, written by `run_all.py` | No |
 
 ## Question fields used
 | Field | Meaning |
@@ -193,6 +224,6 @@ python3 benchmark/runner/retrieval_eval.py
 
 ## Limits
 - Provider name is recorded when the gateway returns it; the field is not documented as stable.
-- Cost is estimated from gateway list prices in `/models`; check the Vercel invoice.
+- Cost is estimated from gateway list prices in `/models`; check the Vercel invoice. The summary README adds the judge cost from the judge tokens in `traces.jsonl`.
 - Mock runs prove the pipeline only. Their scores are random, including the mock judge.
 - The judge is a model: its scores carry its errors. The author checks every 0 and every split between runs ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14).

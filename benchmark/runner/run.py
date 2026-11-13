@@ -8,6 +8,7 @@ Examples:
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
   python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs, questions and judge come from the folder
   python3 benchmark/runner/run.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
+Exit codes: benchmark/runner/exitcodes.py. A whole benchmark round: benchmark/RUN.md.
 """
 import argparse
 import csv
@@ -24,20 +25,23 @@ import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
+import exitcodes as X  # noqa: E402
 import questions as C  # noqa: E402
 import judge as J  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
 import report  # noqa: E402
 from governor import Governor  # noqa: E402
-from llm import GatewayClient, LLMError, MockClient  # noqa: E402
+from health import Health  # noqa: E402
+from llm import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
+from naming import run_name  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
 FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'answer_type', 'input', 'technology', 'task', 'level', 'run', 'temperature',
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
-          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text']
+          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text', 'truncated']
 
 
 def main():
@@ -59,7 +63,10 @@ def main():
     ap.add_argument('--max-minutes', type=float, help='stop starting new answers after this many minutes, let the running ones finish, '
                     'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
-    ap.add_argument('--no-summary-csv', action='store_true', help='do not append to benchmark/results/results.csv')
+    ap.add_argument('--name', help='folder name inside --out (default: <date>-<model>, naming.py)')
+    ap.add_argument('--params', help='JSON {model: {"reasoning": {...}, "max_tokens": N}}: settings sent with every request of that model. '
+                    'Default: the first entry of the model\'s list in config model_params (benchmark/runner/preflight.py picks the entry that works)')
+    ap.add_argument('--no-health', action='store_true', help='do not stop a run whose answers are cut off, unparsable or failing')
     a = ap.parse_args()
 
     cfg = yaml.safe_load(open(a.config))
@@ -96,7 +103,8 @@ def main():
     if not questions_:
         sys.exit('No scorable questions matched.')
 
-    client = MockClient() if a.mock else GatewayClient(cfg['gateway'])
+    params = _model_params(cfg, models_, a.params, saved)
+    client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway']), params)
     if a.primer:
         on = {'map', 'rules', 'terms', 'flows', 'procedure'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
         cfg['agent_primer'] = {b: b in on for b in ('map', 'rules', 'terms', 'flows', 'procedure')}
@@ -131,7 +139,7 @@ def main():
     if a.dry_run:
         return
 
-    run_dir = a.resume or os.path.join(a.out, dt.datetime.now().strftime('%Y%m%d-%H%M%S') + ('-mock' if a.mock else ''))
+    run_dir = a.resume or os.path.join(a.out, a.name or run_name(models_, a.out, a.mock))
     os.makedirs(run_dir, exist_ok=True)
     benchmark_id = os.path.basename(run_dir)
     answers_path = os.path.join(run_dir, 'answers.csv')
@@ -153,10 +161,11 @@ def main():
     now_s = dt.datetime.now().isoformat(timespec='seconds')
     json.dump({'benchmark_id': benchmark_id, 'started': saved.get('started', now_s), 'resumed': (saved.get('resumed') or []) + ([now_s] if saved else []),
                'index_version': sha,
-               'agent_primer': cfg.get('agent_primer'),
+               'agent_primer': cfg.get('agent_primer'), 'term_map_agent': cfg.get('term_map_agent'), 'model_params': params,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
                'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
+               'judge_pricing': {k: ((meta.get(judge.model) or {}).get('pricing') or {}).get(k) for k in ('input', 'output')} if judge and not a.mock else None,
                'groups': {c.id: {'answer_type': c.answer_type, 'input': c.input_types, 'level': c.level} for c in questions_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
@@ -203,6 +212,7 @@ def main():
                             'confident_wrong': int(v['score'] == 0 and not v['unsure']), 'parse_ok': 1,
                             'answer_text': (res['content'] or '')[:2000]})
             row['provider'] = res.get('provider', '')
+            row['truncated'] = int(res.get('finish_reason') == 'length')
             row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace if s['action'] != 'judge')
             row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace if s['action'] != 'judge')
             row['latency'] = round(sum(s.get('latency') or 0 for s in trace), 2)
@@ -226,8 +236,10 @@ def main():
             ft.flush()
         return row
 
+    health = None if (a.no_health or a.mock) else Health()
+
     def late():
-        return deadline is not None and time.monotonic() >= deadline
+        return (deadline is not None and time.monotonic() >= deadline) or bool(health and health.reason)
 
     def one(task):
         if late():
@@ -240,6 +252,8 @@ def main():
         finally:
             gov.release(task[0])
         gov.record(task[0], task[1], row['error'])
+        if health and health.record(row):
+            print(f'  STOP: {health.reason}', flush=True)
         return row
 
     n, errors, left = 0, 0, 0
@@ -255,18 +269,36 @@ def main():
                 print(f'  {n - left}/{len(tasks)} done, {errors} errors, concurrency {gov.summary()}')
     fa.close()
     ft.close()
+    if health and health.reason:
+        # Invalid answers or a refused key: no report, which would score them. The answers stay in the folder.
+        print(f'Run stopped: {health.reason}')
+        print(f'{len(tasks) - left} answers done, {left} not started, {errors} errors. Folder: {run_dir}')
+        sys.exit(health.code)
     if left:
-        # Not a finished run: no report and no summary rows, which would score a partial run.
+        # Not a finished run: no report, which would score a partial run.
         print(f'Stopped at the {limit:g}-minute limit: {len(tasks) - left} answers done, {left} to go, {errors} errors.')
         print(f'Resume: python3 benchmark/runner/run.py --resume {run_dir}')
-        sys.exit(3)
+        sys.exit(X.STOPPED)
 
     path = report.write(run_dir)
     print(f'Report: {path}')
     if errors:
         print(f'{errors} answers failed. Re-run with --resume {run_dir} to retry them.')
-    if not a.no_summary_csv and not a.mock:
-        report.append_summary(run_dir, os.path.join(kb.ROOT, 'benchmark', 'results', 'results.csv'))
+
+
+def _model_params(cfg, models_, given, saved):
+    """Request settings per model: --params, else the ones a resumed folder started with, else the first entry of the
+    model's list in config model_params (preflight.py tries the entries in order and picks the first that answers cleanly)."""
+    if given:
+        return json.loads(given)
+    if saved.get('model_params'):
+        return saved['model_params']
+    out = {}
+    for m in models_:
+        ladder = (cfg.get('model_params') or {}).get(m) or []
+        if ladder and ladder[0]:
+            out[m] = ladder[0]
+    return out
 
 
 def _reason(text):
