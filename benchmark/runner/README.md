@@ -120,6 +120,7 @@ python3 benchmark/runner/retrieval_eval.py
 
 ### Concurrency (speed)
 - Requests sent to the gateway at the same time, per model. Cost does not change with concurrency: the same tokens are sent, only in parallel.
+- Benchmark folders 20261103-081849 and 20261103-093742 (the old 17-question set) were deleted on 2026-11-13; they stay in git history. Every mention of them in the documents is a past result, not a file to open.
 - Measured in benchmark 20261103-081849 (one model, all modes): 4 gave about 25 answers per minute, 0 errors in 128 answers; 12 gave about 54, 0 errors in 2032 answers. At 12 the full matrix of 2160 answers took about 38 minutes.
 - Ceiling: set by the model providers' rate limits behind the gateway, not by the runner. Not documented per model; found by trial. Above it, providers return HTTP 429. The client retries 429, 408 and 5xx; an answer that still fails is listed, and `--resume` retries it.
 - Limit: a Claude Code cloud background command stops after 2 hours (see Long runs below).
