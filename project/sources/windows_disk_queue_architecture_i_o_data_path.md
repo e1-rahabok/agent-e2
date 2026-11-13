@@ -1,19 +1,15 @@
-# Windows Storage I/O Subsystem Architecture: Control Plane vs. Data Plane
-
-## 1. Executive Summary & Core Answer
-
-**Yes, your observation is mathematically and physically correct.** 
+# Windows Storage I/O Subsystem Architecture
 
 For unbuffered I/O (such as standard database writes performed by Microsoft SQL Server via `FILE_FLAG_NO_BUFFERING`), the actual **payload data block** (the raw bytes of data being written) is copied/transferred exactly **two times** across physical spaces:
 
 1. **Transfer 1 (Host RAM $\rightarrow$ Storage Controller Cache):** Direct Memory Access (DMA) transfer over the PCIe/SATA bus from system RAM directly into the onboard SRAM/DRAM buffer of the storage controller.
 2. **Transfer 2 (Storage Controller Cache $\rightarrow$ Physical Media):** Internal firmware transfer from the controller's onboard RAM onto the physical non-volatile media (NAND Flash cells or magnetic disk platters).
 
-The 12 software layers often cited in Windows storage documentation represent the **Control Plane** (processing instructions, metadata, address translation, and queue management). They do **not** touch or move the underlying payload data. 
-
 ---
 
 ## 2. Fundamental Distinction: Control Plane vs. Data Plane
+
+The 12 software layers often cited in Windows storage documentation represent the **Control Plane** (processing instructions, metadata, address translation, and queue management). They do **not** touch or move the underlying payload data. 
 
 To understand Windows storage performance and metrics, the system architecture must be split into two decoupled concepts:
 
