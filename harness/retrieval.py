@@ -4,7 +4,13 @@ import json
 import math
 import os
 import re
+import tempfile
 from collections import Counter, defaultdict
+
+try:
+    import fcntl
+except ImportError:  # Windows: no lock, the atomic write still holds
+    fcntl = None
 
 import kb
 from kb import FILTER_FIELDS, ROOT
@@ -77,19 +83,44 @@ class Retriever:
 
     # ---- embeddings -------------------------------------------------------
     def _embed_chunks(self, cache_dir):
+        """Embed every chunk, reusing the on-disk cache. Safe with several processes at once: a lock
+        makes one process embed while the others wait and then read its result, and the cache is
+        written to a temporary file and renamed, so a reader never sees a half-written file."""
         os.makedirs(cache_dir, exist_ok=True)
         path = os.path.join(cache_dir, 'embeddings-' + self.embed_model.replace('/', '_') + '.json')
-        cache = json.load(open(path)) if os.path.exists(path) else {}
         keys = [hashlib.sha1(c.text.encode()).hexdigest() for c in self.chunks]
-        missing = [(k, c.text) for k, c in zip(keys, self.chunks) if k not in cache]
-        for i in range(0, len(missing), 64):
-            batch = missing[i:i + 64]
-            vecs = self.client.embed(self.embed_model, [t[:8000] for _, t in batch])
-            for (k, _), v in zip(batch, vecs):
-                cache[k] = v
-        if missing:
-            json.dump(cache, open(path, 'w'))
+        with open(path + '.lock', 'w') as lock:
+            if fcntl:
+                fcntl.flock(lock, fcntl.LOCK_EX)
+            cache = self._read_cache(path)
+            missing = [(k, c.text) for k, c in zip(keys, self.chunks) if k not in cache]
+            for i in range(0, len(missing), 64):
+                batch = missing[i:i + 64]
+                vecs = self.client.embed(self.embed_model, [t[:8000] for _, t in batch])
+                for (k, _), v in zip(batch, vecs):
+                    cache[k] = v
+            if missing:
+                fd, tmp = tempfile.mkstemp(dir=cache_dir, prefix='.embeddings-', suffix='.tmp')
+                try:
+                    with os.fdopen(fd, 'w') as f:
+                        json.dump(cache, f)
+                    os.replace(tmp, path)
+                except BaseException:
+                    if os.path.exists(tmp):
+                        os.remove(tmp)
+                    raise
         return [self._norm(cache[k]) for k in keys]
+
+    @staticmethod
+    def _read_cache(path):
+        """A cache that cannot be read (damaged by an older version) is a cache miss, not a crash."""
+        try:
+            with open(path) as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
+        except ValueError:
+            return {}
 
     @staticmethod
     def _norm(v):

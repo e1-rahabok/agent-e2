@@ -691,3 +691,43 @@ class WebOnlyModeTest(unittest.TestCase):
         finally:
             agent.web_only = real
         self.assertEqual((res['content'], used, fb), ('ANSWER: A', [], False))
+
+
+def _embed_worker(cache_dir, n):
+    """Child process of EmbeddingCacheTest: build the cache through the real Retriever."""
+    class Fake:
+        def embed(self, model, texts):
+            return [[float(len(x) % 7 + 1), 1.0, float(i + 1)] for i, x in enumerate(texts)]
+    Retriever(DOCS, CHUNKS[:n], Fake(), 'fake/embed', cache_dir=cache_dir)
+
+
+class EmbeddingCacheTest(unittest.TestCase):
+    def setUp(self):
+        import tempfile
+        self.dir = tempfile.mkdtemp()
+        self.path = os.path.join(self.dir, 'embeddings-fake_embed.json')
+
+    def tearDown(self):
+        import shutil
+        shutil.rmtree(self.dir, ignore_errors=True)
+
+    def test_parallel_processes_leave_a_valid_cache(self):
+        import multiprocessing
+        ctx = multiprocessing.get_context('fork')
+        procs = [ctx.Process(target=_embed_worker, args=(self.dir, 300)) for _ in range(6)]
+        for p in procs:
+            p.start()
+        for p in procs:
+            p.join(120)
+        self.assertEqual([p.exitcode for p in procs], [0] * 6)
+        with open(self.path) as f:
+            cache = json.load(f)  # raises on two documents in one file
+        self.assertGreater(len(cache), 0)
+        self.assertEqual([n for n in os.listdir(self.dir) if n.endswith('.tmp')], [])
+
+    def test_damaged_cache_is_rebuilt(self):
+        with open(self.path, 'w') as f:
+            f.write('{"a": [1]}{"b": [2]}')
+        _embed_worker(self.dir, 20)
+        with open(self.path) as f:
+            self.assertGreater(len(json.load(f)), 0)
