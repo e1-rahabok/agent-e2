@@ -95,7 +95,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 
   - Primed start: the agent stopped using tools. 32 of 40 Gemma answers and 38 of 40 Muse answers made no tool call. The primed agent was classic mode with a smaller context (10K, not 16K; recall 67% against 74-75%). It beat classic on no question and lost on 2 (Gemma) and 3 (Muse). Off.
   - Cold start with the full team: at or above classic on this sample (Gemma +4, Muse +7 points). 20 questions give a margin of about ±15 points, so this is a direction, not a result; the final round decides.
-  - Found but not read: the cold agent saw a needed file in search results more often than it read one (Gemma recall 49%, seen 64%; Muse 62% and 80%). Reading the files it finds is the next lever, not finding them.
+  - Found but not read: the cold agent saw a needed file in search results more often than it read one (Gemma recall 49%, seen 64%; Muse 62% and 80%). Weak support for a lever: answers with full credit read about as many needed files as the others (review of 2026-11-13, section 6).
   - Not tried, on purpose: tuning the seed prompt on 20 questions would fit the noise.
 
 ## 7. How it is improved
