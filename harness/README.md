@@ -59,10 +59,12 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | get_images | Image records of a file | Diagrams and charts. |
 | catalog | Counter unit, rollup, statistics level, esxtop field, thresholds with source, object relations | Exact values; never depends on retrieval rank. |
 | calculate | Result plus source notes | Any arithmetic or unit conversion. |
+| capacity_plan | VMs per host, or how full a host or cluster is for a planned VM mix (allocation, reservation, utilization models) | Capacity planning questions; the model gathers inputs, the code computes. |
 | flow | Steps of a health check or troubleshooting file, or one step with next and references | Health check and troubleshooting questions. |
+| fetch_url, web_search | A public web page trimmed to the question; vendor-site search results | Only with `web.enabled`: links in the question, and current facts (bugs, builds, maximums). |
 
 ## 6. Settings and checks
-- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
+- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` and `catalog_facts` (not in the file: their defaults in code are true; `catalog_facts` puts catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
 - Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: [`benchmark/runner/README.md`](../benchmark/runner/README.md).
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.

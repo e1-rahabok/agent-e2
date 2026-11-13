@@ -41,7 +41,7 @@ A model that knows nothing about the knowledge base can still reach the right fi
 | Order of checks | Numbered steps in the health-check, troubleshooting and decision-tree files | `flow` tool |
 
 ### Five up-front blocks (built 2026-11-06; on in the final round of 2026-11-13)
-Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by [`harness/primer.py`](primer.py), so it cannot drift, and each has its own switch in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml), key `agent_primer`. All five are on in the final round (2026-11-13, with the term map in the agent prompt), so the agentic run is the full team; their gain one at a time is not measured yet (section 7). When one is on, the trace records a `primer` step.
+Each is small (all five: 3,000 tokens, exactly the budget checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by [`harness/primer.py`](primer.py), so it cannot drift, and each has its own switch in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml), key `agent_primer`. All five are on in the final round (2026-11-13, with the term map in the agent prompt), so the agentic run is the full team; their gain one at a time is not measured yet (section 7). When one is on, the trace records a `primer` step.
 
 | # | Block | Content | Built from |
 |---|---|---|---|
@@ -109,7 +109,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 - Code split done 2026-11-06: the loop moved from `modes.py` to `agent.py`.
 
 ## 8. Budgets and the tool-call limit
-- The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of 15,000 answers. It is not a design value. No knowledge-base need sets it at 8.
+- The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of the 10,780 answers of the final round. It is not a design value. No knowledge-base need sets it at 8.
 - Run results (benchmark 2026-11-12, agentic mode, multiple-choice questions, exact answers by number of calls):
 
 | Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
@@ -157,7 +157,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
   2. It is the better mode for some models today. Benchmark 2026-11-12: classic beat agentic for gemma (67% against 54%) and muse (64% against 56%); agentic beat classic for qwen3.8-27b (51% against 39%). The mode is chosen per model by the decision rule in [`benchmark/design.md`](../benchmark/design.md).
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
-- After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
+- After the full run of the 196 questions picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
 - Built and measured 2026-11-13: agentic mode that starts from the classic context (section 3, primed start). The model stopped using tools and scored below classic; off (section 6).
 
 ## 10. Walkthrough of one question

@@ -37,7 +37,7 @@ Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 qu
 
 - The four runs go in parallel, so the round takes as long as the slowest run (Opus). Its time is projected at its starting concurrency of 3; the runner raises it while the provider allows.
 - Add about 3 minutes for the preflight (US$ 0.55) and 1 to 2 relaunches: one command lives 2 hours, the runner stops at 110 minutes.
-- Cost is dominated by Opus, Muse and the judge (about US$ 15 for the 4,180 judged answers). With the agent blocks on, an agentic answer sends 40,000 to 50,000 input tokens because each tool turn sends the blocks again.
+- Cost is dominated by Opus, Muse and the judge (about US$ 15 for the 4,235 judged answers: 77 judged questions x 5 runs x 11 model-modes). With the agent blocks on, an agentic answer sends 40,000 to 50,000 input tokens because each tool turn sends the blocks again.
 - Qwen with its default settings (thinking on) takes about 8 times as long (25-38 s per answer against 3-11 s) and is cut off at the token cap on most answers.
 - The projection is checked again before anything long starts. If it exceeds the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/config.yaml`](runner/config.yaml), the round does not start.
 

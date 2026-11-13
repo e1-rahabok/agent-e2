@@ -18,12 +18,12 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | Use | Means | Do not use for it |
 |---|---|---|
 | sources | Source documents the knowledge is written from ([`project/sources/`](sources)): book chapters, vendor PDFs. Read-only. Proposal, for the author | raw input |
-| benchmark | The proof of the product: question set, runner, judge, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder `benchmark/results/<benchmark-id>/` | Auto Test, test, evaluation, benchmark run |
+| benchmark | The proof of the product: question set, runner, judge, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder per model, `benchmark/results/<date>-<model>/` (benchmark/runner/naming.py) | Auto Test, test, evaluation, benchmark run |
 | run | One pass through all the questions, by one model in one mode. A benchmark has 5 runs (`runs: 5`, column `run`). Each run is a repeat of the same questions; the answers differ | repeat, iteration |
 | question | One benchmark item: one file in [`benchmark/questions/`](../benchmark/questions) with prompt, answer key and metadata. A benchmark question plays a question a VMware administrator asks the product | case, test case, golden case, exam question |
 | question set | All the questions of the benchmark | golden set, case set |
 | main file | The one knowledge file that holds a question's answer or misconception; tag `knowledge_main`. Proposal, for the author | first file, primary file |
-| release gate | The limits Agent E2 must meet to ship (benchmark/design.md, section 7.5): final score, Level 400, confident-wrong, misconceptions, held-out set, gap to the frontier model | passing score, pass mark |
+| release gate | The limits Agent E2 must meet to ship (benchmark/design.md, section 7.5): final score, Level 400, confident-wrong, misconceptions, held-out set (the gap to the frontier model is reported, not a gate) | passing score, pass mark |
 | prompt | The `## Prompt` text of a question: the only text sent to the candidate | question text |
 | quiz | The author's quiz documents (vSphere Metric Quiz.docx, the book's chapter quizzes): a source of questions, `origin: quiz` | - |
 | author question | One entry in [`project/author-questions.md`](author-questions.md) | - |
@@ -46,8 +46,8 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | author | Iwan Rahabok, who owns the knowledge and reviews it | - |
 
 ## Examples
-- The benchmark has 5 runs; each run goes through the same 100 questions.
-- A question counts as known only when all 5 runs answer it exactly right.
+- The benchmark has 5 runs; each run goes through the same 196 questions.
+- A question's credit is the mean of its 5 runs; the worst run is reported as consistency (since 2026-11-13).
 
 ## Open: one word for two things
 - None.

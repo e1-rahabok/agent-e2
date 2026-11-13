@@ -1,6 +1,6 @@
 # Contributing
 
-How to help build Isvara: knowledge, questions, reviews and code. Not indexed.
+How to help build Agent E2: knowledge, questions, reviews and code. Not indexed.
 
 ## Open work
 | What | Where |
@@ -33,5 +33,8 @@ python3 project/tools/lint.py
 ```bash
 python3 -m unittest harness/test_tools.py
 ```
-- Lint must pass with 0 problems. Run the unit tests after changing `harness/` or [`knowledge/catalog/`](knowledge/catalog).
+```bash
+python3 -m unittest benchmark/runner/test_runner.py
+```
+- Lint must pass with 0 problems. Both test suites must pass. Run them after changing `harness/`, [`benchmark/runner/`](benchmark/runner) or [`knowledge/catalog/`](knowledge/catalog).
 - One change set per pull request, merged with a merge commit. Commit messages describe the change.

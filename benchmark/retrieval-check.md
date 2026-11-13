@@ -69,7 +69,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 
 - Percent, not counts: the number of questions moves.
 - Main file: the question's `knowledge_main` ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)), the file that holds the answer or the misconception. The check prints it as the fourth number, over the questions that have one.
-- Held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10): within 5 points of the visible set.
+- Held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): at most 11 points below the visible set.
 
 - Search recall@6 has no gate: it is a diagnostic for ranking. Context is what the model reads.
 - Agentic mode, the shipped mode, searches again and can fetch what classic missed. It is measured by the benchmark, not here. Classic mode is the floor and the fallback, so it carries these levels; they are conservative for the agentic score.
@@ -78,7 +78,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 ### Is perfect applicable?
 - No, as a target. 100% is possible on paper and still not the aim:
   - The key is a human judgment: each question's `knowledge` list is what its writer thought necessary. Some lists name a file the answer does not strictly need; some miss one. 100% against an imperfect key is not 100% of what matters.
-  - Overfitting: the last few percent are reached by tuning files and links to these 90 prompts. That raises this number without helping a real user's question. The held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) would expose it.
+  - Overfitting: the last few percent are reached by tuning files and links to the visible questions (196 at 2026-11-13). That raises this number without helping a real user's question. The held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) would expose it.
   - The budget is finite: a question that needs 7 files competes for 16K tokens; cutting other context to fit it can hurt elsewhere.
   - Real users phrase questions in ways no set covers; a perfect score here does not carry over.
 - Perfect is the right goal for one thing, and it is the gate: no question misses its main file (`knowledge_main`). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.

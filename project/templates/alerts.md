@@ -3,7 +3,7 @@
 ## Coverage and receivers
 - Consumer or provider, and who receives the alerts (application team, infrastructure team, sub-persona).
 - Alerted: the resources and metric types (contention, consumption) this object type alerts on.
-- Every value (threshold, population, wait, gate) is in the alert rows of [`catalog/thresholds-alerts.yaml`](../../../../catalog/thresholds-alerts.yaml), shown with this file.
+- Every value (threshold, population, wait, gate) is in the alert rows of [`catalog/thresholds-alerts.yaml`](../../../catalog/thresholds-alerts.yaml), shown with this file.
 - What every alert of this object shares (a gate, how members are read).
 
 ## <Alert name, exactly as the catalog row's name>

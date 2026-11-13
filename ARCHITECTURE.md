@@ -43,8 +43,8 @@ flowchart LR
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, planning calculator, flow executor), answer verifier. Reads `knowledge/`; depends on no other folder.
   - Agent: the model plus the tool loop, in agentic mode. Its loop is harness code ([`harness/agent.py`](harness/agent.py), up-front blocks in [`harness/primer.py`](harness/primer.py)); what it is told and how it decides: [`harness/AGENT.md`](harness/AGENT.md).
-  - Model: an open-weight vision model that fits one GPU (at most 96 GB), chosen by benchmark ([`benchmark/models.md`](benchmark/models.md)). Not stored here.
-- Proof: shows that the product beats a frontier model.
+  - Model: an open-weight vision model on local GPUs (one GPU is the stretch target; two to four are allowed), chosen by benchmark ([`benchmark/models.md`](benchmark/models.md)). Not stored here.
+- Proof: shows that the product works: the release gate on the benchmark. A higher score than a frontier model is an outcome, not a goal.
   - `benchmark/`: questions with answer keys and their attachments, the candidate models and judge ([`benchmark/models.md`](benchmark/models.md)), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on the mean of 5 runs, the worst run reported as consistency. Never indexed: it holds the answer keys.
 - Project: how this repository is built and kept correct.
   - `project/`: plan (milestones, decisions, open work), author questions, reviews, archive.
@@ -58,7 +58,7 @@ flowchart LR
 | Knowledge | Level 400 facts, mechanisms, misconceptions, flows (markdown) and exact data (YAML catalog); up-front misconceptions | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
 | Agent | The model plus the tool loop: iterative reasoning, decisions and multi-step planning. Exists in agentic mode only ([`harness/AGENT.md`](harness/AGENT.md)) | the loop in [`harness/agent.py`](harness/agent.py) (`agentic`), up-front blocks in [`harness/primer.py`](harness/primer.py), the decisions in the model | Which tool to call next (search, read, catalog, calculate, flow), with which query, and when to stop and answer. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, the loop's rules, the answer verifier | `harness/` | What the model may see, which tools exist, which calls are allowed, whether the answer is accepted. |
-| Model | An open-weight vision LLM on one local GPU (at most 96 GB; [`benchmark/models.md`](benchmark/models.md)) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
+| Model | An open-weight vision LLM on local GPUs (one GPU is the stretch target; [`benchmark/models.md`](benchmark/models.md)) | served by vLLM, llama.cpp or Ollama | How to read the text and the images, which options are right. In agentic mode it is the decision-maker inside the agent. |
 
 - Agent and harness split the agentic loop: the agent chooses, the harness executes and constrains. The harness hosts the agent; the agent is not a separate program.
 - Classic mode has no agent: the harness runs a fixed pipeline (one search, then one answer). Baseline mode is the model alone.
@@ -103,7 +103,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 ## 5. Local deployment
 | Component | Runs on | Notes |
 |---|---|---|
-| Chat model (one GPU, at most 96 GB) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
+| Chat model (one GPU as the stretch target; two to four allowed) | GPU, via vLLM, llama.cpp or Ollama | OpenAI-compatible API on the local network |
 | Embedding model (qwen3-embedding-0.6b) | CPU | For hybrid search |
 | Harness | CPU | Python: retrieval, catalog (SQLite in memory), calculator, flow executor, verifier |
 | Index | Disk | Chunks and vectors built from `knowledge/`, tied to one git commit (index version) |
@@ -150,7 +150,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 ### Retrieval approach
 - Retrieval, not fine-tuning, supplies the facts: the knowledge is not on the Internet; it changes often; answers must cite files; small models memorise facts poorly.
 - Optional later: a light fine-tune (LoRA) for style and terminology only. Facts stay in retrieval.
-- Not used: long-context stuffing (the whole knowledge base is about 125K tokens: too much for a small model and too slow per question); a separate graph database (the metadata links already form the graph).
+- Not used: long-context stuffing (the whole knowledge base is about 315K tokens of indexed text, 2026-11-13: too much for a small model and too slow per question); a separate graph database (the metadata links already form the graph).
 
 ### No fast first-stage model
 - Not used: a second, fast model in front of the reasoning model (a "System 1" classifier). Decided 2026-11-08.
@@ -168,7 +168,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 8. Not indexed but deployed: [`knowledge/misconceptions.md`](knowledge/misconceptions.md) and the confusable pairs of [`knowledge/glossary.md`](knowledge/glossary.md) reach the model as up-front blocks ([`harness/primer.py`](harness/primer.py)), not through search. All five paths by which knowledge reaches the model: [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2.
 
 ### Query
-0. Map the user's words ([`harness/terms.py`](harness/terms.py), [`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misconception the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, off until measured (`term_map_agent`).
+0. Map the user's words ([`harness/terms.py`](harness/terms.py), [`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misconception the words carry. Deterministic code, no model. Classic mode: on (`term_map`). Agentic mode: the notes only, on (`term_map_agent`, since the final-round settings of 2026-11-13).
 1. Classify the question into one `retriever_guide` value: how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree. (Planned: today the agent passes it as a search filter; classic mode does not classify.)
 2. Extract filters from the question: `product`, `object`, `technology`, `pillar`. (Planned, as step 1.)
 3. Retrieve by similarity within those filters.
@@ -195,7 +195,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
 - Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
 - No flow matches: say so, then answer from metric and concept files. Do not invent a flow or a threshold.
-- Troubleshooting: contention before consumption before context, unless the file states another order.
+- Troubleshooting: the check order of [`project/knowledge-rules/flows.md`](project/knowledge-rules/flows.md), unless the file states another order. (One place for the order; it was restated here without configuration.)
 
 ### Trace
 Recorded for every answer (`traces.jsonl` in the benchmark; the answer log at the site).

@@ -15,7 +15,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 - Users' prompt or question can include a URL. Agent E2 will browse and check the content. 
 - Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer.
 - Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
-- Release gate: final score at least 85% on the benchmark, each question scored on the mean of 5 runs. Target: 99%. Confident-wrong rate near 0.
+- Release gate: final score at least 85% on the benchmark, each question scored on the mean of 5 runs; Level 400 at least 80%; confident-wrong at most 3%; no misconception stated as true; the held-out set at most 11 points below. Target: 99%. Details: [benchmark/design.md](benchmark/design.md), section 7.5.
 - Targets, not rules. Hardware (one GPU), the context window (32K) and the model size (about 30B) are stretch targets and design choices, not limits. When a target blocks the mission, change the target and say why: the smallest hardware that passes the release gate wins. Few rules hold in IT operations management; every assumption here, the author's included, is open to challenge with evidence.
 
 
@@ -56,7 +56,7 @@ Six mechanisms, in order of weight.
 | Benchmark fitted to the knowledge base | Claude edits the knowledge base and can read the questions | Held-out set kept by the author; general fixes only ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) |
 
 ### What would prove it wrong
-- The best local configuration stays below the frontier baseline by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
+- The best local configuration stays below the frontier reference by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
 
 ### Status
 - Not achieved yet. On the 150 questions (benchmark 2026-11-12), the best local model with the knowledge base scored 67% in classic mode and 56% in agentic mode; the frontier model without it, 67%.

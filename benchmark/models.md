@@ -7,7 +7,7 @@ Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/
 The goal is Level 400 on a narrow domain, for VMware administrators. That sets what the model must do, and what it must not do.
 
 ### The model's job
-- The knowledge base is written at Level 400 and assumes the reader knows vSphere basics (`CLAUDE.md`, section Level): cluster, host, VM, datastore, HA, DRS, vMotion, resource pools, shares, reservations, limits, vCPU, NUMA.
+- The knowledge base is written at Level 400 and assumes the reader knows vSphere basics (`CLAUDE.md`, section Purpose): cluster, host, VM, datastore, HA, DRS, vMotion, resource pools, shares, reservations, limits, vCPU, NUMA.
 - So the model brings Level 100-300 vSphere knowledge from training. Public text covers it well, and it is mostly correct at that level. It is not documented in the knowledge base.
 - The knowledge base adds the Level 400 layer: mechanisms, vantage points, and the corrections to Level 300 rules of thumb. Where the two differ, the knowledge base wins.
 - The model must:
@@ -66,8 +66,8 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 | 30B MoE, 3B active | ~30 GB | ~17 GB | same as 32B | ~5-8x |
 | 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
 
-- Add the KV cache for the retrieved context (8-12K tokens per question).
-- Only two limits count: fit for the goal, and hardware cost (one GPU, at most 96 GB). Parameter count is not a limit.
+- Add the KV cache for the retrieved context (16K tokens per question in classic mode, `context_tokens`).
+- Only two limits count: fit for the goal, and hardware cost (as little GPU as passes the gate; one GPU is the stretch target, criterion 3). Parameter count is not a limit.
 - 8B-14B: too weak at multi-step reasoning and tool use.
 - 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs.
 
@@ -83,14 +83,14 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 - One gateway: Vercel AI Gateway. It is an OpenAI-compatible front door to many providers and many models, so the runner tests 3 or 10 models with one API key and one code path. It is a test convenience only.
 - Hugging Face is not a gateway here. It is where the open weights are published; this file uses it to check size, licence and release date, and the site downloads the weights from it.
-- Both speak the same OpenAI-compatible API. The harness changes one setting ([harness/llm.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/llm.py): base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 7).
+- Both speak the same OpenAI-compatible API. The harness changes one setting ([harness/llm.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/llm.py): base URL and key); the retrieval, tools, prompts and verifier are the same code (`ARCHITECTURE.md`, section 5).
 - So the gateway is not part of the product and is not relevant at the customer site. It is the reason for criterion 6: a model that is not on the gateway cannot be benchmarked cheaply, and a model without downloadable weights cannot be deployed.
 
 ### What the gateway does not prove
 - Precision: a provider may serve 16-bit or 8-bit weights; the site may run 4-bit on a 48 GB GPU. 4-bit costs some accuracy on multi-step reasoning.
 - Version: the provider serves what it chose to load under the id (mistral-small changed from 24B dense to Mistral Small 4 without a new id).
 - Speed: gateway latency measures the provider and the network, not the customer GPU.
-- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (open work in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Evaluation).
+- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (after 1.0: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section M5 Live test).
 
 ## 3. Selection criteria
 Two limits decide:
@@ -114,7 +114,7 @@ All are required. A model that fails one is not a candidate.
 
    - Tier C, two to four GPUs: allowed since 2026-11-13. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
 4. Tool calling, for agentic retrieval and the calculator, catalog and flow tools.
-5. Context window of at least 32K tokens: system prompt + 8-12K retrieved text + images + answer.
+5. Context window of at least 32K tokens: system prompt + up-front blocks (3K) + 12-16K retrieved text + images + answer.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
 7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate.
 
@@ -129,7 +129,7 @@ Preferred, not required:
 | meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
-- Next challenger: a current-generation dense vision model of about 70B, when one is published and on the gateway (open work in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Evaluation).
+- Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
 - Vision tags checked in the gateway model list on 2026-11-05.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.
@@ -137,8 +137,8 @@ Preferred, not required:
 - Request settings (`model_params` in `config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
 
 ## 5. Frontier reference
-- One frontier model, scored the same way with and without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Web search on, as Claude has it; effort capped at medium, for the cost of the author's subscription.
-- No benchmark run until development is done: the benchmark is M4 and starts only after M1 (knowledge base), M2 (questions) and M3 (retrieval) are complete (Q163).
+- One frontier model, without the knowledge base, in two modes (baseline, and `web`, the reference: search available, the model decides): anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Web search on, as Claude has it; effort capped at medium, for the cost of the author's subscription.
+- Q163 (no benchmark run until development is done) was overtaken: development runs took place on 2026-11-12 and 2026-11-13. The next run is the full run (author, 2026-11-13).
 - The claim ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); the provider rate-limits above that in a short trial, and the governor probes upward from 3.
 - Effort: `model_params` in `config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).

@@ -41,7 +41,7 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 7. Plain sentences; grammar and elegance do not matter. Drop stories and personal asides; keep a one-line analogy only when it explains a mechanism a user may ask about.
 8. Leave `## Metadata` to Claude: review notes, corrections and links are kept consistent there.
 9. Titles and headings are noun phrases: no question, command or claim. Headings at most 9 words, titles at most 8 (lint).
-10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check and merges.
+10. After editing: commit, or tell Claude which files changed. Claude runs lint, updates the glossary, term map, threshold catalog and links, notes the source in the metadata, runs the retrieval check (paused by the author since 2026-11-12) and merges.
 
 ## Format choices
 - Each format choice serves both readers:

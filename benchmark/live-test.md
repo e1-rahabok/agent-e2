@@ -14,7 +14,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 | Can be updated offline | A new knowledge bundle is imported and served without a network |
 
 ## 2. When
-- After the 100 questions and the knowledge base are complete, and one gateway benchmark has picked the leading model and mode.
+- After the full run of the 196 questions, and one gateway benchmark has picked the leading model and mode.
 - Again before every release: the release score is the live-test score (`models.md`, section 2).
 
 ## 3. Setup

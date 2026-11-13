@@ -6,8 +6,8 @@ Each block is generated from the knowledge base at start, so it cannot drift fro
   terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
   flows      flow index by kind (every health-check, troubleshooting and decision-tree file: title and id)
   procedure  how to use the tools (fixed text: procedure, not facts)
-Each block has a switch in benchmark/runner/config.yaml, key agent_primer. All off by default until the benchmark
-shows a gain (harness/AGENT.md, section 7).
+Each block has a switch in benchmark/runner/config.yaml, key agent_primer. All five are on (final-round settings,
+2026-11-13); their gain one at a time is not measured (harness/AGENT.md, section 7).
 """
 import os
 import re

@@ -99,7 +99,7 @@ flowchart LR
 
 | Path | Holds | Home | Why this path |
 |---|---|---|---|
-| Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
+| Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 315K tokens (2026-11-13): too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
 | Given up front, every question | Misconceptions with the widest reach, confusable pairs, flow index, map | [`knowledge/misconceptions.md`](knowledge/misconceptions.md); built from [`knowledge/glossary.md`](knowledge/glossary.md) and file ids by [`harness/primer.py`](harness/primer.py) | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
 | Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | [`harness/calc.py`](harness/calc.py), `capacity.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |

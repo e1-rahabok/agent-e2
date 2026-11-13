@@ -14,8 +14,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
-  <img src="https://img.shields.io/badge/knowledge%20files-281-6e7781?labelColor=3d444d" alt="Knowledge files: 281">
-  <img src="https://img.shields.io/badge/benchmark%20questions-150-6e7781?labelColor=3d444d" alt="Benchmark questions: 150">
+  <img src="https://img.shields.io/badge/knowledge%20files-285-6e7781?labelColor=3d444d" alt="Knowledge files: 285">
+  <img src="https://img.shields.io/badge/benchmark%20questions-196-6e7781?labelColor=3d444d" alt="Benchmark questions: 196">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -104,4 +104,8 @@ python3 project/tools/lint.py
 
 ```bash
 python3 -m unittest harness/test_tools.py
+```
+
+```bash
+python3 -m unittest benchmark/runner/test_runner.py
 ```

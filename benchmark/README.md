@@ -7,7 +7,7 @@ Never index this folder: it contains answer keys.
 
 ```text
 benchmark/
-├── questions/<id>-<slug>.md                          # one question per file, one flat folder
+├── questions/L<level>-<nn>-<slug>.md                 # one question per file, one flat folder
 ├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
 ├── runner/                                       # Benchmark runner: run.py, run_all.py, preflight.py, health.py, summarize.py, judge.py, report.py, governor.py, config.yaml
 ├── models.md                                     # candidate models, frontier reference, judge
@@ -49,7 +49,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 |---|---|---|
 | `id` | Internal key for the runner and the results. 4-digit number, quoted. Never changed, never reused. Not in the file name | `"0007"` |
 | `title` | Short name for a human reviewer | Free text |
-| `status` | Review state | `draft` (written, not reviewed), `awaiting-input` (the screenshot or table is not supplied yet: the `## Input to supply` section describes it; not run), `reviewed` (author approved), `deferred` (kept for a later release, not run: the screenshot questions of [design.md](design.md), section 13), `retired` (archived, not run) |
+| `status` | Review state | `draft` (written, not reviewed), `awaiting-input` (the screenshot or table is not supplied yet: the `## Input to supply` section describes it; not run), `reviewed` (author approved), `deferred` (kept for a later release, not run; none at 2026-11-13), `retired` (archived, not run) |
 
 **What the question is about**
 
