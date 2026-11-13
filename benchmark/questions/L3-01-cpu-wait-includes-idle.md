@@ -16,7 +16,6 @@ Are they right?
 - High Wait alone does not indicate a bottleneck. Requires other evidence (e.g. disk latency, memory contention).
 
 ## Notes
-- Previous id: vsphere-cpu-001 (renamed 2026-11-05).
 - Tests: Confusing name (distinction).
 
 ## Metadata

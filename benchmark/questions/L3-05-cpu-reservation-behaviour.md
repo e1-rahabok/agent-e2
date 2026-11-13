@@ -27,9 +27,6 @@ E (non-sticky read as overcommittable), F (kernel assumed to need no reservation
 - F is wrong: kernel modules such as vSAN and NSX can have reservations. A storage-only vSAN node fully reserves CPU, so CPU Demand is flat and high.
 - G is wrong: utilization can exceed reservation.
 
-## Notes
-- Previous id: vsphere-cpu-011 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0011"

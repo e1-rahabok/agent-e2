@@ -25,7 +25,6 @@ C: concluding that a metric is broken.
 - Snapshots also add datastore IO that virtual disk counters exclude: another reason for a gap.
 
 ## Notes
-- Previous id: question-0049 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: shared datastores stated in the stem. Counts only after author approval.
 
 ## Metadata

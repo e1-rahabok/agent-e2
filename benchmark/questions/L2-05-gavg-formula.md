@@ -21,7 +21,6 @@ B: adding QAVG on top of KAVG, counting the queue time twice.
 - C (-1.1 ms) and D (2.6 ms) do not match the values shown.
 
 ## Notes
-- Previous id: question-0043 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: values added so the relation can be checked. Counts only after author approval.
 
 ## Metadata

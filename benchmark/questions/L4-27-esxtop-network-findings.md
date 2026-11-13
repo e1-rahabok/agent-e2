@@ -40,7 +40,6 @@ B: applying the zero-drop rule of a VMkernel network to a VM port. Or D: reading
 - E: one team member negotiated down to 10 Gb/s: check the cable, the transceiver and the switch port. Every port mapped to it (here vMotion) gets less bandwidth.
 
 ## Notes
-- Previous id: question-0069 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): the screenshot became an esxtop excerpt in the prompt; the team standard is stated in the prompt (fairness F3); a negotiated-speed finding added. After the independent review, the units option was replaced (question 0029 owns that fact).
 

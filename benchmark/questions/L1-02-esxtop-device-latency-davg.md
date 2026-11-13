@@ -21,7 +21,6 @@ A: GAVG is the total latency the VM sees, not the device part.
 - C is wrong: QAVG is the time in kernel queues, part of KAVG.
 
 ## Notes
-- Previous id: question-0032 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0. Counts only after author approval.
 
 ## Metadata

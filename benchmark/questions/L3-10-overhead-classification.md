@@ -17,7 +17,6 @@ Is this classification correct?
 - Bonus: vMotion is not overhead, but can raise VM Consumed on the destination (swap or compressed pages become regular pages).
 
 ## Notes
-- Previous id: vsphere-foundations-004 (renamed 2026-11-05).
 - Tests: Principle: overhead vs not overhead.
 
 ## Metadata

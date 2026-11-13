@@ -33,7 +33,6 @@ B: a CPU Latency above 37.5% read as starvation. Or D: one tool must be wrong.
 - F is wrong: shares decide who runs first when vCPUs wait in Ready; app-31 is not waiting.
 
 ## Notes
-- Previous id: question-0059 (renamed 2026-11-05).
 - Revised 2026-11-12: the earlier key said VCF Operations CPU Contention counts frequency and Hyper-Threading. That was true before VCF Operations 8.18 (Contention mapped to CPU Latency); in 9.1 it is false. The question now tests the difference between the two counters.
 
 ## Metadata

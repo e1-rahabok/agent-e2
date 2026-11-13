@@ -18,7 +18,6 @@ Is that conclusion valid?
 - Mental model: Guest OS view Demand = A + B; VM view Demand = B + C + D.
 
 ## Notes
-- Previous id: vsphere-storage-001 (renamed 2026-11-05).
 - Tests: Visibility layers (principle + diagram).
 
 ## Metadata

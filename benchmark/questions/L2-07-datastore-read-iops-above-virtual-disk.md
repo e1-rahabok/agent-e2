@@ -18,7 +18,6 @@ What is the most likely cause, and how do you confirm it?
 - Confirm: look for a snapshot on the VM (Snapshot Manager, or Disk Space | Snapshot in VCF Operations). Without a snapshot the two read IOPS lines overlap.
 
 ## Notes
-- Previous id: question-0045 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the only VM on the datastore, so another VM cannot explain it. Counts only after author approval.
 
 ## Metadata

@@ -20,9 +20,6 @@ B (equal values read as one thread per core).
 - C is wrong: the two values together give the thread-per-core ratio.
 - D is wrong: it is possible, but a corner case.
 
-## Notes
-- Previous id: vsphere-cpu-012 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0012"

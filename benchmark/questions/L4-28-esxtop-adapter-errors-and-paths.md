@@ -24,7 +24,6 @@ What do you conclude from the panel, and what do you check next?
 - Next: path state per LUN on vmhba3, the HBA driver and firmware, the cable, the SFP and the fabric switch port of that adapter, and the zoning.
 
 ## Notes
-- Previous id: question-0070 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot replaced by an esxtop excerpt in text. Counts only after author approval.
 
 ## Metadata

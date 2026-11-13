@@ -20,7 +20,6 @@ B or C: reading the host-level Ready as the host waiting.
 - D is wrong: Ready is measured by the ESXi scheduler per vCPU, not by DRS.
 
 ## Notes
-- Previous id: question-0036 (renamed 2026-11-05).
 - Revised 2026-11-12: the stem no longer gives the answer away ("a consumer waiting"); option D replaces the cluster, which has no Ready counter in the vSphere Client.
 
 ## Metadata

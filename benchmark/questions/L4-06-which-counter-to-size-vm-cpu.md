@@ -22,7 +22,6 @@ C or D (Demand), because it includes unmet demand; or A/B (Usage).
 - More accurate: configured vCPU - Idle + a CPU Run Queue factor. No such counter exists; build it as a super metric.
 
 ## Notes
-- Previous id: vsphere-cpu-008 (renamed 2026-11-05).
 - Author (Q186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing). The hint was removed. Claude Haiku 5.5 picked C (Demand) on this prompt.
 
 ## Metadata

@@ -25,7 +25,6 @@ B: assuming Highest latency is the worst read or write latency.
 - D is wrong: ESXi does not see the Guest OS queues; adapter latency starts in the host.
 
 ## Notes
-- Previous id: question-0072 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot replaced by a CSV export of the chart; option E added. Counts only after author approval.
 
 ## Metadata

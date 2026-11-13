@@ -26,7 +26,6 @@ A: reading 95% as 95% of the VM's normal traffic lost.
 - E is wrong: the formula adds received and transmitted drops; here the receive drops make the whole value.
 
 ## Notes
-- Previous id: question-0061 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): this question tests only the formula at low traffic. Transmit drops hidden by TCP are tested in 0074; ranking VMs by the right statistic in 0082.
 

@@ -15,7 +15,6 @@ Should we set a vSphere VM disk latency alert at 15 ms averaged over 5 minutes?
 - No universal threshold: tolerance varies by application, use case and end user. Too low = noise, too high = missed problems.
 
 ## Notes
-- Previous id: vsphere-storage-002 (renamed 2026-11-05).
 - Tests: Judgment / interpretation (heuristic, "it depends").
 
 ## Metadata

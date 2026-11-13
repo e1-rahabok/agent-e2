@@ -22,7 +22,6 @@ What causes the drops, and what do you change? What would you check before chang
 - vSphere charts show that packets are dropped, not why: vsish on the host shows the reason.
 
 ## Notes
-- Previous id: question-0060 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): the ring size advice no longer cites the book; Ready and per-vCPU saturation added to the stem so the ring, not CPU, is the cause. After the independent review: vsish counters read as increases; Broadcom KB 2039495 (VMXNET3 loss in high bursts when buffers run out) moved here from the key.
 ## Metadata

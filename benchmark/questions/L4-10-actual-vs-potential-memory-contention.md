@@ -20,9 +20,6 @@ A or B (balloon, swap or compression read as slowness).
 - C is the actual measurement.
 - D is illogical (a distractor).
 
-## Notes
-- Previous id: vsphere-memory-004 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0023"

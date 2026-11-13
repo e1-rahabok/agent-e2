@@ -24,7 +24,6 @@ B: ranking hosts by the maximum.
 - D is wrong: one 250 ms sample among about 2,000 adds about 0.1 ms to esx-017's mean, which stays below 1 ms; esx-024 is far higher.
 
 ## Notes
-- Previous id: question-0081 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: 192 hosts reduced to 40; esx-024 and esx-031 replace esx-044 and esx-101; options D and E new. Counts only after author approval.
 
 ## Metadata

@@ -23,7 +23,6 @@ A: (read + write) / 2, which would be 11 ms.
 - So check read and write latency separately: often only one of them has a problem, and the combined value hides it.
 
 ## Notes
-- Previous id: question-0044 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: values added; moved to the host Disk chart (disk.totalLatency), since the vSphere Client has no total latency counter for a virtual disk. Counts only after author approval.
 
 ## Metadata

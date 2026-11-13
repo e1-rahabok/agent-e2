@@ -21,7 +21,6 @@ Is the host full? What do you base the answer on?
 - Decide by contention as VMs are added: keep placing VMs while Ready and Co-stop per VM stay low, and watch Utilization rise toward its planned ceiling.
 
 ## Notes
-- Previous id: question-0058 (renamed 2026-11-05).
 - Revised 2026-11-12: ESXi 9.1 no longer caps host CPU Usage at 100% (the book's example was an older release with a flat 100%); task moved from troubleshoot to decide-capacity, since the question is whether to keep placing VMs.
 
 ## Metadata

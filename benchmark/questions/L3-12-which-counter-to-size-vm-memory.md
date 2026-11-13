@@ -22,9 +22,6 @@ A or B (VM-level counters), or D (mixing VM and Guest OS layers).
 - D is wrong: mixes the VM layer and the Guest OS layer.
 - E is the base answer; variants exist (for example adding cache).
 
-## Notes
-- Previous id: vsphere-memory-002 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0021"

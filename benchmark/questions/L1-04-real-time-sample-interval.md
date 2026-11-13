@@ -17,7 +17,6 @@ C: 5 minutes is the 1 Day interval, built from real-time samples.
 - vCenter rolls them up: 5 minutes (1 Day), 30 minutes (1 Week), 2 hours (1 Month), 1 day (1 Year). esxtop defaults to 5 seconds but is not the vCenter chart.
 
 ## Notes
-- Previous id: question-0035 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

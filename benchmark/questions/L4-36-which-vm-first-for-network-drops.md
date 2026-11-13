@@ -25,7 +25,6 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 - E is wrong: on a busy database, about 100 minutes a week at 1.9% or more and millions of dropped packets are real loss that TCP hides by resending. Raise it with the network team.
 
 ## Notes
-- Previous id: question-0082 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
 

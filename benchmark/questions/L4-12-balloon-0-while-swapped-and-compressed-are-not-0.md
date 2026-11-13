@@ -23,9 +23,6 @@ A (reclamation order read as a current-state rule) or D.
 - C is correct.
 - D is wrong: memory tiering is transparent to these counters.
 
-## Notes
-- Previous id: vsphere-memory-006 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0025"

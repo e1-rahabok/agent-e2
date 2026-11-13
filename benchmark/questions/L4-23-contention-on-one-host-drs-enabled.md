@@ -22,7 +22,6 @@ B: concluding that the cluster is short when only one host is hot.
 - Remove the blocker, or move the migration threshold toward Aggressive, and check again.
 
 ## Notes
-- Previous id: question-0065 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

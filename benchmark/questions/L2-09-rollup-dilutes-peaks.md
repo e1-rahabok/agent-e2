@@ -20,7 +20,6 @@ C: 288 is the number of points per day, not the dilution of one point.
 - In the 1 Year interval the same burst is diluted 4,320 times. Use real-time or esxtop to see bursts.
 
 ## Notes
-- Previous id: question-0047 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

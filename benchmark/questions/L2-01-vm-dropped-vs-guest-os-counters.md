@@ -24,7 +24,6 @@ C: "a full receive ring is invisible to the guest". Or D and E: looking for a co
 - D and E are wrong: VMware Tools does not change the guest counters, and both tools count packets.
 
 ## Notes
-- Previous id: question-0039 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0), then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
 

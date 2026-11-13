@@ -25,7 +25,6 @@ B: expecting Consumed to equal the kernel reservation.
 
 ## Notes
 - Revised 2026-11-12 (question set 1.0): option E added; tags added.
-- Previous id: question-0056 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

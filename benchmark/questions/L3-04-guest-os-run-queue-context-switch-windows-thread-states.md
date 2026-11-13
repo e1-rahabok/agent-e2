@@ -26,7 +26,6 @@ A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dis
 - F: Windows has 8 thread states. Ready, Standby and Deferred Ready measure a CPU problem.
 
 ## Notes
-- Previous id: vsphere-cpu-010 (renamed 2026-11-05).
 - Author confirmed D, E, F (Q036, 2026-11-03). The quiz document's answer column lists D, E only.
 
 ## Metadata

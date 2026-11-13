@@ -22,9 +22,6 @@ C (a guest free assumed to propagate to ESXi).
 - D: without Tools, ESXi cannot ask the Guest OS to give up pages.
 - E: correct.
 
-## Notes
-- Previous id: vsphere-memory-003 (renamed 2026-11-05).
-
 ## Metadata
 ```yaml
 id: "0022"

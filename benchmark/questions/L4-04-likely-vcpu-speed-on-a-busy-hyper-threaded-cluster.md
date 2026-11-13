@@ -32,7 +32,6 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 - E is less likely: most cores are busy and most run two threads, so Single Core Turbo does not apply.
 
 ## Notes
-- Previous id: vsphere-cpu-005 (renamed 2026-11-05).
 - Author confirmed the key (Q034, 2026-11-03). Knowledge: [`vsphere/technology/cpu/concepts/cpu-frequency`](../../knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md), section Likely vCPU speed on a busy cluster.
 
 ## Metadata

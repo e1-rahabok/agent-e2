@@ -26,7 +26,6 @@ How can latency be high at so few IOPS? Give the checks, in order, that find whe
 - On the host, split GAVG into KAVG and DAVG for that LUN: KAVG well above zero (the vSphere documentation targets 0-1 ms) points to kernel queues; DAVG high while the array reports 0.6 ms points to the fabric or HBA.
 
 ## Notes
-- Previous id: question-0062 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: per-disk values and the array's own reading added. Counts only after author approval.
 
 ## Metadata

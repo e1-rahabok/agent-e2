@@ -26,7 +26,6 @@ E: "a small share and no complaints, so it does not matter". Or D: reading 0 rec
 - E is wrong: the share is small, but the drops are regular and their cost is resend delay.
 
 ## Notes
-- Previous id: question-0074 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12 (question set 1.0): the screenshot became a CSV chart export; the management pack score removed (fairness); the question now tests transmit drops hidden by TCP and a regular drop pattern; after the independent review, the top-of-rack option was removed (that fact belongs to a Guest OS question). The CSV is synthetic, generated with a fixed seed.
 

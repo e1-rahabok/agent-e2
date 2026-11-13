@@ -18,7 +18,6 @@ Is the host running out of memory?
 - Check contention metrics, not Usage, to decide.
 
 ## Notes
-- Previous id: vsphere-memory-001 (renamed 2026-11-05).
 - Tests: Same name, different formula per object (distinction).
 
 ## Metadata
