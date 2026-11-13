@@ -39,7 +39,7 @@ Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 qu
 - Add about 3 minutes for the preflight (US$ 0.55) and 1 to 2 relaunches: one command lives 2 hours, the runner stops at 110 minutes.
 - Cost is dominated by Opus, Muse and the judge (about US$ 15 for the 4,180 judged answers). With the agent blocks on, an agentic answer sends 40,000 to 50,000 input tokens because each tool turn sends the blocks again.
 - Qwen with its default settings (thinking on) takes about 8 times as long (25-38 s per answer against 3-11 s) and is cut off at the token cap on most answers.
-- The projection is checked again before anything long starts. If it exceeds the credits, `max_cost_usd` (150) or `max_hours` (6) in `benchmark/runner/config.yaml`, the round does not start.
+- The projection is checked again before anything long starts. If it exceeds the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/config.yaml`](runner/config.yaml), the round does not start.
 
 ## What happens
 
@@ -72,14 +72,14 @@ Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 qu
    - a run whose answers are invalid with the current settings starts again from the beginning with the next settings of its model (`model_params` in `config.yaml`); the invalid folder is kept and archived at the end;
    - a run stopped at the time limit continues where it stopped.
 
-5. Do not edit `knowledge/`, `benchmark/questions/`, `harness/` or `benchmark/runner/` during the round. If a defect needs a code change, stop and report; do not patch a running round.
+5. Do not edit `knowledge/`, [`benchmark/questions/`](questions), `harness/` or [`benchmark/runner/`](runner) during the round. If a defect needs a code change, stop and report; do not patch a running round.
 
 ## After the round
 
-1. `ls benchmark/results`: four run folders and `README.md`, nothing else. Read `README.md`.
+1. `ls benchmark/results`: four run folders and [`README.md`](../README.md), nothing else. Read [`README.md`](../README.md).
 2. `python3 project/tools/lint.py` reports 0 problems; `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Read the results, not only the exit codes.
-3. Add one entry to `project/plan.md` (Decisions, latest first): what ran, the final scores, time and cost against the projection, anything unexpected. Update the "Result so far" cells in `benchmark/models.md`, section 4, from the README.
-4. Commit everything (run folders without `traces.jsonl`, `README.md`, the archive move, the plan and models changes). The message describes the change in plain words and names no model.
+3. Add one entry to [`project/plan.md`](../project/plan.md) (Decisions, latest first): what ran, the final scores, time and cost against the projection, anything unexpected. Update the "Result so far" cells in [`benchmark/models.md`](models.md), section 4, from the README.
+4. Commit everything (run folders without `traces.jsonl`, [`README.md`](../README.md), the archive move, the plan and models changes). The message describes the change in plain words and names no model.
 5. Push the session branch, open a pull request, merge it with a merge commit (not squash), and check that `main` holds `benchmark/results/README.md`. Do this yourself in the same session.
 6. Reply to the human: the Final score table and the Reading lines of the README, actual time and cost against the projection, anything the human must decide.
 
@@ -92,7 +92,7 @@ Give these before the round so nothing waits for a click.
   - `python3 project/tools/lint.py`, `python3 -m unittest harness/test_tools.py`, `python3 -m unittest benchmark/runner/test_runner.py`;
   - reading: `cat`, `ls`, `tail`, `head`, `test -n "$AI_GATEWAY_API_KEY"`, `git status`, `git diff`, `git log`;
   - `git add`, `git commit`, `git push -u origin <session branch>`, `git fetch`, `git merge origin/main` (only if `main` moved).
-- Edit and write: `project/plan.md`, `benchmark/models.md`, `benchmark/results/**`, `project/archive/**`.
+- Edit and write: [`project/plan.md`](../project/plan.md), [`benchmark/models.md`](models.md), `benchmark/results/**`, `project/archive/**`.
 - GitHub pull request tools: create, list, read and merge (`mcp__github__create_pull_request`, `mcp__github__list_pull_requests`, `mcp__github__pull_request_read`, `mcp__github__merge_pull_request`, `mcp__github__update_pull_request`).
 - Scheduling: `send_later` (`mcp__claude-code-remote__send_later`) or `ScheduleWakeup`, for the 15-minute check.
 - Network from the session: `ai-gateway.vercel.sh` (models, embeddings, search, judge) and public web pages (the Opus `web` mode fetches pages the model chooses).
@@ -104,7 +104,7 @@ Only these stop the round:
 - credits or key budget used up (exit 6), or credits too low at the start (exit 4);
 - no clean request setting for a model, or invalid answers on its last setting (exits 4, 5);
 - a failure the table above does not recover (exit 7, second crash);
-- a merge conflict that is not in `project/plan.md` or `benchmark/models.md`.
+- a merge conflict that is not in [`project/plan.md`](../project/plan.md) or [`benchmark/models.md`](models.md).
 
 ## Why the preflight and the health check exist
 

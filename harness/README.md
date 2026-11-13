@@ -29,7 +29,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 - `retrieval.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
 - `catalog.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
 - `flows.py` reads the numbered steps of each health-check, troubleshooting and decision-tree file (its `retriever_guide`, wherever it sits) directly; there is no second copy.
-- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the agent finds files: `AGENT.md`, section 3. How the knowledge is shaped for this: `KNOWLEDGE-ENGINEERING.md` and its rule modules in `project/knowledge-rules/`. Full ingest, query and answer contract: `ARCHITECTURE.md`, section Local LLM use.
+- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the agent finds files: `AGENT.md`, section 3. How the knowledge is shaped for this: [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md) and its rule modules in [`project/knowledge-rules/`](../project/knowledge-rules). Full ingest, query and answer contract: [`ARCHITECTURE.md`](../ARCHITECTURE.md), section Local LLM use.
 
 ## 4. Modules
 | File | Job |
@@ -45,7 +45,7 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
 | `agent.py` | The agent loop: tools, rules (lookup first, no repeats, same-name check), budgets, fallback, verifier. Design: `AGENT.md`. |
 | `clarify.py` | One clarifying round: the `chat` and `chat_final` prompt rules, `CLARIFY:` parsing; the conversation runs through `modes.converse`. |
-| `terms.py` | Question understanding before search: the user's words matched against `knowledge/catalog/user-terms.yaml`; adds knowledge-base terms to the query, pulls files into the context, adds a note per misconception. Switches `term_map`, `term_map_agent`. |
+| `terms.py` | Question understanding before search: the user's words matched against [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml); adds knowledge-base terms to the query, pulls files into the context, adds a note per misconception. Switches `term_map`, `term_map_agent`. |
 | `primer.py` | The agent's five up-front blocks, generated from the knowledge base; switches `agent_primer` in the config. |
 | `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
@@ -62,12 +62,12 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | flow | Steps of a health check or troubleshooting file, or one step with next and references | Health check and troubleshooting questions. |
 
 ## 6. Settings and checks
-- Settings live in `benchmark/runner/config.yaml`: `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
+- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` (default true), `catalog_facts` (default true: catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
-- Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: `benchmark/runner/README.md`.
+- Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: [`benchmark/runner/README.md`](../benchmark/runner/README.md).
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.
 
 ## 7. Planned
 - `draw_mermaid` tool: render a flow or layer diagram that no stored image shows.
 - Verifier: every metric name in an answer exists as a metric file title or is a quoted user term.
-- Question understanding before search (question type, object, layer as filters) and query rewriting with glossary synonyms: `ARCHITECTURE.md`, section Status.
+- Question understanding before search (question type, object, layer as filters) and query rewriting with glossary synonyms: [`ARCHITECTURE.md`](../ARCHITECTURE.md), section Status.

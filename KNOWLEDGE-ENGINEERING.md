@@ -93,7 +93,7 @@ flowchart LR
 - Two bodies of knowledge, as the author carries them as a consultant, and Agent E2 combines them in every answer:
   - the method, the SP5 Framework: how to operate VCF, in VCF terms and examples (`sp5-framework/`). Source: Private Cloud Management by Iwan Rahabok.
   - the product, VCF 9.x: what each component is and does (`vsphere/`, `vcf-operations/`), and the Guest OS above the VM (`guest-os/`).
-- Scope is VCF only: nothing about competitor products. Folder rules: `project/knowledge-rules/placement.md`.
+- Scope is VCF only: nothing about competitor products. Folder rules: [`project/knowledge-rules/placement.md`](project/knowledge-rules/placement.md).
 - Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is deployed to the site, and all of it is reviewed by the author.
 - The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:
 
@@ -101,13 +101,13 @@ flowchart LR
 |---|---|---|---|
 | Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 125K tokens: too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
-| Given up front, every question | Misconceptions with the widest reach, confusable pairs, flow index, map | `knowledge/misconceptions.md`; built from `knowledge/glossary.md` and file ids by `harness/primer.py` | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
-| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | `harness/calc.py`, `capacity.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
-| Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | `harness/modes.py` (system prompts), `harness/primer.py` (procedure) | Conduct for every answer, not a fact about one metric |
+| Given up front, every question | Misconceptions with the widest reach, confusable pairs, flow index, map | [`knowledge/misconceptions.md`](knowledge/misconceptions.md); built from [`knowledge/glossary.md`](knowledge/glossary.md) and file ids by [`harness/primer.py`](harness/primer.py) | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
+| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | [`harness/calc.py`](harness/calc.py), `capacity.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
+| Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | [`harness/modes.py`](harness/modes.py) (system prompts), [`harness/primer.py`](harness/primer.py) (procedure) | Conduct for every answer, not a fact about one metric |
 
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each up-front misconception ends with `See <id>`.
 - Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong up-front line or prompt rule therefore costs more than a wrong metric file, and its review comes first.
-- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. `knowledge/misconceptions.md` is given up front and kept out of the index (`harness/kb.py`, `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
+- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. [`knowledge/misconceptions.md`](knowledge/misconceptions.md) is given up front and kept out of the index ([`harness/kb.py`](harness/kb.py), `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
 - Not deployed: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge and hold nothing the agent reads.
 
 ## 3. Knowledge forms
@@ -120,17 +120,17 @@ flowchart LR
 | Folder hierarchy | The method (SP5 Framework) and the product (VCF 9.x) apart; inside the product, metrics by technology and KPIs by object | `knowledge/` | One tree in the order the author reviews; links and tags give the other views |
 | Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
 | Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree | Small models skip steps; the flow tool keeps them on the path |
-| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | `harness/calc.py`, formulas in files | Arithmetic is where models slip |
+| Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | [`harness/calc.py`](harness/calc.py), formulas in files | Arithmetic is where models slip |
 | Images with text twins | The author's diagrams and charts | `images/` folders | The text twin makes a diagram usable by a text-only model |
-| Terminology | Vocabulary, confusable pairs | `knowledge/glossary.md` | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |
+| Terminology | Vocabulary, confusable pairs | [`knowledge/glossary.md`](knowledge/glossary.md) | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |
 | Provenance | Source and version, what is still to check, status | metadata | Every fact traceable and challengeable |
-| Rules as code | Architecture and writing rules (project, not deployed) | `project/tools/lint.py`, `tags.yaml` | A rule a script checks cannot drift |
-| Executable expectations | Expert answers and the misconception a non-expert holds | `benchmark/questions/` | Shows that the knowledge changes answers |
+| Rules as code | Architecture and writing rules (project, not deployed) | [`project/tools/lint.py`](project/tools/lint.py), `tags.yaml` | A rule a script checks cannot drift |
+| Executable expectations | Expert answers and the misconception a non-expert holds | [`benchmark/questions/`](benchmark/questions) | Shows that the knowledge changes answers |
 
 ## 4. Misconceptions and Level 400
 
 ### Levels
-This is the one definition of the levels; the benchmark uses it (`benchmark/design.md`, section 3.2).
+This is the one definition of the levels; the benchmark uses it ([`benchmark/design.md`](benchmark/design.md), section 3.2).
 
 | Level | Can do | Example (VM CPU Ready) |
 |---|---|---|
@@ -158,7 +158,7 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 
 ### One concept, two homes
 - In the file: `## Misconceptions`, in the user's own words, next to the mechanism. A question that carries the belief retrieves its correction. It reaches only the answers that retrieve the file.
-- Up front: `knowledge/misconceptions.md`, the dozen with the widest reach, each one also in the file it names. A model never looks up what it is sure of, so these corrections are in place before it reasons.
+- Up front: [`knowledge/misconceptions.md`](knowledge/misconceptions.md), the dozen with the widest reach, each one also in the file it names. A model never looks up what it is sure of, so these corrections are in place before it reasons.
 - Not a confusable pair: two real terms swapped (Core vs Thread Utilization) is a vocabulary error, kept in the glossary; a misconception is a wrong belief about how something works.
 
 ### Misconception types
@@ -201,12 +201,12 @@ This is the one definition of the levels; the benchmark uses it (`benchmark/desi
 | Method apart from product (SP5 Framework vs vSphere and VCF Operations) | A design rule mistaken for product behaviour, or a product limit mistaken for a rule of the method. |
 | A `## Misconceptions` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
-- A file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason. How the agent uses this structure: `harness/AGENT.md`, section 3.
+- A file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason. How the agent uses this structure: [`harness/AGENT.md`](harness/AGENT.md), section 3.
 
 ## 6. Workflow: from source to reviewed file
 1. Extract: the book one Heading 3 at a time, then official documentation for the current release, checking the document revision each time. Files start as `status: draft`.
 2. Structure: write each fact in the form that fits it (section 3); add tags, links and misconceptions.
-3. Ask: every conflict or gap becomes an author question in `project/author-questions.md`, with a verbatim search string. The answer is applied to the file; the review note is deleted. Extraction continues; it does not wait for answers.
+3. Ask: every conflict or gap becomes an author question in [`project/author-questions.md`](project/author-questions.md), with a verbatim search string. The answer is applied to the file; the review note is deleted. Extraction continues; it does not wait for answers.
 4. Check: `python3 project/tools/lint.py` must pass before merge (folders, tags, layers, links, images, quotes, tables, phrases). Unit tests check the tools.
 5. Prove: the retrieval check confirms that the right files are found; the benchmark runs the questions against the whole system; every wrong answer is traced to knowledge, retrieval or model.
 6. Review: the author reviews each file, answers `review_notes`, fixes errors and sets `status: reviewed`. Release content is final and curated: every file reviewed.

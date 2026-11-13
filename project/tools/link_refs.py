@@ -2,7 +2,9 @@
 
 A backticked knowledge id (`vsphere/architecture/resource-controls`) becomes [<its # title>](URL).
 A backticked repository path that exists (`benchmark/design.md`) becomes [path](URL).
-Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md).
+Every other Markdown file: a backticked knowledge id becomes [`id`](relative/path.md); outside knowledge/ and the
+question files, a backticked repository path that exists (`harness/agent.py`, `MISSION.md`) becomes [`path`](relative/path).
+A link costs the model nothing: knowledge files keep only `id` at ingest, and the other documents are not indexed.
     python3 project/tools/link_refs.py          # rewrite DOCS
     python3 project/tools/link_refs.py --check  # list unlinked references; exit 1 if any (used by lint)
 """
@@ -78,10 +80,17 @@ def others():
     return [f for f in sorted(glob.glob('**/*.md', recursive=True)) if f not in DOCS and not f.startswith(SKIP) and tracked(f)]
 
 
+NO_PATH_LINKS = ('knowledge/', 'benchmark/questions/', 'benchmark/results/')  # indexed text, text sent to a candidate, generated reports: knowledge ids only
+
+
 def _rel(path, ref):
     ref = MOVED.get(ref.rstrip('/'), ref.rstrip('/'))
     k = f'knowledge/{ref}.md'
-    return os.path.relpath(k, os.path.dirname(path) or '.') if '/' in ref and os.path.isfile(k) else None
+    if '/' in ref and os.path.isfile(k):
+        return os.path.relpath(k, os.path.dirname(path) or '.')
+    if not path.startswith(NO_PATH_LINKS) and ('/' in ref or '.' in ref) and not ref.startswith(('.', '/')) and tracked(ref) and ref != path:
+        return os.path.relpath(ref, os.path.dirname(path) or '.')
+    return None
 
 
 def rewrite_relative(path, text):

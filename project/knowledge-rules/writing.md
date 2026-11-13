@@ -4,7 +4,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 
 ## Rules
 - One fact per bullet or table row. A mistake should sit on one line.
-- One English word per concept. The agent's vocabulary: `knowledge/glossary.md`. Writing vocabulary and words to avoid: `project/vocabulary.md`. Repository terms: `project/terms.md`.
+- One English word per concept. The agent's vocabulary: [`knowledge/glossary.md`](../../knowledge/glossary.md). Writing vocabulary and words to avoid: [`project/vocabulary.md`](../vocabulary.md). Repository terms: [`project/terms.md`](../terms.md).
 - State mechanism and reason, not only the definition.
 - Facts may come from the source, official docs, or Claude's own knowledge; the author chooses what goes in. A fact still to check gets a `review_notes` line with its section and the URL to check against. No generic filler.
 - No text aimed at human motivation.
@@ -12,18 +12,18 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
   - no filler words or stock phrases of generated text;
   - no praise, hedging or summary lines;
   - no adjective where a number or a mechanism can stand; name the thing.
-  - The list of flagged phrases, each with its plain replacement: `project/tools/tags.yaml`, `avoid_ai_speak`. The review checks them; lint stopped checking writing style on 2026-11-10 (`project/plan.md`). The same rule applies to documents, commit messages and pull request text.
+  - The list of flagged phrases, each with its plain replacement: [`project/tools/tags.yaml`](../tools/tags.yaml), `avoid_ai_speak`. The review checks them; lint stopped checking writing style on 2026-11-10 ([`project/plan.md`](../plan.md)). The same rule applies to documents, commit messages and pull request text.
 - Titles and headings are noun phrases that name the topic, as in a reference book: "Sub-metric formulas", not "How each sub-metric is calculated".
   - No questions, no openers How, Why, What, When, Where, Which, Who; no commands ("Design the alerts as a set"); no claims ("CPU Ready does not apply to ESXi"); no slogans ("Begin with the end in mind"). A claim is a fact: it goes in a bullet under the heading. Sentence headings are a habit of generated text, so they count as AI-speak.
-  - Reason: `harness/kb.py` puts the file title and the heading in front of every chunk. Words such as how, why, is and does name no topic, so they add nothing to search; a claim in a heading sits outside the one-fact-per-bullet rule, where a review misses it.
+  - Reason: [`harness/kb.py`](../../harness/kb.py) puts the file title and the heading in front of every chunk. Words such as how, why, is and does name no topic, so they add nothing to search; a claim in a heading sits outside the one-fact-per-bullet rule, where a review misses it.
   - The title names the scope of the whole file. A sub-topic that one section covers goes in that section's heading, not in the title: "Windows CPU scheduling", not "Windows CPU scheduling and thread states". Reason: the title repeats in every chunk, so a sub-topic in the title pulls the other chunks into searches they do not answer and spends the context budget.
   - At most 8 words for a title, 9 for a heading. No list of contents after a colon. Words in parentheses (an alias, a counter name) do not count.
   - Exceptions, because these titles are the words users type: a metric file title is the metric name; a troubleshooting title is the symptom ("VM disk latency is high"); a decision tree title is the question as users ask it ("Can this cluster take more VMs?").
-  - Fixed section names (templates in `project/templates/`): `Definition`, `Reason`, `Impact`, `Checks, in order` (read by `harness/flows.py`), `Order rationale`, `Interpretation`, `Not alerted`.
+  - Fixed section names (templates in [`project/templates/`](../templates)): `Definition`, `Reason`, `Impact`, `Checks, in order` (read by [`harness/flows.py`](../../harness/flows.py)), `Order rationale`, `Interpretation`, `Not alerted`.
   - Lint checks the word limits, a list after a colon in a title, and the openers How, Why, What, When, Where, Which, Who (decision tree titles exempt). The review checks commands, claims and slogans: no pattern finds them.
 - Write full sentences. No slogans ("Three sides, three metrics."), no aphorisms in place of the mechanism, no "X, not Y" where a plain statement says it.
 - One vSphere object type per metric file.
-- Refer to another knowledge file as a link with its id: [`id`](relative/path.md). GitHub makes it clickable for review; the harness keeps only `id` for the model (`ARCHITECTURE.md`, section Ingest). The same in every Markdown file of the repository, `knowledge/glossary.md` and `knowledge/misconceptions.md` included: their parsers keep only `id` as well. `project/tools/link_refs.py` adds missing links; lint fails on a bare id.
+- Refer to another knowledge file as a link with its id: [`id`](relative/path.md). GitHub makes it clickable for review; the harness keeps only `id` for the model ([`ARCHITECTURE.md`](../../ARCHITECTURE.md), section Ingest). The same in every Markdown file of the repository, [`knowledge/glossary.md`](../../knowledge/glossary.md) and [`knowledge/misconceptions.md`](../../knowledge/misconceptions.md) included: their parsers keep only `id` as well. [`project/tools/link_refs.py`](../tools/link_refs.py) adds missing links; lint fails on a bare id.
 - Formulas as plain text. Diagrams as Mermaid plus a text explanation.
 - Tables: short cells (about 12 words). At most 4 columns when cells hold text; number tables such as colour bands can have more. When rows carry long explanations, use one bullet block per row instead (bold item, one sub-bullet per field). GitHub renders a fixed-width column, so wide tables wrap every cell. Split a wide table in two, or move long explanations to bullets under the table.
 - Every metric file ends its body with `## Misconceptions`, written in the misconception format of KNOWLEDGE-ENGINEERING.md, section 4.
@@ -72,10 +72,10 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 - Third-party images (vendor diagrams, documentation screenshots) are not copied. Link the source in `review_notes`.
 
 ## Versions and sources
-- Write from the current release: vSphere 9.1, VCF 9.1.1 (the Versions section of `CLAUDE.md` holds the current list).
+- Write from the current release: vSphere 9.1, VCF 9.1.1 (the Versions section of [`CLAUDE.md`](../../CLAUDE.md) holds the current list).
 - Before writing from a vendor document, check that it is the current version and read its revision date; record version and revision in `source.document`.
 - A file written from an older version gets a `review_notes` line naming the newer version, and is re-checked before `status: reviewed`.
-- The author's book is cited as "Private Cloud Management by Iwan Rahabok (https://isvara.io/download)" in `source.document`, with the heading path in `source.path`. The working files in `project/sources/` (Part 1, 2, 3) are not named in `knowledge/`, and their page numbers are not used: Agent E2 knows the book, not its parts.
+- The author's book is cited as "Private Cloud Management by Iwan Rahabok (https://isvara.io/download)" in `source.document`, with the heading path in `source.path`. The working files in [`project/sources/`](../sources) (Part 1, 2, 3) are not named in `knowledge/`, and their page numbers are not used: Agent E2 knows the book, not its parts.
 - Theory and practice: theoretical advice covers the technology itself (Windows, Linux, Kubernetes), not only what VMware Tools or VCF Operations collects; practical advice states what each product can and cannot do (for example, which Guest OS counters VMware Tools collects).
 - Oldest release covered: no knowledge about outdated releases; Linux starts at 5.0. Keep the knowledge base compact.
-- `project/sources/` is read-only.
+- [`project/sources/`](../sources) is read-only.

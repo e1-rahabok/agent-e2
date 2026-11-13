@@ -64,8 +64,8 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | -------------- | ---------------------------------------------------------------------------- | --------------------- |
 | Knowledge base | Level 400 facts, mechanisms, misconceptions, flows and exact data                     | `knowledge/`          |
 | Harness        | Retrieval, exact tools, rules, budgets, answer verifier                      | `harness/`            |
-| Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | `harness/AGENT.md`    |
-| Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | `benchmark/models.md` |
+| Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | [`harness/AGENT.md`](harness/AGENT.md)    |
+| Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | [`benchmark/models.md`](benchmark/models.md) |
 
 - The benchmark tests the whole system, not the model: it picks the model, scores each change to the other three parts, and compares the system with the frontier model.
 
@@ -94,7 +94,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 ## Status
 
 - Goal not achieved yet: on the 150 questions (benchmark 2026-11-12), the best small model with the knowledge base scores 67% in classic mode and 56% in agentic mode; the frontier model without it scores 67%. The release gate is 85%.
-- Plan, milestones and decisions: `project/plan.md`. Latest review: `project/review-2026-11-06.md`.
+- Plan, milestones and decisions: [`project/plan.md`](project/plan.md). Latest review: [`project/review-2026-11-06.md`](project/review-2026-11-06.md).
 
 ## Checks
 

@@ -12,7 +12,30 @@ before they are allowed to change an answer:
 """
 import re
 
-ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
+ANSWER = re.compile(r'ANSWER:[ \t]*([^\n]*)', re.I)
+# One letter of a letter list: optional bold or italics around it, then a separator (comma, &, the word and, or a space).
+LETTER = re.compile(r'\s*[*_]*([A-J])[*_]*(?![A-Za-z])\s*(?:,|&|\band\b)?', re.I)
+
+
+def answer_letters(text):
+    """Letters of the last ANSWER line, in order of appearance, or None when there is none.
+
+    Reads a list of single letters from the start of the line and stops at the first other word, so 'C and E' is C, E
+    (not the letters of 'and'), '**B**, **D**' is B, D, and 'B. Because ...' is B.
+    """
+    m = None
+    for m in ANSWER.finditer(text or ''):
+        pass  # last ANSWER line wins (models sometimes draft first)
+    if not m:
+        return None
+    line, pos, out = m.group(1), 0, []
+    while True:
+        t = LETTER.match(line, pos)
+        if not t or t.end() == pos:
+            break
+        out.append(t.group(1).upper())
+        pos = t.end()
+    return out or None
 OPTION = re.compile(r'^([A-J])\.\s+(.*)$', re.M)
 KB_ID = re.compile(r'\b(?:vsphere|guest-os|observability|sp5-framework|vcf-operations)/[a-z0-9][a-z0-9/\-]*[a-z0-9]')
 NUMBER = re.compile(r'(?<![\w.,])(\d+(?:\.\d+)?)\s?(%|ms|µs|us|ns|MB/s|MBps|KBps|Mbps|GB|MB|KB|GHz|MHz|seconds|minutes)(?![\w/])')
@@ -30,12 +53,10 @@ def check(reply, question, context='', kb_ids=None):
     """Return a list of issues: {'type', 'hard', 'detail'}."""
     issues = []
     opts, unsure, nc = options(question)
-    m = None
-    for m in ANSWER.finditer(reply or ''):
-        pass
-    if not m:
+    found = answer_letters(reply)
+    if not found:
         return [{'type': 'format', 'hard': True, 'detail': 'No line starting with "ANSWER:".'}]
-    letters = sorted(set(re.findall(r'[A-J]', m.group(1).upper())))
+    letters = sorted(set(found))
     bad = [x for x in letters if opts and x not in opts]
     if bad:
         issues.append({'type': 'format', 'hard': True, 'detail': f'{", ".join(bad)} is not an option.'})

@@ -250,7 +250,7 @@ Each entry has:
 - Written as now: the rule is in writing.md and the review checks it. `check_titles` is still in lint.py but is not called since 2026-11-10. Run by hand on 2026-11-12, after the title and heading pass: 0 problems.
 - Final answer (2026-11-12; expert call):
   - Call `check_titles` again, and add the question openers (How, Why, What, When, Where, Which, Who) for `##` and `###` headings; decision tree titles stay questions.
-  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: `harness/kb.py` puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
+  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: [harness/kb.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/kb.py) puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
   - Change if accepted: lint.py (one call, one pattern); writing.md (the review checks the rest).
   - For you: nothing.
 - Answer: accepted (2026-11-12).

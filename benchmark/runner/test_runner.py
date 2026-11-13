@@ -138,6 +138,15 @@ class PromptSplitTest(unittest.TestCase):
         self.assertEqual([o[1] for o in opts], ['one', 'two'])
 
 
+class AnswerParseTest(unittest.TestCase):
+    def test_letters_not_taken_from_words_and_bold_kept(self):
+        m = {c: c for c in 'ABCDEFG'}
+        self.assertEqual(C.parse('ANSWER: C and E', m), ['C', 'E'])          # was A, C, D, E: the letters of "and"
+        self.assertEqual(C.parse('ANSWER: **B**, **D**', m), ['B', 'D'])     # was B only
+        self.assertEqual(C.parse('ANSWER: B. Because A is wrong', m), ['B'])
+        self.assertEqual(C.parse('draft ANSWER: A\nANSWER: D & F', m), ['D', 'F'])   # the last ANSWER line counts
+        self.assertIsNone(C.parse('ANSWER: none', m))
+
 class OverrideTest(unittest.TestCase):
     def test_misconception_with_full_recall_counts(self):
         rows = [{'mode': 'classic', 'retrieval_recall': '1.0', 'misconception': '1'},

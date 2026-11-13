@@ -40,7 +40,7 @@ python3 benchmark/runner/preflight.py
 python3 benchmark/runner/run_all.py --max-minutes 110
 python3 benchmark/runner/run_all.py --resume --max-minutes 110
 ```
-- The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and `benchmark/RUN.md`.
+- The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py

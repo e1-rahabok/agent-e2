@@ -7,7 +7,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 |---|---|---|---|
 | how-it-works | How does it work? Why does the metric behave this way? | `concepts/`, `sp5-framework/observability/`, `sp5-framework/outputs/`, `vsphere/architecture/`, `vcf-operations/` (role, features, dashboards, reports, alert definitions) | `concept.md` |
 | metric-meaning | What does this number mean on this object? | `metrics/`, `models/`, `tools/`; `<object>-performance` (KPI) | `metric.md` |
-| term-meaning | What does this term mean? | `knowledge/glossary.md` | - |
+| term-meaning | What does this term mean? | [`knowledge/glossary.md`](../../knowledge/glossary.md) | - |
 | what-to-set | What should be configured, and why? Which alerts does this object type get, and why? | `configuration/`; `<object>-alerts` | `configuration.md`, `alerts.md` |
 | health-check | Is this object healthy? What do I check, in what order (the what)? | `<object>-health-check` | `health-check.md` |
 | troubleshooting | It is down or slow (complaint, alert, failed health check step). Why? What do I check, in what order? | `troubleshooting/`, or the parent folder for a single flow | `troubleshooting.md` |
@@ -20,14 +20,14 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 
 | Field | Meaning |
 |---|---|
-| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in `project/tools/moved.yaml` (old id → new id): lint names the current id when an old one is still used, and `link_refs.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
+| `id` | Path without `knowledge/` and `.md`. A file that moves gets a line in [`project/tools/moved.yaml`](../tools/moved.yaml) (old id → new id): lint names the current id when an old one is still used, and `link_refs.py` rewrites links in the author documents. Not deployed: the harness reads only current ids. |
 | `retriever_guide` | See retriever_guide above. |
 | `scope` | sp5-framework, vsphere, vcf-operations or guest-os; matches the top folder. Root files (glossary, misconceptions): sp5-framework. |
 | `technology` | cpu, memory, storage, network, system. System = the box as a whole: OS, BIOS, or a whole device. |
 | `pillar` | availability, performance, compliance, capacity, value: the five pillars of the SP5 framework. Value covers the cost IT spends, the price it charges tenants, and the business value of the investment. Security is part of the platform; inventory and configuration sit under all five pillars. |
 | `product` | vsphere, vsan, nsx, vcf-operations, windows, linux, kubernetes. On a method file: the products its terms and examples use. |
 | `object` | vSphere managed object types: VirtualMachine, HostSystem, ClusterComputeResource, ResourcePool, Datastore, Datacenter, Folder, VmwareDistributedVirtualSwitch, DistributedVirtualPortgroup, ... |
-| `layer` | Required in `metrics/virtual-motherboard/` and in every file under `knowledge/guest-os/`. The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
+| `layer` | Required in `metrics/virtual-motherboard/` and in every file under [`knowledge/guest-os/`](../../knowledge/guest-os). The stack layer that produces the metric: guest-os, virtual-motherboard, hypervisor, physical. |
 | `instance` | Metric files only, optional. The instance level when the formula differs by instance: aggregate, per-vcpu, per-vmnic, ... |
 | `metric_class` | Metric files only. contention, consumption, or context. Context metrics account for inventory or configuration and answer "it depends" questions. |
 | `internal_derive` | Ids of other knowledge-base files that this file is derived from. Internal links only. Not book chapters, not URLs. |
