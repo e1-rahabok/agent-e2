@@ -1,7 +1,7 @@
 # Linux steal time and Windows busy time on a busy host
 
 ## Prompt
-- Two VMs with 4 vCPUs run on the same ESXi host. The host is busy.
+- Two VMs with 4 vCPUs run on the same VMware ESXi host. The host is busy.
 - vCenter, last hour, both VMs: CPU Ready about 10% per vCPU, Co-stop near 0.
 - Linux VM (steal clock enabled in the VM's advanced settings), `top` summary line: `%Cpu(s): 58.0 us, 4.0 sy, 0.0 wa, 28.0 id, 10.0 st`.
 - Windows VM, Performance Monitor: Processor(_Total) \ % Processor Time about 75%, while its VM CPU Run in vCenter is about 65%.
@@ -53,5 +53,5 @@ source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.
 answer: [A, B]
 misconception: [D, E, F]
 misconception_type: [layer-confusion, frequency-and-hyper-threading]
-status: draft
+status: reviewed
 ```
