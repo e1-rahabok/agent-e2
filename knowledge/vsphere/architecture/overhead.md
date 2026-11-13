@@ -39,8 +39,8 @@
 
 ## The term hypervisor
 - More than the kernel: user-level processes run on top of it.
-- VMkernel traditionally excludes vSAN and NSX (vSAN processes sit under /opt).
-- Treated as capacity, not performance: the hypervisor has the highest priority. Per-process ready time is in esxtop.
+- The word VMkernel traditionally excludes vSAN and NSX (vSAN processes sit under /opt).
+- The hypervisor threads have the highest priority. Per-process ready time can be seen in esxtop.
 
 ## Metric for usable capacity
 | Metric | Problem |
