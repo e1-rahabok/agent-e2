@@ -59,8 +59,8 @@ Six mechanisms, in order of weight.
 - The best local configuration stays below the frontier reference by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
 
 ### Status
-- Not achieved yet. On the 150 questions (benchmark 2026-11-12), the best local model with the knowledge base scored 67% in classic mode and 56% in agentic mode; the frontier model without it, 67%.
-- Known causes, each tracked: knowledge gaps, answer-key errors, weak agentic tool use, retrieval reaching 67% of needed files.
+- Not achieved yet. Round of 2026-11-13 (196 questions): the best local model with the knowledge base, meta/muse-glimmer-30b in agentic mode, scored 78%; the frontier model with web search, 81%. A tie inside the margin (12 points behind on 2026-11-12). No configuration passes the release gate; neither does the frontier model (81%, Level 400 79%, confident-wrong 12%).
+- Where the points are lost (Muse, agentic, 22 points): retrieval 12, knowledge base wrong or missing 8, model with every needed file read 2. The gap is retrieval and knowledge, not the model's reasoning. Analysis: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md), section 11.
 
 ## 4. Model size
 - Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.
