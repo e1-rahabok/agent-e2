@@ -1,21 +1,22 @@
-# Mission: why a small local model can beat a frontier model
+# Mission
 
 Not indexed.
 How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). The agent: [harness/AGENT.md](harness/AGENT.md). How the claim is proved: [benchmark/design.md](benchmark/design.md). Which model: [benchmark/models.md](benchmark/models.md).
 
 ## 1. Mission
-- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management available.
-- The goal is to exceed frontier models on monitoring and troubleshooting because its agent, harness and knowledge base are purpose-built. That is how a 32B-parameter model delivers better answers than far larger models.
-- An open-weight model, running locally on one GPU (at most 96 GB), answers Level 400 private cloud operations questions better than  frontier models from leading players (Google, OpenAI, Anthropic).
+- Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management pluggable by AI Operations Management software.
+- A proof that Agent E2 works is the benchmark result show it scored higher than frontier models from leading players (Google, OpenAI, Anthropic).
+- It achieved as it has 3 components working as one brain:
+  - The Agent
+  - The Harness
+  - The Knowledge
+  - The LLM. Standard open-weight model(s), running locally with minimal GPU. It is not a customized, fine tuned model.
 - Locally means on the customer's own infrastructure: no cloud AI service, and no customer data (questions, screenshots, files) leaving the customer network. No per-token fee.
 - Users' prompt or question can include a URL. Agent E2 will browse and check the content. 
 - Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer.
 - Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
 - Release gate: final score at least 85% on the benchmark, each question scored on its worst of 5 runs. Target: 99%. Confident-wrong rate near 0.
 
-## 2. What we can change
-- The model is frozen. We do not train or fine-tune it. Its weights are a given.
-- The product is not the model. It is a compound system: model + agent + harness + knowledge base.
 
 | Lever | What it is | What we change | Where |
 |---|---|---|---|
@@ -27,7 +28,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 - The benchmark tests the whole system, not the model. It answers three questions:
   - which frozen model to ship (model choice is the fourth lever);
   - what each change to the knowledge base, harness or agent adds: a score delta per change, with everything else fixed;
-  - whether the system beats the frontier model.
+  - whether Agent E2 scores higher than a frontier model.
 - Baseline mode (the model alone) is not a test of the model for its own sake. It is the zero point: system score minus baseline score is what our work adds.
 
 ## 3. Why it is possible
