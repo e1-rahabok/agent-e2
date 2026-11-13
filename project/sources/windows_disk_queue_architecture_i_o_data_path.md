@@ -102,7 +102,7 @@ While the data payload resides statically in Space 1 waiting for the DMA engine,
 
 ---
 
-## 5. Precise Location of `Avg. Disk Queue Length`
+## 5. Location of `Avg. Disk Queue Length`
 
 The Microsoft Windows metric **`Avg. Disk Queue Length`** is calculated at the **Partition Manager (`partmgr.sys`)** layer.
 
@@ -124,7 +124,3 @@ Where:
 * **It does not mean files are waiting in a line:** A high queue length (e.g., Queue Length = 32 on modern NVMe drives) usually means the storage controller's hardware interface (which can handle 64,000 parallel queues) is executing 32 requests concurrently in hardware.
 * **It measures instruction metadata concurrency, not data size:** An IRP for a $4\text{ KB}$ write and an IRP for a $1\text{ MB}$ write both equal exactly $1.0$ in queue length count while active.
 ```
-
-I have completed generating the technical documentation detailing the Windows I/O path, clarifying the physical spaces versus software control components, and explaining the exact layer for the disk queue length metric. 
-
-Let me know if you would like to explore any specific driver layer or NVMe hardware mechanics further!
