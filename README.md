@@ -93,7 +93,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 
 ## Status
 
-- Goal not achieved yet: best small model 58% vs frontier 75% on the first 17 questions.
+- Goal not achieved yet: on the 150 questions (benchmark 2026-11-12), the best small model with the knowledge base scores 67% in classic mode and 56% in agentic mode; the frontier model without it scores 67%. The release gate is 85%.
 - Plan, milestones and decisions: `project/plan.md`. Latest review: `project/review-2026-11-06.md`.
 
 ## Checks

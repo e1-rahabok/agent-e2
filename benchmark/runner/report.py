@@ -1,4 +1,4 @@
-"""Aggregate answers.csv into report.md, and append one summary row per question to results.csv."""
+"""Aggregate answers.csv into report.md (one run folder)."""
 import csv
 import json
 import math
@@ -289,23 +289,3 @@ def write(run_dir):
     path = os.path.join(run_dir, 'report.md')
     open(path, 'w').write('\n'.join(L))
     return path
-
-
-def append_summary(run_dir, results_csv):
-    """One row per model, mode, track and question: mean exact score over the runs."""
-    rows = _rows(run_dir)
-    cfg = json.load(open(os.path.join(run_dir, 'config.json')))
-    g = defaultdict(list)
-    for r in rows:
-        g[(r['model'], r['mode'], r['track'], r['question_id'])].append(r)
-    exists = os.path.exists(results_csv)
-    header = next(csv.reader(open(results_csv))) if exists else ['date', 'model', 'effort', 'mode', 'question_id', 'score', 'notes']
-    with open(results_csv, 'a', newline='') as f:
-        w = csv.writer(f)
-        if not exists:
-            w.writerow(header)
-        for (m, mode, tr, cid), rs in sorted(g.items()):
-            score = _mean(_credit(r) for r in rs)
-            d = cfg['benchmark_id'][:8]
-            w.writerow([f'{d[:4]}-{d[4:6]}-{d[6:8]}', m, 'n/a', f'{mode}-{tr}' if tr != 'text' else mode, cid, f'{score:.2f}',
-                        f'benchmark {cfg["benchmark_id"]}; score = mean credit 0-1 (exact letters, or judge score / 3) over {len(rs)} runs; temp {cfg["temperature"]}'])

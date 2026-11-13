@@ -47,7 +47,6 @@ English words carry a general meaning and a VMware operations meaning. A word is
 
 ## Examples
 - The benchmark has 5 runs; each run goes through the same 100 questions.
-- Benchmark 20261103-081849 had 5 runs of 17 multiple-choice questions per model and mode.
 - A question counts as known only when all 5 runs answer it exactly right.
 
 ## Open: one word for two things

@@ -39,8 +39,8 @@ A model that knows nothing about the knowledge base can still reach the right fi
 | Exact values | `knowledge/catalog/*.yaml`, KPI colour-band tables | `catalog` tool |
 | Order of checks | Numbered steps in the health-check, troubleshooting and decision-tree files | `flow` tool |
 
-### Five up-front blocks (built 2026-11-06, off until measured)
-Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All are off by default until the benchmark shows a gain (section 7). When one is on, the trace records a `primer` step.
+### Five up-front blocks (built 2026-11-06; on in the final round of 2026-11-13)
+Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All five are on in the final round (2026-11-13, with the term map in the agent prompt), so the agentic run is the full team; their gain one at a time is not measured yet (section 7). When one is on, the trace records a `primer` step.
 
 | # | Block | Content | Built from |
 |---|---|---|---|
@@ -81,9 +81,9 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 
 - The limits are budgets, not design values. Deployment rule (stop on token budget, time budget or no progress): section 8.
 
-## 6. Observed behaviour (2026-11-03, 17 questions)
-- Agentic scored below classic for 7 of 8 small models (33% vs 45% exact on average). The frontier model was slightly ahead in agentic (67% vs 62%).
-- Causes seen in traces: few or no tool calls (qwen-3-32b averaged 1.8); searching in circles until the limit (answers that hit the limit were mostly wrong); one model broke the answer format.
+## 6. Observed behaviour (benchmark 2026-11-12, 150 questions)
+- Agentic scored below classic for 2 of 3 models: google/gemma-4-31b-it 54% against 67%, meta/muse-glimmer-30b 56% against 64%. alibaba/qwen3.8-27b scored 51% in agentic and 39% in classic; its baseline run is invalid (answers cut at the token cap).
+- Tool use differs by model. Mean calls per answer on the multiple-choice questions: gemma 4.9, qwen3.8-27b 6.4, muse-glimmer-30b 8.1. Muse reached the limit of 8 calls on 367 of 450 answers.
 - So today the weakest step is the agent's first lookups, not the knowledge base. The up-front blocks (section 3) and a primed start (agentic mode that starts from the classic context) target that step.
 
 ## 7. How it is improved
@@ -98,18 +98,17 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 
 ## 8. Budgets and the tool-call limit
 - The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of 15,000 answers. It is not a design value. No knowledge-base need sets it at 8.
-- Run results (2026-11-03, agentic mode, exact answers by number of calls):
+- Run results (benchmark 2026-11-12, agentic mode, multiple-choice questions, exact answers by number of calls):
 
 | Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
 |---|---|---|---|
-| frontier model | 31 of 33 | 27 of 42 | 6 of 20 |
-| google/gemma-4-31b-it | 28 of 44 | 14 of 28 | 5 of 23 |
-| mistral/mistral-small | 0 of 3 | 7 of 20 | 21 of 72 |
-| alibaba/qwen-3-32b | 36 of 82 | 2 of 3 | never reached |
+| google/gemma-4-31b-it | 125 of 135 | 205 of 253 | 40 of 62 |
+| meta/muse-glimmer-30b | 1 of 1 | 82 of 82 | 304 of 367 |
+| alibaba/qwen3.8-27b | 4 of 25 | 231 of 248 | 148 of 177 |
 
-- Answers that hit the limit are mostly wrong. In most traces the model searches in circles; one more call would not have helped.
+- Answers that hit the limit are not mostly wrong: 65% exact for gemma, 83% for muse, 84% for qwen. The data does not show that a higher limit helps; the budget re-run (section 7, lever 4) decides.
 - Hard questions also take more calls, so the table does not prove that more calls are useless. Next check: re-run the limit-hit answers with 16 calls.
-- Some models make few tool calls (qwen-3-32b averages 1.8). The limit does not affect them.
+- Models differ in how many calls they use (table above). The limit does not affect a model that makes few calls.
 - Deployment has no per-token fee. Its limits are:
   - the context window: every tool result stays in the conversation; with a 32K window, about 12-16K tokens of tool output leaves room for the prompt and the answer;
   - waiting time: each call is a model turn on the local GPU (seconds each).
@@ -143,7 +142,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 ## 9. Why classic mode stays
 - Classic mode costs a third of the benchmark. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is the better mode for some models today. Benchmark 20261103-081849: classic beat agentic for 7 of 8 small models (45% vs 33% exact on average); for the frontier model agentic was slightly ahead (67% vs 62%). The mode is chosen per model by the decision rule in `benchmark/design.md`.
+  2. It is the better mode for some models today. Benchmark 2026-11-12: classic beat agentic for gemma (67% against 54%) and muse (64% against 56%); agentic beat classic for qwen3.8-27b (51% against 39%). The mode is chosen per model by the decision rule in `benchmark/design.md`.
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
 - After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.

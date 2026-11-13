@@ -9,11 +9,12 @@ Never index this folder: it contains answer keys.
 benchmark/
 ├── questions/<id>-<slug>.md                          # one question per file, one flat folder
 ├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
-├── runner/                                       # Benchmark runner: run.py, questions.py, judge.py, report.py, governor.py, config.yaml
+├── runner/                                       # Benchmark runner: run.py, run_all.py, preflight.py, health.py, summarize.py, judge.py, report.py, governor.py, config.yaml
 ├── models.md                                     # candidate models, frontier reference, judge
+├── RUN.md                                        # how to run a benchmark round: the prompt, approvals, time, cost
 ├── live-test.md                                  # the system on an offline model: plan and pass criteria
-├── results/results.csv                           # summary: one row per question, model and mode of each benchmark
-├── results/<benchmark-id>/                       # per benchmark: answers.csv, report.md, config.json (traces.jsonl not in git)
+├── results/README.md                             # one analysis of all runs of a round (written when the last run finishes)
+├── results/<date>-<model>/                       # per run: answers.csv, report.md, config.json (traces.jsonl not in git)
 └── _templates/question.md
 ```
 
@@ -100,14 +101,3 @@ One tag per concept ([project/terms.md](https://github.com/e1-rahabok/agent-e2/b
   - `## Expected key points` is the judge's answer key: the facts a correct answer must state, one per bullet, as many as the question takes; not the wording the candidate must use;
   - write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 
-## results.csv columns
-
-| Column | Example |
-|---|---|
-| date | 2026-11-03 |
-| model | model id |
-| effort | n/a for gateway models; medium / high / max where the model has an effort setting |
-| mode | baseline, classic, agentic (`-vision` suffix for the screenshot track) |
-| question_id | 0004 |
-| score | Benchmark runner: mean credit over the runs, 0-1 (exact letters 1 or 0; free text: judge score / 3). Older rows: exact-match mean, or manual 0-3. |
-| notes | benchmark id and scale, e.g. "benchmark 20261105-090000; score = mean credit 0-1 (exact letters, or judge score / 3) over 5 runs; temp 0.2" |

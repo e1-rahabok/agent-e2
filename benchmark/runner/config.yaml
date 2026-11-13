@@ -16,10 +16,27 @@ judge_max_tokens: 1500
 modes: [baseline, classic, agentic]
 runs: 5                       # repeats per question per model per mode
 temperature: 0.2              # use the value the website will use; fixed for a whole run
-max_tokens: 4000              # reasoning models spend tokens before the ANSWER line
-concurrency: 12               # proven parallel requests per model: 12 tested OK (benchmark 20261103-081849). The floor: the runner never goes below it
+max_tokens: 4000              # per answer, thinking included: a reasoning model that thinks past it is cut off before the ANSWER line (the health check stops such a run)
+concurrency: 12               # proven parallel requests per model. The floor: the runner never goes below it
 concurrency_by_model:         # the proven value of a model that rate-limits earlier than 12
-  anthropic/claude-opus-5.5: 3   # HTTP 429 at 12, 0 errors at 3 (benchmark/runner/README.md, section Concurrency)
+  anthropic/claude-opus-5.5: 3   # HTTP 429 at 12, 0 errors at 3
+model_params:                 # per model, a list of request settings in order of preference. The preflight (preflight.py) tries them on a sample and
+                              # keeps the first that answers cleanly: no cut-off answers, every letter readable. run.py without --params uses the first.
+                              # Fields: reasoning (sent to the gateway as is), max_tokens (replaces max_tokens above). The gateway lists what a model accepts
+                              # in /v1/models, field reasoning_options (benchmark/models.md, section 5).
+  alibaba/qwen3.8-27b:        # reasoning model: 3,700-4,300 tokens per answer with the default, 85% of baseline answers cut at the 4,000 cap
+    - {reasoning: {effort: none}}
+    - {reasoning: {effort: low}}
+    - {reasoning: {effort: low}, max_tokens: 8000}
+  meta/muse-glimmer-30b:      # reasoning model: 2,000-3,000 tokens per answer with the default
+    - {reasoning: {enabled: false}}
+    - {reasoning: {effort: low}}
+    - {reasoning: {effort: low}, max_tokens: 8000}
+  google/gemma-4-31b-it:      # 160-380 tokens per answer with the default
+    - {}
+  anthropic/claude-opus-5.5:  # frontier reference: effort capped at medium (Q164, benchmark/models.md section 5)
+    - {reasoning: {effort: medium}, max_tokens: 8000}
+    - {max_tokens: 8000}
 max_minutes: null              # stop cleanly after this many minutes (exit code 3, then --resume). A Claude Code cloud background command stops after 120: use --max-minutes 110 there
 adaptive_concurrency:         # probe above the proven value, one model at a time (benchmark/runner/governor.py)
   enabled: true
@@ -34,7 +51,7 @@ context_tokens: 16000         # classic mode context budget (author, 2026-11-06:
 expand_derive: true           # classic: add up to 3 internal_derive files of the top 2 hits (retrieval check 2026-11-06: 70% -> 71%, 50 -> 52 of 90 complete)
 route_troubleshooting: true         # classic: a troubleshooting question puts its best troubleshooting file first (71%, 51 of 90; both together with the above: 73%, 53 of 90)
 term_map: true                # classic: user words -> knowledge-base terms, files and notes (knowledge/catalog/user-terms.yaml, harness/terms.py). Retrieval check 2026-11-09, BM25: 73% -> 76%, 53 -> 57 of 90 complete
-term_map_agent: false         # agentic: the same notes in the system prompt; off until the benchmark measures it
+term_map_agent: true          # agentic: the same notes in the system prompt (on for the final round, 2026-11-13)
 term_map_files: 2             # classic: files pulled in from the matched rows
 term_map_position: 1          # classic: where they go in the file order (0 = before the top search hit)
 query_expansion: false        # add glossary preferred words to the query; no gain measured (the glossary has 2 synonym rows), off
@@ -61,12 +78,28 @@ agent_max_calls: 8            # tool calls per question
 agent_tool_tokens: 12000      # tool output budget per question
 context_window: 32000         # the deployed model's window (MISSION.md, section 5); the agent stops calling tools before the prompt outgrows it
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model
-agent_primer:                 # up-front blocks for the agent (harness/primer.py, harness/AGENT.md section 3); off until the benchmark shows a gain
-  map: false                  # what each area holds, what each file kind answers
-  rules: false                # Level 300 misconceptions (knowledge/misconceptions.md)
-  terms: false                # confusable pairs (knowledge/glossary.md)
-  flows: false                # symptom -> flow index
-  procedure: false            # how to use the tools
+agent_primer:                 # up-front blocks for the agent (harness/primer.py, harness/AGENT.md section 3); all on for the final round (2026-11-13)
+  map: true                   # what each area holds, what each file kind answers
+  rules: true                 # Level 300 misconceptions (knowledge/misconceptions.md)
+  terms: true                 # confusable pairs (knowledge/glossary.md)
+  flows: true                 # symptom -> flow index
+  procedure: true             # how to use the tools
 
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
 provider_order: {}
+
+release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (run_all.py)
+  runs:
+    - {model: google/gemma-4-31b-it, modes: [baseline, classic, agentic]}
+    - {model: alibaba/qwen3.8-27b, modes: [baseline, classic, agentic]}
+    - {model: meta/muse-glimmer-30b, modes: [baseline, classic, agentic]}
+    - {model: anthropic/claude-opus-5.5, modes: [baseline, web]}    # frontier reference: the prompt alone, and with open web search (design.md, section 7.5)
+  reference: anthropic/claude-opus-5.5
+  max_cost_usd: 150           # preflight refuses the round when the projected cost (with the safety factor) is above this
+  cost_safety: 1.3            # the sample is small: projected cost x this factor must fit the credits and max_cost_usd
+  max_hours: 6                # preflight refuses the round when the slowest run is projected above this
+  preflight:
+    questions: 7              # per model and mode: 4 multiple-choice, 2 judged, 1 screenshot question (the vision path)
+    min_parse_rate: 0.95      # share of multiple-choice sample answers with a readable letter
+    max_token_share: 0.5      # mean completion tokens of the sample must stay below this share of max_tokens
+  retries: 2                  # relaunches of a run that crashed (exit 1), each with --resume

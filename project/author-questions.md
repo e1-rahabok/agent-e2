@@ -624,7 +624,7 @@ Each entry has:
 - Written as now:
   - Plan and design.md: final score at least 85%, target 99%, confident-wrong rate "near 0" (no number). Superiority: the local configuration beats the frontier baseline "by more than the margin" (no number). Sub-scores are diagnostic only.
   - Frontier reference (Q164): Claude Opus 5.5, web search on, effort capped at medium, no knowledge base.
-  - No current run: the runs of 2026-11-03 are outdated (old set, old harness) and are not used here (author, 2026-11-12). The frontier score below is an expert estimate.
+  - No frontier run at this date (author, 2026-11-12). The frontier score below is an expert estimate.
   - Paired power at 100 questions (review, section 5): 68% at a 10-point gap, 91% at 15, 98% at 20.
   - retrieval-check.md: proposal in counts of 90 questions, not agreed. Latest retrieval (2026-11-11): search 60%, classic context 78%, 61 of 95 complete. No question has a main-file key. Retrieval check paused (2026-11-12) until the question bank revamp.
 - Final answer (2026-11-12, revised the same day; expert call):
@@ -1189,9 +1189,9 @@ Each entry has:
 ### Q163 · Plan, Decisions 2026-11-06 · Benchmark before M1 and M2 are complete
 
 - Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5).
-- What the knowledge base says now: no benchmark run until the 100 questions and the knowledge base are complete. Last run 2026-11-03, 17 questions.
+- What the knowledge base says now: no benchmark run until the 100 questions and the knowledge base are complete.
 - Question: (a) run the 70 scorable questions now as a development signal: 1 candidate and the frontier reference, 3 modes, 5 runs, about US$ 20-40; (b) keep the 2026-11-06 decision.
-- Proposed answer: (a). Every change since 2026-11-03 is unmeasured.
+- Proposed answer: (a). Every change since the first version is unmeasured.
 - Answer: Author (2026-11-11): (b). Absolutely no benchmark until development is done. Closed.
 
 ### Q170 · KNOWLEDGE-ENGINEERING.md, section 5.1 · Home of the misreadings
@@ -2232,14 +2232,11 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q038 · Auto Test > Prompt design · ONLY the knowledge base, or knowledge base first
 
-- Files: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (SYSTEM_KB, SYSTEM_AGENT); evidence in the report of the frontier reference run 20261103-093742, section Analysis (the run folder was deleted on 2026-11-13; it stays in git history).
-- Search: not from the book. Finding from the frontier reference run 20261103-093742.
+- Files: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (SYSTEM_KB, SYSTEM_AGENT).
+- Search: not from the book.
 - Question: should the AI answer from the knowledge base only, or use the knowledge base first and its own knowledge where the knowledge base is silent?
 - Written as now: prompt says answer using ONLY the knowledge base; if not covered, choose "Not covered by the knowledge base".
-- Finding:
-  - Frontier model: baseline (no knowledge base) 75%, classic 67%, agentic 67%.
-  - The ONLY rule cost 3 questions where the knowledge base is silent: vendor-neutral-general-001 (5 of 5 to 0 of 5), [Reclaiming vCPUs from an idle VM](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-06-reclaiming-vcpus-from-an-idle-vm.md) (5 to 0), [Performance vs capacity view of utilization](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-11-performance-vs-capacity-view-of-utilization.md) (5 to 2).
-  - The knowledge base cut the trap rate: 16% to 6-9%.
+- Finding: with the ONLY rule, questions on topics the knowledge base does not cover scored 0 although the model knew the answer.
 - Options:
   - Keep ONLY: fewer invented answers; no credit where the knowledge base is silent; every gap must be filled in the knowledge base.
   - Knowledge base first: knowledge base wins on conflict; own knowledge fills gaps; more coverage; more risk of invented answers.

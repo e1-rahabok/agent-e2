@@ -74,7 +74,8 @@ Started by one operational question; ends in a choice to act, with its reason. N
 |---|---|
 | `benchmark/questions/` | Questions with answer keys. Never indexed. Template: `benchmark/_templates/question.md` |
 | `benchmark/runner/` | Runner, judge, retrieval check (`retrieval_eval.py`), config |
-| `benchmark/results/` | Run results, `results.csv` |
+| `benchmark/results/` | One folder per run (`<date>-<model>`) and `README.md`, the analysis of all runs |
+| `benchmark/RUN.md` | How to run a benchmark round: prompt, approvals, time, cost |
 | `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md) |
 
 ## Project: not deployed

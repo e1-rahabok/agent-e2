@@ -308,7 +308,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - Reference: the frontier model in baseline mode: Claude Opus 5.5, web search on, effort capped at medium, no knowledge base (Q164). The claim in section 1 is met when Agent E2 exceeds it by at least 15 points and a one-sided exact McNemar test on the questions is significant at α 0.05 (section 7.5).
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap below 15 points does not support the claim.
-- Run matrix at 150 questions: 10 models x 3 modes x 150 questions x 5 runs = 22,500 answers, about US$ 40-60 and 3-6 hours (re-check prices and rate limits before each run).
+- Run matrix of the final round: 3 candidates x 3 modes plus the frontier reference x 2 modes (baseline, web), 196 questions, 5 runs = 10,780 answers, about US$ 90 and 2-4 hours, from the preflight sample ([benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md)). Prices, rate limits and a model's thinking change both numbers: run the preflight before each round.
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in the classic context. Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
@@ -399,10 +399,9 @@ For the set:
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
 - Target: 99% final score on the question set (chosen mode). See section 7.4.
 - Minimum: the release gate, section 7.5 (Q130, 2026-11-12; set size and held-out rule revised 2026-11-12, question set 1.0).
-- mistral/ministral-8b dropped from future runs: 29-40% exact in benchmark 20261103-081849.
 - The other candidates stay until the question set is complete; no model is dropped on a small set.
 - What 99% requires: at 150 questions, 99% allows 1 wrong question and proves only about 97.5%; proving 99% needs about 300 questions (section 4). Answer keys must be correct: every wrong answer from the best model gets an author check.
-- Status at benchmark 20261103-081849 (17 questions, old set): best small model 58% exact (classic). Gap: 41 points.
+- Status at benchmark 2026-11-12 (150 questions): best small model 67% in classic mode and 56% in agentic mode against the 85% gate; frontier model without the knowledge base 67%.
 
 ## 16. Decision rules
 - Mode: agentic is the shipped mode and carries the release gate (Q130, 2026-11-12). Classic stays as the floor and the fallback; it is reported in every benchmark.
@@ -413,6 +412,6 @@ For the set:
 - A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1.
 
 ## 17. Outputs
-- [benchmark/results/results.csv](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/results.csv): one row per question, model and mode of each benchmark.
+- [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md): one analysis of all runs of a round, written when the last run finishes. One folder per run, named `<date>-<model>`.
 - A short report per run in [benchmark/results](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results): score matrix, consistency, worst cases, trace links.
 - Every wrong answer tagged with a cause (knowledge gap, retrieval miss, model error) and turned into a plan item or an author question.
