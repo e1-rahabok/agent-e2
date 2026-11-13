@@ -214,6 +214,9 @@ def answer(mode, client, model, question, images, cfg, retriever, kind='choice')
     if mode == 'classic':
         res, used = classic(client, model, question, images, cfg, trace, retriever, kind)
         return res, used, trace, False
+    if mode == 'web':
+        res, used = agent.web_only(client, model, question, images, cfg, trace, retriever, kind)
+        return res, used, trace, False
     try:
         res, used = agent.agentic(client, model, question, images, cfg, trace, retriever, kind)
         return res, used, trace, False
