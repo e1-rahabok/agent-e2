@@ -4,7 +4,7 @@
 - A VM with multiple virtual disks can span multiple datastores, and RDMs.
 - A datastore typically hosts many VMs.
 - An ESXi host can mount multiple LUNs.
-- A LUN is typically presented to multiple ESXi hosts, and can be presented to multiple clusters.
+- A LUN is typically presented to multiple ESXi hosts in the same cluster. Technically, it can be even presented to ESXi hosts from different vCenter Servers.
 
 ## Consequence
 - Totals across VM, datastore, ESXi, cluster and data center do not reconcile when viewed together.
