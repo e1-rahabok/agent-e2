@@ -40,7 +40,7 @@ technology:
 pillar:
 - availability
 - performance
-- compliance
+- security
 product:
 - vcf-operations
 - vsphere

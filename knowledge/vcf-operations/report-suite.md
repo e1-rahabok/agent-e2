@@ -60,7 +60,7 @@ technology:
 - system
 pillar:
 - performance
-- compliance
+- security
 - capacity
 product:
 - vcf-operations

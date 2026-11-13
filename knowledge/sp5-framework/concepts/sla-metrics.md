@@ -153,7 +153,7 @@ technology:
 - system
 pillar:
 - availability
-- compliance
+- security
 product:
 - vsphere
 - vcf-operations

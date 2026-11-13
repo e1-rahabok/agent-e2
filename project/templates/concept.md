@@ -20,7 +20,7 @@ id: vsphere/technology/<technology>/concepts/<slug>     # path without knowledge
 retriever_guide: how-it-works                # see KNOWLEDGE-ENGINEERING.md, retriever_guide: how-it-works | metric-meaning | term-meaning | what-to-set | health-check | troubleshooting
 scope: vsphere                               # vendor-neutral | vsphere
 technology: [cpu]                            # cpu | memory | storage | network | system
-pillar: [performance]                        # availability | performance | compliance | capacity | value
+pillar: [performance]                        # availability | performance | security | capacity | value
 product: [vsphere]                           # vsphere | vsan | nsx | vcf-operations | windows | linux | kubernetes
 object: [VirtualMachine, HostSystem]         # vSphere managed object types; omit if none
 internal_derive: []                          # ids of other knowledge-base files this file is derived from (internal links only)

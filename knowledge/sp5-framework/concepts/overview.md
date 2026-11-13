@@ -28,7 +28,7 @@
 
 ## The five pillars
 
-- Availability, performance, compliance, capacity, value. Each is a unit of management with its own discipline. The `pillar` tag of the knowledge base uses these five.
+- Availability, performance, security, capacity, value. Each is a unit of management with its own discipline. The `pillar` tag of the knowledge base uses these five.
 - Value management keeps three things apart: the cost of the infrastructure IT spends, the price IT charges each tenant (line of business), and the business value of the investment. The SP5 diagram labels the pillar Cost + Price.
 - Inventory and configuration are not pillars: they sit under all five.
 - Security is part of the platform (architecture layer), not a pillar.
@@ -152,7 +152,7 @@ technology:
 pillar:
 - availability
 - performance
-- compliance
+- security
 - capacity
 - value
 product:

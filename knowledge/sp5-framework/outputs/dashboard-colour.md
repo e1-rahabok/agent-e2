@@ -43,7 +43,7 @@ technology:
 pillar:
 - performance
 - capacity
-- compliance
+- security
 product:
 - vcf-operations
 - vsan

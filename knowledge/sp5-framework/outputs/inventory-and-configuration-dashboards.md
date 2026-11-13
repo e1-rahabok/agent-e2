@@ -43,7 +43,7 @@ scope: sp5-framework
 technology:
 - system
 pillar:
-- compliance
+- security
 - availability
 - performance
 product:

@@ -59,7 +59,7 @@ scope: vsphere
 technology:
 - cpu
 pillar:
-- compliance
+- security
 - performance
 product:
 - vsphere
