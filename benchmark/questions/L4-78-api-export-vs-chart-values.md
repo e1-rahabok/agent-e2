@@ -28,7 +28,6 @@ B: reading the API value in the chart's unit.
 - E is wrong: Highest latency is the highest value across the VM's disks, and with rollup latest it is one point in time, not an average over the 5 minutes.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2).
 - Units and rollups: vSphere 9.1 API reference, PerformanceManager counters (mem.consumed in KB; net.usage in KBps; disk.maxTotalLatency rollup latest).
 
 ## Metadata
@@ -54,5 +53,5 @@ source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [tool-confusion, unit-and-normalization]
-status: draft
+status: reviewed
 ```
