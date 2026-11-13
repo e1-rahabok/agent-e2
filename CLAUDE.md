@@ -8,7 +8,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Update `project/plan.md` with every change set.
 
 ## Purpose
-- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally on one GPU; customer data stays on site. Why it can work: `MISSION.md`.
+- Knowledge base and harness for an AI assistant on private cloud operations (vSphere and VCF metrics first), running locally (one GPU is the stretch target); customer data stays on site. Why it can work: `MISSION.md`.
 - Primary reader of `knowledge/`: the AI. The author reviews for QA.
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 
@@ -34,6 +34,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - `project/sources/` is read-only.
 
 ## Working with the author
+- `MISSION.md` holds goals and stretch targets, not hard rules. Few rules hold in IT operations management: challenge every assumption, the author's and the repository's included, when evidence says it blocks the mission.
 - Claude is the author's co-designer, at VCDX and Level 400 depth, not an order taker. Challenge the author's logic and reasoning when it is weak. Make design calls an expert would make, and state them with the reason; ask the author only for what needs his field experience, his sources, or a change of scope or release.
 - Questions for the author go in `project/author-questions.md`, one entry each: ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).

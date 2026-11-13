@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/-Linux-6e7781?style=for-the-badge&logo=linux&logoColor=white&labelColor=3d444d" alt="Linux">
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/model-open%20weights%2C%20one%20GPU-6e7781?labelColor=3d444d" alt="Model: open weights, one GPU">
+  <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
   <img src="https://img.shields.io/badge/knowledge%20files-281-6e7781?labelColor=3d444d" alt="Knowledge files: 281">
   <img src="https://img.shields.io/badge/benchmark%20questions-150-6e7781?labelColor=3d444d" alt="Benchmark questions: 150">
@@ -49,7 +49,7 @@
 
 **Mission:**
 
-- An open-weight model, running locally on one GPU (customer data stays on site), answering Level 400 private cloud management questions better than frontier models.
+- An open-weight model, running locally on as little GPU as possible (customer data stays on site), answering Level 400 private cloud management questions better than frontier models.
 
 ## Why it is possible
 
@@ -65,7 +65,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | Knowledge base | Level 400 facts, mechanisms, misconceptions, flows and exact data                     | `knowledge/`          |
 | Harness        | Retrieval, exact tools, rules, budgets, answer verifier                      | `harness/`            |
 | Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | `harness/AGENT.md`    |
-| Model          | An open-weight vision model on one GPU, chosen by the benchmark              | `benchmark/models.md` |
+| Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | `benchmark/models.md` |
 
 - The benchmark tests the whole system, not the model: it picks the model, scores each change to the other three parts, and compares the system with the frontier model.
 

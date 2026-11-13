@@ -6,7 +6,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 ## 1. Mission
 - Agent E2 is built by Iwan 'E1' Rahabok to make his expertise and experience in VCF performance and capacity management pluggable by AI Operations Management software.
 - A proof that Agent E2 works is the benchmark result show it scored higher than frontier models from leading players (Google, OpenAI, Anthropic).
-- It achieved as it has 3 components working as one brain:
+- It achieves this with four parts working as one brain:
   - The Agent
   - The Harness
   - The Knowledge
@@ -16,6 +16,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 - Scope: version 1.0 covers vSphere 9.1 metrics and the Guest OS layer.
 - Later: vSAN, NSX, VCF Operations, Kubernetes, Linux. The end scope is the private cloud stack.
 - Release gate: final score at least 85% on the benchmark, each question scored on its worst of 5 runs. Target: 99%. Confident-wrong rate near 0.
+- Targets, not rules. Hardware (one GPU), the context window (32K) and the model size (about 30B) are stretch targets and design choices, not limits. When a target blocks the mission, change the target and say why: the smallest hardware that passes the release gate wins. Few rules hold in IT operations management; every assumption here, the author's included, is open to challenge with evidence.
 
 
 | Lever | What it is | What we change | Where |
@@ -111,7 +112,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 |---|---|
 | Data stays on site | No customer data leaves the customer network. Agent E2 answers without Internet access. A call out carries only public knowledge requests (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository; an edited prompt is an untested prompt. |
-| Model | Open weights with a commercial licence, vision, at least 32K context, one GPU of at most 96 GB. Chosen by the benchmark. |
+| Model | Open weights with a commercial licence, vision, at least 32K context. Hardware: as little as passes the release gate; one GPU is the stretch target, two to four GPUs are acceptable. Chosen by the benchmark. |
 | Reproducibility | Every answer stores question, answer, cited ids, tool trace, index version, prompt version, model, settings. |
 | Accuracy | Release gate in section 1, measured on the shipped configuration. |
 | Feedback | Rate and flag every answer, with a cause (knowledge gap, wrong fact, retrieval miss, model error). |

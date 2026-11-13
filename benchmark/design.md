@@ -4,7 +4,7 @@ For human experts who check that the benchmark is valid and complete. Not indexe
 Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Question format: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Misconception definition: `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 ## 1. Claim
-- Claim: a local open-weight model on one GPU ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
+- Claim: a local open-weight model on customer hardware (one GPU is the stretch target; [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)), with this harness and knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`MISSION.md`, section 2). It measures:
   - which frozen model to ship;
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
