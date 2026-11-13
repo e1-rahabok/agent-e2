@@ -15,6 +15,7 @@
 | VM with vCPUs ≤ cores per physical NUMA node | All vCPUs in one NUMA node | Preferentially local to that node | All accesses local. Lowest memory access latency. |
 | "Wide" VM: vCPUs > cores per physical NUMA node | Two or more NUMA nodes | Preferentially local to those nodes | Some vCPUs may access remote memory. Higher average memory access latency. |
 
+- vCPUs fit one node, memory does not: the VM stays one NUMA client with one home node, and new memory comes from that node until the node's memory is used; the rest lands on another node. That remote memory is steady: no rebalancing makes it local, because the home node cannot hold it. Typical cause: memory raised past one node's capacity. Fix by sizing the memory to fit one node, from what the guest needs, or by splitting the VM into NUMA clients that each fit a node ([`vsphere/technology/cpu/configuration/numa-settings`](../configuration/numa-settings.md)).
 - A VM with no more vCPUs than cores per NUMA node can have a slight performance advantage.
 - Wide VM latency increase can be reduced with vNUMA. See [`vsphere/technology/cpu/concepts/virtual-numa`](virtual-numa.md).
 
@@ -49,6 +50,8 @@
 
 ## Misconceptions
 - "A VM with more vCPUs than cores per node is as fast as one that fits" → wide VMs can access remote memory and have higher average memory latency.
+- "Remote memory means the VM is wide, or ESXi keeps moving it between nodes" → a VM with one home node whose memory exceeds the node has steady remote memory. Steady NRMEM over samples is placement, not migration.
+- "Pin the VM to its node with CPU and memory affinity to make memory local" → affinity takes the VM out of NUMA management (no rebalancing, no memory migration) and cannot make memory larger than the node local.
 
 ## Metadata
 ```yaml
@@ -79,6 +82,7 @@ corrections: []
 review_notes:
 - 'Section ''Scheduler mechanics'': from the vSphere 9.1 documentation, vSphere Resource Management > How ESX NUMA Scheduling Works, Home Nodes and Initial Placement, Dynamic Load Balancing and Page Migration, Transparent Page Sharing Optimized for NUMA, Specifying NUMA Controls (pp. 1936-1942).'
 - 'To check: Section ''Scheduler mechanics'': the esxtop counter mapping; not in the documentation.'
+- 'To check: Section ''VM categories'': a VM whose vCPUs fit one node but whose memory exceeds it stays one NUMA client with steady remote memory, against vSphere 9.1 Resource Management, Home Nodes and Initial Placement, and Performance Best Practices for vSphere 9.1 (revision 20260624), vNUMA, https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices.'
 - Checked against 9.1 (revision 20260624). Snoop mode list removed in 9.1 (p. 30). Hardware locality and Intel Granite Rapids guidance added (p. 30).
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: the ''Using NUMA Systems with ESX'' section of the vSphere Resource Management guide, referenced by the source; not read.'

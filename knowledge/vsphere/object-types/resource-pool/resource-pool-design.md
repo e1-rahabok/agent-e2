@@ -12,6 +12,12 @@
 - A pool's reservation, limit and shares apply across the cluster, while each of its VMs runs on one host. In a large cluster a pool limit or share setting can hurt its VMs in ways hard to see from one host.
 - Fixed vs expandable reservation is a design choice: Fixed isolates the pool (only its own reservation is admitted); expandable is flexible, but one child pool can take all of the parent's spare reservation. To isolate a pool fully, set it to Fixed with a reservation and a limit. How the admission check walks the tree: [`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../cluster/concepts/admission-control-and-cluster-state.md).
 
+## Reading a pool limit in the data
+- A pool at its CPU limit shows pool CPU usage flat at one value sample after sample, near a round number, while its hosts have spare CPU. A pool that is not capped varies with its load.
+- Its VMs show Ready on every host they run on, while VMs of other pools on the same hosts show little or none: the wait follows the pool, not the host. Ready includes time held back by a limit; vCenter shows it as Max Limited.
+- A limit on one pool caps only that pool and its descendants. It cannot raise Ready in a sibling pool: it frees CPU for the siblings. When the pool that a change was meant for runs below the limit and another pool sits flat at it, check which pool holds the limit: the change may have hit the wrong pool.
+- More hosts or more vCPUs do not help a pool at its limit: the VMs share the same cap.
+
 ## Siblings and Scalable Shares
 - Rule: pools and VMs are not siblings. Each level of the tree holds only pools or only VMs. The rule holds with Scalable Shares off or on; only the reason changes.
 - Scalable Shares (vSphere 7.0 and later) is set per cluster or per resource pool and is inherited. Off is the default.
@@ -30,6 +36,8 @@
 - "Resource pools and VMs can be siblings once Scalable Shares is on" → dilution is gone, but the pool's VMs then weigh 2x a sibling VM at Normal and the weight changes as VMs are added. Keep each level pools only or VMs only.
 - "A pool with High shares protects each of its VMs" → without Scalable Shares the pool's shares are divided among its VMs; a crowded High pool can give each VM less than a sibling VM.
 - "A pool limit is felt the same on every host" → the limit is cluster-wide; a VM on one host can be capped by load elsewhere in the pool.
+- "A CPU limit on one pool starves the VMs of its sibling pool" → a limit caps only its own pool and frees CPU for the others. Ready in the sibling pool with spare host CPU points to a limit on that pool itself.
+- "Many VMs show high Ready, so the cluster needs more hosts" → check pool and VM limits first: Ready with spare host CPU, confined to one pool, is a limit.
 
 ## Metadata
 ```yaml
@@ -58,6 +66,7 @@ source:
 corrections: []
 review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'To check: Section ''Reading a pool limit in the data'': a pool limit applies across the cluster and Ready includes limit time (Max Limited), against vSphere 9.1 Resource Management, Resource Pool Attributes, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html.'
 - 'To check: Section Siblings and Scalable Shares: default off and the 4, 2, 1 multiplier, against vSphere 9.1 documentation, DRS Scalable Shares (Q110 c).'
 status: draft
 ```

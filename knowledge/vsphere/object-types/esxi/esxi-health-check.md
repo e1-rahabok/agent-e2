@@ -63,6 +63,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
   - esxtop PCPU line (usage of physical CPUs): 80% is a reasonable ceiling.
   - esxtop PCPU line: 90% should be a warning.
   - The source notes that organizations set their own standards for the target load percentage.
+- These levels describe a host in normal operation. They say nothing about the loss of a host: in a cluster of N identical hosts with one failure to tolerate, the N - 1 hosts left carry the whole load, so each runs at N / (N - 1) times its normal utilization. A host just under 80% in a small cluster lands above 90% after a failure. The check belongs to the cluster (step 8), not to the host.
 - Knowledge base reading: these are utilization levels, so they are capacity signals. Confirm a performance problem with the contention of the host's VMs (step 2). Load average 1.00 means all PCPUs fully used. See [`vsphere/tools/esxtop/cpu`](../../tools/esxtop/cpu.md).
 
 ## Misconceptions
@@ -71,6 +72,8 @@ Order: availability, performance, security, capacity; within each pillar the wha
 - "Demand 130%, so the host is overloaded" → check Core Utilization, Thread Utilization and VM contention.
 - "Host memory Consumed at 95%, so add memory" → check balloon, swap-in and worst VM memory Latency.
 - "The host is up and ESXi Performance is green, so it is healthy" → present health only; capacity and configuration are risk.
+- "Every host is below the 80% esxtop ceiling, so nothing to do" → the ceiling is for normal operation. Multiply by N / (N - 1) for the load after one host is lost; HA admission control does not warn, because it counts reservations, not usage.
+- "Hosts are busy, so add a host now" → high utilization with no VM waiting is not a defect; the reason to add capacity is the load after a failure, decided in the cluster check.
 
 ## Metadata
 ```yaml

@@ -10,9 +10,12 @@
 ## Three reservation counters
 - A provider must account for reservations: they cannot be overcommitted.
 - Memory reservation is sticky. CPU has only 1 reservation counter: CPU reservation is transient.
+- A memory reservation is held only after it is used. Until a VM has touched its full reservation, the VMkernel can give the unused part of the reservation to other VMs. Once touched, the pages stay with the VM even when it goes idle: that is the sticky part.
+- Admission control is a separate check: it counts the full reservation whether used or not. A VM powers on only if the unreserved memory covers its reservation, so an untouched reservation still blocks new reservations, not other VMs' use of the pages.
 
 ## Misconceptions
 - "Reserved = used" → check Reservation consumed.
+- "A reservation takes its memory away from other VMs from power-on" → untouched reserved pages can serve other VMs; only admission control counts the full amount at power-on.
 
 ## Metadata
 ```yaml
@@ -39,6 +42,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Overview; Consumption Metrics > Reservation
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Three reservation counters'': check the 9.1 wording that the VMkernel can allocate the unused portion of a reservation to other VMs until the VM consumes it (stated in vSphere 8.0 Resource Management; no 9.1 page found yet). https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html'
 status: draft
 ```

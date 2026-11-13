@@ -3,11 +3,11 @@
 ## Three speeds
 | Speed | Meaning | Facts |
 |---|---|---|
-| Base (nominal) | The frequency vSphere uses as total capacity. Most commonly shown. | The CPU rarely runs at it. It runs above it. |
+| Base (nominal) | The frequency vSphere uses for its total CPU capacity in GHz. Most commonly shown. | The CPU rarely runs at it. It runs above it. |
 | Single-Core Turbo | Marketing figure. Single-thread benchmarks use it. | AMD EPYC 9000 series: 7%-64% above base. Intel Xeon Platinum 8593Q: 77% above base. |
 | All-Core Turbo | The speed that matters for a loaded host. | AMD publishes All-Core Boost. Intel no longer does. AMD EPYC 9000 series: 1%-48% above base. |
 
-- Intel does not expose All-Core Turbo via API. So it cannot be used in capacity calculations.
+- Intel does not expose All-Core Turbo via API. So it cannot be used in throughput calculations such as vSphere's GHz total.
 - Intel Turbo Boost raises clock speed dynamically, with no installation or configuration.
 - Intel Turbo Boost inputs: the heat the system tolerates and the number of active cores. It boosts to the maximum safe level.
 
@@ -16,7 +16,8 @@
 - Rolling up to ESXi level is therefore complex.
 - One throughput counter cannot be derived from another. Each must be calculated at core level.
 
-## Total capacity
+## Clock speed and throughput
+- Frequency sets throughput (work per second), not capacity. Capacity is space, counted in physical threads where a vCPU can run: [`vsphere/technology/cpu/concepts/cpu-measurement-levels`](cpu-measurement-levels.md), section CPU capacity: Rules.
 - All else equal, a CPU at 1 GHz is 50% slower than at 2 GHz.
 - Turbo raises the clock above the stated frequency.
 - Turbo works with power saving in the same socket: some cores sleep, and the saved power boosts other cores.
@@ -39,7 +40,7 @@
 | Turbo / base ratio | 1.0x | about 1.7x-2.2x |
 
 ## Turbo
-- Turbo is large enough that both performance and capacity must account for it.
+- Turbo is large enough that every throughput figure (Usage, Demand, vSphere's GHz total) must account for it.
 - Within a core: the frequency cannot be predicted. It depends on the instructions and on what other cores do.
 - Within a socket: which cores run faster cannot be predicted. A 20-core socket runs at more than one frequency in practice.
 - Example, Intel Xeon Platinum 8260 (base 2.4 GHz):
@@ -55,7 +56,7 @@
 - Turbo can still engage with the BIOS set to static high performance. Field observation: esxtop %A/MPERF showed all cores at 129%.
 
 ## All-Core Turbo
-- A loaded CPU runs above base frequency: more capacity than vSphere shows.
+- A loaded CPU runs above base frequency: more throughput than vSphere's GHz total shows.
 - All-Core Turbo is not always exposed via the CPU API.
 - A CPU rarely runs at base clock. Under load it spends most of its time at All-Core Turbo.
 - All-Core Turbo is the frequency every core can hold at the same time. Single-Core Turbo is reached only when few cores are active and the rest are idle.
@@ -96,7 +97,7 @@
 - All 20 cores busy: 30% above nominal (1.3 GHz).
 - One core busy: up to 70% above nominal (1.7 GHz).
 - The vSphere Client shows the nominal speed and treats it as 100%.
-- Using nominal speed as total capacity understates capacity.
+- Using nominal speed as the 100% mark understates throughput.
 - A real CPU with this boost profile: AMD EPYC 9634.
 
 ## Scenarios
@@ -126,7 +127,8 @@
 - CPU Usage (%) masks this degradation.
 
 ## Misconceptions
-- "Base frequency is the capacity" → the CPU runs above base most of the time. Base understates capacity.
+- "Base frequency × cores is the most work the host can do" → the CPU runs above base most of the time. Base understates throughput.
+- "Turbo raises host capacity" → Turbo raises throughput. Capacity is counted in threads and does not change with frequency.
 - "Turbo can be turned off in ESXi" → no direct setting. Use the power policy or BIOS.
 - "BIOS static high performance means no Turbo" → Turbo was observed at 129% (%A/MPERF).
 - "All cores run at the same frequency" → frequency is per core and changes with load.
