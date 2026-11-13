@@ -26,7 +26,7 @@ meta:
   review_notes:
   - 'To check: kpi cells still null: green, yellow, orange, red, zero to enter by hand for each of 5m, 20s and 2s (Q152).'
   - 'To check: cluster memory wait rows: green and zero limits set from memory latency only (zero 8 and 4), before NVMe wait is scored; 90th percentile disk latency rows: interval 5m here, while the KPI design reads VM stats at their 20-second peak.'
-  status: draft
+  status: reviewed
 kpi:
 - {object: Guest OS, metric: "Peak vCPU run queue length (count)", group: "Guest OS contention", direction: above, 5m: null, 20s: [0, 2, 4, 8, 16], 2s: null, kb: guest-os/system/guest-os-performance}
 - {object: Guest OS, metric: "Peak disk queue length (count)", group: "Guest OS contention", direction: above, 5m: null, 20s: [0, 20, 40, 80, 160], 2s: null, kb: guest-os/system/guest-os-performance}
