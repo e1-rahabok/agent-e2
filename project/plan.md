@@ -4,7 +4,7 @@ Read first, every session. One page: mission, milestones with exit criteria, dec
 Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md). Questions waiting for the author: [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md).
 
 ## Mission
-- 1.0 minimum: Iwan 'E1' Rahabok's expertise in VCF performance and capacity management; beats frontier models on monitoring and troubleshooting through a purpose-built agent, harness and knowledge base. Anything else is not a release blocker.
+- 1.0 minimum: Iwan 'E1' Rahabok's expertise in VCF performance and capacity management; higher score than frontier models on monitoring and troubleshooting through a purpose-built agent, harness and knowledge base. Anything else is not a release blocker.
 - Agent E2, an expert system of agent, harness, knowledge base and an open-weight model, running locally (customer data stays on site; one GPU is the stretch target, not a limit). The benchmark is the proof that it works (MISSION.md).
 - Release gate (Q130; [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5), Agent E2 in agentic mode on the local model: final score at least 85%; Level 400 at least 80%; confident-wrong at most 3%; no misconception of misconceptions.md stated as true; held-out set within 5 points; at least 15 points over the frontier model without the knowledge base, paired test significant. Target 99%. Confirmed on the shipped configuration by the live test.
 
