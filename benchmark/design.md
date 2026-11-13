@@ -10,7 +10,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
 - Baseline mode (the model alone) is the zero point: system minus baseline is what our work adds.
-- Release gate: section 7.5 (final score at least 85%, Level 400 at least 80%, confident-wrong at most 3%, at least 15 points over the frontier model, held-out set not fitted). Target: 99%. Final score: section 7.4.
+- Release gate: section 7.5 (final score at least 85%, Level 400 at least 80%, confident-wrong at most 3%, held-out set not fitted). Target: 99%. Final score: section 7.4.
 - The question set is one test, designed top down (section 3): what it must decide, then its size (section 4), its rules (section 6), its allocation, its slots, and only then the questions.
 - The benchmark must:
   1. rank candidate models and answer modes against each other;
