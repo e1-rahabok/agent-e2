@@ -143,7 +143,7 @@ Preferred, not required:
 
 ## 6. Judge
 - Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.
-- Model: `judge_model` in `config.yaml`, now openai/gpt-5.6-sol.
+- Model: `judge_model` in `config.yaml`, now openai/gpt-6.1-terra (from 2026-11-13; before: openai/gpt-5.6-sol, 4x the price). Scores graded by different judges are never compared.
 - Rules:
   - never a candidate (the runner refuses the benchmark);
   - a different vendor from the frontier reference, so no model family grades its own answers;
