@@ -18,6 +18,13 @@ Each entry has:
 
 ## Open
 
+### Q207 · Benchmark > Field set · Measure coverage on real questions
+
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 12); [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set).
+- Question: 159 of the 196 questions were drafted from the knowledge files they test, so the benchmark cannot show how often a real question falls outside the knowledge base. On your 37 questions Agent E2 leads the frontier model by 8-17 points; outside coverage the 30B model is far weaker than the frontier model. Proposal: a field set of about 100 real questions, collected, not written from the knowledge base (your tickets and consulting cases, customer questions, Broadcom community and forum threads). Two numbers from it: coverage (share settled by the knowledge base) and the score. Out-of-coverage answers must say so. (A) adopt it, collected now, kept out of the repository like the held-out set; (B) adopt it, collected at release only; (C) no: the live test's 20 questions are enough.
+- Written as now: held-out set of 30 drawn from the same blueprint; 20 real questions in the live test. Recommended: A. You hold the real questions; Claude can collect public community threads.
+- Answer:
+
 ### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
 
 - Files: [Swap and compression](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/swap-and-compression.md) (section Example: limit, swap and compress in opposite directions).
