@@ -76,6 +76,7 @@ layer:
 internal_derive: []
 related:
 - guest-os/storage/disk-queue
+- vsphere/technology/storage/concepts/esxi-storage-io-path
 - guest-os/storage/linux-storage-io-path
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
