@@ -1,4 +1,4 @@
-# CPU frequency and Turbo
+# CPU frequency
 
 ## Three speeds
 | Speed | Meaning | Facts |
