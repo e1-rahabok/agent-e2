@@ -1,6 +1,4 @@
-# Linux Storage I/O Subsystem Architecture: Control Plane vs. Data Plane
-
-## 1. Executive Summary & Core Answer
+# Linux Storage I/O Subsystem Architecture
 
 Just as in Windows, when an application (such as PostgreSQL or MySQL) issues unbuffered Direct I/O using the `O_DIRECT` flag (or via `io_uring` / `libaio`), the actual **payload data block** (e.g., an $8\text{ KB}$ or $16\text{ KB}$ database block) is physically moved exactly **two times** across hardware boundaries:
 
@@ -171,7 +169,3 @@ $$\text{aqu-sz} = \text{Requests in } \texttt{blk-mq} \text{ Software Queues} + 
 
 On modern NVMe drives using high queue depths (e.g., 32 parallel hardware queues), an `aqu-sz` of `32` indicates full parallel processing in hardware without any queue starvation or software blocking.
 ```
-
-I have generated the Linux technical manual explaining the separation between the Linux kernel software control path (`blk-mq`, `bio`, system calls) and physical host memory/DMA payload transfers, as well as detailing how Linux measures block layer queue statistics (`aqu-sz`).
-
-Let me know if you would like to explore specific kernel data structures (like `struct bio` or `struct request`) or dig deeper into `io_uring` hardware completion handling!
