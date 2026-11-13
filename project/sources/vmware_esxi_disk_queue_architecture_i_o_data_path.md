@@ -1,6 +1,4 @@
-# VMware ESXi Storage Subsystem Architecture: Control Plane vs. Data Plane
-
-## 1. Executive Summary & Core Answer
+# VMware ESXi Storage Subsystem Architecture
 
 When a virtualized workload (running inside a Guest OS such as Windows or Linux) issues an unbuffered Direct I/O write to a virtual disk (`.vmdk`) backed by a local VMFS datastore on a physical motherboard-attached SSD, the **payload data block** still moves physically **exactly two times** across hardware boundaries:
 
@@ -8,7 +6,7 @@ When a virtualized workload (running inside a Guest OS such as Windows or Linux)
 2. **Transfer 2 (Storage Controller Memory** $\rightarrow$ **Physical Flash Media):** Internal hardware write execution from device controller cache onto physical NAND flash cells.
 
 ### Why Virtualization Does Not Add Extra Payload Data Copies
-Modern x86 hardware virtualization utilizes **Extended Page Tables (EPT) / Nested Page Tables (NPT)**. Memory allocated by the Guest OS (Guest Physical Address or GPA) maps directly to actual Host Physical Addresses (HPA) in physical DRAM. 
+x86 hardware virtualization utilizes **Extended Page Tables (EPT) / Nested Page Tables (NPT)**. Memory allocated by the Guest OS (Guest Physical Address or GPA) maps directly to actual Host Physical Addresses (HPA) in physical DRAM. 
 
 When the Paravirtualized SCSI (`PVSCSI`) device driver inside the Guest OS submits an I/O request, the VMkernel translates the descriptor’s memory addresses from GPA to HPA. The physical storage controller’s DMA engine then reads data **directly** out of host DRAM (which is the exact physical location holding the guest memory page). The hypervisor does **not** copy the payload bytes into a secondary host buffer.
 
@@ -147,7 +145,3 @@ $$
 * **High `KAVG` / `QAVG` ($> 2\text{–}5\text{ ms}$), Low `DAVG`:** The hypervisor software queues are throttling requests. This usually occurs when the VM’s concurrent requests exceed configured device queue depths (e.g., `pvscsi` queue depth or `Disk.SchedNumReqOutstanding`).
 
 ```
-
-I have generated the VMware ESXi technical manual detailing how virtualization impacts the control and data planes, showing how hardware page tables (EPT/NPT) maintain a 2-hop physical data path, and breaking down `esxtop` latency metrics (`GAVG`, `KAVG`, `DAVG`, `QAVG`).
-
-Would you like to explore specific ESXi queue depth settings (such as `pvscsi` ring size tuning) or delve into how VMFS block allocation affects Dynamic vs. Thick Provisioned disks?
