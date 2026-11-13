@@ -1,9 +1,9 @@
 # Overhead
 
 ## Definition
-- Overhead: mandatory (cannot be avoided) AND has negative impact (slower performance or more resource required).
-- Not overhead: optional. You choose to use it. Typically brings a capability not possible without virtualization.
 - Do not label every additional load as overhead.
+- Overhead: mandatory (cannot be avoided) AND has negative impact (slower performance or more resource required).
+- Not overhead: optional. You choose to use it. Typically brings a capability not possible without virtualization. The capability typically consumes resource, which is often mistaken as overhead.
 
 ## Overhead
 | Item | Note |
