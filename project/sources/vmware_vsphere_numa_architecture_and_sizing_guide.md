@@ -1,7 +1,7 @@
-# VMware vSphere NUMA Architecture and Sizing Guide
+# vSphere NUMA Architecture and Sizing Guide
 **Applies to:** VMware vSphere / ESXi 9.1 (Hardware Version 20+)
 
-## 1. Introduction: The Necessity of NUMA in Modern SoCs
+## 1. The Necessity of NUMA in SoCs
 
 In modern System on a Chip (SoC) and multi-chiplet processor designs, the concept of Non-Uniform Memory Access (NUMA) is more critical than ever. While all CPU cores on a single physical package share physical pathways to all memory DIMMs via internal die fabrics, these paths are not equal. 
 
@@ -64,8 +64,8 @@ Starting with Virtual Hardware Version 20 (introduced in vSphere 8 and continuin
 *   **Legacy Behavior:** Historically, ESXi calculated the vNUMA topology on the first power-on and locked it (`TRUE`). This prevented unexpected OS topology changes but caused severe performance degradation if the VM was later migrated to a host with a different physical architecture.
 *   **Current ESXi 9.1 Behavior:** The default value is now **`FALSE`**. The ESXi CPU scheduler dynamically re-evaluates and rebuilds the optimal vNUMA topology on *every* power cycle to ensure alignment with the current physical host.
 
-### Cluster-Wide vNUMA Persistence (IaaS Environments)
-For Cloud Providers or administrators who require the legacy behavior (locking the topology to prevent guest OS disruptions upon reboot), do not use individual VMX parameters. 
+### Cluster-Wide vNUMA Persistence
+If you require the legacy behavior (locking the topology to prevent guest OS disruptions upon reboot), do not use individual VMX parameters. 
 *   Navigate to **vCenter -> Cluster -> Configure -> Advanced Settings**.
 *   Add or set the advanced parameter `VPXD_PersistVnuma` to `True`.
 
