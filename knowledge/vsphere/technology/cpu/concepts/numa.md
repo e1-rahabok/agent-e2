@@ -35,7 +35,7 @@
   - selects optimal virtual L3 sizes,
   - exposes NUMA for virtual devices, and vNUMA topology, when CPU hot plug is enabled.
 
-## Hardware locality (9.1 p. 30)
+## Hardware locality (ESXi 9.1)
 - NICs, NVMe drives and GPUs are usually associated with a specific NUMA node.
 - To reduce data traffic across NUMA boundaries:
   - distribute devices across NUMA nodes,
