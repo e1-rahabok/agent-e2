@@ -102,6 +102,15 @@ Each entry has:
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
+### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
+
+- Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
+- Search 1: "From vSphere 7.0 Update 2, the defaults are NPS-1"
+- Search 2: "Optimal Setting: NPS4 (Nodes Per Socket 4)"
+- Question: Performance Best Practices for vSphere 9.1 (revision 20260624, pp. 29-30) says NPS-1 with CCX as NUMA Domain off gives the best performance in nearly all cases, and NPS-4 is worth testing only for bandwidth-hungry, NUMA-optimized, pinned workloads. Your source gives NPS4 as the optimal setting for EPYC 9005 and NPS2 for EPYC 9006. Which does Agent E2 recommend for a general-purpose cluster: (A) NPS-1 unless the workload meets the four conditions; (B) the setting that matches the silicon (NPS4 on 9005, NPS2 on 9006); (C) B for monster VMs only?
+- Written as now: both stated; cpu-topology gives the per-processor setting, numa-settings keeps the vendor default and points to this question.
+- Answer:
+
 ### Q197 · Repository consistency · Pillar list and the troubleshooting check order
 
 - Files: [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (`pillar`); [project/vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/vocabulary.md) (Pillar); [REPOSITORY-MAP.md](https://github.com/e1-rahabok/agent-e2/blob/main/REPOSITORY-MAP.md) (health check); [project/knowledge-rules/flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md) (Order); [project/templates/troubleshooting.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/troubleshooting.md) (checks).
@@ -155,7 +164,8 @@ Each entry has:
 - Search 2 (vendor page): "If the value is set to FALSE, the virtual NUMA topology is updated every time it is powered on."
 - Question: the vSphere 9.0 and 9.1 Virtual NUMA Controls pages give the default of numa.autosize.once as FALSE in the options table and as TRUE in the description. What value does a new VM have on a 9.x host? Does a power-off and power-on on a host with a different NUMA layout rebuild the layout?
 - Written as now: both values stated; a power cycle rebuilds the layout only with FALSE; the Using Virtual NUMA 9.1 page says the layout does not change unless the vCPU count changes. The key of the question says the layout changes only with the vCPU count. With FALSE as the default, a power cycle on the old host is a valid fix and the key must say so.
-- Answer:
+- Answer (2026-11-13), from the author's source (project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md): in vSphere 9.1, virtual hardware 20 and later, the default is FALSE: ESXi rebuilds the vNUMA layout at every power cycle. To keep a layout across reboots, use the vCenter cluster advanced setting VPXD_PersistVnuma = True, not a VMX option. numa.autosize.once and similar numa.* attributes are no longer offered or supported in the VM's Advanced Parameters; manual layouts go in Edit Settings > Virtual Hardware > CPU, vNUMA Topology.
+- Applied 2026-11-13: virtual-numa (Requirements, Topology initialization, Sizing, Misconceptions); question 0113 (L4-53) key: a power cycle on the old host is now a valid fix. The 9.1 TechDocs page still lists numa.autosize.once and does not name VPXD_PersistVnuma: noted in review_notes.
 
 ### Q193 · Guest OS sizing · Lowering SQL Server max server memory in steps
 

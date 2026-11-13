@@ -14,11 +14,11 @@ Why does the guest see one node? What does that cost on the old host, and what d
 "vMotion rebuilds the virtual NUMA layout for the new host, so the guest is always right. The variation must come from storage."
 
 ## Expected key points
-- vNUMA is built when the VM first powers on, from the host it starts on: 20 vCPUs fit one 32-core node, so the guest got one virtual node.
-- The layout does not follow the VM across vMotion. It changes only when the vCPU count changes.
+- vNUMA is built at power-on, from the host the VM starts on: 20 vCPUs fit one 32-core node, so the guest got one virtual node.
+- The layout does not follow the VM across vMotion: a running guest cannot take a NUMA change. In vSphere 9.1 (virtual hardware 20 and later) the next power cycle rebuilds it for the host the VM powers on, unless the cluster keeps layouts (`VPXD_PersistVnuma`).
 - On an old host the 20 vCPUs do not fit a 12-core node: ESXi splits the VM over two physical nodes, but the guest still schedules as if all its memory were local. Threads read remote memory without knowing: higher and uneven memory latency.
 - Until the refresh ends, keep the VM on hosts with the same NUMA layout: a DRS VM/Host rule to the new hosts, or a separate cluster. Clusters of hosts with the same NUMA layout avoid the problem.
-- If the VM must run on the old hosts, size it to fit a 12-core node, or give it a layout that matches them.
+- If the VM must run on the old hosts: a power cycle there rebuilds the layout to match them (two virtual nodes, 10 vCPUs and 80 GB each); or size it to fit a 12-core node. A later power-on on a new host rebuilds it again.
 
 ## Metadata
 ```yaml

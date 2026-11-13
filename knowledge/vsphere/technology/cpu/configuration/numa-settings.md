@@ -49,6 +49,7 @@
   - the lowest possible memory latency is required,
   - the workload is highly NUMA-optimized,
   - the VMs can be pinned or affinitized.
+- The knowledge base gives a setting per processor that matches its silicon: NPS4 on EPYC 9005, NPS2 on EPYC 9006 (two IODs per socket), SNC3 on Xeon 6 6900P ([`vsphere/technology/cpu/concepts/cpu-topology`](../concepts/cpu-topology.md), section NUMA). That differs from the NPS-1 default above for AMD: author question Q198. The Intel guidance agrees (SNC2 or SNC3 on Granite Rapids, [`vsphere/object-types/esxi/configuration/bios-settings`](../../../object-types/esxi/configuration/bios-settings.md)).
 
 ## Misconceptions
 - "NUMA settings are always better tuned manually" → the source says the default ESX NUMA scheduling is intelligent and adaptive. Manual controls are for specific cases.
