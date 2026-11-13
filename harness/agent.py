@@ -101,6 +101,16 @@ WEB_TOOLS = [
         'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query']}}},
 ]
 TOOL_NAMES = [t['function']['name'] for t in TOOLS + WEB_TOOLS]
+# Reference mode `web` (benchmark): what a chat product gives a frontier model when web search is on. The descriptions say
+# nothing about when to search: the model decides, as it does for an administrator who types a question.
+REF_WEB_TOOLS = [
+    {'type': 'function', 'function': {
+        'name': 'web_search', 'description': 'Search the web.',
+        'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query']}}},
+    {'type': 'function', 'function': {
+        'name': 'fetch_url', 'description': 'Fetch a web page.',
+        'parameters': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'required': ['url']}}},
+]
 
 
 class FallbackNeeded(Exception):
@@ -234,6 +244,45 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
                     out = _run_tool(retriever, name, args, state)
                     _step(trace, name, args, _summary(name, out), r)
             tokens_used += _tok(out)
+            msgs.append({'role': 'tool', 'tool_call_id': tc.get('id', ''), 'content': out})
+
+
+def web_only(client, model, question, images, cfg, trace, retriever, kind='choice'):
+    """Reference mode: the baseline prompt plus web search and page fetch that the model may use or ignore.
+    No knowledge base, no instruction to search, the open web (no host list), no answer verifier. Returns (result, [])."""
+    wcfg = dict(cfg.get('web') or {})
+    wcfg.update({'enabled': True, 'search_hosts': [], 'allow_hosts': []})
+    if not web.search_configured(wcfg):
+        raise ValueError('mode web needs web.search_backend or web.search_url in the config')
+    max_calls = cfg.get('web_max_calls', 5)
+    msgs = [{'role': 'system', 'content': PROMPTS[kind]['base']}, _user(question, images)]
+    po = cfg.get('provider_order', {}).get(model)
+    calls = 0
+    while True:
+        tools = REF_WEB_TOOLS if calls < max_calls else None
+        if tools is None:
+            msgs.append({'role': 'user', 'content': 'Answer now.\n' + PROMPTS[kind]['format']})
+        res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
+        tcs = res['tool_calls'] if tools else []
+        if not tcs:
+            _step(trace, 'answer', '', (res['content'] or '')[:400], res)
+            return res, []
+        msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
+        for n, tc in enumerate(tcs):
+            calls += 1
+            name = tc.get('function', {}).get('name', '')
+            raw = tc.get('function', {}).get('arguments') or '{}'
+            try:
+                args = json.loads(raw) if isinstance(raw, str) else raw
+            except json.JSONDecodeError:
+                args = {}
+            if name == 'web_search':
+                out = json.dumps(web.search(str(args.get('query', '')), wcfg), ensure_ascii=False, indent=0)
+            elif name == 'fetch_url':
+                out = web.block([web.fetch(str(args.get('url', '')), question, wcfg)])
+            else:
+                out = json.dumps({'error': f'unknown tool {name}'})
+            _step(trace, name, args, f'{_tok(out)} tokens', res if n == 0 else None)
             msgs.append({'role': 'tool', 'tool_call_id': tc.get('id', ''), 'content': out})
 
 

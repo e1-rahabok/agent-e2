@@ -301,7 +301,7 @@ def _cost(m, pin, pout):
 def _estimate(tasks, meta, judge_model=None):
     total = 0.0
     for m, mode, c, tr, r in tasks:
-        pin, pout = {'baseline': (600, 300), 'classic': (8000, 300), 'agentic': (24000, 900)}[mode]
+        pin, pout = {'baseline': (600, 300), 'classic': (8000, 300), 'agentic': (24000, 900), 'web': (2500, 600)}[mode]
         if not c.choice:
             pout *= 2  # a free-text answer is longer than two lines
         total += _cost(meta.get(m, {}), pin, pout) or 0

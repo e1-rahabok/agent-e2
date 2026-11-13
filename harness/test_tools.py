@@ -10,6 +10,8 @@ import flows  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
 import verify  # noqa: E402
+import agent  # noqa: E402
+import web  # noqa: E402
 from llm import MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
@@ -564,3 +566,76 @@ class RetrievalFixTest(unittest.TestCase):
         for d in derive:
             if d in DOCS:
                 self.assertIn(d, used)
+
+
+class WebOnlyModeTest(unittest.TestCase):
+    """Reference mode `web`: the baseline prompt plus a web search the model may ignore. No knowledge base."""
+    CFG = {'temperature': 0.2, 'max_tokens': 200, 'web_max_calls': 2, 'web': {'search_backend': 'gateway', 'search_hosts': ['docs.vmware.com']}}
+
+    class Scripted:
+        """A client that returns scripted replies and records what it was given."""
+        def __init__(self, replies):
+            self.replies, self.calls = list(replies), []
+
+        def chat(self, model, messages, tools=None, **kw):
+            self.calls.append({'messages': list(messages), 'tools': tools})
+            return dict(self.replies.pop(0), prompt_tokens=1, completion_tokens=1, latency=0.1, provider='p')
+
+    @staticmethod
+    def call(name, **args):
+        import json
+        return {'id': 'c1', 'type': 'function', 'function': {'name': name, 'arguments': json.dumps(args)}}
+
+    def run_mode(self, replies, cfg=None):
+        client, trace = self.Scripted(replies), []
+        seen = {}
+        real = web.search
+        web.search = lambda q, c: seen.update(query=q, cfg=c) or [{'url': 'https://example.org/a', 'title': 't', 'snippet': 's'}]
+        try:
+            res, used = agent.web_only(client, 'm', 'Q?', [], cfg or self.CFG, trace, None, 'choice')
+        finally:
+            web.search = real
+        return client, trace, res, used, seen
+
+    def test_answers_without_searching_when_the_model_does_not(self):
+        client, trace, res, used, _ = self.run_mode([{'content': 'ANSWER: A\nREASON: x', 'tool_calls': []}])
+        self.assertEqual([s['action'] for s in trace], ['answer'])
+        self.assertEqual(used, [])
+        self.assertEqual({t['function']['name'] for t in client.calls[0]['tools']}, {'web_search', 'fetch_url'})   # no knowledge base tool
+        system = client.calls[0]['messages'][0]['content']
+        self.assertEqual(system, modes.PROMPTS['choice']['base'])
+        self.assertNotIn('search', system.lower())                                                                  # no instruction to search
+
+    def test_search_result_reaches_the_model_and_the_query_is_not_rewritten(self):
+        q = ' '.join(f'word{i}' for i in range(30))
+        client, trace, res, _, seen = self.run_mode([
+            {'content': '', 'tool_calls': [self.call('web_search', query=q)]},
+            {'content': 'ANSWER: B\nREASON: y', 'tool_calls': []}])
+        self.assertEqual([s['action'] for s in trace], ['web_search', 'answer'])
+        self.assertEqual(seen['query'], q)                                                                         # 30 words, not cut to 20
+        tool_msg = [m for m in client.calls[1]['messages'] if m['role'] == 'tool'][0]['content']
+        self.assertIn('https://example.org/a', tool_msg)
+
+    def test_open_web_not_the_vendor_host_list(self):
+        _, _, _, _, seen = self.run_mode([
+            {'content': '', 'tool_calls': [self.call('web_search', query='x')]},
+            {'content': 'ANSWER: A', 'tool_calls': []}])
+        self.assertEqual(seen['cfg']['search_hosts'], [])
+        self.assertEqual(seen['cfg']['allow_hosts'], [])
+
+    def test_call_budget_ends_with_an_answer_turn_without_tools(self):
+        replies = [{'content': '', 'tool_calls': [self.call('web_search', query='a')]},
+                   {'content': '', 'tool_calls': [self.call('web_search', query='b')]},
+                   {'content': 'ANSWER: C', 'tool_calls': []}]
+        client, trace, _, _, _ = self.run_mode(replies)
+        self.assertIsNone(client.calls[2]['tools'])
+        self.assertEqual([s['action'] for s in trace], ['web_search', 'web_search', 'answer'])
+
+    def test_dispatch_through_modes_answer(self):
+        real = agent.web_only
+        agent.web_only = lambda *a, **k: ({'content': 'ANSWER: A'}, [])
+        try:
+            res, used, trace, fb = modes.answer('web', None, 'm', 'Q?', [], {}, None)
+        finally:
+            agent.web_only = real
+        self.assertEqual((res['content'], used, fb), ('ANSWER: A', [], False))

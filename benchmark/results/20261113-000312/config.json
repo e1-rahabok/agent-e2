@@ -1,0 +1,1371 @@
+{
+  "benchmark_id": "20261113-000312",
+  "started": "2026-11-13T00:03:19",
+  "resumed": [],
+  "index_version": "772630b04a97ac95f9d672505f07e05d23d4fe85",
+  "agent_primer": {
+    "map": false,
+    "rules": false,
+    "terms": false,
+    "flows": false,
+    "procedure": false
+  },
+  "models": {
+    "anthropic/claude-opus-5.5": {
+      "tags": [
+        "explicit-caching",
+        "fast",
+        "file-input",
+        "reasoning",
+        "tool-use",
+        "vision",
+        "web-search",
+        "structured-output"
+      ],
+      "context_window": 1000000,
+      "pricing": {
+        "input": "0.000004",
+        "output": "0.00002",
+        "input_cache_read": "0.0000002",
+        "input_cache_write": "0.000005",
+        "web_search": "10",
+        "fast": {
+          "input": "0.000008",
+          "output": "0.00004",
+          "input_cache_read": "0.0000004",
+          "input_cache_write": "0.00001"
+        },
+        "regional": {
+          "au": {
+            "input": "0.0000044",
+            "output": "0.000022",
+            "input_cache_read": "0.00000022",
+            "input_cache_write": "0.0000055"
+          },
+          "eu": {
+            "input": "0.0000044",
+            "output": "0.000022",
+            "input_cache_read": "0.00000022",
+            "input_cache_write": "0.0000055"
+          },
+          "jp": {
+            "input": "0.0000044",
+            "output": "0.000022",
+            "input_cache_read": "0.00000022",
+            "input_cache_write": "0.0000055"
+          },
+          "us": {
+            "input": "0.0000044",
+            "output": "0.000022",
+            "input_cache_read": "0.00000022",
+            "input_cache_write": "0.0000055",
+            "fast": {
+              "input": "0.0000088",
+              "output": "0.000044",
+              "input_cache_read": "0.00000044",
+              "input_cache_write": "0.000011"
+            }
+          }
+        }
+      }
+    }
+  },
+  "modes": [
+    "baseline"
+  ],
+  "runs": 5,
+  "temperature": 0.2,
+  "questions": [
+    "0029",
+    "0032",
+    "0035",
+    "0036",
+    "0038",
+    "0039",
+    "0040",
+    "0041",
+    "0043",
+    "0044",
+    "0045",
+    "0046",
+    "0047",
+    "0048",
+    "0049",
+    "0052",
+    "0053",
+    "0149",
+    "0271",
+    "0273",
+    "0001",
+    "0007",
+    "0009",
+    "0010",
+    "0011",
+    "0013",
+    "0014",
+    "0015",
+    "0016",
+    "0017",
+    "0019",
+    "0021",
+    "0022",
+    "0027",
+    "0028",
+    "0089",
+    "0094",
+    "0095",
+    "0105",
+    "0107",
+    "0110",
+    "0111",
+    "0114",
+    "0143",
+    "0144",
+    "0145",
+    "0151",
+    "0181",
+    "0182",
+    "0185",
+    "0187",
+    "0211",
+    "0213",
+    "0214",
+    "0231",
+    "0232",
+    "0233",
+    "0263",
+    "0268",
+    "0270",
+    "0002",
+    "0003",
+    "0004",
+    "0005",
+    "0006",
+    "0008",
+    "0012",
+    "0018",
+    "0020",
+    "0023",
+    "0024",
+    "0025",
+    "0026",
+    "0054",
+    "0056",
+    "0057",
+    "0058",
+    "0059",
+    "0060",
+    "0061",
+    "0062",
+    "0063",
+    "0065",
+    "0066",
+    "0067",
+    "0068",
+    "0069",
+    "0070",
+    "0072",
+    "0073",
+    "0074",
+    "0077",
+    "0079",
+    "0080",
+    "0081",
+    "0082",
+    "0083",
+    "0084",
+    "0085",
+    "0086",
+    "0088",
+    "0090",
+    "0097",
+    "0100",
+    "0101",
+    "0102",
+    "0103",
+    "0104",
+    "0106",
+    "0108",
+    "0109",
+    "0112",
+    "0113",
+    "0115",
+    "0140",
+    "0141",
+    "0142",
+    "0146",
+    "0147",
+    "0148",
+    "0150",
+    "0152",
+    "0153",
+    "0180",
+    "0183",
+    "0184",
+    "0186",
+    "0188",
+    "0210",
+    "0212",
+    "0215",
+    "0216",
+    "0217",
+    "0230",
+    "0234",
+    "0235",
+    "0236",
+    "0237",
+    "0238",
+    "0239",
+    "0240",
+    "0260",
+    "0261",
+    "0262",
+    "0264",
+    "0265",
+    "0266",
+    "0267",
+    "0269",
+    "0272"
+  ],
+  "skipped_questions": [
+    "0034",
+    "0037",
+    "0042",
+    "0051",
+    "0050"
+  ],
+  "judge_model": "openai/gpt-5.6-sol",
+  "groups": {
+    "0029": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0032": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0035": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0036": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0038": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 100
+    },
+    "0039": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0040": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0041": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0043": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0044": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0045": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0046": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 200
+    },
+    "0047": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0048": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0049": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0052": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0053": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0149": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0271": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0273": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 200
+    },
+    "0001": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0007": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0009": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0010": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0011": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0013": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0014": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0015": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0016": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0017": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0019": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0021": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0022": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0027": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0028": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0089": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0094": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0095": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0105": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0107": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0110": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0111": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0114": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0143": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0144": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0145": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0151": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 300
+    },
+    "0181": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0182": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0185": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0187": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0211": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0213": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0214": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0231": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0232": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0233": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0263": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0268": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0270": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 300
+    },
+    "0002": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0003": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0004": {
+      "answer_type": "deterministic",
+      "input": [
+        "screenshot"
+      ],
+      "level": 400
+    },
+    "0005": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0006": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0008": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0012": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0018": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0020": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0023": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0024": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0025": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0026": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0054": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0056": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0057": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0058": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0059": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0060": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0061": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0062": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0063": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0065": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0066": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0067": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0068": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0069": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0070": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0072": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0073": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0074": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0077": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0079": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0080": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0081": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0082": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0083": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0084": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0085": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0086": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0088": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0090": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0097": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0100": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0101": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0102": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0103": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0104": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0106": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0108": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0109": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0112": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0113": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0115": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0140": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0141": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0142": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0146": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0147": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0148": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0150": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0152": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0153": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0180": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0183": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0184": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0186": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0188": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0210": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0212": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0215": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0216": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0217": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0230": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0234": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0235": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0236": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0237": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0238": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0239": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0240": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0260": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0261": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0262": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0264": {
+      "answer_type": "deterministic",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0265": {
+      "answer_type": "judged",
+      "input": [
+        "table"
+      ],
+      "level": 400
+    },
+    "0266": {
+      "answer_type": "deterministic",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0267": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0269": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    },
+    "0272": {
+      "answer_type": "judged",
+      "input": [
+        "text"
+      ],
+      "level": 400
+    }
+  },
+  "retrieval": "hybrid",
+  "embedding_model": "alibaba/qwen3-embedding-0.6b",
+  "mock": false,
+  "config": {
+    "gateway": "https://ai-gateway.vercel.sh/v1",
+    "models": [
+      "google/gemma-4-31b-it",
+      "alibaba/qwen3.8-27b",
+      "meta/muse-glimmer-30b"
+    ],
+    "judge_model": "openai/gpt-5.6-sol",
+    "judge_temperature": 0,
+    "judge_max_tokens": 1500,
+    "modes": [
+      "baseline",
+      "classic",
+      "agentic"
+    ],
+    "runs": 5,
+    "temperature": 0.2,
+    "max_tokens": 4000,
+    "concurrency": 12,
+    "concurrency_by_model": {
+      "anthropic/claude-opus-5.5": 3
+    },
+    "max_minutes": null,
+    "adaptive_concurrency": {
+      "enabled": true,
+      "step": 2,
+      "max_probes": 2,
+      "window": 40,
+      "gain_fraction": 0.5
+    },
+    "embedding_model": "alibaba/qwen3-embedding-0.6b",
+    "classic_k": 6,
+    "context_tokens": 16000,
+    "expand_derive": true,
+    "route_troubleshooting": true,
+    "term_map": true,
+    "term_map_agent": false,
+    "term_map_files": 2,
+    "term_map_position": 1,
+    "query_expansion": false,
+    "rerank": false,
+    "rerank_model": "bge-reranker-v2-m3",
+    "rerank_n": 10,
+    "rerank_mode": "fuse",
+    "rerank_stem": false,
+    "web": {
+      "enabled": true,
+      "fetch": true,
+      "search_backend": "gateway",
+      "search_url": null,
+      "gateway_search_model": "google/gemma-4-31b-it",
+      "search_timeout": 60,
+      "allow_hosts": [],
+      "search_hosts": [
+        "techdocs.broadcom.com",
+        "knowledge.broadcom.com",
+        "docs.vmware.com",
+        "developer.broadcom.com"
+      ],
+      "timeout": 15,
+      "max_bytes": 3000000,
+      "page_tokens": 2000,
+      "search_results": 5,
+      "search_fetch": 2
+    },
+    "agent_max_calls": 8,
+    "agent_tool_tokens": 12000,
+    "context_window": 32000,
+    "image_tokens": 1500,
+    "agent_primer": {
+      "map": false,
+      "rules": false,
+      "terms": false,
+      "flows": false,
+      "procedure": false
+    },
+    "provider_order": {}
+  }
+}
