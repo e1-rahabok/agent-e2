@@ -230,5 +230,5 @@ review_notes:
   - "To check: column 'Not to confuse with': each pair against the file in its File column."
   - "To check: the entries added 2026-11-11 to carry a pair (ESXi CPU Demand, ESXi CPU Usage, VM CPU Used, Guest OS In Use, VM Memory Usage (%), Disk (device), Cluster Risk (%), Compliance, Property)."
   - "To check: each term and its preferred name in section 'CPU', from Run Quality onward."
-status: draft
+status: reviewed
 ```
