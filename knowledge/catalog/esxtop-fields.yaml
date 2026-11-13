@@ -8,7 +8,7 @@ meta:
   review_notes:
   - 'Whole file: parsed from the esxtop panel statistics tables of the vSphere 9.1 documentation. Identity columns (ID, NAME, DEVICE, PATH, ...) and the vSAN panel are omitted.'
   - Descriptions are the documentation text, condensed to one line. The knowledge base reading of each field is in the esxtop comparison files.
-  status: draft
+  status: reviewed
 formulas:
 - formula: 100% = %RUN + %RDY + %CSTP + %WAIT
   panel: CPU
