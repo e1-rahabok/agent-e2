@@ -48,7 +48,7 @@ Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 qu
 2. Four `run.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
 3. Health check inside each run: stops it when 25% of the last 40 answers are cut off, unreadable or failed.
 4. Recovery (table below).
-5. When all four are complete: `benchmark/results/README.md` (one analysis of all runs, written by `summarize.py`); the run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. Nothing else stays at the `results/` level.
+5. When all four are complete: [`benchmark/results/README.md`](results/README.md) (one analysis of all runs, written by `summarize.py`); the run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. Nothing else stays at the `results/` level.
 
 ## Steps for the LLM
 
@@ -81,7 +81,7 @@ Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 qu
 2. `python3 project/tools/lint.py` reports 0 problems; `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Read the results, not only the exit codes.
 3. Add one entry to [`project/plan.md`](../project/plan.md) (Decisions, latest first): what ran, the final scores, time and cost against the projection, anything unexpected. Update the "Result so far" cells in [`benchmark/models.md`](models.md), section 4, from the README.
 4. Commit everything (run folders without `traces.jsonl`, [`README.md`](../README.md), the archive move, the plan and models changes). The message describes the change in plain words and names no model.
-5. Push the session branch, open a pull request, merge it with a merge commit (not squash), and check that `main` holds `benchmark/results/README.md`. Do this yourself in the same session.
+5. Push the session branch, open a pull request, merge it with a merge commit (not squash), and check that `main` holds [`benchmark/results/README.md`](results/README.md). Do this yourself in the same session.
 6. Reply to the human: the Final score table and the Reading lines of the README, actual time and cost against the projection, anything the human must decide.
 
 ## Approve up front

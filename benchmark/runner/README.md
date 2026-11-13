@@ -198,7 +198,7 @@ python3 benchmark/runner/retrieval_eval.py
 6. Writes the benchmark folder: `answers.csv`, `config.json`, `traces.jsonl`, `report.md`.
 
 ## Output: `benchmark/results/<date>-<model>/`
-- One folder per run, named for the day it started and the model (`20261114-gemma-4-31b-it`; a second folder of the same name gets `-2`). `benchmark/results/README.md` is the only file at that level: the analysis of all runs of a round.
+- One folder per run, named for the day it started and the model (`20261114-gemma-4-31b-it`; a second folder of the same name gets `-2`). [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) is the only file at that level: the analysis of all runs of a round.
 | File | Content | In git |
 |---|---|---|
 | `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), agent blocks, judge and its price, settings | Yes |
