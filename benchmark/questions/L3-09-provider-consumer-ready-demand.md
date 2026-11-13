@@ -18,7 +18,6 @@ Can a physical core itself have Ready time?
 - Do not read a host figure as VMs plus kernel by default: Usage includes the kernel, Demand does not.
 
 ## Notes
-- Previous id: vsphere-foundations-003 (renamed 2026-11-05).
 - Tests: Principle: provider vs consumer perspective; provider metric vs sum-of-consumer metric.
 - Key corrected 2026-11-12. It read ESXi CPU Demand as a provider metric. The knowledge base (host/demand, provider-consumer) and the author's answer to Q009 settle it: the value at ESXi is the summation over the VMs, a sum-of-consumer metric held at the provider. A candidate that said "sum of consumers" was scored 0 against the old key in all runs of 20261112 (see project/plan.md).
 
@@ -43,5 +42,5 @@ object: [esxi, vm]
 tool: [none]
 knowledge_main: vsphere/architecture/provider-consumer
 misconception_type: [provider-vs-consumer]
-status: draft
+status: reviewed
 ```
