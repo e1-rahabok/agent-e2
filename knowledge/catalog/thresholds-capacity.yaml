@@ -24,7 +24,7 @@ meta:
     bands: 'grey (below green: wastage), green, yellow, orange, red. Grey is empty until a source gives it.'
   review_notes:
   - 'To check: grey (wastage) band values, empty until a source gives them.'
-  status: draft
+  status: reviewed
 models:
 - id: guest-os-sizing-guest-os-memory-utilization-for-sizing
   metric: Guest OS memory utilization, for sizing (%)
