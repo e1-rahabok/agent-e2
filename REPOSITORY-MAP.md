@@ -8,7 +8,7 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [README.md](README.md) | What Agent E2 is, in one page |
 | [MISSION.md](MISSION.md) | Why a small local model can win; requirements; risks |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | The whole system: repository, parts, modes, query flow |
-| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and misconceptions. Rules: `project/knowledge-rules/` |
+| [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | The knowledge design: where knowledge lives, forms, Level 400 and misconceptions. Rules: [`project/knowledge-rules/`](project/knowledge-rules) |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How to add or change a file |
 | [CLAUDE.md](CLAUDE.md) | How Claude works in this repository |
 | [SECURITY.md](SECURITY.md) | Security policy |
@@ -17,16 +17,16 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | Folder | Holds |
 |---|---|
 | `knowledge/` | What Agent E2 reads. The only indexed folder. Placement rules: [project/knowledge-rules/placement.md](project/knowledge-rules/placement.md) |
-| `knowledge/catalog/` | Exact data in YAML, read by code: vCenter counters, esxtop fields, object model, thresholds (performance KPI, capacity models and decisions, alerts), user terms |
-| `knowledge/sp5-framework/` | The method: how to operate VCF, the SP5 Framework (source: Private Cloud Management by Iwan Rahabok). `concepts/`: across pillars (overview, health check, health-risk-efficiency, class of service, modelling). `observability/`: how to read telemetry. `outputs/`: alerts, dashboards, reports, NOC live screen. `performance/`, `capacity/`: one pillar each |
-| `knowledge/vsphere/architecture/` | vSphere design every metric follows from: provider and consumer, VM vs Guest OS realms, overhead, resource controls |
-| `knowledge/vsphere/technology/` | One technology at a time (`cpu`, `memory`, `storage`, `network`, `gpu`): how it works, metrics per object, what to set, troubleshooting and decision trees within that technology |
-| `knowledge/vsphere/object-types/` | One folder per object type (`vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `datastore-cluster`, `distributed-switch`, `distributed-port-group`): what combines technologies, KPIs, models, the object's alerts (`<object>-alerts`), its health check (`<object>-health-check`), troubleshooting and decision trees on that object |
-| `knowledge/vsphere/tools/` | How esxtop and the vSphere Client show the counters |
-| `knowledge/vcf-operations/` | The product VCF Operations: its role, `features/`, `dashboards/` and the report suite as built in it, and how an alert definition works (`alert-definitions`). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
-| `knowledge/guest-os/` | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `guest-os-alerts` |
-| `knowledge/glossary.md` | The agent's vocabulary |
-| `knowledge/misconceptions.md` | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
+| [`knowledge/catalog/`](knowledge/catalog) | Exact data in YAML, read by code: vCenter counters, esxtop fields, object model, thresholds (performance KPI, capacity models and decisions, alerts), user terms |
+| [`knowledge/sp5-framework/`](knowledge/sp5-framework) | The method: how to operate VCF, the SP5 Framework (source: Private Cloud Management by Iwan Rahabok). `concepts/`: across pillars (overview, health check, health-risk-efficiency, class of service, modelling). `observability/`: how to read telemetry. `outputs/`: alerts, dashboards, reports, NOC live screen. `performance/`, `capacity/`: one pillar each |
+| [`knowledge/vsphere/architecture/`](knowledge/vsphere/architecture) | vSphere design every metric follows from: provider and consumer, VM vs Guest OS realms, overhead, resource controls |
+| [`knowledge/vsphere/technology/`](knowledge/vsphere/technology) | One technology at a time (`cpu`, `memory`, `storage`, `network`, `gpu`): how it works, metrics per object, what to set, troubleshooting and decision trees within that technology |
+| [`knowledge/vsphere/object-types/`](knowledge/vsphere/object-types) | One folder per object type (`vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `datastore-cluster`, `distributed-switch`, `distributed-port-group`): what combines technologies, KPIs, models, the object's alerts (`<object>-alerts`), its health check (`<object>-health-check`), troubleshooting and decision trees on that object |
+| [`knowledge/vsphere/tools/`](knowledge/vsphere/tools) | How esxtop and the vSphere Client show the counters |
+| [`knowledge/vcf-operations/`](knowledge/vcf-operations) | The product VCF Operations: its role, `features/`, `dashboards/` and the report suite as built in it, and how an alert definition works (`alert-definitions`). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
+| [`knowledge/guest-os/`](knowledge/guest-os) | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `guest-os-alerts` |
+| [`knowledge/glossary.md`](knowledge/glossary.md) | The agent's vocabulary |
+| [`knowledge/misconceptions.md`](knowledge/misconceptions.md) | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
 | `harness/` | Retrieval, catalog, calculator, planning calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
@@ -72,24 +72,24 @@ Started by one operational question; ends in a choice to act, with its reason. N
 ## Proof: not deployed
 | Folder | Holds |
 |---|---|
-| `benchmark/questions/` | Questions with answer keys. Never indexed. Template: `benchmark/_templates/question.md` |
-| `benchmark/runner/` | Runner, judge, retrieval check (`retrieval_eval.py`), config |
-| `benchmark/results/` | One folder per run (`<date>-<model>`) and `README.md`, the analysis of all runs |
-| `benchmark/RUN.md` | How to run a benchmark round: prompt, approvals, time, cost |
+| [`benchmark/questions/`](benchmark/questions) | Questions with answer keys. Never indexed. Template: [`benchmark/_templates/question.md`](benchmark/_templates/question.md) |
+| [`benchmark/runner/`](benchmark/runner) | Runner, judge, retrieval check (`retrieval_eval.py`), config |
+| [`benchmark/results/`](benchmark/results) | One folder per run (`<date>-<model>`) and [`README.md`](README.md), the analysis of all runs |
+| [`benchmark/RUN.md`](benchmark/RUN.md) | How to run a benchmark round: prompt, approvals, time, cost |
 | `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md) |
 
 ## Project: not deployed
 | Folder | Holds |
 |---|---|
-| `project/README.md` | What the project folder holds |
-| `project/plan.md` | Milestones, decisions, open work. Read first |
-| `project/author-questions.md` | Questions for the author |
-| `project/design-thresholds.md` | Threshold catalog design: use cases, files, fields. Proposal |
-| `project/alert_close_cycle_design_best_practices.md` | Example of an alert close cycle design, for review (Q155 answer; reviewed in `project/design-thresholds.md`, section 9.5) |
+| [`project/README.md`](project/README.md) | What the project folder holds |
+| [`project/plan.md`](project/plan.md) | Milestones, decisions, open work. Read first |
+| [`project/author-questions.md`](project/author-questions.md) | Questions for the author |
+| [`project/design-thresholds.md`](project/design-thresholds.md) | Threshold catalog design: use cases, files, fields. Proposal |
+| [`project/alert_close_cycle_design_best_practices.md`](project/alert_close_cycle_design_best_practices.md) | Example of an alert close cycle design, for review (Q155 answer; reviewed in [`project/design-thresholds.md`](project/design-thresholds.md), section 9.5) |
 | `project/review-*.md` | Dated reviews of the mission, architecture and benchmark |
-| `project/vocabulary.md`, `project/terms.md` | Writing vocabulary; repository terms |
-| `project/sources/` | Source documents. Read-only |
-| `project/knowledge-rules/` | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
-| `project/templates/` | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
-| `project/tools/` | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py`, `coverage.py` (question set against the blueprint) |
-| `project/archive/` | Retired documents |
+| [`project/vocabulary.md`](project/vocabulary.md), [`project/terms.md`](project/terms.md) | Writing vocabulary; repository terms |
+| [`project/sources/`](project/sources) | Source documents. Read-only |
+| [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
+| [`project/templates/`](project/templates) | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
+| [`project/tools/`](project/tools) | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py`, `coverage.py` (question set against the blueprint) |
+| [`project/archive/`](project/archive) | Retired documents |

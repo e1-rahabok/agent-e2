@@ -40,14 +40,14 @@ python3 benchmark/runner/preflight.py
 python3 benchmark/runner/run_all.py --max-minutes 110
 python3 benchmark/runner/run_all.py --resume --max-minutes 110
 ```
-- The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and `benchmark/RUN.md`.
+- The final round: a sample first, then all runs in parallel, then the summary. See "A whole round" below and [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
 
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py
 ```
 - Scoring tests: judge reply parsing, final score, sub-score groups, question tags. No API calls.
 
-- Agent up-front blocks for one benchmark (an experiment; the config default is all off): `--primer rules,terms` or `--primer all`. The choice is stored in `config.json` (`agent_primer`). Design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
+- Agent up-front blocks for one benchmark (an experiment; the config default is all on since 2026-11-13): `--primer rules,terms` or `--primer all`. The choice is stored in `config.json` (`agent_primer`). Design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
 
 ## Retrieval check (no model)
 ```bash
@@ -78,7 +78,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Every question says: "Choose all the correct options. There can be more than one." One option is appended: "Unsure". There is no "Not covered" option: the system answers from the knowledge base first and from the model's own knowledge where it is silent (author, Q038, 2026-11-05).
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
 - Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.1.
-- Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. It is the multiple-choice credit in the final score.
+- Stable correct: share of multiple-choice questions answered exactly right in all 5 runs. Report table `Multiple choice: luck-free scores`. Reported as consistency; the final score uses the mean of the runs (since 2026-11-13).
 - Luck: share of questions right in some runs only. Counted as not known.
 - Override (table `Final score`): share of knowledge base answers that state the misconception although every needed file was in the context. Prior override, not a retrieval miss.
 - Confident-wrong rate: share of answers that are wrong and not Unsure. Accuracy when answered: exact share among non-Unsure answers.
@@ -86,7 +86,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Reason and design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
-- Margin: 95% interval on Majority. Set by the number of questions: 150 questions give about ±8 points on the final score.
+- Margin: 95% interval on Majority. Set by the number of questions: 196 questions give about ±5 points on the final score (benchmark/design.md, section 4).
 
 ### Modes: baseline, classic, agentic
 
@@ -95,7 +95,7 @@ python3 benchmark/runner/retrieval_eval.py
 | Knowledge base | None | Yes | Yes |
 | Who looks up | Nobody | The runner | The model |
 | Lookups | 0 | 1, before the model starts | Up to `agent_max_calls` (8), chosen by the model. Option, off: the classic lookup first (primed start, `agent_seed_tokens`) |
-| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (16K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`, within `agent_tool_tokens` (12K) and the context window |
+| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (16K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `capacity_plan`, `flow`, and `fetch_url` and `web_search` when `web.enabled`, within `agent_tool_tokens` (12K) and the context window |
 | Can it go back for more | - | No | Yes |
 | What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
 
@@ -104,7 +104,7 @@ python3 benchmark/runner/retrieval_eval.py
 - Classic and agentic answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
 - Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well. `--seed-tokens N` runs the primed start (the classic lookup as the first message), off since the sample of 2026-11-13 (harness/AGENT.md section 6).
 - Recall columns: Recall counts the needed files whose text reached the model (classic: the context; agentic: the first lookup and the files it read). Seen counts the needed files the model was shown at all, search results included (CSV `search_recall`). Seen above Recall: found but not read.
-- The agentic limits (8 calls, 12K tokens) are cost caps for the benchmark, not a design choice.
+- The agentic limits (8 calls, 12K tokens) started as cost caps; the benchmark now runs the deployment budgets (harness/AGENT.md, section 8).
 
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
@@ -114,7 +114,7 @@ python3 benchmark/runner/retrieval_eval.py
 - The runner reads the files on disk but records the commit SHA. Commit all knowledge changes before a benchmark, or the recorded version is wrong.
 
 ### Hybrid retrieval
-- No internet access in any mode. Retrieval searches only the `knowledge/` files.
+- Retrieval searches only the `knowledge/` files. With `web.enabled` (on), links in the question are read in every knowledge base mode, and the agent has `fetch_url` and `web_search` (ARCHITECTURE.md, section 5).
 - In the benchmark the models and the embedding model run in the cloud through Vercel AI Gateway, to compare candidates cheaply. In production the chosen model runs locally; the knowledge base lookup is the same.
 - Retrieval = finding the knowledge-base sections to give the model. Used in classic and agentic modes.
 - The knowledge files are cut into chunks, one per `##` heading.
@@ -190,7 +190,7 @@ python3 benchmark/runner/retrieval_eval.py
    - multiple choice: shuffles the options (same order for every model and mode within a run) and appends "Unsure"; free text: sends the prompt as written;
    - answers in the mode:
      - `baseline`: no knowledge base;
-     - `classic`: one search, link expansion (`same_name`, `related`), 8K-token context;
+     - `classic`: one search, link expansion (`same_name`, `related`), 16K-token context;
      - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. With `--seed-tokens N` (off by default) the classic lookup comes first. Falls back to classic after 2 tool-format errors;
    - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Not-covered pick, Unsure pick;
    - free text: the judge scores 0-3; credit = score / 3;

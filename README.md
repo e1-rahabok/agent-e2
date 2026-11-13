@@ -14,8 +14,8 @@
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
-  <img src="https://img.shields.io/badge/knowledge%20files-281-6e7781?labelColor=3d444d" alt="Knowledge files: 281">
-  <img src="https://img.shields.io/badge/benchmark%20questions-150-6e7781?labelColor=3d444d" alt="Benchmark questions: 150">
+  <img src="https://img.shields.io/badge/knowledge%20files-285-6e7781?labelColor=3d444d" alt="Knowledge files: 285">
+  <img src="https://img.shields.io/badge/benchmark%20questions-196-6e7781?labelColor=3d444d" alt="Benchmark questions: 196">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
 
@@ -64,8 +64,8 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | -------------- | ---------------------------------------------------------------------------- | --------------------- |
 | Knowledge base | Level 400 facts, mechanisms, misconceptions, flows and exact data                     | `knowledge/`          |
 | Harness        | Retrieval, exact tools, rules, budgets, answer verifier                      | `harness/`            |
-| Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | `harness/AGENT.md`    |
-| Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | `benchmark/models.md` |
+| Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | [`harness/AGENT.md`](harness/AGENT.md)    |
+| Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | [`benchmark/models.md`](benchmark/models.md) |
 
 - The benchmark tests the whole system, not the model: it picks the model, scores each change to the other three parts, and compares the system with the frontier model.
 
@@ -94,7 +94,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 ## Status
 
 - Goal not achieved yet: on the 150 questions (benchmark 2026-11-12), the best small model with the knowledge base scores 67% in classic mode and 56% in agentic mode; the frontier model without it scores 67%. The release gate is 85%.
-- Plan, milestones and decisions: `project/plan.md`. Latest review: `project/review-2026-11-06.md`.
+- Plan, milestones and decisions: [`project/plan.md`](project/plan.md). Latest review: [`project/review-2026-11-06.md`](project/review-2026-11-06.md).
 
 ## Checks
 
@@ -104,4 +104,8 @@ python3 project/tools/lint.py
 
 ```bash
 python3 -m unittest harness/test_tools.py
+```
+
+```bash
+python3 -m unittest benchmark/runner/test_runner.py
 ```

@@ -16,6 +16,7 @@ import re
 import yaml
 
 from kb import ROOT
+from verify import answer_letters
 
 META = '\n## Metadata\n```yaml\n'
 UNSURE = 'Unsure: the information available does not settle this question.'
@@ -27,7 +28,6 @@ IMAGE_EXT = ('.png', '.jpg', '.jpeg', '.webp')
 # The model reads only the link text: the target is stripped, as kb.FILE_LINK does for knowledge links (no token cost).
 ATTACH_LINK = re.compile(r'\[([^\]\n]+)\]\((\d{4}/[^)\s]+)\)')
 OPTION = re.compile(r'^(?:[-*]\s+)?([A-H])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
-ANSWER = re.compile(r'ANSWER:\s*\**\s*([A-J](?:\s*(?:,|and|&)?\s*[A-J])*)\b', re.I)
 
 
 class Question:
@@ -171,12 +171,10 @@ def load(pattern=None):
 
 def parse(text, mapping):
     """Return the original letters chosen, or None when the answer cannot be parsed."""
-    m = None
-    for m in ANSWER.finditer(text or ''):
-        pass  # last ANSWER line wins (models sometimes draft first)
-    if not m:
+    letters = answer_letters(text)
+    if not letters:
         return None
-    shown = set(re.findall(r'[A-J]', m.group(1).upper()))
+    shown = set(letters)
     if not shown or not shown <= set(mapping):
         return None
     return sorted(mapping[s] for s in shown)

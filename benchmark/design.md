@@ -5,7 +5,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 
 ## 1. Claim
 - Claim: a local open-weight model on customer hardware (one GPU is the stretch target; [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)), with this harness + agent + knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
-- System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`MISSION.md`, section 2). It measures:
+- System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`MISSION.md`, section 1). It measures:
   - which frozen model to ship;
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
@@ -24,7 +24,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Resistance to misconceptions (see `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400) | Writing style of judged answers (the judge scores facts only, section 14) |
 | Combining several facts and tables in one answer, including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
-| Reading tables: vCenter chart exports, VCF Operations exports, esxtop batch output | Screenshots (the screenshot set after 1.0, section 13) |
+| Reading tables: vCenter chart exports, VCF Operations exports, esxtop batch output | More screenshots (the screenshot set grows after 1.0, section 13) |
 | Knowing the limits: choosing Unsure instead of guessing | Multi-turn conversation with clarifying questions (a separate set, later) |
 | Consistency: the same answer on every run | Cost and price (out of scope, author 2026-11-04) |
 | Answering without options (free text, judged) | Agent E2's own framework and the vCommunity management pack (section 6.1) |
@@ -84,9 +84,9 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 |---|---|---|---|
 | Text | The prompt alone. It may hold a few values or a small table typed into the prompt (an esxtop excerpt, a resource pool tree) | As text | about 114 (text only) |
 | Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) | about 35 |
-| Screenshot | An image of a product UI | As an image, to a vision model | 1 in 1.0 (the author's [ESXi utilization for capacity](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md)) |
+| Screenshot | An image of a product UI | As an image, to a vision model | 6 in the run set (2026-11-13: the author's [ESXi utilization for capacity](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md)) |
 
-- 1.0 has no new screenshots (author, 2026-11-12). A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set follows 1.0 (section 13).
+- 1.0 adds no screenshots beyond the six in the run set (the author's L4-03, and the five reactivated on 2026-11-13). A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set follows 1.0 (section 13).
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]` or `[screenshot]`, derived from `attachments` and checked by lint.
 - URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
@@ -152,6 +152,7 @@ Level against input type (questions that include it):
 
 ## 4. Sample size
 150 questions in the development set, and 30 held-out questions drawn at release (section 7.5). The number follows from the decisions the set supports.
+- The run set grew to 196 (2026-11-13: 8 at Level 100, 17 at 200, 40 at 300, 131 at 400; 119 multiple choice, 77 judged). At 196 the margin on the final score is about ±5.0 points at 85%, Level 400 (131 questions) about ±6.8 points at 80%, and one question is worth 0.51 points. The tables below keep the 150 blueprint as written.
 
 | Questions | 95% margin at 85% | Level 400 questions (margin at 80%) | Paired test power, 15-point gap, reverse 5% | reverse 8% | reverse 10% | Author time |
 |---|---|---|---|---|---|---|
@@ -215,7 +216,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Unsure, chosen alone | Unsure | Not correct; not counted as wrong |
 | Anything else: wrong, partly right, Unsure mixed with other letters, unparseable | Confident wrong | Confident-wrong rate |
 
-- Two numbers are reported for deterministic questions: **Stable correct** (absolute, against the fixed set; it is the deterministic question credit in the final score, section 7.4) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
+- Two numbers are reported for deterministic questions: **Stable correct** (absolute, against the fixed set: correct in every run; reported as consistency since 2026-11-13, when the final score moved to the mean of the runs, section 7.4) and **confident-wrong rate** (share of answers that are wrong and not Unsure; target near 0).
 - The model is told: a wrong answer is worse than Unsure, because an operator would act on it; if it cannot decide every option, choose Unsure.
 
 ### 7.1 No points, no -1
@@ -273,8 +274,8 @@ The frontier model must be able to answer every question from public knowledge. 
 
 | Gate | Limit | Why |
 |---|---|---|
-| Final score, development set (150) | at least 85% | Margin ±5.7 (section 4); below 85 an operator stops trusting the answers |
-| Level 400 sub-score | at least 80% | 90 questions (margin ±8): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
+| Final score, run set (196) | at least 85% | Margin about ±5 (section 4); below 85 an operator stops trusting the answers |
+| Level 400 sub-score | at least 80% | 131 questions (margin about ±7): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
 | Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
 | Misconceptions of [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
 | Held-out set (30) | at most 11 points below the development set | One-sided 95% for 150 against 30 questions at about 87%: a larger drop means the knowledge base or retrieval is fitted to the visible questions |
@@ -345,6 +346,7 @@ For the set:
 10. Is every misconception type covered at least 5 times?
 
 ## 12. Status
+- 2026-11-13: 196 questions run (Level 100 8, 200 17, 300 40, 400 131; 119 multiple choice, 77 judged; 6 with a screenshot, 35 with a table); none deferred. The two lines below are the state of 2026-11-12.
 - 2026-11-12: 150 questions run, at the allocation of section 3 (`python3 project/tools/coverage.py`; tasks within 2 of target: decide-capacity 31, explain-mechanism 24). Plus 5 deferred screenshot questions; 12 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Origin: 35 by the author (17 quiz, 10 book, 8 from the author's samples of 2026-11-12), 2 real exchanges, 113 synthetic. 35 carry a CSV; 1 a screenshot.
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
@@ -352,7 +354,7 @@ For the set:
 
 ## 13. Screenshot questions (after 1.0)
 - Purpose: administrators upload screenshots and ask the agent to explain the problem, often several at once, from different tools.
-- 1.0 has one (the author's L4-03). The screenshot set after 1.0 starts from the 5 deferred questions (`status: deferred`), with images the author already supplied, and grows to about 25 (5 per source: esxtop, vCenter, VCF Operations).
+- 1.0 has six (the author's L4-03 and the five reactivated on 2026-11-13, no longer deferred). The screenshot set after 1.0 grows to about 25 (5 per source: esxtop, vCenter, VCF Operations).
 - Reading screenshots stays a basic requirement: a model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)).
 - A screenshot question carries all its images in `attachments`; every image is sent with the same prompt. The prompt states the problem in words; the images supply the values. Images are masked (host and customer names) before commit.
 
@@ -385,14 +387,14 @@ For the set:
 
 - Judge rules (in its prompt): judge facts, not style or length; a contradiction of a key point caps the score at 0; the key points are the truth even where general IT practice differs; reward nothing the key points do not contain.
 - Reply: one JSON object (`score`, `misconception`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
-- Each run of a question is judged separately. The question credit is the lowest score / 3 (section 7.4).
+- Each run of a question is judged separately. The question credit is the mean score over the runs / 3 (section 7.4).
 - Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 6.
 - Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `misconception`, `unsure`, and the answer text.
 - Checks on the judge:
   - the author reviews every score 0 and every question where runs disagree by 2 or more points;
   - an author score overrides the judge: correct the key points, then re-score;
   - a key point the judge misreads is rewritten as one testable fact per bullet.
-- Cost: one judge call per judged answer, about 1,500 input tokens (more with a table).
+- Cost: one judge call per judged answer, about 1,800 input tokens (more with a table; `JUDGE_TOKENS` in benchmark/runner/preflight.py).
 
 ## 15. Target history
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.

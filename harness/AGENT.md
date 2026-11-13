@@ -7,7 +7,7 @@ Why Agent E2 can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [ARC
 - The agent is the model plus the tool loop, in agentic mode only. It is not a separate program.
 - The model makes the decisions: which tool next, with which query, which file to read, when to stop and answer.
 - The harness hosts the loop and constrains it: it runs the tools, enforces the rules and the budgets, and checks the answer.
-- Code: `harness/agent.py` (the loop, the tools, the rules), `harness/primer.py` (the up-front blocks), prompts `SYSTEM_AGENT` and `PROMPTS` in `harness/modes.py`. The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `capacity.py`, `flows.py`); the verifier in `verify.py`.
+- Code: [`harness/agent.py`](agent.py) (the loop, the tools, the rules), [`harness/primer.py`](primer.py) (the up-front blocks), prompts `SYSTEM_AGENT` and `PROMPTS` in [`harness/modes.py`](modes.py). The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `capacity.py`, `flows.py`); the verifier in `verify.py`.
 - The model is frozen. What we change is what the agent is told, which tools it has, and the rules around them.
 
 ## 2. Why an agent
@@ -41,13 +41,13 @@ A model that knows nothing about the knowledge base can still reach the right fi
 | Order of checks | Numbered steps in the health-check, troubleshooting and decision-tree files | `flow` tool |
 
 ### Five up-front blocks (built 2026-11-06; on in the final round of 2026-11-13)
-Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by `harness/primer.py`, so it cannot drift, and each has its own switch in `benchmark/runner/config.yaml`, key `agent_primer`. All five are on in the final round (2026-11-13, with the term map in the agent prompt), so the agentic run is the full team; their gain one at a time is not measured yet (section 7). When one is on, the trace records a `primer` step.
+Each is small (all five: 3,000 tokens, exactly the budget checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by [`harness/primer.py`](primer.py), so it cannot drift, and each has its own switch in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml), key `agent_primer`. All five are on in the final round (2026-11-13, with the term map in the agent prompt), so the agentic run is the full team; their gain one at a time is not measured yet (section 7). When one is on, the trace records a `primer` step.
 
 | # | Block | Content | Built from |
 |---|---|---|---|
 | 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids and `retriever_guide` |
-| 2 | Level 300 misconceptions (`knowledge/misconceptions.md`) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | `knowledge/misconceptions.md`, the lines under its first heading |
-| 3 | Confusable terms | 17 pairs that pass the tests of `project/knowledge-rules/terminology.md`: Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; KPI, SLA, SLI and model; alert and insight | `knowledge/glossary.md`, lines Not to confuse with |
+| 2 | Level 300 misconceptions ([`knowledge/misconceptions.md`](../knowledge/misconceptions.md)) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | [`knowledge/misconceptions.md`](../knowledge/misconceptions.md), the lines under its first heading |
+| 3 | Confusable terms | 17 pairs that pass the tests of [`project/knowledge-rules/terminology.md`](../project/knowledge-rules/terminology.md): Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; KPI, SLA, SLI and model; alert and insight | [`knowledge/glossary.md`](../knowledge/glossary.md), lines Not to confuse with |
 | 4 | Flow index by kind | One line per flow file: its name and id, grouped as health check (object), troubleshooting (symptom), decision tree (question) | `retriever_guide` of each file |
 | 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |
 
@@ -109,7 +109,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 - Code split done 2026-11-06: the loop moved from `modes.py` to `agent.py`.
 
 ## 8. Budgets and the tool-call limit
-- The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of 15,000 answers. It is not a design value. No knowledge-base need sets it at 8.
+- The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of the 10,780 answers of the final round. It is not a design value. No knowledge-base need sets it at 8.
 - Run results (benchmark 2026-11-12, agentic mode, multiple-choice questions, exact answers by number of calls):
 
 | Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
@@ -154,10 +154,10 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 ## 9. Why classic mode stays
 - Classic mode costs a third of the benchmark. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is the better mode for some models today. Benchmark 2026-11-12: classic beat agentic for gemma (67% against 54%) and muse (64% against 56%); agentic beat classic for qwen3.8-27b (51% against 39%). The mode is chosen per model by the decision rule in `benchmark/design.md`.
+  2. It is the better mode for some models today. Benchmark 2026-11-12: classic beat agentic for gemma (67% against 54%) and muse (64% against 56%); agentic beat classic for qwen3.8-27b (51% against 39%). The mode is chosen per model by the decision rule in [`benchmark/design.md`](../benchmark/design.md).
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
-- After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
+- After the full run of the 196 questions picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
 - Built and measured 2026-11-13: agentic mode that starts from the classic context (section 3, primed start). The model stopped using tools and scored below classic; off (section 6).
 
 ## 10. Walkthrough of one question
@@ -188,7 +188,7 @@ sequenceDiagram
 
 1. The harness sends the question with the rules: knowledge base first, and it wins on conflict; search or catalog first; check same-name metrics; use the catalog for units and levels, the calculator for arithmetic, the flow tool for troubleshooting.
 2. The model searches. The harness runs hybrid search (keyword BM25 plus a local embedding model, fused by rank) and returns ids and snippets, not answers.
-3. The model asks the catalog for the counter. The harness answers from SQLite built from `knowledge/catalog/`: rollup Summation, statistics level 1, the knowledge file, and the thresholds with their source.
+3. The model asks the catalog for the counter. The harness answers from SQLite built from [`knowledge/catalog/`](../knowledge/catalog): rollup Summation, statistics level 1, the knowledge file, and the thresholds with their source.
 4. The model asks for the conversion. The calculator returns 10% (8,000 ms ÷ (20 s × 1,000 ms × 4 vCPUs)) and names the rule's source file. The model never does the arithmetic itself.
 5. The model answers. The verifier checks the reply; a hard issue (no ANSWER line, a letter that is not an option, Unsure mixed with other letters) gets one repair turn.
 6. The answer goes out with the files it used.

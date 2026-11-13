@@ -8,4 +8,4 @@ How this repository is built and kept correct. Not indexed. The model reads `kno
 - `terms.md`: one English word per concept for the repository's own parts.
 - `tools/`: lint, link and renumber scripts; allowed tag values (`tags.yaml`).
 - `archive/`: records no longer maintained: earlier reviews and designs, the old to-do list, legacy files.
-- Design, architecture and knowledge rules: the root documents listed in `README.md`, section Documents.
+- Design, architecture and knowledge rules: the root documents listed in [`README.md`](../README.md), section Documents.

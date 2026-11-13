@@ -14,7 +14,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 | Can be updated offline | A new knowledge bundle is imported and served without a network |
 
 ## 2. When
-- After the 100 questions and the knowledge base are complete, and one gateway benchmark has picked the leading model and mode.
+- After the full run of the 196 questions, and one gateway benchmark has picked the leading model and mode.
 - Again before every release: the release score is the live-test score (`models.md`, section 2).
 
 ## 3. Setup
@@ -32,7 +32,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 ## 4. Code changes needed first
 | Change | Why |
 |---|---|
-| Runner `--local <url>`: point `harness/llm.py` at the local server; no API key required | Today the client requires `AI_GATEWAY_API_KEY` |
+| Runner `--local <url>`: point [`harness/llm.py`](../harness/llm.py) at the local server; no API key required | Today the client requires `AI_GATEWAY_API_KEY` |
 | Vision and context checks from config, not from the gateway model list | The runner reads the `vision` tag and context window from the gateway; a local server has no tags |
 | Judge later: save judged answers offline, score them with the judge after the VM is back online | The judge is a frontier model; it is not on the offline VM |
 | Timings per model turn in `answers.csv` (time to first token, tokens per second) | Speed on the target GPU is a result of this test |

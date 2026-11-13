@@ -102,6 +102,17 @@ Each entry has:
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
+### Q197 · Repository consistency · Pillar list and the troubleshooting check order
+
+- Files: [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (`pillar`); [project/vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/vocabulary.md) (Pillar); [REPOSITORY-MAP.md](https://github.com/e1-rahabok/agent-e2/blob/main/REPOSITORY-MAP.md) (health check); [project/knowledge-rules/flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md) (Order); [project/templates/troubleshooting.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/troubleshooting.md) (checks).
+- Search 1: "every pillar in order: availability, performance, security, capacity"
+- Search 2: "Contention metrics first, then configuration (always, author Q104)"
+- Question:
+  - (a) Pillars. The `pillar` tag allows availability, performance, compliance, capacity, value (Q091, applied 2026-11-08). vocabulary.md says availability, performance, security, capacity, value. The health check order (REPOSITORY-MAP.md, flows.md, Q104) uses availability, performance, security, capacity. Is security a pillar (A: add it to the tag), is compliance (B: fix vocabulary.md and the health check order), or are the tag pillars and the health check steps two different lists (C: say so in vocabulary.md)?
+  - (b) Order of the checks in a performance troubleshooting flow. flows.md: contention, consumption, configuration, known bug, log. The troubleshooting template: contention, configuration, consumption, context. Which one?
+- Written as now: unchanged. ARCHITECTURE.md now points to flows.md instead of restating the order.
+- Answer:
+
 ### Q196 · Mission · What result proves that Agent E2 works?
 
 - Files: [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md) (section 1); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 1 and 7.5); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate).
@@ -250,7 +261,7 @@ Each entry has:
 - Written as now: the rule is in writing.md and the review checks it. `check_titles` is still in lint.py but is not called since 2026-11-10. Run by hand on 2026-11-12, after the title and heading pass: 0 problems.
 - Final answer (2026-11-12; expert call):
   - Call `check_titles` again, and add the question openers (How, Why, What, When, Where, Which, Who) for `##` and `###` headings; decision tree titles stay questions.
-  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: `harness/kb.py` puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
+  - Reason: the 2026-11-10 cut kept what a machine reads. The title and heading are machine input: [harness/kb.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/kb.py) puts both in front of every chunk. Commands, claims and slogans stay with the review: no pattern finds them.
   - Change if accepted: lint.py (one call, one pattern); writing.md (the review checks the rest).
   - For you: nothing.
 - Answer: accepted (2026-11-12).

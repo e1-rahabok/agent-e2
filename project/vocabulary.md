@@ -1,6 +1,6 @@
 # Writing vocabulary
 
-How the knowledge files are written: the dimensions not to mix, and the words to avoid when writing. For writers and lint, not for Agent E2; not indexed. The agent's vocabulary (one entry per term: meaning, other names, the term it is confused with) is `knowledge/glossary.md`. Repository terms: `project/terms.md`.
+How the knowledge files are written: the dimensions not to mix, and the words to avoid when writing. For writers and lint, not for Agent E2; not indexed. The agent's vocabulary (one entry per term: meaning, other names, the term it is confused with) is [`knowledge/glossary.md`](../knowledge/glossary.md). Repository terms: [`project/terms.md`](terms.md).
 
 ## Dimensions (do not mix)
 - Object type: a kind of managed object (VirtualMachine, HostSystem). Not a component inside an object (vCPU, vmnic).
@@ -13,12 +13,12 @@ How the knowledge files are written: the dimensions not to mix, and the words to
 - Pillar: availability, performance, security, capacity, value. Not a technology.
 - Metric class: contention, consumption, context. Not a pillar.
 - Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
-- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One concept, two homes: `## Misconceptions` in the file, and the widest-reaching ones up front in `knowledge/misconceptions.md`. `KNOWLEDGE-ENGINEERING.md`, section 4.
+- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One concept, two homes: `## Misconceptions` in the file, and the widest-reaching ones up front in [`knowledge/misconceptions.md`](../knowledge/misconceptions.md). [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md), section 4.
 - Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
 - Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.
 
 ## Words to avoid
-When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in `knowledge/glossary.md` too, so search maps it.
+When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in [`knowledge/glossary.md`](../knowledge/glossary.md) too, so search maps it.
 
 | Avoid | Use instead | Why |
 |---|---|---|
@@ -47,5 +47,5 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | verification (of an object's state) | health check | A third word for the same thing. |
 | KPI (for capacity, risk, availability) | model | KPI is strictly performance: the P in KPI. Capacity, risk, availability and security are models. |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
-| a sentence or question as a title or heading ("How each sub-metric is calculated", "Why this order") | a noun phrase that names the topic ("Sub-metric formulas", "Order rationale") | Sentence headings are a habit of generated text. The title and heading go in front of every chunk, and question words name no topic (2026-11-12). Rule: `project/knowledge-rules/writing.md`. |
+| a sentence or question as a title or heading ("How each sub-metric is calculated", "Why this order") | a noun phrase that names the topic ("Sub-metric formulas", "Order rationale") | Sentence headings are a habit of generated text. The title and heading go in front of every chunk, and question words name no topic (2026-11-12). Rule: [`project/knowledge-rules/writing.md`](knowledge-rules/writing.md). |
 | guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Keep the vendor term once in parentheses for retrieval. |

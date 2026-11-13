@@ -1,6 +1,7 @@
 """Tests for the harness tools. Run: python3 -m unittest harness/test_tools.py (from the repository root)."""
 import os
 import sys
+import json
 import unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -292,6 +293,30 @@ class ModesTest(unittest.TestCase):
         self.assertTrue(seed)
         self.assertEqual(used, seed)            # the seed counts as read; no tool call, no same-name reminder
         self.assertNotIn('reminder', [s['action'] for s in trace])
+
+    def test_first_read_of_a_file_named_up_front_is_not_refused(self):
+        ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
+
+        class Reader(MockClient):
+            n = 0
+
+            def chat(self, model, messages, tools=None, **kw):
+                Reader.n += 1
+                if Reader.n == 1:
+                    return {'content': '', 'tool_calls': [{'id': 't1', 'function': {'name': 'read_file', 'arguments': json.dumps({'id': ready})}}],
+                            'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+                return {'content': 'ANSWER: A\nREASON: x', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+        ret = Retriever(DOCS, CHUNKS)
+        cfg = dict(self.CFG, agent_primer={'flows': True, 'procedure': True})
+        import agent
+        orig = agent.primer.build
+        agent.primer.build = lambda docs, sw: f'Flow index: {ready}'   # an up-front block that names the file
+        try:
+            res, used, trace, fb = modes.answer('agentic', Reader(), 'mock', VerifyTest.Q, [], cfg, ret)
+        finally:
+            agent.primer.build = orig
+        self.assertNotIn('refused', [s['action'] for s in trace])
+        self.assertIn(ready, used)
 
     def test_primed_start_refuses_rereading_a_seed_file(self):
         import agent

@@ -219,7 +219,9 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     msgs = [{'role': 'system', 'content': system}, _user(text, images)]
     # A seed file counts as read; the last one may be cut at the budget, so read_file stays open for it.
     state = {'read': list(seed_ids), 'seed_full': set(seed_ids[:-1]), 'same_name_checked': set(), 'searched': bool(seed),
-             'question': question, 'web': wcfg}
+             'question': question, 'web': wcfg,
+             # Ids the system prompt names (up-front blocks, term notes): opening one counts as the first lookup, not a guess.
+             'offered': {i for i in retriever.docs if i in system}}
     seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
     po = cfg.get('provider_order', {}).get(model)
     while True:
@@ -262,7 +264,7 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
                     raise FallbackNeeded('tool call format errors')
             else:
                 key = name + json.dumps(args, sort_keys=True)
-                if not state['searched'] and name not in ('search', 'catalog'):
+                if not state['searched'] and name not in ('search', 'catalog') and args.get('id') not in state['offered']:
                     out = json.dumps({'error': 'Your first action must be search or catalog.'})
                     _step(trace, 'refused', {name: args}, 'search first', r)
                 elif key in seen:
@@ -270,6 +272,8 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
                     _step(trace, 'refused', {name: args}, 'repeat', r)
                 else:
                     seen.add(key)
+                    if args.get('id') in state['offered']:
+                        state['searched'] = True
                     out = _run_tool(retriever, name, args, state)
                     _step(trace, name, args, _summary(name, out), r)
             tokens_used += _tok(out)
