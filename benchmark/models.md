@@ -124,9 +124,9 @@ Preferred, not required:
 ## 4. Candidates
 | Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
-| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Classic 67%, agentic 54% (benchmark 2026-11-12, 150 questions) |
-| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Added 2026-11-04 |
-| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Added 2026-11-05 |
+| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Baseline 57%, classic 78%, agentic 76% (final round 2026-11-13, 196 questions, 5 runs) |
+| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Baseline 41%, classic 69%, agentic 63%; reasoning off (final round 2026-11-13) |
+| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Baseline 54%, classic 77%, agentic 78%; reasoning off (final round 2026-11-13) |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
 - Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
