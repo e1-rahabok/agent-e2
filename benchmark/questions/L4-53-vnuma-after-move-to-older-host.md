@@ -40,5 +40,5 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
 misconception_type: [threshold-transplanted]
-status: draft
+status: reviewed
 ```

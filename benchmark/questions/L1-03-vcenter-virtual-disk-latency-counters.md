@@ -31,9 +31,9 @@ C or D: taking the rate (KBps) for latency.
 - Read rate and Write rate are in kilobytes per second: throughput, not latency.
 
 ## Notes
-- Deferred 2026-11-12: screenshot question, kept for the screenshot set after 1.0 (benchmark/design.md, section 13).
 - Previous id: question-0034 (renamed 2026-11-05).
-- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). 
+
 ## Metadata
 ```yaml
 id: "0034"
@@ -53,5 +53,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A, B]
 misconception: [C]
-status: deferred
+status: reviewed
 ```

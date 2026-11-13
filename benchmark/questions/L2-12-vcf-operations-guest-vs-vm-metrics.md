@@ -1,9 +1,9 @@
 # Guest OS metrics in the VM metric tree
 
 ## Prompt
-[The attached screenshot](0051/vcf-operations-vm-guest-and-cpu-metrics.png) is the VCF Operations Metrics tab of a Windows VM, with the Guest and CPU groups expanded.
+Review the following [The attached screenshot](0051/vcf-operations-vm-guest-and-cpu-metrics.png).
 
-Which of these metrics are Guest OS metrics, not VM metrics? Choose all that apply.
+Which of these metrics are Microsoft Windows or Linux metrics, not VMware VM metrics? Choose all that apply.
 
 - A. Guest | CPU Queue
 - B. CPU | Ready
@@ -31,8 +31,6 @@ Taking every metric on the VM object as a VM metric.
 - Decide by the layer that produces a metric, not by the object that stores it.
 
 ## Notes
-- Deferred 2026-11-12: screenshot question, kept for the screenshot set after 1.0 (benchmark/design.md, section 13).
-- Previous id: question-0051 (renamed 2026-11-05).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml
@@ -53,5 +51,5 @@ origin: synthetic
 source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
 answer: [A, C]
 misconception: [B]
-status: deferred
+status: reviewed
 ```
