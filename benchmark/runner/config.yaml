@@ -93,7 +93,7 @@ release:                      # the final round: benchmark/RUN.md. One run folde
     - {model: google/gemma-4-31b-it, modes: [baseline, classic, agentic]}
     - {model: alibaba/qwen3.8-27b, modes: [baseline, classic, agentic]}
     - {model: meta/muse-glimmer-30b, modes: [baseline, classic, agentic]}
-    - {model: anthropic/claude-opus-5.5, modes: [baseline, web]}    # frontier reference: the prompt alone, and with open web search (design.md, section 7.5)
+    - {model: anthropic/claude-opus-5.5, modes: [baseline, web]}    # frontier reference: web (search available, the model decides); baseline shows what search adds (design.md, section 8)
   reference: anthropic/claude-opus-5.5
   max_cost_usd: 150           # preflight refuses the round when the projected cost (with the safety factor) is above this
   cost_safety: 1.3            # the sample is small: projected cost x this factor must fit the credits and max_cost_usd
