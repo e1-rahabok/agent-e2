@@ -103,7 +103,7 @@ def reading(fin, rows, info, ref):
         elif d is not None:
             line += f' Agentic and classic are within the margin of each other ({_pts(d)} points).'
         out.append(line)
-    if (ref[0], 'web') in fin and ref in fin:
+    if (ref[0], 'baseline') in fin and (ref[0], 'web') in fin:
         d, mg = _lift(fin, ref[0], 'baseline', 'web')
         out.append(f'{ref[0]}: open web search adds {_pts(d)} points over the prompt alone ({"outside" if abs(d) > mg else "inside"} the margin of {100 * mg:.0f} points).')
     if ref in fin:

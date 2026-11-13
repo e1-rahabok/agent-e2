@@ -32,12 +32,13 @@ Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 qu
 | `<date>-gemma-4-31b-it` | baseline, classic, agentic | 2,940 | default | 48 min | 9.65 |
 | `<date>-qwen3.8-27b` | baseline, classic, agentic | 2,940 | reasoning off | 33 min | 9.93 |
 | `<date>-muse-glimmer-30b` | baseline, classic, agentic | 2,940 | reasoning off | 54 min | 27.02 |
-| `<date>-claude-opus-5.5` | baseline, web | 1,960 | effort medium, 8,000 tokens | 116 min | 43.61 |
-| Total | | 10,780 | | 2 to 4 hours | about 90 (117 with the safety factor) |
+| `<date>-claude-opus-5.5` | web | 980 | effort medium, 8,000 tokens | about 70 min | about 27 |
+| Total | | 9,800 | | 1.5 to 3 hours | about 73 (95 with the safety factor) |
 
 - The four runs go in parallel, so the round takes as long as the slowest run (Opus). Its time is projected at its starting concurrency of 3; the runner raises it while the provider allows.
+- The Opus row is the preflight figure for two modes (1,960 answers, 116 min, US$ 43.61) scaled to `web` alone by the measured cost per answer of 2026-11-13 (web US$ 0.033, prompt-only US$ 0.021: web is 61% of the pair). The preflight gives the real number before the round starts.
 - Add about 3 minutes for the preflight (US$ 0.55) and 1 to 2 relaunches: one command lives 2 hours, the runner stops at 110 minutes.
-- Cost is dominated by Opus, Muse and the judge (about US$ 15 for the 4,235 judged answers: 77 judged questions x 5 runs x 11 model-modes). With the agent blocks on, an agentic answer sends 40,000 to 50,000 input tokens because each tool turn sends the blocks again.
+- Cost is dominated by Opus, Muse and the judge (about US$ 14 for the 3,850 judged answers: 77 judged questions x 5 runs x 10 model-modes). With the agent blocks on, an agentic answer sends 40,000 to 50,000 input tokens because each tool turn sends the blocks again.
 - Qwen with its default settings (thinking on) takes about 8 times as long (25-38 s per answer against 3-11 s) and is cut off at the token cap on most answers.
 - The projection is checked again before anything long starts. If it exceeds the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/config.yaml`](runner/config.yaml), the round does not start.
 
