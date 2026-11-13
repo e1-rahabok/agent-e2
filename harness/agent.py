@@ -197,8 +197,8 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
     if seed_tokens:
         system = _seeded_system(system)
         seed, seed_ids, hits = classic_context(retriever, question, cfg, budget=seed_tokens)
-        _step(trace, 'search', question[:200], [h['id'] for h in hits])
-        _step(trace, 'context', '', seed_ids)
+        _step(trace, 'seed_search', question[:200], [h['id'] for h in hits])  # not tool calls: not counted as steps
+        _step(trace, 'seed', '', seed_ids)
     up_front = primer.build(retriever.docs, cfg.get('agent_primer') or {})
     if up_front:
         system += '\n\n' + up_front

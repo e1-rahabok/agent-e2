@@ -75,7 +75,7 @@ web:                          # public web knowledge (harness/web.py; MISSION.md
   search_results: 5
   search_fetch: 2             # result pages read in classic mode
 agent_max_calls: 8            # tool calls per question
-agent_seed_tokens: 10000      # primed start: the classic lookup, fitted to this many tokens, is the agent's first context (harness/AGENT.md section 3). 0 = cold start (search first)
+agent_seed_tokens: 0          # primed start: the classic lookup, fitted to this many tokens, is the agent's first context (harness/AGENT.md section 3). 0 = cold start (search first). Off: sample of 2026-11-13, the primed agent stopped calling tools and scored below classic
 agent_tool_tokens: 12000      # tool output budget per question
 context_window: 32000         # the deployed model's window (MISSION.md, section 5); the agent stops calling tools before the prompt outgrows it
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model

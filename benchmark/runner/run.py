@@ -231,7 +231,7 @@ def main():
             row['retrieval_recall'] = round(len(set(used) & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode != 'baseline') else ''
             # retrieval_recall: needed files whose text reached the model. search_recall: needed files the model was shown
             # at all, as a search result or in its context: a gap between the two is a file found but not read.
-            seen = set(used) | {i for s in trace if s['action'] in ('search', 'context') and isinstance(s['output'], list) for i in s['output']}
+            seen = set(used) | {i for s in trace if s['action'] in ('search', 'context', 'seed_search', 'seed') and isinstance(s['output'], list) for i in s['output']}
             row['search_recall'] = round(len(seen & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode not in ('baseline', 'web')) else ''
             row['cost_usd'] = _cost(meta.get(m, {}), row['prompt_tokens'], row['completion_tokens'])
             row['error'] = ''

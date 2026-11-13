@@ -288,7 +288,7 @@ class ModesTest(unittest.TestCase):
         self.assertIn('first lookup', system)
         self.assertNotIn('Your first action must be search', system)
         self.assertTrue(user.startswith('Knowledge base (first lookup):'))
-        seed = next(s['output'] for s in trace if s['action'] == 'context')
+        seed = next(s['output'] for s in trace if s['action'] == 'seed')
         self.assertTrue(seed)
         self.assertEqual(used, seed)            # the seed counts as read; no tool call, no same-name reminder
         self.assertNotIn('reminder', [s['action'] for s in trace])
