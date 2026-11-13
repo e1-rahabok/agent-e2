@@ -48,9 +48,11 @@
 
 ## Example: limit, swap and compress in opposite directions
 - 64 GB VM. Swapped plus compressed peaked at 20 GB over 7 days.
-- Consumed was flat for 7 days: a limit. The small gap above the limit is VM overhead.
-- Granted hovered above Consumed.
-- The guest kept using pages: some were swapped in; others were compressed or swapped to make room. So Swapped and Compressed moved in opposite directions.
+- Consumed was flat for 7 days, just under the effective limit: a limit. The effective limit includes the VM's overhead, so Consumed stays a little below it.
+- Granted hovered above Consumed and above the effective limit: Granted ignores the limit.
+- The guest kept using pages: some were swapped in; others were compressed or swapped to make room under the limit. So Swapped fell while Compressed rose: they moved in opposite directions.
+- Each swap-in is a wait for the vCPU that touched the page, so VM memory contention rose at those moments. That is the slowness the application sees.
+- The host had free memory: the cause is the VM's limit, not the host. Fix: remove the limit or raise it to what the guest needs. More memory for the host or the VM changes nothing while the limit stays.
 ![Limit: Consumed flat, swapped and compressed move in opposite directions](../images/vm-memory-limit-swapped-and-compressed-move-opposite.png)
 
 ## Compression, host cache and swap: triggers and cost
@@ -64,6 +66,7 @@
 - "Swapped = Swap in - Swap out" → in and out run in parallel on different pages.
 - "Swap out means contention" → only swap in is contention.
 - "Swapped 0 means no reclamation" → pages may all be compressed.
+- "The VM swaps, so the host is short of memory" → with free host memory and no other VM reclaimed, the cause is a limit on the VM or its pool: Consumed flat just under the effective limit.
 
 - "Host-level swapping and guest OS swapping are the same" → they are distinct. Host-level swapping is transparent to the guest.
 - "Memory compression is as costly as swapping" → decompression latency is much smaller than swap-in latency.
@@ -106,6 +109,7 @@ source:
   path: Memory > VM > Swap + Compress; Transition; Example; Quiz
 corrections: []
 review_notes:
+- 'To check: Section ''Example: limit, swap and compress in opposite directions'': the effective limit includes the VM overhead (Consumed just under it; Granted above it), read from the chart of this example; check against the VCF Operations 9.1 metric definition of Memory|Effective limit, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1.html.'
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''Swap instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
 - 'Section ''Mechanism'': the book''s sentence on why there is no 3:1 compression is incomplete. Left out.'

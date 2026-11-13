@@ -13,6 +13,14 @@
 - vCenter stores `clusterServices.failover` on the cluster (level 1, rollup latest). Its counter summary: vSphere HA number of failures that can be tolerated. Low priority. Misconception: when the hosts of the cluster are not identical, failures to tolerate counted in hosts does not equal capacity lost: losing the largest host costs more.
 - With DPM, capacity of hosts in standby counts as available; DRS recommends powering them on when a VM cannot be admitted without them.
 
+## HA performance degradation threshold
+- HA admission control checks reservations, so VMs without reservations can fill the cluster past what the hosts left after a failure can run. The VM resource reduction threshold (UI label: Performance degradation VMs tolerate) is the HA setting that compares usage with that capacity.
+- The threshold only raises a configuration warning. It does not block power-ons, migrations or reservation changes; that stays the job of the admission control policy.
+- Default 100%: no warning, because any degradation is tolerated. 0%: a warning as soon as the current cluster usage exceeds the capacity left after the failover capacity is removed.
+- Between the two, the tolerated reduction is current usage × the threshold. A threshold of 20% warns when current usage minus 20% of it exceeds the capacity left after a failure.
+- Worked case: 4 identical hosts at 80% CPU usage carry 3.2 hosts of load. After one host fails, 3 hosts would run at about 107%: the VMs restart, then contend. At 0% the cluster warns; at 100% it is silent.
+- The threshold needs vSphere DRS turned on. With DRS off the setting is not available, and only the reservation-based policy remains.
+
 ## Fixed vs expandable reservation (resource pools)
 | Type | Admission check |
 |---|---|
@@ -55,6 +63,9 @@
 - "Yellow cluster means VMs are starving" → running VMs still have their reservations; resource pool reservations cannot all be met.
 - "Add a host to fix a red cluster" → red is an inconsistency in the tree; fix the reservations.
 - "Expandable pools isolate departments" → only Fixed pools isolate.
+- "HA admission control keeps enough failover capacity for the running VMs" → it counts reservations only; usage after a failure is checked by the performance degradation threshold, which is off (100%) by default.
+- "The HA performance degradation warning stops new VMs from powering on" → it is a configuration warning only.
+- "With a failover percentage kept, the configured memory of all VMs must fit in the rest" → the percentage policy sums reservations plus overhead only; unreserved VMs pass whatever their size or usage, and fully reserved VMs (vGPU, passthrough) count in full.
 
 ## Metadata
 ```yaml
@@ -90,5 +101,6 @@ review_notes:
 - 'To check: Section ''Admission control'': the example (losing the largest host costs more).'
 - 'Section ''Admission control'': the failover counter, level and summary from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
+- 'Section ''HA performance degradation threshold'': default, 0% behaviour, reduction formula and DRS requirement from vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html; check the UI label in vSphere Client 9.1.'
 status: draft
 ```

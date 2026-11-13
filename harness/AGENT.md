@@ -75,6 +75,8 @@ Each is small (all five: 3,000 tokens, exactly the budget checked by lint), need
 | Look up before answering | Primed start: the first lookup is done before the model starts. Cold start: the first call must be `search` or `catalog`; any other tool is refused | Answers from memory are the main failure |
 | No repeats | An identical call is refused | Small models search in circles |
 | Same-name check | Before the answer, a reminder to call `follow_links(same_name)` on each metric file read | Same label, different object, is the commonest misconception |
+| Read reminder (`agent_read_reminder`, new 2026-11-13) | In the same one reminder: the top 3 hits of its searches that the agent did not read, at most 3 files, best rank first | Found but not read: Muse scored 74% when a needed file was found and not read, 82% otherwise. Within the same question the gap is +5 points for Muse and about 0 for Gemma and Qwen, so the expected gain is small; it is the one agentic change of the next round, kept only if it scores |
+| Consensus (`consensus_samples`, classic and agentic) | Up to n samples; unanimous letters stand, else Unsure | Confident-wrong is the gate the models miss most. Design and numbers: [README.md](README.md), section 6a |
 | Budget | At most `agent_max_calls` (8) tool calls and `agent_tool_tokens` (12K) of tool output; then "answer now" | Context window and time; benchmark cost |
 | Context window | Before each model turn, the prompt estimate plus the answer budget must fit `context_window` (32K); otherwise no more tools, answer now (trace step `context_full`) | The deployed model's window, not the gateway's |
 | Format | Two malformed tool calls: fall back to classic mode | A broken loop must still answer |

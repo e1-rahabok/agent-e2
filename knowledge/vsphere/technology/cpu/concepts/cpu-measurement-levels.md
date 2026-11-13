@@ -60,6 +60,8 @@
 - ESXi CPU total capacity = base frequency × cores. No Turbo, no Hyper-Threading.
 - Conservative: suits mission-critical clusters. Other workloads can be packed more.
 - Sum of VM CPU Usage can exceed ESXi total capacity: total capacity is nominal.
+- vSphere's GHz total is a throughput reference, not capacity in the sense of space: two hosts with the same GHz total can hold different numbers of vCPUs. Capacity is counted in physical threads (section CPU capacity: Rules).
+- A GHz figure with Turbo or a Hyper-Threading factor is still throughput. It changes with load and power policy; the thread count of a host does not.
 
 ## CPU capacity: Example
 ![ESXi 1: 20 cores at 1 GHz; ESXi 2: 10 cores at 2 GHz](../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png)
@@ -91,6 +93,8 @@
 - "Use Usage or Demand for capacity" → they include frequency. Capacity uses static counters (Run, Utilization).
 - "Usage (%) near 100% means no headroom" → nominal speed is not the upper limit. Check contention counters.
 - "Faster CPU = more capacity" → more speed, not more space.
+- "Host CPU capacity = cores × GHz, with or without Turbo and Hyper-Threading" → that is throughput. Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock speed.
+- "Host CPU capacity depends on Turbo and the power policy" → those change throughput. The thread count is fixed by the hardware and the Hyper-Threading setting.
 - "Sum of VM Usage above total capacity is impossible" → total is nominal; Turbo exceeds it.
 
 ## Metadata

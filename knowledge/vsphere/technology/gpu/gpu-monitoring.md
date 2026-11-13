@@ -45,6 +45,9 @@
   - its memory is never ballooned, compressed or swapped;
   - it counts in full against host, resource pool and HA admission control;
   - it is excluded from memory tiering and stays in DRAM.
+- Unlike an ordinary memory reservation, which is backed only as the guest touches pages, the whole memory of a passthrough or vGPU VM is allocated at power-on: the device reads and writes guest memory directly (DMA), so every page must stay backed and in place. The host sees it as Consumed from power-on, whatever the guest uses.
+- Effect on the other VMs of the host and cluster: the reserved memory leaves the reclaimable pool. The unreserved VMs share only what is left, so their overcommit ratio rises, and every later shortage (their growth, a host failure, maintenance mode) is reclaimed from them alone.
+- HA admission control (cluster resource percentage) sees the vGPU VMs' reservations, which fit as long as all reservations stay below the capacity minus the failover percentage. The unreserved VMs count only their overhead, so admission control stays green while the hosts left after a failure cannot hold the unreserved VMs' Consumed memory. Check memory after a failure as the remaining capacity minus all reservations, against the unreserved VMs' Consumed ([`vsphere/object-types/cluster/concepts/admission-control-and-cluster-state`](../../object-types/cluster/concepts/admission-control-and-cluster-state.md)).
 - A VM can have up to 16 vGPU devices (virtual hardware version 21).
 
 ## vGPU capacity
@@ -82,6 +85,8 @@
 - "DirectPath Profiles charts cover DirectPath I/O passthrough" → DirectPath Profiles count vGPU profile instances.
 - "`gpu.mem.used` is at or below reserved on every release" → true on vSphere 9.0 and 9.1, not on 8.x.
 - "Balloon the vGPU VM to free host memory" → vGPU VMs are fully reserved; nothing is reclaimed.
+- "Host Consumed leaves enough free memory for the new vGPU VMs, and admission control agrees, so the cluster has room" → the vGPU VMs fit today, but their reservations shrink what the unreserved VMs can use; admission control does not see the unreserved VMs' usage, so check their room in normal operation and after a host failure.
+- "Fully reserved vGPU VMs larger than the HA failover percentage fail admission control" → with the percentage policy the reservations are compared with the capacity left after the failover percentage, not with the failover percentage itself.
 
 ## Metadata
 ```yaml
@@ -119,6 +124,7 @@ review_notes:
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'To check: Section ''Reading the counters'': thermal throttling as a clock reduction, and vGPU time slicing as the quality-of-service mechanism; the documentation says only that overheating can cause throttling and reduced performance, and points to the GPU vendor for QoS.'
 - 'To check: Section ''Placement and migration'': breadth-first placement fragments GPU capacity (inferred from the documentation''s remedies: same profile, GPU consolidation, manual migration to open up unused physical GPU capacity), and the pause during GPU state copy (not in the documentation).'
+- 'To check: Section ''vGPU and host memory'': memory of a passthrough or vGPU VM allocated at power-on (not backed on demand like an ordinary reservation), against vSphere 9.1 Resource Management, PCI passthrough memory reservation, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html.'
 - 'Section ''vGPU and host memory'': exclusion from memory tiering follows from the documentation listing PCI Passthrough VMs as DRAM-only.'
 status: draft
 ```

@@ -53,6 +53,15 @@
   - `MinPoweredOnCpuCapacity`: default 1 MHz.
   - `MinPoweredOnMemCapacity`: default 1 MB.
 
+## Power-on lag
+- Without predictions, DPM is reactive: it powers on a standby host only after the demand on the powered-on hosts has risen above its target range. The historical demand it considers sizes the spare capacity it keeps; it does not forecast a daily ramp.
+- A standby host takes minutes to return: power on through IPMI, iLO or Wake-on-LAN, boot ESXi, reconnect to vCenter, start the HA agent. DRS then needs further minutes of vMotion to move VMs onto it.
+- When the load ramps faster than hosts return, the VMs on the powered-on hosts contend (VM CPU Ready rises) until enough hosts carry load. The contention repeats every time the ramp repeats.
+- Signature of power-on lag: contention only while the number of powered-on hosts climbs, and normal VM CPU Ready once all hosts are on. A cluster that contends with all hosts powered on is short of capacity instead.
+- Adding hosts does not fix power-on lag: DPM puts the new hosts in standby during the quiet hours as well.
+- Ways to have the hosts on before a known ramp: a Scheduled Task that deactivates DPM before the ramp (this powers on all standby hosts) and activates it after; Predictive DRS with VCF Operations predictions; a higher `MinPoweredOnCpuCapacity`; a more conservative DPM Threshold; or no DPM on a cluster whose users cannot accept the lag.
+- After the change, check that VM CPU Ready stays low across the whole ramp window, not only in the hourly or daily average.
+
 ## Scheduling
 - Advanced option `DPMPowerOffInterval` (introduced in vSphere 7.0): minimum time DPM waits between calculations of whether hosts should go into standby.
 - Default: 30 minutes. Maximum: 12 hours. Configured independently for each cluster.
@@ -76,6 +85,8 @@
 ## Misconceptions
 - "DPM saves power with no effect on capacity" → DPM keeps excess capacity and HA capacity powered on. Fewer hosts go into standby than the raw load suggests.
 - "Scheduled DPM deactivation keeps standby hosts off" → deactivating DPM with Scheduled Tasks powers on all standby hosts.
+- "DPM learns the daily pattern and wakes hosts before the morning load" → only with Predictive DRS predictions; otherwise it powers on after demand has risen, and boot plus vMotion take minutes.
+- "VMs contend every morning in a DPM cluster, so buy more hosts" → check VM CPU Ready with all hosts powered on; if it is normal, the cause is power-on lag, and new hosts would also go into standby.
 
 ## Metadata
 ```yaml
@@ -105,6 +116,7 @@ source:
 corrections: []
 review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
+- 'To check: Section ''Power-on lag'': reactive power-on and the return sequence of a standby host (vSphere 9.1 Resource Management, Managing Power Resources, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html).'
 - 'To check: Predictive DRS and predictive DPM: the source requires VMware vRealize Operations 6.4 or later, an old product version; whether the feature still applies in vSphere 9.0 and VCF Operations.'
 status: draft
 ```

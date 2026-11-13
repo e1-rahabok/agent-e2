@@ -1,5 +1,6 @@
 """Aggregate answers.csv into report.md (one run folder)."""
 import csv
+import itertools
 import json
 import math
 import os
@@ -91,6 +92,52 @@ def final(rows):
     return out
 
 
+def consensus(rows, k=3, modes=('classic', 'agentic')):
+    """Per (model, mode): the scores the harness would get with consensus of k samples (cfg consensus_samples), projected
+    from the recorded runs. Multiple choice: every draw of k runs out of the recorded ones; unanimous letters stand,
+    anything else (disagreement, Unsure, unreadable) is Unsure: no credit, not confident wrong. Judged answers are kept
+    as recorded: consensus applies to letters only (harness/modes.py, _consensus).
+    The projection is the exact mean over all draws of the recorded runs, so it needs no new model call. It assumes the
+    samples of one question are independent, as the runs of one question are.
+    Returns {(model, mode): {final, confident_wrong, choice_confident_wrong, choice_unsure, k}}; questions with fewer
+    than k runs are left out.
+    """
+    g = defaultdict(lambda: defaultdict(list))
+    for r in rows:
+        if r['mode'] in modes:
+            g[(r['model'], r['mode'])][r['question_id']].append(r)
+    out = {}
+    for key, by_question in g.items():
+        credit, cw, n_ans, c_cw, c_un, c_n = [], 0.0, 0, 0.0, 0.0, 0
+        for crs in by_question.values():
+            if any(r['track'] == 'vision' for r in crs):
+                crs = [r for r in crs if r['track'] == 'vision']
+            if len(crs) < k:
+                continue
+            if not _choice(crs[0]):
+                credit.append(sum(_credit(r) for r in crs) / len(crs))
+                cw += sum(int(r.get('confident_wrong') or 0) for r in crs)
+                n_ans += len(crs)
+                continue
+            draws = list(itertools.combinations(crs, k))
+            ok = wrong = 0
+            for d in draws:
+                letters = {r['answer_letters'] for r in d}
+                if len(letters) == 1 and d[0]['answer_letters'] and not int(d[0].get('unsure') or 0):
+                    ok += int(d[0]['exact'])
+                    wrong += 1 - int(d[0]['exact'])
+            credit.append(ok / len(draws))
+            cw += wrong / len(draws) * len(crs)
+            n_ans += len(crs)
+            c_cw += wrong / len(draws)
+            c_un += 1 - (ok + wrong) / len(draws)
+            c_n += 1
+        if credit and c_n:
+            out[key] = {'final': sum(credit) / len(credit), 'confident_wrong': cw / n_ans, 'choice_confident_wrong': c_cw / c_n,
+                        'choice_unsure': c_un / c_n, 'k': k}
+    return out
+
+
 # Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 in agentic mode.
 # Not computed here: no misconception of knowledge/misconceptions.md stated as true (author check of each answer),
 # and the held-out set at most 11 points below the development set (a separate run).
@@ -135,6 +182,23 @@ def gate(fin, rows, model, mode='agentic', ref=REFERENCE):
         out += [('Gap to the frontier model', gap, 'outcome, not a gate', None),
                 (f'Paired test (b {b}, c {c})', p, f'significant if p below {ALPHA}', None)]
     return out
+
+
+def consensus_table(fin, proj):
+    """Report lines: recorded scores next to the consensus projection (report and results summary)."""
+    if not proj:
+        return []
+    k = next(iter(proj.values()))['k']
+    L = ['', f'## Consensus of {k}, projected', '',
+         f'What the shipped setting `consensus_samples: {k}` would give: multiple-choice letters stand only when {k} samples agree; '
+         'otherwise Unsure. Projected from the recorded runs, no new model call (`report.py`, function `consensus`). Judged answers unchanged.', '',
+         '| Model | Mode | Final | Final, consensus | Confident wrong | Confident wrong, consensus | Multiple choice: confident wrong, consensus | Multiple choice: Unsure, consensus |',
+         '|---|---|---|---|---|---|---|---|']
+    for key, p in sorted(proj.items()):
+        s = fin.get(key, {})
+        L.append(f'| {key[0]} | {key[1]} | {_pct(s.get("final", float("nan")))} | {_pct(p["final"])} | {_pct(s.get("confident_wrong", float("nan")))} | '
+                 f'{_pct(p["confident_wrong"])} | {_pct(p["choice_confident_wrong"])} | {_pct(p["choice_unsure"])} |')
+    return L
 
 
 def override(rows):
@@ -210,6 +274,8 @@ def write(run_dir):
     for (m, mode), s in sorted(fin.items(), key=lambda x: -x[1]['final']):
         L.append(f'| {m} | {mode} | {_pct(s["final"])} | {_pct(s["margin"])} | {_pct(s["worst"])} | {_pct(s["luck"])} | '
                  f'{_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
+    if (cfg.get('consensus_samples') or 1) <= 1 and (cfg.get('runs') or 0) >= 3:
+        L += consensus_table(fin, consensus(all_scored))
     cands = [k for k in fin if k[1] == 'agentic' and k != REFERENCE]
     if cands:
         L += ['', '## Release gate', '', f'Agentic mode. Reference: {REFERENCE[0]}, {REFERENCE[1]} mode'

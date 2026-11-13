@@ -58,7 +58,7 @@
 
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
 - Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
-- The VM CPU Ready chart shows the average of all vCPUs at level 1. Ready per vCPU appears only at level 3.
+- At level 1 the VM CPU Ready history is one value for the whole VM: the sum of its vCPUs in ms, not the average. Divide by the number of vCPUs for the mean per vCPU. One vCPU that waited a lot and several that each waited a little give the same value. Ready per vCPU is stored only from level 3.
 - Per-device GPU counters on the host (utilization, memory used, temperature) are level 4 in the chart tables. Cluster and resource pool GPU counters are level 1 in the vCenter 9.1 API. See [`vsphere/technology/gpu/gpu-monitoring`](../../technology/gpu/gpu-monitoring.md).
 - Levels 3 and 4 raise vCenter load significantly. If vpxd cannot write statistics to the database fast enough, its memory grows until it runs out of memory and crashes. After raising a level, watch the vpxd process size.
 
@@ -105,6 +105,8 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 - "Ready of 2,000 ms is high" → it depends on the interval: 2,000 ms in 20 seconds is 10% of one vCPU; in a 5-minute point it is 0.67%.
 - "No data in the chart, so the VM was idle" → check rollup delay, power state, recent vMotion across vCenter, and statistics level.
 - "Raise all intervals to level 4 for better history" → vpxd memory growth and database size. Raise for a short time only.
+- "VM CPU Ready at level 1 is the average of the vCPUs" → it is their sum; a value above 100% of one vCPU is possible on a multi-vCPU VM.
+- "Raise the statistics level now to see the incident of last week" → a level applies from the moment it is set; counters that were not collected are not rebuilt.
 
 ## Metadata
 ```yaml
@@ -136,6 +138,7 @@ source:
   path: vSphere Monitoring and Performance > Monitoring Inventory Objects with Performance Charts > Data Counters, Data Collection Intervals, Statistics Levels, Performance Chart Types; Troubleshoot and Enhance Performance > Empty Performance Charts; Hosts > GPU charts (pp. 2025-2031, 2065-2067, 2123-2124)
 corrections: []
 review_notes:
+- 'Section ''Statistics levels'': VM CPU Ready is the sum over the vCPUs: Broadcom KB 387750, https://knowledge.broadcom.com/external/article/387750.'
 - 'Sections ''Level 1 counters per object'', ''Units'' (API units), ''Chart behaviour'' (distributed switch) and the GPU line in ''Statistics levels'': from the vCenter 9.1.0 API export (build 25370922), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. The chart-unit conversions are from the vSphere 9.1 chart tables (catalog/vcenter-counters).'
 - 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Collection intervals'': the document says 1 Week rolls up 12 points of 1 Day every 2 hours (text under 1 Week) and 6 points every 30 minutes (text under 1 Day). The table uses the arithmetic: 6 x 5 min = 30 min; 4 x 30 min = 2 h; 12 x 2 h = 1 day.'

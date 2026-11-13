@@ -129,7 +129,7 @@
 
 - CPU:
   - total CPU use should stay the same;
-  - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back;
+  - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back. Why: default shares are per vCPU, so halving the vCPUs halves the VM's shares while its demand stays the same. On a contended host the VM then gets less than it demands: Usage falls below Demand and Ready rises, while the guest run queue stays the same ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md));
   - load spread across all vCPUs → each remaining vCPU shows higher utilization;
   - uneven load, vCPUs taking turns → each remaining vCPU shows about the same utilization;
   - Guest OS CPU run queue should stay the same; if it rises, check the thread states;

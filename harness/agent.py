@@ -24,6 +24,11 @@ SEED_RULE = ('- The question message holds the knowledge base text of a first lo
              'If it settles the question, answer without tools.\n')
 FIRST_RULE = '- Your first action must be search or catalog.\n'
 GROUND_RULE = '- Base the knowledge base part of the answer on text returned by read_file, catalog, flow and calculate.'
+# Read reminder (cfg agent_read_reminder): the top hits of each search the agent did not open are named once before it answers.
+# Why: the 2026-11-13 round showed needed files found by search but never read (Muse: 74% credit when found but not read,
+# 82% when read; within the same question +5 points for Muse, about 0 for Gemma and Qwen). Cheap, so tried; kept only if it scores.
+READ_TOP = 3
+READ_REMIND = 3
 
 
 def _seeded_system(system):
@@ -137,6 +142,8 @@ def _run_tool(retriever, name, args, state):
         filters = {k: args[k] for k in ('product', 'object', 'technology', 'retriever_guide') if args.get(k)}
         out = retriever.search(args.get('query', ''), filters=filters, k=8)
         state['searched'] = True
+        for rank, h in enumerate(out[:READ_TOP]):  # best rank of each file over all searches, for the read reminder
+            state['hits'][h['id']] = min(rank, state['hits'].get(h['id'], rank))
         return json.dumps(out, indent=0)
     if name == 'read_file':
         d = retriever.docs.get(args.get('id', ''))
@@ -218,7 +225,7 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
         text = f'Knowledge base (first lookup):\n{seed}\n\nQuestion:\n{text}'
     msgs = [{'role': 'system', 'content': system}, _user(text, images)]
     # A seed file counts as read; the last one may be cut at the budget, so read_file stays open for it.
-    state = {'read': list(seed_ids), 'seed_full': set(seed_ids[:-1]), 'same_name_checked': set(), 'searched': bool(seed),
+    state = {'read': list(seed_ids), 'seed_full': set(seed_ids[:-1]), 'same_name_checked': set(), 'searched': bool(seed), 'hits': {},
              'question': question, 'web': wcfg,
              # Ids the system prompt names (up-front blocks, term notes): opening one counts as the first lookup, not a guess.
              'offered': {i for i in retriever.docs if i in system}}
@@ -237,11 +244,18 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
             # Same-name check on files the agent chose to read; the seed already expanded the same-name links of its top hits.
             metric_reads = [r for r in state['read'][len(seed_ids):] if (retriever.docs.get(r) and retriever.docs[r].meta.get('same_name'))]
             unchecked = [r for r in metric_reads if r not in state['same_name_checked']]
-            if unchecked and not reminded and tools:
+            unread = _unread(state) if cfg.get('agent_read_reminder') else []
+            if (unchecked or unread) and not reminded and tools:
                 reminded = True
+                ask = []
+                if unchecked:
+                    ask.append(f'call follow_links with link_type "same_name" on: {", ".join(unchecked[:3])}')
+                if unread:
+                    ask.append(f'your searches ranked these files high and you have not read them: {", ".join(unread)}. '
+                               'Read each one that bears on the question with read_file; skip one only if its title shows it does not')
                 msgs.append({'role': 'assistant', 'content': res['content'] or ''})
-                msgs.append({'role': 'user', 'content': f'Before answering, call follow_links with link_type "same_name" on: {", ".join(unchecked[:3])}.'})
-                _step(trace, 'reminder', '', unchecked[:3], res)
+                msgs.append({'role': 'user', 'content': 'Before answering, ' + '; and '.join(ask) + '.'})
+                _step(trace, 'reminder', '', unchecked[:3] + unread, res)
                 continue
             _step(trace, 'answer', '', (res['content'] or '')[:400], res)
             seen_text = '\n'.join([seed] + [m['content'] for m in msgs if m['role'] == 'tool' and isinstance(m.get('content'), str)])
@@ -278,6 +292,12 @@ def agentic(client, model, question, images, cfg, trace, retriever, kind='choice
                     _step(trace, name, args, _summary(name, out), r)
             tokens_used += _tok(out)
             msgs.append({'role': 'tool', 'tool_call_id': tc.get('id', ''), 'content': out})
+
+
+def _unread(state):
+    """Top search hits the agent did not open (read_file, flow or the seed), best rank first, at most READ_REMIND."""
+    read = set(state['read'])
+    return [i for i, _ in sorted(state['hits'].items(), key=lambda x: x[1]) if i not in read][:READ_REMIND]
 
 
 def web_only(client, model, question, images, cfg, trace, retriever, kind='choice'):

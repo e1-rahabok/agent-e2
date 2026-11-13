@@ -92,6 +92,13 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 - Windows and Linux differ more for memory than for CPU.
 
+## Memory downsizing: which VMs give memory back
+- Contention is excluded from the size, not from the choice of VM. A VM with memory contention above 0 already waits (a limit, or host reclamation); a VM whose guest pages out is already short. Neither gives memory back.
+- No guest data (VMware Tools not running): no Needed Memory, so no sizing. VM Active and Consumed do not stand in for it; restore the data first.
+- Low VM Active with Needed Memory near the configured size: the guest uses its memory as cache (database buffer pool, Java heap). Not a donor.
+- New size = peak Needed Memory plus headroom, so that the result lands in the green band, not at 100%.
+- Cut in steps, not all at once. After each step check guest page-out and VM memory contention over a business cycle before the next.
+
 ## Applications that manage their own memory
 - SQL Server claims memory for its buffer pool up to `max server memory (MB)` and keeps it, so Windows counts that memory as In Use and the sqlservr.exe working set stays near the limit, whatever the query load.
 - The default of `max server memory (MB)` is 2,147,483,647 MB, which is no limit. SQL Server then takes nearly all the memory of the VM and leaves Windows little, so Windows Available is low. Microsoft recommends an upper limit in every version.
@@ -125,6 +132,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - "VM Active is below 12 GB, so cut the VM to 16 GB" → VM Active does not see how SQL Server uses its cache. The cut removes the cache. Set `max server memory (MB)` first and lower it in steps.
 - "Size the guest with VM CPU Usage" → includes HT, frequency and System.
 - "Free memory is safe headroom" → for memory, unused is waste.
+- "Memory contention is excluded from sizing, so ignore it when choosing VMs to downsize" → it is excluded from the size; a VM with contention above 0 already waits and gives nothing back.
 - "Size memory on In Use: that is the demand" → without cache the Guest OS pages and runs slower; size for performance, not only demand.
 - "Size on the average day" → include the peak period and the business cycle; exclude IT load such as backups and scans.
 
