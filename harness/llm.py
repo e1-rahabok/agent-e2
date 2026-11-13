@@ -42,8 +42,12 @@ class GatewayClient:
             time.sleep(delay + random.random())
             delay *= 2
 
-    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None):
-        body = {'model': model, 'messages': messages, 'temperature': temperature, 'max_tokens': max_tokens}
+    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None,
+             top_p=None, top_k=None):
+        body = {'model': model, 'messages': messages, 'max_tokens': max_tokens}
+        for k, v in (('temperature', temperature), ('top_p', top_p), ('top_k', top_k)):
+            if v is not None:   # None: the provider's default
+                body[k] = v
         if reasoning:
             body['reasoning'] = reasoning       # gateway field, e.g. {'effort': 'none'} or {'enabled': False}; per model: models.md, section 5
         if tools:
@@ -85,16 +89,19 @@ class GatewayClient:
 
 
 class ParamClient:
-    """Adds per-model request settings to every chat call: `reasoning` (the gateway's reasoning field) and `max_tokens`.
+    """Adds per-model request settings to every chat call: `reasoning` (the gateway's reasoning field), `max_tokens`,
+    and the sampling settings of the model's own card (`temperature`, `top_p`, `top_k`: what a local server applies by default).
 
     One wrapper instead of a parameter threaded through every mode: the same settings reach classic, agentic, web and the
     answer repair. A model without an entry passes through unchanged (the judge, an embedding call).
     """
 
-    def __init__(self, inner, params):
-        self.inner, self.params = inner, params or {}
+    def __init__(self, inner, params, sampling=None):
+        self.inner, self.params, self.sampling = inner, params or {}, sampling or {}
 
     def chat(self, model, messages, **kw):
+        if model in self.sampling:
+            kw.update({k: self.sampling[model].get(k) for k in ('temperature', 'top_p', 'top_k')})
         p = self.params.get(model) or {}
         if 'max_tokens' in p:
             kw['max_tokens'] = p['max_tokens']
@@ -127,7 +134,7 @@ class MockClient:
     def __init__(self, seed=0):
         self.rng = random.Random(seed)
 
-    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None):
+    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None, top_p=None, top_k=None):
         last = messages[-1]
         tool_turns = sum(1 for m in messages if m['role'] == 'tool')
         if tools and tool_turns == 0:

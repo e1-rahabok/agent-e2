@@ -67,21 +67,22 @@ class AttachmentTest(unittest.TestCase):
 
 
 class FinalScoreTest(unittest.TestCase):
-    def test_worst_run_counts_and_groups_average(self):
+    def test_mean_of_runs_counts_and_worst_run_is_reported(self):
         rows = [row('a', 'deterministic', 'text', 100, 1, 1), row('a', 'deterministic', 'text', 100, 1, 2),        # stable: 1
                 row('b', 'deterministic', 'text', 400, 1, 1), row('b', 'deterministic', 'text', 400, 0, 2),        # luck: 0
                 row('c', 'judged', 'text', 400, 1, 1), row('c', 'judged', 'text', 400, 0.667, 2),
                 row('d', 'deterministic', 'table screenshot', 400, 1, 1, track='vision'),
                 row('d', 'deterministic', 'table screenshot', 400, 1, 2, track='vision')]
         s = report.final(rows)[('m', 'classic')]
-        self.assertAlmostEqual(s['final'], (1 + 0 + 0.667 + 1) / 4, places=3)
-        self.assertAlmostEqual(s['answer:deterministic'], 2 / 3, places=3)
-        self.assertAlmostEqual(s['answer:judged'], 0.667, places=3)
+        self.assertAlmostEqual(s['final'], (1 + 0.5 + 0.8335 + 1) / 4, places=3)      # mean of the runs per question
+        self.assertAlmostEqual(s['worst'], (1 + 0 + 0.667 + 1) / 4, places=3)        # lowest run per question: reported
+        self.assertAlmostEqual(s['answer:deterministic'], 2.5 / 3, places=3)
+        self.assertAlmostEqual(s['answer:judged'], 0.8335, places=3)
         self.assertEqual(s['input:table'], 1)
         self.assertEqual(s['input:screenshot'], 1)
         self.assertEqual(s['input:table_n'], 1)
         self.assertEqual(s['level:100'], 1)
-        self.assertAlmostEqual(s['level:400'], (0 + 0.667 + 1) / 3, places=3)
+        self.assertAlmostEqual(s['level:400'], (0.5 + 0.8335 + 1) / 3, places=3)
         self.assertEqual(s['luck'], 0.5)
 
     def test_old_text_track_ignored_when_vision_exists(self):
@@ -369,6 +370,21 @@ class ParamClientTest(unittest.TestCase):
         self.assertEqual(seen[0][1]['max_tokens'], 8000)
         self.assertNotIn('reasoning', seen[1][1])
         self.assertEqual(seen[1][1]['max_tokens'], 4000)
+
+    def test_card_sampling_replaces_the_run_temperature_and_empty_means_provider_default(self):
+        seen = []
+
+        class Rec(MockClient):
+            def chat(self, model, messages, **kw):
+                seen.append(kw)
+                return super().chat(model, messages, **kw)
+        c = ParamClient(Rec(), {}, {'a/one': {'temperature': 1.0, 'top_p': 0.95, 'top_k': 64}, 'ref/x': {}})
+        c.chat('a/one', [{'role': 'user', 'content': 'x'}], temperature=0.2)
+        c.chat('ref/x', [{'role': 'user', 'content': 'x'}], temperature=0.2)
+        c.chat('judge/z', [{'role': 'user', 'content': 'x'}], temperature=0)
+        self.assertEqual((seen[0]['temperature'], seen[0]['top_p'], seen[0]['top_k']), (1.0, 0.95, 64))
+        self.assertIsNone(seen[1]['temperature'])        # None: not sent, the provider's default
+        self.assertEqual(seen[2]['temperature'], 0)      # a model without an entry (the judge) keeps its own setting
 
 
 class _Q:

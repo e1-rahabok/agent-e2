@@ -174,14 +174,13 @@ python3 benchmark/runner/retrieval_eval.py
 
 ### Temperature
 - Temperature controls randomness in the model's word choice. 0 = always the most likely word. Higher = more varied.
-- Set to 0.2 in `config.yaml`.
-- Reasons:
-  - Factual multiple-choice questions need stable answers, so temperature stays low.
-  - 0 does not make hosted models deterministic (see Why 5 runs). The 5 runs measure the remaining variation either way.
-  - Some reasoning models loop or repeat at 0. Their vendors advise against greedy decoding. A small value avoids this.
-  - The benchmark should match production: `config.yaml` says to use the value the website will use. The website value is not fixed yet; 0.2 is the working assumption.
-- Fixed for a whole run. Comparing runs at different temperatures mixes two effects.
-- The 0.2 choice is a design default, not a measured optimum. A temperature sweep (0, 0.2, 0.7) on the best model would test it.
+- Each model runs with the sampling settings of its own card (`generation_config.json` on Hugging Face): `config.yaml`, key `sampling` (author, 2026-11-13).
+  - Gemma 4 31B and Muse Glimmer 30B: temperature 1.0, top_p 0.95, top_k 64. Qwen 3.8 27B: temperature 1.0, top_p 0.95, top_k 20.
+  - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until 2026-11-13 every model ran at 0.2.
+  - The frontier reference sends none: the provider's default, as a chat user meets it.
+  - The gateway accepted top_p and top_k for all three candidates (one call each, 2026-11-13). Whether every provider honours top_k is not known.
+- `--temperature` replaces the settings for every model: an experiment, not the release run.
+- The judge stays at 0.
 
 ## What it does
 1. Loads `knowledge/` exactly as `ARCHITECTURE.md`, section Local LLM use: metadata split off, body chunked by `##` heading.

@@ -253,13 +253,14 @@ The frontier model must be able to answer every question from public knowledge. 
 
 ### 7.4 Final score
 - One number, 0-100%, for each model and mode. Sub-scores support it: by answer type, by input type, by level.
-- Question credit, 0 to 1, taken from the worst of the 5 runs:
-  - deterministic: 1 if the letters are exactly right in every run, else 0 (Stable correct);
-  - judged: the lowest judge score over the runs, divided by 3 (0, 0.33, 0.67, 1).
+- Question credit, 0 to 1, the mean of the 5 runs (author, 2026-11-13):
+  - deterministic: the share of runs with exactly the right letters;
+  - judged: the mean judge score over the runs, divided by 3.
+- Worst run: the same score with each question on its lowest run. Reported next to the final score as consistency; not a gate.
 - Final score = sum of question credits / number of questions. Every question weighs the same, whatever its level, answer type or input type.
 - Sub-score = the same mean within one group. A question counts for every input type it includes. The allocation (section 3.6) sets how much each group weighs in the final score.
 - Reasons:
-  - worst run, not mean: the same rule as Stable correct. An answer right in 4 runs of 5 is luck, and an operator gets one run;
+  - mean, not worst run: an operator asks once and gets one answer; the mean of the runs is the best estimate of that answer's quality. The worst run measures something else (does it never fail?) and stays in the report as consistency. Until 2026-11-13 the worst run counted;
   - one weight per question: no group can carry the score by a formula choice; the blueprint decides the mix;
   - judge score / 3: a partly right judged answer earns part credit, as a human examiner would give. A deterministic answer has no part credit, because a partly right set of letters is a wrong answer an operator would act on.
 - Confident-wrong rate covers both: wrong letters that are not Unsure, and judged answers scored 0 that do not say the information does not settle it.

@@ -129,7 +129,7 @@ def build(folders, today=None):
     cfg0 = info[0]['cfg']
     n_q = len(cfg0.get('questions') or [])
     L = [f'# Benchmark results: round of {dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}', '',
-         f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, temperature {cfg0.get("temperature")}. '
+         f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, sampling {json.dumps(cfg0.get("sampling")) if cfg0.get("sampling") else cfg0.get("temperature")}. '
          f'Judge: {cfg0.get("judge_model")}. Written by `benchmark/runner/summarize.py` from the run folders; every number below comes from them.',
          '- How to read a score: the exact value is read at plus or minus 5 points; the signal is the jump from baseline to a mode, read per model on the same questions. '
          'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). '
@@ -146,7 +146,7 @@ def build(folders, today=None):
     L += ['## Final score', '', '| Model | Mode | Final | ± margin | Level 100 | Level 200 | Level 300 | Level 400 | Confident wrong |', '|---|---|---|---|---|---|---|---|---|']
     for (m, mode), s in sorted(fin.items(), key=lambda x: (x[0][0] == ref[0], x[0][0], MODE_ORDER.get(x[0][1], 9))):
         L.append(f'| {m} | {mode} | **{s["final"]:.0%}** | {100 * s["margin"]:.0f} | ' + ' | '.join(R._pct(s[k]) for k in LEVEL_KEYS) + f' | {R._pct(s["confident_wrong"])} |')
-    L += ['', 'Final = mean over the questions of the lowest credit over the runs (the worst run counts). Levels: the same mean within one level.', '']
+    L += ['', 'Final = mean over the questions of the mean credit over the runs. Levels: the same mean within one level. The worst-run score is in each run folder\'s report.md (consistency; not a gate).', '']
     L += ['## Lift', '', 'Points of the final score. A difference is outside the margin when it is larger than the two margins combined.', '',
           '| Model | Classic over baseline | Agentic over baseline | Agentic over classic | Web over baseline |', '|---|---|---|---|---|']
     for m in sorted({m for m, _ in fin}):
