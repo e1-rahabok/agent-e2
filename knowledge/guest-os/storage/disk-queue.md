@@ -8,6 +8,7 @@
 - Windows: Avg. Disk Queue Length and Current Disk Queue Length count the requests active below the partition manager. A request can wait in a Storport queue or in a queue of the adapter driver (LSI Logic, PVSCSI), be in service at the virtual or physical device, or be completed and on its way back up the stack. The counter does not separate waiting from service. See [`guest-os/storage/windows-storage-io-path`](windows-storage-io-path.md).
 - Linux: aqu-sz in iostat counts the requests in progress at the block layer, from the moment a request enters the request queue until it finishes, whether it waits or is served. See [`guest-os/storage/linux-storage-io-path`](linux-storage-io-path.md).
 - Both are Little's Law values: the queue equals the I/O rate times the time per I/O.
+- Windows derives Avg. Disk Queue Length from Disk Transfers/sec × Avg. Disk sec/Transfer. The counter adds no evidence beyond those two: a high value at a given I/O rate is the same fact as a long time per I/O, so read the time per I/O and find where it is spent.
 - The part of the queue that waits in the Guest OS for a free slot of the virtual adapter has not reached the virtual disk. The vCenter virtual disk latency starts at the virtual disk, so it does not include that wait.
 
 | VMware Tools counter | Windows source (WMI) |
@@ -19,7 +20,8 @@
 - Windows documentation: the queue length per physical disk should average below 2. The guideline counts spindles; a virtual disk has none.
 - High guest queue with low I/O rate: the time per I/O is long (queue = I/O rate x time per I/O). Read the response time.
 - Requests at the virtual disk equal the I/O rate times the vCenter virtual disk latency. Compare with VM outstanding IO.
-- The guest queue minus the requests at the virtual disk is the average number of requests that wait inside the Guest OS. A remainder near zero means the queue is concurrency the device serves; it is not a wait in the guest.
+- First test, in time rather than in requests: compare the Guest OS time per I/O (Avg. Disk sec/Transfer, await) with the vCenter virtual disk latency for the same period. When the two are close, almost all of the time per I/O is spent at or below the virtual disk (ESXi queues, the storage path, the array), and the Guest OS adds little.
+- The guest queue minus the requests at the virtual disk is the concurrency spent above the virtual disk: Guest OS queues, the driver and the completion path. A remainder of a few requests is within the difference between two tools that sample and average separately; it is not a count of requests blocked in the guest.
 - A remainder that is large, with the requests at the virtual disk at the queue depth of the adapter (Paravirtual SCSI default: 64 per device, 254 per adapter), means requests wait in the guest for a free slot.
 - VM disk latency stays good while requests wait in the guest, because it starts at the virtual disk. The application still feels the delay.
 - No universal threshold; varies by application.
@@ -44,7 +46,9 @@
 ## Misconceptions
 - "VM latency is fine, so the guest sees no storage delay" → the VM latency starts at the virtual disk. Time spent waiting in the guest queues is not in it. Compare the guest queue with the I/O rate x the VM latency.
 - "The guest disk queue is IO not yet sent" → the counter also counts requests in service at the device and requests on their way back. Only the excess over the I/O rate x the VM latency waits in the guest.
-- "A high guest disk queue with a low VM latency proves the guest is the bottleneck" → a queue equal to the I/O rate x the VM latency is requests in service. Only the excess waits.
+- "A high guest disk queue with a low VM latency proves the guest is the bottleneck" → a queue equal to the I/O rate x the VM latency is requests at or below the virtual disk. Only a large excess points at the guest.
+- "The guest queue equals the I/O rate x the VM latency, so all those requests are in service at the storage" → requests below the virtual disk can also wait in ESXi or array queues. The queue shows concurrency; it does not split waiting from service at any layer.
+- "A disk queue of several dozen shows the Guest OS is the bottleneck, while storage latency is fine" → the queue is the I/O rate x the time per I/O; when the guest time per I/O is close to the vCenter virtual disk latency, the time is spent in storage, and lower storage latency would lower the queue.
 
 ## Metadata
 ```yaml

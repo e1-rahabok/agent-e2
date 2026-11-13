@@ -40,7 +40,9 @@
 - Ready is lower when the guest stays busy than when processes keep waking and sleeping (more scheduling events).
 - All else equal, Ready is higher on larger VMs. A busy host is less likely to run many vCPUs at the same time.
 - Downsizing reduces both Ready and Co-stop: a smaller VM fits into free threads more easily.
-- Counter-effect: shares scale with vCPU count by default. A smaller VM gets fewer shares, which can raise Ready under contention.
+- Default CPU shares are set per vCPU (1,000 per vCPU at Normal). Downsizing keeps each vCPU's share; the VM's total shares fall with its vCPU count ([`vsphere/architecture/resource-controls`](../../../../architecture/resource-controls.md), section Shares). The outcome depends on the demand per vCPU:
+  - Oversized VM (the work fits on fewer vCPUs at their current share): Ready and Co-stop fall.
+  - Same work that now needs more per vCPU than its share on a contended host: each vCPU demands more than its entitlement, so Ready rises and Usage falls below Demand. The guest run queue does not rise, because the vCPU count was not the constraint. Fix with the VM's shares or a less busy host, not by adding the vCPUs back.
 - High Ready with low Co-stop: whenever the VM runs, there are enough threads for all its vCPUs. An all-or-nothing pattern.
 
 ## Guest OS sizing
@@ -65,6 +67,7 @@
 - "Ready is always caused by ESXi" → shares, vMotion and limits are VM-side causes.
 - "5-minute Ready is low, so no problem" → Ready lasts seconds. Check the 20-second peak.
 - "Idle VM should show 0% Ready" → scheduling cost keeps it slightly above 0.
+- "A smaller VM gets fewer shares per vCPU, so each vCPU waits longer" → default shares are per vCPU; each vCPU keeps the same share after downsizing.
 
 ## Metadata
 ```yaml
@@ -112,6 +115,5 @@ review_notes:
 - Sections Mechanism, Read against Run, Units, and the last 2 misconceptions: from CPU > Architecture.
 - 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
 - 'Section ''Observed values'': the 50% statement is the book''s observation on a 16-vCPU VM, not a stated threshold.'
-- 'To check: Section ''Larger VMs'': ''Shares scale with vCPU count by default''; not in the book.'
 status: draft
 ```

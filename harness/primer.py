@@ -18,9 +18,9 @@ BUDGET_TOKENS = 3000          # all five blocks together; lint checks it
 MISCONCEPTIONS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge', 'misconceptions.md')
 
 KINDS = {  # retriever_guide -> what it answers and which tool serves it. The kind is metadata, not a folder (2026-11-12).
-    'how-it-works': ('how it works, why a value behaves so; how to design and read (method)', 'search, read_file'),
+    'how-it-works': ('how it works, why a value behaves so; design and reading methods', 'search, read_file'),
     'metric-meaning': ('what a counter, KPI or model means on one object; in vsphere/tools/, how esxtop or the vSphere Client shows it', 'catalog, read_file, follow_links(same_name)'),
-    'what-to-set': ('what a setting does; <object>-alerts: the alerts of one object type and why (values come with the file)', 'search, read_file, catalog'),
+    'what-to-set': ('what a setting does; <object>-alerts: the alerts of one object type and why (values included)', 'search, read_file, catalog'),
     'health-check': ('is this object healthy, on every pillar: the what', 'flow'),
     'troubleshooting': ('why is it down or slow: from a complaint, alert or failed health check step', 'flow'),
     'decision-tree': ('can it, should it, how much: one operational question, ending in a choice to act', 'flow'),

@@ -5,7 +5,7 @@
 - No alert in the set. Its member datastores have their own alerts ([`vsphere/object-types/datastore/datastore-alerts`](../datastore/datastore-alerts.md)).
 
 ## Not alerted
-- Consumption: not implemented. It should fire when a member datastore meets the datastore consumption condition, because the cluster average hides a full member. Remediation: run Storage DRS.
+- Consumption: not implemented. It should fire when a member datastore meets the datastore consumption condition, because the cluster average hides a full member. Remediation: run Storage DRS ([`vsphere/object-types/datastore-cluster/storage-drs`](storage-drs.md)).
 - Latency: not implemented. VMs and datastores are many-to-many, and a VM's disks can sit on several members.
 
 ## Misconceptions
@@ -31,6 +31,7 @@ internal_derive:
 - vsphere/object-types/datastore/datastore-alerts
 related:
 - vsphere/technology/storage/datastore-space-headroom
+- vsphere/object-types/datastore-cluster/storage-drs
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Proactive Operations > Alert > Storage Alerts (Consumption Alerts); Alerts Planning > Design (alert count table)'

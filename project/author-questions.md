@@ -18,6 +18,49 @@ Each entry has:
 
 ## Open
 
+### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
+
+- Files: [Swap and compression](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/swap-and-compression.md) (section Example: limit, swap and compress in opposite directions).
+- Search 1: "The small gap above the limit is VM overhead" (old line, removed)
+- Question: The old line said the small gap above the limit is VM overhead. In the example data, Consumed sits just under Memory|Effective limit and Granted above it. Did the line mean the gap between Consumed and Granted? Is the effective limit the configured limit plus overhead?
+- Written as now: Consumed stays a little below the effective limit because the effective limit includes overhead; Granted sits above it and ignores the limit (draft, review note).
+- Answer:
+
+### Q204 · VCF Operations > Capacity forecast · Capacity Remaining: largest gap or tightest point
+
+- Files: [Capacity forecast](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/capacity-forecast.md); question 0235 (benchmark/questions).
+- Search 1: "The largest difference between usable capacity and projected utilization"
+- Search 2: "follows the tightest point of the 3 days"
+- Question: TechDocs 9.1 says Capacity Remaining (%) is the largest difference between usable capacity and projected utilization over the next 3 days; the same page sets it to 0 when any projection exceeds 100%. In the field, does the value follow the smallest remaining capacity (the highest projected point), as the key of 0235 says, or the largest gap, as the text literally reads?
+- Written as now: the TechDocs wording kept, plus a reading that the 0 rule makes the value follow the tightest point (draft, review note).
+- Answer:
+
+### Q203 · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
+
+- Files: [CPU measurement levels](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-measurement-levels.md); [CPU frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md).
+- Search 1: "Capacity is counted in physical threads"
+- Question: vSphere and VCF Operations label the GHz figure Total Capacity, so every model without the knowledge base reads capacity as GHz (question 0006: Opus 0%). The fix calls it vSphere's GHz total, a throughput reference. Should the knowledge base also name the product label explicitly ("vSphere's Total Capacity (GHz), a throughput figure, not capacity")?
+- Written as now: capacity = physical threads; every GHz use of the word capacity reworded as throughput (draft).
+- Answer:
+
+### Q202 · Memory > Overhead · Kernel memory reservation with vSAN and NSX
+
+- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); question 0024, option E.
+- Search 1: "Too low with vSAN and NSX, too high with ESXi only"
+- Search 2: "Reservation stays steady even when kernel use drops"
+- Question: The file says the kernel reservation is too low with vSAN and NSX (supports the key: E false), and later that the memory reservation stays steady even when kernel use drops 90% (supports E). On a busy host with vSAN and NSX, is the kernel memory reservation below actual kernel use? Should the second line be scoped to an idle or ESXi-only host?
+- Written as now: both lines unchanged.
+- Answer:
+
+### Q201 · Memory > Reservation · 'Not available to VMs': admission or physical pages
+
+- Files: [ESXi memory reservation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md); [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md); question 0024, option D.
+- Search 1: "Kernel reservation means the amount is not available to VMs"
+- Search 2: "reserved memory must be used first before it is held"
+- Question: Option D of 0024 does not say which sense of available it means. For admission control the kernel reservation is withheld whether used or not, so D is true; for physical pages it is not withheld until touched, so D is false. Every model, Opus included, reads the first. Should D say (A) not available for VM reservations (true), (B) physically blocked before use (false), or (C) leave the misconception list?
+- Written as now: an untouched reservation can serve other VMs; admission control counts the full reservation (draft, review note).
+- Answer:
+
 ### Q200 · Benchmark > Mode · Agentic or classic as the shipped mode
 
 - Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).

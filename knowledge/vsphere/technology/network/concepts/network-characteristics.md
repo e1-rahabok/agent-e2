@@ -38,8 +38,10 @@
 ![VM traffic has 100 of 500 shares](../images/nioc-vm-traffic-100-of-500-shares.png)
 
 ## Coarse allocation
-- vNIC speed cannot be set. It takes the speed of the vmnic behind the port group: 1, 10 or 25 GbE (with the right vNIC driver).
-- 500 Mbps or 250 Mbps cannot be allocated in the guest.
+- The link speed a VMXNET3 adapter reports to the Guest OS is a label, not a limit. It is 10 Gbps by default, whatever the speed of the vmnic behind the port group, because the virtual device has no physical link to negotiate.
+- A VMXNET3 adapter moves data as fast as host CPU, virtual switch policies and the uplinks allow. Its throughput can exceed the reported speed, for example VM-to-VM traffic on one host, which never reaches a vmnic.
+- From vSphere 8.0 Update 2, the VMX setting `ethernetX.linkspeed` (in Mbps, VM powered off) changes the reported speed within 10,000 to 65,000 Mbps; a value outside that range falls back to 10 Gbps. It exists for guest software that sizes itself from the detected speed, and it caps nothing.
+- Setting a lower speed in the Guest OS adapter properties does not cap throughput either. 500 Mbps or 250 Mbps cannot be allocated through the vNIC speed.
 - Physical bandwidth is shared and typically oversubscribed.
 - A network-intensive VM can exceed 1 Gbps each way. Example: a Hadoop worker receiving more than 5 Gbps several times.
 - Network I/O Control gives each VM network adapter shares, a reservation and a limit, set in the VM's adapter settings; traffic shaping is a port group policy ([`vsphere/architecture/resource-controls`](../../../architecture/resource-controls.md), section Controls per resource). Neither sets the vNIC speed the Guest OS sees.
@@ -64,6 +66,7 @@
 ## Misconceptions
 - "Each VM can use the full uplink speed" → the uplink is shared, dynamic and often oversubscribed.
 - "No NIOC metric, so NIOC never capped" → no such metric exists.
+- "Set the vNIC speed to 500 Mbps to cap the VM" or "the vNIC takes the uplink speed" → the VMXNET3 speed is a label, 10 Gbps by default; cap bandwidth with traffic shaping on the port group or a Network I/O Control limit on the VM network adapter.
 
 ## Metadata
 ```yaml
@@ -97,6 +100,7 @@ source:
   path: Network > Architecture > Unique Characteristics
 corrections: []
 review_notes:
+- 'Section ''Coarse allocation'': VMXNET3 reported speed and `ethernetX.linkspeed`: check against https://knowledge.broadcom.com/external/article/368812/how-to-change-the-vmxnet3-link-speed-of.html and https://knowledge.broadcom.com/external/article/444078/vmxnet3-guest-os-link-speed-resets-and-d.html for vSphere 9.1.'
 - 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; the book states vCenter 7 has none.'
 - 'Section ''Interconnect'': example outage read from the book: https://blog.ipspace.net/2019/05/real-life-data-center-meltdown.html (third-party).'
 status: draft

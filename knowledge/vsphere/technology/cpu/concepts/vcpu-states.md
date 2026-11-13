@@ -63,7 +63,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 | Run | Measures how long the vCPU runs. Unit: ms, not GHz. |
 | Run | Does not measure how fast it runs (frequency) or how efficiently (Hyper-Threading). |
 | Ready | Caused by ESXi: no physical thread available. |
-| Ready | Usually reduced by making the VM smaller: it fits free threads more easily. Fewer shares on a smaller VM can raise it. |
+| Ready | Usually reduced by making the VM smaller: it fits free threads more easily. Default shares are per vCPU, so each vCPU keeps its share. |
 | Co-stop | Caused by the VM: its vCPUs drift apart. |
 | Co-stop | Reduced by making the VM smaller, especially relative to the NUMA boundary. |
 | Ready, Co-stop | Opposite causes. For the guest the effect is the same: a freeze. |
@@ -129,7 +129,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 ## Misconceptions
 - "Ready + Co-stop + Run + Wait is 100% for the VM" → it is 100% per vCPU. Sum over vCPUs for the VM total in ms.
 - "Ready 5% is always worse than Ready 2%" → read against Run.
-- "A smaller VM reduces only Co-stop" → it usually reduces Ready too. Fewer shares can work the other way.
+- "A smaller VM reduces only Co-stop" → it usually reduces Ready too. Default shares are per vCPU, so downsizing does not lower the share of each vCPU.
 - "High Wait means IO problems" → Wait includes idle.
 - "No Ready, so no Hyper-Threading contention" → states are blind to Hyper-Threading. Check CPU Latency.
 - "Compare ms counters across VMs" → ms counters scale with vCPU count. Use %.
