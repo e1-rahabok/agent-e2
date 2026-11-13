@@ -1,7 +1,7 @@
 # Windows paging while vSphere shows no memory problem
 
 ## Prompt
-- APP-07 is a Windows Server 2022 VM with 8 GB, running a Java application server.
+- APP-07 is a Microsoft Windows Server 2022 VM with 8 GB, running a Java application server.
 - Users say the application freezes for seconds at a time between 14:00 and 14:40.
 - [The attached Performance Monitor log](0265/perfmon-app-07-memory.csv) covers 13:30-15:00 in 1-minute samples.
 - vCenter, same window: VM Ballooned 0, Swapped 0, Swap in rate 0, Memory Latency 0%; Consumed flat at 8 GB; virtual disk latency 1-3 ms.
@@ -47,5 +47,5 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
 misconception_type: [layer-confusion]
-status: draft
+status: reviewed
 ```
