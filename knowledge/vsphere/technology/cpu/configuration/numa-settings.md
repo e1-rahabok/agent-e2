@@ -28,7 +28,7 @@
 - COD partitions a processor at boot into one or more NUMA nodes.
 - SNC is similar to COD. It differs in how it uses the last-level cache.
 
-## Intel Granite Rapids (9.1 p. 30)
+## Intel Granite Rapids (ESXi 9.1)
 - Size VMs to align with NUMA node and SNC domain boundaries.
 - Design workloads to maximize NUMA locality. Consider vCPU placement, memory allocation, and NUMA node and SNC domain boundaries.
 - Reduce unnecessary VM movement to stabilize NUMA locality: set the NUMA migration threshold to 50 or greater, `numa.migThreshold = XX`.
