@@ -61,5 +61,6 @@ source:
 corrections: []
 review_notes:
 - 'Sections Values, IOPS limit: from Storage > VM.'
+- 'To check: Section ''Under-reporting'': a request waiting in a guest queue before the virtual disk is not yet in the VM counters, but once issued and completed it is, so the IOPS over an interval equal the guest transfers per second when the queue drains. See guest-os/storage/disk-queue (reading of the guest queue).'
 status: draft
 ```

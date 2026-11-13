@@ -22,9 +22,7 @@ Is this conclusion supported by the numbers? What does Avg. Disk Queue Length sh
 ## Notes
 - Public source: Microsoft Learn (archived page), "Using Storage-related Parameters and Performance Counters" (https://learn.microsoft.com/previous-versions/dn567651(v=vs.85)), page date 2016-05-02, updated 2021-12-02, Windows Server 2012 R2 era. It states that Average Disk Queue Length is equal to (Disk Transfers/sec) x (Disk sec/Transfer), based on Little's Law, that the requests may be in service and not necessarily queued, and that the guideline of two per physical disk assumes known physical disks.
 - Why one answer: 3,000 x 0.016 = 48 shows the counter is the product of two other counters, and the vendor says it includes requests in service. The conclusion needs a queue that has not reached the device, which the numbers do not show.
-- Debatable risk: the page is archived and describes Windows Server 2012 R2. The derivation is a property of the counter definition; the prompt does not ask for a threshold. The knowledge file guest-os/storage/disk-queue says the queue is "above the SCSI driver"; the Microsoft text says below the driver that takes the statistics. The author should check that file.
-
-- Status deferred: not run until Q194 is answered. The knowledge file guest-os/storage/disk-queue says the queue is above the SCSI driver and holds IO not yet sent; the Microsoft page (derived from Transfers/sec x sec/Transfer, requests in service included) says otherwise. If the author keeps the knowledge file, this key is wrong.
+- Debatable risk: the page is archived and describes Windows Server 2012 R2. The derivation is a property of the counter definition; the prompt does not ask for a threshold. The knowledge file guest-os/storage/disk-queue said the queue is "above the SCSI driver"; it was corrected on 2026-11-13 to the Microsoft reading (author question Q194).
 
 ## Metadata
 ```yaml
@@ -42,10 +40,11 @@ knowledge:
   - guest-os/storage/disk-queue
   - guest-os/guest-os-alerts
   - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
+  - guest-os/storage/windows-storage-io-path
 knowledge_main: guest-os/storage/disk-queue
 attachments: []
 origin: synthetic
 source_path: "Drafted 2026-11-13 for the coverage gap (project/plan.md)"
 misconception_type: [layer-confusion]
-status: deferred                 # waits for author question Q194: the knowledge file and the Microsoft counter documentation disagree on what the counter measures
+status: draft
 ```
