@@ -14,7 +14,7 @@ meta:
   - 'Read by harness/terms.py. Switch: term_map in benchmark/runner/config.yaml.'
   - 'To check: the wrong terms users write in tickets and forums, with what they mean (Q149).'
   - 'To check: each note against the file it cites.'
-  status: draft
+  status: reviewed
 rows:
 - id: vm-slow
   match: ['\btriage\b', '\b(vm|virtual machine|server|application|app)s? (is|are|was|were|feels?|got|running|seems?) (very |really |so )?(slow|sluggish|laggy|unresponsive)', '\bslow (vm|virtual machine|server|application)', 'performance (issue|problem|degradation|complaint)']
