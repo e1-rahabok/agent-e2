@@ -111,7 +111,7 @@ def reading(fin, rows, info, ref):
         if best and (best, 'agentic') in fin:
             gap = fin[(best, 'agentic')]['final'] - fin[ref]['final']
             out.append(f'Best local model in agentic mode: {best}, {fin[(best, "agentic")]["final"]:.0%}; the frontier model without the knowledge base '
-                       f'scores {fin[ref]["final"]:.0%}, a gap of {_pts(gap)} points (the mission needs at least +{R.GATE["gap"]:.0%}).')
+                       f'scores {fin[ref]["final"]:.0%}, a gap of {_pts(gap)} points (an outcome, not a gate).')
     passed = [m for m in locals_ if (m, 'agentic') in fin and all(g[3] for g in R.gate(fin, rows, m, 'agentic', ref)[:3])]
     out.append('Release gate in agentic mode (final score, Level 400, confident wrong): ' +
                (f'passed by {", ".join(passed)}.' if passed else 'passed by no model.'))
@@ -160,8 +160,8 @@ def build(folders, today=None):
         L += ['## Release gate (agentic mode)', '', f'Reference: {ref[0]}, {ref[1]} mode. Limits: benchmark/design.md, section 7.5.', '', '| Model | Gate | Value | Limit | Pass |', '|---|---|---|---|---|']
         for m in sorted({m for m, mode in fin if mode == 'agentic' and m != ref[0]}):
             for name, v, limit, ok in R.gate(fin, rows, m, 'agentic', ref):
-                L.append(f'| {m} | {name} | {v:.0%} | {limit} | {"yes" if ok else "no"} |' if not name.startswith('Paired') else
-                         f'| {m} | {name} | p {v:.3f} | {limit} | {"yes" if ok else "no"} |')
+                L.append(f'| {m} | {name} | {v:.0%} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |' if not name.startswith('Paired') else
+                         f'| {m} | {name} | p {v:.3f} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |')
         L += ['', 'Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check of the answers), and the held-out set within 5 points (a separate run).', '']
     L += ['## Reading', ''] + [f'- {x}' for x in reading(fin, rows, info, ref)] + ['']
     L += ['## Time and tokens', '', '| Model | Mode | Mean latency s | Mean tool calls | Mean tokens |', '|---|---|---|---|---|']

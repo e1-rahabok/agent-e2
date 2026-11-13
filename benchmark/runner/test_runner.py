@@ -102,7 +102,9 @@ class ReleaseGateTest(unittest.TestCase):
         self.assertEqual((b, c), (8, 0))
         self.assertAlmostEqual(p, 1 / 256)
         g = {name.split(' (')[0]: ok for name, _, _, ok in report.gate(fin, rows, 'e2')}
-        self.assertTrue(all(g.values()), g)
+        self.assertTrue(all(g[k] for k in ('Final score', 'Level 400', 'Confident wrong')), g)
+        self.assertIsNone(g['Gap to the frontier model'])  # an outcome, not a gate
+        self.assertIsNone(g['Paired test'])
 
     def test_fails_below_final_score(self):
         rows = [dict(row(f'q{i}', 'deterministic', 'text', 400, int(i < 8), 1), model='e2', mode='agentic') for i in range(10)]
