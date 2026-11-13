@@ -1,10 +1,10 @@
 # A slow Windows application: where to start
 
 ## Prompt
-- The application team says their order-entry application on a Windows Server 2022 VM (8 vCPUs, 32 GB) "has been slow lately".
+- The application team says their order-entry application on a Microsoft Windows Server 2022 VM (8 vCPUs, 32 GB) "has been slow lately".
 - They send a Task Manager screenshot from this morning: CPU 30%, memory 62%.
 - Their monitoring tool shows the VM's daily average CPU at 25% for the last month.
-- They ask you to prove vSphere is not the cause, or to give the VM more vCPUs and memory.
+- They ask you to prove VMware vSphere is not the cause, or to give the VM more vCPUs and memory.
 
 Where do you start, what do you ask them to measure, and how do you decide whether the cause is inside Windows or below it?
 
@@ -46,5 +46,5 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
 misconception_type: [rollup-and-interval, layer-confusion]
-status: draft
+status: reviewed
 ```
