@@ -121,8 +121,9 @@ TROUBLESHOOT = re.compile(r'\b(slow|troubleshoot\w*|what (do|should|would) (you|
                           r'complain\w*|drops?|dropped|fail\w*|spike\w*|high|degrad\w*)\b', re.I)
 
 
-def classic_context(retriever, question, cfg):
-    """One fixed retrieval pass: search, expand same_name and related, fit to budget."""
+def classic_context(retriever, question, cfg, budget=None):
+    """One fixed retrieval pass: search, expand same_name and related, fit to budget (default cfg context_tokens).
+    Also the agent's first lookup when it starts primed (agent.py, cfg agent_seed_tokens)."""
     matched = terms.match(question) if cfg.get('term_map') else []
     hits = retriever.search(terms.query(question, matched), k=cfg['classic_k'])
     ids = [h['id'] for h in hits]
@@ -145,7 +146,7 @@ def classic_context(retriever, question, cfg):
         for link in links:
             if link['id'] in retriever.docs and link['id'] not in ids:
                 ids.append(link['id'])
-    budget, parts, used = cfg['context_tokens'], [], []
+    budget, parts, used = budget or cfg['context_tokens'], [], []
     notes = terms.block(matched)
     if notes:
         parts.append(notes)

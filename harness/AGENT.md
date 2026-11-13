@@ -21,7 +21,8 @@ Why Agent E2 can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [ARC
 - The system prompt: knowledge base first, and it wins on conflict; own knowledge only where the knowledge base is silent, said so in the reason; mechanism before definition; same-name metrics; thresholds only when the knowledge base states them; Unsure over a guess.
 - The tool rules (section 5) and the tool descriptions.
 - The question and its images.
-- Nothing about the knowledge base itself. The agent discovers what exists only by searching.
+- Primed start (`agent_seed_tokens`, 10K; built 2026-11-13): the harness runs the classic lookup (`modes.classic_context`: hybrid search, term map, troubleshooting route, link expansion, catalog facts) and puts its text in the first message, fitted to the seed budget. The seed files count as read. The rule "first action must be search or catalog" is replaced by "read the first lookup; call tools only for what it does not settle". A seed file in full cannot be read again (the last one may be cut at the budget, so it can). The same-name reminder covers only files the agent reads itself: the seed already expanded the same-name links of its top hits.
+- So agentic mode = the classic context + the tool loop. With `agent_seed_tokens: 0` the agent starts cold: it knows nothing about the knowledge base and discovers what exists only by searching.
 
 ### The gap
 - Searching helps only when the model knows it does not know. Its worst errors are Internet rules of thumb it believes, so it never searches for them.
@@ -71,7 +72,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
 ## 5. Rules the harness enforces
 | Rule | How | Why |
 |---|---|---|
-| Look up before answering | The first call must be `search` or `catalog`; any other tool is refused | Answers from memory are the main failure |
+| Look up before answering | Primed start: the first lookup is done before the model starts. Cold start: the first call must be `search` or `catalog`; any other tool is refused | Answers from memory are the main failure |
 | No repeats | An identical call is refused | Small models search in circles |
 | Same-name check | Before the answer, a reminder to call `follow_links(same_name)` on each metric file read | Same label, different object, is the commonest misconception |
 | Budget | At most `agent_max_calls` (8) tool calls and `agent_tool_tokens` (12K) of tool output; then "answer now" | Context window and time; benchmark cost |
@@ -146,7 +147,7 @@ Each is small (all five: about 2,700 tokens; budget 3,000, checked by lint), nee
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
 - After the 100-question set picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
-- To try: agentic mode that starts from the classic context (first search done, catalog facts included). This skips the first search, the weakest step for small models, and keeps further lookups.
+- Built 2026-11-13: agentic mode starts from the classic context (section 3, primed start). Classic minus agentic now reads as what the tool loop adds on top of one lookup.
 
 ## 10. Walkthrough of one question
 Real trace (2026-11-04, alibaba/qwen-3-32b): "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?" Options include the rollup and statistics level, 10% Ready and 40% Ready.

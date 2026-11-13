@@ -180,7 +180,7 @@ def aggregate(rows):
             'unsure': _mean(r.get('unsure') for r in rs), 'answered_accuracy': _mean(r['exact'] for r in answered),
             'misconception': _mean(int(_mc(r) or 0) for r in rs), 'not_covered': _mean(r['not_covered'] for r in rs),
             'parse_fail': 1 - _mean(r['parse_ok'] for r in rs),
-            'recall': _mean(r['retrieval_recall'] for r in rs),
+            'recall': _mean(r['retrieval_recall'] for r in rs), 'seen': _mean(r.get('search_recall') for r in rs),
             'fallback': _mean(r['fallback'] for r in rs), 'steps': _mean(r['steps'] for r in rs),
             'tokens': _mean(int(r['prompt_tokens'] or 0) + int(r['completion_tokens'] or 0) for r in rs),
             'latency': _mean(r['latency'] for r in rs), 'cost': sum(float(r['cost_usd'] or 0) for r in rs),
@@ -254,15 +254,15 @@ def write(run_dir):
           '- Confident wrong: share of answers that are wrong and not Unsure (wrong letters, partly right, Unsure mixed with other letters, unparseable). The answers that mislead an operator. Target: near 0.',
           '- Accuracy when answered: exact share among answers that were not Unsure.', '',
          '## Deterministic answers: scores', '',
-         '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Misconception | Parse fail | Recall | Fallback | Steps | Tokens | Latency s | Cost US$ |',
-         '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
+         '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Misconception | Parse fail | Recall | Seen | Fallback | Steps | Tokens | Latency s | Cost US$ |',
+         '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['majority'])):
         L.append(f'| {m} | {mode} | {tr} | {_pct(s["exact"])} | {_pct(s["partial"])} | {_pct(s["majority"])} | {_pct(s["margin"])} | '
-                 f'{_pct(s["consistency"])} | {_pct(s["misconception"])} | {_pct(s["parse_fail"])} | {_pct(s["recall"])} | {_pct(s["fallback"])} | '
+                 f'{_pct(s["consistency"])} | {_pct(s["misconception"])} | {_pct(s["parse_fail"])} | {_pct(s["recall"])} | {_pct(s["seen"])} | {_pct(s["fallback"])} | '
                  f'{"-" if math.isnan(s["steps"]) else round(s["steps"], 1)} | {int(s["tokens"]) if not math.isnan(s["tokens"]) else "-"} | '
                  f'{"-" if math.isnan(s["latency"]) else round(s["latency"], 1)} | {s["cost"]:.3f} |')
     L += ['', '- Exact and Partial: mean over all runs. Majority: most common answer per question. Margin: 95% interval on Majority from the number of questions.',
-          '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids the mode retrieved or read.', '']
+          '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids whose text reached the model (classic: the context; agentic: the first lookup and the files it read). Seen: the same share counting search results too; Seen above Recall means files found but not read.', '']
 
     # per technology and task (a question counts for every technology it lists), deterministic answers
     for dim in ('technology', 'task'):

@@ -273,6 +273,33 @@ class ModesTest(unittest.TestCase):
         self.assertIn('calculate', actions)
         self.assertFalse(fb)
 
+    def test_primed_start_gives_the_first_lookup_and_skips_search_first(self):
+        class Recorder(MockClient):
+            first = None
+
+            def chat(self, model, messages, tools=None, **kw):
+                if Recorder.first is None:
+                    Recorder.first = messages
+                return {'content': 'ANSWER: A\nREASON: x', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
+        ret = Retriever(DOCS, CHUNKS)
+        cfg = dict(self.CFG, agent_seed_tokens=4000)
+        res, used, trace, fb = modes.answer('agentic', Recorder(), 'mock', 'What is VM CPU Ready?\n\nA. one\nB. two', [], cfg, ret)
+        system, user = Recorder.first[0]['content'], Recorder.first[1]['content']
+        self.assertIn('first lookup', system)
+        self.assertNotIn('Your first action must be search', system)
+        self.assertTrue(user.startswith('Knowledge base (first lookup):'))
+        seed = next(s['output'] for s in trace if s['action'] == 'context')
+        self.assertTrue(seed)
+        self.assertEqual(used, seed)            # the seed counts as read; no tool call, no same-name reminder
+        self.assertNotIn('reminder', [s['action'] for s in trace])
+
+    def test_primed_start_refuses_rereading_a_seed_file(self):
+        import agent
+        state = {'read': [], 'seed_full': {'vsphere/technology/cpu/metrics/virtual-motherboard/ready'}}
+        out = agent._run_tool(Retriever(DOCS, CHUNKS), 'read_file', {'id': 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'}, state)
+        self.assertIn('already in full', out)
+        self.assertEqual(state['read'], [])
+
     def test_classic_context_has_catalog_facts(self):
         # The mechanism, not the ranking: when the Ready file is retrieved, its catalog facts lead the context.
         ret = Retriever(DOCS, CHUNKS)
