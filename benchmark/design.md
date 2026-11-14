@@ -4,13 +4,12 @@ For human experts who check that the benchmark is valid and complete. Not indexe
 Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md). Question format: [benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Misconception definition: `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 ## 1. Claim
-- Claim: a local open-weight model on customer hardware (one GPU is the stretch target; [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)), with this harness + agent + knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
+- Claim: a local open-weight model on customer hardware with this harness + agent + knowledge base, answers Level 400 vSphere operations questions better than the best frontier model without them.
 - System under test: model + agent + harness + knowledge base. The model is frozen; the benchmark does not test it for its own sake (`MISSION.md`, section 1). It measures:
   - which frozen model to ship;
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
 - Base (the model alone) is the zero point: Agent E2 minus Base is what our work adds.
-- Release gate: section 7.5 (final score at least 85%, Level 400 at least 80%, confident-wrong at most 3%, held-out set not fitted). Target: 99%. Final score: section 7.4.
 - The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). The real test is the field: the live test with the author's real questions ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md)) and the operators who use Agent E2. The question set has no target size and no allocation to fill: questions are added, rewritten and retired as the knowledge base and the field show what matters.
 - The benchmark must:
   1. rank candidate models against each other, on Agent E2 and on Base;
@@ -26,7 +25,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
 | Reading tables: vCenter chart exports, VCF Operations exports, esxtop batch output | More screenshots (the screenshot set grows after 1.0, section 13) |
 | Knowing the limits: choosing Unsure instead of guessing | Multi-turn conversation with clarifying questions (a separate set, later); a consultation that interviews the user and computes (capacity planning): the live test, step 9 |
-| Consistency: the same answer on every run | Cost and price (out of scope, author 2026-11-04) |
+| Consistency: the same answer on every run | Cost and price (out of scope) |
 | Knowing every true statement and rejecting every plausible false one, among as many options as the question needs | Agent E2's own framework and the vCommunity management pack (section 6.1) |
 | | Answering without options, in free text: the live test, judged by the author ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9; Q199) |
 
@@ -87,7 +86,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 | Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) |
 | Screenshot | An image of a product UI | As an image, to a vision model |
 
-- 1.0 adds no more screenshots, except the Explain half of a pair when a screen has no export (section 3.9; author, 2026-11-14). A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set grows after 1.0 (section 13).
+- A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. 
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]` or `[screenshot]`, derived from `attachments` and checked by lint.
 - URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
@@ -126,7 +125,7 @@ Each question lists every area it touches in `technology` (values from [project/
 - `coverage.py` prints each count and marks a zero. The review rules are checked by the reviewer (section 11).
 
 ### 3.8 Answer-key shape (deterministic)
-- Options: as many as the question needs, no fixed count (author, Q199, 2026-11-14): the reader is a model, not a person, so a list of 20 is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option since 2026-11-05 (Q038).
+- Options: as many as the question needs, no fixed count limit or target. Since the reader is an LLM model, not a person, so a long list is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option since 2026-11-05 (Q038).
 - The number of correct options varies from one to all of them (1 correct and 19 wrong is valid). The model is never told how many: every question carries the same instruction, "Choose all the correct options. There can be more than one."
 - A model that learns "usually one answer" or "usually all but one" gains nothing, and with many options a guess is almost never exactly right (6 options plus Unsure: about 1 in 64).
 
