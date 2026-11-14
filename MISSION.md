@@ -23,14 +23,14 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 |---|---|---|---|
 | Knowledge base | Level 400 facts, mechanisms, misconceptions, flows, exact data | Content, structure, links, catalog | `knowledge/` |
 | Harness | The software around the model: retrieval, tools, verifier, rules, budgets | Code, tool design, retrieval settings | `harness/` |
-| Agent | The model plus the tool loop: what it is told up front, its rules for choosing tools | System prompt, up-front knowledge, tool rules | `harness/` (`AGENT.md`) |
+| Agent | The expert's procedure as code: it reads the question into a case, plans what to read from the knowledge base's map, computes, decides whether to ask, calls the model, checks the answer | The stages, the reading plan, the rules, the prompts | `harness/` (`AGENT.md`) |
 | Model choice | Which frozen model we ship | Swap in a better open model when one appears | [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) |
 
-- The benchmark tests the whole system, not the model. It answers three questions:
-  - which frozen model to ship (model choice is the fourth lever);
-  - what each change to the knowledge base, harness or agent adds: a score delta per change, with everything else fixed;
-  - whether Agent E2 scores higher than a frontier model.
-- Baseline mode (the model alone) is not a test of the model for its own sake. It is the zero point: system score minus baseline score is what our work adds.
+- The benchmark tests the whole system, not the model. It is a proof, not a goal (author, 2026-11-14): no mode or run is kept for its own sake. It answers:
+  - whether Agent E2, as shipped, passes the release gate and how it compares with a frontier model;
+  - which frozen model to ship (model choice is the fourth lever).
+- What a change to the knowledge base, harness or agent adds is read from free checks first (the retrieval check, traces, unit tests), and from the next round that proves the product.
+- Agent E2 has one pipeline (author, 2026-11-14): classic and agentic mode are replaced by the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Whether the local model alone (baseline) keeps a place in the rounds: Q209.
 
 ## 3. Why it is possible
 Six mechanisms, in order of weight.
@@ -50,8 +50,8 @@ Six mechanisms, in order of weight.
 | Risk | Why it matters | Guard |
 |---|---|---|
 | Prior override | The model reads the right file and still answers from an Internet rule of thumb | Prompt rule: knowledge base wins; override rate measured; core rules given up front ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)) |
-| Retrieval miss | The right file exists but is not found; the model cannot use what it does not see | Retrieval check without a model; link expansion; a map of the knowledge base given up front |
-| Weak tool use | Small models search in circles or make no calls | Classic mode as fallback; tool rules; no-progress stops |
+| Retrieval miss | The right file exists but is not found; the model cannot use what it does not see | Retrieval check without a model; the reading plan follows the knowledge base's links and searches each claim; a gap in the draft triggers one follow-up |
+| Weak tool use | Small models search in circles or make no calls | The model makes no tool calls: the agent plans the reading and runs the tools in code ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)) |
 | Knowledge gap | The fact is not in the knowledge base | Every wrong answer classified; the author fills the gap |
 | Benchmark fitted to the knowledge base | Claude edits the knowledge base and can read the questions | Held-out set kept by the author; general fixes only ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 10) |
 

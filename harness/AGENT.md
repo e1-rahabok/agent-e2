@@ -1,213 +1,181 @@
 # Agent
 
-What it knows when a question arrives, what it decides, and how it is improved. Not indexed.
-Why Agent E2 can win: [MISSION.md](../MISSION.md). Run-time flow and modes: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md) and its rule modules in [project/knowledge-rules/](../project/knowledge-rules/).
+The expert-led agent: the expert's procedure as code. It reads the question into a case, plans what to read from the knowledge base's own map, runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer. One pipeline for every question: it replaces classic and agentic mode (author, 2026-11-14). Not indexed.
+Why Agent E2 can win: [MISSION.md](../MISSION.md). The whole system: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md). The tool-loop agent it replaces, with its measurements: [project/archive/agent-tool-loop-2026-11-14.md](../project/archive/agent-tool-loop-2026-11-14.md).
 
-## 1. What it is
-- The agent is the model plus the tool loop, in agentic mode only. It is not a separate program.
-- The model makes the decisions: which tool next, with which query, which file to read, when to stop and answer.
-- The harness hosts the loop and constrains it: it runs the tools, enforces the rules and the budgets, and checks the answer.
-- Code: [`harness/agent.py`](agent.py) (the loop, the tools, the rules), [`harness/primer.py`](primer.py) (the up-front blocks), prompts `SYSTEM_AGENT` and `PROMPTS` in [`harness/modes.py`](modes.py). The tools are in `harness/` (`retrieval.py`, `catalog.py`, `calc.py`, `capacity.py`, `flows.py`); the verifier in `verify.py`.
-- The model is frozen. What we change is what the agent is told, which tools it has, and the rules around them.
+- Status (2026-11-14): designed. Built: the reading plan (stage 2, [`harness/planner.py`](planner.py)), a prototype measured by the retrieval check and off by default. Not built: stages 1 and 3 to 6. Until the build order of section 7 is done, the code keeps the classic and agentic modes ([`harness/modes.py`](modes.py), [`harness/agent.py`](agent.py)).
 
-## 2. Why an agent
-- A Level 400 question often needs a chain across files: metric → the same-named metric on another object → the concept behind it → the troubleshooting flow → a calculation.
-- One search cannot predict that chain. Classic mode (one lookup, then answer) is capped by what that lookup finds: 67% of needed files reach its context (2026-11-04).
-- The agent can go back for more: read a file, follow its links, look up a value, compute, then answer.
-- Classic mode stays as the reference point and the fallback (section 9).
-
-## 3. What it knows when a question arrives
-### Today
-- The system prompt: knowledge base first, and it wins on conflict; own knowledge only where the knowledge base is silent, said so in the reason; mechanism before definition; same-name metrics; thresholds only when the knowledge base states them; Unsure over a guess.
-- The tool rules (section 5) and the tool descriptions.
-- The question and its images.
-- Primed start (`agent_seed_tokens`; built 2026-11-13, off: see section 6): the harness runs the classic lookup (`modes.classic_context`: hybrid search, term map, troubleshooting route, link expansion, catalog facts) and puts its text in the first message, fitted to the seed budget. The seed files count as read. The rule "first action must be search or catalog" is replaced by "read the first lookup; call tools only for what it does not settle". A seed file in full cannot be read again (the last one may be cut at the budget, so it can). The same-name reminder covers only files the agent reads itself: the seed already expanded the same-name links of its top hits.
-- With `agent_seed_tokens: 0` (the setting) the agent starts cold: it knows nothing about the knowledge base beyond the up-front blocks and discovers what exists by searching.
-
-### The gap
-- Searching helps only when the model knows it does not know. Its worst errors are Internet rules of thumb it believes, so it never searches for them.
-- Without a map, the agent searches blind: it does not know that a health check answers "is it healthy" and a troubleshooting file answers "why" or that a comparison file sets two tools side by side.
-
-### How the agent finds knowledge
-A model that knows nothing about the knowledge base can still reach the right file, through these paths:
-
-| Path to a file | Built from | Used by |
+## 1. Who decides what
+| Part | Does | Never does |
 |---|---|---|
-| Words in the question | Body text, misconception lines in the user's words, glossary synonyms | Search (BM25 and embeddings) |
-| Kind of question | `retriever_guide`, the kind of each file (how-it-works, metric-meaning, what-to-set, health-check, troubleshooting, decision-tree); not the folder | Search filters; the map (block 1) |
-| Object, layer, product | Metadata tags | Search filters |
-| From one file to the next | `same_name`, `same_meaning`, `internal_derive`, `related` | Link expansion; `follow_links` |
-| Exact values | `knowledge/catalog/*.yaml`, KPI colour-band tables | `catalog` tool |
-| Order of checks | Numbered steps in the health-check, troubleshooting and decision-tree files | `flow` tool |
+| Agent (code) | Builds the case; plans the reading set; runs the catalog, calculator, flow executor and planning calculator on the case's values; decides whether to ask the user; calls the model; checks the answer; follows up once on a gap | Writes prose; guesses a value |
+| Harness | The tools (hybrid search, catalog, calculator, planning calculator, flow executor, web), budgets, the verifier, the model client | Decides |
+| Model | Reads the question and its images into the case (fixed schema); reads the reading set and writes the answer, with a file for each claim | Chooses files or tools; does arithmetic; compares a value with a threshold |
+| Knowledge | The map the agent plans with (file kinds, links, catalog, flows, term map) and the text the model reads | |
 
-### Five up-front blocks (built 2026-11-06; on in the final round of 2026-11-13)
-Each is small (all five: 3,000 tokens, exactly the budget checked by lint), needed on most questions, and changes behaviour. Each is generated from the knowledge base at start by [`harness/primer.py`](primer.py), so it cannot drift, and each has its own switch in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml), key `agent_primer`. All five are on in the final round (2026-11-13, with the term map in the agent prompt), so the agentic run is the full team; their gain one at a time is not measured yet (section 7). When one is on, the trace records a `primer` step.
+- The model is called; it does not drive. Every decision about what to read, compute or ask is code that reads the knowledge base, so the author can review it, and the same question always takes the same path.
+- The word agent changes meaning: it was the model plus the tool loop ([project/terms.md](../project/terms.md), proposal for the author).
 
-| # | Block | Content | Built from |
-|---|---|---|---|
-| 1 | Map of the knowledge base | Each area with its files by kind; what each kind answers and which tool serves it | File ids and `retriever_guide` |
-| 2 | Level 300 misconceptions ([`knowledge/misconceptions.md`](../knowledge/misconceptions.md)) | 12 wrong beliefs a frontier model applies without looking them up, each corrected with its file: VM is not Guest OS; same name, different metric; utilization is not contention; provider and consumer views differ; overcommit per thread | [`knowledge/misconceptions.md`](../knowledge/misconceptions.md), the lines under its first heading |
-| 3 | Confusable terms | 17 pairs that pass the tests of [`project/knowledge-rules/terminology.md`](../project/knowledge-rules/terminology.md): Usage, Thread and Core Utilization, Demand; Run and Used; VM and ESXi memory Usage; KPI, SLA, SLI and model; alert and insight | [`knowledge/glossary.md`](../knowledge/glossary.md), lines Not to confuse with |
-| 4 | Flow index by kind | One line per flow file: its name and id, grouped as health check (object), troubleshooting (symptom), decision tree (question) | `retriever_guide` of each file |
-| 5 | Procedure rules | Troubleshooting starts with the flow; a number comes from the catalog, never from memory; cite the files read | Fixed text in `primer.py` (procedure, not facts) |
+## 2. Evidence for the split
+- Planning a lookup needs a map of what the knowledge base holds. That map is the author's proprietary knowledge; the Internet text the model learned from does not have it. A model cannot plan a search through ground it has never seen, and its worst errors are beliefs it never looks up.
+- The code can plan: the knowledge base records its own map (file kinds, `same_name` and `internal_derive` links, the catalog, flows, the term map).
 
-### Kept behind tools
-| Content | Why not up front |
+| Finding (benchmark 2026-11-12 and 2026-11-13, retrieval check 2026-11-13) | Reading |
 |---|---|
-| Full glossary | Long; most entries never matter for one question. Looked up when met. |
-| Metrics and thresholds | Hundreds of rows. Up front, the model recalls a value instead of looking it up, and a recalled number cannot be checked or cited. |
-| Full flowcharts | Long; one applies per question. The index points to it; the `flow` tool serves it step by step. |
+| Agentic and classic within the margin for every model (-6, -3, +1 points); agentic at 2-3.5 times the tokens and twice the latency | The model's own tool use adds nothing yet |
+| 4.8-7.4 tool calls per multiple-choice answer; Muse at the 8-call limit on 359 of 595 | The model searches in circles |
+| A needed file in the agent's search results, never opened (20-question sample, 2026-11-13): Gemma read 49%, saw 64%; Muse read 62%, saw 80% | The model cannot tell which hit matters |
+| Qwen agentic: the same letters in all 5 runs on 35% of the questions | Lookups chosen by the model change from run to run |
+| Primed start (same sample): given the classic context, no tool call on 32 of 40 (Gemma) and 38 of 40 (Muse) answers | The model does not ask for what is missing; a gap must be found by code |
+| Every needed file read: Muse agentic loses 1.7 of its 22 lost points | The model reads and reasons well |
+| Classic: every needed file in context for 96% of questions with 1 needed file, 5% with 5 or more; the most-missed files are mechanism files the question's words do not name (VM CPU Ready 9 times, resource-controls 7, Co-stop 5) | One search on the question's words does not reach the mechanism |
 
-- Reason for the size limit: a small model's attention thins as the prompt grows; rules buried in 20K tokens of reference are ignored. Every token is also sent on every question and run.
+- So the model keeps the jobs it does well (reading, reasoning over given text, writing) and loses the job it does badly (deciding what to read). Code takes that job, from the knowledge base's map.
 
-## 4. What it decides
-| Decision | Example |
-|---|---|
-| What to look up first | `search("cpu.ready.summation")` or `catalog("cpu.ready")` |
-| Which file to read | `read_file` on the metric file, not the snippet |
-| Which links to follow | `follow_links(same_name)` before answering about a metric |
-| Which exact tool | `catalog` for unit and rollup, `calculate` for the conversion, `flow` for a troubleshooting question |
-| When to stop | Answer once the files settle the question, or Unsure |
+### Classic and agentic: what the new agent keeps
+- Classic was the first harness (2026-11-04). It stayed for three reasons: the control that isolates the model's tool skill (agentic minus classic), the fallback when a model breaks the tool-call format twice, and speed (one model call).
+- For Agent E2 the product, only the fallback and the speed counted. The control is a benchmark diagnostic, and the benchmark is a proof, not a goal ([CLAUDE.md](../CLAUDE.md), Evaluation).
+- The new agent needs no fallback: the model makes no tool calls, so no tool-call format can break. It keeps the speed: 2 model calls in the common case.
+- Kept from classic: the harness leads; a deterministic lookup; catalog facts in the context; the term map; the troubleshooting route.
+- Kept from agentic: reading beyond one search (link closure, one search per claim, a follow-up on a gap); the exact tools; the verifier.
+- Dropped: the model choosing tools; the tool-call budget; the same-name and read reminders (code reads the files and their same-name links itself); the primed start; up-front blocks 1 (map) and 4 (flow index), which existed so the model could plan.
 
-## 5. Rules the harness enforces
-| Rule | How | Why |
-|---|---|---|
-| Look up before answering | Primed start: the first lookup is done before the model starts. Cold start: the first call must be `search` or `catalog`; any other tool is refused | Answers from memory are the main failure |
-| No repeats | An identical call is refused | Small models search in circles |
-| Same-name check | Before the answer, a reminder to call `follow_links(same_name)` on each metric file read | Same label, different object, is the commonest misconception |
-| Read reminder (`agent_read_reminder`, new 2026-11-13) | In the same one reminder: the top 3 hits of its searches that the agent did not read, at most 3 files, best rank first | Found but not read: Muse scored 74% when a needed file was found and not read, 82% otherwise. Within the same question the gap is +5 points for Muse and about 0 for Gemma and Qwen, so the expected gain is small; it is the one agentic change of the next round, kept only if it scores |
-| Consensus (`consensus_samples`, classic and agentic) | Up to n samples; unanimous letters stand, else Unsure | Confident-wrong is the gate the models miss most. Design and numbers: [README.md](README.md), section 6a |
-| Budget | At most `agent_max_calls` (8) tool calls and `agent_tool_tokens` (12K) of tool output; then "answer now" | Context window and time; benchmark cost |
-| Context window | Before each model turn, the prompt estimate plus the answer budget must fit `context_window` (32K); otherwise no more tools, answer now (trace step `context_full`) | The deployed model's window, not the gateway's |
-| Format | Two malformed tool calls: fall back to classic mode | A broken loop must still answer |
-| Verify | The final answer goes through `verify.py`; a hard issue gets one repair turn | A wrong format scores as wrong |
-
-- The limits are budgets, not design values. Deployment rule (stop on token budget, time budget or no progress): section 8.
-
-## 6. Observed behaviour
-### Final round (benchmark 2026-11-13, 196 questions, 5 runs; up-front blocks and term map on, cold start)
-- Agentic and classic are within the margin for every model: google/gemma-4-31b-it 76% against 78%, meta/muse-glimmer-30b 78% against 77%, alibaba/qwen3.8-27b 63% against 69%. Agentic uses 2-3.5 times the tokens and about twice the latency.
-- Mean tool calls per multiple-choice answer: gemma 4.8, muse 7.1, qwen 7.4.
-- Found but not read: within the same question, reading the found file adds about +5 points for Muse and about 0 for the others. Read reminder built (section 5).
-- Agentic consistency is the weak point for Qwen: the same letters in all 5 runs on 35% of the questions.
-- Analysis: [benchmark/results/analysis-2026-11-13.md](../benchmark/results/analysis-2026-11-13.md), sections 4 and 6.
-
-### Earlier rounds
-- Benchmark 2026-11-12, 150 questions: agentic scored below classic for 2 of 3 models: google/gemma-4-31b-it 54% against 67%, meta/muse-glimmer-30b 56% against 64%. alibaba/qwen3.8-27b scored 51% in agentic and 39% in classic; its baseline run is invalid (answers cut at the token cap).
-- Tool use differs by model. Mean calls per answer on the multiple-choice questions: gemma 4.9, qwen3.8-27b 6.4, muse-glimmer-30b 8.1. Muse reached the limit of 8 calls on 367 of 450 answers.
-- So today the weakest step is the agent's first lookups, not the knowledge base. The up-front blocks (section 3) and a primed start (agentic mode that starts from the classic context) target that step.
-- Sample of 2026-11-13 (20 questions drawn at random, 12 multiple choice and 8 judged, 2 runs; Gemma and Muse; up-front blocks and term map on, reasoning off for Muse). Credit on the worst run:
-
-| Model | Classic | Agentic, cold | Agentic, primed (10K seed) |
-|---|---|---|---|
-| google/gemma-4-31b-it | 83% | 87% | 77% |
-| meta/muse-glimmer-30b | 78% | 85% | 63% |
-
-  - Primed start: the agent stopped using tools. 32 of 40 Gemma answers and 38 of 40 Muse answers made no tool call. The primed agent was classic mode with a smaller context (10K, not 16K; recall 67% against 74-75%). It beat classic on no question and lost on 2 (Gemma) and 3 (Muse). Off.
-  - Cold start with the full team: at or above classic on this sample (Gemma +4, Muse +7 points). 20 questions give a margin of about ±15 points, so this is a direction, not a result; the final round decides.
-  - Found but not read: the cold agent saw a needed file in search results more often than it read one (Gemma recall 49%, seen 64%; Muse 62% and 80%). Weak support for a lever: answers with full credit read about as many needed files as the others (review of 2026-11-13, section 6).
-  - Not tried, on purpose: tuning the seed prompt on 20 questions would fit the noise.
-
-## 7. How it is improved
-- One change at a time, scored on the benchmark against the same model and questions: a score delta per change.
-- Levers, in expected order of effect:
-  1. up-front blocks 1-5 (section 3), each switched on alone and then together;
-  2. a primed start from the classic context;
-  3. tool descriptions and tool rules;
-  4. the budgets, re-run on the answers that hit the limit with 16 calls.
-- Kept: a change that raises the final score or lowers the confident-wrong or override rate by more than the margin. Otherwise dropped.
-- Code split done 2026-11-06: the loop moved from `modes.py` to `agent.py`.
-
-## 8. Budgets and the tool-call limit
-- The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of the 10,780 answers of the final round. It is not a design value. No knowledge-base need sets it at 8.
-- Run results (agentic mode, multiple-choice questions, exact answers by number of calls). Final round, benchmark 2026-11-13:
-
-| Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
-|---|---|---|---|
-| google/gemma-4-31b-it | 207 of 212 | 221 of 273 | 79 of 110 |
-| meta/muse-glimmer-30b | 32 of 33 | 198 of 203 | 287 of 359 |
-| alibaba/qwen3.8-27b | 19 of 19 | 128 of 152 | 277 of 424 |
-
-- Answers that hit the limit in the final round: 72% exact for gemma, 80% for muse, 65% for qwen.
-- Benchmark 2026-11-12 (150 questions), for comparison:
-
-| Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
-|---|---|---|---|
-| google/gemma-4-31b-it | 125 of 135 | 205 of 253 | 40 of 62 |
-| meta/muse-glimmer-30b | 1 of 1 | 82 of 82 | 304 of 367 |
-| alibaba/qwen3.8-27b | 4 of 25 | 231 of 248 | 148 of 177 |
-
-- Answers that hit the limit in the round of 2026-11-12: 65% exact for gemma, 83% for muse, 84% for qwen. The data does not show that a higher limit helps; the budget re-run (section 7, lever 4) decides.
-- Hard questions also take more calls, so the table does not prove that more calls are useless. Next check: re-run the limit-hit answers with 16 calls.
-- Models differ in how many calls they use (table above). The limit does not affect a model that makes few calls.
-- Deployment has no per-token fee. Its limits are:
-  - the context window: every tool result stays in the conversation; with a 32K window, about 12-16K tokens of tool output leaves room for the prompt and the answer;
-  - waiting time: each call is a model turn on the local GPU (seconds each).
-- Deployment rule, replacing a fixed count:
-  - stop on a token budget (tool output that still fits the context) or a time budget (set from trials with users), whichever comes first;
-  - stop early on no progress: repeated searches, re-reading the same file, two calls returning nothing new;
-  - at the stop, answer with what was read and say what is missing, or answer Unsure;
-  - show progress (what is being read) and let the user stop or ask to keep digging.
-- The benchmark uses the same budget as deployment, so the score predicts the product.
-
-### Benchmark and deployment
-- The release score is measured on the deployed configuration. A different benchmark setting would grade a system that is not shipped.
-- Same in both: prompt, tools, retrieval settings, verifier, context window, token budget for tool output, no-progress stops.
-- Different:
-
-- **Time**
-  - Why: Benchmark time depends on the gateway, network and provider rate limits, not on the customer GPU. A wall-clock limit in the benchmark would grade the provider.
-  - Handling: The benchmark stops on hardware-independent limits only: tokens and no-progress. A maximum number of model turns is derived from the deployment time limit: turns = time limit ÷ seconds per turn measured on the target GPU (benchmark phase 5).
-- **Context window**
-  - Why: Gateway models often offer 128K or more; the deployed server may run 32K.
-  - Handling: The benchmark caps the context to the deployed window.
-- **User in the loop**
-  - Why: In deployment the user can stop, ask to keep digging, or answer a clarifying question. A benchmark has no user.
-  - Handling: The benchmark answers at the end of the budget with no help: a worst case. Clarifying questions are scored as a separate set later.
-- **Experiments**
-  - Why: Some runs ask "what if" (16 calls, primed agentic, another embedding model).
-  - Handling: Run as named experiment profiles. Only the deployment profile produces the release score.
-
-- One harness, several profiles: the deployment profile (release score and product) and named experiment profiles (for experiments only).
-
-## 9. Why classic mode stays
-- Classic mode costs a third of the benchmark. Reasons to keep it:
-  1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is as good as agentic today. Benchmark 2026-11-13: classic and agentic within the margin for every model (gemma 78% against 76%, muse 77% against 78%, qwen 69% against 63%), at a third to half of the tokens. Q200 asks whether the next round decides the shipped mode. The mode is chosen per model by the decision rule in [`benchmark/design.md`](../benchmark/design.md).
-  3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
-  4. It is fast: one model call instead of up to nine.
-- After the full run of the 196 questions picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
-- Built and measured 2026-11-13: agentic mode that starts from the classic context (section 3, primed start). The model stopped using tools and scored below classic; off (section 6).
-
-## 10. Walkthrough of one question
-Real trace (2026-11-04, alibaba/qwen-3-32b): "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?" Options include the rollup and statistics level, 10% Ready and 40% Ready.
-
+## 3. One question, six stages
 ```mermaid
-sequenceDiagram
-  participant U as User
-  participant H as Harness
-  participant M as Model (local GPU)
-  participant K as Knowledge
-  U->>H: question
-  H->>M: system rules + tool list + question
-  M->>H: search("cpu.ready.summation")
-  H->>K: hybrid search (BM25 + embeddings)
-  K-->>H: top files
-  H-->>M: ids, titles, snippets
-  M->>H: catalog("cpu.ready.summation")
-  H->>K: SQLite catalog lookup
-  K-->>H: VM cpu.ready: Summation, level 1, kb file, thresholds
-  H-->>M: exact facts
-  M->>H: calculate("summation_to_percent(8000, 20, 4)")
-  H-->>M: 10.0, with the rule and its source file
-  M->>H: ANSWER: A, B / REASON: ...
-  H->>H: verifier: format, letters, Unsure alone, ids exist, numbers grounded
-  H-->>U: answer with cited files
+flowchart TD
+  Q["Question and images"] --> U["1 Understand<br/>model reads into the case;<br/>code resolves names"]
+  U --> P["2 Plan<br/>code builds the reading set<br/>from the knowledge base's map"]
+  P --> C["3 Compute<br/>catalog, calculator, flow executor,<br/>planning calculator on the case"]
+  C --> A{"4 Ask?<br/>code rule"}
+  A -->|"a missing fact changes the answer"| R["One clarifying round"]
+  R --> U
+  A -->|"no"| W["5 Answer<br/>model reads and writes<br/>(n samples)"]
+  W --> K["6 Check<br/>verifier, gap follow-up,<br/>consensus, coverage"]
+  K -->|"gap: a named metric not read"| P
+  K --> O["Answer with citations<br/>and computed facts"]
 ```
 
-1. The harness sends the question with the rules: knowledge base first, and it wins on conflict; search or catalog first; check same-name metrics; use the catalog for units and levels, the calculator for arithmetic, the flow tool for troubleshooting.
-2. The model searches. The harness runs hybrid search (keyword BM25 plus a local embedding model, fused by rank) and returns ids and snippets, not answers.
-3. The model asks the catalog for the counter. The harness answers from SQLite built from [`knowledge/catalog/`](../knowledge/catalog): rollup Summation, statistics level 1, the knowledge file, and the thresholds with their source.
-4. The model asks for the conversion. The calculator returns 10% (8,000 ms ÷ (20 s × 1,000 ms × 4 vCPUs)) and names the rule's source file. The model never does the arithmetic itself.
-5. The model answers. The verifier checks the reply; a hard issue (no ANSWER line, a letter that is not an option, Unsure mixed with other letters) gets one repair turn.
-6. The answer goes out with the files it used.
+| Stage | Who | Model calls | Output |
+|---|---|---|---|
+| 1 Understand | Model, then code | 1 | The case |
+| 2 Plan | Code | 0 | The reading set |
+| 3 Compute | Code | 0 | Computed facts; the flow path |
+| 4 Ask | Code | 0 | Clarifying questions, or none |
+| 5 Answer | Model | 1 (n with consensus) | The draft answer |
+| 6 Check | Code | 0-1 gap follow-up, 0-1 repair | The checked answer |
+
+- Common case: 2 model calls (agentic averaged 5-8, classic 1). The understand call reads about 1-2K tokens and writes a few hundred; the answer call reads about 16K.
+- Consensus samples share one prompt, so on a local vLLM server they run as one batch on a cached prefix.
+
+## 4. The stages
+### 4.1 Understand: the case
+- The model reads the question and its images into a fixed schema; it does not answer yet. Extraction is reading, which a 30B model does well. It is also the only way to read a screenshot (MISSION.md, section 5: values shown back before reasoning).
+- Case fields:
+  - `kind`: a `retriever_guide` value (how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree);
+  - `objects` and `layer`: VM, ESXi, cluster, datastore, resource pool; virtual motherboard or Guest OS;
+  - `metrics`: each as written, with object, value, unit, interval or chart, and tool (vCenter, esxtop, VCF Operations, Windows, Linux);
+  - `symptom`;
+  - `premise`: the belief the question carries ("add vCPUs because Ready is high");
+  - `claims`: the options of a multiple-choice question, or the parts of an open one;
+  - `missing`: facts the question does not give (interval, vCPU count, object);
+  - `images`: per screenshot, tool, object, metrics, values, interval and time range.
+- Code checks the case: each metric name resolves through the catalog and the metric file titles. A name that does not resolve stays text and plans nothing; it is never guessed into a file.
+- Code also reads the question on its own (term map, object words, counter keys, metric titles, options: `planner.anchors`, `planner.claims`, `planner.objects_in`) and merges the two readings. A failed or empty extraction leaves the code-only case, so no fallback mode is needed.
+- Output is JSON under a schema; on vLLM and llama.cpp, grammar-guided decoding keeps it valid (plan, M5).
+
+### 4.2 Plan: the reading set
+Code, from what the knowledge base records about itself ([`harness/planner.py`](planner.py)). Tiers, packed in this order into the context budget (`context_tokens`, 16K):
+
+| Tier | Files | Form |
+|---|---|---|
+| 1 Flow | A troubleshooting question: its best troubleshooting flow | Whole |
+| 2 Named | Files the question names exactly: term-map rows; metric titles and counter keys resolved through the catalog, kept for the objects the question names | Whole |
+| 3 Search | Top 3 hits of hybrid search on the question | Whole |
+| 4 Mechanism | `same_name` and `internal_derive` (up to 8 each) of the named files and the top 2 hits | Best sections, 400 tokens each |
+| 5 Claims | The top hit of one search per claim | Best sections |
+| 6 Rest | Search hits 4-6; the second hit per claim; 2 `related` of the top 2 hits | Best sections |
+
+- Tiers 4 and 5: the claims of a Level 400 question test different mechanisms, and the mechanism file seldom shares the question's words. The links record which file a metric derives from; one search per claim finds the file for each claim.
+- Sections: the candidate list averages 21 files against room for about 14 whole files. With whole files, 10 points of needed-file recall were planned and then cut by the budget (plan 78%, context 68%, BM25). A secondary file gives its best sections (BM25 on the question). A file counts as in the context when its sections are, as a truncated file did in classic mode.
+- Deterministic: the same question gets the same reading set. Consensus samples then differ only in reasoning, so a disagreement marks doubt in the reasoning, not a different search.
+- Measured, retrieval check on the 196 questions (2026-11-14; `--set planner=true`):
+
+| Search | Context | Context recall | Every needed file | Main file missing | 3 needed files | 4 | 5 or more |
+|---|---|---|---|---|---|---|---|
+| BM25 | Classic | 62% | 85 of 196 (43%) | 43 | 36% | 24% | 0% |
+| BM25 | Reading plan | 76% | 108 of 196 (55%) | 25 | 52% | 31% | 21% |
+| Hybrid | Classic | 69% | 91 of 196 (46%) | 23 | 42% | 19% | 5% |
+| Hybrid | Reading plan | 80% | 115 of 196 (59%) | 19 | 57% | 36% | 26% |
+
+- Outputs: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/plan-hybrid.md). Search recall@6 is the same in both rows (60% hybrid, 49% BM25): the gain comes from what the plan adds after the search.
+- Not tuned to the questions: one design, the tiers as the knowledge base defines its links; two settings tried (section size 250 or 400 tokens, derive cap 3 or 8), within 2 questions of each other.
+- Still short of the release level of the retrieval check (main file 100%, recall 95%, complete 90%). Next levers, in order: the model's case (4.1) feeding tier 2; the knowledge changes of section 6.
+
+### 4.3 Compute
+- The agent runs the exact tools on what the case holds, before the model reads. The model gets `Computed (exact)` lines and computes nothing.
+  - Each named metric: catalog facts (unit, rollup, statistics level, thresholds by use, with source).
+  - Each metric value: the conversion its rollup needs (summation ms to % per vCPU when the interval and the vCPU count are known), and the band of its threshold row for that interval and use, with the source ([project/design-thresholds.md](../project/design-thresholds.md), target: the verdict per use from the catalog).
+  - A troubleshooting or health-check question: the flow executor with executable steps (Q166, approved for 1.0). Each step names its metric, object and test as data; code compares the case's values, takes the branch, and stops at the first step whose value the case lacks.
+  - A capacity question with its inputs: the planning calculator ([`harness/capacity.py`](capacity.py)).
+- Before the model, not on request: a small model does not call a tool it does not know it needs, as it does not search for a belief it holds. Code calls it every time.
+
+### 4.4 Ask
+- Code decides, by the rule of MISSION.md, section 5: ask only when the answer changes with a fact the case lacks:
+  - the flow's next step needs a value the case does not hold;
+  - a term-map row marks the words as having several meanings that lead to different answers, and nothing in the question or the images tells which;
+  - the text and an image disagree.
+- At most one round. The model words the questions. The benchmark kinds (`choice`, `open`) never ask.
+
+### 4.5 Answer
+- One model call (n with consensus) with: the rules (knowledge base first and it wins; a file for each claim; a threshold only with its source; Unsure over a guess); the up-front misconceptions (block 2) and confusable pairs (block 3); the case as understood; the computed facts; the reading set; the question.
+- Answer shape: conclusion first, then the mechanism and the reason, then what to check next. Each claim names the file it rests on. A claim with no file goes under "Not settled by the knowledge base" (Q199, option A). A product label follows the teaching order of [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md), section Product label and better model.
+- The model may add one line `MISSING: <metric, object or concept>`; the agent resolves it as in stage 2 and follows up once. Not relied on: models given a context seldom ask (primed start).
+
+### 4.6 Check
+- Verifier ([`harness/verify.py`](verify.py)): format, letters, Unsure alone; one repair turn.
+- Gap follow-up, once: every metric and object the draft names must resolve to a file in the reading set. A name outside it (the draft reasons about Co-stop; the reading set has no Co-stop file) makes the agent add that file's sections and ask for the answer again. This is the gain the tool loop was built for, a chain across files, run by code on evidence in the draft instead of on the model's choice.
+- Grounding: a number in neither the question, the reading set nor the computed facts is flagged; a cited id must exist.
+- Consensus (multiple choice): n samples of stage 5 on one reading set; unanimous letters stand, otherwise Unsure ([README.md](README.md), section 6a).
+- Coverage boundary: no named file, no flow and a weak top search score mean the knowledge base does not cover the question. The answer then says so, and that what follows is general knowledge ([analysis-2026-11-13](../benchmark/results/analysis-2026-11-13.md), section 12). The score limit is set on the field set (Q207), not on the benchmark.
+
+## 5. Rules and budgets
+| Rule | How | Replaces (tool loop) |
+|---|---|---|
+| Knowledge before the answer | The model answers only with the reading set in front of it | First call must be search or catalog |
+| The other object's meaning of a label | `same_name` files of every named file are tier 4 | Same-name reminder |
+| The mechanism behind a metric | `internal_derive` closure | The model's `follow_links` |
+| Exact values | Computed facts from the catalog and the calculator | `catalog` and `calculate` calls |
+| Order of checks | The flow executor takes the branch | `flow` tool; the model took the branch |
+| One question, one path | Deterministic plan | Lookups chosen per run |
+| Budget | Reading set 16K; context window 32K (`context_window`); at most 4 model calls plus consensus samples | 8 tool calls, 12K tokens of tool output |
+
+- The benchmark uses the deployment budgets, so the score predicts the product. Time per question on the target GPU: 2 model turns in the common case; measured in the live test (M5).
+
+## 6. What the knowledge must give the agent
+The plan is as good as the map. Changes to the knowledge, in order; each becomes a rule in [project/knowledge-rules/](../project/knowledge-rules) and a lint check when built:
+1. `internal_derive` is the mechanism closure: a metric file lists every mechanism file it follows from. The most-missed files are reached only through these links: 12 files derive from resource-controls and 8 from vm-vs-guest-os, yet a question that names none of those 20 files does not reach them.
+2. Names resolve: metric file titles keep the form object, technology, label (VM CPU Ready); esxtop field rows in the catalog get the `kb` of their metric file (today only vCenter counters carry it).
+3. Sections stand alone: the plan reads sections of secondary files, so each `##` section names its object and metric in its first line and does not lean on the section before it.
+4. Flow steps as data (Q166): metric, object, interval, the catalog test, the branch targets, in the flow file (one home). Format designed on the VM slow flow.
+5. Term-map rows mark words with several meanings (stage 4).
+6. Coverage by mechanism ([analysis-2026-11-13](../benchmark/results/analysis-2026-11-13.md), section 12): the field set shows which mechanisms are missing.
+
+## 7. Build order
+Each step is proved by its own check. No benchmark round until step 5 (plan: Not doing, experiments and tuning rounds before the full run).
+1. Reading plan on the code-only case: prototype built and measured (section 4.2). Next: the default context of the new agent.
+2. The case by the model: the retrieval check with the model's case (one model call per question; under US$ 1 for the 196 questions).
+3. Computed facts and the executable VM slow flow: unit tests on worked examples.
+4. Answer, gap follow-up, coverage label, the ask rule: unit tests with the mock client; one validity sample (preflight).
+5. The round that proves it: Agent E2 on the candidate models and the frontier reference. Then the classic and agentic code is archived.
+
+## 8. Walkthrough of one question
+Question: "A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?" Options include the rollup and statistics level, 10% Ready and 40% Ready.
+
+1. Understand (model call 1): kind metric-meaning; object VM; metric `cpu.ready.summation` = 8,000 ms, real-time chart (20-second sample), 4 vCPUs, vCenter; the claims are the options.
+2. Plan (traced on the prototype): tier 2 VM CPU Ready (the counter key resolves through the catalog); tier 3 adds vCenter statistics and aggregation; tier 4 the mechanism files (provider and consumer, resource controls, vCPU states, metric sources); tier 5 one hit per option (vCenter statistics for the statistics-level option, vCPU states for the limit option; one hit, the cluster health check, is noise). 16 files in the 16K budget, the secondary ones as sections.
+3. Compute: catalog, Summation and statistics level 1; calculator, 8,000 / (20 × 1,000 × 4) = 10% per vCPU, with the rule's source file.
+4. Ask: no; "real-time" gives the interval.
+5. Answer (model call 2): the model reads and writes the letters, each reason citing its file.
+6. Check: the verifier; every metric the draft names is in the reading set; consensus.
+
+- Two model calls. The tool-loop agent took four model turns for the same question (trace of 2026-11-04, archived design, section 10), and chose each lookup itself.

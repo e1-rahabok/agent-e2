@@ -270,7 +270,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), function `final`. Report table `Final score`.
 
 ### 7.5 Release gate
-- Read on Agent E2 as shipped: the local model in agentic mode, with the deployment profile (section 8). Classic mode is the floor and the fallback; it carries the retrieval levels (section 9).
+- Read on Agent E2 as shipped: the local model running the one pipeline of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (author, 2026-11-14), with the deployment profile (section 8). Rounds up to 2026-11-13 read it on agentic mode. The retrieval levels (section 9) are read on the reading plan.
 - All must hold. One number alone can be carried by easy questions or bought with confident guesses.
 
 | Gate | Limit | Why |
@@ -304,9 +304,9 @@ The frontier model must be able to answer every question from public knowledge. 
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400 and confident-wrong as the gate; the gap and the paired test as outcomes. The misconception check and the held-out set are read outside the report.
 
 ## 8. Comparison design
-- Reasons for running both modes and for the call limit: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), sections 8 and 9.
-- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 8, Benchmark and deployment.
-- Every model runs in three modes on the same questions: baseline (no knowledge base), classic (one lookup), agentic (model-driven lookups). See [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md).
+- Agent E2 has one pipeline (author, 2026-11-14): the benchmark runs it as shipped, not modes of it. The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). Why classic and agentic mode were replaced: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 2.
+- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 5.
+- Each candidate runs Agent E2 as shipped. Until the new agent is built, the runner has baseline (no knowledge base), classic (one lookup) and agentic (model-driven lookups) ([benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md)); what the next round runs, and whether the model alone keeps a run: Q209.
 - Reference: the frontier model as an administrator uses it: Claude Opus 5.5 in `web` mode (the baseline prompt plus web search and page fetch; no instruction to search, so the model decides as it does in a chat product; at most 5 calls), effort medium, no knowledge base (Q164). Its prompt-only mode does not run: a user cannot switch search off, so it measures nothing a user meets (author, 2026-11-13). The report gives the gap to it and a one-sided exact McNemar test at α 0.05: an outcome, not a gate (section 7.5).
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap within the margin is a tie.
@@ -314,7 +314,7 @@ The frontier model must be able to answer every question from public knowledge. 
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in the classic context. Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
-- Reactivated 2026-11-13 (author, Q206) on the 196 questions of the run set: hybrid (as in benchmark runs): search recall@6 60%, classic context recall 69%, 91 of 196 complete (46%), main file missing on 23. BM25: 49%, 62%, 86 of 196 (44%), main file missing on 42. Earlier, on the old 95: search 60%, classic context 78%, 61 of 95 complete. Output: [benchmark/results/retrieval-2026-11-13/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-13/hybrid.md).
+- Reactivated 2026-11-13 (author, Q206) on the 196 questions of the run set: hybrid (as in benchmark runs): search recall@6 60%, classic context recall 69%, 91 of 196 complete (46%), main file missing on 23. BM25: 49%, 62%, 86 of 196 (44%), main file missing on 42. Earlier, on the old 95: search 60%, classic context 78%, 61 of 95 complete. Output: [benchmark/results/retrieval-2026-11-13/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-13/hybrid.md). The reading plan of the expert-led agent (2026-11-14, prototype), hybrid: context recall 80%, 115 of 196 complete (59%), main file missing on 19; BM25: 76%, 108 of 196, 25 ([benchmark/results/retrieval-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-14/plan-hybrid.md)).
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats
@@ -407,9 +407,9 @@ For the set:
 - Status at benchmark 2026-11-13 (196 questions, 5 runs): best local model, meta/muse-glimmer-30b in agentic mode, 78% (Level 400 75%, confident-wrong 20%) against the 85% gate; frontier model with web search 81%, which fails the gate too (Level 400 79%, confident-wrong 12%). Analysis: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md).
 
 ## 16. Decision rules
-- Mode: agentic is the shipped mode and carries the release gate (Q130, 2026-11-12). Classic stays as the floor and the fallback; it is reported in every benchmark.
+- Mode: one pipeline, the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)), carries the release gate (author, 2026-11-14; replaces Q130, agentic as the shipped mode). No fallback mode: the model makes no tool calls.
 - Pick the model: highest final score in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
-- Agentic is dropped for a model with more than 10% fallbacks.
+- A model that breaks the case or answer format on more than 10% of answers is dropped (it replaces the rule on agentic fallbacks).
 - Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
 - 70B challenger: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
 - A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1.

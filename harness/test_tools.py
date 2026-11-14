@@ -13,6 +13,7 @@ import modes  # noqa: E402
 import verify  # noqa: E402
 import agent  # noqa: E402
 import web  # noqa: E402
+import planner  # noqa: E402
 from llm import MockClient  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
@@ -663,6 +664,45 @@ class RetrievalFixTest(unittest.TestCase):
         for d in derive:
             if d in DOCS:
                 self.assertIn(d, used)
+
+
+class PlannerTest(unittest.TestCase):
+    """Reading plan (harness/planner.py): code chooses what the model reads, from the knowledge base's own map."""
+    READY = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
+    CFG = dict(ModesTest.CFG, context_tokens=16000, plan_section_tokens=400, plan_derive_n=8)
+
+    def test_objects_in_question(self):
+        self.assertEqual(planner.objects_in('A 4-vCPU VM on an ESXi host'), {'VirtualMachine', 'HostSystem'})
+        self.assertIn('guest', planner.objects_in('Windows shows Processor Queue Length 12'))
+
+    def test_named_metric_resolves_to_its_file_for_the_named_object(self):
+        found = planner.anchors(DOCS, 'The VM shows CPU Ready at 8% and Co-stop at 3%.')
+        self.assertIn(self.READY, found)
+        self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/co-stop', found)
+        self.assertFalse([i for i in found if '/metrics/host/' in i], 'a VM question does not anchor ESXi metric files')
+
+    def test_counter_key_resolves_through_the_catalog(self):
+        self.assertIn(self.READY, planner.anchors(DOCS, 'cpu.ready.summation = 8,000 ms in one real-time sample'))
+
+    def test_claims_are_the_options_without_unsure(self):
+        q = 'Which are correct?\n\nA. Ready is a summation\nB. Ready includes limit time\nC. Unsure: the information available does not settle this question.'
+        self.assertEqual(planner.claims(q), ['Ready is a summation', 'Ready includes limit time'])
+
+    def test_mechanism_files_of_a_named_metric_are_read(self):
+        ret = Retriever(DOCS, CHUNKS)
+        _, used, _ = planner.reading_set(ret, 'A VM shows CPU Ready at 8%. Is the VM slow?', self.CFG)
+        self.assertIn(self.READY, used)
+        for d in DOCS[self.READY].meta.get('internal_derive') or []:
+            self.assertIn(d, used)
+
+    def test_same_question_same_reading_set_within_budget(self):
+        ret = Retriever(DOCS, CHUNKS)
+        q = 'Users say the VM is slow. CPU Ready is 2% and Run is 10%. What do you check first?'
+        a, used_a, _ = planner.reading_set(ret, q, self.CFG)
+        b, used_b, _ = planner.reading_set(ret, q, self.CFG)
+        self.assertEqual((a, used_a), (b, used_b))
+        self.assertLessEqual(len(a) // 4, self.CFG['context_tokens'])
+        self.assertEqual(DOCS[used_a[0]].meta['retriever_guide'], 'troubleshooting')
 
 
 class WebOnlyModeTest(unittest.TestCase):

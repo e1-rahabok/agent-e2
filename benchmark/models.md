@@ -113,7 +113,7 @@ All are required. A model that fails one is not a candidate.
 | B | 96 GB | MoE up to about 150B total, for example 120B with 6-12B active |
 
    - Tier C, two to four GPUs: allowed since 2026-11-13. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
-4. Tool calling, for agentic retrieval and the calculator, catalog and flow tools.
+4. Structured output (a JSON schema) for the case ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.1). Tool calling is no longer needed: in the expert-led agent (2026-11-14) the model makes no tool calls. Until it is built, the agentic runs still use tool calling.
 5. Context window of at least 32K tokens: system prompt + up-front blocks (3K) + 12-16K retrieved text + images + answer.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
 7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate.

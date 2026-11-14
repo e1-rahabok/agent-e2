@@ -24,7 +24,7 @@
 # Agent E2
 
 - What it is:
-  - An LLM-based expert system, built as agentic RAG on a local LLM.
+  - An LLM-based expert system on a local LLM. The agent and the harness lead: code follows the expert's procedure, decides what to read from the knowledge base's map and computes the exact values; the model reads and writes ([harness/AGENT.md](harness/AGENT.md)).
 - Scope for Phase 1:
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name:
@@ -98,7 +98,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
   - The knowledge base adds 19-28 points to every local model.
   - Frontier model (Claude Opus 5.5 with web search, no knowledge base): 81%. The gap of 3 points is inside the margin.
   - Release gate (final 85%, Level 400 80%, confident-wrong 3%): passed by no model, the frontier model included.
-- Retrieval check (2026-11-13, hybrid): 69% of needed files reach the classic context; 91 of 196 questions get every needed file ([baseline](benchmark/results/retrieval-2026-11-13/hybrid.md)).
+- Retrieval check (2026-11-13, hybrid): 69% of needed files reach the classic context; 91 of 196 questions get every needed file ([baseline](benchmark/results/retrieval-2026-11-13/hybrid.md)). The reading plan of the expert-led agent (2026-11-14, prototype): 80%, 115 of 196 ([output](benchmark/results/retrieval-2026-11-14/plan-hybrid.md)).
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md). Latest review: [`project/review-2026-11-13.md`](project/review-2026-11-13.md).
 
 ## Checks
