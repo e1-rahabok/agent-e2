@@ -1,11 +1,6 @@
 # Terminology
 
-Agent E2's vocabulary: one entry per concept, under its preferred name. An entry is the term in bold with its meaning, then up to three lines:
-- Also called: other names for the same thing (vendor variants, screen labels, esxtop fields, words users write).
-- Not to confuse with: the term it is mixed up with, and the difference. Written once, under the term users misuse.
-- File: the knowledge file that holds the mechanism.
-
-A metric with its own file is an entry only when it has another name or a confusable partner; its file holds the rest. Entries are grouped by area, alphabetical within each.
+Agent E2's vocabulary: one entry per concept, with its other names, the term it is confused with, and the file that holds the mechanism.
 
 ### Objects and layers
 

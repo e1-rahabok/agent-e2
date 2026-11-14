@@ -1,13 +1,6 @@
 # Level 300 misconceptions
 
-The misconceptions with the widest reach, given to the agent before every question (up-front block `rules`, switch `agent_primer.rules`, on since the final round of 2026-11-13). Built by `harness/primer.py`. Not indexed (`harness/kb.py`, `NOT_INDEXED`), so search never returns this summary instead of the file.
-
-What belongs here:
-- A misconception a frontier model applies with confidence, so it never looks it up: what is a problem, which metric decides, what to add or size by. Level 300: a VMware administrator who knows the basics still holds it.
-- Promoted from a file: each line is also a misconception in the `## Misconceptions` section of the file it names, where the mechanism and the user's own words live. This list only makes sure the correction is in place before the model reasons.
-- Chosen by reach: a misconception that changes the verdict on many questions (layer, provider and consumer, utilization vs contention, memory as cache), not one that matters for a single counter.
-- Not a definition, and not two terms swapped: those are entries of `knowledge/glossary.md` (Not to confuse with).
-- One line: the correct understanding, then `See` the file that holds the mechanism.
+Beliefs a model applies without looking anything up, each corrected, with the file that holds the mechanism. Sent to the model with every question (up-front block `rules`, config `primer.rules`, `harness/primer.py`). Not indexed: search returns the file with the mechanism, not this one-line summary (`harness/kb.py`, `NOT_INDEXED`). What belongs here: [project/knowledge-rules/terminology.md](../project/knowledge-rules/terminology.md).
 
 ## Corrections
 

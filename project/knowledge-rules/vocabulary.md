@@ -1,24 +1,9 @@
-# Writing vocabulary
+# Words to avoid
 
-How the knowledge files are written: the dimensions not to mix, and the words to avoid when writing. For writers and lint, not for Agent E2; not indexed. The agent's vocabulary (one entry per term: meaning, other names, the term it is confused with) is [`knowledge/glossary.md`](../knowledge/glossary.md). Repository terms: [`project/terms.md`](terms.md).
+Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../KNOWLEDGE-ENGINEERING.md). The words to avoid when writing, each with its replacement and reason. For writers and reviewers; not indexed. The dimensions behind the tags (object type, layer, technology, pillar): [metadata.md](metadata.md). Writing rules: [writing.md](writing.md). The agent's vocabulary (one entry per term: meaning, other names, the term it is confused with) is [`knowledge/glossary.md`](../../knowledge/glossary.md). Repository terms: [`project/terms.md`](../terms.md).
 
-## Dimensions (do not mix)
-- Object type: a kind of managed object (VirtualMachine, HostSystem). Not a component inside an object (vCPU, vmnic).
-- Object: one named instance of an object type ("db01"). Not a metric or a layer.
-- Instance (metric): a sub-component a metric is reported for (vCPU 0, vmnic1, vmhba0). Tag `instance`. Not an object type.
-- Layer: a level of the stack: guest-os, virtual-motherboard, hypervisor, physical. Guest OS is a layer, not an object type.
-- Vantage point: the layer or object a metric is observed from (consumer VM vs provider ESXi). Expressed through `object` and `layer`.
-- Perspective (book): technology, pillar of operations, product. Not a layer.
-- Technology: cpu, gpu, memory, storage, network, system (the box as a whole). Not a product.
-- Pillar: availability, performance, security, capacity, value. Not a technology.
-- Metric class: contention, consumption, context. Not a pillar.
-- Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
-- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One concept, two homes: `## Misconceptions` in the file, and the widest-reaching ones up front in [`knowledge/misconceptions.md`](../knowledge/misconceptions.md). [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md), section 4.
-- Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
-- Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.
-
-## Words to avoid
-When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in [`knowledge/glossary.md`](../knowledge/glossary.md) too, so search maps it.
+## Table
+When the author corrects a wording mistake, add it here. A word users also say goes into the Also called line of its entry in [`knowledge/glossary.md`](../../knowledge/glossary.md) too, so search maps it.
 
 | Avoid | Use instead | Why |
 |---|---|---|
@@ -32,8 +17,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | VM rightsizing | Guest OS sizing (internal, Guest OS counters) or VM footprint (external, vSphere counters) | Two different jobs with two formulas. Author's other book, VM Footprint and Guest OS Sizing. |
 | VM metric (for a Guest OS counter such as Run Queue, Disk Queue, Processor Time) | Guest OS metric | The VM is a virtual motherboard; the Guest OS is a separate layer. Author correction, 2026-11-03. |
 | virtual machine, thought of as a complete machine | virtual motherboard (VM) | A VM has no OS of its own. Author's book. |
-| need, want, wish (for a vCPU or VM) | demands runtime; the kernel decides how much it gets | A vCPU is a thread in the scheduler. It has no intent. |
-| "uses only X% of what it needs" | "is charged X%" or "gets X% of the runtime it demands" | Same reason. |
+| "uses only X% of what it needs" | "is charged X%" or "gets X% of the runtime it demands" | A vCPU is a thread in the scheduler with no intent ([writing.md](writing.md), CPU scheduling language). |
 | object (for vCPU, Guest OS) | instance (vCPU), layer (Guest OS) | vCPU and Guest OS are not vSphere object types. |
 | trap (for a wrong belief or wrong reading) | misconception | In IT infrastructure a trap is an event notification (SNMP trap, a log message an alert traps) or, in CPU virtualization, a hand-over to the hypervisor (trap-and-emulate). Agent E2 does not set traps for other models; it knows the mechanism (author, 2026-11-11). |
 | misreading (for the up-front list) | misconception | One concept, one word: the up-front lines are misconceptions promoted from their files. |
@@ -48,5 +32,4 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | verification (of an object's state) | health check | A third word for the same thing. |
 | KPI (for capacity, risk, availability) | model | KPI is strictly performance: the P in KPI. Capacity, risk, availability and security are models. |
 | Imbalance (for vCPU usage) | Usage Disparity | Imbalance implies the vCPUs should be balanced. |
-| a sentence or question as a title or heading ("How each sub-metric is calculated", "Why this order") | a noun phrase that names the topic ("Sub-metric formulas", "Order rationale") | Sentence headings are a habit of generated text. The title and heading go in front of every chunk, and question words name no topic (2026-11-12). Rule: [`project/knowledge-rules/writing.md`](knowledge-rules/writing.md). |
 | guest physical memory, guest physical page, machine page, machine memory | VM pages, ESXi pages | Only ESXi manages physical memory. Keep the vendor term once in parentheses for retrieval. |
