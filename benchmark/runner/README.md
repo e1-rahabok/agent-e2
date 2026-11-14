@@ -1,13 +1,13 @@
 # Benchmark runner
 
-Runs every question (multiple choice, screenshot, free text) against the candidate open-weight models through Vercel AI Gateway, scores them automatically (letters, or a judge model for free text), and writes a report with one final score.
+Runs every question (multiple choice, with text, tables or screenshots) against the candidate open-weight models through Vercel AI Gateway, scores the letters automatically, and writes a report with one final score.
 A whole round (four runs, preflight, recovery, summary) without anyone at the keyboard: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md).
-Design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). Models and judge: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Not indexed.
+Design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). Models: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md). Not indexed.
 
 ## Setup
 - Python 3.10+ with `pyyaml` and `requests`.
 - Environment variable `AI_GATEWAY_API_KEY` (Vercel AI Gateway API key). Never commit it.
-- Settings: `config.yaml` (models, judge, modes, runs, temperature, budgets, provider pinning).
+- Settings: `config.yaml` (models, modes, runs, temperature, budgets, provider pinning).
 
 ## Commands
 ```bash
@@ -45,7 +45,7 @@ python3 benchmark/runner/run_all.py --resume --max-minutes 110
 ```bash
 python3 -m unittest benchmark/runner/test_runner.py
 ```
-- Scoring tests: judge reply parsing, final score, sub-score groups, question tags. No API calls.
+- Scoring tests: final score, sub-score groups, question tags. No API calls.
 
 - Up-front blocks of Agent E2's answer prompt (config `primer`, both on): `--primer rules` or `--primer all`. The choice is stored in `config.json` (`primer`). Design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.5.
 
@@ -61,11 +61,8 @@ python3 benchmark/runner/retrieval_eval.py
 ### Final score
 - Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.4. Report table `Final score`; code `report.py`, function `final`.
 
-### Free text and the judge
-- `answer_type: judged` questions are sent without options, with an open-answer prompt ([harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `PROMPTS['open']`). The verifier does not run on them: it checks letters only.
-- `judge.py` sends the prompt, images, `## Expected key points`, `## Likely wrong answer` and the answer to `judge_model`, and reads back a JSON score 0-3.
-- The runner refuses a benchmark where the judge is also a candidate.
-- Rubric and checks: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14. Report table `Free-text answers (judge)`.
+### Free text
+- Not in the benchmark: every question is multiple choice (author, Q199, 2026-11-14), and `run.py` refuses a question without options. The judge is archived in [project/archive/legacy/judge-2026-11-14](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14).
 
 ### Screenshots
 - Questions with image attachments are sent with all their images (track `vision`). There is no text-only track.
@@ -141,7 +138,7 @@ python3 benchmark/runner/retrieval_eval.py
 ### Long runs: stop and resume
 - `--max-minutes N` (or `max_minutes` in `config.yaml`): after N minutes the runner starts no new answer, lets the running ones finish, prints `Resume: python3 benchmark/runner/run.py --resume <folder>` and exits with code 3. It writes no `report.md`: a stopped run is not a result. Exit code 0 = finished, 3 = stopped at the limit.
 - In a Claude Code cloud session start every long run with `--max-minutes 110`: the 2-hour limit kills a command in the middle of an answer; this stops it clean, a few minutes earlier.
-- `--resume <folder>` needs no other flag: models, modes, runs, temperature, questions, judge and primer are read from the folder's `config.json`, so a resume cannot change what the run measures (a resume without `--models` once ran every model of `config.yaml` into the folder). A flag you pass still overrides. Saved answers are kept; answers that failed are retried. `config.json` keeps the original `started` time and lists each resume in `resumed`.
+- `--resume <folder>` needs no other flag: models, modes, runs, temperature, questions and primer are read from the folder's `config.json`, so a resume cannot change what the run measures (a resume without `--models` once ran every model of `config.yaml` into the folder). A flag you pass still overrides. Saved answers are kept; answers that failed are retried. `config.json` keeps the original `started` time and lists each resume in `resumed`.
 - Cannot be done inside the process: a command cannot extend the 2-hour limit of the session that started it. The relaunch is a new command: when a run exits with code 3 (or its process is gone and the folder has fewer answers than the matrix), start `python3 benchmark/runner/run.py --resume <folder> --max-minutes 110` again. The 15-minute progress check does this on its own: it counts the rows of `answers.csv` by `model` and relaunches a dead run.
 - `index_version` in `config.json` is the commit at the last resume; each row of `answers.csv` keeps the commit of its own answer. A resume after a change to the knowledge base mixes two versions in one run: stop edits to `knowledge/` during a run.
 
@@ -158,7 +155,7 @@ python3 benchmark/runner/retrieval_eval.py
 - `--no-health` turns it off (the preflight uses that: it judges the sample itself). Tested in `test_runner.py`, class HealthTest.
 
 ### Preflight (before a round)
-- [preflight.py](preflight.py) answers a sample (4 multiple-choice, 2 judged, 1 screenshot question; 6 multiple-choice when the set has no judged question, as since 2026-11-14) in every mode of every run of the round, through `run.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
+- [preflight.py](preflight.py) answers a sample (6 multiple-choice text questions and 1 screenshot question) in every mode of every run of the round, through `run.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
 - It reads the credits (`/v1/credits`), projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
 - The projection is rough: seven questions per mode. Live on 2026-11-13: 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
 
@@ -175,7 +172,7 @@ python3 benchmark/runner/retrieval_eval.py
   - Gemma 4 31B and Muse Glimmer 30B: temperature 1.0, top_p 0.95, top_k 64. Qwen 3.8 27B: temperature 1.0, top_p 0.95, top_k 20.
   - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until 2026-11-13 every model ran at 0.2.
   - The frontier reference sends none: the provider's default, as a chat user meets it.
-  - The judge and Agent E2's case call (stage 1) run at temperature 0: a reading step, not an answer.
+  - Agent E2's case call (stage 1) runs at temperature 0: a reading step, not an answer.
   - The gateway accepted top_p and top_k for all three candidates (one call each, 2026-11-13). Whether every provider honours top_k is not known.
 - `--temperature` replaces the settings for every model: an experiment, not the release run.
 
@@ -190,7 +187,6 @@ python3 benchmark/runner/retrieval_eval.py
      - `agent-e2`: the six stages of harness/AGENT.md: the case, the reading plan (16K tokens), computed facts, the answer, the checks (verifier, one gap follow-up);
      - `web`: the frontier reference, web search and page fetch at the model's choice;
    - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Unsure pick;
-   - free text: the judge scores 0-3; credit = score / 3;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
 6. Writes the benchmark folder: `answers.csv`, `config.json`, `traces.jsonl`, `report.md`.
 
@@ -198,16 +194,16 @@ python3 benchmark/runner/retrieval_eval.py
 - One folder per run, named for the day it started and the model (`20261114-gemma-4-31b-it`; a second folder of the same name gets `-2`). [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) is the only file at that level: the analysis of all runs of a round.
 | File | Content | In git |
 |---|---|---|
-| `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), up-front blocks, judge and its price, settings | Yes |
-| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, misconception, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall (Agent E2), model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
-| `report.md` | Final score and sub-scores; release gate and consensus projection; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, model calls, cost), by area and task; hardest questions | Yes |
+| `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), up-front blocks, settings | Yes |
+| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, misconception, unsure, credit, confident wrong), retrieval recall (Agent E2), model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
+| `report.md` | Final score and sub-scores; release gate and consensus projection; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, model calls, cost), by area and task; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
 | `run.log` | Console output of the run, written by `run_all.py` | No |
 
 ## Question fields used
 | Field | Meaning |
 |---|---|
-| `answer_type` | `deterministic` (letters) or `judged` (judge) |
+| `answer_type` | `deterministic` (letters); the only type since 2026-11-14 (Q199) |
 | `level` | `100`, `200`, `300`, `400` |
 | `input` | `text`, `table`, `screenshot`; checked against the attachments by lint |
 | `answer` | Correct option letters, as in `## Prompt` |
@@ -216,11 +212,10 @@ python3 benchmark/runner/retrieval_eval.py
 
 - Options in `## Prompt` are lines starting with `A. ` to `H. `. Text after the options (for example `Hint:`) is kept below them.
 - The prompt states the problem in words; the images supply the values.
-- Free text: `## Expected key points` and `## Likely wrong answer` go to the judge, never to the candidate.
+- `## Expected key points` and `## Likely wrong answer` are the key for reviewers; never sent to a candidate.
 - [project/tools/lint.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/lint.py) checks these fields.
 
 ## Limits
 - Provider name is recorded when the gateway returns it; the field is not documented as stable.
-- Cost is estimated from gateway list prices in `/models`; check the Vercel invoice. The summary README adds the judge cost from the judge tokens in `traces.jsonl`.
-- Mock runs prove the pipeline only. Their scores are random, including the mock judge.
-- The judge is a model: its scores carry its errors. The author checks every 0 and every split between runs ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14).
+- Cost is estimated from gateway list prices in `/models`; check the Vercel invoice.
+- Mock runs prove the pipeline only. Their scores are random.

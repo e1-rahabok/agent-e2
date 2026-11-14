@@ -29,7 +29,7 @@ flowchart LR
     A -->|calls to read and write| M
   end
   subgraph Proof["Proof: not deployed"]
-    B["benchmark/<br/>questions, models, judge,<br/>runner, results"]
+    B["benchmark/<br/>questions, models,<br/>runner, results"]
   end
   subgraph Project["Project: not deployed"]
     P["project/<br/>plan, decisions,<br/>author questions, reviews"]
@@ -46,7 +46,7 @@ flowchart LR
   - Agent: the expert's procedure as code, a neuro-symbolic expert system (built 2026-11-14; [`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/planner.py`](harness/planner.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
   - Model: an open-weight vision model on local GPUs (one GPU is the stretch target; two to four are allowed), chosen by benchmark ([`benchmark/models.md`](benchmark/models.md)). Not stored here.
 - Proof: shows that the product works: the release gate on the benchmark. A higher score than a frontier model is an outcome, not a goal.
-  - `benchmark/`: questions with answer keys and their attachments, the candidate models and judge ([`benchmark/models.md`](benchmark/models.md)), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on the mean of 5 runs, the worst run reported as consistency. Never indexed: it holds the answer keys.
+  - `benchmark/`: questions with answer keys and their attachments, the candidate models ([`benchmark/models.md`](benchmark/models.md)), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on the mean of 5 runs, the worst run reported as consistency. Never indexed: it holds the answer keys.
 - Project: how this repository is built and kept correct.
   - `project/`: plan (milestones, decisions, open work), author questions, reviews, archive.
   - [`project/tools/`](project/tools): `lint.py` (file, tag and folder checks, run before every merge) and `tags.yaml` (allowed tag values, avoided phrases).

@@ -6,7 +6,7 @@ Examples:
   python3 benchmark/runner/run.py --mock --runs 2
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-04
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
-  python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs, questions and judge come from the folder
+  python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
   python3 benchmark/runner/run.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
 Exit codes: benchmark/runner/exitcodes.py. A whole benchmark round: benchmark/RUN.md.
 """
@@ -27,7 +27,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
 import exitcodes as X  # noqa: E402
 import questions as C  # noqa: E402
-import judge as J  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
 import report  # noqa: E402
@@ -42,7 +41,7 @@ FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'questio
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'unsure', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
-          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text', 'truncated']
+          'credit', 'confident_wrong', 'answer_text', 'truncated']
 
 
 def main():
@@ -57,10 +56,9 @@ def main():
     ap.add_argument('--no-adaptive', action='store_true', help='keep every model at its proven concurrency: no probing upward')
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')
     ap.add_argument('--mock', action='store_true', help='offline: random answers, no API calls')
-    ap.add_argument('--judge', help='judge model id (default: config judge_model)')
     ap.add_argument('--primer', help='up-front blocks of the answer prompt to switch on, comma-separated: rules,terms, or all (default: config primer)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
-    ap.add_argument('--resume', help='existing run folder to continue; models, modes, runs, temperature, questions, judge and primer are read from its config.json unless you pass them')
+    ap.add_argument('--resume', help='existing run folder to continue; models, modes, runs, temperature, questions and primer are read from its config.json unless you pass them')
     ap.add_argument('--max-minutes', type=float, help='stop starting new answers after this many minutes, let the running ones finish, '
                     'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
     ap.add_argument('--out', default=os.path.join(kb.ROOT, 'benchmark', 'results'))
@@ -118,14 +116,11 @@ def main():
     unknown = [m for m in modes_ if m not in modes.MODES]
     if unknown:
         sys.exit(f'Unknown modes {unknown}: {", ".join(modes.MODES)}. Classic and agentic were removed on 2026-11-14 (harness/AGENT.md).')
-    judge_model = a.judge or saved.get('judge_model') or cfg.get('judge_model')   # a resume never switches the judge
-    needs_judge = any(not c.choice for c in questions_)
-    if needs_judge and judge_model in models_:
-        sys.exit(f'The judge {judge_model} is also a candidate. The judge must never grade its own answers.')
-    if needs_judge and not (judge_model or a.mock):
-        sys.exit('Judged questions need a judge: set judge_model in config.yaml or pass --judge.')
-    judge = J.MockJudge() if a.mock else J.Judge(client, judge_model, cfg) if needs_judge else None
-    meta = _model_meta(client, models_ + ([judge_model] if needs_judge and not a.mock else []), a.mock)
+    # Every question is multiple choice (author, Q199, 2026-11-14); the judge is archived (project/archive/legacy/judge-2026-11-14).
+    open_qs = [c.id for c in questions_ if not c.choice]
+    if open_qs:
+        sys.exit(f'Questions without options cannot be scored: {", ".join(open_qs)}. Every question is multiple choice (Q199).')
+    meta = _model_meta(client, models_, a.mock)
     # Reading screenshots is a basic requirement (benchmark/models.md): a model without vision is not a candidate.
     blind = [m for m in models_ if 'vision' not in meta.get(m, {}).get('tags', [])]
     if meta and blind and any(c.has_images for c in questions_):
@@ -139,12 +134,9 @@ def main():
                 for r in range(1, cfg['runs'] + 1):
                     tasks.append((m, mode, c, tr, r))
 
-    answer_types = ', '.join(f'{k} {sum(1 for c in questions_ if c.answer_type == k)}' for k in ('deterministic', 'judged'))
-    print(f'Questions: {len(questions_)} ({answer_types}). Skipped (no key, awaiting input or retired): {", ".join(skipped) or "none"}')
-    if needs_judge:
-        print(f'Judge: {judge.model}')
+    print(f'Questions: {len(questions_)}. Skipped (no key, awaiting input or retired): {", ".join(skipped) or "none"}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')
-    est = _estimate(tasks, meta, judge_model if needs_judge else None)
+    est = _estimate(tasks, meta)
     print(f'Estimated cost: US$ {est:.2f} (rough; Agent E2 counted as the case call plus one answer)')
     if a.dry_run:
         return
@@ -174,8 +166,7 @@ def main():
                'primer': cfg.get('primer'), 'case_model': cfg.get('case_model', True), 'gap_followup': cfg.get('gap_followup', True), 'model_params': params, 'sampling': sampling,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
-               'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
-               'judge_pricing': {k: ((meta.get(judge.model) or {}).get('pricing') or {}).get(k) for k in ('input', 'output')} if judge and not a.mock else None,
+               'skipped_questions': skipped,
                'groups': {c.id: {'answer_type': c.answer_type, 'input': c.input_types, 'level': c.level} for c in questions_}, 'retrieval': 'hybrid' if embed else 'bm25', 'embedding_model': embed,
                'mock': a.mock, 'config': cfg}, open(os.path.join(run_dir, 'config.json'), 'w'), indent=2)
 
@@ -193,40 +184,26 @@ def main():
     def answer_one(task):
         m, mode, c, track, r = task
         rng = random.Random(f'{c.id}-{r}')  # same option order for every model and mode in run r
-        if c.choice:
-            question, mapping = c.render(rng)
-        else:
-            question, mapping = c.open_text(), {}
+        question, mapping = c.render(rng)
         images = c.image_parts() if track == 'vision' else []
         row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
                'track': track, 'question_id': c.id, 'answer_type': c.answer_type, 'input': ' '.join(c.input_types), 'technology': ' '.join(c.technology), 'task': c.task, 'level': c.level, 'run': r,
                'temperature': sampling.get(m, {}).get('temperature', ''), 'options_order': ''.join({'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
-            res, used, trace = modes.answer(mode, client, m, question, images, cfg, retriever,
-                                                'choice' if c.choice else 'open')
-            if c.choice:
-                picked = C.parse(res['content'], mapping)
-                row.update(C.score(c, picked))
-                row['answer_letters'] = ','.join(picked) if picked else ''
-                row['reason'] = _reason(res['content'])
-                row['credit'] = row['exact']
-                row['confident_wrong'] = int(not row['exact'] and not row['unsure'])
-            else:
-                v, jres = judge.grade(c, res['content'], images)
-                trace.append({'step': len(trace) + 1, 'action': 'judge', 'input': judge.model, 'output': v,
-                              'prompt_tokens': jres.get('prompt_tokens'), 'completion_tokens': jres.get('completion_tokens')})
-                row.update({'judge_model': judge.model, 'judge_score': v['score'], 'judge_missed': v['missed'],
-                            'reason': v['reason'], 'misconception': int(v['misconception']), 'unsure': int(v['unsure']),
-                            'exact': int(v['score'] == 3), 'credit': round(v['score'] / 3, 3),
-                            'confident_wrong': int(v['score'] == 0 and not v['unsure']), 'parse_ok': 1,
-                            'answer_text': (res['content'] or '')[:2000]})
+            res, used, trace = modes.answer(mode, client, m, question, images, cfg, retriever, 'choice')
+            picked = C.parse(res['content'], mapping)
+            row.update(C.score(c, picked))
+            row['answer_letters'] = ','.join(picked) if picked else ''
+            row['reason'] = _reason(res['content'])
+            row['credit'] = row['exact']
+            row['confident_wrong'] = int(not row['exact'] and not row['unsure'])
             row['provider'] = res.get('provider', '')
             row['truncated'] = int(res.get('finish_reason') == 'length')
-            row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace if s['action'] != 'judge')
-            row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace if s['action'] != 'judge')
+            row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace)
+            row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace)
             row['latency'] = round(sum(s.get('latency') or 0 for s in trace), 2)
-            row['steps'] = sum(1 for s in trace if s.get('prompt_tokens') is not None and s['action'] != 'judge')   # model calls
+            row['steps'] = sum(1 for s in trace if s.get('prompt_tokens') is not None)   # model calls
             # Tools of the web reference, and the stages of Agent E2 that acted (compute, gap follow-up, repair, consensus)
             row['tools_used'] = ' '.join(sorted({s['action'] for s in trace if s['action'] in modes.TOOL_NAMES + list(AGENT_ACTIONS)}))
             row['verify_flags'] = ' | '.join(f for s in trace if s['action'] == 'verify' for f in s['output'])[:300]
@@ -341,15 +318,11 @@ def _cost(m, pin, pout):
         return ''
 
 
-def _estimate(tasks, meta, judge_model=None):
+def _estimate(tasks, meta):
     total = 0.0
     for m, mode, c, tr, r in tasks:
         pin, pout = {'baseline': (600, 300), 'agent-e2': (12000, 600), 'web': (2500, 600)}[mode]   # agent-e2: case call + answer
-        if not c.choice:
-            pout *= 2  # a free-text answer is longer than two lines
         total += _cost(meta.get(m, {}), pin, pout) or 0
-        if not c.choice and judge_model:
-            total += _cost(meta.get(judge_model, {}), 1500, 300) or 0
     return total
 
 

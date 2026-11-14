@@ -9,8 +9,8 @@ Never index this folder: it contains answer keys.
 benchmark/
 ├── questions/L<level>-<nn>-<slug>.md                 # one question per file, one flat folder
 ├── questions/<id>/                                   # the question's attachments: screenshots, logs, diagrams (only when it has any)
-├── runner/                                       # Benchmark runner: run.py, run_all.py, preflight.py, health.py, summarize.py, judge.py, report.py, governor.py, config.yaml
-├── models.md                                     # candidate models, frontier reference, judge
+├── runner/                                       # Benchmark runner: run.py, run_all.py, preflight.py, health.py, summarize.py, report.py, governor.py, config.yaml
+├── models.md                                     # candidate models, frontier reference
 ├── RUN.md                                        # how to run a benchmark round: the prompt, approvals, time, cost
 ├── live-test.md                                  # the system on an offline model: plan and pass criteria
 ├── results/README.md                             # one analysis of all runs of a round (written when the last run finishes)
@@ -97,7 +97,7 @@ One tag per concept ([project/terms.md](https://github.com/e1-rahabok/agent-e2/b
 - `format`, old `level` values, old `input` values: replaced on 2026-11-05 by `answer_type`, levels 100-400 and `input` [text, table, screenshot].
 
 ## Scoring
-- Classes, Stable correct, the 0-3 judge rubric and the final score: `design.md`, sections 7 and 14. Runner details: `runner/README.md`, section Methodology.
+- Classes, Stable correct and the final score: `design.md`, section 7. Runner details: `runner/README.md`, section Methodology.
 - Writing the answer key of a multiple-choice question: `## Expected key points` starts with `- Answer: <letters>.`, then one bullet per option with the reason it is true or false (for reviewers; never sent to a model). Options: as many as the question needs, one fact each, similar in length; the false ones wrong for a reason the knowledge base states ([design.md](design.md), sections 3.8 and 6.2).
 - Writing the answer key of a judged question (none in the run set since 2026-11-14):
   - `## Expected key points` is the judge's answer key: the facts a correct answer must state, one per bullet, as many as the question takes; not the wording the candidate must use;

@@ -33,7 +33,6 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 | `<date>-qwen3.8-27b` | baseline, agent-e2 | 1,960 | reasoning off | about 50 min | about 3 |
 | `<date>-muse-glimmer-30b` | baseline, agent-e2 | 1,960 | reasoning off | about 60 min | about 7 |
 | `<date>-claude-opus-5.5` | web | 980 | effort medium, 8,000 tokens | about 70 min | about 27 |
-| Judge | | none: every question is multiple choice since 2026-11-14 (Q199) | | | 0 |
 | Total | | 6,860 | | 1.5 to 2 hours | about 40 (52 with the safety factor) |
 
 - The four runs go in parallel, so the round takes as long as the slowest run (Opus, at its starting concurrency of 3; the runner raises it while the provider allows).
@@ -43,7 +42,7 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 
 ## What happens
 
-1. Preflight (`preflight.py`): credits; a sample of 7 questions (6 multiple-choice and 1 screenshot while the set has no judged question; otherwise 4, 2 judged and 1) in every mode of every run, with the real code and settings; the first request setting of each model that gives clean answers is chosen. A model with no clean setting stops the round before it spends anything.
+1. Preflight (`preflight.py`): credits; a sample of 7 questions (6 multiple-choice text questions and 1 screenshot question) in every mode of every run, with the real code and settings; the first request setting of each model that gives clean answers is chosen. A model with no clean setting stops the round before it spends anything.
 2. Four `run.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
 3. Health check inside each run: stops it when 25% of the last 40 answers are cut off, unreadable or failed.
 4. Recovery (table below).
@@ -95,7 +94,7 @@ Give these before the round so nothing waits for a click.
 - Edit and write: [`project/plan.md`](../project/plan.md), [`benchmark/models.md`](models.md), `benchmark/results/**`, `project/archive/**`.
 - GitHub pull request tools: create, list, read and merge (`mcp__github__create_pull_request`, `mcp__github__list_pull_requests`, `mcp__github__pull_request_read`, `mcp__github__merge_pull_request`, `mcp__github__update_pull_request`).
 - Scheduling: `send_later` (`mcp__claude-code-remote__send_later`) or `ScheduleWakeup`, for the 15-minute check.
-- Network from the session: `ai-gateway.vercel.sh` (models, embeddings, search, judge) and public web pages (the Opus `web` mode fetches pages the model chooses).
+- Network from the session: `ai-gateway.vercel.sh` (models, embeddings, search) and public web pages (the Opus `web` mode fetches pages the model chooses).
 - Money: the credits and key budget under "Before you start". The runner spends nothing else.
 
 ## Needs the human

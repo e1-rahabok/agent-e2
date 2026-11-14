@@ -38,36 +38,13 @@ def load(folders):
         allrows = list(csv.DictReader(open(os.path.join(f, 'answers.csv'))))
         ok = [r for r in allrows if not r['error']]
         times = sorted(r['time'] for r in allrows if r.get('time'))
-        judge_cost = _judge_cost(f, cfg, ok)
         info.append({'folder': os.path.basename(f), 'cfg': cfg, 'answers': len(ok), 'failed': len(allrows) - len(ok),
                      'first': times[0] if times else '', 'last': times[-1] if times else '',
-                     'cost': sum(float(r['cost_usd'] or 0) for r in ok) + judge_cost, 'judge_cost': judge_cost,
+                     'cost': sum(float(r['cost_usd'] or 0) for r in ok),
                      'truncated': sum(1 for r in ok if str(r.get('truncated') or '0') == '1'),
                      'unparsed': sum(1 for r in ok if r['answer_type'] == 'deterministic' and str(r['parse_ok']) == '0')})
         rows += ok
     return rows, info
-
-
-def _judge_cost(folder, cfg, ok):
-    """Judge cost of one run: judge tokens from traces.jsonl when present, else the measured average per judged answer."""
-    p = cfg.get('judge_pricing') or {}
-    try:
-        pin, pout = float(p['input']), float(p['output'])
-    except (KeyError, TypeError, ValueError):
-        return 0.0
-    tin = tout = n = 0
-    path = os.path.join(folder, 'traces.jsonl')
-    if os.path.exists(path):
-        for line in open(path):
-            for s in json.loads(line)['trace']:
-                if s['action'] == 'judge':
-                    n += 1
-                    tin += s.get('prompt_tokens') or 0
-                    tout += s.get('completion_tokens') or 0
-    if not n:
-        n = sum(1 for r in ok if r['answer_type'] == 'judged')
-        tin, tout = n * 1800, n * 340
-    return tin * pin + tout * pout
 
 
 def _minutes(i):
@@ -122,17 +99,16 @@ def build(folders, today=None):
     n_q = len(cfg0.get('questions') or [])
     L = [f'# Benchmark results: round of {dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}', '',
          f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, sampling {json.dumps(cfg0.get("sampling")) if cfg0.get("sampling") else cfg0.get("temperature")}. '
-         f'Judge: {cfg0.get("judge_model")}. Written by `benchmark/runner/summarize.py` from the run folders; every number below comes from them.',
+         f'Written by `benchmark/runner/summarize.py` from the run folders; every number below comes from them.',
          '- How to read a score: the exact value is read at plus or minus 5 points. The benchmark is a proof: Agent E2 against the release gate and the frontier reference. '
-         'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). '
-         'Scores are not comparable with scores graded by another judge.', '']
-    L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Failed | Cut off | First to last answer | Cost US$ (judge) |', '|---|---|---|---|---|---|---|---|---|']
+         'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md).', '']
+    L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Failed | Cut off | First to last answer | Cost US$ |', '|---|---|---|---|---|---|---|---|---|']
     for i in info:
         c = i['cfg']
         m = list(c['models'])[0] if len(c['models']) == 1 else ', '.join(c['models'])
         prm = '; '.join(json.dumps(v) for v in (c.get('model_params') or {}).values()) or 'default'
         L.append(f'| [{i["folder"]}]({REPO}/{i["folder"]}/report.md) | {m} | {", ".join(c["modes"])} | `{prm}` | {i["answers"]} | {i["failed"]} | '
-                 f'{i["truncated"]} | {_minutes(i):.0f} min | {i["cost"]:.2f} ({i["judge_cost"]:.2f}) |')
+                 f'{i["truncated"]} | {_minutes(i):.0f} min | {i["cost"]:.2f} |')
     L += ['', f'- Total cost US$ {sum(i["cost"] for i in info):.2f}. Agent E2: up-front blocks '
               f'{", ".join(k for k, v in (cfg0.get("primer") or {}).items() if v) or "none"}; case read by the model: {"on" if cfg0.get("case_model", True) else "off"}; '
               f'gap follow-up: {"on" if cfg0.get("gap_followup", True) else "off"}.', '']
@@ -167,7 +143,7 @@ def build(folders, today=None):
     for (m, mode), xs in sorted(best.items(), key=lambda x: (x[0][0], MODE_ORDER.get(x[0][1], 9))):
         a = xs[0]
         L.append(f'| {m} | {mode} | {a["latency"]:.1f} | {a["steps"]:.1f} | {a["tokens"]:.0f} |')
-    L += ['', 'Latency is the sum of the model calls of one answer (the judge is not in it). Per-run detail, hardest questions and consistency: the report.md of each run folder.', '']
+    L += ['', 'Latency is the sum of the model calls of one answer Per-run detail, hardest questions and consistency: the report.md of each run folder.', '']
     return '\n'.join(L)
 
 

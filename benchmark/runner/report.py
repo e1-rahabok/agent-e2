@@ -265,7 +265,7 @@ def write(run_dir):
          f'- Questions: {len(cfg["questions"])} (' + ', '.join(f'{k} {sample.get("answer:" + k + "_n", 0)}' for k in ANSWER_TYPES) + '; '
          + ', '.join(f'{k} {sample.get("input:" + k + "_n", 0)}' for k in INPUT_TYPES) + '; '
          + ', '.join(f'level {k}: {sample.get("level:" + k + "_n", 0)}' for k in LEVELS) + ').'
-         f' Skipped: {", ".join(cfg["skipped_questions"]) or "none"}. Judge: {cfg.get("judge_model") or "none"}.',
+         f' Skipped: {", ".join(cfg["skipped_questions"]) or "none"}.',
          f'- Answers: {len(all_scored)} scored, {len(all_rows) - len(all_scored)} failed.' + (' Mock run: scores are random.' if cfg.get('mock') else ''),
          '', '## Final score', '',
          '| Model | Mode | Final | ± margin | Worst run | Luck | Confident wrong | Override |',

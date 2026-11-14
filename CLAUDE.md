@@ -44,8 +44,8 @@ How Claude works in this repository. Read at the start of every session. The des
 
 ## Evaluation
 - The benchmark is a proof, not a goal. It proves that Agent E2 works: the shipped configuration against the release gate and the frontier reference. No mode, run, metric or setting is kept for the benchmark's own sake (author, 2026-11-14). Development diagnostics come from free checks first: the retrieval check, traces, unit tests.
-- Never send `## Expected key points` or `## Likely wrong answer` to a candidate. Only the judge ([`benchmark/runner/judge.py`](benchmark/runner/judge.py)) reads them.
-- Every candidate model must read screenshots (vision). Models and judge: [`benchmark/models.md`](benchmark/models.md).
+- Never send `## Expected key points` or `## Likely wrong answer` to a candidate: they are the key, for reviewers only. Every question is multiple choice; the judge is archived (Q199, 2026-11-14).
+- Every candidate model must read screenshots (vision). Models: [`benchmark/models.md`](benchmark/models.md).
 - Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).
 - Run a benchmark round: [`benchmark/RUN.md`](benchmark/RUN.md) (one prompt, the approvals to give up front, time and cost).
 - While a benchmark runs, send the author a short progress report every 15 minutes: answers done, errors, time left.

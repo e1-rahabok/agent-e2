@@ -19,7 +19,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | Use | Means | Do not use for it |
 |---|---|---|
 | sources | Source documents the knowledge is written from ([`project/sources/`](sources)): book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them (author, 2026-11-14) | raw input |
-| benchmark | The proof of the product: question set, runner, judge, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder per model, `benchmark/results/<date>-<model>/` (benchmark/runner/naming.py) | Auto Test, test, evaluation, benchmark run |
+| benchmark | The proof of the product: question set, runner, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder per model, `benchmark/results/<date>-<model>/` (benchmark/runner/naming.py) | Auto Test, test, evaluation, benchmark run |
 | run | One pass through all the questions, by one model in one mode (`baseline` or `agent-e2` for a candidate, `web` for the frontier reference). A benchmark has 5 runs (`runs: 5`, column `run`). Each run is a repeat of the same questions; the answers differ | repeat, iteration |
 | question | One benchmark item: one file in [`benchmark/questions/`](../benchmark/questions) with prompt, answer key and metadata. A benchmark question plays a question a VMware administrator asks the product | case, test case, golden case, exam question |
 | question set | All the questions of the benchmark | golden set, case set |
@@ -37,13 +37,13 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | reading plan | The code that builds the reading set: tiers of named files, search hits, mechanism links and one search per claim ([`harness/AGENT.md`](../harness/AGENT.md), section 4.2) (author, 2026-11-14, Q210) | retrieval (alone), routing |
 | harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, budgets, the verifier. The agent runs on it and uses its tools | wrapper |
 | runner | The benchmark code ([`benchmark/runner/`](../benchmark/runner)) | - |
-| judge | The model that scores free-text and compound answers 0-3 | grader |
+| judge | The model that scored free-text answers 0-3; archived 2026-11-14 (Q199): every question is multiple choice | grader |
 | candidate | A model in the benchmark | model under test, AI under test |
 | test | A code test only: [`harness/test_tools.py`](../harness/test_tools.py), [`benchmark/runner/test_runner.py`](../benchmark/runner/test_runner.py) | the benchmark |
 | retrieval check | [`benchmark/runner/retrieval_eval.py`](../benchmark/runner/retrieval_eval.py): are the files each question needs found, without a model. Guide: [`benchmark/retrieval-check.md`](../benchmark/retrieval-check.md) | retrieval test, harness-only test |
 | frontier reference | The frontier model scored as the bar to beat | - |
 | answer key | `answer` and `misconception` letters, `## Expected key points`, `## Likely wrong answer` | key (alone) |
-| answer type | How a question is scored: deterministic (option letters) or judged (free text, by the judge) | kind, format, multiple choice vs conversation |
+| answer type | How a question is scored: deterministic (option letters); the only type since 2026-11-14 (Q199) | kind, format, multiple choice vs conversation |
 | input type | What the administrator gives besides the prompt: text, table, screenshot | input kind |
 | level | 100, 200, 300 or 400 ([`benchmark/design.md`](../benchmark/design.md), section 3.2) | recall, multi-hop |
 | attachment | A file listed in a question's `attachments` | - |

@@ -143,7 +143,7 @@ def main():
     plan = [p for p in rel['runs'] if not only or p['model'] in only]
 
     if a.dry_run:
-        print(f'Round plan: {len(plan)} runs, {cfg["runs"]} runs per question, judge {cfg["judge_model"]}.')
+        print(f'Round plan: {len(plan)} runs, {cfg["runs"]} runs per question.')
         for p in plan:
             print(f'  {p["model"]}: {", ".join(p["modes"])}  settings {json.dumps((cfg.get("model_params") or {}).get(p["model"]) or [{}])}')
         print(f'  folders: {a.out}/<date>-<model>; limit {rel["max_cost_usd"]} US$, {rel["max_hours"]} h')

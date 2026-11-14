@@ -9,7 +9,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
 import questions as C  # noqa: E402
 import governor as G  # noqa: E402
-import judge as J  # noqa: E402
 import report  # noqa: E402
 import exitcodes as X  # noqa: E402
 import health as H  # noqa: E402
@@ -25,17 +24,6 @@ def row(question, answer_type, inp, level, credit, run, track='text', exact=None
             'level': str(level), 'track': track, 'run': str(run),
             'credit': str(credit), 'exact': str(int(credit == 1) if exact is None else exact), 'unsure': str(unsure),
             'confident_wrong': cw}
-
-
-class JudgeParseTest(unittest.TestCase):
-    def test_json_with_text_around(self):
-        v = J.parse('Here: {"score": 2, "misconception": false, "unsure": false, "missed": "", "reason": "ok"} done')
-        self.assertEqual(v['score'], 2)
-
-    def test_rejects_bad_score(self):
-        self.assertIsNone(J.parse('{"score": 5}'))
-        self.assertIsNone(J.parse('no json'))
-        self.assertIsNone(J.parse('{"score": "high"}'))
 
 
 class AttachmentTest(unittest.TestCase):
@@ -424,11 +412,10 @@ class PreflightTest(unittest.TestCase):
         return r
 
     def test_sample_is_spread_and_has_each_kind(self):
-        qs = [_Q(f'c{i}') for i in range(40)] + [_Q(f'j{i}', choice=False) for i in range(20)] + [_Q('v1', images=True), _Q('skip', scorable=False)]
+        qs = [_Q(f'c{i}') for i in range(40)] + [_Q('v1', images=True), _Q('skip', scorable=False)]
         ids = [q.id for q in P.pick_sample(qs, 7)]
         self.assertEqual(len(ids), 7)
-        self.assertEqual(sum(i.startswith('c') for i in ids), 4)
-        self.assertEqual(sum(i.startswith('j') for i in ids), 2)
+        self.assertEqual(sum(i.startswith('c') for i in ids), 6)
         self.assertIn('v1', ids)
         self.assertNotIn('skip', ids)
         self.assertEqual(ids, [q.id for q in P.pick_sample(qs, 7)])          # the same sample every time
@@ -460,9 +447,9 @@ class PreflightTest(unittest.TestCase):
 
     def test_projection_scales_with_answers_and_concurrency(self):
         stats = {'agent-e2': {'latency': 12.0, 'cost': 0.01}}
-        minutes, cost = P.project(stats, n_questions=150, runs=5, judged_share=0.4, concurrency=12, judge_cost=0.0035)
-        self.assertAlmostEqual(minutes, 750 * (12 + 0.4 * P.JUDGE_SECONDS) / 12 / 60, places=6)
-        self.assertAlmostEqual(cost, 750 * (0.01 + 0.4 * 0.0035), places=6)
+        minutes, cost = P.project(stats, n_questions=150, runs=5, concurrency=12)
+        self.assertAlmostEqual(minutes, 750 * 12 / 12 / 60, places=6)
+        self.assertAlmostEqual(cost, 750 * 0.01, places=6)
 
 
 class RoundHelpersTest(unittest.TestCase):
