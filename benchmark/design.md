@@ -156,9 +156,7 @@ Level against input type (questions that include it), blueprint (150); the run s
 
 | Questions | 95% margin at 85% | Level 400 questions (margin at 80%) | Paired test power, 15-point gap, reverse 5% | reverse 8% | reverse 10% | Author time |
 |---|---|---|---|---|---|---|
-| 100 | ±7.0 | 60 (±10) | 91% | 84% | 80% | 1x |
-| 150 (blueprint) | ±5.7 | 90 (±8) | 98% | 95% | 91% | 1.5x |
-| **200 (196 in the run set)** | **±4.9 (196: ±5.0)** | **120 (±7; 131 in the run set: ±6.8)** | **~100%** | **98%** | **97%** | **2x** |
+| **196** | **±4.9 (196: ±5.0)** | **120 (±7; 131 in the run set: ±6.8)** | **~100%** | **98%** | **97%** | **2x** |
 
 - Reverse: the share of questions the frontier model gets right and Agent E2 gets wrong. Power of a one-sided exact McNemar test at α 0.05, simulated.
 - Why not 100:
