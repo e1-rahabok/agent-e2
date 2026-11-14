@@ -59,10 +59,11 @@ How the model reads a file: the harness cuts it at every `##` heading, and each 
 
 ## Images
 - `knowledge/` is for Agent E2 only. An image earns its place only if it helps the agent; proof screenshots for human reviewers stay in the book.
-- The agent reads the text twin and the alt text, not the pixels: `get_images` returns image records, never the image itself.
+- The model reads pixels: vision is a hard requirement (MISSION.md, Non-functional). The user's uploaded images always reach it. A knowledge-base image reaches it as its text twin and alt text: search finds words, not pixels, and an image costs about 1,500 prompt tokens.
 - Keep the author's own diagrams and tables from the book. One image per concept, placed under the section it explains. The facts an image proves go in the text.
 - Images live in the `images/` folder of the folder that uses them (for example `vsphere/technology/<tech>/images/`, `vsphere/object-types/cluster/images/`, `guest-os/<technology>/images/`).
-- Alt text describes what the image shows. The text around it repeats the facts, so retrieval does not depend on the image.
+- Alt text describes what the image shows. The text around it states the facts the image proves, so search finds them.
+- Never write the values of a benchmark question's attachment into the knowledge base, and never attach a knowledge-base image to a question: the reading set would hold the answer (benchmark/README.md, section Question fields).
 - Every image has its own tags in the file's metadata `images` list ([metadata.md](metadata.md)). The validator fails on a missing or invalid entry.
 - Every image file is linked from a knowledge file. The validator fails on an unlinked image: an unlinked image has no context for the AI.
 - File names describe what the image shows. No length limit applies (GitHub, git and Markdown accept long names).

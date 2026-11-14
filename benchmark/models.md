@@ -100,7 +100,7 @@ Two limits decide:
 Country of origin is not a criterion. Parameter count is not a criterion; memory and speed are.
 
 All are required. A model that fails one is not a candidate.
-1. Vision: reads screenshots. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI. Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
+1. Vision: reads screenshots. A hard requirement of Agent E2 (MISSION.md, Non-functional), not a benchmark choice. Administrators upload several screenshots per question, from esxtop, the vCenter UI and the VCF Operations UI. Checked by the `vision` tag in the gateway model list; the runner refuses a model without it when screenshot questions are in the run.
 2. Open weights, with a licence that allows commercial on-premises use. Checked per model before deployment.
 3. Runs on customer hardware: all weights at 4-bit or better, plus the KV cache for the context window. One GPU of at most 96 GB is the stretch target; two to four GPUs are acceptable when the score needs them.
    - Memory is set by total parameters, also for a mixture-of-experts (MoE) model: every expert must be loaded. Speed is set by active parameters.

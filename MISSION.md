@@ -114,7 +114,8 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 |---|---|
 | Data stays on site | No customer data leaves the customer network. Agent E2 answers without Internet access. A call out carries only public knowledge requests (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository; an edited prompt is an untested prompt. |
-| Model | Open weights with a commercial licence, vision, at least 32K context. Hardware: as little as passes the release gate; one GPU is the stretch target, two to four GPUs are acceptable. Chosen by the benchmark. |
+| Vision | Hard requirement (author, 2026-11-14). Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
+| Model | Open weights with a commercial licence, vision (above), at least 32K context. Hardware: as little as passes the release gate; one GPU is the stretch target, two to four GPUs are acceptable. Chosen by the benchmark. |
 | Reproducibility | Every answer stores question, answer, cited ids, tool trace, index version, prompt version, model, settings. |
 | Accuracy | Release gate in section 1, measured on the shipped configuration. |
 | Feedback | Rate and flag every answer, with a cause (knowledge gap, wrong fact, retrieval miss, model error). |

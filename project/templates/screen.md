@@ -7,7 +7,7 @@ knowledge/vcf-operations/<features|dashboards|reports>/screens/<slug>.md for VCF
 ![<what the screen shows>](images/<ui>-<screen>-<version>.png)
 
 ## Text twin
-- Every label, column and control on the screen, in reading order, so a text-only model loses nothing.
+- Every label, column and control on the screen, in reading order, so search can match an uploaded screenshot to this file.
 
 ## Visual cues
 - Visual cues that tell this screen apart from similar ones: title, tabs, column headers, chart legend.
