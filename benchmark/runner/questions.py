@@ -118,8 +118,12 @@ class Question:
         return '\n\n'.join(out)
 
     def open_text(self):
-        """The text a judged question sends: the prompt, then its tables."""
+        """The prompt as written, then its tables."""
         return self.prompt + ('\n\n' + self.tables if self.tables else '')
+
+    def stem_text(self):
+        """The question without its options, then its tables: what an operator would type (retrieval check, --no-options)."""
+        return self.stem + ('\n\n' + self.tables if self.tables else '')
 
     def render(self, rng):
         """Shuffle options, append Unsure, return (text, map shown_letter -> original).

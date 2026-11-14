@@ -133,6 +133,7 @@ Why the mission is possible: `MISSION.md`. Last review: [project/review-2026-11-
 - Per-question answer length in the runner (the long scenario has 10 key points; the open-answer prompt caps at 250 words).
 
 ### M3 Retrieval
+- 2026-11-14, the field reading: the retrieval check on the question stems without their options (`retrieval_eval.py --no-options`, as an operator asks): BM25 recall 67%, 85 of 196 complete (43%), main file missing on 32; with options 78%, 116, 20. The options act as hints (one search per option), so the field number is the stem-only one; read both. The structure review of 2026-11-14 traces the stem-only misses to their causes.
 - Baseline of the Agent E2 generation (2026-11-14), the reading set on the code-only case (`python3 benchmark/runner/retrieval_eval.py`, add `--embeddings` for hybrid; [benchmark/results/retrieval-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-14/hybrid.md)): BM25 recall 76%, every needed file 109 of 196 (56%), main file missing on 25; hybrid recall 80%, 117 of 196 complete (60%), main file missing on 19. Earlier generations are not compared (author, 2026-11-14).
 - Next, in order, each measured on the retrieval check:
   1. The model's case feeding tier 2: a `--case-model` switch for the retrieval check (one model call per question, under US$ 1).

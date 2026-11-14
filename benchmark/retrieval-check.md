@@ -22,6 +22,7 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 python3 benchmark/runner/retrieval_eval.py                       # keyword (BM25), offline
 python3 benchmark/runner/retrieval_eval.py --questions 0062,0067  # some questions
 python3 benchmark/runner/retrieval_eval.py --set plan_section_tokens=250   # try a setting
+python3 benchmark/runner/retrieval_eval.py --no-options                    # the stem only, as an operator asks: the field reading
 AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings   # hybrid, as in benchmark runs
 ```
 

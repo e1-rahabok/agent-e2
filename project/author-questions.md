@@ -33,6 +33,7 @@ Each entry has:
   - (3) A value the case lacks: in a conversation, the agent asks for it (stage 4, one round). In a single-turn answer (the benchmark, a question with no reply) code stops at that step and the model states both branches with what to read. AGENT.md (stops at the first missing value) and ARCHITECTURE.md (ask, or state both branches) say this in parts; the build makes it one rule.
   - Change if accepted: AGENT.md sections 4.3, 4.4 and 6.4 (first flow, format, missing value); flows.md (the `steps` list); lint; `flows.py` and stage 3 of `agent.py` with unit tests on worked examples; the retrieval check before and after.
   - For you: accept (1)-(3), or keep VM slow first.
+- Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
 ### Q212 · Mission > Release gate · Is beating the frontier model a 1.0 requirement?
@@ -132,6 +133,7 @@ Each entry has:
 - Files: [analysis-2026-11-13.md, archived](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (section 12); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 4.6, coverage boundary); [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set).
 - Question: 159 of the 196 questions were drafted from the knowledge files they test, so the benchmark cannot show how often a real question falls outside the knowledge base. In the round of 2026-11-13 (previous generation, archived), on your 37 questions the local configuration led the frontier model by 8-17 points; outside coverage the 30B model was far weaker than the frontier model. Proposal: a field set of about 100 real questions, collected, not written from the knowledge base (your tickets and consulting cases, customer questions, Broadcom community and forum threads). Two numbers from it: coverage (share settled by the knowledge base) and the score. Out-of-coverage answers must say so. (A) adopt it, collected now, kept out of the repository like the held-out set; (B) adopt it, collected at release only; (C) no: the live test's 20 questions are enough.
 - Written as now: held-out set of 30 drawn at release in the proportions of the run set, from real questions where you have them; 20 real questions in the live test. The blueprint (target counts) was removed on 2026-11-14: the real test is the field. Built 2026-11-14: the coverage boundary (when nothing in the reading set came from a flow or a file the question names, the answer prompt says the question may be outside the knowledge base, and to say so); AGENT.md sets its search-score limit on this field set, so the field set also tunes that boundary. Recommended: A. You hold the real questions; Claude can collect public community threads (titles and questions only, no customer data).
+- Re-checked 2026-11-14, after your direction "focus on Agent E2 in the real world": A matters more now. Every benchmark question is multiple choice (Q199), and its options help retrieval: the reading plan searches each option. With the options removed, as an operator asks, the retrieval check falls from 78% to 67% recall, from 116 to 85 of 196 questions with every needed file, and the main file is missing on 32 instead of 20 (`retrieval_eval.py --no-options`). Only real questions show the field number. Recommended: A, and the field set scored on open answers (judged by you), with the retrieval check run on its questions as written.
 - Answer:
 
 ### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
@@ -216,6 +218,7 @@ Each entry has:
   - With Q208 (B): rows for product labels are generated from the glossary, so the seed rows above stay for user words, not labels.
   - Change if accepted: user-terms.yaml (10 rows, 3 notes); retrieval check before and after.
   - For you: the wrong terms you see in real tickets.
+- Re-checked 2026-11-14: more useful now. Without options (the field case) retrieval rests on the question's own words (recall 67% against 78% with options); a term-map row brings the right file when the user's words do not name it.
 - Answer:
 
 ### Q150 · URL questions · Pages with known Level 300 errors
@@ -237,7 +240,7 @@ Each entry has:
   - Not proposed yet: TechDocs 9.1 Solutions for Disk Performance Problems (kernelLatency above 4 ms, deviceLatency above 15 ms) and Broadcom KB 344099 (https://knowledge.broadcom.com/external/article/344099: DAVG, KAVG and GAVG "should not exceed 10 ms"). The knowledge base's own KAVG and DAVG values have no catalog row yet (review of 2026-11-14), so a key would rest on an unsourced number; they qualify once the rows exist.
   - Recommended for 1.0: the two KBs and pages 1-4. Each question records the fetch date (`dateModified`; the visible date renders by script) and quotes the lines it relies on, and is re-checked before scoring.
   - The frontier reference runs in mode `web` (search available, the model decides; [Q164](author-questions-resolved.md#q164--benchmarkdesignmd-sections-1-and-8--what-frontier-model-means-in-the-claim), Q209), so a URL question tests whether a model agrees with a page it reads.
-  - Change if accepted: one URL question per accepted page (Level 300; key point: the page is wrong, and the mechanism); design.md section 3.4.
+  - Change if accepted: one URL question per accepted page, multiple choice like every question since Q199 (options: the page's claims and the corrections, each true or false; Level 300); design.md section 3.4.
   - For you: accept or pick from the list; add pages you know to be wrong.
 - Answer:
 
