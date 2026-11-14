@@ -18,6 +18,13 @@ Each entry has:
 
 ## Open
 
+### Q208 · Knowledge design · Product label and better model
+
+- Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).
+- Question: from your answer to Q203, a general design: every product label Agent E2 improves on is kept verbatim and paired with what it computes, the decision it invites, the better model and the better name. Accept these parts, or change them: (A) glossary entries named by the product label, with new lines `Product label:` and `Better name:`; (B) term-map rows for those labels generated from the glossary, so the note reaches the model before it reasons; (C) the five-step teaching order in every answer that meets such a label; (D) misconception type `label-read-as-model`; (E) the better name for Total Capacity (GHz): your word (a throughput figure at base clock; "Nominal Throughput" is one option). Then: which other labels belong in the first list? Candidates from the knowledge base: ESXi CPU Usage (%), VM Memory Usage (%), ESXi Memory Usage (%), Consumed, CPU Latency, Contention (VCF Operations), Capacity Remaining (%).
+- Written as now: the design is a proposal; Q203 applied to the two CPU files only. Recommended: A-D as written; E and the list are yours.
+- Answer:
+
 ### Q207 · Benchmark > Field set · Measure coverage on real questions
 
 - Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 12); [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set).
@@ -40,14 +47,6 @@ Each entry has:
 - Search 2: "follows the tightest point of the 3 days"
 - Question: TechDocs 9.1 says Capacity Remaining (%) is the largest difference between usable capacity and projected utilization over the next 3 days; the same page sets it to 0 when any projection exceeds 100%. In the field, does the value follow the smallest remaining capacity (the highest projected point), as the key of 0235 says, or the largest gap, as the text literally reads?
 - Written as now: the TechDocs wording kept, plus a reading that the 0 rule makes the value follow the tightest point (draft, review note).
-- Answer:
-
-### Q203 · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
-
-- Files: [CPU measurement levels](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-measurement-levels.md); [CPU frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md).
-- Search 1: "Capacity is counted in physical threads"
-- Question: vSphere and VCF Operations label the GHz figure Total Capacity, so every model without the knowledge base reads capacity as GHz (question 0006: Opus 0%). The fix calls it vSphere's GHz total, a throughput reference. Should the knowledge base also name the product label explicitly ("vSphere's Total Capacity (GHz), a throughput figure, not capacity")?
-- Written as now: capacity = physical threads; every GHz use of the word capacity reworded as throughput (draft).
 - Answer:
 
 ### Q202 · Memory > Overhead · Kernel memory reservation with vSAN and NSX
@@ -155,6 +154,14 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q203 · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
+
+- Files: [CPU measurement levels](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-measurement-levels.md); [CPU frequency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md).
+- Search 1: "Capacity is counted in physical threads"
+- Question: vSphere and VCF Operations label the GHz figure Total Capacity, so every model without the knowledge base reads capacity as GHz (question 0006: Opus 0%). The fix calls it vSphere's GHz total, a throughput reference. Should the knowledge base also name the product label explicitly ("vSphere's Total Capacity (GHz), a throughput figure, not capacity")?
+- Written as now: capacity = physical threads; every GHz use of the word capacity reworded as throughput (draft).
+- Answer: Author (2026-11-14): do not change the product label. The product UI is reality; reality is not always correct. Agent E2 knows both: vSphere Total Capacity means GHz in the real world, GHz is not capacity, and CPU Usage reads better as CPU Throughput. Applied: cpu-measurement-levels (section vSphere's number: label, what it measures, why the product uses it), cpu-frequency (label kept), glossary (Base frequency, CPU Throughput), vocabulary (Words to avoid). The general design: KNOWLEDGE-ENGINEERING.md, section Product label and better model (Q208).
 
 ### Q206 · Benchmark > Retrieval check · Restart it now
 

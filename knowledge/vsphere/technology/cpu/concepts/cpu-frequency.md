@@ -3,11 +3,11 @@
 ## Three speeds
 | Speed | Meaning | Facts |
 |---|---|---|
-| Base (nominal) | The frequency vSphere uses for its total CPU capacity in GHz. Most commonly shown. | The CPU rarely runs at it. It runs above it. |
+| Base (nominal) | The frequency vSphere uses for Total Capacity (GHz). Most commonly shown. | The CPU rarely runs at it. It runs above it. |
 | Single-Core Turbo | Marketing figure. Single-thread benchmarks use it. | AMD EPYC 9000 series: 7%-64% above base. Intel Xeon Platinum 8593Q: 77% above base. |
 | All-Core Turbo | The speed that matters for a loaded host. | AMD publishes All-Core Boost. Intel no longer does. AMD EPYC 9000 series: 1%-48% above base. |
 
-- Intel does not expose All-Core Turbo via API. So it cannot be used in throughput calculations such as vSphere's GHz total.
+- Intel does not expose All-Core Turbo via API. So it cannot be used in throughput figures such as vSphere's Total Capacity (GHz).
 - Intel Turbo Boost raises clock speed dynamically, with no installation or configuration.
 - Intel Turbo Boost inputs: the heat the system tolerates and the number of active cores. It boosts to the maximum safe level.
 
@@ -40,7 +40,7 @@
 | Turbo / base ratio | 1.0x | about 1.7x-2.2x |
 
 ## Turbo
-- Turbo is large enough that every throughput figure (Usage, Demand, vSphere's GHz total) must account for it.
+- Turbo is large enough that every throughput figure (Usage, Demand, vSphere's Total Capacity in GHz) must account for it.
 - Within a core: the frequency cannot be predicted. It depends on the instructions and on what other cores do.
 - Within a socket: which cores run faster cannot be predicted. A 20-core socket runs at more than one frequency in practice.
 - Example, Intel Xeon Platinum 8260 (base 2.4 GHz):
@@ -56,7 +56,7 @@
 - Turbo can still engage with the BIOS set to static high performance. Field observation: esxtop %A/MPERF showed all cores at 129%.
 
 ## All-Core Turbo
-- A loaded CPU runs above base frequency: more throughput than vSphere's GHz total shows.
+- A loaded CPU runs above base frequency: more throughput than vSphere's Total Capacity (GHz) shows.
 - All-Core Turbo is not always exposed via the CPU API.
 - A CPU rarely runs at base clock. Under load it spends most of its time at All-Core Turbo.
 - All-Core Turbo is the frequency every core can hold at the same time. Single-Core Turbo is reached only when few cores are active and the rest are idle.

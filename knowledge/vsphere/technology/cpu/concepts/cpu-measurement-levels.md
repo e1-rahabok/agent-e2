@@ -57,11 +57,13 @@
 - With no known upper limit, complement with contention counters (for example Ready and Overlap) to manage proactively.
 
 ## vSphere's number
-- ESXi CPU total capacity = base frequency × cores. No Turbo, no Hyper-Threading.
+- The product label: vSphere shows the host and cluster CPU figure as Total Capacity, in GHz: base frequency × cores. No Turbo, no Hyper-Threading. VCF Operations uses the same label. Read a screen by this label: it is what the operator sees.
+- What it measures: throughput at base clock, not capacity. GHz is work per second. Capacity is space, counted in physical threads where a vCPU can run (section CPU capacity: Rules). Two hosts with the same Total Capacity (GHz) can hold different numbers of vCPUs.
+- Why the product uses it: one GHz number fits a summary screen and adds up across hosts and VMs. The thread model needs Hyper-Threading and frequency explained, which a UI label cannot do.
 - Conservative: suits mission-critical clusters. Other workloads can be packed more.
-- Sum of VM CPU Usage can exceed ESXi total capacity: total capacity is nominal.
-- vSphere's GHz total is a throughput reference, not capacity in the sense of space: two hosts with the same GHz total can hold different numbers of vCPUs. Capacity is counted in physical threads (section CPU capacity: Rules).
-- A GHz figure with Turbo or a Hyper-Threading factor is still throughput. It changes with load and power policy; the thread count of a host does not.
+- Sum of VM CPU Usage can exceed Total Capacity: Total Capacity is nominal, and Usage counts Turbo.
+- A GHz figure with Turbo or a Hyper-Threading factor added is still throughput. It changes with load and power policy; the thread count of a host does not.
+- The counter CPU Usage (MHz) reads better as CPU Throughput: cycles completed ([`knowledge/glossary.md`](../../../../glossary.md), CPU Throughput).
 
 ## CPU capacity: Example
 ![ESXi 1: 20 cores at 1 GHz; ESXi 2: 10 cores at 2 GHz](../images/esxi-cpu-capacity-20-cores-1-ghz-vs-10-cores-2-ghz.png)
@@ -93,9 +95,9 @@
 - "Use Usage or Demand for capacity" → they include frequency. Capacity uses static counters (Run, Utilization).
 - "Usage (%) near 100% means no headroom" → nominal speed is not the upper limit. Check contention counters.
 - "Faster CPU = more capacity" → more speed, not more space.
-- "Host CPU capacity = cores × GHz, with or without Turbo and Hyper-Threading" → that is throughput. Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock speed.
+- "Total Capacity (GHz) is the host's CPU capacity" or "capacity = cores × GHz, with or without Turbo and Hyper-Threading" → Total Capacity is the product's label for throughput at base clock. Capacity is the count of physical threads: 16 cores with Hyper-Threading = 32 threads, at any clock speed.
 - "Host CPU capacity depends on Turbo and the power policy" → those change throughput. The thread count is fixed by the hardware and the Hyper-Threading setting.
-- "Sum of VM Usage above total capacity is impossible" → total is nominal; Turbo exceeds it.
+- "Sum of VM Usage above Total Capacity is impossible" → Total Capacity is nominal; Turbo exceeds it.
 
 ## Metadata
 ```yaml
