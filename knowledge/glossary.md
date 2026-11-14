@@ -20,7 +20,7 @@ A metric with its own file is an entry only when it has another name or a confus
 
 - **All-Core Turbo**: Frequency when all cores of a socket are busy.
   - Also called: All Core Boost (AMD)
-- **Base frequency**: Nominal frequency. vSphere uses it as total capacity.
+- **Base frequency**: Nominal frequency. vSphere's Total Capacity (GHz) = cores × base frequency: a throughput figure; capacity is counted in threads.
   - Also called: Nominal frequency, base clock speed
 - **CCD**: Core Complex Die: a die of cores inside an AMD socket. On most generations one CCD is one L3 domain; on Zen 4c a CCD holds two 8-core CCX, each its own L3 domain.
 - **Co-stop**: vCPU state: held back because a sibling vCPU of the same VM is too far behind.
@@ -32,8 +32,8 @@ A metric with its own file is an entry only when it has another name or a confus
   - File: [`vsphere/technology/cpu/metrics/host/core-utilization`](vsphere/technology/cpu/metrics/host/core-utilization.md)
 - **CPPC**: Collaborative Processor Performance Control (ACPI 5.0+).
   - Also called: Intel HWP
-- **CPU Throughput**: Productive cycles attributed to a thread or vCPU. Excludes the idle loop.
-  - Also called: Usage (MHz), Used
+- **CPU Throughput**: Productive cycles attributed to a thread or vCPU. Excludes the idle loop. The better name for the product's CPU Usage (MHz).
+  - Also called: Usage (MHz), CPU Usage (MHz), Used
 - **CPU Utilization for Resources**: 17 legacy rescpu.* metrics. Avoid.
   - Also called: rescpu
 - **Efficacy (CPU)**: Work per cycle from core architecture. Not accounted by any metric.

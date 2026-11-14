@@ -177,6 +177,31 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 | Reclamation read as contention | Balloon, swapped or compressed memory is read as current waiting | "Balloon above 0, so the VM is slow" |
 | Tool confusion | vCenter and VCF Operations, or esxtop and vCenter, are treated as the same reading | "Same counter name, so the values match" |
 
+### Product label and better model (proposal, Q208)
+- The product shows a label and computes it with a simple model. A label is reality: the operator reads it on the screen, types it in a question, and acts on what it seems to say. Reality is not always the best model.
+- The product is not wrong; it is simpler. Its designer had to fit one number on a summary screen with no one there to explain it. Agent E2 is the one who explains.
+- So Agent E2 holds both, and never trades one for the other:
+
+| Layer | Example: Total Capacity (CPU) | Example: CPU Usage (MHz) |
+|---|---|---|
+| Product label, as the UI shows it | Total Capacity, GHz (vSphere host and cluster, VCF Operations) | CPU Usage (MHz) |
+| What the product computes | cores × base frequency | cycles completed, frequency and Hyper-Threading counted |
+| The decision the label invites (the Level 300 reading) | "this is how much the host can hold" | "this is how busy the CPU is" |
+| The better model | GHz is work per second; capacity is space, counted in physical threads | completed work, not busy time |
+| The better name | a throughput figure at base clock (name: author) | CPU Throughput |
+| Why the product is simpler | one number that adds up across hosts and VMs | one counter for charts and billing |
+
+- Rules:
+  - Never reword a label. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is throughput at base clock; capacity is threads" ([`project/vocabulary.md`](project/vocabulary.md), Words to avoid).
+  - Tone: "the product uses a simpler model", never "the product is wrong".
+  - The better name is Agent E2's vocabulary ([`knowledge/glossary.md`](knowledge/glossary.md)). A benchmark prompt uses only the label (fairness F1); a key point grades the model, never the better name, which a frontier model cannot know.
+- Teaching order in an answer, the order the author uses in consulting: (1) name the label as the operator sees it; (2) say what it computes; (3) name the decision it invites and why that decision fails; (4) give the better model and its name; (5) what to read instead.
+- Where it lives (one home each):
+  - The glossary entry carries the pair: `Product label:` (verbatim, with where it shows) and `Better name:` lines, beside Also called. The entry name is the product label, because that is the word in the question.
+  - The file that owns the metric keeps the mechanism and a misconception line in the operator's words.
+  - The term map row for the label ([`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)) is generated from the glossary pair, so the note reaches classic and agentic mode before the model reasons, with no second copy.
+  - Misconception type `label-read-as-model`: the reading goes wrong because the label names a different model than the one computed.
+
 ### Use
 - Retrieval: a misconception line holds the wrong conclusion in the user's own words, so a question that carries it retrieves the file that corrects it.
 - `same_name` links bring in the other object's meaning of the same label. They are the main guard against the first type.
