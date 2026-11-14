@@ -26,6 +26,7 @@ Each entry has:
 
 Answered questions are in [author-questions-resolved.md](author-questions-resolved.md). Each key links to its entry there.
 
+- [Q211](project/author-questions-resolved.md#q211--repository-rules--sources-folder-read-only-or-author-added) · Repository rules · Sources folder: read-only or author-added
 - [Q210](project/author-questions-resolved.md#q210--terms--neuro-symbolic-expert-system-agent-case-reading-set-reading-plan) · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
 - [Q209](project/author-questions-resolved.md#q209--benchmark--runs--what-the-next-round-runs) · Benchmark > Runs · What the next round runs
 - [Q200](project/author-questions-resolved.md#q200--benchmark--mode--agentic-or-classic-as-the-shipped-mode) · Benchmark > Mode · Agentic or classic as the shipped mode
