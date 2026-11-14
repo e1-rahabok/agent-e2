@@ -13,11 +13,12 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
   - The LLM. Standard open-weight model(s), running locally with minimal GPU. It is not a customized, fine tuned model.
 - Locally means on the customer's own infrastructure: no cloud AI service, and no customer data (questions, screenshots, files) leaving the customer network. No per-token fee.
 - Users' prompt or question can include a URL. Agent E2 will browse and check the content. 
-- Agent E2 is more than an LLM answering one question (author, 2026-11-14). It is also a consultant that leads a conversation: asked "Can you guide me over capacity planning for a vSphere cluster? What should I consider? You're my expert consultant", it interviews the user for what the plan needs, computes with code, and explains each number and the trade-off behind it. Code knows which inputs are missing and does the arithmetic; the model words the questions and the advice. The benchmark measures single-turn knowledge; a conversation is measured in the live test (section 5, Ways to ask, 4 and 7).
+- Agent E2 is more than an LLM answering one question. It is also a consultant that leads a conversation: asked "Can you guide me over capacity planning for a vSphere cluster? What should I consider? You're my expert consultant", it interviews the user for what the plan needs, computes with code, and explains each number and the trade-off behind it. Code knows which inputs are missing and does the arithmetic; the model words the questions and the advice. The benchmark measures single-turn knowledge; a conversation is measured in the live test (section 5, Ways to ask, 4 and 7).
 - Scope: version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer.
 - Later: vSAN, NSX, Kubernetes, Linux flows, and VCF Operations beyond its vSphere metrics. The end scope is the private cloud stack.
-- Release gate: final score at least 85% on the benchmark, each question scored on the mean of 5 runs; Level 400 at least 80%; confident-wrong at most 3%; no misconception stated as true; the held-out set at most 11 points below. Target: 99%. Details: [benchmark/design.md](benchmark/design.md), section 7.5.
-- Targets, not rules. Hardware (one GPU), the context window (32K) and the model size (about 30B) are stretch targets and design choices, not limits. When a target blocks the mission, change the target and say why: the smallest hardware that passes the release gate wins. Few rules hold in IT operations management; every assumption here, the author's included, is open to challenge with evidence.
+- Comprehensive Benchmark, each question scored on the mean of 5 runs; Level 400 at least 80%; confident-wrong at most 3%; no misconception stated as true; the held-out set at most 11 points below. Details: [benchmark/design.md](benchmark/design.md), section 7.5.
+- Targets, not rules. The smallest hardware (GPU, CPU, Memory) that passes the benchmark.
+- Few rules hold in IT operations management; every assumption here, the author's included, is open to challenge with evidence.
 
 
 | Lever | What it is | What we change | Where |
@@ -27,7 +28,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
 | Agent | The expert's procedure as code: it reads the question into a case, plans what to read from the knowledge base's map, computes, decides whether to ask, calls the model, checks the answer | The stages, the reading plan, the rules, the prompts | `harness/` (`AGENT.md`) |
 | Model choice | Which frozen model we ship | Swap in a better open model when one appears | [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md) |
 
-- The benchmark tests the whole system, not the model. It is a proof, not a goal (author, 2026-11-14): no mode or run is kept for its own sake. It answers:
+- The benchmark tests the whole system, not the model. It is a proof, not a goal: no mode or run is kept for its own sake. It answers:
   - whether Agent E2, as shipped, passes the release gate and how it compares with a frontier model;
   - which frozen model to ship (model choice is the fourth lever).
 - What a change to the knowledge base, harness or agent adds is read from free checks first (the retrieval check, traces, unit tests), and from the next round that proves the product.
