@@ -51,7 +51,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 
 ## What is a good number
-- Levels agreed by the author (Q130, 2026-11-12). Baseline 2026-11-13 (196 questions), hybrid (as in benchmark runs): search recall@6 60%, classic context recall 69%, 91 of 196 complete (46%), main file missing on 23. BM25: 49%, 62%, 86 of 196 (44%), main file missing on 42: bad. Before the pause (2026-11-11, 95 questions): 78%, 61 of 95 complete. Output: [benchmark/results/retrieval-2026-11-13/](../benchmark/results/retrieval-2026-11-13/hybrid.md).
+- Levels agreed by the author (Q130, 2026-11-12). Baseline 2026-11-13 (196 questions), hybrid (as in benchmark runs): search recall@6 60%, classic context recall 69%, 91 of 196 complete (46%), main file missing on 23. BM25: 49%, 62%, 86 of 196 (44%), main file missing on 42: bad. Before the pause (2026-11-11, 95 questions): 78%, 61 of 95 complete. Output: [benchmark/results/retrieval-2026-11-13/](../benchmark/results/retrieval-2026-11-13/hybrid.md). Reading plan, 2026-11-14: hybrid 80%, 115 of 196 complete, main file missing on 19; BM25 76%, 108 of 196, 25 ([benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/plan-hybrid.md)).
 
 ### Why the retrieval number must be higher than the release score
 - Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% in agentic mode, Level 400 at least 80%, confident-wrong at most 3%.

@@ -105,8 +105,9 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 | BM25 | Classic | 62% | 85 of 196 (43%) | 43 | 36% | 24% | 0% |
 | BM25 | Reading plan | 76% | 108 of 196 (55%) | 25 | 52% | 31% | 21% |
 | Hybrid | Classic | 69% | 91 of 196 (46%) | 23 | 42% | 19% | 5% |
-| Hybrid | Reading plan | pending | pending | pending | pending | pending | pending |
+| Hybrid | Reading plan | 80% | 115 of 196 (59%) | 19 | 57% | 36% | 26% |
 
+- Outputs: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/plan-hybrid.md). Search recall@6 is the same in both rows (60% hybrid, 49% BM25): the gain comes from what the plan adds after the search.
 - Not tuned to the questions: one design, the tiers as the knowledge base defines its links; two settings tried (section size 250 or 400 tokens, derive cap 3 or 8), within 2 questions of each other.
 - Still short of the release level of the retrieval check (main file 100%, recall 95%, complete 90%). Next levers, in order: the model's case (4.1) feeding tier 2; the knowledge changes of section 6.
 
