@@ -1,10 +1,9 @@
 # Which counter to size VM CPU
 
 ## Prompt
-- A correctly sized VM balances performance, capacity and cost.
 - The context is sizing, not performance troubleshooting.
 
-Choose the most accurate counter from the list.
+Which counters from the list are the most accurate?
 
 - A. VM CPU Usage (MHz)
 - B. VM CPU Usage (%)
@@ -23,6 +22,8 @@ C or D (Demand), because it includes unmet demand; or A/B (Usage).
 
 ## Notes
 - Author (Q186, 2026-11-12): "VM sizing" in an administrator's words almost always means Guest OS sizing. Agent E2 names that reading (term map row vm-sizing). The hint was removed. Claude Haiku 5.5 picked C (Demand) on this prompt.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "A correctly sized VM balances performance, capacity and cost."
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Choose the most accurate counter from the list."
 
 ## Metadata
 ```yaml

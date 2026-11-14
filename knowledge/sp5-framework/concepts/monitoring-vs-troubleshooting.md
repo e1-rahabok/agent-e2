@@ -115,12 +115,11 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Your Private Cloud > SP5 Framework > Monitor | Troubleshoot; Troubleshoot; Root Cause Analysis'
 corrections:
-- 'Section ''Troubleshooting'', order: daily health check availability, performance, security; configuration as drill-down; known bugs are configuration; every performance flow checks configuration. The book diagram (contention, configuration, availability, utilization) is replaced.'
+- 'Section ''Troubleshooting'', order: daily health check availability, performance, security; configuration as drill-down; known bugs are configuration; every performance flow checks configuration. The source document diagram (contention, configuration, availability, utilization) is replaced.'
 - 'Monitoring table, row Logs, and the interval bullets: monitoring needs logs; performance monitoring reports the 20-second peak within the 5-minute interval; 20-second visibility for mission-critical systems.'
 review_notes:
-- 'To check: Section ''Troubleshooting'': the order differs between files: the book diagram gives contention, configuration, availability, utilization; the reactive track diagram in SP5 Framework: Process uses configuration, availability, known bugs, consumption; vm-slow has its own order (Q060).'
+- 'To check: Section ''Troubleshooting'': the order differs between files: the source document diagram gives contention, configuration, availability, utilization; the reactive track diagram in SP5 Framework: Process uses configuration, availability, known bugs, consumption; vm-slow has its own order (Q060).'
 - 'Section ''Troubleshooting'': the diagram says Aria Operations for Logs; written as VCF Operations for logs (current name).'
-- 'Section ''Validating a log message'': log lines from the book image (2016 example); the Log Insight screenshot is not copied. ''0.4 s earlier'' computed from the timestamps (23:42:14.842 vs 23:42:15.266).'
-- 'To check: Section ''Validating a log message'', rule: a generalization of the example; not stated in the book.'
+- 'To check: Section ''Validating a log message'', rule: a generalization of the example; not stated in the source document.'
 status: draft
 ```

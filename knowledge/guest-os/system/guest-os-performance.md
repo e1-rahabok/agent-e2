@@ -10,12 +10,12 @@
 - Not a built-in VCF Operations metric. Scored on every powered-on VM with VMware Tools; without VMware Tools there is no score.
 
 ## Sub-metrics
-| Group | Sub-metric | Source | Unit | Scores 100 at |
-|---|---|---|---|---|
-| Guest OS contention | CPU run queue per vCPU | `guest\|20_sec_peak_cpu_queue` | threads | 0 |
-| Guest OS contention | Disk queue | `guest\|20_sec_peak_disk_queue` | IOs | 0 |
-| Guest OS utilization | Free memory | `guest\|mem.free_latest` ÷ 1024 (KB to MB) | MB | 1,024 or more |
-| Guest OS utilization | Page-out rate | `guest\|page.outRate_latest` | pages/s | 0 |
+| Group | Sub-metric | Source | Unit | Scores 100 at | Catalog row (KPI) |
+|---|---|---|---|---|---|
+| Guest OS contention | CPU run queue per vCPU | `guest\|20_sec_peak_cpu_queue` | threads | 0 | Peak vCPU run queue length (count) |
+| Guest OS contention | Disk queue | `guest\|20_sec_peak_disk_queue` | IOs | 0 | Peak disk queue length (count) |
+| Guest OS utilization | Free memory | `guest\|mem.free_latest` ÷ 1024 (KB to MB) | MB | 1,024 or more | Free memory (MB) |
+| Guest OS utilization | Page-out rate | `guest\|page.outRate_latest` | pages/s | 0 | Memory page-out rate (pages/s) |
 
 - Colour levels: `catalog/thresholds-performance`, section `kpi`, rows with this file as `kb`.
 - Free memory is higher-is-better, so its limits go down: 1 GB or more free scores 100; the green range ends at 512 MB.
@@ -84,7 +84,7 @@ source:
   document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the reasons and the metrics not used
   path: 'Consumer Objects > Performance: VM & Guest OS > Guest OS Performance (%); Metrics Not Used'
 corrections:
-- 'Section ''Sub-metrics'': the book is outdated. Free memory scores 100 from 1 GB (the earlier text: above 512 MB).'
+- 'Section ''Sub-metrics'': the source document is outdated. Free memory scores 100 from 1 GB (the earlier text: above 512 MB).'
 review_notes: []
 status: draft
 ```

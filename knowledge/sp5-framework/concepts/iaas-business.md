@@ -149,9 +149,8 @@ source:
   path: 'Your Private Cloud > Overview > Complaint-based Operations (The Litmus Test, Common Mistakes); The Business of IaaS (VM as a Service, Capabilities, Key Metrics, The Restaurant Analogy)'
 corrections: []
 review_notes:
-- 'To check: Section ''Three variants of IaaS'', last bullet: contention from the pool limit or tenant overcommit is the tenant''s, and Ready includes limit time; derived from the book''s resource pool row and the VM CPU Ready file.'
-- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from sp5-framework/observability/thresholds; not in the book.'
+- 'To check: Section ''Three variants of IaaS'', last bullet: contention from the pool limit or tenant overcommit is the tenant''s, and Ready includes limit time; derived from the source document''s resource pool row and the VM CPU Ready file.'
+- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from sp5-framework/observability/thresholds; not in the source document.'
 - 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
-- 'Book naming is older (Aria products); the knowledge base uses VCF Operations.'
 status: draft
 ```

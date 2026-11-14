@@ -53,7 +53,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > VM > Overview; Consumption Metrics
 corrections: []
-review_notes:
-- 'Example outage cited by the book: https://communities.vmware.com/t5/VMware-vSphere-Discussions/Limit-on-network-packets-per-second-for-VMs/td-p/2312644 (community post).'
+review_notes: []
 status: draft
 ```

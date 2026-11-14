@@ -174,9 +174,8 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Your Private Cloud > Service Level Agreement (The 4 SLAs of IaaS, VM vs Guest OS, Availability SLA, Performance SLA, Compliance SLA, Service SLA, The Metrics of SLAs, The Time Window, The 2 Sides of an SLA, SLA Calculation, Performance Quantification, Penalty Quantification, The Benchmark to Rule Them All)'
 corrections:
-- 'Performance SLA, SLI and SLO removed (2026-11-11): the SLA is a business contract; performance is managed by the KPI only. The book''s Performance SLA, SLA calculation and Performance Quantification sections are not used.'
+- 'Performance SLA, SLI and SLO removed (2026-11-11): the SLA is a business contract; performance is managed by the KPI only. The source document''s Performance SLA, SLA calculation and Performance Quantification sections are not used.'
 review_notes:
-- 'To check: Section ''Availability SLA'', Operational Availability formula: derived from the definition; the book has a Formula heading with no formula.'
-- 'Section ''Time window'': tables transcribed from the book images. The book table has 99.95% quarter 65.5 min (91-day quarter) and year 263.0 min (rounded); kept as the book gives them.'
+- 'To check: Section ''Availability SLA'', Operational Availability formula: derived from the definition; the source document has a Formula heading with no formula.'
 status: draft
 ```

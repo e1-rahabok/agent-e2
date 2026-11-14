@@ -7,13 +7,13 @@ Cluster 007 runs ESXi 9.1 hosts with identical specifications:
 - Single Core Turbo 4.0 GHz.
 - Hyper-Threading enabled.
 - BIOS power management set to OS Controlled.
-- ESXi power management set to Balanced, not High Performance, so frequency fluctuates.
+- ESXi power management set to Balanced, not High Performance.
 - All other host settings are consistent and follow vSphere best practices.
 
 - What CPU speed do you tell tenants their VMs will likely get during actual run? This is not the configured speed.
 - It is the real throughput most likely when the cluster CPUs are fairly busy serving many demanding VMs: many cores are busy and most run two threads.
 
-Which number is most realistic for one vCPU, as reported by VM CPU Usage in the vCenter real-time chart?
+Which numbers are the most realistic for one vCPU, as reported by VM CPU Usage in the vCenter real-time chart?
 
 - A. 1.6 GHz. Lower than the 2.0 GHz nominal because Hyper-Threading has a penalty.
 - B. 2.0 GHz. That is what is stated on the box.
@@ -33,6 +33,8 @@ B (2.0 GHz, the nominal speed) or D (3.0 GHz, ignoring the Hyper-Threading charg
 
 ## Notes
 - Author confirmed the key (Q034, 2026-11-03). Knowledge: [`vsphere/technology/cpu/concepts/cpu-frequency`](../../knowledge/vsphere/technology/cpu/concepts/cpu-frequency.md), section Likely vCPU speed on a busy cluster.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "so frequency fluctuates" (after the power policy line).
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which number is most realistic for one vCPU".
 
 ## Metadata
 ```yaml

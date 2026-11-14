@@ -115,8 +115,8 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Performance: VM & Guest OS > Approach; Implementation'
 corrections:
-- 'Section ''One KPI per realm'': VM GOS KPI = average of the two, for the application team. Part 1 of the book, which combines them in one KPI, is outdated.'
-- 'Section ''Scoring'': the book gives step weights 1x, 2x, 4x, 8x. The knowledge base uses the smooth weight 2^((100 - score)/25) with the excluded green, single-value green, rounding and missing-data rules.'
+- 'Section ''One KPI per realm'': VM GOS KPI = average of the two, for the application team. Part 1 of the source document, which combines them in one KPI, is outdated.'
+- 'Section ''Scoring'': the source document gives step weights 1x, 2x, 4x, 8x. The knowledge base uses the smooth weight 2^((100 - score)/25) with the excluded green, single-value green, rounding and missing-data rules.'
 review_notes: []
 status: draft
 ```

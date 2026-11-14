@@ -1,10 +1,7 @@
 # Performance vs capacity view of utilization
 
 ## Prompt
-- Performance management and capacity management are highly related.
-- Related is not identical: two things that are related are, by that fact, two different things.
-
-In a private cloud (finite hardware), choose all the correct statements:
+In a private cloud (finite hardware), choose all the correct statements about performance management and capacity management:
 
 - A. For performance, 100% utilization is not only good, it is perfect. As long as there is no queue, higher utilization means more throughput.
 - B. For capacity, 100% utilization is bad news, especially if it breaches Usable Capacity. Capacity is low: add capacity or reclaim.
@@ -22,6 +19,9 @@ Rejecting A (100% utilization seen as a performance problem) or C.
 - C: check contention: context switch, queue, latency.
 - D: provider vs consumer perspective.
 - E: the two pillars have different time horizons, although they are intertwined.
+
+## Notes
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Performance management and capacity management are highly related. Related is not identical: two things that are related are, by that fact, two different things."
 
 ## Metadata
 ```yaml

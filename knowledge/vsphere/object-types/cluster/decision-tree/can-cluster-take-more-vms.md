@@ -141,7 +141,6 @@ source:
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
 review_notes:
-- 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow the book (Cluster Closure, Logic) (Q061).'
-- 'Step 6: the book text says the risk check runs when capacity and performance are both orange. One orange and one green is not stated; read as open.'
+- 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow the source document (Cluster Closure, Logic) (Q061).'
 status: draft
 ```

@@ -202,8 +202,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''The five pillars'': pillar names differ between the SP5 diagram (compliance; cost + price) and the text (security and compliance; value).'
-- 'Section ''Private cloud scope'': text twin of the capabilities diagram (book p. 44), not copied: the text carries its content.'
-- 'Section ''Availability'': five nines at 10x the cost of four nines is the book''s rule of thumb, not a measured figure.'
 - 'Not copied: detailed pillar relationship diagram (p. 53), private cloud capabilities diagram.'
 status: draft
 ```

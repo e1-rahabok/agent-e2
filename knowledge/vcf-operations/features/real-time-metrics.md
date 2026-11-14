@@ -78,6 +78,5 @@ review_notes:
 - 'To check: Section ''Purpose and implementations'': a Prometheus endpoint or API route for external scripts; the docs show PromQL only in the Custom Query sub-tab (Q129).'
 - 'Docs conflict: the policy page says ESX Top view is for Virtual Machine types; the Workbench page says Host System and VM.'
 - 'To check: The list of the ~21 2-second metrics (VODAP-9.1-Metrics-List-Per-Provider.xlsx, not read).'
-- 'Section ''Cost'': 1,000 data points from the book; 10x volume is arithmetic.'
 status: draft
 ```

@@ -92,6 +92,6 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture > Observability > Input | Output'
 corrections: []
 review_notes:
-- 'To check: Section ''Property'': the reason for VMs in a cluster being a metric (result of activity, collected every interval) is not from the book.'
+- 'To check: Section ''Property'': the reason for VMs in a cluster being a metric (result of activity, collected every interval) is not from the source document.'
 status: draft
 ```

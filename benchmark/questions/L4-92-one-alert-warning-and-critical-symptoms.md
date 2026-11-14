@@ -13,7 +13,7 @@
   - an alert with Critical criticality when usage is above 95 and CPU Ready is high.
 - Other alert definitions already use S1, S2 and S3 on their own, and must not change.
 
-Which configuration of the new alert definition gives that behaviour?
+Which configurations of the new alert definition give that behaviour?
 
 - A. One symptom set with S1, S2 and S3 that matches Any; the alert criticality is Symptom Based.
 - B. One symptom set with S1, S2 and S3 that matches All; the alert criticality is Symptom Based.
@@ -42,6 +42,7 @@ B or A. B: All is read as "the strongest evidence" and the Warning and Critical 
 - Why one answer: the behaviour list is a Boolean expression, (S1 OR S2) AND S3, and only C builds it with the documented operators. The severity rule rules out a fixed criticality.
 - Debatable risk: other designs exist (three alert definitions, or conditions written inside the alert). The prompt fixes one alert definition and says the symptom definitions stay as they are. The "most critical wins" wording is from the Aria Operations 8.18 page; the VCF 9 pages describe the same behaviour more loosely. No page was found for VCF 9.1 that spells out both operators in one place.
 - Rewritten 2026-11-13 to raise difficulty: a third symptom (contention) forces two sets with Any inside the first and All between sets; the severity of S3 matters for Symptom Based; the vendor pattern alone (A) is the trap.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which configuration ... gives that behaviour?"
 
 ## Metadata
 ```yaml

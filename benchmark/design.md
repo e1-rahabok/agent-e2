@@ -162,6 +162,9 @@ The frontier model must be able to answer every question from public knowledge. 
 
 ### 6.2 Stem, options, key
 - Stem: a realistic situation with the values an operator would see (counter names, numbers, units, time window, tool). Not a definition prompt, except at Level 100-200.
+- No hints in the prompt (author, 2026-11-14): no line that explains a mechanism, defines a counter, interprets a value or points to the answer ("Hint:", "Be aware of", "Do not select", "the cores run below the base clock"). A frontier model uses a hint; a local model does not, so a hint measures the model, not the knowledge base. A hint that helps a reviewer goes in `## Notes`. Case facts stay: values, settings, versions, what changed, and limits on scope ("ignore the VMX swap file").
+- The stem never tells how many options are correct (Q199): plural wording ("Which statements are correct?"), matching the runner's closing line "Choose all the correct options. There can be more than one."
+- Lint checks both against `question_prompt_hints` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml).
 - Options:
   - one fact per option;
   - similar length and style, so length gives no hint;

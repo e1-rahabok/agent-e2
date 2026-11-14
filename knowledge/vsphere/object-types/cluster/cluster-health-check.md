@@ -101,7 +101,7 @@ source:
 corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; KPI is performance only (Cluster Consumption and Cluster Risk are models); availability flows, security and compliance are future, after 1.0.'
 review_notes:
-- 'To check: Section ''Checks, in order'': the placement of steps 5 and 7; the order of the pillars follows health-risk-efficiency (book) (Q062).'
+- 'To check: Section ''Checks, in order'': the placement of steps 5 and 7; the order of the pillars follows health-risk-efficiency (Q062).'
 - 'To check: Sections ''Order rationale'' and ''Interpretation'': written from the linked files.'
 status: draft
 ```

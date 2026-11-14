@@ -118,6 +118,6 @@ source:
   path: Storage > Architecture > Storage Layers; VM Layer; ESXi Layer; Datastore Layer
 corrections: []
 review_notes:
-- 'To check: VMFS extent article cited by the book, not read (http://blogs.vmware.com/vsphere/2012/02/vmfs-extents-are-they-bad-or-simply-misunderstood.html).'
+- 'To check: VMFS extent article cited by the source document, not read (http://blogs.vmware.com/vsphere/2012/02/vmfs-extents-are-they-bad-or-simply-misunderstood.html).'
 status: draft
 ```

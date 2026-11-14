@@ -104,6 +104,5 @@ corrections: []
 review_notes:
 - 'Section ''Efficacy'': the 30% figure is an estimate for a new vs a 5-year-old Intel Xeon at the same clock speed, not a published measurement.'
 - 'To check: Section ''CPU Throughput'': which counters the name ''CPU Throughput'' covers (Usage (MHz) at minimum); proposed in the glossary.'
-- "Section 'Fair Share Scheduler': the book compares with the Linux EEVDF scheduler (replaced CFS in Linux 6.12; https://lwn.net/Articles/925371/). Left out of the body as a tangent."
 status: draft
 ```

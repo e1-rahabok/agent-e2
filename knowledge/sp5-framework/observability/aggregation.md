@@ -102,8 +102,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
   path: Metric Mastery > Aggregation; The Problem with Average; Lagging vs Leading Indicators; "Peak" Utilization; Depth vs Breadth; Usage Disparity
 corrections:
-- 'Section ''Divide summed counters correctly'': the book writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs), which gives ms per vCPU. The denominator needs the sample length (https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html).'
-review_notes:
-- 'Section ''Techniques'': the book table "Count / Worst 5th Percentile / Exclusion" lists 10 → 9.50, 0.50 and so on; written as members excluded.'
+- 'Section ''Divide summed counters correctly'': the source document writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs), which gives ms per vCPU. The denominator needs the sample length (https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html).'
+review_notes: []
 status: draft
 ```

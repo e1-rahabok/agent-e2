@@ -85,7 +85,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > VM > Quiz! > VM vs ESXi
 corrections: []
-review_notes:
-- 'Test data from Valentin Bondzio (book footnote).'
+review_notes: []
 status: draft
 ```

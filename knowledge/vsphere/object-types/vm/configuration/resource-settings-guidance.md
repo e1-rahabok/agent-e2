@@ -82,7 +82,6 @@ source:
 corrections: []
 review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Headroom for memory virtualization overhead and migration overhead: the source defines no percentage; whether the book gives one.'
-- 'Section Principle: the book''s impact table (limit, reservation, share) is written as text; the image is archived (2026-11-12). Its share row said reservation where it means share (Q108).'
+- 'To check: Headroom for memory virtualization overhead and migration overhead: the source defines no percentage; whether the source document gives one.'
 status: draft
 ```

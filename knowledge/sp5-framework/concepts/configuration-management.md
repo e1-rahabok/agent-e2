@@ -136,8 +136,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Configuration Management (opening); Approach (Review Approach, Time-based Approach, The 4 Types of Check); Review List (opening, Security)'
 corrections: []
-review_notes:
-- 'Section ''Four types of check'': the book announces 4 types and lists 2 bullets (value, multi-object); the subsections are value, consistency, compatibility, variance. Written as the four subsections.'
-- 'Section ''Security'': the book writes Log Insight; written as the log tool (VCF Operations for logs).'
+review_notes: []
 status: draft
 ```

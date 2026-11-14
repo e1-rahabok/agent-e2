@@ -202,7 +202,7 @@ source:
   path: 'Part 3: Consumer Objects > Capacity: Guest OS > Benefits. Part 1: Capacity Management > Rightsizing (Challenges; Micro Burst; Oversized Guest OS; Cost of Oversized; Optimization; Best Practices; The Big Picture; Progressive Pricing; Start Small?; Before vs After), pages 121-127.'
 corrections: []
 review_notes:
-- 'To check: Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") explains the book image; not in the book text.'
+- 'To check: Section ''Cost of an oversized VM'': the Overlap reason ("more interrupts and IO serviced on their time") explains the source document image; not in the source document text.'
 - 'Section ''Prevent oversizing'': the CPU Hot Add and vNUMA link is from Performance Best Practices (idle-and-unused-vcpus), not this chapter.'
 - 'Part 1, VM Footprint | Guest OS Sizing repeats the Part 3 text already in guest-os/system/concepts/guest-os-sizing; nothing added.'
 status: draft

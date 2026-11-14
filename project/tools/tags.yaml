@@ -37,6 +37,16 @@ question_fairness:
   '(?i)inter-host imbalance': 'vCommunity metric'
   '(?i)IaaS high utili[sz]ation': 'Agent E2 grouping'
   '(?i)\brealms?\b': 'Agent E2 term; say layer'
+# Prompt lines that help the frontier model and not the local model (author, 2026-11-14): a hint goes in ## Notes,
+# and the stem never tells how many options are correct (Q199). Checked in ## Prompt of every question that runs.
+question_prompt_hints:
+  '(?im)^\s*hint\b': 'is a hint: move it to ## Notes'
+  '(?i)\bbe aware (of|that)\b': 'is a hint: move it to ## Notes'
+  '(?i)\bdo not select\b': 'is a hint: move it to ## Notes'
+  '(?i)\bwhich (statement|reading|definition|change|configuration|number|metric|counter|VM) (about [^?]*)?(is|describes|implements|removes|gives|meets|should)\b': 'tells that one option is correct: use the plural'
+  '(?i)\bwhich single\b': 'tells that one option is correct: use the plural'
+  '(?i)\bchoose the most\b': 'tells that one option is correct: use the plural'
+  '(?i)\bwhat is the most likely\b': 'tells that one option is correct: use the plural'
 # Size cap of a CSV attachment in 1.0: the runner puts it in the prompt (benchmark/design.md, section 13.1). About 3,000 tokens.
 question_csv_max_chars: 12000
 # Prompt-injection guard: rejected in every knowledge file (body and metadata) and every benchmark prompt.

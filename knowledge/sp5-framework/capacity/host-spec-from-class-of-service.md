@@ -83,7 +83,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); Capacity Planning Stage (spreadsheet, 2026-11-11)
   path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind > Day 0 | Day 1 | Day 2; Service Level Agreement > Price & SLA; Planning Template'
 corrections:
-- 'Section ''Method'': the book sizes RAM from the vCPUs sold at the allocation ratio (Silver 4:1 per core, memory 2:1: 512 GB). The class settings are now per thread with three models; the RAM follows the binding CPU model.'
+- 'Section ''Method'': the source document sizes RAM from the vCPUs sold at the allocation ratio (Silver 4:1 per core, memory 2:1: 512 GB). The class settings are now per thread with three models; the RAM follows the binding CPU model.'
 review_notes:
 - 'Section ''Reading the example'', licensing: per-core licensing with a 16-core minimum per CPU, Broadcom KB 313548 (https://knowledge.broadcom.com/external/article/313548) and the VCF 9.0 Licensing Model page (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-0/licensing/licensing-overview/licensing-model.html).'
 status: draft

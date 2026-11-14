@@ -195,8 +195,6 @@ source:
   path: CPU > Architecture > State of a VM vCPU; OS Comparison; State Across Time; State Across Multiple vCPU
 corrections: []
 review_notes:
-- 'To check: Section ''State diagram'': the meaning given for the three arrows without a label in the book''s state diagram (Wait to Run, Wait to Co-stop, Run to Co-stop).'
-- "Section 'State across time': the book says the % versions are normalized by the number of vCPUs. Applies to vCenter and VCF Operations %. esxtop VM-level % values are sums (see vsphere/technology/cpu/metrics/virtual-motherboard/ready)."
-- "Section 'OS comparison': the book uses HarmonyOS as the example OS. The OS name is left out; the state mapping is kept."
+- 'To check: Section ''State diagram'': the meaning given for the three arrows without a label in the source document''s state diagram (Wait to Run, Wait to Co-stop, Run to Co-stop).'
 status: draft
 ```

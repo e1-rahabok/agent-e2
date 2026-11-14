@@ -117,10 +117,9 @@ source:
   document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for reasons and monster VM factors
   path: Provider Objects > Other Metrics > Cluster Risk (%); Monster VM
 corrections:
-- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''DRAM as the memory base'', ''Scoring'', ''Known limitation'': the book table is outdated. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
-- 'Section ''Monster VM'': the definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The book''s other values (45% or 40% of threads, half the host) are superseded.'
+- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''DRAM as the memory base'', ''Scoring'', ''Known limitation'': the source document table is outdated. Changes: six Excluded green ranges; imbalance 1.3/1.6/2; reservation 10/40/60/80; memory overcommit 1.4/1.8/2.2; monster ratios 1/2/3/4; memory tiering latency row added.'
+- 'Section ''Monster VM'': the definition is final: CPU above 50% of physical cores; memory above 40% of DRAM or 256 GB, whichever is smaller. The source document''s other values (45% or 40% of threads, half the host) are superseded.'
 review_notes:
-- 'Memory tiering rows decided by the author (Q178 a, Q179, 2026-11-12): active memory 50/62.5/75/100% of DRAM, from Broadcom''s 50% recommended and 75% significant loss; NVMe read latency 100/200/400/800 µs, doubling, red from Broadcom''s 400 µs impact point.'
 - 'Section ''Thresholds'', Allocation rows: a Bronze cluster built to the Part 1 plan shows red overcommit rows, as intended: the planning ratio is tied to price, Cluster Risk reads the running cluster, and Bronze is expected to score higher than Gold. CPU overcommit is per thread.'
 status: draft
 ```

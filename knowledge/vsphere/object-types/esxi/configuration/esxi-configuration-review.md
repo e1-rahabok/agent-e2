@@ -109,6 +109,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Section ''Capacity'', 30-vCPU VM spanning NUMA: 32 cores read as 2 sockets × 16 cores per socket.'
-- 'To check: Misconceptions 5 and 6: derived from the book''s rules, not stated in the book.'
+- 'To check: Misconceptions 5 and 6: derived from the source document''s rules, not stated in the source document.'
 status: draft
 ```

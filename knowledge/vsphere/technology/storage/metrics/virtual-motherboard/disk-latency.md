@@ -65,7 +65,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Storage > Architecture > VM Layer > Performance; Storage > VM > Performance Metrics > Contention Metrics
 corrections:
-- 'Section ''Mechanism'' (2026-11-04): the book says read and write both map to network Transmit. Wrong: they do not map 1:1 to Transmit and Receive; it depends on block size, MTU and TCP handshake packets. Keep until the book is updated.'
+- 'Section ''Mechanism'' (2026-11-04): the source document says read and write both map to network Transmit. Wrong: they do not map 1:1 to Transmit and Receive; it depends on block size, MTU and TCP handshake packets. Keep until the source document is updated.'
 review_notes:
 - 'Section ''Mechanism'': from Storage > Architecture.'
 - 'Sections Units and levels, Threshold: from Storage > VM.'

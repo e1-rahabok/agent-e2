@@ -81,6 +81,7 @@ related:
 - vsphere/technology/network/concepts/passthrough-and-offload
 - vsphere/technology/network/configuration/rss-and-interrupt-coalescing
 - vsphere/object-types/cluster/concepts/drs-overview
+- vsphere/technology/network/concepts/nic-teaming
 source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Networking Considerations > Network I/O Control (NetIOC) (pp. 47-48)

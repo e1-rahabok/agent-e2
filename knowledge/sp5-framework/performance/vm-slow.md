@@ -111,6 +111,6 @@ source:
 corrections:
 - 'Step 5: every performance flow, this one included, checks configuration; known bugs are mostly configuration.'
 review_notes:
-- 'To check: Steps 2-8, from field practice (Q060). Step 1 from the author, 2026-11-11.'
+- 'To check: Steps 2-8, from field practice (Q060).'
 status: draft
 ```

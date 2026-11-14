@@ -20,13 +20,13 @@
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100 that hides the other rows. Any bad packet is yellow and counts.
 
 ## Sub-metric formulas
-| Sub-metric | Source (VCF Operations) |
-|---|---|
-| Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` |
-| Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` |
-| Memory wait (worst, 90th percentile) | Memory latency, VM `mem\|20_sec_peak_host_contentionPct`, plus NVMe wait on hosts with memory tiering (below) |
-| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` |
-| Bad network packets | Per host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle; the highest host |
+| Sub-metric | Source (VCF Operations) | Catalog row (KPI) |
+|---|---|---|
+| Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` | Worst peak vCPU Ready among all VMs (%); 90th percentile peak vCPU Ready among VMs (%) |
+| Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` | Worst peak vCPU Co-stop among all VMs (%); 90th percentile peak vCPU Co-stop among VMs (%) |
+| Memory wait (worst, 90th percentile) | Memory latency, VM `mem\|20_sec_peak_host_contentionPct`, plus NVMe wait on hosts with memory tiering (below) | Worst memory wait among all VMs (%): memory latency + NVMe wait; 90th percentile memory wait among VMs (%): memory latency + NVMe wait |
+| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak read/write disk latency, all VM vDisks (ms); 90th percentile read/write latency among VM virtual disks (ms) |
+| Bad network packets | Per host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle; the highest host | Highest ESXi (error + dropped) network packets (%) |
 
 - VMs counted: powered-on VMs on the cluster's hosts. A powered-off VM is left out: its last stats are old.
 - 90th percentile: sort the VMs; take the one at position 90% of the count, rounded up. With fewer than 10 VMs it equals the worst VM.
@@ -103,9 +103,9 @@ source:
   document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the design and threshold reasons
   path: Provider Objects > Performance > Cluster Performance (%)
 corrections:
-- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''Scoring'': the book table and text are outdated: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
-- 'Section ''vMotion Count'': vMotion is excluded; the book text says both included and not included.'
+- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''Scoring'': the source document table and text are outdated: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
+- 'Section ''vMotion Count'': vMotion is excluded; the source document text says both included and not included.'
 review_notes:
-- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the book, whose text is outdated; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'
+- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the source document, whose text is outdated; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'
 status: draft
 ```

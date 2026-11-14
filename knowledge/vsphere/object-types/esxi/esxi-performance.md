@@ -18,13 +18,13 @@
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100. Any bad packet is yellow and counts.
 
 ## Sub-metric formulas
-| Sub-metric | Source (VCF Operations) |
-|---|---|
-| Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` |
-| Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` |
-| Memory latency (worst, 90th percentile) | VM `mem\|20_sec_peak_host_contentionPct` |
-| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` |
-| Bad network packets | Host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle |
+| Sub-metric | Source (VCF Operations) | Catalog row (KPI) |
+|---|---|---|
+| Ready (worst, 90th percentile) | VM `cpu\|20_sec_peak_readyPct` | Worst peak vCPU Ready among VMs on the host (%); 90th percentile peak vCPU Ready among VMs on the host (%) |
+| Co-stop (worst, 90th percentile) | VM `cpu\|20_sec_peak_costopPct` | Worst peak vCPU Co-stop among VMs on the host (%); 90th percentile peak vCPU Co-stop among VMs on the host (%) |
+| Memory latency (worst, 90th percentile) | VM `mem\|20_sec_peak_host_contentionPct` | Worst memory latency among VMs on the host (%); 90th percentile memory latency among VMs on the host (%) |
+| Disk latency (worst, 90th percentile) | VM `virtualDisk\|20_sec_peak_totalLatency_average` | Worst peak read/write disk latency, all vDisks of VMs on the host (ms); 90th percentile read/write latency among virtual disks of VMs on the host (ms) |
+| Bad network packets | Host: (errorsRx + errorsTx + droppedRx + droppedTx) / (packetsRx + packetsTx) × 100 in the last 5-minute cycle | ESXi (error + dropped) network packets (%) |
 
 - Bad packets are never averaged over a longer time: that hides a spike. Packets Received and Transmitted totals are deactivated by default in VCF Operations; activate them in the policy first.
 - It replaces the former "ESXi Bad Network Packets" super metric.

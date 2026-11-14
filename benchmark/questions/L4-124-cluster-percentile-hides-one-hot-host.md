@@ -9,7 +9,7 @@
 - Across the 200 VMs, that gives: worst VM 6%, 90th percentile 0.3%, mean 0.70%.
 - The team's alert on the cluster fires when the 90th percentile of VM Ready passes 1%, or the mean passes 2%.
 
-Which reading is correct?
+Which readings are correct?
 
 - A. The cluster is healthy: only 7% of the VMs are affected, the 90th percentile is 0.3%, and no alert fired.
 - B. The cluster needs a performance finding: the worst VM at 6% proves it, and adding a host to the cluster is the first step.
@@ -33,6 +33,7 @@ A or E: the cluster aggregates are read as the verdict, with a small share of VM
 - Why one answer: the numbers show the dilution, and only C names the host where the VMs concentrate. The alert levels are given in the prompt as the team's own, so no threshold is asked.
 - Debatable risk: moderate. The 90th percentile, the 1% and 2% alert levels are design choices; they are stated as facts of the scenario, and the key does not rest on them being right, only on what a percentile can and cannot show. The statement that DRS Score is not a contention counter is also covered by question L3-37.
 - Rests on: the design logic of the cluster health check (Principle: depth and breadth, averages hide one VM; step 2 aggregation by worst and 90th percentile; step 3 hot host) and the vendor definition of DRS Score.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which reading is correct?"
 
 ## Metadata
 ```yaml

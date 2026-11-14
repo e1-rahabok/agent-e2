@@ -42,7 +42,7 @@ source:
   path: Memory > VM > Consumption Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''Meaning'': the limit behaviour; the book''s guess.'
+- 'To check: Section ''Meaning'': the limit behaviour; the source document''s guess.'
 - 'To check: whether Entitlement excludes memory above a limit (the VM is not entitled beyond its limit).'
 status: draft
 ```

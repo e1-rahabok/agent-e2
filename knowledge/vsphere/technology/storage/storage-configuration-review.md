@@ -69,6 +69,5 @@ source:
 corrections: []
 review_notes:
 - 'To check: whether vSphere 9.1 still supports vVols (vSphere 9.1 release notes). vVols deprecated in VCF 9.0: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070); Protection and Recovery 9.1 release notes (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/protection-and-recovery/9-1/release-notes/protection-and-recovery-91-release-notes.html) say 9.1 is its last release supporting vVols.'
-- 'Queue depth misconception: the kernel queueing mechanism is from vsphere/technology/storage/concepts/esxi-storage-latency-stack, not from the book.'
 status: draft
 ```

@@ -648,6 +648,12 @@ class PlannerTest(unittest.TestCase):
         self.assertEqual(planner.claims('Why is Ready high on this VM?'), ['Why is Ready high on this VM?'])
         self.assertEqual(planner._stem('Is Ready high here? Which statements are correct?\n- A. x'), 'Is Ready high here?')
 
+    def test_health_check_question_reads_health_check_flow(self):
+        # 'You run the health check on this VM': the health-check flow, not a troubleshooting flow (2026-11-14: 0350, 0352)
+        self.assertTrue(planner.HEALTH_CHECK.search('You run the health check on this VM. Which statements are correct?'))
+        self.assertTrue(planner.HEALTH_CHECK.search('The scheduled host health-check reads these values'))
+        self.assertIsNone(planner.HEALTH_CHECK.search('Why is the VM slow?'))
+
     def test_search_text_keeps_table_header_only(self):
         q = 'Why is it slow?\n\nAttachment a.csv:\n```csv\nTime,VM CPU Ready (%)\n09:00,1.2\n09:05,8.4\n```'
         t = planner.search_text(q)

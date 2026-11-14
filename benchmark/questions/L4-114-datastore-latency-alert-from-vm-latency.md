@@ -8,7 +8,7 @@
   - DS-FAST: latency of the datastore 1.5 ms. 18 of its 40 VMs report VM disk latency above 10 ms (the 18 that also use DS-SLOW). The highest VM disk latency among them is 55 ms.
 - The alert goes red on both datastores. The storage team accepts the alert on DS-SLOW, and rejects the one on DS-FAST as a false alarm. DS-FAST also serves 22 VMs that have no disk on DS-SLOW and have latency below 2 ms.
 
-Which change removes the false alarm on DS-FAST in a way that keeps working when VMs move or disks are added?
+Which changes remove the false alarm on DS-FAST in a way that keeps working when VMs move or disks are added?
 
 - A. Add a condition on the latency of the datastore itself (above 5 ms) next to the VM conditions, because a VM's latency covers all its disks and the datastore's own counter is the only value that belongs to one datastore.
 - B. Raise the share of VMs from 25% to 50%, because 45% of the VMs of DS-FAST falls under it and 95% of the VMs of DS-SLOW stays over it.
@@ -33,6 +33,7 @@ B (a higher share) or C (a peak condition on the VMs): both keep the VM figure a
 - Knowledge file logic: vsphere/object-types/datastore/datastore-alerts, section "Datastore latency: not implemented": VMs and datastores are many-to-many, so a VM-level condition cannot be set for a datastore; guide values (more than 25% of VMs above 10 ms, highest VM above 40 ms, datastore above 5 ms).
 - Why one answer: only the datastore's own latency is measured on one datastore; the numbers (45% against 25%, 55 ms against 40 ms) show that the two VM-based conditions pass on DS-FAST.
 - Debatable risk: a reader could argue that per-virtual-disk counters (instances) would map disks to datastores. The prompt gives only the VM-level value the alert reads. B passes this case by chance, but fails the "keeps working" clause. The guide values (10, 40, 5 ms) are the author's design; the question uses only the 5 ms condition as the mechanism and does not ask for the number.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which change removes ...".
 
 ## Metadata
 ```yaml

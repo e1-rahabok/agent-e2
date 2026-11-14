@@ -12,12 +12,7 @@
 - Reports the last observed value, not an average. No highest or lowest variants.
 
 ## Thresholds
-| Range | Per processor |
-|---|---|
-| Yellow | 2-4 |
-| Orange | 4-8 |
-| Red | Above 8 |
-
+- Colour levels per processor: the Guest OS KPI row "Peak vCPU run queue length (count)" in the threshold catalog (one place per number). Whether the VCF Operations peak queue is already per vCPU is open (Q217).
 - PerfMon UI text: divide by processors; below 10 per processor is normally acceptable. MSDN: above 2 sustained indicates congestion. SQL Server documentation: 3.
 - Utilization can be 100% with a low queue: the workload runs as fast as it can. Adding vCPUs then slows it (more context switching).
 
@@ -84,7 +79,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: MS Windows > CPU > Run Queue
 corrections: []
-review_notes:
-- 'Section ''Thresholds'': the book''s table lists the three ranges without colour labels in the extracted text. Mapped to yellow, orange, red, matching Guest OS Performance (%).'
+review_notes: []
 status: draft
 ```

@@ -121,7 +121,6 @@ review_notes:
 - 'To check: Section ''Reading the counters'': what gpu.mem.used counts on vSphere 8.x (Q168).'
 - 'To check: Section ''Reading the counters'': whether DirectPath I/O GPUs are also excluded from gpu.mem.total; live check on a cluster with one passthrough GPU.'
 - 'To check: Section ''vGPU capacity'': GPU architectures that support MixedSize and the fixed placement positions per profile, against the NVIDIA Virtual GPU Software User Guide, Release 21.0, https://docs.nvidia.com/vgpu/latest/pdf/grid-vgpu-user-guide.pdf.'
-- 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'To check: Section ''Reading the counters'': thermal throttling as a clock reduction, and vGPU time slicing as the quality-of-service mechanism; the documentation says only that overheating can cause throttling and reduced performance, and points to the GPU vendor for QoS.'
 - 'To check: Section ''Placement and migration'': breadth-first placement fragments GPU capacity (inferred from the documentation''s remedies: same profile, GPU consolidation, manual migration to open up unused physical GPU capacity), and the pause during GPU state copy (not in the documentation).'
 - 'To check: Section ''vGPU and host memory'': memory of a passthrough or vGPU VM allocated at power-on (not backed on demand like an ordinary reservation), against vSphere 9.1 Resource Management, PCI passthrough memory reservation, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management.html.'

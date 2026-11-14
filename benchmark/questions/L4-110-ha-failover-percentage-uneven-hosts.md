@@ -7,7 +7,7 @@
 - The powered-on VMs with a CPU reservation reserve 150 GHz in total. 250 other powered-on VMs have no CPU reservation. The cluster uses about 35% of its CPU.
 - A VM with 12 vCPUs and a CPU reservation of 24 GHz is powered on.
 
-Which statement is correct?
+Which statements are correct?
 
 - A. The Insufficient Failover Resources warning is shown, because 40% is below the 53.3% minimum for two failures. The power-on is refused, because the failover capacity left after it, about 39.3%, is below the configured 40%.
 - B. The Insufficient Failover Resources warning is shown, because 40% is below the 53.3% minimum for two failures. The power-on succeeds, because the VMs without a reservation count nothing and the failover capacity left is about 42%.
@@ -31,6 +31,7 @@ E (or C): 40% is read as the failover capacity of two hosts out of five, with th
 - Debatable risk: the power-on test is stated by the admission control overview ("any action that might violate these constraints is not permitted"); the page does not print the exact formula for a power-on, so the question uses the failover capacity formula after the VM's reservation is added. Memory is excluded on purpose; the 9.1 page notes the memory computation has its own rules for clusters with Memory Tiering, not used here.
 - This is a mechanism the cluster health check relies on when it reads "HA failover capacity met"; the question uses no health-check order.
 - Rewritten 2026-11-13 to raise difficulty: five uneven hosts and two failures instead of four hosts and one; a power-on whose result depends on the 32 MHz default of unreserved VMs; the warning (minimum) and the power-on check (configured value) are two separate tests that give different numbers.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
 ```yaml

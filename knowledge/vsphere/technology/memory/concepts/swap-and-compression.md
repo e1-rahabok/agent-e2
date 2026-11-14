@@ -112,6 +112,5 @@ review_notes:
 - 'To check: Section ''Example: limit, swap and compress in opposite directions'': the effective limit includes the VM overhead (Consumed just under it; Granted above it), read from the chart of this example; check against the VCF Operations 9.1 metric definition of Memory|Effective limit, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1.html.'
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'Section ''Swap instead of ballooning'': from the vSphere 9.1 documentation, vSphere Resource Management > Using Swap Files, Swap Space and Memory Overcommitment, Memory Compression, Advanced Virtual Machine Attributes (pp. 1841, 1873-1874, 1944).'
-- 'Section ''Mechanism'': the book''s sentence on why there is no 3:1 compression is incomplete. Left out.'
 status: draft
 ```

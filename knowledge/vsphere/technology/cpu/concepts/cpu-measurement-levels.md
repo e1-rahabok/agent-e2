@@ -179,6 +179,6 @@ source:
   path: CPU > Architecture > Architecture intro; ESXi ≠ VM + Kernel; Provider Objects > Capacity > CPU (from former vsphere/technology/cpu/concepts/cpu-measurement-levels)
 corrections: []
 review_notes:
-- 'To check: Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''; an average of GHz values is unusual, a sum is expected. Written as in the book.'
+- 'To check: Section ''Capacity vs performance'': the infographic says ''ESXi Usage (GHz) = Average (thread Usage)''; an average of GHz values is unusual, a sum is expected. Written as in the source document.'
 status: draft
 ```

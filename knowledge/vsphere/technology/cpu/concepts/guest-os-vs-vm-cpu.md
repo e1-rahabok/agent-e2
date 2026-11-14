@@ -140,8 +140,7 @@ source:
   path: CPU > Architecture > Guest OS vs VM
 corrections: []
 review_notes:
-- 'To check: Section ''Blind spots per layer'': how often ESXi updates the guest on per-core frequency; the book is unsure.'
-- "Section 'Frozen time': reference paper from the book: https://dl.acm.org/doi/10.1145/2668930.2695524"
+- 'To check: Section ''Blind spots per layer'': how often ESXi updates the guest on per-core frequency; the source document is unsure.'
 - "Section 'Windows vs Linux accounting': steal clock from Broadcom KB 434983 (https://knowledge.broadcom.com/external/article/434983) and the Linux VMware steal clock (arch/x86/kernel/cpu/vmware.c, mainline 5.7). To check: a vSphere 9.1 document for `stealclock.enable` on general VMs (the KB is written for Tanzu)."
 status: draft
 ```

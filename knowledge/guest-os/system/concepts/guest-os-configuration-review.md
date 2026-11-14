@@ -63,7 +63,6 @@ source:
   path: 'Configuration Management > Review List > Consumer Objects > Guest OS'
 corrections: []
 review_notes:
-- 'Section ''Drivers'': the book links a networking driver best-practice page; the link target is not in the source text.'
-- 'To check: Section ''Applications'', JVM: the misconception statement ''the Guest OS starts paging'' is not in the book.'
+- 'To check: Section ''Applications'', JVM: the misconception statement ''the Guest OS starts paging'' is not in the source document.'
 status: draft
 ```

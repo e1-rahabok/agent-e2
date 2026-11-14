@@ -1,14 +1,12 @@
 # Actual vs potential memory contention
 
 ## Prompt
-Which metric best indicates a VM has an actual memory performance problem? Do not select counters that indicate risk but not actual slowness.
+Which metrics best indicate that a VM has an actual memory performance problem?
 
 - A. VM Memory Ballooned
 - B. VM Memory Swapped + Zipped
 - C. VM Memory Latency
 - D. When Ballooned = Configured.
-
-Hint: separate actual from potential, risk from reality.
 
 ## Likely wrong answer
 A or B (balloon, swap or compression read as slowness).
@@ -19,6 +17,10 @@ A or B (balloon, swap or compression read as slowness).
 - B is potential: higher risk.
 - C is the actual measurement.
 - D is illogical (a distractor).
+
+## Notes
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Do not select counters that indicate risk but not actual slowness." Stem made plural (Q199); was "Which metric best indicates".
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: separate actual from potential, risk from reality."
 
 ## Metadata
 ```yaml

@@ -53,7 +53,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization
 corrections:
-- 'Section ''Reason'': Core Utilization is not the capacity reading under Hyper-Threading. The book calls it a capacity metric because it ignores frequency.'
+- 'Section ''Reason'': Core Utilization is not the capacity reading under Hyper-Threading. The source document calls it a capacity metric because it ignores frequency.'
 review_notes:
 - Sections Reason: from CPU > Architecture.
 - 'Section Rollup: from CPU > ESXi.'

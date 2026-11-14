@@ -8,17 +8,17 @@
 - Use: step 2 of the VM health check ([`vsphere/object-types/vm/vm-health-check`](vm-health-check.md)); when it drops, open the sub-metric that pulls it down.
 
 ## Sub-metrics
-| Group | Sub-metric | Source (VCF Operations) |
-|---|---|---|
-| VM contention | CPU Co-stop | `cpu\|20_sec_peak_costopPct` |
-| VM contention | CPU Ready | `cpu\|20_sec_peak_readyPct` |
-| VM contention | CPU Overlap | `cpu\|20_sec_peak_overlap` |
-| VM contention | Memory Contention | `mem\|20_sec_peak_host_contentionPct` |
-| VM contention | Disk Latency | `virtualDisk\|20_sec_peak_totalLatency_average` |
-| VM contention | Network Dropped Tx | `net\|droppedTxPct_max` |
-| VM utilization | CPU Run | `cpu\|net_run` |
-| IaaS high utilization | Memory Ballooned | `mem\|balloonPct` |
-| IaaS high utilization | Memory Zip Swap | (`mem\|compressed_average` + `mem\|swapped_average`) ÷ `guest\|used_memory` × 100 |
+| Group | Sub-metric | Source (VCF Operations) | Catalog row (KPI) |
+|---|---|---|---|
+| VM contention | CPU Co-stop | `cpu\|20_sec_peak_costopPct` | Peak CPU Co-stop among any vCPU (%) |
+| VM contention | CPU Ready | `cpu\|20_sec_peak_readyPct` | Peak CPU Ready among any vCPU (%) |
+| VM contention | CPU Overlap | `cpu\|20_sec_peak_overlap` | Peak CPU Overlap (%) |
+| VM contention | Memory Contention | `mem\|20_sec_peak_host_contentionPct` | Peak RAM Contention (%) |
+| VM contention | Disk Latency | `virtualDisk\|20_sec_peak_totalLatency_average` | Peak read/write latency among vDisks (ms) |
+| VM contention | Network Dropped Tx | `net\|droppedTxPct_max` | Peak network TX dropped packets (%) |
+| VM utilization | CPU Run | `cpu\|net_run` | CPU Net Run (%) |
+| IaaS high utilization | Memory Ballooned | `mem\|balloonPct` | VM Memory Ballooned (%) |
+| IaaS high utilization | Memory Zip Swap | (`mem\|compressed_average` + `mem\|swapped_average`) ÷ `guest\|used_memory` × 100 | VM Memory Compressed + Swapped (%) |
 
 - 20-second peaks where they exist, not 5-minute averages: the KPI is a leading indicator ([`vcf-operations/features/peak-20-second-metrics`](../../../vcf-operations/features/peak-20-second-metrics.md)).
 - Colour levels: `catalog/thresholds-performance`, section `kpi`, rows with this file as `kb`.
@@ -106,10 +106,10 @@ source:
   document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the reasons and the metrics not used
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%); Metrics Not Used'
 corrections:
-- 'Section ''Reasons'': the book says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded. Keep until the book is updated.'
-- 'Sections ''Sub-metrics'' and ''Reasons'': the book is outdated. Network Dropped Tx: green only at exactly 0 (book: up to 0.25%); CPU Run and CPU Overlap excluded while green; Ballooned read from mem|balloonPct, only Zip Swap divided by Guest OS used memory.'
+- 'Section ''Reasons'': the source document says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded. Keep until the source document is updated.'
+- 'Sections ''Sub-metrics'' and ''Reasons'': the source document is outdated. Network Dropped Tx: green only at exactly 0 (source document: up to 0.25%); CPU Run and CPU Overlap excluded while green; Ballooned read from mem|balloonPct, only Zip Swap divided by Guest OS used memory.'
 review_notes:
 - 'To check: Section ''Sub-metrics'': the denominator of mem|balloonPct (configured memory or Guest OS used memory); the earlier text divided Ballooned by Guest OS used memory too.'
-- 'To check: Section ''Not used'': VM DRS Score formula from the book (vSphere 7 blog), not read (https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html).'
+- 'To check: Section ''Not used'': VM DRS Score formula from the source document (vSphere 7 blog), not read (https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html).'
 status: draft
 ```

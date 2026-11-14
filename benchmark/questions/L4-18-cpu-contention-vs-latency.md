@@ -8,7 +8,7 @@
 | db-11 (8 vCPUs) | 9% | 10% | 8.5% | 0.4% | 0.1% |
 | app-31 (4 vCPUs) | 0.8% | 38% | 0.5% | 0.1% | 0.2% |
 
-- app-31's host: power policy Balanced, Utilization (per thread) 88%. The esxtop power panel shows %A/MPERF about 90: the cores run below the base clock. Neither VM has a CPU limit.
+- app-31's host: power policy Balanced, Utilization (per thread) 88%. The esxtop power panel shows %A/MPERF about 90. Neither VM has a CPU limit.
 - Inside app-31 the run queue is short.
 
 Which statements are correct?
@@ -34,6 +34,7 @@ B: a CPU Latency above 37.5% read as starvation. Or D: one tool must be wrong.
 
 ## Notes
 - Revised 2026-11-12: the earlier key said VCF Operations CPU Contention counts frequency and Hyper-Threading. That was true before VCF Operations 8.18 (Contention mapped to CPU Latency); in 9.1 it is false. The question now tests the difference between the two counters.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: ": the cores run below the base clock" (after %A/MPERF about 90).
 
 ## Metadata
 ```yaml

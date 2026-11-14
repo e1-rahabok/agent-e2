@@ -83,8 +83,7 @@ source:
   path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration'
 corrections: []
 review_notes:
-- 'Section ''VMware Tools'': Broadcom KB 315382; the book cited KB 340.'
 - 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols.'
-- 'To check: Misconceptions 1 and 2: examples derived from the book''s rules.'
+- 'To check: Misconceptions 1 and 2: examples derived from the source document''s rules.'
 status: draft
 ```

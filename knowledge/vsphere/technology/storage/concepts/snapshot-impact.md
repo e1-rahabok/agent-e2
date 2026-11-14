@@ -57,6 +57,6 @@ source:
   path: Storage > VM > Performance Metrics > Consumption metrics > Datastore
 corrections: []
 review_notes:
-- 'To check: best-practice blog cited by the book, not read (https://blogs.vmware.com/performance/2021/06/performance-best-practices-for-vmware-snapshots.html). Snapshot file docs linked by the book are vSphere 7.0.'
+- 'To check: best-practice blog cited by the source document, not read (https://blogs.vmware.com/performance/2021/06/performance-best-practices-for-vmware-snapshots.html). Snapshot file docs linked by the source document are vSphere 7.0.'
 status: draft
 ```

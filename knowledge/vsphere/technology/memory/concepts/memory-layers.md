@@ -116,8 +116,6 @@ source:
 corrections: []
 review_notes:
 - 'Section ''Page mapping across layers'': diagram adapted from a Valentin Bondzio diagram.'
-- 'Section ''ESXi memory management'': the book cites VMware vSphere 6.5 Host Resources Deep Dive (Denneman, Hagoort), chapter 11, p. 243, for the overcommit backing types. Third-party excerpt not copied.'
-- 'To check: Section ''ESXi memory management'': TPS KB cited by the book, not read (https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html).'
-- 'Section ''Virtual memory inside the guest'': SQLOS source from the book: https://blogs.vmware.com/apps/2020/11/monitoring-and-rightsizing-memory-resource-for-virtualized-sql-server-workloads.html'
+- 'To check: Section ''ESXi memory management'': TPS KB cited by the source document, not read (https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html).'
 status: draft
 ```

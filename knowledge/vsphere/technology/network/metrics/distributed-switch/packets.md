@@ -60,6 +60,5 @@ corrections: []
 review_notes:
 - 'Whole file: counter names, scopes, level, rollup, stat type and summaries from the vCenter 9.1.0 API export. The distributed port group returned no counters (same README).'
 - 'To check: Sections ''Meaning'' (what a DVPort connects to), ''Interpretation'' and the third misconception: inferred from the counter scopes, not from a document.'
-- 'Section ''Interpretation'': VCF Operations port group metrics aggregated over all hosts restates network-observability (book).'
 status: draft
 ```

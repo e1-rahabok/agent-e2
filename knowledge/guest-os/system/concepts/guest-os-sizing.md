@@ -177,13 +177,12 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Capacity: Guest OS > Guest OS Sizing'
 corrections:
-- 'Section ''Memory'': balloon is included, to be conservative; the book text says exclude.'
-- 'Section ''Memory'': option 2 ranges 0-75-85-90-95-100%; the book gives no numbers for option 2.'
+- 'Section ''Memory'': balloon is included, to be conservative; the source document text says exclude.'
+- 'Section ''Memory'': option 2 ranges 0-75-85-90-95-100%; the source document gives no numbers for option 2.'
 review_notes:
 - 'Source URL for section ''Applications that manage their own memory'': Microsoft Learn, Server memory configuration options, SQL Server 2022 (ms.date 2025-08-26, updated 2026-10-19), https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/server-memory-server-configuration-options?view=sql-server-ver16. The percentage allowance of the starting value and the recommended share of memory are on that page; no number is repeated here (one place per number: knowledge/catalog).'
-- 'To check: Section ''Applications that manage their own memory'': lowering max server memory in steps and watching the counters over a business cycle is not on the Microsoft page; the author to confirm from field experience. SQL Server on Linux uses memory.memorylimitmb: not covered.'
-- 'To check: Section ''VM rightsizing: two jobs'': from the other book, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full book when it is provided.'
-- 'Section ''Sizing rules'': Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Capacity Management > Rightsizing > Sizing Logic.'
-- 'To check: References from the book, not read: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html'
+- 'To check (Q193): Section ''Applications that manage their own memory'': lowering max server memory in steps and watching the counters over a business cycle is not on the Microsoft page. SQL Server on Linux uses memory.memorylimitmb: not covered.'
+- 'To check: Section ''VM rightsizing: two jobs'': from another source, section VM Footprint | Guest OS Sizing (screenshot of 2026-11-03 only); check against the full document when it is provided.'
+- 'To check: References from the source document, not read: https://blogs.vmware.com/management/2020/01/rightsizing-vms-with-vrealize-operations.html and https://blogs.vmware.com/management/2019/09/26212.html'
 status: draft
 ```

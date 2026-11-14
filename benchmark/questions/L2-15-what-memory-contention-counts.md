@@ -1,7 +1,7 @@
 # What VM memory contention counts
 
 ## Prompt
-- In VCF Operations, a VM shows Memory|Contention (%) at 2% for the last hour. In the vSphere Client the same counter is the VM's memory Latency.
+- In VCF Operations, a VM shows Memory|Contention (%) at 2% for the last hour.
 
 What can raise this counter?
 
@@ -24,6 +24,7 @@ C: reading the percentage as a share of memory, not of time. Or D: counting the 
 
 ## Notes
 - Sources: the knowledge base, VM Memory Latency (esxtop %LAT_M; VCF Operations Memory Contention maps to it); vSphere Monitoring and Performance, memory counters (latency: percentage of time the VM is waiting to access swapped or compressed memory).
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "In the vSphere Client the same counter is the VM's memory Latency."
 
 ## Metadata
 ```yaml

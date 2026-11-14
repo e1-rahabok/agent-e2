@@ -13,7 +13,7 @@
 
 - On esx-02, the worst VM has 8 vCPUs and sits in a resource pool with a CPU limit. The other 11 VMs of esx-02 show Ready below 0.3%.
 
-Which reading of the check is correct?
+Which readings of the check are correct?
 
 - A. esx-01 first: at 88% it is the busiest host, so its CPU flow opens, and the other three hosts are healthy.
 - B. esx-02 opens the CPU contention flow, starting from limits and resource pools; esx-04 is a capacity warning; esx-01 and esx-03 have no finding.
@@ -37,6 +37,7 @@ A (busiest host first) or D (balloon read as a current wait).
 - Why one answer: only one VM waits (Ready 22% against Run 30%), and the vendor definitions make the other findings either utilization (esx-01, esx-03) or reclamation without wait (esx-04).
 - Debatable risk: moderate on the wording "capacity warning" for esx-04. The question does not ask what to do about it, only that it is not a contention flow; B is the only option that matches the table. Whether esx-04 deserves action at all is left out.
 - Rests on: the design logic of the ESXi health check (Principle: provider, worst VM, utilization is capacity; Interpretation: contention with low utilization points to limits and placement) and the vendor definitions above.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which reading of the check is correct?"
 
 ## Metadata
 ```yaml

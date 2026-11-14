@@ -86,6 +86,6 @@ source:
   path: CPU > VM > Contention Metrics; Wait Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''States per metric'': table assembled from the book''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the book.'
+- 'To check: Section ''States per metric'': table assembled from the source document''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the source document.'
 status: draft
 ```

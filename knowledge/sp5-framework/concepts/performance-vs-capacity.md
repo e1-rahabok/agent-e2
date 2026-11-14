@@ -154,8 +154,8 @@ corrections:
 - 'Section ''Absolute vs relative'': utilization alone means nothing; 0% can be bad, 100% can be good.'
 - 'Section ''Cluster: performance vs capacity'': highest-host utilization belongs to Cluster Risk (%), not cluster performance.'
 - 'Section ''Pattern difference'': the drop starts where the allocation ratio passes 1, on the hottest host first; only allocation can be overcommitted.'
-- 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity. Corrects the book (performance is absolute).'
+- 'Section ''Absolute vs relative'': performance is relative to other clusters and to itself over time; Gold vs Bronze; capacity reads higher against usable capacity. Corrects the source document (performance is absolute).'
 - 'Section ''Four points on the utilization scale'', point A: utilization cannot pass physical capacity; demand can.'
-review_notes:
+review_notes: []
 status: draft
 ```

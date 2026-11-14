@@ -116,6 +116,5 @@ corrections: []
 review_notes:
 - 'To check: Section ''NUMA'': how esxtop prints more than one home node in NHN (list format), against vSphere 9.1 Monitoring and Performance, esxtop Memory Panel, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-monitoring-and-performance.html.'
 - 'To check: Sections ''Summary lines'', ''Consumption'': Clear state added in ESXi 6.0; the esxtop section of the documentation lists only 4 states (high, soft, hard, low), and the file keeps the 5 states of vsphere/technology/memory/concepts/host-memory-states. State values, shared = common + saving, Consumed = GRANT - SHRDSVD and the CNSM definition from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > esxtop > Memory Panel (pp. 2155-2157).'
-- 'Section ''Summary lines'': overcommit formula source cited by the book: https://communities.vmware.com/t5/Storage-Performance/Interpreting-esxtop-4-1-Statistics/ta-p/2786881 (esxtop 4.1 era).'
 status: draft
 ```

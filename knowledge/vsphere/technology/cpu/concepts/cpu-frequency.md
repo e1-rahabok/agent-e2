@@ -211,12 +211,7 @@ corrections: []
 review_notes:
 - 'Section ''Turbo'': whitepaper ''Host Power Management in VMware vSphere 7.0'' (2021), pp. 12 and 24: https://www.vmware.com/docs/hpm-vsphere7-perf. A search on 2026-11-02 found no newer standalone version; vSphere 8 and 9 cover host power management inside Performance Best Practices.'
 - 'To check: Section ''Turbo'': %A/MPERF as the esxtop ratio of actual to nominal frequency (APERF/MPERF registers).'
-- 'To check: Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q (from the book) against vendor pages.'
-- 'Section ''Turbo'': Intel Xeon 6520P spec page from the book: https://www.intel.com/content/www/us/en/products/sku/242640/intel-xeon-6520p-processor-144m-cache-2-40-ghz/specifications.html'
-- 'Section ''Three speeds'': Intel Turbo Boost description from https://www.intel.com/content/www/us/en/gaming/resources/cpu-clock-speed.html (quoted in the book).'
-- 'Section ''All-Core Turbo'': the book cites https://ioflood.com/blog/what-is-all-cores-turbo-base-clock-max-turbo-and-all-cores-turbo-explained/ (third-party).'
+- 'To check: Section ''Three speeds'': figures for AMD EPYC 9000 series and Intel Xeon Platinum 8593Q (from the source document) against vendor pages.'
 - 'To check: Section ''Likely vCPU speed on a busy cluster'': relationship between the 62.5% charge per thread when both threads run (`vsphere/technology/cpu/metrics/virtual-motherboard/used` and `usage`) and the 80% tenant-facing likely speed; not yet written.'
-- 'Section ''Scenarios'': the ''Total'' column is computed from the book''s per-vCPU values (2 × 0.8125 = 1.625 GHz); the book gives no total.'
-- 'Section ''Sample CPU'': example CPU from the book: AMD EPYC 9634, https://www.amd.com/en/products/processors/server/epyc/4th-generation-9004-and-8004-series/amd-epyc-9634.html'
 status: draft
 ```

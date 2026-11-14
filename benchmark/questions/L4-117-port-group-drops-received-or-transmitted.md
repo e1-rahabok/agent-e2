@@ -8,7 +8,7 @@
 - 5.9 million of the received drops belong to one VM, a Windows Server 2022 VM with a VMXNET3 adapter at the default receive buffer settings. That VM runs a backup agent; its Guest OS shows a long CPU queue, and the host counter for the adapter shows "running out of buffers" rising.
 - The physical network shows no errors on the uplinks, and the port group is configured with the default security policy (promiscuous mode rejected).
 
-Which statement is correct?
+Which statements are correct?
 
 - A. The transmitted drops are 0.5%, so the network is healthy. The 15% received drops are mostly one VM's full receive ring, which the Guest OS side owns, so the port group alert should count transmitted packets and not open a network ticket for this.
 - B. The received drops are 15%, so the port group alert is right to go red and the network team should check the upstream fabric first.
@@ -32,6 +32,7 @@ B or E: a drop is read as a network fault whatever the direction, as the port gr
 - Knowledge file logic: vsphere/object-types/distributed-port-group/distributed-port-group-alerts, section "Distributed port group dropped packets" (planned change: count transmitted only; received drops include packets not for the VM, security settings and a full receive ring, whose cause and fix are in the Guest OS) and Misconceptions ("every received drop on a port group is a network fault").
 - Why one answer: the three numbers (0.5%, 15%, 8.0%) and the one VM with 5.9 of 6.15 million drops separate the cases, and the Guest OS cause is documented by the KB.
 - Debatable risk: whether the port group alert should count transmitted only is the author's planned design. The question asks which statement is correct about this case, not about the current alert definition. Option A says "should count transmitted packets", which an expert could contest for a case with a real upstream fault; the prompt closes it with no uplink errors and the one-VM concentration.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
 ```yaml

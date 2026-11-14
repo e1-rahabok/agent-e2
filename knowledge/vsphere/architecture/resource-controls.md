@@ -153,10 +153,9 @@ source:
 corrections:
 - 'Sections Reservation: CPU vs memory: CPU reservation capped at base clock speed × cores, and applies only under contention (quiz CPU Q8 key options A and B).'
 - '2026-11-02: Shares apply at two scheduler levels: cluster and host.'
-- 'Section ''Reservation: CPU vs memory'': memory reservation is also on demand. Consumed does not jump to the reservation at power-on; until the VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; touched reserved memory is kept, even when idle. Verified on a live vCenter; corrects the book and the 2026-11-02 entry.'
+- 'Section ''Reservation: CPU vs memory'': memory reservation is also on demand. Consumed does not jump to the reservation at power-on; until the VM has touched all memory within its reservation, the VMkernel can allocate the untouched part to other VMs; touched reserved memory is kept, even when idle. Verified on a live vCenter; corrects the source document and the 2026-11-02 entry.'
 - '2026-11-02: Metric-type table, CPU row: Utilization in thread and Hertz, Reservation in Hertz, Allocation in vCPU. Uploaded document leaves CPU Reservation and Allocation cells unlabelled.'
 review_notes:
-- 'Section ''Shares'': default values from the vSphere Web Services API, SharesInfo.Level, and vSphere 9.1 documentation, Create a Resource Pool; the pool-weight explanation and the example (Q108) are not in the book. Section ''Controls per resource'', network: vSphere 9.1 documentation (What is vSphere Network I/O Control; Defining Bandwidth Requirements for a Virtual Machine; Traffic Shaping Policy; Factors Considered for Virtual Machine Restarts) (Q109).'
 - 'Section ''Memory entitlement under overcommit'' is from the vSphere 9.1 documentation, vSphere Resource Management > CPU Virtualization, How ESX Hosts Allocate Memory, Memory Tax for Idle Virtual Machines, Edit Settings (pp. 1825-1827, 1838-1839).'
 - 'To check: Section ''Two scheduler levels'', Cluster row: cluster-level shares scope (siblings under the same parent resource pool).'
 status: draft

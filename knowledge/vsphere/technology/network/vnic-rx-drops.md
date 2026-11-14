@@ -73,7 +73,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > ESXi > Contention Metrics > Dropped Packet > vsish
 corrections: []
-review_notes:
-- 'Section ''Interpretation'': the 2K ring size is a field suggestion from the book, not a vendor value.'
+review_notes: []
 status: draft
 ```

@@ -5,7 +5,7 @@
 - On Monday at 10:00 an owner reports that the 8-vCPU VM erp-batch-04 was slow on Sunday between 03:20 and 03:40.
 - You run the VM health check for that window from the vSphere Client performance charts. The check reads, in order, CPU Ready and Co-stop, memory Latency, disk latency, and dropped packets.
 
-Which statement is correct?
+Which statements are correct?
 
 - A. Co-stop, memory Latency and dropped packets are all in the 1 Day chart as 5-minute averages, so the whole check can run.
 - B. The Real-time chart still holds the window at 20-second resolution, so the peaks are readable there for any day of the past week.
@@ -29,6 +29,7 @@ A or D: the health-check counters are assumed to exist in the chart history, or 
 - Why one answer: the retention (1 hour), the Latest rollup of maxTotalLatency and the level of the other counters are documented properties. Only C matches all of them.
 - Debatable risk: moderate on one fact. I did not re-verify the level of cpu.costop, mem.latency and net.droppedRx in the vSphere 9.1 chart tables myself: the knowledge file derives "not kept at level 1" from the 9.1 API export (level 1 list per object has none of them), and the vSphere 5-era documentation lists co-stop and the drop counters at level 2. The author should confirm against the 9.1 Data Counters tables before approving.
 - Rests on: vendor documentation (retention, rollups, levels), and the health-check counter list of the VM check file.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
 ```yaml

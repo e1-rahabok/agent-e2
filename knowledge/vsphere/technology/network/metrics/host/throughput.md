@@ -60,7 +60,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > ESXi > ESXi intro; Consumption Metrics; Unusual Packets
 corrections: []
-review_notes:
-- 'Section ''Packet size'': the book says to divide packets per second by bits per second. Written as bits per second / packets per second, which gives size.'
+review_notes: []
 status: draft
 ```

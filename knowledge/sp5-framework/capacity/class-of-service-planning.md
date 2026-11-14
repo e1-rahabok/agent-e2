@@ -123,7 +123,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); Capacity Planning Stage (spreadsheet, 2026-11-11)
   path: 'Capacity Management > Capacity Model > Planning Phase; Planning Template'
 corrections:
-- 'Section ''Example implementation'': the book table gives a minimum Performance (%) per class (Gold 99.5%, Silver 99%, Bronze 98%), labelled KPI, not SLA. Not used: the KPI has no class of service, and the numbers sit on the older Performance (%) scale (100 minus the share of time waiting), not on the banded score (Q162).'
+- 'Section ''Example implementation'': the source document table gives a minimum Performance (%) per class (Gold 99.5%, Silver 99%, Bronze 98%), labelled KPI, not SLA. Not used: the KPI has no class of service, and the numbers sit on the older Performance (%) scale (100 minus the share of time waiting), not on the banded score (Q162).'
 review_notes:
 - 'Section ''Example implementation'': Silver 2:1 and Bronze 3:1 per thread are 4 and 6 vCPUs per core with Hyper-Threading; Cluster Risk (%) marks 3-4 vCPUs per core as red, so a Bronze cluster built to this plan scores red on the CPU overcommit row. Memory 1.4:1 stays below the memory red band (1.8-2.2).'
 status: draft

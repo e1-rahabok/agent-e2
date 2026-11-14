@@ -73,7 +73,7 @@ source:
   path: CPU > VM > Consumption Metrics > System
 corrections: []
 review_notes:
-- 'To check: Section ''Values'': KB cited by the book, not read (https://kb.vmware.com/s/article/59640).'
-- 'vCenter counter description reads: amount of time spent on system processes on each virtual CPU in the virtual machine. Differs from the book''s per-vCPU statement.'
+- 'To check: Section ''Values'': KB cited by the source document, not read (https://kb.vmware.com/s/article/59640).'
+- 'To check: Section ''Values'': the vCenter counter description reads ''amount of time spent on system processes on each virtual CPU in the virtual machine''; it differs from the per-vCPU statement of the source document.'
 status: draft
 ```
