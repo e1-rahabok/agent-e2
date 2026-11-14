@@ -14,6 +14,7 @@ Which statements about these counters are correct?
 - G. In VCF Operations, ESXi CPU Demand above Usage means VMs are waiting for CPU.
 - H. ESXi CPU Usage includes the CPU the kernel uses, for example for vSAN and NSX work.
 - I. ESXi CPU Usage (MHz) in VCF Operations leaves out the kernel's work.
+- J. ESXi CPU Demand (MHz) in VCF Operations adds each running VM's CPU reservation on top of that VM's demand.
 
 ## Likely wrong answer
 A: the same name means the same counter, so ESXi CPU Demand matches between the tools. Or the reverse: both counters differ. Only Demand differs.
@@ -24,15 +25,16 @@ A: the same name means the same counter, so ESXi CPU Demand matches between the 
 - B true: Usage is one counter; VCF Operations collects the 20-second vCenter samples and stores their 5-minute average.
 - C true: VCF Operations takes the operations view (what the host must be able to deliver), so it adds the kernel's reservation; vCenter shows what the scheduler wants now.
 - D false: vCenter Demand leaves the kernel reservation out. A host with no VMs shows vCenter Demand flat at 0.
-- E true: VCF Operations adds the reservations of running VMs too.
+- E true: per running VM, VCF Operations counts the higher of its demand and its reservation, so a reservation above demand shows in host Demand.
 - F true: the gap is reserved capacity, not unmet demand.
 - G false: in VCF Operations the gap can be reservation alone. Contention is Ready and Co-stop.
 - H true: Usage is actual use by VMs and the kernel; a host with no VMs has Usage above 0.
 - I false: Usage is the same counter in both tools and includes kernel work.
+- J false: per VM it is the higher of the two, not the sum. A VM demanding 4 GHz with a 5 GHz reservation counts 5 GHz, not 9 GHz.
 
 ## Notes
 - Paired with the screenshot question 0363 (Type 1 know, Type 2 explain; author, 2026-11-14). Wrong here and wrong there: knowledge gap. Right here and wrong there: reading failure.
-- The author's answer to Q218 (2026-11-14): vCenter Demand excludes the hypervisor reservation; VCF Operations Demand includes it and the reservations of VMs. The split goes back to vRealize Operations.
+- The author's answer to Q218 (2026-11-14): vCenter Demand excludes the hypervisor reservation; VCF Operations Demand includes it and, per VM, takes the higher of demand and reservation. The split goes back to vRealize Operations.
 - Drafted by Claude 2026-11-14 from the author's sample (origin: synthetic). Counts only after author approval.
 
 ## Metadata
