@@ -70,5 +70,6 @@ source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 answer: [A, D, E]
 misconception: [B, F]
 misconception_type: [unit-and-normalization, provider-vs-consumer]
+pair: "0103"
 status: draft
 ```

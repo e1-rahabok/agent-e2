@@ -5,27 +5,29 @@
 - Inside Linux, `ip -s link show eth0` shows 0 dropped packets in both directions.
 - `ethtool -S eth0` shows `pkts rx OOB: 0` on every receive queue.
 
-Which reasons can explain drops that vCenter counts and Linux does not?
+Which statements about drops that vCenter counts and Linux does not are correct?
 
-- A. ESXi dropped received frames before delivery, such as frames against the security policy.
-- B. The host dropped packets after the guest sent them, for example on a firewall rule.
-- C. The VMXNET3 receive ring was full; ESXi counts that drop, and the guest has no counter for it.
-- D. VMware Tools resets the Linux network counters every 20 seconds, so they stay at 0.
-- E. Linux counts dropped packets in bytes and vCenter in packets, so small counts round to 0.
+- A. ESXi dropped received frames before delivery, such as frames that break the port group's security policy.
+- B. The host dropped packets after the guest sent them, for example on a distributed firewall rule.
+- C. Linux has no counter for drops on a full VMXNET3 receive ring.
+- D. ESXi and Linux count the same dropped packets, so one of the two counters is faulty.
+- E. Raise the VMXNET3 receive ring in Linux to stop the drops that vCenter shows.
 
 ## Likely wrong answer
-C: "a full receive ring is invisible to the guest". Or D and E: looking for a counter bug instead of where the drop happens.
+D: "The counts should match, so one of them is broken." Or C: "a full receive ring is invisible to the guest."
 
 ## Expected key points
 - Answer: A, B.
-- A: ESXi drops received frames that are not for the guest or that break the port group's security settings. The guest never receives them, so it cannot count them.
-- B: a packet dropped after it left the guest (for example an NSX distributed firewall reject) is counted by ESXi on the VM, not by the guest. The guest sees only the resend delay.
-- C is wrong: the VMXNET3 device reports ring overflows to the guest driver as out-of-buffer packets (`pkts rx OOB` in `ethtool -S`). It reads 0 here, so the ring was not full.
-- D and E are wrong: VMware Tools does not change the guest counters, and both tools count packets.
+- A is true: ESXi drops received frames that are not for the guest or that break the port group's security settings. The guest never receives them, so it cannot count them.
+- B is true: a packet dropped after it left the guest (for example an NSX distributed firewall reject) is counted by ESXi on the VM, not by the guest. The guest sees only the resend delay.
+- C is false: the VMXNET3 device shares a ring-full drop with the guest driver; Linux shows it per receive queue as `pkts rx OOB` in `ethtool -S`. It reads 0 here, so the ring was not full.
+- D is false: received drops happen before the Guest OS and transmitted drops after it, so the two layers count different packets.
+- E is false: `pkts rx OOB` is 0, so the ring did not overflow; a larger ring changes nothing for these drops.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12, then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the compound option C split; the two options not in the knowledge base (Tools resets counters, bytes against packets) replaced by the misconception D and the wrong action E. Ring-drop visibility is kept here and in 0212 only. Key unchanged: A, B.
 
 ## Metadata
 ```yaml
@@ -48,7 +50,8 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
 answer: [A, B]
-misconception: [C]
+misconception: [C, D]
 misconception_type: [layer-confusion]
+pair: "0420"
 status: draft
 ```

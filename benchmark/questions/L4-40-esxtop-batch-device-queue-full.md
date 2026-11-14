@@ -3,9 +3,8 @@
 ## Prompt
 - The application on VMs whose disks sit on LUN naa.624a9370a1 reports slow transactions between 10:20 and 10:40.
 - [The attached CSV](0086/esx-07-esxtop-batch-disk-devices-1-hour.csv) is one hour of esxtop batch output of host esx-07 (`esxtop -b -d 60`), reduced to two LUNs and the fields of the disk device panel.
-- From 10:20 to 10:40, naa.624a9370a1 shows ACTV equal to DQLEN, QUED above 0, %USD 100 and LOAD near 3. KAVG/cmd rises above 2 ms while DAVG/cmd stays near 1 ms.
 
-Where is the latency added, and what do you check?
+Which statements about where the latency is added, and what to check, are correct?
 
 - A. In the ESXi kernel: the device queue is full, so commands wait before the array.
 - B. In the array: DAVG, the time from the HBA to the array and back, is the cause.
@@ -27,6 +26,7 @@ B: blaming the array.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot removed; the batch output reduced to two devices, one-minute samples and the panel's field names; the Storage I/O Control option removed (deprecated in VCF 9.0). Counts only after author approval.
+- 2026-11-14: the stem bullet that read the CSV for the candidate (ACTV equal to DQLEN, QUED, %USD, LOAD, KAVG against DAVG in the window) removed (design.md 6.2); question made plural. Practical half of 0043 (project/question-pairing-2026-11-14.md, A16). Key unchanged.
 
 ## Metadata
 ```yaml
@@ -53,5 +53,6 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [A, E]
 misconception: [B]
 misconception_type: [layer-confusion]
+pair: "0043"
 status: draft
 ```

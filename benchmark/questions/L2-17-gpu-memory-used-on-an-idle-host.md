@@ -8,30 +8,34 @@
 
 Which statements are correct?
 
-- A. Memory used at 88-94% means the workloads fill the GPUs, so buy more GPUs or move VMs off.
+- A. Memory used at 88-94% shows that the notebooks fill the GPUs with work.
 - B. The host chart's Memory used is the frame buffer allocated to the vGPU profiles of the powered-on VMs.
-- C. A profile's frame buffer is allocated whole at VM power-on and freed at power-off, so it stays high while the VMs idle.
-- D. NVIDIA vGPU time-slices GPU compute between the VMs but never overcommits the frame buffer.
-- E. On vSphere 9, the cluster counter gpu.mem.used shows the frame buffer the workloads use, at or below the reserved amount.
-- F. Whether another vGPU VM fits depends on free frame buffer on a single physical GPU for its profile size.
+- C. NVIDIA allocates a profile's whole frame buffer when the VM powers on.
+- D. NVIDIA vGPU never overcommits the frame buffer.
+- E. On vSphere 9.1, the cluster counter gpu.mem.used counts the frame buffer that the workloads use.
+- F. A vGPU's frame buffer sits on one physical GPU; it never spans two.
 - G. When the cluster's free GPU memory exceeds a profile's size, a VM with that profile is sure to power on.
 - H. A 1-week chart of these per-GPU host counters at the default statistics level would show the same lines.
 - I. The memory of a GPU given to a VM by DirectPath I/O passthrough is counted in the cluster's gpu.mem.reserved.
+- J. With compute below 5%, these GPUs have room for another vGPU VM.
+- K. Buy more GPUs now: these workloads have outgrown the two GPUs.
 
 ## Likely wrong answer
-- A: "GPU memory is at 90%, the GPUs are full: we need more GPUs."
+- A: "GPU memory is at 90%, the GPUs are full of work: we need more GPUs."
 
 ## Expected key points
 - Answer: B, C, D, E, F.
 - A is false: the per-device Memory used is allocation, not workload use; with compute below 5% the workloads are idle.
 - B is true: the host per-device counter shows the frame buffer allocated to vGPUs, so a host can show high GPU memory while its VMs are idle.
-- C is true: NVIDIA allocates the profile's whole frame buffer on the physical GPU at power-on and frees it at power-off (Broadcom KB 439680).
+- C is true: NVIDIA allocates the profile's whole frame buffer on the physical GPU at power-on and frees it at power-off (Broadcom KB 439680), so it stays high while the VMs idle.
 - D is true: frame buffer is never overcommitted with NVIDIA vGPU; only compute is time-sliced, so low compute frees no GPU memory.
 - E is true: at cluster and resource pool level vCenter reports gpu.mem.reserved (memory consumed by virtual GPUs) and gpu.mem.used (memory used by workloads); on 9.0 and 9.1 used is at or below reserved.
-- F is true: a vGPU never spans two physical GPUs; placement needs one GPU with a contiguous free frame buffer of the profile size, so this percentage does not answer it.
+- F is true: a vGPU never spans two physical GPUs; placement needs one GPU with a contiguous free frame buffer of the profile size.
 - G is false: placement is per physical GPU and per profile; four GPUs with 8 GB free each cannot place a 16 GB profile (Broadcom KB 312021).
 - H is false: the per-device host GPU counters are statistics level 4; at the default level 1 vCenter keeps no history for them. Use the cluster or resource pool GPU counters, which are level 1.
 - I is false: a passthrough GPU bypasses the NVIDIA vGPU Manager, so the host does not count its memory; read it inside the guest with nvidia-smi.
+- J is false: the frame buffer is allocated whole at power-on and never overcommitted; only compute is shared, so idle compute frees no frame buffer. This is the over-correction of A.
+- K is false: the workloads are idle; the frame buffer is held by the profiles of the powered-on VMs, not by work. Whether another vGPU VM fits is a placement question per GPU and per profile, not this percentage.
 
 ## Notes
 - Sources: the knowledge base (GPU monitoring); Broadcom KB 439680 (the profile's frame buffer is allocated at power-on and freed at power-off).
@@ -39,6 +43,7 @@ Which statements are correct?
 - Prompt sharpened: the chart is Real-time (last hour), because the per-device host GPU counters are level 4 and have no 24-hour history at the default statistics level.
 - Dropped from the key: nvidia-smi inside a vGPU guest as a second way to read workload use; the knowledge base names nvidia-smi only for passthrough GPUs.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option (A, C, D, E); F stated as the placement fact instead of next to its negation G; J the over-correction and K the wrong action added. Key unchanged: B, C, D, E, F.
 
 ## Metadata
 ```yaml

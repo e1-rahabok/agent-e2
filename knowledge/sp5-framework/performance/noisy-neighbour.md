@@ -31,7 +31,7 @@
   - reserving the first vCPU of each VM: 400 × 2.5 GHz = 1,000 GHz, the whole cluster, beyond usable capacity once HA is counted. HT adds about 25% throughput;
   - the higher the overcommit, the less a reservation can guarantee: at 3:1 per physical thread (Bronze, the highest class ratio), at most a third of a thread per vCPU across the environment, on average.
 - Share:
-  - shares are per VM, not per vCPU. A larger VM has more shares in total, shared among its vCPUs;
+  - the share value is one number set on the VM. By default it scales with the vCPU count (Normal: 1,000 per vCPU), so a larger VM has more shares in total, shared among its vCPUs;
   - the busy vCPU of a 2-vCPU VM gains from its idle sibling: vCPU 1 of VM 2 gets 2x the share of vCPU 1 of VM 1. A Level 400 point;
   - shares are charged against CPU Used, not CPU Run. Used includes System time, the hypervisor's work for the VM (network packets, disk commands). A VM with heavy IO uses up its shares and can see CPU Ready.
   - formula of Used (%RUN, %SYS, %OVRLP, frequency and HT factors): [`vsphere/tools/esxtop/cpu`](../../vsphere/tools/esxtop/cpu.md).
@@ -143,8 +143,8 @@ images:
     topic: 'CPU shares per VM: busy vs idle vCPU'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size'
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: 'Performance Management > Noisy Neighbour > CPU; Memory; Disk > Storage I/O Control; Network; Solution > Maximum VM Size. vSphere 9.1, vSphere Resource Management > CPU Virtualization in vSphere (p. 1827): with default settings each VM receives an equal share of CPU per virtual CPU'
 corrections:
 - 'Section ''Memory'': overcommit ratio against DRAM only with tiering.'
 - 'Section ''CPU'', Share: the busy vCPU gains from its idle sibling; 2x.'

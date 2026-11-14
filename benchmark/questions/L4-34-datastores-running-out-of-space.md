@@ -70,5 +70,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
 misconception_type: []
+pair: "0343"
 status: draft
 ```

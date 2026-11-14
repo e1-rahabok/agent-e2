@@ -1,7 +1,7 @@
 # Guest OS metrics in the VM metric tree
 
 ## Prompt
-Review the following [The attached screenshot](0051/vcf-operations-vm-guest-and-cpu-metrics.png).
+Review [the attached screenshot](0051/vcf-operations-vm-guest-and-cpu-metrics.png).
 
 Which of these metrics are Microsoft Windows or Linux metrics, not VMware VM metrics? Choose all that apply.
 
@@ -14,13 +14,6 @@ Which of these metrics are Microsoft Windows or Linux metrics, not VMware VM met
 ## Screenshot
 ![VCF Operations Metrics tab of a Windows VM: Guest CPU Queue, CPU Ready, Guest Free Memory, CPU Co-stop](0051/vcf-operations-vm-guest-and-cpu-metrics.png)
 
-## Input to supply
-- Tool: VCF Operations 9.1.
-- Where: one Windows VM with VMware Tools running > Metrics tab; expand the Guest group and the CPU group.
-- Must show: Guest | CPU Queue, Guest | Free Memory, CPU | Ready, CPU | Co-stop (names as VCF Operations 9.1 shows them; tell Claude if a name differs).
-- Mask the VM name.
-- Save as `benchmark/questions/51/vcf-operations-vm-guest-and-cpu-metrics.png`.
-
 ## Likely wrong answer
 Taking every metric on the VM object as a VM metric.
 
@@ -31,6 +24,7 @@ Taking every metric on the VM object as a VM metric.
 - Decide by the layer that produces a metric, not by the object that stores it.
 
 ## Notes
+- 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the four chart headings (author: every VM name is masked); the stale `## Input to supply` removed.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

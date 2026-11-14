@@ -10,24 +10,31 @@
 
 Which statements are correct?
 
-- A. Consumed is about 32 GB: the API reports memory in KB, while the chart converts to MB.
-- B. Read in MB, as on the chart, Consumed is about 32 TB, so the script or the API is broken.
-- C. Network usage is in KBps: 12,500 KBps is about 100 Mbps.
-- D. `maxTotalLatency` with rollup latest is the last value in the 5-minute point, so a latency spike earlier in that interval can be missing from the 4 ms.
-- E. The 4 ms is the average latency of all the VM's virtual disks over the 5 minutes.
+- A. sql-02's Consumed is about 32 GB.
+- B. The API returns Consumed in MB, the unit the chart shows.
+- C. Rewrite the script: a Consumed of 33,554,432 shows that it reads the wrong counter.
+- D. A network usage of 12,500 is about 100 Mbps.
+- E. The API reports network usage in kilobits per second.
+- F. The vSphere Client Advanced chart of sql-02 shows network usage in a different unit from the API.
+- G. The 4 ms is the value at the end of the 10:05 interval, so an earlier latency spike in that interval can be missing from it.
+- H. The 4 ms is the average latency of all the VM's virtual disks over the 5 minutes.
 
 ## Likely wrong answer
-B: reading the API value in the chart's unit.
+B: reading the API value in the chart's unit, so Consumed reads about 32 TB and the script looks broken.
 
 ## Expected key points
-- Answer: A, C, D.
-- A: 33,554,432 KB = 32 GB. The API returns memory in KB; the chart converts to MB, so an API value read as MB is 1,024 times too large.
-- B is wrong for the same reason.
-- C: vCenter network usage is in kilobytes per second (KBps): 12,500 × 1,024 × 8 bits ≈ 102 Mbps.
-- D: rollup latest keeps one point in time, not the worst value of the interval; use the real-time interval or a peak metric for spikes.
-- E is wrong: Highest latency is the highest value across the VM's disks, and with rollup latest it is one point in time, not an average over the 5 minutes.
+- Answer: A, D, G.
+- A is true: 33,554,432 KB = 32 GB.
+- B is false: the API returns memory in KB; the chart converts to MB, so an API value read as MB is 1,024 times too large.
+- C is false: the value is right in KB; the script reads the right counter in the API's unit.
+- D is true: vCenter network usage is in kilobytes per second (KBps): 12,500 × 1,024 × 8 bits ≈ 102 Mbps.
+- E is false: net.usage is kilobytes per second; read as kilobits it would be 8 times too low (12.5 Mbps).
+- F is false: the Advanced chart and its CSV export plot the network counters as stored, in KBps, the same unit as the API; only memory and space are converted.
+- G is true: rollup latest keeps one point in time, not the worst value of the interval; use the real-time interval or a peak metric for spikes.
+- H is false: Highest latency is the highest value across the VM's disks, and with rollup latest it is one point in time, not an average over the 5 minutes.
 
 ## Notes
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option (the old A and B split into a reading and a unit); wrong action C, unit error E and over-correction F added. Key changed from A, C, D to A, D, G (same facts, relettered). The author reviewed the earlier options; the rewrite follows the approved plan.
 - Units and rollups: vSphere 9.1 API reference, PerformanceManager counters (mem.consumed in KB; net.usage in KBps; disk.maxTotalLatency rollup latest).
 
 ## Metadata
@@ -50,8 +57,8 @@ knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
-answer: [A, C, D]
+answer: [A, D, G]
 misconception: [B]
 misconception_type: [tool-confusion, unit-and-normalization]
-status: reviewed
+status: draft   # options rewritten 2026-11-14: back to draft for the author's review
 ```

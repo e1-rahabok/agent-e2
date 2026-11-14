@@ -13,41 +13,36 @@ Which statements are correct?
 - B. The retransmit counter on its own shows which device on the path dropped the lost segments.
 - C. TcpRetransSegs rising is evidence of loss: acknowledgements did not return, so Linux resent the segments.
 - D. A frame dropped by the top-of-rack switch would appear in vCenter as a transmitted packet dropped on the VM.
-- E. The host's vmnic would report a frame that the top-of-rack switch later discarded as a transmit error.
-- F. ESXi counts a frame as sent once the NIC has put it on the wire: Ethernet does not acknowledge frames.
-- G. A frame that a congested top-of-rack switch discards is counted only in the counters of that switch.
-- H. Zero drops in vCenter and on the vmnics do not show that the path beyond the host is clean.
-- I. vCenter keeps a TCP retransmission counter per VM, so the retransmits can be confirmed there.
-- J. A full VMXNET3 receive ring in this VM would have shown in vCenter as received packets dropped on the VM.
-- K. An uplink at about 9.4 of 10 Gbps while the backup runs points at congestion in that hour.
-- L. The VM's network latency counter in vCenter would show the delay that the retransmissions add.
-- M. Each retransmission costs time, so a loss of a few percent can slow the nightly transfer.
-- N. With no drops counted in vCenter, on the vmnics or in Linux, the network is clean and the cause is the application.
+- E. ESXi counts a frame as sent once the physical NIC has put it on the wire.
+- F. A frame that a congested top-of-rack switch discards is counted only in the counters of that switch.
+- G. vCenter keeps a TCP retransmission counter per VM, so the retransmits can be confirmed there.
+- H. An uplink at about 9.4 of 10 Gbps while the backup runs points at congestion in that hour.
+- I. The uplink at 9.4 of 10 Gbps shows that the host's own NIC dropped the lost frames.
+- J. Each retransmission costs time, so a loss of a few percent can slow the nightly transfer.
+- K. With no drops counted in vCenter, on the vmnics or in Linux, the network is clean: ask the application team to fix the export.
 
 ## Likely wrong answer
 - D: "If a switch dropped our packets, vCenter would show transmit drops on the VM."
-- N: "vSphere and Linux show no dropped packets, so the network is clean; it is the application."
+- K: "vSphere and Linux show no dropped packets, so the network is clean; it is the application."
 
 ## Expected key points
-- Answer: A, C, F, G, H, J, K, M.
+- Answer: A, C, E, F, H, J.
 - A is true: the evidence of a top-of-rack drop is in the switch's discard counters, read by the network team for the same hour.
 - B is false: a retransmit only says no acknowledgement came back; the switch counters or a packet capture at both ends locate the loss (top-of-rack, upstream, firewall, WAN link, partner).
 - C is true: TCP resends a segment when no acknowledgement returns (timer or duplicate acknowledgements); the retransmits are the evidence of loss.
 - D is false: steps 1-5 of the transmit path (guest, vNIC, port group, virtual switch, physical NIC) all count 0; only the switch that drops the frame counts it.
-- E is false: the physical NIC finished its part when it serialized the frame; it counts no error for a later discard.
-- F is true: Ethernet does not acknowledge frames, so (unless PAUSE flow control holds it back) the frame counts as sent once it is on the wire.
-- G is true: the switch ASIC drops the frame and counts it as an input discard or queue drop; no other layer counts it.
-- H is true: zero drops in vSphere do not prove the network is clean; a transmit drop beyond the host is invisible to ESXi and to the guest.
-- I is false: vSphere has no retransmit counter for VM traffic; retransmits are read inside the guest.
-- J is true: a full VMXNET3 receive ring is counted by the hypervisor at the port and the VM (droppedRx, %DRPRX), so the zero rules it out.
-- K is true: the uplink near line rate while the backup runs points at congestion in 01:00-02:00.
-- L is false: vSphere has no VM network latency counter.
-- M is true: each loss forces a resend and slows TCP down; the application sees higher latency.
-- N is false: the misconception; a drop at a congested switch is invisible to ESXi and to the guest.
+- E is true: Ethernet does not acknowledge frames, so (unless PAUSE flow control holds it back) the frame counts as sent once it is on the wire.
+- F is true: the switch ASIC drops the frame and counts it as an input discard or queue drop; no other layer counts it.
+- G is false: vSphere has no retransmit counter for VM traffic; retransmits are read inside the guest.
+- H is true: the uplink near line rate while the backup runs points at congestion in 01:00-02:00.
+- I is false: a drop at the host's physical NIC is counted as a dropped packet on that vmnic, and the vmnics show none.
+- J is true: each loss forces a resend and slows TCP down; the application sees higher latency.
+- K is false: the misconception; a drop at a congested switch is invisible to ESXi and to the guest, so the zero counts do not clear the network.
 
 ## Notes
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Sharpened stem: the VMXNET3 adapter (for option J) and the clean `ip -s link` output (for option N) are stated.
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the negation pair H/N resolved (old H dropped); old E (vmnic transmit error) dropped next to D; old J (full receive ring in vCenter) dropped, as ring-drop visibility stays in 0039 and 0212; old L (VM network latency counter) dropped, as 0214 holds that fact; over-correction I added; K carries the wrong action. Key changed from A, C, F, G, H, J, K, M to A, C, E, F, H, J.
+- Sharpened stem: the VMXNET3 adapter and the clean `ip -s link` output (for option K) are stated.
 
 ## Metadata
 ```yaml
@@ -58,8 +53,8 @@ technology: [network]
 task: troubleshoot
 level: 300
 answer_type: deterministic
-answer: [A, C, F, G, H, J, K, M]
-misconception: [N, D]
+answer: [A, C, E, F, H, J]
+misconception: [K, D]
 input: [text]
 object: [guest-os, vm, network]
 tool: [guest-os-tools, vcenter]
@@ -67,6 +62,7 @@ knowledge:
   - vsphere/technology/network/concepts/packet-drop-accounting
   - vsphere/technology/network/metrics/vm-network-metrics
   - vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
+  - vsphere/technology/network/metrics/host/packets-dropped
 knowledge_main: vsphere/technology/network/concepts/packet-drop-accounting
 attachments: []
 origin: synthetic

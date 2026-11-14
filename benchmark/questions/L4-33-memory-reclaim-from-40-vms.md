@@ -43,6 +43,8 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - Revised 2026-11-12: the 300-VM export that was to be supplied is now a generated 40-VM export (a CSV of 1.0 must stay small; design.md, section 13.1). The ask is 256 GB instead of 1 TB.
 - The amounts are illustrative. Headroom of 25% above Guest Needed Memory, rounded up to 4 GB, gives 284 GB. An answer with another headroom that names the six VMs and reaches 256 GB is right, with or without small trims on other VMs.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Option C holds for any headroom up to about 50%: 432 GB configured minus 1.5 x 111.6 GB needed leaves about 265 GB.
+- Checked 2026-11-14 as the practical half of 0021 (project/question-pairing-2026-11-14.md, pair A4): every option decided from the knowledge files and the export; no defect found, options unchanged.
+- Paired with 0021 (theory and practical; design.md, section 3.9).
 
 ## Metadata
 ```yaml
@@ -55,6 +57,7 @@ level: 400
 answer_type: deterministic
 answer: [A,C,D,F,G,H,I,K,L]
 misconception: [B]
+pair: "0021"
 input: [table]
 object: [vm, guest-os]
 tool: [vcf-operations]

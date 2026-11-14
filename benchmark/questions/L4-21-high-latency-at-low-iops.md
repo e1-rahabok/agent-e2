@@ -74,5 +74,6 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [consumption-as-contention, average-hides-worst]
+pair: "0184"
 status: draft
 ```

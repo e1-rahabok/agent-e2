@@ -22,7 +22,7 @@ flowchart TD
 
 ## Checks, in order
 1. Quantify (Guest OS). Ask which transaction is slow, how slow (response time against normal), and when (a time, a schedule, all the time). The window found here is the window of every later step, in Linux and in vSphere. Read the counters at their highest resolution in that window (sar history, or vmstat and iostat at 1-5 seconds while it happens). → step 2.
-2. CPU queue (Guest OS). Run queue: `r` in vmstat ([`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md)). Linux includes running threads, so compare it with the vCPU count: above it, threads wait for a vCPU. Load average counts runnable tasks plus tasks in uninterruptible sleep (state D, usually waiting for IO): a high load with idle vCPUs points to IO, not CPU. Pressure stall information: `/proc/pressure/cpu` gives the share of time at least one task waited for a CPU. Queue above vCPU count → step 3. Otherwise → step 4.
+2. CPU queue (Guest OS). Run queue: `r` in vmstat ([`guest-os/cpu/metrics/run-queue`](../../cpu/metrics/run-queue.md)). Linux includes running threads, so compare it with the vCPU count: above it, threads wait for a vCPU. Load average (`uptime`, `/proc/loadavg`) counts tasks running or runnable (state R) plus tasks in uninterruptible sleep (state D, usually waiting for disk IO): a high load with idle vCPUs points to IO, not CPU. It is a count for the whole Guest OS, not divided by the vCPU count, so read it against the vCPU count. The kernel samples that count every 5 seconds and keeps three exponentially decaying averages (1, 5 and 15 minutes): the 1-minute figure still carries older samples, and a burst shorter than 5 seconds can fall between two samples. Pressure stall information: `/proc/pressure/cpu` gives the share of time at least one task waited for a CPU. Queue above vCPU count → step 3. Otherwise → step 4.
 3. Why the queue (Guest OS). Per vCPU user and system time (mpstat), the context switch rate (`cs` in vmstat; [`guest-os/cpu/metrics/context-switch`](../../cpu/metrics/context-switch.md)).
    - Queue high, vCPUs not all busy, or one vCPU busy and the rest idle → locks, threads that cannot run in parallel, kernel work: the application or the configuration, not the vCPU count.
    - Queue high, every vCPU busy → the workload demands more runtime than Linux gets. Before adding vCPUs, check VM CPU contention in [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 4: a vCPU waiting for a physical thread is invisible to Linux ([`vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu`](../../../vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu.md)).
@@ -56,6 +56,7 @@ flowchart TD
 
 ## Misconceptions
 - "Load average is above the vCPU count, so add vCPUs" → load average includes tasks waiting for IO; read the run queue and per-vCPU time.
+- "A Linux load average of 1.00 means every vCPU is busy, as in esxtop" → esxtop normalises its load average to the physical CPUs; the Linux figure is a count of R and D tasks, not divided by the vCPUs, and includes tasks waiting for IO.
 - "Free memory is near 0, so Linux is short of memory" → Linux fills free memory with page cache; read MemAvailable, swap activity and memory pressure.
 - "The VM's disk latency is fine, so Linux sees no storage delay" → IO waiting in the Linux queue never reaches the VM.
 - "The Linux run queue means the same as the Windows queue" → Linux counts running threads too; compare with the vCPU count.
@@ -93,11 +94,12 @@ related:
 - vsphere/architecture/vm-vs-guest-os
 - guest-os/system/guest-os-performance
 source:
-  document: Knowledge base synthesis of the files in internal_derive; Linux kernel documentation (pressure stall information, load average)
-  path: n/a
+  document: Knowledge base synthesis of the files in internal_derive; Linux man-pages 6.19, proc_loadavg(5) (2026-02-08); Linux kernel source, kernel/sched/loadavg.c and include/linux/sched/loadavg.h; Linux kernel documentation (pressure stall information)
+  path: 'Step 2, load average: proc_loadavg(5) DESCRIPTION (jobs in the run queue, state R, or waiting for disk I/O, state D, averaged over 1, 5 and 15 minutes); loadavg.c header comment (exponentially decaying average of nr_running + nr_uninterruptible); loadavg.h LOAD_FREQ (5-second intervals)'
 corrections: []
 review_notes:
 - 'To check: the whole order of checks, from field practice (Q060, 2026-11-11: the application team first quantifies the slowness in Guest OS counters).'
-- 'To check: Steps 2, 4, 5: the Linux counters (vmstat, iostat, mpstat, load average, MemAvailable); no source yet; pressure stall information against https://docs.kernel.org/accounting/psi.html (Q172).'
+- 'To check: Steps 2, 4, 5: the Linux counters (vmstat, iostat, mpstat, MemAvailable); no source yet; pressure stall information against https://docs.kernel.org/accounting/psi.html (Q172).'
+- 'Step 2, load average: https://man7.org/linux/man-pages/man5/proc_loadavg.5.html; https://github.com/torvalds/linux/blob/master/kernel/sched/loadavg.c; https://github.com/torvalds/linux/blob/master/include/linux/sched/loadavg.h.'
 status: draft
 ```

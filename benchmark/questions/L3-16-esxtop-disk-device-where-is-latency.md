@@ -3,7 +3,7 @@
 ## Prompt
 Review [the attached screenshot](0050/esxtop-disk-device-panel.png).
 
-For the device with the highest GAVG, where does most of the latency come from?
+For the device with the highest GAVG, where does most of the latency come from? Which statements are correct?
 
 - A. Beyond the host: the network and the NFS server (DAVG).
 - B. The VMkernel queue (KAVG).
@@ -12,14 +12,6 @@ For the device with the highest GAVG, where does most of the latency come from?
 
 ## Screenshot
 ![esxtop disk device panel with three NFS datastores and two NVMe devices](0050/esxtop-disk-device-panel.png)
-
-## Input to supply
-- Tool: esxtop on one ESXi 9.1 host, disk device panel (press u).
-- Must show the columns DEVICE, DAVG/cmd, KAVG/cmd, GAVG/cmd, QAVG/cmd, and at least 3 devices.
-- Condition for the key: the device with the highest GAVG has KAVG under 0.5 ms and DAVG at least 2 ms.
-- Supplied by the author 2026-11-05: highest GAVG is {NFS}vcf-m02-sup01-ds-nfs, DAVG 37.22, KAVG 0.02, GAVG 37.24 ms.
-- Mask device names if they reveal the customer.
-- Save as `benchmark/questions/50/esxtop-disk-device-panel.png`.
 
 ## Likely wrong answer
 D: assuming an NFS datastore does not show in the device panel and has no DAVG.
@@ -34,6 +26,7 @@ D: assuming an NFS datastore does not show in the device panel and has no DAVG.
 - C is wrong: esxtop has no Guest OS metrics.
 
 ## Notes
+- 2026-11-14 (project/question-pairing-2026-11-14.md, A15): the hand-drawn marks beside DAVG and GAVG on the answer row masked; the stale `## Input to supply` removed (screenshot supplied by the author 2026-11-05, esxtop on one ESXi 9.1 host); closing line made plural (Q199).
 - Author 2026-11-05: Level 300; the misconception is thinking an NFS datastore is not in the device panel and has no DAVG.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -60,5 +53,6 @@ object: [esxi, datastore]
 tool: [esxtop]
 knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 misconception_type: [tool-confusion]
+pair: "0186"
 status: reviewed
 ```

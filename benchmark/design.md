@@ -144,7 +144,7 @@ An administrator rarely questions a counter in the abstract. The question comes 
 - Each question is sent alone, so one never gives away the other.
 - Pairs are written where a screenshot exists, not for every counter. A fact gets two questions at most: every question weighs the same (section 3.6).
 - Theory options, from the first pair: each option one fact about the mechanism, no option the negation of another, no vague "they differ"; the Level 300 misconception and its over-correction both present; a false option that draws the wrong action from the reading.
-- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-41-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-132-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
+- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-41-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-130-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
 
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).

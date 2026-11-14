@@ -1,12 +1,20 @@
 Name,Type,Parent,Power state,CPU reservation (MHz),CPU expandable reservation,CPU limit (MHz),CPU shares,Memory reservation (MB),Memory expandable reservation
-RP-MOM,Resource pool,cluster prod-cl07,,6000,No,Unlimited,Normal,0,Yes
-vm-mom-app01,VM,RP-MOM,Powered on,1500,,Unlimited,Normal,0,
-vm-mom-app02,VM,RP-MOM,Powered on,1500,,Unlimited,Normal,0,
-vm-mom-web01,VM,RP-MOM,Powered on,0,,Unlimited,Normal,0,
-RP-KID,Resource pool,RP-MOM,,2000,Yes,Unlimited,Normal,0,Yes
-vm-kid-db01,VM,RP-KID,Powered on,2000,,Unlimited,Normal,8192,
-vm-kid-db02,VM,RP-KID,Powered off,2000,,Unlimited,Normal,0,
-RP-OPS,Resource pool,cluster prod-cl07,,10000,Yes,Unlimited,Normal,0,Yes
-vm-ops-mon01,VM,RP-OPS,Powered on,2000,,Unlimited,Normal,4096,
-vm-ops-log01,VM,RP-OPS,Powered on,1000,,Unlimited,Normal,0,
-vm-ops-bak01,VM,RP-OPS,Powered on,0,,Unlimited,Normal,0,
+RP-INFRA,Resource pool,cluster cl-east-02,,14000,Yes,Unlimited,High,0,Yes
+infra-dc01,VM,RP-INFRA,Powered on,1200,,Unlimited,Normal,4096,
+infra-dc02,VM,RP-INFRA,Powered on,1200,,Unlimited,Normal,0,
+infra-mon01,VM,RP-INFRA,Powered on,2500,,Unlimited,Normal,0,
+infra-log01,VM,RP-INFRA,Powered on,0,,Unlimited,Normal,0,
+infra-bak01,VM,RP-INFRA,Powered on,0,,Unlimited,Normal,4096,
+RP-FIN,Resource pool,cluster cl-east-02,,9600,No,Unlimited,Normal,0,Yes
+fin-erp-app01,VM,RP-FIN,Powered on,2400,,Unlimited,Normal,0,
+fin-erp-app02,VM,RP-FIN,Powered on,1800,,Unlimited,Normal,2048,
+fin-web01,VM,RP-FIN,Powered on,0,,Unlimited,Normal,2048,
+fin-rpt01,VM,RP-FIN,Powered on,600,,Unlimited,Normal,0,
+fin-web02,VM,RP-FIN,Powered on,0,,Unlimited,Normal,0,
+RP-FIN-BATCH,Resource pool,RP-FIN,,3200,Yes,Unlimited,Normal,0,Yes
+fin-batch01,VM,RP-FIN-BATCH,Powered on,3200,,Unlimited,Normal,6144,
+fin-batch02,VM,RP-FIN-BATCH,Powered off,2400,,Unlimited,Normal,0,
+RP-TEST,Resource pool,cluster cl-east-02,,0,Yes,Unlimited,Low,0,Yes
+test-app01,VM,RP-TEST,Powered on,0,,4000,Low,0,
+test-app02,VM,RP-TEST,Powered on,0,,4000,Low,0,
+test-app03,VM,RP-TEST,Powered off,0,,4000,Low,0,

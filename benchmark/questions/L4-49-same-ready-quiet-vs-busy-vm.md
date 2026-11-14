@@ -66,5 +66,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [threshold-transplanted]
+pair: "0364"
 status: draft
 ```

@@ -52,7 +52,7 @@
   - at 3.1 GHz all-core Turbo: the full 165 W budget.
   - heavy instructions such as AVX-512: 3.1 GHz cannot be held within 165 W. The CPU lowers the frequency to stay under the limit.
 - Example, Intel Xeon 6520P (base 2.4 GHz): 3.4 GHz, 42% above base.
-- ESXi has no setting to enable or disable Turbo Boost directly. Turbo is on by default. Control it through the power management policy.
+- Turbo Boost is on by default and switched in the BIOS. ESXi has no on-off switch for it: on Intel processors, Power.MaxFreqPct below 100% keeps the cores at or below base clock, which turns Turbo off. The power management policy decides how much Turbo is used ([`power-states`](power-states.md)).
 - Turbo can still engage with the BIOS set to static high performance. Field observation: esxtop %A/MPERF showed all cores at 129%.
 
 ## All-Core Turbo

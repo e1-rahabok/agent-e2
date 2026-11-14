@@ -6,21 +6,26 @@
 
 Choose all the correct statements about the Xeon 6520P:
 
-- A. The nominal clock speed is 2.4 GHz. However, the CPU can run all cores simultaneously at 3.4 GHz.
-- B. TDP stands for Total Drawn Power, so the maximum power consumption is 210 W.
-- C. The Max Turbo Frequency can only be reached with the High Performance setting. Balanced will not boost to this level.
-- D. With BIOS power management set to OS Controlled and ESXi power management set to Balanced, you sacrifice performance to save energy. This applies to all types of workload.
-- E. The 3 speeds (2.4, 3.4, 4.0 GHz) require different power: 4 GHz needs more than 210 W, 2.4 GHz less than 210 W.
+- A. All 24 cores can run at 3.4 GHz at the same time.
+- B. The 210 W TDP is the most power the processor can draw.
+- C. vSphere counts 2.4 GHz per core when it reports the host's Total Capacity (GHz).
+- D. Under load on every core, the cores spend most of their time near 2.4 GHz.
+- E. At 4 GHz the processor draws more than 210 W.
+- F. The 4 GHz Max Turbo is reached only while few cores are active and the rest are idle.
+- G. With Hyper-Threading, the 48 threads deliver twice the work of the 24 cores.
 
 ## Likely wrong answer
-B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance).
+B (TDP read as maximum power draw), D (base frequency read as the speed a loaded CPU runs at), or E (power read as rising with the highest clock).
 
 ## Expected key points
-- Answer: A only.
-- B is wrong: TDP is Thermal Design Power: the average power the processor dissipates at Base Frequency with all cores active under an Intel-defined high-complexity workload.
-- C is wrong: Balanced also boosts to Max Turbo, and is likely to, because power per core is more flexible.
-- D is wrong: performance is not necessarily sacrificed. Most workloads suit Balanced.
-- E is wrong: the relation is not that simple. At Single Core Turbo, total power can be below 210 W because other cores are idle.
+- Answer: A, C, F.
+- A is true: All-Core Turbo is the frequency every core can hold at the same time; 3.4 GHz is 42% above base.
+- B is false: TDP is Thermal Design Power: the average power the processor dissipates at Base Frequency with all cores active under an Intel-defined high-complexity workload. It is not the maximum draw.
+- C is true: vSphere uses the base (nominal) frequency for Total Capacity, because Intel does not expose All-Core Turbo through an API.
+- D is false: a loaded CPU rarely runs at base clock; it spends most of its time near All-Core Turbo, so base understates throughput.
+- E is false: power and frequency are not linear. At Single-Core Turbo the other cores are idle, so total power can stay below TDP.
+- F is true: Max Turbo (Single-Core Turbo) is reached only when few cores are active and the rest are idle.
+- G is false: Hyper-Threading delivers about 1.25 times the work of one thread per core, not 2 times.
 
 ## Notes
 - The Intel web page image holds the same specification as the prompt. It is not sent to the candidate: it is not a product screenshot (author, 2026-11-05).
@@ -29,6 +34,7 @@ B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance)
 
 - Fact source for the TDP definition: Intel's published definition, as quoted in the author's key.
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Be aware of the architectural difference between AMD EPYC and Intel Xeon."
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option. Old C (only High Performance reaches Max Turbo) and D (Balanced costs performance for every workload) removed: the same facts are options E and G of 0111. C, D, F and G are new. Key changed from A to A, C, F (author approved, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -42,17 +48,15 @@ object: [esxi]
 tool: [none]
 knowledge:
   - vsphere/technology/cpu/concepts/cpu-frequency
-  - vsphere/technology/cpu/concepts/power-states
-  - vsphere/technology/cpu/configuration/host-power-management
-  - vsphere/object-types/esxi/configuration/bios-settings
+  - vsphere/technology/cpu/concepts/hyper-threading
 knowledge_main: vsphere/technology/cpu/concepts/cpu-frequency
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q4 ESXi CPU Frequency"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A]
-misconception: [B,C,D]
+answer: [A, C, F]
+misconception: [B, D, E]
 misconception_type: [frequency-and-hyper-threading]
 status: draft
 ```

@@ -3,7 +3,7 @@
 ## Prompt
 - ESXi host esx-07: 2 sockets of 24 cores, Hyper-Threading on. 28 VMs with 110 vCPUs in total. Host Utilization about 60%.
 - Between 14:00 and 15:00 the DBA of db-07 reported slow queries.
-- The host's CPU Ready for that hour, averaged over its 110 vCPUs, is 1.1%.
+- In VCF Operations, esx-07's CPU Ready (%) for that hour is 1.1%.
 - [The attached VCF Operations list](0115/esx-07-vms-cpu-14-to-15.csv) shows every VM on esx-07, with the 20-second peaks of CPU Ready (%), Co-stop (%) and Net Run (%) for that hour.
 
 Which statements are correct?
@@ -28,6 +28,10 @@ B: the host average read as every VM. Or D: the slowness must be in the guest.
 - E is wrong: Ready does not register Hyper-Threading; a busy sibling thread slows a running vCPU, it does not make it wait.
 - F: a 16-vCPU VM needs many threads free at about the same time; a limit or low shares can also hold one VM back. Check these before treating it as a cluster capacity problem.
 - G: contention is per consumer; sort the VMs by their own Ready, at the 20-second peak that keeps short waits visible.
+
+## Notes
+- Stem changed 2026-11-14 (design.md 6.2; project/question-pairing-2026-11-14.md, A3): the phrase "averaged over its 110 vCPUs" stated the mechanism that option A tests; the stem now gives only the host's value. Key unchanged.
+- Paired with 0016 (theory and practical, design.md 3.9).
 
 ## Metadata
 ```yaml
@@ -54,5 +58,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, F, G]
 misconception: [B, D]
 misconception_type: [average-hides-worst, provider-vs-consumer]
+pair: "0016"
 status: draft
 ```

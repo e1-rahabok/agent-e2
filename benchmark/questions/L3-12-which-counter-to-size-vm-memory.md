@@ -7,22 +7,26 @@ Which counters are the most accurate to rightsize the memory of a VM?
 - B. VM Memory Active
 - C. (VM Memory Consumed + VM Memory Active) / 2
 - D. VM Memory Active + Balloon + Swapped + Zipped
-- E. Guest OS Memory Used. In some cases, add the cache.
+- E. Guest OS memory in use plus part of the Guest OS cache
+- F. Guest OS memory in use, without any of its cache
 
 ## Likely wrong answer
-A or B (VM-level counters), or D (mixing VM and Guest OS layers).
+A or B (VM-level counters), or D (mixing VM and Guest OS layers). Or F, the over-correction: size on In Use alone.
 
 ## Expected key points
 - Answer: E.
-- A is wrong: a VM-level counter full of idle pages.
-- B is wrong: a VM-level counter, a sample of active pages taken regularly.
+- A is wrong: a VM-level counter full of idle pages; a page the guest frees stays in Consumed.
+- B is wrong: a VM-level counter, a sample of recently touched pages taken regularly; it does not see how the guest uses its cache.
 - C is wrong: mixes two different concepts.
-- D is wrong: mixes the VM layer and the Guest OS layer.
-- E is the base answer; variants exist (for example adding cache).
+- D is wrong: mixes the VM layer and the Guest OS layer; balloon, swap and compression are ESXi reclamation, not guest need.
+- E is right: size from what the Guest OS needs, including cache, so the guest does not page out. How much cache to include is open.
+- F is wrong: sizing on in-use only leaves no cache or free memory, and the Guest OS pages out.
 
 ## Notes
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Choose the most accurate counter to rightsize a VM."
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: the VM is virtual hardware. What you size is the OS running on it."
+- Option E rewritten 2026-11-14 (was "Guest OS Memory Used. In some cases, add the cache.": vague) and option F added, the over-correction (design.md 3.9; project/question-pairing-2026-11-14.md). Key unchanged: E (author approved, 2026-11-14).
+- Paired with 0079 (theory and practical; design.md, section 3.9).
 
 ## Metadata
 ```yaml
@@ -47,6 +51,7 @@ answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [E]
 misconception: [A,B,D]
+pair: "0079"
 misconception_type: [layer-confusion]
 status: draft
 ```

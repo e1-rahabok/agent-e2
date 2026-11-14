@@ -11,21 +11,24 @@ Choose all the correct statements:
 - C. VM CPU reservation is not sticky. The moment the vCPU stops using it, it is immediately available to other VMs.
 - D. CPU reservation is set in Hertz, not vCPU, because what is reserved is CPU cycles, not a core or thread.
 - E. You can overcommit CPU reservation because it is not sticky. Total reservation of all VMs can exceed ESXi capacity.
-- F. CPU reservation applies only to VMs. The ESXi kernel has no reservation because kernel processes have higher priority.
-- G. With vSAN, NSX and ESXi, total kernel reservation is likely much higher than kernel actual utilization, even when ESXi is highly utilized, to protect the kernel.
+- F. The ESXi kernel holds no CPU reservation of its own, so the VMs can reserve the host's whole base capacity.
+- G. A VM's CPU reservation raises its CPU Usage, even while the guest is idle, because reserved cycles are charged to it.
 
 ## Likely wrong answer
-E (non-sticky read as overcommittable), F (kernel assumed to need no reservation), G.
+E (non-sticky read as overcommittable), F (kernel assumed to need no reservation), or G (a reservation read as CPU in use).
 
 ## Expected key points
 - Answer: A, B, C, D.
-- A: only the base frequency is guaranteed. A conservative design.
+- A: only the base frequency is guaranteed, because Turbo is not. A conservative design.
 - B: if there is enough for everyone, reservation is irrelevant.
-- C: CPU is highly transient.
+- C: CPU is transient: reserved CPU that the VM does not use is used by other VMs.
 - D: the scheduler runs threads at different speeds, so cycles are reserved.
-- E is wrong: HA and DRS use reservation before placing a VM (admission control).
-- F is wrong: kernel modules such as vSAN and NSX can have reservations. A storage-only vSAN node fully reserves CPU, so CPU Demand is flat and high.
-- G is wrong: utilization can exceed reservation.
+- E is wrong: a reservation is a guarantee, so it cannot be overcommitted; HA and DRS check it before placing a VM (admission control).
+- F is wrong: the kernel holds a CPU reservation (System Resource Reservation): several GHz on hosts with vSAN and NSX.
+- G is wrong: a CPU reservation is on demand and shows in no utilization metric; an idle VM with a reservation has CPU Usage near 0.
+
+## Notes
+- Options F and G rewritten 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md): F one fact; old G (kernel reservation above kernel use) removed because it repeats option E of 0024; new G tests whether a reservation shows in utilization. Key unchanged (author approved, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -47,8 +50,8 @@ origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q8 Reservation"
 answer_type: deterministic
 level: 300                      # author 2026-11-05
-answer: [A,B,C,D]
-misconception: [E,F,G]
+answer: [A, B, C, D]
+misconception: [E, F, G]
 misconception_type: [provider-vs-consumer]
 status: draft
 ```

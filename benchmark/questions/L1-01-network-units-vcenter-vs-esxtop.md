@@ -40,5 +40,6 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [B]
 misconception: [A]
 misconception_type: [tool-confusion, unit-and-normalization]
+pair: "0412"
 status: draft
 ```

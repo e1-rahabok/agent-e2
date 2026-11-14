@@ -25,7 +25,7 @@ C: "the sessions are up, so the network is fine". Or D: looking for the loss in 
 
 ## Expected key points
 - Answer: A, B, F.
-- 1472 and 8972 are the ICMP payloads that fill a 1,500-byte and a 9,000-byte frame (28 bytes of IP and ICMP headers). 1472 passes, 1473 fails: the largest frame the path carries is 1,500 bytes.
+- 1472 and 8972 are the ICMP payloads that fill a 1,500-byte and a 9,000-byte MTU (28 bytes of IPv4 and ICMP headers). 1472 passes, 1473 fails: the largest frame the path carries is 1,500 bytes.
 - A and B: with the don't-fragment flag set, a frame above a hop's MTU is dropped at that hop. A time-out with no error message means the host sent the frame and the path lost it.
 - C is wrong: logins, discovery and small reads use small frames, which pass. Large data frames are lost, so IO stalls and times out.
 - D is wrong: iSCSI runs on the VMkernel port, not on the VMs' network adapters. The VMs see slow or failed disk IO, not network drops.
@@ -35,6 +35,7 @@ C: "the sessions are up, so the network is fine". Or D: looking for the loss in 
 
 ## Notes
 - Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
+- 2026-11-14: options B, C and E were not decidable from the knowledge base; the vmkping facts (don't-fragment flag, 28 bytes of IPv4 and ICMP headers, a local Message too long error against a time-out, small frames passing a mismatch) were added to network-configuration-review from the Broadcom KB articles below (project/question-pairing-2026-11-14.md). Key unchanged: A, B, F.
 - Vendor sources: Broadcom KB 313061, Testing jumbo frame pings from ESXi over the network (1472, 1473 and 8972; 28 bytes of overhead), https://knowledge.broadcom.com/external/article/313061/testing-jumbo-frame-pings-from-esxi-over.html; Broadcom KB 419088, Risks and potential impacts of changing the MTU on a virtual switch ("Message too long"; change the physical path first), https://knowledge.broadcom.com/external/article/419088/risks-and-potential-impacts-of-changing.html; Broadcom KB 448714, iSCSI storage connectivity issues due to MTU mismatch, https://knowledge.broadcom.com/external/article/448714/iscsi-storage-connectivity-issues-or-slo.html.
 
 ## Metadata

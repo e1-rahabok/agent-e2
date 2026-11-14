@@ -12,6 +12,8 @@ Which statements are correct?
 - C. Over the 5-minute point, a vCPU was ready about 1% of the time on average.
 - D. The 5-minute point is about 15% per vCPU: 12,000 of 20,000 ms, divided by the 4 vCPUs.
 - E. The 5-minute point shows that no 20-second sample in those 5 minutes passed about 1% per vCPU.
+- F. Ready (ms) on the 1 Day chart cannot be compared with the Real-time value: the two use different units.
+- G. A Ready of 4% per vCPU in one sample calls for two more vCPUs to spread the wait.
 
 ## Likely wrong answer
 B: the milliseconds of all 4 vCPUs read against one vCPU. Or E: the 5-minute value read as the worst moment.
@@ -24,7 +26,14 @@ B: the milliseconds of all 4 vCPUs read against one vCPU. Or E: the 5-minute val
 - C: the 1 Day chart sums 15 Real-time samples over 300 seconds: 12,000 / (300,000 × 4) = 1%.
 - D is wrong: a 5-minute point is not a 20-second sample.
 - E is wrong: one sample in the window was at 4%. A 5-minute point averages the burst away.
+- F is wrong: both are milliseconds summed over the interval; divided by the interval length (20,000 or 300,000 ms per vCPU) they compare directly.
+- G is wrong: more vCPUs make co-scheduling harder and can raise Ready; a single 4% sample is no reason to resize.
 - The Readiness (%) counter is already per vCPU and avoids the conversion.
+
+## Notes
+- Options F (the over-correction) and G (the wrong action) added 2026-11-14 (design.md 3.9; project/question-pairing-2026-11-14.md). Key unchanged, A, C.
+- B kept: the audit listed it as a copy of option E of 0231. 0231 E tests that statistics level 1 keeps only the VM total, so one vCPU's wait cannot be told apart; B here tests the ms-to-% conversion over the vCPU count, the core of this question.
+- Paired with 0369 (theory and practical, design.md 3.9).
 
 ## Metadata
 ```yaml
@@ -48,5 +57,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C]
 misconception: [B, E]
 misconception_type: [unit-and-normalization, rollup-and-interval]
+pair: "0369"
 status: draft
 ```

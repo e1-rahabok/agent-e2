@@ -30,7 +30,7 @@ flowchart TD
 |---|---|---|
 | Used higher than Run | Turbo raises Used. System, VMX, MKS and Helper add to VM-level Used. | Check frequency and System. |
 | Used lower than Run, little System and Overlap | Power saving and Hyper-Threading lower Used. | Do not add vCPUs. Check power management and SMT. |
-| Example: 4-vCPU Ubuntu VM, Used about 44% of Run | Power saving plus SMT. | If Run is far from 100% and the team asks for speed, adding vCPUs is the wrong answer. |
+| Used far below Run, Run far from 100%, the team asks for speed | Power saving plus SMT. | More vCPUs is the wrong answer: each vCPU runs slower; it is not short of run time. |
 | Example: 1-vCPU VM, 2.095 GHz host, 2 GHz limit | Demand and Usage flat around 1.96 GHz (about 94%). Used about 18,600 ms (93%). Run much lower: Used 41% higher than Run. | Cause: CPU frequency. The VM ran above nominal clock speed because of Turbo Boost. Used grows with frequency; Run is time only. |
 
 ## Misconceptions

@@ -3,7 +3,6 @@
 ## Prompt
 - [The attached export](0072/esx-14-storage-adapter-latency-1-hour.csv) is the vSphere Client real-time chart of host esx-14, Storage adapter, exported to CSV: read latency and write latency per vmhba, and Highest latency, every 20 seconds for one hour.
 - From 09:22 to 09:31, a batch job runs on VMs whose LUNs sit behind vmhba2.
-- During the batch, vmhba2 read latency is 14-18 ms, while Highest latency stays below 10 ms.
 
 Which statements are correct?
 
@@ -26,6 +25,8 @@ B: assuming Highest latency is the worst read or write latency.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot replaced by a CSV export of the chart; option E added. Counts only after author approval.
+- Stem bullet that read the batch values out of the CSV for the candidate removed 2026-11-14 (design.md 6.2; project/question-pairing-2026-11-14.md, item B8). Key unchanged: A, E.
+- Paired with 0406 (theory; design.md, section 3.9).
 
 ## Metadata
 ```yaml
@@ -50,5 +51,6 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [A, E]
 misconception: [B]
 misconception_type: [average-hides-worst]
+pair: "0406"
 status: draft
 ```

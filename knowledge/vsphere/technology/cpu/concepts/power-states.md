@@ -55,10 +55,14 @@ Platform Power Management Features
 | Setting | Effect |
 |---|---|
 | Use C States | Use deep ACPI C-states (C2 or deeper) when the processor is idle. |
-| Use C States | An idle core lowers its frequency below base clock speed. It does not have to run fast, so power is saved. |
+| Use C States | An idle core halts; in deeper C-states parts of the core lose power. Lowering the frequency is the job of P-states, not C-states. |
 | Use C States | Disabling it does not disable Turbo. Firmware thermal management sets the frequency of each core. |
 | Use P States | Use ACPI P-states or CPPC to save power when the processor is busy. |
-| Use P States | Disabled: ESXi uses the highest available frequency. |
+| Use P States | Disabled: ESXi uses the highest available frequency, Turbo included. |
+| Power.MaxFreqPct (Custom policy) | Below 100% on Intel processors turns off Turbo on all processors. |
+
+- Turbo is switched on or off in the BIOS. From ESXi, Power.MaxFreqPct below 100% turns it off on Intel processors. Use C States and Use P States do not turn it off.
+- Deep C-states on idle cores leave thermal headroom, so busy cores reach higher Turbo frequencies. With deep C-states off, a lightly threaded load gets less Turbo, not none.
 
 ## CPPC
 - Collaborative Processor Performance Control. Part of ACPI 5.0 and later.
@@ -69,10 +73,12 @@ Platform Power Management Features
 ## C-state × P-state combinations
 | Use C States | Use P States | Frequency behaviour |
 |---|---|---|
-| 1 | 1 | Full dynamic range. Cores drop below base to save power, sleep (0 Hz) when idle, and scale up to All-Core or Single-Core Turbo under heavy load. |
-| 1 | 0 | Rigid base, sleep only. Busy cores are pinned at base: no Turbo, no down-throttling. Power drops only in C-state sleep. |
-| 0 | 1 | Throttled range. Cores scale below base to save power. No Turbo: without core sleep states there is no thermal budget. |
-| 0 | 0 | Flatline. All cores at base frequency, always. No power saving, no sleep, no Turbo. |
+| 1 | 1 | Default (Balanced). Busy cores scale from below base up to Turbo; idle cores sleep. |
+| 1 | 0 | Busy cores run at the highest available frequency, Turbo included; idle cores sleep. |
+| 0 | 1 | Busy cores scale from below base up to Turbo; idle cores stop at C1. |
+| 0 | 0 | Highest available frequency, Turbo included; idle cores stop at C1. No power saving. |
+
+- Turbo stays on in all four rows while the BIOS enables it. Rows with idle cores at C1 leave busy cores less Turbo headroom on a lightly loaded host.
 
 ## High Performance vs Balanced
 - Do not always set power management to maximum.
@@ -97,6 +103,7 @@ Platform Power Management Features
 ## Misconceptions
 - "High Performance always gives the highest frequency" → Balanced reached about 151% vs 130% when other cores were idle.
 - "Disabling deep C-states disables Turbo" → firmware thermal management still sets per-core frequency.
+- "Use P States off pins the cores at base clock" → ESXi then uses the highest available frequency, Turbo included.
 - "ESXi controls power states" → only when the BIOS hands control to the OS.
 - "Lower clock speed means the VM completes less work" → not necessarily. Check contention counters.
 
@@ -133,13 +140,10 @@ images:
     topic: 'CPU power states'
     image_type: screenshot
 source:
-  document: Knowledge base
-  path: CPU > Architecture > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
+  path: CPU > Architecture > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM. Performance Best Practices 9.1, C States in General (p. 22), Host Power Management in ESX (p. 31). vSphere 9.1, vSphere Resource Management > Configure Custom Policy Parameters for the ESX Host Power Management (pp. 1831-1832)
 corrections: []
 review_notes:
-- 'To check: Section ''ESXi level'': advanced option names Power.UseCStates and Power.UsePStates; shows them as ''Use C States'' and ''Use P States'' in the UI.'
-- 'To check: Section ''C-state × P-state combinations'': conflicts with the Use P States text and the Turbo observation.'
-- 'To check: Section ''C-state × P-state combinations'': the row Use C States = 1, Use P States = 0 says no Turbo; the ESXi level text says P-states off means ''highest available frequency''; the Turbo section reports Turbo (129%) under BIOS static high performance.'
 - "Section 'Oversized VM': chart from 'Host Power Management in VMware vSphere 7.0' (2021), p. 24: https://www.vmware.com/docs/hpm-vsphere7-perf. No newer standalone version found on 2026-11-02."
 - 'To check: the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series); not read.'
 status: draft

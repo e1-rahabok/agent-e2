@@ -7,8 +7,8 @@
 
 Which statements are correct?
 
-- A. vCenter has a VM network latency chart; open it for both VMs and for the hosts between them.
-- B. vCenter has no network latency, jitter or retransmit counter for a VM or its virtual NIC.
+- A. vCenter keeps a network latency counter for each VM's virtual NIC.
+- B. Hand the case to the network team, since vSphere holds no evidence that bears on this delay.
 - C. For a VM, dropped packets are the only network contention counter that vSphere keeps.
 - D. With no dropped packets on either VM in that window, the network and the hosts added no delay to these calls.
 - E. CPU contention (Ready, Co-stop) on either VM adds delay without a drop: a packet waits until the vCPU runs.
@@ -24,9 +24,9 @@ Which statements are correct?
 - D: "No dropped packets, so the network added no delay."
 
 ## Expected key points
-- Answer: B, C, E, F, G, H, K.
+- Answer: C, E, F, G, H, K.
 - A is false: vSphere has no network latency metric for a VM.
-- B is true: latency, jitter and retransmits are missing for VM traffic; host VMkernel TCP retransmits exist only in vSAN tooling.
+- B is false: vSphere has no latency counter, but CPU contention on the VMs and on any VM in the path is vSphere evidence for the same window.
 - C is true: for a VM, dropped packets are the only sign of network contention.
 - D is false: no drops does not mean no delay; several vSphere conditions add delay without dropping a packet.
 - E is true: CPU contention on the VM can add network latency; the packet is processed only when the vCPU runs.
@@ -41,6 +41,7 @@ Which statements are correct?
 - Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - TCP retransmits seen inside the guest belong to a Guest OS question of the set; this one tests what vSphere measures and what it can add.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the negation pair A/B resolved (old B, "no latency, jitter or retransmit counter", dropped; the retransmit fact stays in 0268 only); B is now the over-correction and wrong action. Key changed from B, C, E, F, G, H, K to C, E, F, G, H, K.
 
 ## Metadata
 ```yaml
@@ -53,7 +54,7 @@ tool: [vcenter]
 task: explain-mechanism
 level: 300
 answer_type: deterministic
-answer: [B, C, E, F, G, H, K]
+answer: [C, E, F, G, H, K]
 misconception: [A, D]
 input: [text]
 knowledge:

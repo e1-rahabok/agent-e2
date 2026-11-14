@@ -58,5 +58,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [provider-vs-consumer, same-name-other-object]
+pair: "0407"
 status: draft
 ```

@@ -56,5 +56,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D, E]
 misconception: [B, F]
 misconception_type: [tool-confusion]
+pair: "0050"
 status: draft
 ```

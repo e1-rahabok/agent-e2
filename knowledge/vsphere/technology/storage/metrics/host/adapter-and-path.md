@@ -3,7 +3,7 @@
 ## Scope
 - Adapter and path have identical counter sets.
 - Path object names are not friendly names: they can look like devices, but the object is the path.
-- No adapter queue length or commands aborted counter.
+- No commands aborted counter at adapter level. Queue counters (queued, outstanding IOs, queue depth, queue latency) exist in the vSphere API at statistics level 2 or higher (vSphere Web Services API 9.1, storage adapter counters); the default adapter chart does not show them.
 
 ## Contention counters
 - Read latency, write latency, highest latency.
@@ -60,9 +60,10 @@ images:
     image_type: table
     sample: '192 hosts, 1 week'
 source:
-  document: Knowledge base
+  document: Knowledge base; vSphere Web Services API 9.1 (storage adapter counters)
   path: Storage > ESXi > Storage Adapter & Path
 corrections: []
-review_notes: []
+review_notes:
+- 'Section Scope: the statistics level of storageAdapter.queued, outstandingIOs, queueDepth and queueLatency, and whether the vSphere Client 9.1 adapter chart offers them; check https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/storage_adapter_counters.html and a 9.1 client.'
 status: draft
 ```

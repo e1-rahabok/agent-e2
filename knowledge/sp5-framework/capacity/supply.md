@@ -67,11 +67,13 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 | Hosts out | Event | Total capacity | Usable capacity |
 |---|---|---|---|
 | 1 | DPM | 9 | 8 |
-| 1 | Maintenance mode | 10 | 9 |
+| 1 | Maintenance mode | 10 | 8 |
 | 2 | DPM | 8 | 7 |
-| 2 | Maintenance mode | 10 | 8 |
+| 2 | Maintenance mode | 10 | 7 |
 
 - 10-host cluster with 1 HA host. DPM takes hosts out of total capacity; maintenance mode keeps them in total and takes them out of usable capacity.
+- The HA host does not cover maintenance. vSphere HA admission control counts only hosts that are connected, not in maintenance mode and free of HA errors, and keeps its failover capacity among those hosts. With one host in maintenance, the 9 hosts left still hold one host's worth for failover: 8 hosts' worth is usable.
+- A design that keeps HA protection during maintenance plans usable capacity as total minus the HA host minus the maintenance host: 8 of 10 hosts here. Planning with the HA host as the maintenance host leaves VMs short when a host fails during a maintenance window.
 - The same events read as availability (Actual and Operational Availability of the hosts): [`sp5-framework/concepts/sla-metrics`](../concepts/sla-metrics.md), section Availability SLA.
 
 - Total Capacity counts only hosts connected to vCenter. A disconnected host's value goes blank.
@@ -105,6 +107,7 @@ Hypervisor = VMkernel + vSAN + NSX + vSphere Replication
 - "Usable capacity changes with the load" → it is a chosen constant; actual use can exceed it.
 - "Subtract the hypervisor from usable capacity and count its load in utilization too" → count it once: in supply when planning, in the measured load when running.
 - "A host in maintenance mode lowers total capacity" → it lowers usable capacity; DPM lowers total capacity.
+- "The HA host covers maintenance: both are spare capacity" → HA admission control leaves hosts in maintenance mode out and keeps its failover capacity among the hosts left; plan one host for HA and one for maintenance.
 - "Affinity rules, CPU pinning and small datastores cost nothing in capacity" → each pocket holds a buffer that other workloads cannot use.
 
 ## Metadata
@@ -149,9 +152,10 @@ images:
     topic: 'Total vs usable capacity'
     image_type: diagram
 source:
-  document: Knowledge base
-  path: 'Provider Objects > Capacity > Key Metrics; Cluster Capacity; Capacity Management > Overview (Private Cloud Capacity; Optimized Capacity)'
+  document: Knowledge base; VMware vSphere 9.1 product documentation, vSphere Availability (Broadcom TechDocs, page last updated 2026-11-09)
+  path: 'Provider Objects > Capacity > Key Metrics; Cluster Capacity; Capacity Management > Overview (Private Cloud Capacity; Optimized Capacity); vSphere Availability > Creating and Using vSphere HA Clusters > vSphere HA Admission Control > Cluster Resources Percentage Admission Control'
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Total vs usable after host loss'': the maintenance rows and the HA host rule from vSphere 9.1 Availability, Cluster Resources Percentage Admission Control ("vSphere HA considers only hosts that are connected, not in maintenance mode, and have no vSphere HA errors"), https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control/cluster-resources-percentage-admission-control.html.'
 status: draft
 ```

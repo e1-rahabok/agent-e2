@@ -7,11 +7,11 @@
 
 Which statements are correct?
 
-- A. With 1.5 times the VMs, active memory reaches about 390 GB, just over half of DRAM: test and monitor the workloads.
+- A. With 1.5 times the VMs, active memory lands in the band where Broadcom advises testing and monitoring the workloads.
 - B. Tiering starts when memory consumption reaches about 80% of DRAM; below that, all pages stay in DRAM.
 - C. Kernel memory moves to the NVMe tier first, since kernel pages are the least active pages on the host.
 - D. A tiered host has a higher hypervisor memory overhead, so less of its memory is reservable for VMs.
-- E. Consumed after the change, about 930 GB, exceeds DRAM, so the host will start compressing and swapping.
+- E. Once Consumed passes the 768 GB of DRAM, the host starts compressing and swapping.
 
 ## Likely wrong answer
 C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as pressure.
@@ -22,11 +22,13 @@ C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as press
 - B: tiering starts at about 80% DRAM consumption; pages are classified by recency and frequency, and cold pages move to NVMe.
 - C is wrong: only VM pages are tiered; kernel memory never goes to NVMe.
 - D: tiering raises the hypervisor overhead (about 7.96% for 512 GB DRAM + 512 GB NVMe, against about 2% for a 1 TB non-tiered host).
-- E is wrong: on a tiered host Consumed covers both tiers and may exceed DRAM by design. Active against DRAM decides performance, not Consumed.
+- E is wrong: on a tiered host Consumed covers both tiers and may exceed DRAM by design (about 930 GB here); new pages come from the NVMe tier once DRAM passes about 80%. Active against DRAM decides performance, not Consumed.
 
 ## Notes
 - Revised 2026-11-12: numbers changed so that A is computed (51% of DRAM), option E added, tags added. Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (candidates, the 80% line, hypervisor overhead); Performance Best Practices for vSphere 9.1, Memory Tiering.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Options A and E rewritten 2026-11-14 to one fact each (design.md 3.9; project/question-pairing-2026-11-14.md). Key unchanged: A, B, D.
+
 ## Metadata
 ```yaml
 id: "0057"

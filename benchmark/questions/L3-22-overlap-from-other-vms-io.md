@@ -9,9 +9,11 @@ Which statements about Overlap are correct?
 
 - A. Overlap is time a running vCPU was interrupted so the hypervisor could do system work, such as processing IO.
 - B. Overlap comes only from this VM's own IO, so this VM must be doing more IO than it seems.
-- C. Run keeps counting during Overlap, so Run overstates the time the guest really executed. Run minus Overlap is closer.
+- C. Run keeps counting during Overlap, so Run overstates the time the guest really executed.
 - D. Overlap is part of Ready: the vCPU waited in the ready queue.
-- E. The guest feels Overlap as a short freeze of that vCPU, the same as a wait in Ready.
+- E. For the guest, Overlap is time frozen on that vCPU.
+- F. Used counts the Overlap time as work done by the VM.
+- G. Moving this VM's disks to a faster datastore cuts its Overlap.
 
 ## Likely wrong answer
 B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Ready.
@@ -20,9 +22,14 @@ B: Overlap is always caused by the VM's own IO. Or D: Overlap is counted in Read
 - Answer: A, C, E.
 - A: with no free core, the kernel runs IO work (for example incoming packets) on a core that is running a vCPU, and interrupts it.
 - B is wrong: the work can be for the host or for other VMs. Here the neighbours drive the IO.
-- C: Overlap happens inside the Run state. Used and Demand remove it; Run does not. VCF Operations shows Net Run = Run - Overlap.
+- C: Overlap happens inside the Run state. VCF Operations shows Net Run = Run - Overlap.
 - D is wrong: the vCPU stays in Run, so Ready does not include Overlap.
-- E: for the guest it is lost time on that vCPU, like Ready; include it when sizing the guest.
+- E: the guest clock does not tick for that vCPU during the interruption; include Overlap when sizing the guest.
+- F is wrong: Used subtracts Overlap from Run; Usage goes down when Overlap goes up.
+- G is wrong: the interrupting IO belongs to the neighbours and to the host; this VM's own disks are not the source.
+
+## Notes
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): E no longer compares Overlap with Ready (Linux steal time counts Ready and not Overlap); F (Used) and G (the wrong action) added. Key unchanged, A, C, E.
 
 ## Metadata
 ```yaml
@@ -39,6 +46,7 @@ tool: [vcenter]
 knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
   - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
+  - vsphere/technology/cpu/metrics/virtual-motherboard/used
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 attachments: []
 origin: synthetic

@@ -15,6 +15,8 @@ Which statements are correct?
 - C. At 1.9% of the uplink, the VM's network path cannot be what limits it.
 - D. Packets received leaves out broadcast and multicast, so part is missing.
 - E. Packets received includes the packets that ESXi dropped for the VM.
+- F. For a small-packet workload such as this one, the throughput counters carry no useful information.
+- G. Move log-03 to a host with faster uplinks.
 
 ## Likely wrong answer
 C: reading bandwidth utilization as network load. A low share of the link says nothing about a high packet rate.
@@ -26,10 +28,13 @@ C: reading bandwidth utilization as network load. A low share of the link says n
 - C is wrong: with small packets the load is the packet rate, not the bandwidth. Each packet costs CPU in the host and in the guest to receive, whatever its size. A 10 GbE link of 1,500-byte frames peaks near 833,000 packets per second each way; this one VM takes 300,000 per second at only 1.9% of a 25 GbE link.
 - D is wrong: the packet count includes broadcast and multicast.
 - E is wrong: the packet counts exclude dropped packets; drops have their own counters.
+- F is wrong: throughput divided by the packet rate gives the average packet size (option B), which is how the small packets show.
+- G is wrong: the uplink is at 1.9%; the load is the packet rate, which costs CPU per packet whatever the link speed.
 - Next: check the VM's receive drops and its vCPU usage, and the guest's receive processing, before asking for more bandwidth.
 
 ## Notes
 - Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): over-correction F and wrong action G added. Key unchanged: A, B.
 
 ## Metadata
 ```yaml
@@ -53,7 +58,8 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B]
-misconception: [C]
+misconception: [C, G]
 misconception_type: [unit-and-normalization]
+pair: "0415"
 status: draft
 ```

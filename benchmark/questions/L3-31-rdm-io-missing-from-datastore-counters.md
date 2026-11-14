@@ -10,27 +10,32 @@
 
 Which statements are correct?
 
-- A. The VM's datastore counters exclude RDM IO: the RDM data sits on its own LUNs, not on the datastore.
+- A. The VM's datastore counters count only IO to files on DS-ORA01, so the six RDMs are not in them.
 - B. The gap is a fault: IO cannot be lower at the datastore than at the virtual disk.
-- C. The virtual disk counters include the RDMs: an RDM appears to the VM as a virtual disk.
-- D. The device-level Disk counters include the RDM LUNs, so they match the virtual disk total here.
+- C. The virtual disk counters include the RDMs, since an RDM appears to the VM as a virtual disk.
+- D. The device-level Disk counters cover the RDM LUNs as well as the VMFS LUN.
 - E. The datastore's used space includes the data on the RDMs, since their mapping files live there.
-- F. The datastore counters would include the RDMs if the RDMs were in virtual compatibility mode.
+- F. The 50 datastore read IOPS include reads by other VMs on DS-ORA01.
+- G. Device-level Disk read IOPS match virtual disk read IOPS for any VM, whatever backs its disks.
+- H. With only 50 datastore read IOPS, the database storage has plenty of headroom, so its LUNs need no check.
 
 ## Likely wrong answer
 B: reading the gap as lost IO.
 
 ## Expected key points
 - Answer: A, C, D.
-- A: an RDM is a pointer file on the datastore; its data lives on a separate LUN. The VM's datastore counters see only the VMDK's 50 read IOPS.
-- C: the virtual disk counters cover VMDKs and RDMs alike.
-- D: the device-level counters cover every LUN the VM uses, VMFS and RDM, so they also show 4,000.
-- B is wrong: each counter is right for its own layer.
-- E is wrong: the RDM data is not on the datastore; only the small mapping file is.
-- F is wrong: the compatibility mode changes how SCSI commands are virtualized, not where the data lives.
+- A is true: an RDM is a pointer file on the datastore; its data lives on a separate LUN. The VM's datastore counters see only the VMDK's 50 read IOPS.
+- B is false: each counter is right for its own layer.
+- C is true: the virtual disk counters cover VMDKs and RDMs alike.
+- D is true: the device-level counters cover every LUN the VM uses, VMFS and RDM, so they also show 4,000.
+- E is false: the RDM data is not on the datastore; only the small mapping file is.
+- F is false: the VM's datastore counters hold this VM's IO only.
+- G is false: the Disk level covers VMFS and RDM, not NFS; a VM with disks on NFS shows virtual disk IO that the Disk level does not.
+- H is false: the RDM LUNs carry the 4,000 read IOPS; the datastore counters see only the OS disk.
 
 ## Notes
 - Drafted by Claude 2026-11-12, replacing a question on "write latency below read latency": that topic depends on the array's cache design, so its key would not be decidable from public mechanisms. Counts only after author approval.
+- Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): the compatibility-mode option (old F) dropped, as the knowledge base does not name the mode; F (other VMs), over-correction G and wrong action H added. Key unchanged: A, C, D.
 
 ## Metadata
 ```yaml

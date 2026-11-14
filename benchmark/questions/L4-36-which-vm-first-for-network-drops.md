@@ -3,7 +3,6 @@
 ## Prompt
 - [The attached export](0082/vm-network-drops-one-week.csv) is a VCF Operations view of 40 VMs over one week, built from 5-minute samples: the maximum and the 99th percentile of Packets Dropped (%), the week's sum of received and transmitted packets dropped, and the average usage rate.
 - The team sorted the view by the maximum of Packets Dropped (%) and plans to open network tickets for the top five VMs.
-- You can open one ticket today.
 
 Which VMs should be investigated first?
 
@@ -28,6 +27,7 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12: the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which VM should be investigated first?"
+- 2026-11-14: the stem line "You can open one ticket today" removed: it told the candidate that one option is correct (design.md 6.2). Practical half of 0061 (project/question-pairing-2026-11-14.md, A13). Key unchanged.
 
 ## Metadata
 ```yaml
@@ -51,5 +51,6 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [B]
 misconception: [A]
 misconception_type: [rollup-and-interval]
+pair: "0061"
 status: draft
 ```

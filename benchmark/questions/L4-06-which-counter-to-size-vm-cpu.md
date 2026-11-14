@@ -50,5 +50,6 @@ level: 400                      # author 2026-11-05
 answer: [E]
 misconception: [C,D]
 misconception_type: [frequency-and-hyper-threading]
+pair: "0371"
 status: draft
 ```

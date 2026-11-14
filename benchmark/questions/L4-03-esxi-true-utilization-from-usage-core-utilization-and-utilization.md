@@ -4,33 +4,29 @@
 - Study [the attached vCenter chart](0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png) (not VCF Operations) of a single ESXi host.
 - Hyper-Threading is enabled: each core runs 2 hardware threads.
 - [The second attachment](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png) zooms into the start of the chart.
+- The host runs ESXi 7.
 
-At the end, where the counters spike:
-- ESXi CPU Usage is flat at 100%. The host runs ESXi 7.
-- ESXi CPU Core Utilization is about 70%.
-- ESXi CPU Utilization is about 40%.
+Three metrics show three values at the end of the chart, where the counters spike. Which options give the ESXi utilization at that point, from a capacity management perspective?
 
-Three metrics show three values. Which options give the ESXi utilization, from a capacity management perspective?
-
-- A. 100%. The blue line. No more physical cores or threads are available.
-- B. 70%. The green line. It is a balanced reporting.
-- C. 40%. The black line. Plenty of physical threads are idle.
-- D. Not shown. It is the average of the green line and the black line, as Hyper-Threading is enabled.
-- E. Not shown. To get the utilization, sum the running VMs and the kernel.
+- A. About 100%, the blue Usage line: no physical cores or threads are left.
+- B. About 85%, the green Core Utilization line: it balances cores and threads.
+- C. About 54%, the black Utilization line: nearly half of the physical threads are idle.
+- D. Not shown: about 70%, the average of the green and black lines, because Hyper-Threading is enabled.
+- E. Not shown: add up the running VMs and the kernel to get the utilization.
 
 ## Attachments
-![vCenter chart, 1 hour, of one ESXi host: CPU Usage (blue) flat at 100%, Core Utilization (green) about 70%, Utilization (black) about 40% at the end](0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png)
+![vCenter chart, 1 hour, of one ESXi host: CPU Usage (blue) flat at 100% from the ramp on; Core Utilization (green) about 75%, rising to 84.94% at the end; Utilization (black) about 46%, rising to 54.38% at the end](0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png)
 
 ![Zoom on the start of the same chart, where the three counters ramp up](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png)
 
 ## Likely wrong answer
-A (100%): reading CPU Usage as utilization. Or B (70%): treating Core Utilization as the capacity measure.
+A (100%): reading CPU Usage as utilization. Or B (85%): treating Core Utilization as the capacity measure.
 
 ## Expected key points
-- Answer: C (40%).
-- A is wrong: CPU Usage (%) is inflated by Turbo Boost.
+- Answer: C (about 54%).
+- A is wrong: CPU Usage (%) includes frequency (Turbo Boost), which is speed, and on ESXi 7 it is capped at 100%.
 - B is wrong: Core Utilization counts a core as busy when one thread runs. Each thread can run a vCPU or a kernel world, so the thread is the unit of capacity.
-- C is correct: about 60% of the physical threads are idle and can still run work. Capacity counts space (threads available), not speed.
+- C is correct: the legend's Latest value is 54.38%, so about 46% of the physical threads are idle and can still run work. Capacity counts space (threads available), not speed.
 - D is wrong: averaging thread and core utilization has no meaning.
 - E is wrong: it mixes the consumer (VM) and provider (ESXi) perspectives.
 
@@ -39,6 +35,8 @@ A (100%): reading CPU Usage as utilization. Or B (70%): treating Core Utilizatio
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "(From vSphere 8.0 Update 3 this counter is no longer capped and would exceed 100%: Broadcom KB 417702.)"
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "What is the ESXi utilization, from capacity management perspective?"
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality."
+- Stem and options changed 2026-11-14 (author agreed; project/question-pairing-2026-11-14.md, A1 and section 5): the stem typed Core Utilization about 70% and Utilization about 40%, which disagreed with the chart (plateau about 75% and 46%, Latest 84.94% and 54.38%) and equalled the example in the ESXi CPU Utilization knowledge file. The bullets are deleted; the options carry the chart's values at the end (the legend's Latest). The version line stays: a case fact (Usage capped at 100% on ESXi 7). Key unchanged, C.
+- Paired with 0012 (theory and practical, design.md 3.9).
 
 ## Metadata
 ```yaml
@@ -67,5 +65,6 @@ level: 400                      # author 2026-11-05
 answer: [C]
 misconception: [A,B]
 misconception_type: [same-name-other-object, frequency-and-hyper-threading]
+pair: "0012"
 status: draft
 ```

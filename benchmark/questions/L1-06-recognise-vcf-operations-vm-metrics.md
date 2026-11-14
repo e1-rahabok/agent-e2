@@ -14,13 +14,6 @@ Which tool shows it, and for which object type?
 ## Screenshot
 ![VCF Operations Metrics tab of a VM: metric tree with CPU, Guest, Memory, Virtual Disk groups](0037/vcf-operations-vm-metrics-tab.png)
 
-## Input to supply
-- Tool: VCF Operations 9.1.
-- Where: one VM > Metrics tab, metric tree expanded at the top level.
-- Must show: the object type icon and name in the header, and the top-level metric groups (CPU, Memory, Guest, Virtual Disk, Network).
-- Mask the VM name.
-- Save as `benchmark/questions/37/vcf-operations-vm-metrics-tab.png`.
-
 ## Likely wrong answer
 B: taking the VCF Operations metric tree for the vCenter performance chart.
 
@@ -30,6 +23,7 @@ B: taking the VCF Operations metric tree for the vCenter performance chart.
 - vCenter is the administrative tool and shows Chart Options; VCF Operations is the operations tool.
 
 ## Notes
+- 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the chart heading; the vCommunity group removed from the metric tree (author: every VM name is masked); the stale `## Input to supply` removed.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml
