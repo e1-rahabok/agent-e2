@@ -17,7 +17,7 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 - E. Memory Consumed plays no part in HA admission control with the percentage policy.
 - F. Nine VMs at 14% to 18% Ready show the cluster is short of CPU, so it needs a host before any new VM.
 - G. The nine dev-pool VMs wait because the pool's 12 GHz CPU limit is below the 19 GHz its VMs demand.
-- H. Time a VM is held back by a CPU limit is not counted as Ready, so the dev-pool Ready must come from busy hosts.
+- H. Ready leaves out the time a VM is held back by a CPU limit; vCenter counts that time only as Max Limited.
 - I. A CPU Utilization of 39% shows that no VM in the cluster can be waiting for CPU.
 - J. Adding a fifth host would not remove the Ready of the dev-pool VMs.
 - K. Lowering the new VMs' reservations below 16 GB would let more of them pass admission control.
@@ -39,7 +39,7 @@ Which statements about the 12 VMs and the health check of this cluster are corre
 - E true: admission control counts reservations, not usage.
 - F false: nine of 180 VMs (5%) in one pool wait, the other 171 show no wait, and utilization is 39%. The wait follows the pool, not the hosts: a limit, not a lack of cluster capacity. It is not a reason to refuse the new VMs.
 - G true: the pool limit (12 GHz) is below its demand (19 GHz). Check resource pools and limits in the configuration step.
-- H false: Ready includes time held back by a limit; vCenter also shows that part as Max Limited.
+- H false: Ready includes the time held back by a limit; vCenter shows that part as Max Limited as well, not instead.
 - I false: cluster utilization is an average; the dev-pool VMs wait at 39% utilization because of their pool limit.
 - J true: more hosts do not help a pool at its limit; its VMs share the same cap.
 - K true: admission control charges the reservation plus overhead. Reserving what the VMs use, or powering on in phases, are options for the project.

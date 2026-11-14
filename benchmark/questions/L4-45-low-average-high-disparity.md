@@ -20,7 +20,7 @@ How can the average be so low while the disparity is above 100%, is the owner ri
 - I. Adding vCPUs would make the reports run faster, as the vendor's sizing for the appliance suggests.
 - J. A faster clock speed would make the reports run faster on the same vCPU count.
 - K. The seven idle vCPUs can be removed without slowing the appliance, unless the vendor changes the guest to use them.
-- L. Net Run counts time, not clock speed: vCPU 0 counts as fully busy in it, while its MHz shows the Turbo.
+- L. Net Run follows the clock speed like Usage does, so with Turbo it can pass 100% for one vCPU.
 
 ## Likely wrong answer
 - D: "12.5% means the VM is mostly idle, so it is not the bottleneck."
@@ -28,7 +28,7 @@ How can the average be so low while the disparity is above 100%, is the owner ri
 - I: "The vendor says 8 vCPUs; give it more if the reports are slow."
 
 ## Expected key points
-- Answer: A, B, E, H, J, K, L.
+- Answer: A, B, E, H, J, K.
 - A true: in every 5-minute point vCPU 0 is at about 2,615-2,660 MHz and the others are at 0-1.2 MHz; one busy vCPU of 8 gives 12.5%.
 - B true: 2,640 / 2,000 = 132%; Turbo pushes one vCPU above 100% of base, and the disparity (busiest minus least busy) follows.
 - C false: Turbo can push the usage of one vCPU above 100% of the base clock.
@@ -40,11 +40,11 @@ How can the average be so low while the disparity is above 100%, is the owner ri
 - I false: the work runs on one CPU; more vCPUs add idle vCPUs.
 - J true: a single busy vCPU is limited by its clock speed; all else equal, throughput scales with frequency.
 - K true: the idle vCPUs do no work today.
-- L true: Net Run is time-based and caps at 100%; it does not see frequency, so Turbo shows only in the MHz counters.
+- L false: Net Run is time-based and cannot pass 100%; it does not see frequency, so vCPU 0 counts as fully busy (12.5% for the VM) and Turbo shows only in the MHz counters.
 
 ## Notes
 - From the author's samples: average utilization 12.5%, Usage Disparity above 100%; plotting each vCPU showed only the first one busy (uniprocessor kernel), and Turbo above 100%. Values reproduced in the export.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: option L (Net Run is time-based) turned into a near miss, so fewer options are correct.
 
 ## Metadata
 ```yaml
@@ -55,7 +55,7 @@ technology: [cpu]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,B,E,H,J,K,L]
+answer: [A,B,E,H,J,K]
 misconception: [C,D,I]
 input: [table]
 object: [vm, guest-os]

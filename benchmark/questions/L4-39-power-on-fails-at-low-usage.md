@@ -24,6 +24,7 @@ Why does the power-on fail when the cluster is at 30%, what do you change, and w
 - N. The error is transient: a retry or a restart of vCenter lets the power-on through.
 - O. An expandable reservation isolates the VMs of a pool from the demands of the sibling pools under the same parent.
 - P. Keep part of the cluster capacity unreserved; the vSphere documentation advises at least 10%.
+- Q. Lowering the CPU reservation of vm-mom-app01 from 1,500 to 1,000 MHz lets vm-kid-db02 power on.
 
 ## Likely wrong answer
 - B: "The cluster is short of CPU: add a host."
@@ -48,12 +49,13 @@ Why does the power-on fail when the cluster is at 30%, what do you change, and w
 - N false: the failure is deterministic, from the reservations in the tree.
 - O false: only a fixed reservation isolates; with an expandable one, a child can take all of the parent's spare reservation and leave none for its siblings.
 - P true: headroom for reservation changes, pool edits, overhead and DRS migrations.
+- Q false: RP-MOM would then have 6,000 - (1,000 + 1,500 + 0) - 2,000 = 1,500 MHz unreserved, still less than the 2,000 MHz asked; lowering the reservations of RP-MOM's own VMs by 1,000 MHz or more in total would work.
 
 ## Notes
 - Revised 2026-11-12: the tree as a CSV export, the error as text; no screenshot.
 - Expandable reservations walk up the tree while each ancestor is expandable (vSphere 9.1 Resource Management, Expandable Reservations Example).
 - Admission control questions test different facts: L2-10 (reservations, not usage), L4-30 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: option Q added for the old key point "lower other reservations in RP-MOM", as a near miss (1,000 MHz is not enough).
 
 ## Metadata
 ```yaml

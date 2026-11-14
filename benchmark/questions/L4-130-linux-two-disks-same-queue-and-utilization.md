@@ -28,16 +28,16 @@ Which statements about the four columns, the two disks and the two engineers are
 - J. aqu-sz in iostat counts only the requests still waiting to be sent to the driver.
 - K. Raising nr_requests or the queue depth for sdc would not lower its await.
 - L. The queue of 32 on sdc is at the default Paravirtual SCSI device queue depth, so raising cmd_per_lun would help.
-- M. sdb would show spare capacity as a rising I/O rate with a flat await when its load grows.
+- M. sdb would show spare capacity as a rising await with a flat I/O rate when its load grows.
 - N. Next for sdc: the latency of DS-ARCH split into device, kernel and queue latency, and the load of the array.
-- O. On sdb, Linux adds about 0.2 ms, and about 30 of its 32 requests are at the virtual disk.
+- O. On sdb, about 30 of the 32 requests wait in Linux, a backlog in front of the virtual disk.
 
 ## Likely wrong answer
 - B: "Both disks have 100% utilization and an aqu-sz of 32, so both are saturated: raise the queue size on both."
 - F: "Same queue, ten times the await on sdc: the Linux queue of sdc is the problem; tune it."
 
 ## Expected key points
-- Answer: A, C, D, E, H, K, M, N, O.
+- Answer: A, C, D, E, H, K, N.
 - A true: Little's Law: sdb 8,000 x 0.004 = 32 and sdc 800 x 0.040 = 32.
 - B false: aqu-sz alone does not show a backlog, and %util at 100% does not show a limit for a device that serves requests in parallel. Neither engineer is right.
 - C true: 32 requests in service at 8,000 I/Os per second, against 32 requests on a slow device at 800 I/Os per second.
@@ -50,16 +50,16 @@ Which statements about the four columns, the two disks and the two engineers are
 - J false: a request counts from the moment it enters the request queue until it finishes, whether it waits or is served.
 - K true: only about 1.6 requests wait in Linux; a larger queue only holds more requests in front of a slow device.
 - L false: the default device queue depth of vmw_pvscsi is 64, and only about 30 requests are at the virtual disk. No request waits for a free slot.
-- M true: spare capacity shows as the I/O rate rising with await flat; saturation shows as await rising with the I/O rate flat. For sdb, nothing to tune unless the database needs a response time below 4 ms.
+- M false: await rising with the I/O rate flat is the sign of saturation; spare capacity shows as the I/O rate rising with await flat. For sdb, nothing to tune unless the database needs a response time below 4 ms.
 - N true: read device, kernel and queue latency of DS-ARCH in esxtop, the array load and the schedule of the backups; ask whether the archive workload needs better than 38 ms.
-- O true: 4.0 ms against 3.8 ms; 8,000 x 0.0038 = 30.4 of the 32 requests are at the virtual disk: requests in service, not a backlog.
+- O false: 4.0 ms against 3.8 ms, so Linux adds about 0.2 ms; 8,000 x 0.0038 = 30.4 of the 32 requests are at the virtual disk, in service, and only about 1.6 are in Linux. Not a backlog.
 
 ## Notes
 - Public source: Linux kernel documentation, I/O statistics fields: field 9 counts requests in progress, field 10 the time with at least one request in progress, field 11 the weighted time. sysstat iostat(1) manual page: aqu-sz is the average queue length of the requests issued to the device; await includes the time in the queue and the time in service; %util for devices serving requests in parallel, such as RAID arrays and modern SSDs, does not reflect their performance limits. aqu-sz = I/O rate x await is Little's Law.
 - Why one answer: the arithmetic ties the columns, and the vCenter latency shows how much of await is below the guest.
 - Debatable risk: that the vCenter virtual disk latency starts at the virtual disk and excludes the wait in Linux is read from the counter definitions and the knowledge file; the vSphere API reference was not read for this. The numbers are chosen so that the arithmetic is exact.
 - Prepared with author question Q194 (the reading of the guest disk queue).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). The prompt now states that vmw_pvscsi runs with its default queue depths, so option L is decidable (64 per device, Broadcom KB 343323).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). The prompt now states that vmw_pvscsi runs with its default queue depths, so option L is decidable (64 per device, Broadcom KB 343323). Review 2026-11-14: options M and O turned into near-miss false options that test the same facts (the signature of spare capacity; requests in service on sdb), so fewer options are true.
 
 ## Metadata
 ```yaml
@@ -70,7 +70,7 @@ technology: [storage]
 task: troubleshoot
 level: 400
 answer_type: deterministic
-answer: [A,C,D,E,H,K,M,N,O]
+answer: [A,C,D,E,H,K,N]
 misconception: [B,F]
 input: [text]
 object: [vm, guest-os]

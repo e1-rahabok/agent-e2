@@ -15,7 +15,7 @@ Will that work in vSphere 9.1, and what do you advise instead? Which statements 
 - E. An IOPS limit on the virtual disks of rpt-07, sized so its job still ends in the window, protects db-11.
 - F. A throughput limit in MB/s on the disks of rpt-07 is the right control for its large sequential reads.
 - G. An IOPS limit cannot restrain large sequential reads, because each large read counts as a single IO.
-- H. Moving rpt-07 or db-11 to another datastore or LUN, or using the QoS of the array, also separates the two.
+- H. Moving rpt-07 or db-11 to storage the other does not share, or limiting rpt-07 with the QoS of the array, also protects db-11.
 - I. The latency rises on db-11 alone, so the cause is on the host of db-11, and a setting on that host fixes it.
 - J. High DAVG with low KAVG on the host of db-11 shows it waits in the array or fabric, which it shares with the host of rpt-07.
 
@@ -32,7 +32,7 @@ Will that work in vSphere 9.1, and what do you advise instead? Which statements 
 - E true: limits are still honoured; put the control on the noisy VM. IO above the limit waits in the kernel queue of rpt-07's host.
 - F false: a disk throughput limit does not exist; the limit is in IOPS.
 - G false: the ESXi IO scheduler (mClock) counts an IO above 32 KB as several, so an IOPS limit also caps the throughput of large reads.
-- H true: separation removes the shared queue; the array's QoS works across all its initiators.
+- H true: separation removes the shared queue; the array is a point of control of its own, and its QoS works across all its initiators.
 - I false: the latency rises only in rpt-07's window, and rpt-07 runs on another host: the contention is in what the two hosts share.
 - J true: confirm where db-11 waits before changing anything; no setting on db-11's host alone fixes a wait in the array or fabric.
 
@@ -41,6 +41,7 @@ Will that work in vSphere 9.1, and what do you advise instead? Which statements 
 - Vendor documents: Broadcom KB 385396, "Deprecation of default Storage Policy Components for SIOC Storage Policy" (https://knowledge.broadcom.com/external/article/385396): from VCF 9.0 the SIOC policy supports only limits and the backend ignores shares and reservations. Deprecation notice with vSphere 8.0 U3 (https://www.yellow-bricks.com/2024/11/25/storage-io-control-aka-sioc-deprecation-notice-with-8-0-u3).
 - The key does not depend on whether SIOC can still be enabled on a datastore in 9.x (only a secondary source says it cannot). An answer that says so is a correct alternative, not a requirement.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). No option depends on whether Storage I/O Control can still be enabled on a datastore in 9.x.
+- Review 2026-11-14: option H says storage the two do not share, not "another datastore or LUN": a second LUN on the same array can still share the array or fabric where db-11 waits (option J).
 
 ## Metadata
 ```yaml
@@ -61,6 +62,7 @@ knowledge:
   - vsphere/technology/storage/metrics/virtual-motherboard/iops
   - vsphere/technology/storage/concepts/esxi-storage-latency-stack
   - vsphere/architecture/resource-controls
+  - sp5-framework/performance/noisy-neighbour
 knowledge_main: vsphere/technology/storage/metrics/datastore/storage-io-control
 attachments: []
 origin: synthetic

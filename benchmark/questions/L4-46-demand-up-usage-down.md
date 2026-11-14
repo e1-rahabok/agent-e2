@@ -34,7 +34,7 @@ Why did Demand rise while Usage fell, why is Latency higher than Demand minus Us
 - E true: Latency includes the Hyper-Threading effect and power saving below nominal frequency; Demand minus Usage includes only Hyper-Threading.
 - F false: Demand minus Usage is not unmet demand; a limit, for example, leaves Demand equal to Usage. It holds only the Hyper-Threading charge.
 - G false: Ready does not register Hyper-Threading or frequency; the VM loses throughput while it runs.
-- H false: a rise in CPU Latency does not mean waiting; waiting shows in Ready and Co-stop, which stay low. Latency here is mostly sibling-thread and frequency effects.
+- H false: a rise in CPU Latency does not mean waiting: Latency also counts the sibling-thread and frequency effects, while time waiting for a physical thread shows in Readiness, which stays below 1%.
 - I false: nobody changed the VM, and under a limit Demand stays at Usage; the time a limit holds back shows in Ready (Max Limited), which stays below 1%.
 - J false: more vCPUs change neither the sibling-thread load nor the clock speed; the VM uses about a quarter of its capacity.
 - K true: Demand rose and Usage fell at once with no change on the VM: something changed on the host it runs on.

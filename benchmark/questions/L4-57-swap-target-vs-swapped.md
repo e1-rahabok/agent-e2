@@ -12,7 +12,7 @@ Which statements are correct?
 - B. ESXi will swap about 6.5 GB more of the VM, the amount shown in Swap target.
 - C. Swap target is the level of reclamation ESXi aims at for this VM, not a queue of pages that adds to Swapped.
 - D. The gap of about 300 MB between Swap target and Swapped is pages still waiting to be swapped out.
-- E. Swap target moves as a mirror of Consumed: when Consumed rises, the target falls.
+- E. Swap target moves against Consumed in most samples: when Consumed rises, the target falls.
 - F. Granted is flat for the hour: the guest is not asking ESXi for more pages.
 - G. The VM is not waiting for its swapped pages now: the swap-in and decompression rates are 0.
 - H. The VM is slow because it is short of memory, so it needs more memory or another host.
@@ -32,7 +32,7 @@ Which statements are correct?
 - B false: Swap target is an input, not pages queued on top of Swapped; with every rate at 0, nothing goes out.
 - C true: ESXi need not reach the target if it does not have to; it is a compress-swap target.
 - D false: the target is not the same thing as Swapped, and no page is going out: every rate is 0.
-- E true: in the export the target changes by less than 1 MB, and moves against Consumed in most samples.
+- E true: in the export the target moves against Consumed in 136 of the 179 steps (the two mirror each other), and changes by less than 1 MB.
 - F true: Granted is 1,223,088 KB in every sample.
 - G true: swap-in is the contention; at 0, the guest does not wait for these pages now. A wait would show as swap-in, decompression and memory latency.
 - H false: nothing is swapped in or out now; the swapped pages are history that the guest does not touch.

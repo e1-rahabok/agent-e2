@@ -19,7 +19,7 @@ Which statements about this host are correct?
 - G. Thread Utilization of 62% leaves about 30 of the 80 threads idle.
 - H. Core Utilization of 85% means that 85% of the host's capacity is in use.
 - I. An idle thread on a busy core gives a new vCPU the same speed as a whole free core.
-- J. Keep placing VMs while Ready and Co-stop per VM stay low, and watch Thread Utilization rise toward its planned ceiling.
+- J. Keep placing VMs while per-VM Ready and Co-stop stay low, and watch Thread Utilization near its ceiling.
 - K. Demand reads higher than Usage once VMs share cores with Hyper-Threading.
 
 ## Likely wrong answer

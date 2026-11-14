@@ -34,7 +34,7 @@ You run the health check on this VM. Which statements are correct?
 
 ## Expected key points
 - Answer: B, C, F, G, H, K, N.
-- A is false: the misconception; Ballooned, Swapped and Compressed are amounts reclaimed earlier, and Consumed is consumption. The balloon is a leading warning about host pressure, not proof that this VM is slow.
+- A is false: the misconception; Ballooned, Swapped and Compressed are amounts reclaimed earlier, and Consumed is consumption. The balloon is past reclamation to look at in the configuration step, not proof that this VM is slow.
 - B is true: Usage counts the delivered frequency (2.5 GHz against 2.0 GHz nominal) while Run is 71%; consumption sizes the VM, contention shows waiting. Read contention first.
 - C is true: 1.4% + 0.3% against 71% Net Run is a loss of about 2% of the time the vCPUs wanted to run.
 - D is false: the misconception; the 5-minute averages hide the 20-second peak of 410 ms.
@@ -53,7 +53,7 @@ You run the health check on this VM. Which statements are correct?
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 - Public source: Broadcom KB 444403, Understanding "Peak" or "Worst" Performance Metrics in VMware VCF / Aria Operations (VCF Operations 9.x and Aria Operations 8.x; the page shows no updated date): VCF Operations polls vCenter every 5 minutes, takes 15 samples of 20 seconds, and the peak metrics show the highest of them; averages hide short spikes. Mechanism of memory counters: Balloon, Swapped and Compressed are amounts, Memory Contention (vSphere mem.latency, "time spent waiting to swap in or decompress guest physical memory") is the wait. Turbo: Usage counts the delivered frequency.
 - Why one answer: the numbers decide it. Only the disk peak is a wait; CPU waits are about 2% of the run time and memory wait is 0%. The order contention, then consumption, then sizing is the design logic of the VM check (section Principle and Order rationale of the VM health check file).
-- Debatable risk: low. The only judgment is how much to say about the balloon: the key calls it a leading warning, not a finding of a slow VM, which follows from the counter definitions. The 410 ms figure is chosen far above any latency threshold, so no threshold is argued.
+- Debatable risk: low. The only judgment is how much to say about the balloon: the key calls it past reclamation for the configuration step, not a finding of a slow VM, which follows from the counter definitions. It does not say whether host pressure or a limit caused it (open question Q214). The 410 ms figure is chosen far above any latency threshold, so no threshold is argued.
 - Rests on: the knowledge file's design logic (vm-health-check, Principle, Checks 3 to 6, Order rationale) and the vendor definitions above.
 
 ## Metadata

@@ -17,7 +17,7 @@ Is the network clean, and if not, which host and port, what is the likely cause,
 - G. vmnic2 negotiated a lower speed or half duplex, and that mismatch explains its errors.
 - H. About 48,000 errors among roughly 500 million received packets is under 0.01%, an acceptable rate for a 25 GbE port.
 - I. The errors come with receive drops on the same port, a sign that the NIC receive ring is full.
-- J. The `esxcli network nic stats get` counters are cumulative since boot: read them twice to see if errors still grow.
+- J. The `esxcli network nic stats get` counters are cumulative: read them twice to see if the errors still grow.
 - K. Compare with the error counters of the switch port at the other end of the link, with the network team.
 - L. The older firmware on esx-c1-04 is a consistency item to fix, even though that host shows no errors.
 

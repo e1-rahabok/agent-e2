@@ -16,7 +16,7 @@ Which statements about the hosts, the two colleagues and the loss of one host ar
 - D. HA admission control keeps 25% of the cluster free, so the three hosts left can run the whole load without contention.
 - E. The 80% ceiling and 90% warning for the esxtop PCPU line describe a host in normal operation, not the hosts left after a failure.
 - F. Core Utilization of 72% means the hosts are overloaded today, and that alone is the reason to add a fifth host.
-- G. HA admission control gives no warning here, because it compares the 8% of CPU that is reserved with the 25% it keeps.
+- G. HA admission control stays silent here, because it counts the 8% of CPU that is reserved, not the 72% in use.
 - H. HA admission control refuses new power-ons once host CPU usage passes the 75% left after the failover share.
 - I. With "Performance degradation VMs tolerate" at its default of 100%, vSphere HA raises no warning for this cluster.
 - J. Set to 0%, "Performance degradation VMs tolerate" would stop new VMs from powering on in this cluster.
@@ -38,7 +38,7 @@ Which statements about the hosts, the two colleagues and the loss of one host ar
 - D false: with the percentage policy, admission control keeps failover capacity for reservations plus overhead, not for usage. VMs without reservations can fill the cluster past what three hosts can run.
 - E true: Performance Best Practices for vSphere 9.1 gives 80% as a reasonable ceiling and 90% as a warning, and says organizations set their own target. The levels say nothing about the loss of a host.
 - F false: 72% with no VM waiting is not a defect. Colleague 2 reaches a defensible outcome for the wrong reason: the reason to add capacity is the load after a failure, decided in the cluster check.
-- G true: the percentage policy sums reservations plus overhead (8% of CPU) against the 25% kept, so it stays silent while usage is high.
+- G true: the percentage policy sums reservations plus overhead (8% of CPU) and checks that the 25% failover share stays free of them; usage does not enter the check, so it stays silent while usage is high.
 - H false: admission control counts reservations, not usage; a cluster at high usage still admits VMs without reservations.
 - I true: at the default of 100%, any degradation is tolerated, so no warning. The setting that compares usage with what survives a failure is this one, not the admission control policy.
 - J false: the threshold raises a configuration warning only; it does not block power-ons, migrations or reservation changes.

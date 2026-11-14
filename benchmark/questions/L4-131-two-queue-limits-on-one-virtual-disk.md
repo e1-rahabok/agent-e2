@@ -25,12 +25,12 @@ Which statements about where the 25 ms is spent, what limits the I/O rate and th
 - G. Raising the Paravirtual SCSI queue depth to 254 shortens the time per I/O that the application sees.
 - H. Adding vCPUs to the VM would let it issue I/O faster and raise its I/O rate.
 - I. The GAVG of 16 ms is the whole time that the application waits for each of its I/Os.
-- J. Requests above the Paravirtual SCSI device queue depth wait in the VMkernel and show up as QAVG.
+- J. Here the requests beyond the Paravirtual SCSI queue depth wait in the VMkernel, inside the 7.8 ms of QAVG.
 - K. The first change is to raise the device queue depth of the LUN, or to spread the data over more LUNs.
-- L. A flat I/O rate with growing latency fits a queue limit rather than an array short of capacity.
+- L. With the array at 30% of its rated IOPS, a flat I/O rate with growing latency points to a queue limit.
 - M. The VMkernel stack itself, outside its device queue, adds only about 0.2 ms.
 - N. Of the 100 requests Windows counts, about 32 are at the device and about 31 wait in the VMkernel queue.
-- O. After the fix, success shows as ACTV above 32, QUED near 0, and Windows latency close to GAVG.
+- O. Once both limits are raised, success shows as ACTV above 32, QUED near 0 and Windows latency close to GAVG.
 
 ## Likely wrong answer
 - D: "KAVG of 8 ms means the VMkernel is slow."
@@ -48,19 +48,19 @@ Which statements about where the 25 ms is spent, what limits the I/O rate and th
 - G false: the device still takes 32 commands at once, so the 9 ms moves from the guest queue to the VMkernel queue and the total stays at 25 ms or grows.
 - H false: CPU is low and the wait is queueing.
 - I false: GAVG starts at the virtual device; the 9 ms in the guest queue is outside it.
-- J false: a request above the Paravirtual SCSI device queue depth waits in the Guest OS, before the virtual device takes it; ESXi latency does not include it. A request above the device queue depth (DQLEN) waits in the VMkernel.
+- J false: QUED 31 = 4,000 x 0.0078 is the excess over DQLEN 32 of the 64 requests at the virtual disk; the other 36 requests are outside GAVG, which is 9 ms below the Windows latency. A request beyond the Paravirtual SCSI queue depth waits in the Guest OS, before the virtual device takes it; a request beyond DQLEN waits in the VMkernel.
 - K true: raise the device queue depth of the LUN (the HBA driver parameter, within the adapter queue depth and the limits of the array ports), or spread the files over more LUNs. Then raise the Paravirtual SCSI queue depth and ring pages if a guest wait remains.
-- L true: the array has spare capacity (30%), so it is not the cause; a flat I/O rate with growing latency is the signature of a queue limit.
+- L true: the array has spare capacity (30%), so it is not the cause; with the array ruled out, a flat I/O rate with growing latency is the signature of a queue limit.
 - M true: KAVG 8.0 minus QAVG 7.8 = 0.2 ms; about 1 request at 4,000 per second.
 - N true: 4,000 x 0.008 = 32 at the device, 4,000 x 0.0078 = 31 in the VMkernel queue, about 1 in the stack and 36 in the guest queue: 100 in all.
-- O true: check with the same figures: ACTV above 32, QUED near 0, a higher IOPS rate at a similar DAVG, and Windows latency close to GAVG.
+- O true: check with the same figures: ACTV above 32, QUED near 0, a higher IOPS rate at a similar DAVG, and Windows latency close to GAVG. Windows latency close to GAVG needs the guest wait gone too, hence both limits.
 
 ## Notes
 - Public source: esxtop storage device panel, vSphere Monitoring and Performance 9.1 (last updated 2026-11-09): DQLEN, ACTV, QUED, %USD, LOAD, DAVG/cmd, KAVG/cmd, GAVG/cmd, QAVG/cmd. Broadcom KB 344099 (legacy 1008205): GAVG = DAVG + KAVG. Broadcom KB 343323 (legacy 2053145): the Paravirtual SCSI default queue depth is 64 for a device and 254 for an adapter. Microsoft Learn, "Using Storage-related Parameters and Performance Counters": Avg. Disk Queue Length = Disk Transfers/sec x Disk sec/Transfer, and the requests include those waiting in a Storport queue.
 - Why one answer: the numbers satisfy Little's Law at every layer (100 = 36 + 31.2 + 0.8 + 32), so the split is forced, and the ceiling DQLEN / DAVG equals the observed rate.
-- Debatable risk: the author's working source says a request that exceeds the Paravirtual SCSI queue depth is seen as QAVG; this question reads it as a wait in the guest (author question Q195). The way to raise the device queue depth depends on the HBA driver and was not verified in a vendor document. The array headroom is stated in the prompt. GAVG is read as starting at the virtual device.
+- Debatable risk: the author's working source says a request that exceeds the Paravirtual SCSI queue depth is seen as QAVG; the knowledge files read it as a wait in the guest (author question Q195, open). No option depends on Q195: A and B follow from the numbers (Windows 25 ms against GAVG and vCenter 16 ms; 4,000 x 0.016 = 64), and J is stated for this case, where QUED 31 = 4,000 x 0.0078 holds only the excess over DQLEN. Performance Best Practices for vSphere 9.1 (revision 20260624) supports the guest reading: "The depth of the queue of outstanding commands in the guest operating system SCSI driver can significantly impact disk performance" (p. 60), and a small virtual SCSI adapter queue "can hamper the ability of the guest OS to pass data to the next layer down the storage stack" (p. 87). The way to raise the device queue depth depends on the HBA driver and was not verified in a vendor document. The array headroom is stated in the prompt. GAVG is read as starting at the virtual device.
 - Prepared from the ESXi storage I/O path source file.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14). Options A, B and J follow the knowledge file's reading of the Paravirtual SCSI limit (Q195 has no recorded answer).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: J restated for this case and L tied to the array's 30%, so each is decided by the prompt's numbers; O names both limits.
 
 ## Metadata
 ```yaml

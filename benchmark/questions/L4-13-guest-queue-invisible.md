@@ -8,14 +8,14 @@
 
 Which statements about the storage team's conclusion are correct?
 
-- A. I/O still waiting inside Windows has not reached the virtual disk, so the VM's IOPS in vCenter can under-report what Oracle asks for.
+- A. I/O still waiting inside Windows has not reached the virtual disk, so vCenter IOPS can under-report what Oracle asks for.
 - B. Normal VM disk IOPS and latency in vCenter show the I/O path is healthy, so the slowness is not an infrastructure problem.
 - C. The VM's disk latency in vCenter includes the time an I/O spends queued inside Windows.
 - D. Normal disk metrics at the VM level do not prove the I/O path is healthy from the application down.
 - E. A high Windows disk queue shows up in vCenter as an equally high count of outstanding I/O on the VM.
 - F. VMware Tools adjusts the Windows disk counters so that they include the time ESXi holds each I/O.
 - G. Windows Disk Queue Length counts only the I/O that Windows has not yet sent to the virtual disk.
-- H. The part of the Windows queue that waits inside the guest is the queue minus the I/O rate times the vCenter disk latency.
+- H. The I/O rate times the vCenter disk latency counts the requests at the virtual disk; only the Windows queue above it can wait in the guest.
 - I. Windows does not see where ESXi holds its I/O; it only sees each I/O take longer.
 
 ## Likely wrong answer
@@ -30,7 +30,7 @@ Which statements about the storage team's conclusion are correct?
 - E false: requests at the virtual disk equal the I/O rate times the vCenter disk latency. The guest queue also counts requests that still wait in Windows, so the two need not match.
 - F false: VMware Tools adds new metrics inside the guest; it does not change the existing Windows counters, which stay unaware of virtualization.
 - G false: the counter also counts requests in service at the device and requests on their way back up the stack. It is a Little's Law value: I/O rate times time per I/O.
-- H true: requests at the virtual disk are the I/O rate times the vCenter latency; the rest of the queue waits in the guest. A large remainder means requests wait for a free slot of the virtual adapter.
+- H true: requests at the virtual disk are the I/O rate times the vCenter latency (Little's Law); only the excess of the guest queue over that figure is spent above the virtual disk. A large excess means requests wait for a free slot of the virtual adapter.
 - I true: the mental model of the two views: the Guest OS sees its own queues and its own use; the VM view sees the guest's use, hypervisor work for the VM and unmet demand. The guest only feels the hypervisor's wait as slowness.
 
 ## Notes
