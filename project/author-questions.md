@@ -59,7 +59,7 @@ Each entry has:
 
 ### Q204 · VCF Operations > Capacity forecast · Capacity Remaining: largest gap or tightest point
 
-- Files: [Capacity forecast](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/capacity-forecast.md); question 0235 (benchmark/questions).
+- Files: [Capacity forecast](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/capacity-forecast.md); question [0235](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-76-capacity-forecast-averages-hide-month-end.md).
 - Search 1: "The largest difference between usable capacity and projected utilization"
 - Search 2: "follows the tightest point of the 3 days"
 - Question: TechDocs 9.1 says Capacity Remaining (%) is the largest difference between usable capacity and projected utilization over the next 3 days; the same page sets it to 0 when any projection exceeds 100%. In the field, does the value follow the smallest remaining capacity (the highest projected point), as the key of 0235 says, or the largest gap, as the text literally reads?
@@ -68,7 +68,7 @@ Each entry has:
 
 ### Q202 · Memory > Overhead · Kernel memory reservation with vSAN and NSX
 
-- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); question 0024, option E.
+- Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); question [0024](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-11-memory-reservation-behaviour.md), option E.
 - Search 1: "Too low with vSAN and NSX, too high with ESXi only"
 - Search 2: "Reservation stays steady even when kernel use drops"
 - Question: The file says the kernel reservation is too low with vSAN and NSX (supports the key: E false), and later that the memory reservation stays steady even when kernel use drops 90% (supports E). On a busy host with vSAN and NSX, is the kernel memory reservation below actual kernel use? Should the second line be scoped to an idle or ESXi-only host?
@@ -77,7 +77,7 @@ Each entry has:
 
 ### Q201 · Memory > Reservation · 'Not available to VMs': admission or physical pages
 
-- Files: [ESXi memory reservation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md); [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md); question 0024, option D.
+- Files: [ESXi memory reservation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md); [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md); question [0024](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-11-memory-reservation-behaviour.md), option D.
 - Search 1: "Kernel reservation means the amount is not available to VMs"
 - Search 2: "reserved memory must be used first before it is held"
 - Question: Option D of 0024 does not say which sense of available it means. For admission control the kernel reservation is withheld whether used or not, so D is true; for physical pages it is not withheld until touched, so D is false. Every model, Opus included, reads the first. Should D say (A) not available for VM reservations (true), (B) physically blocked before use (false), or (C) leave the misconception list?
