@@ -1,6 +1,6 @@
 # Level 300 misconceptions
 
-The misconceptions with the widest reach, given to the agent before every question (up-front block `rules`, switch `agent_primer.rules`, off until the benchmark shows a gain). Built by `harness/primer.py`. Not indexed (`harness/kb.py`, `NOT_INDEXED`), so search never returns this summary instead of the file.
+The misconceptions with the widest reach, given to the agent before every question (up-front block `rules`, switch `agent_primer.rules`, on since the final round of 2026-11-13). Built by `harness/primer.py`. Not indexed (`harness/kb.py`, `NOT_INDEXED`), so search never returns this summary instead of the file.
 
 What belongs here:
 - A misconception a frontier model applies with confidence, so it never looks it up: what is a problem, which metric decides, what to add or size by. Level 300: a VMware administrator who knows the basics still holds it.

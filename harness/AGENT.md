@@ -84,8 +84,16 @@ Each is small (all five: 3,000 tokens, exactly the budget checked by lint), need
 
 - The limits are budgets, not design values. Deployment rule (stop on token budget, time budget or no progress): section 8.
 
-## 6. Observed behaviour (benchmark 2026-11-12, 150 questions)
-- Agentic scored below classic for 2 of 3 models: google/gemma-4-31b-it 54% against 67%, meta/muse-glimmer-30b 56% against 64%. alibaba/qwen3.8-27b scored 51% in agentic and 39% in classic; its baseline run is invalid (answers cut at the token cap).
+## 6. Observed behaviour
+### Final round (benchmark 2026-11-13, 196 questions, 5 runs; up-front blocks and term map on, cold start)
+- Agentic and classic are within the margin for every model: google/gemma-4-31b-it 76% against 78%, meta/muse-glimmer-30b 78% against 77%, alibaba/qwen3.8-27b 63% against 69%. Agentic uses 2-3.5 times the tokens and about twice the latency.
+- Mean tool calls per multiple-choice answer: gemma 4.8, muse 7.1, qwen 7.4.
+- Found but not read: within the same question, reading the found file adds about +5 points for Muse and about 0 for the others. Read reminder built (section 5).
+- Agentic consistency is the weak point for Qwen: the same letters in all 5 runs on 35% of the questions.
+- Analysis: [benchmark/results/analysis-2026-11-13.md](../benchmark/results/analysis-2026-11-13.md), sections 4 and 6.
+
+### Earlier rounds
+- Benchmark 2026-11-12, 150 questions: agentic scored below classic for 2 of 3 models: google/gemma-4-31b-it 54% against 67%, meta/muse-glimmer-30b 56% against 64%. alibaba/qwen3.8-27b scored 51% in agentic and 39% in classic; its baseline run is invalid (answers cut at the token cap).
 - Tool use differs by model. Mean calls per answer on the multiple-choice questions: gemma 4.9, qwen3.8-27b 6.4, muse-glimmer-30b 8.1. Muse reached the limit of 8 calls on 367 of 450 answers.
 - So today the weakest step is the agent's first lookups, not the knowledge base. The up-front blocks (section 3) and a primed start (agentic mode that starts from the classic context) target that step.
 - Sample of 2026-11-13 (20 questions drawn at random, 12 multiple choice and 8 judged, 2 runs; Gemma and Muse; up-front blocks and term map on, reasoning off for Muse). Credit on the worst run:
@@ -112,7 +120,16 @@ Each is small (all five: 3,000 tokens, exactly the budget checked by lint), need
 
 ## 8. Budgets and the tool-call limit
 - The benchmark limit (8 tool calls, 12K tokens of tool output) caps the cost of the 10,780 answers of the final round. It is not a design value. No knowledge-base need sets it at 8.
-- Run results (benchmark 2026-11-12, agentic mode, multiple-choice questions, exact answers by number of calls):
+- Run results (agentic mode, multiple-choice questions, exact answers by number of calls). Final round, benchmark 2026-11-13:
+
+| Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
+|---|---|---|---|
+| google/gemma-4-31b-it | 207 of 212 | 221 of 273 | 79 of 110 |
+| meta/muse-glimmer-30b | 32 of 33 | 198 of 203 | 287 of 359 |
+| alibaba/qwen3.8-27b | 19 of 19 | 128 of 152 | 277 of 424 |
+
+- Answers that hit the limit in the final round: 72% exact for gemma, 80% for muse, 65% for qwen.
+- Benchmark 2026-11-12 (150 questions), for comparison:
 
 | Model | 0-3 calls | 4-7 calls | Hit the limit (8) |
 |---|---|---|---|
@@ -120,7 +137,7 @@ Each is small (all five: 3,000 tokens, exactly the budget checked by lint), need
 | meta/muse-glimmer-30b | 1 of 1 | 82 of 82 | 304 of 367 |
 | alibaba/qwen3.8-27b | 4 of 25 | 231 of 248 | 148 of 177 |
 
-- Answers that hit the limit are not mostly wrong: 65% exact for gemma, 83% for muse, 84% for qwen. The data does not show that a higher limit helps; the budget re-run (section 7, lever 4) decides.
+- Answers that hit the limit in the round of 2026-11-12: 65% exact for gemma, 83% for muse, 84% for qwen. The data does not show that a higher limit helps; the budget re-run (section 7, lever 4) decides.
 - Hard questions also take more calls, so the table does not prove that more calls are useless. Next check: re-run the limit-hit answers with 16 calls.
 - Models differ in how many calls they use (table above). The limit does not affect a model that makes few calls.
 - Deployment has no per-token fee. Its limits are:
@@ -156,7 +173,7 @@ Each is small (all five: 3,000 tokens, exactly the budget checked by lint), need
 ## 9. Why classic mode stays
 - Classic mode costs a third of the benchmark. Reasons to keep it:
   1. It isolates tool skill. Classic = what the knowledge base adds with no tool skill from the model. Agentic minus classic = what the model's own tool use adds or loses. Without classic, a low agentic score cannot be pinned on the model or on the knowledge base.
-  2. It is the better mode for some models today. Benchmark 2026-11-12: classic beat agentic for gemma (67% against 54%) and muse (64% against 56%); agentic beat classic for qwen3.8-27b (51% against 39%). The mode is chosen per model by the decision rule in [`benchmark/design.md`](../benchmark/design.md).
+  2. It is as good as agentic today. Benchmark 2026-11-13: classic and agentic within the margin for every model (gemma 78% against 76%, muse 77% against 78%, qwen 69% against 63%), at a third to half of the tokens. Q200 asks whether the next round decides the shipped mode. The mode is chosen per model by the decision rule in [`benchmark/design.md`](../benchmark/design.md).
   3. It is the fallback. When a model breaks the tool-call format twice, the harness answers in classic mode instead of failing.
   4. It is fast: one model call instead of up to nine.
 - After the full run of the 196 questions picks the model and mode, routine runs use the chosen mode plus baseline only. Classic stays in the code as the fallback.
