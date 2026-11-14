@@ -9,11 +9,11 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
   - which frozen model to ship;
   - the score delta of each change to the knowledge base, harness or agent, with everything else fixed;
   - the gap to the frontier model.
-- Baseline mode (the model alone) is the zero point: system minus baseline is what our work adds.
+- Base (the model alone) is the zero point: Agent E2 minus Base is what our work adds.
 - Release gate: section 7.5 (final score at least 85%, Level 400 at least 80%, confident-wrong at most 3%, held-out set not fitted). Target: 99%. Final score: section 7.4.
-- The question set is one test, designed top down (section 3): what it must decide, then its size (section 4), its rules (section 6), its allocation, its slots, and only then the questions.
+- The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). The real test is the field: the live test with the author's real questions ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md)) and the operators who use Agent E2. The question set has no target size and no allocation to fill: questions are added, rewritten and retired as the knowledge base and the field show what matters.
 - The benchmark must:
-  1. rank candidate models and answer modes against each other;
+  1. rank candidate models against each other, on Agent E2 and on Base;
   2. show whether a configuration clears the release gate (section 7.5);
   3. show how close it is to 99%, and state what the number proves.
 
@@ -31,19 +31,21 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 
 - Scope of 1.0: vSphere 9.1 metrics and the Guest OS layer, for performance and capacity, in monitoring and troubleshooting (`MISSION.md`, section 1).
 
-## 3. Blueprint
-Six independent axes (3.1 to 3.5, 3.7), allocated in section 3.6. The run set holds 196 questions (since 2026-11-13); the blueprint targets below were set for 150 and are minimums: every column shows the run set first, the blueprint target second. Each question fills one slot of the blueprint. The slot list lives in [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2, until every slot is written; the coverage script ([project/tools/coverage.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/coverage.py)) counts the set against every target below.
+## 3. Question set
+- Each question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `product`, `object`, `tool`, `misconception_type`, `knowledge`). The axes below describe the set; they are not quotas.
+- Counts change with every question added, rewritten or retired. They live in code, not in this file: `python3 project/tools/coverage.py` prints the count of every tag value and marks a value with no question (`<<`). The report breaks the score down by the same axes.
+- A value with no question, or a field question the set has nothing like, is a reason to write a question. A count is never a reason to keep or drop one.
 
 ### 3.1 The job
-The product is a narrow expert for one reader: a VMware administrator. The administrator brings one of five tasks, with text or a table as evidence.
+The product is a narrow expert for one reader: a VMware administrator. The administrator brings one of five tasks, with text, a table or a screenshot as evidence.
 
-| Task | What the administrator asks | Run set (196) | Blueprint (150) |
-|---|---|---|---|
-| Troubleshoot | Something is slow. What do I check, in what order, and what is the cause? | 59 | 45 |
-| Read a metric | What does this value mean on this object, and is it a problem? | 44 | 35 |
-| Decide capacity | Is there room? How big should this VM be? What can I reclaim? | 35 | 30 |
-| Explain a mechanism | Why does the counter behave this way? | 29 | 25 |
-| Judge a setting | What does this setting do to performance or capacity? | 29 | 15 |
+| Task | What the administrator asks |
+|---|---|
+| Troubleshoot | Something is slow. What do I check, in what order, and what is the cause? |
+| Read a metric | What does this value mean on this object, and is it a problem? |
+| Decide capacity | Is there room? How big should this VM be? What can I reclaim? |
+| Explain a mechanism | Why does the counter behave this way? |
+| Judge a setting | What does this setting do to performance or capacity? |
 
 - Troubleshooting leads: the mission is monitoring and troubleshooting (`MISSION.md`, section 1). Real operator questions are mostly "why does this counter do that" and "what is wrong" (the author's samples, 2026-11-12).
 - Each task maps to a `retriever_guide` value of the knowledge base: troubleshooting, metric-meaning, health-check and decision-tree, how-it-works, what-to-set.
@@ -51,99 +53,78 @@ The product is a narrow expert for one reader: a VMware administrator. The admin
 ### 3.2 By level
 Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
-| Level | The expert can | Run set (196) / blueprint (150) | Example |
-|---|---|---|---|
-| 100 | Name and recognise: which counter, which object, which tool | 8 / 5 | [Device latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L1-02-esxtop-device-latency-davg.md) |
-| 200 | Define and explain one item in isolation | 17 / 15 | [Co-stop on a multi-vCPU VM](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-14-co-stop-multi-vcpu.md) |
-| 300 | Apply common practice correctly: read a value, convert a unit, apply a published threshold | 40 / 40 | [High CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md) |
-| 400 | Explain the mechanism, know when a reading misleads, and combine several facts or tables to a conclusion | 131 / 90 | [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md) |
+| Level | The expert can | Example |
+|---|---|---|
+| 100 | Name and recognise: which counter, which object, which tool | [Device latency in esxtop](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L1-02-esxtop-device-latency-davg.md) |
+| 200 | Define and explain one item in isolation | [Co-stop on a multi-vCPU VM](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-14-co-stop-multi-vcpu.md) |
+| 300 | Apply common practice correctly: read a value, convert a unit, apply a published threshold | [High CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md) |
+| 400 | Explain the mechanism, know when a reading misleads, and combine several facts or tables to a conclusion | [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md) |
 
 - Level 400 is hard and complex, not tricky. It tests knowledge of the system, not reading of English. To stay unambiguous it is often long: the situation, the values, the tool, the time window, and one clear question.
-- Level 400 combines facts inside one answer: several knowledge files, a calculation, a flow, several inputs. There is no back-and-forth with the user; the agent does the chaining with its tool calls.
-- Why Level 100-300 are in the set, when the claim is about Level 400:
+- Level 400 combines facts inside one answer: several knowledge files, a calculation, a flow, several inputs. There is no back-and-forth with the user; the agent's code does the chaining (the reading plan and the computed facts of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)).
+- Level 400 holds most of the set, most of the judged questions and most of the tables: the claim is about Level 400.
+- Why Level 100-300 are in the set:
   1. The knowledge base assumes the basics and does not teach them. A candidate that fails Level 100-200 cannot read the knowledge base; a Level 400 failure is then a model failure, not a knowledge gap.
   2. Administrators ask basic questions too. One wrong basic answer costs the product its credibility.
   3. Non-regression (Level 300): the knowledge base corrects Level 300 rules of thumb. The candidate must not over-correct a practice that is right.
-- Why so few at Level 100 (8): every model scores about 95% there, so the questions separate nothing and add no power to the paired test (section 4). They stay as a guard.
-- Level 400 carries most of the judged questions and most of the tables (section 3.6).
+- Level 100 stays small: every model scores about 95% there, so its questions separate nothing. They stay as a guard.
 
 ### 3.3 By answer type
-| Answer type | The answer is | Scored by | Run set (196) / blueprint (150) |
-|---|---|---|---|
-| Deterministic | One or more option letters (A, B, C, ...). Exactly right or not | The runner, by comparing letters | 119 (61%) / 90 (60%) |
-| Judged | Free text. It cannot be scored as right or wrong by a rule | A judge model, 0-3 against the key points (section 14) | 77 (39%) / 60 (40%) |
+| Answer type | The answer is | Scored by |
+|---|---|---|
+| Deterministic | One or more option letters (A, B, C, ...). Exactly right or not | The runner, by comparing letters |
+| Judged | Free text. It cannot be scored as right or wrong by a rule | A judge model, 0-3 against the key points (section 14) |
 
 - Deterministic is the majority: it is exact, cheap, and free of scorer bias.
-- Judged is 40%, up from 30%: a real administrator asks without options, and options reward recognition. A small model can pick the right option yet fail to raise the point unprompted.
+- Judged is a large minority: a real administrator asks without options, and options reward recognition. A small model can pick the right option yet fail to raise the point unprompted.
 - Example, deterministic ([CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md)): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
 - Example, judged ([High CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md)): "A VM shows CPU Wait at 90%. The application owner says the VM must be stuck waiting on disk or memory. Are they right?"
 - Metadata: `answer_type: deterministic | judged`.
 
 ### 3.4 By input type
-| Input type | What it is | How it reaches the model | Run set (196) / blueprint (150), questions that include it |
-|---|---|---|---|
-| Text | The prompt alone. It may hold a few values or a small table typed into the prompt (an esxtop excerpt, a resource pool tree) | As text | 155 / 114 (text only) |
-| Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) | 35 / 35 |
-| Screenshot | An image of a product UI | As an image, to a vision model | 6 / 1 (2026-11-13: the author's [ESXi utilization for capacity](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-03-esxi-true-utilization-from-usage-core-utilization-and-utilization.md)) |
+| Input type | What it is | How it reaches the model |
+|---|---|---|
+| Text | The prompt alone. It may hold a few values or a small table typed into the prompt (an esxtop excerpt, a resource pool tree) | As text |
+| Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) |
+| Screenshot | An image of a product UI | As an image, to a vision model |
 
-- 1.0 adds no screenshots beyond the six in the run set (the author's L4-03, and the five reactivated on 2026-11-13). A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set follows 1.0 (section 13).
+- 1.0 adds no more screenshots. A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set grows after 1.0 (section 13).
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]` or `[screenshot]`, derived from `attachments` and checked by lint.
 - URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
 
 ### 3.5 By area
-Each question has one primary area for the allocation, and lists every area it touches in `technology` (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml)). The Guest OS layer is counted by `product` (windows, linux).
+Each question lists every area it touches in `technology` (values from [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml)). The Guest OS layer is counted by `product` (windows, linux).
 
-| Area | Primary, blueprint (150) | Touched: run set (196) / blueprint minimum | Covers |
-|---|---|---|---|
-| CPU | 36 | 78 / 40 | vCPU states, Ready, Co-stop, Run, Used, Usage, Demand, Hyper-Threading, frequency, NUMA |
-| Memory | 28 | 63 / 35 | Consumed, Active, Granted, balloon, swap, compression, contention, sharing, tiering |
-| Storage | 25 | 49 / 28 | latency stack, queues, outstanding IO, IO size, space, snapshots, IP storage |
-| Network | 18 | 32 / 20 | drops, throughput, packet rate, units, teaming, offload |
-| System | 25 | 62 / 30 | the object as a whole: cluster, DRS, admission control, resource pools, statistics and rollups, capacity, availability |
-| Guest OS layer | 15 | 45 / 20 | Windows and Linux counters, and where they meet the VM counters |
-| Outside the knowledge base | 3 | 3 | Answered from the model's own knowledge (knowledge base first, own knowledge where it is silent: author, Q038). They check that a gap does not turn into a wrong answer |
+| Area | Covers |
+|---|---|
+| CPU | vCPU states, Ready, Co-stop, Run, Used, Usage, Demand, Hyper-Threading, frequency, NUMA |
+| Memory | Consumed, Active, Granted, balloon, swap, compression, contention, sharing, tiering |
+| Storage | latency stack, queues, outstanding IO, IO size, space, snapshots, IP storage |
+| Network | drops, throughput, packet rate, units, teaming, offload |
+| System | the object as a whole: cluster, DRS, admission control, resource pools, statistics and rollups, capacity, availability |
+| Guest OS layer | Windows and Linux counters, and where they meet the VM counters |
+| Outside the knowledge base | A few questions answered from the model's own knowledge (knowledge base first, own knowledge where it is silent: author, Q038). They check that a gap does not turn into a wrong answer |
 
-- Per-area scores (18-36 questions) are diagnostic only (margin about ±12-17 points). Decisions use the total.
+- Per-area scores rest on a few dozen questions each (margin about ±12-17 points): diagnostic only. Decisions use the total.
 
-### 3.6 Allocation
-Level against answer type, run set (196) / blueprint (150):
-
-| Level | Deterministic | Judged | Total |
-|---|---|---|---|
-| 100 | 7 / 5 | 1 / 0 | 8 / 5 |
-| 200 | 13 / 11 | 4 / 4 | 17 / 15 |
-| 300 | 27 / 26 | 13 / 14 | 40 / 40 |
-| 400 | 72 / 48 | 59 / 42 | 131 / 90 |
-| Total | 119 / 90 | 77 / 60 | 196 / 150 |
-
-Level against input type (questions that include it), blueprint (150); the run set by input type is in section 3.4:
-
-| Level | Text only | Table | Screenshot |
-|---|---|---|---|
-| 100 | 5 | 0 | 0 |
-| 200 | 14 | 1 | 0 |
-| 300 | 33 | 7 | 0 |
-| 400 | 62 | 27 | 1 |
-| Total | 114 | 35 | 1 |
-
+### 3.6 Mix
+- No group can carry the score alone: every question weighs the same (section 7.4), so the mix of the set is what weighs each group. Coverage keeps it honest: every area, object, tool and misconception type is tested, and none dominates by accident.
 - Judged questions and tables sit mostly at Level 400: reading evidence and combining it is the expert's work, and open-ended troubleshooting is where a real administrator asks without options.
-- The 5 tasks (section 3.1) and the areas (section 3.5) are spread across every row.
-- A cell may move by 2 questions while writing. The run set exceeds the blueprint at Level 200 and 400 (2026-11-13: questions added to cover files no question tested, then rewritten to Level 400); the blueprint stays the minimum. `python3 project/tools/coverage.py` prints both.
+- The five tasks (section 3.1) and the areas (section 3.5) are spread across every level.
 
-### 3.7 Coverage constraints
-| Constraint | Minimum | Counted by |
-|---|---|---|
-| Each of the 12 misconception types | 5 questions each | `misconception_type` |
-| Same name, other object (one label on two objects) | 8 | `misconception_type: same-name-other-object` |
-| Objects: VM / ESXi / cluster / datastore / Guest OS / resource pool / network | 45 / 30 / 15 / 8 / 20 / 4 / 8 | `object` |
-| Tools: vCenter / VCF Operations / esxtop / Guest OS tools | 30 / 25 / 10 / 10 | `tool` |
-| Follow a troubleshooting flow (a `troubleshooting/` file) in order | 15 | `knowledge` |
-| Calculation (summation to %, units, capacity) | 8 | review |
-| The knowledge base and the vendor document disagree, with the evidence in the question | 3 | review |
-| Long, multi-area scenario | 2 | review |
+### 3.7 Coverage rules
+| Rule | Checked by |
+|---|---|
+| Every misconception type of `KNOWLEDGE-ENGINEERING.md` is tested, same name on another object most often | `misconception_type` |
+| Every object type (VM, ESXi, cluster, datastore, Guest OS, resource pool, network) is read | `object` |
+| Every tool (vCenter, VCF Operations, esxtop, Guest OS tools) is shown | `tool` |
+| Troubleshooting flows (a `troubleshooting/` file) are followed in order | `knowledge` |
+| Calculations (summation to %, units, capacity) | review |
+| The knowledge base and the vendor document disagree, with the evidence in the question | review |
+| Long, multi-area scenarios | review |
 
-- Every question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `product`, `object`, `tool`, `misconception_type`, `knowledge`), so coverage is counted by a script, not by eye.
+- `coverage.py` prints each count and marks a zero. The review rules are checked by the reviewer (section 11).
 
 ### 3.8 Answer-key shape (deterministic)
 - Options: 4-8 written options, plus Unsure appended to every question. No Not covered option since 2026-11-05 (Q038).
@@ -151,27 +132,18 @@ Level against input type (questions that include it), blueprint (150); the run s
 - A model that learns "usually one answer" or "usually all but one" gains nothing.
 
 ## 4. Sample size
-196 questions in the development set (the run set since 2026-11-13: 8 at Level 100, 17 at 200, 40 at 300, 131 at 400; 119 multiple choice, 77 judged), and 30 held-out questions drawn at release (section 7.5). The blueprint asked for at least 150; the table shows why.
-- At 196 the margin on the final score is about ±5.0 points at 85%, Level 400 (131 questions) about ±6.8 points at 80%, and one question is worth 0.51 points.
-
-| Questions | 95% margin at 85% | Level 400 questions (margin at 80%) | Paired test power, 15-point gap, reverse 5% | reverse 8% | reverse 10% | Author time |
-|---|---|---|---|---|---|---|
-| 100 | ±7.0 | 60 (±10) | 91% | 84% | 80% | 1x |
-| 150 (blueprint) | ±5.7 | 90 (±8) | 98% | 95% | 91% | 1.5x |
-| **200 (196 in the run set)** | **±4.9 (196: ±5.0)** | **120 (±7; 131 in the run set: ±6.8)** | **~100%** | **98%** | **97%** | **2x** |
-
-- Reverse: the share of questions the frontier model gets right and Agent E2 gets wrong. Power of a one-sided exact McNemar test at α 0.05, simulated.
-- Why not 100:
-  - The fairness rules (section 6.1) remove the questions on Agent E2's own framework and the vCommunity models: the frontier model could not know them, so they made the gap cheap. Every question now rests on public mechanisms, where the frontier model is stronger, and the local model will lose more questions the frontier model gets right. At a reverse share of 10%, 100 questions miss a real 15-point win 1 time in 5; 150 questions, 1 time in 11.
-  - The Level 400 gate (80%) is read on 60 questions at ±10 points: an 80% and a 90% system overlap. 90 questions give ±8.
-- Why the blueprint stopped at 150: the margin improves by less than 1 point per 50 questions, for one third more author time. Author time is the constraint: every key is checked by hand. The run set reached 196 anyway, through coverage questions on untested knowledge files (2026-11-13).
-- Why a held-out set on top, not more development questions: more questions read the gate more finely; they do not show that the knowledge base was not fitted to them. Only questions nobody tuned on show that (section 7.5).
-- 196 cannot prove 99%. Even a perfect score only shows at least 98.5% with 95% confidence. Proving 99% needs about 300 questions with no wrong answer (rule of three). 99% stays a direction.
-- One question is worth 0.51 points.
+- The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).
+- Rule of thumb for a score near 85%: about ±7 points at 100 questions, ±5 at 200, ±4 at 300. The margin shrinks with the square root of the count: four times the questions for half the margin.
+- The comparison with the frontier model is paired, question by question (a one-sided exact McNemar test, section 8). At about 200 questions it finds a real 15-point win almost every time, even when the frontier model wins 10% of the questions Agent E2 loses.
+- What size cannot buy:
+  - fitness to the field: more questions read the gate more finely; they do not show that real questions look like them. The field shows that (section 1; the live test);
+  - freedom from fitting: only questions nobody tuned on show that the knowledge base was not fitted to the set (the held-out set, section 7.5).
+- 99% cannot be proven at this size. Even a perfect score on 200 questions only shows at least 98.5% with 95% confidence; proving 99% needs about 300 questions with no wrong answer (rule of three). 99% stays a direction.
+- Author time is the constraint: every key is checked by hand.
 
 ## 5. Set design
 The set must measure one thing (Level 400 operations knowledge on public mechanisms) evenly, so the total has meaning.
-- Coverage: the blueprint (section 3) makes every area, object, layer and misconception type count. No area can carry the score alone.
+- Coverage: every area, object, layer and misconception type is tested (section 3.7). No area can carry the score alone.
 - Balance of difficulty: Level 100-200 questions anchor the scale. If they fail, the problem is the model's basics or retrieval, and Level 400 failures are not interpreted (section 3.2).
 - Paired questions: the same concept on two objects. A model that answers both right understands the vantage point; one that answers one right was lucky or pattern-matched.
 - Independence: no question gives away another's answer. No two questions test the same single fact.
@@ -229,8 +201,15 @@ The frontier model must be able to answer every question from public knowledge. 
 - Read on the previous generation (round of 2026-11-13): the local models chose Unsure in 1-6% of multiple-choice answers and were confident wrong in 10-22% of them with the knowledge base. A rule in the prompt does not make a 30B model abstain. The harness now abstains for it: consensus of samples (`consensus_samples`, [harness/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/README.md), section 6a). Analysis (archived): [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md).
 
 ### 7.2 Five runs
-- Hosted models do not answer the same way twice, even at the same temperature: sampling, batching on shared GPUs, provider routing, silent serving updates.
-- A question counts as known (Stable correct) only when all 5 runs are exactly right. Right in some runs only = Luck, counted as not known.
+- One run is one draw of the answer, not the answer. Agent E2 makes two model calls (stage 1 and stage 5 of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)):
+  - the case (stage 1) is asked at temperature 0, so the same question reads into the same case and gets the same reading set;
+  - the answer (stage 5) is sampled with the settings of the model's own card (temperature 1.0 for the three candidates, `sampling` in `config.yaml`), because a local server applies them by default and the operator meets that answer (author, 2026-11-13). Two runs of the same question can give different letters.
+- Base and the frontier reference also sample (the card's settings; the provider's default for Opus).
+- Temperature 0 would not make one run enough either: hosted models do not answer the same way twice even at temperature 0 (batching on shared GPUs, provider routing, silent serving updates).
+- So each question runs 5 times. The 5 runs give:
+  - the final score: the mean of the runs, the best estimate of the one answer an operator gets (section 7.4);
+  - the consensus projection: the shipped profile asks 3 samples and keeps only unanimous letters (`consensus_samples: 3`); the report computes it exactly from all draws of 3 of the 5 runs (section 7.5);
+  - consistency: Stable correct (right in all 5) and Luck (right in some only).
 - Chance of passing all runs, by per-run probability of being right:
 
 | Runs | Pure guess (50%) | 80% | 90% | 95% | 99% |
@@ -239,7 +218,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | **5** | **3.1%** | **33%** | **59%** | **77%** | **95%** |
 | 10 | 0.1% | 11% | 35% | 60% | 90% |
 
-- 3 runs let a coin-flip question pass 1 time in 8. 5 runs cut that to 1 in 32, and still reward a model that is right 99% of the time (95% pass). 10 runs double the cost for little gain.
+- 3 runs let a coin-flip question pass 1 time in 8, and give only one draw of 3 for the consensus projection. 5 runs cut the coin flip to 1 in 32 and give 10 draws of 3. 10 runs double the cost for little gain.
 
 ### 7.3 Secondary measures
 | Measure | Why |
@@ -247,23 +226,23 @@ The frontier model must be able to answer every question from public knowledge. 
 | Luck | How much of a model's score is unstable. |
 | Confident-wrong rate | Answers that would mislead an operator. |
 | Unsure rate, accuracy when answered | A cautious model with gaps vs a reckless one. |
-| Misconception rate, per `misconception_type` | How often the misconception option is picked. The core Level 400 signal. |
-| Not-covered accuracy | Guessing outside the knowledge base. |
-| Retrieval recall | Whether the right files were found; separates retrieval from reasoning. |
+| Misconception rate | How often the misconception option is picked, or a judged answer states it. The core Level 400 signal. |
+| Override rate | Agent E2 answers that state the misconception although every needed file was read ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1). |
+| Retrieval recall | Agent E2 only: whether the needed files reached the model; separates retrieval from reasoning. |
 | Stages used, verifier flags | Which stages of Agent E2 acted (compute, gap follow-up, repair, consensus), and the web reference's tool calls. |
-| Per area, per level, per input | Diagnosis only (small counts). |
+| Per area, per task, per level, per input | Diagnosis only (small counts). |
 
 ### 7.4 Final score
-- One number, 0-100%, for each model and mode. Sub-scores support it: by answer type, by input type, by level.
+- One number, 0-100%, for each model and mode (Base, Agent E2, web). Sub-scores support it: by answer type, by input type, by level.
 - Question credit, 0 to 1, the mean of the 5 runs (author, 2026-11-13):
   - deterministic: the share of runs with exactly the right letters;
   - judged: the mean judge score over the runs, divided by 3.
 - Worst run: the same score with each question on its lowest run. Reported next to the final score as consistency; not a gate.
 - Final score = sum of question credits / number of questions. Every question weighs the same, whatever its level, answer type or input type.
-- Sub-score = the same mean within one group. A question counts for every input type it includes. The allocation (section 3.6) sets how much each group weighs in the final score.
+- Sub-score = the same mean within one group. A question counts for every input type it includes. The mix of the set (section 3.6) sets how much each group weighs in the final score.
 - Reasons:
   - mean, not worst run: an operator asks once and gets one answer; the mean of the runs is the best estimate of that answer's quality. The worst run measures something else (does it never fail?) and stays in the report as consistency. Until 2026-11-13 the worst run counted;
-  - one weight per question: no group can carry the score by a formula choice; the blueprint decides the mix;
+  - one weight per question: no group can carry the score by a formula choice; coverage keeps the mix honest (section 3.7);
   - judge score / 3: a partly right judged answer earns part credit, as a human examiner would give. A deterministic answer has no part credit, because a partly right set of letters is a wrong answer an operator would act on.
 - Confident-wrong rate covers both: wrong letters that are not Unsure, and judged answers scored 0 that do not say the information does not settle it.
 - Margin: 95% interval on the final score from the number of questions (section 4).
@@ -275,46 +254,37 @@ The frontier model must be able to answer every question from public knowledge. 
 
 | Gate | Limit | Why |
 |---|---|---|
-| Final score, run set (196) | at least 85% | Margin about ±5 (section 4); below 85 an operator stops trusting the answers |
-| Level 400 sub-score | at least 80% | 131 questions (margin about ±7): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
+| Final score, run set | at least 85% | Margin about ±5 at 200 questions (section 4); below 85 an operator stops trusting the answers |
+| Level 400 sub-score | at least 80% | The one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
 | Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
 | Up-front misconceptions (the `## Misconceptions` lines marked `up_front`) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
-| Held-out set (30) | at most 11 points below the development set | One-sided 95% for 196 against 30 questions at about 87%: a larger drop means the knowledge base or retrieval is fitted to the visible questions |
+| Held-out set (30) | at most 11 points below the run set | One-sided 95% for about 200 against 30 questions at about 87%: a larger drop means the knowledge base or retrieval is fitted to the visible questions |
 
 - Consensus: the deployed profile sets `consensus_samples: 3`; the benchmark runs one sample and reads the projection next to the gate in each `report.md` (section Consensus of 3, projected), the exact mean over all draws of 3 of the 5 runs. Same result at a third of the cost.
 - The gap to the frontier model is not a gate. It is an outcome, reported next to the gate with its paired test (section 8). The benchmark is not designed to beat anyone: it is fair (section 6.1) and its questions are hard; a deeper knowledge base shows as a higher score.
-- Why 85%, not 90%: at 196 questions 85 and 90 still overlap inside the margin (±5); the confident-wrong limit does more for the operator than 5 more points.
-- Reading the gap: within the margin (about ±5 points at 196 questions) it is a tie; the paired test says whether a larger gap is more than luck.
+- Why 85%, not 90%: at about 200 questions 85 and 90 still overlap inside the margin (±5); the confident-wrong limit does more for the operator than 5 more points.
+- Reading the gap: within the margin (printed in the report) it is a tie; the paired test says whether a larger gap is more than luck.
 - Held-out set:
-  - 30 questions drawn at release from the same blueprint, in proportion (about 1 at Level 100, 3 at 200, 8 at 300, 18 at 400; 12 judged, 6 with a table).
+  - 30 questions drawn at release in the proportions of the run set at that time (level, answer type, input; `coverage.py`), from real questions where the author has them (Q207).
   - Written by a session that does not edit the knowledge base, reviewed by the author, never committed to the repository. Run once, on the release configuration.
   - Why drawn at release, not now: a question that exists while the knowledge base is still edited can leak into it. A fresh draw cannot.
   - Why the 11-point limit replaces "within 5 points": on 20-30 questions the noise alone is about ±13 points, so a 5-point rule fails or passes by luck.
-- Expected frontier score (expert estimate, 2026-11-12; replaced by the first M4 benchmark): about 70%.
-
-| Level | Run set (196) | Frontier expected | Why |
-|---|---|---|---|
-| 100 | 8 | about 95% | Public counter names |
-| 200 | 17 | about 90% | Public definitions; exact multi-select costs a few |
-| 300 | 40 | about 80% | Public practice, but some published thresholds are the ones the knowledge base corrects |
-| 400 | 131 | about 60% | Knows each mechanism alone; misses the vantage point and the combination of readings, and picks the Level 300 rule of thumb. Web search returns the same Level 300 pages |
-
-- The author-framework row of the earlier estimate (about 25%) is gone with the fairness rules: the gap must be won on public mechanisms.
-- Target: 99%, a direction. 196 questions cannot prove it (section 4).
+- Expected frontier score: about 80%. Measured on 2026-11-13 (Claude Opus 5.5 with web search, previous state of the question set, archived): final 81%, Level 400 79%, confident-wrong 12%. It fails the gate too. The expert estimate of 2026-11-12 (about 70%) was too low: the frontier model knows each public mechanism, and loses mostly on the vantage point, the combination of readings and the Level 300 rule of thumb.
+- Target: 99%, a direction. The set cannot prove it (section 4).
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), functions `gate` and `mcnemar`, report table `Release gate`: final score, Level 400 and confident-wrong as the gate; the gap and the paired test as outcomes. The misconception check and the held-out set are read outside the report.
 
 ## 8. Comparison design
 - Agent E2 has one pipeline (author, 2026-11-14): the benchmark runs it as shipped, not modes of it. The benchmark is a proof, not a goal ([CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md), Evaluation). Why classic and agentic mode were removed: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 2.
-- The release score uses the deployment profile of the harness: same prompt, tools, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 5.
+- The release score uses the deployment profile of the harness: same prompt, reading plan, context window and budgets as the product. Time is replaced by a turn limit derived from the target GPU. Other settings run only as named experiments. See [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 5.
 - Two runs per candidate (author, 2026-11-14): Base, the model alone (`baseline`), and Agent E2 as shipped (`agent-e2`) ([benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md)). Scores of earlier generations (classic and agentic modes) are archived and not compared.
-- Reference: the frontier model as an administrator uses it: Claude Opus 5.5 in `web` mode (the baseline prompt plus web search and page fetch; no instruction to search, so the model decides as it does in a chat product; at most 5 calls), effort medium, no knowledge base (Q164). Its prompt-only mode does not run: a user cannot switch search off, so it measures nothing a user meets (author, 2026-11-13). The report gives the gap to it and a one-sided exact McNemar test at α 0.05: an outcome, not a gate (section 7.5).
+- Reference: the frontier model as an administrator uses it: Claude Opus 5.5 with web search available (mode `web`), effort medium, no knowledge base (Q164). The model gets the baseline prompt and two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search: it decides whether to search, and can answer with no search at all, as in a chat product with search on. At most 5 tool calls. The mode name says what is available, not what is forced. No run with the tools removed: a user cannot switch search off in a chat product by typing, so that run measures nothing a user meets (author, 2026-11-13). The report records the tool calls per answer (`tools_used`), so how often Opus chose to search is read from the results. The report gives the gap to it and a one-sided exact McNemar test at α 0.05: an outcome, not a gate (section 7.5).
 - Paired comparison: models are compared question by question on the same set, not only by totals.
 - Between candidate models, a gap smaller than the margin is a tie; the smaller model wins a tie. Against the frontier model, a gap within the margin is a tie.
-- Run matrix of the final round: 3 candidates x 3 modes plus the frontier reference x 1 mode (web), 196 questions, 5 runs = 9,800 answers, about US$ 73 and 1.5-3 hours, from the preflight sample ([benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md)). Prices, rate limits and a model's thinking change both numbers: run the preflight before each round.
+- Run matrix of a round: 3 candidates x 2 modes (Base, Agent E2) plus the frontier reference x 1 mode (`web`), every question of the run set, 5 runs. Time and cost: [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md), projected by the preflight sample. Prices, rate limits and a model's thinking change both numbers: run the preflight before each round.
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in Agent E2's reading set (the code-only case). Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
-- Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid recall 80%, 117 of 196 complete (60%), main file missing on 19. Output: [benchmark/results/retrieval-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-14/hybrid.md). Re-baselined when the question bank changes (Q206).
+- Levels and current numbers: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) and [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3. Re-baselined when the question set changes (Q206).
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats
@@ -329,7 +299,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Position, length and count bias | Shuffled options; similar option length; varied number of correct options. |
 | Guessing | Unsure option, the prompt rule that a wrong answer is worse than Unsure, confident-wrong rate, 5-run stability. |
 | Leakage into the model | Questions are never indexed, never used for fine-tuning, and `## Expected key points` is never sent to the model. |
-| Frontier model knows public material | Baseline tests exactly that. The knowledge base must add what public material lacks. |
+| Frontier model knows public material | Base and the web reference test exactly that. The knowledge base must add what public material lacks. |
 | Version drift | Every benchmark records the index version (git commit), model, provider and settings. Scores are compared only within one scoring scheme. |
 
 ## 11. Review checklist
@@ -344,19 +314,17 @@ For each question:
 8. Does a CSV hold every value the key relies on, and nothing that contradicts it?
 
 For the set:
-9. Do the counts match the blueprint in section 3 (coverage script)?
-10. Is every misconception type covered at least 5 times?
+9. Does `coverage.py` show a tag value with no question (section 3.7)?
+10. Does a field question the set has nothing like call for a new question?
 
 ## 12. Status
-- 2026-11-13: 196 questions run (Level 100 8, 200 17, 300 40, 400 131; 119 multiple choice, 77 judged; 6 with a screenshot, 35 with a table); none deferred. The two lines below are the state of 2026-11-12.
-- 2026-11-12: 150 questions run, at the allocation of section 3 (`python3 project/tools/coverage.py`; tasks within 2 of target: decide-capacity 31, explain-mechanism 24). Plus 5 deferred screenshot questions; 12 retired to [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
-- Origin: 35 by the author (17 quiz, 10 book, 8 from the author's samples of 2026-11-12), 2 real exchanges, 113 synthetic. 35 carry a CSV; 1 a screenshot.
+- The run set is every question with status draft or reviewed. Its counts: `python3 project/tools/coverage.py`. Retired questions: [project/archive/benchmark-questions](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions).
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
 - Status draft: each question counts after the author's review (section 6.2).
 
 ## 13. Screenshot questions (after 1.0)
 - Purpose: administrators upload screenshots and ask the agent to explain the problem, often several at once, from different tools.
-- 1.0 has six (the author's L4-03 and the five reactivated on 2026-11-13, no longer deferred). The screenshot set after 1.0 grows to about 25 (5 per source: esxtop, vCenter, VCF Operations).
+- 1.0 has the author's L4-03 and the five reactivated on 2026-11-13. After 1.0 the screenshot set grows, a few per source (esxtop, vCenter, VCF Operations).
 - Reading screenshots stays a basic requirement: a model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)).
 - A screenshot question carries all its images in `attachments`; every image is sent with the same prompt. The prompt states the problem in words; the images supply the values. Images are masked (host and customer names) before commit.
 
@@ -369,7 +337,7 @@ For the set:
 
 ## 14. Judged questions and the judge
 - Questions with `answer_type: judged` are answered without options and scored 0-3 by a judge model. Code: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py).
-- The candidate gets the same harness, modes and tools as for deterministic questions, with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `PROMPTS['open']`.
+- The candidate runs in the same modes as for deterministic questions (Base, Agent E2, web), with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `PROMPTS['open']`.
 - The judge gets: the prompt with its tables, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The candidate never sees the key.
 - `## Expected key points` is the answer key for the judge, not a script for the candidate:
   - each bullet is one fact a correct answer must state, in any words, in any order;
@@ -400,18 +368,18 @@ For the set:
 
 ## 15. Target history
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.
-- Target: 99% final score on the question set (chosen mode). See section 7.4.
+- Target: 99% final score on Agent E2. See section 7.4.
 - Minimum: the release gate, section 7.5 (Q130, 2026-11-12; set size and held-out rule revised 2026-11-12, question set 1.0).
-- The other candidates stay until the question set is complete; no model is dropped on a small set.
-- What 99% requires: at 196 questions, 99% allows 1 wrong question and proves only about 97.6%; proving 99% needs about 300 questions (section 4). Answer keys must be correct: every wrong answer from the best model gets an author check.
+- No candidate is dropped on a partial run or a small sample.
+- What 99% requires: at about 200 questions, 99% allows 2 wrong questions; proving 99% needs about 300 questions with none wrong (section 4). Answer keys must be correct: every wrong answer from the best model gets an author check.
 - Status: no round on Agent E2 yet (built 2026-11-14). The previous generation and the frontier reference both failed the gate (archived: [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)).
 
 ## 16. Decision rules
 - Mode: one pipeline, Agent E2, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)), carries the release gate (author, 2026-11-14; replaces Q130, agentic as the shipped mode). No fallback mode: the model makes no tool calls.
-- Pick the model: highest final score in the chosen mode; then lowest confident-wrong rate; ties go to the smaller model.
+- Pick the model: highest final score on Agent E2; then lowest confident-wrong rate; ties go to the smaller model.
 - A model that breaks the answer format on more than 10% of answers is dropped. (An unreadable case does not count: the code-only case takes its place.)
-- Knowledge base lift: kb modes must beat baseline in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
-- 70B challenger: only if the best 30B-band result loses points through reasoning errors (trace shows the right files were read).
+- Knowledge base lift: Agent E2 must beat Base in every area. An area with no lift is a knowledge or retrieval problem, not a model problem.
+- 70B challenger: only if the best 30B-band result loses points through reasoning errors (the trace shows the right files were read).
 - A challenger that needs more hardware (dense about 70B, or a 96 GB GPU) is kept only if it beats the best current candidate by more than the margin and its override rate is not higher. Reason: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1.
 
 ## 17. Outputs

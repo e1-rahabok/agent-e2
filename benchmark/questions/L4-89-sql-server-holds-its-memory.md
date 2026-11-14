@@ -44,7 +44,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [consumption-as-contention, layer-confusion]
 status: reviewed
 ```

@@ -40,7 +40,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/troubleshooting/vm-other-wait-high
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [consumption-as-contention, same-name-other-object]
 status: draft
 ```

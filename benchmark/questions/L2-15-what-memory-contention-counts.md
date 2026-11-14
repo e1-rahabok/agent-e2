@@ -43,7 +43,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A]
 misconception: [C, D]
 misconception_type: [unit-and-normalization]

@@ -287,12 +287,11 @@ class ModesTest(unittest.TestCase):
         return Scripted
 
     def test_stages_in_the_trace(self):
-        res, used, trace, fb = modes.answer('agent-e2', MockClient(), 'mock', VerifyTest.Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', MockClient(), 'mock', VerifyTest.Q, [], self.CFG, Retriever(DOCS, CHUNKS))
         actions = [s['action'] for s in trace]
         for a in ('understand', 'plan', 'coverage', 'answer'):
             self.assertIn(a, actions)
         self.assertTrue(used)
-        self.assertFalse(fb)
 
     def test_unknown_mode_is_refused(self):
         with self.assertRaises(ValueError):
@@ -300,7 +299,7 @@ class ModesTest(unittest.TestCase):
 
     def test_compute_converts_a_summation_counter(self):
         cli = self._scripted(['ANSWER: A\nREASON: x'])
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], self.CFG, Retriever(DOCS, CHUNKS))
         comp = next(s['output'] for s in trace if s['action'] == 'compute')
         self.assertIn('40% of one vCPU', comp[0])
         self.assertIn('10% per vCPU of 4 vCPUs', comp[0])
@@ -308,21 +307,21 @@ class ModesTest(unittest.TestCase):
 
     def test_unreadable_case_leaves_the_code_only_reading(self):
         cli = self._scripted(['ANSWER: A\nREASON: x'], case='not json')
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], self.CFG, Retriever(DOCS, CHUNKS))
         self.assertIn('unreadable', next(s['output'] for s in trace if s['action'] == 'understand'))
         self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/ready', used)
 
     def test_case_metric_names_a_file_the_text_does_not(self):
         case = json.dumps({'kind': 'metric-meaning', 'metrics': [{'name': 'Co-stop', 'object': 'VM'}], 'objects': ['VM']})
         cli = self._scripted(['ANSWER: A\nREASON: x'], case=case)
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', 'Is this VM waiting for its siblings?\n\nA. yes\nB. no',
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', 'Is this VM waiting for its siblings?\n\nA. yes\nB. no',
                                             [], self.CFG, Retriever(DOCS, CHUNKS))
         self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/co-stop', used)
 
     def test_gap_follow_up_adds_the_file_the_draft_names(self):
         cli = self._scripted(['ANSWER: A\nREASON: The VM CPU Overlap shows the interrupt time.', 'ANSWER: A\nREASON: checked'])
         cfg = dict(self.CFG, context_tokens=1200)
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], cfg, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], cfg, Retriever(DOCS, CHUNKS))
         gap = next(s for s in trace if s['action'] == 'gap')
         self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/overlap', gap['input'])
         self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/overlap', used)
@@ -331,7 +330,7 @@ class ModesTest(unittest.TestCase):
     def test_consensus_keeps_unanimous_letters_on_one_reading_set(self):
         cli = self._scripted(['ANSWER: A, B\nREASON: x', 'ANSWER: B, A\nREASON: y', 'ANSWER: A,B\nREASON: z'])
         cfg = dict(self.CFG, consensus_samples=3, gap_followup=False)
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertEqual(verify.answer_letters(res['content']), ['A', 'B'])
         self.assertEqual(cli.calls, 3)
         self.assertEqual([s['action'] for s in trace].count('understand'), 1)   # read once, shared by the samples
@@ -341,7 +340,7 @@ class ModesTest(unittest.TestCase):
     def test_consensus_disagreement_is_unsure_and_stops_early(self):
         cli = self._scripted(['ANSWER: A, B\nREASON: x', 'ANSWER: A\nREASON: y', 'ANSWER: A\nREASON: z'])
         cfg = dict(self.CFG, consensus_samples=3, gap_followup=False)
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertEqual(verify.answer_letters(res['content']), ['D'])   # D is the Unsure option of VerifyTest.Q
         self.assertEqual(cli.calls, 2)                                   # the third sample cannot change the outcome
         self.assertIn('disagreed', res['content'])
@@ -363,7 +362,7 @@ class ModesTest(unittest.TestCase):
 
     def test_repair_turn_on_hedge(self):
         cli = self._scripted(['ANSWER: A, D\nREASON: x', 'ANSWER: D\nREASON: x'])
-        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], dict(self.CFG, gap_followup=False), Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], dict(self.CFG, gap_followup=False), Retriever(DOCS, CHUNKS))
         self.assertEqual(res['content'], 'ANSWER: D\nREASON: x')
         self.assertIn('repair', [s['action'] for s in trace])
 
@@ -377,7 +376,7 @@ class ModesTest(unittest.TestCase):
                 Recorder.systems.append(messages[0]['content'])
                 return {'content': 'Ready includes limit time, so check Max Limited.', 'tool_calls': [],
                         'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
-        res, used, trace, fb = modes.answer('agent-e2', Recorder(), 'mock', 'Why is Ready high?', [], self.CFG, Retriever(DOCS, CHUNKS), 'open')
+        res, used, trace = modes.answer('agent-e2', Recorder(), 'mock', 'Why is Ready high?', [], self.CFG, Retriever(DOCS, CHUNKS), 'open')
         self.assertNotIn('repair', [s['action'] for s in trace])
         self.assertNotIn('ANSWER:', Recorder.systems[0])
         self.assertIn('Not settled by the knowledge base', Recorder.systems[0])
@@ -452,7 +451,7 @@ class WindowTest(unittest.TestCase):
 
     def test_prompt_above_the_window_is_flagged(self):
         cfg = dict(ModesTest.CFG, context_window=2000, max_tokens=100)
-        res, used, trace, fb = modes.answer('agent-e2', MockClient(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        res, used, trace = modes.answer('agent-e2', MockClient(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertIn('context_over', [s['action'] for s in trace])
 
 
@@ -705,7 +704,7 @@ class WebOnlyModeTest(unittest.TestCase):
         real = web.search
         web.search = lambda q, c: seen.update(query=q, cfg=c) or [{'url': 'https://example.org/a', 'title': 't', 'snippet': 's'}]
         try:
-            res, used = modes.web_only(client, 'm', 'Q?', [], cfg or self.CFG, trace, 'choice')
+            res, used = modes.web_search_on(client, 'm', 'Q?', [], cfg or self.CFG, trace, 'choice')
         finally:
             web.search = real
         return client, trace, res, used, seen
@@ -745,13 +744,13 @@ class WebOnlyModeTest(unittest.TestCase):
         self.assertEqual([s['action'] for s in trace], ['web_search', 'web_search', 'answer'])
 
     def test_dispatch_through_modes_answer(self):
-        real = modes.web_only
-        modes.web_only = lambda *a, **k: ({'content': 'ANSWER: A'}, [])
+        real = modes.web_search_on
+        modes.web_search_on = lambda *a, **k: ({'content': 'ANSWER: A'}, [])
         try:
-            res, used, trace, fb = modes.answer('web', None, 'm', 'Q?', [], {}, None)
+            res, used, trace = modes.answer('web', None, 'm', 'Q?', [], {}, None)
         finally:
-            modes.web_only = real
-        self.assertEqual((res['content'], used, fb), ('ANSWER: A', [], False))
+            modes.web_search_on = real
+        self.assertEqual((res['content'], used), ('ANSWER: A', []))
 
 
 def _embed_worker(cache_dir, n):

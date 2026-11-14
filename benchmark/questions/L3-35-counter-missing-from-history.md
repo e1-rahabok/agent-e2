@@ -25,7 +25,7 @@ B: expecting a higher level to fill in the past. Or D: level 4 everywhere, perma
 - E: at level 1 Ready is kept for the VM as a whole, summed over its vCPUs; the per-vCPU split is gone, so one vCPU waiting a lot and eight waiting a little give the same value.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2).
+- Drafted 2026-11-12.
 - VM-level CPU Ready is the sum over the vCPUs, not the average: Broadcom KB 387750 (https://knowledge.broadcom.com/external/article/387750).
 - Real-time vs historical charts: Broadcom KB 344684, vCenter Server advanced performance charts only display real time counters or some chart metrics are missing entirely (https://knowledge.broadcom.com/external/article/344684).
 
@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, E]
 misconception: [B, D]
 misconception_type: [rollup-and-interval, tool-confusion]

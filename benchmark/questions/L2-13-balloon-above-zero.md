@@ -17,7 +17,7 @@ Is the VM slow because of memory? What does the balloon tell you, and what do yo
 - Adding memory to the VM does not stop the balloon: it follows host pressure or a VM or resource pool limit, not VM size.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): situation and the owner's claim added; key points aligned with the knowledge files.
+- Revised 2026-11-12: situation and the owner's claim added; key points aligned with the knowledge files.
 
 ## Metadata
 ```yaml
@@ -38,7 +38,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/ballooned
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [reclamation-as-contention]
 status: draft
 ```

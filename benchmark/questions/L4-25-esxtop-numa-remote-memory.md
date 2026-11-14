@@ -41,7 +41,7 @@ What do the NUMA columns show for `db-ora-07`, why, and what do you recommend?
 ## Notes
 - NMIG left out (author, Q191 e: its meaning is unsure; not in the benchmark before 1.0).
 - The split: `maxPerMachineNode` limits the vCPUs per NUMA node, so ESXi places the VM as two NUMA clients with local memory each, and vNUMA shows two nodes ([`vsphere/technology/cpu/configuration/numa-settings`](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md)). Sizing a VM larger than one node to split evenly across as few nodes as possible: Performance Best Practices for vSphere 9.1, vNUMA.
-- Revised 2026-11-12 (question set 1.0): the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text. The cause changed from vCPU count (tested by L4-22, wide VM placement) to memory size larger than a node.
+- Revised 2026-11-12: the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text. The cause changed from vCPU count (tested by L4-22, wide VM placement) to memory size larger than a node.
 
 ## Metadata
 ```yaml
@@ -63,7 +63,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/memory
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [cumulative-vs-current]
 status: draft
 ```

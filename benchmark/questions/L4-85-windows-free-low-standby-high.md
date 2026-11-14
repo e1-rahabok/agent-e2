@@ -54,7 +54,7 @@ knowledge_main: guest-os/memory/windows-memory
 attachments:
   - 0264/perfmon-fs-03-memory-24h.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, C, D]
 misconception: [E, F]
 misconception_type: [consumption-as-contention, layer-confusion]

@@ -44,7 +44,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2); replaces the CPU Hot Add slot (vNUMA behaviour with Hot Add differs by release and hardware version)"
+source_path: "Drafted by Claude 2026-11-12; replaces a CPU Hot Add question (vNUMA behaviour with Hot Add differs by release and hardware version)"
 answer: [A, C, F]
 misconception: [B, D]
 misconception_type: [unit-and-normalization]

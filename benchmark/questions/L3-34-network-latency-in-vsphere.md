@@ -19,7 +19,7 @@ Can you? Where can network latency be measured, and which vSphere conditions can
 - Next: compare Ready and Co-stop of web-03, db-05 and any VM in the path for 14:00-14:30.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - TCP retransmits seen inside the guest belong to a Guest OS question of the set; this one tests what vSphere measures and what it can add.
 
 ## Metadata
@@ -42,7 +42,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/metrics/vm-network-metrics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [tool-confusion]
 status: draft
 ```

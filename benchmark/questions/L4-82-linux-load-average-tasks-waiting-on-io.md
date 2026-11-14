@@ -55,7 +55,7 @@ knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments:
   - 0260/vmstat-10s-db-replica-02.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [B, C, D]
 misconception: [A, E]
 misconception_type: [same-name-other-object, consumption-as-contention]

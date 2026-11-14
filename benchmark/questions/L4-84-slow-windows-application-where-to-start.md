@@ -44,7 +44,7 @@ knowledge:
 knowledge_main: guest-os/system/troubleshooting/ms-windows-slow
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [rollup-and-interval, layer-confusion]
 status: reviewed
 ```

@@ -41,7 +41,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [D]
 misconception: [A]
 misconception_type: []

@@ -29,7 +29,7 @@ C: reading bandwidth utilization as network load. A low share of the link says n
 - Next: check the VM's receive drops and its vCPU usage, and the guest's receive processing, before asking for more bandwidth.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -51,7 +51,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B]
 misconception: [C]
 misconception_type: [unit-and-normalization]

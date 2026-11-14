@@ -16,7 +16,7 @@ Why should I not collect every metrics? What if an incident happen and I'm not a
 
 ## Notes
 - The author's own prompt to Gemini 3.1 Pro (high effort), 2026-11-10, kept in the author's words. Author: Gemini's answer is fairly good but stays at the architecture view; an operations expert works back from what can fail. Both are needed.
-- Revised 2026-11-12 (question set 1.0): key points written in public words (benchmark/design.md, section 6.1).
+- Revised 2026-11-12: key points written in public words (benchmark/design.md, section 6.1).
 
 ## Metadata
 ```yaml

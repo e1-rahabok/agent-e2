@@ -40,7 +40,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/datastore-space-headroom
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [cumulative-vs-current]
 status: reviewed
 ```

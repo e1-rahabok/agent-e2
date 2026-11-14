@@ -243,10 +243,9 @@ def aggregate(rows):
             'stable_unsure': _mean(stable_unsure),
             'confident_wrong': _mean(int(not int(r['exact']) and not int(r.get('unsure') or 0)) for r in rs),
             'unsure': _mean(r.get('unsure') for r in rs), 'answered_accuracy': _mean(r['exact'] for r in answered),
-            'misconception': _mean(int(_mc(r) or 0) for r in rs), 'not_covered': _mean(r['not_covered'] for r in rs),
+            'misconception': _mean(int(_mc(r) or 0) for r in rs),
             'parse_fail': 1 - _mean(r['parse_ok'] for r in rs),
-            'recall': _mean(r['retrieval_recall'] for r in rs), 'seen': _mean(r.get('search_recall') for r in rs),
-            'fallback': _mean(r['fallback'] for r in rs), 'steps': _mean(r['steps'] for r in rs),
+            'recall': _mean(r['retrieval_recall'] for r in rs), 'steps': _mean(r['steps'] for r in rs),
             'tokens': _mean(int(r['prompt_tokens'] or 0) + int(r['completion_tokens'] or 0) for r in rs),
             'latency': _mean(r['latency'] for r in rs), 'cost': sum(float(r['cost_usd'] or 0) for r in rs),
         }
@@ -296,7 +295,7 @@ def write(run_dir):
           '- Question credit = the mean of its runs. Deterministic: share of runs with the exact letters. Judged: mean judge score / 3. Worst run: the same score with each question on its lowest run (consistency; not a gate).',
           '- Sub-scores: the same mean within one group. By answer type, by input type (a question counts for every input it includes), by level.',
           '- Luck: share of questions whose credit differs between runs. Confident wrong: share of answers that are wrong and not Unsure (judged: score 0, not unsure).',
-          '- Override: share of answers in knowledge base modes that state the misconception although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
+          '- Override: share of Agent E2 answers that state the misconception although every needed file was in the context: the model kept its own belief over the knowledge base. Target: 0. See `benchmark/models.md`, section 1.',
           '- Method: `benchmark/design.md`, sections 3 and 7.4.', '']
     conv = [r for r in all_scored if not _choice(r)]
     if conv:
@@ -315,21 +314,21 @@ def write(run_dir):
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['stable'])):
         L.append(f'| {m} | {mode} | {tr} | {_pct(s["stable"])} | {_pct(s["stable_margin"])} | {_pct(s["luck"])} | '
                  f'{_pct(s["stable_unsure"])} | {_pct(s["confident_wrong"])} | {_pct(s["unsure"])} | {_pct(s["answered_accuracy"])} |')
-    L += ['', '- Stable correct: share of questions answered correctly in every run. The headline score: a known answer, not a guess.',
+    L += ['', '- Stable correct: share of questions answered correctly in every run: a known answer, not a guess. Consistency, not the final score (the final score is the mean of the runs).',
           '- Luck: share of questions correct in some runs but not all. Counted as not known.',
           '- Stable unsure: share of questions where the model chose Unsure in every run.',
           '- Confident wrong: share of answers that are wrong and not Unsure (wrong letters, partly right, Unsure mixed with other letters, unparseable). The answers that mislead an operator. Target: near 0.',
           '- Accuracy when answered: exact share among answers that were not Unsure.', '',
          '## Deterministic answers: scores', '',
-         '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Misconception | Parse fail | Recall | Seen | Fallback | Steps | Tokens | Latency s | Cost US$ |',
-         '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
+         '| Model | Mode | Track | Exact | Partial | Majority | ± margin | Consistency | Misconception | Parse fail | Recall | Steps | Tokens | Latency s | Cost US$ |',
+         '|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|']
     for (m, mode, tr), s in sorted(agg.items(), key=lambda x: (x[0][2], -x[1]['majority'])):
         L.append(f'| {m} | {mode} | {tr} | {_pct(s["exact"])} | {_pct(s["partial"])} | {_pct(s["majority"])} | {_pct(s["margin"])} | '
-                 f'{_pct(s["consistency"])} | {_pct(s["misconception"])} | {_pct(s["parse_fail"])} | {_pct(s["recall"])} | {_pct(s["seen"])} | {_pct(s["fallback"])} | '
+                 f'{_pct(s["consistency"])} | {_pct(s["misconception"])} | {_pct(s["parse_fail"])} | {_pct(s["recall"])} | '
                  f'{"-" if math.isnan(s["steps"]) else round(s["steps"], 1)} | {int(s["tokens"]) if not math.isnan(s["tokens"]) else "-"} | '
                  f'{"-" if math.isnan(s["latency"]) else round(s["latency"], 1)} | {s["cost"]:.3f} |')
     L += ['', '- Exact and Partial: mean over all runs. Majority: most common answer per question. Margin: 95% interval on Majority from the number of questions.',
-          '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids whose text reached the model (Agent E2: the reading set and any gap follow-up). Seen: the same for Agent E2, which shows the model every file it plans.', '']
+          '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids whose text reached the model (Agent E2 only: the reading set and any gap follow-up). Steps: model calls per answer.', '']
 
     # per technology and task (a question counts for every technology it lists), deterministic answers
     for dim in ('technology', 'task'):
@@ -351,7 +350,7 @@ def write(run_dir):
         if r['mode'] != 'baseline':
             per_question[r['question_id']].append(_credit(r))
     worst = sorted(per_question.items(), key=lambda x: _mean(x[1]))[:10]
-    L += ['## Hardest questions (knowledge base modes)', '', '| Question | Mean credit | Common wrong answers or missed points |', '|---|---|---|']
+    L += ['## Hardest questions (Agent E2, or web for the frontier reference)', '', '| Question | Mean credit | Common wrong answers or missed points |', '|---|---|---|']
     for cid, xs in worst:
         wrong = Counter((r['answer_letters'] or '(unparsed)') if _choice(r) else (r.get('judge_missed') or f'score {r.get("judge_score")}')
                         for r in all_scored if r['question_id'] == cid and r['mode'] != 'baseline' and _credit(r) < 1)

@@ -20,7 +20,7 @@ Is the network clean? If not, which host and port, what is the likely cause, and
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): the management pack metric and the screenshot removed (fairness); the 256-row workbook became a 64-row CSV. The CSV is synthetic, generated with a fixed seed: one port with errors, one host with older firmware and no errors.
+- Revised 2026-11-12: the management pack metric and the screenshot removed (fairness); the 256-row workbook became a 64-row CSV. The CSV is synthetic, generated with a fixed seed: one port with errors, one host with older firmware and no errors.
 
 ## Metadata
 ```yaml
@@ -42,7 +42,7 @@ knowledge_main: vsphere/technology/network/metrics/host/errors
 attachments:
   - 0088/cluster-c1-vmnic-counters-one-day.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [average-hides-worst]
 status: draft
 ```

@@ -98,9 +98,6 @@ def reading(fin, rows, info, ref):
         if d is not None:
             line += f' Agent E2 is {_pts(d)} points over the model alone ({"outside" if abs(d) > mg else "inside"} the margin of {100 * mg:.0f} points).'
         out.append(line)
-    if (ref[0], 'baseline') in fin and (ref[0], 'web') in fin:
-        d, mg = _lift(fin, ref[0], 'baseline', 'web')
-        out.append(f'{ref[0]}: open web search adds {_pts(d)} points over the prompt alone ({"outside" if abs(d) > mg else "inside"} the margin of {100 * mg:.0f} points).')
     if ref in fin:
         best = max(locals_, key=lambda m: fin.get((m, E2), {}).get('final', -1), default=None)
         if best and (best, E2) in fin:

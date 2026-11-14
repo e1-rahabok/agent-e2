@@ -31,7 +31,7 @@ Will adding a host fix it? Explain the state, the risk to the running VMs, and t
 - Likely origin: reservations changed while VMs were failing over; a VM in failover is not charged to its pool until the failover completes.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): the screenshot became the tree as text. A DRS cluster turns red (Invalid) when the tree is inconsistent; yellow (Overcommitted) when capacity no longer covers the reservations (vSphere 9.1 Resource Management, Valid, Overcommitted and Invalid DRS clusters).
+- Revised 2026-11-12: the screenshot became the tree as text. A DRS cluster turns red (Invalid) when the tree is inconsistent; yellow (Overcommitted) when capacity no longer covers the reservations (vSphere 9.1 Resource Management, Valid, Overcommitted and Invalid DRS clusters).
 - Admission control questions test different facts: L2-10 (reservations, not usage), this one (Invalid vs Overcommitted), L4-39 (expandable reservations walk up the tree).
 
 ## Metadata
@@ -52,7 +52,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation; revised 2026-11-12 (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention]
 status: draft
 ```

@@ -55,7 +55,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/contention
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6); revised 2026-11-12"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [tool-confusion, frequency-and-hyper-threading]

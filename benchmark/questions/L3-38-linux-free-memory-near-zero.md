@@ -54,7 +54,7 @@ knowledge:
 knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [B]
 misconception: [A, C]
 misconception_type: [consumption-as-contention, reclamation-as-contention]

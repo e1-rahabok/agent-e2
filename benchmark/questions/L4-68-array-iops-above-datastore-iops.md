@@ -19,7 +19,7 @@ Why does the array report about twice the IOPS vCenter shows at night, and what 
 - No vSphere setting fixes it: ask the storage team which initiators and jobs hit the LUN at 22:00, and move or throttle them, or move the batch window. Track the ratio over time.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot (Level 400 explain-mechanism with a table): the backing device ratio. Counts only after author approval.
+- Drafted by Claude 2026-11-12: the backing device ratio. Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -42,7 +42,7 @@ knowledge_main: vsphere/technology/storage/concepts/storage-layers
 attachments:
   - 0188/ds-crm02-vs-lun-iops-1-day.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [provider-vs-consumer]
 status: draft
 ```

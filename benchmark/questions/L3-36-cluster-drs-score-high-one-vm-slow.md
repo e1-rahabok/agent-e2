@@ -25,7 +25,7 @@ B or E: reading the cluster score as the state of every VM.
 - E is wrong: a weighted average of 420 VMs hides one VM.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2).
+- Drafted 2026-11-12.
 - Cluster DRS Score and VM DRS Score: vSphere 9.1 Resource Management, DRS Score.
 
 ## Metadata
@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/configuration/drs-migration-levels
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, D]
 misconception: [B, E]
 misconception_type: [average-hides-worst]

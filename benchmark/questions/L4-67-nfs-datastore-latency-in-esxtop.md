@@ -31,7 +31,7 @@ B: tuning a block-storage queue that NFS does not have. Or F: expecting an NFS d
 - F is wrong: the vSphere Client lists only block devices as Disk objects; NFS latency is read on the datastore counters.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot "NFS in esxtop" (project/plan.md, M2). The deferred screenshot question 0050 tests the same panel on a picture after 1.0. Counts only after author approval.
+- Drafted by Claude 2026-11-12. The deferred screenshot question 0050 tests the same panel on a picture after 1.0. Counts only after author approval.
 - Vendor document: Broadcom KB 427727, "VMs on NFS datastore observe latency" (https://knowledge.broadcom.com/external/article/427727): NFS datastore latency is read as DAVG and KAVG in esxtop; the resolution is on the NFS server side.
 
 ## Metadata
@@ -52,7 +52,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/concepts/esxi-storage-latency-stack
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D, E]
 misconception: [B, F]
 misconception_type: [tool-confusion]

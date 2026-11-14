@@ -38,7 +38,7 @@ What is the most likely cause of the slowness? Weigh the evidence for and agains
 - Do not add a host: Ready is low, core utilization 55%, thread utilization 35%; the problem is the Co-stop of one VM, not a cluster short of CPU.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): management pack terms removed from the key (fairness); knowledge list without the pack's model files.
+- Revised 2026-11-12: management pack terms removed from the key (fairness); knowledge list without the pack's model files.
 - Sources behind the CPU evidence: Broadcom KB 2000058 (snapshots and Co-stop); Broadcom KB 85393 (an accounting issue can inflate Other Wait: check it if Other Wait stays high after the snapshot is gone).
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
@@ -64,7 +64,7 @@ object: [vm, esxi, cluster, datastore]
 tool: [vcf-operations, esxtop]
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation; revised 2026-11-12 (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention]
 status: draft
 ```

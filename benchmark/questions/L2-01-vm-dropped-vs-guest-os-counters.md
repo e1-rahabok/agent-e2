@@ -25,7 +25,7 @@ C: "a full receive ring is invisible to the guest". Or D and E: looking for a co
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0), then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
+- Revised 2026-11-12, then after the independent review: Linux guest with a decidable counter. `ip -s link` RX dropped does not include the device's out-of-buffer count; `ethtool -S` shows it as `pkts rx OOB` per queue (upstream Linux vmxnet3 driver, vmxnet3_ethtool.c).
 
 ## Metadata
 ```yaml
@@ -46,7 +46,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/concepts/packet-drop-accounting
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, B]
 misconception: [C]
 misconception_type: [layer-confusion]

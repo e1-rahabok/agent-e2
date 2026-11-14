@@ -50,7 +50,7 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
 attachments:
   - 0109/erp-db-02-cpu-real-time.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, D, E]
 misconception: [B, C]
 misconception_type: [reclamation-as-contention, same-name-other-object]

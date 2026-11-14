@@ -32,7 +32,7 @@ A: Memory Latency is 0%, so memory is not the cause.
 - F is wrong: ballooning comes before compression and swap; 0 there does not mean there is no pressure.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): the earlier version repeated "balloon above 0 is normal" (also in L2-13); now the indicator that matters is the last one, guest paging.
+- Revised 2026-11-12: the earlier version repeated "balloon above 0 is normal" (also in L2-13); now the indicator that matters is the last one, guest paging.
 
 ## Metadata
 ```yaml
@@ -53,7 +53,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [B, C, D]
 misconception: [A]
 misconception_type: [layer-confusion, reclamation-as-contention]

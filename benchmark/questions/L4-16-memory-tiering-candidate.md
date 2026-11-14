@@ -25,7 +25,7 @@ C: assuming kernel memory can be tiered. Or E: Consumed above DRAM read as press
 - E is wrong: on a tiered host Consumed covers both tiers and may exceed DRAM by design. Active against DRAM decides performance, not Consumed.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): numbers changed so that A is computed (51% of DRAM), option E added, tags added. Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (candidates, the 80% line, hypervisor overhead); Performance Best Practices for vSphere 9.1, Memory Tiering.
+- Revised 2026-11-12: numbers changed so that A is computed (51% of DRAM), option E added, tags added. Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (candidates, the 80% line, hypervisor overhead); Performance Best Practices for vSphere 9.1, Memory Tiering.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml
@@ -45,7 +45,7 @@ tool: [none]
 knowledge_main: vsphere/technology/memory/concepts/memory-tiering
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, B, D]
 misconception: [C, E]
 misconception_type: [consumption-as-contention, threshold-transplanted]

@@ -26,7 +26,7 @@ B: counting the HA host as the maintenance host. Or E: letting usable capacity m
 - HA admission control does not hold the plan by itself: it counts reservations, and most VMs have none. The capacity process holds it.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2). The design rule (one maintenance host on top of HA) is stated in the prompt (benchmark/design.md, section 6.1, F3).
+- Drafted 2026-11-12. The design rule (one maintenance host on top of HA) is stated in the prompt (benchmark/design.md, section 6.1, F3).
 - HA admission control: vSphere 9.1 Availability, Cluster Resources Percentage Admission Control (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html).
 
 ## Metadata
@@ -48,7 +48,7 @@ knowledge:
 knowledge_main: sp5-framework/capacity/supply
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C]
 misconception: [B, E]
 misconception_type: [threshold-transplanted]

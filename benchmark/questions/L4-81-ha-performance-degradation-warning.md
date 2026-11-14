@@ -27,7 +27,7 @@ B: reading the warning as a block on power-ons.
 - E is wrong: the setting needs vSphere DRS to be on.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2). Outside the knowledge base: the knowledge base has HA admission control but not this setting. Keyed from the vendor documents.
+- Drafted 2026-11-12. Outside the knowledge base: the knowledge base has HA admission control but not this setting. Keyed from the vendor documents.
 - vSphere HA Admission Control, Performance degradation VMs tolerate: not available unless DRS is on; default 100% gives no warnings; at 0% a warning is generated when cluster usage exceeds the available capacity (vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html).
 
 ## Metadata
@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots, outside the knowledge base (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12, outside the knowledge base"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [consumption-as-contention]

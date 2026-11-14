@@ -43,7 +43,7 @@ knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments:
   - 0151/vm-memory-past-day.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [layer-confusion, consumption-as-contention]
 status: draft
 ```

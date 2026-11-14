@@ -34,7 +34,7 @@ C: "the sessions are up, so the network is fine". Or D: looking for the loss in 
 - Why the loss is in the middle: an endpoint with a 1,500 MTU would advertise a smaller TCP segment size, and both sides would adapt. A switch port in the middle cannot do that; it drops the jumbo frame.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - Vendor sources: Broadcom KB 313061, Testing jumbo frame pings from ESXi over the network (1472, 1473 and 8972; 28 bytes of overhead), https://knowledge.broadcom.com/external/article/313061/testing-jumbo-frame-pings-from-esxi-over.html; Broadcom KB 419088, Risks and potential impacts of changing the MTU on a virtual switch ("Message too long"; change the physical path first), https://knowledge.broadcom.com/external/article/419088/risks-and-potential-impacts-of-changing.html; Broadcom KB 448714, iSCSI storage connectivity issues due to MTU mismatch, https://knowledge.broadcom.com/external/article/448714/iscsi-storage-connectivity-issues-or-slo.html.
 
 ## Metadata
@@ -55,7 +55,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/configuration/network-configuration-review
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, F]
 misconception: [C, D]
 misconception_type: [layer-confusion]

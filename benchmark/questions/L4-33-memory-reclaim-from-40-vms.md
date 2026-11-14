@@ -19,7 +19,7 @@ Which VMs do you take memory from, and about how much from each? Which counters 
 - Reclaim in steps and check page-out and contention after each change.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): the 300-VM export that was to be supplied is now a generated 40-VM export (a CSV of 1.0 must stay small; design.md, section 13.1). The ask is 256 GB instead of 1 TB.
+- Revised 2026-11-12: the 300-VM export that was to be supplied is now a generated 40-VM export (a CSV of 1.0 must stay small; design.md, section 13.1). The ask is 256 GB instead of 1 TB.
 - The amounts are illustrative. Headroom of 25% above Guest Needed Memory, rounded up to 4 GB, gives 284 GB. An answer with another headroom that names the six VMs and reaches 256 GB is right, with or without small trims on other VMs.
 
 ## Metadata
@@ -44,7 +44,7 @@ knowledge_main: guest-os/system/concepts/guest-os-sizing
 attachments:
   - 0079/vm-memory-30-days.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [layer-confusion, consumption-as-contention]
 status: draft
 ```

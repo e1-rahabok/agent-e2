@@ -30,7 +30,7 @@ C: adding up VM throughput and reading it as the load on the uplinks.
 - Plan uplink capacity from the vmnic counters per direction, and keep VMs that talk a lot on the same host where DRS rules allow.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - The CSV is synthetic, generated with a fixed seed and ±6% noise per VM: the vmnic totals (bytes and packets) are the external VM traffic plus the VMkernel ports, by construction.
 
 ## Metadata
@@ -54,7 +54,7 @@ knowledge_main: vsphere/technology/network/concepts/network-observability
 attachments:
   - 0217/esx-05-esxtop-network-busy-hour.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [provider-vs-consumer, same-name-other-object]

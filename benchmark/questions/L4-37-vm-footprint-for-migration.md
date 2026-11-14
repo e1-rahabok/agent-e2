@@ -20,7 +20,7 @@ Is the plan right for db-01? Work out db-01's CPU footprint in cluster A, in vCP
 - The footprint is the load on the infrastructure; whether the Guest OS has enough (its run queue) is a separate check.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): key built on public counters and their mechanism (Used is adjusted for frequency and Hyper-Threading; Ready and Co-stop are unmet demand; System is charged at VM level). The earlier version asked for a named formula; this one asks for the reasoning (benchmark/design.md, section 6.1, F3).
+- Revised 2026-11-12: key built on public counters and their mechanism (Used is adjusted for frequency and Hyper-Threading; Ready and Co-stop are unmet demand; System is charged at VM level). The earlier version asked for a named formula; this one asks for the reasoning (benchmark/design.md, section 6.1, F3).
 - Overlap and Other Wait are not in the export; with them, the footprint would add them too.
 
 ## Metadata
@@ -44,7 +44,7 @@ knowledge_main: sp5-framework/capacity/vm-footprint-sizing
 attachments:
   - 0083/vm-cpu-peak-sample-20-vms.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation; revised 2026-11-12 (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 misconception_type: [frequency-and-hyper-threading, unit-and-normalization]
 status: draft
 ```

@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/host-memory-states
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C]
 misconception: [B, E]
 misconception_type: [reclamation-as-contention, threshold-transplanted]

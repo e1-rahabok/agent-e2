@@ -24,7 +24,7 @@ B: expecting Consumed to equal the kernel reservation.
 - E is wrong: VM overhead leaves with the VMs; what stays is the kernel's own use.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): option E added; tags added.
+- Revised 2026-11-12: option E added; tags added.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml
@@ -44,7 +44,7 @@ tool: [vcenter]
 knowledge_main: vsphere/technology/memory/metrics/host/consumed
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, C]
 misconception: [B]
 misconception_type: [provider-vs-consumer]

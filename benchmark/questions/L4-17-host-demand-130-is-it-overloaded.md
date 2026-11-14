@@ -43,7 +43,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6); revised 2026-11-12"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention, frequency-and-hyper-threading]
 status: draft
 ```

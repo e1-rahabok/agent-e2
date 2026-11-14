@@ -18,7 +18,7 @@ Will that work in vSphere 9.1? What do you advise instead?
 - Confirm where db-11 waits first: high DAVG with low KAVG on db-11's host shows the wait is in the array or fabric, shared with rpt-07's host; no setting on db-11's host alone fixes it.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot "Storage I/O Control and one noisy VM" (project/plan.md, M2). Counts only after author approval.
+- Drafted by Claude 2026-11-12. Counts only after author approval.
 - Vendor documents: Broadcom KB 385396, "Deprecation of default Storage Policy Components for SIOC Storage Policy" (https://knowledge.broadcom.com/external/article/385396): from VCF 9.0 the SIOC policy supports only limits and the backend ignores shares and reservations. Deprecation notice with vSphere 8.0 U3 (https://www.yellow-bricks.com/2024/11/25/storage-io-control-aka-sioc-deprecation-notice-with-8-0-u3).
 - The key does not depend on whether SIOC can still be enabled on a datastore in 9.x (only a secondary source says it cannot). An answer that says so is a correct alternative, not a requirement.
 
@@ -41,7 +41,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/metrics/datastore/storage-io-control
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: []
 status: draft
 ```

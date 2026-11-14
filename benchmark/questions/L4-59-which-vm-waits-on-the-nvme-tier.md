@@ -29,7 +29,7 @@ A: the most memory on NVMe read as the most waiting. Or E: the host average read
 
 ## Notes
 - Sources: vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe (per-VM and per-tier counters, VMs kept in DRAM, full reservation); Memory Tiering Performance, VCF 9.0 performance study (https://www.vmware.com/docs/memtier-vcf9-perf), Using and monitoring Memory Tiering; the knowledge base, memory tiering and the decision tree "Is memory tiering slowing this host?".
-- The plan's slot was "memory latency on a tiered host". Whether VM memory contention counts tier-1 fetches is not stated by any source read (knowledge base review note), so the question asks for the per-VM tier counters instead.
+- The topic was "memory latency on a tiered host". Whether VM memory contention counts tier-1 fetches is not stated by any source read (knowledge base review note), so the question asks for the per-VM tier counters instead.
 
 ## Metadata
 ```yaml
@@ -50,7 +50,7 @@ knowledge_main: vsphere/technology/memory/decision-tree/is-memory-tiering-slowin
 attachments:
   - 0147/tiered-host-per-vm-1-hour.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [B, D, F]
 misconception: [A, E]
 misconception_type: [consumption-as-contention, average-hides-worst]

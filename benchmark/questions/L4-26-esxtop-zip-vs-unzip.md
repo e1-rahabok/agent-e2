@@ -33,7 +33,7 @@ B: reading compression and swap-out as the VM waiting. Or D: the largest SWCUR r
 - F: decompression is in DRAM and costs far less than a swap-in from disk; that is why ESXi compresses before it swaps.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text.
+- Revised 2026-11-12: the esxtop screenshot that was to be supplied is now an esxtop excerpt typed as text.
 
 ## Metadata
 ```yaml
@@ -54,7 +54,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/memory
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, C, E, F]
 misconception: [B, D]
 misconception_type: [reclamation-as-contention, cumulative-vs-current]

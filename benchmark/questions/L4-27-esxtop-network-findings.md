@@ -41,7 +41,7 @@ B: applying the zero-drop rule of a VMkernel network to a VM port. Or D: reading
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): the screenshot became an esxtop excerpt in the prompt; the team standard is stated in the prompt (fairness F3); a negotiated-speed finding added. After the independent review, the units option was replaced (question 0029 owns that fact).
+- Revised 2026-11-12: the screenshot became an esxtop excerpt in the prompt; the team standard is stated in the prompt (fairness F3); a negotiated-speed finding added. After the independent review, the units option was replaced (question 0029 owns that fact).
 
 ## Metadata
 ```yaml
@@ -62,7 +62,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/network
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [threshold-transplanted]

@@ -39,10 +39,10 @@ from retrieval import Retriever  # noqa: E402
 
 AGENT_ACTIONS = ('compute', 'gap', 'repair', 'consensus', 'context_over')
 FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'answer_type', 'input', 'technology', 'task', 'level', 'run', 'temperature',
-          'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'not_covered', 'unsure', 'points', 'parse_ok',
-          'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
+          'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'unsure', 'parse_ok',
+          'retrieval_recall', 'ids_used', 'steps', 'prompt_tokens', 'completion_tokens',
           'latency', 'cost_usd', 'index_version', 'error', 'reason', 'tools_used', 'verify_flags', 'repaired',
-          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text', 'truncated', 'search_recall']
+          'credit', 'confident_wrong', 'judge_model', 'judge_score', 'judge_missed', 'answer_text', 'truncated']
 
 
 def main():
@@ -200,10 +200,10 @@ def main():
         images = c.image_parts() if track == 'vision' else []
         row = {'benchmark_id': benchmark_id, 'time': dt.datetime.now().isoformat(timespec='seconds'), 'model': m, 'mode': mode,
                'track': track, 'question_id': c.id, 'answer_type': c.answer_type, 'input': ' '.join(c.input_types), 'technology': ' '.join(c.technology), 'task': c.task, 'level': c.level, 'run': r,
-               'temperature': sampling.get(m, {}).get('temperature', ''), 'options_order': ''.join({'NC': '*', 'UN': '?'}.get(v, v) for v in mapping.values()),
+               'temperature': sampling.get(m, {}).get('temperature', ''), 'options_order': ''.join({'UN': '?'}.get(v, v) for v in mapping.values()),
                'correct': ','.join(c.answer), 'index_version': sha[:12]}
         try:
-            res, used, trace, fb = modes.answer(mode, client, m, question, images, cfg, retriever,
+            res, used, trace = modes.answer(mode, client, m, question, images, cfg, retriever,
                                                 'choice' if c.choice else 'open')
             if c.choice:
                 picked = C.parse(res['content'], mapping)
@@ -231,14 +231,10 @@ def main():
             row['tools_used'] = ' '.join(sorted({s['action'] for s in trace if s['action'] in modes.TOOL_NAMES + list(AGENT_ACTIONS)}))
             row['verify_flags'] = ' | '.join(f for s in trace if s['action'] == 'verify' for f in s['output'])[:300]
             row['repaired'] = int(any(s['action'] == 'repair' for s in trace))
-            row['tool_errors'] = sum(1 for s in trace if s['action'] in ('tool_error', 'refused'))
-            row['fallback'] = int(fb)
             row['ids_used'] = ' '.join(used)
-            row['retrieval_recall'] = round(len(set(used) & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode != 'baseline') else ''
-            # retrieval_recall: needed files whose text reached the model. search_recall: needed files the model was shown
-            # at all, as a search result or in its context: a gap between the two is a file found but not read.
-            seen = set(used)   # Agent E2 shows the model every file it plans: found and read are the same set
-            row['search_recall'] = round(len(seen & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode not in ('baseline', 'web')) else ''
+            # needed files whose text reached the model (the reading set and any gap follow-up). Agent E2 only:
+            # baseline and web read no knowledge base
+            row['retrieval_recall'] = round(len(set(used) & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode == modes.AGENT) else ''
             row['cost_usd'] = _cost(meta.get(m, {}), row['prompt_tokens'], row['completion_tokens'])
             row['error'] = ''
         except LLMError as e:

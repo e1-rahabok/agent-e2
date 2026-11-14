@@ -38,7 +38,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/concepts/network-characteristics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [B]
 misconception: [A]
 misconception_type: [unit-and-normalization]

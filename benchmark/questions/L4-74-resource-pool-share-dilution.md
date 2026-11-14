@@ -27,7 +27,7 @@ B: reading the pool's High shares as the priority of each of its VMs.
 - E: inside a pool, sibling VMs split the pool's entitlement by their own shares; all are equal here.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2).
+- Drafted 2026-11-12.
 - Scalable Shares: vSphere 7.0 and later, per cluster or per resource pool (vSphere 9.1 Resource Management, Scalable Shares).
 
 ## Metadata
@@ -48,7 +48,7 @@ knowledge:
 knowledge_main: vsphere/object-types/resource-pool/resource-pool-design
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D, E]
 misconception: [B]
 misconception_type: [same-name-other-object]

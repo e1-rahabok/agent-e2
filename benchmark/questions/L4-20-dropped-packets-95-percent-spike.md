@@ -27,7 +27,7 @@ A: reading 95% as 95% of the VM's normal traffic lost.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): this question tests only the formula at low traffic. Transmit drops hidden by TCP are tested in 0074; ranking VMs by the right statistic in 0082.
+- Revised 2026-11-12: this question tests only the formula at low traffic. Transmit drops hidden by TCP are tested in 0074; ranking VMs by the right statistic in 0082.
 
 ## Metadata
 ```yaml
@@ -46,7 +46,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets-dropped
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [B, C]
 misconception: [A]
 misconception_type: [unit-and-normalization]

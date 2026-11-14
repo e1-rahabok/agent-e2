@@ -27,7 +27,7 @@ Why are packets dropped? Will 8 more vCPUs help? What do you change?
 - Then check the drops and the per-vCPU load again; the Guest OS owner makes the guest change.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - Differs from 0060 (receive ring too small for bursts): here the ring is already large and one vCPU cannot drain it.
 - Broadcom KB 440347, Mitigating VMXNET3 adapter packet drops due to single receive queue (all interrupts on one vCPU; a maximum ring does not fix it; enable RSS, queues capped by the vCPU count): https://knowledge.broadcom.com/external/article/440347
 - Host-side RSS on the physical NIC needs the NIC driver's RSS on and `ethernetX.pNicFeatures = "4"` in the VM's configuration (rss-and-interrupt-coalescing).
@@ -51,7 +51,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/configuration/rss-and-interrupt-coalescing
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [average-hides-worst, layer-confusion]
 status: draft
 ```
