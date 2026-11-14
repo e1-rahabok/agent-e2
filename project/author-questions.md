@@ -103,6 +103,43 @@ Each entry has:
 - Written as now: both, unreconciled.
 - Answer:
 
+### Q223 · Memory > Balloon · Does "VMware Tools not running" stop ballooning?
+
+- Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md); question [0022](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md).
+- Search: not from the book.
+- Question: your answer of 2026-11-14 on question 0022: the balloon driver comes from the VMware Tools service, so they are the same thing. ballooning.md says: "Ballooning needs the balloon driver loaded, not the VMware Tools service: a Linux VM keeps ballooning while vmtoolsd is stopped." On Linux the driver is `vmw_balloon`, in the upstream kernel; open-vm-tools does not contain it. On Windows the driver ships with VMware Tools and runs as a kernel driver, apart from the Tools service; "VMware Tools: Not running" in vCenter reports the service. Broadcom KB 313773 lists the kernel commits of `vmw_balloon`; no vendor document found says whether the service is needed, so the documents do not settle it. Does a stopped Tools service stop ballooning? Question [0052](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-13-balloon-above-zero.md) dropped its option on this point until the answer.
+- Written as now: ballooning.md as quoted. Question 0022, option D, now states the case both agree on (VMware Tools not installed on a Windows VM); key A, B, D, E.
+- Final answer (expert call): the knowledge base stands: "not running" (the service) and "not installed" (no driver) differ. For you: a case you have seen where a VM with Tools installed but its service stopped was not ballooned; else accept.
+- Answer:
+
+### Q224 · Observability > Collection interval · VCF Operations 5-minute ms values: 100% at 20,000 or 300,000 ms per vCPU?
+
+- Files: [Collection interval](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/collection-interval.md) (section Short problems in 5-minute collection; Misconceptions); [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/aggregation.md) (Sample length); question [0104](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-48-run-above-used-more-vcpus.md).
+- Search: not from the book.
+- Question: your answer of 2026-11-14 on question 0104: 20,000 ms is 20 seconds, not 5 minutes, so 0104 is right. The knowledge base says: "The 100% of any millisecond value in VCF Operations is 20,000 ms, not 300,000 ms: it averages the 15 20-second values. CPU Ready of 3,000 ms is 15%, not 1%." A 5-minute point is then a value per 20 seconds, and a 4-vCPU VM peaks at 80,000 ms. 0104's export says "1,200,000 ms is 100%" and shows Run of about 375,000 ms. Both cannot hold. Which is right?
+- Check on one VM: VCF Operations CPU|Ready (ms) and CPU|Ready (%) at the same 5-minute point. If (%) / 100 × 20,000 × vCPUs equals the ms value, the base is 20,000; if it needs 300,000, the base is 300,000.
+- Written as now: the knowledge base says 20,000; 0104 uses 300,000. 0104 is unchanged; the new pair on this fact (VCF Operations against vCenter Ready in ms) is held.
+- Final answer (expert call): 20,000 ms, as the knowledge base says (VCF Operations averages the 15 samples). Then 0104's export is rescaled (80,000 ms = 100%, Run about 25,000 ms) and its stem loses the base line. For you: the check above.
+- Answer:
+
+### Q225 · CPU > Hyper-Threading > Used · A thread with a busy sibling: Used at 62.5% of Run, or half?
+
+- Files: [esxtop CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md); [VM CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
+- Search: not from the book.
+- Question: the knowledge base charges a thread whose sibling also runs 62.5% of a core (1.25x per core): used.md, hyper-threading, and since 2026-11-14 esxtop/cpu (world %USED is 62.5% of %RUN; it said "%RUN can be twice %USED" before). The vSphere 9.1 documentation, esxtop CPU panel (p. 2153), says each busy PCPU of a pair "accounts for half of the CPU usage" (PCPU USED). hyper-threading already lists "37.5% (VM Usage) and 50% (ESXi Used)" as open. Which holds? (A) 62.5% for VM and world Used, 50% for PCPU USED: two counters, two rules. (B) 62.5% for both; the 9.1 text is out of date. (C) 50% for both. Close to [Q220](#q220--cpu--hyper-threading--thread-utilization-with-both-threads-busy-100-or-200).
+- Written as now: (A) in effect; a review note in esxtop/cpu.
+- Final answer (expert call): (A). For you: confirm on an esxtop PCPU panel of a host with both threads of a core busy.
+- Answer:
+
+### Q226 · SP5 > SLA > Availability · Usable hosts during maintenance: 8 or 9 of 10?
+
+- Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (Availability SLA, the 10-host example); [Supply](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md) (Total vs usable after host loss).
+- Search: "Example on a 10-host cluster with 1 HA host (usable 9 hosts)"; "| 1 | Maintenance mode | 9/10 = 90% | 9/9 = 100% |".
+- Question: supply.md now says a 10-host cluster with one HA host has 8 usable hosts while one host is in maintenance: vSphere HA admission control counts only hosts that are connected and not in maintenance mode (vSphere 9.1 Availability, percentage admission control), so the HA reserve stays. This settled question [0233](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-37-usable-capacity-ha-and-maintenance.md). sla-metrics still computes Operational Availability with usable 9 in that case. Which model? (a) Operational Availability divides by the planned usable (9) whatever the maintenance; sla-metrics says so and stops pointing at supply's after-event column. (b) It divides by the usable of the event (9/8 and 8/7, capped at 100%), so maintenance never lowers it. (c) Your model lets the HA host cover one host in maintenance; supply then shows two views, protected usable (8) and unprotected (9). Related to [Q222](#q222--sp5--sla--availability--does-a-host-in-maintenance-mode-lower-operational-availability).
+- Written as now: supply 8, sla-metrics 9.
+- Final answer (expert call): (a): availability is measured against the planned service; usable capacity is what is safe to use now. For you: choose.
+- Answer:
+
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
