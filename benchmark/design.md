@@ -23,7 +23,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Resistance to misconceptions (see `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400) | Writing style of answers |
 | Combining several facts and tables in one answer, including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
-| Reading tables: vCenter chart exports, VCF Operations exports, esxtop batch output | More screenshots (the screenshot set grows after 1.0, section 13) |
+| Reading evidence: screenshots of vCenter, VCF Operations and esxtop, chart exports, VCF Operations exports, esxtop batch output | Recognising every product screen (the screen library, release 1.1) |
 | Knowing the limits: choosing Unsure instead of guessing | Multi-turn conversation with clarifying questions (a separate set, later); a consultation that interviews the user and computes (capacity planning): the live test, step 9 |
 | Consistency: the same answer on every run | Cost and price (out of scope) |
 | Knowing every true statement and rejecting every plausible false one, among as many options as the question needs | Agent E2's own framework and the vCommunity management pack (section 6.1) |
@@ -86,7 +86,9 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 | Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) |
 | Screenshot | An image of a product UI | As an image, to a vision model |
 
-- A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. 
+- Screenshots are in 1.0 (author, 2026-11-14). Administrators send screenshots far more often than exports, and vision is a hard requirement of Agent E2 (MISSION.md, Non-functional). Reading the screen is part of what is tested.
+- Screenshot or table: use the evidence the administrator would send. A screenshot when they would look at the screen (a chart that looks wrong, two tools that disagree, a configuration page). A CSV export when the answer needs exact values over many rows or objects, which a chart cannot show legibly.
+- Leak guard: a screenshot is never a knowledge-base image, and the knowledge base never states a screenshot's values (section 13).
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]` or `[screenshot]`, derived from `attachments` and checked by lint.
 - URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
@@ -108,7 +110,7 @@ Each question lists every area it touches in `technology` (values from [project/
 
 ### 3.6 Mix
 - No group can carry the score alone: every question weighs the same (section 7.4), so the mix of the set is what weighs each group. Coverage keeps it honest: every area, object, tool and misconception type is tested, and none dominates by accident.
-- Tables and long scenarios sit mostly at Level 400: reading evidence and combining it is the expert's work.
+- Screenshots, tables and long scenarios sit mostly at Level 400: reading evidence and combining it is the expert's work.
 - The five tasks (section 3.1) and the areas (section 3.5) are spread across every level.
 
 ### 3.7 Coverage rules
@@ -130,19 +132,19 @@ Each question lists every area it touches in `technology` (values from [project/
 - A model that learns "usually one answer" or "usually all but one" gains nothing, and with many options a guess is almost never exactly right (6 options plus Unsure: about 1 in 64).
 
 ### 3.9 Paired questions
-An administrator rarely questions a counter in the abstract. The question comes when the screen does not match what they expect. A model that does not know the counter is then misled by the screen. A pair asks one fact two ways (author, 2026-11-14):
+An administrator rarely questions a counter in the abstract. The question comes when the screen does not match what they expect, and a model that does not know the counter is then misled by the screen. A pair asks one fact two ways (author, 2026-11-14):
 
-| Kind | Tests | Input |
+| Type | Tests | Input |
 |---|---|---|
-| Know | The definition and the formula | Text |
-| Explain | Why a screen disagrees with what the administrator expects | Screenshot or table |
-| Compute | A value predicted from the inputs | Text or table |
-| Decide | The action the reading leads to (move VMs, add capacity, nothing) | Any |
+| Theory | The counter: what it counts, its formula, how it differs from its namesakes | Text |
+| Practical | The same fact on a screen that disagrees with what the administrator expects | Screenshot, sometimes a table |
 
-- Know and Explain are the pair: `pair` in the metadata of both, checked by lint. Compute and Decide are the usual Level 400 forms; they need no tag.
-- Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on Know and wrong on Explain is a reading failure (fix the harness or the reading plan); wrong on Know and right on Explain is a guess.
+- Both questions carry `pair` with the other's id; lint checks that it exists and points back.
+- Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on theory and wrong on practical is a reading failure (check the trace: the screen misread in stage 1, the file missed, or the model ignored it); wrong on theory and right on practical is a guess.
 - Each question is sent alone, so one never gives away the other.
-- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-41-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-132-esxi-cpu-demand-differs-between-tools.md). The Explain question is Level 400: it needs arithmetic across three screenshots.
+- Pairs are written where a screenshot exists, not for every counter. A fact gets two questions at most: every question weighs the same (section 3.6).
+- Theory options, from the first pair: each option one fact about the mechanism, no option the negation of another, no vague "they differ"; the Level 300 misconception and its over-correction both present; a false option that draws the wrong action from the reading.
+- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-41-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-132-esxi-cpu-demand-differs-between-tools.md). The practical question is Level 400: it needs arithmetic across three screenshots.
 
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).
@@ -301,6 +303,7 @@ The frontier model must be able to answer every question from public knowledge. 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in Agent E2's reading set (the code-only case). Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
 - Levels and current numbers: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) and [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3. Re-baselined when the question set changes (Q206).
+- Blind spot: the check runs no model, so it cannot read a screenshot. A screenshot question whose stem names no counter shows as a miss even when the agent finds its files from the images in stage 1. A check of stage 1 on the screenshot questions (one model call each) covers it (to build, project/plan.md, M3).
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats
@@ -314,7 +317,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Ambiguous options | A question with a disputed option is fixed or removed, and the benchmark is re-scored. |
 | Position, length and count bias | Shuffled options; similar option length; varied number of correct options. |
 | Guessing | Unsure option, the prompt rule that a wrong answer is worse than Unsure, confident-wrong rate, 5-run stability. |
-| Leakage into the model | Questions are never indexed, never used for fine-tuning, and `## Expected key points` is never sent to the model. |
+| Leakage into the model | Questions are never indexed, never used for fine-tuning, and `## Expected key points` is never sent to the model. A screenshot is never a knowledge-base image (lint compares the bytes), and its values are never written into the knowledge base. |
 | Frontier model knows public material | Base and the web reference test exactly that. The knowledge base must add what public material lacks. |
 | Version drift | Every benchmark records the index version (git commit), model, provider and settings. Scores are compared only within one scoring scheme. |
 
@@ -338,11 +341,13 @@ For the set:
 - Every synthetic question was checked by an independent review agent, which tried to break each key against the knowledge files and the vendor documents; the defects found were fixed. Author questions from the review: all answered (Q182-Q191). Knowledge fixes found on the way: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M1.
 - Status draft: each question counts after the author's review (section 6.2).
 
-## 13. Screenshot questions (after 1.0)
+## 13. Screenshot questions
 - Purpose: administrators upload screenshots and ask the agent to explain the problem, often several at once, from different tools.
-- 1.0 has the author's L4-03 and the five reactivated on 2026-11-13. After 1.0 the screenshot set grows, a few per source (esxtop, vCenter, VCF Operations).
+- 1.0 grows the screenshot set (author, 2026-11-14): the practical halves of pairs (section 3.9), the author's field screenshots, and knowledge-base charts redrawn or recaptured so that no attachment is a knowledge-base image. A few per source: vCenter, VCF Operations, esxtop, Guest OS tools.
 - Reading screenshots stays a basic requirement: a model without vision is not a candidate ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md)).
-- A screenshot question carries all its images in `attachments`; every image is sent with the same prompt. The prompt states the problem in words; the images supply the values. Images are masked (host and customer names) before commit.
+- A screenshot question carries all its images in `attachments`; every image is sent with the same prompt. The prompt states the problem in words; the images supply the values.
+- No leak: an attachment is never a knowledge-base image (lint), and the knowledge base never states an attachment's values; a knowledge example of the same mechanism uses its own numbers.
+- Masking: customer names (hosts, VMs, datastores, clusters) are masked before commit. Names from the author's lab may stay: they are not customer data.
 
 ### 13.1 Table questions
 - Purpose: administrators export data and ask about it: a vCenter chart export, a VCF Operations list or metric export, esxtop batch output.
