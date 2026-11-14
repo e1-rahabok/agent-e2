@@ -42,15 +42,18 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 | `web.py` | Public web knowledge: URLs in the question read before the model starts; `fetch_url` and `web_search` for the agent; search only for current facts; system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
 | `flows.py` | Flow executor: a health check or troubleshooting file as ordered steps, one at a time, with the next step and the steps it refers to. |
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
-| `modes.py` | Answer modes and prompts: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. |
-| `agent.py` | The agent loop: tools, rules (lookup first, no repeats, same-name check), budgets, fallback, verifier. Design: `AGENT.md`. |
+| `planner.py` | The reading plan of the expert-led agent (`AGENT.md`, section 4.2): named files, search, mechanism links, one search per claim, packed by tier with best sections. Prototype; read by the retrieval check (`planner: true`). |
+| `modes.py` | Answer modes and prompts as built: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. Replaced by the expert-led agent when it is built (`AGENT.md`, section 7). |
+| `agent.py` | As built: the tool loop of agentic mode (tools, rules, budgets, fallback, verifier); its design is archived ([project/archive/agent-tool-loop-2026-11-14.md](../project/archive/agent-tool-loop-2026-11-14.md)). The expert-led agent replaces it: `AGENT.md`. |
 | `clarify.py` | One clarifying round: the `chat` and `chat_final` prompt rules, `CLARIFY:` parsing; the conversation runs through `modes.converse`. |
 | `terms.py` | Question understanding before search: the user's words matched against [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml); adds knowledge-base terms to the query, pulls files into the context, adds a note per misconception. Switches `term_map`, `term_map_agent`. |
 | `primer.py` | The agent's five up-front blocks, generated from the knowledge base; switches `agent_primer` in the config. |
 | `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
 
-## 5. Agentic tools
+## 5. Tools
+- In the expert-led agent the tools below are called by the agent's code on the case, not by the model (`AGENT.md`, section 4.3). The table is the tool-loop interface as built.
+
 | Tool | Returns | Use |
 |---|---|---|
 | search | File ids, titles, snippets | Always first (or catalog). |

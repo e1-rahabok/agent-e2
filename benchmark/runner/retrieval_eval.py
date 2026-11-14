@@ -25,6 +25,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'
 import questions as C  # noqa: E402
 import kb  # noqa: E402
 import modes  # noqa: E402
+import planner  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
 
@@ -62,7 +63,8 @@ def main():
             continue
         question = c.render(random.Random(0))[0] if c.options else c.open_text()
         top = [h['id'] for h in ret.search(question, k=a.k)]
-        _, ctx, _ = modes.classic_context(ret, question, cfg)
+        context = planner.reading_set if cfg.get('planner') else modes.classic_context
+        _, ctx, _ = context(ret, question, cfg)
         rows.append((c.id, need, top, ctx, c.knowledge_main))
     print(f"| Question | Needed | Search top {a.k} | Classic context | Missed in context |")
     print('|---|---|---|---|---|')
@@ -76,7 +78,10 @@ def main():
           f"Questions with every needed file in context: {s['complete']}/{s['questions']} ({s['complete'] / s['questions']:.0%}). "
           f"Main file missing from context: {len(s['main_missed'])} of {s['main_keyed']} questions with a main file"
           f"{' (' + ', '.join(s['main_missed']) + ')' if s['main_missed'] else ''}. "
-          f"Mode: {'hybrid' if a.embeddings else 'BM25 only'}{' + rerank' if cfg.get('rerank') else ''}.")
+          f"Mode: {'hybrid' if a.embeddings else 'BM25 only'}{' + rerank' if cfg.get('rerank') else ''}"
+          f"{', reading plan (harness/planner.py)' if cfg.get('planner') else ''}.")
+    print('Complete by number of needed files: ' + ', '.join(f"{k} file{'s' if k != '1' else ''} {v[0]}/{v[1]} ({v[0] / v[1]:.0%})"
+                                                         for k, v in s['by_need'].items()) + '.')
     print('Release levels (benchmark/retrieval-check.md): main file 100%, context recall at least 95%, complete at least 90%.')
 
 
@@ -89,7 +94,18 @@ def summary(rows):
             'context': sum(i in ctx for _, need, _, ctx, _ in rows for i in need) / n if n else 0,
             'complete': sum(all(i in ctx for i in need) for _, need, _, ctx, _ in rows),
             'main_keyed': len(keyed),
-            'main_missed': [cid for cid, main_id, ctx in keyed if main_id not in ctx]}
+            'main_missed': [cid for cid, main_id, ctx in keyed if main_id not in ctx],
+            'by_need': _by_need(rows)}
+
+
+def _by_need(rows):
+    """Complete questions by number of needed files: {'1': (complete, questions), ..., '5+': ...}."""
+    out = {}
+    for _, need, _, ctx, _ in sorted(rows, key=lambda r: len(r[1])):
+        k = str(len(need)) if len(need) < 5 else '5+'
+        done, total = out.get(k, (0, 0))
+        out[k] = (done + all(i in ctx for i in need), total + 1)
+    return out
 
 if __name__ == '__main__':
     main()

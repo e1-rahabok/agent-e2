@@ -24,7 +24,7 @@
 # Agent E2
 
 - What it is:
-  - An LLM-based expert system, built as agentic RAG on a local LLM.
+  - An LLM-based expert system on a local LLM. The agent and the harness lead: code follows the expert's procedure, decides what to read from the knowledge base's map and computes the exact values; the model reads and writes ([harness/AGENT.md](harness/AGENT.md)).
 - Scope for Phase 1:
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name:

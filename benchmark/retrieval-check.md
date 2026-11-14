@@ -42,7 +42,8 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
   - **Main file missing from context**: questions whose `knowledge_main` did not arrive, out of the questions that have one. Each is a defect.
 - Read the context numbers first. A search drop with no context drop means link expansion still brings the file; the model sees the same files. Example 2026-11-07: search recall@6 fell from 65% to 64% (questions 0062 and 0067 each lost one file from the top 6), context stayed at 75% and 55 of 90: no effect on answers.
 - Compare against the previous run, question by question, not only the totals. Two questions can swap (one gains, one loses) with no change in the total. Save both outputs and `diff` them.
-- Agentic mode is not measured: the agent searches several times with its own queries. A file missed here can still be found there, but classic mode is the floor.
+- The reading plan of the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2) is measured with `--set planner=true`: the same numbers on the context the new agent gives the model. Since 2026-11-14 it is the context that carries the levels; classic mode stays the comparison until the new agent replaces it. The planner adds a line: complete questions by number of needed files.
+- Agentic mode is not measured: the agent searches several times with its own queries.
 - Limits:
   - the needed files are the question writer's judgment; a missing id in a question makes recall look better than it is;
   - a file counted as in context can be cut by the budget, so only its start reaches the model;
@@ -72,7 +73,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): at most 11 points below the visible set.
 
 - Search recall@6 has no gate: it is a diagnostic for ranking. Context is what the model reads.
-- Agentic mode, the shipped mode, searches again and can fetch what classic missed. It is measured by the benchmark, not here. Classic mode is the floor and the fallback, so it carries these levels; they are conservative for the agentic score.
+- Read on the reading plan since 2026-11-14 (one pipeline, author): it is the context the shipped agent gives the model, so its number caps the product, as classic's capped classic mode. The gap follow-up of stage 6 can add a file after the draft; it is measured by the benchmark, not here.
 - Read the last numbers this way: 61 of 95 complete (64%) means about 1 question in 3 lacks at least one needed file: the Bad band, about 25 points short of release.
 
 ### Is perfect applicable?

@@ -12,6 +12,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 - General: the meaning in daily life, between people.
 - VMware operations: the jargon of a VMware administrator. In operations, a case is an issue to investigate and solve (a support case, a ticket). A use case is a scenario.
 - So the benchmark does not use case. Its items are questions: they are answered, not investigated. A question can have several parts.
+- The product does: the agent reads each question into a case, the issue it works on (proposal, 2026-11-14, table below).
 - Quiz is the author's word for his source documents: it checks what the reader knows (it is not a request for something unknown), and it reads lighter than an exam.
 
 ## Terms
@@ -29,8 +30,11 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | author question | One entry in [`project/author-questions.md`](author-questions.md) | - |
 | knowledge base | The content in `knowledge/` | KB (in prose) |
 | Agent E2 | The product: model, harness, agent and knowledge base as shipped. Always both words, like Agent 007. Will run on isvara.io, replacing AskIO | Isvara (the website, not the product); E2 alone |
-| agent | The model plus the tool loop, in agentic mode only: it chooses the next tool, query and file, and when to answer. The loop code is in the harness; the decisions are the model's | - |
-| harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, the loop's rules, the verifier. It hosts the agent and constrains it | wrapper, pipeline |
+| agent | The expert's procedure as code ([`harness/AGENT.md`](../harness/AGENT.md)): it reads the question into a case, plans the reading set from the knowledge base's map, runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer. The decisions are code; the model is called. Changed 2026-11-14 (was: the model plus the tool loop, in agentic mode). Proposal, for the author | tool loop (the old meaning) |
+| case | The agent's structured reading of one question: kind, objects, layer, metrics with values, symptom, premise, claims, missing facts, what each screenshot shows ([`harness/AGENT.md`](../harness/AGENT.md), section 4.1; the case state of Q166). The product's word: in operations a case is an issue to investigate. The benchmark still says question for its items. Proposal, for the author | question state, query object |
+| reading set | The files and sections the agent gives the model for one question, chosen by the reading plan ([`harness/planner.py`](../harness/planner.py)). Proposal, for the author | context (alone), seed |
+| reading plan | The code that builds the reading set: tiers of named files, search hits, mechanism links and one search per claim ([`harness/AGENT.md`](../harness/AGENT.md), section 4.2). Proposal, for the author | retrieval (alone), routing |
+| harness | The execution environment and guardrails around the model (`harness/`): search engine, catalog, calculator, flow executor, budgets, the verifier. The agent runs on it and uses its tools | wrapper |
 | runner | The benchmark code ([`benchmark/runner/`](../benchmark/runner)) | - |
 | judge | The model that scores free-text and compound answers 0-3 | grader |
 | candidate | A model in the benchmark | model under test, AI under test |

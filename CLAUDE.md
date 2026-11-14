@@ -43,6 +43,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - One English word per concept: the agent's vocabulary in [`knowledge/glossary.md`](knowledge/glossary.md), writing vocabulary in [`project/vocabulary.md`](project/vocabulary.md), repository terms in [`project/terms.md`](project/terms.md). A new term is added there as a proposal and flagged for the author before use.
 
 ## Evaluation
+- The benchmark is a proof, not a goal. It proves that Agent E2 works: the shipped configuration against the release gate and the frontier reference. No mode, run, metric or setting is kept for the benchmark's own sake (author, 2026-11-14). Development diagnostics come from free checks first: the retrieval check, traces, unit tests.
 - Never send `## Expected key points` or `## Likely wrong answer` to a candidate. Only the judge ([`benchmark/runner/judge.py`](benchmark/runner/judge.py)) reads them.
 - Every candidate model must read screenshots (vision). Models and judge: [`benchmark/models.md`](benchmark/models.md).
 - Baseline runs use no knowledge base. The model and its reasoning setting are in the run folder's `config.json` (`model_params`).

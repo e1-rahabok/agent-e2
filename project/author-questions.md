@@ -18,6 +18,23 @@ Each entry has:
 
 ## Open
 
+### Q210 · Terms · Agent, case, reading set, reading plan
+
+- Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md).
+- Question: the new design needs four repository terms. Accept, or give your word: (A) agent now means the expert's procedure as code (was: the model plus the tool loop); (B) case: the agent's structured reading of one question (your word in Q166, case state; the benchmark keeps question); (C) reading set: the files and sections the model reads for one question; (D) reading plan: the code that builds it.
+- Written as now: all four in project/terms.md as proposals; used in harness/AGENT.md and ARCHITECTURE.md.
+- Answer:
+
+### Q209 · Benchmark > Runs · What the next round runs
+
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 8 and 16); [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md); [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml) (`final_round`); [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md) (section 1).
+- Question: under the rule that the benchmark is a proof (2026-11-14), two run choices change.
+  - (1) The local model alone (baseline). It showed that the knowledge base lifts every model by 19-28 points; it proves nothing about the shipped product. (A) drop it from the rounds; (B) keep it, 1 run instead of 5, as the zero point.
+  - (2) The next full round, decided on 2026-11-13 as the next run, on classic and agentic. (C) run it now as planned; (D) run it when the new agent is built ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 7, step 5): Agent E2 on the candidates, and the frontier reference.
+- Written as now: `final_round` runs baseline, classic and agentic for 3 candidates and the frontier reference in web mode, 5 runs.
+- Recommended: A and D. A round on classic and agentic measures pipelines that will not ship (about US$ 73 and 2-4 hours); the retrieval check gives the new agent's retrieval number for free, and the round after step 5 is the proof.
+- Answer:
+
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).
@@ -65,13 +82,6 @@ Each entry has:
 - Search 2: "reserved memory must be used first before it is held"
 - Question: Option D of 0024 does not say which sense of available it means. For admission control the kernel reservation is withheld whether used or not, so D is true; for physical pages it is not withheld until touched, so D is false. Every model, Opus included, reads the first. Should D say (A) not available for VM reservations (true), (B) physically blocked before use (false), or (C) leave the misconception list?
 - Written as now: an untouched reservation can serve other VMs; admission control counts the full reservation (draft, review note).
-- Answer:
-
-### Q200 · Benchmark > Mode · Agentic or classic as the shipped mode
-
-- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).
-- Question: Q130 made agentic the shipped mode. Round of 2026-11-13: agentic and classic tie for every model (-6, -3, +1 points, inside the margin), and agentic costs 2-3.5 times the tokens and about twice the latency. Proposal: (A) keep Q130; (B) the next round decides: agentic stays only if it beats classic outside the margin, else classic ships with consensus and agentic is an option; (C) ship classic now.
-- Written as now: agentic is the shipped mode (design.md, section 16). Recommended: B.
 - Answer:
 
 ### Q199 · Benchmark > Release gate · Confident-wrong limit on open answers
@@ -154,6 +164,13 @@ Each entry has:
 - Answer:
 
 ## Resolved
+
+### Q200 · Benchmark > Mode · Agentic or classic as the shipped mode
+
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).
+- Question: Q130 made agentic the shipped mode. Round of 2026-11-13: agentic and classic tie for every model (-6, -3, +1 points, inside the margin), and agentic costs 2-3.5 times the tokens and about twice the latency. Proposal: (A) keep Q130; (B) the next round decides: agentic stays only if it beats classic outside the margin, else classic ships with consensus and agentic is an option; (C) ship classic now.
+- Written as now: agentic is the shipped mode (design.md, section 16). Recommended: B.
+- Answer: Author (2026-11-14, in session): neither. Classic mode leaves the model only to read; agentic mode lets the model plan lookups in a domain it does not know. One pipeline takes the best of both: the agent and the harness lead, the model reads and writes. Designed: the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Replaces Q130's agentic as the shipped mode. Applied: ARCHITECTURE.md, MISSION.md, benchmark/design.md section 16, project/plan.md; rule added to CLAUDE.md, Evaluation: the benchmark is a proof, not a goal. Follow-ups: Q209 (what the next round runs), Q210 (terms).
 
 ### Q203 · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
 
