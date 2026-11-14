@@ -642,6 +642,18 @@ class PlannerTest(unittest.TestCase):
     READY = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
     CFG = dict(ModesTest.CFG, context_tokens=16000, plan_section_tokens=400, plan_derive_n=8)
 
+    def test_generic_ask_is_not_a_claim(self):
+        # 'Which statements are correct?' names no topic: searched, it returned an unrelated file (structure review 2026-11-14)
+        self.assertEqual(planner.claims('- A VM shows Ready 8%.\n\nWhich statements are correct?'), [])
+        self.assertEqual(planner.claims('Why is Ready high on this VM?'), ['Why is Ready high on this VM?'])
+        self.assertEqual(planner._stem('Is Ready high here? Which statements are correct?\n- A. x'), 'Is Ready high here?')
+
+    def test_search_text_keeps_table_header_only(self):
+        q = 'Why is it slow?\n\nAttachment a.csv:\n```csv\nTime,VM CPU Ready (%)\n09:00,1.2\n09:05,8.4\n```'
+        t = planner.search_text(q)
+        self.assertIn('VM CPU Ready (%)', t)
+        self.assertNotIn('09:05', t)
+
     def test_objects_in_question(self):
         self.assertEqual(planner.objects_in('A 4-vCPU VM on an ESXi host'), {'VirtualMachine', 'HostSystem'})
         self.assertIn('guest', planner.objects_in('Windows shows Processor Queue Length 12'))
