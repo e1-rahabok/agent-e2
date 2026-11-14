@@ -92,7 +92,7 @@ def final(rows):
     return out
 
 
-def consensus(rows, k=3, modes=('classic', 'agentic')):
+def consensus(rows, k=3, modes=('agent-e2',)):
     """Per (model, mode): the scores the harness would get with consensus of k samples (cfg consensus_samples), projected
     from the recorded runs. Multiple choice: every draw of k runs out of the recorded ones; unanimous letters stand,
     anything else (disagreement, Unsure, unreadable) is Unsure: no credit, not confident wrong. Judged answers are kept
@@ -138,7 +138,7 @@ def consensus(rows, k=3, modes=('classic', 'agentic')):
     return out
 
 
-# Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 in agentic mode.
+# Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 (mode agent-e2, 2026-11-14).
 # Not computed here: no misconception of knowledge/misconceptions.md stated as true (author check of each answer),
 # and the held-out set at most 11 points below the development set (a separate run).
 GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03}
@@ -165,7 +165,7 @@ def mcnemar(rows, model, mode, ref=REFERENCE):
     return b, c, p
 
 
-def gate(fin, rows, model, mode='agentic', ref=REFERENCE):
+def gate(fin, rows, model, mode='agent-e2', ref=REFERENCE):
     """Release gate rows for (model, mode): (name, value, limit, passed).
 
     The gap to the reference and its paired test follow as outcome rows: passed is None, they gate nothing.
@@ -276,9 +276,9 @@ def write(run_dir):
                  f'{_pct(s["confident_wrong"])} | {_pct(s["override"])} |')
     if (cfg.get('consensus_samples') or 1) <= 1 and (cfg.get('runs') or 0) >= 3:
         L += consensus_table(fin, consensus(all_scored))
-    cands = [k for k in fin if k[1] == 'agentic' and k != REFERENCE]
+    cands = [k for k in fin if k[1] == 'agent-e2' and k != REFERENCE]
     if cands:
-        L += ['', '## Release gate', '', f'Agentic mode. Reference: {REFERENCE[0]}, {REFERENCE[1]} mode'
+        L += ['', '## Release gate', '', f'Agent E2. Reference: {REFERENCE[0]}, {REFERENCE[1]} mode'
               + ('' if REFERENCE in fin else ' (not in this benchmark: gap not read)') + '.', '',
               '| Model | Gate | Value | Limit | Pass |', '|---|---|---|---|---|']
         for m, mode in sorted(cands):
@@ -329,7 +329,7 @@ def write(run_dir):
                  f'{"-" if math.isnan(s["steps"]) else round(s["steps"], 1)} | {int(s["tokens"]) if not math.isnan(s["tokens"]) else "-"} | '
                  f'{"-" if math.isnan(s["latency"]) else round(s["latency"], 1)} | {s["cost"]:.3f} |')
     L += ['', '- Exact and Partial: mean over all runs. Majority: most common answer per question. Margin: 95% interval on Majority from the number of questions.',
-          '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids whose text reached the model (classic: the context; agentic: the first lookup and the files it read). Seen: the same share counting search results too; Seen above Recall means files found but not read.', '']
+          '- Consistency: share of questions answered identically in every run. Recall: share of the question `knowledge` ids whose text reached the model (Agent E2: the reading set and any gap follow-up). Seen: the same for Agent E2, which shows the model every file it plans.', '']
 
     # per technology and task (a question counts for every technology it lists), deterministic answers
     for dim in ('technology', 'task'):

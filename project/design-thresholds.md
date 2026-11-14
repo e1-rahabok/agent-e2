@@ -38,23 +38,23 @@ Not indexed.
 ### 3.2 How Agent E2 uses them
 1. Start-up: [`harness/catalog.py`](../harness/catalog.py) loads the three files into an in-memory SQLite catalog: tables `thresholds` (one-value tests with `use`: alert, decision, rule; plus `criticality`, `class`, `pillar`, `interval`, `instance`), `kpi`, and `bands` (capacity model rows).
 2. Term map ([`harness/terms.py`](../harness/terms.py), [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml)): the user's words pull the metric's knowledge files into the context. No threshold is fetched here.
-3. Classic mode: `Catalog.facts_for(ids)` adds up to 14 "Catalog facts (exact)" lines for the files in the context: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
-4. Agentic mode: the LLM may call the `catalog` tool with a name. `Catalog.lookup` scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
+3. Agent E2's reading set: `Catalog.facts_for(ids)` adds up to 20 "Catalog facts (exact)" lines for the files in the reading set: counters, rule rows, and the KPI levels of a KPI file (all three intervals, "no value" where empty).
+4. The agent's code calls `Catalog.lookup` with each metric name of the case (harness/AGENT.md, stage 1; the model calls no tool since 2026-11-14). It scores every counter, esxtop field, metric file and threshold row against the name (word overlap, `_score`) and returns the 8 best of each, with the KPI levels of each matched band.
 5. The LLM reads the rows, picks one, compares the value itself and writes the answer.
 6. Prompt rules ([`harness/modes.py`](../harness/modes.py), [`harness/primer.py`](../harness/primer.py)): "Quote a threshold only when the knowledge base states it"; "For a threshold, call catalog. Its values are exact."
 7. Verifier ([`harness/verify.py`](../harness/verify.py)): a number with a unit in the reason line that is not in the question or the context is recorded as "ungrounded" in the trace. Soft: it does not trigger a repair.
 8. Clarifying ([`harness/clarify.py`](../harness/clarify.py), shipped conversation only): one round of up to 3 questions when the question is odd, the text and an attachment disagree, or one missing fact (object, layer, interval, version) changes the answer.
-9. Quality checks: lint checks every catalog row (parses, fields, allowed values), a `quote` where one remains, and that no knowledge file carries a colour-band table. [`harness/test_tools.py`](../harness/test_tools.py) checks lookups, classic facts and `read_file` show the catalog values.
+9. Quality checks: lint checks every catalog row (parses, fields, allowed values), a `quote` where one remains, and that no knowledge file carries a colour-band table. [`harness/test_tools.py`](../harness/test_tools.py) checks that lookups and the reading set show the catalog values.
 
 ### 3.3 Gaps in what is built
 | # | Gap | Effect on an answer |
 |---|---|---|
 | G1 | Lookup by fuzzy name | "Ready" returns VM, ESXi and cluster rows mixed; the LLM picks |
-| G2 | Fixed 2026-11-11: results and classic facts carry `interval` and `instance` where a row has them | - |
+| G2 | Fixed 2026-11-11: results and reading-set facts carry `interval` and `instance` where a row has them | - |
 | G3 | Fixed 2026-11-11: every value is labelled with its use ("Alert, red: VM CPU Ready > 8", "Capacity decision: ...") | - |
 | G4 | The LLM compares the value | Errors on ranges, open ends and lower-is-worse metrics |
-| G5 | Fixed 2026-11-10: lookups and classic facts return the KPI levels (`kpi`) | - |
-| G6 | Fixed 2026-11-10: classic facts include the KPI levels of a KPI file in the context | - |
+| G5 | Fixed 2026-11-10: lookups and reading-set facts return the KPI levels (`kpi`) | - |
+| G6 | Fixed 2026-11-10: reading-set facts include the KPI levels of a KPI file in the context | - |
 | G7 | Wait cycles are free text inside `condition` | Agent E2 cannot compute when an alert fires or clears |
 | G8 | No signal that the answer depends on a missing fact | Asking is left to the LLM's judgment |
 | G9 | Ungrounded-number check is soft and reason-line only | A wrong threshold in the answer body passes |
@@ -438,7 +438,7 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 | Lookup | Returns rows | Extends the existing `catalog` tool with `value`, `use`, `class`: returns the verdict per use, `why`, "not comparable" for other readings, "depends on" for missing parts. One tool, not a new one: each tool costs prompt tokens and choice errors for a 32B LLM |
 | Comparison | By the LLM | In the catalog: levels and bands, direction, the boundary rule |
 | Alert timing | Free text | Computed: time to fire and to clear from wait and cancel cycles |
-| Classic mode (`Catalog.facts_for`) | Counters and rules of the files in context | Results of section 10 for every reading of the files in context, bands included |
+| Reading set (`Catalog.facts_for`) | Counters and rules of the files in the reading set | Results of section 10 for every reading of the files in context, bands included |
 | Term map (`user-terms.yaml`) | Files | Files and reading keys, so the lookup starts before the LLM asks |
 | Up-front block ([`harness/primer.py`](../harness/primer.py)) | Tool advice | The threshold frame of section 12 |
 | Clarifying rule ([`harness/clarify.py`](../harness/clarify.py)) | Object, layer, interval, version | Adds instance, use, class, the customer's own setting; reads "depends on" |
@@ -461,10 +461,10 @@ A question rarely gives all six parts of a threshold, and the customer's VCF Ope
 ## 15. Work list
 
 ### 15.1 1.0, in order
-1. Done 2026-11-10: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and classic facts return them.
+1. Done 2026-11-10: answers to Q152-Q158; `levels` as the one copy of the KPI levels; lookups and reading-set facts return them.
 2. `readings.yaml` for every reading that has a threshold today.
 3. Migration to the performance, capacity and alerts files. Done 2026-11-11: sections by use (`sla`, `sli`, `kpi`; `models`, `decisions`, `rules`; `alerts`), `class` and `criticality` as fields, use labels in every result. Alert rows into symptoms and alert definitions: done 2026-11-12 (section 8.4). Still to do: cancel cycles (step 10); reading keys (step 2).
-4. Catalog tables, lookup with verdicts, `catalog` tool arguments, classic facts, unit tests.
+4. Catalog tables, lookup with verdicts, the case's metric names, reading-set facts, unit tests.
 5. Up-front block, clarifying triggers, verifier check.
 6. `thresholds-availability.yaml` with its two rows.
 7. [`project/knowledge-rules/thresholds.md`](knowledge-rules/thresholds.md): the threshold files of this design.

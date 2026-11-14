@@ -1,19 +1,15 @@
-"""Answer modes: baseline (no knowledge base), classic RAG, agentic (the agent loop, agent.py).
-
-Classic and agentic replies pass the answer verifier (verify.py); a hard issue gets one repair turn.
-Classic context carries catalog facts for the files it holds; agentic mode adds the catalog, calculate and flow tools.
-Two answer kinds: choice (multiple-choice letters, verified) and open (free-text conversation answer, not verified:
-the verifier checks letter format only). The retrieval and tools are the same for both.
+"""Answer modes: Agent E2 (the neuro-symbolic expert system, agent.py), and the two benchmark references:
+baseline (the model alone, no knowledge base) and web (the frontier reference: the model alone with web search, as a
+user meets it). Agent E2 replies pass the answer verifier (verify.py); a hard issue gets one repair turn.
+Two answer kinds: choice (multiple-choice letters, verified) and open (free text); chat and chat_final are the
+conversation kinds of the shipped assistant (clarify.py).
 """
 import json
 import re
 
-import catalog
 import clarify
-import terms
 import verify
 import web
-from llm import LLMError
 
 FORMAT = ('Reply with exactly two lines and nothing else:\n'
           'ANSWER: <letter or letters, comma separated>\n'
@@ -36,18 +32,6 @@ SYSTEM_KB = (
     '- If neither the knowledge base nor your own knowledge settles every option, choose only the Unsure option.\n'
     + UNSURE_RULE + FORMAT)
 
-SYSTEM_AGENT = SYSTEM_KB.replace(
-    'Use the knowledge base text provided to you first.',
-    'Look up the knowledge base with the tools first, before you answer from your own knowledge.') + (
-    '\nTool rules:\n'
-    '- Your first action must be search or catalog.\n'
-    '- Base the knowledge base part of the answer on text returned by read_file, catalog, flow and calculate. Search snippets are not enough.\n'
-    '- Before answering about a metric, call follow_links with link_type "same_name" on its file.\n'
-    '- For a unit, rollup, statistics level, esxtop field, threshold or object relationship, call catalog. Its values are exact.\n'
-    '- For any arithmetic or unit conversion, call calculate. Do not compute in your head.\n'
-    '- For a troubleshooting question, call flow on the matching troubleshooting file and follow its steps in order.\n'
-    '- You have at most {max_calls} tool calls. Then answer.')
-
 OPEN_FORMAT = ('Answer in plain text, at most 250 words. Give the conclusion first, then the mechanism and the reason, '
                'then what to check next. If the information available does not settle the question, say so instead of guessing.')
 
@@ -63,8 +47,8 @@ def _open(system):
 
 
 PROMPTS = {
-    'choice': {'base': SYSTEM_BASE, 'kb': SYSTEM_KB, 'agent': SYSTEM_AGENT, 'format': FORMAT},
-    'open': {'base': _open(SYSTEM_BASE), 'kb': _open(SYSTEM_KB), 'agent': _open(SYSTEM_AGENT), 'format': OPEN_FORMAT},
+    'choice': {'base': SYSTEM_BASE, 'kb': SYSTEM_KB, 'format': FORMAT},
+    'open': {'base': _open(SYSTEM_BASE), 'kb': _open(SYSTEM_KB), 'format': OPEN_FORMAT},
 }
 # Conversation kinds (the shipped assistant, harness/clarify.py): 'chat' may ask once; 'chat_final' must answer.
 PROMPTS['chat'] = {k: v + clarify.ASK_RULE for k, v in PROMPTS['open'].items()}
@@ -117,77 +101,6 @@ def baseline(client, model, question, images, cfg, trace, kind='choice'):
     return res, []
 
 
-TROUBLESHOOT = re.compile(r'\b(slow|troubleshoot\w*|what (do|should|would) (you|i|we) check|root cause|cause[sd]?|why (is|are|does|do)|'
-                          r'complain\w*|drops?|dropped|fail\w*|spike\w*|high|degrad\w*)\b', re.I)
-
-
-def classic_context(retriever, question, cfg, budget=None):
-    """One fixed retrieval pass: search, expand same_name and related, fit to budget (default cfg context_tokens).
-    Also the agent's first lookup when it starts primed (agent.py, cfg agent_seed_tokens)."""
-    matched = terms.match(question) if cfg.get('term_map') else []
-    hits = retriever.search(terms.query(question, matched), k=cfg['classic_k'])
-    ids = [h['id'] for h in hits]
-    if cfg.get('route_troubleshooting') and TROUBLESHOOT.search(question):
-        flows = [h for h in retriever.search(question, filters={'retriever_guide': 'troubleshooting'}, k=2, min_hits=1)
-                 if retriever.docs.get(h['id']) and retriever.docs[h['id']].meta.get('retriever_guide') == 'troubleshooting']
-        for h in reversed(flows[:1]):
-            if h['id'] in ids:
-                ids.remove(h['id'])
-            ids.insert(0, h['id'])
-    pos = cfg.get('term_map_position', 1)
-    for f in reversed(terms.files(matched, retriever.docs, cfg.get('term_map_files', 2))):
-        if f in ids:
-            ids.remove(f)
-        ids.insert(min(pos, len(ids)), f)
-    for h in hits[:2]:
-        links = retriever.links(h['id'], 'same_name') + retriever.links(h['id'], 'related')[:2]
-        if cfg.get('expand_derive'):
-            links += retriever.links(h['id'], 'internal_derive')[:cfg.get('expand_derive_n', 3)]
-        for link in links:
-            if link['id'] in retriever.docs and link['id'] not in ids:
-                ids.append(link['id'])
-    budget, parts, used = budget or cfg['context_tokens'], [], []
-    notes = terms.block(matched)
-    if notes:
-        parts.append(notes)
-        budget -= _tok(notes)
-    facts = catalog.get(retriever.docs).facts_for(ids) if cfg.get('catalog_facts', True) else ''
-    if facts:
-        parts.append(facts)
-        budget -= _tok(facts)
-    for i in ids:
-        d = retriever.docs[i]
-        block = f'### {d.title}\nid: {d.id} | status: {d.status}\n{d.body}'
-        if _tok(block) > budget:
-            block = block[:budget * 4]
-        parts.append(block)
-        used.append(i)
-        budget -= _tok(block)
-        if budget <= 200:
-            break
-    return '\n\n'.join(parts), used, hits
-
-
-def classic(client, model, question, images, cfg, trace, retriever, kind='choice'):
-    context, used, hits = classic_context(retriever, question, cfg)
-    _step(trace, 'search', question[:200], [h['id'] for h in hits])
-    _step(trace, 'context', '', used)
-    pages = web.gather(question, cfg['web']) if (cfg.get('web') or {}).get('enabled') else []
-    if pages:
-        _step(trace, 'web', [p['url'] for p in pages], [p.get('error') or f"{_tok(p['text'])} tokens" for p in pages])
-    pages_text = ('\n\n' + web.block(pages)) if pages else ''
-    msgs = [{'role': 'system', 'content': PROMPTS[kind]['kb']},
-            _user(f'Knowledge base:\n{context}{pages_text}\n\nQuestion:\n{question}', images)]
-    if over_window(msgs, cfg):
-        _step(trace, 'context_over', cfg.get('context_window'), 'prompt larger than the deployed window')
-    po = cfg.get('provider_order', {}).get(model)
-    res = client.chat(model, msgs, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
-    _step(trace, 'answer', '', res['content'][:400], res)
-    if kind == 'choice':
-        res = _verified(client, model, msgs, res, question, context, set(retriever.docs), cfg, trace, po)
-    return res, used
-
-
 def _verified(client, model, msgs, res, question, context, kb_ids, cfg, trace, po):
     """Run the answer verifier. Hard issues get one repair turn; soft issues are only recorded."""
     if not cfg.get('verify', True):
@@ -205,36 +118,52 @@ def _verified(client, model, msgs, res, question, context, kb_ids, cfg, trace, p
     return res2
 
 
-CONSENSUS_MODES = ('classic', 'agentic')  # the shipped modes; baseline and web stay one sample: they measure the model alone
+AGENT = 'agent-e2'                # the shipped system
+MODES = ('baseline', AGENT, 'web')  # baseline and web are benchmark references: the model alone, without and with web search
+CONSENSUS_MODES = (AGENT,)        # baseline and web stay one sample: they measure the model alone
 
 
 def answer(mode, client, model, question, images, cfg, retriever, kind='choice'):
-    """Run one question in one mode. kind: choice (letters) or open (free text).
-    With cfg consensus_samples n > 1 (choice questions, classic and agentic mode): n samples; the letters stand only
-    when every sample gives the same set, otherwise the answer is Unsure (harness/README.md, section Consensus).
-    Returns (result, ids used, trace, fallback flag)."""
+    """Run one question in one mode. kind: choice (letters), open (free text), chat or chat_final (conversation).
+    With cfg consensus_samples n > 1 (choice questions, Agent E2): n samples of the answer on one reading set; the letters
+    stand only when every sample gives the same set, otherwise the answer is Unsure (harness/README.md, section Consensus).
+    Returns (result, ids used, trace, fallback flag). The flag stays for the run log's column: Agent E2 has no fallback."""
+    if mode not in MODES:
+        raise ValueError(f'unknown mode {mode!r}: {", ".join(MODES)}')
+    trace = []
+    if mode == 'baseline':
+        res, used = baseline(client, model, question, images, cfg, trace, kind)
+        return res, used, trace, False
+    if mode == 'web':
+        res, used = web_only(client, model, question, images, cfg, trace, kind)
+        return res, used, trace, False
+    prep = agent.prepare(client, model, question, images, cfg, trace, retriever, kind, PROMPTS)
     n = cfg.get('consensus_samples') or 1
-    if n > 1 and kind == 'choice' and mode in CONSENSUS_MODES:
-        return _consensus(n, mode, client, model, question, images, cfg, retriever)
-    return _answer_once(mode, client, model, question, images, cfg, retriever, kind)
+    if n > 1 and kind == 'choice':
+        res, used = _consensus(n, client, model, question, cfg, trace, retriever, prep)
+    else:
+        res, used = agent.write(client, model, question, cfg, trace, retriever, kind, prep, _verified)
+    return res, used, trace, False
 
 
-def _consensus(n, mode, client, model, question, images, cfg, retriever):
-    """Up to n samples, stopped at the first disagreement or Unsure: unanimous letters stand, anything else is Unsure.
+def _consensus(n, client, model, question, cfg, trace, retriever, prep):
+    """Up to n samples of the answer on the one prepared reading set, stopped at the first disagreement or Unsure:
+    unanimous letters stand, anything else is Unsure.
 
-    Why: on the 2026-11-13 round, 55-75% of the confident-wrong multiple-choice answers in knowledge base modes were
-    partly right, and the same question got different letters in different runs. Disagreement between samples marks
-    the questions the model does not know; the Unsure rule in the prompt alone did not (Unsure 1-6% of answers).
+    Why: on the 2026-11-13 round, 55-75% of the confident-wrong multiple-choice answers were partly right, and the same
+    question got different letters in different runs. Disagreement between samples marks the questions the model does not
+    know; the Unsure rule in the prompt alone did not (Unsure 1-6% of answers). The reading set is shared, so a
+    disagreement is doubt in the reasoning, not a different search.
     """
     _, unsure, _ = verify.options(question)
-    trace, used, fallback, first, first_letters = [], [], False, None, None
+    used, first, first_letters, letters = [], None, None, None
     for i in range(n):
-        res, ids, tr, fb = _answer_once(mode, client, model, question, images, cfg, retriever, 'choice')
+        tr = []
+        res, ids = agent.write(client, model, question, cfg, tr, retriever, 'choice', prep, _verified)
         for s in tr:
             s['sample'] = i + 1
         trace += tr
         used += [x for x in ids if x not in used]
-        fallback = fallback or fb
         letters = sorted(set(verify.answer_letters(res.get('content') or '') or []))
         if first is None:
             first, first_letters = res, letters
@@ -242,10 +171,10 @@ def _consensus(n, mode, client, model, question, images, cfg, retriever):
             break
     else:
         _step(trace, 'consensus', n, f'agreed: {",".join(first_letters)}')
-        return first, used, trace, fallback
+        return first, used
     if not unsure:  # no Unsure option to fall back to: keep the first answer, flag it
         _step(trace, 'consensus', n, 'disagreed; no Unsure option, first answer kept')
-        return first, used, trace, fallback
+        return first, used
     seen = f'{",".join(first_letters) or "none"} then {",".join(letters) or "none"}'
     if not letters:
         why = 'a sample gave no readable letters'
@@ -260,29 +189,7 @@ def _consensus(n, mode, client, model, question, images, cfg, retriever):
     # One ANSWER line only: the parser reads the last one, so the first sample's own ANSWER line is not repeated.
     out['content'] = (f'ANSWER: {unsure}\nREASON: Not settled: {why}, so the knowledge read does not decide every option.'
                       + (f' First sample\'s reason: {first_reason[:400]}' if first_reason else ''))
-    return out, used, trace, fallback
-
-
-def _answer_once(mode, client, model, question, images, cfg, retriever, kind='choice'):
-    trace = []
-    if mode == 'baseline':
-        res, used = baseline(client, model, question, images, cfg, trace, kind)
-        return res, used, trace, False
-    if mode == 'classic':
-        res, used = classic(client, model, question, images, cfg, trace, retriever, kind)
-        return res, used, trace, False
-    if mode == 'web':
-        res, used = agent.web_only(client, model, question, images, cfg, trace, retriever, kind)
-        return res, used, trace, False
-    try:
-        res, used = agent.agentic(client, model, question, images, cfg, trace, retriever, kind)
-        return res, used, trace, False
-    except (agent.FallbackNeeded, LLMError) as e:
-        if isinstance(e, LLMError) and 'tool' not in str(e).lower():
-            raise
-        _step(trace, 'fallback', str(e)[:200], 'classic')
-        res, used = classic(client, model, question, images, cfg, trace, retriever, kind)
-        return res, used, trace, True
+    return out, used
 
 
 def converse(mode, client, model, turns, images, cfg, retriever):
@@ -308,6 +215,56 @@ def converse(mode, client, model, turns, images, cfg, retriever):
     return {'type': 'answer', 'result': res, 'used': used, 'trace': trace, 'fallback': fb}
 
 
-# The agent loop lives in agent.py, which imports the prompts and helpers above; so it is imported last.
-import agent  # noqa: E402
-from agent import TOOLS, TOOL_NAMES, FallbackNeeded  # noqa: E402,F401  (re-exported for the runner)
+# Reference mode `web` (benchmark): what a chat product gives a frontier model when web search is on. The descriptions say
+# nothing about when to search: the model decides, as it does for an administrator who types a question.
+REF_WEB_TOOLS = [
+    {'type': 'function', 'function': {
+        'name': 'web_search', 'description': 'Search the web.',
+        'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query']}}},
+    {'type': 'function', 'function': {
+        'name': 'fetch_url', 'description': 'Fetch a web page.',
+        'parameters': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'required': ['url']}}},
+]
+TOOL_NAMES = [t['function']['name'] for t in REF_WEB_TOOLS]   # the only tool calls left: the web reference's
+
+
+def web_only(client, model, question, images, cfg, trace, kind='choice'):
+    """Reference mode: the baseline prompt plus web search and page fetch that the model may use or ignore.
+    No knowledge base, no instruction to search, the open web (no host list), no answer verifier. Returns (result, [])."""
+    wcfg = dict(cfg.get('web') or {})
+    wcfg.update({'enabled': True, 'search_hosts': [], 'allow_hosts': []})
+    if not web.search_configured(wcfg):
+        raise ValueError('mode web needs web.search_backend or web.search_url in the config')
+    max_calls = cfg.get('web_max_calls', 5)
+    msgs = [{'role': 'system', 'content': PROMPTS[kind]['base']}, _user(question, images)]
+    po = cfg.get('provider_order', {}).get(model)
+    calls = 0
+    while True:
+        tools = REF_WEB_TOOLS if calls < max_calls else None
+        if tools is None:
+            msgs.append({'role': 'user', 'content': 'Answer now.\n' + PROMPTS[kind]['format']})
+        res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
+        tcs = res['tool_calls'] if tools else []
+        if not tcs:
+            _step(trace, 'answer', '', (res['content'] or '')[:400], res)
+            return res, []
+        msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
+        for n, tc in enumerate(tcs):
+            calls += 1
+            name = tc.get('function', {}).get('name', '')
+            raw = tc.get('function', {}).get('arguments') or '{}'
+            try:
+                args = json.loads(raw) if isinstance(raw, str) else raw
+            except json.JSONDecodeError:
+                args = {}
+            if name == 'web_search':
+                out = json.dumps(web.search(str(args.get('query', '')), wcfg), ensure_ascii=False, indent=0)
+            elif name == 'fetch_url':
+                out = web.block([web.fetch(str(args.get('url', '')), question, wcfg)])
+            else:
+                out = json.dumps({'error': f'unknown tool {name}'})
+            _step(trace, name, args, f'{_tok(out)} tokens', res if n == 0 else None)
+            msgs.append({'role': 'tool', 'tool_call_id': tc.get('id', ''), 'content': out})
+
+
+import agent  # noqa: E402  (agent.py reads PROMPTS and _verified from here at call time)

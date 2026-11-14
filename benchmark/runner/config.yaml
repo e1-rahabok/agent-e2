@@ -13,7 +13,7 @@ judge_model: openai/gpt-6.1-terra   # 2026-11-13: USD 1 and 5 per million tokens
 judge_temperature: 0
 judge_max_tokens: 1500
 
-modes: [baseline, classic, agentic]
+modes: [baseline, agent-e2]     # the model alone, and Agent E2 (harness/AGENT.md). The frontier reference runs mode web (release.runs)
 runs: 5                       # repeats per question per model per mode
 temperature: null             # models without a `sampling` entry: null = the provider's default
 sampling:                     # per model: the settings of its own card (generation_config.json on Hugging Face), which a local server
@@ -52,18 +52,16 @@ adaptive_concurrency:         # probe above the proven value, one model at a tim
   gain_fraction: 0.5          # a step must deliver this share of the ideal gain in answers per minute; HTTP 429 returns to proven
 
 embedding_model: alibaba/qwen3-embedding-0.6b   # null = BM25 only
-classic_k: 6                  # files from the search before link expansion
-context_tokens: 16000         # classic mode context budget (author, 2026-11-06: 16K reaches 76%; 20K and 24K add nothing)
-expand_derive: true           # classic: add up to 3 internal_derive files of the top 2 hits (retrieval check 2026-11-06: 70% -> 71%, 50 -> 52 of 90 complete)
-route_troubleshooting: true         # classic: a troubleshooting question puts its best troubleshooting file first (71%, 51 of 90; both together with the above: 73%, 53 of 90)
-term_map: true                # classic: user words -> knowledge-base terms, files and notes (knowledge/catalog/user-terms.yaml, harness/terms.py). Retrieval check 2026-11-09, BM25: 73% -> 76%, 53 -> 57 of 90 complete
-term_map_agent: true          # agentic: the same notes in the system prompt (on for the final round, 2026-11-13)
-term_map_files: 2             # classic: files pulled in from the matched rows
-term_map_position: 1          # classic: where they go in the file order (0 = before the top search hit)
-planner: false                # reading plan of the expert-led agent (harness/planner.py, harness/AGENT.md section 4): prototype, read by the retrieval check only
-                              # (--set planner=true). 2026-11-14, BM25: context recall 62% -> 76%, complete 85 -> 108 of 196; hybrid: 69% -> 80%, 91 -> 115 of 196
+search_k: 6                   # hybrid search hits of the question: the top 3 read whole (tier 3), 4-6 as sections (harness/planner.py)
+context_tokens: 16000         # the reading set's budget (harness/AGENT.md, section 4.2)
 plan_section_tokens: 400      # reading plan: files below the whole-file tiers give their best sections, at most this many tokens each
 plan_derive_n: 8              # reading plan: internal_derive files taken per named file (the mechanism closure)
+plan_claims_max: 10           # reading plan: one search per claim, at most this many claims
+term_map: true                # user words -> knowledge-base terms, files and notes (knowledge/catalog/user-terms.yaml, harness/terms.py)
+term_map_files: 2             # files pulled in from the matched rows (tier 2)
+case_model: true              # stage 1: the model reads the question into a case (temperature 0); false = the code-only reading
+case_max_tokens: 1200
+gap_followup: true            # stage 6: one more answer turn when the draft names a metric whose file was not read
 query_expansion: false        # add glossary preferred words to the query; no gain measured (the glossary has 2 synonym rows), off
 rerank: false                 # cross-encoder bge-reranker-v2-m3 over the top fused chunks (harness/rerank.py); retrieval check 2026-11-06, BM25: 56 of 90 without; best variant 56 (fuse, top 10), others 44-52. No gain, off
 rerank_model: bge-reranker-v2-m3
@@ -71,7 +69,7 @@ rerank_n: 10
 rerank_mode: fuse              # fuse: its rank added to the fusion; replace: its order alone
 rerank_stem: false             # true: score the question without its options
 web:                          # public web knowledge (harness/web.py; MISSION.md, section 5)
-  enabled: true               # read URLs in the question; tools fetch_url and web_search in agentic mode
+  enabled: true               # read URLs in the question before Agent E2 answers
   fetch: true
   search_backend: gateway     # gateway: Vercel AI Gateway's Perplexity search (benchmark; needs AI_GATEWAY_API_KEY, about USD 0.006 a search, 2026-11-09). searxng: a customer's SearXNG at search_url
   search_url: null            # SearXNG-style JSON endpoint, e.g. https://searx.example/search
@@ -83,32 +81,24 @@ web:                          # public web knowledge (harness/web.py; MISSION.md
   max_bytes: 3000000
   page_tokens: 2000           # a page is trimmed to the parts most relevant to the question
   search_results: 5
-  search_fetch: 2             # result pages read in classic mode
-agent_max_calls: 8            # tool calls per question
-agent_read_reminder: true     # before the answer, name the top search hits the agent did not read (harness/AGENT.md, section 5). New 2026-11-13: the one
-                              # agentic change of the next round, so its effect reads as agentic before and after
-consensus_samples: 1          # multiple choice, classic and agentic: n samples, unanimous letters stand, else Unsure (harness/README.md, section Consensus).
+  search_fetch: 2             # result pages read for a current-facts question
+consensus_samples: 1          # multiple choice, Agent E2: n answer samples on one reading set; unanimous letters stand, else Unsure (harness/README.md, section Consensus).
                               # The benchmark keeps 1: report.py projects consensus of 3 exactly from the 5 runs, at a third of the cost. The deployed
                               # profile sets 3 (round of 2026-11-13, projected: confident-wrong multiple choice 10-18% -> 2-6%)
-agent_seed_tokens: 0          # primed start: the classic lookup, fitted to this many tokens, is the agent's first context (harness/AGENT.md section 3). 0 = cold start (search first). Off: sample of 2026-11-13, the primed agent stopped calling tools and scored below classic
-agent_tool_tokens: 12000      # tool output budget per question
-context_window: 32000         # the deployed model's window (MISSION.md, section 5); the agent stops calling tools before the prompt outgrows it
+context_window: 32000         # the deployed model's window (MISSION.md, section 5); a prompt above it is flagged in the trace (context_over)
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model
-agent_primer:                 # up-front blocks for the agent (harness/primer.py, harness/AGENT.md section 3); all on for the final round (2026-11-13)
-  map: true                   # what each area holds, what each file kind answers
+primer:                       # up-front blocks in Agent E2's answer prompt (harness/primer.py)
   rules: true                 # Level 300 misconceptions (knowledge/misconceptions.md)
   terms: true                 # confusable pairs (knowledge/glossary.md)
-  flows: true                 # symptom -> flow index
-  procedure: true             # how to use the tools
 
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]
 provider_order: {}
 
 release:                      # the final round: benchmark/RUN.md. One run folder per entry, all started together (run_all.py)
   runs:
-    - {model: google/gemma-4-31b-it, modes: [baseline, classic, agentic]}
-    - {model: alibaba/qwen3.8-27b, modes: [baseline, classic, agentic]}
-    - {model: meta/muse-glimmer-30b, modes: [baseline, classic, agentic]}
+    - {model: google/gemma-4-31b-it, modes: [baseline, agent-e2]}
+    - {model: alibaba/qwen3.8-27b, modes: [baseline, agent-e2]}
+    - {model: meta/muse-glimmer-30b, modes: [baseline, agent-e2]}
     - {model: anthropic/claude-opus-5.5, modes: [web]}    # frontier reference as a user meets it: search available, the model decides; no prompt-only mode (author, 2026-11-13)
   reference: anthropic/claude-opus-5.5
   max_cost_usd: 150           # preflight refuses the round when the projected cost (with the safety factor) is above this
