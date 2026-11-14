@@ -353,7 +353,7 @@ Proposal. Values are design values for the recommended alert set, to tune from e
   - with an event engine: debounce there; symptom cancel cycles can stay at the low end of R2;
   - VCF Operations sending straight to email or ITSM: the cancel cycle is the only debounce; use the values of R2 as they are.
 
-### 9.5 Review of [`project/alert_close_cycle_design_best_practices.md`](alert_close_cycle_design_best_practices.md)
+### 9.5 Review of [`project/sources/alert_close_cycle_design_best_practices.md`](sources/alert_close_cycle_design_best_practices.md)
 | Point in the note | Verdict | Reason |
 |---|---|---|
 | Separate telemetry, event and ITSM states | Agree | Section 9.1 |

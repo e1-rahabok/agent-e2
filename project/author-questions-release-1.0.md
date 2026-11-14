@@ -131,3 +131,10 @@ Open questions that must be answered before Agent E2 release 1.0. Rules for answ
   - Change if accepted: two URL questions (Level 300, troubleshoot).
   - For you: 3-8 more pages (blogs, community posts) you know to be wrong.
 - Answer:
+
+### Q211 · Repository rules · Sources folder: read-only or author-added
+
+- Files: [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Facts and sources: "project/sources/ is read-only"); [project/sources/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/README.md); [project/sources/alert_close_cycle_design_best_practices.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/alert_close_cycle_design_best_practices.md) (moved here on 2026-11-14).
+- Question: the rule says Claude must not write to project/sources/, but you asked for a source file to be placed there, and you say it is a mistake to keep sources elsewhere. Change the rule to: the author adds sources; Claude reads them and never edits them? Or keep it read-only for Claude and the author adds files only?
+- Written as now: the rule says read-only; the file is in project/sources/ as instructed.
+- Answer:
