@@ -62,7 +62,6 @@ Six mechanisms, in order of weight.
 
 ### Status
 - Not achieved yet. Agent E2 was rebuilt on 2026-11-14 as one pipeline, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)): code plans what the model reads and computes the exact values; the model reads and writes. No round has run on it yet.
-- Why the rebuild: in the previous generation the gap was retrieval and knowledge, not the model's reasoning: with every needed file read, the model lost under 2 points (archived analysis: [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md), section 11). Earlier scores are not compared with the new generation.
 
 ## 4. Model size
 - Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.
