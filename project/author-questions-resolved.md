@@ -1330,7 +1330,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Search: "Values in the author's set"
 - What the knowledge base says now: wait cycle 5 minutes for contention, 10 where false positives are common, 15 for consumption. No cancel cycle anywhere.
 - Question: (a) cancel cycle per type (contention, consumption)? (b) symptom-level wait and cancel with alert-level cycles at 1, as Broadcom advises? (c) does any of your alerts set an alert-level wait cycle?
-- Answer: Cancel cycle needs an overall design; Claude to propose one. Example for review: project/alert_close_cycle_design_best_practices.md.
+- Answer: Cancel cycle needs an overall design; Claude to propose one. Example for review: project/sources/alert_close_cycle_design_best_practices.md.
 - Applied 2026-11-10: proposal in project/design-thresholds.md, section 9 (three states, rules R1-R6, incident layer, review of the example). Values wait for approval.
 
 ### Q154 · Threshold design · Symptom: two meanings
