@@ -100,7 +100,7 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 - guest-os/system/guest-os-performance
 source:
-  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation)
+  document: Knowledge base; vSphere 9.1 documentation
   path: Linked files in each section
 corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; availability, security and compliance are future, after 1.0.'

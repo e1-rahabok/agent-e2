@@ -136,7 +136,7 @@ images:
     topic: 'VM memory views'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Overview; Contention Metrics; Consumption Metrics; Demand
 corrections: []
 review_notes: []

@@ -110,7 +110,7 @@ images:
     topic: 'esxtop memory'
     image_type: screenshot
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > esxtop > Memory
 corrections: []
 review_notes:

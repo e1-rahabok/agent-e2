@@ -91,7 +91,7 @@ related:
 - sp5-framework/concepts/monitoring-vs-troubleshooting
 - sp5-framework/concepts/performance-vs-capacity
 source:
-  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery'
+  document: Knowledge base
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
 review_notes: []

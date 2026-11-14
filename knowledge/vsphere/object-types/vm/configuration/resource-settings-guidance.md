@@ -77,11 +77,11 @@ images:
     image_type: scatter
     sample: 'about 1,500 VMs'
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: 'Virtual Infrastructure Management > General Resource Management (p. 65); Part 1, Configuration Management > Review List > Resource Management, Share, Reservation, Limit, Resource Pool (pp. 138-141)'
 corrections: []
 review_notes:
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: Headroom for memory virtualization overhead and migration overhead: the source defines no percentage; whether the source document gives one.'
+- 'To check: Headroom for memory virtualization overhead and migration overhead: the source defines no percentage; whether gives one.'
 status: draft
 ```

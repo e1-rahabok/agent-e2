@@ -73,12 +73,12 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/zero-pages
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed; section Mechanism from the author's hypervisor memory management manual (project/sources/hypervisor_memory_management_manual.md)
 corrections: []
 review_notes:
 - 'Section ''View'': from Memory > Architecture.'
 - 'Sections Formula, Consumed after the guest frees memory: from Memory > VM.'
-- 'To check: Section ''Formula'': whether Consumed includes the compressed remainder that stays in DIMM; the source document is unsure.'
+- 'To check: Section ''Formula'': whether Consumed includes the compressed remainder that stays in DIMM; unconfirmed.'
 status: draft
 ```

@@ -89,9 +89,9 @@ related:
 - vsphere/object-types/cluster/cluster-health-check
 - sp5-framework/capacity/supply
 source:
-  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the closure logic
+  document: Knowledge base
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
-review_notes:
+review_notes: []
 status: draft
 ```

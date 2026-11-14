@@ -46,7 +46,7 @@ related:
 - vsphere/technology/storage/troubleshooting/host-storage-latency
 - vsphere/technology/storage/metrics/host/datastore
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Storage Alerts (Contention Alerts: Infrastructure Contention; Consumption Alerts); Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes:

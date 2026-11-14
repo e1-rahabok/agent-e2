@@ -99,10 +99,9 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
+  document: Knowledge base
   path: Metric Mastery > Aggregation; The Problem with Average; Lagging vs Leading Indicators; "Peak" Utilization; Depth vs Breadth; Usage Disparity
-corrections:
-- 'Section ''Divide summed counters correctly'': the source document writes ESXi CPU Ready (%) = ESXi CPU Ready (ms) / Sum (vCPU of running VMs), which gives ms per vCPU. The denominator needs the sample length (https://knowledge.broadcom.com/external/article/306576; https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/cpu_counters.html).'
+corrections: []
 review_notes: []
 status: draft
 ```

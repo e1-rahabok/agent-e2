@@ -151,7 +151,7 @@ images:
     topic: 'Consumer and provider metric types; drive by contention'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Performance Management > The 3 Realms > The Layers in IT Systems; The Layers in IaaS > IaaS Metric Types; Optimized Performance'
 corrections:
 - 'Section ''Consumer and provider metric types'': driver-layer metrics are guest-os layer, fixed in the guest; the VM KPI covers the vNIC as the hypervisor sees it.'

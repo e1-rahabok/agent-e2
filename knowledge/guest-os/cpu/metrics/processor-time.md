@@ -49,7 +49,7 @@ same_meaning: []
 related:
 - guest-os/cpu/windows-cpu-scheduling
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: MS Windows > CPU; DPC Time
 corrections: []
 review_notes: []

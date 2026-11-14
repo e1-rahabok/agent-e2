@@ -104,11 +104,9 @@ images:
     metric: ['Guest OS CPU Usage']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
-corrections:
-- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading; the source document table marks Run as Yes.'
-- 'Same table: VM CPU Demand is affected by Hyper-Threading; the source document table marks it No.'
+corrections: []
 review_notes: []
 status: draft
 ```

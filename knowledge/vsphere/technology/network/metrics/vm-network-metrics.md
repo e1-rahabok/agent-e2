@@ -58,7 +58,7 @@ related:
 - vsphere/technology/network/metrics/virtual-motherboard/packets
 - vsphere/technology/network/metrics/virtual-motherboard/throughput
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > VM > Overview
 corrections: []
 review_notes: []

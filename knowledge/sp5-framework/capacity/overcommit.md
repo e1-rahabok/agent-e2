@@ -85,9 +85,9 @@ images:
     topic: 'Overcommit ratio'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Provider Objects > Capacity > Key Metrics (Overcommit); Capacity Management > Capacity Model (VM Price; Allocation; Overcommit)'
 corrections: []
-review_notes:
+review_notes: []
 status: draft
 ```

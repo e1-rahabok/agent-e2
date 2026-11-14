@@ -103,13 +103,11 @@ related:
 - vsphere/object-types/cluster/configuration/drs-migration-levels
 images:
 source:
-  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the reasons and the metrics not used
+  document: Knowledge base
   path: 'Consumer Objects > Performance: VM & Guest OS > VM Performance (%); Metrics Not Used'
-corrections:
-- 'Section ''Reasons'': the source document says the Compressed + Swapped threshold is 2x memory contention. The table (half) is correct; the text is superseded. Keep until the source document is updated.'
-- 'Sections ''Sub-metrics'' and ''Reasons'': the source document is outdated. Network Dropped Tx: green only at exactly 0 (source document: up to 0.25%); CPU Run and CPU Overlap excluded while green; Ballooned read from mem|balloonPct, only Zip Swap divided by Guest OS used memory.'
+corrections: []
 review_notes:
 - 'To check: Section ''Sub-metrics'': the denominator of mem|balloonPct (configured memory or Guest OS used memory); the earlier text divided Ballooned by Guest OS used memory too.'
-- 'To check: Section ''Not used'': VM DRS Score formula from the source document (vSphere 7 blog), not read (https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html).'
+- 'To check: Section ''Not used'': VM DRS Score formula (vSphere 7 blog), not read (https://blogs.vmware.com/vsphere/2020/05/vsphere-7-a-closer-look-at-the-vm-drs-score.html).'
 status: draft
 ```

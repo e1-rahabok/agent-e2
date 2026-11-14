@@ -59,10 +59,10 @@ related:
 - guest-os/system/concepts/guest-os-sizing
 - vsphere/architecture/vm-vs-guest-os
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Configuration Management > Review List > Consumer Objects > Guest OS'
 corrections: []
 review_notes:
-- 'To check: Section ''Applications'', JVM: the misconception statement ''the Guest OS starts paging'' is not in the source document.'
+- 'To check: Section ''Applications'', JVM: the misconception statement ''the Guest OS starts paging''; no source yet.'
 status: draft
 ```

@@ -52,11 +52,11 @@ images:
     metric: ['ESXi Memory Shared', 'ESXi Memory Shared Common']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Consumption Metrics > Shared
 corrections: []
 review_notes:
-- 'To check: Section ''Behaviour'': the reason Shared Common exceeds half of Shared; the source document guesses large pages.'
+- 'To check: Section ''Behaviour'': the reason Shared Common exceeds half of Shared; large pages is a guess.'
 - 'To check: why Shared Common exceeds half of Shared (large pages broken into 4 KB pages is a guess).'
 status: draft
 ```

@@ -133,7 +133,7 @@ images:
     topic: 'Three configuration review dimensions: time, architecture, operations'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Configuration Management (opening); Approach (Review Approach, Time-based Approach, The 4 Types of Check); Review List (opening, Security)'
 corrections: []
 review_notes: []

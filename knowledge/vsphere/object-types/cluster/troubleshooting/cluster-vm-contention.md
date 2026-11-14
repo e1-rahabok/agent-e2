@@ -71,7 +71,7 @@ internal_derive:
 related:
 - sp5-framework/performance/performance-management
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > Performance > Cluster Performance (%) > Troubleshooting
 corrections: []
 review_notes: []

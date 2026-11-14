@@ -149,7 +149,7 @@ images:
     topic: 'Total vs usable capacity'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Provider Objects > Capacity > Key Metrics; Cluster Capacity; Capacity Management > Overview (Private Cloud Capacity; Optimized Capacity)'
 corrections: []
 review_notes: []

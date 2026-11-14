@@ -94,12 +94,11 @@ images:
     metric: ['VM Network Transmit Packets Dropped']
     image_type: distribution
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > VM > Contention Metrics
 corrections:
 - 'Section ''Known causes'': VMXNET3 ring-buffer drops are guest-os layer, fixed in the guest (2026-11-06).'
-- 'Section ''Profile transmit drops'': the source document says 1 thousand dropped packets = 1,500 MB within 300 seconds. Correct: 1.5 MB (2026-11-04). Keep until the source document is updated.'
 review_notes:
-- 'To check: KBs cited by the source document, not read (https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495).'
+- 'To check: KBs not read (https://knowledge.broadcom.com/external/article?articleNumber=322462 and https://kb.vmware.com/s/article/2039495).'
 status: draft
 ```

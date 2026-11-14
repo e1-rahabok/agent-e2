@@ -62,7 +62,7 @@ images:
     topic: 'Projection vs percentile'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Provider Objects > Capacity > Projected Metrics'
 corrections: []
 review_notes: []

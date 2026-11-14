@@ -86,7 +86,7 @@ related:
 - sp5-framework/performance/performance-management
 - vsphere/object-types/vm/vm-alerts
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Contention Metrics > Latency
 corrections:
 - 'Section ''Checks, in order'': the source tests Contention against 37.5% (the Hyper-Threading share in CPU Latency). That is the CPU Latency logic before Aria Operations 8.18; Contention now leaves out frequency and Hyper-Threading, so step 1 reads its parts against the KPI levels and only CPU Latency leads to Hyper-Threading (Q144).'

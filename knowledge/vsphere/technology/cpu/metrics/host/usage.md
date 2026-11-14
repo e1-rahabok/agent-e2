@@ -76,7 +76,7 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
 - vsphere/technology/cpu/metrics/host/peak-core-usage
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > ESXi > Used | Usage; Usage; Usage and 100%; Consumed
 corrections:
 - '2026-11-02: Hyper-Threading values (section: Hyper-Threading) are not in the uploaded document.'

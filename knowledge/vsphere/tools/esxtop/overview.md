@@ -69,7 +69,7 @@ images:
     topic: 'esxtop panels'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > esxtop > Overview
 corrections: []
 review_notes:

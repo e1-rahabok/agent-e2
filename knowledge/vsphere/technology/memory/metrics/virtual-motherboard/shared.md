@@ -59,7 +59,7 @@ images:
     image_type: table
     sample: '7,505 VMs'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Consumption Metrics > Shared; Savings
 corrections: []
 review_notes: []

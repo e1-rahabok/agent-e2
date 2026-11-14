@@ -80,7 +80,7 @@ related:
 - sp5-framework/outputs/it-leaders-dashboards
 - sp5-framework/capacity/reclamation
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Reports > Report | Dashboard (Suitability); Target Audience (Auditor, Capacity Planning Team, Finance Department, Tenant, Consultant)'
 corrections: []
 review_notes:

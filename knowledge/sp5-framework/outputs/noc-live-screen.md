@@ -81,7 +81,7 @@ images:
     topic: 'Auto-rotate order of NOC live screens, about 60 seconds each'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Live Screen (Action, Auto Rotate)'
 corrections: []
 review_notes:

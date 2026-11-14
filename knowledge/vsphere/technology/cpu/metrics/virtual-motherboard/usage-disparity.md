@@ -68,7 +68,7 @@ images:
     metric: ['VM CPU Usage Disparity']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Consumption Metrics > CPU Usage Disparity
 corrections: []
 review_notes: []

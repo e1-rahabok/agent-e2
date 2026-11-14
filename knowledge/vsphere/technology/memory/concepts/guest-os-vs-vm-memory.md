@@ -100,7 +100,7 @@ images:
     metric: ['Guest OS Memory In Use']
     image_type: screenshot
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Memory > Architecture > Guest OS vs VM; Example: Guest OS More Accurate; Example: VM More Accurate'
 corrections: []
 review_notes:

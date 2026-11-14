@@ -98,12 +98,11 @@ images:
     metric: ['Guest OS Disk Queue', 'VM Disk Latency']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: MS Windows > Storage
-corrections:
-- 'Section ''Meaning'': the source document reads the queue as above the SCSI driver, holding IO that has not reached the driver or the VM. Microsoft documentation says the counter counts the requests active below the driver that takes the statistics (the partition manager), including requests in service. The file follows Microsoft.'
+corrections: []
 review_notes:
-- 'To check: Section ''Interpretation'': the subtraction of the requests at the virtual disk from the guest queue is a derivation from Little''s Law, not a vendor procedure. The Observed values in the source document are read with it; the 3,000 VMs and the spikes above 1,000 were not re-measured.'
+- 'To check: Section ''Interpretation'': the subtraction of the requests at the virtual disk from the guest queue is a derivation from Little''s Law, not a vendor procedure. The Observed values in are read with it; the 3,000 VMs and the spikes above 1,000 were not re-measured.'
 - 'Source URL, Microsoft: https://learn.microsoft.com/previous-versions/dn567651(v=vs.85)'
 status: draft
 ```

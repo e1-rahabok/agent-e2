@@ -80,7 +80,7 @@ related:
 - sp5-framework/observability/metrics-as-accounting
 - vsphere/architecture/vm-vs-guest-os
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Interpretation Challenge
 corrections: []
 review_notes: []

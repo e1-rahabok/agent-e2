@@ -168,15 +168,14 @@ images:
     topic: 'Alerts, NOC live screen, daily, weekly and monthly checks over 24 hours'
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework: Process (Proactive Operations, Day-to-day Operations, Real Time, Daily, Optimize, VM Life Cycle); SP5 Framework: Pillars (pillar per phase table)'
 corrections:
-- 'Daily SOP per pillar, Capacity: snapshots older than one day; the source document example said 3 days.'
 - 'Daily check length: about 5 minutes when there is no problem; a problem makes it longer.'
 - 'Sections ''Dual track'' and ''Day-to-day order'': reactive starts after an alert, an incident or a complaint; proactive is insight, typically anomaly detection, which gives false positives without business context; configuration is a drill-down; known bugs are configuration. The example in brackets (month-end batch, planned migration) is not from the source.'
 review_notes:
 - 'Section ''Daily SOP per pillar'', 31 backups: subtraction (1,549 - 1,518).'
-- 'To check: Section ''Daily SOP per pillar'', Proactive HA reading hardware health: vSphere Proactive HA uses hardware vendor health providers; not in the source document.'
+- 'To check: Section ''Daily SOP per pillar'', Proactive HA reading hardware health: vSphere Proactive HA uses hardware vendor health providers; no source yet.'
 - 'Not copied: day-to-day operations cadence image (text in A 24-hour day), day-to-day order image (text in Day-to-day order).'
 status: draft
 ```

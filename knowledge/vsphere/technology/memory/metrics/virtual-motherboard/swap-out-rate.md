@@ -37,10 +37,10 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Swap + Compress > Transition; Example
 corrections: []
 review_notes:
-- 'To check: metric_class: set to context; swap out is not contention per the source document.'
+- 'To check: metric_class: set to context; swap out is not contention.'
 status: draft
 ```

@@ -133,10 +133,10 @@ images:
     image_type: table
     sample: 'about 3,000 VMs'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: MS Windows > Memory
 corrections: []
 review_notes:
-- 'To check: References from the source document, not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
+- 'To check: References not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
 status: draft
 ```

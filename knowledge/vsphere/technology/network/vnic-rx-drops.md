@@ -70,7 +70,7 @@ related:
 - vsphere/technology/network/metrics/host/packets-dropped
 - sp5-framework/performance/performance-management
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > ESXi > Contention Metrics > Dropped Packet > vsish
 corrections: []
 review_notes: []

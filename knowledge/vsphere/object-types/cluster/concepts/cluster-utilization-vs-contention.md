@@ -87,7 +87,7 @@ images:
     metric: ['VM Memory Contention', 'ESXi Memory Free']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > Performance > Contention vs Consumption
 corrections: []
 review_notes: []

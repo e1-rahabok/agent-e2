@@ -61,7 +61,7 @@ related:
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/cluster/concepts/drs-overview
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624); Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: 'VMware Distributed Resource Scheduler (DRS) > DRS in General (p. 77); DRS Cluster Sizing and Resource Settings (p. 78); Configuration Management > Review List > Resource Pool'
 corrections: []
 review_notes:

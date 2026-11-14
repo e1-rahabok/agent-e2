@@ -86,7 +86,7 @@ related:
 - vsphere/technology/cpu/concepts/virtual-numa
 - vsphere/technology/cpu/concepts/hyper-threading
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Noisy Neighbour > Maximum VM size; Class of Service'
 corrections: []
 review_notes:

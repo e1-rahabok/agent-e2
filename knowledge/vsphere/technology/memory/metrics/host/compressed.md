@@ -55,7 +55,7 @@ images:
     image_type: timeline
     sample: '1 host, 1 year'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Overview; Swap + Compress
 corrections: []
 review_notes:

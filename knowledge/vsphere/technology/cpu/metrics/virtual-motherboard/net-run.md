@@ -50,7 +50,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Consumption Metrics > Run | Net Run; Usage vs Net Run
 corrections: []
 review_notes: []

@@ -97,7 +97,7 @@ images:
     image_type: scatter
     sample: '1,102 VMs'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Guest OS vs VM; ESXi ≠ VM + Kernel; CPU Throughput; Impacts on VM; CPU > VM > Consumption Metrics > Used | Usage > Usage
 corrections:
 - '2026-11-02: Hyper-Threading scenario (section: Hyper-Threading) rewritten; the uploaded document sentence is truncated.'

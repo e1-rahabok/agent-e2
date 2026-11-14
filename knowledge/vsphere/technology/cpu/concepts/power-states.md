@@ -133,14 +133,14 @@ images:
     topic: 'CPU power states'
     image_type: screenshot
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > Architecture > Power States; BIOS Level; ESXi Level; High Performance vs Balance; Impact on Oversized VM
 corrections: []
 review_notes:
-- 'To check: Section ''ESXi level'': advanced option names Power.UseCStates and Power.UsePStates; the source document shows them as ''Use C States'' and ''Use P States'' in the UI.'
-- 'To check: Section ''C-state × P-state combinations'': conflicts with the Use P States text and the Turbo observation; the source document is to be updated (project/plan.md).'
+- 'To check: Section ''ESXi level'': advanced option names Power.UseCStates and Power.UsePStates; shows them as ''Use C States'' and ''Use P States'' in the UI.'
+- 'To check: Section ''C-state × P-state combinations'': conflicts with the Use P States text and the Turbo observation.'
 - 'To check: Section ''C-state × P-state combinations'': the row Use C States = 1, Use P States = 0 says no Turbo; the ESXi level text says P-states off means ''highest available frequency''; the Turbo section reports Turbo (129%) under BIOS static high performance.'
 - "Section 'Oversized VM': chart from 'Host Power Management in VMware vSphere 7.0' (2021), p. 24: https://www.vmware.com/docs/hpm-vsphere7-perf. No newer standalone version found on 2026-11-02."
-- 'To check: the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series), both cited by the source document; not read.'
+- 'To check: the 9.0 TechDocs page on host power management policies and a VMworld 2017 session (Extreme Performance Series); not read.'
 status: draft
 ```

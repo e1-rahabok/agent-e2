@@ -87,9 +87,9 @@ related:
 - sp5-framework/capacity/capacity-management
 images:
 source:
-  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > Other Metrics > Cluster Consumption (%)
 corrections: []
-review_notes:
+review_notes: []
 status: draft
 ```

@@ -80,7 +80,7 @@ related:
 - sp5-framework/observability/measurement-precision
 - vcf-operations/features/real-time-metrics
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
+  document: Knowledge base
   path: Metric Mastery > Collection Interval; Why Milliseconds as Unit?; Rollup Type; Real Time Collection; Performance Troubleshooting
 corrections: []
 review_notes: []

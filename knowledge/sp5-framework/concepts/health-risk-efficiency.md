@@ -85,7 +85,7 @@ images:
     topic: 'Pillars grouped as environment, health, risk and efficiency'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework > Health'
 corrections: []
 review_notes:

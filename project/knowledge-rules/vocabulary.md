@@ -9,6 +9,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 |---|---|---|
 | utilization above physical capacity | demand above physical capacity | Utilization measures what happens and cannot pass 100%; demand includes unmet demand. |
 | A product label reworded ("vSphere's GHz total" for Total Capacity) | The label as the product shows it, then what it measures and the better name: "Total Capacity (GHz) is throughput at base clock; capacity is threads" | The product UI is reality: the operator reads that label. Agent E2 keeps it and corrects the model behind it (author, 2026-11-14, Q203). |
+| "the book", "the source document" (in a knowledge file or its metadata) | Nothing: state the fact. For a vendor document, its name and version | The knowledge base is a superset of the author's material; its sources are stated once, in KNOWLEDGE-ENGINEERING.md section 2 (author, 2026-11-14). "The source document" tells a reader nothing. |
 | SLI, SLO, performance SLA | KPI | The SLA is a business contract, not an operations metric; performance is managed by the KPI only (author, 2026-11-11). |
 | Cluster Availability as an SLA | the availability of the consumer's VMs and pods | The application team does not care about the infrastructure under its VMs and pods (author, 2026-11-11). |
 | KPI target | KPI baseline (standard expectation) | A target is not reached yet; a KPI is what is maintained as standard. |

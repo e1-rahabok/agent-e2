@@ -110,7 +110,7 @@ images:
     metric: ['ESXi Memory Ballooned', 'ESXi Memory Active', 'ESXi Memory Consumed']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Contention Metrics > Balloon; states, hysteresis and actions per state from the author's ESXi 9.1 memory reclamation manual (project/sources/esxi_memory_reclamation_manual.md)
 corrections: []
 review_notes:

@@ -50,10 +50,9 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/host/imbalance
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances; CPU > Architecture > ESXi ≠ VM + Kernel; Impacts on ESXi; CPU > ESXi > Thread Utilization
-corrections:
-- 'Section ''Reason'': Core Utilization is not the capacity reading under Hyper-Threading. The source document calls it a capacity metric because it ignores frequency.'
+corrections: []
 review_notes:
 - Sections Reason: from CPU > Architecture.
 - 'Section Rollup: from CPU > ESXi.'

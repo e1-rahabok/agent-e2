@@ -1,6 +1,6 @@
 # Sources
 
-Source documents the knowledge is written from: the author's book, vendor PDFs. The author adds sources; Claude may edit them (author, 2026-11-14). Not indexed, not shipped, not read at run time.
+Source documents the knowledge is written from: the author's material and vendor PDFs. The latest copies of the author's books and spreadsheets are at https://isvara.io. The knowledge base is a superset of these sources, and knowledge files do not cite them one by one (KNOWLEDGE-ENGINEERING.md, section 2). The author adds sources; Claude may edit them (author, 2026-11-14). Not indexed, not shipped, not read at run time.
 
 Examples:
 - Microsoft Word documents (.docx)

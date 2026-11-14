@@ -110,7 +110,7 @@ related:
 - guest-os/system/guest-os-performance
 - sp5-framework/performance/business-application-kpi
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework: Pillars (Performance); Performance Management; SP5 Framework > Monitor | Troubleshoot'
 corrections: []
 review_notes: []

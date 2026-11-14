@@ -74,7 +74,7 @@ related:
 - sp5-framework/concepts/class-of-service
 - sp5-framework/outputs/capacity-dashboards
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Overall Design Approach > Overall Design: Performance Dashboards'
 corrections: []
 review_notes:

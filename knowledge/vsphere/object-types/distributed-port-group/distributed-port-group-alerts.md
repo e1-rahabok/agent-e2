@@ -40,7 +40,7 @@ related:
 - vsphere/object-types/vm/vm-alerts
 - vsphere/technology/network/vnic-rx-drops
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Network Alerts > Contention Alerts'
 corrections: []
 review_notes: []

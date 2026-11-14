@@ -90,7 +90,7 @@ related:
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 - vsphere/technology/memory/vm-memory-latency-high
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > CPU Alerts (Infrastructure Contention, Infrastructure Consumption); Memory Alerts (Infrastructure Contention, Infrastructure Consumption); Network Alerts > Contention Alerts'
 corrections:
 - 'Section ''ESXi memory contention'': the source gives the per-VM values without a population; written as the CPU alert, a share of the host''s VMs (above 25%), because the values sit below the VM alert''s for the same reason (Q145).'

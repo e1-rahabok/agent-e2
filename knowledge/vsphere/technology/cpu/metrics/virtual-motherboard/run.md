@@ -80,7 +80,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 - vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > State of a VM vCPU; 2 Metrics Not 1; CPU Efficiency; CPU > VM > Consumption Metrics > Run | Net Run
 corrections: []
 review_notes:

@@ -64,7 +64,7 @@ related:
 - vsphere/technology/storage/concepts/esxi-storage-latency-stack
 - vsphere/technology/storage/concepts/storage-layers
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Configuration Management > Review List > Storage (Datastore, Others)'
 corrections: []
 review_notes:

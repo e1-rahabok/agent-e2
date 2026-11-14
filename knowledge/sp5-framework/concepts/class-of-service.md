@@ -175,12 +175,12 @@ images:
     topic: 'Compute and storage pools per service tier; management and NSX pools with KPI only'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > Service Level Agreement (Class of Service, Price/Performance, Free Tier, Recommended SLA, Penalty Quantification, Sample Offering, Price & SLA, Size Limit, Service, Availability, Compute & Storage, Mix and Match)'
 corrections: []
 review_notes:
-- 'To check: Section ''Planning example'', price formula: derived from the source document''s 67% and 33% figures.'
-- 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of the source document''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
+- 'To check: Section ''Planning example'', price formula: derived from 67% and 33% figures.'
+- 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Not copied: class of service input diagram (text in Price/performance), mix-and-match diagrams (text), size limit image (table), generic tables (text).'
 status: draft
 ```

@@ -55,12 +55,12 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - sp5-framework/capacity/unused-vm
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Capacity Management > Reclamation > Idle VM'
 corrections: []
 review_notes:
-- 'To check: Section ''Policy defaults'': values from the source document screenshot of the VCF Operations policy (Idle VMs: 7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days) against the VCF Operations 9.1 documentation; the screenshot is not copied.'
+- 'To check: Section ''Policy defaults'': values from screenshot of the VCF Operations policy (Idle VMs: 7 days, 100 MHz, 100% of the time, exclude VMs provisioned in the last 30 days) against the VCF Operations 9.1 documentation; the screenshot is not copied.'
 - 'To check: Section ''Policy defaults'': "any 5-minute period above 100 MHz makes the day not idle" as the reading of 100% of the time with 5-minute collection.'
-- 'To check: metric keys of Idleness Indicator and Reclaimable Idle; not in the source document (VCF Operations 9.1 metric reference; plan, M1 VCF Operations).'
+- 'To check: metric keys of Idleness Indicator and Reclaimable Idle; no source yet (VCF Operations 9.1 metric reference; plan, M1 VCF Operations).'
 status: draft
 ```

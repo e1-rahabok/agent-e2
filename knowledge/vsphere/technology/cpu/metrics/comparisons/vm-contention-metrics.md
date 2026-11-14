@@ -82,10 +82,10 @@ images:
     metric: ['VM CPU Wait', 'VM CPU Idle', 'VM CPU Swap Wait']
     image_type: table
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Contention Metrics; Wait Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''States per metric'': table assembled from the source document''s Ready, Co-stop, Overlap, Contention and Latency sections and diagrams; not one table in the source document.'
+- 'To check: Section ''States per metric'': table assembled from Ready, Co-stop, Overlap, Contention and Latency sections and diagrams.'
 status: draft
 ```

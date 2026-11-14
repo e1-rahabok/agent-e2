@@ -36,7 +36,7 @@ related:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/tools/vsphere-client/performance-guidance
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > ESXi > Consumed
 corrections: []
 review_notes:

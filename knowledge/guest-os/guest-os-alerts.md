@@ -72,7 +72,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - guest-os/system/guest-os-performance
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption)'
 corrections: []
 review_notes:

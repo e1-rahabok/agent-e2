@@ -98,7 +98,7 @@ images:
     topic: 'CPU throughput'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > Architecture > Fair Share Scheduler; 2 Metrics Not 1; Frequency | Efficiency | Efficacy; CPU Throughput
 corrections: []
 review_notes:

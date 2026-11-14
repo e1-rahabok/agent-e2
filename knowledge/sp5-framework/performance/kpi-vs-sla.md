@@ -85,13 +85,12 @@ related:
 - sp5-framework/concepts/realms-and-layers
 images: []
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Performance Management > Key Performance Indicator > KPIs as a Stepping Stone; KPI | SLA > Differences; KPIs in IaaS'
 corrections:
 - 'Section ''KPI vs SLA'', Scope: Part 1 combines VM and Guest OS in one KPI; outdated. Two KPIs; the VM GOS KPI is their average, for the application team.'
 - 'Section ''KPI means performance'': a KPI is a baseline, not a target.'
 - 'Sections ''Two steps of maturity'', ''KPI vs SLA'': KPI timing confirmed; both teams track the KPI.'
-- 'Section ''KPI only'' (2026-11-11): the source document''s third maturity step (SLA), the SLI and the Performance SLA are removed. The SLA is a business contract; performance is managed by the KPI only.'
 review_notes: []
 status: draft
 ```

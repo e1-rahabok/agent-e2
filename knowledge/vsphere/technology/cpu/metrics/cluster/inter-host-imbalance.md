@@ -85,10 +85,10 @@ images:
     image_type: table
     sample: '12 hosts'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > Overview > Inter-Host Imbalance
 corrections: []
 review_notes:
-- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; the source document does not say.'
+- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; unconfirmed.'
 status: draft
 ```

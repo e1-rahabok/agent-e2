@@ -29,7 +29,7 @@ same_name: []
 same_meaning: []
 related: []
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections: []
 review_notes: []

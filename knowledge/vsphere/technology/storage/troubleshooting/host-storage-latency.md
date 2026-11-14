@@ -66,7 +66,7 @@ related:
 - vsphere/technology/storage/metrics/datastore/storage-io-control
 - sp5-framework/performance/performance-management
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > ESXi > Disk or Device; Storage Adapter & Path
 corrections: []
 review_notes:

@@ -59,7 +59,7 @@ related:
 - vsphere/technology/cpu/metrics/host/imbalance
 - vsphere/technology/cpu/metrics/comparisons/host-contention-metrics
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > ESXi > Consumption Metrics > Summary > Recommendation; Real World Samples
 corrections: []
 review_notes: []

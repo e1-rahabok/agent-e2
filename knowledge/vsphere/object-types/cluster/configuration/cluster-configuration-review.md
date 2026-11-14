@@ -65,9 +65,9 @@ related:
 - sp5-framework/capacity/supply
 - sp5-framework/concepts/health-risk-efficiency
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Configuration Management > Review List > Cluster; vSphere Cluster Variation'
 corrections: []
-review_notes:
+review_notes: []
 status: draft
 ```

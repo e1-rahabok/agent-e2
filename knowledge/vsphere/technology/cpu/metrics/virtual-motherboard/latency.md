@@ -88,7 +88,7 @@ images:
     metric: ['VM CPU Latency']
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; CPU > Architecture > Architecture intro; State of a VM vCPU; CPU > VM > Contention Metrics > Latency
 corrections: []
 review_notes:

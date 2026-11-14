@@ -137,10 +137,10 @@ images:
     metric: ['Cluster Consumption', 'Cluster Performance', 'Cluster Risk']
     image_type: table
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); knowledge base synthesis of the files in internal_derive
+  document: Knowledge base; knowledge base synthesis of the files in internal_derive
   path: 'Capacity Management > Capacity Model > Cluster Closure; Logic'
 corrections: []
 review_notes:
-- 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow the source document (Cluster Closure, Logic) (Q061).'
+- 'To check: Steps 1, 6 and 7 and the full order of steps: steps 1, 6 and 7 come from the files in internal_derive (architecture review 2026-11-06, section 3.3); steps 2 to 5 and the closure thresholds follow (Cluster Closure, Logic) (Q061).'
 status: draft
 ```

@@ -273,6 +273,7 @@ def main():
     check_terminology(pdocs, bad)
     check_catalog(allowed, ids, {fm.get('id'): FILE_LINK.sub(r'\1', body) for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
+    check_source_document({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_titles(bad)  # titles and headings are machine input: harness/kb.py puts both in front of every chunk (Q181)
 
     # every image file must be linked from a knowledge file, so the AI gets its context
@@ -649,6 +650,19 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'kpi line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
         elif os.path.exists(f'knowledge/{lv["kb"]}.md') and str(lv.get('metric')).replace('|', '\\|') not in open(f'knowledge/{lv["kb"]}.md').read():
             bad(f'knowledge/{lv["kb"]}.md', f'KPI table: no cell names the catalog kpi line "{lv.get("metric")}" (column Catalog row (KPI))')
+
+def check_source_document(docs, bad):
+    """source.document names no author material (book, spreadsheet): sources are stated once (KNOWLEDGE-ENGINEERING.md, section 2)."""
+    pat = re.compile(r'Private Cloud Management|Capacity Planning Stage|\bbook\b|isvara', re.I)
+    for i, (fm, _) in docs.items():
+        doc = str(((fm or {}).get('source') or {}).get('document', ''))
+        if pat.search(doc):
+            bad(f'knowledge/{i}.md', f'source.document names the author\'s material ("{pat.search(doc).group(0)}"): write Knowledge base (KNOWLEDGE-ENGINEERING.md, section 2)')
+        for k in ('corrections', 'review_notes'):
+            for n in (fm or {}).get(k) or []:
+                if isinstance(n, str) and re.search(r'(?i)the source document|\bthe book\b', n):
+                    bad(f'knowledge/{i}.md', f'{k}: "the book" or "the source document": state the fact (project/knowledge-rules/vocabulary.md)')
+
 
 def check_flows(docs, bad):
     """Flow files must parse into steps for the flow executor (harness/flows.py); step references must exist."""

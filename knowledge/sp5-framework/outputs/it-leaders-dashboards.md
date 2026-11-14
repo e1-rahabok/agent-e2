@@ -112,7 +112,7 @@ related:
 - sp5-framework/capacity/supply
 - sp5-framework/outputs/system-engagement
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Overall Design Approach > Overall Design: IT Leaders Dashboard (General Requirements, Sample Requirements Analysis: Business Applications, Operations Overview; Sample Dashboards: Capacity Summary, How to Use, Points to Note)'
 corrections: []
 review_notes:

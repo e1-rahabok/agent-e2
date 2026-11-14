@@ -216,10 +216,10 @@ images:
     topic: 'Capacity management cadence'
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework: Pillars (Capacity); Capacity Management > Capacity Model (planning stage vs operating stage); Capacity Management > Overview ("Good" Advice; Concept; Private Cloud Capacity; Stages; The Planning Stage; Architecture Plan; Example; Optimized Capacity)'
 corrections: []
 review_notes:
-- 'To check: Section ''Four phases'': the reason for preventing oversized VMs before provisioning (reclaiming later is harder); not in the source document.'
+- 'To check: Section ''Four phases'': the reason for preventing oversized VMs before provisioning (reclaiming later is harder); no source yet.'
 status: draft
 ```

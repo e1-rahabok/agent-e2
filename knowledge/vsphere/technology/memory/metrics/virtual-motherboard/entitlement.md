@@ -38,11 +38,11 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/granted
 - vsphere/technology/memory/metrics/virtual-motherboard/overhead
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Consumption Metrics
 corrections: []
 review_notes:
-- 'To check: Section ''Meaning'': the limit behaviour; the source document''s guess.'
+- 'To check: Section ''Meaning'': the limit behaviour; unconfirmed.'
 - 'To check: whether Entitlement excludes memory above a limit (the VM is not entitled beyond its limit).'
 status: draft
 ```

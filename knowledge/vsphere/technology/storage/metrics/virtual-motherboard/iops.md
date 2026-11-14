@@ -57,7 +57,7 @@ images:
     image_type: distribution
     sample: '3,500 VMs'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; Storage > VM > Performance Metrics > Consumption metrics
 corrections: []
 review_notes:

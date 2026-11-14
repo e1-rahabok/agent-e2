@@ -53,7 +53,7 @@ related:
 - vcf-operations/features/peak-20-second-metrics
 - sp5-framework/observability/collection-interval
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections: []
 review_notes: []

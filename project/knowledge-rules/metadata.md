@@ -35,8 +35,8 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `same_meaning` | Metric files only. Ids of metrics with a different label but the same meaning. |
 | `related` | Ids to retrieve together. |
 | `images` | One entry per image linked in the body. Fields: `path` (as linked), `product`, `object`, `metric` (list of metric names shown) and/or `topic` (concept shown), `image_type` (diagram, table, timeline, distribution, scatter, screenshot), `sample` (optional: fleet size and period). The image's own tags: they can differ from the file's, e.g. an ESXi chart inside a cluster concept. |
-| `source.document` / `source.path` | Source document (with version and revision) and heading path or pages. |
-| `corrections` | Facts that differ from the source document named in `source.document`. Each entry names the section it affects. |
+| `source.document` / `source.path` | `Knowledge base` for knowledge written from the author's material (project/sources and isvara.io: stated once, in KNOWLEDGE-ENGINEERING.md section 2, never per file); a vendor document with version and revision; or both, separated by `;`. `source.path`: heading path or pages. Lint rejects the author's book or spreadsheet names here. |
+| `corrections` | Facts that differ from a vendor document named in `source.document`, kept until that document is fixed. Each entry names the section it affects. Not for the author's material: the knowledge base supersedes it. |
 | `review_notes` | Only what is still to check: section, what, and the URL or document to check against. No who-said-it tags. A settled item is deleted. |
 | `up_front` | Optional. The wrong belief of one `## Misconceptions` line of this file, as quoted in that line: the line goes to the model with every question (up-front block `rules`, [`harness/primer.py`](../../harness/primer.py)). Lint checks it matches exactly one line. |
 | `status` | draft (not reviewed) or reviewed. Agent E2 says so when an answer depends on a draft file. |

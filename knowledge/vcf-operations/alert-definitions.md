@@ -51,7 +51,7 @@ related:
 - sp5-framework/outputs/alerts-and-insights
 - sp5-framework/observability/collection-interval
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Alerts Planning > Design > Threshold Design (Wait Cycle, Conditions); Recommendation | Remediation'
 corrections: []
 review_notes:

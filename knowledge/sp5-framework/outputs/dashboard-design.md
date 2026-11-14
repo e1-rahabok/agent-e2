@@ -98,7 +98,7 @@ images:
     topic: 'Persona grid: frequency of use against granularity; executive, manager, admin'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Overall Design Approach > Design Consideration (Design Methodology, Clean Layout, Past vs Present, Summary List Detail, Interaction)'
 corrections: []
 review_notes:

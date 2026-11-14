@@ -96,11 +96,11 @@ images:
     topic: 'Network I/O Control'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > Architecture > Unique Characteristics
 corrections:
 - '2026-11-14: VMXNET3 link speed is a label: 10 Gbps by default, settable from 10,000 to 65,000 Mbps with the VM off, and it limits nothing (Broadcom KB 368812, https://knowledge.broadcom.com/external/article/368812; KB 444078, https://knowledge.broadcom.com/external/article/444078). Section ''Coarse allocation'' follows the KB articles.'
 review_notes:
-- 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; the source document states vCenter 7 has none.'
+- 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; states vCenter 7 has none.'
 status: draft
 ```
