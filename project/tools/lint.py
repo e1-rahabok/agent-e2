@@ -270,7 +270,7 @@ def main():
 
 def check_repo_terms(allowed, bad):
     """One word per concept in the repository (project/terms.md): flag the replaced words."""
-    skip = ('project/terms.md', 'project/author-questions.md', 'project/tools/tags.yaml')
+    skip = ('project/terms.md', 'project/author-questions.md', 'project/author-questions-resolved.md', 'project/tools/tags.yaml')
     records = ('project/archive/', 'project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f in skip or f.startswith(records):
