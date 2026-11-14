@@ -8,7 +8,7 @@ Not indexed.
 ## 1. Goal
 
 - Agent E2 knows every threshold it needs, applies the right one to the reading in front of it, explains why that number sits there, and never mixes the uses.
-- Agent E2 is one program: a 32B LLM, the Harness and the Agent loop working together. This document says what Agent E2 does. It names a part (LLM, Harness, catalog, verifier) only where the design depends on where the work happens.
+- Agent E2 is one program: a 32B LLM, the Harness and the agent (the six stages of [harness/AGENT.md](../harness/AGENT.md); the verdict per use belongs in stage 3, compute) working together. This document says what Agent E2 does. It names a part (LLM, Harness, catalog, verifier) only where the design depends on where the work happens.
 
 ## 2. Domain premises
 

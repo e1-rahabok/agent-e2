@@ -14,7 +14,7 @@ How to help build Agent E2: knowledge, questions, reviews and code. Not indexed.
 ## Ways to contribute
 - **Answer an author question.** Write after `Answer:` in [`project/author-questions.md`](project/author-questions.md). The answer is applied to the knowledge files and the entry moves to Resolved.
 - **Review a knowledge file.** Check every fact against its source in the metadata (`source`, `review_notes`, `corrections`). Report a wrong fact, a missing misconception or a missing link.
-- **Add a benchmark question.** Use [`benchmark/_templates/question.md`](benchmark/_templates/question.md). A realistic situation with values, 4-8 options, a misconception option, the knowledge ids that answer it, and `product` and `technology` tags. The id is the next free 4-digit number (`id: "0091"`); the file name is `L<level>-<nn>-<slug>.md` (rules: [benchmark/README.md](benchmark/README.md)). Never send `## Expected key points` or `## Likely wrong answer` to a model.
+- **Add a benchmark question.** Use [`benchmark/_templates/question.md`](benchmark/_templates/question.md). A realistic situation with values, 4-8 options, a misconception option, the knowledge ids that answer it, and `product` and `technology` tags. The id is the next free 4-digit number (`id: "0nnn"`; retired ids are not reused); the file name is `L<level>-<nn>-<slug>.md` (rules: [benchmark/README.md](benchmark/README.md)). Never send `## Expected key points` or `## Likely wrong answer` to a model.
 - **Report a wrong answer.** Give the question, the answer, and the run or trace. It is classified as a knowledge gap, a retrieval miss or a model error.
 - **Improve the harness.** Code in `harness/`, tests in [`harness/test_tools.py`](harness/test_tools.py).
 
@@ -22,9 +22,9 @@ How to help build Agent E2: knowledge, questions, reviews and code. Not indexed.
 - Level 400: mechanism and reason, misconceptions, edge cases. No definitions a vSphere administrator already knows.
 - One fact per bullet. One managed object type per metric file.
 - A threshold only with its source. No invented numbers.
-- Facts not from the author's book are recorded in `review_notes` until the author confirms them.
+- A fact from another source records that source in `source` (document, version, revision); what is still to check goes in `review_notes` (section, what, the URL or document to check against) until it is settled.
 - Folder, tag and writing rules: [placement.md](project/knowledge-rules/placement.md) and [writing.md](project/knowledge-rules/writing.md) in [`project/knowledge-rules/`](project/knowledge-rules). Terms: [knowledge/glossary.md](knowledge/glossary.md).
-- [`project/sources/`](project/sources) is read-only.
+- [`project/sources/`](project/sources) holds the source documents: the author adds them; Claude may edit them (author, 2026-11-14).
 
 ## Before a pull request
 ```bash

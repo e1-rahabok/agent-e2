@@ -504,3 +504,4 @@ guest-os/memory/concepts/windows-memory: guest-os/memory/windows-memory
 guest-os/system/alerts/guest-os-alerts: guest-os/guest-os-alerts
 vsphere/object-types/datastore/alerts/datastore-alerts: vsphere/object-types/datastore/datastore-alerts
 vsphere/object-types/distributed-switch/alerts/distributed-switch-alerts: vsphere/object-types/distributed-switch/distributed-switch-alerts
+sp5-framework/concepts/alerts-and-insights: sp5-framework/outputs/alerts-and-insights

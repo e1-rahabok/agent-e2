@@ -42,7 +42,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 2. Build the VM, attach the GPU, copy the bundle in. Then block egress.
 3. Prove the block: an outbound request from the VM fails; the firewall log shows the attempt dropped.
 4. Smoke test: one question on Base and on Agent E2; the trace shows the case, the reading plan, the computed facts and the checks working.
-5. Benchmark: every question of the run set, Agent E2 and Base, 5 runs, at `context_window: 32000`. Deterministic questions are scored on the VM; judged answers are saved for the judge.
+5. Benchmark: every question of the run set, Agent E2 and Base, 5 runs, at `context_window: 32000`, with the deployment profile (`consensus_samples: 3`; [harness/README.md](../harness/README.md), section 6a), since this run is the release score. Deterministic questions are scored on the VM; judged answers are saved for the judge.
 6. Judge: bring the saved answers to a connected machine; the judge scores them; the report is built.
 7. Compare: paired, question by question, with the gateway run of the same model on Agent E2 (`design.md`, section 8). Note any question that changes.
 8. Speed: median and 95th percentile time per answer and per model turn, on Agent E2; GPU memory at peak.

@@ -633,7 +633,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'kpi line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
 
 def check_flows(docs, bad):
-    """Diagnosis files must parse into steps for the flow tool (harness/flows.py); step references must exist."""
+    """Flow files must parse into steps for the flow executor (harness/flows.py); step references must exist."""
     import flows
 
     class _Doc:

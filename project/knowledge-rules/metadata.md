@@ -55,6 +55,6 @@ The concepts behind the tags; the allowed values are in [`project/tools/tags.yam
 - Pillar: availability, performance, security, capacity, value. Not a technology.
 - Metric class: contention, consumption, context. Not a pillar.
 - Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
-- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One home: `## Misconceptions` in the file; the widest-reaching ones are also sent up front, marked by `up_front`. [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md), section 4.
+- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One home: `## Misconceptions` in the file; the widest-reaching ones are also sent up front, marked by `up_front`. [`KNOWLEDGE-ENGINEERING.md`](../../KNOWLEDGE-ENGINEERING.md), section 4.
 - Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
 - Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.

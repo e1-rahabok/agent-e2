@@ -26,10 +26,10 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [`knowledge/vcf-operations/`](knowledge/vcf-operations) | The product VCF Operations: its role, `features/`, `dashboards/` and the report suite as built in it, and how an alert definition works (`alert-definitions`). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
 | [`knowledge/guest-os/`](knowledge/guest-os) | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `guest-os-alerts` |
 | [`knowledge/glossary.md`](knowledge/glossary.md) | The agent's vocabulary |
-| `harness/` | Retrieval, catalog, calculator, planning calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
+| `harness/` | The agent (six stages: case, reading plan, compute, ask, answer, check) and its tools: retrieval, catalog, calculator, verifier, web; the planning calculator and the flow executor are built but not yet called by the agent. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
-A flow is an expert's order of checks, run step by step by the `flow` tool. Three kinds, named by `retriever_guide` (health-check, troubleshooting, decision-tree); the harness finds them by that metadata, wherever the file sits, and gives the agent one index, grouped by kind. What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md). Lint checks that these tables list every flow.
+A flow is an expert's order of checks. Three kinds, named by `retriever_guide` (health-check, troubleshooting, decision-tree); the agent finds them by that metadata, wherever the file sits: the reading plan puts the best flow of the question's kind first (tier 1, [harness/AGENT.md](harness/AGENT.md), section 4.2), and the model follows its numbered steps. Code taking the branches is to build (Q166). What each kind is: [Health check](knowledge/sp5-framework/concepts/health-check.md). Lint checks that these tables list every flow.
 
 ### Health checks: is this object healthy?
 Started by a schedule or a request, never by a problem. Always on one object type, never on a technology or a pillar; every pillar in order: availability, performance, security, capacity. The parent includes its children, except across a realm (the Guest OS is not part of the VM or host check). A failed step opens a troubleshooting flow.
@@ -73,7 +73,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 |---|---|
 | [`benchmark/questions/`](benchmark/questions) | Questions with answer keys. Never indexed. Template: [`benchmark/_templates/question.md`](benchmark/_templates/question.md) |
 | [`benchmark/runner/`](benchmark/runner) | Runner, judge, retrieval check (`retrieval_eval.py`), config |
-| [`benchmark/results/`](benchmark/results) | One folder per run (`<date>-<model>`) and [`README.md`](README.md), the analysis of all runs |
+| [`benchmark/results/`](benchmark/results) | One folder per run (`<date>-<model>`), [`README.md`](benchmark/results/README.md) (the analysis of all runs) and the retrieval check outputs (`retrieval-<date>/`) |
 | [`benchmark/RUN.md`](benchmark/RUN.md) | How to run a benchmark round: prompt, approvals, time, cost |
 | `benchmark/*.md` | [design](benchmark/design.md), [models](benchmark/models.md), [live test](benchmark/live-test.md), [retrieval check](benchmark/retrieval-check.md) |
 
@@ -84,11 +84,9 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | [`project/plan.md`](project/plan.md) | Milestones, decisions, open work. Read first |
 | [`project/author-questions.md`](project/author-questions.md), [`project/author-questions-resolved.md`](project/author-questions-resolved.md) | Open questions for the author (Release 1.0, Future release); answered ones, kept as history |
 | [`project/design-thresholds.md`](project/design-thresholds.md) | Threshold catalog design: use cases, files, fields. Proposal |
-| [`project/sources/alert_close_cycle_design_best_practices.md`](project/sources/alert_close_cycle_design_best_practices.md) | Example of an alert close cycle design, for review (Q155 answer; reviewed in [`project/design-thresholds.md`](project/design-thresholds.md), section 9.5) |
 | [`project/archive/`](project/archive) | Records no longer maintained: reviews, the plan's decisions before 2026-11-14, results of earlier benchmark generations, legacy code and designs |
 | [`project/terms.md`](project/terms.md) | Repository terms (words to avoid when writing knowledge: [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md)) |
-| [`project/sources/`](project/sources) | Source documents. Read-only |
-| [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
+| [`project/sources/`](project/sources) | Source documents: book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them (author, 2026-11-14) |
+| [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology, vocabulary (words to avoid) |
 | [`project/templates/`](project/templates) | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
 | [`project/tools/`](project/tools) | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py`, `coverage.py` (what the question set covers: counts per tag value) |
-| [`project/archive/`](project/archive) | Retired documents |

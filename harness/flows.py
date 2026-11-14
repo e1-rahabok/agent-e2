@@ -4,7 +4,9 @@ troubleshooting or decision-tree, wherever the file sits), served one step at a 
 The markdown file is the single source. Two step formats are read:
   - a '## Checks, in order' section with numbered lines (1. 2. 3. ...), continuation lines kept with their step;
   - '## Step a: <title>' sections (one step per section).
-A step that names another step ('step 4', '→ step 2') gets that step number in 'refers_to', so the model can jump.
+A step that names another step ('step 4', '→ step 2') gets that step number in 'refers_to'.
+Today read by lint (every flow parses) and the unit tests; the agent reads flow files whole (tier 1 of planner.py) and
+will call this module when flow steps become executable (Q166, harness/AGENT.md, section 4.3).
 """
 import re
 
@@ -46,7 +48,7 @@ def flow_ids(docs):
 
 
 def run(docs, flow_id, step=None):
-    """One call of the flow tool. step None: all steps in order. step N: that step and where to go next."""
+    """Steps of one flow. step None: all steps in order. step N: that step and where to go next."""
     d = docs.get(flow_id or '')
     if not d or not is_flow(d):
         return {'error': f'unknown flow {flow_id!r}', 'flows': {i: docs[i].title for i in flow_ids(docs)}}
