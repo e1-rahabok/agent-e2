@@ -31,7 +31,9 @@ product:
 object:
 - HostSystem
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/architecture/resource-controls
+- vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 same_name: []
 same_meaning: []
 related:

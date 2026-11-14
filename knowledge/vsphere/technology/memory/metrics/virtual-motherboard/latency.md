@@ -54,6 +54,7 @@ internal_derive:
 same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/latency
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
+- vsphere/technology/memory/metrics/host/latency
 same_meaning: []
 related:
 - vsphere/technology/memory/concepts/memory-as-storage

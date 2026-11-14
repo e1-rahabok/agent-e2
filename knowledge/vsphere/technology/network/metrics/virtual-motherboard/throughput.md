@@ -28,8 +28,11 @@ object:
 layer:
 - virtual-motherboard
 metric_class: consumption
-internal_derive: []
-same_name: []
+internal_derive:
+- vsphere/technology/network/concepts/network-characteristics
+- sp5-framework/observability/units
+same_name:
+- vsphere/technology/network/metrics/host/throughput
 same_meaning: []
 related:
 - vsphere/technology/network/metrics/virtual-motherboard/packets

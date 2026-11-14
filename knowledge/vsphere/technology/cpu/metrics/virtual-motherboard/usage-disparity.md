@@ -53,7 +53,9 @@ layer:
 instance:
 - per-vcpu
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/technology/cpu/concepts/idle-and-unused-vcpus
+- vsphere/technology/cpu/concepts/cpu-measurement-levels
 same_name: []
 same_meaning: []
 related:

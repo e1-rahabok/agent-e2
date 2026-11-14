@@ -50,7 +50,10 @@ product:
 object:
 - HostSystem
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/technology/storage/concepts/storage-layers
+- vsphere/technology/storage/concepts/esxi-storage-latency-stack
+- vsphere/architecture/object-relationships
 same_name: []
 same_meaning: []
 related:

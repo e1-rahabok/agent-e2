@@ -37,7 +37,9 @@ product:
 object:
 - HostSystem
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/technology/memory/concepts/swap-and-compression
+- vsphere/technology/memory/concepts/host-memory-states
 same_name: []
 same_meaning: []
 related:

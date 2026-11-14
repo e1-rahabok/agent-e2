@@ -35,7 +35,10 @@ object:
 layer:
 - virtual-motherboard
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/technology/storage/concepts/storage-layers
+- vsphere/technology/storage/concepts/vm-files
+- vsphere/technology/storage/concepts/snapshot-impact
 same_name: []
 same_meaning: []
 related:

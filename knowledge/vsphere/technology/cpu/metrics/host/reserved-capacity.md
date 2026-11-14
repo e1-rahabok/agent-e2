@@ -31,7 +31,9 @@ product:
 object:
 - HostSystem
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/architecture/resource-controls
+- vsphere/technology/cpu/concepts/cpu-frequency
 same_name: []
 same_meaning: []
 related:

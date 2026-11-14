@@ -38,7 +38,9 @@ product:
 object:
 - HostSystem
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/technology/storage/concepts/esxi-storage-io-path
+- vsphere/technology/storage/concepts/storage-layers
 same_name: []
 same_meaning: []
 related:

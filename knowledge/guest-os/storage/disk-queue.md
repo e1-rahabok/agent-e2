@@ -66,7 +66,10 @@ product:
 layer:
 - guest-os
 metric_class: contention
-internal_derive: []
+internal_derive:
+- guest-os/storage/windows-storage-io-path
+- guest-os/storage/linux-storage-io-path
+- vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 same_name: []
 same_meaning: []
 related:

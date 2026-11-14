@@ -28,7 +28,9 @@ object:
 layer:
 - virtual-motherboard
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/architecture/resource-controls
+- vsphere/technology/memory/concepts/memory-overhead
 same_name: []
 same_meaning: []
 related:

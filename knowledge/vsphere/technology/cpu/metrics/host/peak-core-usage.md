@@ -32,7 +32,10 @@ product:
 object:
 - HostSystem
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/technology/cpu/concepts/hyper-threading
+- vsphere/technology/cpu/concepts/cpu-topology
+- vsphere/technology/cpu/concepts/numa
 same_name: []
 same_meaning: []
 related:

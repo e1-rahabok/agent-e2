@@ -30,7 +30,10 @@ product:
 object:
 - HostSystem
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/technology/memory/concepts/ballooning
+- vsphere/technology/memory/concepts/host-memory-states
+- vsphere/architecture/provider-consumer
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
 same_meaning: []

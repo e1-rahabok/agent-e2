@@ -52,7 +52,10 @@ product:
 object:
 - ClusterComputeResource
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/object-types/cluster/concepts/cluster-operations
+- vsphere/object-types/cluster/concepts/drs-overview
+- sp5-framework/observability/input-types
 same_name: []
 same_meaning: []
 related:

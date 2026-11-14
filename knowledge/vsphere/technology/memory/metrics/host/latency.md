@@ -21,7 +21,9 @@ product:
 object:
 - HostSystem
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/architecture/provider-consumer
+- sp5-framework/observability/aggregation
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 same_meaning: []

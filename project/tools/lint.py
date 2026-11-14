@@ -252,6 +252,15 @@ def main():
         if not primer.build(pdocs, {b: True}): bad('harness/primer.py', f'up-front block "{b}" is empty: its source section is missing')
     n = primer.tokens(primer.build(pdocs, {b: True for b in primer.BLOCKS}))
     if n > primer.BUDGET_TOKENS: bad('harness/primer.py', f'up-front blocks are {n} tokens, above the budget of {primer.BUDGET_TOKENS}')
+    # Links the reading plan follows (harness/AGENT.md, section 6): same_name is symmetric, and every metric file
+    # names the mechanism files it follows from (internal_derive), so the mechanism tier can reach them.
+    for d in pdocs.values():
+        p = os.path.join('knowledge', d.id + '.md')
+        for t in d.meta.get('same_name') or []:
+            if t in pdocs and d.id not in (pdocs[t].meta.get('same_name') or []):
+                bad(p, f'same_name "{t}" does not link back: same_name is symmetric')
+        if d.meta.get('retriever_guide') == 'metric-meaning' and not d.meta.get('internal_derive'):
+            bad(p, 'metric file has no internal_derive: name the mechanism files it follows from (harness/AGENT.md, section 6)')
     check_moved(ids, bad)
     check_file_types(bad)
     check_terminology(pdocs, bad)
