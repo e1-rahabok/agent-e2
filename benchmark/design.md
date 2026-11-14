@@ -134,7 +134,8 @@ Each question lists every area it touches in `technology` (values from [project/
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).
 - Rule of thumb for a score near 85%: about ±7 points at 100 questions, ±5 at 200, ±4 at 300. The margin shrinks with the square root of the count: four times the questions for half the margin.
-- The comparison with the frontier model is paired, question by question (a one-sided exact McNemar test, section 8). At about 200 questions it finds a real 15-point win almost every time, even when the frontier model wins 10% of the questions Agent E2 loses.
+- The comparison with the frontier model is paired, question by question (a one-sided exact McNemar test at α 0.05, section 8). Power to find a real 15-point win, simulated at 196 questions: about 100%, 98% and 97% when the frontier model is right and Agent E2 wrong on 5%, 8% and 10% of the questions (the reverse share).
+- Level 400 alone (about two thirds of the set) reads at about ±7 points at 80%.
 - What size cannot buy:
   - fitness to the field: more questions read the gate more finely; they do not show that real questions look like them. The field shows that (section 1; the live test);
   - freedom from fitting: only questions nobody tuned on show that the knowledge base was not fitted to the set (the held-out set, section 7.5).
