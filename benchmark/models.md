@@ -138,21 +138,19 @@ Preferred, not required:
 
 ## 5. Frontier reference
 - One frontier model, without the knowledge base, in one mode, `web` (search available, the model decides, as in a chat product): anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Web search on, as Claude has it; effort capped at medium, for the cost of the author's subscription.
-- Q163 (no benchmark run until development is done) was overtaken: development runs took place on 2026-11-12 and 2026-11-13. The next run is the full run (author, 2026-11-13).
-- The claim ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 1) is met when a candidate with the knowledge base beats the frontier reference without it by more than the margin.
 - Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); the provider rate-limits above that in a short trial, and the governor probes upward from 3.
 - Effort: `model_params` in `config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).
 - Mode in the final round: `web` only (the baseline prompt plus open web search and page fetch, no knowledge base, no instruction to search: how an administrator's chat product behaves). No prompt-only run: a user cannot switch search off by typing a prompt, so that mode measures nothing a user meets (author, 2026-11-13). The prompt-only result of 2026-11-13 (67%) stays in the archive as history.
 
 ## 6. Judge
 - Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.
-- Model: `judge_model` in `config.yaml`, now openai/gpt-6.1-terra (from 2026-11-13; before: openai/gpt-5.6-sol, 4x the price). Scores graded by different judges are never compared.
+- Model: `judge_model` in `config.yaml`, now openai/gpt-6.1-terra (reason is openai/gpt-5.6-sol is 4x the price with minimal difference).
 - Rules:
   - never a candidate (the runner refuses the benchmark);
   - a different vendor from the frontier reference, so no model family grades its own answers;
   - vision, because screenshot questions can be free text;
   - temperature 0.
-- The judge is a frontier model on the benchmark gateway only. It is never deployed: at a customer site nothing is graded.
+- The judge is only used in benchmark. It is never deployed: at a customer site nothing is graded. In real world, VMware Administrator is the real judge. 
 
 ## 7. Removed
 | Model | Date | Reason |
