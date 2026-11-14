@@ -42,5 +42,6 @@ source_path: "<heading path in the source document>"
 answer: [B]                       # deterministic only
 misconception: [A]                # deterministic only
 misconception_type: [layer-confusion]   # project/tools/tags.yaml, misconception_type
+pair: "<nnnn>"                    # optional: the paired question (benchmark/design.md, section 3.9); delete if none
 status: draft                     # draft | awaiting-input | reviewed | deferred | retired
 ```

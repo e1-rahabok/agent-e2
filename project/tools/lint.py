@@ -137,7 +137,7 @@ def main():
                 bad(f, f'a metric file in metrics/{m.group(1)}/ has exactly one object type')
         # Writing style (audit markers, words to avoid, AI-speak) is the review's job, not lint's (2026-11-10). Titles and headings: check_titles (Q181).
 
-    seen_ids, level_numbers = {}, {}
+    seen_ids, level_numbers, pairs = {}, {}, {}
     for f in sorted(glob.glob('benchmark/questions/**/*.md', recursive=True)):
         t = open(f).read()  # benchmark questions: metadata at the end, like knowledge files
         if t.startswith('---\n'): bad(f, 'front matter at the top: move it to a ## Metadata section at the end')
@@ -157,6 +157,7 @@ def main():
         if not re.fullmatch(r'\d{4}', qid): bad(f, 'id must be a stable 4-digit number, quoted, e.g. "0007" (benchmark/README.md)')
         elif qid in seen_ids: bad(f, f'id {qid} is also used by {seen_ids[qid]}')
         else: seen_ids[qid] = f
+        if 'pair' in (fm or {}): pairs[qid] = (f, str((fm or {}).get('pair') or ''))  # paired questions (benchmark/design.md, section 3.9)
         lv = (fm or {}).get('level')
         mm = re.match(r'L(\d)-(\d{2,3})-', os.path.basename(f))
         if not mm or not isinstance(lv, int) or int(mm.group(1)) != lv // 100:
@@ -239,6 +240,9 @@ def main():
             if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') != 'awaiting-input':
                 bad(f, f'attachment not found: {att}')
 
+    for qid, (f, other) in pairs.items():
+        if other not in seen_ids: bad(f, f'pair "{other}" is not a question id')
+        elif pairs.get(other, (None, None))[1] != qid: bad(f, f'pair "{other}" must point back to "{qid}"')
     for lv, ns in level_numbers.items():
         if sorted(ns) != list(range(1, len(ns) + 1)):
             bad('benchmark/questions', f'level {lv} file numbers must run 01..{len(ns):02d} without gaps; run project/tools/renumber_questions.py')
