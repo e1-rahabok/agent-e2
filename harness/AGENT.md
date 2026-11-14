@@ -125,7 +125,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 ### 4.4 Ask
 - Code decides whether the model may ask, by the rule of MISSION.md, section 5. Built: the round is offered only when the case lists a missing fact, the case reads a premise, or a term-map row marked `premise` matches; otherwise the answer prompt has no clarifying rule at all (`chat_final`).
 - To build: the flow's next step needs a value the case does not hold (with Q166); a term-map row marks words with several meanings; the text and an image disagree.
-- At most one round. The model words the questions. The benchmark kinds (`choice`, `open`) never ask.
+- At most one round, except in a consultation (4.7). The model words the questions. The benchmark kinds (`choice`, `open`) never ask.
 
 ### 4.5 Answer
 - One model call (n with consensus) with: the rules (knowledge base first and it wins; a file for each claim; a threshold only with its source; Unsure over a guess); the up-front misconceptions and confusable pairs ([`harness/primer.py`](primer.py), config `primer`); the case as read; the computed facts; the coverage note when it applies; the reading set; any web page the question links; the question.
@@ -138,6 +138,14 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 - Grounding (multiple choice; open answers are not verified): a number in neither the question, the reading set nor the computed facts is flagged; a cited id must exist.
 - Consensus (multiple choice): n samples of stage 5 on one reading set; unanimous letters stand, otherwise Unsure ([README.md](README.md), section 6a). Each sample runs its own gap follow-up, so two samples can read different extra sections after their drafts; the shared reading set is stages 1-4.
 - Coverage boundary: when nothing in the reading set came from tier 1 or 2 (no flow, no file the question names: only search hits), the answer prompt says the question may be outside the knowledge base, and to say so if the text does not settle it. Trace step `coverage` (`weak` or `named`). A search-score limit is set later on the field set (Q207), not on the benchmark.
+
+### 4.7 Consultation (several turns; to build)
+- When the user asks to be guided ("You're my expert consultant: guide me through capacity planning"), the agent leads. MISSION.md, Ways to ask, 7.
+- The procedure is code: the planning calculator's inputs are the checklist. Each turn, code compares what the conversation holds with that list and picks the next topic and the inputs it needs; the model explains why the topic matters and words the question.
+- A missing input gets its default from the catalog (`planning-*` rows of thresholds-capacity.yaml), offered as a default and named as one ("Silver default: 2:1 per physical thread; give yours to recompute"). Defaults are the starting point of the advice, never a hidden assumption.
+- When the inputs are complete, the calculator computes (stage 3) and the model explains the six numbers, the binding one and what would change it.
+- The one-round limit of 4.4 does not apply: the user asked for the conversation.
+- Not in the benchmark: a benchmark question states every input in its prompt (benchmark/design.md, section 6.1, F3), so it tests the method, not the conversation (question L4-43). The live test measures consultations (benchmark/live-test.md, step 9).
 
 ## 5. Rules and budgets
 | Rule | How | Replaces (tool loop) |
