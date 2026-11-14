@@ -80,7 +80,7 @@
 - "Show capacity remaining for the whole World" → clusters are not interchangeable; show it per cluster and datastore.
 - "VM count growth means demand growth" → without utilization growth, the new VMs are not yet used.
 - "A high overcommit ratio is a problem" → it is efficiency; read it with contention.
-- "CPU capacity counts hyper-threads" → VCF Operations counts physical cores.
+- "CPU capacity counts hyper-threads" → VCF Operations counts physical cores (Total Capacity in GHz = cores × base frequency); plan capacity per physical thread.
 - "Use technical terms on executive dashboards" → use the organisation's business terms.
 
 ## Metadata

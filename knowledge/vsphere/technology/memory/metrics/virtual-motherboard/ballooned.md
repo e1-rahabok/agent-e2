@@ -20,7 +20,7 @@
   - VM layer: that use makes Consumed grow.
   - ESXi layer: when Consumed tries to grow beyond the limit, ESXi compresses or swaps.
 - So under a limit, the direct result is Compressed or Swapped. Balloon is not.
-- Example: 8 GB CentOS VM running MySQL with a 2 GB limit was heavily ballooned. The book notes a default maximum of around 63%.
+- Example: 8 GB CentOS VM running MySQL with a 2 GB limit was heavily ballooned. The balloon maximum is Mem.CtlMaxPercent, default 65% of configured memory.
 - See [`vsphere/technology/memory/concepts/ballooning`](../../concepts/ballooning.md).
 
 ## Misconceptions
@@ -63,6 +63,5 @@ review_notes:
 - 'To check: metric_class: set to contention.'
 - 'Section ''Mechanism'': from Memory > Architecture.'
 - 'Sections Behaviour: from Memory > VM.'
-- 'To check: Section ''Behaviour'': the balloon maximum is the Mem.CtlMaxPercent setting, default 65%; the book states around 63%.'
 status: draft
 ```

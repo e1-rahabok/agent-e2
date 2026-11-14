@@ -29,7 +29,7 @@ B: deleted in the guest means free on the datastore.
 ## Notes
 - Drafted by Claude 2026-11-12. Counts only after author approval.
 - Windows sends unmap on delete when delete notifications are on and the virtual hardware supports it; the stem implies it did not, so the guest side is the first thing to check. The options do not depend on why.
-- Vendor documents: VMFS 6 automatic space reclamation and its 1 MB granularity, vSphere Storage, "Space Reclamation Requests from VMFS Datastores" (https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-BC1A172C-E649-4812-B8B2-A9E45AC97051.html); Broadcom KB 314380 (unmap granularity above 1 MB). The key does not depend on the exact reclamation rate: the knowledge base gives 25-50 MB/s at Low, some Broadcom pages give 100 MB/s.
+- Vendor documents: VMFS 6 automatic space reclamation and its 1 MB granularity, vSphere Storage, "Space Reclamation Requests from VMFS Datastores" (https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-BC1A172C-E649-4812-B8B2-A9E45AC97051.html); Broadcom KB 314380 (unmap granularity above 1 MB). The key does not depend on the exact reclamation rate: the knowledge base gives 25-50 MB/s at Low (vSphere 9.1); Broadcom KB 452963 (ESXi 7.x, 8.x) gives 100 MB/s.
 
 ## Metadata
 ```yaml

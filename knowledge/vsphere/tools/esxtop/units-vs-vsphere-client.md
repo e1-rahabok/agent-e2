@@ -2,7 +2,7 @@
 
 ## Meaning
 - esxtop shows network counters in megabits.
-- vSphere Client shows network counters in kilobytes.
+- vSphere Client: the API stores network counters in kilobytes per second (KBps); the host and cluster Network charts show megabits per second (Mbps).
 
 ## Misconceptions
 - Comparing values from the two tools without converting bits to bytes and mega to kilo.

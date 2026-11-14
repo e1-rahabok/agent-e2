@@ -23,7 +23,7 @@
 - Swapped was always 0: every page could be compressed.
 - Compression started about a month earlier and was only 342 MB (under 0.1% of consumed), but it hit an active VM.
 ![ESXi memory Compressed history: rises around 2 August, peak 342 MB](../images/esxi-memory-compressed-history-timeline.png)
-- The book's guess: a limit, directly or via a resource pool.
+- Compression with no host pressure points to a memory limit on the VM or its resource pool: ESXi reclaims above a limit even with free host memory.
 ![Highest VM memory contention on a host with plenty of free memory](../images/esxi-worst-vm-memory-contention-with-free-memory.png)
 
 ## Misconceptions

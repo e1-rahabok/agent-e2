@@ -1,7 +1,7 @@
 # Cluster Memory Usage
 
 ## Meaning
-- Maps to Consumed + Overhead.
+- Maps to Consumed (VM overhead included).
 
 ## Metadata
 ```yaml

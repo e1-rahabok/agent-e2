@@ -17,7 +17,7 @@ Any metric can be viewed from three perspectives. Full understanding requires al
 |---|---|
 | Availability | Not given in the source. |
 | Performance | KPI (%) |
-| Compliance | PCI-DSS Compliance Score (%) |
+| Security | PCI-DSS Compliance Score (%) |
 | Capacity | Time Remaining, Recommended Size |
 | Value | Month-to-Date Cost |
 
@@ -67,6 +67,5 @@ corrections:
 - '2026-11-02: Pillars are availability, performance, security, capacity, value (section: 2. Pillars of operations). Uploaded document lists capacity, cost, performance, compliance.'
 - '2026-11-02: Technology includes system: OS, BIOS, or whole device (section: 1. Technology).'
 review_notes:
-- 'To check: Example metrics: Compliance Score moved under Security, Month-to-Date Cost under Value.'
 status: draft
 ```

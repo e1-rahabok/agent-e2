@@ -7,12 +7,18 @@
 - Fleet view in VCF Operations: vSphere \ ESXi Bad Network Packets.
 ![vCenter ESXi network error counters](../../images/vcenter-esxi-network-error-counters-table.png)
 
+## Host TCP retransmits
+- The VMkernel TCP/IP stack carries the host's own traffic (vSAN, vMotion, NFS, iSCSI); the host counts its retransmits. VM traffic is TCP inside the Guest OS: the host does not see it.
+- vSAN: Performance for Support, host, Network, TCP/IP: `tcpTxRetransmitRate`, with duplicate ACKs and receive errors.
+- Any host: `net-stats`, sections `tcptx` and `tcprx`; retransmit % = rexmit ÷ packets per second × 100.
+- Retransmits point to loss in the physical network (optic, cable, switch congestion), outside ESXi.
+
 ## Detail with esxcli
 ```text
 watch esxcli network nic stats get -n vmnic#
 ```
 - Counters are cumulative: the problem may be in the past.
-- vCenter shows totals. The book believes vCenter error counters are Total receive errors and Total transmit errors.
+- vCenter shows totals (Total receive errors and Total transmit errors: see `review_notes`).
 
 | esxcli counter | Meaning |
 |---|---|
@@ -64,6 +70,8 @@ source:
   path: Network > ESXi > Contention Metrics > Error Metrics; esxcli
 corrections: []
 review_notes:
-- 'To check: KB cited by the book, not read; descriptions are the book''s summary (https://knowledge.broadcom.com/external/article?articleNumber=341594).'
+- 'To check: KB 341594, not read; the esxcli descriptions are a summary (https://knowledge.broadcom.com/external/article?articleNumber=341594).'
+- 'To check: whether the vCenter error counters are esxcli Total receive errors and Total transmit errors.'
+- 'Section ''Host TCP retransmits'': Broadcom KB 424515 (net-stats tcptx rexmit), KB 419500 (Performance for Support, tcpTxRetransmitRate), KB 415001 (vSAN 8.x and 9.x). To check: the chart name in the vSAN 9.x TechDocs.'
 status: draft
 ```

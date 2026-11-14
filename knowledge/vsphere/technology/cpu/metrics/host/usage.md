@@ -12,7 +12,7 @@
 
 ## Cap
 - ESXi CPU Usage is no longer capped at 100%, in vCenter or VCF Operations. On a busy host with Turbo it exceeds 100% of nominal capacity.
-- Older releases capped it at 100%: older charts and the book's ESXi 7 examples show a flat 100%.
+- Older releases capped it at 100%: older charts and ESXi 7 examples show a flat 100%.
 - Cause: an accounting decision error in ESXi. Known issue, documented in an official VMware KB.
 
 ## Same metric, two names
@@ -31,8 +31,8 @@ ESXi Usage = sum over physical cores (not sum of VMs + kernel)
 ## Names and units
 - Used (ms), Used (%), Usage (%), Usage (MHz). esxtop uses Used (%). vSphere Client uses the other 3.
 - vSphere Client labels it Used in summary views and Usage in charts. Treat Used (MHz) = Usage (MHz).
-- The book sees a use case only for Usage (MHz).
-- Usage is added by vCenter. It does not exist at ESXi level.
+- Of Usage (%) and Usage (MHz), only Usage (MHz) has an operational use case.
+- esxtop has no Usage field; the vSphere Host Client (ESXi) shows Usage, and the API has cpu.usagemhz on HostSystem.
 - Summary value (Used CPU): summary.quickStats.overallCpuUsage. Likely a multi-minute average; it does not match the chart exactly.
 - vSphere has no usable capacity concept for CPU: Free = Capacity - Used. Example: capacity 35.18 GHz, used 11.3 GHz.
 - Consumed CPU (%) in the host list = Usage (%). The last value of the Usage chart is the table value.

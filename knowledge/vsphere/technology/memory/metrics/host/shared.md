@@ -14,7 +14,7 @@ Host memory savings from sharing = Shared - Shared Common
 - Far below half: large savings.
 
 ## Behaviour
-- Shared Common exceeded half of Shared many times in one example. Unexplained. The book's guess: large pages broken into 4 KB pages.
+- Shared Common exceeded half of Shared many times in one example. Unexplained.
 - With hardware-assisted memory virtualization, ESXi backs VM memory with large pages, which rarely share. Under high consumption, large pages are broken into 4 KB pages, which can share.
 - Use Shared Common over time as a leading indicator of large pages being broken up. Compare with the host's own history.
 - With TPS limited to within a VM by default, shared values should be much smaller. Salting allows sharing only when salt and content match.
@@ -56,5 +56,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Section ''Behaviour'': the reason Shared Common exceeds half of Shared; the book guesses large pages.'
+- 'To check: why Shared Common exceeds half of Shared (large pages broken into 4 KB pages is a guess).'
 status: draft
 ```

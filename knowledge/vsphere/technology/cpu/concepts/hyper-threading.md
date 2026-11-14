@@ -136,7 +136,7 @@ Core Utilization (ESXi)   = (75% + 100%) / 2          = 87.5%
 
 ## Imbalance signal
 - Core Utilization below 2 × Thread Utilization: some cores run 2 threads while other cores are idle.
-- A VM runs on as few cores as possible, not spread over all cores. Fewer context switches.
+- The scheduler spreads vCPUs across cores before pairing threads on one core (vSphere 9.1 documentation: VMs are "preferentially scheduled on two different cores"). Uneven core load comes from the workload and NUMA placement.
 
 ## Used per thread
 - Used splits a core's time when both threads run: 10,000 ms each, not 20,000.

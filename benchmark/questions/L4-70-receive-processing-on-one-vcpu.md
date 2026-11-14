@@ -19,7 +19,7 @@ Why are packets dropped? Will 8 more vCPUs help? What do you change?
 
 ## Expected key points
 - The receive work of the adapter runs on one vCPU: Processor(0) is saturated by deferred procedure calls (network receive processing) while the other seven are almost idle. That vCPU cannot drain the receive ring fast enough, so the ring fills and new packets are dropped.
-- The drop is inside the VM, at the VMXNET3 ring: vCenter counts it as receive drops, and Windows counts it too (Packets Received Discarded). It is not the physical network.
+- The drop is inside the VM, at the VMXNET3 ring: vCenter counts it as receive drops. It is not the physical network.
 - VM CPU Usage of 16% is an average over 8 vCPUs: one vCPU at 100% is 12.5% of the VM. The average hides it.
 - Ready at 0.4% rules out ESXi starving the vCPU: the bottleneck is how the guest spreads its receive work.
 - More vCPUs do not help: the receive processing stays on the one vCPU. A larger ring only absorbs bursts.

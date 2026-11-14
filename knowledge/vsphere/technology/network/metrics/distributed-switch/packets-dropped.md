@@ -2,7 +2,7 @@
 
 ## Meaning
 - Dropped packet counts that vCenter keeps on the distributed switch object, at the switch, per distributed port (DVPort) and per link aggregation group (LAG), each for transmit and receive.
-- Dropped packets are the only network contention signal vSphere has: there is no network latency or retransmit counter.
+- Dropped packets are the only network contention signal vSphere has for VM traffic: there is no network latency or retransmit counter for a VM or a port. The host counts retransmits of its own VMkernel TCP traffic: [`vsphere/technology/network/metrics/host/errors`](../host/errors.md).
 
 ## Counters (vCenter 9.1 API)
 | Scope | Transmit | Receive |

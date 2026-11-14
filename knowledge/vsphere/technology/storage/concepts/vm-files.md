@@ -16,13 +16,13 @@
 | Snapshot | .vmsn | VM configuration. |
 | Snapshot | .vmsd | Metadata of all active snapshots. One file, under 1 KB, updated on each snapshot create or delete. |
 | Swap | .vswp | Size = configured RAM - memory reservation. Deleted at power-off. |
-| Swap | VMX swap file | Small (MB). The book has not observed it. |
+| Swap | VMX swap file | Small (MB). |
 | Others | Logs, .vmx, .nvram | Small (KB or MB). Any file placed in the VM folder counts, for example an ISO. A large value means unneeded files. |
 
 ![Snapshot files](../images/vm-snapshot-files.png)
 
 - A snapshot protects VMDK, memory and configuration.
-- Snapshots do not apply to RDM. RDM snapshots happen in the storage system, transparent to ESXi.
+- Snapshots do not apply to a physical-mode RDM: its snapshots happen in the storage system, transparent to ESXi. A virtual-mode RDM supports VM snapshots (vSphere 9.1 documentation, Raw Device Mapping).
 - A VM can have up to 64 disks, across datastores.
 - Storing .vswp on local host storage saves vSAN space. Trade-off: vMotion must copy the swap file.
 
@@ -51,7 +51,7 @@
 
 ## Misconceptions
 - "Thick disk Used = guest usage" → it is the configured size.
-- "Snapshots apply to RDM" → no; the array handles it.
+- "Snapshots apply to every RDM" → only to virtual-mode RDMs; a physical-mode RDM is snapshotted by the array.
 - "Hard disk size in the UI includes vSAN" → it shows configured size, the guest view.
 
 ## Metadata
@@ -97,6 +97,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Storage > VM > Capacity Metrics > VM Files; Single VMDK; All VM Files; vSphere Client UI
 corrections: []
-review_notes: []
+review_notes:
+- 'To check: the VMX swap file size on a running VM (not observed).'
 status: draft
 ```

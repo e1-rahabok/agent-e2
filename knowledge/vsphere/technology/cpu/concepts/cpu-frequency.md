@@ -89,7 +89,8 @@
 | 67% | 80% | Same. |
 | 75% | 90% | Same. |
 | 100% | 120% | Same. |
-| 125% | 150% | Performance impact from Hyper-Threading. |
+
+- Core Utilization stops at 100%. Work beyond it runs on the second thread of busy cores, where Hyper-Threading costs performance.
 
 ## Sample CPU
 ![Sample CPU: 1 GHz nominal, 1.3 GHz all cores, 1.7 GHz single core](../images/cpu-turbo-boost-example-nominal-all-core-single-core.png)
@@ -136,7 +137,7 @@
 - "TDP is the maximum power the CPU draws" → TDP is thermal design power at base frequency.
 - "Only High Performance reaches Max Turbo" → Balanced reaches it too.
 - "Usage (%) above Core Utilization means a problem" → the gap is Turbo.
-- "Usage (%) at 100% means the host is at its limit" → the metric is capped. Actual usage can be higher due to Turbo.
+- "Usage (%) at 100% means the host is at its limit" → nominal speed is not the limit: Usage exceeds 100% with Turbo (uncapped from vSphere 8.0 Update 3). Check Core and Thread Utilization and contention.
 - "Demand 170%, so add vCPUs" → the vCPU already runs on a boosted core. A second vCPU on the same core gets 0.625x.
 - "Run 100% means constant performance" → throughput varies with frequency and Hyper-Threading.
 - "2 vCPUs give 2x the throughput of 1 vCPU" → 2.12 GHz vs 1.7 GHz in the single-core case.

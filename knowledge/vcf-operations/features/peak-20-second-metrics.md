@@ -37,7 +37,7 @@
 
 ## Misconceptions
 - "Peak 15x the average is the maximum gap" → it can be far larger.
-- "Use the peak for the SLA" → use the 5-minute average; the peak is a warning.
+- "Use the peak for a performance SLA" → performance is managed by the KPI, which reads the 20-second peak; the 5-minute average is for trends and capacity.
 - "The 5-minute value is below the threshold, so there is no problem" → a threshold holds only for its object, its level within the object and its sample interval. A 5-minute average hides 20-second peaks.
 
 ## Metadata

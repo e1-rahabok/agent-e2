@@ -6,7 +6,7 @@
 
 ## Mechanism
 - CPU is the fastest resource. It waits when data must come from memory, and the page is in ESXi swap.
-- More RAM or faster RAM can lower Swap Wait, so Run goes up.
+- More host memory for the VM (less overcommit, a reservation) or a faster swap location lowers Swap Wait, so Run goes up.
 - Include Swap Wait in Guest OS CPU sizing: it is runtime the guest demanded.
 - Superseded by the Memory Contention metric.
 - VCF Operations counts Swap Wait as part of memory contention, not CPU Contention.

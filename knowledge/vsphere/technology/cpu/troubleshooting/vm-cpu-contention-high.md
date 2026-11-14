@@ -3,7 +3,7 @@
 ## Symptom
 - VM CPU Contention (VCF Operations) or CPU Latency (vCenter, esxtop %LAT_C) is high, the CPU rows of VM Performance (%) are yellow or worse, or the VM CPU contention alert fired.
 - Entered from [`sp5-framework/performance/vm-slow`](../../../../sp5-framework/performance/vm-slow.md) (step 4), a health check performance step, or an alert.
-- The two metrics count different waits. Contention, from VCF Operations 8.18: Ready (with the time held back by a limit), Co-stop, Overlap, and Other Wait when below 1%. CPU Latency also counts the effect of frequency scaling and Hyper-Threading, and leaves out the time held back by a limit ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../metrics/virtual-motherboard/contention.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../metrics/virtual-motherboard/latency.md)).
+- The two metrics count different waits. Contention, from Aria Operations 8.18: Ready (with the time held back by a limit), Co-stop, Overlap, and Other Wait when below 1%. CPU Latency also counts the effect of frequency scaling and Hyper-Threading, and leaves out the time held back by a limit ([`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](../metrics/virtual-motherboard/contention.md), [`vsphere/technology/cpu/metrics/virtual-motherboard/latency`](../metrics/virtual-motherboard/latency.md)).
 
 ## Flow
 ```mermaid
@@ -46,7 +46,7 @@ flowchart TD
 
 ## Misconceptions
 - "CPU Latency above 37.5% means CPU starvation" → Hyper-Threading and frequency alone can cause it; Contention leaves both out.
-- "Contention and Latency are the same" → only before VCF Operations 8.18. Contention now includes the time a limit holds back and leaves out frequency and Hyper-Threading.
+- "Contention and Latency are the same" → only before Aria Operations 8.18. Contention now includes the time a limit holds back and leaves out frequency and Hyper-Threading.
 - "Use Latency as the KPI" → too volatile. Use Ready.
 - "High Ready, so add vCPUs" → more vCPUs make co-scheduling harder and can raise Ready and Co-stop.
 
@@ -89,7 +89,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > VM > Contention Metrics > Latency
 corrections:
-- 'Section ''Checks, in order'': the source tests Contention against 37.5% (the Hyper-Threading share in CPU Latency). That is the CPU Latency logic before VCF Operations 8.18; Contention now leaves out frequency and Hyper-Threading, so step 1 reads its parts against the KPI levels and only CPU Latency leads to Hyper-Threading (Q144).'
+- 'Section ''Checks, in order'': the source tests Contention against 37.5% (the Hyper-Threading share in CPU Latency). That is the CPU Latency logic before Aria Operations 8.18; Contention now leaves out frequency and Hyper-Threading, so step 1 reads its parts against the KPI levels and only CPU Latency leads to Hyper-Threading (Q144).'
 review_notes:
 - 'To check: Sections ''Checks, in order'' steps 2-5 (limits and pool shares, host overcommit, VM size and snapshots, DRS placement) are a synthesis of the linked files, not the source''s flow.'
 status: draft

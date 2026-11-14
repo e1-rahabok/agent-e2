@@ -47,7 +47,7 @@
 - Benefit: can improve performance, especially for small packets and high packet rates.
 
 ## HClock Multiqueue (p. 48)
-- Activation: `/Net/NetSchedHClkMQ` through `esxcli system advanced set`.
+- Activation: `esxcli system settings advanced set -i <0|1|2> -o /Net/NetSchedHClkMQ` (Performance Best Practices for vSphere 9.1, p. 48).
   - 0: deactivated,
   - 1: activated without automatic scaling,
   - 2: activated with automatic scaling (default).

@@ -6,7 +6,7 @@
 - [The second attachment](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png) zooms into the start of the chart.
 
 At the end, where the counters spike:
-- ESXi CPU Usage is flat at 100%. (The host was ESXi 7. In ESXi 9 this counter is no longer capped and would exceed 100%.)
+- ESXi CPU Usage is flat at 100%. (The host was ESXi 7. From vSphere 8.0 Update 3 this counter is no longer capped and would exceed 100%: Broadcom KB 417702.)
 - ESXi CPU Core Utilization is about 70%.
 - ESXi CPU Utilization is about 40%.
 

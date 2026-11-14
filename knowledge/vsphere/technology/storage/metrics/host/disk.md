@@ -7,8 +7,7 @@
 
 ## Contention counters
 - Device, kernel, queue and guest latency, each as read, write and command. See [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](../../concepts/esxi-storage-latency-stack.md).
-- Bus Resets and Commands Aborted: always 0 in the book's observation.
-- Highest Latency: the book is unsure whether it is guest, kernel or device.
+- Bus Resets and Commands Aborted: always 0 in the observations so far.
 - Maximum Queue Depth: a setting, more property than metric.
 
 ## Consumption counters
@@ -62,5 +61,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Section ''Memory tiering devices'': NVMe power-state facts from the book against vendor documents.'
+- 'To check: whether host Highest Latency is guest, kernel or device latency.'
 status: draft
 ```

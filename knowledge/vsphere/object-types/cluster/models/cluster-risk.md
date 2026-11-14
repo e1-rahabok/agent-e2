@@ -76,7 +76,7 @@ Per host, then the worst host is kept.
 - vMotion: involves the network across top-of-rack switches. Track the maximum vMotion stun time across the environment separately, as basic health ([`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md), section vMotion Count).
 
 ## Misconceptions
-- "The CPU overcommit row reads 3, so the Bronze 3:1 plan is met" → the row is per core; 3 per core is 1.5 per thread with Hyper-Threading. The plan is per thread: Bronze 3:1 reads 6 per core.
+- "The CPU overcommit row reads 3, so the Bronze 3:1 plan is met" → the row is per thread, as the class plans are: Bronze 3:1 reads 3; on Hyper-Threading hosts that is 6 vCPUs per core.
 - "Cluster average utilization shows risk" → use the worst host.
 - "Cluster Risk fell, so the cluster is safer" → a worse sub-metric can lower it when the score is already high; read the sub-metrics.
 - "Memory consumed is low against DRAM + NVMe" → risk is measured against DRAM only.

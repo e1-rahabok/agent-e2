@@ -10,7 +10,7 @@
 - Causes: a thread asking another for data, or preemption by a higher-priority thread. IO tends to require switches.
 - VCF Operations reports the total only (System and Thread objects exist in Windows).
 
-## Thresholds (book)
+## Thresholds
 | Range | Per processor |
 |---|---|
 | Yellow | 2K-4K |

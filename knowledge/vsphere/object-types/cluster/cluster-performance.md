@@ -14,7 +14,7 @@
 - Limitation: outliers, for example one VM with a limit in a large cluster; the worst-VM rows have higher limits than the 90th-percentile rows for that reason.
 
 ## Thresholds
-- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
+- Colour levels (green, yellow, orange, red, zero for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
 
 - The red range ends where the sub-metric scores 0.
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100 that hides the other rows. Any bad packet is yellow and counts.
@@ -31,7 +31,7 @@
 - VMs counted: powered-on VMs on the cluster's hosts. A powered-off VM is left out: its last stats are old.
 - 90th percentile: sort the VMs; take the one at position 90% of the count, rounded up. With fewer than 10 VMs it equals the worst VM.
 - Bad packets are never averaged or summed over a longer time: that hides a spike. Packets Received and Transmitted totals are deactivated by default in VCF Operations; activate them in the policy first.
-- One VM with 200 ms disk latency and the others at 0: the worst-VM row is orange to red; the 90th percentile stays 0. One VM is not a broad problem.
+- One VM with 200 ms disk latency and the others at 0: the worst-VM row is red, a quarter into the band; the 90th percentile stays 0. One VM is not a broad problem.
 
 - NVMe wait: the share of vCPU time a VM waits for pages fetched from the NVMe tier, by Little's law. NVMe wait (%) = VM tier-1 read bandwidth (MB/s) × 256 pages per MB × host NVMe read latency (s) ÷ VM vCPUs × 100. The VM does not care where it waits for memory, so the bands stay those of memory latency. On a host without tiering, NVMe wait is 0.
 - Before NVMe wait is scored, validate on a tiered host: one 4 KB page per fetch blocking one vCPU, no prefetch, and memory latency not already counting the fetches. Until then it is shown and left out of the score.

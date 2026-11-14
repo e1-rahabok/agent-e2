@@ -34,7 +34,7 @@ ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of runn
 | Sum | Total over members | Green threshold at 0 | Threshold depends on member count |
 | Disparity | Highest minus lowest | Members meant to share load equally | - |
 
-- Percentile choice: the worst 5th percentile below about 100 members; above 250, the 97th percentile (about 3 standard deviations).
+- Percentile choice: the worst 5th percentile below about 100 members; above 250, the 97th percentile (about 1.9 standard deviations above the mean on a normal distribution).
 - Worst 5th percentile excludes: 10 members 0.5; 20 1; 50 2.5; 100 5; 200 10; 500 25.
 - Count reads as real life: 5 affected users out of 100,000 is 0.005% as an average, but 5 as a count. Track the red count (expected 0) and the orange count as an earlier warning.
 - Sum: when every member can be green while the parent sum is red, the threshold was not scaled to the member count.

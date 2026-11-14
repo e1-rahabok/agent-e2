@@ -114,7 +114,7 @@ Usage <= Entitlement   (at any point in time)
 
 ## Misconceptions
 - "CPU reservation shows up in CPU usage" → wrong. CPU reservation is on demand and not in utilization metrics.
-- "High Memory Consumed means the VM is actively using that memory" → not necessarily. Reservation is counted in Consumed.
+- "High Memory Consumed means the VM is actively using that memory" → not necessarily. Touched pages stay in Consumed, a touched reservation included, even when the VM is idle.
 - Using a limit instead of right-sizing → unpredictable; the guest cannot see the limit.
 - "Shares guarantee CPU" → shares act only under contention, and only on what reservations leave. A reservation is the guarantee.
 - "2,000 shares means the same priority on every cluster" → shares are relative to siblings; the same number is another share elsewhere.

@@ -10,7 +10,7 @@
 
 ## 1000 or 1024 per tool
 - No single standard. Google uses 1000 for bytes and bits alike; 1 byte = 8 bits.
-- Storage vendors sell decimal capacity; Windows shows binary. A 128 GB drive shows about 116 GB in Windows: 9% less.
+- Storage vendors sell decimal capacity; Windows shows binary. A 128 GB drive shows about 119 GB in Windows: 7% less.
 - Windows: 1024 for storage.
 - VCF Operations: 1024 for storage, network and memory; 1000 for CPU (tested). It labels binary values KB, MB, GB, not KiB, MiB, GiB.
 - vCenter counters: KB = 1,024 bytes; kb (kilobit) = 1,000 bits ([`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md), section Units).
@@ -33,7 +33,7 @@
 - vSphere example: VM CPU Ready, and many VM-level values in esxtop. See [`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md).
 
 ## Misconceptions
-- "The 128 GB drive shows 116 GB, so 12 GB is lost" → the vendor counts 1000, Windows counts 1024.
+- "The 128 GB drive shows 119 GB, so 9 GB is lost" → the vendor counts 1000, Windows counts 1024.
 - "30 MBps in VCF Operations is 30,000 KBps" → VCF Operations uses 1024 for network: about 31,550 KBps.
 - "KB in VCF Operations means 1,000 bytes" → it means 1,024 bytes, labelled KB, not KiB.
 

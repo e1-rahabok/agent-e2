@@ -25,7 +25,7 @@
 - **Small cluster**: higher HA overhead (3 nodes: 33%; 10 nodes: 10%). vSAN: fewer hosts, fewer failures-to-tolerate options. Many small clusters create resource silos.
 - **Large cluster**: more redundancy per host. Three clusters of 6+1 use 21 hosts; one cluster of 18+2 uses 20 and tolerates two failures. From 32 nodes, harder to operate.
 - **vSAN cluster**: a VM has a compute host and storage hosts, which can differ.
-- **Multi-cluster**: clusters balanced as one; each keeps its own capacity remaining.
+- **Multi-cluster**: clusters balanced as one; each keeps its own usable capacity and Cluster Consumption (%).
 - **Stretched cluster**: more complex. It gives disaster avoidance, not disaster recovery; DR is still required.
 - **Site Recovery cluster**: protected VMs from the other site must be counted in capacity.
 - Cluster size cap from business continuity: [`sp5-framework/concepts/purpose-driven-architecture`](../../../../sp5-framework/concepts/purpose-driven-architecture.md).

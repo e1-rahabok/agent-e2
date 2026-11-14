@@ -15,7 +15,7 @@
 - The kernel has no physical thread (not core) for the vCPU.
 - VM-side causes: insufficient shares relative to other VMs, vMotion, a limit.
 - ESXi-side cause: high host utilization. Sign: other VMs show Ready too.
-- For the Guest OS, Ready is frozen time. Linux reports it as Steal Time. Windows does not account it.
+- For the Guest OS, Ready is frozen time. Linux reports it as Steal Time when the VM's steal clock is on (`stealclock.enable`); otherwise, like Windows, it does not account it.
 - Ready does not register Hyper-Threading contention. A busy sibling thread does not put a vCPU into Ready.
 - Ready on one vCPU can cause Co-stop on a sibling vCPU of the same VM.
 - See [`vsphere/technology/cpu/concepts/vcpu-states`](../../concepts/vcpu-states.md).

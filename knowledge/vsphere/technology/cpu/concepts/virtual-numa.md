@@ -43,8 +43,8 @@
 - A VM vCPU count above the physical core count uses hyper-threads. This can create contention. See [`vsphere/technology/cpu/concepts/hyper-threading`](hyper-threading.md).
 
 ## CPU Hot Add
-- Adding vCPUs with CPU Hot Add deactivates vNUMA for that VM.
-- The guest then sees one vNUMA node.
+- Enabling CPU Hot Add (`vcpu.hotadd = TRUE`) deactivates vNUMA at power-on, whether or not a vCPU is ever added (vmware.log: "forcing UMA"). The guest sees one vNUMA node; hot-added vCPUs join it.
+- Virtual hardware version 20 and later: `numa.allowHotadd = TRUE` keeps vNUMA with CPU Hot Add; hot-added vCPUs can go to new virtual nodes. Validated on Windows Server 2012 R2 to 2022; some Linux kernels panic when a CPU-only node is hot added (Broadcom KB 313375).
 - See [`vsphere/technology/cpu/concepts/idle-and-unused-vcpus`](idle-and-unused-vcpus.md).
 
 ## Misconceptions

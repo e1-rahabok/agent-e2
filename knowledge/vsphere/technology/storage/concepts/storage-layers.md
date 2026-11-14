@@ -10,7 +10,7 @@
 | Guest OS | Network drives (SMB and similar) go out through the vNIC. Not virtual disks; invisible to the hypervisor as disk IO. |
 | VM | Virtual disks. See below. |
 | ESXi | Adapters, paths, devices. See below. |
-| Datastore | Filesystem: VMFS (block) or NFS (file). vSAN presents as VMFS. |
+| Datastore | VMFS (block), NFS (file), vSAN (object store) or vVol: four datastore types. |
 | Storage subsystem | Virtual (vSAN) or physical (array). NFS can be a virtual or physical server. |
 
 - Each layer controls only itself and may use its own terms. Disk, LUN and device can mean the same thing. A device is typically physical; a LUN is typically virtual, striped across physical devices.
@@ -33,7 +33,7 @@
 ![ESXi storage metric groups: vmnic, adapters, paths, datastores, disks](../images/esxi-storage-metric-groups-vmnic-adapter-path-datastore-disk.png)
 - ESXi virtualizes different storage subsystems. The kernel does IO for all VMs and its own modules (for example vSAN).
 - IO blender: sequential IO from many VMs and hosts becomes random when combined. The kernel also re-sequences IO to lower average latency.
-- No VM breakdown at physical layers: vmnic, adapter, path and vSAN objects (cache tier, capacity disk, disk group) are aggregates.
+- No VM breakdown at physical layers: vmnic, adapter, path and vSAN objects (OSA: cache tier, capacity disk, disk group; ESA: one storage pool per host, no cache tier) are aggregates.
 - NFS: uses the vmnic. Adapter types (FC, FCoE, iSCSI) do not apply. Multipathing is in the network, not visible in the storage layer.
 - VMFS and RDM: adapters are visible. One adapter serves many devices. One device is typically reached through 2 adapters with 2 paths each: 4 paths.
 ![Four paths from 2 adapters to one device](../images/esxi-storage-four-paths-from-two-adapters-to-one-device.png)
@@ -55,12 +55,13 @@
 ## Backing device
 - A datastore is a filesystem. Monitor the backing device (LUN or NFS export) in the storage system.
 - Compare with a ratio. LUN IOPS / datastore IOPS = 1 with a 1:1 mapping.
-- Ratio above 1: the array does its own IO, such as replication or snapshots.
+- Ratio above 1: the LUN serves IO no host in vCenter sends: another initiator (a SAN-mode backup proxy, a host of another vCenter) or the array's own jobs (replication, array snapshots, rebuilds).
 
 ## Misconceptions
 - "Adapter IOPS can be split per VM" → physical layers have no VM breakdown.
 - "vSAN has 4 paths like FC" → one path per device.
 - "Sum datastore capacity per cluster" → shared datastores make it impossible.
+- "Array IOPS above datastore IOPS means one tool miscounts" → the array counts every initiator and its own jobs; vCenter counts only its hosts.
 
 ## Metadata
 ```yaml

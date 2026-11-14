@@ -32,7 +32,7 @@ flowchart TD
    - Paging alone is not a shortage: binaries, memory-mapped files and prefetch cause page-in. Low Free with high Standby is normal.
    - → step 5.
 5. Disk (Guest OS). Current and average disk queue length ([`guest-os/storage/disk-queue`](../../storage/disk-queue.md)).
-   - High queue with low VM IOPS → IO is stuck inside Windows (filter driver, antivirus, application): it never reached the VM.
+   - Avg. Disk sec/Transfer high and the VM's virtual disk latency low → the IO waits inside Windows (filter driver, antivirus, application) before it reaches the VM; both high → the wait is below Windows. A queue at low IOPS means a long time per IO (queue = IOPS × latency).
    - High queue with high VM disk latency → the wait is below Windows: the VM and its storage.
    - → step 6.
 6. Network (Guest OS). Receive discards on the VMXNET3 adapter: the guest's receive ring is full, caused and fixed inside Windows ([`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
@@ -42,7 +42,9 @@ flowchart TD
 
 ## Order rationale
 - Quantify first: the application team describes the symptom in Windows terms; the time window and the slow transaction steer every later check.
-- CPU, memory, disk, network: the order of the Guest OS Performance (%) inputs; the run queue is the primary Guest OS CPU counter.
+- CPU first: the run queue is the primary Guest OS contention counter.
+- Memory before disk: paging reads and writes the disk, so a disk queue can be a memory shortage; reading memory first keeps storage from being blamed.
+- Network last: Windows has one network wait sign, inbound discards.
 - The why after the what: a queue is the fact; locks, kernel time and imbalance explain it.
 - Verdict last: only after every Windows queue is read can the wait be placed inside or below Windows.
 

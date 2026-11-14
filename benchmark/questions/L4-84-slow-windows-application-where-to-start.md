@@ -21,7 +21,7 @@ Where do you start, what do you ask them to measure, and how do you decide wheth
 - Do not add vCPUs or memory before the queues are read: a queue with idle vCPUs gets worse with more vCPUs.
 
 ## Notes
-- Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order comes from a score that is not public.
+- Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order is a design choice of the flow.
 
 ## Metadata
 ```yaml

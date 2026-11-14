@@ -18,12 +18,13 @@
 
 ## IOPS limit
 - Set per virtual disk, not per VM. Not possible for snapshots or swap files.
-- Default: no limit. The book recommends keeping it.
-- A limit shows as latency in the Guest OS, not in VM metrics: IO that passes is not delayed. Same as any problem above the VM layer, such as a guest LSI Logic or PVSCSI driver issue.
+- Default: no limit. Keep it.
+- IO above the limit waits in the ESXi kernel queue: esxtop shows high QAVG, inside KAVG and GAVG, with normal DAVG (Broadcom KB 426790).
+- mClock, the ESXi IO scheduler, counts an IO above 32 KB as several: a 100 IOPS limit with 320 KB IOs caps at about 10 IOs per second.
 - VCF Operations per virtual disk: IOPS Limit property, IOPS per GB metric.
 
 ## Misconceptions
-- "VM latency normal, so an IOPS limit is not hurting" → the latency shows in the Guest OS.
+- "Latency is high, so the array is slow" → an IOPS limit shows as high QAVG and KAVG with normal DAVG; check the disk's limit.
 
 ## Metadata
 ```yaml

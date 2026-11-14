@@ -5,7 +5,7 @@
 - VCF Operations converts them to rates and rolls them up to Datacenter, vCenter and vSphere World.
 
 ## Counters
-| Category | Metric | vCenter counter | Notes (book) |
+| Category | Metric | vCenter counter | Notes |
 |---|---|---|---|
 | Change of state | VM guest reboot count | `vmop.numRebootGuest` | Reboot only; the VM is not powered off. |
 | Change of state | VM guest shutdown count | `vmop.numShutdownGuest` | Believed to also trigger VM power off. |

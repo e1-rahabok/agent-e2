@@ -29,7 +29,7 @@
 |---|---|---|
 | Errors | FCMDS/s, FREAD/s, FWRITE/s, FMBRD/s, FMBWR/s | Failed commands, reads, writes, and MB per second. Not in vSphere Client. Any value above 0: investigate. |
 | Errors | CONS/s, FRESV/s, RESV/s | SCSI reservation conflicts, failed reservations, reservations per second. |
-| Errors | ABRTS/s, RESETS/s | Commands aborted and reset per second. |
+| Errors | ABRTS/s, RESETS/s | Commands aborted and reset per second. No per-adapter counter in the vSphere Client. |
 | Queue | AQLEN | Adapter queue depth: maximum active commands the driver supports. Not in vSphere Client. |
 | Contention | DAVG, KAVG, GAVG, QAVG per /cmd, /rd, /wr | 12 latency counters (ms). Averages over the period. /cmd is weighted by reads and writes: write latency can hide in a read-heavy mix. |
 | Consumption | ACTV | Commands currently active. |
@@ -43,7 +43,7 @@
 ## Disk Device
 | Group | Counters | Meaning |
 |---|---|---|
-| Errors | ABRTS/s, RESETS/s | Expect 0 always. |
+| Errors | ABRTS/s, RESETS/s | Expect 0 always. vSphere Client: Commands aborted (`disk.commandsAborted`) and Bus resets (`disk.busResets`) per device on the host and the VM, stored at level 3 per device; the datastore has Datastore Command Aborts (`datastore.commandsAborted`). |
 | Queue | LOAD | (active + kernel-queued commands) / queue depth. Above 1: check QUED. |
 | Queue | QUED | Commands queued in the kernel. Keep well below queue depth. |
 | Queue | %USD | ACTV / QLEN (WQLEN for worlds, DQLEN for devices). 100%: queue full; outstanding IO and latency rise. |

@@ -10,7 +10,7 @@
 
 ## Suitable clusters
 - Most appropriate: clusters where the composite VM demand varies significantly over time.
-- Example from the source: demand is higher during the day and much lower at night.
+- Example: demand is higher during the day and much lower at night.
 - Clusters with consistently high demand relative to cluster capacity have little opportunity to standby hosts.
 
 ## Demand inputs
@@ -34,7 +34,7 @@
 - Automatic DPM: the most flexibility and the most power savings.
 - DPM prefers hosts in automatic mode over hosts in manual mode.
 - DPM can be deactivated for individual hosts, even when DPM is active for the cluster.
-- Example from the source: deactivate DPM for hosts running mission-critical VMs. VM/Host affinity rules then keep those VMs from being migrated away from those hosts.
+- Example: deactivate DPM for hosts running mission-critical VMs. VM/Host affinity rules then keep those VMs from being migrated away from those hosts.
 
 ## DPM Threshold
 - Set in the cluster settings menu, as DPM Threshold.
@@ -67,13 +67,13 @@
 - Default: 30 minutes. Maximum: 12 hours. Configured independently for each cluster.
 - DPM can be activated or deactivated on a schedule with Scheduled Tasks in vCenter Server.
 - Deactivating DPM with Scheduled Tasks powers on all standby hosts in the cluster.
-- Use case from the source: reduce the delay in responding to load spikes that occur at set times of the day.
+- Use case: reduce the delay in responding to load spikes that occur at set times of the day.
 - Restarting the vCenter Server or the vCenter vpxd service powers on all standby ESX hosts managed by that vCenter Server.
 
 ## Predictive DRS and predictive DPM
-- Requires vRealize Operations 6.4 or later, per the source.
+- Needs Predictive DRS on in the cluster's DRS settings, and VCF Operations (formerly vRealize Operations, 6.4 or later) registered with the vCenter as its Predictive DRS data provider.
 - With predictive DRS configured to receive predictions, DPM can bring hosts back from standby before demand increases.
-- Example from the source: if demand rises every morning at 9 am, DPM can bring hosts out of standby by 8 am.
+- Example: if demand rises every morning at 9 am, DPM can bring hosts out of standby by 8 am.
 
 ## HA interaction
 - DPM respects vSphere HA settings. It accounts for them when it recommends standby or power-on.

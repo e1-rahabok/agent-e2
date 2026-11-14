@@ -9,7 +9,7 @@
 |---|---|
 | % Processor Time, % Idle Time | Add up to 100%. |
 | % Priority Time | Part of Processor Time spent by elevated-priority threads. |
-| % User Time, % Privileged Time | Add up to 100%. A thread switches modes on system calls without a context switch. The split is of little use. |
+| % User Time, % Privileged Time | Add up to % Processor Time. A thread switches modes on system calls without a context switch. The split is of little use. |
 | % DPC Time | Deferred procedure calls, part of Privileged Time; lower priority than interrupts. High: Windows busy with higher-priority work. Can occur at low CPU with driver or application issues; CPU 0 often higher. |
 | % Interrupt Time | Interrupts (clock every 10 ms, network, input). High values hurt performance. |
 | % C1, C2, C3 Time | Time in each power level (C0 highest power, C3 lowest). May not add up to Idle Time. |

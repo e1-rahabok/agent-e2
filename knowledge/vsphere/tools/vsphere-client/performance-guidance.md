@@ -13,7 +13,7 @@
 | VM CPU Usage above 90% and VM CPU Ready above 20% | Performance is impacted. |
 
 - Causes the documentation lists: host short of CPU; too many vCPUs relative to physical cores; storage or network IO that puts the CPU in a wait state; Guest OS load.
-- VM CPU Ready in the vCenter chart is a percentage averaged over the vCPUs at statistics level 1.
+- VM CPU Ready (ms) in the vCenter chart is the sum over the vCPUs (statistics level 1), although the chart text says average (Broadcom KB 387750).
 - The knowledge base reads Ready against Run, not against a fixed value: 2% Ready on 10% Run delayed 20% of transactions. See [`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../technology/cpu/metrics/virtual-motherboard/ready.md).
 - High Ready while Usage sits at the VM CPU limit: the limit causes it. esxtop %MLMTD is counted inside %RDY. Remove or raise the limit.
 - More shares give one VM more chances to run. Total host Ready stays the same when the host itself is short of CPU.

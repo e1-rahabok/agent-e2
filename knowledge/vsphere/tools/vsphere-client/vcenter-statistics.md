@@ -9,7 +9,7 @@
 ## Collection intervals (default)
 | Interval (archive length) | One data point every | Built from | Changeable |
 |---|---|---|---|
-| Real-time | 20 seconds | ESXi samples | No |
+| Real-time (1 hour) | 20 seconds | ESXi samples | No |
 | 1 Day | 5 minutes | 15 real-time samples. 288 points per day. | Interval duration and archive length |
 | 1 Week | 30 minutes | 6 points of 1 Day. 336 points per week. | No |
 | 1 Month | 2 hours | 4 points of 1 Week. 360 points per 30-day month. | No |
@@ -56,6 +56,7 @@
   - Adds: Everything, including minimum and maximum rollups.
   - Intended use: Short-term, after a problem appears.
 
+- Levels apply to the history (1 Day to 1 Year). The Real-time chart of a powered-on VM or a connected host reads the host's 20-second samples and offers every counter the host collects, whatever the level: at level 1, Co-stop and Ready per vCPU show in Real-time and are missing from 1 Day onward.
 - Contention counters stored at the default level 1: VM CPU Ready, disk maxTotalLatency (Highest Latency, Latest rollup), balloon, swap-in and swap-out rates.
 - Storage latency per device (kernelLatency, deviceLatency, queueLatency, totalReadLatency, totalWriteLatency) needs level 2 or higher. The chart tables list these at level 3.
 - At level 1 the VM CPU Ready history is one value for the whole VM: the sum of its vCPUs in ms, not the average. Divide by the number of vCPUs for the mean per vCPU. One vCPU that waited a lot and several that each waited a little give the same value. Ready per vCPU is stored only from level 3.
@@ -103,7 +104,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 - "The 1 Week chart shows the peak" → it shows 30-minute averages. Use real-time or esxtop for bursts.
 - "Max rollup is always available" → only at statistics level 4.
 - "Ready of 2,000 ms is high" → it depends on the interval: 2,000 ms in 20 seconds is 10% of one vCPU; in a 5-minute point it is 0.67%.
-- "No data in the chart, so the VM was idle" → check rollup delay, power state, recent vMotion across vCenter, and statistics level.
+- "No data in the chart, so the VM was idle" → check rollup delay, power state, recent vMotion across vCenter, and, for history charts, the statistics level.
 - "Raise all intervals to level 4 for better history" → vpxd memory growth and database size. Raise for a short time only.
 - "VM CPU Ready at level 1 is the average of the vCPUs" → it is their sum; a value above 100% of one vCPU is possible on a multi-vCPU VM.
 - "Raise the statistics level now to see the incident of last week" → a level applies from the moment it is set; counters that were not collected are not rebuilt.

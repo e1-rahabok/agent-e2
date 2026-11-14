@@ -37,7 +37,7 @@
 - Availability is read from soft errors, vMotion stun time and lock-ups, mostly in logs (VCF Operations for logs).
 - Utilization comes last. Even at 100% it does not matter if availability, performance and configuration are good.
 - Every performance flow checks configuration, the VM slow flow included.
-![The book's earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the order above](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
+![An earlier order for an object that is not healthy: contention; configuration (version incompatibility); availability (soft errors, vMotion stun time, lock up; needs the log tool); utilization (check last; even 100% does not matter if 1-3 are good). Replaced by the order above](images/not-healthy-check-order-contention-configuration-availability-utilization-diagram.png)
 - VM-level flow: [`sp5-framework/performance/vm-slow`](../performance/vm-slow.md).
 
 ### First incident: forgivable once

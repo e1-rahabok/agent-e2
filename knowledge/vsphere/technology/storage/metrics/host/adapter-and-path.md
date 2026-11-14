@@ -3,7 +3,7 @@
 ## Scope
 - Adapter and path have identical counter sets.
 - Path object names are not friendly names: they can look like devices, but the object is the path.
-- No adapter queue length or commands aborted: the book would like both.
+- No adapter queue length or commands aborted counter.
 
 ## Contention counters
 - Read latency, write latency, highest latency.

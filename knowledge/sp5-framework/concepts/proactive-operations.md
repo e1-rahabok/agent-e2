@@ -8,10 +8,10 @@
 | Phase | Yes | Partial | Not applicable |
 |---|---|---|---|
 | Day 0: planning | All five | - | - |
-| Day 1: design and build | Availability, performance, compliance, capacity | Cost | - |
+| Day 1: design and build | Availability, performance, security, capacity | Value | - |
 | Day 2: monitoring | All five | - | - |
 | Day 2: troubleshooting | Availability, performance | - | Security (forensic investigation), compliance (drift against the desired configuration), capacity, cost |
-| Day 2: optimizing | Performance, capacity, cost | Availability | Compliance |
+| Day 2: optimizing | Performance, capacity, value | Availability | Security (compliance) |
 
 - A major technology upgrade needs planning and redesign: the cycle starts again.
 

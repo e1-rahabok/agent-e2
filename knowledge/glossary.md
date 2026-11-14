@@ -20,7 +20,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **CCD**: Core Complex Die: a die of cores inside an AMD socket. On most generations one CCD is one L3 domain; on Zen 4c a CCD holds two 8-core CCX, each its own L3 domain.
 - **Co-stop**: vCPU state: held back because a sibling vCPU of the same VM is too far behind.
   - Also called: Co-Stop, CoStop
-- **Contention (VCF Operations)**: Overlap + Co-stop + Ready + Other Wait (when below 1%). Before VCF Operations 8.18 (July 2024): mapped to CPU Latency.
+- **Contention (VCF Operations)**: Overlap + Co-stop + Ready + Other Wait (when below 1%). Before Aria Operations 8.18 (July 2024): mapped to CPU Latency.
   - File: [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](vsphere/technology/cpu/metrics/virtual-motherboard/contention.md)
 - **Core Utilization**: 100% when 1 or 2 threads of a core run.
   - Not to confuse with Thread Utilization: Core Utilization counts a core as fully used when one of its two threads runs; Thread Utilization counts each thread (esxtop shows 200% for a core with both threads busy), so it shows the idle thread that can still take work.
@@ -34,7 +34,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Efficacy (CPU)**: Work per cycle from core architecture. Not accounted by any metric.
 - **Efficiency (CPU)**: Hyper-Threading effect on cycles completed. Accounted as 1.25x per core, 0.625x per thread.
 - **ESXi CPU Demand**: Sum over the VMs of the CPU they would use with no contention.
-  - Not to confuse with ESXi CPU Usage: kernel work is in Usage only, so a host with no VMs shows Demand 0 and Usage above 0.
+  - Not to confuse with ESXi CPU Usage: kernel work is in Usage only, so a host with no VMs shows Demand 0 (or flat at the kernel reservation) and Usage above 0.
   - File: [`vsphere/technology/cpu/metrics/host/demand`](vsphere/technology/cpu/metrics/host/demand.md)
 - **ESXi CPU Imbalance**: Running threads / running cores.
   - Also called: Imbalance Score
