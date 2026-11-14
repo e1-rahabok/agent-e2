@@ -50,15 +50,6 @@ Each entry has:
 - Written as now: Consumed stays a little below the effective limit because the effective limit includes overhead; Granted sits above it and ignores the limit (draft, review note).
 - Answer:
 
-### Q204 · VCF Operations > Capacity forecast · Capacity Remaining: largest gap or tightest point
-
-- Files: [Capacity forecast](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/capacity-forecast.md); question [0235](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-76-capacity-forecast-averages-hide-month-end.md).
-- Search 1: "The largest difference between usable capacity and projected utilization"
-- Search 2: "follows the tightest point of the 3 days"
-- Question: TechDocs 9.1 says Capacity Remaining (%) is the largest difference between usable capacity and projected utilization over the next 3 days; the same page sets it to 0 when any projection exceeds 100%. In the field, does the value follow the smallest remaining capacity (the highest projected point), as the key of 0235 says, or the largest gap, as the text literally reads?
-- Written as now: the TechDocs wording kept, plus a reading that the 0 rule makes the value follow the tightest point (draft, review note).
-- Answer:
-
 ### Q202 · Memory > Overhead · Kernel memory reservation with vSAN and NSX
 
 - Files: [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); question [0024](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-11-memory-reservation-behaviour.md), option E.
