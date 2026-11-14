@@ -145,12 +145,12 @@ images:
     topic: 'What the consumer layer and the provider layer each check, per pillar'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > Overview > Complaint-based Operations (The Litmus Test, Common Mistakes); The Business of IaaS (VM as a Service, Capabilities, Key Metrics, The Restaurant Analogy)'
 corrections: []
 review_notes:
-- 'To check: Section ''Three variants of IaaS'', last bullet: contention from the pool limit or tenant overcommit is the tenant''s, and Ready includes limit time; derived from the source document''s resource pool row and the VM CPU Ready file.'
-- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from sp5-framework/observability/thresholds; not in the source document.'
+- 'To check: Section ''Three variants of IaaS'', last bullet: contention from the pool limit or tenant overcommit is the tenant''s, and Ready includes limit time; derived from resource pool row and the VM CPU Ready file.'
+- 'To check: Section ''A complete, correct and accurate SLA'', last bullet: the reason, taken from sp5-framework/observability/thresholds; no source yet.'
 - 'Not copied (human reference only): the teams diagram (silos to platform team) is in the text; the restaurant analogy wording is kept out.'
 status: draft
 ```

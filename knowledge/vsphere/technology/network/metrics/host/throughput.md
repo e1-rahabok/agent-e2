@@ -57,7 +57,7 @@ images:
     metric: ['ESXi Network Usage Rate', 'ESXi Network Data Receive Rate', 'ESXi Network Data Transmit Rate']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > ESXi > ESXi intro; Consumption Metrics; Unusual Packets
 corrections: []
 review_notes: []

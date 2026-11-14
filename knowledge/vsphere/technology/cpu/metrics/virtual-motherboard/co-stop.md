@@ -77,7 +77,7 @@ images:
     image_type: distribution
     sample: '2,429 VMs'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Contention Metrics > Co-stop
 corrections: []
 review_notes: []

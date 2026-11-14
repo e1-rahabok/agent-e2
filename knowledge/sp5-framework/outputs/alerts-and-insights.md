@@ -177,7 +177,7 @@ images:
     topic: 'Alert criticality from urgency and importance: yellow, orange, red'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > Overview (alert storms, lazy operations); Purpose-Driven Architecture > Observability (Symptom | Alert | Insight; Lagging Indicator | Leading Indicator; Alert); SP5 Framework > Basic Terminology'
 corrections: []
 review_notes:

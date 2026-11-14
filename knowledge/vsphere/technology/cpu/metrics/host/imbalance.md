@@ -66,7 +66,7 @@ images:
     metric: ['ESXi CPU Imbalance']
     image_type: table
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > ESXi > Consumption Metrics > Imbalance
 corrections: []
 review_notes: []

@@ -60,12 +60,12 @@ images:
     metric: ['VM Memory Active', 'VM Memory Consumed']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Consumption Metrics > Active; Consumed vs Active
 corrections: []
 review_notes:
-- 'To check: Section ''Mechanism'': the 2-second sampling; the source document''s assumption.'
-- 'To check: reference cited by the source document, not read (https://blogs.vmware.com/vsphere/2013/10/understanding-vsphere-active-memory.html).'
+- 'To check: Section ''Mechanism'': the 2-second sampling; unconfirmed.'
+- 'To check: reference not read (https://blogs.vmware.com/vsphere/2013/10/understanding-vsphere-active-memory.html).'
 - 'To check: a definition of recent for Active (1 second, like IOPS, is a proposal).'
 status: draft
 ```

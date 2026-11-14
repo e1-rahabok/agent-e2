@@ -77,7 +77,7 @@ images:
     topic: '20-second peak vs 5-minute average'
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics'
 corrections: []
 review_notes: []

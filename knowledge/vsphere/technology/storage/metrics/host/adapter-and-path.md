@@ -60,7 +60,7 @@ images:
     image_type: table
     sample: '192 hosts, 1 week'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > ESXi > Storage Adapter & Path
 corrections: []
 review_notes: []

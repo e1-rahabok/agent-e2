@@ -62,7 +62,7 @@ related:
 - vcf-operations/dashboards/business-applications
 - sp5-framework/outputs/it-leaders-dashboards
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); Knowledge base
+  document: Knowledge base
   path: 'Your Private Cloud > Purpose-Driven Architecture > Begin with The End in Mind: The Crown Jewel'
 corrections:
 - 'Section ''KPI structure'': across tiers the application takes the worst tier; active/passive counts the active node only.'

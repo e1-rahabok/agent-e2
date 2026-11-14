@@ -37,7 +37,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Swap + Compress > Transition
 corrections: []
 review_notes: []

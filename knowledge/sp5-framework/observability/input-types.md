@@ -88,10 +88,10 @@ images:
     topic: 'Six input types and the outputs they feed (push and pull)'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > Purpose-Driven Architecture > Observability > Input | Output'
 corrections: []
 review_notes:
-- 'To check: Section ''Property'': the reason for VMs in a cluster being a metric (result of activity, collected every interval) is not from the source document.'
+- 'To check: Section ''Property'': the reason for VMs in a cluster being a metric (result of activity, collected every interval) has no source yet.'
 status: draft
 ```

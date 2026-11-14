@@ -46,7 +46,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 - vsphere/technology/storage/concepts/snapshot-impact
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > VM > Overview > Datastore; Mapping; Performance Metrics > Datastore
 corrections: []
 review_notes: []

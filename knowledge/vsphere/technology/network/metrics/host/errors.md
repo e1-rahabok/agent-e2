@@ -67,7 +67,7 @@ images:
     metric: ['ESXi Network Error Packets', 'ESXi Network Unknown Protocol Frames']
     image_type: table
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > ESXi > Contention Metrics > Error Metrics; esxcli
 corrections: []
 review_notes:

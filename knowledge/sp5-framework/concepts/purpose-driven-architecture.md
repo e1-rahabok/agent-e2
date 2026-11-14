@@ -113,12 +113,12 @@ images:
     topic: 'Two sides of VCF: IaaS platform of the customer and software product of Broadcom, across seven pillars'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF)'
 corrections: []
 review_notes:
-- 'To check: Section ''Goals from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the source document.'
-- 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: the source document does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
+- 'To check: Section ''Goals from what is sold'', DaaS: the reason (same software on every desktop moves together); no source yet.'
+- 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
 - 'To check: Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not) (vSphere 9.1 availability documentation).'
 - 'Not copied: the application tier diagram (three-tier vs microservices pods) and the maturity diagram; their content is in the text.'
 status: draft

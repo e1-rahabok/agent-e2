@@ -64,7 +64,7 @@ related:
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Overall Design Approach > Overall Design: Inventory Dashboards; Overall Design: Configuration Dashboard'
 corrections: []
 review_notes:

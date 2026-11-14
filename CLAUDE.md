@@ -30,8 +30,9 @@ How Claude works in this repository. Read at the start of every session. The des
 - `review_notes` hold only what is still to check: section, what, and the URL or document to check against. A settled item is deleted; git keeps the history.
 - Before asking the author, look up official sources: Broadcom TechDocs (techdocs.broadcom.com), VMware docs (docs.vmware.com, www.vmware.com/docs), Broadcom KB (knowledge.broadcom.com), Broadcom developer API reference (developer.broadcom.com). PDFs: fetch them, then read the saved file with page ranges. Put the source URL in `review_notes`.
 - Ask the author only when the source text is ambiguous, contradicts official docs or the knowledge base, or the answer needs field experience. Do not ask the author to confirm virtualization basics.
-- No invented thresholds. Keep every `corrections` entry until the source document is updated. A row in `knowledge/catalog/thresholds-*.yaml` that has a `quote` quotes its knowledge file: when that text changes, update the row.
+- No invented thresholds. Keep every `corrections` entry until the vendor document it corrects is updated. A row in `knowledge/catalog/thresholds-*.yaml` that has a `quote` quotes its knowledge file: when that text changes, update the row.
 - [`project/sources/`](project/sources) holds the source documents. The author adds them; Claude may edit them (author, 2026-11-14).
+- The knowledge is sourced from [`project/sources/`](project/sources) and https://isvara.io (the latest books and spreadsheets), stated once in KNOWLEDGE-ENGINEERING.md section 2. The knowledge base is a superset: never name the book or write "the source document" in knowledge files or their metadata; `source.document` is `Knowledge base` plus any vendor document (author, 2026-11-14).
 
 ## Working with the author
 - [`MISSION.md`](MISSION.md) holds goals and stretch targets, not hard rules. Few rules hold in IT operations management: challenge every assumption, the author's and the repository's included, when evidence says it blocks the mission.

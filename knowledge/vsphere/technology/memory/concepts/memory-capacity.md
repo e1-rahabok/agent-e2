@@ -70,10 +70,10 @@ related:
 - vsphere/technology/memory/metrics/host/utilization
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > Capacity > Memory; Storage; Implementation
 corrections: []
 review_notes:
-- 'To check (Q221): Section ''VCF Operations metrics (ESXi)'': VM demand here is max(reservation, Guest OS needed + page-in); the VM Utilization formula in vsphere/technology/memory/metrics/virtual-motherboard/utilization adds unusable memory. Both from the source document.'
+- 'To check (Q221): Section ''VCF Operations metrics (ESXi)'': VM demand here is max(reservation, Guest OS needed + page-in); the VM Utilization formula in vsphere/technology/memory/metrics/virtual-motherboard/utilization adds unusable memory. '
 status: draft
 ```

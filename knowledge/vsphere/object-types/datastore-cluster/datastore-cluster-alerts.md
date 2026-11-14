@@ -33,7 +33,7 @@ related:
 - vsphere/technology/storage/datastore-space-headroom
 - vsphere/object-types/datastore-cluster/storage-drs
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Storage Alerts (Consumption Alerts); Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes:

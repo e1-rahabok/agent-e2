@@ -86,7 +86,7 @@ images:
     topic: 'vSphere folder tree: business unit, department, application, tier, VM'
     image_type: diagram
 source:
-  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download); VCF 9.1, Add Business Application (Broadcom TechDocs, last updated 2026-11-12); VCF Operations 9.0, Custom Object Groups Workspace to Create a New Group (Broadcom TechDocs, last updated 2026-11-09)'
+  document: Knowledge base; VCF 9.1, Add Business Application (Broadcom TechDocs, last updated 2026-11-12); VCF Operations 9.0, Custom Object Groups Workspace to Create a New Group (Broadcom TechDocs, last updated 2026-11-09)
   path: 'Proactive Operations > Business Applications (The Crown Jewel, vSphere Folder Structure, Objects Design)'
 corrections: []
 review_notes:

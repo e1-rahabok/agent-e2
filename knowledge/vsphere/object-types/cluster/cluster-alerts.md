@@ -61,7 +61,7 @@ related:
 - vsphere/object-types/vm/vm-alerts
 - vsphere/object-types/resource-pool/resource-pool-alerts
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > CPU Alerts (Infrastructure Contention, Infrastructure Consumption); Memory Alerts (Infrastructure Contention, Infrastructure Consumption); Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes:

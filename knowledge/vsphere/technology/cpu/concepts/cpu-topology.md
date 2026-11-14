@@ -75,11 +75,11 @@ images:
     topic: 'CPU topology'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'CPU > Architecture > CPU vs vCPU > System on a Chip; NUMA. Also the knowledge base, vSphere NUMA Architecture and Sizing Guide (vSphere 9.1), sections 1 and 2'
 corrections: []
 review_notes:
-- 'To check: Section ''NUMA'': Broadcom KB cited by the source document, not read (https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html).'
-- 'To check: Section ''NUMA'': SAP source cited by the source document, not read (https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html).'
+- 'To check: Section ''NUMA'': Broadcom KB not read (https://knowledge.broadcom.com/external/article/314059/numa-nodes-are-heavily-load-imbalanced-c.html).'
+- 'To check: Section ''NUMA'': SAP source not read (https://help.sap.com/docs/SUPPORT_CONTENT/virtualization/4181102237.html).'
 status: draft
 ```

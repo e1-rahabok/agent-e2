@@ -149,12 +149,12 @@ images:
     metric: ['esxtop %A/MPERF', 'esxtop %UTIL']
     image_type: screenshot
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > esxtop > CPU
 corrections: []
 review_notes:
 - 'Sections ''Summary lines'', ''State counters'', ''Power'': load average meaning, CORE UTIL batch behaviour, %MLMTD inside %RDY, the two formulas, %RUN vs %USED with Hyper-Threading, %WAIT - %IDLE as guest IO wait estimate, per-core percentages, %A/MPERF formula and CPPC from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > CPU Panel, CPU Power Panel (pp. 2150-2155).'
 - 'The 9.1 documentation still lists HTQ in the CPU panel; the field is not shown since ESXi 7.0 and not on ESXi 9.1; the documentation is out of date.'
-- 'To check: Section ''Summary stats'': what the CPU column shows (always blank in the source document''s tests) and whether AMLMT shows when a limit is applied; the source document is unsure.'
+- 'To check: Section ''Summary stats'': what the CPU column shows (always blank in tests) and whether AMLMT shows when a limit is applied; unconfirmed.'
 status: draft
 ```

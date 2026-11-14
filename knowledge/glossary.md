@@ -219,7 +219,7 @@ related:
   - vsphere/architecture/resource-controls
 source:
   document: Knowledge base; vSphere API type names; VCF Operations object types
-  path: "n/a. Section 'Term distinctions' and the Physical CPU synonym from Private Cloud Management by Iwan Rahabok (https://isvara.io/download), The World of Metrics > Metrics Nuances > Complexity > Naming Complexity"
+  path: "n/a"
 corrections: []
 review_notes:
   - "To check: column 'Not to confuse with': each pair against the file in its File column."

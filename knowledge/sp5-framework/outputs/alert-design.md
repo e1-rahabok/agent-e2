@@ -188,7 +188,7 @@ related:
 - vsphere/object-types/datastore-cluster/datastore-cluster-alerts
 - vsphere/object-types/distributed-port-group/distributed-port-group-alerts
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Alerts Planning (Target Persona, Class of Service, What to Alert, What not to Alert, Design: Alert Definition, Threshold Design, Wait Cycle, Recommendation | Remediation); Application Team; VM Alerts; CPU Alerts > Contention Alerts'
 corrections: []
 review_notes:

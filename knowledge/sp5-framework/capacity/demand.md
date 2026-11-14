@@ -187,12 +187,12 @@ images:
     topic: 'Capacity model choice'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Capacity Management > Capacity Model (Workload Level; Workload Type; VM Price; 4 Dimensions of Capacity: Utilization, Performance, Reservation | Share, Allocation, Invisible Demand, Limitation)'
 corrections: []
 review_notes:
-- 'To check: Section ''Consumption'': the 80-100% zone has no numbers in the source document; Cluster Consumption (%) uses different bands (CPU green 0-55) (Q116).'
+- 'To check: Section ''Consumption'': the 80-100% zone has no numbers yet; Cluster Consumption (%) uses different bands (CPU green 0-55) (Q116).'
 - 'Section ''Reservation and share'': the resource-pool advice quotes Frank Denneman, frankdenneman.nl, vSphere 7 DRS Scalable Shares deep dive (2020-05-27). Paraphrased, not copied.'
-- 'To check: Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" explains why the source document computes per VM first; the explanation is not in the source document.'
+- 'To check: Section ''Demand'': "a sum of utilization and a sum of reservation taken separately gives a different number" explains why computes per VM first; the explanation has no source yet.'
 status: draft
 ```

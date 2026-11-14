@@ -45,7 +45,7 @@ related:
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/host/usage
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity; CPU > ESXi > Used | Usage; Core vs Thread
 corrections:
 - '2026-11-02: the CPU Used metric is buggy (section: Notes).'

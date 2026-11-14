@@ -65,7 +65,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/demand
 - sp5-framework/performance/performance-management
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > When Run is lower than Used; When Run is higher than Used
 corrections: []
 review_notes: []

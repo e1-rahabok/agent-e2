@@ -111,11 +111,11 @@ images:
     topic: 'Memory page mapping'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > Architecture > The 4 Layers; Virtual Memory; Relationship
 corrections: []
 review_notes:
 - 'Section ''Page mapping across layers'': diagram adapted from a Valentin Bondzio diagram.'
-- 'To check: Section ''ESXi memory management'': TPS KB cited by the source document, not read (https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html).'
+- 'To check: Section ''ESXi memory management'': TPS KB not read (https://knowledge.broadcom.com/external/article/323624/additional-transparent-page-sharing-mana.html).'
 status: draft
 ```

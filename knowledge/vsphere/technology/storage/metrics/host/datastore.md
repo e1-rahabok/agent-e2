@@ -68,15 +68,15 @@ images:
     metric: ['Datastore Latency', 'VM Disk Latency']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
-  path: Storage > ESXi > Datastore; Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Capacity Management > Reclamation > TRIM and Unmap
+  document: Knowledge base
+  path: Storage > ESXi > Datastore; Capacity Management > Reclamation > TRIM and Unmap
 corrections: []
 review_notes:
-- 'To check: Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency is not explained by the source document.'
+- 'To check: Section ''Counters'': the gap between Datastore latency observed by VMs and datastore latency is not explained yet.'
 - 'Section ''Counters'': Maximum Queue Depth definition and its change under Storage I/O Control from the vSphere 9.1 documentation (vSphere Monitoring and Performance > Datastores and Datastore Clusters > Maximum Queue Depth per Host, p. 2050).'
 - 'Section ''Unmap'': Unmap IO and Unmap Size from Part 1 (TRIM and Unmap). Automatic unmap on VMFS6, priority rates and 1 MB granularity from the vSphere 9.1 documentation (vSphere Storage > Storage Space Reclamation in vSphere, pp. 1533-1534).'
 - 'To check: Section ''Unmap'': vCenter counter keys, likely datastore.unmapIOs and datastore.unmapSize (summation); add to the catalog after checking (vSphere 9.1 API reference).'
 - 'To check: Section ''Unmap'': the check for Unmap Size near 0; not in the sources.'
-- 'To check: Section ''Unmap'': "sum the hosts that mount it" as the reading of the source document sentence "You can track both operations on each datastore, but you can''t aggregate them per datastore" (Q124).'
+- 'To check: Section ''Unmap'': "sum the hosts that mount it" as the reading of sentence "You can track both operations on each datastore, but you can''t aggregate them per datastore" (Q124).'
 status: draft
 ```

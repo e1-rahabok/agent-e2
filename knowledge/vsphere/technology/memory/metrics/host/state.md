@@ -34,7 +34,7 @@ related:
 - vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/host/ballooned
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Overview; Contention Metrics > Balloon
 corrections: []
 review_notes: []

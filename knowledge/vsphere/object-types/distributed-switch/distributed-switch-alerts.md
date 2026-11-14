@@ -31,7 +31,7 @@ related:
 - vsphere/object-types/distributed-port-group/distributed-port-group-alerts
 - vsphere/object-types/esxi/esxi-alerts
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > Network Alerts > Contention Alerts; Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes: []

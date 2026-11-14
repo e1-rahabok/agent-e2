@@ -50,7 +50,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > Architecture > Architecture intro
 corrections: []
 review_notes: []

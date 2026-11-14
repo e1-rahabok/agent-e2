@@ -76,7 +76,7 @@ related:
 - sp5-framework/outputs/it-leaders-dashboards
 - sp5-framework/capacity/rightsizing
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Reports > Functional Considerations (the reports as a set; Overall Design: Executive Report, Operations Management)'
 corrections: []
 review_notes:

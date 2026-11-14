@@ -74,10 +74,10 @@ images:
     metric: ['ESXi Disk Kernel Latency', 'ESXi Disk Device Latency']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > ESXi > Disk or Device > Contention Metrics
 corrections: []
 review_notes:
-- 'To check: what DAVG measures for vSAN when data is local; the source document is unsure.'
+- 'To check: what DAVG measures for vSAN when data is local; unconfirmed.'
 status: draft
 ```

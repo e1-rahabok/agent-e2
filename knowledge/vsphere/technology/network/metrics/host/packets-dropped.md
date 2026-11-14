@@ -57,7 +57,7 @@ images:
     metric: ['ESXi Network Receive Packets Dropped']
     image_type: table
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > ESXi > Contention Metrics > Dropped Packet; Received
 corrections: []
 review_notes: []

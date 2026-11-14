@@ -47,7 +47,7 @@ related:
 - guest-os/memory/windows-memory
 - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Consumption Metrics > Utilization
 corrections: []
 review_notes: []

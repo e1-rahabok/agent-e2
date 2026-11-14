@@ -50,7 +50,7 @@ images:
     image_type: timeline
     sample: '1 host, 7 days'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Overview; Contention Metrics > Balloon; All Together; Consumed > Ballooned
 corrections: []
 review_notes:

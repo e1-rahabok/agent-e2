@@ -287,16 +287,16 @@ images:
   topic: CPU time-based vs work-based metrics
   image_type: table
 source:
-  document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624) + Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX CPU Considerations > Hyper-Threading (p. 28); Guest Operating System CPU Considerations (p. 57); Hardware BIOS Settings (p. 21); CPU > Architecture (pp. 75-77) > CPU Efficiency (from former vsphere/technology/cpu/concepts/hyper-threading); CPU > ESXi > Consumption Metrics > Core vs Thread; Thread Utilization; Used | Usage; Summary (from former vsphere/technology/cpu/concepts/hyper-threading)
 corrections: []
 review_notes:
 - 'Sections ''Scheduling behaviour'', ''Affinity caution'': throughput, charging, scheduler preference and affinity side effects from the vSphere 9.1 documentation, vSphere Resource Management > Hyperthreading and ESX Hosts, Using CPU Affinity, Potential Issues with CPU Affinity (pp. 1829-1831).'
 - Checked against 9.1 (revision 20260624). Page 28 unchanged. Page references updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'To check: the source document''s Hyper-Threading penalty figures, 37.5% (VM Usage) and 50% (ESXi Used); Performance Best Practices for VMware vSphere 9.1 gives no penalty percentages.'
-- 'To check: Section ''Worked example'': the formula line, reconstructed from the source document''s description (VM A runs 50% of the time, half of it with VM B running); the source document gives only the result (40.625%).'
+- 'To check: Hyper-Threading penalty figures, 37.5% (VM Usage) and 50% (ESXi Used); Performance Best Practices for VMware vSphere 9.1 gives no penalty percentages.'
+- 'To check: Section ''Worked example'': the formula line, reconstructed from description (VM A runs 50% of the time, half of it with VM B running); gives only the result (40.625%).'
 - 'Hyper-Threading figures (1.25x, 62.5%) are not in Performance Best Practices for vSphere 9.1. Open item in project/plan.md.'
-- 'To check: Section ''Time base'': what the sibling thread shows when a thread running alone reaches 20,000 ms Used; not tested, per the source document.'
+- 'To check: Section ''Time base'': what the sibling thread shows when a thread running alone reaches 20,000 ms Used; not tested.'
 status: draft
 ```

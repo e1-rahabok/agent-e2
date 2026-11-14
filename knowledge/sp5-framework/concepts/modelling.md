@@ -101,10 +101,9 @@ related:
 - vsphere/object-types/vm/vm-performance
 - vsphere/object-types/cluster/models/cluster-risk
 source:
-  document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download); knowledge base'
+  document: Knowledge base
   path: 'The World of Metrics > Modelling (Actual | Potential; Calculation; Translation; Threshold; Progressive Weightage; Rare Metric; Limitation; Optional Features; Validation)'
-corrections:
-- 'Sections ''Three ways to combine the colours'', ''Rare and rarely-green metrics'', ''Validation'': the knowledge base wins over the source document. The source document weights one step per band (1, 2, 4, 8; one red = 8 greens; 9 green + 3 red = low orange); the knowledge base weights 2^((100 - score)/25), smooth, up to 16 at 0, so 9 green + 3 worst red is red. The source document''s per-metric weights, override table and multi-table KPI are not implemented; skip when green is.'
+corrections: []
 review_notes: []
 status: draft
 ```

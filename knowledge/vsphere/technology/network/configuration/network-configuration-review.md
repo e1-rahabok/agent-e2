@@ -53,7 +53,7 @@ related:
 - vsphere/object-types/esxi/configuration/bios-settings
 - vsphere/technology/network/concepts/nic-teaming
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Configuration Management > Review List > Network (Distributed Switch & Port Group, Others)'
 corrections: []
 review_notes: []

@@ -114,7 +114,7 @@ related:
 - vsphere/tools/vsphere-client/performance-guidance
 - vsphere/tools/esxtop/cpu
 source:
-  document: Knowledge base synthesis of the linked files (book; vSphere 9.1 documentation) + Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  document: Knowledge base; vSphere 9.1 documentation; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: Linked files in each step; section 'Documentation guidance (esxtop)' from ESX CPU Considerations (pp. 27-28)
 corrections:
 - 'Whole file: "what to monitor" is a health check; troubleshooting is part of the health check and comes after it; ESXi has a KPI (ESXi Performance); availability, security and compliance are future, after 1.0. VCF always includes VCF Operations: no vCenter-only fallback.'

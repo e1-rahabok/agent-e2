@@ -42,7 +42,7 @@ related:
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/architecture/resource-controls
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Overview; Consumption Metrics > Reservation
 corrections: []
 review_notes:

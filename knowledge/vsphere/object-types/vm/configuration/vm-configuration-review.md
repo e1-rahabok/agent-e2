@@ -79,11 +79,11 @@ related:
 - vsphere/technology/storage/concepts/snapshot-impact
 - vsphere/technology/storage/storage-configuration-review
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration'
 corrections: []
 review_notes:
 - 'Section ''Storage'', vVols deprecated: Broadcom KB 401070 (https://knowledge.broadcom.com/external/article/401070), VCF 9.0 vSphere product support notes; Protection and Recovery 9.1 release notes call 9.1 its last release supporting vVols.'
-- 'To check: Misconceptions 1 and 2: examples derived from the source document''s rules.'
+- 'To check: Misconceptions 1 and 2: examples derived from rules.'
 status: draft
 ```

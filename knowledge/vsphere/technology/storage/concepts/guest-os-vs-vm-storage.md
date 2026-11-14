@@ -58,7 +58,7 @@ images:
     topic: 'VM storage capacity'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > Architecture > VM Layer > Metric Mapping; Capacity
 corrections: []
 review_notes: []

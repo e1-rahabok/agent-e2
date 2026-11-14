@@ -64,7 +64,7 @@ related:
 - sp5-framework/outputs/performance-dashboards
 - sp5-framework/outputs/it-leaders-dashboards
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Overall Design Approach > Overall Design: Capacity Dashboard'
 corrections: []
 review_notes:

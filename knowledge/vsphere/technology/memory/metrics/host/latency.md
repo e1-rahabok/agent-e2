@@ -31,7 +31,7 @@ related:
 - vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Overview; Contention Metrics
 corrections: []
 review_notes: []

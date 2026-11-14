@@ -100,7 +100,7 @@ related:
 - sp5-framework/outputs/dashboard-design
 - vcf-operations/report-suite
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Reports > Technical Considerations (Output, Context, Widgets); Functional Considerations'
 corrections: []
 review_notes:

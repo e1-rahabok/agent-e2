@@ -61,7 +61,7 @@ same_meaning: []
 related:
 - vsphere/object-types/cluster/concepts/cluster-operations
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Provider Objects > Overview > vSphere Cluster > VM Operations
 corrections: []
 review_notes: []

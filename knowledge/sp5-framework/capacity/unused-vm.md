@@ -112,7 +112,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity
 - vsphere/architecture/resource-controls
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Capacity Management > Reclamation > Unused VM (Configuration; Utilization; Other Signs; Annual Stocktake)'
 corrections: []
 review_notes:

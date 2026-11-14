@@ -96,7 +96,7 @@ images:
     metric: ['ESXi CPU Usage']
     image_type: table
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'CPU > ESXi > Consumption Metrics > Quiz: 50% or 75% or 100%?; Summary > Comparison'
 corrections: []
 review_notes: []

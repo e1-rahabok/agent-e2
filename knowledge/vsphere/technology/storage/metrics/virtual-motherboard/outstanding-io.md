@@ -42,10 +42,10 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > VM > Performance Metrics > Contention Metrics > Virtual Disk
 corrections: []
 review_notes:
-- 'To check: KB cited by the source document, not read (https://kb.vmware.com/s/article/2150017).'
+- 'To check: KB not read (https://kb.vmware.com/s/article/2150017).'
 status: draft
 ```

@@ -57,7 +57,7 @@ related:
 - vsphere/object-types/vm/vmotion
 - sp5-framework/observability/input-types
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Daily Health Check (Morning Routine, vSphere Daily Log Check)'
 corrections: []
 review_notes:

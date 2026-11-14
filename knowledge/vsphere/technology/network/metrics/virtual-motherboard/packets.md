@@ -50,7 +50,7 @@ images:
     metric: ['VM Network Packets Transmitted', 'VM Network Transmit Packets Dropped']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Network > VM > Overview; Consumption Metrics
 corrections: []
 review_notes: []

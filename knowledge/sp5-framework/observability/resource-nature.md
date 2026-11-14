@@ -74,7 +74,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Architecture Complexity
 corrections:
 - '2026-11-02: CPU has a space dimension (Yes), measured in vCPU or physical thread. Uploaded document table shows N/A.'

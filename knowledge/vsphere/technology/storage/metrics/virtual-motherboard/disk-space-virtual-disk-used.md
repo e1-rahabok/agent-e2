@@ -39,7 +39,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > VM > Capacity Metrics > Single VMDK
 corrections: []
 review_notes: []

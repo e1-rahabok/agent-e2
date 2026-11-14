@@ -76,7 +76,7 @@ related:
 - vsphere/architecture/vm-vs-guest-os
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Virtualization Impact
 corrections:
 - 'Section ''ESXi CPU Demand'': sum of VM demand, kernel not included; a host with no VMs shows 0 (Part 1). Replaces the 2026-11-02 reading as a provider metric.'

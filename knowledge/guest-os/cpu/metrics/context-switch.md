@@ -67,7 +67,7 @@ images:
     image_type: distribution
     sample: '11,372 VMs'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: MS Windows > CPU > Context Switch
 corrections: []
 review_notes:

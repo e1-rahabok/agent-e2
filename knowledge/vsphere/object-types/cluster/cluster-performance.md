@@ -100,12 +100,10 @@ related:
 - vsphere/object-types/vm/vm-performance
 images:
 source:
-  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the design and threshold reasons
+  document: Knowledge base
   path: Provider Objects > Performance > Cluster Performance (%)
-corrections:
-- 'Sections ''Thresholds'', ''Sub-metric formulas'', ''Scoring'': the source document table and text are outdated: disk latency is used; packet green is Excluded; balloon and swap moved to Cluster Risk.'
-- 'Section ''vMotion Count'': vMotion is excluded; the source document text says both included and not included.'
+corrections: []
 review_notes:
-- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': still from the source document, whose text is outdated; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'
+- 'To check: Sections ''Design'', ''Threshold reasons'' and ''Not used'': written from older material that is outdated in places; check against sections Thresholds and How each sub-metric is calculated. Rows that conflict with them were removed (disk latency, balloon reason).'
 status: draft
 ```

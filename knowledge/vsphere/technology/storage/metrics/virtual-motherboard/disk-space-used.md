@@ -39,7 +39,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > VM > Capacity Metrics > All VM Files
 corrections: []
 review_notes: []

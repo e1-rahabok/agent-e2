@@ -44,7 +44,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/other-wait
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Wait Metrics
 corrections: []
 review_notes:

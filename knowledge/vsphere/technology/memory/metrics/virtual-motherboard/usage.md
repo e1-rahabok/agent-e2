@@ -53,7 +53,7 @@ images:
     metric: ['VM Memory Usage', 'VM Memory Active']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Consumption Metrics > Usage (%)
 corrections: []
 review_notes:

@@ -67,7 +67,7 @@ images:
     metric: ['VM Memory Granted', 'VM Memory Compressed', 'VM Memory Swapped']
     image_type: timeline
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Consumption Metrics > Granted
 corrections: []
 review_notes: []

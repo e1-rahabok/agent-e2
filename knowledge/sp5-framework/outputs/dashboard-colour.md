@@ -53,7 +53,7 @@ related:
 - sp5-framework/observability/thresholds
 - sp5-framework/capacity/supply
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Overall Design Approach > Design Consideration > Color as Meaning (Threshold, Gradient, Example Implementation)'
 corrections: []
 review_notes:

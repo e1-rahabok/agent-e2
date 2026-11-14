@@ -67,7 +67,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/contention
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Consumption Metrics > Demand
 corrections: []
 review_notes: []

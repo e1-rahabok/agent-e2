@@ -98,6 +98,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: the whole order of checks, from field practice (Q060, 2026-11-11: the application team first quantifies the slowness in Guest OS counters).'
-- 'To check: Steps 2, 4, 5: the Linux counters (vmstat, iostat, mpstat, load average, MemAvailable) are not in the source document; pressure stall information against https://docs.kernel.org/accounting/psi.html (Q172).'
+- 'To check: Steps 2, 4, 5: the Linux counters (vmstat, iostat, mpstat, load average, MemAvailable); no source yet; pressure stall information against https://docs.kernel.org/accounting/psi.html (Q172).'
 status: draft
 ```

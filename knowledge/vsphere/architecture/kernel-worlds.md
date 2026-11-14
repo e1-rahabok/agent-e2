@@ -42,7 +42,7 @@ related:
 - vsphere/architecture/vm-vs-guest-os
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM? > Kernel
 corrections: []
 review_notes: []

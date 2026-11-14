@@ -43,7 +43,7 @@ related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/storage/troubleshooting/vm-storage-performance-checks
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > VM > Overview > Disk; Performance Metrics > Disk
 corrections: []
 review_notes: []

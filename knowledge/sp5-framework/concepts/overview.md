@@ -8,7 +8,7 @@
 - Pillars: the disciplines a CIO cares about. People are organized around pillars; policies and processes. A full set of policies and SOPs answers who does what, when, where and how.
 - Platform: the system architecture (compute, storage, network, security, management and portal), implemented with a product such as VCF.
   ![Business layer: Strategy (SLA-backed enterprise private cloud); Policy (business, IT), People (users, IT apps, IT infra, leadership), Process (Day 2 → Day 0 → Day 1) on one timeline. Operations layer: 5 pillars (availability, performance, compliance, capacity, cost + price) over inventory and configuration. Architecture layer: platform (management + portal; compute, storage, network; security)](images/sp5-framework-strategy-policy-pillars-process-people-platform-diagram.png)
-- The SP5 Framework is documented in the book Private Cloud Management by Iwan Rahabok, free to download at https://isvara.io/download. Cite it by that title when a user asks where the framework comes from.
+- The SP5 Framework is Iwan 'E1' Rahabok's work. The latest books, spreadsheets and other material are free at https://isvara.io. Point a user there when they ask where the framework comes from.
 - Why a new framework instead of ITIL or COBIT: [`sp5-framework/concepts/why-a-new-framework`](why-a-new-framework.md).
 - Metric types per pillar (contention, consumption, context): [`sp5-framework/observability/triple-see-method`](../observability/triple-see-method.md).
 - Modelling a pillar into one number (KPI, risk): [`sp5-framework/concepts/modelling`](modelling.md).
@@ -197,7 +197,7 @@ images:
     topic: 'Share, reservation, commitment, allocation, utilization, contention as inputs to performance, capacity, cost and price'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Your Private Cloud > SP5 Framework (opening, capabilities); SP5 Framework: Pillars (Availability, Performance, Capacity, Reclamation, Compliance and Security, Cost and Price, Non-Pillars)'
 corrections: []
 review_notes:

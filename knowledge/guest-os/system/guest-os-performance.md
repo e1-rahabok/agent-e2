@@ -81,10 +81,9 @@ related:
 - sp5-framework/performance/performance-management
 images:
 source:
-  document: Knowledge base; Private Cloud Management by Iwan Rahabok (https://isvara.io/download) for the reasons and the metrics not used
+  document: Knowledge base
   path: 'Consumer Objects > Performance: VM & Guest OS > Guest OS Performance (%); Metrics Not Used'
-corrections:
-- 'Section ''Sub-metrics'': the source document is outdated. Free memory scores 100 from 1 GB (the earlier text: above 512 MB).'
+corrections: []
 review_notes: []
 status: draft
 ```

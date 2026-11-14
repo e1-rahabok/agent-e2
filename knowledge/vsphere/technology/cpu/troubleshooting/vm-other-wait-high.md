@@ -58,7 +58,7 @@ related:
 - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 - sp5-framework/performance/performance-management
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: CPU > VM > Wait Metrics > Other Wait
 corrections: []
 review_notes: []

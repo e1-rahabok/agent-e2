@@ -50,7 +50,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-target
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > VM > Swap + Compress; Consumption Metrics > Compressed; Consumed > Ballooned
 corrections: []
 review_notes:

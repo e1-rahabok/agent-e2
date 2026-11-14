@@ -92,8 +92,9 @@ flowchart LR
 ## 2. Where the knowledge lives
 
 - Two bodies of knowledge, as the author carries them as a consultant, and Agent E2 combines them in every answer:
-  - the method, the SP5 Framework: how to operate VCF, in VCF terms and examples (`sp5-framework/`). Source: Private Cloud Management by Iwan Rahabok.
+  - the method, the SP5 Framework: how to operate VCF, in VCF terms and examples (`sp5-framework/`).
   - the product, VCF 9.x: what each component is and does (`vsphere/`, `vcf-operations/`), and the Guest OS above the VM (`guest-os/`).
+- Sources, stated once here (author, 2026-11-14): the knowledge is written from [`project/sources/`](project/sources) and from https://isvara.io, which holds the latest copy of the author's books, spreadsheets and other material. The knowledge base is a superset of them: it adds vendor documents, mechanisms and corrections. A knowledge file therefore never names the author's material: its `source.document` is `Knowledge base`, plus any vendor document with its version, which can go stale. `corrections` record differences from vendor documents only.
 - Scope is VCF only: nothing about competitor products. Folder rules: [`project/knowledge-rules/placement.md`](project/knowledge-rules/placement.md).
 - Agent E2 is purpose-built: its domain knowledge is not only in what search returns. Up-front text, code and the agent's instructions carry VMware knowledge too. All of it is deployed to the site, and all of it is reviewed by the author.
 - The home of a fact is decided by how it must reach the model, not by its subject. Five paths, each for a failure the others cannot prevent:

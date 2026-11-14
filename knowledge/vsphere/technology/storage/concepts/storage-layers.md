@@ -114,10 +114,10 @@ images:
     topic: 'Object relationships'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Storage > Architecture > Storage Layers; VM Layer; ESXi Layer; Datastore Layer
 corrections: []
 review_notes:
-- 'To check: VMFS extent article cited by the source document, not read (http://blogs.vmware.com/vsphere/2012/02/vmfs-extents-are-they-bad-or-simply-misunderstood.html).'
+- 'To check: VMFS extent article not read (http://blogs.vmware.com/vsphere/2012/02/vmfs-extents-are-they-bad-or-simply-misunderstood.html).'
 status: draft
 ```

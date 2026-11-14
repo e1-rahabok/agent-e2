@@ -160,10 +160,10 @@ images:
     topic: 'Power-off as a brake'
     image_type: diagram
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap)'
 corrections: []
 review_notes:
-- 'To check: Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming; not in the source document.'
+- 'To check: Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming; no source yet.'
 status: draft
 ```

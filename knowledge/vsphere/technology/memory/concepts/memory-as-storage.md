@@ -57,7 +57,7 @@ related:
 - vsphere/architecture/resource-controls
 - vsphere/technology/memory/concepts/memory-tiering
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > Architecture > Architecture intro
 corrections: []
 review_notes: []

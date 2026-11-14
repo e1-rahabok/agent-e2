@@ -47,7 +47,7 @@ related:
 - vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high
 - vsphere/technology/memory/vm-memory-latency-high
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: 'Proactive Operations > Alert > CPU Alerts (Infrastructure Contention, Infrastructure Consumption); Memory Alerts > Contention Alerts > Infrastructure Contention; Alerts Planning > Design (alert count table)'
 corrections: []
 review_notes: []

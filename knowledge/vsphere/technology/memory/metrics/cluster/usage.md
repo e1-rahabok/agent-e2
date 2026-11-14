@@ -26,7 +26,7 @@ same_meaning: []
 related:
 - vsphere/technology/memory/metrics/cluster/consumed
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
 corrections: []
 review_notes: []

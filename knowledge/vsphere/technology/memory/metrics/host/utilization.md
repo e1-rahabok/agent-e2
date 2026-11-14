@@ -54,7 +54,7 @@ images:
     image_type: table
     sample: '192 hosts'
 source:
-  document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
+  document: Knowledge base
   path: Memory > ESXi > Consumption Metrics > Utilization; Analysis
 corrections: []
 review_notes: []
