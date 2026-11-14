@@ -4,6 +4,13 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q210 · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
+
+- Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (status and name).
+- Question: the new design needs five repository terms. Accept, or give your word: (A) neuro-symbolic expert system: what Agent E2 is (code holds the procedure and the map and decides; the model reads and writes; Kautz's Symbolic[Neural]); (B) agent now means the expert's procedure as code (was: the model plus the tool loop); (C) case: the agent's structured reading of one question (your word in [Q166](author-questions-resolved.md#q166--architecturemd-section-troubleshooting-questions--code-evaluates-flow-branches), case state; the benchmark keeps question); (D) reading set: the files and sections the model reads for one question; (E) reading plan: the code that builds it. Not proposed: finite state machine as the name; the stage order is a small one, but the value is the plan over the knowledge base's map.
+- Written as now: all five in project/terms.md as proposals; used in harness/AGENT.md, ARCHITECTURE.md, README and MISSION.md.
+- Answer: Author (2026-11-14): agree. Applied: project/terms.md (the five terms no longer proposals), harness/AGENT.md.
+
 
 ### Q209 · Benchmark > Runs · What the next round runs
 

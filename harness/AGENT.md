@@ -4,7 +4,7 @@ Agent E2's agent: a neuro-symbolic expert system. Code holds the expert's proced
 Why Agent E2 can win: [MISSION.md](../MISSION.md). The whole system: [ARCHITECTURE.md](../ARCHITECTURE.md). Harness parts: [README.md](README.md). How the knowledge is shaped: [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md). The tool-loop agent it replaces, with its measurements: [project/archive/agent-tool-loop-2026-11-14.md](../project/archive/agent-tool-loop-2026-11-14.md).
 
 - Status (2026-11-14): built and the only mode of Agent E2: [`harness/agent.py`](agent.py) (stages 1 and 3-6), [`harness/planner.py`](planner.py) (stage 2), entered through [`harness/modes.py`](modes.py) as mode `agent-e2`. Classic and agentic mode are removed; their code is archived in [project/archive/legacy/harness-tool-loop-2026-11-14/](../project/archive/legacy/harness-tool-loop-2026-11-14). Still to build: section 7.
-- Name: a neuro-symbolic expert system, of the kind where symbolic control calls a neural model as a subroutine (Kautz: Symbolic[Neural]). The symbolic part is the knowledge base's map (links, file kinds, catalog, flows), the rules and the exact tools; the neural part reads language and images. The fixed order of the stages, with two bounded loops back (one clarifying round, one gap follow-up), is a small state machine; the flow executor with executable steps (Q166) will be the larger one. Proposal for the author: Q210.
+- Name: a neuro-symbolic expert system, of the kind where symbolic control calls a neural model as a subroutine (Kautz: Symbolic[Neural]). The symbolic part is the knowledge base's map (links, file kinds, catalog, flows), the rules and the exact tools; the neural part reads language and images. The fixed order of the stages, with two bounded loops back (one clarifying round, one gap follow-up), is a small state machine; the flow executor with executable steps (Q166) will be the larger one. Agreed by the author (Q210, 2026-11-14).
 
 ## 1. Who decides what
 | Part | Does | Never does |
@@ -15,7 +15,7 @@ Why Agent E2 can win: [MISSION.md](../MISSION.md). The whole system: [ARCHITECTU
 | Knowledge | The map the agent plans with (file kinds, links, catalog, flows, term map) and the text the model reads | |
 
 - The model is called; it does not drive. Every decision about what to read, compute or ask is code that reads the knowledge base, so the author can review it, and the same question always takes the same path.
-- The word agent changes meaning: it was the model plus the tool loop ([project/terms.md](../project/terms.md), proposal for the author, Q210).
+- The word agent changes meaning: it was the model plus the tool loop ([project/terms.md](../project/terms.md), Q210).
 
 ## 2. Evidence for the split
 - Planning a lookup needs a map of what the knowledge base holds. That map is the author's proprietary knowledge; the Internet text the model learned from does not have it. A model cannot plan a search through ground it has never seen, and its worst errors are beliefs it never looks up.

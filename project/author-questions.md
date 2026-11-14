@@ -18,13 +18,6 @@ Each entry has:
 
 ## Open
 
-### Q210 · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
-
-- Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (status and name).
-- Question: the new design needs five repository terms. Accept, or give your word: (A) neuro-symbolic expert system: what Agent E2 is (code holds the procedure and the map and decides; the model reads and writes; Kautz's Symbolic[Neural]); (B) agent now means the expert's procedure as code (was: the model plus the tool loop); (C) case: the agent's structured reading of one question (your word in [Q166](author-questions-resolved.md#q166--architecturemd-section-troubleshooting-questions--code-evaluates-flow-branches), case state; the benchmark keeps question); (D) reading set: the files and sections the model reads for one question; (E) reading plan: the code that builds it. Not proposed: finite state machine as the name; the stage order is a small one, but the value is the plan over the knowledge base's map.
-- Written as now: all five in project/terms.md as proposals; used in harness/AGENT.md, ARCHITECTURE.md, README and MISSION.md.
-- Answer:
-
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).
@@ -157,6 +150,7 @@ Each entry has:
 
 Answered questions are in [author-questions-resolved.md](author-questions-resolved.md). Each key links to its entry there.
 
+- [Q210](author-questions-resolved.md#q210--terms--neuro-symbolic-expert-system-agent-case-reading-set-reading-plan) · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
 - [Q209](author-questions-resolved.md#q209--benchmark--runs--what-the-next-round-runs) · Benchmark > Runs · What the next round runs
 - [Q200](author-questions-resolved.md#q200--benchmark--mode--agentic-or-classic-as-the-shipped-mode) · Benchmark > Mode · Agentic or classic as the shipped mode
 - [Q203](author-questions-resolved.md#q203--cpu--capacity--name-vspheres-ghz-total-capacity-as-a-throughput-figure) · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
