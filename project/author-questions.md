@@ -85,6 +85,36 @@ Each entry has:
 - Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
 - Answer:
 
+### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
+
+- Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
+- Search 1: "From vSphere 7.0 Update 2, the defaults are NPS-1"
+- Search 2: "Optimal Setting: NPS4 (Nodes Per Socket 4)"
+- Question: Performance Best Practices for vSphere 9.1 (revision 20260624, pp. 29-30) says NPS-1 with CCX as NUMA Domain off gives the best performance in nearly all cases, and NPS-4 is worth testing only for bandwidth-hungry, NUMA-optimized, pinned workloads. Your source gives NPS4 as the optimal setting for EPYC 9005 and NPS2 for EPYC 9006. Which does Agent E2 recommend for a general-purpose cluster: (A) NPS-1 unless the workload meets the four conditions; (B) the setting that matches the silicon (NPS4 on 9005, NPS2 on 9006); (C) B for monster VMs only?
+- Written as now: both stated; cpu-topology gives the per-processor setting, numa-settings keeps the vendor default and points to this question.
+- Moved back from the resolved file in the review of 2026-11-14: it had no answer.
+- Answer:
+
+### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
+
+- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question [0361](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-two-queue-limits-on-one-virtual-disk.md) (Two queue limits on one virtual disk).
+- Search 1: "pvscsi queue depth"
+- Search 2: "The hypervisor software queues are throttling requests"
+- Question: the ESXi source file says high KAVG and QAVG (above 2 to 5 ms) with low DAVG usually occur when the concurrent requests of a VM exceed the configured queue depths, and names the pvscsi queue depth and Disk.SchedNumReqOutstanding. The knowledge file reads the two limits apart: a request that exceeds the Paravirtual SCSI queue depth (64 per device, 254 per adapter) waits in the Guest OS, before the virtual device takes it, and shows in the Guest OS counters, not in KAVG or QAVG; a request that exceeds the VMkernel device queue depth (DQLEN) waits in the VMkernel and shows as QUED and QAVG. Which holds? And what does Disk.SchedNumReqOutstanding limit, with what default, and when?
+- Also: the thresholds differ by source for KAVG and DAVG (the source file: KAVG under 1 ms ideal, high at 2 to 5 ms, DAVG high above 10 to 15 ms; Broadcom KB 344099: 10 ms for DAVG, KAVG and GAVG when sustained; the latency stack file from the book: KAVG within 0.5 ms, DAVG within 5 ms). Which values go in the threshold catalog?
+- Written as now: the two limits are read apart; no number for DSNRO; no threshold repeated; flagged in review_notes of the file.
+- Moved back from the resolved file in the review of 2026-11-14: it had no answer.
+- Answer:
+
+### Q193 · Guest OS sizing · Lowering SQL Server max server memory in steps
+
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Applications that manage their own memory); [SQL Server holds its memory](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-89-sql-server-holds-its-memory.md).
+- Search: "Finding the size: lower"
+- Question: the section says to lower max server memory (MB) in steps, watch the SQL Server memory counters and the query times over a full business cycle, and resize the VM after that. The Microsoft page does not say it. Is this your method? Which counters do you watch, and how large is a step?
+- Written as now: the method, with no counter names and no step size; flagged in review_notes.
+- Moved back from the resolved file in the review of 2026-11-14: it had no answer.
+- Answer:
+
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).

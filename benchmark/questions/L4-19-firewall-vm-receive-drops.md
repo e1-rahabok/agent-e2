@@ -10,7 +10,7 @@
 
 Which statements about the cause, the fix and the checks before the fix are correct?
 
-- A. The drops happen inside the host, between the switch port and the guest driver.
+- A. The drops happen inside the host, between the virtual switch port and the guest driver.
 - B. The physical network is congested: ask for faster uplinks, or ask the network team to check the switch.
 - C. The guest's VMXNET3 receive ring is too small for the bursts: the drop count matches "running out of buffers".
 - D. The fix is a larger receive ring in the guest's VMXNET3 driver, such as 2,048 instead of 512.
