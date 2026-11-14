@@ -57,6 +57,7 @@ same_name:
 - vsphere/technology/memory/metrics/host/latency
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/concepts/memory-as-storage
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate

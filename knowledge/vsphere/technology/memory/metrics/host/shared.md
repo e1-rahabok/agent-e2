@@ -42,6 +42,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/shared
 - vsphere/technology/memory/concepts/large-memory-pages
 images:

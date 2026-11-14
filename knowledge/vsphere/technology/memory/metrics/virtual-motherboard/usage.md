@@ -42,6 +42,7 @@ same_name:
 - vsphere/technology/memory/metrics/cluster/usage
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
 - vsphere/technology/memory/metrics/virtual-motherboard/active

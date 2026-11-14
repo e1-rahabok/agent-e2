@@ -94,6 +94,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vsphere/object-types/cluster/cluster-health-check
 - sp5-framework/performance/performance-management
 - vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
 - vsphere/object-types/vm/vm-performance

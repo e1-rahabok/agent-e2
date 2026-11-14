@@ -66,6 +66,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vcf-operations/vcf-operations-role
 - vsphere/object-types/vm/vm-performance
 - guest-os/system/guest-os-performance
 images:

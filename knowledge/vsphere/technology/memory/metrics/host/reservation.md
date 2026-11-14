@@ -37,6 +37,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/cpu/metrics/host/reserved-capacity
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/architecture/resource-controls

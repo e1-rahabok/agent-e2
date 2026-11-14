@@ -86,6 +86,49 @@ Each entry has:
 - Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
 - Answer:
 
+### Q218 · CPU > Demand · Is a CPU reservation inside Demand?
+
+- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (Reservation: CPU vs memory); [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Search: not from the book; found by the structure review of 2026-11-14.
+- Question: resource-controls says Run, Used, Demand and Usage do not include a CPU reservation; host/demand says ESXi Demand includes the reservations of running VMs and of the kernel; sp5 capacity demand uses Demand = Max(Utilization, Reservation), a model with the same word. Which holds for the vCenter counter? (A) VM Demand excludes reservations, host Demand includes the kernel's and the running VMs' reservations (two objects, two rules); (B) neither includes them; (C) other.
+- Written as now: both, in different files; the capacity model's Demand is not marked as a different thing.
+- Final answer (expert call on the wording; the counter behaviour needs you): whatever the counter does, sp5 capacity demand gets one line: its Demand is the capacity model, not `cpu.demand`. One home for the counter rule: resource-controls, with host/demand pointing to it.
+- Answer:
+
+### Q219 · CPU > Demand · ESXi Demand on a host with no VMs
+
+- Files: [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Provider and consumer](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/provider-consumer.md).
+- Search 1: "If a host has no VM, Demand will likely show flat 0"
+- Question: host/demand says Demand on a host with no VMs is flat at 0, or flat at the kernel reservation (one example at 10.21%); provider-consumer says host Demand is VM demand only and flat at 0. Which, and when does each case occur?
+- Written as now: both.
+- Answer:
+
+### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
+
+- Files: [ESXi CPU Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md); [Core Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
+- Search: not from the book.
+- Question: usage.md gives Thread Utilization 100% when both threads are busy; core-utilization.md gives "200% for a core (esxtop)"; hyper-threading.md says per thread, never summed. Is the 200% an esxtop sum of the two threads of one core, or a different counter?
+- Written as now: both.
+- Final answer (expert call): per thread at most 100%; an esxtop core view that adds two threads reads 200%. One home: hyper-threading, section Thread Utilization; core-utilization explains the 200% as two threads at 100%. For you: confirm against the esxtop PCPU panel.
+- Answer:
+
+### Q221 · Memory > Capacity · Memory Demand: kernel Consumed or kernel reservation?
+
+- Files: [Memory capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-capacity.md) (lines on Demand); [ESXi memory utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md); [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Search: not from the book.
+- Question: memory-capacity gives host memory Demand as kernel Consumed plus the sum of VM Demand, and a few lines later as the kernel reservation plus guest needed memory and page-in; host/utilization and sp5 capacity demand give other forms. Three models share the word Demand. Which is the capacity model, and which are the VCF Operations formulas?
+- Written as now: three forms in three files.
+- Final answer (expert call on the placement): the method's model goes in sp5 capacity demand; the VCF Operations formulas stay in host and VM utilization; memory-capacity points to both. The formula itself needs you.
+- Answer:
+
+### Q222 · SP5 > SLA > Availability · Does a host in maintenance mode lower Operational Availability?
+
+- Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (Availability SLA); [Cluster availability](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/metrics/availability.md).
+- Search: not from the book.
+- Question: sla-metrics excludes scheduled downtime from Operational Availability (your Q098 answer: the maintenance window is always excluded), so one host in maintenance gives 100%; cluster availability scores a host in maintenance mode as 25% lost. Is the cluster metric (A) Actual Availability, so it may count maintenance; (B) Operational, so it should not; (C) a different score that the file should name as such?
+- Written as now: both, unreconciled.
+- Answer:
+
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.

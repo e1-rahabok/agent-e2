@@ -60,6 +60,7 @@ same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/metrics/host/granted
 - vsphere/technology/memory/metrics/host/utilization

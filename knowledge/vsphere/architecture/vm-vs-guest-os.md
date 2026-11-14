@@ -136,6 +136,8 @@ object:
 - HostSystem
 internal_derive: []
 related:
+- vsphere/technology/memory/concepts/guest-os-vs-vm-memory
+- vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 - vsphere/architecture/kernel-worlds
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/architecture/overhead

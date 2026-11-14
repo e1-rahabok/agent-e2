@@ -36,6 +36,7 @@ same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/granted
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/granted
 images:

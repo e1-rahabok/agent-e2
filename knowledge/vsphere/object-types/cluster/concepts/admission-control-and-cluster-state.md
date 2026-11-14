@@ -89,6 +89,8 @@ object:
 internal_derive:
 - vsphere/architecture/resource-controls
 related:
+- vsphere/object-types/cluster/cluster-health-check
+- vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/resource-pool/resource-pool-design
 - vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster

@@ -45,6 +45,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-target

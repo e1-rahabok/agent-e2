@@ -77,6 +77,8 @@ object:
 internal_derive:
 - vsphere/architecture/vm-vs-guest-os
 related:
+- guest-os/memory/windows-memory
+- vsphere/technology/memory/metrics/virtual-motherboard/active
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/usage

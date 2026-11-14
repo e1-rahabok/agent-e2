@@ -32,6 +32,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/entitlement
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 source:
