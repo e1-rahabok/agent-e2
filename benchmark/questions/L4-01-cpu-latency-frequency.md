@@ -2,22 +2,39 @@
 
 ## Prompt
 - After a host BIOS power policy change, VM CPU Latency went up by about 15%.
-- CPU Ready and Co-Stop are unchanged.
+- esxtop power view on the host: %A/MPERF fell from about 100% to about 85% after the change.
+- CPU Ready and Co-Stop are unchanged. No limit, reservation or shares were changed on the VM.
 
-Is the VM now suffering a CPU performance problem?
+Which statements are correct?
+
+- A. CPU Latency includes the effect of running below nominal frequency, so a lower clock raises it.
+- B. The 15% rise shows that the vCPUs now wait about 15% longer for a physical CPU to run on.
+- C. The VM runs slower per vCPU but is not waiting to be scheduled, as if it ran on an older CPU.
+- D. Unchanged Ready and Co-Stop show that the vCPUs do not wait longer for a physical thread.
+- E. Like Disk Latency and Memory Latency, CPU Latency measures time the VM waits to be served.
+- F. If the guest runs Linux, its Steal Time would rise by about the same amount as CPU Latency.
+- G. CPU Latency includes Max Limited, the time a CPU limit holds a vCPU back, so a limit explains the rise.
+- H. Work inside the guest takes as long as before, because only the reported Latency changed.
 
 ## Likely wrong answer
-"Yes, latency means the VM is waiting for CPU."
+- B: "Latency went up, so the VM is waiting for CPU."
+- E: "Latency is latency: for CPU it means the same as for disk and memory."
 
 ## Expected key points
-- CPU Latency is affected by **CPU frequency**. Lower frequency raises it.
-- The VM is running at a lower speed, but it is **not waiting to be served**. Like running on an older CPU.
-- Unlike Disk Latency and Memory Latency, CPU Latency does not *always* mean a performance problem.
-- Contrast: Linux Steal Time only includes CPU Ready. VM CPU Latency includes more factors, including frequency.
-- Ready and Co-Stop being flat supports "no contention".
+- Answer: A, C, D.
+- A is true: CPU Latency (%LAT_C) includes power saving below nominal frequency; lower frequency raises it.
+- B is false: the misconception; the rise is a frequency effect, not time spent waiting. Waiting shows in Ready and Co-Stop, which are flat.
+- C is true: %A/MPERF at about 85% shows the cores run below nominal frequency; at a lower clock the VM runs slower but is not waiting to be served, like on an older CPU.
+- D is true: flat Ready and Co-Stop support no added contention.
+- E is false: Disk Latency and Memory Latency do mean the VM waits; CPU Latency does not always mean a performance problem (same name, different meaning).
+- F is false: Linux Steal Time includes only Ready; VM CPU Latency includes more factors, frequency among them. Ready is flat, so Steal Time stays flat.
+- G is false: CPU Latency excludes Max Limited; the time a limit holds a vCPU back shows in Ready, not in Latency. The prompt also rules out a new limit.
+- H is false: the VM runs slower at the lower clock, so the same work takes longer; it is a speed change, not contention.
 
 ## Notes
 - Tests: Same name, different meaning (CPU Latency vs Disk / Memory Latency).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Sharpened stem: no resource setting changed on the VM (rules out a limit for option G). The %A/MPERF line (actual against nominal frequency, named in the latency knowledge file) gives the frequency drop that options C and H need as evidence, not as an inference.
 
 ## Metadata
 ```yaml
@@ -37,7 +54,9 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/latency
 attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity (Same name, different meaning; Same name, same purpose, different formula)."
-answer_type: judged
+answer_type: deterministic
+answer: [A, C, D]
+misconception: [B, E]
 level: 400                      # author 2026-11-05
 misconception_type: [frequency-and-hyper-threading]
 status: draft

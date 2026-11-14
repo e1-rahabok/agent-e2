@@ -85,6 +85,36 @@ Each entry has:
 - Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
 - Answer:
 
+### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
+
+- Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
+- Search 1: "From vSphere 7.0 Update 2, the defaults are NPS-1"
+- Search 2: "Optimal Setting: NPS4 (Nodes Per Socket 4)"
+- Question: Performance Best Practices for vSphere 9.1 (revision 20260624, pp. 29-30) says NPS-1 with CCX as NUMA Domain off gives the best performance in nearly all cases, and NPS-4 is worth testing only for bandwidth-hungry, NUMA-optimized, pinned workloads. Your source gives NPS4 as the optimal setting for EPYC 9005 and NPS2 for EPYC 9006. Which does Agent E2 recommend for a general-purpose cluster: (A) NPS-1 unless the workload meets the four conditions; (B) the setting that matches the silicon (NPS4 on 9005, NPS2 on 9006); (C) B for monster VMs only?
+- Written as now: both stated; cpu-topology gives the per-processor setting, numa-settings keeps the vendor default and points to this question.
+- Moved back from the resolved file in the review of 2026-11-14: it had no answer.
+- Answer:
+
+### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
+
+- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question [0361](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-two-queue-limits-on-one-virtual-disk.md) (Two queue limits on one virtual disk).
+- Search 1: "pvscsi queue depth"
+- Search 2: "The hypervisor software queues are throttling requests"
+- Question: the ESXi source file says high KAVG and QAVG (above 2 to 5 ms) with low DAVG usually occur when the concurrent requests of a VM exceed the configured queue depths, and names the pvscsi queue depth and Disk.SchedNumReqOutstanding. The knowledge file reads the two limits apart: a request that exceeds the Paravirtual SCSI queue depth (64 per device, 254 per adapter) waits in the Guest OS, before the virtual device takes it, and shows in the Guest OS counters, not in KAVG or QAVG; a request that exceeds the VMkernel device queue depth (DQLEN) waits in the VMkernel and shows as QUED and QAVG. Which holds? And what does Disk.SchedNumReqOutstanding limit, with what default, and when?
+- Also: the thresholds differ by source for KAVG and DAVG (the source file: KAVG under 1 ms ideal, high at 2 to 5 ms, DAVG high above 10 to 15 ms; Broadcom KB 344099: 10 ms for DAVG, KAVG and GAVG when sustained; the latency stack file from the book: KAVG within 0.5 ms, DAVG within 5 ms). Which values go in the threshold catalog?
+- Written as now: the two limits are read apart; no number for DSNRO; no threshold repeated; flagged in review_notes of the file.
+- Moved back from the resolved file in the review of 2026-11-14: it had no answer.
+- Answer:
+
+### Q193 · Guest OS sizing · Lowering SQL Server max server memory in steps
+
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Applications that manage their own memory); [SQL Server holds its memory](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-89-sql-server-holds-its-memory.md).
+- Search: "Finding the size: lower"
+- Question: the section says to lower max server memory (MB) in steps, watch the SQL Server memory counters and the query times over a full business cycle, and resize the VM after that. The Microsoft page does not say it. Is this your method? Which counters do you watch, and how large is a step?
+- Written as now: the method, with no counter names and no step size; flagged in review_notes.
+- Moved back from the resolved file in the review of 2026-11-14: it had no answer.
+- Answer:
+
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).
@@ -92,7 +122,7 @@ Each entry has:
 - Written as now: the design is a proposal; [Q203](author-questions-resolved.md#q203--cpu--capacity--name-vspheres-ghz-total-capacity-as-a-throughput-figure) applied to the two CPU files only. Not applied: no glossary entry has `Product label:` or `Better name:` lines; tags.yaml has no `label-read-as-model`; no prompt carries the teaching order. AGENT.md (section 4.5) described the teaching order as part of the answer shape: corrected in the review of 2026-11-14 to "proposed, not built".
 - Final answer (review 2026-11-14; expert call for A-D and the list; E is yours):
   - A, B, D as written. B by a small generator (glossary pair → term-map row) checked by lint, so the row is never edited by hand.
-  - C, narrowed: the teaching order only when the case or a term-map row names a listed label, and inside the answer length, not added to it. Five steps in every answer that meets a label conflict with Q199 (A: shorter answers): a 250-word judged answer with four key points has no room for them. Steps 1, 3 and 4 carry the correction; steps 2 and 5 fold into the mechanism and what to check next.
+  - C, narrowed: the teaching order only when the case or a term-map row names a listed label, and inside the answer length, not added to it: an operator reads a short answer, and 250 words with four key points leave no room for five extra steps (the benchmark is multiple choice since Q199, so this shapes the product's open answers, judged by you in the live test). Steps 1, 3 and 4 carry the correction; steps 2 and 5 fold into the mechanism and what to check next.
   - The list, by the test of the design (the label invites a decision its computed model does not support): ESXi CPU Usage (%) (counts frequency and Hyper-Threading; read as busy time); VM Memory Usage (%) (vCenter: Active over configured; read as "the VM needs more memory"); ESXi Memory Usage (%) (Consumed over total; read as pressure); Consumed (read as in use by the Guest OS); CPU Latency (counts frequency and Hyper-Threading; read as waiting); Capacity Remaining (%) (a projection's tightest point; read as space left now). Contention (VCF Operations) needs you: whether its 9.x formula still differs from what the label invites (Q144).
   - For you: E (the better name for Total Capacity (GHz)); accept or change the list.
 - Answer:
@@ -128,20 +158,6 @@ Each entry has:
 - Search 2: "reserved memory must be used first before it is held"
 - Question: Option D of 0024 does not say which sense of available it means. For admission control the kernel reservation is withheld whether used or not, so D is true; for physical pages it is not withheld until touched, so D is false. Every model, Opus included, reads the first. Should D say (A) not available for VM reservations (true), (B) physically blocked before use (false), or (C) leave the misconception list?
 - Written as now: an untouched reservation can serve other VMs; admission control counts the full reservation (draft, review note).
-- Answer:
-
-### Q199 · Benchmark > Release gate · Confident-wrong limit on open answers
-
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 7.5 and 14); [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py) (RUBRIC); [harness/agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/agent.py) (`OPEN_SHAPE`); [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (`OPEN_FORMAT`); [project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (sections 2 and 3).
-- Question: the gate allows 3% confident-wrong over all answers. In the round of 2026-11-13 (previous generation, archived; the numbers are not compared, only the shape of the problem carries over), consensus brought multiple choice to 3-4% (projected), but judged answers stayed at 31-41% (Opus with web search: 23%). Judged answers are 77 of the 196 questions (39%): even at 8% confident-wrong on them, the overall rate is above 3%. A judged answer of up to 250 words scores 0 when one sentence contradicts a key point. Which way? (A) keep one 3% limit, and change the answer shape: shorter answers that state only what the knowledge base supports, the rest marked as not settled; (B) the judge grades each claim, and a contradicted side claim lowers the score instead of zeroing it; (C) two limits: 3% for multiple choice, a separate limit for judged answers set from the next round; (D) A and C together.
-- Written as now (review 2026-11-14): one limit of 3% over all answers. Part of A is already built, ahead of your answer: Agent E2's open-answer prompt asks for a last line "Not settled by the knowledge base:" holding every claim with no file (`agent.OPEN_SHAPE`, 2026-11-14). Not measured. The 250-word cap is unchanged. The judge has no rule for that line: its rubric scores "says the question cannot be settled" as 0 and unsure, and caps at 0 on any statement that contradicts a key point. A judge can read the line either way, so an answer with the right conclusion and one doubtful side claim under the line can score 0.
-- Final answer (review 2026-11-14; expert call; replaces the recommendation above): D, plus a judge rule (E) that the next round needs whatever you choose.
-  - E: one rule in the judge's rubric: "Text under 'Not settled by the knowledge base:' is not stated as fact: it earns no credit and does not cap the score. The answer is unsure only when its conclusion is there." Without it, the shape built for A is scored by chance.
-  - A: keep the shape; set the answer length by the number of key points, not one 250-word cap (plan M2 already lists a per-question length: 250 words is long for 2 key points and short for 10).
-  - C: confident-wrong at most 3% on multiple choice; for judged answers a separate limit, set from the first round on Agent E2 and lowered with each release (proposal for 1.0: at most 10%).
-  - Not B: grading each claim rewards long answers that hedge; a statement that contradicts a key point is one an operator acts on, so the cap at 0 stays.
-  - Change if accepted: judge.py RUBRIC (rule E) with a unit test; design.md sections 7.5 (two limits) and 14 (rule E); report.py `GATE` (two confident-wrong rows); summarize.py; the per-question answer length (a question field, M2).
-  - For you: accept or change; the judged limit for 1.0.
 - Answer:
 
 ### Q124 · Part 1 > Reclamation > TRIM and Unmap · Per datastore

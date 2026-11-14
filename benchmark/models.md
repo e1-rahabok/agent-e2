@@ -144,6 +144,7 @@ Preferred, not required:
 - No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets (author, 2026-11-13). The result without tools of 2026-11-13 (67%) stays in the archive as history.
 
 ## 6. Judge
+- No judged question in the run set since 2026-11-14 (Q199): every question is multiple choice, so the judge is not called. It stays for judged questions, if any return; archiving it is open (project/plan.md, M4).
 - Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.
 - Model: `judge_model` in `config.yaml`, now openai/gpt-6.1-terra (reason is openai/gpt-5.6-sol is 4x the price with minimal difference).
 - Rules:

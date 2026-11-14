@@ -4,6 +4,21 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q199 · Benchmark > Release gate · Confident-wrong limit on open answers
+
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 7.5 and 14); [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py) (RUBRIC); [harness/agent.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/agent.py) (`OPEN_SHAPE`); [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (`OPEN_FORMAT`); [project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (sections 2 and 3).
+- Question: the gate allows 3% confident-wrong over all answers. In the round of 2026-11-13 (previous generation, archived; the numbers are not compared, only the shape of the problem carries over), consensus brought multiple choice to 3-4% (projected), but judged answers stayed at 31-41% (Opus with web search: 23%). Judged answers are 77 of the 196 questions (39%): even at 8% confident-wrong on them, the overall rate is above 3%. A judged answer of up to 250 words scores 0 when one sentence contradicts a key point. Which way? (A) keep one 3% limit, and change the answer shape: shorter answers that state only what the knowledge base supports, the rest marked as not settled; (B) the judge grades each claim, and a contradicted side claim lowers the score instead of zeroing it; (C) two limits: 3% for multiple choice, a separate limit for judged answers set from the next round; (D) A and C together.
+- Written as now (review 2026-11-14): one limit of 3% over all answers. Part of A is already built, ahead of your answer: Agent E2's open-answer prompt asks for a last line "Not settled by the knowledge base:" holding every claim with no file (`agent.OPEN_SHAPE`, 2026-11-14). Not measured. The 250-word cap is unchanged. The judge has no rule for that line: its rubric scores "says the question cannot be settled" as 0 and unsure, and caps at 0 on any statement that contradicts a key point. A judge can read the line either way, so an answer with the right conclusion and one doubtful side claim under the line can score 0.
+- Final answer (review 2026-11-14; expert call; replaces the recommendation above): D, plus a judge rule (E) that the next round needs whatever you choose.
+  - E: one rule in the judge's rubric: "Text under 'Not settled by the knowledge base:' is not stated as fact: it earns no credit and does not cap the score. The answer is unsure only when its conclusion is there." Without it, the shape built for A is scored by chance.
+  - A: keep the shape; set the answer length by the number of key points, not one 250-word cap (plan M2 already lists a per-question length: 250 words is long for 2 key points and short for 10).
+  - C: confident-wrong at most 3% on multiple choice; for judged answers a separate limit, set from the first round on Agent E2 and lowered with each release (proposal for 1.0: at most 10%).
+  - Not B: grading each claim rewards long answers that hedge; a statement that contradicts a key point is one an operator acts on, so the cap at 0 stays.
+  - Change if accepted: judge.py RUBRIC (rule E) with a unit test; design.md sections 7.5 (two limits) and 14 (rule E); report.py `GATE` (two confident-wrong rows); summarize.py; the per-question answer length (a question field, M2).
+  - For you: accept or change; the judged limit for 1.0.
+- Answer (author, 2026-11-14, in session): F, a new option: improve the questions instead of the judge; make every benchmark question multiple choice, "choose the correct answers from Y choices", without disclosing how many are correct (one or all). No limit on the number of options or of correct and wrong ones: the reader is not a person, so a list of 20 with 1 correct and 19 wrong is valid.
+- Applied 2026-11-14: the 77 judged questions rewritten as multiple choice (each key point a true option, the likely wrong answer and other Level 300 beliefs false options, as many as each question needs), each key checked by an independent review agent; the runner, verifier, planner and lint take up to 25 written options (A-Y, Unsure appended as the next letter), with a unit test on 20 options; design.md sections 2, 3.3, 3.6, 3.8, 7.4 and 14; the preflight sample takes 6 multiple-choice questions when none is judged. One confident-wrong limit (3%) on letters stays. Options A-E (rule E for the judge) are moot for the benchmark; the open-answer line "Not settled by the knowledge base:" stays a product feature, measured in the live test with the author as judge. The judge code stays dormant (plan, M4).
+
 ### Q204 · VCF Operations > Capacity forecast · Capacity Remaining: largest gap or tightest point
 
 - Files: [Capacity forecast](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/capacity-forecast.md); question [0235](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-76-capacity-forecast-averages-hide-month-end.md).
@@ -94,15 +109,6 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Answer (2026-11-12): Linux steal time excludes Overlap.
 - Applied 2026-11-12: overlap.md, section Names: the book line removed; steal time excludes Overlap whatever a document calls it. (b), the steal clock, not answered: kept in project/plan.md, M1.
 
-### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
-
-- Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
-- Search 1: "From vSphere 7.0 Update 2, the defaults are NPS-1"
-- Search 2: "Optimal Setting: NPS4 (Nodes Per Socket 4)"
-- Question: Performance Best Practices for vSphere 9.1 (revision 20260624, pp. 29-30) says NPS-1 with CCX as NUMA Domain off gives the best performance in nearly all cases, and NPS-4 is worth testing only for bandwidth-hungry, NUMA-optimized, pinned workloads. Your source gives NPS4 as the optimal setting for EPYC 9005 and NPS2 for EPYC 9006. Which does Agent E2 recommend for a general-purpose cluster: (A) NPS-1 unless the workload meets the four conditions; (B) the setting that matches the silicon (NPS4 on 9005, NPS2 on 9006); (C) B for monster VMs only?
-- Written as now: both stated; cpu-topology gives the per-processor setting, numa-settings keeps the vendor default and points to this question.
-- Answer:
-
 ### Q197 · Repository consistency · Pillar list and the troubleshooting check order
 
 - Files: [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (`pillar`); [project/vocabulary.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/vocabulary.md) (Pillar); [REPOSITORY-MAP.md](https://github.com/e1-rahabok/agent-e2/blob/main/REPOSITORY-MAP.md) (health check); [project/knowledge-rules/flows.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/flows.md) (Order); [project/templates/troubleshooting.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates/troubleshooting.md) (checks).
@@ -129,16 +135,6 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Answer (2026-11-13): A. Beating anyone is not a goal; it is an outcome. The benchmark is fair and the questions are hard; with deeper knowledge, Agent E2 scores higher as a result. The gap is reported, not gated. Open: which frontier configuration is shown next to it (prompt only or with web search).
 - Applied 2026-11-13: the 15-point gap removed from the gate in design.md (sections 1, 7.5, 8) and the plan; report and summary show the gap and the paired test as outcomes.
 
-### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
-
-- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question [0361](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-two-queue-limits-on-one-virtual-disk.md) (Two queue limits on one virtual disk).
-- Search 1: "pvscsi queue depth"
-- Search 2: "The hypervisor software queues are throttling requests"
-- Question: the ESXi source file says high KAVG and QAVG (above 2 to 5 ms) with low DAVG usually occur when the concurrent requests of a VM exceed the configured queue depths, and names the pvscsi queue depth and Disk.SchedNumReqOutstanding. The knowledge file reads the two limits apart: a request that exceeds the Paravirtual SCSI queue depth (64 per device, 254 per adapter) waits in the Guest OS, before the virtual device takes it, and shows in the Guest OS counters, not in KAVG or QAVG; a request that exceeds the VMkernel device queue depth (DQLEN) waits in the VMkernel and shows as QUED and QAVG. Which holds? And what does Disk.SchedNumReqOutstanding limit, with what default, and when?
-- Also: the thresholds differ by source for KAVG and DAVG (the source file: KAVG under 1 ms ideal, high at 2 to 5 ms, DAVG high above 10 to 15 ms; Broadcom KB 344099: 10 ms for DAVG, KAVG and GAVG when sustained; the latency stack file from the book: KAVG within 0.5 ms, DAVG within 5 ms). Which values go in the threshold catalog?
-- Written as now: the two limits are read apart; no number for DSNRO; no threshold repeated; flagged in review_notes of the file.
-- Answer:
-
 ### Q194 · Guest OS disk queue · Above the driver, or below it?
 
 - Files: [Guest OS Disk Queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/storage/disk-queue.md) (section Meaning, Interpretation); questions [VM vs Guest OS metrics](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-08-vm-vs-guest-os-metrics.md), [Slow Windows application, where to start](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-84-slow-windows-application-where-to-start.md), [VMware Tools not running](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-16-vmware-tools-not-running.md); new question [0311](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-107-windows-disk-queue-length-of-48.md) (deferred).
@@ -158,14 +154,6 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Written as now: both values stated; a power cycle rebuilds the layout only with FALSE; the Using Virtual NUMA 9.1 page says the layout does not change unless the vCPU count changes. The key of the question says the layout changes only with the vCPU count. With FALSE as the default, a power cycle on the old host is a valid fix and the key must say so.
 - Answer (2026-11-13), from the author's source (project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md): in vSphere 9.1, virtual hardware 20 and later, the default is FALSE: ESXi rebuilds the vNUMA layout at every power cycle. To keep a layout across reboots, use the vCenter cluster advanced setting VPXD_PersistVnuma = True, not a VMX option. numa.autosize.once and similar numa.* attributes are no longer offered or supported in the VM's Advanced Parameters; manual layouts go in Edit Settings > Virtual Hardware > CPU, vNUMA Topology.
 - Applied 2026-11-13: virtual-numa (Requirements, Topology initialization, Sizing, Misconceptions); question [0113](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-53-vnuma-after-move-to-older-host.md) (L4-53) key: a power cycle on the old host is now a valid fix. The 9.1 TechDocs page still lists numa.autosize.once and does not name VPXD_PersistVnuma: noted in review_notes.
-
-### Q193 · Guest OS sizing · Lowering SQL Server max server memory in steps
-
-- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Applications that manage their own memory); [SQL Server holds its memory](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-89-sql-server-holds-its-memory.md).
-- Search: "Finding the size: lower"
-- Question: the section says to lower max server memory (MB) in steps, watch the SQL Server memory counters and the query times over a full business cycle, and resize the VM after that. The Microsoft page does not say it. Is this your method? Which counters do you watch, and how large is a step?
-- Written as now: the method, with no counter names and no step size; flagged in review_notes.
-- Answer:
 
 ### Q191 · Field checks the documents do not settle
 

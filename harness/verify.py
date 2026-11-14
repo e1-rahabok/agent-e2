@@ -14,7 +14,7 @@ import re
 
 ANSWER = re.compile(r'ANSWER:[ \t]*([^\n]*)', re.I)
 # One letter of a letter list: optional bold or italics around it, then a separator (comma, &, the word and, or a space).
-LETTER = re.compile(r'\s*[*_]*([A-J])[*_]*(?![A-Za-z])\s*(?:,|&|\band\b)?', re.I)
+LETTER = re.compile(r'\s*[*_]*([A-Z])[*_]*(?![A-Za-z])\s*(?:,|&|\band\b)?', re.I)
 
 
 def answer_letters(text):
@@ -36,7 +36,7 @@ def answer_letters(text):
         out.append(t.group(1).upper())
         pos = t.end()
     return out or None
-OPTION = re.compile(r'^([A-J])\.\s+(.*)$', re.M)
+OPTION = re.compile(r'^([A-Z])\.\s+(.*)$', re.M)
 KB_ID = re.compile(r'\b(?:vsphere|guest-os|observability|sp5-framework|vcf-operations)/[a-z0-9][a-z0-9/\-]*[a-z0-9]')
 NUMBER = re.compile(r'(?<![\w.,])(\d+(?:\.\d+)?)\s?(%|ms|µs|us|ns|MB/s|MBps|KBps|Mbps|GB|MB|KB|GHz|MHz|seconds|minutes)(?![\w/])')
 

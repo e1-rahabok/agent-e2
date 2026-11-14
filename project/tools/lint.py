@@ -223,7 +223,7 @@ def main():
             bad(f, f'input must be {derived or ["text"]}, from the attachments (benchmark/design.md, section 3.4)')
         if at == 'deterministic':
             prompt = re.search(r'## Prompt\n(.*?)\n## ', t, re.S)
-            letters = set(re.findall(r'^(?:[-*]\s+)?([A-H])\.\s', prompt.group(1), re.M)) if prompt else set()
+            letters = set(re.findall(r'^(?:[-*]\s+)?([A-Y])\.\s', prompt.group(1), re.M)) if prompt else set()
             for k in ('answer', 'misconception'):
                 for x in fm.get(k) or []:
                     if str(x) not in letters: bad(f, f'{k} letter {x} is not an option in ## Prompt')

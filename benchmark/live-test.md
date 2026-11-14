@@ -34,7 +34,7 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 |---|---|
 | Runner `--local <url>`: point [`harness/llm.py`](../harness/llm.py) at the local server; no API key required | Today the client requires `AI_GATEWAY_API_KEY` |
 | Vision and context checks from config, not from the gateway model list | The runner reads the `vision` tag and context window from the gateway; a local server has no tags |
-| Judge later: save judged answers offline, score them with the judge after the VM is back online | The judge is a frontier model; it is not on the offline VM |
+| Judge later, only if judged questions return to the set (none since 2026-11-14, Q199): save judged answers offline, score them after the VM is back online | The judge is a frontier model; it is not on the offline VM |
 | Timings per model turn in `answers.csv` (time to first token, tokens per second) | Speed on the target GPU is a result of this test |
 
 ## 5. Steps

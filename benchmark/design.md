@@ -21,13 +21,14 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Measured | Not measured (and where it is measured instead) |
 |---|---|
 | Correct reading of metrics: mechanism, vantage point, unit, rollup | Installation, configuration steps, UI navigation (out of scope for the product) |
-| Resistance to misconceptions (see `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400) | Writing style of judged answers (the judge scores facts only, section 14) |
+| Resistance to misconceptions (see `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400) | Writing style of answers |
 | Combining several facts and tables in one answer, including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
 | Reading tables: vCenter chart exports, VCF Operations exports, esxtop batch output | More screenshots (the screenshot set grows after 1.0, section 13) |
 | Knowing the limits: choosing Unsure instead of guessing | Multi-turn conversation with clarifying questions (a separate set, later) |
 | Consistency: the same answer on every run | Cost and price (out of scope, author 2026-11-04) |
-| Answering without options (free text, judged) | Agent E2's own framework and the vCommunity management pack (section 6.1) |
+| Knowing every true statement and rejecting every plausible false one, among as many options as the question needs | Agent E2's own framework and the vCommunity management pack (section 6.1) |
+| | Answering without options, in free text: the live test, judged by the author ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9; Q199) |
 
 - Scope of 1.0: vSphere 9.1 metrics, the native VCF Operations metrics on vSphere objects (section 6.1, F2) and the Guest OS layer, for performance and capacity, in monitoring and troubleshooting (`MISSION.md`, section 1).
 
@@ -62,7 +63,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 
 - Level 400 is hard and complex, not tricky. It tests knowledge of the system, not reading of English. To stay unambiguous it is often long: the situation, the values, the tool, the time window, and one clear question.
 - Level 400 combines facts inside one answer: several knowledge files, a calculation, a flow, several inputs. There is no back-and-forth with the user; the agent's code does the chaining (the reading plan and the computed facts of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)).
-- Level 400 holds most of the set, most of the judged questions and most of the tables: the claim is about Level 400.
+- Level 400 holds most of the set and most of the tables: the claim is about Level 400.
 - Why Level 100-300 are in the set:
   1. The knowledge base assumes the basics and does not teach them. A candidate that fails Level 100-200 cannot read the knowledge base; a Level 400 failure is then a model failure, not a knowledge gap.
   2. Administrators ask basic questions too. One wrong basic answer costs the product its credibility.
@@ -73,12 +74,11 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 | Answer type | The answer is | Scored by |
 |---|---|---|
 | Deterministic | One or more option letters (A, B, C, ...). Exactly right or not | The runner, by comparing letters |
-| Judged | Free text. It cannot be scored as right or wrong by a rule | A judge model, 0-3 against the key points (section 14) |
+| Judged | Free text | A judge model, 0-3 against the key points (section 14). None in the run set since 2026-11-14 |
 
-- Deterministic is the majority: it is exact, cheap, and free of scorer bias.
-- Judged is a large minority: a real administrator asks without options, and options reward recognition. A small model can pick the right option yet fail to raise the point unprompted.
+- Every question of the run set is deterministic (author, Q199 F, 2026-11-14): exact, cheap, free of scorer bias, and covered by consensus of samples. The judge scored free text unreliably: a 250-word answer scored 0 when one side sentence contradicted a key point, and judged answers carried most of the confident-wrong rate.
+- What options lose, and where it is measured instead: a real administrator asks without options, and options can reward recognition. The guard in the set: many plausible false options, each wrong for a reason the knowledge base states, the Level 300 misconception among them, and exact match of the whole set (section 3.8). The free-text answer itself is measured in the live test, judged by the author.
 - Example, deterministic ([CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md)): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
-- Example, judged ([High CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-01-cpu-wait-includes-idle.md)): "A VM shows CPU Wait at 90%. The application owner says the VM must be stuck waiting on disk or memory. Are they right?"
 - Metadata: `answer_type: deterministic | judged`.
 
 ### 3.4 By input type
@@ -110,7 +110,7 @@ Each question lists every area it touches in `technology` (values from [project/
 
 ### 3.6 Mix
 - No group can carry the score alone: every question weighs the same (section 7.4), so the mix of the set is what weighs each group. Coverage keeps it honest: every area, object, tool and misconception type is tested, and none dominates by accident.
-- Judged questions and tables sit mostly at Level 400: reading evidence and combining it is the expert's work, and open-ended troubleshooting is where a real administrator asks without options.
+- Tables and long scenarios sit mostly at Level 400: reading evidence and combining it is the expert's work.
 - The five tasks (section 3.1) and the areas (section 3.5) are spread across every level.
 
 ### 3.7 Coverage rules
@@ -127,9 +127,9 @@ Each question lists every area it touches in `technology` (values from [project/
 - `coverage.py` prints each count and marks a zero. The review rules are checked by the reviewer (section 11).
 
 ### 3.8 Answer-key shape (deterministic)
-- Options: 4-8 written options, plus Unsure appended to every question. No Not covered option since 2026-11-05 (Q038).
-- The number of correct options varies: about 30% of questions have 1 correct option, 50% have 2-3, 20% have 4 or more. The model is never told how many.
-- A model that learns "usually one answer" or "usually all but one" gains nothing.
+- Options: as many as the question needs, no fixed count (author, Q199, 2026-11-14): the reader is a model, not a person, so a list of 20 is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option since 2026-11-05 (Q038).
+- The number of correct options varies from one to all of them (1 correct and 19 wrong is valid). The model is never told how many: every question carries the same instruction, "Choose all the correct options. There can be more than one."
+- A model that learns "usually one answer" or "usually all but one" gains nothing, and with many options a guess is almost never exactly right (6 options plus Unsure: about 1 in 64).
 
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).
@@ -237,7 +237,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - One number, 0-100%, for each model and mode (Base, Agent E2, web). Sub-scores support it: by answer type, by input type, by level.
 - Question credit, 0 to 1, the mean of the 5 runs (author, 2026-11-13):
   - deterministic: the share of runs with exactly the right letters;
-  - judged: the mean judge score over the runs, divided by 3.
+  - judged (none in the run set since 2026-11-14): the mean judge score over the runs, divided by 3.
 - Worst run: the same score with each question on its lowest run. Reported next to the final score as consistency; not a gate.
 - Final score = sum of question credits / number of questions. Every question weighs the same, whatever its level, answer type or input type.
 - Sub-score = the same mean within one group. A question counts for every input type it includes. The mix of the set (section 3.6) sets how much each group weighs in the final score.
@@ -245,7 +245,7 @@ The frontier model must be able to answer every question from public knowledge. 
   - mean, not worst run: an operator asks once and gets one answer; the mean of the runs is the best estimate of that answer's quality. The worst run measures something else (does it never fail?) and stays in the report as consistency. Until 2026-11-13 the worst run counted;
   - one weight per question: no group can carry the score by a formula choice; coverage keeps the mix honest (section 3.7);
   - judge score / 3: a partly right judged answer earns part credit, as a human examiner would give. A deterministic answer has no part credit, because a partly right set of letters is a wrong answer an operator would act on.
-- Confident-wrong rate covers both: wrong letters that are not Unsure, and judged answers scored 0 that do not say the information does not settle it.
+- Confident-wrong rate: wrong letters that are not Unsure (and, for a judged question, a score of 0 not marked unsure).
 - Margin: 95% interval on the final score from the number of questions (section 4).
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), function `final`. Report table `Final score`.
 
@@ -337,6 +337,7 @@ For the set:
 - A CSV is generated by a seeded script, then checked: every value the key relies on is in it, and nothing contradicts the key. Time stamps, object names and noise are realistic; names are invented, never a customer's.
 
 ## 14. Judged questions and the judge
+- None in the run set since 2026-11-14 (author, Q199 F): every question is multiple choice. The judge code stays in the runner; whether to archive it is open (project/plan.md, M4). The rules below hold for any judged question added later.
 - Questions with `answer_type: judged` are answered without options and scored 0-3 by a judge model. Code: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py).
 - The candidate runs in the same modes as for deterministic questions (Base, Agent E2, web), with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `PROMPTS['open']`.
 - The judge gets: the prompt with its tables, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The candidate never sees the key.

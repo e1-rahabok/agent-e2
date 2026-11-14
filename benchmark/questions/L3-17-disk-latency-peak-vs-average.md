@@ -6,20 +6,41 @@
 - At 02:15 the peak is 9,840 ms. The 5-minute write latency at 02:15 is 248 ms.
 - The application owner asks whether the peak is real, and what it means for the database.
 
-Is the peak real? How can it be 40 times the 5-minute value? What do you tell the owner, and what do you check?
+Which statements are correct?
+
+- A. The peak cannot be real: a 20-second value can be at most 15 times the 5-minute value it belongs to.
+- B. The peak is the highest of the 15 twenty-second values in the 5-minute collection cycle.
+- C. The peak is taken across all 20 virtual disks, reads and writes together.
+- D. One 20-second point of one disk can exceed the 5-minute value, an average over all disks, far more than 15 times.
+- E. VCF Operations keeps all 15 twenty-second values of each cycle, so you can see when within 02:15 the burst came.
+- F. The peak metric tells you which of the 20 virtual disks had the stall.
+- G. It is a one-off: every other peak that day stays below about 22 ms, and the 5-minute values stay low.
+- H. In at least one 20-second point, IO to at least one disk took close to 10 seconds on average.
+- I. An IO wait that long can stall or time out the database, so check the database and Guest OS logs at 02:15.
+- J. Check each virtual disk's write latency at 02:15, and what ran then, such as a backup or a scheduled job.
+- K. The 5-minute write latency of 248 ms is what the database felt, so one cycle like this is harmless.
 
 ## Likely wrong answer
-"The peak cannot be 40 times the average: a 20-second value can be at most 15 times a 5-minute value, so the metric is wrong."
+- A: "A 20-second peak can only be 15 times the 5-minute average, so 40 times means the metric is wrong."
 
 ## Expected key points
-- The peak is real. It is the highest of the 15 twenty-second points in the 5-minute cycle, taken across every virtual disk, read and write.
-- It can exceed 15 times the 5-minute value: the 5-minute latency averages all the IO of all 20 disks over 300 seconds, while the peak is one 20-second point of one disk and one direction (20 disks × 2 × 15 = 600 values).
-- It is a one-off: every other peak of the day is below 30 ms, and the 5-minute values stay low.
-- In at least one 20-second point, IO to at least one disk waited close to 10 seconds. A 248 ms 5-minute write latency needs more than one such point or more than one disk. The database may have stalled or timed out: check the database and Guest OS logs at 02:15.
-- Check every virtual disk at 02:15, write side, and what ran then (a backup or a scheduled job).
+- Answer: B, C, D, G, H, I, J.
+- A is false: the gap can exceed 15 times, because the peak is one point of one disk and one direction, and the average is not.
+- B is true: a Peak ... within collection cycle metric is the highest of the 15 twenty-second averages in the 5-minute cycle.
+- C is true: the peak is taken across instances, all virtual disks, read and write.
+- D is true: 20 disks × 2 directions × 15 points = 600 values; the peak is the highest of them, while the 5-minute value averages all the IO.
+- E is false: only the peak of the 15 points is stored; there is no pattern within the 300 seconds.
+- F is false: the peak is one metric across all instances; it does not name the disk.
+- G is true: in the export every other peak is below 22 ms, and read and write latency stay below about 4 ms outside 02:15.
+- H is true: a 20-second point is an average, so the IO in it averaged about 9.8 seconds.
+- I is true: a 5-minute average hides 20-second peaks; a wait of several seconds is enough for a database to stall or time out.
+- J is true: the peak does not name the disk or direction, and the write value is the one that moved at 02:15.
+- K is false: a value below a threshold on a 5-minute average says nothing about the 20-second peaks inside it.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Revised 2026-11-12 for question set 1.0: the screenshot and the 40-column table replaced by one small export; the vCommunity KPI file removed from `knowledge`. Counts only after author approval.
+- Dropped from the key: "a 248 ms 5-minute write latency needs more than one such point or more than one disk". How many points or disks it takes depends on how the 5-minute value weights IO across disks and points, which the knowledge base does not settle.
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -29,7 +50,9 @@ product: [vcf-operations, vsphere]
 technology: [storage]
 task: read-metric
 level: 300
-answer_type: judged
+answer_type: deterministic
+answer: [B, C, D, G, H, I, J]
+misconception: [A]
 input: [table]
 object: [vm]
 tool: [vcf-operations]

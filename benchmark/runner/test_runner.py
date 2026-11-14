@@ -137,6 +137,21 @@ class PromptSplitTest(unittest.TestCase):
         stem, opts, footer = C.Question._split_prompt('Stem\n\nA. one\nB. two')
         self.assertEqual([o[1] for o in opts], ['one', 'two'])
 
+    def test_many_options_render_and_parse(self):
+        # Q199 (2026-11-14): no fixed option count; 20 written options take A-T and Unsure takes U.
+        import random
+        letters = C.LETTERS[:20]
+        stem, opts, footer = C.Question._split_prompt('Stem\n\n' + '\n'.join(f'- {x}. option {x}' for x in letters))
+        self.assertEqual([o[0] for o in opts], list(letters))
+        q = C.Question.__new__(C.Question)
+        q.stem, q.options, q.tables, q.footer = stem, opts, '', ''
+        text, mapping = q.render(random.Random(1))
+        self.assertEqual(mapping['U'], 'UN')
+        self.assertIn('U. Unsure', text)
+        shown = next(k for k, v in mapping.items() if v == 'S')
+        self.assertEqual(C.parse(f'ANSWER: {shown}', mapping), ['S'])
+        self.assertEqual(C.parse('ANSWER: T, U', mapping), sorted([mapping['T'], 'UN']))
+
 
 class AnswerParseTest(unittest.TestCase):
     def test_letters_not_taken_from_words_and_bold_kept(self):
