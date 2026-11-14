@@ -77,6 +77,6 @@ source:
   path: Memory > VM > Contention Metrics > Latency
 corrections: []
 review_notes:
-- 'To check: unswap article cited by the book, third-party, not read (https://www.yellow-bricks.com/2016/06/02/memory-pages-swapped-can-unswap/).'
+- 'To check: unswap article cited by the source document, third-party, not read (https://www.yellow-bricks.com/2016/06/02/memory-pages-swapped-can-unswap/).'
 status: draft
 ```

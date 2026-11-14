@@ -6,19 +6,17 @@
 - [The second attachment](0004/esxi-cpu-usage-core-utilization-utilization-zoom-on-ramp.png) zooms into the start of the chart.
 
 At the end, where the counters spike:
-- ESXi CPU Usage is flat at 100%. (The host was ESXi 7. From vSphere 8.0 Update 3 this counter is no longer capped and would exceed 100%: Broadcom KB 417702.)
+- ESXi CPU Usage is flat at 100%. The host runs ESXi 7.
 - ESXi CPU Core Utilization is about 70%.
 - ESXi CPU Utilization is about 40%.
 
-Three metrics show three values. What is the ESXi utilization, from capacity management perspective?
+Three metrics show three values. Which options give the ESXi utilization, from a capacity management perspective?
 
 - A. 100%. The blue line. No more physical cores or threads are available.
 - B. 70%. The green line. It is a balanced reporting.
 - C. 40%. The black line. Plenty of physical threads are idle.
 - D. Not shown. It is the average of the green line and the black line, as Hyper-Threading is enabled.
 - E. Not shown. To get the utilization, sum the running VMs and the kernel.
-
-Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality.
 
 ## Attachments
 ![vCenter chart, 1 hour, of one ESXi host: CPU Usage (blue) flat at 100%, Core Utilization (green) about 70%, Utilization (black) about 40% at the end](0004/esxi-cpu-usage-core-utilization-utilization-1-hour-vcenter-chart.png)
@@ -38,6 +36,9 @@ A (100%): reading CPU Usage as utilization. Or B (70%): treating Core Utilizatio
 
 ## Notes
 - Attachments: host names masked in the legend before commit.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "(From vSphere 8.0 Update 3 this counter is no longer capped and would exceed 100%: Broadcom KB 417702.)"
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "What is the ESXi utilization, from capacity management perspective?"
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: capacity is about space, while performance is about speed. Capacity is about quantity, performance is about quality."
 
 ## Metadata
 ```yaml

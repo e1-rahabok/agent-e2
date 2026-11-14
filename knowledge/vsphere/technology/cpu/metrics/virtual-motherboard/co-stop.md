@@ -80,7 +80,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > VM > Contention Metrics > Co-stop
 corrections: []
-review_notes:
-- 'Section ''Values'': the 1% value is the book''s best practice, based on about 64 million data points (2,429 VMs × 26,298).'
+review_notes: []
 status: draft
 ```

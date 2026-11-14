@@ -62,7 +62,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Other Nuances
 corrections:
 - '2026-11-02: 1 GiB = 1024 MiB; 1 GB = 1000 MB. Uploaded document says KiB/KB.'
-review_notes:
-- 'Sections ''1000 or 1024 per tool'' and ''Bit or byte'': Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery > Units (update of 2026-11-08).'
+review_notes: []
 status: draft
 ```

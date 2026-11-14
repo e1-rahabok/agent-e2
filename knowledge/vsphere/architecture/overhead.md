@@ -250,8 +250,6 @@ corrections:
 - '2026-11-02: The item that enables memory overcommit at ESXi level is the VM swap file (.vswp). Uploaded document names it ''VM memory snapshot''.'
 - '2026-11-02: Four buffer types listed. Uploaded document says ''at least 3''.'
 review_notes:
-- '[from former vsphere/architecture/overhead] Section ''Resource groups'': the book lists 5 groups but says to plot only iofilters, system and vim for kernel consumption; host/opt (vSAN) is not in that list. Kept as written.'
-- '[from former vsphere/architecture/overhead] Section ''Size variability'': based on Host Resources Deep Dive (Denneman, Hagoort), p. 258, cited by the book.'
 - '[from former vsphere/architecture/overhead] Section ''Memory metrics'': ESX System Usage = kernel reservation.'
 - '[from former vsphere/architecture/overhead] Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: Old file vsphere/cpu/counters/esxi/cpu.usage.average.md states ''sustained values above ~80-85%'' with no source. This source gives 80% (PCPU ceiling) and 90% (warning) for esxtop. Decide whether to replace the old threshold.'

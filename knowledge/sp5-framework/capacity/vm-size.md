@@ -92,6 +92,5 @@ corrections: []
 review_notes:
 - 'To check: Section ''Size per class'', Intel: compute tile as L3 domain and NUMA node only with SNC on, against the Intel Xeon 6 documentation.'
 - 'To check: Section ''Example: AMD EPYC 9996'': the CPU figures (8 CCDs of 32 cores, 2 IODs, 16 channels) against the AMD product specification.'
-- 'Section ''Size per class'': the author''s general advice (2026-11-12, Q176).'
 status: draft
 ```

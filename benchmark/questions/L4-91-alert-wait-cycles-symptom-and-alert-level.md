@@ -8,7 +8,7 @@
 - No alert is generated during the job window, although the VM is above 90 for two thirds of it.
 - The application owner asks for exactly one alert per job. It must stay open while the pattern continues and close within about 15 minutes after the job ends. The value 90 must stay as it is.
 
-Which single change meets the request?
+Which changes, each made alone, meet the request?
 
 - A. Set the alert-level Wait Cycle to 1 and leave every other setting.
 - B. Set the symptom Wait Cycle to 1 and leave every other setting.
@@ -36,6 +36,7 @@ A: the vendor guidance is to keep the alert-level wait cycle at 1 and tune sensi
 - Why one answer: the timeline is fixed by the pattern, and each option can be computed from the quoted definitions. Only C keeps the symptom triggered long enough for the alert-level Wait Cycle and still gives one alert. A creates an alert that is cancelled and created again; B and D never reach 3 cycles; E acts on a non-existing alert.
 - Debatable risk: the sources state "consecutive" for the Wait Cycle only. The question assumes the Cancel Cycle counts consecutive cycles too (the mirror case), and that the alert-level Wait Cycle counts cycles in which the symptom is in the triggered state. Both are the natural reading of the quoted sentences, but no page works an example like this one. The pattern is chosen so that off-by-one counting does not change any option: the symptom is triggered for 1 cycle (current), 2 cycles (B) or all cycles (C) against a requirement of 3.
 - Rewritten 2026-11-13 to raise difficulty: the single documented fact (wait cycles are stacked) is replaced by a flapping metric where the symptom Wait Cycle, the symptom Cancel Cycle and the alert-level Wait and Cancel Cycle interact. The vendor rule of thumb (alert-level wait 1) is the tempting wrong answer.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which single change meets the request?"
 
 ## Metadata
 ```yaml

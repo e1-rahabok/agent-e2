@@ -114,9 +114,8 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > esxtop > Storage
 corrections:
-- 'Section ''Panels'': the book says esxtop does not cover NFS. NFS datastores show in the Disk Device panel as {NFS} pseudo-devices with DAVG, KAVG and GAVG.'
+- 'Section ''Panels'': the source document says esxtop does not cover NFS. NFS datastores show in the Disk Device panel as {NFS} pseudo-devices with DAVG, KAVG and GAVG.'
 review_notes:
-- 'Section ''Disk Adapter'': the book lists the guest write counter as ''AVG/wr'' and the clone latency as ''AVAG''; read as GAVG/wr and an average clone latency.'
-- 'To check: VAAI references from the book, not read: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/'
+- 'To check: VAAI references from the source document, not read: https://kb.vmware.com/s/article/2065193, https://blogs.vmware.com/vsphere/2012/06/low-level-vaai-behaviour.html, https://www.running-system.com/esxtop-vaai-counters/'
 status: draft
 ```

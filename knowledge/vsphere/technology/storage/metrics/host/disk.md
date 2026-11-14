@@ -62,7 +62,7 @@ source:
   path: Storage > ESXi > Disk or Device
 corrections: []
 review_notes:
-- 'To check: Section ''Memory tiering devices'': NVMe power-state facts from the book against vendor documents.'
+- 'To check: Section ''Memory tiering devices'': NVMe power-state facts from the source document against vendor documents.'
 - 'To check: whether host Highest Latency is guest, kernel or device latency.'
 status: draft
 ```

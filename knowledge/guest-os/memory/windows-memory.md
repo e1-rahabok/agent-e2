@@ -29,7 +29,8 @@ In Use    = Total - (Modified + Standby + Free)
 ![Windows Standby Normal swinging widely on an Exchange 2013 mailbox server; Standby Core and Standby Reserve stay negligible](images/windows-memory-standby-normal-swings-on-exchange-server.png)
 
 ## Free memory guidance
-- Keep above 500 MB for server VMs, above 100 MB for VDI VMs (VDI adds up: 10K users × 100 MB = 1 TB).
+- Server VMs: read free memory against the Guest OS KPI row "Free memory (MB)" in the threshold catalog (one place per number).
+- VDI VMs run with less: the free memory of every desktop adds up (10K users × 100 MB = 1 TB). The KPI has no VDI level.
 - Near-zero free memory with healthy other metrics is ideal: no waste.
 - Free, page-in rate and commit ratio are capacity (utilization) metrics, not contention. They cannot measure severity. Windows and Linux do not measure how long the CPU waits for memory.
 - A freed guest page only updates the guest free list; the hypervisor keeps the page mapped. Hence high Consumed after Active has dropped.
@@ -136,7 +137,6 @@ source:
   path: MS Windows > Memory
 corrections: []
 review_notes:
-- 'Section ''Free memory guidance'': the 500 MB and 100 MB values are the book''s guidance.'
-- 'To check: References from the book, not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
+- 'To check: References from the source document, not read: https://blogs.technet.microsoft.com/markrussinovich/2008/11/17/pushing-the-limits-of-windows-virtual-memory/, http://brandonlive.com/2010/02/21/measuring-memory-usage-in-windows-7/'
 status: draft
 ```

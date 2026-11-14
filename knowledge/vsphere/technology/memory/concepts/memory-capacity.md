@@ -74,6 +74,6 @@ source:
   path: Provider Objects > Capacity > Memory; Storage; Implementation
 corrections: []
 review_notes:
-- 'Section ''VCF Operations metrics (ESXi)'': VM demand here is max(reservation, Guest OS needed + page-in); the VM Utilization formula in vsphere/technology/memory/metrics/virtual-motherboard/utilization adds unusable memory. Both from the book.'
+- 'To check (Q221): Section ''VCF Operations metrics (ESXi)'': VM demand here is max(reservation, Guest OS needed + page-in); the VM Utilization formula in vsphere/technology/memory/metrics/virtual-motherboard/utilization adds unusable memory. Both from the source document.'
 status: draft
 ```

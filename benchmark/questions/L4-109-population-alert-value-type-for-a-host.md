@@ -7,7 +7,7 @@
 - A first version used two symptom sets. Set 1 is Defined on Child (Virtual Machine), value type Percent, operator ">", value 25, with the CPU Contention condition. Set 2 is the same with the Memory Contention condition. The two sets must both be true (All).
 - That version raised an alert on host esx-07, and the infrastructure team judged it a false alarm. At that moment esx-07 ran 40 VMs. 14 of them had CPU Contention above 3%, 15 had Memory Contention above 2%, 5 had both, and 16 had neither.
 
-Which definition implements the requirement, stays silent on esx-07 and keeps working on every host size?
+Which definitions implement the requirement, stay silent on esx-07 and keep working on every host size?
 
 - A. One symptom set Defined on Child (Virtual Machine), value type Percent, operator ">", value 25, with both conditions in the set and the conditions combined with All.
 - B. The same two symptom sets as the first version, but with the sets combined with Any instead of All.
@@ -32,6 +32,7 @@ B or the first version itself (two sets, each with its own population): each set
 - Why one answer: the vendor text defines Percent over the criteria of one set, so the same-VM requirement can only be met by putting both conditions into one set with All; the other options are excluded by esx-07 or by the 20 to 400 VM range.
 - Debatable risk: the 9.1 pages do not repeat the value type definitions; the 8.18 page is the verbatim source. The prompt says the VMs are a child type of the host (as the 8.18 page says), so Descendant is not offered. Powered-off VMs in the denominator are not part of the question.
 - Rewritten 2026-11-13 to raise difficulty: the old question asked for the value type of one condition. The new one adds a second condition, a failed first version with numbers, and a requirement (same VM) that only the set structure can meet, besides the host-size variation.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which definition implements ...".
 
 ## Metadata
 ```yaml

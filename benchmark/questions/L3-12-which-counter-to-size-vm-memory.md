@@ -1,15 +1,13 @@
 # Which counter to size VM memory
 
 ## Prompt
-Choose the most accurate counter to rightsize a VM.
+Which counters are the most accurate to rightsize the memory of a VM?
 
 - A. VM Memory Consumed
 - B. VM Memory Active
 - C. (VM Memory Consumed + VM Memory Active) / 2
 - D. VM Memory Active + Balloon + Swapped + Zipped
 - E. Guest OS Memory Used. In some cases, add the cache.
-
-Hint: the VM is virtual hardware. What you size is the OS running on it.
 
 ## Likely wrong answer
 A or B (VM-level counters), or D (mixing VM and Guest OS layers).
@@ -21,6 +19,10 @@ A or B (VM-level counters), or D (mixing VM and Guest OS layers).
 - C is wrong: mixes two different concepts.
 - D is wrong: mixes the VM layer and the Guest OS layer.
 - E is the base answer; variants exist (for example adding cache).
+
+## Notes
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Choose the most accurate counter to rightsize a VM."
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Hint: the VM is virtual hardware. What you size is the OS running on it."
 
 ## Metadata
 ```yaml

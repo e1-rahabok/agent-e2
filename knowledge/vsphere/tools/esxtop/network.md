@@ -82,12 +82,13 @@ related:
 - vsphere/technology/network/metrics/host/packets-dropped
 - vsphere/technology/network/vnic-rx-drops
 - vsphere/tools/esxtop/units-vs-vsphere-client
+- vsphere/technology/network/concepts/nic-teaming
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > esxtop > Network
 corrections: []
 review_notes:
 - 'The 9.1 documentation still lists DTYP (H = hub, S = switch) in the network panel; the field is not shown on ESXi 9.1; the documentation is out of date.'
-- 'To check: KB from the book, not read: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html'
+- 'To check: KB from the source document, not read: https://knowledge.broadcom.com/external/article/312565/the-output-of-esxtop-show-dropped-receiv.html'
 status: draft
 ```

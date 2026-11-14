@@ -115,6 +115,5 @@ source:
 corrections: []
 review_notes:
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- 'Section ''Ballooning start point'': book typo ''993.1 BB'' written as GB.'
 status: draft
 ```

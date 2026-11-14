@@ -7,7 +7,7 @@
 - The database VM was powered on first. The administrator then powers on small VMs, each with 4 GB of configured memory and no reservation. After about nine small VMs, the next power-on fails with an insufficient resources message about the vSphere HA failover level.
 - At that moment the VMs consume less than 15% of the cluster memory. No VM shows ballooning or swapping.
 
-What explains the failed power-on?
+Which statements explain the failed power-on?
 
 - A. The slot size takes its memory component from the largest memory reservation plus overhead in the cluster, and every powered-on VM needs at least one slot, so each host holds only a few slots.
 - B. HA compares the memory the VMs consume with the memory that remains after one host fails, and the database VM consumes too much.
@@ -30,6 +30,7 @@ B or C: HA admission control is read as a check on consumed memory, or as the pe
 - Public source: vSphere 9.1 documentation (VMware vSphere 9.1 PDF, build of 2026-11-02), vSphere Availability, "Slot Policy Admission Control", "Slot Size Calculation" and "Using Slots to Compute the Current Failover Capacity". Online: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1.html
 - Why one answer: the documentation defines the memory slot as the largest reservation plus overhead and says each VM uses a slot. The other options contradict a stated rule (consumed memory is not used; the average is not used).
 - Debatable risk: none on the cause. The question asks for the cause, not for the fix, so the two valid fixes (slot cap, other policy) are not compared. "About nine" follows from 2 slots per host and one tolerated failure; the exact count depends on the overhead of the database VM, so the prompt does not ask for it.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "What explains the failed power-on?"
 
 ## Metadata
 ```yaml

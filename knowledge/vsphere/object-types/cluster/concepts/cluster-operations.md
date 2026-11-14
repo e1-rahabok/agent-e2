@@ -68,7 +68,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Overview > vSphere Cluster; Imbalance
 corrections:
-- 'Monster VM row: the book said above 45% of the host''s threads. Superseded by the adapter definition.'
+- 'Monster VM row: the source document said above 45% of the host''s threads. Superseded by the adapter definition.'
 review_notes: []
 status: draft
 ```

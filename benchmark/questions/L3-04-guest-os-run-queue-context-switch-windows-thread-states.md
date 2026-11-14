@@ -1,10 +1,7 @@
 # Guest OS run queue, context switch, Windows thread states
 
 ## Prompt
-- Windows or Linux performance affects application performance.
-- Some of these issues are not visible to the VM.
-
-Choose all the correct sentences:
+Choose all the correct sentences about Windows and Linux CPU performance:
 
 - A. The Guest OS is aware of Hyper-Threading and schedules its processes accordingly.
 - B. CPU Run Queue has nothing to do with performance, as it is common for Windows and Linux to form a queue.
@@ -27,6 +24,7 @@ A (Guest OS assumed Hyper-Threading aware), B or C (queue and context switch dis
 
 ## Notes
 - Author confirmed D, E, F (Q036, 2026-11-03). The quiz document's answer column lists D, E only.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Windows or Linux performance affects application performance. Some of these issues are not visible to the VM."
 
 ## Metadata
 ```yaml

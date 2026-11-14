@@ -179,11 +179,8 @@ source:
   path: 'Your Private Cloud > Service Level Agreement (Class of Service, Price/Performance, Free Tier, Recommended SLA, Penalty Quantification, Sample Offering, Price & SLA, Size Limit, Service, Availability, Compute & Storage, Mix and Match)'
 corrections: []
 review_notes:
-- 'Notation: the book writes 1:2 and 2:1 for the same idea; written here as N:1 (consumer : physical) throughout.'
-- 'To check: Section ''Planning example'', price formula: derived from the book''s 67% and 33% figures.'
-- 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of the book''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
-- 'Section ''Compute and storage design'': the book says Gold is charged 200% more for 2x; written as twice the price. Storage I/O Control: deprecated in VCF 9.'
-- 'Section ''Soft products'': the book''s Service SLA text says Gold tickets go to Level 3; its service table says Level 2, bypassing Level 1. Written as bypassing the first level.'
+- 'To check: Section ''Planning example'', price formula: derived from the source document''s 67% and 33% figures.'
+- 'To check: Section ''Mixing compute and storage classes'', 28 pairs: count of the source document''s 6-cluster diagram (each Tier 1 or Tier 3 cluster to 4 datastores, each Tier 2 cluster to 6).'
 - 'Not copied: class of service input diagram (text in Price/performance), mix-and-match diagrams (text), size limit image (table), generic tables (text).'
 status: draft
 ```

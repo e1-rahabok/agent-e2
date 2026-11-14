@@ -220,8 +220,6 @@ source:
   path: 'Your Private Cloud > SP5 Framework: Pillars (Capacity); Capacity Management > Capacity Model (planning stage vs operating stage); Capacity Management > Overview ("Good" Advice; Concept; Private Cloud Capacity; Stages; The Planning Stage; Architecture Plan; Example; Optimized Capacity)'
 corrections: []
 review_notes:
-- 'Section ''Planning inputs'': the cluster-splitting list is the text of the book image after Architecture Plan; the example estate (18 clusters) is the book image after Example. Neither image is copied: the text holds the facts.'
-- 'Section ''Cluster as the capacity unit'': the three-cluster example is the book table image after The Planning Stage, restated as text.'
-- 'To check: Section ''Four phases'': the reason for preventing oversized VMs before provisioning (reclaiming later is harder); not in the book.'
+- 'To check: Section ''Four phases'': the reason for preventing oversized VMs before provisioning (reclaiming later is harder); not in the source document.'
 status: draft
 ```

@@ -51,12 +51,11 @@ related:
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
 - sp5-framework/performance/noisy-neighbour
 - vsphere/object-types/esxi/configuration/bios-settings
+- vsphere/technology/network/concepts/nic-teaming
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Configuration Management > Review List > Network (Distributed Switch & Port Group, Others)'
 corrections: []
-review_notes:
-- 'Section ''Distributed switch'': the book names Cisco Discovery Protocol; LLDP added, not in the book.'
-- 'Section ''Other components'': the book says ensure the redundancy for both NSX Controller and Manager; NSX-T merged the controller into the Manager cluster. Written as NSX Manager.'
+review_notes: []
 status: draft
 ```

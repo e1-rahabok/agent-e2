@@ -64,7 +64,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Provider Objects > Overview > vSphere Cluster > VM Operations
 corrections: []
-review_notes:
-- 'Section ''Counters'': the book lists ''VM host and datastore change count'' twice. The vCenter API confirms two counters: numXVMotion (powered-on and suspended) and numChangeHostDS (powered-off and suspended). Counter names, the location definitions and the datacenter copy from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
+review_notes: []
 status: draft
 ```

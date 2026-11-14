@@ -142,7 +142,6 @@ corrections: []
 review_notes:
 - 'Section ''Statistics levels'': VM CPU Ready is the sum over the vCPUs: Broadcom KB 387750, https://knowledge.broadcom.com/external/article/387750.'
 - 'Sections ''Level 1 counters per object'', ''Units'' (API units), ''Chart behaviour'' (distributed switch) and the GPU line in ''Statistics levels'': from the vCenter 9.1.0 API export (build 25370922), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv. The chart-unit conversions are from the vSphere 9.1 chart tables (catalog/vcenter-counters).'
-- 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''Collection intervals'': the document says 1 Week rolls up 12 points of 1 Day every 2 hours (text under 1 Week) and 6 points every 30 minutes (text under 1 Day). The table uses the arithmetic: 6 x 5 min = 30 min; 4 x 30 min = 2 h; 12 x 2 h = 1 day.'
 - 'To check: Section ''Rollup type'': the Summation example (20,000 ms per vCPU per 20-second sample = 100%) and the burst dilution factors are arithmetic, not from the document.'
 - 'Section ''Statistics levels'': the level 1 contention list is derived from the level 1 table and the chart tables (VM CPU Ready: level 1). The document is inconsistent on disk latency: the level 2 row says all disk metrics except numberRead and numberWrite; the chart tables list deviceLatency, totalReadLatency and totalWriteLatency at level 3.'

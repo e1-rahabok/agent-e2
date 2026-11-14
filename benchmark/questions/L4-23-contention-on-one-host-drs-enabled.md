@@ -5,7 +5,7 @@
 - For a week, VMs on host esx03 show CPU Ready of 6-9% per vCPU at the 20-second peak. The other 5 hosts are lightly used, and their VMs show Ready below 0.5%.
 - The cluster state is green. No VM has a CPU limit.
 
-What is the most likely cause?
+What are the most likely causes?
 
 - A. Something stops DRS from moving VMs off esx03, such as a rule or a DRS override.
 - B. The cluster is short of CPU: add a host to spread the load.
@@ -23,6 +23,8 @@ B: concluding that the cluster is short when only one host is hot.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "What is the most likely cause?"
+
 ## Metadata
 ```yaml
 id: "0065"

@@ -33,6 +33,7 @@ OBJECT_PREFIX = re.compile(r'^(VM|ESXi|Guest OS|Cluster|Datastore|Resource pool|
 COUNTER_KEY = re.compile(r'\b([a-z]+\.[a-zA-Z]+(?:\.[a-zA-Z]+)?)\b')
 TROUBLESHOOT = re.compile(r'\b(slow|troubleshoot\w*|what (do|should|would) (you|i|we) check|root cause|cause[sd]?|why (is|are|does|do)|'
                           r'complain\w*|drops?|dropped|fail\w*|spike\w*|high|degrad\w*)\b', re.I)  # the troubleshooting words: flow tier without a case
+HEALTH_CHECK = re.compile(r'\bhealth[- ]?checks?\b', re.I)  # a question that runs a health check reads the health-check flow first
 
 
 def _tok(text):
@@ -170,7 +171,9 @@ def plan(retriever, question, cfg, case=None):
     top = [h['id'] for h in hits]
     tiers = {'flow': [], 'named': [], 'search': top[:3], 'mechanism': [], 'claims': [], 'search_rest': top[3:], 'more': []}
     kind = (case or {}).get('kind')
-    flow_kind = kind if kind in FLOW_KINDS else ('troubleshooting' if TROUBLESHOOT.search(question) and kind in (None, '') else None)
+    flow_kind = kind if kind in FLOW_KINDS else None
+    if not flow_kind and kind in (None, ''):
+        flow_kind = 'health-check' if HEALTH_CHECK.search(question) else 'troubleshooting' if TROUBLESHOOT.search(question) else None
     if flow_kind:
         tiers['flow'] = [h['id'] for h in retriever.search(search_text(question), filters={'retriever_guide': flow_kind}, k=2, min_hits=1)
                          if docs.get(h['id']) and docs[h['id']].meta.get('retriever_guide') == flow_kind][:1]

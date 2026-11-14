@@ -152,7 +152,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Provider Objects > Capacity > Key Metrics; Cluster Capacity; Capacity Management > Overview (Private Cloud Capacity; Optimized Capacity)'
 corrections: []
-review_notes:
-- 'Section ''Total capacity'': the book says scale out is more popular than scale out; read as more popular than scale up.'
+review_notes: []
 status: draft
 ```

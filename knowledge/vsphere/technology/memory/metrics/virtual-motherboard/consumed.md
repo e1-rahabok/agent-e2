@@ -79,6 +79,6 @@ corrections: []
 review_notes:
 - 'Section ''View'': from Memory > Architecture.'
 - 'Sections Formula, Consumed after the guest frees memory: from Memory > VM.'
-- 'To check: Section ''Formula'': whether Consumed includes the compressed remainder that stays in DIMM; the book is unsure.'
+- 'To check: Section ''Formula'': whether Consumed includes the compressed remainder that stays in DIMM; the source document is unsure.'
 status: draft
 ```

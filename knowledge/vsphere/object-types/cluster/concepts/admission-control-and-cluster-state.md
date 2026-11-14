@@ -103,7 +103,6 @@ review_notes:
 - 'Section Admission control: host and DRS admission control always on, HA restart rule and slot policy from the vSphere 9.1 documentation (Admission Control; vSphere HA Admission Control; Cluster Resources Percentage; Slot Size Calculation) (Q110 a, b).'
 - 'To check: Section ''Admission control'': the example (losing the largest host costs more).'
 - 'Section ''Admission control'': the failover counter, level and summary from the vCenter 9.1.0 API export, https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
-- 'Whole file: from the vSphere 9.1 documentation, not the book.'
 - 'Section ''HA performance degradation threshold'': default, 0% behaviour, reduction formula and DRS requirement from vSphere 9.1 Availability, vSphere HA Admission Control, https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html; check the UI label in vSphere Client 9.1.'
 status: draft
 ```

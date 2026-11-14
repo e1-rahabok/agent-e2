@@ -42,6 +42,6 @@ source:
   path: Storage > VM > Capacity Metrics > All VM Files
 corrections: []
 review_notes:
-- 'To check: KB cited by the book, not read (https://kb.vmware.com/s/article/83990).'
+- 'To check: KB cited by the source document, not read (https://kb.vmware.com/s/article/83990).'
 status: draft
 ```

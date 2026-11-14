@@ -94,7 +94,6 @@ source:
   document: 'Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery'
   path: Metric Mastery > Triple See Method; Primary | Secondary Metrics
 corrections: []
-review_notes:
-- 'Section ''Three types of metric'': the book lists contention for performance only; availability for errors and drops follows from its Contention text.'
+review_notes: []
 status: draft
 ```

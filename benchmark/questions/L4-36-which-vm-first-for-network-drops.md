@@ -5,7 +5,7 @@
 - The team sorted the view by the maximum of Packets Dropped (%) and plans to open network tickets for the top five VMs.
 - You can open one ticket today.
 
-Which VM should be investigated first?
+Which VMs should be investigated first?
 
 - A. batch-03: it has the highest maximum of the week, 98.7%, so it is the worst VM.
 - B. db-07: the highest 99th percentile, and over 4 million transmit drops in the week.
@@ -27,6 +27,7 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12: the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which VM should be investigated first?"
 
 ## Metadata
 ```yaml

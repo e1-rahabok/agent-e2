@@ -56,7 +56,7 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > VM > Swap + Compress
 corrections: []
 review_notes:
-- 'The vSphere 9.1 documentation (vSphere Monitoring and Performance > Virtual Machines > Memory (MB), p. 2105) defines Swapped = swapout - swapin. The documentation is wrong here; the book is right. The vMotion line in section ''Behaviour'' follows the book.'
+- 'The vSphere 9.1 documentation (vSphere Monitoring and Performance > Virtual Machines > Memory (MB), p. 2105) defines Swapped = swapout - swapin. The documentation is wrong here: Swapped is the VM''s current swapped memory. Keep until the documentation is fixed.'
 - 'To check: metric_class: set to contention.'
 - 'Sections Behaviour: from Memory > VM.'
 status: draft

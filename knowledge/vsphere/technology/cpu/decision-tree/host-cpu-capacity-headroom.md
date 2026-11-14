@@ -62,7 +62,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Consumption Metrics > Summary > Recommendation; Real World Samples
 corrections: []
-review_notes:
-- 'Section ''Interpretation'': the 80%-90% Thread Utilization level is field practice from the book, not a vendor threshold.'
+review_notes: []
 status: draft
 ```

@@ -41,6 +41,6 @@ source:
   path: Memory > VM > Swap + Compress > Transition; Example
 corrections: []
 review_notes:
-- 'To check: metric_class: set to context; swap out is not contention per the book.'
+- 'To check: metric_class: set to context; swap out is not contention per the source document.'
 status: draft
 ```

@@ -117,9 +117,8 @@ source:
   path: 'Your Private Cloud > Purpose-Driven Architecture (Begin with The End in Mind: The Crown Jewel, Day 0 | Day 1 | Day 2; Automate | Operate; The 2 Sides of VCF)'
 corrections: []
 review_notes:
-- 'To check: Section ''Goals from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the book.'
-- 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: the book does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
-- 'Section ''Two sides of VCF'': the book text says workload means the customers'' VMs; its diagram lists IT appliances under Workloads. Pillar list differs from the pillar tag values.'
+- 'To check: Section ''Goals from what is sold'', DaaS: the reason (same software on every desktop moves together); not in the source document.'
+- 'To check: Section ''Day 2 → Day 0 → Day 1'', Example 2: the source document does not say whether 32-node clusters with 1,000-2,000 VMs are a counter-example to the cap (Q087 d).'
 - 'To check: Section ''Two sides of VCF'', certificate example (DRS needs vCenter, vSphere HA does not) (vSphere 9.1 availability documentation).'
 - 'Not copied: the application tier diagram (three-tier vs microservices pods) and the maturity diagram; their content is in the text.'
 status: draft

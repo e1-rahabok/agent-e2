@@ -2,7 +2,6 @@
 
 ## Prompt
 - An ESXi host dashboard shows "CPU Ready" and "CPU Demand".
-- A provider metric is about the ESXi host itself; a consumer-based metric is aggregated from the metrics of the VMs the host runs.
 
 Which statements are correct?
 
@@ -40,6 +39,7 @@ Which statements are correct?
 - Key corrected 2026-11-12. It read ESXi CPU Demand as a provider metric. The knowledge base (host/demand, provider-consumer) and the author's answer to Q009 settle it: the value at ESXi is the summation over the VMs, a sum-of-consumer metric held at the provider. A candidate that said "sum of consumers" was scored 0 against the old key in all runs of 20261112 (see project/plan.md).
 - Left out of the options: whether a host with no VMs shows Demand at 0 or flat at the kernel reservation (host/demand and provider-consumer differ on it).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). The definitions of provider and consumer-based metric moved from the question into the context.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "A provider metric is about the ESXi host itself; a consumer-based metric is aggregated from the metrics of the VMs the host runs."
 
 ## Metadata
 ```yaml

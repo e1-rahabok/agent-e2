@@ -89,7 +89,6 @@ source:
   path: Provider Objects > Overview > Inter-Host Imbalance
 corrections: []
 review_notes:
-- 'Section ''Values'': the book''s grey range reads ''-1, -2, -3, ...., 64''. Read as down to -64.'
-- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; the book does not say.'
+- 'To check: Section ''Definitions'': whether Inter-Host Imbalance is a built-in VCF Operations metric or a super metric; the source document does not say.'
 status: draft
 ```

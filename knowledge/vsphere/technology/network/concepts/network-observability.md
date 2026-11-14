@@ -166,7 +166,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > Architecture > Architecture intro; Network Observability
 corrections:
-- 'Section ''Direction terms'': the book diagrams and text say a VM has no ingress traffic. Superseded on 2026-11-04. Keep until the book is updated.'
+- 'Section ''Direction terms'': the source document diagrams and text say a VM has no ingress traffic. Superseded on 2026-11-04. Keep until the source document is updated.'
 review_notes:
 - 'Section ''vCenter counters on switches and port groups'': from the vCenter 9.1.0 API export in repository e1-rahabok/Observability-vSphere and its README (distributed port group returns no counters), https://github.com/e1-rahabok/Observability-vSphere/blob/main/vsphere-metrics.csv.'
 status: draft

@@ -62,7 +62,6 @@ source:
   path: CPU > VM > Wait Metrics > Other Wait
 corrections: []
 review_notes:
-- 'To check: KB 85393 (legacy id) cited by the book, not read (https://knowledge.broadcom.com/external/article?legacyId=85393).'
-- 'Section ''Meaning'': the book uses VM Wait and Other Wait for the same metric. Proposed as synonyms in glossary.'
+- 'To check: KB 85393 (legacy id) cited by the source document, not read (https://knowledge.broadcom.com/external/article?legacyId=85393).'
 status: draft
 ```

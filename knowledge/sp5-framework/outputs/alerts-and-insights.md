@@ -182,7 +182,6 @@ source:
 corrections: []
 review_notes:
 - 'To check: Section ''Prevention window'', last bullet before the image: the instance-rule example (not in the source).'
-- 'Section ''Criticality'': the book''s alert vs insight table calls alerts hopefully not important and insights important; its colour table calls red urgent and important.'
 - 'Not copied: the iceberg picture (decorative) and the colour legend (red: review today, the sooner the better; orange: review today; yellow: review tomorrow, could be a false positive; green: great), whose content is in the text.'
 status: draft
 ```

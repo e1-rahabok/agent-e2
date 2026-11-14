@@ -101,7 +101,6 @@ source:
 corrections:
 - '2026-11-14: VMXNET3 link speed is a label: 10 Gbps by default, settable from 10,000 to 65,000 Mbps with the VM off, and it limits nothing (Broadcom KB 368812, https://knowledge.broadcom.com/external/article/368812; KB 444078, https://knowledge.broadcom.com/external/article/444078). Section ''Coarse allocation'' follows the KB articles.'
 review_notes:
-- 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; the book states vCenter 7 has none.'
-- 'Section ''Interconnect'': example outage read from the book: https://blog.ipspace.net/2019/05/real-life-data-center-meltdown.html (third-party).'
+- 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; the source document states vCenter 7 has none.'
 status: draft
 ```

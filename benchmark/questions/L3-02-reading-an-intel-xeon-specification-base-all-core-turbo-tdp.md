@@ -4,8 +4,6 @@
 - CPU specification, taken unchanged from the Intel website: Intel Xeon 6 6520P (Granite Rapids).
 - 24 cores, 48 threads, Max Turbo Frequency 4 GHz, All Core Turbo Frequency 3.4 GHz, Processor Base Frequency 2.4 GHz, cache 144 MB, TDP 210 W.
 
-- Be aware of the architectural difference between AMD EPYC and Intel Xeon.
-
 Choose all the correct statements about the Xeon 6520P:
 
 - A. The nominal clock speed is 2.4 GHz. However, the CPU can run all cores simultaneously at 3.4 GHz.
@@ -30,6 +28,7 @@ B (TDP read as maximum power draw), C or D (Balanced assumed to cap performance)
 ![Intel website specification of the Xeon 6 6520P: cores, threads, base, All Core Turbo and Max Turbo frequency, cache, TDP](0007/intel-xeon-6520p-specification.png)
 
 - Fact source for the TDP definition: Intel's published definition, as quoted in the author's key.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "Be aware of the architectural difference between AMD EPYC and Intel Xeon."
 
 ## Metadata
 ```yaml

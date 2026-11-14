@@ -75,7 +75,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: 'Consumer Objects > Capacity: Guest OS > VM Footprint'
 corrections:
-- 'Sections ''Purpose'' and ''CPU'': formula grouping and the narrow use case. The book prints System / 20,000 without the grouping.'
+- 'Sections ''Purpose'' and ''CPU'': formula grouping and the narrow use case. The source document prints System / 20,000 without the grouping.'
 review_notes: []
 status: draft
 ```

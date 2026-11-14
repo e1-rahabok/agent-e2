@@ -91,7 +91,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 
 | Tier | Files | Form |
 |---|---|---|
-| 1 Flow | A troubleshooting, health-check or decision-tree question (the case's kind; without a case, the troubleshooting words): its best flow file of that kind | Whole |
+| 1 Flow | A troubleshooting, health-check or decision-tree question (the case's kind; without a case, a named health check, else the troubleshooting words): its best flow file of that kind | Whole |
 | 2 Named | Files the question names exactly: term-map rows; metric titles and counter keys resolved through the catalog, kept for the objects the question names; the metrics of the case | Whole |
 | 3 Search | Top 3 hits of hybrid search on the question | Whole |
 | 4 Mechanism | `same_name` and `internal_derive` (up to 8 each) of the named files, the top 2 hits, then the flow (the files its steps read) | Best sections, 400 tokens each |

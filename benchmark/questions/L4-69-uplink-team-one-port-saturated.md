@@ -41,7 +41,7 @@ B: "more uplinks, more bandwidth for the VM". Or the capacity report's view: 26%
 - The 26% team average hides one saturated uplink: read each uplink, not the team average.
 
 ## Notes
-- Outside the knowledge base: the knowledge base has no file on NIC teaming policies (only a line on load-based teaming in noisy-neighbour). Keyed from the vendor documents below.
+- Keyed from the vendor documents below. Outside the knowledge base when written; since 2026-11-14 the NIC teaming file covers it (vSphere 9.1 documentation, teaming and failover) and is the main file.
 - vSphere Networking, Route Based on Originating Virtual Port and Route Based on IP Hash: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/8-0/vsphere-networking/networking-policies/teaming-and-failover-policy/load-balancing-algorithms-for-virtual-switches/route-based-on-ip-hash.html
 - Route Based on Physical NIC Load (30 seconds, 75%): https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/7-0/vsphere-networking/networking-policies/teaming-and-failover-policy/load-balancing-algorithms-for-virtual-switches/route-based-on-physical-nic-load.html
 - Broadcom KB 321396, Understanding IP Hash load balancing (a VM talking to several IP addresses can use several uplinks): https://knowledge.broadcom.com/external/article/321396/understanding-ip-hash-load-balancing.html
@@ -62,9 +62,10 @@ level: 400
 answer_type: deterministic
 input: [text]
 knowledge:
+  - vsphere/technology/network/concepts/nic-teaming
   - vsphere/tools/esxtop/network
   - sp5-framework/performance/noisy-neighbour
-knowledge_main: vsphere/tools/esxtop/network
+knowledge_main: vsphere/technology/network/concepts/nic-teaming
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12, outside the knowledge base"

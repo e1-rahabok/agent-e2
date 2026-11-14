@@ -6,7 +6,7 @@
 - In the current cycle, 21 of the 30 VMs in Prod-DB meet both red conditions (typically 30% highest Ready, 8% Contention). In Prod, 2 of the 10 directly held VMs meet both red conditions. The other VMs are quiet.
 - DRS is on and the hosts are not over their own limits: only the VMs of Prod-DB are hit, and they run on several hosts.
 
-Which statement about the red alerts of the resource pools is correct?
+Which statements about the red alerts of the resource pools are correct?
 
 - A. Prod-DB goes red: 21 of its 30 VMs is 70%. Prod stays quiet: its set reads the VMs held directly by Prod, 2 of 10 is 20%, and the VMs of Prod-DB are not its children.
 - B. Both go red: Prod holds 40 VMs including the nested pool, and 23 of 40 is 57.5%, over 25%.
@@ -29,6 +29,7 @@ B: a pool is assumed to include the VMs of the pools inside it, as in the resour
 - Knowledge file logic: vsphere/object-types/resource-pool/resource-pool-alerts, sections "Resource pool CPU contention" (does not work with nested pools) and "Coverage and receivers" (a share of the pool's VMs); catalog thresholds-alerts.yaml, alert-resource-pool-cpu-contention-red (population over 25%, relation child, VirtualMachine).
 - Why one answer: Child is defined by the vendor as one level, and the VM-to-pool membership is one pool per VM, so the outer pool's population is its direct VMs only.
 - Debatable risk: I could not find a VCF Operations page that lists the exact relationships of a Resource Pool object to its VMs and nested pools. The prompt states the set as Defined on Child, and the answer rests on the vendor definition of Child plus the knowledge file's statement that the condition does not work with nested pools. The author should confirm on a VCF Operations 9.1 instance that the nested pool's VMs are not children of the outer pool.
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement about ... is correct?"
 
 ## Metadata
 ```yaml

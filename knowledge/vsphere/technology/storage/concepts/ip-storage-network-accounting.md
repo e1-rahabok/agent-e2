@@ -71,7 +71,6 @@ source:
   path: https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
 corrections: []
 review_notes:
-- 'Whole file: from the technical note linked in source.path. Replaces the book statement that read and write both map to network Transmit.'
 - 'To check: Section ''Principle'': NFS and NVMe/TCP named as IP storage; the note covers iSCSI only.'
 - 'To check: Sections ''Worked example'' (write reverses the pattern) and ''Consequences'' (1,500-byte MTU needs several frames): inferred from the note.'
 status: draft

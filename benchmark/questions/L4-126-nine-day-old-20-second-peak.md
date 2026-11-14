@@ -6,7 +6,7 @@
 - In the 5-minute data of VCF Operations, the disk latency of the VM at 02:15 is 12 ms. The metric "Peak Latency within collection cycle" for the same 5-minute cycle is 1,900 ms.
 - You have both tools open.
 
-Which statement is correct?
+Which statements are correct?
 
 - A. Select the date in the vCenter Real-time chart: it holds 20-second points and shows the window.
 - B. The vCenter 1 Week chart shows the answer: its 30-minute point averages the 5-minute values, so the peak is the highest of them.
@@ -29,6 +29,7 @@ B or E: the chart history is read as a store of peaks, or the 20-second data is 
 - Why one answer: A fails on retention, B on the rollup chain, C and E on the stored peak metric; D is the documented behaviour.
 - Debatable risk: low. The statement that the average runs over disks as well as samples is the knowledge file's description of the metric (same reading as the existing question on a 9,840 ms peak against a 248 ms average); the Broadcom KB does not spell it out, so the author should confirm. The time series retention of 6 months is given in the prompt, so no default is claimed.
 - Rests on: the vendor sources above and the role split in the VCF Operations role file (vCenter: short, averaged history; VCF Operations: capacity and troubleshooting history).
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
 ```yaml

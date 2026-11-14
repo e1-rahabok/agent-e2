@@ -1,8 +1,6 @@
 # Counters where a vCPU cannot run at all
 
 ## Prompt
-In a shared environment, a VM vCPU may not get the resource it asks for: because of settings (VM, resource pool or ESXi) or a highly utilized ESXi host.
-
 Choose all the counters that measure a VM vCPU being unable to run: it completely stops, not just runs slower.
 
 - A. CPU Ready
@@ -24,6 +22,7 @@ Omitting Overlap or Other Wait; including Demand as a contention counter.
 ## Notes
 - Author confirmed the key (Q035, 2026-11-03). Demand is a VM-realm counter and is affected by Hyper-Threading. The Guest OS realm does not see physical threads. Knowledge: [`vsphere/architecture/vm-vs-guest-os`](../../knowledge/vsphere/architecture/vm-vs-guest-os.md), section Two realms.
 - Misconception: applying a Guest OS-realm statement to a VM-realm counter.
+- Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: "In a shared environment, a VM vCPU may not get the resource it asks for: because of settings (VM, resource pool or ESXi) or a highly utilized ESXi host."
 
 ## Metadata
 ```yaml

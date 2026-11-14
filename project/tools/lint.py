@@ -193,6 +193,13 @@ def main():
             for pat, hint in allowed['question_fairness'].items():
                 m = re.search(pat, seen)
                 if m: bad(f, f'fairness: "{m.group(0)}" is not public vocabulary ({hint}; benchmark/design.md, section 6.1)')
+            stem_t = re.split(r'\n\s*- [A-Y]\. ', '\n' + prompt_t, maxsplit=1)[0]  # options are claims, not hints
+            for pat, hint in allowed['question_prompt_hints'].items():
+                if 'plural' in hint and re.search(r'(?i)which statements are correct', stem_t):
+                    continue  # a part question inside a plural closing line ("What is the most likely cause ...? Which statements are correct?")
+                m = re.search(pat, stem_t if 'plural' in hint else '\n'.join(
+                    l for l in prompt_t.split('\n') if not re.match(r'\s*- [A-Y]\. ', l)))  # stem and footer
+                if m: bad(f, f'prompt: "{m.group(0)}" {hint} (benchmark/design.md, section 6.2)')
         if st not in ('retired', 'awaiting-input'):
             atts_q = [str(a) for a in (fm or {}).get('attachments') or []]
             linked = re.findall(r'\]\((\d{4}/[^)\s]+)\)', prompt_t)
@@ -640,6 +647,8 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         bad(f'knowledge/{b["kb"]}.md', f'colour-band table row "{b["metric"]}": thresholds live only in knowledge/catalog/thresholds-*.yaml')
     for lv in kpi_all:
         if lv.get('kb') not in ids: bad('knowledge/catalog/thresholds-performance.yaml', f'kpi line "{lv.get("metric")}": kb "{lv.get("kb")}" does not exist')
+        elif os.path.exists(f'knowledge/{lv["kb"]}.md') and str(lv.get('metric')).replace('|', '\\|') not in open(f'knowledge/{lv["kb"]}.md').read():
+            bad(f'knowledge/{lv["kb"]}.md', f'KPI table: no cell names the catalog kpi line "{lv.get("metric")}" (column Catalog row (KPI))')
 
 def check_flows(docs, bad):
     """Flow files must parse into steps for the flow executor (harness/flows.py); step references must exist."""

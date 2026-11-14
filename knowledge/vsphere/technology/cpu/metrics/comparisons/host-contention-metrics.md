@@ -59,7 +59,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: CPU > ESXi > Contention Metrics
 corrections: []
-review_notes:
-- 'Section ''Example'': the explanation of 315% and 143% combines the book''s reasons with the Demand and Usage behaviour from the same section.'
+review_notes: []
 status: draft
 ```

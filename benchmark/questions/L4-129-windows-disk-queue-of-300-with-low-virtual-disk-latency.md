@@ -12,7 +12,7 @@
 - Other VMs on the same datastore show normal latency. The array reports no alert. In Windows, Processor Time is 38%. VM CPU Ready is 0.2%.
 - The storage team says: "Windows measures 15 ms for each I/O, so the array is slow." The application team says: "A queue of 300 is normal on all-flash storage, because flash likes deep queues, so there is nothing to fix."
 
-Which statement is correct?
+Which statements are correct?
 
 - A. The array is slow. Windows measures 15 ms for each I/O, and the 300 requests of the queue wait at the array.
 - B. The array is not the cause. About 64 requests are at the virtual disk, which is the default queue depth of the device, and the other 236 requests wait inside Windows for a free slot.
@@ -36,6 +36,7 @@ A or C: the Windows response time is read as the latency of the storage, or the 
 - Why one answer: the three numbers are tied by Little's Law, and the vCenter latency fixes how many requests are at the virtual disk. 64 equals the documented device queue depth.
 - Debatable risk: that the vCenter virtual disk latency starts at the virtual disk and excludes the wait in Windows is read from the counter definitions and the knowledge file; the vSphere API reference was not read for this. The numbers are chosen so that the arithmetic is exact.
 - Prepared with author question Q194 (the reading of the guest disk queue).
+- Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which statement is correct?"
 
 ## Metadata
 ```yaml

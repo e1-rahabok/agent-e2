@@ -115,6 +115,5 @@ corrections: []
 review_notes:
 - Sections Mechanism, Read against Run, Units, and the last 2 misconceptions: from CPU > Architecture.
 - 'Sections Limit, Floor and size, Guest OS sizing, Ready (ms) vs Readiness (%), Observed values: from CPU > VM.'
-- 'Section ''Observed values'': the 50% statement is the book''s observation on a 16-vCPU VM, not a stated threshold.'
 status: draft
 ```

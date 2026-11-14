@@ -83,9 +83,6 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download), Metric Mastery (update of 2026-11-08)
   path: Metric Mastery > Collection Interval; Why Milliseconds as Unit?; Rollup Type; Real Time Collection; Performance Troubleshooting
 corrections: []
-review_notes:
-- 'Section ''Three ways to collect'': the book says "Tools choose the 1st choice"; read as VMware Tools.'
-- 'Section ''Time as the raw unit of CPU'': stat types (delta, rate, absolute) and rollups are in vsphere/tools/vsphere-client/vcenter-statistics, not repeated. The book notes some % counters have stat type rate without a reason; not written.'
-- 'Section ''Granularity by use case'': cost, compliance, sustainability and inventory rows are empty in the book.'
+review_notes: []
 status: draft
 ```

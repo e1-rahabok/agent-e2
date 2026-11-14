@@ -91,6 +91,5 @@ corrections: []
 review_notes:
 - 'Grouping differs inside the section: the grouping image puts compliance under risk and inventory under environment; the present/future health image puts compliance in present health (with security) and inventory in future health. Written from the text table and the grouping image.'
 - 'Section ''Present health'' and ''Future health'': details (logs, data sources, four kinds of setting issue, capacity questions) from the present/future health image (not copied).'
-- 'The personal and country analogies of the book are left out.'
 status: draft
 ```

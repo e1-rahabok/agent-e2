@@ -107,9 +107,8 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: MS Windows > Introduction; CPU > Thread State; CPU Priority; Usage | Utilization | Time; OS vs Process; Runaway Process
 corrections:
-- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading; the book table marks Run as Yes.'
-- 'Same table: VM CPU Demand is affected by Hyper-Threading; the book table marks it No.'
-review_notes:
-- 'Windows CPU usage above 100%: https://docs.microsoft.com/en-us/troubleshoot/windows-client/performance/cpu-usage-exceeds-100 (from the book).'
+- 'Section ''Usage, utilization, time'', table: VM CPU Run and Net Run are not affected by Hyper-Threading; the source document table marks Run as Yes.'
+- 'Same table: VM CPU Demand is affected by Hyper-Threading; the source document table marks it No.'
+review_notes: []
 status: draft
 ```

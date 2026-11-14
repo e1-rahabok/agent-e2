@@ -164,6 +164,6 @@ source:
   path: 'Capacity Management > Reclamation (Reclamation Approach; Focus on Monster VMs; Powered Off VM; Powered Off as Brake; 2 Sides of a Running VM; Idle VM; TRIM and Unmap)'
 corrections: []
 review_notes:
-- 'To check: Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming; not in the book.'
+- 'To check: Section ''TRIM and unmap'': TRIM (ATA) and unmap (SCSI) naming; not in the source document.'
 status: draft
 ```
