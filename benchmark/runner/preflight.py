@@ -37,7 +37,8 @@ JUDGE_SECONDS = 5.0             # judge latency per judged answer
 
 
 def pick_sample(questions, n=7):
-    """Evenly spaced questions so the sample is the same every time: 4 multiple-choice, 2 judged, the rest screenshot."""
+    """Evenly spaced questions so the sample is the same every time: 4 multiple-choice, 2 judged, the rest screenshot.
+    With no judged question in the set (every question multiple choice since Q199, 2026-11-14), 6 multiple-choice."""
     ok = [c for c in questions if c.scorable]
 
     def spaced(items, k):
@@ -48,7 +49,7 @@ def pick_sample(questions, n=7):
     choice = [c for c in ok if c.choice and not c.has_images]
     judged = [c for c in ok if not c.choice and not c.has_images]
     vision = [c for c in ok if c.has_images]
-    out = spaced(choice, 4) + spaced(judged, 2) + spaced(vision, max(n - 6, 1))
+    out = spaced(choice, 4 if judged else 6) + spaced(judged, 2) + spaced(vision, max(n - 6, 1))
     return out[:n]
 
 

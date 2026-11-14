@@ -25,7 +25,8 @@ IMAGE_EXT = ('.png', '.jpg', '.jpeg', '.webp')
 # A prompt links each attachment by its path, e.g. [the attached chart](0004/chart.png), so a reviewer can open it on GitHub.
 # The model reads only the link text: the target is stripped, as kb.FILE_LINK does for knowledge links (no token cost).
 ATTACH_LINK = re.compile(r'\[([^\]\n]+)\]\((\d{4}/[^)\s]+)\)')
-OPTION = re.compile(r'^(?:[-*]\s+)?([A-H])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
+LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'  # 25 written options at most: Unsure takes the next letter (Q199, 2026-11-14: no fixed option count)
+OPTION = re.compile(r'^(?:[-*]\s+)?([A-Y])\.\s+(.*)$')  # 'A. text' or '- A. text' (a bullet renders as a list on GitHub)
 
 
 class Question:
@@ -127,7 +128,7 @@ class Question:
         and from the model's own knowledge where the knowledge base is silent."""
         opts = self.options[:]
         rng.shuffle(opts)
-        letters = 'ABCDEFGHIJ'
+        letters = LETTERS
         mapping, lines = {}, []
         for i, (orig, text) in enumerate(opts):
             mapping[letters[i]] = orig

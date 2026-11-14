@@ -98,7 +98,7 @@ def anchors(docs, question, objs=None, strict=False):
 
 
 PART = re.compile(r'^\s*([^:\n]{2,40}):\s*$')                       # 'ESXi 01:' heads a list of options
-OPTION_LINE = re.compile(r'^\s*(?:[-*]\s+)?([A-J])\.\s+(.*\S)\s*$')    # 'A. text' or '- A. text'
+OPTION_LINE = re.compile(r'^\s*(?:[-*]\s+)?([A-Z])\.\s+(.*\S)\s*$')    # 'A. text' or '- A. text'
 NOT_A_CLAIM = re.compile(r'^(unsure|not covered|it depends)\b', re.I)
 
 

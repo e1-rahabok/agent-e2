@@ -69,9 +69,9 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | Tag | Meaning | Values |
 |---|---|---|
 | `level` | Expertise level ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.2) | `100`, `200`, `300`, `400` |
-| `answer_type` | How the answer is scored (section 3.3) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
-| `answer` | The correct letters, as written in `## Prompt`. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
-| `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`H` |
+| `answer_type` | How the answer is scored (section 3.3). Every question of the run set is `deterministic` since 2026-11-14 (Q199) | `deterministic` (option letters, compared by the runner), `judged` (free text, scored 0-3 by the judge) |
+| `answer` | The correct letters, as written in `## Prompt`: one, several or all. Deterministic only. Never sent to the candidate | Letters `A`-`Y` (no fixed option count; Unsure is appended by the runner) |
+| `misconception` | The letters a Level 300 reader would pick. Deterministic only. Never sent to the candidate | Letters `A`-`Y` |
 | `misconception_type` | The misconception types the question tests, from `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400. A list; may be empty at Level 100-200 | Values in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml), `misconception_type` |
 
 **What the administrator gives besides the prompt**
@@ -98,7 +98,8 @@ One tag per concept ([project/terms.md](https://github.com/e1-rahabok/agent-e2/b
 
 ## Scoring
 - Classes, Stable correct, the 0-3 judge rubric and the final score: `design.md`, sections 7 and 14. Runner details: `runner/README.md`, section Methodology.
-- Writing the answer key of a judged question:
+- Writing the answer key of a multiple-choice question: `## Expected key points` starts with `- Answer: <letters>.`, then one bullet per option with the reason it is true or false (for reviewers; never sent to a model). Options: as many as the question needs, one fact each, similar in length; the false ones wrong for a reason the knowledge base states ([design.md](design.md), sections 3.8 and 6.2).
+- Writing the answer key of a judged question (none in the run set since 2026-11-14):
   - `## Expected key points` is the judge's answer key: the facts a correct answer must state, one per bullet, as many as the question takes; not the wording the candidate must use;
   - write `## Likely wrong answer` in the words a user would use: the judge flags an answer that states it.
 

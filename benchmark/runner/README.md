@@ -158,7 +158,7 @@ python3 benchmark/runner/retrieval_eval.py
 - `--no-health` turns it off (the preflight uses that: it judges the sample itself). Tested in `test_runner.py`, class HealthTest.
 
 ### Preflight (before a round)
-- [preflight.py](preflight.py) answers a sample (4 multiple-choice, 2 judged, 1 screenshot question) in every mode of every run of the round, through `run.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
+- [preflight.py](preflight.py) answers a sample (4 multiple-choice, 2 judged, 1 screenshot question; 6 multiple-choice when the set has no judged question, as since 2026-11-14) in every mode of every run of the round, through `run.py`: the code and the settings of the real run. It tries a model's `model_params` entries in order until one passes: no API error, 95% of letters readable, no answer cut off, mean completion tokens under half of `max_tokens`, every mode answered.
 - It reads the credits (`/v1/credits`), projects time and cost of the whole round from the sample, and refuses the round when the projected cost times `release.cost_safety` is above the credits or `release.max_cost_usd`, or the time is above `release.max_hours`. The key's own budget cannot be read; it shows only as an HTTP 402.
 - The projection is rough: seven questions per mode. Live on 2026-11-13: 1.5 to 2.5 minutes of wall time for two models at once, about US$ 0.55 for all four.
 

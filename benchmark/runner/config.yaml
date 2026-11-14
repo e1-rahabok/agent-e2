@@ -105,7 +105,7 @@ release:                      # the final round: benchmark/RUN.md. One run folde
   cost_safety: 1.3            # the sample is small: projected cost x this factor must fit the credits and max_cost_usd
   max_hours: 6                # preflight refuses the round when the slowest run is projected above this
   preflight:
-    questions: 7              # per model and mode: 4 multiple-choice, 2 judged, 1 screenshot question (the vision path)
+    questions: 7              # per model and mode: 4 multiple-choice, 2 judged, 1 screenshot question (the vision path); 6 multiple-choice when no question is judged
     min_parse_rate: 0.95      # share of multiple-choice sample answers with a readable letter
     max_token_share: 0.5      # mean completion tokens of the sample must stay below this share of max_tokens
   retries: 2                  # relaunches of a run that crashed (exit 1), each with --resume
