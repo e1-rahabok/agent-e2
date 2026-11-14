@@ -139,7 +139,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 - Consensus (multiple choice): n samples of stage 5 on one reading set; unanimous letters stand, otherwise Unsure ([README.md](README.md), section 6a). Each sample runs its own gap follow-up, so two samples can read different extra sections after their drafts; the shared reading set is stages 1-4.
 - Coverage boundary: when nothing in the reading set came from tier 1 or 2 (no flow, no file the question names: only search hits), the answer prompt says the question may be outside the knowledge base, and to say so if the text does not settle it. Trace step `coverage` (`weak` or `named`). A search-score limit is set later on the field set (Q207), not on the benchmark.
 
-### 4.7 Consultation (several turns; to build)
+### 4.7 Consultation (several turns; to build for 1.0)
 - When the user asks to be guided ("You're my expert consultant: guide me through capacity planning"), the agent leads. MISSION.md, Ways to ask, 7.
 - The procedure is code: the planning calculator's inputs are the checklist. Each turn, code compares what the conversation holds with that list and picks the next topic and the inputs it needs; the model explains why the topic matters and words the question.
 - A missing input gets its default from the catalog (`planning-*` rows of thresholds-capacity.yaml), offered as a default and named as one ("Silver default: 2:1 per physical thread; give yours to recompute"). Defaults are the starting point of the advice, never a hidden assumption.
