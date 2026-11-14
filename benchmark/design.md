@@ -25,7 +25,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Combining several facts and tables in one answer, including arithmetic | Speed and cost (logged per answer, judged separately) |
 | Following a troubleshooting flow to a conclusion | Live-system troubleshooting (after 1.0) |
 | Reading tables: vCenter chart exports, VCF Operations exports, esxtop batch output | More screenshots (the screenshot set grows after 1.0, section 13) |
-| Knowing the limits: choosing Unsure instead of guessing | Multi-turn conversation with clarifying questions (a separate set, later) |
+| Knowing the limits: choosing Unsure instead of guessing | Multi-turn conversation with clarifying questions (a separate set, later); a consultation that interviews the user and computes (capacity planning): the live test, step 9 |
 | Consistency: the same answer on every run | Cost and price (out of scope, author 2026-11-04) |
 | Knowing every true statement and rejecting every plausible false one, among as many options as the question needs | Agent E2's own framework and the vCommunity management pack (section 6.1) |
 | | Answering without options, in free text: the live test, judged by the author ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9; Q199) |
