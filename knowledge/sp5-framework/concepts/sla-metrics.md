@@ -60,7 +60,7 @@ Operational Availability (%) = (minutes in month - downtime minutes counted by t
 ```
 - Example: weekly patch window Sunday 00:00-02:00. In June (30 days, 720 hours) a database VM is patched 3 times inside the window: each time the Guest OS is down 15 minutes and the database takes 45 minutes to be fully restored.
   - Operational Availability: 100%. All three are inside the scheduled window.
-  - IaaS Actual Availability counts the Guest OS only: 3 × 15 = 45 minutes, 99.90%. This is the value of the Availability SLA.
+  - IaaS Actual Availability counts the Guest OS only: 3 × 15 = 45 minutes, 99.90%. The Availability SLA reports Operational Availability, 100% here: the patch window is excluded from the SLA.
   - Counting until the database is restored gives 3 × 60 minutes = 3 hours, 717 / 720 = 99.58%. That is the application owner's view, outside the IaaS SLA: database recovery is the application layer, like application start-up. It belongs to the application team's KAI or an application SLA.
   - Actual and Operational Availability share one scope, the Guest OS answering; they differ only in which downtime counts.
 - Example on a 10-host cluster with 1 HA host (usable 9 hosts). Actual Availability counts running hosts against all hosts; Operational Availability counts them against usable hosts, capped at 100%. DPM is intentional and desired: it lowers total capacity, not availability. Maintenance mode is intentional but not desired: it lowers usable capacity ([`sp5-framework/capacity/supply`](../capacity/supply.md), section Total vs usable after host loss).

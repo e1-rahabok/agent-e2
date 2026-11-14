@@ -52,7 +52,7 @@
 | VM utilization | Irrelevant. Use host metrics. |
 | ESXi Consumed | Higher consumed is better. Ballooned and swapped + compressed are in Cluster Risk. |
 | ESXi CPU utilization | Does not impact performance. Highest host thread utilization is in Cluster Risk. |
-| VM DRS Score | About demand, not contention. Example: 23 VMs on a host; 15 low-memory VMs scored 68, 8 high-memory VMs scored below 25, at 117% memory over-provisioning. Cluster DRS score is a weighted average of VM DRS scores. |
+| VM DRS Score | Execution efficiency (VM happiness), not contention. Example: 23 VMs on a host; 15 low-memory VMs scored 68, 8 high-memory VMs scored below 25, at 117% memory over-provisioning. Cluster DRS score is a weighted average of VM DRS scores. |
 | % VMs facing disk latency | Belongs to the datastore KPI. |
 | CPU Other Wait | False positives seen. |
 | CPU Overlap | Values so low they could mask other problems. |

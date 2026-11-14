@@ -30,6 +30,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity
 corrections: []
-review_notes: []
+review_notes:
+- 'To check: vSphere 9.1 documentation disagrees with itself on cluster Consumed: the cluster memory chart text says VM consumed plus overhead and not the VMkernel, the Memory (MB) counter table says it includes service console and VMkernel memory; the catalog rows (kb = this file) follow the second. Check on a live cluster: cluster Consumed against the sum of host Consumed.'
 status: draft
 ```

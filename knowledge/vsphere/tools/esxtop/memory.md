@@ -18,7 +18,7 @@
 | Counter | Meaning |
 |---|---|
 | MCTL? | Y: a VM (kernel processes are not ballooned). |
-| MCTLSZ (MB) | Current balloon size. Above 0: the host is reclaiming memory. |
+| MCTLSZ (MB) | Current balloon size: memory the balloon holds now. Above 0 says the host reclaimed it at some point, not that it is reclaiming now; MCTLTGT and the host memory state show that. |
 | MCTLTGT (MB) | Balloon target. Not 0: the VM can be ballooned. |
 | MCTLMAX (MB) | Maximum reclaimable by ballooning. Depends on the Guest OS. |
 

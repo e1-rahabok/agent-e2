@@ -45,6 +45,46 @@ Each entry has:
   - For you: A, B or C.
 - Answer:
 
+### Q214 · Memory > Balloon · Does a memory limit cause ballooning?
+
+- Files: [VM Ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md) (section Behaviour); [Host memory states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/host-memory-states.md).
+- Search 1: "Does limit result in Balloon?"
+- Question: your earlier answer ("not directly": a limit results in swapped or compressed when Consumed tries to grow beyond it) is in the files. Two sources point the other way. The vSphere 9.1 documentation, memory performance table (p. 2037): "If free memory is available on the hosts and the virtual machines are experiencing high swap or balloon memory, the virtual machine (or resource pool) has reached its resource limit." And the file's own example: an 8 GB VM with a 2 GB limit "was heavily ballooned". A limit caps the VM's memory target, and ESXi reclaims from a VM above its target with the balloon first when the driver runs. (A) keep: under a limit the direct result is Compressed or Swapped, not Balloon; (B) a limit lowers the VM's target; ESXi reclaims above it with the balloon first, then compression and swap, even with free host memory; (C) other.
+- Written as now: (A) in both files. The review of 2026-11-14 changed only the balloon maximum in the example: Mem.CtlMaxPercent, default 65% (vSphere 9.1 documentation, p. 600; was "around 63%").
+- Final answer (review 2026-11-14; expert call): B. The four layers still explain why Consumed grows under a limit; they do not stop the balloon, which is how ESXi enforces the target when the driver runs.
+  - Change if accepted: ballooned.md (Behaviour, a misconception line "A limit cannot cause ballooning"), host-memory-states.md. No question key depends on the line (grep, 2026-11-14).
+  - For you: A, B or C.
+- Answer:
+
+### Q215 · Memory > ESXi > Utilization · ESX System Usage: vCenter counter or VCF Operations metric?
+
+- Files: [ESXi memory utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md); [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); [Memory capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-capacity.md); [ESXi Consumed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md); [ESXi memory metrics compared](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/comparisons/host-memory-metrics.md).
+- Search 1: "ESX System Usage"
+- Question: your earlier answer ("Memory \ ESX System Usage (KB). It is a raw counter from vCenter ... a legacy name") is in the files, which call it the kernel reservation. The VCF Operations 9.1 Host System metrics page (TechDocs, updated 2026-11-12) lists "Mem|ESX System Usage: Memory usage by the VMkernel and ESX user-level services", key `mem|host_systemUsage`, a key VCF Operations computes, and separately "Mem|VM kernel Usage (KB)", key `mem|sysUsage_average`, which is vCenter `mem.sysUsage` (API 9.1: "Used by VMkernel", without VMs and vSphere services). consumed.md records ESX System Usage at 57 GB on a host with no VMs while host Consumed read 17.5 GB: a reservation, not current use. (A) keep as written; (B) ESX System Usage is a VCF Operations metric (`mem|host_systemUsage`) that behaves as the kernel reservation; vCenter `mem.sysUsage` is current VMkernel use, shown in VCF Operations as VM kernel Usage; (C) other.
+- Written as now: "ESX System Usage is the kernel reservation. Raw vCenter counter: Memory \ ESX System Usage (KB). The name is legacy." The same in overhead.md, memory-capacity.md, host/consumed.md and host-memory-metrics.md.
+- Final answer (review 2026-11-14; expert call on the names, the reservation reading is yours): B. Sources: https://techdocs.broadcom.com (VCF Operations 9.1, Host System metrics); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html.
+  - Change if accepted: the five files; a review note "To check: the formula of `mem|host_systemUsage` (not published)".
+  - For you: A, B or C; and whether any vCenter 9.1 screen shows ESX System Usage.
+- Answer:
+
+### Q216 · CPU > NUMA > Virtual NUMA · `numa.*` options and the topology rebuild in vSphere 9.1
+
+- Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (After 1.0, the manual reminder on `numa.autosize.once`).
+- Search: not from the book; the uploaded NUMA sizing guide, section 4.
+- Question: three lines of virtual-numa come from the uploaded guide, and the vSphere 9.1 documentation says otherwise. (1) "Do not add `numa.*` attributes in the VM's Advanced Parameters: they are no longer offered there or supported" vs vSphere 9.1 (p. 1940, and TechDocs Virtual NUMA Controls, updated 2026-11-09): "You can add these advanced options"; p. 1028 uses `numa.allowHotadd` to keep vNUMA with CPU Hot Add on hardware version 20. (2) "ESXi rebuilds the topology at every power cycle" vs TechDocs 9.1, Using Virtual NUMA: the topology "does not change unless the number of vCPUs ... is changed". (3) Your decision of 2026-11-13 that the 9.1 UI no longer offers `numa.autosize.once` (the UI wins) vs p. 1945, which lists it with default TRUE. Which holds in your 9.1 lab? (A) the guide and the UI: the 9.1 manual is out of date (add these to the manual reminder); (B) the manual: `numa.*` options stay valid as VMX options, and the topology persists unless the vCPU count changes; (C) mixed: name which.
+- Written as now: the guide's three statements. The review of 2026-11-14 added the CPU Hot Add rule with `numa.allowHotadd` (vSphere 9.1 p. 1028; Broadcom KB 313375), itself a `numa.*` option, so line 13 now contradicts the file's own Hot Add line.
+- Final answer (review 2026-11-14): needs you (a lab check). Expert reading: B at least for `numa.allowHotadd` (documented with hardware 20 and a KB), so line 13 must allow it; (2) and (3) need the lab.
+- Answer:
+
+### Q217 · Guest OS > CPU > Run queue · Peak CPU Queue: per vCPU or total?
+
+- Files: [Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-performance.md); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (kpi row); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml) (the queue symptom).
+- Search: not from the book.
+- Question: one VCF Operations metric, `guest|20_sec_peak_cpu_queue`, feeds the Guest OS Performance (%) KPI, which reads it per vCPU ("The run queue stat is already per vCPU"; zero at 16), and an alert symptom above 20 count, which run-queue.md and guest-os-alerts read as a total ("Queue 53 on 8 vCPUs"). Both cannot hold: per vCPU, 20 is past the KPI's zero. (A) per vCPU: the alert value is wrong; (B) a total: the KPI divides by the vCPU count first; (C) other.
+- Written as now: both readings, in different files.
+- Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
+- Answer:
+
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).
@@ -119,6 +159,7 @@ Each entry has:
   - Sources: vSphere 9.1 documentation (Space Reclamation); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/datastore_counters.html (no unmap counter); Broadcom KB 374191.
   - Change if accepted: host datastore, Unmap (keys, conversions, reclamation hosts, link to the esxtop fields); close the plan item on the unmap keys (M1, VCF Operations line).
   - For you: in a live VCF Operations 9.1, confirm the Datastore object has no unmap metric, and give the Host System metric keys.
+- Re-checked in the review of 2026-11-14: no unmap counter on the 9.1, 9.1.1 or latest API counter pages (datastore, disk, storage adapter, storage path, virtual disk); the vSphere 9.1 PDF has no "unmapIOs". The keys `datastore.unmapIOs.summation` (num) and `datastore.unmapSize.summation` (MB) appear only in third-party counter lists built from live vCenter 7.0 and 8.0 dumps (virten.net), not yet for 9.1. One precision for the Units bullet: Broadcom KB 374191 says the vsish counters also reset when no VM on that host runs on the datastore (the datastore is no longer monitored), not only at reboot. The live check stays yours.
 - Answer:
 
 ### Q129 · VCF Operations 9.1 · Prometheus access for scripts
@@ -134,6 +175,7 @@ Each entry has:
   - Auth: POST `/suite-api/api/auth/token/acquire` → OpsToken; read the integration services list and take the service of type VCF_VODAP; POST `/suite-api/api/auth/token/exchange` → JWT, sent as Bearer.
   - Change if accepted: real-time-metrics, new section API for scripts (endpoints, sourceId, auth, URL); delete the review note; keep the corrections entry (the Workbench page still omits the API).
   - For you: one call in your lab: which host answers `{api_host}` (the VCF Operations FQDN or the real-time metrics component), and whether the esxtop feature returns 2-second data through the API.
+- Re-checked in the review of 2026-11-14 (developer.broadcom.com, versions 9.1 and 9.1.1): the endpoints and the auth flow hold. Two corrections: `sourceId` is required only from API 9.1.1 (query and query_range; the 9.1.1 changelog: "Parameter sourceId changed required from false to true"), optional in 9.1 and on metadata; the token exchange takes a service key (`{"serviceKeys": ["<key>"]}`, the key of the integration service whose type is VCF_VODAP). Also not stock Prometheus: responses carry `pageInfo` (`nextPageToken`, `pageSize`) and a `limit` parameter. Grafana and 2-second granularity are in the VMware blog of 2026-05-25, not on the API pages.
 - Answer:
 
 ### Q149 · Term map · Wrong terms users write
@@ -141,7 +183,7 @@ Each entry has:
 - Files: [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml).
 - Search: not from the book.
 - Question: list the wrong terms VMware admins and architects write in tickets, forums and chats, each with what they mean (for example "steal time" means VM CPU Ready and Co-stop). Each becomes a row: the words, the knowledge-base terms, the file, the misconception.
-- Written as now: 41 rows, none from real tickets. `sla-for-performance` was added on 2026-11-11.
+- Written as now: 41 rows, none from real tickets. `sla-for-performance` was added on 2026-11-11. Re-checked 2026-11-14: none of the ten seed rows is in the file yet.
 - Final answer (2026-11-12; expert call for the seed rows; the real terms need you):
   - Ten seed rows, each backed by current knowledge-base text:
     - `latency-unqualified`: "latency" with no layer; answer the likely layer, name the others (clarify rule).
@@ -150,30 +192,37 @@ Each entry has:
     - `ready-percent`: "Ready 5% / 10%" or "Ready 2000 ms": summed over vCPUs, read per vCPU and against Run (ready).
     - `vm-consumed`: "VM consumed memory high" or "memory leak": Consumed does not drop when the Guest OS frees memory (guest-os-vs-vm-memory).
     - `thin-provisioning`: provisioned space counts thin disks at full size.
-    - `drs-score`: DRS Score is demand met per VM, not contention.
+    - `drs-score`: DRS Score is execution efficiency (VM happiness) per VM, not contention (vSphere 9.1 documentation; the cluster files now say the same, review of 2026-11-14).
     - `load-average`: esxtop load average is a utilization level; confirm with VM contention.
-    - `sioc`: Storage I/O Control is deprecated in VCF 9.0.
+    - `sioc`: Storage I/O Control components are deprecated in VCF 9.0 (vSphere 9.1 documentation), and from VCF 9.0 SIOC keeps only IOPS limits: shares and reservations are ignored (Broadcom KB 385396). "Give the VM High disk shares" no longer protects it.
     - `memory-pressure`: three layers: Guest OS paging, VM memory contention, host memory state.
-  - Reword three notes: `iowait` ("CPU wait" can also mean Ready); `overcommit` (per thread, not per core); `esxtop-cpu` (read %RDY against %RUN).
+  - Reword three notes: `iowait` ("CPU wait" can also mean Ready); `overcommit` (per thread, not per core); `esxtop-cpu` (read %RDY against %RUN). Done in the review of 2026-11-14, outside this list: `steal-time` now says Linux shows steal only with the VM's steal clock on (Broadcom KB 434983).
+  - With Q208 (B): rows for product labels are generated from the glossary, so the seed rows above stay for user words, not labels.
   - Change if accepted: user-terms.yaml (10 rows, 3 notes); retrieval check before and after.
   - For you: the wrong terms you see in real tickets.
 - Answer:
 
 ### Q150 · URL questions · Pages with known Level 300 errors
 
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 3.4, URL questions); [L2-15, the first URL question](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions/L2-15-vm-contention-dashboard-deprecated.md).
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 3.4, URL questions); [L2-15, the first URL question, retired](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-questions/L2-15-vm-contention-dashboard-deprecated.md).
 - Search: not from the book.
 - Question: list 5-10 public pages (Broadcom KB or TechDocs, VMware blogs, community posts, third-party blogs) that you know are wrong, each with the error. Each becomes a URL question where a frontier model tends to agree with the page.
-- Written as now: one URL question (L2-15, id 0091, the VM Contention dashboard page). Plan M2 lists the page list as yours to do.
-- Final answer (2026-11-12; expert call for two pages; the rest needs you):
-  - Two pages verified (fetched 2026-11-10):
-    - Broadcom KB 419238, Troubleshooting VM performance (https://knowledge.broadcom.com/external/article/419238): %RDY ≥ 10 for a VM, with no per-vCPU normalisation and no Run; MCTLSZ, CACHEUSD, SWCUR ≥ 1 read as current problems (they are past tense); ZIP/s and UNZIP/s both read as overcommitment (only UNZIP/s and SWR/s mean the VM waits now); %DRPTX and %DRPRX above 0 read as high network utilization (received drops usually mean the Guest OS did not drain the ring); "Increase the amount of CPU and memory" (more vCPUs can raise Ready and Co-stop).
-    - Broadcom KB 386180, CPU Ready Time issues in ESXi environments running high I/O workloads (https://knowledge.broadcom.com/external/article/386180): Ready baseline 5% and warning 10% from an esxtop batch capture, not per vCPU, not against Run; CPU Latency 5% and 10% read as contention (Latency also rises with lower frequency and Hyper-Threading, with no wait).
-  - Checked and rejected: KB 306576 (right apart from "cores" for vCPUs); KB 431027 (matches core-utilization).
-  - Re-fetch each page when the question is written: the date renders by script, so the question key records the fetch date and quotes the lines it relies on.
-  - The frontier reference runs with web search on ([Q164](author-questions-resolved.md#q164--benchmarkdesignmd-sections-1-and-8--what-frontier-model-means-in-the-claim)), so URL questions test whether a model agrees with a page it reads. The benchmark runs after development ([Q163](author-questions-resolved.md#q163--plan-decisions-2026-11-06--benchmark-before-m1-and-m2-are-complete)), so the pages can still change.
-  - Change if accepted: two URL questions (Level 300, troubleshoot).
-  - For you: 3-8 more pages (blogs, community posts) you know to be wrong.
+- Written as now (review 2026-11-14): no URL question in the run set. The first one (L2-15, id 0091) was retired on 2026-11-12 after the official page was fixed ([Q184](author-questions-resolved.md#q184--benchmark--the-vm-contention-page-returns-404)). Plan M2 lists the page list as yours to do.
+- Final answer (review 2026-11-14; expert call for the pages; replaces the answer of 2026-11-12):
+  - Re-fetched 2026-11-14, still published with the same error lines:
+    - Broadcom KB 419238, Troubleshooting VM performance (https://knowledge.broadcom.com/external/article/419238, modified 2026-02-17): %RDY ≥ 10 for a VM with no per-vCPU normalisation and no Run; MCTLSZ, CACHEUSD, SWCUR ≥ 1 read as current problems; ZIP/s and UNZIP/s both read as overcommitment; %DRPTX and %DRPRX above 0 read as high network utilization; "Increase the amount of CPU and memory".
+    - Broadcom KB 386180, CPU Ready Time issues in ESXi environments running high I/O workloads (https://knowledge.broadcom.com/external/article/386180, modified 2026-02-11): Ready baseline 5% and warning 10%, Co-stop under 1% and 5%, CPU Latency 5% and 10% read as contention. New: its capture command runs 112.5 minutes, not the 15 it states (`-d 15 -n $(expr ${minutes} \* 30)`: 450 samples of 15 seconds).
+  - More pages the knowledge base corrects with a mechanism (fetched 2026-11-14):
+    1. TechDocs vSphere 9.1, Solutions for Memory Performance Problems (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-monitoring-and-performance/monitoring-inventory-objects/troubleshoot-and-enhance-performance/memory-performance-solutions.html): "Memory usage is constantly high (94% or greater)", "Free memory consistently is 6% or less", host memory "at least slightly larger than the combined active memory". Host Usage is Consumed, mostly cache; minFree is a sliding scale, about 1% on a large host; Active is not a sizing counter.
+    2. TechDocs vSphere 9.1, Solutions for Poor Network Performance (same path, `network-performance.html`): "Dropped network packets indicate a bottleneck in the network". A receive drop on a VM is usually the guest's full receive ring.
+    3. Broadcom KB 326296, Determining if multiple virtual CPUs are causing performance issues (https://knowledge.broadcom.com/external/article/326296): strict co-scheduling ("has to wait until all, even the currently unused virtual cores, can be run"), and %CSTP above 3 with no per-vCPU reading.
+    4. Broadcom KB 415396, High memory utilization alarms despite low active memory (https://knowledge.broadcom.com/external/article/415396): "Focus on active memory trends rather than total allocated memory". Active is a sampled estimate for the kernel, not a performance or capacity counter.
+    5. Third party, if you want one: Yellow Bricks esxtop (%DRPRX "hardware overworked"), copied by KB 308290 and KB 419238.
+  - Not proposed yet: TechDocs 9.1 Solutions for Disk Performance Problems (kernelLatency above 4 ms, deviceLatency above 15 ms) and Broadcom KB 344099 (https://knowledge.broadcom.com/external/article/344099: DAVG, KAVG and GAVG "should not exceed 10 ms"). The knowledge base's own KAVG and DAVG values have no catalog row yet (review of 2026-11-14), so a key would rest on an unsourced number; they qualify once the rows exist.
+  - Recommended for 1.0: the two KBs and pages 1-4. Each question records the fetch date (`dateModified`; the visible date renders by script) and quotes the lines it relies on, and is re-checked before scoring.
+  - The frontier reference runs in mode `web` (search available, the model decides; [Q164](author-questions-resolved.md#q164--benchmarkdesignmd-sections-1-and-8--what-frontier-model-means-in-the-claim), Q209), so a URL question tests whether a model agrees with a page it reads.
+  - Change if accepted: one URL question per accepted page (Level 300; key point: the page is wrong, and the mechanism); design.md section 3.4.
+  - For you: accept or pick from the list; add pages you know to be wrong.
 - Answer:
 
 ## Future release
