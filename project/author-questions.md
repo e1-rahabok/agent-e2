@@ -19,7 +19,7 @@ Each entry has:
 
 ## Open questions
 
-- [Release 1.0](author-questions-release-1.0.md): 11 questions.
+- [Release 1.0](author-questions-release-1.0.md): 12 questions.
 - [Future release](author-questions-future-release.md): 2 questions.
 
 ## Resolved index
