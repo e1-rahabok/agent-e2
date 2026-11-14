@@ -1,4 +1,4 @@
-# VCF Operations capacity forecast
+# Capacity forecast
 
 ## Projection engine
 - The capacity engine projects future utilization as a range: an upper bound and a lower bound projection. The range covers 90% of the future data points.
