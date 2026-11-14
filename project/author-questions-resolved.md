@@ -4,13 +4,12 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
-
 ### Q200 · Benchmark > Mode · Agentic or classic as the shipped mode
 
 - Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).
 - Question: [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels) made agentic the shipped mode. Round of 2026-11-13: agentic and classic tie for every model (-6, -3, +1 points, inside the margin), and agentic costs 2-3.5 times the tokens and about twice the latency. Proposal: (A) keep [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels); (B) the next round decides: agentic stays only if it beats classic outside the margin, else classic ships with consensus and agentic is an option; (C) ship classic now.
 - Written as now: agentic is the shipped mode (design.md, section 16). Recommended: B.
-- Answer: Author (2026-11-14, in session): neither. Classic mode leaves the model only to read; agentic mode lets the model plan lookups in a domain it does not know. One pipeline takes the best of both: the agent and the harness lead, the model reads and writes. Designed: the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Replaces [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels)'s agentic as the shipped mode. Applied: ARCHITECTURE.md, MISSION.md, benchmark/design.md section 16, project/plan.md; rule added to CLAUDE.md, Evaluation: the benchmark is a proof, not a goal. Follow-ups: [Q209](author-questions.md#q209--benchmark--runs--what-the-next-round-runs) (what the next round runs), [Q210](author-questions.md#q210--terms--agent-case-reading-set-reading-plan) (terms).
+- Answer: Author (2026-11-14, in session): neither. Classic mode leaves the model only to read; agentic mode lets the model plan lookups in a domain it does not know. One pipeline takes the best of both: the agent and the harness lead, the model reads and writes. Designed: the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Replaces [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels)'s agentic as the shipped mode. Applied: ARCHITECTURE.md, MISSION.md, benchmark/design.md section 16, project/plan.md; rule added to CLAUDE.md, Evaluation: the benchmark is a proof, not a goal. Follow-ups: [Q209](author-questions-release-1.0.md#q209--benchmark--runs--what-the-next-round-runs) (what the next round runs), [Q210](author-questions-release-1.0.md#q210--terms--agent-case-reading-set-reading-plan) (terms).
 
 ### Q203 · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
 
@@ -18,7 +17,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Search 1: "Capacity is counted in physical threads"
 - Question: vSphere and VCF Operations label the GHz figure Total Capacity, so every model without the knowledge base reads capacity as GHz (question [0006](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-05-esxi-cpu-capacity-threads-not-hertz.md): Opus 0%). The fix calls it vSphere's GHz total, a throughput reference. Should the knowledge base also name the product label explicitly ("vSphere's Total Capacity (GHz), a throughput figure, not capacity")?
 - Written as now: capacity = physical threads; every GHz use of the word capacity reworded as throughput (draft).
-- Answer: Author (2026-11-14): do not change the product label. The product UI is reality; reality is not always correct. Agent E2 knows both: vSphere Total Capacity means GHz in the real world, GHz is not capacity, and CPU Usage reads better as CPU Throughput. Applied: cpu-measurement-levels (section vSphere's number: label, what it measures, why the product uses it), cpu-frequency (label kept), glossary (Base frequency, CPU Throughput), vocabulary (Words to avoid). The general design: KNOWLEDGE-ENGINEERING.md, section Product label and better model ([Q208](author-questions.md#q208--knowledge-design--product-label-and-better-model)).
+- Answer: Author (2026-11-14): do not change the product label. The product UI is reality; reality is not always correct. Agent E2 knows both: vSphere Total Capacity means GHz in the real world, GHz is not capacity, and CPU Usage reads better as CPU Throughput. Applied: cpu-measurement-levels (section vSphere's number: label, what it measures, why the product uses it), cpu-frequency (label kept), glossary (Base frequency, CPU Throughput), vocabulary (Words to avoid). The general design: KNOWLEDGE-ENGINEERING.md, section Product label and better model ([Q208](author-questions-release-1.0.md#q208--knowledge-design--product-label-and-better-model)).
 
 ### Q206 · Benchmark > Retrieval check · Restart it now
 
@@ -262,6 +261,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - For you: nothing.
 - Answer: Author (2026-11-12): agree.
 - Applied 2026-11-12: alert-definitions gained the advice (write an alert's tests as conditions, not as shared symptom definitions) with both reasons, the line that a condition has its own wait cycle, cancel cycle and severity (VCF Operations API 9.1.1, alert-condition: waitCycles, cancelCycles, severity; checked on the page), two misconceptions and a note to the API page; the catalog meta says the shared symptom ids are a data model for Agent E2, not the build advice; design-thresholds section 9 reads "symptom or condition" in 9.1, 9.2 and R1. Closed.
+
 ### Q144 · Part 2 > Proactive Operations > Alert > CPU Alerts > VM Contention · Orange values and the missing diagram
 
 - Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-alerts.md) (sections Coverage and receivers, VM CPU contention); [ESXi alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-alerts.md) (section ESXi CPU contention); thresholds-alerts.yaml rows alert-vm-cpu-contention-red and -orange; [VM CPU contention is high](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high.md).
@@ -280,6 +280,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - For you: what your shipped orange definition holds; whether Contention stays beside Ready after 8.18.
 - Answer: (2026-11-12) the author asked for the alert questions to be settled from expert knowledge, without his input. Final answer accepted. For you, decided: the orange definition follows the set's own rule (red is 2x orange on every value, [Q140](#q140--part-2--proactive-operations--alert--threshold-design--red-vs-orange-scale)): Peak vCPU Ready above 16%, CPU Ready above 4%. Contention does not stay beside Ready: from 8.18 it is Ready plus Co-stop, Overlap and small Other Wait, never below Ready, so a Contention test at the Ready value adds nothing; Co-stop is insight and a flow branch.
 - Applied 2026-11-12: catalog rows alert-vm-cpu-contention-red and -orange without the Contention symptom, orange on the new symptom sym-vm-peak-vcpu-ready-above-16; vm-alerts (why no Contention symptom, orange halves red, a misconception; corrections entry); alert-design (the application team's higher threshold named against the per-VM values of the infrastructure alerts, no 8% against 6%); vm-cpu-contention-high rewritten: step 1 reads Ready, Co-stop and Overlap against the KPI levels; Ready branch (VM and pool limit and shares, host overcommit, DRS placement), Co-stop branch (VM size, NUMA, snapshots), Latency-only branch (power management, Hyper-Threading); the 37.5% test is a corrections entry. Closed.
+
 ### Q145 · Part 2 > Proactive Operations > Alert > Memory Alerts · Wait, example and instance
 
 - Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-alerts.md) (section Memory contention: mixed causes); [ESXi alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/esxi/esxi-alerts.md) (sections ESXi memory contention, ESXi memory consumption); [Resource pool alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/resource-pool/resource-pool-alerts.md); [Cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/cluster-alerts.md); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md); [Alert definitions in VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/alert-definitions.md); [ESXi Memory Latency](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/latency.md).
@@ -295,6 +296,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - For you: confirm the infrastructure memory alert uses 25% of VMs, as the CPU alert does.
 - Answer: (2026-11-12) settled from expert knowledge at the author's request. Final answer accepted. For you, decided: the infrastructure memory alert reads 25% of the member VMs, as the CPU alert: its per-VM values sit below the VM alert's for the same reason (the share can be hundreds of VMs), and the host's own Memory Latency hides the victim.
 - Applied 2026-11-12: (a) alert-design: consumption waits 10-15 minutes, each alert's wait in its catalog row; (b) vm-alerts: the MB example replaced by the mechanism (time, not memory), corrections entry; (c) the 6 ESXi, resource pool and cluster memory contention rows read a share of the member VMs (child VirtualMachine, > 25%) on 4 renamed VM symptoms; esxi-alerts, resource-pool-alerts, cluster-alerts updated; [Q145](#q145--part-2--proactive-operations--alert--memory-alerts--wait-example-and-instance) review notes deleted. Closed.
+
 ### Q146 · Part 2 > Proactive Operations > Alert > Storage Alerts > VM Contention · 80 ms vs class of service
 
 - Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-alerts.md) (section VM disk read latency and VM disk write latency); [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Class of service); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml).
@@ -311,6 +313,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - For you: whether your shipped set has per-class policies. If yes, their values are needed; none are in the knowledge base.
 - Answer: (2026-11-12) settled from expert knowledge at the author's request. Final answer accepted. For you, decided: the knowledge base holds no per-class values, so the set is one policy for every VM; per-class values come from the site.
 - Applied 2026-11-12: vm-alerts says one policy for every VM, no per-class values (the standard production line removed); alert-design: the class table is an example of the step between classes, not values of the set; catalog meta: one policy, no per-class values. Closed.
+
 ### Q147 · Part 2 > Proactive Operations > Alert > Network Alerts · VM dropped packets
 
 - Files: [VM alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/vm/vm-alerts.md) (section VM dropped packets); [Distributed switch and port group alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/distributed-switch/distributed-switch-alerts.md) (section Distributed port group dropped packets); [VM Network Packets Dropped](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/network/metrics/virtual-motherboard/packets-dropped.md).
@@ -327,6 +330,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - For you: the missing condition and its value; whether (c) meant the delivery ratio.
 - Answer: (2026-11-12) settled from expert knowledge at the author's request. Final answer accepted. For you, decided: (a) the missing condition is the VM CPU Usage gate of the other VM contention alerts (an existing value; no packet floor, which would need an invented number); (c) read as the delivery ratio: TCP resends, the cost is time.
 - Applied 2026-11-12: catalog row alert-vm-network-tx-dropped-red gained sym-vm-cpu-usage-above-1ghz; vm-alerts (gate, transmit only, retransmission line, misconception; corrections entry); distributed-port-group-alerts (the reason for transmit only: received drops include packets not destined for the VM and full receive rings, a Guest OS cause). Closed.
+
 ### Q142 · Part 2 > Proactive Operations > Alert > Design · Alert count table vs the alert sections
 
 - Files: [Alert design](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/outputs/alert-design.md) (section Alerts as a set; the count tables were removed 2026-11-12, each cell is now a line in its object's alert file); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md); [Datastore and datastore cluster alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/datastore/datastore-alerts.md).
@@ -496,22 +500,6 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
   - For you: whether the adapter pages are renamed with the after-1.0 pack fixes.
 - Answer: The author updated the files (2026-11-12): titles without the pack name; Cluster Risk Purpose (potential vs actual contention); Close for Business as the model's automatic decision.
 - Applied 2026-11-12: glossary (new entry Cluster Consumption (%), Also called Cluster Consumption KPI; Cluster Risk (%) Also called Cluster Risk KPI; both a model, not a KPI); cluster-risk (Cluster Consumption is higher-is-worse too; "driving the score"); [Q131](#q131--vcf-vcommunity-adapter--kpi-is-performance-only-names-in-the-adapter-documentation) review notes deleted. README: Agent E2, Isvara.io and the vCommunity management pack as three parts of one body of knowledge. Closed.
-
-### Q128 · Glossary · Proposed terms from Capacity Management
-
-- Files: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Capacity); [Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
-- Search: "Stop Provisioning (Yes/No)"
-- Question: three glossary proposals: (a) "Closed cluster" (also called stop provisioning); (b) pair "Demand (capacity) vs ESXi CPU Demand"; (c) pair "Idle vs oversized vs unused VM". Keep, rename or drop?
-- Written as now: glossary entry **Closed cluster** ("A cluster that accepts no new VM and no VM upsize, decided from Cluster Consumption (%), Cluster Performance (%) and Cluster Risk (%)"; Also called: Stop provisioning; File: can-cluster-take-more-vms). Entry **Demand (capacity)** with "Not to confuse with ESXi CPU Demand". (c) removed by your glossary edit of 2026-11-11. demand.md still says "Stop Provisioning (yes or no): … decided from Performance (%), Capacity Remaining (%) and Risk (%)".
-- Final answer (2026-11-12; (c) settled by your edit; (a), (b) expert call):
-  - (a) Rename the entry to **Close for Business**: 1 = closed (no new VM, no VM upsize), 0 = open, decided from Cluster Consumption, Cluster Performance and Cluster Risk. Also called: Closed cluster, Stop provisioning. File: close-for-business, then can-cluster-take-more-vms. Reason: one word per concept, and the pack metric (`vCommunity|Periodic Cluster Check|Close for Business`), the file title and the plan already use it.
-  - Fix demand.md: Cluster Consumption replaced Capacity Remaining in the closure ([Q121](#q121--part-1--capacity-model--cluster-closure--logic--non-production-capacity-and-the-orange-case)).
-  - (b) Keep, and widen Not to confuse with to CPU Demand (VM and ESXi): VM CPU Demand is the same confusion. A third use exists: VCF Operations names a capacity setting Capacity Buffer (Demand) (cluster-consumption).
-  - (c) Settled: you removed the pair. Nothing to do.
-  - Change if accepted: glossary (Close for Business entry; Demand entry); demand.md (Stop Provisioning line).
-  - For you: nothing.
-- Answer: Agree (2026-11-12).
-- Applied 2026-11-12: glossary entry Close for Business (Also called: Closed cluster, Stop provisioning; File: close-for-business); Demand (capacity) not to confuse with CPU Demand (VM and ESXi), plus Capacity Buffer (Demand); demand.md Stop Provisioning line reads Cluster Consumption, Performance and Risk. Closed.
 
 ### Q125 · Part 1 > Rightsizing > Best Practices · 8-core block, 8 and 16 vCPU
 
@@ -909,15 +897,6 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - For you: (A), (B) or (C).
 - Answer: None of (A)-(C). Memory tiering is not part of the overcommit ratio: NVMe is much slower hardware, likely 1,000x slower than DRAM. Tiering is not used in the capacity planning stage, but must be used in the actual (running) stage.
 - Applied 2026-11-12: overcommit (Per resource), class-of-service-planning (allocation text, calculator inputs, misconception, image note "RAM against DRAM. Memory tiering is not in the ratio."), host-spec-from-class-of-service, capacity README (Two stages row), memory-tiering (Capacity management); harness/capacity.py and the capacity_plan tool no longer take memory_tiering_gb. The running-stage model: [Q178](#q178--memory-tiering-in-the-capacity-and-performance-models--review-of-the-three-closure-conditions).
-
-### Q166 · ARCHITECTURE.md, section Troubleshooting questions · Code evaluates flow branches
-
-- Files: [harness/flows.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/flows.py), [project/design-thresholds.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/design-thresholds.md).
-- What the knowledge base says now: the flow tool serves step text; the model compares values and picks the branch.
-- Question: (a) executable steps: the model extracts values into a case state, code compares them with catalog thresholds and picks the branch, the model explains; (b) keep as is.
-- Proposed answer: (a), for 1.0, starting with the VM slow flow.
-- Answer: Yes, (a) for 1.0.
-- Applied 2026-11-12: Recorded in project/plan.md, M1 open work: executable flow steps (the model extracts values into a case state, code compares them with catalog thresholds and picks the branch), starting with the VM slow flow.
 
 ### Q138 · Part 2 > Proactive Operations > System Engagement · Good For row
 
