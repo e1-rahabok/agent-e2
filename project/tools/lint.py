@@ -2,7 +2,7 @@
 """Lint knowledge-base files and benchmark questions. Run before every merge: python3 project/tools/lint.py
 Exit code 0 = pass, 1 = problems found. Allowed values come from
 project/tools/tags.yaml."""
-import glob, os, re, sys, yaml
+import glob, hashlib, os, re, sys, yaml
 
 HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
 sys.path.insert(0, HARNESS)
@@ -240,6 +240,12 @@ def main():
             if not os.path.exists(os.path.join('benchmark', 'questions', att)) and (fm or {}).get('status') != 'awaiting-input':
                 bad(f, f'attachment not found: {att}')
 
+    kb_images = {hashlib.sha256(open(p_, 'rb').read()).hexdigest(): p_ for p_ in glob.glob('knowledge/**/*', recursive=True)
+                 if p_.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))}
+    for f in sorted(glob.glob('benchmark/questions/*/*')):  # an attachment that is a knowledge image leaks its text (benchmark/README.md)
+        if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+            k = kb_images.get(hashlib.sha256(open(f, 'rb').read()).hexdigest())
+            if k: bad(f, f'same image as {k}: the reading set would hold its facts; use another screenshot')
     for qid, (f, other) in pairs.items():
         if other not in seen_ids: bad(f, f'pair "{other}" is not a question id')
         elif pairs.get(other, (None, None))[1] != qid: bad(f, f'pair "{other}" must point back to "{qid}"')
