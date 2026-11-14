@@ -66,7 +66,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 | 30B MoE, 3B active | ~30 GB | ~17 GB | same as 32B | ~5-8x |
 | 120B MoE, 6-12B active | ~125 GB | ~66 GB | one 96 GB GPU at 4-bit | ~2-4x |
 
-- Add the KV cache for the retrieved context (16K tokens per question in classic mode, `context_tokens`).
+- Add the KV cache for the reading set (16K tokens per question, `context_tokens`).
 - Only two limits count: fit for the goal, and hardware cost (as little GPU as passes the gate; one GPU is the stretch target, criterion 3). Parameter count is not a limit.
 - 8B-14B: too weak at multi-step reasoning and tool use.
 - 27-32B dense: the current bet. 70B dense: the next challenger, when a current-generation vision model of that size exists. MoE with few active parameters: fast but weak at tool use in our runs.
@@ -113,7 +113,7 @@ All are required. A model that fails one is not a candidate.
 | B | 96 GB | MoE up to about 150B total, for example 120B with 6-12B active |
 
    - Tier C, two to four GPUs: allowed since 2026-11-13. It doubles or quadruples the hardware cost, so it must earn its place by the challenger rule in section 1.
-4. Structured output (a JSON schema) for the case ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.1). Tool calling is no longer needed: in the expert-led agent (2026-11-14) the model makes no tool calls. Until it is built, the agentic runs still use tool calling.
+4. Structured output (a JSON schema) for the case ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.1). Tool calling is no longer needed: in the expert-led agent (2026-11-14) the model makes no tool calls. The frontier reference uses tool calling for web search.
 5. Context window of at least 32K tokens: system prompt + up-front blocks (3K) + 12-16K retrieved text + images + answer.
 6. Available both on the benchmark gateway and as downloadable weights, so the tested model is the deployed model.
 7. Latest generation only: one model per family and generation. An older generation or a smaller sibling of the same generation is a duplicate.
@@ -124,12 +124,12 @@ Preferred, not required:
 ## 4. Candidates
 | Model | Tier | Size, licence | Why in the benchmark | Result so far |
 |---|---|---|---|---|
-| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | Baseline 57%, classic 78%, agentic 76% (final round 2026-11-13, 196 questions, 5 runs) |
-| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | Baseline 41%, classic 69%, agentic 63%; reasoning off (final round 2026-11-13) |
-| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for agentic, multi-turn tool use (weights 2026-08) | Baseline 54%, classic 77%, agentic 78%; reasoning off (final round 2026-11-13) |
+| google/gemma-4-31b-it | A | 31B dense, Gemma licence | Strong instruction following; long context | No round on Agent E2 yet (earlier generations archived, not compared) |
+| alibaba/qwen3.8-27b | A | 27.8B dense, Apache 2.0 | Newest Qwen dense model (weights 2026-08) | No round on Agent E2 yet; reasoning off |
+| meta/muse-glimmer-30b | A | 29.8B, Apache 2.0 | Built for multi-turn tool use (weights 2026-08) | No round on Agent E2 yet; reasoning off |
 
 - 3 candidates from 3 vendors (Google, Alibaba, Meta), all dense, all tier A (one 48 GB GPU at 4-bit or 8-bit).
-- Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
+- Next challenger: a current-generation dense vision model of about 70B, after 1.0 (author, 2026-11-13; none on the gateway on 2026-11-14: only Llama 3.1 and 3.3 70B, text only; [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section Milestones, list After 1.0).
 - Vision tags checked in the gateway model list on 2026-11-05.
 - Muse-Glimmer-30B: the gateway does not tag it `open-weights`; the weights and the Apache 2.0 licence are on Hugging Face (`meta-models/Muse-Glimmer-30B`, 29.8B parameters, checked 2026-11-05).
 - mistral-small (removed, section 7): the gateway description says the id serves Mistral Small 4 (2026-03, `mistralai/Mistral-Small-4-119B-2603`), the latest Mistral Small in the Mistral model list (https://docs.mistral.ai/models, checked 2026-11-05). The gateway's 2024-09 release date is older than the model the id now serves; the description is the authority. It is 119B MoE, not 24B dense as this file said before.

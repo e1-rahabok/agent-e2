@@ -6,22 +6,22 @@ Script: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent
 ## Why it is needed
 - A wrong answer has three possible causes: the knowledge base lacks the fact, retrieval did not bring the file to the model, or the model misread a file it had. The benchmark score mixes all three.
 - The retrieval check isolates the second cause. No model is called, so it costs nothing and runs in seconds.
-- It caps classic mode. A model cannot use a file it never sees: if 75% of the needed files reach the context, classic mode answers from at most those files, however good the model is.
+- It caps Agent E2. A model cannot use a file it never sees: if 75% of the needed files reach the reading set, Agent E2 answers from at most those files (plus a gap follow-up), however good the model is.
 - It catches regressions. Every new knowledge file changes word statistics and ranking. A file added for one chapter can push another question's file out of the top results. Without this check, the drop would surface only in the next benchmark, mixed with model noise.
 - It keeps changes honest. Rule (`CLAUDE.md`, Validation): a change to structure or retrieval needs a before and after number. This check gives that number for every change set.
-- Reactivated (author, 2026-11-13, Q206) on the 196 questions of the run set as they are. It was paused on 2026-11-12 until the question bank was revamped; the benchmark of 2026-11-13 showed retrieval is the largest loss (12 of 22 points), so it runs now and is re-baselined when the bank changes.
+- Runs on the 196 questions of the run set as they are (author, 2026-11-13, Q206), re-baselined when the bank changes.
 
 ## What it does
 - Input: every benchmark question that lists `knowledge` ids, the files a correct answer depends on ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)).
-- For each question it runs the same retrieval classic mode uses, on the same `## Prompt` text the model sees, options included:
+- For each question it builds Agent E2's reading set ([harness/planner.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/planner.py)) from the code-only reading of the question (no model call), on the same `## Prompt` text the model sees, options included:
   1. Search: the top 6 files (`--k`, default 6).
-  2. Classic context: the search hits (`classic_k: 6`), plus the troubleshooting flow first when the question reads as troubleshooting (`route_troubleshooting`), plus the `same_name`, `related` and `internal_derive` links of the top 2 hits, cut to the context budget (`context_tokens: 16000`). Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml).
+  2. Reading set: the tiers of [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2 (flow, named files, search, mechanism links, one search per claim, the rest), cut to the context budget (`context_tokens: 16000`). Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml).
 - It never drops an unknown id: a needed file that no longer exists (moved, renamed) stops the check, because dropping it would raise recall falsely. Moved files go in [project/tools/moved.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/moved.yaml).
 
 ```bash
 python3 benchmark/runner/retrieval_eval.py                       # keyword (BM25), offline
 python3 benchmark/runner/retrieval_eval.py --questions 0062,0067  # some questions
-python3 benchmark/runner/retrieval_eval.py --set expand_derive=false   # try a setting
+python3 benchmark/runner/retrieval_eval.py --set plan_section_tokens=250   # try a setting
 AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings   # hybrid, as in benchmark runs
 ```
 
@@ -32,35 +32,34 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 |---|---|
 | Needed | Number of `knowledge` files the question lists |
 | Search top 6 | Needed files among the 6 best search results |
-| Classic context | Needed files in the context the model receives |
-| Missed in context | The needed files that did not arrive |
+| Reading set | Needed files in the reading set the model receives |
+| Missed in the reading set | The needed files that did not arrive |
 
-- Summary line, four numbers:
+- Summary line, four numbers, and a line of complete questions by number of needed files:
   - **Recall@6 search**: share of all needed files found by search alone. It measures ranking.
-  - **Recall classic context**: share of all needed files that reach the model. The number that caps classic mode.
+  - **Recall reading set**: share of all needed files that reach the model. The number that caps Agent E2.
   - **Questions with every needed file in context**: questions where nothing is missing. A question missing one of three files can still be answered wrong.
-  - **Main file missing from context**: questions whose `knowledge_main` did not arrive, out of the questions that have one. Each is a defect.
-- Read the context numbers first. A search drop with no context drop means link expansion still brings the file; the model sees the same files. Example 2026-11-07: search recall@6 fell from 65% to 64% (questions 0062 and 0067 each lost one file from the top 6), context stayed at 75% and 55 of 90: no effect on answers.
+  - **Main file missing from the reading set**: questions whose `knowledge_main` did not arrive, out of the questions that have one. Each is a defect.
+- Read the reading-set numbers first. A search drop with no reading-set drop means the plan still brings the file through a link, a name or a claim; the model sees the same files.
 - Compare against the previous run, question by question, not only the totals. Two questions can swap (one gains, one loses) with no change in the total. Save both outputs and `diff` them.
-- The reading plan of the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.2) is measured with `--set planner=true`: the same numbers on the context the new agent gives the model. Since 2026-11-14 it is the context that carries the levels; classic mode stays the comparison until the new agent replaces it. The planner adds a line: complete questions by number of needed files.
-- Agentic mode is not measured: the agent searches several times with its own queries.
 - Limits:
   - the needed files are the question writer's judgment; a missing id in a question makes recall look better than it is;
-  - a file counted as in context can be cut by the budget, so only its start reaches the model;
+  - a file counted as in the reading set can be there as its best sections only (tiers 4-6), or cut by the budget;
+  - the model's case (stage 1) can add files the code-only reading does not; it is not in this check yet (`--case-model`, planned);
   - BM25 and hybrid give different numbers. Compare like with like, and record the mode.
 - Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 
 ## What is a good number
-- Levels agreed by the author (Q130, 2026-11-12). Baseline 2026-11-13 (196 questions), hybrid (as in benchmark runs): search recall@6 60%, classic context recall 69%, 91 of 196 complete (46%), main file missing on 23. BM25: 49%, 62%, 86 of 196 (44%), main file missing on 42: bad. Before the pause (2026-11-11, 95 questions): 78%, 61 of 95 complete. Output: [benchmark/results/retrieval-2026-11-13/](../benchmark/results/retrieval-2026-11-13/hybrid.md). Reading plan, 2026-11-14: hybrid 80%, 115 of 196 complete, main file missing on 19; BM25 76%, 108 of 196, 25 ([benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/plan-hybrid.md)).
+- Levels agreed by the author (Q130, 2026-11-12). Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid HYB_LINE: bad. Output: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). Earlier generations are archived and not compared.
 
 ### Why the retrieval number must be higher than the release score
-- Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% in agentic mode, Level 400 at least 80%, confident-wrong at most 3%.
-- In classic mode the answer can be no better than its context. Roughly: answer accuracy ≈ (questions with every needed file) × (share the model gets right when it has them) + a little from the model's own knowledge.
+- Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% on Agent E2, Level 400 at least 80%, confident-wrong at most 3%.
+- The answer can be no better than its reading set. Roughly: answer accuracy ≈ (questions with every needed file) × (share the model gets right when it has them) + a little from the model's own knowledge.
 - The model is not perfect even with the right files. If it gets 95% right with complete context, 85% needs about 90% of questions complete (0.90 × 0.95 ≈ 0.85).
 - So the retrieval bar sits above the release bar, not at it.
 - A missing file also drives confident-wrong answers: the model answers from Level 300 public knowledge, the very misconception the knowledge base exists to correct.
 
-### Levels (classic mode, BM25 and hybrid both reported)
+### Levels (the reading set, BM25 and hybrid both reported)
 | Level | Main file in context | Complete questions | Context recall | Meaning |
 |---|---|---|---|---|
 | Bad | below 100% | below 80% | below 90% | The model is starved; a benchmark mostly measures retrieval |
@@ -72,9 +71,8 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Main file: the question's `knowledge_main` ([benchmark/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/README.md)), the file that holds the answer or the misconception. The check prints it as the fourth number, over the questions that have one.
 - Held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): at most 11 points below the visible set.
 
-- Search recall@6 has no gate: it is a diagnostic for ranking. Context is what the model reads.
-- Read on the reading plan since 2026-11-14 (one pipeline, author): it is the context the shipped agent gives the model, so its number caps the product, as classic's capped classic mode. The gap follow-up of stage 6 can add a file after the draft; it is measured by the benchmark, not here.
-- Read the last numbers this way: 61 of 95 complete (64%) means about 1 question in 3 lacks at least one needed file: the Bad band, about 25 points short of release.
+- Search recall@6 has no gate: it is a diagnostic for ranking. The reading set is what the model reads.
+- The gap follow-up of stage 6 can add a file after the draft; it is measured by the benchmark, not here.
 
 ### Is perfect applicable?
 - No, as a target. 100% is possible on paper and still not the aim:

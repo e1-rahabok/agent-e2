@@ -64,10 +64,10 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | -------------- | ---------------------------------------------------------------------------- | --------------------- |
 | Knowledge base | Level 400 facts, mechanisms, misconceptions, flows and exact data                     | `knowledge/`          |
 | Harness        | Retrieval, exact tools, rules, budgets, answer verifier                      | `harness/`            |
-| Agent          | The model plus the tool loop: what it is told up front, how it chooses tools | [`harness/AGENT.md`](harness/AGENT.md)    |
+| Agent          | The expert's procedure as code: reads the question into a case, plans what to read, computes, checks; calls the model to read and write | [`harness/AGENT.md`](harness/AGENT.md)    |
 | Model          | An open-weight vision model on local GPUs, chosen by the benchmark           | [`benchmark/models.md`](benchmark/models.md) |
 
-- The benchmark tests the whole system, not the model: it picks the model, scores each change to the other three parts, and compares the system with the frontier model.
+- The benchmark tests the whole system, not the model. It is a proof, not a goal: Agent E2 against the release gate and the frontier model; it also picks the model.
 
 ## Repository map
 
@@ -93,13 +93,10 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 
 ## Status
 
-- Goal not achieved yet. Benchmark of 2026-11-13, 196 questions, 5 runs ([results](benchmark/results/README.md), [analysis](benchmark/results/analysis-2026-11-13.md)):
-  - Best local model with the knowledge base: meta/muse-glimmer-30b, 78% in agentic mode (Level 400 75%, confident-wrong 20%). Classic mode is within the margin of agentic for every model.
-  - The knowledge base adds 19-28 points to every local model.
-  - Frontier model (Claude Opus 5.5 with web search, no knowledge base): 81%. The gap of 3 points is inside the margin.
-  - Release gate (final 85%, Level 400 80%, confident-wrong 3%): passed by no model, the frontier model included.
-- Retrieval check (2026-11-13, hybrid): 69% of needed files reach the classic context; 91 of 196 questions get every needed file ([baseline](benchmark/results/retrieval-2026-11-13/hybrid.md)). The reading plan of the expert-led agent (2026-11-14, prototype): 80%, 115 of 196 ([output](benchmark/results/retrieval-2026-11-14/plan-hybrid.md)).
-- Plan, milestones and decisions: [`project/plan.md`](project/plan.md). Latest review: [`project/review-2026-11-13.md`](project/review-2026-11-13.md).
+- Goal not achieved yet. Agent E2, the neuro-symbolic expert system, was built on 2026-11-14 and has not run a round. The next round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
+- Retrieval check (2026-11-14): Agent E2's reading set holds 76% of the needed files with keyword search (109 of 196 questions complete), HYB_SHORT with hybrid search ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
+- Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
 
 ## Checks
 

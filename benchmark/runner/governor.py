@@ -7,7 +7,7 @@ the model back to its proven value for the rest of the run. The proven value is 
 never goes below it. A model that rate-limits at the default has its own lower proven value in the config.
 
 Tasks run model by model, so at most one model probes at a time; the others wait at their proven value.
-A window (the answers measured at one level) holds one mode only: baseline, classic and agentic answers
+A window (the answers measured at one level) holds one mode only: baseline, Agent E2 and web answers
 take different times, so a window that spans two modes is thrown away and the base level is measured again.
 
 No I/O here: the runner calls acquire and release around each answer and record after it.

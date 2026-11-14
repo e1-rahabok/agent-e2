@@ -1,357 +1,229 @@
-"""The agent: the model plus the tool loop (agentic mode). Design: harness/AGENT.md.
+"""Agent E2's agent: the neuro-symbolic expert system. Design: harness/AGENT.md.
 
-The model decides which tool to call, with which query, and when to answer. This module runs the tools and
-enforces the rules: look up first, no repeated calls, same-name check before answering, call and token budgets,
-fallback to classic mode on repeated format errors, and the verifier on the final answer.
-Up-front knowledge (the five blocks) is built by primer.py and added to the system prompt when switched on.
+Code leads; the model reads and writes. One pipeline for every question, six stages:
+  1. understand: the model reads the question (and its images) into a case, a fixed JSON shape; code keeps only what
+     resolves, and the code-only reading of planner.py always runs, so a failed extraction leaves a usable case;
+  2. plan: code builds the reading set from the knowledge base's map (planner.py);
+  3. compute: code runs the exact tools on the case's values (catalog facts, summation conversions);
+  4. ask: in a conversation, code decides whether the model may ask the user once;
+  5. answer: the model reads the reading set and writes; consensus samples share the one reading set (modes.py);
+  6. check: verifier with one repair turn; one gap follow-up when the draft names a metric whose file was not read;
+     a coverage flag when nothing the question names is in the knowledge base.
+The model makes no tool calls, so no tool-call format can break and no fallback mode exists.
 """
 import json
+import re
 
 import calc
-import capacity
 import catalog
-import flows
+import planner
 import primer
 import terms
+import verify
 import web
-from modes import PROMPTS, _step, _tok, _user, _verified, classic_context, over_window
 
-# Primed start: the harness runs the classic lookup and gives its text to the agent in the first message.
-# The tools are then for what one lookup cannot do: follow links, exact values, arithmetic, flows, a missing file.
-SEED_RULE = ('- The question message holds the knowledge base text of a first lookup, done for you. Read it first. '
-             'Call tools only for what it does not settle: follow_links for a linked file, catalog for an exact value, '
-             'calculate for arithmetic, flow for troubleshooting steps, search or read_file for a file that is missing. '
-             'If it settles the question, answer without tools.\n')
-FIRST_RULE = '- Your first action must be search or catalog.\n'
-GROUND_RULE = '- Base the knowledge base part of the answer on text returned by read_file, catalog, flow and calculate.'
-# Read reminder (cfg agent_read_reminder): the top hits of each search the agent did not open are named once before it answers.
-# Why: the 2026-11-13 round showed needed files found by search but never read (Muse: 74% credit when found but not read,
-# 82% when read; within the same question +5 points for Muse, about 0 for Gemma and Qwen). Cheap, so tried; kept only if it scores.
-READ_TOP = 3
-READ_REMIND = 3
+KINDS = ('how-it-works', 'metric-meaning', 'term-meaning', 'what-to-set', 'health-check', 'troubleshooting', 'decision-tree')
 
+UNDERSTAND = (
+    'Read the question below into a JSON object. Do not answer it. Copy names exactly as the question writes them.\n'
+    'Fields:\n'
+    f'- "kind": one of {", ".join(KINDS)}.\n'
+    '- "objects": object types named or implied: VM, ESXi host, cluster, datastore, resource pool, Guest OS.\n'
+    '- "metrics": a list of {"name", "object", "value", "unit", "interval", "tool"}: every metric, counter, chart label or '
+    'esxtop field in the question or the images. value as a number or null; interval as written ("real-time", "20 seconds", '
+    '"past day") or null; tool: vCenter, esxtop, VCF Operations, Windows, Linux or null.\n'
+    '- "vcpus": the VM\'s vCPU count as a number, or null.\n'
+    '- "symptom": what the user observes, or null.\n'
+    '- "premise": a belief the question takes for granted that may be wrong, or null.\n'
+    '- "claims": the separate things the question asks to decide, one short line each.\n'
+    '- "missing": facts the question does not give that the answer depends on (object, interval, vCPU count, version).\n'
+    '- "images": per image, {"tool", "object", "shows"}: what the screen is and the values it shows.\n'
+    'Reply with the JSON object only.')
 
-def _seeded_system(system):
-    """The agent prompt for a primed start: the first-lookup rule replaces 'search first'; the seed text counts as read."""
-    assert FIRST_RULE in system and GROUND_RULE in system, 'agent prompt changed: update SEED_RULE'
-    return system.replace(FIRST_RULE, SEED_RULE).replace(GROUND_RULE, GROUND_RULE.replace('text returned by', 'the first lookup and text returned by'))
+ANSWER_RULES = (
+    '\nHow to use what you are given:\n'
+    '- The case is how the question was read; check it against the question.\n'
+    '- Computed facts are exact: use them, do not compute again.\n'
+    '- Base each claim on a knowledge base file and name its id. The knowledge base wins over what you believe.\n')
+OPEN_SHAPE = ('- If a claim rests on no file, put it under a last line "Not settled by the knowledge base:" '
+              'instead of stating it as fact.\n')
+GAP = ('Your draft relies on these metrics, and their files were not in what you read: {names}. '
+       'Their text is below. Check your answer against it and answer again, in the same format.\n\n{text}\n\n')
 
-
-TOOLS = [
-    {'type': 'function', 'function': {
-        'name': 'search', 'description': 'Search the knowledge base. Returns file ids, titles, snippets.',
-        'parameters': {'type': 'object', 'properties': {
-            'query': {'type': 'string'},
-            'product': {'type': 'string', 'description': 'vsphere, vsan, nsx, vcf-operations, windows, linux'},
-            'object': {'type': 'string', 'description': 'VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ...'},
-            'technology': {'type': 'string', 'description': 'cpu, memory, storage, network, system'},
-            'retriever_guide': {'type': 'string', 'description': 'how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree'}},
-            'required': ['query']}}},
-    {'type': 'function', 'function': {
-        'name': 'read_file', 'description': 'Read one knowledge file, or one section of it.',
-        'parameters': {'type': 'object', 'properties': {
-            'id': {'type': 'string'}, 'heading': {'type': 'string'}}, 'required': ['id']}}},
-    {'type': 'function', 'function': {
-        'name': 'follow_links', 'description': 'List files linked from a file. Titles only.',
-        'parameters': {'type': 'object', 'properties': {
-            'id': {'type': 'string'},
-            'link_type': {'type': 'string', 'enum': ['related', 'internal_derive', 'same_name', 'same_meaning', 'all']}},
-            'required': ['id']}}},
-    {'type': 'function', 'function': {
-        'name': 'get_images', 'description': 'List image records (diagrams, charts) of a file.',
-        'parameters': {'type': 'object', 'properties': {'id': {'type': 'string'}}, 'required': ['id']}}},
-    {'type': 'function', 'function': {
-        'name': 'catalog',
-        'description': ('Exact facts from the metric catalog. name = a vCenter counter (cpu.ready.summation), chart label (Ready), '
-                        'esxtop field (%RDY, DAVG) or metric title: returns unit, rollup, statistics level, thresholds by use (KPI, alert, capacity) with source, '
-                        'and the knowledge file. name = an object type (VirtualMachine, HostSystem, Datastore, ...): returns its role '
-                        'and relations; add "to" for the path between two object types.'),
-        'parameters': {'type': 'object', 'properties': {
-            'name': {'type': 'string'},
-            'object': {'type': 'string', 'description': 'Filter: VirtualMachine, HostSystem, ClusterComputeResource, Datastore, ResourcePool'},
-            'to': {'type': 'string', 'description': 'Second object type, for a relation path'}},
-            'required': ['name']}}},
-    {'type': 'function', 'function': {
-        'name': 'calculate',
-        'description': ('Exact arithmetic and unit conversion. Numbers without thousands separators. Functions: '
-                        'summation_to_percent(ms, interval_seconds=20, vcpus=1), percent_to_summation(percent, interval_seconds=20, vcpus=1), '
-                        'convert(value, "from", "to") for KB MB GB TB (binary), KBd MBd GBd (decimal), b kb Mb Gb (bits), '
-                        'rates with ps or /s, ns us ms s min h, MHz GHz; capacity_ghz(cores, ghz_per_core), pct(part, whole), '
-                        'cpu_states(run, ready, costop, wait, vcpus=1), used_pct(run, system, overlap), min, max, round, sum, avg.'),
-        'parameters': {'type': 'object', 'properties': {'expression': {'type': 'string'}}, 'required': ['expression']}}},
-    {'type': 'function', 'function': {
-        'name': 'capacity_plan',
-        'description': ('Planning calculator (no live data): how many VMs fit on an ESXi host, or how full a host or cluster is '
-                        'for a planned VM mix. Three models (allocation, reservation, utilization) x CPU and memory: the first '
-                        'to reach 100% binds. Class defaults (overcommit, reservation, concurrent peak, typical VM size) come '
-                        'from the catalog; override them in classes. Give vm_class for VMs per host, or vms for a mix. '
-                        'Give vm_class without ram_gb for the host specification: the RAM that matches the CPU.'),
-        'parameters': {'type': 'object', 'properties': {
-            'cores': {'type': 'number', 'description': 'Physical cores per host'},
-            'ghz': {'type': 'number', 'description': 'Base clock in GHz'},
-            'ram_gb': {'type': 'number', 'description': 'Host DRAM in GB; leave out with vm_class for a host specification'},
-            'ht': {'type': 'boolean', 'description': 'Hyper-Threading on (default true)'},
-            'hosts': {'type': 'integer', 'description': 'Hosts in the cluster, HA hosts included (default 1)'},
-            'ha_hosts': {'type': 'integer', 'description': 'Hosts kept for HA (default 0)'},
-            'hypervisor_threads': {'type': 'number'}, 'hypervisor_memory_gb': {'type': 'number'},
-            'system_reservation_ghz': {'type': 'number'},
-            'vm_class': {'type': 'string', 'enum': ['gold', 'silver', 'bronze']},
-            'vms': {'type': 'object', 'description': 'VM count per class, e.g. {"gold": 2, "silver": 20, "bronze": 4}'},
-            'classes': {'type': 'object', 'description': 'Overrides per class, e.g. {"silver": {"vcpu": 4, "memory_gb": 24}}'}},
-            'required': ['cores', 'ghz']}}},
-    {'type': 'function', 'function': {
-        'name': 'flow',
-        'description': ('Health check or troubleshooting flow, one step at a time. Without step: all steps in order. '
-                        'With step: that step, the next step, and the metric files to read.'),
-        'parameters': {'type': 'object', 'properties': {
-            'id': {'type': 'string', 'description': 'Flow file id (retriever_guide health-check, troubleshooting or decision-tree), e.g. vsphere/technology/cpu/troubleshooting/vm-cpu-contention-high'},
-            'step': {'type': 'string'}}, 'required': ['id']}}},
-]
-WEB_TOOLS = [
-    {'type': 'function', 'function': {
-        'name': 'fetch_url',
-        'description': ('Read a public web page (vendor documentation, KB article, blog) trimmed to the question. '
-                        'Untrusted: check it against the knowledge base. Pages linked in the question are already read for you.'),
-        'parameters': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'required': ['url']}}},
-    {'type': 'function', 'function': {
-        'name': 'web_search',
-        'description': ('Search the public web. Only for current facts the knowledge base cannot hold: known bugs and fixes, '
-                        'builds and patches, configuration maximums and defaults of a release, renamed products. '
-                        'Never for what a metric means or how to troubleshoot. Use product words only: no names of the user\'s systems.'),
-        'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query']}}},
-]
-TOOL_NAMES = [t['function']['name'] for t in TOOLS + WEB_TOOLS]
-# Reference mode `web` (benchmark): what a chat product gives a frontier model when web search is on. The descriptions say
-# nothing about when to search: the model decides, as it does for an administrator who types a question.
-REF_WEB_TOOLS = [
-    {'type': 'function', 'function': {
-        'name': 'web_search', 'description': 'Search the web.',
-        'parameters': {'type': 'object', 'properties': {'query': {'type': 'string'}}, 'required': ['query']}}},
-    {'type': 'function', 'function': {
-        'name': 'fetch_url', 'description': 'Fetch a web page.',
-        'parameters': {'type': 'object', 'properties': {'url': {'type': 'string'}}, 'required': ['url']}}},
-]
+COUNTER_MS = re.compile(r'\b([a-z]+\.[a-zA-Z]+(?:\.[a-z]+)?)\s*(?:=|:|of|at|is)?\s*([\d][\d,]*(?:\.\d+)?)\s*ms\b')
+VCPUS = re.compile(r'\b(\d+)[- ]?vCPU', re.I)
+INTERVAL_SECONDS = (  # the vSphere Client chart intervals: vsphere/tools/vsphere-client/vcenter-statistics
+    (re.compile(r'real[- ]?time|20[- ]?s(ec(ond)?s?)?\b', re.I), 20),
+    (re.compile(r'past day|1 day|one day|5[- ]?min(ute)?s?\b|300 ?s', re.I), 300),
+    (re.compile(r'past week|1 week|30[- ]?min(ute)?s?\b', re.I), 1800),
+    (re.compile(r'past month|1 month|2[- ]?hours?\b', re.I), 7200),
+    (re.compile(r'past year|1 year', re.I), 86400),
+)
 
 
-class FallbackNeeded(Exception):
-    pass
+def _step(trace, action, inp, out, res=None):
+    s = {'step': len(trace) + 1, 'action': action, 'input': inp, 'output': out}
+    if res:
+        s.update({k: res.get(k) for k in ('prompt_tokens', 'completion_tokens', 'latency', 'provider')})
+    trace.append(s)
 
 
-def _run_tool(retriever, name, args, state):
-    if name == 'search':
-        filters = {k: args[k] for k in ('product', 'object', 'technology', 'retriever_guide') if args.get(k)}
-        out = retriever.search(args.get('query', ''), filters=filters, k=8)
-        state['searched'] = True
-        for rank, h in enumerate(out[:READ_TOP]):  # best rank of each file over all searches, for the read reminder
-            state['hits'][h['id']] = min(rank, state['hits'].get(h['id'], rank))
-        return json.dumps(out, indent=0)
-    if name == 'read_file':
-        d = retriever.docs.get(args.get('id', ''))
-        if not d:
-            return json.dumps({'error': f'unknown id {args.get("id")}'})
-        if d.id in state.get('seed_full', ()):
-            return json.dumps({'note': f'{d.id} is already in full in the first lookup above. Use that text.'})
-        state['read'].append(d.id)
-        text = d.body
-        if args.get('heading'):
-            text = next((t for h, t in d.sections if h.lower() == args['heading'].lower()), text)
-        facts = catalog.get(retriever.docs).facts_for([d.id])  # thresholds live only in the catalog: show them with the file
-        return f'id: {d.id} | status: {d.status}\n{text}' + (f'\n\n{facts}' if facts else '')
-    if name == 'follow_links':
-        lt = args.get('link_type', 'all')
-        if lt in ('same_name', 'all'):
-            state['same_name_checked'].add(args.get('id'))
-        return json.dumps(retriever.links(args.get('id', ''), lt), indent=0)
-    if name == 'get_images':
-        d = retriever.docs.get(args.get('id', ''))
-        return json.dumps(d.images if d else [], indent=0)
-    if name == 'catalog':
-        state['searched'] = True
-        cat = catalog.get(retriever.docs)
-        nm, to = args.get('name', ''), args.get('to')
-        if to:
-            out = cat.path(nm, to)
-        elif 'error' not in cat.object_info(nm):
-            out = cat.object_info(nm)
-        else:
-            out = cat.lookup(nm, args.get('object'))
-            if not any(out[k] for k in ('counters', 'api', 'esxtop', 'metric_files', 'thresholds', 'bands', 'kpi')):
-                out['note'] = 'No catalog entry. Use search.'
-        return json.dumps(out, ensure_ascii=False, separators=(',', ':'))
-    if name == 'calculate':
-        return json.dumps(calc.evaluate(args.get('expression', '')), ensure_ascii=False)
-    if name == 'capacity_plan':
-        return json.dumps(capacity.plan(args), ensure_ascii=False)
-    if name == 'fetch_url':
-        return web.block([web.fetch(args.get('url', ''), state.get('question', ''), state.get('web') or {})])
-    if name == 'web_search':
-        out = web.search(web.public_query(args.get('query', '')), state.get('web') or {})
-        return json.dumps(out, ensure_ascii=False, indent=0)
-    if name == 'flow':
-        out = flows.run(retriever.docs, args.get('id', ''), args.get('step'))
-        if 'flow' in out and out['flow'] not in state['read']:
-            state['read'].append(out['flow'])
-        return json.dumps(out, ensure_ascii=False, indent=0)
-    return json.dumps({'error': f'unknown tool {name}'})
+def _tok(text):
+    return len(text) // 4
 
 
-def agentic(client, model, question, images, cfg, trace, retriever, kind='choice'):
-    """Tool loop. Returns (final result, ids read). Raises FallbackNeeded on repeated format errors."""
-    max_calls, budget = cfg['agent_max_calls'], cfg['agent_tool_tokens']
-    system = PROMPTS[kind]['agent'].format(max_calls=max_calls)
-    seed_tokens = cfg.get('agent_seed_tokens') or 0
-    seed, seed_ids = '', []
-    if seed_tokens:
-        system = _seeded_system(system)
-        seed, seed_ids, hits = classic_context(retriever, question, cfg, budget=seed_tokens)
-        _step(trace, 'seed_search', question[:200], [h['id'] for h in hits])  # not tool calls: not counted as steps
-        _step(trace, 'seed', '', seed_ids)
-    up_front = primer.build(retriever.docs, cfg.get('agent_primer') or {})
+def _user(text, images):
+    if not images:
+        return {'role': 'user', 'content': text}
+    return {'role': 'user', 'content': [{'type': 'text', 'text': text}] + images}
+
+
+# ---------- stage 1: understand ----------
+def parse_case(text):
+    """The first JSON object in a reply, as a dict with the expected fields; {} when there is none."""
+    m = re.search(r'\{.*\}', text or '', re.S)
+    if not m:
+        return {}
+    try:
+        raw = json.loads(m.group(0))
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    case = {k: raw.get(k) for k in ('kind', 'objects', 'metrics', 'vcpus', 'symptom', 'premise', 'claims', 'missing', 'images')}
+    if case['kind'] not in KINDS:
+        case['kind'] = None
+    for k in ('objects', 'metrics', 'claims', 'missing', 'images'):
+        v = case[k]
+        case[k] = [x for x in v if x] if isinstance(v, list) else []
+    case['metrics'] = [m for m in case['metrics'] if isinstance(m, dict) and m.get('name')]
+    case['vcpus'] = case['vcpus'] if isinstance(case['vcpus'], (int, float)) and case['vcpus'] > 0 else None
+    return case
+
+
+def understand(client, model, question, images, cfg, trace, kw):
+    """Stage 1: the model's case. A reply that is not JSON leaves an empty case: the code-only reading of planner.py
+    runs in every case, so the plan never depends on this call. Asked at temperature 0 (deterministic), so the same
+    question is read the same way every time."""
+    case = {}
+    if cfg.get('case_model', True):
+        res = client.chat(model, [{'role': 'system', 'content': UNDERSTAND}, _user(f'Question:\n{question}', images)],
+                          max_tokens=cfg.get('case_max_tokens', 1200), deterministic=True, provider_order=kw['provider_order'])
+        case = parse_case(res.get('content'))
+        _step(trace, 'understand', '', {k: v for k, v in case.items() if v} or 'unreadable: code-only case', res)
+    case = case or {k: [] for k in ('objects', 'metrics', 'claims', 'missing', 'images')}
+    case['code_objects'] = sorted(planner.objects_in(question))
+    return case
+
+
+# ---------- stage 3: compute ----------
+def _interval(text):
+    for pat, sec in INTERVAL_SECONDS:
+        if pat.search(str(text or '')):
+            return sec
+    return None
+
+
+def compute(case, question, retriever, used):
+    """Stage 3: exact values the model reads instead of computing. Catalog facts of the files read come with the
+    reading set (catalog.facts_for); here: summation counters given in ms, turned into % by calc.py."""
+    lines, cat = [], catalog.get(retriever.docs)
+    found = list(case.get('metrics') or [])
+    for key, num in COUNTER_MS.findall(question):  # the code-only reading: 'cpu.ready.summation = 8,000 ms'
+        found.append({'name': key, 'value': float(num.replace(',', '')), 'unit': 'ms'})
+    if not case.get('vcpus'):
+        v = VCPUS.search(question)
+        case = dict(case, vcpus=int(v.group(1)) if v else None)
+    for m in found:
+        unit = str(m.get('unit') or '').lower()
+        value = m.get('value')
+        if not isinstance(value, (int, float)) or unit not in ('ms', 'millisecond', 'milliseconds'):
+            continue
+        rows = cat.lookup(str(m['name']), catalog.norm_object(m.get('object')) if m.get('object') else None).get('counters', [])
+        if not any(r.get('rollup') == 'summation' for r in rows[:2]) and 'summation' not in str(m['name']).lower():
+            continue
+        sec = _interval(m.get('interval')) or _interval(question)
+        if not sec:
+            continue
+        one = calc.evaluate(f'summation_to_percent({value}, {sec}, 1)')
+        line = f"- {m['name']} = {value:g} ms in a {sec}-second sample: {one.get('result'):g}% of one vCPU"
+        if case.get('vcpus'):
+            per = calc.evaluate(f"summation_to_percent({value}, {sec}, {case['vcpus']})")
+            line += f"; {per.get('result'):g}% per vCPU of {case['vcpus']:g} vCPUs (the counter sums every vCPU)"
+        lines.append(line + '. [calc.py: ' + '; '.join(one.get('notes') or []) + ']')
+    return ('Computed (exact):\n' + '\n'.join(dict.fromkeys(lines))) if lines else ''
+
+
+# ---------- stage 6: check ----------
+def gaps(docs, case, draft, used, limit=2):
+    """Metric files the draft names that are not in the reading set, for the objects of the case."""
+    objs = planner.objects_in(' '.join(map(str, case.get('objects') or [])) + ' ' + ' '.join(case.get('code_objects') or []))
+    return [i for i in planner.anchors(docs, draft, objs or None, strict=True) if i not in used][:limit]
+
+
+def coverage(tiers):
+    """Weak when the question names nothing the knowledge base holds and gets no flow: only search hits."""
+    return 'weak' if not any(t in ('flow', 'named') for t in tiers.values()) else 'named'
+
+
+# ---------- the pipeline ----------
+def prepare(client, model, question, images, cfg, trace, retriever, kind, prompts):
+    """Stages 1-4: everything before the model writes. The result is shared by every consensus sample, so the
+    samples differ only in the model's reasoning, never in what it read. prompts: modes.PROMPTS."""
+    kw = {'provider_order': cfg.get('provider_order', {}).get(model)}
+    case = understand(client, model, question, images, cfg, trace, kw)                                   # 1
+    reading, used, hits, tiers = planner.reading_set(retriever, question, cfg, case=case)                 # 2
+    _step(trace, 'plan', question[:200], {t: [i for i in used if tiers[i] == t] for t in planner.ORDER if t in tiers.values()})
+    computed = compute(case, question, retriever, used)                                                  # 3
+    if computed:
+        _step(trace, 'compute', '', computed.split('\n')[1:])
+    cover = coverage(tiers)
+    _step(trace, 'coverage', '', cover)
+    p = prompts[kind]
+    if kind == 'chat':                                                                                   # 4
+        reasons = [r for r, on in (('missing fact', case.get('missing')), ('premise', case.get('premise')),
+                                   ('premise term', any(h.get('premise') for h in terms.match(question)))) if on]
+        if not reasons:
+            p = prompts['chat_final']
+        _step(trace, 'ask', '', ('allowed: ' + ', '.join(reasons)) if reasons else 'no: nothing missing, no premise')
+    system = p['kb'] + ANSWER_RULES + (OPEN_SHAPE if kind != 'choice' else '')
+    up_front = primer.build(retriever.docs, cfg.get('primer') or {})
     if up_front:
         system += '\n\n' + up_front
-        _step(trace, 'primer', sorted(k for k, v in (cfg.get('agent_primer') or {}).items() if v), f'{_tok(up_front)} tokens')
-    matched = terms.match(question) if cfg.get('term_map_agent') and not seed else []  # a seed already carries the term notes
-    if matched:
-        system += '\n\n' + terms.block(matched)
-        _step(trace, 'terms', [h['id'] for h in matched], terms.files(matched, retriever.docs, 6))
-    wcfg = cfg.get('web') or {}
-    tool_list = TOOLS + ([t for t in WEB_TOOLS if t['function']['name'] == 'fetch_url' or web.search_configured(wcfg)]
-                         if wcfg.get('enabled') else [])
-    pages = web.gather(question, wcfg) if wcfg.get('enabled') else []
+    pages = web.gather(question, cfg['web']) if (cfg.get('web') or {}).get('enabled') else []
     if pages:
-        _step(trace, 'web', [p['url'] for p in pages], [p.get('error') or f"{_tok(p['text'])} tokens" for p in pages])
-    text = question + ('\n\n' + web.block(pages) if pages else '')
-    if seed:
-        text = f'Knowledge base (first lookup):\n{seed}\n\nQuestion:\n{text}'
-    msgs = [{'role': 'system', 'content': system}, _user(text, images)]
-    # A seed file counts as read; the last one may be cut at the budget, so read_file stays open for it.
-    state = {'read': list(seed_ids), 'seed_full': set(seed_ids[:-1]), 'same_name_checked': set(), 'searched': bool(seed), 'hits': {},
-             'question': question, 'web': wcfg,
-             # Ids the system prompt names (up-front blocks, term notes): opening one counts as the first lookup, not a guess.
-             'offered': {i for i in retriever.docs if i in system}}
-    seen, calls, errors, reminded, tokens_used = set(), 0, 0, False, 0
-    po = cfg.get('provider_order', {}).get(model)
-    while True:
-        full = over_window(msgs, cfg)
-        tools = tool_list if calls < max_calls and tokens_used < budget and not full else None
-        if tools is None:
-            if full:
-                _step(trace, 'context_full', cfg.get('context_window'), 'answer now')
-            msgs.append({'role': 'user', 'content': 'Tool budget used. Answer now from what you have read.\n' + PROMPTS[kind]['format']})
-        res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
-        tcs = res['tool_calls'] if tools else []
-        if not tcs:
-            # Same-name check on files the agent chose to read; the seed already expanded the same-name links of its top hits.
-            metric_reads = [r for r in state['read'][len(seed_ids):] if (retriever.docs.get(r) and retriever.docs[r].meta.get('same_name'))]
-            unchecked = [r for r in metric_reads if r not in state['same_name_checked']]
-            unread = _unread(state) if cfg.get('agent_read_reminder') else []
-            if (unchecked or unread) and not reminded and tools:
-                reminded = True
-                ask = []
-                if unchecked:
-                    ask.append(f'call follow_links with link_type "same_name" on: {", ".join(unchecked[:3])}')
-                if unread:
-                    ask.append(f'your searches ranked these files high and you have not read them: {", ".join(unread)}. '
-                               'Read each one that bears on the question with read_file; skip one only if its title shows it does not')
-                msgs.append({'role': 'assistant', 'content': res['content'] or ''})
-                msgs.append({'role': 'user', 'content': 'Before answering, ' + '; and '.join(ask) + '.'})
-                _step(trace, 'reminder', '', unchecked[:3] + unread, res)
-                continue
-            _step(trace, 'answer', '', (res['content'] or '')[:400], res)
-            seen_text = '\n'.join([seed] + [m['content'] for m in msgs if m['role'] == 'tool' and isinstance(m.get('content'), str)])
-            if kind == 'choice':
-                res = _verified(client, model, msgs, res, question, seen_text, set(retriever.docs), cfg, trace, po)
-            return res, list(dict.fromkeys(state['read']))
-        msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
-        for n, tc in enumerate(tcs):
-            r = res if n == 0 else None
-            calls += 1
-            name = tc.get('function', {}).get('name', '')
-            raw = tc.get('function', {}).get('arguments') or '{}'
-            try:
-                args = json.loads(raw) if isinstance(raw, str) else raw
-            except json.JSONDecodeError:
-                errors += 1
-                out = json.dumps({'error': 'arguments are not valid JSON'})
-                _step(trace, 'tool_error', raw[:200], 'bad json', r)
-                if errors >= 2:
-                    raise FallbackNeeded('tool call format errors')
-            else:
-                key = name + json.dumps(args, sort_keys=True)
-                if not state['searched'] and name not in ('search', 'catalog') and args.get('id') not in state['offered']:
-                    out = json.dumps({'error': 'Your first action must be search or catalog.'})
-                    _step(trace, 'refused', {name: args}, 'search first', r)
-                elif key in seen:
-                    out = json.dumps({'error': 'Identical call already made. Use the earlier result.'})
-                    _step(trace, 'refused', {name: args}, 'repeat', r)
-                else:
-                    seen.add(key)
-                    if args.get('id') in state['offered']:
-                        state['searched'] = True
-                    out = _run_tool(retriever, name, args, state)
-                    _step(trace, name, args, _summary(name, out), r)
-            tokens_used += _tok(out)
-            msgs.append({'role': 'tool', 'tool_call_id': tc.get('id', ''), 'content': out})
+        _step(trace, 'web', [p_['url'] for p_ in pages], [p_.get('error') or f"{_tok(p_['text'])} tokens" for p_ in pages])
+    shown = {k: v for k, v in case.items() if v}
+    text = (f'Case (how the question was read):\n{json.dumps(shown, ensure_ascii=False)}\n\n'
+            + (f'{computed}\n\n' if computed else '')
+            + ('Coverage: the question names nothing the knowledge base holds; if the text below does not settle it, '
+               'say the question is outside the knowledge base.\n\n' if cover == 'weak' else '')
+            + f'Knowledge base:\n{reading}'
+            + ('\n\n' + web.block(pages) if pages else '')
+            + f'\n\nQuestion:\n{question}')
+    return {'case': case, 'used': used, 'seen': reading + '\n' + computed, 'format': p['format'],
+            'msgs': [{'role': 'system', 'content': system}, _user(text, images)], 'kw': kw}
 
 
-def _unread(state):
-    """Top search hits the agent did not open (read_file, flow or the seed), best rank first, at most READ_REMIND."""
-    read = set(state['read'])
-    return [i for i, _ in sorted(state['hits'].items(), key=lambda x: x[1]) if i not in read][:READ_REMIND]
-
-
-def web_only(client, model, question, images, cfg, trace, retriever, kind='choice'):
-    """Reference mode: the baseline prompt plus web search and page fetch that the model may use or ignore.
-    No knowledge base, no instruction to search, the open web (no host list), no answer verifier. Returns (result, [])."""
-    wcfg = dict(cfg.get('web') or {})
-    wcfg.update({'enabled': True, 'search_hosts': [], 'allow_hosts': []})
-    if not web.search_configured(wcfg):
-        raise ValueError('mode web needs web.search_backend or web.search_url in the config')
-    max_calls = cfg.get('web_max_calls', 5)
-    msgs = [{'role': 'system', 'content': PROMPTS[kind]['base']}, _user(question, images)]
-    po = cfg.get('provider_order', {}).get(model)
-    calls = 0
-    while True:
-        tools = REF_WEB_TOOLS if calls < max_calls else None
-        if tools is None:
-            msgs.append({'role': 'user', 'content': 'Answer now.\n' + PROMPTS[kind]['format']})
-        res = client.chat(model, msgs, tools=tools, temperature=cfg['temperature'], max_tokens=cfg['max_tokens'], provider_order=po)
-        tcs = res['tool_calls'] if tools else []
-        if not tcs:
-            _step(trace, 'answer', '', (res['content'] or '')[:400], res)
-            return res, []
-        msgs.append({'role': 'assistant', 'content': res['content'] or None, 'tool_calls': tcs})
-        for n, tc in enumerate(tcs):
-            calls += 1
-            name = tc.get('function', {}).get('name', '')
-            raw = tc.get('function', {}).get('arguments') or '{}'
-            try:
-                args = json.loads(raw) if isinstance(raw, str) else raw
-            except json.JSONDecodeError:
-                args = {}
-            if name == 'web_search':
-                out = json.dumps(web.search(str(args.get('query', '')), wcfg), ensure_ascii=False, indent=0)
-            elif name == 'fetch_url':
-                out = web.block([web.fetch(str(args.get('url', '')), question, wcfg)])
-            else:
-                out = json.dumps({'error': f'unknown tool {name}'})
-            _step(trace, name, args, f'{_tok(out)} tokens', res if n == 0 else None)
-            msgs.append({'role': 'tool', 'tool_call_id': tc.get('id', ''), 'content': out})
-
-
-def _summary(name, out):
-    if name in ('search', 'follow_links'):
-        try:
-            return [x['id'] for x in json.loads(out)]
-        except Exception:
-            return out[:120]
-    if name == 'calculate':
-        o = json.loads(out)
-        return o.get('result', o.get('error'))
-    if name == 'capacity_plan':
-        o = json.loads(out)
-        return o.get('error') or {k: o.get(k) for k in ('fit', 'binding', 'binding_pct', 'verdict') if k in o}
-    if name == 'catalog':
-        o = json.loads(out)
-        return {k: len(v) for k, v in o.items() if isinstance(v, list)} or out[:120]
-    return f'{_tok(out)} tokens'
+def write(client, model, question, cfg, trace, retriever, kind, prep, verified):
+    """Stages 5-6: the model answers from the prepared messages; code checks. Returns (result, ids read)."""
+    kw, msgs, used, seen = prep['kw'], prep['msgs'], list(prep['used']), prep['seen']
+    import modes  # the window estimate lives with the prompts; imported here because modes imports this module
+    if modes.over_window(msgs, cfg):
+        _step(trace, 'context_over', cfg.get('context_window'), 'prompt larger than the deployed window')
+    res = client.chat(model, msgs, temperature=cfg.get('temperature'), max_tokens=cfg['max_tokens'], **kw)   # 5
+    _step(trace, 'answer', '', (res.get('content') or '')[:400], res)
+    if cfg.get('gap_followup', True) and res.get('content'):                                             # 6
+        missing = gaps(retriever.docs, prep['case'], res['content'], used)
+        if missing:
+            extra = '\n\n'.join(planner.sections_of(retriever, i, question, cfg.get('plan_section_tokens', 400)) for i in missing)
+            names = ', '.join(retriever.docs[i].title for i in missing)
+            msgs = msgs + [{'role': 'assistant', 'content': res['content']},
+                           {'role': 'user', 'content': GAP.format(names=names, text=extra) + prep['format']}]
+            res = client.chat(model, msgs, temperature=cfg.get('temperature'), max_tokens=cfg['max_tokens'], **kw)
+            _step(trace, 'gap', missing, (res.get('content') or '')[:400], res)
+            used += missing
+            seen += '\n' + extra
+    if kind == 'choice':
+        res = verified(client, model, msgs, res, question, seen, set(retriever.docs), cfg, trace, kw['provider_order'])
+    return res, used

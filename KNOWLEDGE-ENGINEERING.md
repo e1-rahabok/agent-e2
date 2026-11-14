@@ -199,7 +199,7 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 - Where it lives (one home each):
   - The glossary entry carries the pair: `Product label:` (verbatim, with where it shows) and `Better name:` lines, beside Also called. The entry name is the product label, because that is the word in the question.
   - The file that owns the metric keeps the mechanism and a misconception line in the operator's words.
-  - The term map row for the label ([`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)) is generated from the glossary pair, so the note reaches classic and agentic mode before the model reasons, with no second copy.
+  - The term map row for the label ([`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)) is generated from the glossary pair, so the note reaches Agent E2's answer prompt before the model reasons, with no second copy.
   - Misconception type `label-read-as-model`: the reading goes wrong because the label names a different model than the one computed.
 
 ### Use

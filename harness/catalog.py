@@ -306,7 +306,7 @@ class Catalog:
         return self._q('SELECT * FROM formulas')
 
     def facts_for(self, ids, max_rows=20):
-        """Compact catalog facts for knowledge files already in the context (classic mode)."""
+        """Compact catalog facts for knowledge files in Agent E2's reading set (harness/planner.py)."""
         if not ids:
             return ''
         marks = ','.join('?' * len(ids))

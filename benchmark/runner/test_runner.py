@@ -21,7 +21,7 @@ from llm import MockClient, ParamClient  # noqa: E402
 
 
 def row(question, answer_type, inp, level, credit, run, track='text', exact=None, unsure=0, cw=''):
-    return {'model': 'm', 'mode': 'classic', 'question_id': question, 'answer_type': answer_type, 'input': inp,
+    return {'model': 'm', 'mode': 'agent-e2', 'question_id': question, 'answer_type': answer_type, 'input': inp,
             'level': str(level), 'track': track, 'run': str(run),
             'credit': str(credit), 'exact': str(int(credit == 1) if exact is None else exact), 'unsure': str(unsure),
             'confident_wrong': cw}
@@ -73,7 +73,7 @@ class FinalScoreTest(unittest.TestCase):
                 row('c', 'judged', 'text', 400, 1, 1), row('c', 'judged', 'text', 400, 0.667, 2),
                 row('d', 'deterministic', 'table screenshot', 400, 1, 1, track='vision'),
                 row('d', 'deterministic', 'table screenshot', 400, 1, 2, track='vision')]
-        s = report.final(rows)[('m', 'classic')]
+        s = report.final(rows)[('m', 'agent-e2')]
         self.assertAlmostEqual(s['final'], (1 + 0.5 + 0.8335 + 1) / 4, places=3)      # mean of the runs per question
         self.assertAlmostEqual(s['worst'], (1 + 0 + 0.667 + 1) / 4, places=3)        # lowest run per question: reported
         self.assertAlmostEqual(s['answer:deterministic'], 2.5 / 3, places=3)
@@ -88,7 +88,7 @@ class FinalScoreTest(unittest.TestCase):
     def test_old_text_track_ignored_when_vision_exists(self):
         rows = [row('d', 'deterministic', 'screenshot', 400, 0, 1, track='text'),
                 row('d', 'deterministic', 'screenshot', 400, 1, 1, track='vision')]
-        self.assertEqual(report.final(rows)[('m', 'classic')]['final'], 1)
+        self.assertEqual(report.final(rows)[('m', 'agent-e2')]['final'], 1)
 
 
 class ReleaseGateTest(unittest.TestCase):
@@ -96,10 +96,10 @@ class ReleaseGateTest(unittest.TestCase):
         rows = []
         for i in range(10):  # the model right on all 10, the reference on 2
             q = f'q{i}'
-            rows.append(dict(row(q, 'deterministic', 'text', 400, 1, 1), model='e2', mode='agentic'))
+            rows.append(dict(row(q, 'deterministic', 'text', 400, 1, 1), model='e2', mode='agent-e2'))
             rows.append(dict(row(q, 'deterministic', 'text', 400, int(i < 2), 1), model=report.REFERENCE[0], mode=report.REFERENCE[1]))
         fin = report.final(rows)
-        b, c, p = report.mcnemar(rows, 'e2', 'agentic')
+        b, c, p = report.mcnemar(rows, 'e2', 'agent-e2')
         self.assertEqual((b, c), (8, 0))
         self.assertAlmostEqual(p, 1 / 256)
         g = {name.split(' (')[0]: ok for name, _, _, ok in report.gate(fin, rows, 'e2')}
@@ -108,7 +108,7 @@ class ReleaseGateTest(unittest.TestCase):
         self.assertIsNone(g['Paired test'])
 
     def test_fails_below_final_score(self):
-        rows = [dict(row(f'q{i}', 'deterministic', 'text', 400, int(i < 8), 1), model='e2', mode='agentic') for i in range(10)]
+        rows = [dict(row(f'q{i}', 'deterministic', 'text', 400, int(i < 8), 1), model='e2', mode='agent-e2') for i in range(10)]
         g = {name: ok for name, _, _, ok in report.gate(report.final(rows), rows, 'e2')}
         self.assertFalse(g['Final score'])
         self.assertNotIn('Gap to the frontier model', g)
@@ -149,9 +149,9 @@ class AnswerParseTest(unittest.TestCase):
 
 class OverrideTest(unittest.TestCase):
     def test_misconception_with_full_recall_counts(self):
-        rows = [{'mode': 'classic', 'retrieval_recall': '1.0', 'misconception': '1'},
-                {'mode': 'classic', 'retrieval_recall': '1.0', 'misconception': '0'},
-                {'mode': 'classic', 'retrieval_recall': '0.5', 'misconception': '1'},   # file missing: not an override
+        rows = [{'mode': 'agent-e2', 'retrieval_recall': '1.0', 'misconception': '1'},
+                {'mode': 'agent-e2', 'retrieval_recall': '1.0', 'misconception': '0'},
+                {'mode': 'agent-e2', 'retrieval_recall': '0.5', 'misconception': '1'},   # file missing: not an override
                 {'mode': 'baseline', 'retrieval_recall': '', 'misconception': '1'}]     # no knowledge base: not an override
         self.assertEqual(report.override(rows), 0.5)
 
@@ -181,7 +181,7 @@ class GovernorTest(unittest.TestCase):
         self.clock, self.lines = _Clock(), []
         return G.Governor(proven or {'m': 12}, window=10, clock=self.clock, log=self.lines.append, **kw)
 
-    def drive(self, gov, n, rate_of, model='m', tag='classic', error=lambda i: ''):
+    def drive(self, gov, n, rate_of, model='m', tag='agent-e2', error=lambda i: ''):
         """n answers finish; the time between two is 1 / rate_of(current limit) minutes."""
         for i in range(n):
             self.clock.t += 60.0 / rate_of(gov.limit_of(model))
@@ -212,7 +212,7 @@ class GovernorTest(unittest.TestCase):
         g = self.make()
         self.drive(g, 60, lambda c: 3.0 * c)
         self.assertGreater(g.limit_of('m'), 12)
-        g.record('m', 'classic', 'HTTP 429: rate limited')
+        g.record('m', 'agent-e2', 'HTTP 429: rate limited')
         self.assertEqual(g.limit_of('m'), 12)
         self.drive(g, 200, lambda c: 3.0 * c)
         self.assertEqual(g.limit_of('m'), 12)
@@ -221,13 +221,13 @@ class GovernorTest(unittest.TestCase):
         g = self.make()
         self.drive(g, 200, lambda c: 3.0 * c)
         self.assertEqual(g.limit_of('m'), 16)
-        g.record('m', 'classic', 'HTTP 429: x')
+        g.record('m', 'agent-e2', 'HTTP 429: x')
         self.assertEqual(g.limit_of('m'), 12)
 
     def test_429_at_the_proven_value_never_lowers_it(self):
         g = self.make({'opus': 3})
-        g.record('opus', 'classic', 'HTTP 429: no access')
-        g.record('opus', 'classic', 'HTTP 429: no access')
+        g.record('opus', 'agent-e2', 'HTTP 429: no access')
+        g.record('opus', 'agent-e2', 'HTTP 429: no access')
         self.assertEqual(g.limit_of('opus'), 3)
         self.assertEqual(sum('proven value' in s for s in self.lines), 1)    # warned once
 
@@ -239,7 +239,7 @@ class GovernorTest(unittest.TestCase):
     def test_window_across_two_modes_is_measured_again(self):
         g = self.make()
         self.drive(g, 25, lambda c: 10.0 * c, tag='baseline')       # fast mode
-        self.drive(g, 200, lambda c: 2.0 * c, tag='agentic')        # slow mode, same shape
+        self.drive(g, 200, lambda c: 2.0 * c, tag='agent-e2')        # slow mode, same shape
         self.assertEqual(g.limit_of('m'), 16)                       # not rejected for the slower mode
         self.assertTrue(any('mode changed' in s for s in self.lines))
 
@@ -280,7 +280,7 @@ class StopAndResumeTest(unittest.TestCase):
         import json
         import tempfile
         with tempfile.TemporaryDirectory() as out:
-            r = self.run_py('--models', 'x/one,x/two', '--modes', 'classic', '--runs', '1', '--questions', 'L1-01',
+            r = self.run_py('--models', 'x/one,x/two', '--modes', 'agent-e2', '--runs', '1', '--questions', 'L1-01',
                             '--out', out, '--max-minutes', '0')
             self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
             self.assertIn('--resume', r.stdout)
@@ -295,7 +295,7 @@ class StopAndResumeTest(unittest.TestCase):
             with open(os.path.join(folder, 'answers.csv')) as fh:
                 rows = list(csv.DictReader(fh))
             self.assertEqual(sorted(x['model'] for x in rows), ['x/one', 'x/two'])      # only the run's own models
-            self.assertEqual({x['mode'] for x in rows}, {'classic'})
+            self.assertEqual({x['mode'] for x in rows}, {'agent-e2'})
             self.assertTrue(os.path.exists(os.path.join(folder, 'report.md')))
             cfg = json.load(open(os.path.join(folder, 'config.json')))
             self.assertEqual(cfg['started'], started)                                   # the original start is kept
@@ -402,7 +402,7 @@ class _Q:
 
 
 class PreflightTest(unittest.TestCase):
-    def srow(self, mode='classic', **kw):
+    def srow(self, mode='agent-e2', **kw):
         r = {'mode': mode, 'answer_type': 'deterministic', 'parse_ok': '1', 'error': '', 'truncated': '0', 'latency': '10',
              'completion_tokens': '100', 'prompt_tokens': '8000', 'cost_usd': '0.01', 'steps': '1'}
         r.update(kw)
@@ -419,32 +419,32 @@ class PreflightTest(unittest.TestCase):
         self.assertEqual(ids, [q.id for q in P.pick_sample(qs, 7)])          # the same sample every time
 
     def test_good_sample_has_no_problem(self):
-        rows = [self.srow('classic'), self.srow('agentic', steps='4')]
-        problems, stats = P.evaluate(rows, 4000, ['classic', 'agentic'])
+        rows = [self.srow('baseline'), self.srow('agent-e2', steps='4')]
+        problems, stats = P.evaluate(rows, 4000, ['baseline', 'agent-e2'])
         self.assertEqual(problems, [])
-        self.assertEqual(stats['agentic']['steps'], 4)
+        self.assertEqual(stats['agent-e2']['steps'], 4)
 
     def test_cut_off_answers_are_a_problem(self):
         rows = [self.srow(truncated='1', completion_tokens='4000'), self.srow()]
-        problems, _ = P.evaluate(rows, 4000, ['classic'])
+        problems, _ = P.evaluate(rows, 4000, ['agent-e2'])
         self.assertTrue(any('cut off' in p for p in problems))
 
     def test_unreadable_letters_and_errors_are_problems(self):
         rows = [self.srow(parse_ok='0'), self.srow(parse_ok='0'), self.srow(), self.srow(error='HTTP 400: reasoning not supported')]
-        problems = P.evaluate(rows, 4000, ['classic'])[0]
+        problems = P.evaluate(rows, 4000, ['agent-e2'])[0]
         self.assertTrue(any('readable letter' in p for p in problems))
         self.assertTrue(any('HTTP 400' in p for p in problems))
 
     def test_thinking_tokens_close_to_the_cap_are_a_problem_even_when_the_answer_is_not_cut(self):
-        problems = P.evaluate([self.srow(completion_tokens='3000')], 4000, ['classic'])[0]
+        problems = P.evaluate([self.srow(completion_tokens='3000')], 4000, ['agent-e2'])[0]
         self.assertTrue(any('max_tokens' in p for p in problems))
 
     def test_a_mode_without_a_valid_answer_is_a_problem(self):
-        problems = P.evaluate([self.srow('classic')], 4000, ['classic', 'web'])[0]
+        problems = P.evaluate([self.srow('agent-e2')], 4000, ['agent-e2', 'web'])[0]
         self.assertTrue(any('web' in p for p in problems))
 
     def test_projection_scales_with_answers_and_concurrency(self):
-        stats = {'classic': {'latency': 12.0, 'cost': 0.01}}
+        stats = {'agent-e2': {'latency': 12.0, 'cost': 0.01}}
         minutes, cost = P.project(stats, n_questions=150, runs=5, judged_share=0.4, concurrency=12, judge_cost=0.0035)
         self.assertAlmostEqual(minutes, 750 * (12 + 0.4 * P.JUDGE_SECONDS) / 12 / 60, places=6)
         self.assertAlmostEqual(cost, 750 * (0.01 + 0.4 * 0.0035), places=6)
@@ -459,10 +459,10 @@ class RoundHelpersTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             open(os.path.join(d, 'answers.csv'), 'w').write(
                 'model,mode,question_id,track,run,error\n'
-                'm,classic,Q1,text,1,HTTP 500\n'
-                'm,classic,Q1,text,1,\n'              # retried and answered
-                'm,classic,Q2,text,1,HTTP 500\n')     # still failing
-            self.assertEqual(RA.unresolved(d), {('m', 'classic', 'Q2', 'text', '1')})
+                'm,agent-e2,Q1,text,1,HTTP 500\n'
+                'm,agent-e2,Q1,text,1,\n'              # retried and answered
+                'm,agent-e2,Q2,text,1,HTTP 500\n')     # still failing
+            self.assertEqual(RA.unresolved(d), {('m', 'agent-e2', 'Q2', 'text', '1')})
 
     def test_earlier_run_folders_move_to_the_archive_and_the_round_stays(self):
         import tempfile
@@ -589,21 +589,21 @@ class SummarizeTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as out:
             run = os.path.join(os.path.dirname(__file__), 'run.py')
             for m in ('x/one', 'x/two'):
-                subprocess.run([sys.executable, run, '--mock', '--models', m, '--modes', 'baseline,classic,agentic', '--runs', '1',
+                subprocess.run([sys.executable, run, '--mock', '--models', m, '--modes', 'baseline,agent-e2', '--runs', '1',
                                 '--questions', 'L1-01,L1-02,L2-01', '--out', out], capture_output=True, text=True, timeout=300, check=True)
             folders = [os.path.join(out, n) for n in sorted(os.listdir(out))]
             text = S.build(folders)
             self.assertIn('## Final score', text)
             self.assertIn('## Lift', text)
             self.assertIn('x/one', text)
-            self.assertIn('Agentic is', text)
+            self.assertIn('Agent E2 is', text)
             self.assertEqual(len(folders), 2)
 
 
 class PreflightLadderTest(unittest.TestCase):
     """check_model tries the settings of a model in order and keeps the first that answers cleanly (run_sample replaced: no model call)."""
 
-    def good(self, mode='classic'):
+    def good(self, mode='agent-e2'):
         return {'mode': mode, 'answer_type': 'deterministic', 'parse_ok': '1', 'error': '', 'truncated': '0', 'latency': '5',
                 'completion_tokens': '120', 'prompt_tokens': '9000', 'cost_usd': '0.002', 'steps': '1'}
 
@@ -618,7 +618,7 @@ class PreflightLadderTest(unittest.TestCase):
         try:
             pf = {'min_parse_rate': 0.95, 'max_token_share': 0.5}
             ladder = [{'reasoning': {'effort': 'none'}}, {'reasoning': {'effort': 'low'}}, {'reasoning': {'effort': 'low'}, 'max_tokens': 8000}]
-            v = P.check_model('x/m', ['classic'], ladder, {'max_tokens': 4000}, 'cfg', [_Q('a')], {}, pf, lambda s: None)
+            v = P.check_model('x/m', ['agent-e2'], ladder, {'max_tokens': 4000}, 'cfg', [_Q('a')], {}, pf, lambda s: None)
         finally:
             P.run_sample = real
         return v, calls

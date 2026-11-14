@@ -4,7 +4,7 @@
 Examples:
   python3 benchmark/runner/run.py --dry-run
   python3 benchmark/runner/run.py --mock --runs 2
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models openai/gpt-oss-20b --modes classic --runs 1 --questions L4-04
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-04
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
   python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs, questions and judge come from the folder
   python3 benchmark/runner/run.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
@@ -37,6 +37,7 @@ from llm import GatewayClient, LLMError, MockClient, ParamClient  # noqa: E402
 from naming import run_name  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
+AGENT_ACTIONS = ('compute', 'gap', 'repair', 'consensus', 'context_over')
 FIELDS = ['benchmark_id', 'time', 'model', 'provider', 'mode', 'track', 'question_id', 'answer_type', 'input', 'technology', 'task', 'level', 'run', 'temperature',
           'options_order', 'answer_letters', 'correct', 'exact', 'partial', 'misconception', 'not_covered', 'unsure', 'points', 'parse_ok',
           'retrieval_recall', 'ids_used', 'steps', 'tool_errors', 'fallback', 'prompt_tokens', 'completion_tokens',
@@ -48,7 +49,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--config', default=os.path.join(os.path.dirname(__file__), 'config.yaml'))
     ap.add_argument('--models', help='comma-separated model ids (default: config)')
-    ap.add_argument('--modes', help='comma-separated: baseline,classic,agentic')
+    ap.add_argument('--modes', help='comma-separated: baseline, agent-e2 (candidates); web (the frontier reference)')
     ap.add_argument('--runs', type=int)
     ap.add_argument('--questions', help='comma-separated: an id or a file-name fragment, e.g. L4-04,L1-,esxtop')
     ap.add_argument('--temperature', type=float)
@@ -57,9 +58,8 @@ def main():
     ap.add_argument('--no-embeddings', action='store_true', help='BM25 only')
     ap.add_argument('--mock', action='store_true', help='offline: random answers, no API calls')
     ap.add_argument('--judge', help='judge model id (default: config judge_model)')
-    ap.add_argument('--primer', help='agent up-front blocks to switch on, comma-separated: map,rules,terms,flows,procedure, or all (default: config agent_primer)')
+    ap.add_argument('--primer', help='up-front blocks of the answer prompt to switch on, comma-separated: rules,terms, or all (default: config primer)')
     ap.add_argument('--dry-run', action='store_true', help='print the matrix and cost estimate, then stop')
-    ap.add_argument('--seed-tokens', type=int, help='agentic: tokens of the first lookup given to the agent (0 = cold start; default: config agent_seed_tokens)')
     ap.add_argument('--resume', help='existing run folder to continue; models, modes, runs, temperature, questions, judge and primer are read from its config.json unless you pass them')
     ap.add_argument('--max-minutes', type=float, help='stop starting new answers after this many minutes, let the running ones finish, '
                     'print the resume command and exit with code 3 (default: config max_minutes, or no limit)')
@@ -80,10 +80,8 @@ def main():
                 cfg[k] = saved[k]
         if saved.get('sampling') is not None:
             cfg['sampling'] = saved['sampling']
-        if not a.primer and saved.get('agent_primer') is not None:
-            cfg['agent_primer'] = saved['agent_primer']
-        if a.seed_tokens is None and saved.get('agent_seed_tokens') is not None:
-            cfg['agent_seed_tokens'] = saved['agent_seed_tokens']
+        if not a.primer and saved.get('primer') is not None:
+            cfg['primer'] = saved['primer']
         if not a.questions and saved.get('questions'):
             a.questions = ','.join(saved['questions'])
         print(f'Resuming {a.resume}: settings from its config.json.')
@@ -114,11 +112,12 @@ def main():
     if a.temperature is not None:
         sampling = {m: {'temperature': a.temperature} for m in models_}
     client = ParamClient(MockClient() if a.mock else GatewayClient(cfg['gateway']), params, sampling)
-    if a.seed_tokens is not None:
-        cfg['agent_seed_tokens'] = a.seed_tokens
     if a.primer:
-        on = {'map', 'rules', 'terms', 'flows', 'procedure'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
-        cfg['agent_primer'] = {b: b in on for b in ('map', 'rules', 'terms', 'flows', 'procedure')}
+        on = {'rules', 'terms'} if a.primer == 'all' else {x.strip() for x in a.primer.split(',')}
+        cfg['primer'] = {b: b in on for b in ('rules', 'terms')}
+    unknown = [m for m in modes_ if m not in modes.MODES]
+    if unknown:
+        sys.exit(f'Unknown modes {unknown}: {", ".join(modes.MODES)}. Classic and agentic were removed on 2026-11-14 (harness/AGENT.md).')
     judge_model = a.judge or saved.get('judge_model') or cfg.get('judge_model')   # a resume never switches the judge
     needs_judge = any(not c.choice for c in questions_)
     if needs_judge and judge_model in models_:
@@ -146,7 +145,7 @@ def main():
         print(f'Judge: {judge.model}')
     print(f'Models: {len(models_)}  Modes: {", ".join(modes_)}  Runs: {cfg["runs"]}  Answers: {len(tasks)}')
     est = _estimate(tasks, meta, judge_model if needs_judge else None)
-    print(f'Estimated cost: US$ {est:.2f} (rough; agentic counted at 3x classic tokens)')
+    print(f'Estimated cost: US$ {est:.2f} (rough; Agent E2 counted as the case call plus one answer)')
     if a.dry_run:
         return
 
@@ -172,7 +171,7 @@ def main():
     now_s = dt.datetime.now().isoformat(timespec='seconds')
     json.dump({'benchmark_id': benchmark_id, 'started': saved.get('started', now_s), 'resumed': (saved.get('resumed') or []) + ([now_s] if saved else []),
                'index_version': sha,
-               'agent_primer': cfg.get('agent_primer'), 'term_map_agent': cfg.get('term_map_agent'), 'agent_seed_tokens': cfg.get('agent_seed_tokens', 0), 'model_params': params, 'sampling': sampling,
+               'primer': cfg.get('primer'), 'case_model': cfg.get('case_model', True), 'gap_followup': cfg.get('gap_followup', True), 'model_params': params, 'sampling': sampling,
                'models': {m: {k: meta.get(m, {}).get(k) for k in ('tags', 'context_window', 'pricing')} for m in models_},
                'modes': modes_, 'runs': cfg['runs'], 'temperature': cfg['temperature'], 'questions': [c.id for c in questions_],
                'skipped_questions': skipped, 'judge_model': judge.model if judge else None,
@@ -227,8 +226,9 @@ def main():
             row['prompt_tokens'] = sum(s.get('prompt_tokens') or 0 for s in trace if s['action'] != 'judge')
             row['completion_tokens'] = sum(s.get('completion_tokens') or 0 for s in trace if s['action'] != 'judge')
             row['latency'] = round(sum(s.get('latency') or 0 for s in trace), 2)
-            row['steps'] = sum(1 for s in trace if s['action'] in modes.TOOL_NAMES)
-            row['tools_used'] = ' '.join(sorted({s['action'] for s in trace if s['action'] in modes.TOOL_NAMES}))
+            row['steps'] = sum(1 for s in trace if s.get('prompt_tokens') is not None and s['action'] != 'judge')   # model calls
+            # Tools of the web reference, and the stages of Agent E2 that acted (compute, gap follow-up, repair, consensus)
+            row['tools_used'] = ' '.join(sorted({s['action'] for s in trace if s['action'] in modes.TOOL_NAMES + list(AGENT_ACTIONS)}))
             row['verify_flags'] = ' | '.join(f for s in trace if s['action'] == 'verify' for f in s['output'])[:300]
             row['repaired'] = int(any(s['action'] == 'repair' for s in trace))
             row['tool_errors'] = sum(1 for s in trace if s['action'] in ('tool_error', 'refused'))
@@ -237,7 +237,7 @@ def main():
             row['retrieval_recall'] = round(len(set(used) & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode != 'baseline') else ''
             # retrieval_recall: needed files whose text reached the model. search_recall: needed files the model was shown
             # at all, as a search result or in its context: a gap between the two is a file found but not read.
-            seen = set(used) | {i for s in trace if s['action'] in ('search', 'context', 'seed_search', 'seed') and isinstance(s['output'], list) for i in s['output']}
+            seen = set(used)   # Agent E2 shows the model every file it plans: found and read are the same set
             row['search_recall'] = round(len(seen & set(c.knowledge)) / len(c.knowledge), 3) if (c.knowledge and mode not in ('baseline', 'web')) else ''
             row['cost_usd'] = _cost(meta.get(m, {}), row['prompt_tokens'], row['completion_tokens'])
             row['error'] = ''
@@ -348,7 +348,7 @@ def _cost(m, pin, pout):
 def _estimate(tasks, meta, judge_model=None):
     total = 0.0
     for m, mode, c, tr, r in tasks:
-        pin, pout = {'baseline': (600, 300), 'classic': (8000, 300), 'agentic': (24000, 900), 'web': (2500, 600)}[mode]
+        pin, pout = {'baseline': (600, 300), 'agent-e2': (12000, 600), 'web': (2500, 600)}[mode]   # agent-e2: case call + answer
         if not c.choice:
             pout *= 2  # a free-text answer is longer than two lines
         total += _cost(meta.get(m, {}), pin, pout) or 0

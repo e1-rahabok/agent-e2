@@ -1,6 +1,6 @@
 # Harness
 
-The software around the model. It turns a question into a grounded, checked answer. Not indexed.
+The software around the model: the tools, guards and model client the agent runs on. Together with the agent it turns a question into a grounded, checked answer: a neuro-symbolic expert system ([AGENT.md](AGENT.md)). Not indexed.
 Why the system can win: [MISSION.md](../MISSION.md). How one question flows through it: [ARCHITECTURE.md](../ARCHITECTURE.md). The agent it hosts: [AGENT.md](AGENT.md).
 
 ## 1. What it is for
@@ -8,14 +8,14 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 
 | Failure of a model alone | Harness part | What it does instead |
 |---|---|---|
-| Does not know the Level 400 fact | Retrieval (`retrieval.py`, `kb.py`) | Finds the knowledge file, then its linked misconceptions and mechanisms |
+| Does not know the Level 400 fact, nor which file holds it | Reading plan (`planner.py`), retrieval (`retrieval.py`, `kb.py`) | Code chooses the files: those the question names, search hits, their mechanism links, one search per claim |
 | Reads one meaning of a label that has two | Link expansion (`retrieval.py`) | Brings the `same_name` file on the other object with the first |
 | Gets a unit, rollup, statistics level or threshold wrong | Catalog (`catalog.py`) | Returns the exact value from the vSphere 9.1 tables, with its source |
 | Slips on arithmetic | Calculator (`calc.py`) | Computes the conversion and names the rule's source file |
 | Slips on a multi-step capacity plan | Planning calculator (`capacity.py`) | Six numbers per host (3 models × CPU and memory), the binding one, HA hosts on top; class defaults from the catalog |
-| Skips troubleshooting steps | Flow executor (`flows.py`) | Serves the flow steps in order, one at a time |
+| Skips troubleshooting steps | Flow file read whole (tier 1 of the plan); flow executor (`flows.py`) | Serves the steps in order; executable steps (Q166) to build |
 | Answers in a broken format or guesses | Verifier (`verify.py`) | Rejects letters that are not options, Unsure mixed with others; one repair turn |
-| Answers from memory, or loops | Agent rules and budgets (`agent.py`, `AGENT.md`) | Lookup first, no repeats, same-name check, call and token budgets |
+| Answers from memory | The agent (`agent.py`, `AGENT.md`) | The model answers only with the reading set and the computed facts in front of it; the knowledge base wins |
 
 ## 2. Design rules
 - Code does what can be exact: search, lookup, arithmetic, step order, format checks. The model does only what needs language.
@@ -29,71 +29,59 @@ A small model alone fails at Level 400 in predictable ways. Each part of the har
 - `retrieval.py` builds a keyword index (BM25) and an embedding index over the chunks, fused by rank, with metadata filters and link expansion.
 - `catalog.py` compiles `knowledge/catalog/*.yaml` and the colour bands in the KPI files into an in-memory SQLite database.
 - `flows.py` reads the numbered steps of each health-check, troubleshooting and decision-tree file (its `retriever_guide`, wherever it sits) directly; there is no second copy.
-- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. What the agent is told about it: `AGENT.md`, section 3. How the agent finds files: `AGENT.md`, section 3. How the knowledge is shaped for this: [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md) and its rule modules in [`project/knowledge-rules/`](../project/knowledge-rules). Full ingest, query and answer contract: [`ARCHITECTURE.md`](../ARCHITECTURE.md), section Local LLM use.
+- So the harness knows the content by structure: ids, headings, tags, links and catalog rows. How the agent plans with it: `AGENT.md`, section 4.2. How the knowledge is shaped for this: [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md) and its rule modules in [`project/knowledge-rules/`](../project/knowledge-rules). Full ingest, query and answer contract: [`ARCHITECTURE.md`](../ARCHITECTURE.md), section Local LLM use.
 
 ## 4. Modules
 | File | Job |
 |---|---|
 | `kb.py` | Load `knowledge/`: metadata split off, body chunked by `##` heading, chunks prefixed with title and id. |
-| `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, link expansion (`same_name`, `related`). |
+| `retrieval.py` | Hybrid search (BM25 + embeddings, reciprocal rank fusion), metadata filters, links of a file by type. |
 | `catalog.py` | Metric catalog in SQLite: lookups by counter, chart label, esxtop field or title; chart and API units; thresholds; colour bands; object relations and paths. |
 | `calc.py` | Safe arithmetic plus domain functions (summation ms ↔ %, units with vCenter KB/kb rules, CPU capacity, esxtop state sums). Each result names its source. |
-| `capacity.py` | Planning calculator, tool `capacity_plan`: how many VMs of a class fit per host, or how full a host or cluster is for a VM mix. Allocation, reservation and utilization × CPU and memory; defaults are catalog rows `planning-*`. Method: [`sp5-framework/capacity/class-of-service-planning`](../knowledge/sp5-framework/capacity/class-of-service-planning.md), section Planning calculator. |
-| `web.py` | Public web knowledge: URLs in the question read before the model starts; `fetch_url` and `web_search` for the agent; search only for current facts; system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
+| `capacity.py` | Planning calculator (`capacity.plan`; not yet wired into the agent, `AGENT.md` section 7): how many VMs of a class fit per host, or how full a host or cluster is for a VM mix. Allocation, reservation and utilization × CPU and memory; defaults are catalog rows `planning-*`. Method: [`sp5-framework/capacity/class-of-service-planning`](../knowledge/sp5-framework/capacity/class-of-service-planning.md), section Planning calculator. |
+| `web.py` | Public web knowledge: URLs in the question read before the model starts; search only for current facts (a pattern list); system names dropped from queries; private addresses refused; pages trimmed and labelled untrusted. Config key `web`. |
 | `flows.py` | Flow executor: a health check or troubleshooting file as ordered steps, one at a time, with the next step and the steps it refers to. |
 | `verify.py` | Hard issues (no ANSWER line, letters that are not options, Unsure mixed with others) get one repair turn. Soft issues (no REASON, unknown file id, an ungrounded number) are recorded only. |
-| `planner.py` | The reading plan of the expert-led agent (`AGENT.md`, section 4.2): named files, search, mechanism links, one search per claim, packed by tier with best sections. Prototype; read by the retrieval check (`planner: true`). |
-| `modes.py` | Answer modes and prompts as built: baseline (model alone), classic (one lookup); agentic is handed to `agent.py`. Replaced by the expert-led agent when it is built (`AGENT.md`, section 7). |
-| `agent.py` | As built: the tool loop of agentic mode (tools, rules, budgets, fallback, verifier); its design is archived ([project/archive/agent-tool-loop-2026-11-14.md](../project/archive/agent-tool-loop-2026-11-14.md)). The expert-led agent replaces it: `AGENT.md`. |
+| `planner.py` | Stage 2, the reading plan (`AGENT.md`, section 4.2): named files, search, mechanism links, one search per claim, packed by tier with best sections. Also read by the retrieval check. |
+| `agent.py` | The agent: stages 1 and 3-6 (case, compute, ask, answer, check). Design: `AGENT.md`. |
+| `modes.py` | Entry point `answer(mode, ...)`: `agent-e2` (the agent), and the benchmark references `baseline` (the model alone) and `web` (the model alone with web search); prompts; verifier repair; consensus on one reading set; the conversation (`converse`). |
 | `clarify.py` | One clarifying round: the `chat` and `chat_final` prompt rules, `CLARIFY:` parsing; the conversation runs through `modes.converse`. |
-| `terms.py` | Question understanding before search: the user's words matched against [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml); adds knowledge-base terms to the query, pulls files into the context, adds a note per misconception. Switches `term_map`, `term_map_agent`. |
-| `primer.py` | The agent's five up-front blocks, generated from the knowledge base; switches `agent_primer` in the config. |
-| `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `MockClient` runs the loop offline. |
+| `terms.py` | The user's words matched against [`knowledge/catalog/user-terms.yaml`](../knowledge/catalog/user-terms.yaml): knowledge-base terms for the query, files for tier 2, a note per misconception. Switch `term_map`. |
+| `primer.py` | Up-front blocks of the answer prompt (misconceptions, confusable pairs), generated from the knowledge base; switch `primer` in the config. |
+| `llm.py` | Model client: Vercel AI Gateway for the benchmark; a local OpenAI-compatible server (vLLM, llama.cpp) at the site. `deterministic` calls (the case) run at temperature 0. `MockClient` runs offline. |
 | `test_tools.py` | Unit tests: `python3 -m unittest harness/test_tools.py` from the repository root. |
 
 ## 5. Tools
-- In the expert-led agent the tools below are called by the agent's code on the case, not by the model (`AGENT.md`, section 4.3). The table is the tool-loop interface as built.
+The agent's code calls them; the model calls none (`AGENT.md`, section 1).
 
-| Tool | Returns | Use |
+| Tool | Returns | Called in |
 |---|---|---|
-| search | File ids, titles, snippets | Always first (or catalog). |
-| read_file | One file or one section | The only source of prose facts. |
-| follow_links | Linked files by type | `same_name` before answering about a metric. |
-| get_images | Image records of a file | Diagrams and charts. |
-| catalog | Counter unit, rollup, statistics level, esxtop field, thresholds with source, object relations | Exact values; never depends on retrieval rank. |
-| calculate | Result plus source notes | Any arithmetic or unit conversion. |
-| capacity_plan | VMs per host, or how full a host or cluster is for a planned VM mix (allocation, reservation, utilization models) | Capacity planning questions; the model gathers inputs, the code computes. |
-| flow | Steps of a health check or troubleshooting file, or one step with next and references | Health check and troubleshooting questions. |
-| fetch_url, web_search | A public web page trimmed to the question; vendor-site search results | Only with `web.enabled`: links in the question, and current facts (bugs, builds, maximums). |
+| `retrieval.search`, `retrieval.links` | File ids and best chunks; linked files by type | Stage 2, the reading plan |
+| `catalog.lookup`, `catalog.facts_for` | Counter unit, rollup, statistics level, esxtop field, thresholds with source, KPI levels, object relations | Stage 1 (names of the case), stage 2 (counter keys), the reading set's catalog facts |
+| `calc.evaluate` | Result plus source notes | Stage 3, summation conversions |
+| `capacity.plan` | VMs per host, or how full a host or cluster is for a planned VM mix | To wire into stage 3 |
+| `flows.run` | Steps of a flow file, or one step with next and references | To wire into stage 3 with executable steps (Q166) |
+| `web.gather`, `web.block` | Pages the question links, and vendor search results for current facts, trimmed and labelled untrusted | Stage 5, after the knowledge base text |
 
 ## 6. Settings and checks
-- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` and `catalog_facts` (not in the file: their defaults in code are true; `catalog_facts` puts catalog facts at the top of the classic context), `classic_k`, `context_tokens`, `expand_derive`, `route_troubleshooting`, `query_expansion`, `agent_max_calls`, `agent_tool_tokens`, `agent_read_reminder`, `consensus_samples`, `context_window`, `image_tokens`, `agent_primer` (one switch per up-front block). Each retrieval switch carries its measured effect in the config comment.
+- Settings live in [`benchmark/runner/config.yaml`](../benchmark/runner/config.yaml): `verify` and `catalog_facts` (not in the file: their defaults in code are true; `catalog_facts` puts catalog facts at the top of the reading set), `search_k`, `context_tokens`, `plan_section_tokens`, `plan_derive_n`, `plan_claims_max`, `term_map`, `term_map_files`, `case_model`, `case_max_tokens`, `gap_followup`, `query_expansion`, `consensus_samples`, `context_window`, `image_tokens`, `primer` (one switch per up-front block).
 - `.cache/` holds embedding vectors (not in git). The catalog is rebuilt in memory at each start (under a second).
 - Tools: `python3 -m unittest harness/test_tools.py`. Retrieval without a model: `python3 benchmark/runner/retrieval_eval.py`. Whole system: [`benchmark/runner/README.md`](../benchmark/runner/README.md).
 - The runner records `tools_used`, `verify_flags` and `repaired` per answer. A soft verifier issue becomes a repair trigger only when results show it predicts wrong answers.
 
 ## 6a. Consensus
-- Setting `consensus_samples` (n). Multiple-choice questions in classic and agentic mode: the harness asks up to n samples. The letters stand only when every sample gives the same set. A disagreement, an Unsure or an unreadable reply makes the answer Unsure, with the reason "not settled". It stops at the first disagreement, so a split costs 2 samples, not n.
+- Setting `consensus_samples` (n). Multiple-choice questions of Agent E2: the harness asks up to n answer samples on one reading set (stages 1-4 run once). The letters stand only when every sample gives the same set. A disagreement, an Unsure or an unreadable reply makes the answer Unsure, with the reason "not settled". It stops at the first disagreement, so a split costs 2 samples, not n.
 - Code: `answer` and `_consensus` in [`modes.py`](modes.py). Baseline and web stay one sample: they measure the model alone. Open answers stay one sample: free text has no letters to compare.
-- Why (round of 2026-11-13, [`benchmark/results/analysis-2026-11-13.md`](../benchmark/results/analysis-2026-11-13.md)):
+- Why (previous generation, round of 2026-11-13, [`benchmark/results/analysis-2026-11-13.md`](../project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md)):
   - The confident-wrong rate was 19-30% in the knowledge base modes against a gate of 3%.
   - Unsure was chosen in only 1-6% of multiple-choice answers. The prompt rule "a wrong answer is worse than Unsure" does not make a 30B model abstain: it does not know what it does not know.
   - 55-75% of the confident-wrong multiple-choice answers were partly right, and the same question got different letters in different runs (luck 48-63%). Disagreement between samples is the signal the model cannot give about itself.
-- Measured effect, projected exactly from the 5 recorded runs (`consensus` in [`benchmark/runner/report.py`](../benchmark/runner/report.py)), n = 3:
-
-| Model, mode | Final | Confident wrong, all | Confident wrong, multiple choice | Unsure, multiple choice |
-|---|---|---|---|---|
-| gemma-4-31b, agentic | 76% → 71% | 21% → 15% | 14% → 4% | 1% → 18% |
-| muse-glimmer-30b, agentic | 78% → 73% | 20% → 15% | 12% → 3% | 1% → 18% |
-| qwen3.8-27b, agentic | 63% → 49% | 30% → 16% | 22% → 0% | 6% → 52% |
-| gemma-4-31b, classic | 78% → 75% | 19% → 15% | 10% → 3% | 1% → 13% |
-
-- Trade-off: about 5 points of final score for about two thirds fewer wrong letters. The gate puts confident-wrong first ([`benchmark/design.md`](../benchmark/design.md), section 7.5: "the confident-wrong limit does more for the operator than 5 more points"). Qwen pays 14 points: its agent is too unstable (consistency 35%) for consensus to keep its right answers.
+- Projected on the previous generation (n = 3, from its 5 recorded runs; archived analysis above): multiple-choice confident-wrong 10-22% fell to 0-4%, at about 5 points of final score; the most unstable model paid 14. The gate puts confident-wrong first ([`benchmark/design.md`](../benchmark/design.md), section 7.5). With one reading set shared by the samples, a disagreement now comes from the reasoning alone.
 - What it does not fix: judged (open) answers. Their confident-wrong rate stays 31-41%, so the overall rate stays near 15%. Next lever: Q199 in [`project/author-questions.md`](../project/author-questions.md) and the analysis file above.
-- Cost: up to n model passes per answer. On a local vLLM server the samples share the prompt cache and run as one batch, so latency rises little; in agentic mode each sample runs its own tool loop.
+- Cost: up to n model passes per answer. On a local vLLM server the samples share the prompt cache and run as one batch, so latency rises little.
 - Benchmark: keeps `consensus_samples: 1` and reads the projection in `report.md` (section Consensus of 3, projected). The projection is the exact mean over all draws of 3 of the 5 runs, so it costs no model call. The deployed profile sets 3.
 
 ## 7. Planned
 - `draw_mermaid` tool: render a flow or layer diagram that no stored image shows.
 - Verifier: every metric name in an answer exists as a metric file title or is a quoted user term.
-- Question understanding before search (question type, object, layer as filters) and query rewriting with glossary synonyms: [`ARCHITECTURE.md`](../ARCHITECTURE.md), section Status.
+- The rest of the agent's build order: [`AGENT.md`](AGENT.md), section 7.
