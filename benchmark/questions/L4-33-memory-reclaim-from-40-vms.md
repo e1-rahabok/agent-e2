@@ -8,7 +8,7 @@ Which statements about the VMs to take memory from, and the counters to use, are
 
 - A. Size each VM from Guest Needed Memory, not from the VM-level Active or Consumed counters.
 - B. Take memory from the VMs with the largest gap between configured memory and Active: db-sql-01 alone gives back more than 200 GB.
-- C. app-crm-01, app-hr-02, web-portal-03, file-svc-01, bi-report-02 and dev-build-05 can together give back 256 GB or more, with headroom above Needed Memory.
+- C. app-crm-01, app-hr-02, web-portal-03, file-svc-01, bi-report-02 and dev-build-05 can give back 256 GB, keeping headroom above Needed Memory.
 - D. db-sql-01, java-erp-02 and db-pg-03 are not donors: their guests need nearly all their memory, though Active is low.
 - E. The new size of a donor is its peak Needed Memory itself; headroom above it is waste.
 - F. legacy-app-07 and appliance-09 cannot be sized: VMware Tools is not running, so there is no guest data.
