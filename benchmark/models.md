@@ -22,7 +22,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### The risk: prior override
 - Public Internet text teaches Level 300 readings: "Ready above 5% is bad", "memory usage at 95% means add RAM", "the VM is the Guest OS".
-- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 2% of multiple-choice answers and 4% of judged answers (benchmark 2026-11-13, 150 questions).
+- A model that holds those beliefs strongly can read the correct knowledge base file and still answer from its belief. Measured on the frontier model without the knowledge base: misconception answer on 2% of multiple-choice answers and 3-4% of judged answers (benchmark 2026-11-13, 196 questions, without and with web search).
 - Memory is not the problem in itself: the basics come from it. The problem is how firmly the model holds a rule of thumb against the context in front of it.
 - Model size moves both ways: a larger model knows the basics better and follows long instructions better, and may hold rules of thumb more firmly. Which effect wins on this task is not known from theory or published results. It is measured.
 

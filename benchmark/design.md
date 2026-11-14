@@ -404,7 +404,7 @@ For the set:
 - Minimum: the release gate, section 7.5 (Q130, 2026-11-12; set size and held-out rule revised 2026-11-12, question set 1.0).
 - The other candidates stay until the question set is complete; no model is dropped on a small set.
 - What 99% requires: at 150 questions, 99% allows 1 wrong question and proves only about 97.5%; proving 99% needs about 300 questions (section 4). Answer keys must be correct: every wrong answer from the best model gets an author check.
-- Status at benchmark 2026-11-12 (150 questions): best small model 67% in classic mode and 56% in agentic mode against the 85% gate; frontier model without the knowledge base 67%.
+- Status at benchmark 2026-11-13 (196 questions, 5 runs): best local model, meta/muse-glimmer-30b in agentic mode, 78% (Level 400 75%, confident-wrong 20%) against the 85% gate; frontier model with web search 81%, which fails the gate too (Level 400 79%, confident-wrong 12%). Analysis: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md).
 
 ## 16. Decision rules
 - Mode: agentic is the shipped mode and carries the release gate (Q130, 2026-11-12). Classic stays as the floor and the fallback; it is reported in every benchmark.

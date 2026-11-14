@@ -93,8 +93,13 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 
 ## Status
 
-- Goal not achieved yet: on the 150 questions (benchmark 2026-11-12), the best small model with the knowledge base scores 67% in classic mode and 56% in agentic mode; the frontier model without it scores 67%. The release gate is 85%.
-- Plan, milestones and decisions: [`project/plan.md`](project/plan.md). Latest review: [`project/review-2026-11-06.md`](project/review-2026-11-06.md).
+- Goal not achieved yet. Benchmark of 2026-11-13, 196 questions, 5 runs ([results](benchmark/results/README.md), [analysis](benchmark/results/analysis-2026-11-13.md)):
+  - Best local model with the knowledge base: meta/muse-glimmer-30b, 78% in agentic mode (Level 400 75%, confident-wrong 20%). Classic mode is within the margin of agentic for every model.
+  - The knowledge base adds 19-28 points to every local model.
+  - Frontier model (Claude Opus 5.5 with web search, no knowledge base): 81%. The gap of 3 points is inside the margin.
+  - Release gate (final 85%, Level 400 80%, confident-wrong 3%): passed by no model, the frontier model included.
+- Retrieval check (2026-11-13, hybrid): 69% of needed files reach the classic context; 91 of 196 questions get every needed file ([baseline](benchmark/results/retrieval-2026-11-13/hybrid.md)).
+- Plan, milestones and decisions: [`project/plan.md`](project/plan.md). Latest review: [`project/review-2026-11-13.md`](project/review-2026-11-13.md).
 
 ## Checks
 
