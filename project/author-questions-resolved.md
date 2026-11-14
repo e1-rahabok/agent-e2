@@ -4,6 +4,15 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q204 · VCF Operations > Capacity forecast · Capacity Remaining: largest gap or tightest point
+
+- Files: [Capacity forecast](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/capacity-forecast.md); question [0235](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-76-capacity-forecast-averages-hide-month-end.md).
+- Search 1: "The largest difference between usable capacity and projected utilization"
+- Search 2: "follows the tightest point of the 3 days"
+- Question: TechDocs 9.1 says Capacity Remaining (%) is the largest difference between usable capacity and projected utilization over the next 3 days; the same page sets it to 0 when any projection exceeds 100%. In the field, does the value follow the smallest remaining capacity (the highest projected point), as the key of 0235 says, or the largest gap, as the text literally reads?
+- Written as now: the TechDocs wording kept, plus a reading that the 0 rule makes the value follow the tightest point (draft, review note).
+- Answer: Settled by vendor documentation (2026-11-14), no author answer needed. The value follows the smallest remaining capacity: usable capacity minus the highest projected utilization over the next 3 days. TechDocs 9.1 Capacity Analytics Generated Metrics: "the maximum point between the usable capacity now and the projected utilization for 3 days into the future" (https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/calculated-metrics/capacity-metrics.html); VCF blog 2025-08-12: "the minimum capacity left projected three days in the future" (https://blogs.vmware.com/cloud-foundation/2025/08/12/vmware-cloud-foundation-helps-you-optimally-size-vms-and-keep-your-infrastructure-and-workloads-running-smoothly/); Broadcom KB 379077 uses the same "max point" wording. The concept page's "largest difference" is kept as a corrections entry. Applied: capacity-forecast (section Capacity Remaining, misconception added, review note deleted), question 0235 (key point and notes). Closed.
+
 ### Q128 · Glossary · Proposed terms from Capacity Management
 
 - Files: [Terminology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (section Capacity); [Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).

@@ -9,6 +9,7 @@
 ## Projection or percentile
 - With a clear trend, a projection beats a percentile.
 - Accuracy depends on data volume and cycle length. Quarter-end peaks need at least 6 months of data.
+- A tool's lookback caps this. VCF Operations 9.1.1 reads at most 90 days: one quarter-end, no year-end, and a short periodic peak counts only through the upper bound ([`vcf-operations/features/capacity-forecast`](../../vcf-operations/features/capacity-forecast.md), section Peaks in the 9.1.1 engine).
 - Without 3 months of data: use the 97th percentile for overall sizing. 2 standard deviations ≈ 95%, 3 ≈ 99.7%; the 97th sits between.
 ![Projection vs percentile](images/capacity-projection-vs-percentile.png)
 - Momentary one-off peaks should barely move a projection; periodic peaks (month-end, quarter-end) must be kept in it.
