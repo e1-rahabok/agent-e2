@@ -34,7 +34,7 @@ cpu.ready.HOST{feature='TROUBLESHOOTING'} 20-second
 ```
 
 ## Cost
-- 2-second data is 10x the volume of 20-second data. Limit collection (book: about 1,000 data points) so the monitored system is not loaded.
+- 2-second data is 10x the volume of 20-second data. Limit collection (about 1,000 data points) so the monitored system is not loaded.
 
 ## Misconceptions
 - "The 20-second tier is real time" → the UI calls it real time; each point is a 20-second average. Only the 2-second tier sees a burst of 1-3 seconds ([`sp5-framework/observability/real-time-metrics`](../../sp5-framework/observability/real-time-metrics.md)).

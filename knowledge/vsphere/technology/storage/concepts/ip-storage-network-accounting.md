@@ -39,7 +39,7 @@ Control frame with no payload = 14 + 20 + 20 + 48 + 4 = 106 bytes
 
 ## Consequences
 - Network bytes are not storage throughput. Subtract the headers and count the acknowledgements in both directions before comparing them.
-- A 9,000-byte MTU keeps a 4 KB or 8 KB block in one frame: no IP fragmentation, so the overhead stays a fixed set of headers per IO.
+- A 9,000-byte MTU keeps a 4 KB or 8 KB block in one TCP segment, so the overhead stays a fixed set of headers per IO.
 - With a 1,500-byte MTU the same 8 KB block needs several frames, each with its own headers: more packets per IO and more overhead.
 
 ## Misconceptions
@@ -68,7 +68,7 @@ related:
 - vsphere/tools/esxtop/units-vs-vsphere-client
 source:
   document: 'Technical note: Storage and Network Accounting for iSCSI over 10 GbE (Google Doc, read 2026-11-04)'
-  path: https:/docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
+  path: https://docs.google.com/document/d/1E7Or6rsJZ_P1MUZZfL1X3RSXPxhR2lW2fSp3wcaqnGo/edit
 corrections: []
 review_notes:
 - 'Whole file: from the technical note linked in source.path. Replaces the book statement that read and write both map to network Transmit.'

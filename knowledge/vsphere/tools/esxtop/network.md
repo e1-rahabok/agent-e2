@@ -35,6 +35,7 @@
 | SPEED | Link speed (Mb/s). |
 | FDUPLX | Y: full duplex. N is a problem. |
 | USED-BY, DNAME | Port user; virtual device name. |
+| TEAM-PNIC | Physical NIC used for the team uplink: on a VM or VMkernel port, the vmnic it uses now. |
 
 - DTYP (hub or switch) is no longer shown; the vSphere 9.1 documentation still lists it, a documentation error. vSphere Client shows switches, VMkernel ports and NICs in more detail.
 

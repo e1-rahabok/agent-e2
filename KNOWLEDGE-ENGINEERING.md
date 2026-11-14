@@ -30,8 +30,8 @@ flowchart LR
     BM[Retrieval check and benchmark]
   end
   subgraph Use["5. Used by the AI"]
-    R[Harness: search, catalog, calculator, flow tool]
-    A[Agent and model: read, apply, answer with citations]
+    R[Agent and harness: reading plan, search, catalog, calculator]
+    A[Model: read, apply, answer with citations]
   end
   B --> Structure
   F --> Structure
@@ -82,7 +82,7 @@ flowchart LR
 5. Vantage points are never mixed. One object type and one layer per metric file; Guest OS is its own layer and folder.
 6. Traceable to source. Every file records its source document and heading path.
 7. Depth before breadth. One complete mechanism beats twenty shallow counter definitions.
-8. Measured, not assumed. A structure change is kept only when the benchmark or the retrieval check improves.
+8. Measured, not assumed. A structure change is kept only when the retrieval check improves, or holds while the content becomes more correct; the benchmark proves the release ([`benchmark/retrieval-check.md`](benchmark/retrieval-check.md)).
 
 ### Limits
 - Turning expert judgment into files is lossy; some tacit knowledge resists codifying.
@@ -103,8 +103,8 @@ flowchart LR
 | Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 315K tokens (2026-11-13): too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
 | Given up front, every question | Misconceptions with the widest reach, confusable pairs | Built by [`harness/primer.py`](harness/primer.py) from the `## Misconceptions` lines marked `up_front` in their files and from [`knowledge/glossary.md`](knowledge/glossary.md) | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
-| Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | [`harness/calc.py`](harness/calc.py), `capacity.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
-| Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | [`harness/modes.py`](harness/modes.py) (system prompts), [`harness/primer.py`](harness/primer.py) (procedure) | Conduct for every answer, not a fact about one metric |
+| Executed as code | Arithmetic identities, answer checks, user-word mapping; capacity plans and flow branches (built, not yet called by the agent: [`harness/AGENT.md`](harness/AGENT.md), section 4.3) | [`harness/calc.py`](harness/calc.py), `verify.py`, `terms.py`; `capacity.py`, `flows.py` | Small models slip on arithmetic and skip steps; code does not |
+| Agent instructions | Knowledge base first, same-name check, a file for each claim, threshold only with its source, Unsure | [`harness/modes.py`](harness/modes.py) (system prompts), [`harness/agent.py`](harness/agent.py) (answer rules) | Conduct for every answer, not a fact about one metric |
 
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each up-front misconception ends with `See <id>`.
 - Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong up-front line or prompt rule therefore costs more than a wrong metric file, and its review comes first.
@@ -120,7 +120,7 @@ flowchart LR
 | Links | Same name, same meaning, derived from, related | `same_name`, `same_meaning`, `internal_derive`, `related` | The expert's mental map: which facts are read together |
 | Folder hierarchy | The method (SP5 Framework) and the product (VCF 9.x) apart; inside the product, metrics by technology and KPIs by object | `knowledge/` | One tree in the order the author reviews; links and tags give the other views |
 | Catalog | Units, rollups, statistics levels, esxtop fields, thresholds, object model | `knowledge/catalog/*.yaml` → SQLite | Exact values must not depend on retrieval luck |
-| Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree | Small models skip steps; the flow tool keeps them on the path |
+| Flows | Order of checks: health check, troubleshooting, decision tree | Files with `retriever_guide` health-check, troubleshooting or decision-tree | Small models skip steps; the reading plan puts the flow first, and the flow executor takes the branches in code (to build, Q166) |
 | Formulas and calculator | Conversions and identities (summation ms ↔ %, KB vs kb) | [`harness/calc.py`](harness/calc.py), formulas in files | Arithmetic is where models slip |
 | Images with text twins | The author's diagrams and charts | `images/` folders | The text twin makes a diagram usable by a text-only model |
 | Terminology | Vocabulary, confusable pairs | [`knowledge/glossary.md`](knowledge/glossary.md) | Wrong words produce wrong reasoning (Usage vs Utilization, KPI vs SLA) |
@@ -193,7 +193,7 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 | Why the product is simpler | one number that adds up across hosts and VMs | one counter for charts and billing |
 
 - Rules:
-  - Never reword a label. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is throughput at base clock; capacity is threads" ([`project/vocabulary.md`](project/vocabulary.md), Words to avoid).
+  - Never reword a label. Quote it as the product shows it, then correct the model behind it. Wrong: "vSphere's GHz total". Right: "Total Capacity (GHz) is throughput at base clock; capacity is threads" ([`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md), Words to avoid).
   - Tone: "the product uses a simpler model", never "the product is wrong".
   - The better name is Agent E2's vocabulary ([`knowledge/glossary.md`](knowledge/glossary.md)). A benchmark prompt uses only the label (fairness F1); a key point grades the model, never the better name, which a frontier model cannot know.
 - Teaching order in an answer, the order the author uses in consulting: (1) name the label as the operator sees it; (2) say what it computes; (3) name the decision it invites and why that decision fails; (4) give the better model and its name; (5) what to read instead.
@@ -227,7 +227,7 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 | Method apart from product (SP5 Framework vs vSphere and VCF Operations) | A design rule mistaken for product behaviour, or a product limit mistaken for a rule of the method. |
 | A `## Misconceptions` section in every metric file | A true observation read to the wrong conclusion. See section 4. |
 
-- A file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason. How the agent uses this structure: [`harness/AGENT.md`](harness/AGENT.md), section 3.
+- A file that is not tagged, linked and placed in the right folder is found only by its words. Lint checks tags and links for that reason. How the agent plans with this structure: [`harness/AGENT.md`](harness/AGENT.md), sections 4.2 and 6.
 
 ## 6. Workflow: from source to reviewed file
 1. Extract: the book one Heading 3 at a time, then official documentation for the current release, checking the document revision each time. Files start as `status: draft`.

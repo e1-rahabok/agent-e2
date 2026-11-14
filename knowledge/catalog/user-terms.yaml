@@ -35,7 +35,7 @@ rows:
 - id: steal-time
   match: ['steal(ed)? time', '%st\b', '\bcpu steal']
   means: VM CPU Ready Co-stop
-  note: 'Steal time is the Linux guest view of time its vCPU was runnable but not running. On vSphere read VM CPU Ready and Co-stop.'
+  note: 'Steal time is the Linux guest view of time its vCPU was runnable but not running; on vSphere it shows only when the VM''s steal clock is on (stealclock.enable), else it stays 0. Read VM CPU Ready and Co-stop.'
   files: [vsphere/technology/cpu/metrics/virtual-motherboard/ready, vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu]
 - id: iowait
   match: ['io ?wait', 'i/o wait', 'cpu wait']

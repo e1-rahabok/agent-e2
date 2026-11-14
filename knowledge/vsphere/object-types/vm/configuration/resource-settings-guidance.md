@@ -31,7 +31,7 @@
 
 ## Share audit
 - Audit regularly: shares per vCPU should be 1,000 and per GB of RAM 10,240 (Normal), or the class values.
-- In one sample of 1,500 VMs, most sat at 1,000 per vCPU, with others at 4,000, 2,000, 1,500, 800, 650, 500, 250, 125 and 0. Some VMs carried resource pool values (4,000 CPU, 163,840 memory) on 1-2 vCPU VMs: 160 shares per GB on a 1 GB VM.
+- In one sample of 1,500 VMs, most sat at 1,000 per vCPU, with others at 4,000, 2,000, 1,500, 800, 650, 500, 250, 125 and 0. Some VMs carried resource pool values (4,000 CPU, 163,840 memory) on 1-2 vCPU VMs: 163,840 memory shares on a 1 GB VM is 160 shares per MB, 16x Normal.
 ![Shares per vCPU across about 1,500 VMs, sorted: about 1,330 VMs at 1,000; outliers at 4,000, 2,000, 1,500, 800, 650, 500, 250, 125 and 0](../images/vm-cpu-shares-per-vcpu-across-vms-scatter.png)
 - Values that drift usually come from an API resize (default shares not recalculated) or hand-set values copied from resource pools.
 

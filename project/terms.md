@@ -12,13 +12,13 @@ English words carry a general meaning and a VMware operations meaning. A word is
 - General: the meaning in daily life, between people.
 - VMware operations: the jargon of a VMware administrator. In operations, a case is an issue to investigate and solve (a support case, a ticket). A use case is a scenario.
 - So the benchmark does not use case. Its items are questions: they are answered, not investigated. A question can have several parts.
-- The product does: the agent reads each question into a case, the issue it works on (proposal, 2026-11-14, table below).
+- The product does: the agent reads each question into a case, the issue it works on (author, 2026-11-14, Q210; table below).
 - Quiz is the author's word for his source documents: it checks what the reader knows (it is not a request for something unknown), and it reads lighter than an exam.
 
 ## Terms
 | Use | Means | Do not use for it |
 |---|---|---|
-| sources | Source documents the knowledge is written from ([`project/sources/`](sources)): book chapters, vendor PDFs. Read-only. Proposal, for the author | raw input |
+| sources | Source documents the knowledge is written from ([`project/sources/`](sources)): book chapters, vendor PDFs, technical notes. The author adds them; Claude may edit them (author, 2026-11-14) | raw input |
 | benchmark | The proof of the product: question set, runner, judge, results (`benchmark/`). Also one execution of it: every candidate, every mode, 5 runs; one folder per model, `benchmark/results/<date>-<model>/` (benchmark/runner/naming.py) | Auto Test, test, evaluation, benchmark run |
 | run | One pass through all the questions, by one model in one mode (`baseline` or `agent-e2` for a candidate, `web` for the frontier reference). A benchmark has 5 runs (`runs: 5`, column `run`). Each run is a repeat of the same questions; the answers differ | repeat, iteration |
 | question | One benchmark item: one file in [`benchmark/questions/`](../benchmark/questions) with prompt, answer key and metadata. A benchmark question plays a question a VMware administrator asks the product | case, test case, golden case, exam question |

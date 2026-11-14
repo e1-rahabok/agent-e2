@@ -24,7 +24,7 @@ C, D or F: data from inside Linux assumed to come from the hypervisor.
 - F is wrong: the IP addresses and host name are reported from inside the guest by VMware Tools. Without the service, vCenter shows them as unknown.
 
 ## Notes
-- Ballooning is not an option here: on Linux the balloon driver (vmw_balloon) is an upstream kernel driver, not part of open-vm-tools, so it keeps working while vmtoolsd is stopped (open-vm-tools README; Broadcom KB 313773). The knowledge base says the opposite (author question).
+- Ballooning is not an option here: on Linux the balloon driver (vmw_balloon) is an upstream kernel driver, not part of open-vm-tools, so it keeps working while vmtoolsd is stopped (open-vm-tools README; Broadcom KB 313773).
 
 ## Metadata
 ```yaml

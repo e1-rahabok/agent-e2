@@ -1,9 +1,10 @@
 # Snapshot impact on metrics
 
 ## IO
-- Reads must check all snapshot files. Datastore-level read IOPS rise; write is less affected (writes go to the newest file).
+- Redo-log snapshots (VMFS delta disks, NFS without array snapshots, vSAN OSA): reads must check the files of the chain. Datastore-level read IOPS rise; write is less affected (writes go to the newest file).
 - The extra reads return no data: datastore throughput stays equal to virtual-disk throughput while datastore read IOPS is consistently higher.
 - Test: with no snapshot, datastore and virtual-disk read IOPS overlap 100%. With a snapshot, datastore read IOPS is consistently higher.
+- vSAN ESA native snapshots keep no delta chain: a B-tree maps each block to its snapshot, so this read signature does not apply.
 - The .vmsd metadata file is updated on every snapshot create and delete.
 ![Datastore read IOPS rises when a snapshot exists](../images/datastore-read-iops-rise-with-vm-snapshot.png)
 
@@ -20,7 +21,7 @@
 - Datastore metrics include them.
 
 ## Misconceptions
-- "Datastore IOPS above virtual disk IOPS means another VM" → check for snapshots on this VM.
+- "Datastore IOPS above virtual disk IOPS means another VM" → on VMFS, check for snapshots on this VM.
 
 ## Metadata
 ```yaml

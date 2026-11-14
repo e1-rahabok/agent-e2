@@ -3,7 +3,7 @@
 ## Definition
 - The capacity model's automatic decision for one vSphere cluster: 1 = closed for business (full: place no new VM), 0 = open.
 - Built from three 0-100% scores: Cluster Performance (KPI, [`vsphere/object-types/cluster/cluster-performance`](../cluster-performance.md)), Cluster Consumption (capacity model, [`vsphere/object-types/cluster/models/cluster-consumption`](cluster-consumption.md)), Cluster Risk (risk model, [`vsphere/object-types/cluster/models/cluster-risk`](cluster-risk.md)).
-- It implements the overcommit path of the book's closure logic. The full decision, including the no-overcommit path and the fit of new VMs: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md).
+- It implements the overcommit path of the cluster closure logic. The full decision, including the no-overcommit path and the fit of new VMs: [`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../decision-tree/can-cluster-take-more-vms.md).
 
 ## Logic
 - It runs periodically. Ideally once a day so the full day peak is considered. 

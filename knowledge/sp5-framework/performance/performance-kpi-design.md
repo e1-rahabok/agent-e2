@@ -38,7 +38,7 @@
 - Two numbers each KPI has:
   - actual: volatile, per object (the VM's score);
   - target: steady, for many objects. One set of levels and one target for every object of a type: the KPI is never per class of service.
-  - Daily KPI actual: the 99th percentile of the day's 288 scores, the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
+  - Daily KPI actual: the 99th percentile of the day's 288 scores counted from the worst (higher is better, so statistically the 1st percentile): the score that 99% of the intervals reach or exceed; the worst 2 intervals (10 minutes) are ignored. The 95th percentile (70 minutes ignored) is too lenient for large organisations. For capacity, the summary over time is part of each model.
 - The class of service shows in the result, not in the target. Gold has less contention by design (less overcommit, more reservation and shares), so a Gold VM tends to score higher than a Silver VM. To check the promise, group the VMs per class and compare each group's KPI: Gold should score above Silver, Silver above Bronze ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md), section Two steps of maturity). The promise is relative, contention 1x, 2x, 3x ([`sp5-framework/capacity/class-of-service-planning`](../capacity/class-of-service-planning.md)), not a minimum KPI per class.
 - Cadence: daily, in a technical meeting; a month is far too late ([`sp5-framework/performance/kpi-vs-sla`](kpi-vs-sla.md)).
 

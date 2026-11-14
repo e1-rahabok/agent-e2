@@ -24,7 +24,7 @@
 | Guest OS | How the frozen time is accounted | Effect |
 |---|---|---|
 | Windows | Not accounted. | Windows reports a higher utilization than vSphere. |
-| Linux | Accounted as Steal Time. | Accurate when the guest uses a paravirtualized system clock. |
+| Linux | Steal Time only with the VM's steal clock: `stealclock.enable = TRUE`, hardware version 13 or later, a kernel with the VMware steal clock (mainline 5.7 or later, or a distribution backport). Without it: not accounted, as in Windows. | With the steal clock, `st` follows VM CPU Ready; without it, `st` stays 0 however high Ready is. |
 
 - Windows example:
   - second 0-1: the vCPU runs 100%.
@@ -68,7 +68,7 @@
 | System | The kernel or privileged ring, where core OS functions run. |
 | Idle | Not running. Expect a low run queue during idle time. |
 | Wait | Time waiting for IO (disk or network). |
-| Steal | Time the vCPU is frozen because the hypervisor has no physical thread to run it. Exists only in a VM. On dedicated physical hardware there is no Steal Time. |
+| Steal | Time the vCPU is frozen because the hypervisor has no physical thread to run it. Exists only in a VM. On dedicated physical hardware there is no Steal Time. On vSphere it needs the VM's steal clock; without it, 0. |
 
 ## State mapping for one vCPU
 ![Guest OS states mapped to VM states for one vCPU](../images/guest-os-cpu-states-mapped-to-vm-vcpu-states.png)
@@ -142,6 +142,6 @@ corrections: []
 review_notes:
 - 'To check: Section ''Blind spots per layer'': how often ESXi updates the guest on per-core frequency; the book is unsure.'
 - "Section 'Frozen time': reference paper from the book: https://dl.acm.org/doi/10.1145/2668930.2695524"
-- "Section 'Windows vs Linux accounting': Steal Time source from the book: https://github.com/torvalds/linux/blob/master/kernel/sched/cputime.c"
+- "Section 'Windows vs Linux accounting': steal clock from Broadcom KB 434983 (https://knowledge.broadcom.com/external/article/434983) and the Linux VMware steal clock (arch/x86/kernel/cpu/vmware.c, mainline 5.7). To check: a vSphere 9.1 document for `stealclock.enable` on general VMs (the KB is written for Tanzu)."
 status: draft
 ```

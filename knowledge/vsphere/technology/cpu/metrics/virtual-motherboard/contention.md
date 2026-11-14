@@ -3,7 +3,7 @@
 ## Meaning
 - Time the vCPU does not get CPU time.
 - A VCF Operations metric. vSphere has no Contention counter. The vSphere counter is CPU Latency (esxtop %LAT_C).
-- Before VCF Operations 8.18 (July 2024) Contention mapped to CPU Latency, which excludes limit. From 8.18 it has its own formula, which includes limit.
+- Before Aria Operations 8.18 (July 2024) Contention mapped to CPU Latency, which excludes limit. From 8.18 it has its own formula, which includes limit.
 
 ## Formula (from July 2024)
 ```text

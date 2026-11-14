@@ -12,7 +12,7 @@
 - Reports the last observed value, not an average. No highest or lowest variants.
 
 ## Thresholds
-| Range | Per processor (book) |
+| Range | Per processor |
 |---|---|
 | Yellow | 2-4 |
 | Orange | 4-8 |
@@ -29,12 +29,13 @@
 ![Run queue profile across 3,385 Windows VMs](../images/windows-run-queue-distribution-across-vms.png)
 
 ## Cases
-- 8-vCPU VM at 52% with queue 53: expected about 8. Queue cycled 14-59 (sharp rise in 5-10 minutes, slow fall over an hour) and trended up over 7 days (possible leak). Ready, Co-stop, Other Wait, memory contention and disk latency were low. vCPU Run was very imbalanced (gap above 140%). Check software locks (mutex, semaphore) holding ready threads, and high Privileged Time with low User Time (driver or kernel locking).
+- 8-vCPU VM at 52% with queue 53: expected about 8. Queue cycled 14-59 (sharp rise in 5-10 minutes, slow fall over an hour) and trended up over 7 days (possible leak). Ready, Co-stop, Other Wait, memory contention and disk latency were low. vCPU Run was very imbalanced (gap above 140%). A thread blocked on a lock (mutex, semaphore, critical section) is in the Wait state and is not in the queue: the queue counts Ready threads only. A long queue while some vCPUs idle points at threads that cannot use those vCPUs (processor affinity, work bound to one vCPU). High Privileged Time with low User Time points at driver or kernel work (DPC, interrupts).
 - High queue while idle: the application created many threads. 20-second spikes are much smaller in the 5-minute average.
 ![Imbalanced vCPU run with a high queue](../images/windows-high-run-queue-with-imbalanced-vcpu-run.png)
 
 ## Misconceptions
-- "Queue 53 on 8 vCPUs means add vCPUs" → check locks, imbalance and kernel time first.
+- "Queue 53 on 8 vCPUs means add vCPUs" → check vCPU imbalance, processor affinity and kernel time first.
+- "Threads waiting on a lock lengthen the processor queue" → a blocked thread is in Wait; it joins the queue only when the lock is released.
 
 ## Metadata
 ```yaml

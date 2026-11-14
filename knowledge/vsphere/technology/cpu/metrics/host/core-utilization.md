@@ -11,7 +11,7 @@
 - Core Utilization is a static metric: it ignores frequency.
 - It is not the capacity reading under Hyper-Threading: a core with one busy thread still has a free thread. For capacity (space) use Thread Utilization. See [`vsphere/technology/cpu/metrics/host/utilization`](utilization.md), section The capacity reading.
 - Its use is speed: it shows how many cores already run work, where a second thread would share the core.
-- With All-Core Turbo at 20%, Usage (%) = 120% when Core Utilization = 100% (book table). See [`vsphere/technology/cpu/concepts/cpu-frequency`](../../concepts/cpu-frequency.md).
+- With All-Core Turbo at 20%, Usage (%) = 120% when Core Utilization = 100%. See [`vsphere/technology/cpu/concepts/cpu-frequency`](../../concepts/cpu-frequency.md).
 
 ## Rollup
 - ESXi Core Utilization = average of core values.

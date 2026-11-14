@@ -36,14 +36,16 @@ flowchart TD
    - Wait high in Linux, VM disk latency low → the IO waits inside Linux (queue, IO scheduler, filesystem): it never reached the VM.
    - Wait high in Linux and VM disk latency high → the wait is below Linux: the VM and its storage.
    - → step 6.
-6. Network (Guest OS). Receive drops on the vmxnet3 interface (`ip -s link`): the guest's receive ring is full, caused and fixed inside Linux ([`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
+6. Network (Guest OS). Ring-full drops on the vmxnet3 interface: `pkts rx OOB` per receive queue in `ethtool -S` (`ip -s link` RX dropped leaves them out): the guest's receive ring is full, caused and fixed inside Linux ([`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
 7. Verdict.
    - A wait found inside Linux (queue, memory stall, disk wait with low VM latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Linux queues worse.
    - No wait inside Linux, or the signs point down (every vCPU busy, disk wait with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
 
 ## Order rationale
 - Quantify first: the application team describes the symptom in Linux terms; the time window and the slow transaction steer every later check.
-- CPU, memory, disk, network: the order of the Guest OS Performance (%) inputs.
+- CPU first: the run queue is the primary Guest OS contention counter.
+- Memory before disk: paging reads and writes the disk, so a disk queue can be a memory shortage; reading memory first keeps storage from being blamed.
+- Network last: Linux has one network wait sign, ring-full drops.
 - The why after the what: a queue is the fact; locks, kernel time and imbalance explain it.
 - Verdict last: only after every Linux queue is read can the wait be placed inside or below Linux.
 

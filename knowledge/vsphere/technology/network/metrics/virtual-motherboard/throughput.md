@@ -2,8 +2,7 @@
 
 ## Meaning
 - Data rate per direction, in KB per second (vCenter). esxtop shows megabits per second.
-- The book assumes it includes broadcast and multicast and excludes dropped packets.
-- Standard packet size: 1,500 bytes. Jumbo frames: 9,000 bytes. NSX: typically 1,600.
+- Standard packet size: 1,500 bytes. Jumbo frames: 9,000 bytes. NSX adds its Geneve header on the transport network (MTU at least 1,600), not to the VM's packets.
 
 ## Packet size
 ```text
@@ -39,6 +38,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > VM > Overview; Consumption Metrics
 corrections: []
-review_notes: []
+review_notes:
+- 'To check: whether VM network throughput includes broadcast and multicast and excludes dropped packets.'
 status: draft
 ```

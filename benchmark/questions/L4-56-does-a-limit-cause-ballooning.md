@@ -20,7 +20,7 @@ B: Granted above the limit read as the limit not working. Or E: ballooned memory
 - Answer: A, C, D.
 - A: under a limit, Consumed sits at the limit and cannot grow past it.
 - B is wrong: the limit caps the physical memory ESXi gives the VM, which is Consumed. Consumed stays at the limit.
-- C: Granted is the VM's view of mapped pages; shared and zero pages cost little physical memory. It ignores the limit; Consumed does not.
+- C: Granted is the VM's view of mapped pages; shared and zero pages, once shared, cost little physical memory. It ignores the limit; Consumed does not.
 - D: the balloon driver is a kernel driver inside Linux, so its 63.66% of 16 GB (about 10.2 GB) counts as used in the Guest OS counters. Exclude it when sizing the guest.
 - E is wrong: ballooned pages have no ESXi page behind them, so they are not in Consumed.
 

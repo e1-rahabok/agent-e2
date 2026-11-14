@@ -31,7 +31,7 @@
 - Availability, performance, security, capacity, value. Each is a unit of management with its own discipline. The `pillar` tag of the knowledge base uses these five.
 - Value management keeps three things apart: the cost of the infrastructure IT spends, the price IT charges each tenant (line of business), and the business value of the investment. The SP5 diagram labels the pillar Cost + Price.
 - Inventory and configuration are not pillars: they sit under all five.
-- Security is part of the platform (architecture layer), not a pillar.
+- Security also has a platform part (the architecture layer); operating it is the security pillar.
 - CIO order: availability first (a system that is down has neither a performance nor a security problem; nobody can log in to a vCenter that is down); then performance (so slow it is as good as down); then security and compliance (up and fast is not secure).
 - The complexity of a pillar depends on the technology: vSAN capacity is more dynamic than a traditional SAN; a storage policy change can raise consumption at once.
 
@@ -55,7 +55,7 @@
 - Solutions span snapshots, backup, redundancy, fault tolerance, clustering and site recovery. Most consume resources (load balancers, replication), so they go into capacity planning; then they do not hurt performance.
 - Include the load of a DR event in capacity planning.
 - Two metrics: Actual Availability (%) ignores HA design and scheduled downtime; Operational Availability (%) accounts for them, is higher, and is the SLA number ([`sp5-framework/concepts/sla-metrics`](sla-metrics.md)).
-- Each extra nine shrinks the margin of error 10x. The book puts five nines at 10x the cost of four nines.
+- Each extra nine shrinks the margin of error 10x. Five nines cost about 10x four nines.
 
 ## Performance
 
@@ -85,7 +85,7 @@
 - Security covers attacks, by insiders or outsiders: track malicious activity such as misuse of administrator accounts or denial of service.
 - Compliance covers settings that expose loopholes or must meet a standard. It is close to configuration: you comply by controlling configuration values.
 - Compliance is measured continuously, against internal and industry standards.
-- Compliance is binary and unaffected by contention or performance. So the provider guarantees 100% compliance with its own benchmark for every class.
+- Compliance is binary and unaffected by contention or performance. So the compliance level is the same for every class: the contract (SLA) says 99.95%, the internal KSI 100%.
 - Guarantee only what you manage: no Guest OS in the service, no Guest OS compliance and no SLA on it. With the Guest OS in the service, manage its configuration (for example with Active Directory Group Policy).
 
 ## Value: cost, price and business value
@@ -135,7 +135,7 @@
 - "Count HA spare as capacity" → availability and capacity do not overlap; capacity is calculated after availability.
 - "Add hardware for the annual sale day" → burst, borrow hosts, or limit, power off or move other workloads for that day.
 - "The infrastructure team should make developers shrink their VMs" → show the CFO the cost of waste; budget control makes the line of business optimize.
-- "Compliance is lower in the cheaper class" → compliance is binary and guaranteed at 100% for every class.
+- "Compliance is lower in the cheaper class" → compliance is binary and the same for every class: SLA 99.95%, internal KSI 100%.
 - "Offer a compliance SLA for the Guest OS though the customer manages it" → guarantee only what you manage.
 - "VM count per cluster is a configuration setting" → it is inventory. Configuration maximums are inventory maximums.
 - "Reliability needs its own team and metrics" → it is a characteristic of performance and availability; a separate pillar overlaps them.

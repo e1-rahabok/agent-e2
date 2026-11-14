@@ -8,7 +8,7 @@
 ## VM CPU metrics by source
 | Source | VM CPU metrics |
 |---|---|
-| ESXi | Run (ms), Used (ms), Demand (MHz) |
+| ESXi | Run, Used, Demand (esxtop: Run and Used in %; vCenter: Run and Used in ms, Demand in MHz) |
 | vCenter (added) | Usage (MHz), Usage (%) |
 
 ## Used: ESXi vs vCenter

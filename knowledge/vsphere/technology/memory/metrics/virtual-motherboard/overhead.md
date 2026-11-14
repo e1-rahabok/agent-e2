@@ -1,7 +1,7 @@
 # VM Memory Overhead
 
 ## Meaning
-- ESXi memory for virtualization data structures of the VM: metadata and index information, such as shadow page tables.
+- ESXi memory for virtualization data structures of the VM: metadata and index information, such as nested (EPT or RVI) page-table mappings and the frame buffer.
 - vCenter counters: Overhead reserved, Overhead consumed, Overhead active.
 - Rises with more vCPUs and more configured memory.
 - Operationally negligible.

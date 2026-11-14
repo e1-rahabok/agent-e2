@@ -9,7 +9,7 @@
 - Some configurations have RSS deactivated by default, because of the potential for increased CPU overhead.
 - Activation per NIC type (9.1 pp. 50-51):
   - Broadcom BCM5741x, BCM5750x, BCM5760x: the bnxtnet driver supports DRSS and NetQueue RSS by default. RSS is supported in pktHandle mode and EDP mode.
-  - Intel 82599, X450, X550, X557, E610, E710, XL710, XXV710, E810, E830, E835: enable with the ixgben driver module parameter `RSS`.
+  - Intel 82599, X450, X550, X557, E610, X710, XL710, XXV710, E810, E830, E835: enable with the ixgben driver module parameter `RSS`.
   - Marvell FastLinQ 45xxx and 41xxx: the qedentv driver supports DRSS and NetQueue RSS by default. RSS is supported with and without EDP.
   - NVIDIA (previously Mellanox) ConnectX-4 through ConnectX-9: the nmlx5_core driver supports DRSS and NetQueue RSS by default.
 - For each VM that uses the feature, once RSS is enabled (by default or by command), add `ethernetX.pNicFeatures = "4"` to the VMX file, where X is the virtual NIC number.

@@ -61,8 +61,8 @@ flowchart TD
 - Release 1.0 checks availability, performance and capacity. Security and compliance steps are a future phase: state them as not checked.
 
 ## Health checks vs other flows
-- Most questions in VCF operations are not health checks. Three kinds of question are answered by a flow, each in its own folder:
-  - Health check (`health-check/`): is this object healthy? Starts from a schedule or a request, on one object type, every pillar.
+- Most questions in VCF operations are not health checks. Three kinds of question are answered by a flow, each with its own `retriever_guide`:
+  - Health check (`<object>-health-check` files): is this object healthy? Starts from a schedule or a request, on one object type, every pillar.
   - Troubleshooting (`troubleshooting/`): why is it down or slow? Starts from a known problem: a complaint, an alert, a failed health check step.
   - Decision tree (`decision-tree/`): can it, should it, how much? Starts from one operational question and ends in a choice to act, with its reason. Examples: can this cluster take more VMs ([`vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms`](../../vsphere/object-types/cluster/decision-tree/can-cluster-take-more-vms.md)), does this host have CPU headroom ([`vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom`](../../vsphere/technology/cpu/decision-tree/host-cpu-capacity-headroom.md)), should this VM be downsized ([`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../vsphere/technology/cpu/decision-tree/oversized-vm-downsizing.md)).
 - A health check may read the result of a decision tree as one of its steps: the cluster health check reads whether the cluster is closed. The decision tree is still not a health check.

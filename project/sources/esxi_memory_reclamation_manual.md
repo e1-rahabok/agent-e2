@@ -12,7 +12,7 @@ Beginning in ESXi 6.0 and maintained through ESXi 7.x, 8.x, and 9.1, ESXi incorp
 
 The parameter $\text{minFree}$ represents the baseline amount of physical RAM that VMkernel reserves exclusively for its critical system processes. It is calculated automatically during host boot based on total host capacity.
 
-For modern hosts, $\text{minFree}$ is computed non-linearly across memory tiers (roughly $890\text{ MB}$ for the first $4\text{ GB}$, plus $1\%$ to $2\%$ of additional capacity up to scaling caps).
+For modern hosts, $\text{minFree}$ is computed non-linearly across memory tiers (roughly $900\text{ MB}$ for the first $28\text{ GB}$: 6% of the first 4 GB, 4% of the next 8 GB, 2% of the next 16 GB; then $1\%$ of the rest).
 
 ### Example Reference Table (1 TB Host)
 For a host equipped with $1\text{ TB}$ ($1,024\text{ GB}$) of physical RAM:

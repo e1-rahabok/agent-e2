@@ -21,7 +21,7 @@
 - Placement inside a socket affects application performance.
 
 ## NUMA
-- NUMA node = package, not always socket. One socket can hold more than one package, for example with Intel Xeon Cluster-on-Die enabled.
+- NUMA node = a memory domain, not always a socket. One socket (package) holds several NUMA nodes with Sub-NUMA Clustering (SNC, formerly Cluster-on-Die) or AMD NPS2 and NPS4.
 - AMD EPYC 9005: AMD states the socket is best divided into 4 NUMA domains. The setting is called NPS4.
 - In NPS4, each domain has 6 memory DIMMs and 3 memory controllers.
 - Intel: SAP recommends enabling Sub-NUMA Clustering (SNC). The workload situation is similar to AMD NPS4.

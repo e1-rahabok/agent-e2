@@ -46,7 +46,7 @@ The variants differ in what is sold, how it is priced, and which SLA is offered.
 | Availability | Actual Availability (%) | Absolute: as it happened; usually lower |
 | Performance | KPI (%) | Absolute: as it happened |
 | Capacity | Capacity Remaining (%) | Relative to usable capacity, not total |
-| Capacity | Time Remaining (days) | Days until Capacity Remaining reaches 0 |
+| Capacity | Time Remaining (days) | Days until projected utilization reaches usable capacity |
 | Compliance | Benchmark compliance (%) | One metric per benchmark, such as PCI-DSS |
 
 - Performance has no SLA and no SLI: the KPI is enough ([`sp5-framework/performance/kpi-vs-sla`](../performance/kpi-vs-sla.md)).

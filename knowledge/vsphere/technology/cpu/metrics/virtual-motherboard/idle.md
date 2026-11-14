@@ -1,7 +1,7 @@
 # VM CPU Idle
 
 ## Meaning
-- Time the vCPU was scheduled but had nothing to run.
+- Time the Guest OS had the vCPU halted (HLT or MWAIT in its idle loop): ESXi de-schedules a halted vCPU, so it holds no physical thread.
 - Part of Wait.
 
 ## Mechanism

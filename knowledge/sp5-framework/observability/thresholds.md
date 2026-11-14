@@ -22,7 +22,7 @@ threshold(VM layer) < threshold(Guest OS layer) < threshold(application layer)
 
 ## Time window rule
 - "Consistently above X" must be translated into a time window.
-- IO is measured per second. A 5-minute window = 300 samples.
+- vSphere samples every 20 seconds: a 5-minute window holds 15 samples (150 in esxtop at 2 seconds); an IO rate is a per-second value within each sample.
 - Observed: a 5-minute window on disk latency produces many alerts but few user complaints.
 
 ## Interval rule

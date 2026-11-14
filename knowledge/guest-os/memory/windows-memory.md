@@ -28,7 +28,7 @@ In Use    = Total - (Modified + Standby + Free)
 ![Windows In Use with compressed pages](images/windows-memory-in-use-with-compressed-pages.png)
 ![Windows Standby Normal swinging widely on an Exchange 2013 mailbox server; Standby Core and Standby Reserve stay negligible](images/windows-memory-standby-normal-swings-on-exchange-server.png)
 
-## Free memory guidance (book)
+## Free memory guidance
 - Keep above 500 MB for server VMs, above 100 MB for VDI VMs (VDI adds up: 10K users × 100 MB = 1 TB).
 - Near-zero free memory with healthy other metrics is ideal: no waste.
 - Free, page-in rate and commit ratio are capacity (utilization) metrics, not contention. They cannot measure severity. Windows and Linux do not measure how long the CPU waits for memory.
@@ -36,7 +36,7 @@ In Use    = Total - (Modified + Standby + Free)
 
 ## Page file
 - Paging is integral: Windows uses the page file while physical memory is free. Microsoft advises not disabling it. Let Windows manage its size.
-- Default size = physical memory (8 GB RAM, 8 GB page file). Larger than that: memory pressure.
+- System-managed size: the minimum depends on page file use history, RAM ÷ 8 (at most 32 GB) and the crash dump setting; the maximum is 3 × RAM or 4 GB, whichever is larger. Windows grows the file when the commit charge passes 90% of the commit limit (Microsoft Learn, How to determine the appropriate page file size for 64-bit versions of Windows).
 - Processes see virtual memory backed by RAM and page file. Paging moves pages between page file and RAM.
 - Page file size is a poor sizing input: SuperFetch prefetches pages that are never used. Paging rate (recent 300 s in VCF Operations) is more realistic.
 - Page in: a potential performance indicator. Page out: a potential capacity indicator.
@@ -51,7 +51,7 @@ In Use    = Total - (Modified + Standby + Free)
 - Page-out: less important; usually idle pages. Large pages are never paged out.
 - 3,325 VMs, 4 months, 99th percentile of 5-minute values: 97% below 32,000 pages; a few above 500,000.
 ![Windows page-out 99th percentile distribution across 3,325 VMs over 4 months](images/windows-memory-page-out-99th-percentile-distribution-across-vms.png)
-- Example arithmetic: 10,000 pages/s × 8 KB × 300 s = 24 GB in 5 minutes.
+- Example arithmetic: 10,000 pages/s × 4 KB × 300 s = 12 GB in 5 minutes.
 - Across about 3K VMs: page-in max about 4x page-out; at the 99th percentile about 9x. Likely read-only pages (binaries) discarded instead of written.
 - Both are momentary: the 99th percentile is usually far below the maximum (about 1,000 VMs checked).
 - Example Oracle RAC VM: page-in and page-out correlated. 100,000 pages/s × 4 KB = 400 MB/s, 120 GB in 5 minutes.
@@ -63,7 +63,7 @@ In Use    = Total - (Modified + Standby + Free)
 |---|---|
 | Active File Cache Memory | Active subset of the system file cache (System Cache Resident Bytes, Memory \ Cache Bytes). Last observed value. |
 | Committed Bytes | Committed virtual memory; not all written to the page file yet. Measures demand: can rise without In Use rising (example: committed 2x usage, Free and Cached unchanged). |
-| Commit Limit | RAM + page file, typically 2x RAM. A growing limit is an early warning: Windows grows pagefile.sys under pressure. |
+| Commit Limit | RAM + the current page file size. A growing limit is an early warning: Windows grows pagefile.sys under pressure. |
 | % Committed | Keep below 80%. Performance drops at 90%. With the page file disabled, Windows slowed and applications crashed despite over 1 GB free. |
 
 - Reserved memory (databases, JVM reserve a contiguous block) holds no data until committed. Committed memory is guaranteed in RAM or on disk (page file).

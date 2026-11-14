@@ -9,8 +9,8 @@ Why Agent E2 can win: [MISSION.md](../MISSION.md). The whole system: [ARCHITECTU
 ## 1. Who decides what
 | Part | Does | Never does |
 |---|---|---|
-| Agent (code) | Builds the case; plans the reading set; runs the catalog, calculator, flow executor and planning calculator on the case's values; decides whether to ask the user; calls the model; checks the answer; follows up once on a gap | Writes prose; guesses a value |
-| Harness | The tools (hybrid search, catalog, calculator, planning calculator, flow executor, web), budgets, the verifier, the model client | Decides |
+| Agent (code) | Builds the case; plans the reading set; runs the catalog and the calculator on the case's values (the flow executor and the planning calculator: to build, section 4.3); reads the pages the question links; decides whether to ask the user; calls the model; checks the answer; follows up once on a gap | Writes prose; guesses a value |
+| Harness | The tools (hybrid search, catalog, calculator, web; the planning calculator and the flow executor, built but not yet called), budgets, the verifier, the model client | Decides |
 | Model | Reads the question and its images into the case (fixed schema); reads the reading set and writes the answer, with a file for each claim | Chooses files or tools; does arithmetic; compares a value with a threshold |
 | Knowledge | The map the agent plans with (file kinds, links, catalog, flows, term map) and the text the model reads | |
 
@@ -105,7 +105,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 
 | Search | Recall | Every needed file | Main file missing | 3 needed files | 4 | 5 or more |
 |---|---|---|---|---|---|---|
-| BM25 | 76% | 109 of 196 (56%) | 25 | 52% | 33% | 21% |
+| BM25 | 76% (77% after Q211) | 109 of 196 (56%; 110 after Q211) | 25 | 52% | 33% (36% after Q211) | 21% |
 | Hybrid | 80% | 117 of 196 (60%) | 19 | 57% | 40% | 26% |
 
 - Outputs: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). The design was measured against classic mode before it was built: hybrid recall 69% to 80%, complete 46% to 59% ([archived](../project/archive/benchmark-results-before-2026-11-14/retrieval-2026-11-14/plan-hybrid.md)); generations are not compared further.
@@ -128,14 +128,14 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 
 ### 4.5 Answer
 - One model call (n with consensus) with: the rules (knowledge base first and it wins; a file for each claim; a threshold only with its source; Unsure over a guess); the up-front misconceptions and confusable pairs ([`harness/primer.py`](primer.py), config `primer`); the case as read; the computed facts; the coverage note when it applies; the reading set; any web page the question links; the question.
-- Answer shape: conclusion first, then the mechanism and the reason, then what to check next. Each claim names the file it rests on. A claim with no file goes under "Not settled by the knowledge base" (Q199, option A). A product label follows the teaching order of [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md), section Product label and better model.
+- Answer shape: conclusion first, then the mechanism and the reason, then what to check next. Each claim names the file it rests on. Open answers: a claim with no file goes under a last line "Not settled by the knowledge base:" (`agent.OPEN_SHAPE`; built ahead of the author's answer to Q199, option A, and not yet measured; the judge has no rule for that line yet, Q199). Proposed, not built: a product label follows the teaching order of [KNOWLEDGE-ENGINEERING.md](../KNOWLEDGE-ENGINEERING.md), section Product label and better model (Q208).
 - Not built: a `MISSING:` line for the model to name what it lacks. The gap follow-up (4.6) finds the same need from the draft, and models given a context seldom ask (primed start).
 
 ### 4.6 Check
 - Verifier ([`harness/verify.py`](verify.py)): format, letters, Unsure alone; one repair turn.
 - Gap follow-up, once (`gap_followup`): every metric the draft names, for the case's objects, must resolve to a file in the reading set. A name outside it (the draft reasons about Co-stop; the reading set has no Co-stop file) makes the agent add that file's best sections (at most 2 files) and ask for the answer again. Only names of two or more words or a hyphenated name count (`strict`): in the first validity sample, single words such as Throughput or Performance fired it on 6 of 9 answers with unrelated files; strict, on 0 of 9. This is the gain the tool loop was built for, a chain across files, run by code on evidence in the draft instead of on the model's choice.
-- Grounding: a number in neither the question, the reading set nor the computed facts is flagged; a cited id must exist.
-- Consensus (multiple choice): n samples of stage 5 on one reading set; unanimous letters stand, otherwise Unsure ([README.md](README.md), section 6a).
+- Grounding (multiple choice; open answers are not verified): a number in neither the question, the reading set nor the computed facts is flagged; a cited id must exist.
+- Consensus (multiple choice): n samples of stage 5 on one reading set; unanimous letters stand, otherwise Unsure ([README.md](README.md), section 6a). Each sample runs its own gap follow-up, so two samples can read different extra sections after their drafts; the shared reading set is stages 1-4.
 - Coverage boundary: when nothing in the reading set came from tier 1 or 2 (no flow, no file the question names: only search hits), the answer prompt says the question may be outside the knowledge base, and to say so if the text does not settle it. Trace step `coverage` (`weak` or `named`). A search-score limit is set later on the field set (Q207), not on the benchmark.
 
 ## 5. Rules and budgets

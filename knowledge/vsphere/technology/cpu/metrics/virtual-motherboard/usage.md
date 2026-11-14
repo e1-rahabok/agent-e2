@@ -26,13 +26,12 @@
 
 ## Formula
 ```text
-Usage = Used + work done by the kernel on behalf of the VM
 Usage (%) = (sum of Usage (MHz) of each vCPU + VM-level load) / VM static CPU speed
 ```
 - Gap to Used grows on VMs processing many network packets or storage commands.
 - Usage (%): VM level only. Usage (MHz): vCPU and VM level.
 - Both exist only in vCenter, not in ESXi.
-- Usage (%) and Usage (MHz) are very similar but not always identical. The book's guess: Usage (%) contains VMX load.
+- Usage (%) and Usage (MHz) are very similar but not always identical.
 
 ## Turbo example
 - One 24-vCPU VM fills a host: 12 cores, 2.4 GHz nominal, HT on. VM at about 100%.
@@ -106,5 +105,6 @@ review_notes:
 - 'To check: the 37.5% Hyper-Threading penalty; not found in Performance Best Practices for VMware vSphere 9.1.'
 - Sections Throughput, Masked degradation, and the last misconception: from CPU > Architecture.
 - 'Sections Formula, Turbo example, Usage vs Run at scale: from CPU > VM.'
+- 'To check: whether VM CPU Usage (%) contains VMX load, the gap between Usage (%) and Usage (MHz).'
 status: draft
 ```

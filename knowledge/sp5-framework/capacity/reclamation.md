@@ -52,8 +52,8 @@
 - Example: 20 large VMs reduced by 10 vCPUs each, or 100 small VMs by 2 each: both reclaim 200 vCPUs. The large-VM option gives more and is easier:
   - every downsize requires downtime, approval and a change request; 20 changes cost less than 100;
   - owners resist giving up what they have, more so when they have little;
-  - large VMs hurt other VMs: the scheduler must find cores for all their vCPUs, idle or not, and other VMs get migrated between cores and sockets (esxtop tracks these migrations);
-  - large VMs are slower themselves: all their vCPUs must be co-scheduled (Co-stop);
+  - large VMs hurt other VMs: their busy vCPUs need many threads at once, and other VMs get migrated between cores and sockets (esxtop tracks these migrations);
+  - large VMs are slower themselves: when busy vCPUs drift apart, the lead vCPU is held until its siblings catch up (Co-stop; relaxed co-scheduling, idle vCPUs are de-scheduled);
   - large VMs lower the consolidation ratio.
 
 ## Two sides of a running VM

@@ -7,7 +7,7 @@
 ## Counters
 - IOPS, throughput and latency, each read and write: 6 counters.
 - Block size: derive as throughput / IOPS.
-- Datastore latency observed by VMs: much higher than the datastore latency in the book's example. Only the kernel sits between them; the gap is unexplained.
+- Datastore latency observed by VMs: much higher than the datastore latency in one observed example. Only the kernel sits between them; the gap is unexplained.
 - Highest latency: a normalized average of read and write, so it can be lower.
 - Outstanding IO: derive from latency and IOPS. Latency is more insightful: little IO in the queue can still mean high latency.
 - Queue depth per datastore (likely the backing LUN). Check settings are as expected and consistent; list them per cluster.
@@ -23,6 +23,8 @@
 - Per host and datastore only: a datastore total across hosts is not available. Sum the hosts that mount it.
 - Unmap starts from two places: the VMFS datastore (deleted or migrated VMs, consolidated snapshots) and the Guest OS (files deleted on a thin virtual disk).
 - VMFS6 sends unmap automatically, in the background, at a constant rate. Default priority Low: 25-50 MB/s; Medium 50-100 MB/s; High above 100 MB/s; None deactivates it. Granularity equals the VMFS block size (1 MB): free regions smaller than that are not reclaimed.
+- Fixed method: a set rate instead of a priority, at least 10 MB/s (`esxcli storage vmfs reclaim config set -l <datastore> -m fixed -b <MB/s>`); `esxcli storage vmfs reclaim config get -l <datastore>` shows the current setting.
+- VMFS frees the space at once; the array frees its blocks only as the throttled unmap reaches it, so array free space lags (Broadcom KB 452963). To catch up at once: `esxcli storage vmfs unmap --volume-label=<datastore>`.
 - A host sending unmap regularly is normal on thin-provisioned arrays. Unmap Size near 0 for weeks on a thin datastore with deletions: check that space reclamation is on.
 - Space left to reclaim in a VM: compare Guest OS used space with virtual disk used space ([`sp5-framework/capacity/reclamation`](../../../../../sp5-framework/capacity/reclamation.md), section TRIM and unmap).
 

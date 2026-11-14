@@ -19,7 +19,7 @@
 | Hyper-Threading effect | No | Yes | No | No |
 | Frequency below nominal | No | Yes | No | No |
 
-- Stable sum = Ready + Co-stop + Overlap + Other Wait + Swap Wait. The book's more stable contention measure. All in ms.
+- Stable sum = Ready + Co-stop + Overlap + Other Wait + Swap Wait. A more stable contention measure. All in ms.
 
 ## Ranking
 - Ready and Co-stop are the main counters.
@@ -38,7 +38,7 @@
 - Cluster performance: not Contention (includes limits). Not Latency alone (includes HT and frequency).
 
 ## Misconceptions
-- "Latency 0% and Contention 0% means no waiting" → a limit is excluded from Latency. Check Ready.
+- "Latency 0% means no waiting" → limits are excluded from Latency. Check Ready or Contention.
 - "The vCPU states metrics are independent" → Ready on one vCPU causes Co-stop on its siblings.
 
 ## Metadata

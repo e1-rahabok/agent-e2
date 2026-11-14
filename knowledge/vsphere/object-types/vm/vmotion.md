@@ -19,7 +19,7 @@
 ## Stun time
 - A checkpoint stun: no guest instruction executes on the same vmx file.
 - Caused by device reset, disk branching, disk promotion, snapshot take and snapshot consolidate.
-- In the first vMotion phase a snapshot (delta VMDK) is created, which requires a stun; writes then go to the delta disk.
+- A compute vMotion copies the VM's state (memory, registers, network connections) to the target host; it creates no delta disk. Stun time is the switch-over: the VM is paused while its last memory pages and device state are copied, then resumes on the target (vSphere 9.1 documentation, Stages in vSphere vMotion).
 
 ## Misconceptions
 - "Downtime value 150,000 is 150 seconds" → the unit is microseconds: 150 ms.

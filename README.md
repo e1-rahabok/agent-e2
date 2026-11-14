@@ -80,7 +80,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | Read                                                 | For                                                                                                         |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | [MISSION.md](MISSION.md)                             | The mission; why it is possible; what we can change; risks; what the product must do; design considerations |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: repository, parts, modes, local deployment, checks, query flow                                   |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                   | The whole system: repository, parts, control, local deployment, checks, query flow                                 |
 | [REPOSITORY-MAP.md](REPOSITORY-MAP.md)               | Where each folder and file lives                                                                            |
 | [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md) | How expertise is codified and found; folder, metadata, misconception, flow, image and writing rules                  |
 | [harness/AGENT.md](harness/AGENT.md)                 | What the agent knows up front, what it decides, its rules, how it is improved                               |

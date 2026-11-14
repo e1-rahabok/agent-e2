@@ -69,7 +69,7 @@ Run + Ready + Co-stop + Wait = 100%    (per vCPU, per sample period)
 | Ready, Co-stop | Opposite causes. For the guest the effect is the same: a freeze. |
 | Wait | Covers both idle and IO wait. The hypervisor cannot tell whether the guest waits for IO or is idle. Either way, the vCPU does nothing. |
 | Wait | Also covers wait caused by hypervisor IO. |
-| Wait (idle) | Idle = executing the idle loop. A CPU cannot stop executing instructions without powering down. The kernel runs a lowest-priority system thread: the idle task. |
+| Wait (idle) | Idle = the Guest OS halted the vCPU in its idle loop (HLT or MWAIT); ESXi de-schedules it, so it holds no physical thread. |
 
 ## Hyper-Threading and vCPU states
 - Ready, Co-stop and Wait do not register slowdown from Hyper-Threading.

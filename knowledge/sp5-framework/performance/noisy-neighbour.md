@@ -59,11 +59,11 @@
   - too low → VM latency rises; too high → no protection. If each of 2,000 VMs may take 2.5% of the array, 40 VMs (2% of the population) at their limit saturate it, even with IO spread evenly over the disks; hot spots make it worse;
   - a limit on the OS disk is reasonable when the applications do not use it: it stops rogue agents and system services.
 - Reservation: none in the VM disk settings.
-- Share: applies only when latency passes a threshold. It ignores disk size. The control wanted is IOPS per GB: storage sold by GB should carry IOPS and throughput at a latency, which justifies a higher Gold price per GB.
+- Share: ignored from VCF 9.0, which keeps only the IOPS limit (Broadcom KB 385396); before, it applied only when latency passed a threshold. It ignores disk size. The control wanted is IOPS per GB: storage sold by GB should carry IOPS and throughput at a latency, which justifies a higher Gold price per GB.
 - Disk space under thin provisioning cannot be controlled. Monitor snapshot age and remove snapshots within a few days.
 
 ### Storage I/O Control
-- Deprecated: with VCF 9.0, vSphere Storage I/O Control components are deprecated (vSphere 9.1 documentation). Do not design with it; the knowledge base follows the official deprecation, not the book.
+- Deprecated: with VCF 9.0, vSphere Storage I/O Control components are deprecated (vSphere 9.1 documentation). Do not design with it.
 - It was datastore-wide throttling, separate from the per-disk controls, and never applied to vSAN, which has its own mechanism.
 
 ## Network
@@ -73,7 +73,7 @@
 - With 2 × 10 Gb the risk is far higher: it is the overcommit ratio again.
 - The pool is the group of uplinks assigned to the switch, not one uplink. With Load Based Teaming the distributed switch checks the uplinks every 30 seconds; above 75% load it moves the port (VM or VMkernel) with the highest I/O to another uplink.
 - Configured on the distributed switch, not in the cluster resource allocation. Each VM network adapter has share, reservation and limit.
-- Limit and reservation per VM: not recommended. They complicate operations, more so in a dynamic, large environment. The book's 8 Gb/s limit and 100 Mb/s reservation are withdrawn.
+- Limit and reservation per VM: not recommended. They complicate operations, more so in a dynamic, large environment. An earlier advice of an 8 Gb/s limit and a 100 Mb/s reservation is withdrawn.
 - Share: the main issue is VM vs VMkernel traffic. All VM traffic gets one share as a group, while each VMkernel traffic type gets its own share, so VM traffic is outnumbered.
 - Example, a distributed switch (not the defaults): virtual machine traffic High (100) as one group; NFS High (100); management, NVMe over TCP, provisioning, vSAN and backup NFC Normal (50 each); Fault Tolerance, iSCSI, vMotion, data protection backup and vSphere Replication Low (25 each). VMkernel traffic totals 475 shares against 100 for all VMs.
 - Between VMkernel types it is hard: replicating a mission-critical VM vs migrating a development VM.

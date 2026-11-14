@@ -13,7 +13,7 @@ Maps Windows In Use to VM Consumed (or Active) as two views of the same utilizat
 - Consequence: size the Guest OS from Guest OS metrics; read VM metrics for what ESXi does.
 
 ## Notes
-- The only channel into the Guest OS is VMware Tools (the balloon driver): not needed for the answer.
+- The only channel for ESXi to ask the Guest OS for memory is the balloon driver (VMware Tools on Windows; the vmw_balloon kernel module on Linux): not needed for the answer.
 - Author's prompt to Gemini 3.1 Pro (high effort), 2026-11-10. Author: Gemini's answer looks copied from the book. A parity question: Agent E2 must at least match it.
 - The prompt is the author's own words (a real exchange); the key was drafted by Claude 2026-11-10 from the knowledge files listed in `knowledge`. Counts only after author approval.
 

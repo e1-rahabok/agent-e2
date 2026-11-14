@@ -12,7 +12,7 @@
 - A VM belongs to the host named in its `summary|parentHost` property; it counts only when `summary|runtime|powerState` is Powered On.
 
 ## Thresholds
-- Colour levels (yellow, orange, red for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
+- Colour levels (green, yellow, orange, red, zero for 5 minutes, 20 seconds and 2 seconds): `catalog/thresholds-performance`, section `kpi`. They are shown with this file; this file holds the reasons.
 
 - The red range ends where the sub-metric scores 0.
 - Excluded: while bad packets are exactly 0, the row is left out of the KPI, so it does not add a free 100. Any bad packet is yellow and counts.

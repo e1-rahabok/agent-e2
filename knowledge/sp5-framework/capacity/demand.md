@@ -75,7 +75,7 @@ Reviewed together: each covers what the other lacks.
 | Stage | Planning | Running |
 | Where | Indirectly: resource pool | Directly: VM |
 
-- A reservation set on the VM changes HA admission control and HA restart: unreserved capacity left after host failures decides placement. Set it on a resource pool instead (Frank Denneman's recommendation, cited by the book).
+- A reservation set on the VM changes HA admission control and HA restart: unreserved capacity left after host failures decides placement. Set it on a resource pool instead.
 - VM-level reservation leads to lower provider utilization and higher consumer contention: placement becomes unbalanced.
 - Through a resource pool, a Gold VM may not get its reserved share on time: the DRS scheduler lags the ESXi scheduler.
 - Turbo gives spare CPU at ESXi level above the reservable base clock ([`vsphere/architecture/resource-controls`](../../vsphere/architecture/resource-controls.md), section Reservation: CPU vs memory).

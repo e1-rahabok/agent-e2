@@ -18,7 +18,7 @@ Are they right? Where can the packets be lost, and how do you confirm it?
 - The TCP retransmissions in Linux are the evidence: no acknowledgement came back, so Linux sent the data again; each loss also slows TCP down.
 - Confirm with the network team: discard and queue-drop counters on the physical switches in the path (the top-of-rack ports facing the host first, then upstream, the firewall and the WAN link) in 01:00-02:00, or a packet capture at both ends.
 - The uplink near line rate while the backup runs points at congestion in that hour.
-- vSphere has no retransmit or network latency counter; the retransmits must be read inside the guest.
+- vSphere has no retransmit or network latency counter for VM traffic; the retransmits must be read inside the guest.
 
 ## Metadata
 ```yaml

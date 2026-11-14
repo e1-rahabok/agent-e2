@@ -17,7 +17,7 @@
 - Used adjusts Run for:
   - a shared physical core (Hyper-Threading): Used goes down. Used is lower than Run.
   - CPU frequency.
-  - hypervisor IO done on behalf of the vCPU: Used is decreased.
+  - hypervisor work that interrupts the vCPU for other VMs or the system (Overlap): Used is decreased. Kernel work done for this VM (System) is added to VM-level Used.
 - See [`vsphere/technology/cpu/concepts/run-time-vs-run-quality`](../../concepts/run-time-vs-run-quality.md).
 
 ## Hyper-Threading examples

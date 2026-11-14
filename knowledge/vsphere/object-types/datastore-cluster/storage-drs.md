@@ -1,7 +1,7 @@
 # Storage DRS space balancing
 
 ## Definition
-- Storage DRS places and moves VM disks between the datastores of a datastore cluster, for space and, when I/O metric inclusion is on, for I/O latency.
+- Storage DRS places and moves VM disks between the datastores of a datastore cluster, for space. I/O load balancing is gone: Storage I/O Control components are deprecated from VCF 9.0 (vSphere 9.1 documentation, Storage I/O Control; Activate Storage DRS lists only space balancing).
 - It gives initial placement (create, clone, add a disk, move a disk into the cluster) and ongoing balancing recommendations. Fully Automated applies them; Manual lists them on the Storage DRS Recommendations page.
 
 ## Invocation

@@ -8,7 +8,7 @@
 ## Behaviour
 - Can exceed total capacity. Example: 1,053 GB granted on a 755 GB host.
 - Consumed + Swapped + Compressed stays below total capacity.
-- Not 0 on a host with no running VMs. The book's guess: non-VM user worlds.
+- Not 0 on a host with no running VMs.
 ![Granted above total capacity](../../images/esxi-memory-granted-above-total-capacity.png)
 
 ## Misconceptions
@@ -45,6 +45,7 @@ source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Memory > ESXi > Consumption Metrics > Granted
 corrections: []
-review_notes: []
+review_notes:
+- 'To check: what host Granted holds with no running VMs (non-VM user worlds is a guess).'
 status: draft
 ```

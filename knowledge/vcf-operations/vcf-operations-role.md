@@ -21,12 +21,8 @@
   - VM Performance (%): [`vsphere/object-types/vm/vm-performance`](../vsphere/object-types/vm/vm-performance.md);
   - Cluster Risk (%): [`vsphere/object-types/cluster/models/cluster-risk`](../vsphere/object-types/cluster/models/cluster-risk.md);
   - 20-second peaks, how VCF Operations shows a counter: [`vcf-operations/features/peak-20-second-metrics`](features/peak-20-second-metrics.md).
-- This folder holds VCF Operations itself, in five folders:
-  - `concepts/`: what the product is for and how it reaches people (this file, [`sp5-framework/outputs/system-engagement`](../sp5-framework/outputs/system-engagement.md));
-  - `features/`: product features as implemented, such as [`vcf-operations/features/real-time-metrics`](features/real-time-metrics.md);
-  - `dashboards/`: dashboard design and the shipped dashboard suites, such as [`sp5-framework/outputs/dashboard-design`](../sp5-framework/outputs/dashboard-design.md);
-  - `reports/`: report design and the report suite, such as [`sp5-framework/outputs/report-design`](../sp5-framework/outputs/report-design.md);
-  - `alerts/`: how alert definitions are built (bottom up), [`vcf-operations/alert-definitions`](alert-definitions.md).
+- This folder holds VCF Operations itself: this file, [`vcf-operations/alert-definitions`](alert-definitions.md) (how alert definitions are built, bottom up), the report suite, `features/` (product features as implemented, such as [`vcf-operations/features/real-time-metrics`](features/real-time-metrics.md)) and `dashboards/` (the shipped dashboard suites).
+- How to design dashboards, reports and alerts is method: [`sp5-framework/outputs/dashboard-design`](../sp5-framework/outputs/dashboard-design.md), [`sp5-framework/outputs/report-design`](../sp5-framework/outputs/report-design.md), [`sp5-framework/outputs/system-engagement`](../sp5-framework/outputs/system-engagement.md).
 - Later: its own sizing, health and performance troubleshooting.
 - Alert architecture across products (top down): [`sp5-framework/outputs/alert-design`](../sp5-framework/outputs/alert-design.md). The recommended alerts live with the object type they fire on, such as [`vsphere/object-types/vm/vm-alerts`](../vsphere/object-types/vm/vm-alerts.md); their values are in the threshold catalog.
 

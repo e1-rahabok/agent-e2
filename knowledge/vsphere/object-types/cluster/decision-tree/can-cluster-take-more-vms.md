@@ -56,7 +56,7 @@ flowchart TD
    - Any no → no, or change the VM design. All fit → step 8.
 8. Balance (ClusterComputeResource). Inter-host imbalance red or pink → rebalance first: a hot host suffers while the cluster has room ([`vsphere/technology/cpu/metrics/cluster/inter-host-imbalance`](../../../technology/cpu/metrics/cluster/inter-host-imbalance.md)). Then answer yes, with the resource that fills first and the time remaining from the projection ([`sp5-framework/capacity/forecasting`](../../../../sp5-framework/capacity/forecasting.md)).
 
-![Closure thresholds, all at the 95th percentile of the last 24 hours. Consumption (%): red above 80%, orange above 60%, production and non-production. Performance (%): red below 20%, orange below 40%, production and non-production. Risk (%): production orange above 60%; non-production red above 80%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
+![Closure thresholds of the last 24 hours: Consumption and Risk at the 95th percentile, Performance at the 5th percentile. Consumption (%): red above 80%, orange above 60%, production and non-production. Performance (%): red below 20%, orange below 40%, production and non-production. Risk (%): production orange above 60%; non-production red above 80%](../images/cluster-closure-thresholds-prod-vs-non-prod-table.png)
 
 ## Order rationale
 - The goal first: a customer who does not run clusters to the limit has a sufficient answer in VCF Operations' own capacity metrics; the closure model is for running to the limit.
@@ -134,7 +134,7 @@ images:
   - path: ../images/cluster-closure-thresholds-prod-vs-non-prod-table.png
     product: [vcf-operations]
     object: [ClusterComputeResource]
-    metric: ['Capacity Remaining', 'Cluster Performance', 'Cluster Risk']
+    metric: ['Cluster Consumption', 'Cluster Performance', 'Cluster Risk']
     image_type: table
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download); knowledge base synthesis of the files in internal_derive

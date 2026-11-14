@@ -5,7 +5,7 @@
 - The kernel cannot see between the HBA and the device: no fabric topology, no hop count.
 
 ## Counters
-| Counter | Meaning | Healthy value (book) |
+| Counter | Meaning | Healthy value |
 |---|---|---|
 | GAVG (Guest Average) | Total latency seen from the VMM. Guest means VM, not Guest OS. | - |
 | KAVG (Kernel Average) | Time in the VMkernel. Derived from GAVG and DAVG. | Within 0.5 ms. |

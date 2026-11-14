@@ -187,7 +187,7 @@ rows:
   unit: percent
   level: 1
   summary: Percentage of host physical memory that has been consumed
-  kb: vsphere/technology/memory/metrics/virtual-motherboard/usage
+  kb: vsphere/technology/memory/metrics/host/usage
 - counter: mem.swapinRate
   object: HostSystem
   rollup: average

@@ -4,7 +4,7 @@
 - A VM is not an OS: far fewer network metrics than Windows or Linux.
 - Contention: dropped packets only.
 - Traffic type: broadcast and multicast packets. Most traffic should be unicast. Broadcast and multicast can explain drops.
-- Utilization: 6 throughput metrics (the book considers them triplicates) and packet counts.
+- Utilization: 6 throughput metrics (largely repeats of each other) and packet counts.
 - Each group exists for Transmit (outgoing) and Receive (incoming).
 
 ## Instances

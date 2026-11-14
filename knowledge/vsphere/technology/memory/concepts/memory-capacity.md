@@ -41,7 +41,7 @@ VM Demand   = Min (Limit, Consumed + Ballooned + Zipped + Swapped)
 | Memory \| Workload (%) | Possibly a normalized average of hosts. |
 
 ## Storage: used above allocated
-- vSAN protects in software. A 10 GB thick disk (vSAN policy) consumes 20 GB at the VMFS layer.
+- vSAN protects in software. A 10 GB thick disk with a RAID-1, FTT=1 policy consumes 20 GB of vSAN capacity.
 
 ## Misconceptions
 - "Allocated is the ceiling of used" → vSAN protection and other files exceed it.

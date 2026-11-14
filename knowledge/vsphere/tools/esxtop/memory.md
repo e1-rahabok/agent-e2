@@ -5,7 +5,7 @@
 
 | Line | Meaning |
 |---|---|
-| MEM overcommit avg | 1, 5, 15-minute exponentially weighted averages. Ratio of total requested memory to managed memory, minus 1. Requested = VM configured memory (or limit) + user world memory + reserved overhead. Above 0 (ratio above 1): requested exceeds physical; fine with ballooning and sharing. The book prefers configured VM memory alone for capacity. |
+| MEM overcommit avg | 1, 5, 15-minute exponentially weighted averages. Ratio of total requested memory to managed memory, minus 1. Requested = VM configured memory (or limit) + user world memory + reserved overhead. Above 0 (ratio above 1): requested exceeds physical; fine with ballooning and sharing. For capacity, read configured VM memory alone. |
 | PMEM | Physical memory. Total (from BIOS) = vmk + other + free. vmk: kernel code, data, heap, management. Other: VMs and non-VM user worlds. |
 | VMKMEM | Managed (slightly below total; allocatable to VMs, user worlds, kernel), minfree (kept free for critical use; inside Free), reserved (group reservations + overhead reservations + minfree), unreserved (available for reservation), state (keep High). 5 states: high (no pressure), clear, soft, hard, low (under pressure). See [`vsphere/technology/memory/concepts/host-memory-states`](../../technology/memory/concepts/host-memory-states.md). |
 | NUMA | Per node: total and free. Sum is slightly below total. Cluster-on-Die doubles the nodes. |
@@ -18,7 +18,7 @@
 | Counter | Meaning |
 |---|---|
 | MCTL? | Y: a VM (kernel processes are not ballooned). |
-| MCTLSZ (MB) | Current balloon size. Above 0: the host is reclaiming memory. |
+| MCTLSZ (MB) | Current balloon size: memory the balloon holds now. Above 0 says the host reclaimed it at some point, not that it is reclaiming now; MCTLTGT and the host memory state show that. |
 | MCTLTGT (MB) | Balloon target. Not 0: the VM can be ballooned. |
 | MCTLMAX (MB) | Maximum reclaimable by ballooning. Depends on the Guest OS. |
 

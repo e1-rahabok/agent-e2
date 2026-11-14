@@ -205,7 +205,7 @@ def override(rows):
     """Share of answers that state the misconception although every needed knowledge file was in the context.
 
     The knowledge base gave the correct reading, and the model answered from its own (Level 300) belief instead.
-    Knowledge base modes only; nan when no answer had full retrieval recall.
+    Agent E2 only; nan when no answer had full retrieval recall.
     """
     full = [r for r in rows if r['mode'] != 'baseline' and r.get('retrieval_recall') not in ('', None)
             and float(r['retrieval_recall']) >= 1]

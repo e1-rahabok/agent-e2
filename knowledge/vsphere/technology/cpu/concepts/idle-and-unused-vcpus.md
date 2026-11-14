@@ -39,8 +39,7 @@
 - The source recommends testing with the specific workload in the specific environment.
 
 ## CPU Hot Add
-- Adding vCPUs to a running VM with CPU Hot Add deactivates vNUMA for that VM.
-- The guest then sees a single vNUMA node.
+- Enabling CPU Hot Add deactivates vNUMA for that VM, even if no vCPU is ever added; the guest sees a single vNUMA node. Virtual hardware 20 and later: `numa.allowHotadd = TRUE` keeps vNUMA (see [`vsphere/technology/cpu/concepts/virtual-numa`](virtual-numa.md)).
 - Without vNUMA, the guest OS has no knowledge of the host CPU and memory topology.
 - Result: sub-optimal guest scheduling decisions, and reduced performance for applications in large VMs.
 - Activate CPU Hot Add only if the VM is expected to use it.

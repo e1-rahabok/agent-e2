@@ -29,7 +29,7 @@ Runner and commands: [benchmark/runner/README.md](https://github.com/e1-rahabok/
 | Consistency: the same answer on every run | Cost and price (out of scope, author 2026-11-04) |
 | Answering without options (free text, judged) | Agent E2's own framework and the vCommunity management pack (section 6.1) |
 
-- Scope of 1.0: vSphere 9.1 metrics and the Guest OS layer, for performance and capacity, in monitoring and troubleshooting (`MISSION.md`, section 1).
+- Scope of 1.0: vSphere 9.1 metrics, the native VCF Operations metrics on vSphere objects (section 6.1, F2) and the Guest OS layer, for performance and capacity, in monitoring and troubleshooting (`MISSION.md`, section 1).
 
 ## 3. Question set
 - Each question records what it covers in its metadata (`task`, `level`, `answer_type`, `input`, `technology`, `product`, `object`, `tool`, `misconception_type`, `knowledge`). The axes below describe the set; they are not quotas.
@@ -116,7 +116,7 @@ Each question lists every area it touches in `technology` (values from [project/
 ### 3.7 Coverage rules
 | Rule | Checked by |
 |---|---|
-| Every misconception type of `KNOWLEDGE-ENGINEERING.md` is tested, same name on another object most often | `misconception_type` |
+| Every misconception type of `KNOWLEDGE-ENGINEERING.md` is tested | `misconception_type` |
 | Every object type (VM, ESXi, cluster, datastore, Guest OS, resource pool, network) is read | `object` |
 | Every tool (vCenter, VCF Operations, esxtop, Guest OS tools) is shown | `tool` |
 | Troubleshooting flows (a `troubleshooting/` file) are followed in order | `knowledge` |

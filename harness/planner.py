@@ -32,7 +32,7 @@ OBJECT_WORDS = (
 OBJECT_PREFIX = re.compile(r'^(VM|ESXi|Guest OS|Cluster|Datastore|Resource pool|Host)\s+', re.I)
 COUNTER_KEY = re.compile(r'\b([a-z]+\.[a-zA-Z]+(?:\.[a-zA-Z]+)?)\b')
 TROUBLESHOOT = re.compile(r'\b(slow|troubleshoot\w*|what (do|should|would) (you|i|we) check|root cause|cause[sd]?|why (is|are|does|do)|'
-                          r'complain\w*|drops?|dropped|fail\w*|spike\w*|high|degrad\w*)\b', re.I)  # same pattern as modes.py
+                          r'complain\w*|drops?|dropped|fail\w*|spike\w*|high|degrad\w*)\b', re.I)  # the troubleshooting words: flow tier without a case
 
 
 def _tok(text):

@@ -51,7 +51,7 @@
 |---|---|
 | Latency | No |
 | Dropped packets | Yes |
-| Retransmitted packets (TCP retransmits drops) | No |
+| Retransmitted packets (TCP retransmits drops) | VM traffic: no. Host VMkernel TCP: yes (vSAN Performance for Support, `net-stats`) |
 | Jitter (variation of latency) | No |
 
 - Applications can tolerate poor latency better than variable latency.
@@ -98,9 +98,9 @@ images:
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)
   path: Network > Architecture > Unique Characteristics
-corrections: []
+corrections:
+- '2026-11-14: VMXNET3 link speed is a label: 10 Gbps by default, settable from 10,000 to 65,000 Mbps with the VM off, and it limits nothing (Broadcom KB 368812, https://knowledge.broadcom.com/external/article/368812; KB 444078, https://knowledge.broadcom.com/external/article/444078). Section ''Coarse allocation'' follows the KB articles.'
 review_notes:
-- 'Section ''Coarse allocation'': VMXNET3 reported speed and `ethernetX.linkspeed`: check against https://knowledge.broadcom.com/external/article/368812/how-to-change-the-vmxnet3-link-speed-of.html and https://knowledge.broadcom.com/external/article/444078/vmxnet3-guest-os-link-speed-resets-and-d.html for vSphere 9.1.'
 - 'To check: Section ''Contention metrics'': whether vCenter 9.1 has a NIOC cap counter; the book states vCenter 7 has none.'
 - 'Section ''Interconnect'': example outage read from the book: https://blog.ipspace.net/2019/05/real-life-data-center-meltdown.html (third-party).'
 status: draft

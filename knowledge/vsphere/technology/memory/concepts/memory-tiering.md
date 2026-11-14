@@ -61,6 +61,7 @@
 - Broadcom does not state that compression and swap now wait until tier 1 is full. The host's total memory is tier 0 + tier 1, and new pages are allocated from tier 1 once DRAM passes 80%, so host-wide reclamation is expected only when both tiers are nearly full.
 - Do not combine memory overcommit with memory tiering: ballooning and swapping on top of NVMe pages degrade performance.
 - Memory reservations (not pinned memory) can be split between DRAM and NVMe when the reserved VMs together exceed DRAM.
+- A memory reservation does not keep a tiered VM in DRAM: its reservation can be served from NVMe; only its overhead memory always sits in DRAM. To keep a VM in DRAM, turn tiering off for it and reserve all its memory (vSphere 9.1 documentation, pp. 1871, 1873, 1969).
 - vMotion of a tiered VM takes 1.5x to 2x longer: pages are fetched from NVMe first. The running VM is barely affected.
 - After vMotion the destination host starts tiering the VM from scratch: page heat is not transferred (planned for a future release).
 - Measured (VCF 9.0 performance study): evacuating 4 Oracle VMs took 82 s with tiering against 23.5 s DRAM only; downtime stayed below 1 s and the guest penalty below 5%. The extra time is in the precopy, reading cold pages from NVMe.
@@ -134,7 +135,7 @@ memstats -r vmtier-stats -u mb -s name:memSize:active:tier1Target:tier1Consumed
 - tier1Target: NVMe memory the VM is meant to hold; tier1Consumed: NVMe memory it holds now.
 - Tier 1 consumed at 0 is expected while host DRAM consumption is below about 80%: tiering has not started.
 
-## Operations (book)
+## Operations
 - Use memory tiering actively, as part of memory, not as an occasional buffer.
 - Leave 25% of the NVMe drive unpartitioned (for example 1.2 TB of a 1.6 TB drive). The flash translation layer then has spare blocks for lazy garbage collection, avoiding urgent inline garbage collection under write pressure.
 - Track the read latency of the tier device.
@@ -196,7 +197,7 @@ review_notes:
 - 'To check: Section ''Touching a page on NVMe'': a write to a tier-1 page waits for the fetch, and the 1,000x figure, are inferences from the architecture (NVMe is not byte-addressable); no Broadcom page states them.'
 - 'To check: Section ''Interactions'': whether the host memory states and host-wide reclamation count tier 1 as free memory; not stated in the 9.1 documentation (vSphere Resource Management > Memory Reclamation).'
 - 'To check: whether VM memory contention (%LAT_M) counts time waiting for tier-1 fetches; not stated in any source read (2026-11-12).'
-- 'Section ''Operations (book)'': from Storage > ESXi. The 25% figure is field practice from the book, not a vendor value.'
+- 'Section ''Operations'': from Storage > ESXi. The 25% figure is field practice, not a vendor value.'
 - 'Sections ''Mechanism'' (from the 80% line on), ''Sizing (documentation)'', ''VMs kept in DRAM'', ''Interactions'' and the bandwidth, latency and SMART lines in ''Monitoring counters'': from the vSphere 9.1 documentation, vSphere Resource Management > Memory Tiering over NVMe, Capacity Planning Considerations, Virtual Machine Profiles, Configuration Parameters, Assessing Customer Workloads, Memory Tiering Considerations and Best Practices, NVMe Failure Scenarios, Troubleshooting > The Reservable Memory is Lower than Expected, NVMe Device Health Monitoring (pp. 1844-1849, 1868-1873, 1957-1959).'
 - 'Section ''Interactions'': the reason given for not combining overcommit with tiering paraphrases the documentation (potential performance impact).'
 - 'Section ''Monitoring counters'': from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Hosts > Memory (MB), Memory Rate (MBps), Memory Bandwidth (MBps), Memory Latency (ns); View Memory Tiering Device Information (pp. 2038, 2070, 2074-2076, 2145).'

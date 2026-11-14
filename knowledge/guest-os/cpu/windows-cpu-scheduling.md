@@ -31,7 +31,7 @@
 - Tools count threads per state at one instant. Collecting thousands of threads takes about 100 ms, during which Standby slots change hundreds of times. Counts can exceed the number of processors.
 
 ## Priority
-- Windows prioritizes foreground work: 6 priority levels. ESXi has no priority concept: it uses a fair-share scheduler with no foreground.
+- Windows prioritizes foreground work: 6 priority classes over 32 priority levels (0-31); foreground boosts apply to levels 0-15. ESXi has no priority concept: it uses a fair-share scheduler with no foreground.
 - A process often in the queue may have low relative priority. Give agents low priority and limited CPU.
 
 ## Usage, utilization, time

@@ -4,7 +4,7 @@
 - Time a vCPU is blocked by something other than memory: disk IO, network IO, vMotion, snapshots.
 - Example: the VMM layer tries to do something and is blocked.
 - Part of Wait. Contention for the guest: the guest experiences a freeze.
-- Called VM Wait in parts of VCF Operations and the book. Earlier named IO Wait by mistake.
+- Called VM Wait in parts of VCF Operations and in older documents. Earlier named IO Wait by mistake.
 
 ## Formula (VCF Operations)
 ```text

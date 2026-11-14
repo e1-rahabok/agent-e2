@@ -4,7 +4,7 @@
 - Datastore-wide counters computed by Storage I/O Control (SIOC). They span all hosts and VMs on the datastore, unlike the host datastore counters.
 - All show 0 when SIOC is deactivated on the datastore.
 - Statistics level 3. Not stored at the default level 1.
-- Storage I/O Control components are deprecated as of VCF 9.0. The counters still appear in the vSphere 9.1 charts.
+- Storage I/O Control components are deprecated as of VCF 9.0. The counters still appear in the vSphere 9.1 charts. From VCF 9.0 SIOC honours only IOPS limits; it ignores shares and reservations (Broadcom KB 385396).
 
 | Counter | Chart label | Unit, rollup | Meaning |
 |---|---|---|---|
@@ -27,14 +27,15 @@ Normalized Latency = sum(device latency x IO count) / sum(IO count), adjusted fo
 ## Reason
 - SIOC detects congestion from the device latency of the whole datastore, not of one host. One host cannot see the IO of the others.
 - Weighting by IO count stops an idle host with a few slow IOs from dominating the value.
-- When congestion crosses the SIOC threshold, SIOC lowers the device queue depth of each host by shares. Host Maximum Queue Depth per datastore then changes over time. See [`vsphere/technology/storage/metrics/host/datastore`](../host/datastore.md).
-- Activity above 0 means SIOC was throttling. Shares decided which VMs got the IO; a VM with low shares sees its own latency rise.
+- With SIOC enabled, Host Maximum Queue Depth per datastore can change over time when congestion is detected at the array. See [`vsphere/technology/storage/metrics/host/datastore`](../host/datastore.md).
+- Activity above 0 means SIOC was throttling. From VCF 9.0 shares no longer decide which VM gets the IO: High disk shares do not protect a VM from a VM on another host; an IOPS limit on the noisy VM's disks does.
 
 ## Misconceptions
 - "Normalized Latency is low, so VMs see low latency" → it excludes kernel queuing. Compare with VM observed latency.
 - "Normalized Latency equals the host DAVG" → it is size-adjusted and weighted over all hosts.
 - "All SIOC charts at 0, so no congestion" → check whether SIOC is enabled and the statistics level is 3 or higher.
 - "Aggregate IOPs from one host's chart" → one host shows only its own share; this counter covers all hosts.
+- "Give the critical VM High disk shares and SIOC protects it" → from VCF 9.0 SIOC ignores shares; limit the noisy VM.
 
 ## Metadata
 ```yaml

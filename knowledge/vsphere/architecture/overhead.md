@@ -109,7 +109,7 @@
 - Memory | VMkernel consumed covers host/system only, not vSAN.
 ![Kernel memory overhead relative to consumed, 607 hosts](images/esxi-hypervisor-memory-overhead-relative-to-consumed-across-hosts.png)
 
-## Recommended static values (book)
+## Recommended static values
 | Stack | CPU (at 2.5 GHz) | Memory |
 |---|---|---|
 | ESXi + vSAN + NSX | 12 threads | 64 GB |

@@ -20,7 +20,7 @@
 
 - Keep hosts in High. A host that keeps 400% of minFree free keeps the 2 MB backing and its performance benefit. Unless high utilization is the goal, hosts sit in High.
 - Clear is not idle: large-page breaking and page sharing work there. That is why Shared memory can jump while free memory is still far above the balloon point.
-- minFree is computed at boot from host RAM, non-linearly: about 890 MB for the first 4 GB, then 1-2% of the rest up to caps; about 10.8 GB on a 1 TB host. Read it with `vsish -e get /memory/memInfo` (Min free, State) or in the esxtop memory panel header (`state:`).
+- minFree is computed at boot from host RAM, non-linearly: about 900 MB for the first 28 GB (6% of the first 4 GB, 4% of the next 8 GB, 2% of the next 16 GB), then 1% of the rest; about 10.8 GB on a 1 TB host. Read it with `vsish -e get /memory/memInfo` (Min free, State) or in the esxtop memory panel header (`state:`).
 
 ## Ballooning start point
 | | 512 GB host | 1 TB host | 1.5 TB host |

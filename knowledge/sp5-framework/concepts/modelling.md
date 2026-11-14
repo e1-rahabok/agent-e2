@@ -58,7 +58,7 @@
 ## Rare and rarely-green metrics
 - A metric that is green almost always (dropped packets) or whose green says nothing about health (low CPU or memory utilization) would add a free 100 every cycle and hide the others.
 - So such a metric is skipped while green and counts once it leaves green; missing data is left out, never counted as 0. The rules: [`sp5-framework/performance/performance-kpi-design`](../performance/performance-kpi-design.md), section Scoring.
-- The book's alternatives are not implemented: a fixed weight per metric (CPU 40%, memory, disk, network 20% each), a second table that overrides the KPI to red for a rare serious metric, and a multi-table KPI for many equal metrics. Weight depends only on the score. Two tables exist only in availability, as above.
+- Alternatives not implemented: a fixed weight per metric (CPU 40%, memory, disk, network 20% each), a second table that overrides the KPI to red for a rare serious metric, and a multi-table KPI for many equal metrics. Weight depends only on the score. Two tables exist only in availability, as above.
 
 ## Validation
 - Write the common scenarios and the value expected, then check the model gives it.

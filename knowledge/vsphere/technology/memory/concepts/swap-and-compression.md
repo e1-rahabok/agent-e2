@@ -12,7 +12,7 @@
 
 ## Swap instead of ballooning
 - Host swapping is the fallback when the balloon driver cannot reclaim:
-  - VMware Tools (balloon driver) never installed;
+  - balloon driver never loaded (Windows without VMware Tools; Linux without the vmw_balloon module);
   - balloon driver deactivated;
   - balloon driver not running yet, for example while the guest boots;
   - balloon driver too slow for current demand;

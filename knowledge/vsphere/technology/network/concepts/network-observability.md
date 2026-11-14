@@ -91,7 +91,7 @@ flowchart LR
 - To see which objects have a metric: open a VCF Operations policy and search the metric name.
 
 ## Packet size
-- Typically 1,600 bytes with NSX, or 9,000 bytes with jumbo frames.
+- VM packets: up to 1,500 bytes, or 9,000 with jumbo frames. The NSX transport network (Geneve) needs an MTU of at least 1,600 bytes, 1,700 recommended.
 - Special packets (for example ping) are smaller and should be a small share.
 - Track packet sizes against expectation.
 

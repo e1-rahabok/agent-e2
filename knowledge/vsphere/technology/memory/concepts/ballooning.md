@@ -10,7 +10,7 @@
 - A 1 GB balloon does not free 1 GB in ESXi when the pages were shared (TPS). It can be less.
 - The Guest OS allocates to the balloon from Free pages first, then Cache, then Modified, then In Use.
 - The Guest OS must have enough swap space configured for ballooning.
-- How much is requested depends on the Idle Memory Tax. The book advises against changing it.
+- How much is requested depends on the Idle Memory Tax. Do not change it.
 
 ## Performance impact
 - Ballooning by itself does not cause a performance problem.
@@ -35,13 +35,13 @@
 ## Trigger and requirement
 - Trigger: host memory begins to get low and the VM's memory usage approaches its memory target. The balloon inflates when the host enters the Soft state (free memory at 64% of minFree; see [`vsphere/technology/memory/concepts/host-memory-states`](host-memory-states.md)).
 - No host pressure, no balloon: a VM inside its configured memory on a host with free memory is never ballooned, with or without VMware Tools. It reuses its own mapped pages.
-- The `vmmemctl` module (VMware Tools) makes the guest OS give up the pages it considers least valuable.
+- The balloon driver makes the guest OS give up the pages it considers least valuable. Windows: the driver ships with VMware Tools. Linux: the driver is `vmw_balloon`, in the upstream kernel and loaded automatically on a VMware VM; open-vm-tools does not contain it (Broadcom KB 313773).
 - Performance closely matches a native system under similar memory constraints.
 - The guest OS must have enough swap space configured.
-- Ballooning needs VMware Tools running: without the driver, ESXi cannot ask the guest for memory and can only compress or swap, blind to which pages the guest uses.
+- Ballooning needs the balloon driver loaded, not the VMware Tools service: a Linux VM keeps ballooning while vmtoolsd is stopped. Without the driver (Windows without VMware Tools, Linux with the module missing or blacklisted), ESXi can only compress or swap, blind to which pages the guest uses.
 
 ## Misconceptions
-- "ESXi can balloon any VM" → only a VM with VMware Tools running; without it, the host swaps instead.
+- "ESXi can balloon any VM" → only a VM with the balloon driver loaded (VMware Tools on Windows, the kernel module on Linux); otherwise the host compresses and swaps.
 - "Ballooned 10 GB, so the guest is slow" → only requested pages cause a hit. Check Latency.
 - "Balloon frees exactly its size in ESXi" → shared pages free less.
 - "Include ballooned memory in Guest OS sizing" → exclude it.

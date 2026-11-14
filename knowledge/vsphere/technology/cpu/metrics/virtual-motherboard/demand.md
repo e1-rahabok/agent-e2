@@ -3,7 +3,7 @@
 ## Meaning
 - What VM utilization would be had the VM experienced no issue, including Hyper-Threading.
 - Like Usage, but assumes the VM does not share the physical core.
-- An internal metric of the kernel resource scheduler. The book's advice: ignore it for operations.
+- An internal metric of the kernel resource scheduler. Ignore it for operations.
 - Unit: MHz. Source: ESXi. VM level only. vCenter counter: cpu.demand.average.
 - VM realm, not Guest OS realm: the VMkernel computes it and sees physical threads. Its value is affected by Hyper-Threading (it removes the Hyper-Threading charge that Usage applies).
 - Not a contention counter: it does not measure a vCPU being unable to run.
@@ -26,7 +26,7 @@
 - CPU Latency can exceed Demand - Usage.
 - Example: Demand 25%, Usage 15%, Latency about 20%.
 - Reason: Latency includes both frequency and Hyper-Threading. Demand - Usage includes only Hyper-Threading.
-- Older vRealize Operations CPU Contention behaved like Latency here. Since VCF Operations 8.18, CPU Contention is its own sum of Ready, Co-stop, Overlap and Other Wait, without frequency and Hyper-Threading. See [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](contention.md).
+- Older vRealize Operations CPU Contention behaved like Latency here. Since Aria Operations 8.18, CPU Contention is its own sum of Ready, Co-stop, Overlap and Other Wait, without frequency and Hyper-Threading. See [`vsphere/technology/cpu/metrics/virtual-motherboard/contention`](contention.md).
 
 ## Formula (VCF Operations)
 ```text

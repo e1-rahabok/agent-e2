@@ -8,7 +8,7 @@
 |---|---|
 | Swap Consumed | Memory swapped by all powered-on VMs and vSphere services. Falls when pages are swapped back in. Not Swap Out minus Swap In, the same as VM Swapped. |
 | Swap In, Swap Out | Cumulative amounts swapped in or out to date. |
-| Swap In Rate, Swap Out Rate | Rates. The book suspects they include compression; unconfirmed. |
+| Swap In Rate, Swap Out Rate | Rates. |
 
 - 5 swap counters at host level, not 6: Swap Target is missing.
 - Swap Out is cumulative: it does not fall when pages are swapped in.
@@ -53,5 +53,6 @@ corrections: []
 review_notes:
 - 'To check: metric_class: set to contention.'
 - 'Section ''Swap counters at host level'': from Memory > ESXi.'
+- 'To check: whether host Swap In Rate and Swap Out Rate include compression.'
 status: draft
 ```

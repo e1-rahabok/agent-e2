@@ -10,7 +10,7 @@
 ## Mechanism
 - Wait covers both idle and IO wait. The hypervisor cannot tell whether the Guest OS waits for IO or is idle.
 - Wait also covers wait caused by hypervisor IO (VM IO).
-- Idle means the vCPU executes the idle loop. A CPU cannot stop executing instructions without powering down. The kernel runs a lowest-priority idle task.
+- Idle means the Guest OS halted the vCPU in its idle loop (HLT or MWAIT); ESXi de-schedules it, so it holds no physical thread.
 - Guest OS IO wait can appear as VM Run (guest IO processing) or as VM Wait (VM IO).
 - Wait is one of 4 states: Run + Ready + Co-stop + Wait = 100%, per vCPU.
 - See [`vsphere/technology/cpu/concepts/vcpu-states`](../../concepts/vcpu-states.md).
@@ -26,7 +26,7 @@ Wait = Idle + Swap Wait + Other Wait
 | Swap Wait | Memory pages from ESXi swap. | Include. |
 | Other Wait | Anything else: disk IO, network IO, vMotion, snapshots. | Include. |
 
-- Wait mixes consumption (Idle) and contention (Swap Wait, Other Wait). The book groups it separately.
+- Wait mixes consumption (Idle) and contention (Swap Wait, Other Wait). So Wait is grouped apart from both.
 - The Guest OS does not see Swap Wait or Other Wait. It experiences a freeze.
 
 ## Misconceptions

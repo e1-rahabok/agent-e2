@@ -38,9 +38,9 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 |---|---|---|
 | Strong instruction following and context faithfulness | Knowledge beyond vSphere basics | Basics come from training; past them, memory is where Level 300 rules of thumb live |
 | Dense, 27-32B now, about 70B when available | MoE of the same GPU memory | More compute per token for the memory paid |
-| Reliable tool calling | Long reasoning traces | Exact values come from tools; long traces drift and break the answer format |
+| Reliable structured output (JSON) and a stable answer format | Long reasoning traces | The case is a JSON object; exact values come from code; long traces drift and break the answer format |
 | Native vision with good OCR | Vision as an add-on | Screenshots carry the values |
-| Latest generation | Older or sibling models | Newer models follow instructions and use tools better at the same size |
+| Latest generation | Older or sibling models | Newer models follow instructions and read long contexts better at the same size |
 
 - General knowledge benchmarks (trivia, exams) are not a selection signal. Basic vSphere knowledge is tested directly (below).
 

@@ -36,7 +36,7 @@
 
 - More CPU, memory and disk do not make a VM faster; they add overhead.
 - Higher frequency with fewer vCPUs: fewer active threads let ESXi boost the active cores. Check CPU Usage (MHz) per vCPU.
-- Lower Co-stop and Ready: all vCPUs are scheduled, used or not.
+- Lower Co-stop and Ready: idle vCPUs halt and are de-scheduled, but extra vCPUs still add Ready, Co-stop when siblings skew, timer interrupts and lost cache locality.
 - Higher chance of CPU Overlap: more vCPUs, more interrupts and IO serviced on their time.
 - Process ping-pong: the guest scheduler moves threads across vCPUs; each move costs a context switch and cache warm-up ([`vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity`](../../vsphere/technology/cpu/metrics/virtual-motherboard/usage-disparity.md)).
 - Faster snapshots, especially with memory.

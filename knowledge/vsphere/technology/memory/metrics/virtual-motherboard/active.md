@@ -2,13 +2,13 @@
 
 ## Meaning
 - Estimate of VM memory read or written recently. ESXi calls it Touch; vCenter calls it Active.
-- An internal counter of kernel memory management. The book sees no operational use case.
+- An internal counter of kernel memory management. It has no operational use case.
 - VCF Operations name: Memory | Non Zero Active (KB). Active Write counts writes only.
 
 ## Mechanism
 - Active is really a rate (pages touched per time), reported as space (KB).
 - A page can be read and written many times. 100 reads + 100 writes can touch far fewer than 200 pages.
-- Recent must be defined. The book proposes 1 second, like IOPS.
+- Recent must be defined.
 - Sampling: if ESXi samples every 2 seconds, vCenter has 10 samples per 20-second period. Samples can hit the same or different pages. Example: 100 MB then 150 MB active gives 150-250 MB for 4 seconds.
 - Each sample is independent and averaged with earlier samples. Active becomes more accurate over time. esxtop has a longer-term Active; vSphere Client does not.
 - Ballooned memory is excluded (inactive). Active is unaware of locked pages and large pages.
@@ -65,5 +65,6 @@ corrections: []
 review_notes:
 - 'To check: Section ''Mechanism'': the 2-second sampling; the book''s assumption.'
 - 'To check: reference cited by the book, not read (https://blogs.vmware.com/vsphere/2013/10/understanding-vsphere-active-memory.html).'
+- 'To check: a definition of recent for Active (1 second, like IOPS, is a proposal).'
 status: draft
 ```

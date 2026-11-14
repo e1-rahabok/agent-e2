@@ -32,7 +32,6 @@ Consumed = Granted - savings (sharing)
 - First touch: the guest writes a guest physical page with no mapping. The CPU raises an EPT violation, the VMkernel allocates a machine page, writes the mapping and resumes the vCPU. Consumed grows by 4 KB, or 2 MB with large pages.
 - The mapping stays until ESXi reclaims the page (sharing, balloon, compression, swap). Nothing else removes it.
 - An idle guest does not shrink Consumed: halting or waiting vCPUs do not touch the page tables, and with free host memory ESXi has no reason to reclaim.
-- The same holds on KVM and Hyper-V: memory is mapped on demand and kept, unless the guest reports free pages through a cooperating driver.
 
 ## Consumed after the guest frees memory
 - A guest that frees a page only updates its free list. The hypervisor does not see the list, so the ESXi page stays mapped.

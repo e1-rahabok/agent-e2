@@ -45,7 +45,7 @@
 - It charges with Used (ms). Used adjusts Run:
   - shared physical core: Used goes down. Used is lower than Run (62.5% vs 100% when both threads run all the time). Usage also goes down.
   - CPU frequency: Used is adjusted for the actual frequency.
-  - hypervisor IO done on behalf of the vCPU: Used is decreased.
+  - hypervisor work that interrupts the vCPU for other VMs or the system (Overlap): Used is decreased. Kernel work done for this VM (System) is added to VM-level Used.
 
 ## CPU Throughput
 - Frequency and efficiency have the same final effect: they change the productive cycles attributed to a vCPU thread.

@@ -44,7 +44,7 @@
 | QAVG, most of KAVG | The VMkernel device queue | DQLEN against ACTV and QUED, other VMs on the device |
 | DAVG | The device, the fabric or the array | Array load, paths, the fabric |
 | KAVG minus QAVG | The VMkernel stack itself | A small value. A large value points to the host. |
-- Requests at each place follow from the rate and the time spent there: the guest queue is the rate x (guest latency - GAVG); the VMkernel queue is the rate x QAVG; the device is the rate x DAVG. They add up to the Guest OS queue figure: [`guest-os/storage/windows-storage-io-path`](../../../guest-os/storage/windows-storage-io-path.md) and [`guest-os/storage/linux-storage-io-path`](../../../guest-os/storage/linux-storage-io-path.md).
+- Requests at each place follow from the rate and the time spent there: the guest queue is the rate x (guest latency - GAVG); the VMkernel queue is the rate x QAVG; the device is the rate x DAVG. They add up to the Guest OS queue figure: [`guest-os/storage/windows-storage-io-path`](../../../../guest-os/storage/windows-storage-io-path.md) and [`guest-os/storage/linux-storage-io-path`](../../../../guest-os/storage/linux-storage-io-path.md).
 - Two limits can act at the same time, one in the guest and one in the VMkernel. The smaller of the concurrency limits on the path sets the throughput. Fix it first, then read the figures again.
 
 ## Misconceptions
