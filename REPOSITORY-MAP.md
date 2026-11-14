@@ -87,7 +87,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | [`project/design-thresholds.md`](project/design-thresholds.md) | Threshold catalog design: use cases, files, fields. Proposal |
 | [`project/sources/alert_close_cycle_design_best_practices.md`](project/sources/alert_close_cycle_design_best_practices.md) | Example of an alert close cycle design, for review (Q155 answer; reviewed in [`project/design-thresholds.md`](project/design-thresholds.md), section 9.5) |
 | [`project/archive/`](project/archive) | Records no longer maintained: reviews, the plan's decisions before 2026-11-14, results of earlier benchmark generations, legacy code and designs |
-| [`project/vocabulary.md`](project/vocabulary.md), [`project/terms.md`](project/terms.md) | Writing vocabulary; repository terms |
+| [`project/terms.md`](project/terms.md) | Repository terms (words to avoid when writing knowledge: [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md)) |
 | [`project/sources/`](project/sources) | Source documents. Read-only |
 | [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
 | [`project/templates/`](project/templates) | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |

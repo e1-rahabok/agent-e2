@@ -13,7 +13,7 @@ Part of the knowledge rules; overview and why: [KNOWLEDGE-ENGINEERING.md](../../
 | troubleshooting | It is down or slow (complaint, alert, failed health check step). Why? What do I check, in what order? | `troubleshooting/`, or the parent folder for a single flow | `troubleshooting.md` |
 | decision-tree | Can it, should it, how much? One operational question, ending in a choice to act | `decision-tree/`, or the parent folder for a single tree | `decision-tree.md` |
 
-- `retriever_guide` is the kind of the file: the harness (flow tool, primer map, catalog, search filter) and lint read it, not the folder. A kind folder exists only with 2 or more files ([placement.md](placement.md)).
+- `retriever_guide` is the kind of the file: the harness (reading plan, flow executor, catalog, search filter) and lint read it, not the folder. A kind folder exists only with 2 or more files ([placement.md](placement.md)).
 
 ## Metadata fields (end of file)
 Every knowledge file and every benchmark question ends with a `## Metadata` section holding one yaml block. No front matter at the top.
@@ -41,3 +41,19 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `status` | draft (not reviewed) or reviewed. Agent E2 says so when an answer depends on a draft file. |
 
 - Audit information (corrections, what is still to check, review state) lives only in the metadata block. Body text and headings carry no audit markers and no who-said-it tags: no "", no "the author states".
+
+## Dimensions not to mix
+The concepts behind the tags; the allowed values are in [`project/tools/tags.yaml`](../tools/tags.yaml).
+- Object type: a kind of managed object (VirtualMachine, HostSystem). Not a component inside an object (vCPU, vmnic).
+- Object: one named instance of an object type ("db01"). Not a metric or a layer.
+- Instance (metric): a sub-component a metric is reported for (vCPU 0, vmnic1, vmhba0). Tag `instance`. Not an object type.
+- Layer: a level of the stack: guest-os, virtual-motherboard, hypervisor, physical. Guest OS is a layer, not an object type.
+- Vantage point: the layer or object a metric is observed from (consumer VM vs provider ESXi). Expressed through `object` and `layer`.
+- Perspective (book): technology, pillar of operations, product. Not a layer.
+- Technology: cpu, gpu, memory, storage, network, system (the box as a whole). Not a product.
+- Pillar: availability, performance, security, capacity, value. Not a technology.
+- Metric class: contention, consumption, context. Not a pillar.
+- Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
+- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One concept, two homes: `## Misconceptions` in the file, and the widest-reaching ones up front in [`knowledge/misconceptions.md`](../../knowledge/misconceptions.md). [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md), section 4.
+- Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
+- Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.

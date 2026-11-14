@@ -4,6 +4,13 @@ Open questions that must be answered before Agent E2 release 1.0. Rules for answ
 
 ## Open
 
+### Q211 · Knowledge design · One home for the up-front misconceptions
+
+- Files: [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md); [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section 4, One concept, two homes); [project/knowledge-rules/terminology.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/terminology.md); [harness/primer.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/primer.py).
+- Question: each of the 12 lines of misconceptions.md is written twice: in the `## Misconceptions` section of the file it names, and again, reworded, in misconceptions.md. Two copies drift. (A) keep two hand-written copies; (B) one home: mark the promoted line in its file (a metadata list `up_front`), and primer.py builds the block from the marks, so misconceptions.md is generated and archived. The model gets the same text; the author edits one place; lint keeps the 3,000-token budget.
+- Written as now: two copies, by design (KNOWLEDGE-ENGINEERING.md, section 4). Recommended: B. In the new agent the reading set brings a file with its `## Misconceptions` section whenever the question names it; the up-front copy only covers beliefs the question does not name, which needs the text, not a second home for it.
+- Answer:
+
 ### Q208 · Knowledge design · Product label and better model
 
 - Files: [KNOWLEDGE-ENGINEERING.md](https://github.com/e1-rahabok/agent-e2/blob/main/KNOWLEDGE-ENGINEERING.md) (section Product label and better model); [knowledge/glossary.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md); [knowledge/catalog/user-terms.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/user-terms.yaml); [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml) (misconception_type).

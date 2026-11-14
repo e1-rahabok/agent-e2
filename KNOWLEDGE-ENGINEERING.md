@@ -59,9 +59,10 @@ flowchart LR
 | This file | The design: problem, where knowledge lives, forms, Level 400 and misconceptions, why the structure is so, workflow |
 | [placement.md](project/knowledge-rules/placement.md) | Which folder a file goes in; the `knowledge/` tree |
 | [flows.md](project/knowledge-rules/flows.md) | Health checks, troubleshooting flows, decision trees: vocabulary, order, step format |
-| [metadata.md](project/knowledge-rules/metadata.md) | `retriever_guide` values and every metadata field |
+| [metadata.md](project/knowledge-rules/metadata.md) | `retriever_guide` values, every metadata field, the dimensions not to mix |
 | [thresholds.md](project/knowledge-rules/thresholds.md) | What a threshold is, the catalog files, one place per number |
 | [writing.md](project/knowledge-rules/writing.md) | Writing rules, the author's editing checklist, format choices, images, versions |
+| [vocabulary.md](project/knowledge-rules/vocabulary.md) | Words to avoid, each with its replacement and reason |
 | [terminology.md](project/knowledge-rules/terminology.md) | Glossary entries, confusable pairs, up-front misconceptions, budget |
 
 ## 1. The problem

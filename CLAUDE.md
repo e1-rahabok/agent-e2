@@ -13,7 +13,7 @@ How Claude works in this repository. Read at the start of every session. The des
 - Write at Level 400: mechanisms, reasons, trade-offs, edge cases. No Level 200 definitions. Assume the reader knows vSphere basics: cluster, DRS, resource pools, shares, reservations, limits, vCPU, NUMA.
 
 ## Rules for knowledge files
-- Design (where knowledge lives, forms, Level 400 and misconceptions): [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md). Rules, one module each in [`project/knowledge-rules/`](project/knowledge-rules): placement, flows, metadata, thresholds, writing (including no AI-speak, images, versions and sources), terminology.
+- Design (where knowledge lives, forms, Level 400 and misconceptions): [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md). Rules, one module each in [`project/knowledge-rules/`](project/knowledge-rules): placement, flows, metadata (with the dimensions not to mix), thresholds, writing (including no AI-speak, images, versions and sources), terminology, vocabulary (words to avoid).
 - Architecture rule to keep in mind: a VM is a virtual motherboard; the Guest OS is a separate layer. Decide a metric's home by the layer that produces it, not by the object that stores it.
 - When a repository rule conflicts with the author's architecture, raise it in [`project/author-questions.md`](project/author-questions.md); do not resolve it silently.
 
@@ -39,8 +39,8 @@ How Claude works in this repository. Read at the start of every session. The des
 - Questions for the author go in [`project/author-questions-release-1.0.md`](project/author-questions-release-1.0.md) (blocks release 1.0) or [`project/author-questions-future-release.md`](project/author-questions-future-release.md) (later release), one entry each; rules in [`project/author-questions.md`](project/author-questions.md): ID, section, files, search strings, what the knowledge base says now, and an empty `Answer:` line. Do not list them elsewhere.
 - About the book: give a verbatim search string. About a file: link it (the link tools turn file references into clickable GitHub links). Name the item to check (question, option letters, section).
 - Extract the book one Heading 3 at a time. Add that section's questions and continue; do not wait for answers.
-- When the author corrects a wording mistake, add it to the Words to avoid table in [`project/vocabulary.md`](project/vocabulary.md); if users also say the word, add it to the Also called line of its entry in [`knowledge/glossary.md`](knowledge/glossary.md).
-- One English word per concept: the agent's vocabulary in [`knowledge/glossary.md`](knowledge/glossary.md), writing vocabulary in [`project/vocabulary.md`](project/vocabulary.md), repository terms in [`project/terms.md`](project/terms.md). A new term is added there as a proposal and flagged for the author before use.
+- When the author corrects a wording mistake, add it to the Words to avoid table in [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md); if users also say the word, add it to the Also called line of its entry in [`knowledge/glossary.md`](knowledge/glossary.md).
+- One English word per concept: the agent's vocabulary in [`knowledge/glossary.md`](knowledge/glossary.md), words to avoid in [`project/knowledge-rules/vocabulary.md`](project/knowledge-rules/vocabulary.md), repository terms in [`project/terms.md`](project/terms.md). A new term is added there as a proposal and flagged for the author before use.
 
 ## Evaluation
 - The benchmark is a proof, not a goal. It proves that Agent E2 works: the shipped configuration against the release gate and the frontier reference. No mode, run, metric or setting is kept for the benchmark's own sake (author, 2026-11-14). Development diagnostics come from free checks first: the retrieval check, traces, unit tests.

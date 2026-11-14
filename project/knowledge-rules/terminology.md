@@ -7,7 +7,7 @@ Agent E2 has four jobs with words. Each has one home, so a fact is written once.
 | Job | Failure it prevents | Home | Reaches the model |
 |---|---|---|---|
 | Recognize the user's word | Search misses the file ("steal time", "%RDY", "uptime KPI") | Glossary, Also called; the term map ([`knowledge/catalog/user-terms.yaml`](../../knowledge/catalog/user-terms.yaml)) for phrases | Query terms, files and notes before search |
-| Know what a term means here | The public meaning wins (ESXi CPU Demand read where capacity Demand is meant) | Glossary entry; the file for a metric | Search, `read_file` |
+| Know what a term means here | The public meaning wins (ESXi CPU Demand read where capacity Demand is meant) | Glossary entry; the file for a metric | Search: the reading set |
 | Keep two terms apart | The answer uses the wrong one of two real terms | Glossary, Not to confuse with | Up-front block `terms` |
 | Drop a wrong belief | A confident rule of thumb, never looked up | [`knowledge/misconceptions.md`](../../knowledge/misconceptions.md) | Up-front block `rules` |
 
@@ -30,4 +30,4 @@ Up-front misconception ([`knowledge/misconceptions.md`](../../knowledge/misconce
 - Level 300: a VMware administrator with hands-on vSphere knowledge still holds it. Not a definition, not a swap of two terms (those are glossary entries).
 - One line: the correct reading, then `See` the file with the mechanism.
 
-Up-front budget: the five blocks together stay within 3,000 tokens ([`harness/primer.py`](../../harness/primer.py), lint). A new pair or misconception needs room; drop a weaker one first.
+Up-front budget: the up-front blocks together stay within 3,000 tokens ([`harness/primer.py`](../../harness/primer.py), lint). A new pair or misconception needs room; drop a weaker one first.
