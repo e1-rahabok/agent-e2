@@ -65,6 +65,7 @@ same_name:
 - vsphere/technology/memory/metrics/cluster/consumed
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 - vsphere/technology/memory/metrics/virtual-motherboard/granted

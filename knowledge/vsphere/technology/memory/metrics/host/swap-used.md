@@ -38,6 +38,7 @@ same_name: []
 same_meaning:
 - vsphere/technology/memory/metrics/virtual-motherboard/swapped
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/host/compressed
 - vsphere/technology/memory/concepts/swap-and-compression
 images:

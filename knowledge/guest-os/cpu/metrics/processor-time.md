@@ -40,7 +40,10 @@ product:
 layer:
 - guest-os
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- guest-os/cpu/windows-cpu-scheduling
+- vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
+- vsphere/architecture/vm-vs-guest-os
 same_name: []
 same_meaning: []
 related:

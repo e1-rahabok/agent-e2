@@ -28,11 +28,15 @@ product:
 object:
 - HostSystem
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/technology/memory/concepts/memory-layers
+- vsphere/architecture/provider-consumer
+- vsphere/architecture/kernel-worlds
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/granted
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/granted
 images:

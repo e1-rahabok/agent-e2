@@ -54,7 +54,8 @@ product:
 object:
 - HostSystem
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/technology/network/concepts/network-observability
 same_name: []
 same_meaning: []
 related:

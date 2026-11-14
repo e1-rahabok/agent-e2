@@ -48,9 +48,11 @@ layer:
 metric_class: contention
 internal_derive:
 - vsphere/technology/memory/concepts/host-memory-states
-same_name: []
+same_name:
+- vsphere/technology/memory/metrics/host/ballooned
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/decision-tree/is-overcommit-affecting-vm
 - vsphere/technology/memory/concepts/memory-layers
 - vsphere/technology/memory/concepts/ballooning

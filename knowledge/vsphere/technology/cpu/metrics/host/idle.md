@@ -31,7 +31,8 @@ object:
 metric_class: context
 internal_derive:
 - vsphere/technology/cpu/concepts/hyper-threading
-same_name: []
+same_name:
+- vsphere/technology/cpu/metrics/virtual-motherboard/idle
 same_meaning: []
 related:
 - vsphere/technology/cpu/concepts/hyper-threading

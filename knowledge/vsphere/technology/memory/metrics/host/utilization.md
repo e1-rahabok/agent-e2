@@ -36,7 +36,10 @@ product:
 object:
 - HostSystem
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/technology/memory/concepts/memory-capacity
+- sp5-framework/capacity/demand
+- vsphere/technology/memory/concepts/memory-overhead
 same_name: []
 same_meaning: []
 related:

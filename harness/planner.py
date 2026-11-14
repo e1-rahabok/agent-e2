@@ -100,6 +100,9 @@ def anchors(docs, question, objs=None, strict=False):
 PART = re.compile(r'^\s*([^:\n]{2,40}):\s*$')                       # 'ESXi 01:' heads a list of options
 OPTION_LINE = re.compile(r'^\s*(?:[-*]\s+)?([A-Z])\.\s+(.*\S)\s*$')    # 'A. text' or '- A. text'
 NOT_A_CLAIM = re.compile(r'^(unsure|not covered|it depends)\b', re.I)
+# An ask that names no topic ('Which statements are correct?'): searched, it returns whatever file says 'correct'.
+GENERIC_ASK = re.compile(r'^\s*(which|what)\s+(of\s+(the|these)\s+)?(statements?|options?|answers?|following)\b.*\b(correct|true|right|apply)\b'
+                         r'|^\s*(choose|select|pick)\s+(all|the)\b', re.I)
 
 
 def claims(question):
@@ -118,13 +121,13 @@ def claims(question):
             part = pm.group(1).strip()
     if out:
         return list(dict.fromkeys(out))
-    return [s.strip() for s in re.findall(r'[^.?!\n]*\?', question) if len(s.split()) >= 4]
+    return [s.strip() for s in re.findall(r'[^.?!\n]*\?', question) if len(s.split()) >= 4 and not GENERIC_ASK.match(s)]
 
 
 def _stem(question):
     """The question without its options: the last sentence that asks, for context of short claims."""
     body = '\n'.join(l for l in question.split('\n') if not OPTION_LINE.match(l))
-    asks = [s.strip() for s in re.findall(r'[^.?!\n]*\?', body)]
+    asks = [s.strip() for s in re.findall(r'[^.?!\n]*\?', body) if not GENERIC_ASK.match(s)]
     return asks[-1] if asks else ''
 
 
@@ -149,18 +152,27 @@ def case_files(docs, case):
     return [i for i in dict.fromkeys(out) if i in docs]
 
 
+TABLE_BLOCK = re.compile(r'```csv\n([^\n]*)\n.*?```', re.S)
+
+
+def search_text(question):
+    """The question for search: a pasted or attached table keeps its header (the metric names) and drops its data rows,
+    whose times and numbers would otherwise outweigh the question's words."""
+    return TABLE_BLOCK.sub(lambda m: m.group(1), question)
+
+
 def plan(retriever, question, cfg, case=None):
     """Ordered tiers of file ids for one question. case: the model's reading (agent.py, stage 1) or None.
     Returns (tiers, matched term rows, search hits)."""
     docs = retriever.docs
     matched = terms.match(question) if cfg.get('term_map', True) else []
-    hits = retriever.search(terms.query(question, matched), k=cfg.get('search_k', 6))
+    hits = retriever.search(terms.query(search_text(question), matched), k=cfg.get('search_k', 6))
     top = [h['id'] for h in hits]
     tiers = {'flow': [], 'named': [], 'search': top[:3], 'mechanism': [], 'claims': [], 'search_rest': top[3:], 'more': []}
     kind = (case or {}).get('kind')
     flow_kind = kind if kind in FLOW_KINDS else ('troubleshooting' if TROUBLESHOOT.search(question) and kind in (None, '') else None)
     if flow_kind:
-        tiers['flow'] = [h['id'] for h in retriever.search(question, filters={'retriever_guide': flow_kind}, k=2, min_hits=1)
+        tiers['flow'] = [h['id'] for h in retriever.search(search_text(question), filters={'retriever_guide': flow_kind}, k=2, min_hits=1)
                          if docs.get(h['id']) and docs[h['id']].meta.get('retriever_guide') == flow_kind][:1]
     tiers['named'] = terms.files(matched, docs, cfg.get('term_map_files', 2)) + anchors(docs, question) + case_files(docs, case)
     stem = _stem(question)
@@ -174,11 +186,11 @@ def plan(retriever, question, cfg, case=None):
         ids = [h['id'] for h in retriever.search(q, k=2)]
         tiers['claims'] += ids[:1]
         second += ids[1:2]
-    base = tiers['named'] + top[:2]
+    base = tiers['named'] + top[:2] + tiers['flow']   # a flow's internal_derive lists the files its steps read; after the named files'
     for i in base:
         tiers['mechanism'] += [x['id'] for x in retriever.links(i, 'same_name')]
         tiers['mechanism'] += [x['id'] for x in retriever.links(i, 'internal_derive')][:cfg.get('plan_derive_n', 3)]
-    for h in top[:2]:
+    for h in top[:2] + tiers['named']:
         tiers['more'] += [x['id'] for x in retriever.links(h, 'related')][:2]
     tiers['more'] = second + tiers['more']
     return tiers, matched, hits

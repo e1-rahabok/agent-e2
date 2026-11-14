@@ -44,7 +44,9 @@ object:
 layer:
 - virtual-motherboard
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/architecture/overhead
+- sp5-framework/performance/performance-kpi-design
 same_name: []
 same_meaning: []
 related:

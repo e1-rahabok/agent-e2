@@ -128,6 +128,7 @@ object:
 internal_derive:
 - vsphere/architecture/metric-sources
 related:
+- vcf-operations/vcf-operations-role
 - sp5-framework/observability/real-time-metrics
 - vsphere/architecture/metric-sources
 - vcf-operations/features/peak-20-second-metrics

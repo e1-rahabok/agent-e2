@@ -32,7 +32,9 @@ object:
 layer:
 - virtual-motherboard
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/technology/storage/concepts/storage-layers
+- vsphere/technology/storage/concepts/guest-os-vs-vm-storage
 same_name: []
 same_meaning: []
 related:

@@ -39,7 +39,10 @@ product:
 object:
 - HostSystem
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/technology/network/concepts/network-characteristics
+- sp5-framework/observability/units
+- vsphere/architecture/provider-consumer
 same_name:
 - vsphere/technology/network/metrics/virtual-motherboard/throughput
 same_meaning: []

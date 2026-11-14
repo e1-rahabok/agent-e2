@@ -43,7 +43,8 @@ object:
 metric_class: consumption
 internal_derive:
 - vsphere/architecture/provider-consumer
-same_name: []
+same_name:
+- vsphere/technology/cpu/metrics/virtual-motherboard/demand
 same_meaning: []
 related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics

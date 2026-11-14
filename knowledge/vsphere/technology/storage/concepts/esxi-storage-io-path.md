@@ -34,7 +34,7 @@
 - DAVG is the average device latency per command. KAVG is the average VMkernel latency per command. QAVG is the average queue latency per command. GAVG is DAVG plus KAVG.
 - The queue depth sets a ceiling on the throughput of a device: the commands active at one time divided by the device latency. At a DQLEN of 64 and a DAVG of 4 ms the ceiling is 16,000 commands per second.
 - Little's Law holds at each layer: the commands active at the device equal CMDS/s x DAVG, and the commands queued in the VMkernel equal CMDS/s x QAVG.
-- The thresholds of DAVG, KAVG and QAVG are in the threshold catalog. See [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](esxi-storage-latency-stack.md) for the meaning of each latency and the NFS case.
+- The meaning and healthy values of DAVG, KAVG and QAVG, and the NFS case: [`vsphere/technology/storage/concepts/esxi-storage-latency-stack`](esxi-storage-latency-stack.md).
 
 ## Locating the delay with three measurements
 - The latency measured inside the Guest OS (Windows Avg. Disk sec/Transfer, Linux await), GAVG for the virtual disk, and the split of GAVG into KAVG and DAVG, put the time in one of four places.

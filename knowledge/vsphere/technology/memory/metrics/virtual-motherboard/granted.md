@@ -47,7 +47,8 @@ layer:
 metric_class: consumption
 internal_derive:
 - vsphere/technology/memory/concepts/memory-layers
-same_name: []
+same_name:
+- vsphere/technology/memory/metrics/host/granted
 same_meaning: []
 related:
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed

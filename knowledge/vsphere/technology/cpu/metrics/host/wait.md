@@ -24,7 +24,9 @@ product:
 object:
 - HostSystem
 metric_class: context
-internal_derive: []
+internal_derive:
+- vsphere/technology/cpu/concepts/vcpu-states
+- vsphere/architecture/provider-consumer
 same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/wait
 same_meaning: []

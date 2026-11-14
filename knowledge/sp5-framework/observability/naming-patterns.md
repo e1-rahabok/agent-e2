@@ -55,7 +55,7 @@ The patterns below classify the ways names mislead.
 ## Metadata
 ```yaml
 id: sp5-framework/observability/naming-patterns
-retriever_guide: metric-meaning
+retriever_guide: how-it-works
 scope: sp5-framework
 technology:
 - cpu

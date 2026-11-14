@@ -34,6 +34,7 @@ def main():
     ap.add_argument('--config', default=os.path.join(os.path.dirname(__file__), 'config.yaml'))
     ap.add_argument('--embeddings', action='store_true', help='hybrid search with the configured embedding model (needs AI_GATEWAY_API_KEY)')
     ap.add_argument('--k', type=int, default=6)
+    ap.add_argument('--no-options', action='store_true', help='the stem only, as an operator asks: options left out (the field reading; every benchmark question is multiple choice)')
     ap.add_argument('--questions', help='comma-separated id fragments')
     ap.add_argument('--set', action='append', default=[], metavar='KEY=VALUE',
                     help='override a config value for this check, e.g. --set plan_section_tokens=250 (repeatable)')
@@ -61,7 +62,7 @@ def main():
             sys.exit(f'{c.id}: unknown knowledge ids {unknown} (moved? use the current id: project/tools/moved.yaml maps old ids)')
         if not need:
             continue
-        question = c.render(random.Random(0))[0] if c.options else c.open_text()
+        question = c.stem_text() if a.no_options else c.render(random.Random(0))[0] if c.options else c.open_text()
         top = [h['id'] for h in ret.search(question, k=a.k)]
         ctx = planner.reading_set(ret, question, cfg)[1]
         rows.append((c.id, need, top, ctx, c.knowledge_main))

@@ -59,6 +59,7 @@ internal_derive:
 same_name: []
 same_meaning: []
 related:
+- vsphere/technology/cpu/metrics/comparisons/host-contention-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
 - vsphere/technology/cpu/metrics/comparisons/vm-contention-metrics
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu

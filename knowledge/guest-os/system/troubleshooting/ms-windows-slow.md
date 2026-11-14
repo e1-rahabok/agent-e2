@@ -79,6 +79,7 @@ product:
 layer:
 - guest-os
 internal_derive:
+- vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - guest-os/cpu/metrics/run-queue
 - guest-os/cpu/metrics/context-switch

@@ -54,8 +54,12 @@ object:
 layer:
 - virtual-motherboard
 metric_class: contention
-internal_derive: []
-same_name: []
+internal_derive:
+- vsphere/technology/network/concepts/packet-drop-accounting
+- vsphere/technology/network/concepts/network-observability
+same_name:
+- vsphere/technology/network/metrics/distributed-switch/packets-dropped
+- vsphere/technology/network/metrics/host/packets-dropped
 same_meaning: []
 related:
 - vsphere/technology/network/metrics/vm-network-metrics

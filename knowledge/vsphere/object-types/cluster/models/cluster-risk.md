@@ -99,7 +99,12 @@ product:
 object:
 - ClusterComputeResource
 metric_class: context
-internal_derive: []
+internal_derive:
+- sp5-framework/concepts/modelling
+- sp5-framework/capacity/overcommit
+- vsphere/technology/cpu/metrics/cluster/inter-host-imbalance
+- vsphere/technology/memory/concepts/memory-tiering
+- vsphere/architecture/resource-controls
 same_name: []
 same_meaning: []
 related:

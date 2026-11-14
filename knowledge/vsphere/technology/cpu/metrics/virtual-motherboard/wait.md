@@ -52,7 +52,8 @@ metric_class: context
 internal_derive:
 - vsphere/architecture/provider-consumer
 - vsphere/technology/cpu/concepts/vcpu-states
-same_name: []
+same_name:
+- vsphere/technology/cpu/metrics/host/wait
 same_meaning: []
 related:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu

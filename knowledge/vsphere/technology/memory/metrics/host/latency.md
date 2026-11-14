@@ -21,11 +21,14 @@ product:
 object:
 - HostSystem
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/architecture/provider-consumer
+- sp5-framework/observability/aggregation
 same_name:
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 same_meaning: []
 related:
+- vsphere/technology/memory/metrics/comparisons/host-memory-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 source:
   document: Private Cloud Management by Iwan Rahabok (https://isvara.io/download)

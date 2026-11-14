@@ -37,7 +37,9 @@ product:
 object:
 - HostSystem
 metric_class: consumption
-internal_derive: []
+internal_derive:
+- vsphere/architecture/overhead
+- vsphere/architecture/kernel-worlds
 same_name: []
 same_meaning: []
 related:

@@ -33,6 +33,7 @@ Each entry has:
   - (3) A value the case lacks: in a conversation, the agent asks for it (stage 4, one round). In a single-turn answer (the benchmark, a question with no reply) code stops at that step and the model states both branches with what to read. AGENT.md (stops at the first missing value) and ARCHITECTURE.md (ask, or state both branches) say this in parts; the build makes it one rule.
   - Change if accepted: AGENT.md sections 4.3, 4.4 and 6.4 (first flow, format, missing value); flows.md (the `steps` list); lint; `flows.py` and stage 3 of `agent.py` with unit tests on worked examples; the retrieval check before and after.
   - For you: accept (1)-(3), or keep VM slow first.
+- Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
 ### Q212 · Mission > Release gate · Is beating the frontier model a 1.0 requirement?
@@ -85,6 +86,49 @@ Each entry has:
 - Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
 - Answer:
 
+### Q218 · CPU > Demand · Is a CPU reservation inside Demand?
+
+- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (Reservation: CPU vs memory); [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Search: not from the book; found by the structure review of 2026-11-14.
+- Question: resource-controls says Run, Used, Demand and Usage do not include a CPU reservation; host/demand says ESXi Demand includes the reservations of running VMs and of the kernel; sp5 capacity demand uses Demand = Max(Utilization, Reservation), a model with the same word. Which holds for the vCenter counter? (A) VM Demand excludes reservations, host Demand includes the kernel's and the running VMs' reservations (two objects, two rules); (B) neither includes them; (C) other.
+- Written as now: both, in different files; the capacity model's Demand is not marked as a different thing.
+- Final answer (expert call on the wording; the counter behaviour needs you): whatever the counter does, sp5 capacity demand gets one line: its Demand is the capacity model, not `cpu.demand`. One home for the counter rule: resource-controls, with host/demand pointing to it.
+- Answer:
+
+### Q219 · CPU > Demand · ESXi Demand on a host with no VMs
+
+- Files: [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Provider and consumer](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/provider-consumer.md).
+- Search 1: "If a host has no VM, Demand will likely show flat 0"
+- Question: host/demand says Demand on a host with no VMs is flat at 0, or flat at the kernel reservation (one example at 10.21%); provider-consumer says host Demand is VM demand only and flat at 0. Which, and when does each case occur?
+- Written as now: both.
+- Answer:
+
+### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
+
+- Files: [ESXi CPU Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md); [Core Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
+- Search: not from the book.
+- Question: usage.md gives Thread Utilization 100% when both threads are busy; core-utilization.md gives "200% for a core (esxtop)"; hyper-threading.md says per thread, never summed. Is the 200% an esxtop sum of the two threads of one core, or a different counter?
+- Written as now: both.
+- Final answer (expert call): per thread at most 100%; an esxtop core view that adds two threads reads 200%. One home: hyper-threading, section Thread Utilization; core-utilization explains the 200% as two threads at 100%. For you: confirm against the esxtop PCPU panel.
+- Answer:
+
+### Q221 · Memory > Capacity · Memory Demand: kernel Consumed or kernel reservation?
+
+- Files: [Memory capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-capacity.md) (lines on Demand); [ESXi memory utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md); [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Search: not from the book.
+- Question: memory-capacity gives host memory Demand as kernel Consumed plus the sum of VM Demand, and a few lines later as the kernel reservation plus guest needed memory and page-in; host/utilization and sp5 capacity demand give other forms. Three models share the word Demand. Which is the capacity model, and which are the VCF Operations formulas?
+- Written as now: three forms in three files.
+- Final answer (expert call on the placement): the method's model goes in sp5 capacity demand; the VCF Operations formulas stay in host and VM utilization; memory-capacity points to both. The formula itself needs you.
+- Answer:
+
+### Q222 · SP5 > SLA > Availability · Does a host in maintenance mode lower Operational Availability?
+
+- Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (Availability SLA); [Cluster availability](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/object-types/cluster/metrics/availability.md).
+- Search: not from the book.
+- Question: sla-metrics excludes scheduled downtime from Operational Availability (your Q098 answer: the maintenance window is always excluded), so one host in maintenance gives 100%; cluster availability scores a host in maintenance mode as 25% lost. Is the cluster metric (A) Actual Availability, so it may count maintenance; (B) Operational, so it should not; (C) a different score that the file should name as such?
+- Written as now: both, unreconciled.
+- Answer:
+
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
@@ -132,6 +176,7 @@ Each entry has:
 - Files: [analysis-2026-11-13.md, archived](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (section 12); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 4.6, coverage boundary); [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set).
 - Question: 159 of the 196 questions were drafted from the knowledge files they test, so the benchmark cannot show how often a real question falls outside the knowledge base. In the round of 2026-11-13 (previous generation, archived), on your 37 questions the local configuration led the frontier model by 8-17 points; outside coverage the 30B model was far weaker than the frontier model. Proposal: a field set of about 100 real questions, collected, not written from the knowledge base (your tickets and consulting cases, customer questions, Broadcom community and forum threads). Two numbers from it: coverage (share settled by the knowledge base) and the score. Out-of-coverage answers must say so. (A) adopt it, collected now, kept out of the repository like the held-out set; (B) adopt it, collected at release only; (C) no: the live test's 20 questions are enough.
 - Written as now: held-out set of 30 drawn at release in the proportions of the run set, from real questions where you have them; 20 real questions in the live test. The blueprint (target counts) was removed on 2026-11-14: the real test is the field. Built 2026-11-14: the coverage boundary (when nothing in the reading set came from a flow or a file the question names, the answer prompt says the question may be outside the knowledge base, and to say so); AGENT.md sets its search-score limit on this field set, so the field set also tunes that boundary. Recommended: A. You hold the real questions; Claude can collect public community threads (titles and questions only, no customer data).
+- Re-checked 2026-11-14, after your direction "focus on Agent E2 in the real world": A matters more now. Every benchmark question is multiple choice (Q199), and its options help retrieval: the reading plan searches each option. With the options removed, as an operator asks, the retrieval check falls from 78% to 67% recall, from 116 to 85 of 196 questions with every needed file, and the main file is missing on 32 instead of 20 (`retrieval_eval.py --no-options`). Only real questions show the field number. Recommended: A, and the field set scored on open answers (judged by you), with the retrieval check run on its questions as written.
 - Answer:
 
 ### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
@@ -216,6 +261,7 @@ Each entry has:
   - With Q208 (B): rows for product labels are generated from the glossary, so the seed rows above stay for user words, not labels.
   - Change if accepted: user-terms.yaml (10 rows, 3 notes); retrieval check before and after.
   - For you: the wrong terms you see in real tickets.
+- Re-checked 2026-11-14: more useful now. Without options (the field case) retrieval rests on the question's own words (recall 67% against 78% with options); a term-map row brings the right file when the user's words do not name it.
 - Answer:
 
 ### Q150 · URL questions · Pages with known Level 300 errors
@@ -237,7 +283,7 @@ Each entry has:
   - Not proposed yet: TechDocs 9.1 Solutions for Disk Performance Problems (kernelLatency above 4 ms, deviceLatency above 15 ms) and Broadcom KB 344099 (https://knowledge.broadcom.com/external/article/344099: DAVG, KAVG and GAVG "should not exceed 10 ms"). The knowledge base's own KAVG and DAVG values have no catalog row yet (review of 2026-11-14), so a key would rest on an unsourced number; they qualify once the rows exist.
   - Recommended for 1.0: the two KBs and pages 1-4. Each question records the fetch date (`dateModified`; the visible date renders by script) and quotes the lines it relies on, and is re-checked before scoring.
   - The frontier reference runs in mode `web` (search available, the model decides; [Q164](author-questions-resolved.md#q164--benchmarkdesignmd-sections-1-and-8--what-frontier-model-means-in-the-claim), Q209), so a URL question tests whether a model agrees with a page it reads.
-  - Change if accepted: one URL question per accepted page (Level 300; key point: the page is wrong, and the mechanism); design.md section 3.4.
+  - Change if accepted: one URL question per accepted page, multiple choice like every question since Q199 (options: the page's claims and the corrections, each true or false; Level 300); design.md section 3.4.
   - For you: accept or pick from the list; add pages you know to be wrong.
 - Answer:
 

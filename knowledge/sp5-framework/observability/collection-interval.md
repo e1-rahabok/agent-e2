@@ -73,6 +73,7 @@ product:
 - vcf-operations
 internal_derive: []
 related:
+- vcf-operations/vcf-operations-role
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vcf-operations/features/peak-20-second-metrics
 - sp5-framework/observability/aggregation

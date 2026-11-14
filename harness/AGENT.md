@@ -94,10 +94,11 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 | 1 Flow | A troubleshooting, health-check or decision-tree question (the case's kind; without a case, the troubleshooting words): its best flow file of that kind | Whole |
 | 2 Named | Files the question names exactly: term-map rows; metric titles and counter keys resolved through the catalog, kept for the objects the question names; the metrics of the case | Whole |
 | 3 Search | Top 3 hits of hybrid search on the question | Whole |
-| 4 Mechanism | `same_name` and `internal_derive` (up to 8 each) of the named files and the top 2 hits | Best sections, 400 tokens each |
+| 4 Mechanism | `same_name` and `internal_derive` (up to 8 each) of the named files, the top 2 hits, then the flow (the files its steps read) | Best sections, 400 tokens each |
 | 5 Claims | The top hit of one search per claim: each option (prefixed by its part, such as "ESXi 01:", when a question has several option lists), or each part the case reads in an open question; at most 10 | Best sections |
-| 6 Rest | Search hits 4-6; the second hit per claim; 2 `related` of the top 2 hits | Best sections |
+| 6 Rest | Search hits 4-6; the second hit per claim; 2 `related` of the top 2 hits and of each named file | Best sections |
 
+- Search reads a table's header (the metric names), not its data rows, whose times and numbers would outweigh the question's words; an ask that names no topic ("Which statements are correct?") is not searched as a claim (structure review 2026-11-14).
 - Tiers 4 and 5: the claims of a Level 400 question test different mechanisms, and the mechanism file seldom shares the question's words. The links record which file a metric derives from; one search per claim finds the file for each claim.
 - Sections: the candidate list averages 21 files against room for about 14 whole files. With whole files, 10 points of needed-file recall were planned and then cut by the budget (plan 78%, context 68%, BM25). A secondary file gives its best sections (BM25 on the question). The retrieval check counts a file as read when its sections are.
 - Deterministic: the same question gets the same reading set. Consensus samples then differ only in reasoning, so a disagreement marks doubt in the reasoning, not a different search.

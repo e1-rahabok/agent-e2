@@ -45,6 +45,7 @@ same_name: []
 same_meaning:
 - vsphere/technology/memory/metrics/host/swap-used
 related:
+- vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/metrics/virtual-motherboard/compressed
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate

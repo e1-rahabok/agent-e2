@@ -33,7 +33,9 @@ object:
 layer:
 - virtual-motherboard
 metric_class: contention
-internal_derive: []
+internal_derive:
+- vsphere/technology/storage/concepts/esxi-storage-io-path
+- vsphere/technology/storage/concepts/esxi-storage-latency-stack
 same_name: []
 same_meaning: []
 related:
