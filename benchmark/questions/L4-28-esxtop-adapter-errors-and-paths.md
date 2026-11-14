@@ -14,13 +14,13 @@ vmhba3    10  2071.8      0.85      0.01     3.40     0.20      0.00
 Which statements about the panel and the next checks are correct?
 
 - A. vmhba3 shows 10 paths where the design gives it 20: half of its paths to the LUNs are gone.
-- B. Latency is normal, so the storage is healthy and there is nothing to do.
+- B. Latency on the host is normal in the vSphere Client, so the storage is healthy and there is nothing to do.
 - C. The host has less path redundancy than designed, even though I/O still flows.
 - D. Failed commands and aborts on vmhba3 should be 0; any value above 0 needs investigation.
-- E. ABRTS/s of 0.20 is below one per second, so it is noise that needs no follow-up.
-- F. The vSphere Client has no failed-command counter and no abort counter per adapter, so normal charts do not rule out this fault.
-- G. The missing paths most likely belong to LUNs that were unpresented from the host.
-- H. Check per LUN which paths remain: a LUN left with paths on one HBA stops if that HBA or its fabric fails.
+- E. ABRTS/s of 0.20 is less than one abort per second, so it is background noise that needs no follow-up.
+- F. The vSphere Client shows neither failed commands nor aborts per adapter, so normal charts do not clear vmhba3.
+- G. The missing paths most likely belong to LUNs that the array no longer presents to this host.
+- H. Check which paths each LUN still has: a LUN whose paths all run through one HBA stops if that HBA fails.
 - I. vmhba3 carries about half the commands of vmhba2 because Round Robin spreads I/O over the paths that remain.
 - J. Next: path state per LUN on vmhba3, its driver and firmware, the cable, the SFP, the switch port and the zoning.
 

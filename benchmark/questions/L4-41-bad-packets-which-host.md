@@ -10,16 +10,16 @@ Is the network clean, and if not, which host and port, what is the likely cause,
 
 - A. The network is not clean: one port, vmnic2 on esx-c1-11, logged about 48,000 receive errors in the day.
 - B. A cluster average of receive errors close to 0 shows that the cluster network is clean.
-- C. An average over 64 vmnics hides a single bad port; read the worst vmnic, not the mean.
+- C. An average over 64 vmnics hides a single bad port; read the worst vmnic of the cluster, not the mean.
 - D. esx-c1-04 runs older NIC firmware, so it is the source of the errors behind the stalls.
-- E. vmnic3, on the same card with the same driver and firmware, is clean, which points to the physical link of vmnic2 rather than the driver.
+- E. vmnic3, on the same card, driver and firmware, is clean: that points to the physical link of vmnic2, not the driver.
 - F. The icen driver version is the likely cause, so the driver should be updated on every host.
 - G. vmnic2 negotiated a lower speed or half duplex, and that mismatch explains its errors.
 - H. About 48,000 errors among roughly 500 million received packets is under 0.01%, an acceptable rate for a 25 GbE port.
 - I. The errors come with receive drops on the same port, a sign that the NIC receive ring is full.
-- J. The counters of `esxcli network nic stats get` are cumulative since boot: read them twice to see whether errors still grow.
-- K. Compare with the error counters of the physical switch port at the other end of the link, together with the network team.
-- L. The older firmware on esx-c1-04 is a consistency item to fix in the cluster, even though that host shows no errors.
+- J. The `esxcli network nic stats get` counters are cumulative since boot: read them twice to see if errors still grow.
+- K. Compare with the error counters of the switch port at the other end of the link, with the network team.
+- L. The older firmware on esx-c1-04 is a consistency item to fix, even though that host shows no errors.
 
 ## Likely wrong answer
 - B: "The cluster average is near 0, so the network is clean."

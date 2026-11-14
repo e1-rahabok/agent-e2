@@ -8,17 +8,17 @@
 
 Why does the power-on fail when the cluster is at 30%, what do you change, and what do you advise for the reservation design? Which statements are correct?
 
-- A. The check compares the 2,000 MHz reservation with capacity that is not yet reserved; the 30% CPU usage plays no part in it.
+- A. The check compares the 2,000 MHz reservation with capacity not yet reserved; the 30% CPU usage plays no part.
 - B. Adding a fifth host lets vm-kid-db02 power on, because the cluster has run out of unreserved CPU.
 - C. vm-kid-db01 already holds the 2,000 MHz of RP-KID, so the request goes up to RP-MOM because RP-KID is expandable.
 - D. vm-kid-db01 is mostly idle, so the part of its reservation it does not use is free for vm-kid-db02 at power-on.
-- E. RP-MOM has about 1,000 MHz unreserved: 6,000 MHz minus 3,000 MHz reserved by its own VMs minus the 2,000 MHz held by RP-KID.
-- F. Because the reservation of RP-MOM is fixed, the check stops at RP-MOM and never reaches the unreserved CPU of the cluster root.
-- G. The 10,000 MHz reservation of RP-OPS takes the CPU that vm-kid-db02 needs.
-- H. Turning off HA admission control on the cluster lets vm-kid-db02 power on.
+- E. RP-MOM has about 1,000 MHz unreserved: 6,000 MHz minus 3,000 MHz for its own VMs minus 2,000 MHz for RP-KID.
+- F. As the reservation of RP-MOM is fixed, the check stops there and never reaches the unreserved CPU of the root.
+- G. The 10,000 MHz reservation of RP-OPS takes the unreserved CPU that vm-kid-db02 needs at power-on.
+- H. Turning off HA admission control on the cluster removes the check, so vm-kid-db02 powers on.
 - I. Raising the CPU reservation of RP-MOM to 7,000 MHz or more lets vm-kid-db02 power on.
 - J. Raising the CPU reservation of RP-KID to 4,000 MHz lets vm-kid-db02 power on without any change to RP-MOM.
-- K. Setting RP-MOM to an expandable reservation lets the request continue to the cluster root, which has enough unreserved CPU.
+- K. Setting RP-MOM to an expandable reservation lets the request reach the cluster root, which has CPU to spare.
 - L. Setting RP-KID to a fixed reservation lets vm-kid-db02 power on from the reservation of RP-KID alone.
 - M. Removing the CPU reservation of vm-kid-db02 lets it pass CPU admission control.
 - N. The error is transient: a retry or a restart of vCenter lets the power-on through.

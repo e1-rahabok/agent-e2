@@ -19,16 +19,16 @@
 
 Which statements about the red state, the risk to the running VMs and the fix are correct?
 
-- A. Red here is the Invalid state: Prod-DB and Prod-App reserve 115 GHz under a parent with a Fixed reservation of 100 GHz.
-- B. Red means the cluster is short of capacity, so a seventh host clears it.
-- C. CPU and memory usage are below 40%, so the red state is a false alarm.
-- D. Yellow (Overcommitted) is the state that more capacity fixes: the tree is consistent, but capacity no longer covers it.
+- A. Red here is the Invalid state: the children of Prod reserve 115 GHz under its Fixed 100 GHz.
+- B. Red means the cluster is short of capacity, so a seventh host clears the red state.
+- C. CPU and memory usage are below 40%, so the red state is a false alarm that needs no change.
+- D. Yellow, not red, is the state that more hosts fix: the tree is consistent but capacity falls short.
 - E. While the cluster is red, some running VMs may not get their reservations.
 - F. Raising the reservation of Prod to at least 115 GHz makes the tree valid again.
 - G. Making Prod expandable clears red, but Prod then borrows from the root and no longer isolates its pools.
 - H. The red state comes from Test, whose expandable reservation borrows from the cluster root.
-- I. Editing pool reservations while VMs fail over can turn a cluster red: a failing-over VM is not charged to its pool until the failover completes.
-- J. Once the failed host came back, the cluster should have returned to green by itself.
+- I. Editing pool reservations while VMs fail over can turn a cluster red.
+- J. Once the failed host came back an hour later, the cluster should have returned to green by itself.
 
 ## Likely wrong answer
 - B: "Red means the cluster is short of capacity, so add a host."
@@ -44,7 +44,7 @@ Which statements about the red state, the risk to the running VMs and the fix ar
 - F true: the children then fit within the parent. Lowering Prod-DB or Prod-App is the other way to bring the children within the parent.
 - G true: an expandable Prod borrows from the root, and loses its isolation.
 - H false: Test's 20 GHz fits easily in the 480 GHz root; the conflict is under Prod.
-- I true: the likely origin here: reservations changed while VMs were failing over.
+- I true: a failing-over VM is not charged to its pool until the failover completes; the likely origin here, as reservations changed during the failover.
 - J false: red is an inconsistency in the tree; it stays until the reservations are fixed, whatever the host count.
 
 ## Notes

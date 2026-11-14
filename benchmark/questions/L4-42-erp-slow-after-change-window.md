@@ -11,7 +11,7 @@
   - the backup product took a snapshot of erp-db before patching. It is still present.
   - esx05 entered maintenance mode and came back.
 - Monday, 09:00-10:00, users report the ERP is slow. VCF Operations and esxtop show:
-  - erp-db CPU, per vCPU, from VCF Operations: Run 50%, Ready 1.5%, Co-stop 6%, Other Wait 12%; System higher than last week. Guest OS CPU queue 2.
+  - erp-db CPU, per vCPU, from VCF Operations: Run 50%, Ready 1.5%, Co-stop 6%, Other Wait 12%; System higher than last week. Guest OS CPU run queue 2, in total for the 24 vCPUs.
   - erp-db memory: Contention 0%, Ballooned 0, Swapped 0.
   - erp-db storage: disk latency 30 ms, mostly reads. Datastore read IOPS of the VM is 1.8 times its virtual disk read IOPS, with the same throughput.
   - erp-db NUMA, in esxtop: NHN 0,1; N%L 70%.
@@ -22,19 +22,19 @@
 
 What is the most likely cause of the slowness, what do you change tonight, and what do you not change? Which statements are correct?
 
-- A. The snapshot still present on erp-db is the most likely cause of the slowness.
-- B. Datastore read IOPS at 1.8 times virtual disk read IOPS, with the same throughput, is the signature of a snapshot: each read checks the files of the chain.
+- A. The snapshot still present on erp-db since Sunday is the most likely cause of the slowness.
+- B. Datastore read IOPS at 1.8 times virtual disk read IOPS, with equal throughput, is the signature of a snapshot chain.
 - C. Datastore read IOPS above the VM's virtual disk read IOPS show that another VM on the datastore is doing the extra reads.
 - D. The extra snapshot reads show in the virtual disk counters of erp-db as well as in its datastore counters.
 - E. A snapshot is a known cause of both Co-stop and Other Wait on the VM that has it.
 - F. System time above last week fits a snapshot: the kernel walks the chain on the VM's IO.
 - G. Other Wait at 12% is the time the vCPUs spend waiting for the 30 ms disk latency, so the two measure the same delay.
 - H. Ready at 1.5% and Core Utilization of 55% on esx02 show that the host is not short of CPU.
-- I. Memory Contention, Ballooned and Swapped at 0 rule memory out as the cause.
-- J. The receive drops on app-03 alone are a local issue of that VM; they do not explain a slowness that every ERP user feels.
+- I. Memory Contention, Ballooned and Swapped all at 0 rule memory out as the cause.
+- J. The receive drops on app-03 alone are a local issue of that VM, not the cause of a slowness all users feel.
 - K. Co-stop at 6% shows that erp-db cannot get enough physical CPU, so the 8 extra vCPUs would help.
 - L. A ninth host would lower the Co-stop of erp-db by giving DRS more room to place it.
-- M. Run at 50% per vCPU and a guest CPU queue of 2 show that erp-db is not short of vCPUs.
+- M. Run at 50% per vCPU and a guest run queue of 2 for 24 vCPUs show that erp-db is not short of vCPUs.
 - N. Adding vCPUs to erp-db tends to raise its Co-stop, which grows with the vCPU count.
 - O. N%L at 70% means about 30% of the memory of erp-db is remote, as expected of a 24-vCPU VM on 16-core NUMA nodes.
 - P. Tonight, delete or consolidate the snapshot off-peak, and fix the backup job that left it.
@@ -59,7 +59,7 @@ What is the most likely cause of the slowness, what do you change tonight, and w
 - J true: one application VM with receive drops is a local issue (its receive ring); the slowness is across all users.
 - K false: Co-stop comes from the VM's own vCPUs and the snapshot, not from a lack of physical CPU; Ready is low.
 - L false: the cluster is not short of CPU; a host changes neither the snapshot nor the Co-stop of one VM.
-- M true: the vCPUs are half busy and the guest queue is short.
+- M true: the vCPUs are half busy, and 2 threads waiting for 24 vCPUs is a short queue.
 - N true: Co-stop tends to be higher on VMs with more vCPUs; more vCPUs also widen the VM further across NUMA nodes.
 - O true: secondary finding; erp-db is wide (24 vCPUs on 16-core nodes), so some remote memory is expected. Size it to one node only if the guest demand allows.
 - P true: the fix is to remove the snapshot and stop the backup job from leaving it.

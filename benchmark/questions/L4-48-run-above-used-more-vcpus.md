@@ -10,13 +10,13 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 - A. Run averages about 375,000 of 1,200,000 ms, about 31%: the 4 vCPUs are far from full.
 - B. Ready below 1% and Co-stop near 0 show that the VM is not waiting for CPU.
 - C. Used is about 44% of Run while System and Overlap are small: each millisecond of run completes less work.
-- D. The likely causes of the gap are a clock speed lowered by power saving under the Balanced policy and busy sibling threads on the same cores.
-- E. The checks are on the host: its power policy and actual clock speed, and how busy the sibling threads are (Thread against Core Utilization).
+- D. The likely causes are a clock speed lowered by power saving under Balanced, and busy sibling threads on the same cores.
+- E. The checks are on the host: its power policy, its actual clock speed, and the load on sibling threads.
 - F. More vCPUs change neither the clock speed nor the sharing of cores with sibling threads.
 - G. Used is less than half of Run, so the VM gets less than half the CPU it needs, and the 4 extra vCPUs are justified.
-- H. The gap between Run and Used is time the vCPUs spent waiting in the hypervisor.
-- I. System and Overlap time charged to the VM explain most of the gap between Run and Used.
-- J. Run is the counter that shows how much work the vCPUs completed.
+- H. The gap between Run and Used is time the vCPUs spent waiting in the hypervisor to be scheduled.
+- I. System and Overlap time charged to the VM explain most of the gap between Run and Used here.
+- J. Run is the counter that shows how much work the vCPUs completed in each cycle.
 - K. Used cannot be compared with Run, because Used is converted to milliseconds at the actual clock speed.
 
 ## Likely wrong answer
@@ -29,7 +29,7 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 - B true: Ready 0.25-0.6%, Co-stop 0-0.04%.
 - C true: Used averages about 165,000 ms against 375,000 ms of Run; System is about 3,000 ms and Overlap about 1,600 ms.
 - D true: with little System and Overlap, Used below Run comes from power saving and Hyper-Threading.
-- E true: power management first (a setting), then the sibling-thread load (it depends on the other VMs).
+- E true: power management and the actual frequency first (a setting), then the sibling-thread load, read as Thread against Core Utilization (it depends on the other VMs).
 - F true: the gap is in how fast each vCPU runs, not in how many vCPUs it has; adding vCPUs to a VM at 31% Run is the wrong answer to a request for speed.
 - G false: Used is a charge adjusted for a shared core, frequency and hypervisor work, not the share of CPU the VM needs.
 - H false: waiting shows in Ready and Co-stop, which are near 0; the gap is in the quality of the run time.

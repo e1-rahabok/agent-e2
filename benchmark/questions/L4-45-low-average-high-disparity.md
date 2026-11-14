@@ -10,17 +10,17 @@
 How can the average be so low while the disparity is above 100%, is the owner right, and what do you advise on the VM's size? Which statements are correct?
 
 - A. The 12.5% is one fully busy vCPU out of 8: vCPU 0 runs at about 2,640 MHz while the other seven stay near 0.
-- B. vCPU 0 runs above the 2.0 GHz base clock with Turbo Boost, so its usage is about 132% of base and the spread between vCPUs passes 100%.
-- C. A disparity above 100% is a data error, because the usage of one vCPU cannot pass 100%.
-- D. At 12.5% the VM is mostly idle, so it cannot be the bottleneck behind the slow reports.
-- E. The VM-level average hides that the one vCPU doing the work is saturated.
+- B. vCPU 0 runs above the 2.0 GHz base clock with Turbo Boost: about 132% of base, so the spread between vCPUs passes 100%.
+- C. A disparity above 100% is a data error, because the usage of one vCPU cannot pass 100% of its clock.
+- D. At 12.5% the VM is mostly idle all day, so it cannot be the bottleneck behind the slow reports.
+- E. The VM-level average hides that the one vCPU doing the work is saturated all day.
 - F. vCPU Usage Disparity is the average usage of the 8 vCPUs, measured against the base clock.
 - G. The export shows the vCPUs taking turns at being busy, a sign of a process moving between vCPUs.
-- H. The guest likely runs its work on one CPU only, such as a uniprocessor kernel or a single-threaded process; the CPU count its kernel sees settles it.
-- I. Adding vCPUs would make the reports run faster.
-- J. A faster clock speed would make the reports run faster.
+- H. The guest likely runs its work on one CPU only, as a uniprocessor kernel or a single-threaded process would.
+- I. Adding vCPUs would make the reports run faster, as the vendor's sizing for the appliance suggests.
+- J. A faster clock speed would make the reports run faster on the same vCPU count.
 - K. The seven idle vCPUs can be removed without slowing the appliance, unless the vendor changes the guest to use them.
-- L. Net Run counts time, not clock speed: vCPU 0 counts as fully busy in it, while its usage in MHz also shows the Turbo.
+- L. Net Run counts time, not clock speed: vCPU 0 counts as fully busy in it, while its MHz shows the Turbo.
 
 ## Likely wrong answer
 - D: "12.5% means the VM is mostly idle, so it is not the bottleneck."

@@ -9,15 +9,15 @@
 Which statements are correct?
 
 - A. ESXi is not swapping the VM now: every swap and compression rate is 0, and Swapped is flat for the whole hour.
-- B. ESXi will swap about 6.5 GB more of the VM, the amount in Swap target.
+- B. ESXi will swap about 6.5 GB more of the VM, the amount shown in Swap target.
 - C. Swap target is the level of reclamation ESXi aims at for this VM, not a queue of pages that adds to Swapped.
 - D. The gap of about 300 MB between Swap target and Swapped is pages still waiting to be swapped out.
 - E. Swap target moves as a mirror of Consumed: when Consumed rises, the target falls.
-- F. Granted is flat for the hour: the guest is not asking for more pages.
+- F. Granted is flat for the hour: the guest is not asking ESXi for more pages.
 - G. The VM is not waiting for its swapped pages now: the swap-in and decompression rates are 0.
 - H. The VM is slow because it is short of memory, so it needs more memory or another host.
-- I. The swapped pages stay out until the guest touches them; with no limit and no resource pool, they come from past host pressure or arrived with a vMotion.
-- J. A memory limit on the VM is the likely source of the 6.2 GB swapped.
+- I. The swapped pages stay out until the guest touches them; with no limit or pool, they come from past host pressure or a vMotion.
+- J. A memory limit on the VM is the likely source of the 6.2 GB that are swapped out.
 - K. With swap-in and swap-out rates both at 0, Swapped should read 0, so the 6.2 GB is a counter error.
 - L. Active at about 82 MB is the memory the VM needs, so it can be resized to a few hundred MB.
 

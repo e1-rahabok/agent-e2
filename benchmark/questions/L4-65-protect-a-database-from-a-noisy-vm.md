@@ -11,13 +11,13 @@ Will that work in vSphere 9.1, and what do you advise instead? Which statements 
 - A. Storage I/O Control throttles rpt-07 once the datastore latency crosses its threshold, so db-11 with High shares wins.
 - B. High disk shares on db-11 protect it even without Storage I/O Control, through the IO scheduler of its own host.
 - C. The plan will not protect db-11: from VCF 9.0, Storage I/O Control ignores shares and reservations and honours only limits.
-- D. An IOPS reservation on the virtual disks of db-11 guarantees it the IOPS it needs.
+- D. An IOPS reservation on the virtual disks of db-11 guarantees it the IOPS it needs in the window.
 - E. An IOPS limit on the virtual disks of rpt-07, sized so its job still ends in the window, protects db-11.
 - F. A throughput limit in MB/s on the disks of rpt-07 is the right control for its large sequential reads.
 - G. An IOPS limit cannot restrain large sequential reads, because each large read counts as a single IO.
 - H. Moving rpt-07 or db-11 to another datastore or LUN, or using the QoS of the array, also separates the two.
 - I. The latency rises on db-11 alone, so the cause is on the host of db-11, and a setting on that host fixes it.
-- J. High device latency (DAVG) with low kernel latency (KAVG) on the host of db-11 shows that it waits in the array or fabric, which it shares with the host of rpt-07.
+- J. High DAVG with low KAVG on the host of db-11 shows it waits in the array or fabric, which it shares with the host of rpt-07.
 
 ## Likely wrong answer
 - A: "Yes. Enable Storage I/O Control and set db-11 to High shares: SIOC throttles rpt-07 when the datastore latency crosses its threshold."

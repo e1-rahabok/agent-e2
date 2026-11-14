@@ -10,7 +10,7 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 
 - A. Each vGPU VM gets a full memory reservation, and all its memory is allocated at power-on, whatever its guest uses.
 - B. The memory of the vGPU VMs is backed only as their guests touch it, like an ordinary reservation, so they add only what they use.
-- C. The reserved memory of the vGPU VMs is never ballooned, compressed or swapped, so any later shortage is reclaimed from the existing VMs alone.
+- C. The reserved memory of the vGPU VMs is never ballooned, compressed or swapped: later shortages hit the existing VMs alone.
 - D. The existing 4.8 TB of configured memory is then backed by about 2.5 TB, an overcommit of about 1.9:1 instead of 1.2:1.
 - E. In normal operation Consumed rises to about 3.7 TB of 4 TB, about 92%, which leaves about 300 GB for growth.
 - F. The capacity manager is right: 1.8 TB is free, the new VMs need 1.5 TB, and admission control is green, so the cluster has room.
@@ -18,7 +18,7 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 - H. HA admission control stays green because it counts reservations and overhead, and the existing VMs reserve nothing.
 - I. HA admission control keeps enough capacity for the Consumed memory of the existing VMs after a host failure.
 - J. HA admission control refuses the vGPU VMs, because their 1.5 TB of reservations exceed the 25% kept for failover (1 TB).
-- K. After a host failure, ESXi can balloon the vGPU VMs to make room for the existing VMs.
+- K. After a host failure, ESXi can balloon the vGPU VMs to make room for the existing VMs they share hosts with.
 - L. Running the vGPU VMs on hosts or a cluster of their own keeps their reservations out of the memory the existing VMs share.
 
 ## Likely wrong answer

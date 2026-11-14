@@ -19,12 +19,12 @@ Which statements about where the 25 ms is spent, what limits the I/O rate and th
 - A. About 9 ms of the 25 ms is spent inside Windows, before the requests reach the virtual disk.
 - B. The virtual disk holds about 64 requests at a time, the default Paravirtual SCSI device queue depth.
 - C. About 7.8 ms of each I/O is spent waiting in the VMkernel queue of the LUN, whose 32 slots are all busy.
-- D. KAVG of 8 ms shows that the VMkernel storage code on this host is slow.
+- D. A KAVG of 8 ms shows that the VMkernel storage code on this host is slow and needs attention.
 - E. The device latency of 8 ms shows the array is the bottleneck, so a case with the array vendor is the fix.
 - F. The LUN queue depth caps the I/O rate: 32 commands at 8 ms each allow about 4,000 per second.
 - G. Raising the Paravirtual SCSI queue depth to 254 shortens the time per I/O that the application sees.
-- H. Adding vCPUs to the VM would raise its I/O rate.
-- I. GAVG of 16 ms is the whole time the application waits for each I/O.
+- H. Adding vCPUs to the VM would let it issue I/O faster and raise its I/O rate.
+- I. The GAVG of 16 ms is the whole time that the application waits for each of its I/Os.
 - J. Requests above the Paravirtual SCSI device queue depth wait in the VMkernel and show up as QAVG.
 - K. The first change is to raise the device queue depth of the LUN, or to spread the data over more LUNs.
 - L. A flat I/O rate with growing latency fits a queue limit rather than an array short of capacity.

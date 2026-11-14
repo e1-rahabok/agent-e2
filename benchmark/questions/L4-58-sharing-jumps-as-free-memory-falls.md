@@ -12,11 +12,11 @@ Why did page sharing jump now and not before, how much memory does it save, and 
 - A. Sharing stayed tiny for weeks because ESXi backed VM memory with 2 MB pages, which it does not share.
 - B. With about 13 GB free, below 300% of minimum free memory (about 25 GB), the host entered Clear and began breaking large pages.
 - C. The saving is Shared minus Shared common, about 42 GB, which matches the fall of Consumed from about 755 to 713 GB.
-- D. The saving is the full 64 GB shown in Shared, the memory that sharing gave back.
-- E. The saving is the 22 GB shown in Shared common, the pages that sharing removed.
+- D. The saving is the full 64 GB shown in Shared, the memory that page sharing gave back to the host.
+- E. The saving is the 22 GB shown in Shared common, the duplicate pages that page sharing removed.
 - F. The new VMs share pages with the older VMs that run the same OS, which made Shared jump.
 - G. Page sharing on this host works only once Mem.ShareForceSalting is set to 0 on the host.
-- H. Page sharing starts only in the Soft state, at the same time as ballooning inflates.
+- H. Page sharing starts only in the Soft state, at the same time as the balloon driver starts to inflate.
 - I. With Balloon, Compressed and Swapped at 0, the jump in sharing says nothing about the state of the host.
 - J. The jump is an early warning: as free memory keeps falling, ballooning comes next, then compression and swap.
 - K. Ballooning starts at about 90% of host memory, so at about 98% Consumed it should already be active.

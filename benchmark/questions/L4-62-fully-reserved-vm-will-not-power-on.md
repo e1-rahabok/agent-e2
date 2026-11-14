@@ -10,11 +10,11 @@
 Which statements are correct?
 
 - A. It should fit, since 481 GB is unreserved for 480 GB and the host is only 30% used: the failure is a fault, and a retry or a host reboot clears it.
-- B. The power-on also needs the VM's overhead memory reserved on top of the 480 GB, and for 64 vCPUs and 480 GB that overhead is far more than the 1 GB left.
+- B. The power-on also needs the VM's overhead reserved on top of the 480 GB; for 64 vCPUs and 480 GB it is far above the 1 GB left.
 - C. The per-VM overhead is part of the 480 GB of configured memory, so it needs no reservation of its own.
 - D. The VMX swap file takes all of the VM's overhead out of the reservation, so overhead cannot be what blocks the power-on.
 - E. The per-VM overhead is about 100 MB whatever the size of the VM, so it cannot explain the failure.
-- F. The 64 vCPUs need CPU that the host cannot reserve, and that is what blocks the power-on.
+- F. The 64 vCPUs need CPU capacity that the host cannot reserve for the VM, and that is what blocks the power-on.
 - G. Lowering the memory reservation by 1 GB, to 479 GB, is enough to let the VM power on on this host.
 
 ## Likely wrong answer

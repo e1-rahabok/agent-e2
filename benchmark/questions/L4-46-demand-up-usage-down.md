@@ -14,7 +14,7 @@ Why did Demand rise while Usage fell, why is Latency higher than Demand minus Us
 - D. Usage carries the Hyper-Threading charge and Demand does not, so Demand minus Usage holds only that charge.
 - E. Latency also counts the clock-speed effect, so it sits near 19.5% while Demand minus Usage is about 9 points.
 - F. Demand minus Usage, about 9 points, is the CPU time the VM asked for and was denied: its unmet demand.
-- G. With Readiness below 1% all week, the host cannot be what slows the VM down after 03:00.
+- G. With Readiness below 1% in every point, the host cannot be what slows the VM down after 03:00.
 - H. Latency rising from about 2% to about 19.5% means the vCPUs now wait about a fifth of the time to be scheduled.
 - I. A CPU limit applied at 03:00 fits the pattern: a limit holds Usage down while Demand keeps rising.
 - J. Adding vCPUs to app-22 would win back the throughput it lost at 03:00, since its Demand rose.
@@ -36,7 +36,7 @@ Why did Demand rise while Usage fell, why is Latency higher than Demand minus Us
 - G false: Ready does not register Hyper-Threading or frequency; the VM loses throughput while it runs.
 - H false: a rise in CPU Latency does not mean waiting; waiting shows in Ready and Co-stop, which stay low. Latency here is mostly sibling-thread and frequency effects.
 - I false: nobody changed the VM, and under a limit Demand stays at Usage; the time a limit holds back shows in Ready (Max Limited), which stays below 1%.
-- J false: more vCPUs change neither the sibling-thread load nor the clock speed; the VM uses about a fifth of its capacity.
+- J false: more vCPUs change neither the sibling-thread load nor the clock speed; the VM uses about a quarter of its capacity.
 - K true: Demand rose and Usage fell at once with no change on the VM: something changed on the host it runs on.
 
 ## Notes

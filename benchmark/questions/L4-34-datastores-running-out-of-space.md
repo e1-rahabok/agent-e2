@@ -8,18 +8,18 @@ Which statements about the datastores most at risk and the overcommit ratio are 
 
 - A. Used % alone understates the risk: thin disks can grow to their provisioned size.
 - B. DS-ARCH-01 is the only datastore at risk: it is 95% full, and the others are below 80%.
-- C. Rank the datastores by their unwritten thin space (provisioned - used) against their free space (capacity - used).
+- C. Rank datastores by unwritten thin space (provisioned - used) against free space (capacity - used).
 - D. DS-APP-04, DS-APP-09 and DS-WEB-02 rank highest: their unwritten thin space is two to three times their free space.
 - E. DS-DB-03 and DS-DEV-11 hold snapshots of over a quarter of their used space, close to their free space.
 - F. DS-ARCH-01 cannot fill by itself: its disks are all thick and it holds no snapshot.
 - G. The used space of VSAN-PROD-A includes the second copy kept by its RAID-1 policy.
-- H. The thin disks of VSAN-PROD-A can still claim more space than it has free.
+- H. The thin disks of VSAN-PROD-A can still claim more space than the datastore has free today.
 - I. Keep a vSAN datastore below about 80% used, to leave room to rebuild after a host failure.
 - J. The overcommit ratio of a datastore is the provisioned size of its virtual disks divided by its capacity.
-- K. Snapshot and swap space belong in the provisioned figure of the overcommit ratio.
-- L. On vSAN with RAID-1, double the provisioned size before comparing it with capacity, so the ratio that fits is about half the VMFS one.
+- K. Snapshot space and VM swap files belong in the provisioned figure when computing the overcommit ratio.
+- L. With RAID-1 on vSAN, the overcommit ratio that fits is about half the VMFS one, as each disk is kept twice.
 - M. The ratio that fits depends on how fast the thin disks fill against the lead time to expand or reclaim.
-- N. Powering off VMs on DS-APP-04 frees the space their thin disks can still claim.
+- N. Powering off the VMs on DS-APP-04 frees the space that their thin disks can still claim later.
 
 ## Likely wrong answer
 - B: "DS-ARCH-01 is the only datastore at risk: it is 95% full. The others are below 80%."
@@ -37,7 +37,7 @@ Which statements about the datastores most at risk and the overcommit ratio are 
 - I true: VSAN-PROD-A is at 78%; above 80% vSAN rebalances, and it needs room to rebuild after a host failure or maintenance.
 - J true: provisioned divided by capacity, counting virtual disks only.
 - K false: the ratio counts virtual disks only, not snapshots or swap.
-- L true: 26,000 GB claims 52,000 GB (85% of VSAN-PROD-A).
+- L true: multiply the provisioned size by the copies before comparing it with capacity: 26,000 GB claims 52,000 GB (85% of VSAN-PROD-A).
 - M true: there is no ratio that fits every datastore.
 - N false: powering off a VM frees only its swap file; its disks stay until the VM is deleted.
 

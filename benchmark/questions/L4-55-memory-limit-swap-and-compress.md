@@ -11,11 +11,11 @@ Why is Consumed flat, why do Swapped and Compressed move in opposite directions,
 - A. The VM's own memory limit is the cause: Consumed sits flat just under an Effective limit that is flat at 40.44 GB.
 - B. The host is running out of memory, and ESXi is swapping this VM to free memory for the others.
 - C. The two move in opposite directions: touched pages are read back (Swapped falls) while others are compressed to stay under the limit.
-- D. Each fall of Swapped shows that the memory pressure on the VM has eased at that moment.
+- D. Each fall of Swapped shows that the memory pressure on the VM has eased, and the VM is getting its pages back.
 - E. Contention rises at those moments: each page read back is a wait for the vCPU that touched it.
-- F. Pages swapped out are a wait for the VM even when the guest never touches them again.
-- G. Moving the VM to a host with more free memory stops the swapping and the compression.
-- H. Configuring the VM with more than 64 GB stops the swapping, as the guest gets more room.
+- F. Pages swapped out make the VM wait even when the guest never touches them again, so swap-out is the slowness.
+- G. Moving the VM to a host with more free memory stops the swapping and the compression of its pages.
+- H. Configuring the VM with more than 64 GB stops the swapping, as the guest gets more room for its working set.
 - I. Remove the limit, or raise it to what the guest needs, after finding out why it was set.
 - J. Consumed flat for 7 days shows that the guest's memory demand is steady, so memory is not the problem.
 
