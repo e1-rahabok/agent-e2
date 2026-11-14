@@ -43,7 +43,9 @@ class GatewayClient:
             delay *= 2
 
     def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None,
-             top_p=None, top_k=None):
+             top_p=None, top_k=None, deterministic=False):
+        if deterministic:   # a reading step (agent.py, stage 1): the same input reads the same way every time
+            temperature, top_p, top_k = 0, None, None
         body = {'model': model, 'messages': messages, 'max_tokens': max_tokens}
         for k, v in (('temperature', temperature), ('top_p', top_p), ('top_k', top_k)):
             if v is not None:   # None: the provider's default
@@ -92,15 +94,16 @@ class ParamClient:
     """Adds per-model request settings to every chat call: `reasoning` (the gateway's reasoning field), `max_tokens`,
     and the sampling settings of the model's own card (`temperature`, `top_p`, `top_k`: what a local server applies by default).
 
-    One wrapper instead of a parameter threaded through every mode: the same settings reach classic, agentic, web and the
-    answer repair. A model without an entry passes through unchanged (the judge, an embedding call).
+    One wrapper instead of a parameter threaded through every mode: the same settings reach Agent E2, baseline, web and the
+    answer repair. A model without an entry passes through unchanged (the judge, an embedding call). A call marked
+    deterministic (the agent's reading of the question) keeps temperature 0 instead of the card's sampling.
     """
 
     def __init__(self, inner, params, sampling=None):
         self.inner, self.params, self.sampling = inner, params or {}, sampling or {}
 
     def chat(self, model, messages, **kw):
-        if model in self.sampling:
+        if model in self.sampling and not kw.get('deterministic'):
             kw.update({k: self.sampling[model].get(k) for k in ('temperature', 'top_p', 'top_k')})
         p = self.params.get(model) or {}
         if 'max_tokens' in p:
@@ -129,27 +132,24 @@ def _provider(data, headers):
 
 
 class MockClient:
-    """Offline stand-in. Picks answers at random (seeded) and exercises the tool loop: search, read_file, catalog, calculate."""
+    """Offline stand-in. Picks answers at random (seeded); reads a question into a minimal case; serves the web
+    reference's tool calls (web_search, then an answer)."""
 
     def __init__(self, seed=0):
         self.rng = random.Random(seed)
 
-    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None, top_p=None, top_k=None):
-        last = messages[-1]
+    def chat(self, model, messages, tools=None, temperature=0.2, max_tokens=4000, provider_order=None, reasoning=None, top_p=None, top_k=None,
+             deterministic=False):
         tool_turns = sum(1 for m in messages if m['role'] == 'tool')
+        if deterministic:   # the agent's reading of the question (agent.py, stage 1)
+            return {'content': json.dumps({'kind': 'metric-meaning', 'objects': ['VM'], 'claims': [],
+                                           'metrics': [{'name': 'CPU Ready', 'object': 'VM', 'value': None, 'unit': None}]}),
+                    'tool_calls': [], 'finish_reason': 'stop', 'prompt_tokens': 300, 'completion_tokens': 60, 'latency': 0.01,
+                    'served_model': model, 'provider': 'mock'}
         if tools and tool_turns == 0:
             q = next(m['content'] for m in messages if m['role'] == 'user')
             q = q if isinstance(q, str) else q[0]['text']
-            return self._tool('search', {'query': q[:200]})
-        if tools and tool_turns == 1:
-            hit = re.search(r'"id": "([^"]+)"', messages[-1]['content'])
-            if hit:
-                return self._tool('read_file', {'id': hit.group(1)})
-        names = {t['function']['name'] for t in tools or []}
-        if tools and tool_turns == 2 and 'catalog' in names:
-            return self._tool('catalog', {'name': 'cpu.ready.summation'})
-        if tools and tool_turns == 3 and 'calculate' in names:
-            return self._tool('calculate', {'expression': 'summation_to_percent(2000, 20, 1)'})
+            return self._tool(tools[0]['function']['name'], {'query': q[:200]})
         text = json.dumps([m['content'] if isinstance(m['content'], str) else m['content'][0]['text'] for m in messages if m['role'] == 'user'])
         letters = sorted(set(re.findall(r'\\n([A-H])\. ', text)))
         pick = sorted(self.rng.sample(letters, k=1 if letters else 0)) or ['A']

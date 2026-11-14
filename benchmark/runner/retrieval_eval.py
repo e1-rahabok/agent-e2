@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Harness-only test: does retrieval find the files a question needs? No model is called.
 
-For every question with `knowledge` ids, run the classic-mode retrieval on the prompt text
-(the same `## Prompt` the model sees, options included) and report:
+For every question with `knowledge` ids, build Agent E2's reading set (harness/planner.py, the code-only reading of the
+question: no model call) on the prompt text (the same `## Prompt` the model sees, options included) and report:
   - recall@k of plain search (top k files),
-  - recall of the classic context (search + same_name/related expansion, within the token budget),
+  - recall of the reading set (named files, search, mechanism links, one search per claim, within the token budget),
   - which needed files were missed,
-  - questions whose main file (`knowledge_main`) is missing from the classic context: each one is a defect.
+  - questions whose main file (`knowledge_main`) is missing from the reading set: each one is a defect,
+  - complete questions by number of needed files.
 A miss here is a harness or knowledge problem, never a model problem.
 
 Examples:
@@ -24,7 +25,6 @@ sys.path.insert(0, os.path.dirname(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'))
 import questions as C  # noqa: E402
 import kb  # noqa: E402
-import modes  # noqa: E402
 import planner  # noqa: E402
 from retrieval import Retriever  # noqa: E402
 
@@ -36,7 +36,7 @@ def main():
     ap.add_argument('--k', type=int, default=6)
     ap.add_argument('--questions', help='comma-separated id fragments')
     ap.add_argument('--set', action='append', default=[], metavar='KEY=VALUE',
-                    help='override a config value for this check, e.g. --set expand_derive=true (repeatable)')
+                    help='override a config value for this check, e.g. --set plan_section_tokens=250 (repeatable)')
     a = ap.parse_args()
     cfg = yaml.safe_load(open(a.config))
     for kv in a.set:
@@ -63,10 +63,9 @@ def main():
             continue
         question = c.render(random.Random(0))[0] if c.options else c.open_text()
         top = [h['id'] for h in ret.search(question, k=a.k)]
-        context = planner.reading_set if cfg.get('planner') else modes.classic_context
-        _, ctx, _ = context(ret, question, cfg)
+        ctx = planner.reading_set(ret, question, cfg)[1]
         rows.append((c.id, need, top, ctx, c.knowledge_main))
-    print(f"| Question | Needed | Search top {a.k} | Classic context | Missed in context |")
+    print(f"| Question | Needed | Search top {a.k} | Reading set | Missed in the reading set |")
     print('|---|---|---|---|---|')
     for cid, need, top, ctx, main_id in rows:
         sh = sum(i in top for i in need)
@@ -74,19 +73,19 @@ def main():
         miss = ', '.join(f'`{i}`' + (' (main)' if i == main_id else '') for i in need if i not in ctx) or '-'
         print(f'| {cid} | {len(need)} | {sh}/{len(need)} | {ch}/{len(need)} | {miss} |')
     s = summary(rows)
-    print(f"\nQuestions: {s['questions']}. Recall@{a.k} search: {s['search']:.0%}. Recall classic context: {s['context']:.0%}. "
+    print(f"\nQuestions: {s['questions']}. Recall@{a.k} search: {s['search']:.0%}. Recall reading set: {s['context']:.0%}. "
           f"Questions with every needed file in context: {s['complete']}/{s['questions']} ({s['complete'] / s['questions']:.0%}). "
-          f"Main file missing from context: {len(s['main_missed'])} of {s['main_keyed']} questions with a main file"
+          f"Main file missing from the reading set: {len(s['main_missed'])} of {s['main_keyed']} questions with a main file"
           f"{' (' + ', '.join(s['main_missed']) + ')' if s['main_missed'] else ''}. "
           f"Mode: {'hybrid' if a.embeddings else 'BM25 only'}{' + rerank' if cfg.get('rerank') else ''}"
-          f"{', reading plan (harness/planner.py)' if cfg.get('planner') else ''}.")
+          ".")
     print('Complete by number of needed files: ' + ', '.join(f"{k} file{'s' if k != '1' else ''} {v[0]}/{v[1]} ({v[0] / v[1]:.0%})"
                                                          for k, v in s['by_need'].items()) + '.')
     print('Release levels (benchmark/retrieval-check.md): main file 100%, context recall at least 95%, complete at least 90%.')
 
 
 def summary(rows):
-    """The four numbers of the check, from rows (id, needed, search top k, classic context, main id or '')."""
+    """The numbers of the check, from rows (id, needed, search top k, reading set, main id or '')."""
     n = sum(len(need) for _, need, _, _, _ in rows)
     keyed = [(cid, main_id, ctx) for cid, _, _, ctx, main_id in rows if main_id]
     return {'questions': len(rows),

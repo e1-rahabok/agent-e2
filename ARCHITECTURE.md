@@ -43,7 +43,7 @@ flowchart LR
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics and the Guest OS layer; the end scope is the private cloud stack (vSAN, NSX, VCF Operations, Kubernetes, Linux).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator, planning calculator, flow executor), answer verifier, and the agent. Reads `knowledge/`; depends on no other folder.
-  - Agent: the expert's procedure as code (designed 2026-11-14; [`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/planner.py`](harness/planner.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
+  - Agent: the expert's procedure as code, a neuro-symbolic expert system (built 2026-11-14; [`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/planner.py`](harness/planner.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
   - Model: an open-weight vision model on local GPUs (one GPU is the stretch target; two to four are allowed), chosen by benchmark ([`benchmark/models.md`](benchmark/models.md)). Not stored here.
 - Proof: shows that the product works: the release gate on the benchmark. A higher score than a frontier model is an outcome, not a goal.
   - `benchmark/`: questions with answer keys and their attachments, the candidate models and judge ([`benchmark/models.md`](benchmark/models.md)), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on the mean of 5 runs, the worst run reported as consistency. Never indexed: it holds the answer keys.
@@ -57,12 +57,12 @@ flowchart LR
 | Part | What it is | Where | What it decides |
 |---|---|---|---|
 | Knowledge | Level 400 facts, mechanisms, misconceptions, flows (markdown) and exact data (YAML catalog); up-front misconceptions | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
-| Agent | The expert's procedure as code: six stages from question to checked answer ([`harness/AGENT.md`](harness/AGENT.md)) | `harness/` ([`harness/planner.py`](harness/planner.py) built; the other stages planned) | The case, the reading set, which exact tools run on which values, whether to ask, when the answer is accepted. |
+| Agent | The expert's procedure as code: six stages from question to checked answer ([`harness/AGENT.md`](harness/AGENT.md)) | [`harness/agent.py`](harness/agent.py), [`harness/planner.py`](harness/planner.py) | The case, the reading set, which exact tools run on which values, whether to ask, when the answer is accepted. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, flow executor, budgets, the answer verifier | `harness/` | Nothing on its own: it runs what the agent asks and enforces the limits. |
 | Model | An open-weight vision LLM on local GPUs (one GPU is the stretch target; [`benchmark/models.md`](benchmark/models.md)) | served by vLLM, llama.cpp or Ollama | How to read the question and the images into the case, and how to read the reading set into an answer: which options are right, which mechanism applies. It does not choose what to read. |
 
 - The agent leads, the model reads. The model does not know what the knowledge base holds, so it cannot plan the lookups; the knowledge base records its own map (file kinds, links, catalog, flows), so code can ([`harness/AGENT.md`](harness/AGENT.md), section 2).
-- One pipeline for every question (author, 2026-11-14). Classic mode (one search, then one answer) and agentic mode (the model chooses its tools) are replaced; their code stays until the new agent is built and proved ([`harness/AGENT.md`](harness/AGENT.md), section 7). Baseline (the model alone) and web (the frontier reference) are benchmark references, not product modes.
+- One pipeline for every question (author, 2026-11-14). Classic mode (one search, then one answer) and agentic mode (the model chooses its tools) are removed; their code is archived ([`harness/AGENT.md`](harness/AGENT.md), section 2). Baseline (the model alone) and web (the frontier reference) are benchmark references, not product modes.
 - The model's own memory of vSphere metrics comes from public Internet text and repeats the misconceptions the knowledge base corrects.
 - The model is told to use the knowledge base first; where the knowledge base speaks, it wins; where it is silent, the model may use its own knowledge and must say so.
 - The knowledge base does not answer by itself. It must be found, read and applied to the question.
@@ -111,7 +111,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Updates arrive as a bundle: knowledge, catalog, index, and optionally new weights; downloaded, or imported offline. No customer data is sent out.
 - Internet access: two harness tools, `fetch_url` (a link in the question) and `web_search` (only for current facts: bugs, builds, maximums, renamed features). Both go through the customer's proxy and send only public requests, never customer data. Fetched text is untrusted, trimmed to the relevant parts, placed after the knowledge-base files and checked against them. Rules: [`MISSION.md`](MISSION.md), section 5 (Ways to ask, Answer). Built in [`harness/web.py`](harness/web.py) (2026-11-09):
   - Every URL in the question (up to 3) is read before the model starts, in both modes; the agent also has the tools `fetch_url` and `web_search`.
-  - Search runs only when the question asks for current facts (a pattern list: known bugs, builds, patches, release notes, maximums, defaults, renamed, end of support). The agent decides by that rule, not the model (until the new agent is built: classic mode by the rule, the tool-loop agent by the tool description).
+  - Search runs only when the question asks for current facts (a pattern list: known bugs, builds, patches, release notes, maximums, defaults, renamed, end of support). The agent decides by that rule, not the model.
   - The search query keeps product words, versions and KB numbers and drops tokens that look like the customer's system names (letters mixed with digits, dots or underscores), so names of VMs, hosts and datastores do not leave the site.
   - Private, loopback and link-local addresses are refused; an optional allow list restricts hosts.
   - HTML is reduced to text without scripts, styles, menus and footers, then trimmed to about 2,000 tokens most relevant to the question (BM25 over 120-word chunks).
@@ -141,7 +141,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Reading a wrong answer: needed file not in context → retrieval or knowledge problem; file in context but answer wrong → model or prompt problem; file missing from the knowledge base → knowledge gap.
 
 ## 7. Status
-- Milestones and what is built: [`project/plan.md`](project/plan.md). Not built yet: question understanding before search beyond the term map (question type, object, layer as filters), query rewriting with glossary synonyms, the offline bundle. Screenshots are read in 1.0; the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
+- Milestones and what is built: [`project/plan.md`](project/plan.md). Not built yet: the rest of the agent's build order ([`harness/AGENT.md`](harness/AGENT.md), section 7), query rewriting with glossary synonyms, the offline bundle. Screenshots are read in 1.0; the screen library is 1.1. Data files are 1.2; a live VCF Operations connection comes after 1.0.
 
 ## 8. Local LLM use
 - Design target: a local LLM with a small context window and retrieval-augmented generation (RAG). The knowledge base is the retrieval corpus. No fine-tuning is assumed.
@@ -169,16 +169,15 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 
 ### Query
 0. Map the user's words ([`harness/terms.py`](harness/terms.py), [`knowledge/catalog/user-terms.yaml`](knowledge/catalog/user-terms.yaml)). Users write Level 300 terms ("CPU usage is high", "steal time", "the real-time chart"). Each matched row adds knowledge-base terms to the search query, pulls its files into the context, and adds one note on the misconception the words carry. Deterministic code, no model; part of the case (stage 1) and tier 2 of the reading plan.
-1. Read the question into the case (stage 1 of [`harness/AGENT.md`](harness/AGENT.md)): its `retriever_guide` kind (how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree), objects, layer, metrics with values, claims. Planned; today the code-only part: object words, metric titles and counter keys, options ([`harness/planner.py`](harness/planner.py)).
-2. Extract filters from the question: `product`, `object`, `technology`, `pillar`. (Planned, as step 1.)
-3. Retrieve by similarity within those filters.
+1. Read the question into the case (stage 1 of [`harness/AGENT.md`](harness/AGENT.md)): its `retriever_guide` kind (how-it-works, metric-meaning, term-meaning, what-to-set, health-check, troubleshooting, decision-tree), objects, layer, metrics with values, claims, missing facts, what each image shows. Code also reads the question on its own: object words, metric titles and counter keys, values in ms, options and their parts ([`harness/planner.py`](harness/planner.py), [`harness/agent.py`](harness/agent.py)).
+2. Filters: the objects the question names filter the metric files it names (tier 2); the case's kind picks the flow (tier 1). `product`, `technology` and `pillar` as search filters: not used.
+3. Retrieve by similarity: hybrid search on the question, and one search per claim.
 4. Expand: add files named in `related`, `internal_derive`, `same_name`, `same_meaning`.
    - Reading plan: `same_name` and `internal_derive` of the named files and the top 2 hits, one search per claim, 2 `related` of the top 2 hits; a troubleshooting question gets its flow first. Tiers and measurement: [`harness/AGENT.md`](harness/AGENT.md), section 4.2.
-   - Classic mode until then: `same_name` and two `related` of the top 2 hits; with `expand_derive`, up to 3 `internal_derive` files of each; with `route_troubleshooting`, the best troubleshooting file first.
    - `same_name` is the main misconception guard: it brings in the other object's meaning of the same label.
 5. Add the matching SP5 observability files (`sp5-framework/observability/`) and vSphere architecture files when the answer depends on units, sampling, thresholds or the provider/consumer view.
 6. Fit to the context window. Priority: matching metric or flow file, then its concepts, then observability and architecture, then the rest of the links.
-7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model. In the new agent, code runs them on the case's values before the model reads (stage 3, computed facts).
+7. Take exact values (units, rollups, statistics levels, thresholds) from the catalog, and arithmetic from the calculator, not from the model. The agent runs them on the case's values before the model reads (stage 3, computed facts).
 
 ### Answer
 - Answer from the retrieved text first. Where it is silent, the model may answer from its own knowledge and says so; where they differ, the knowledge base wins. Prefer mechanism and reason over a definition.
@@ -186,12 +185,12 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 - Treat `status: draft` content as unreviewed. Say so when the answer depends on it.
 - Use terms from [`knowledge/glossary.md`](knowledge/glossary.md): preferred names, other names, confusable terms.
 - Quote a threshold only when a file states it with its source.
-- One clarifying round ([`harness/clarify.py`](harness/clarify.py), `modes.converse`; rules in MISSION.md, section 5). In the new agent, code decides whether to ask (stage 4: a missing fact the next flow step needs, a term with several meanings, text and image disagree) and the model only words the questions. As built today, the shipped assistant runs the conversation kind `chat`: the model may reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
+- One clarifying round ([`harness/clarify.py`](harness/clarify.py), `modes.converse`; rules in MISSION.md, section 5). Code decides whether the round is offered (stage 4: the case lists a missing fact or reads a premise, or a term-map row marked `premise` matches); otherwise the prompt has no clarifying rule. When offered, the conversation kind `chat` lets the model reply `CLARIFY:` with at most 3 questions, each with its reason, when the question is odd or illogical, the text and an attachment disagree, or one missing fact changes the answer. The second turn runs `chat_final`: the original question, the questions asked and the user's reply, with the rule to answer now; a second request to clarify gets one repair turn. Term-map rows marked `premise` flag their note as a possible wrong premise. The benchmark kinds (`choice`, `open`) never offer the round.
 
 ### Flow questions (`health-check`, `troubleshooting`, `decision-tree`)
 - Retrieve the matching flow file first: the object's health check, the troubleshooting flow for the symptom, or the decision tree for the question. Retrieve its `internal_derive` metric files with it.
 - Follow the numbered steps in `## Checks, in order`, from step 1. Do not skip to a later step.
-- At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives. In the new agent the comparison and the branch are code (executable steps, Q166); the model explains the path.
+- At each step: name the metric and object, compare with the stated threshold, then take the branch the step gives. To build: the comparison and the branch as code (executable steps, Q166); the model then explains the path.
 - The Mermaid chart is not in the model's text (Ingest, step 3): the numbered steps are the flow. A reviewer checks that chart and steps agree.
 - When the user has given a value, apply it to the step. When not, ask for that metric's value, or state both branches.
 - Stop at the step that gives a conclusion. State the path taken: step numbers, values, thresholds and their sources.
@@ -203,13 +202,13 @@ Recorded for every answer (`traces.jsonl` in the benchmark; the answer log at th
 
 | Field | Content |
 |---|---|
-| step, action | 1, 2, 3, ...; as built: search, read_file, follow_links, get_images, catalog, calculate, flow, primer, reminder, refused, verify, repair, answer, fallback. New agent: understand, plan (with tiers), compute, ask, answer, verify, gap, consensus, coverage |
+| step, action | 1, 2, 3, ...; understand, plan (files by tier), compute, coverage, ask, web, answer, gap, verify, repair, consensus, context_over; the web reference: web_search, fetch_url, answer |
 | input | tool arguments |
 | output summary | ids returned, tokens returned |
 | tokens, latency, provider | per model turn |
 | index version | git SHA of `knowledge/` |
 
-- The trace explains each failure: right file not in the reading set → plan or knowledge-link problem; file read but fact ignored → model problem; fact missing → knowledge gap. The new agent's trace names the tier that brought each file, so a miss points at the link or rule that should have brought it.
+- The trace explains each failure: right file not in the reading set → plan or knowledge-link problem; file read but fact ignored → model problem; fact missing → knowledge gap. The trace names the tier that brought each file, so a miss points at the link or rule that should have brought it.
 
 ### Measurement
 - `benchmark/` runs the same questions with and without the knowledge base. A structure change is kept only when scores improve.

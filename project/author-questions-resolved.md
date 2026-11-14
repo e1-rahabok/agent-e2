@@ -5,9 +5,20 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 ## Resolved
 
 
+### Q209 · Benchmark > Runs · What the next round runs
+
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 8 and 16); [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md); [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml) (`final_round`); [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md) (section 1).
+- Question: under the rule that the benchmark is a proof (2026-11-14), two run choices change.
+  - (1) The local model alone (baseline). It showed that the knowledge base lifts every model by 19-28 points; it proves nothing about the shipped product. (A) drop it from the rounds; (B) keep it, 1 run instead of 5, as the zero point.
+  - (2) The next full round, decided on 2026-11-13 as the next run, on classic and agentic. (C) run it now as planned; (D) run it when the new agent is built ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 7, step 5): Agent E2 on the candidates, and the frontier reference.
+- Written as now: `final_round` runs baseline, classic and agentic for 3 candidates and the frontier reference in web mode, 5 runs.
+- Recommended: A and D. A round on classic and agentic measures pipelines that will not ship (about US$ 73 and 2-4 hours); the retrieval check gives the new agent's retrieval number for free, and the round after step 5 is the proof.
+- Answer: Author (2026-11-14, in session): two runs per candidate, Base and Agent E2 (the neuro-symbolic expert system); the frontier model runs once, in the mode that mimics real use (web search at its own choice). Classic and agentic removed; earlier results archived and not compared. Applied: config.yaml (`modes`, `release.runs`), the runner, RUN.md, benchmark/design.md, project/plan.md (M4). Read as B and D: Base stays as one run of 5 repeats per question, like Agent E2. "Runs once" read as one mode (web) with the same 5 repeats as every candidate, so its score has the same margin; one repeat would save about US$ 22 at a wider margin: say so if that was meant.
+
+
 ### Q200 · Benchmark > Mode · Agentic or classic as the shipped mode
 
-- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (section 6); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 16, Mode); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 9).
 - Question: [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels) made agentic the shipped mode. Round of 2026-11-13: agentic and classic tie for every model (-6, -3, +1 points, inside the margin), and agentic costs 2-3.5 times the tokens and about twice the latency. Proposal: (A) keep [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels); (B) the next round decides: agentic stays only if it beats classic outside the margin, else classic ships with consensus and agentic is an option; (C) ship classic now.
 - Written as now: agentic is the shipped mode (design.md, section 16). Recommended: B.
 - Answer: Author (2026-11-14, in session): neither. Classic mode leaves the model only to read; agentic mode lets the model plan lookups in a domain it does not know. One pipeline takes the best of both: the agent and the harness lead, the model reads and writes. Designed: the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Replaces [Q130](#q130--benchmark--release-score-gap-to-the-frontier-model-retrieval-levels)'s agentic as the shipped mode. Applied: ARCHITECTURE.md, MISSION.md, benchmark/design.md section 16, project/plan.md; rule added to CLAUDE.md, Evaluation: the benchmark is a proof, not a goal. Follow-ups: [Q209](author-questions.md#q209--benchmark--runs--what-the-next-round-runs) (what the next round runs), [Q210](author-questions.md#q210--terms--agent-case-reading-set-reading-plan) (terms).
@@ -22,7 +33,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q206 · Benchmark > Retrieval check · Restart it now
 
-- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 11); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md); [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Validation).
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (section 11); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md); [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Validation).
 - Question: the retrieval check is paused until the question bank is revamped (2026-11-12). The round of 2026-11-13 shows retrieval is the largest loss: 12 of the 22 points Muse loses in agentic mode, against 2 for the model. (A) keep it paused; (B) restart it now on the 196 questions as they are, and re-run it when the bank changes. It needs no model and no judge, so it costs nothing.
 - Written as now: paused. Recommended: B.
 - Answer: Author (2026-11-13): B, do it. Applied: baseline in benchmark/results/retrieval-2026-11-13/ (hybrid 69% context recall, 91 of 196 complete); CLAUDE.md, retrieval-check.md, design.md section 9, plan M3.
@@ -589,7 +600,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q130 · Benchmark · Release score, gap to the frontier model, retrieval levels
 
-- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate; M3 exit criteria); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 4, 7.4, 8, 10 Release criteria); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5, power table).
+- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission, release gate; M3 exit criteria); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 4, 7.4, 8, 10 Release criteria); [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md) (section What is a good number); [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-11.md) (section 5, power table).
 - Search: not from the book.
 - Question: (a) the passing score of Agent E2 in agentic mode; (b) the gap Agent E2 must show over the frontier model without the knowledge base; (c) the retrieval levels for classic mode; (d) should each question mark its main file, so the check reports main-file misses separately?
 - Written as now:
@@ -756,7 +767,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q064 · Review · Which files to review first
 
-- Files: the 25 most-cited knowledge files below. Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.4.
+- Files: the 25 most-cited knowledge files below. Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-06.md), section 3.4.
 - Search: not applicable.
 - Question: 0 of 277 knowledge files are `status: reviewed`. Reviewing them in this order puts your review where the benchmark scores. Please confirm the rule, or name your own order.
 - Written as now (recount 2026-11-12): 95 questions cite 131 of 277 files; moved ids resolved. Up front: M = a `See` id in knowledge/misconceptions.md; G = a glossary entry with a Not to confuse with line (the `terms` block).
@@ -1110,7 +1121,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q060 · Operations flows · Users say the VM is slow: your order of checks
 
-- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/vm-slow.md) (sections Checks, in order; Order rationale). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Files: [Users say the VM is slow: triage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/performance/vm-slow.md) (sections Checks, in order; Order rationale). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-06.md), section 3.3.
 - Search: not from the book. Drafted from the VM overview file and the per-resource flows.
 - Question:
   1. Is this the order you follow in the field: time window, breadth (many VMs?), VM contention per resource, Guest OS queues, then context (limits, snapshots, vMotion)?
@@ -1159,7 +1170,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q163 · Plan, Decisions 2026-11-06 · Benchmark before M1 and M2 are complete
 
-- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-11.md) (section 5).
+- Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing), [project/review-2026-11-11.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-11.md) (section 5).
 - What the knowledge base says now: no benchmark run until the 100 questions and the knowledge base are complete.
 - Question: (a) run the 70 scorable questions now as a development signal: 1 candidate and the frontier reference, 3 modes, 5 runs, about US$ 20-40; (b) keep the 2026-11-06 decision.
 - Proposed answer: (a). Every change since the first version is unmeasured.
@@ -1664,7 +1675,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q063 · Sources · Book Part 1 and the VCF Operations chapters
 
-- Files: [sp5-framework/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework) (4 files and 2 new flows); [vcf-operations/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations) (1 concept, 12 metrics, 5 KPIs). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/review-2026-11-06.md), section 3.3.
+- Files: [sp5-framework/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework) (4 files and 2 new flows); [vcf-operations/](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations) (1 concept, 12 metrics, 5 KPIs). Review: [project/review-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-06.md), section 3.3.
 - Search: not applicable.
 - Question: please upload Part 1 of the book (capacity and performance management) and your VCF Operations chapters to [project/sources](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources). Today 159 of 206 files come from Part 3, and operators work in VCF Operations, which a third of the screenshot questions show. Claude will fetch the VCF Operations 9.1 metric reference from TechDocs for the catalog.
 - Written as now: Part 3 extracted; operations-management and vcf-operations hold only what Part 3 and the vCommunity adapter documentation give.

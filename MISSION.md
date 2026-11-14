@@ -30,7 +30,7 @@ How the parts run: [ARCHITECTURE.md](ARCHITECTURE.md). How expertise is codified
   - whether Agent E2, as shipped, passes the release gate and how it compares with a frontier model;
   - which frozen model to ship (model choice is the fourth lever).
 - What a change to the knowledge base, harness or agent adds is read from free checks first (the retrieval check, traces, unit tests), and from the next round that proves the product.
-- Agent E2 has one pipeline (author, 2026-11-14): classic and agentic mode are replaced by the expert-led agent ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)). Whether the local model alone (baseline) keeps a place in the rounds: Q209.
+- Agent E2 has one pipeline (author, 2026-11-14): the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); classic and agentic mode are removed. A round has two runs per candidate, Base (the model alone) and Agent E2, and the frontier reference in its web mode.
 
 ## 3. Why it is possible
 Six mechanisms, in order of weight.
@@ -59,8 +59,8 @@ Six mechanisms, in order of weight.
 - The best local configuration stays below the frontier reference by more than the margin after the knowledge base covers the questions (retrieval check at 100%) and the override rate is near 0. Then the gap is the model's reasoning, and the next lever is a larger frozen model ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1).
 
 ### Status
-- Not achieved yet. Round of 2026-11-13 (196 questions): the best local model with the knowledge base, meta/muse-glimmer-30b in agentic mode, scored 78%; the frontier model with web search, 81%. A tie inside the margin (12 points behind on 2026-11-12). No configuration passes the release gate; neither does the frontier model (81%, Level 400 79%, confident-wrong 12%).
-- Where the points are lost (Muse, agentic, 22 points): retrieval 12, knowledge base wrong or missing 8, model with every needed file read 2. The gap is retrieval and knowledge, not the model's reasoning. Analysis: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md), section 11.
+- Not achieved yet. Agent E2 was rebuilt on 2026-11-14 as one pipeline, the neuro-symbolic expert system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)): code plans what the model reads and computes the exact values; the model reads and writes. No round has run on it yet.
+- Why the rebuild: in the previous generation the gap was retrieval and knowledge, not the model's reasoning: with every needed file read, the model lost under 2 points (archived analysis: [analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md), section 11). Earlier scores are not compared with the new generation.
 
 ## 4. Model size
 - Size, speed and hardware: [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section Model size and speed.

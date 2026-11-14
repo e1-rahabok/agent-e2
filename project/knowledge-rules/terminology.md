@@ -12,7 +12,7 @@ Agent E2 has four jobs with words. Each has one home, so a fact is written once.
 | Drop a wrong belief | A confident rule of thumb, never looked up | [`knowledge/misconceptions.md`](../../knowledge/misconceptions.md) | Up-front block `rules` |
 
 Glossary entry ([`knowledge/glossary.md`](../../knowledge/glossary.md), read by [`harness/kb.py`](../../harness/kb.py), checked by lint):
-- `- **Term**: meaning`, then optional lines `  - Also called: a, b`, `  - Not to confuse with Other term: difference.`, ``  - File: `id` ``. Grouped by area under `###` headings, alphabetical within each. Not `##`: the glossary must stay one chunk, so search never ranks this summary above the files that hold the mechanism (retrieval check 2026-11-11: with `##` areas the glossary entered 18 of 95 classic contexts instead of 3, and 2 questions lost a needed file).
+- `- **Term**: meaning`, then optional lines `  - Also called: a, b`, `  - Not to confuse with Other term: difference.`, ``  - File: `id` ``. Grouped by area under `###` headings, alphabetical within each. Not `##`: the glossary must stay one chunk, so search never ranks this summary above the files that hold the mechanism (retrieval check 2026-11-11: with `##` areas the glossary entered 18 of 95 retrieved contexts instead of 3, and 2 questions lost a needed file).
 - Meaning only where Agent E2's meaning differs from public text, or a 32B model lacks it (SP5 and VCF Operations terms, redefined words). No Level 100 or 200 definitions.
 - A metric with its own file is an entry only when it has another name or a confusable partner.
 - Same name, two things (Demand for capacity, Demand on ESXi): two entries with a qualifier, each pointing at the other.

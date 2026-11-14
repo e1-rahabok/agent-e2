@@ -21,7 +21,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'
 import report as R  # noqa: E402
 
 REPO = 'https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results'
-MODE_ORDER = {'baseline': 0, 'classic': 1, 'agentic': 2, 'web': 3}
+E2 = 'agent-e2'
+MODE_ORDER = {'baseline': 0, E2: 1, 'web': 2}
 LEVEL_KEYS = [f'level:{x}' for x in R.LEVELS]
 
 
@@ -91,29 +92,23 @@ def reading(fin, rows, info, ref):
     locals_ = sorted({m for m, _ in fin if m != ref[0]})
     for m in locals_:
         s = lambda mode: fin.get((m, mode), {}).get('final')      # noqa: E731
-        parts = [f'{mode} {s(mode):.0%}' for mode in ('baseline', 'classic', 'agentic') if s(mode) is not None]
+        parts = [f'{mode} {s(mode):.0%}' for mode in ('baseline', E2) if s(mode) is not None]
         line = f'{m}: ' + ', '.join(parts) + '.'
-        d, mg = _lift(fin, m, 'baseline', 'agentic')
+        d, mg = _lift(fin, m, 'baseline', E2)
         if d is not None:
-            line += f' Agentic is {_pts(d)} points over baseline ({"outside" if abs(d) > mg else "inside"} the margin of {100 * mg:.0f} points).'
-        d, mg = _lift(fin, m, 'classic', 'agentic')
-        if d is not None and abs(d) > mg:
-            line += (f' Agentic is {_pts(d)} points against classic: the model\'s own tool use '
-                     f'{"adds to" if d > 0 else "loses"} what one retrieval gives.')
-        elif d is not None:
-            line += f' Agentic and classic are within the margin of each other ({_pts(d)} points).'
+            line += f' Agent E2 is {_pts(d)} points over the model alone ({"outside" if abs(d) > mg else "inside"} the margin of {100 * mg:.0f} points).'
         out.append(line)
     if (ref[0], 'baseline') in fin and (ref[0], 'web') in fin:
         d, mg = _lift(fin, ref[0], 'baseline', 'web')
         out.append(f'{ref[0]}: open web search adds {_pts(d)} points over the prompt alone ({"outside" if abs(d) > mg else "inside"} the margin of {100 * mg:.0f} points).')
     if ref in fin:
-        best = max(locals_, key=lambda m: fin.get((m, 'agentic'), {}).get('final', -1), default=None)
-        if best and (best, 'agentic') in fin:
-            gap = fin[(best, 'agentic')]['final'] - fin[ref]['final']
-            out.append(f'Best local model in agentic mode: {best}, {fin[(best, "agentic")]["final"]:.0%}; the frontier model without the knowledge base '
+        best = max(locals_, key=lambda m: fin.get((m, E2), {}).get('final', -1), default=None)
+        if best and (best, E2) in fin:
+            gap = fin[(best, E2)]['final'] - fin[ref]['final']
+            out.append(f'Best local model with Agent E2: {best}, {fin[(best, E2)]["final"]:.0%}; the frontier model without the knowledge base '
                        f'scores {fin[ref]["final"]:.0%}, a gap of {_pts(gap)} points (an outcome, not a gate).')
-    passed = [m for m in locals_ if (m, 'agentic') in fin and all(g[3] for g in R.gate(fin, rows, m, 'agentic', ref)[:3])]
-    out.append('Release gate in agentic mode (final score, Level 400, confident wrong): ' +
+    passed = [m for m in locals_ if (m, E2) in fin and all(g[3] for g in R.gate(fin, rows, m, E2, ref)[:3])]
+    out.append('Release gate on Agent E2 (final score, Level 400, confident wrong): ' +
                (f'passed by {", ".join(passed)}.' if passed else 'passed by no model.'))
     bad = [i for i in info if i['failed'] or i['truncated'] or i['unparsed']]
     for i in bad:
@@ -131,7 +126,7 @@ def build(folders, today=None):
     L = [f'# Benchmark results: round of {dates[0][:4]}-{dates[0][4:6]}-{dates[0][6:]}', '',
          f'- {len(info)} runs, {n_q} questions, {cfg0.get("runs")} runs per question, sampling {json.dumps(cfg0.get("sampling")) if cfg0.get("sampling") else cfg0.get("temperature")}. '
          f'Judge: {cfg0.get("judge_model")}. Written by `benchmark/runner/summarize.py` from the run folders; every number below comes from them.',
-         '- How to read a score: the exact value is read at plus or minus 5 points; the signal is the jump from baseline to a mode, read per model on the same questions. '
+         '- How to read a score: the exact value is read at plus or minus 5 points. The benchmark is a proof: Agent E2 against the release gate and the frontier reference. '
          'Method and scoring: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md). '
          'Scores are not comparable with scores graded by another judge.', '']
     L += ['## Runs', '', '| Run folder | Model | Modes | Request settings | Answers | Failed | Cut off | First to last answer | Cost US$ (judge) |', '|---|---|---|---|---|---|---|---|---|']
@@ -141,32 +136,33 @@ def build(folders, today=None):
         prm = '; '.join(json.dumps(v) for v in (c.get('model_params') or {}).values()) or 'default'
         L.append(f'| [{i["folder"]}]({REPO}/{i["folder"]}/report.md) | {m} | {", ".join(c["modes"])} | `{prm}` | {i["answers"]} | {i["failed"]} | '
                  f'{i["truncated"]} | {_minutes(i):.0f} min | {i["cost"]:.2f} ({i["judge_cost"]:.2f}) |')
-    L += ['', f'- Total cost US$ {sum(i["cost"] for i in info):.2f}. Harness in agentic mode: up-front blocks '
-              f'{", ".join(k for k, v in (cfg0.get("agent_primer") or {}).items() if v) or "none"}; term map in the agent prompt: {"on" if cfg0.get("term_map_agent") else "off"}.', '']
+    L += ['', f'- Total cost US$ {sum(i["cost"] for i in info):.2f}. Agent E2: up-front blocks '
+              f'{", ".join(k for k, v in (cfg0.get("primer") or {}).items() if v) or "none"}; case read by the model: {"on" if cfg0.get("case_model", True) else "off"}; '
+              f'gap follow-up: {"on" if cfg0.get("gap_followup", True) else "off"}.', '']
     L += ['## Final score', '', '| Model | Mode | Final | ± margin | Level 100 | Level 200 | Level 300 | Level 400 | Confident wrong |', '|---|---|---|---|---|---|---|---|---|']
     for (m, mode), s in sorted(fin.items(), key=lambda x: (x[0][0] == ref[0], x[0][0], MODE_ORDER.get(x[0][1], 9))):
         L.append(f'| {m} | {mode} | **{s["final"]:.0%}** | {100 * s["margin"]:.0f} | ' + ' | '.join(R._pct(s[k]) for k in LEVEL_KEYS) + f' | {R._pct(s["confident_wrong"])} |')
     L += ['', 'Final = mean over the questions of the mean credit over the runs. Levels: the same mean within one level. The worst-run score is in each run folder\'s report.md (consistency; not a gate).', '']
     L += ['## Lift', '', 'Points of the final score. A difference is outside the margin when it is larger than the two margins combined.', '',
-          '| Model | Classic over baseline | Agentic over baseline | Agentic over classic | Web over baseline |', '|---|---|---|---|---|']
-    for m in sorted({m for m, _ in fin}):
+          '| Model | Agent E2 over the model alone |', '|---|---|']
+    for m in sorted({m for m, _ in fin if m != ref[0]}):
         cells = []
-        for a, b in (('baseline', 'classic'), ('baseline', 'agentic'), ('classic', 'agentic'), ('baseline', 'web')):
+        for a, b in (('baseline', E2),):
             d, mg = _lift(fin, m, a, b)
             cells.append('-' if d is None else f'{_pts(d)} ({"outside" if abs(d) > mg else "inside"} ±{100 * mg:.0f})')
         L.append(f'| {m} | ' + ' | '.join(cells) + ' |')
     L.append('')
     if ref in fin:
-        L += ['## Release gate (agentic mode)', '', f'Reference: {ref[0]}, {ref[1]} mode. Limits: benchmark/design.md, section 7.5.', '', '| Model | Gate | Value | Limit | Pass |', '|---|---|---|---|---|']
-        for m in sorted({m for m, mode in fin if mode == 'agentic' and m != ref[0]}):
-            for name, v, limit, ok in R.gate(fin, rows, m, 'agentic', ref):
+        L += ['## Release gate (Agent E2)', '', f'Reference: {ref[0]}, {ref[1]} mode. Limits: benchmark/design.md, section 7.5.', '', '| Model | Gate | Value | Limit | Pass |', '|---|---|---|---|---|']
+        for m in sorted({m for m, mode in fin if mode == E2 and m != ref[0]}):
+            for name, v, limit, ok in R.gate(fin, rows, m, E2, ref):
                 L.append(f'| {m} | {name} | {v:.0%} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |' if not name.startswith('Paired') else
                          f'| {m} | {name} | p {v:.3f} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |')
         L += ['', 'Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check of the answers), and the held-out set at most 11 points below the development set (a separate run).', '']
     if (cfg0.get('consensus_samples') or 1) <= 1 and (cfg0.get('runs') or 0) >= 3:
         L += R.consensus_table(fin, R.consensus(rows))[1:] + ['']
     L += ['## Reading', ''] + [f'- {x}' for x in reading(fin, rows, info, ref)] + ['']
-    L += ['## Time and tokens', '', '| Model | Mode | Mean latency s | Mean tool calls | Mean tokens |', '|---|---|---|---|---|']
+    L += ['## Time and tokens', '', '| Model | Mode | Mean latency s | Mean model calls | Mean tokens |', '|---|---|---|---|---|']
     agg = R.aggregate(rows)
     best = {}
     for (m, mode, tr), a in agg.items():

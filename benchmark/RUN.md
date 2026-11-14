@@ -18,28 +18,27 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Before you start (only you can do these)
 1. `AI_GATEWAY_API_KEY` is set in the environment of the session.
-2. Credits: at least US$ 120. The preflight reads the balance and refuses the round if it does not cover the projected cost times 1.3.
-3. Key budget: room for US$ 120 beyond what the key has used. The budget of a key is cumulative and cannot be read by the runner; it shows as HTTP 402. (On 2026-11-13 the key had used US$ 150.43 of 150.)
+2. Credits: at least US$ 80. The preflight reads the balance and refuses the round if it does not cover the projected cost times 1.3.
+3. Key budget: room for US$ 80 beyond what the key has used. The budget of a key is cumulative and cannot be read by the runner; it shows as HTTP 402. (On 2026-11-13 the key had used US$ 150.43 of 150.)
 4. Everything is committed. The index version is the commit SHA: the questions, `knowledge/` and `harness/` must not change during the round. A resume after a change mixes two versions in one run.
 5. The session works on its own branch, started from `main`.
 
 ## Expect
 
-Projected from the preflight sample of 2026-11-13 (7 questions per mode), 196 questions, 5 runs each, judge openai/gpt-6.1-terra. The sample is small: read these as plus or minus 30%.
+Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in `web` only; 196 questions, 5 runs each, judge openai/gpt-6.1-terra. Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
 | Run folder | Modes | Answers | Request settings | Time | Cost US$ |
 |---|---|---|---|---|---|
-| `<date>-gemma-4-31b-it` | baseline, classic, agentic | 2,940 | default | 48 min | 9.65 |
-| `<date>-qwen3.8-27b` | baseline, classic, agentic | 2,940 | reasoning off | 33 min | 9.93 |
-| `<date>-muse-glimmer-30b` | baseline, classic, agentic | 2,940 | reasoning off | 54 min | 27.02 |
+| `<date>-gemma-4-31b-it` | baseline, agent-e2 | 1,960 | default | about 50 min | about 3 |
+| `<date>-qwen3.8-27b` | baseline, agent-e2 | 1,960 | reasoning off | about 50 min | about 3 |
+| `<date>-muse-glimmer-30b` | baseline, agent-e2 | 1,960 | reasoning off | about 60 min | about 7 |
 | `<date>-claude-opus-5.5` | web | 980 | effort medium, 8,000 tokens | about 70 min | about 27 |
-| Total | | 9,800 | | 1.5 to 3 hours | about 73 (95 with the safety factor) |
+| Judge | | about 2,700 judged answers | | | about 10 |
+| Total | | 6,860 | | 1.5 to 2 hours | about 50 (65 with the safety factor) |
 
-- The four runs go in parallel, so the round takes as long as the slowest run (Opus). Its time is projected at its starting concurrency of 3; the runner raises it while the provider allows.
-- The Opus row is the preflight figure for two modes (1,960 answers, 116 min, US$ 43.61) scaled to `web` alone by the measured cost per answer of 2026-11-13 (web US$ 0.033, prompt-only US$ 0.021: web is 61% of the pair). The preflight gives the real number before the round starts.
-- Add about 3 minutes for the preflight (US$ 0.55) and 1 to 2 relaunches: one command lives 2 hours, the runner stops at 110 minutes.
-- Cost is dominated by Opus, Muse and the judge (about US$ 14 for the 3,850 judged answers: 77 judged questions x 5 runs x 10 model-modes). With the agent blocks on, an agentic answer sends 40,000 to 50,000 input tokens because each tool turn sends the blocks again.
-- Qwen with its default settings (thinking on) takes about 8 times as long (25-38 s per answer against 3-11 s) and is cut off at the token cap on most answers.
+- The four runs go in parallel, so the round takes as long as the slowest run (Opus, at its starting concurrency of 3; the runner raises it while the provider allows).
+- An Agent E2 answer sends about 17,000 input tokens over its 2 model calls (the case call about 1,500, the answer call about 15,000 with the reading set), against about 400 for Base.
+- Add about 3 minutes for the preflight (under US$ 1) and 1 relaunch: one command lives 2 hours, the runner stops at 110 minutes.
 - The projection is checked again before anything long starts. If it exceeds the credits, `max_cost_usd` (150) or `max_hours` (6) in [`benchmark/runner/config.yaml`](runner/config.yaml), the round does not start.
 
 ## What happens
@@ -115,6 +114,6 @@ Only these stop the round:
 
 ## A smaller run
 
-- One model, one mode: `python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes classic --runs 1 --questions L4-04`.
-- `run.py --dry-run` prints the answers and a rough cost. It undercounts a model that thinks and an agentic run with the agent blocks on by 2 to 3 times. Trust `preflight.py --models <id>` instead.
+- One model, one mode: `python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-04`.
+- `run.py --dry-run` prints the answers and a rough cost. It undercounts a model that thinks. Trust `preflight.py --models <id>` instead.
 - `python3 benchmark/runner/run_all.py --dry-run` prints the plan of the round without any call.

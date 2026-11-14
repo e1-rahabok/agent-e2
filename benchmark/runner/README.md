@@ -21,7 +21,7 @@ python3 benchmark/runner/run.py --mock --runs 2
 - Offline pipeline check: random answers, real retrieval, no API calls.
 
 ```bash
-python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes classic --runs 1 --questions L4-04
+python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-04
 ```
 - Smallest real benchmark: one model, one mode, one question.
 
@@ -47,13 +47,13 @@ python3 -m unittest benchmark/runner/test_runner.py
 ```
 - Scoring tests: judge reply parsing, final score, sub-score groups, question tags. No API calls.
 
-- Agent up-front blocks for one benchmark (an experiment; the config default is all on since 2026-11-13): `--primer rules,terms` or `--primer all`. The choice is stored in `config.json` (`agent_primer`). Design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 3.
+- Up-front blocks of Agent E2's answer prompt (config `primer`, both on): `--primer rules` or `--primer all`. The choice is stored in `config.json` (`primer`). Design: [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 4.5.
 
 ## Retrieval check (no model)
 ```bash
 python3 benchmark/runner/retrieval_eval.py
 ```
-- Recall of each question's `knowledge` files in search and in the classic context. Add `--embeddings` for hybrid search (needs `AI_GATEWAY_API_KEY`).
+- Recall of each question's `knowledge` files in search and in Agent E2's reading set (the code-only case: no model call). Add `--embeddings` for hybrid search (needs `AI_GATEWAY_API_KEY`).
 - Why it is needed, how to read the result, what to do when it is low: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
 
 ## Methodology
@@ -88,23 +88,20 @@ python3 benchmark/runner/retrieval_eval.py
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
 - Margin: 95% interval on Majority. Set by the number of questions: 196 questions give about ±5 points on the final score (benchmark/design.md, section 4).
 
-### Modes: baseline, classic, agentic
+### Modes: baseline, agent-e2, web
 
-| | Baseline | Classic | Agentic |
+| | Baseline | Agent E2 (`agent-e2`) | Web (frontier reference) |
 |---|---|---|---|
-| Knowledge base | None | Yes | Yes |
-| Who looks up | Nobody | The runner | The model |
-| Lookups | 0 | 1, before the model starts | Up to `agent_max_calls` (8), chosen by the model. Option, off: the classic lookup first (primed start, `agent_seed_tokens`) |
-| What the model gets | The prompt only | Catalog facts for the retrieved files, then the top `classic_k` (6) files from one hybrid lookup, plus files linked by `same_name` and `related`, within `context_tokens` (16K) | What it asks for with tools `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `capacity_plan`, `flow`, and `fetch_url` and `web_search` when `web.enabled`, within `agent_tool_tokens` (12K) and the context window |
-| Can it go back for more | - | No | Yes |
-| What it measures | The model's own knowledge | What the knowledge base adds with no tool skill from the model | Whether the model can use the knowledge base fully |
+| Knowledge base | None | Yes | None |
+| Who decides what to read | Nobody | The agent's code, from the knowledge base's map | The model: web search and page fetch, its own choice |
+| Model calls | 1 | 2 in the common case: the case (temperature 0), the answer; plus a gap follow-up and a repair when needed | 1 plus up to 5 tool calls |
+| What the model gets | The prompt only | The case, computed facts, catalog facts, the reading set (16K), the up-front blocks, the prompt | The prompt and the pages it chose to read |
+| Runs on | Every candidate | Every candidate | The frontier reference only |
 
-- Classic = classic RAG (retrieval-augmented generation): retrieve once, then answer. The standard, older pattern. "Classic" is this benchmark's label, not an industry term.
-- Agentic is the target design. The knowledge base links (`same_name`, `related`, `internal_derive`), misconceptions, health check and troubleshooting files exist so a model can follow a chain across files.
-- Classic and agentic answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline is not verified.
-- Classic is the reference point for agentic: agentic should score at least as high, or the model is not using the tools well. `--seed-tokens N` runs the primed start (the classic lookup as the first message), off since the sample of 2026-11-13 (harness/AGENT.md section 6).
-- Recall columns: Recall counts the needed files whose text reached the model (classic: the context; agentic: the first lookup and the files it read). Seen counts the needed files the model was shown at all, search results included (CSV `search_recall`). Seen above Recall: found but not read.
-- The agentic limits (8 calls, 12K tokens) started as cost caps; the benchmark now runs the deployment budgets (harness/AGENT.md, section 8).
+- Two runs per candidate (author, 2026-11-14): Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs `web` only: a user cannot switch search off, so the reference is the model as a user meets it (author, 2026-11-13).
+- Agent E2 answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline and web are not verified.
+- Recall columns: Recall counts the needed files whose text reached the model (the reading set and any gap follow-up). Seen equals Recall for Agent E2: the model sees every file the agent plans.
+- Classic and agentic modes were removed on 2026-11-14; `run.py` refuses them.
 
 ### Index version
 - The knowledge base changes with every commit. A score is only meaningful next to the knowledge that produced it.
@@ -114,15 +111,15 @@ python3 benchmark/runner/retrieval_eval.py
 - The runner reads the files on disk but records the commit SHA. Commit all knowledge changes before a benchmark, or the recorded version is wrong.
 
 ### Hybrid retrieval
-- Retrieval searches only the `knowledge/` files. With `web.enabled` (on), links in the question are read in every knowledge base mode, and the agent has `fetch_url` and `web_search` (ARCHITECTURE.md, section 5).
+- Retrieval searches only the `knowledge/` files. With `web.enabled` (on), Agent E2 reads the links in the question, and searches vendor sites when the question asks for current facts (ARCHITECTURE.md, section 5).
 - In the benchmark the models and the embedding model run in the cloud through Vercel AI Gateway, to compare candidates cheaply. In production the chosen model runs locally; the knowledge base lookup is the same.
-- Retrieval = finding the knowledge-base sections to give the model. Used in classic and agentic modes.
+- Retrieval = finding the knowledge-base sections to give the model. Used by Agent E2's reading plan.
 - The knowledge files are cut into chunks, one per `##` heading.
 - Two searches run on the same prompt:
   - Keyword search (BM25): scores chunks that share the prompt's words. Strong on exact terms: metric names, counter names such as %LAT_M.
   - Vector search (embeddings): an embedding model (`embedding_model` in `config.yaml`) turns each chunk and the prompt into vectors; nearest vectors score highest. Strong on meaning when the words differ, e.g. "VM waits for memory" vs "page-fault latency".
 - Fusion: reciprocal rank fusion. Each chunk gets 1 / (60 + rank) from each list; the sums decide the order. A chunk ranked well by both searches comes first.
-- Best chunk per file; top files go to the model (classic: `classic_k`, plus linked files).
+- Best chunk per file; the reading plan takes the top `search_k` (6) files, then adds linked files and one search per claim ([harness/planner.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/planner.py)).
 - Hybrid = both searches fused. `bm25` in a report = embeddings were off or unavailable; keyword search only.
 - Why hybrid: keyword search misses paraphrases; vector search misses rare exact terms. Fusing both is the common practice for technical text.
 
@@ -136,7 +133,7 @@ python3 benchmark/runner/retrieval_eval.py
 - It then probes upward in steps of 2, up to 2 steps (12, 14, 16). Each level is measured over a window of 40 answers (the first answers after a change are dropped).
 - A step is kept only if the window has no error and the answers per minute rise by at least half of the ideal gain (12 to 14: at least +8.3% of the ideal +16.7%; 14 to 16: at least +7.1%). A step that fails returns to the last level that held, and probing stops.
 - Any HTTP 429 returns the model to its proven value for the rest of the run. A 429 at the proven value changes nothing and prints a warning: that model's proven value is too high, so lower its entry in `concurrency_by_model` and resume.
-- A window holds one mode: baseline, classic and agentic answers take different times. A window that spans two modes is thrown away and the base level is measured again.
+- A window holds one mode: baseline, Agent E2 and web answers take different times. A window that spans two modes is thrown away and the base level is measured again.
 - Tasks run model by model, so one model probes at a time; the others wait at their proven value.
 - The console prints each decision (`concurrency <model>: 14 kept, 36.2 answers/min is 1.12x the 32.3 at 12`) and, every 25 answers, the current level of each model.
 - Tested offline (a fake clock, [test_runner.py](test_runner.py), class GovernorTest). The first live run is the real test: watch the decision lines.
@@ -190,8 +187,8 @@ python3 benchmark/runner/retrieval_eval.py
    - multiple choice: shuffles the options (same order for every model and mode within a run) and appends "Unsure"; free text: sends the prompt as written;
    - answers in the mode:
      - `baseline`: no knowledge base;
-     - `classic`: one search, link expansion (`same_name`, `related`), 16K-token context;
-     - `agentic`: tool loop with `search`, `read_file`, `follow_links`, `get_images`, `catalog`, `calculate`, `flow`; at most 8 calls and 12K tokens of tool output. Search first, no repeated calls, a same_name reminder. With `--seed-tokens N` (off by default) the classic lookup comes first. Falls back to classic after 2 tool-format errors;
+     - `agent-e2`: the six stages of harness/AGENT.md: the case, the reading plan (16K tokens), computed facts, the answer, the checks (verifier, one gap follow-up);
+     - `web`: the frontier reference, web search and page fetch at the model's choice;
    - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Not-covered pick, Unsure pick;
    - free text: the judge scores 0-3; credit = score / 3;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
@@ -201,8 +198,8 @@ python3 benchmark/runner/retrieval_eval.py
 - One folder per run, named for the day it started and the model (`20261114-gemma-4-31b-it`; a second folder of the same name gets `-2`). [benchmark/results/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/README.md) is the only file at that level: the analysis of all runs of a round.
 | File | Content | In git |
 |---|---|---|
-| `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), agent blocks, judge and its price, settings | Yes |
-| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, tool steps, tools used, verifier flags, repaired, tokens, latency, cost | Yes |
+| `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), up-front blocks, judge and its price, settings | Yes |
+| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
 | `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
 | `run.log` | Console output of the run, written by `run_all.py` | No |

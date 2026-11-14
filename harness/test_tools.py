@@ -72,12 +72,13 @@ class CatalogTest(unittest.TestCase):
         self.assertIn('KPI levels', f)
         self.assertIn('Peak CPU Ready among any vCPU (%) (VM contention), higher is worse: 20s green 0-2, yellow 2-4, orange 4-8, red 8-16, score 0 beyond 16; 5m no value', f)
 
-    def test_read_file_shows_catalog_values(self):
-        import agent
-        class R: docs = DOCS
-        out = agent._run_tool(R(), 'read_file', {'id': 'vsphere/object-types/vm/vm-performance'}, {'read': []})
-        self.assertIn('KPI levels', out)
-        self.assertIn('red 8-16, score 0 beyond 16', out)
+    def test_reading_set_shows_catalog_values(self):
+        ret = Retriever(DOCS, CHUNKS)
+        vmp = 'vsphere/object-types/vm/vm-performance'
+        ret.search = lambda q, k=8, filters=None, min_hits=3: [{'id': vmp, 'title': DOCS[vmp].title, 'score': 1.0}]
+        ctx = planner.reading_set(ret, 'VM Performance', dict(ModesTest.CFG, context_tokens=50000))[0]
+        self.assertIn('KPI levels', ctx)
+        self.assertIn('red 8-16, score 0 beyond 16', ctx)
 
     def test_lookup_returns_kpi(self):
         r = CAT.thresholds(name='Peak CPU Ready among any vCPU')
@@ -264,132 +265,105 @@ class VerifyTest(unittest.TestCase):
 
 
 class ModesTest(unittest.TestCase):
-    CFG = {'temperature': 0.2, 'max_tokens': 100, 'classic_k': 4, 'context_tokens': 6000,
-           'agent_max_calls': 8, 'agent_tool_tokens': 20000}
-
-    def test_agentic_uses_new_tools(self):
-        ret = Retriever(DOCS, CHUNKS)
-        res, used, trace, fb = modes.answer('agentic', MockClient(), 'mock', VerifyTest.Q, [], self.CFG, ret)
-        actions = [s['action'] for s in trace]
-        self.assertIn('catalog', actions)
-        self.assertIn('calculate', actions)
-        self.assertFalse(fb)
-
-    def test_primed_start_gives_the_first_lookup_and_skips_search_first(self):
-        class Recorder(MockClient):
-            first = None
-
-            def chat(self, model, messages, tools=None, **kw):
-                if Recorder.first is None:
-                    Recorder.first = messages
-                return {'content': 'ANSWER: A\nREASON: x', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
-        ret = Retriever(DOCS, CHUNKS)
-        cfg = dict(self.CFG, agent_seed_tokens=4000)
-        res, used, trace, fb = modes.answer('agentic', Recorder(), 'mock', 'What is VM CPU Ready?\n\nA. one\nB. two', [], cfg, ret)
-        system, user = Recorder.first[0]['content'], Recorder.first[1]['content']
-        self.assertIn('first lookup', system)
-        self.assertNotIn('Your first action must be search', system)
-        self.assertTrue(user.startswith('Knowledge base (first lookup):'))
-        seed = next(s['output'] for s in trace if s['action'] == 'seed')
-        self.assertTrue(seed)
-        self.assertEqual(used, seed)            # the seed counts as read; no tool call, no same-name reminder
-        self.assertNotIn('reminder', [s['action'] for s in trace])
-
-    def test_first_read_of_a_file_named_up_front_is_not_refused(self):
-        ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
-
-        class Reader(MockClient):
-            n = 0
-
-            def chat(self, model, messages, tools=None, **kw):
-                Reader.n += 1
-                if Reader.n == 1:
-                    return {'content': '', 'tool_calls': [{'id': 't1', 'function': {'name': 'read_file', 'arguments': json.dumps({'id': ready})}}],
-                            'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
-                return {'content': 'ANSWER: A\nREASON: x', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
-        ret = Retriever(DOCS, CHUNKS)
-        cfg = dict(self.CFG, agent_primer={'flows': True, 'procedure': True})
-        import agent
-        orig = agent.primer.build
-        agent.primer.build = lambda docs, sw: f'Flow index: {ready}'   # an up-front block that names the file
-        try:
-            res, used, trace, fb = modes.answer('agentic', Reader(), 'mock', VerifyTest.Q, [], cfg, ret)
-        finally:
-            agent.primer.build = orig
-        self.assertNotIn('refused', [s['action'] for s in trace])
-        self.assertIn(ready, used)
+    """Agent E2 (harness/agent.py) through modes.answer, with offline clients."""
+    CFG = {'temperature': 0.2, 'max_tokens': 100, 'search_k': 4, 'context_tokens': 6000, 'plan_section_tokens': 400,
+           'plan_derive_n': 8, 'gap_followup': True}
+    READY_Q = ('A 4-vCPU VM shows cpu.ready.summation = 8,000 ms in one real-time sample. Which statements are correct?\n\n'
+               'A. Ready is 10% per vCPU.\nB. Ready is 40% per vCPU.\nC. Unsure: the information available does not settle this question.')
 
     @staticmethod
-    def _scripted(replies):
-        """A client that answers in classic mode with the given replies in turn."""
+    def _scripted(replies, case='{}'):
+        """A client that reads every question into `case` and answers with the given replies in turn."""
         class Scripted(MockClient):
-            calls = 0
+            calls, users = 0, []
 
-            def chat(self, model, messages, tools=None, **kw):
+            def chat(self, model, messages, tools=None, deterministic=False, **kw):
+                if deterministic:
+                    return {'content': case, 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
                 Scripted.calls += 1
+                Scripted.users.append(messages[1]['content'] if isinstance(messages[1]['content'], str) else '')
                 return {'content': replies[min(Scripted.calls, len(replies)) - 1], 'tool_calls': [],
                         'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
         return Scripted
 
-    def test_consensus_keeps_unanimous_letters(self):
+    def test_stages_in_the_trace(self):
+        res, used, trace, fb = modes.answer('agent-e2', MockClient(), 'mock', VerifyTest.Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+        actions = [s['action'] for s in trace]
+        for a in ('understand', 'plan', 'coverage', 'answer'):
+            self.assertIn(a, actions)
+        self.assertTrue(used)
+        self.assertFalse(fb)
+
+    def test_unknown_mode_is_refused(self):
+        with self.assertRaises(ValueError):
+            modes.answer('classic', MockClient(), 'mock', VerifyTest.Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+
+    def test_compute_converts_a_summation_counter(self):
+        cli = self._scripted(['ANSWER: A\nREASON: x'])
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+        comp = next(s['output'] for s in trace if s['action'] == 'compute')
+        self.assertIn('40% of one vCPU', comp[0])
+        self.assertIn('10% per vCPU of 4 vCPUs', comp[0])
+        self.assertIn('Computed (exact):', cli.users[0])
+
+    def test_unreadable_case_leaves_the_code_only_reading(self):
+        cli = self._scripted(['ANSWER: A\nREASON: x'], case='not json')
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], self.CFG, Retriever(DOCS, CHUNKS))
+        self.assertIn('unreadable', next(s['output'] for s in trace if s['action'] == 'understand'))
+        self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/ready', used)
+
+    def test_case_metric_names_a_file_the_text_does_not(self):
+        case = json.dumps({'kind': 'metric-meaning', 'metrics': [{'name': 'Co-stop', 'object': 'VM'}], 'objects': ['VM']})
+        cli = self._scripted(['ANSWER: A\nREASON: x'], case=case)
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', 'Is this VM waiting for its siblings?\n\nA. yes\nB. no',
+                                            [], self.CFG, Retriever(DOCS, CHUNKS))
+        self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/co-stop', used)
+
+    def test_gap_follow_up_adds_the_file_the_draft_names(self):
+        cli = self._scripted(['ANSWER: A\nREASON: The VM CPU Overlap shows the interrupt time.', 'ANSWER: A\nREASON: checked'])
+        cfg = dict(self.CFG, context_tokens=1200)
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', self.READY_Q, [], cfg, Retriever(DOCS, CHUNKS))
+        gap = next(s for s in trace if s['action'] == 'gap')
+        self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/overlap', gap['input'])
+        self.assertIn('vsphere/technology/cpu/metrics/virtual-motherboard/overlap', used)
+        self.assertEqual(res['content'], 'ANSWER: A\nREASON: checked')
+
+    def test_consensus_keeps_unanimous_letters_on_one_reading_set(self):
         cli = self._scripted(['ANSWER: A, B\nREASON: x', 'ANSWER: B, A\nREASON: y', 'ANSWER: A,B\nREASON: z'])
-        cfg = dict(self.CFG, consensus_samples=3)
-        res, used, trace, fb = modes.answer('classic', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        cfg = dict(self.CFG, consensus_samples=3, gap_followup=False)
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertEqual(verify.answer_letters(res['content']), ['A', 'B'])
         self.assertEqual(cli.calls, 3)
+        self.assertEqual([s['action'] for s in trace].count('understand'), 1)   # read once, shared by the samples
+        self.assertEqual(len(set(cli.users)), 1)                                 # every sample read the same text
         self.assertEqual(trace[-1]['action'], 'consensus')
 
     def test_consensus_disagreement_is_unsure_and_stops_early(self):
         cli = self._scripted(['ANSWER: A, B\nREASON: x', 'ANSWER: A\nREASON: y', 'ANSWER: A\nREASON: z'])
-        cfg = dict(self.CFG, consensus_samples=3)
-        res, used, trace, fb = modes.answer('classic', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        cfg = dict(self.CFG, consensus_samples=3, gap_followup=False)
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertEqual(verify.answer_letters(res['content']), ['D'])   # D is the Unsure option of VerifyTest.Q
         self.assertEqual(cli.calls, 2)                                   # the third sample cannot change the outcome
         self.assertIn('disagreed', res['content'])
 
-    def test_consensus_off_for_baseline_and_open_answers(self):
+    def test_consensus_off_for_baseline(self):
         cli = self._scripted(['ANSWER: A\nREASON: x'])
         cfg = dict(self.CFG, consensus_samples=3)
         modes.answer('baseline', cli(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertEqual(cli.calls, 1)
 
-    def test_read_reminder_names_unread_top_hits(self):
-        import agent
-        ret = Retriever(DOCS, CHUNKS)
-        state = {'read': [], 'searched': False, 'hits': {}}
-        agent._run_tool(ret, 'search', {'query': 'cpu ready'}, state)
-        top = list(state['hits'])
-        self.assertTrue(0 < len(top) <= agent.READ_TOP)
-        state['read'].append(top[0])
-        self.assertNotIn(top[0], agent._unread(state))
-        self.assertEqual(agent._unread(state), [i for i in top[1:]][:agent.READ_REMIND])
-
-    def test_primed_start_refuses_rereading_a_seed_file(self):
-        import agent
-        state = {'read': [], 'seed_full': {'vsphere/technology/cpu/metrics/virtual-motherboard/ready'}}
-        out = agent._run_tool(Retriever(DOCS, CHUNKS), 'read_file', {'id': 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'}, state)
-        self.assertIn('already in full', out)
-        self.assertEqual(state['read'], [])
-
-    def test_classic_context_has_catalog_facts(self):
-        # The mechanism, not the ranking: when the Ready file is retrieved, its catalog facts lead the context.
+    def test_catalog_facts_lead_the_reading_set(self):
+        # The mechanism, not the ranking: when the Ready file is read, its catalog facts lead the reading set.
         ret = Retriever(DOCS, CHUNKS)
         ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
-        ret.search = lambda q, k=8, filters=None: [{'id': ready, 'title': DOCS[ready].title, 'score': 1.0}]
-        ctx, used, _ = modes.classic_context(ret, 'What is the rollup and statistics level of VM CPU Ready?', self.CFG)
+        ret.search = lambda q, k=8, filters=None, min_hits=3: [{'id': ready, 'title': DOCS[ready].title, 'score': 1.0}]
+        ctx, used, _, _ = planner.reading_set(ret, 'What is the rollup and statistics level of VM CPU Ready?', dict(self.CFG, term_map=False))
         self.assertIn(ready, used)
         self.assertTrue(ctx.startswith('Catalog facts'))
 
     def test_repair_turn_on_hedge(self):
-        class Hedger(MockClient):
-            calls = 0
-
-            def chat(self, model, messages, tools=None, **kw):
-                Hedger.calls += 1
-                text = 'ANSWER: A, D\nREASON: x' if Hedger.calls == 1 else 'ANSWER: D\nREASON: x'
-                return {'content': text, 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
-        ret = Retriever(DOCS, CHUNKS)
-        res, used, trace, fb = modes.answer('classic', Hedger(), 'mock', VerifyTest.Q, [], self.CFG, ret)
+        cli = self._scripted(['ANSWER: A, D\nREASON: x', 'ANSWER: D\nREASON: x'])
+        res, used, trace, fb = modes.answer('agent-e2', cli(), 'mock', VerifyTest.Q, [], dict(self.CFG, gap_followup=False), Retriever(DOCS, CHUNKS))
         self.assertEqual(res['content'], 'ANSWER: D\nREASON: x')
         self.assertIn('repair', [s['action'] for s in trace])
 
@@ -397,18 +371,27 @@ class ModesTest(unittest.TestCase):
         class Recorder(MockClient):
             systems = []
 
-            def chat(self, model, messages, tools=None, **kw):
+            def chat(self, model, messages, tools=None, deterministic=False, **kw):
+                if deterministic:
+                    return {'content': '{}', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
                 Recorder.systems.append(messages[0]['content'])
                 return {'content': 'Ready includes limit time, so check Max Limited.', 'tool_calls': [],
                         'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
-        ret = Retriever(DOCS, CHUNKS)
-        res, used, trace, fb = modes.answer('classic', Recorder(), 'mock', 'Why is Ready high?', [], self.CFG, ret, 'open')
+        res, used, trace, fb = modes.answer('agent-e2', Recorder(), 'mock', 'Why is Ready high?', [], self.CFG, Retriever(DOCS, CHUNKS), 'open')
         self.assertNotIn('repair', [s['action'] for s in trace])
         self.assertNotIn('ANSWER:', Recorder.systems[0])
-        self.assertNotIn('Unsure option', Recorder.systems[0])
+        self.assertIn('Not settled by the knowledge base', Recorder.systems[0])
         for p in modes.PROMPTS['open'].values():
             self.assertNotIn('option', p.lower())
 
+    def test_case_parser_keeps_only_known_fields(self):
+        import agent
+        c = agent.parse_case('Here: {"kind": "metric-meaning", "metrics": [{"name": "Ready"}, "x"], "vcpus": -2, "other": 1}')
+        self.assertEqual(c['kind'], 'metric-meaning')
+        self.assertEqual(c['metrics'], [{'name': 'Ready'}])
+        self.assertIsNone(c['vcpus'])
+        self.assertNotIn('other', c)
+        self.assertEqual(agent.parse_case('no json'), {})
 
 if __name__ == '__main__':
     unittest.main()
@@ -419,8 +402,7 @@ class PrimerTest(unittest.TestCase):
 
     def test_all_blocks_present_and_within_budget(self):
         t = self.P.build(DOCS, {b: True for b in self.P.BLOCKS})
-        for head in ('## Map of the knowledge base', '## Level 300 misconceptions', '## Confusable terms',
-                     '## Health checks', '## Troubleshooting (symptom', '## Decision trees', '## Procedure'):
+        for head in ('## Level 300 misconceptions', '## Confusable terms'):
             self.assertIn(head, t)
         self.assertLessEqual(self.P.tokens(t), self.P.BUDGET_TOKENS)
 
@@ -448,24 +430,17 @@ class PrimerTest(unittest.TestCase):
         files = [e['file'] for e in kb.glossary(DOCS) if e['file']]
         self.assertTrue(files and all(f in DOCS for f in files))
 
-    def test_flow_index_lists_every_flow_file(self):
-        t = self.P.flows_block(DOCS)
-        flows_found = [i for i, d in DOCS.items() if d.meta.get('retriever_guide') in ('health-check', 'troubleshooting', 'decision-tree')]
-        self.assertGreater(len(flows_found), 15)
-        for i in flows_found:  # the kind is metadata: a flow outside a troubleshooting/ folder is still a flow
-            self.assertIn(i, t)
-        self.assertIn('sp5-framework/performance/vm-slow', t)
-
-    def test_agentic_adds_primer_to_system_prompt(self):
+    def test_answer_prompt_carries_the_blocks(self):
         class Recorder(MockClient):
-            def chat(self, model, msgs, **kw):
-                self.system = msgs[0]['content']
-                return super().chat(model, msgs, **kw)
-        cfg = dict(ModesTest.CFG, agent_primer={'rules': True})
+            def chat(self, model, msgs, deterministic=False, **kw):
+                if not deterministic:
+                    self.system = msgs[0]['content']
+                return super().chat(model, msgs, deterministic=deterministic, **kw)
+        cfg = dict(ModesTest.CFG, primer={'rules': True})
         rec = Recorder()
-        res, used, trace, fb = modes.answer('agentic', rec, 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        modes.answer('agent-e2', rec, 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
         self.assertIn('## Level 300 misconceptions', rec.system)
-        self.assertIn('primer', [s['action'] for s in trace])
+        self.assertNotIn('## Confusable terms', rec.system)
 
 
 class WindowTest(unittest.TestCase):
@@ -473,10 +448,10 @@ class WindowTest(unittest.TestCase):
         msgs = [{'role': 'user', 'content': [{'type': 'text', 'text': 'x' * 400}, {'type': 'image_url'}]}]
         self.assertEqual(modes.msgs_tokens(msgs, {'image_tokens': 1500}), 100 + 1500)
 
-    def test_agent_stops_tools_when_window_is_full(self):
+    def test_prompt_above_the_window_is_flagged(self):
         cfg = dict(ModesTest.CFG, context_window=2000, max_tokens=100)
-        res, used, trace, fb = modes.answer('agentic', MockClient(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
-        self.assertIn('context_full', [s['action'] for s in trace])
+        res, used, trace, fb = modes.answer('agent-e2', MockClient(), 'mock', VerifyTest.Q, [], cfg, Retriever(DOCS, CHUNKS))
+        self.assertIn('context_over', [s['action'] for s in trace])
 
 
 class TermMapTest(unittest.TestCase):
@@ -502,15 +477,15 @@ class TermMapTest(unittest.TestCase):
             for f in r['files']:
                 self.assertIn(f, DOCS, r['id'])
 
-    def test_classic_context_pulls_files_and_notes(self):
+    def test_reading_set_pulls_files_and_notes(self):
         cfg = dict(ModesTest.CFG, term_map=True, context_tokens=50000)
-        ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
+        ctx, used, _, _ = planner.reading_set(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
         self.assertIn('sp5-framework/observability/real-time-metrics', used)
         self.assertTrue(ctx.startswith('Terms in this question'))
 
     def test_off_by_switch(self):
         cfg = dict(ModesTest.CFG, term_map=False, context_tokens=50000)
-        ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
+        ctx, used, _, _ = planner.reading_set(Retriever(DOCS, CHUNKS), 'The vCenter real-time chart shows no spike. Why?', cfg)
         self.assertNotIn('Terms in this question', ctx)
 
 
@@ -522,12 +497,14 @@ class ClarifyTest(unittest.TestCase):
         def __init__(self, replies):
             self.replies, self.systems = list(replies), []
 
-        def chat(self, model, messages, tools=None, **kw):
+        def chat(self, model, messages, tools=None, deterministic=False, **kw):
+            if deterministic:   # the agent's reading of the question
+                return {'content': '{}', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
             self.systems.append(messages[0]['content'])
             return {'content': self.replies.pop(0), 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1,
                     'latency': 0, 'served_model': model, 'provider': 'mock'}
 
-    CFG = dict(ModesTest.CFG, verify=False)
+    CFG = dict(ModesTest.CFG, verify=False, gap_followup=False)
 
     def test_parse(self):
         import clarify
@@ -538,17 +515,23 @@ class ClarifyTest(unittest.TestCase):
 
     def test_first_round_may_ask(self):
         c = self.Scripted(['CLARIFY:\n1. What problem did users report? because more vCPUs can raise Ready'])
-        out = modes.converse('classic', c, 'm', ['Should I add vCPUs because CPU Ready is high?'], [], self.CFG, Retriever(DOCS, CHUNKS))
+        out = modes.converse('agent-e2', c, 'm', ['Should I add vCPUs because CPU Ready is high?'], [], self.CFG, Retriever(DOCS, CHUNKS))
         self.assertEqual(out['type'], 'clarify')
         self.assertIn('Clarifying:', c.systems[0])
 
     def test_second_round_must_answer(self):
         c = self.Scripted(['CLARIFY:\n1. again?', 'Answer: the VM has contention.'])
-        out = modes.converse('classic', c, 'm', ['Add vCPUs?', 'CLARIFY:\n1. What problem?', 'Users say it is slow.'],
+        out = modes.converse('agent-e2', c, 'm', ['Add vCPUs?', 'CLARIFY:\n1. What problem?', 'Users say it is slow.'],
                              [], self.CFG, Retriever(DOCS, CHUNKS))
         self.assertEqual(out['type'], 'answer')
         self.assertEqual(out['result']['content'], 'Answer: the VM has contention.')
         self.assertIn('Do not ask again', c.systems[0])
+
+    def test_no_round_without_a_reason_to_ask(self):
+        c = self.Scripted(['VM CPU Ready is time a vCPU waited for a thread.'])
+        out = modes.converse('agent-e2', c, 'm', ['What is VM CPU Ready?'], [], self.CFG, Retriever(DOCS, CHUNKS))
+        self.assertEqual(out['type'], 'answer')
+        self.assertNotIn('Clarifying:', c.systems[0])        # the code rule took the round away: nothing missing, no premise
 
     def test_benchmark_kinds_never_offer_the_round(self):
         for kind in ('choice', 'open'):
@@ -627,16 +610,18 @@ class WebTest(unittest.TestCase):
         for w in ('ESXi', '8.0U3', '312345'):
             self.assertIn(w, q)
 
-    def test_classic_puts_the_page_after_the_knowledge_base(self):
+    def test_agent_puts_the_page_after_the_knowledge_base(self):
         seen = []
 
         class C:
-            def chat(self, model, messages, **kw):
+            def chat(self, model, messages, deterministic=False, **kw):
+                if deterministic:
+                    return {'content': '{}', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1, 'latency': 0}
                 seen.append(messages[-1]['content'])
                 return {'content': 'ok', 'tool_calls': [], 'prompt_tokens': 1, 'completion_tokens': 1,
                         'latency': 0, 'served_model': model, 'provider': 'mock'}
-        cfg = dict(ModesTest.CFG, verify=False, web={'enabled': True})
-        modes.answer('classic', C(), 'm', 'https://techdocs.broadcom.com/x.html is this the dashboard for VM contention?',
+        cfg = dict(ModesTest.CFG, verify=False, gap_followup=False, web={'enabled': True})
+        modes.answer('agent-e2', C(), 'm', 'https://techdocs.broadcom.com/x.html is this the dashboard for VM contention?',
                      [], cfg, Retriever(DOCS, CHUNKS), 'open')
         text = seen[0]
         self.assertLess(text.index('Knowledge base:'), text.index('Web pages (untrusted'))
@@ -649,21 +634,6 @@ class RetrievalFixTest(unittest.TestCase):
         terms = retrieval.glossary_terms(DOCS)
         self.assertIn('ESXi', retrieval.expand_query('Is this ESX host overloaded?', terms))
 
-    def test_route_puts_a_troubleshooting_file_first(self):
-        cfg = dict(ModesTest.CFG, route_troubleshooting=True)
-        ctx, used, _ = modes.classic_context(Retriever(DOCS, CHUNKS), 'Users say the VM is slow. What do you check first?', cfg)
-        self.assertEqual(DOCS[used[0]].meta['retriever_guide'], 'troubleshooting')
-
-    def test_expand_derive_adds_linked_files(self):
-        ret = Retriever(DOCS, CHUNKS)
-        ready = 'vsphere/technology/cpu/metrics/virtual-motherboard/ready'
-        ret.search = lambda q, k=8, filters=None, min_hits=3: [{'id': ready, 'title': DOCS[ready].title, 'score': 1.0}]
-        derive = [l['id'] for l in ret.links(ready, 'internal_derive')][:3]
-        cfg = dict(ModesTest.CFG, expand_derive=True, context_tokens=50000)
-        ctx, used, _ = modes.classic_context(ret, 'Ready', cfg)
-        for d in derive:
-            if d in DOCS:
-                self.assertIn(d, used)
 
 
 class PlannerTest(unittest.TestCase):
@@ -684,13 +654,17 @@ class PlannerTest(unittest.TestCase):
     def test_counter_key_resolves_through_the_catalog(self):
         self.assertIn(self.READY, planner.anchors(DOCS, 'cpu.ready.summation = 8,000 ms in one real-time sample'))
 
+    def test_claims_of_a_question_with_two_option_lists(self):
+        q = 'What is the capacity of each host?\n\nESXi 01:\n- A. 20 GHz\n- E. 40 threads\n- F. It depends\n\nESXi 02:\n- A. 20 GHz\n- E. 20 threads'
+        self.assertEqual(planner.claims(q), ['ESXi 01: 20 GHz', 'ESXi 01: 40 threads', 'ESXi 02: 20 GHz', 'ESXi 02: 20 threads'])
+
     def test_claims_are_the_options_without_unsure(self):
         q = 'Which are correct?\n\nA. Ready is a summation\nB. Ready includes limit time\nC. Unsure: the information available does not settle this question.'
         self.assertEqual(planner.claims(q), ['Ready is a summation', 'Ready includes limit time'])
 
     def test_mechanism_files_of_a_named_metric_are_read(self):
         ret = Retriever(DOCS, CHUNKS)
-        _, used, _ = planner.reading_set(ret, 'A VM shows CPU Ready at 8%. Is the VM slow?', self.CFG)
+        _, used, _, _ = planner.reading_set(ret, 'A VM shows CPU Ready at 8%. Is the VM slow?', self.CFG)
         self.assertIn(self.READY, used)
         for d in DOCS[self.READY].meta.get('internal_derive') or []:
             self.assertIn(d, used)
@@ -698,8 +672,8 @@ class PlannerTest(unittest.TestCase):
     def test_same_question_same_reading_set_within_budget(self):
         ret = Retriever(DOCS, CHUNKS)
         q = 'Users say the VM is slow. CPU Ready is 2% and Run is 10%. What do you check first?'
-        a, used_a, _ = planner.reading_set(ret, q, self.CFG)
-        b, used_b, _ = planner.reading_set(ret, q, self.CFG)
+        a, used_a, _, _ = planner.reading_set(ret, q, self.CFG)
+        b, used_b, _, _ = planner.reading_set(ret, q, self.CFG)
         self.assertEqual((a, used_a), (b, used_b))
         self.assertLessEqual(len(a) // 4, self.CFG['context_tokens'])
         self.assertEqual(DOCS[used_a[0]].meta['retriever_guide'], 'troubleshooting')
@@ -729,7 +703,7 @@ class WebOnlyModeTest(unittest.TestCase):
         real = web.search
         web.search = lambda q, c: seen.update(query=q, cfg=c) or [{'url': 'https://example.org/a', 'title': 't', 'snippet': 's'}]
         try:
-            res, used = agent.web_only(client, 'm', 'Q?', [], cfg or self.CFG, trace, None, 'choice')
+            res, used = modes.web_only(client, 'm', 'Q?', [], cfg or self.CFG, trace, 'choice')
         finally:
             web.search = real
         return client, trace, res, used, seen
@@ -769,12 +743,12 @@ class WebOnlyModeTest(unittest.TestCase):
         self.assertEqual([s['action'] for s in trace], ['web_search', 'web_search', 'answer'])
 
     def test_dispatch_through_modes_answer(self):
-        real = agent.web_only
-        agent.web_only = lambda *a, **k: ({'content': 'ANSWER: A'}, [])
+        real = modes.web_only
+        modes.web_only = lambda *a, **k: ({'content': 'ANSWER: A'}, [])
         try:
             res, used, trace, fb = modes.answer('web', None, 'm', 'Q?', [], {}, None)
         finally:
-            agent.web_only = real
+            modes.web_only = real
         self.assertEqual((res['content'], used, fb), ('ANSWER: A', [], False))
 
 

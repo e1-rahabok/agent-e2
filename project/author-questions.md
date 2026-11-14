@@ -18,21 +18,11 @@ Each entry has:
 
 ## Open
 
-### Q210 · Terms · Agent, case, reading set, reading plan
+### Q210 · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
 
-- Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md).
-- Question: the new design needs four repository terms. Accept, or give your word: (A) agent now means the expert's procedure as code (was: the model plus the tool loop); (B) case: the agent's structured reading of one question (your word in [Q166](author-questions-resolved.md#q166--architecturemd-section-troubleshooting-questions--code-evaluates-flow-branches), case state; the benchmark keeps question); (C) reading set: the files and sections the model reads for one question; (D) reading plan: the code that builds it.
-- Written as now: all four in project/terms.md as proposals; used in harness/AGENT.md and ARCHITECTURE.md.
-- Answer:
-
-### Q209 · Benchmark > Runs · What the next round runs
-
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 8 and 16); [benchmark/RUN.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/RUN.md); [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml) (`final_round`); [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md) (section 1).
-- Question: under the rule that the benchmark is a proof (2026-11-14), two run choices change.
-  - (1) The local model alone (baseline). It showed that the knowledge base lifts every model by 19-28 points; it proves nothing about the shipped product. (A) drop it from the rounds; (B) keep it, 1 run instead of 5, as the zero point.
-  - (2) The next full round, decided on 2026-11-13 as the next run, on classic and agentic. (C) run it now as planned; (D) run it when the new agent is built ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md), section 7, step 5): Agent E2 on the candidates, and the frontier reference.
-- Written as now: `final_round` runs baseline, classic and agentic for 3 candidates and the frontier reference in web mode, 5 runs.
-- Recommended: A and D. A round on classic and agentic measures pipelines that will not ship (about US$ 73 and 2-4 hours); the retrieval check gives the new agent's retrieval number for free, and the round after step 5 is the proof.
+- Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (status and name).
+- Question: the new design needs five repository terms. Accept, or give your word: (A) neuro-symbolic expert system: what Agent E2 is (code holds the procedure and the map and decides; the model reads and writes; Kautz's Symbolic[Neural]); (B) agent now means the expert's procedure as code (was: the model plus the tool loop); (C) case: the agent's structured reading of one question (your word in [Q166](author-questions-resolved.md#q166--architecturemd-section-troubleshooting-questions--code-evaluates-flow-branches), case state; the benchmark keeps question); (D) reading set: the files and sections the model reads for one question; (E) reading plan: the code that builds it. Not proposed: finite state machine as the name; the stage order is a small one, but the value is the plan over the knowledge base's map.
+- Written as now: all five in project/terms.md as proposals; used in harness/AGENT.md, ARCHITECTURE.md, README and MISSION.md.
 - Answer:
 
 ### Q208 · Knowledge design · Product label and better model
@@ -44,7 +34,7 @@ Each entry has:
 
 ### Q207 · Benchmark > Field set · Measure coverage on real questions
 
-- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (section 12); [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set).
+- Files: [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (section 12); [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set).
 - Question: 159 of the 196 questions were drafted from the knowledge files they test, so the benchmark cannot show how often a real question falls outside the knowledge base. On your 37 questions Agent E2 leads the frontier model by 8-17 points; outside coverage the 30B model is far weaker than the frontier model. Proposal: a field set of about 100 real questions, collected, not written from the knowledge base (your tickets and consulting cases, customer questions, Broadcom community and forum threads). Two numbers from it: coverage (share settled by the knowledge base) and the score. Out-of-coverage answers must say so. (A) adopt it, collected now, kept out of the repository like the held-out set; (B) adopt it, collected at release only; (C) no: the live test's 20 questions are enough.
 - Written as now: held-out set of 30 drawn from the same blueprint; 20 real questions in the live test. Recommended: A. You hold the real questions; Claude can collect public community threads.
 - Answer:
@@ -86,7 +76,7 @@ Each entry has:
 
 ### Q199 · Benchmark > Release gate · Confident-wrong limit on open answers
 
-- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5); [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py) (RUBRIC); [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (OPEN_FORMAT); [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/analysis-2026-11-13.md) (sections 2 and 3).
+- Files: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5); [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py) (RUBRIC); [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py) (OPEN_FORMAT); [benchmark/results/analysis-2026-11-13.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/benchmark-results-before-2026-11-14/analysis-2026-11-13.md) (sections 2 and 3).
 - Question: the gate allows 3% confident-wrong over all answers. With consensus, multiple choice reaches 3-4%, but judged answers stay at 31-41% (Opus with web search: 23%). A judged answer of up to 250 words scores 0 when one sentence contradicts a key point. Which way? (A) keep one 3% limit, and change the answer shape: shorter answers that state only what the knowledge base supports, the rest marked as not settled; (B) the judge grades each claim, and a contradicted side claim lowers the score instead of zeroing it; (C) two limits: 3% for multiple choice, a separate limit for judged answers set from the next round; (D) A and C together.
 - Written as now: one limit of 3% over all answers. Recommended: D. A is a harness change Claude can build and measure; C keeps the gate reachable while A is measured.
 - Answer:
@@ -167,6 +157,7 @@ Each entry has:
 
 Answered questions are in [author-questions-resolved.md](author-questions-resolved.md). Each key links to its entry there.
 
+- [Q209](author-questions-resolved.md#q209--benchmark--runs--what-the-next-round-runs) · Benchmark > Runs · What the next round runs
 - [Q200](author-questions-resolved.md#q200--benchmark--mode--agentic-or-classic-as-the-shipped-mode) · Benchmark > Mode · Agentic or classic as the shipped mode
 - [Q203](author-questions-resolved.md#q203--cpu--capacity--name-vspheres-ghz-total-capacity-as-a-throughput-figure) · CPU > Capacity · Name vSphere's GHz 'Total Capacity' as a throughput figure
 - [Q206](author-questions-resolved.md#q206--benchmark--retrieval-check--restart-it-now) · Benchmark > Retrieval check · Restart it now
