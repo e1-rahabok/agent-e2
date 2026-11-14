@@ -39,7 +39,7 @@ G: the counters are the same, and rollup and the collection cycle explain the ga
 3. Subtract the CPU System Resource Reservation from VCF Operations Demand: the rest matches vCenter.
 
 ## Notes
-- Paired with 0362 (Type 1 know, Type 2 explain; author, 2026-11-14).
+- Paired with 0362 (theory and practical; author, 2026-11-14).
 - Author's hint, kept out of the prompt: the prompt intentionally adds no information that would make a frontier model investigate. Gemini Hydrogen (high effort) took the author's own prompt as a premise that the counters must differ and misread both counters.
 - Screenshots supplied by the author 2026-11-14, vSphere and VCF Operations 9.1, one host. Exception to design.md section 3.4 (no new screenshots in 1.0), author's request: the third image is a configuration page, not a chart, and has no CSV export. The host name is the author's lab; masking is the author's call.
 - Drafted by Claude 2026-11-14 from the author's sample (origin: synthetic). Counts only after author approval.

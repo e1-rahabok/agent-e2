@@ -33,7 +33,7 @@ A: the same name means the same counter, so ESXi CPU Demand matches between the 
 - J false: per VM it is the higher of the two, not the sum. A VM demanding 4 GHz with a 5 GHz reservation counts 5 GHz, not 9 GHz.
 
 ## Notes
-- Paired with the screenshot question 0363 (Type 1 know, Type 2 explain; author, 2026-11-14). Wrong here and wrong there: knowledge gap. Right here and wrong there: reading failure.
+- Paired with the screenshot question 0363 (theory and practical; author, 2026-11-14). Reading the pair: design.md, section 3.9.
 - The author's answer to Q218 (2026-11-14): vCenter Demand excludes the hypervisor reservation; VCF Operations Demand includes it and, per VM, takes the higher of demand and reservation. The split goes back to vRealize Operations.
 - Drafted by Claude 2026-11-14 from the author's sample (origin: synthetic). Counts only after author approval.
 
