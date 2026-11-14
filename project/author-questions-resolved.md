@@ -4,6 +4,13 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q211 · Repository rules · Sources folder: read-only or author-added
+
+- Files: [CLAUDE.md](https://github.com/e1-rahabok/agent-e2/blob/main/CLAUDE.md) (Facts and sources: "project/sources/ is read-only"); [project/sources/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/README.md); [project/sources/alert_close_cycle_design_best_practices.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/alert_close_cycle_design_best_practices.md) (moved here on 2026-11-14).
+- Question: the rule says Claude must not write to project/sources/, but you asked for a source file to be placed there, and you say it is a mistake to keep sources elsewhere. Change the rule to: the author adds sources; Claude reads them and never edits them? Or keep it read-only for Claude and the author adds files only?
+- Written as now: the rule says read-only; the file is in project/sources/ as instructed.
+- Answer: Author (2026-11-14): you can edit them. Applied: CLAUDE.md and project/sources/README.md no longer say read-only; the author adds sources, Claude may edit them.
+
 ### Q210 · Terms · Neuro-symbolic expert system, agent, case, reading set, reading plan
 
 - Files: [project/terms.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/terms.md); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (status and name).
