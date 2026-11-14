@@ -62,6 +62,7 @@ The tags in each question's `## Metadata` block, grouped by what they describe. 
 | `knowledge` | The knowledge files the correct answer depends on. A list of knowledge ids. The retrieval check measures whether the harness finds them; every id must exist | Knowledge ids, e.g. [VM CPU Wait](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/wait.md) |
 | `object` | Every object type the question reads. A list. Counted by `coverage.py` ([design.md](design.md), section 3.7) | `vm`, `esxi`, `cluster`, `resource-pool`, `datastore`, `network`, `guest-os` |
 | `tool` | Every tool whose output the question shows or asks about. A list | `vcenter`, `vcf-operations`, `esxtop`, `guest-os-tools` (Windows or Linux counters), `none` |
+| `pair` | Optional. The id of the question it is paired with: the same fact asked as theory (text) and as a screen to explain (screenshot or table). Both point to each other; lint checks it ([design.md](design.md), section 3.9) | `"0363"` |
 | `knowledge_main` | The one file that holds the answer or the misconception. Also listed in `knowledge` (lint checks it). Not the list order. The retrieval check reports a missing main file as a defect ([retrieval-check.md](retrieval-check.md)). Set by the author in the question review (Q130) | One knowledge id |
 
 **How hard it is and how it is scored**

@@ -87,7 +87,7 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 | Table | A CSV file: a vCenter performance chart export, a VCF Operations metric chart or list view export, or esxtop batch output | As text, after the prompt (section 13.1) |
 | Screenshot | An image of a product UI | As an image, to a vision model |
 
-- 1.0 adds no more screenshots. A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set grows after 1.0 (section 13).
+- 1.0 adds no more screenshots, except the Explain half of a pair when a screen has no export (section 3.9; author, 2026-11-14). A chart becomes its CSV export: the operator can export any vCenter or VCF Operations chart, and the question tests the reading, not the eyes. The screenshot set grows after 1.0 (section 13).
 - A question can combine input types; it counts for each input type it includes. Every question has a prompt, so text as an input type means the prompt alone.
 - Metadata: `input: [text]`, `[table]` or `[screenshot]`, derived from `attachments` and checked by lint.
 - URL questions: a question that carries a link to a public page with a known Level 300 error. The key point is that the answer corrects the page with the mechanism. The page is fetched live; the key records the page's date; a changed page is re-checked before scoring. None in 1.0: the first one (0091, VM Contention dashboard) was retired after the author had the official page fixed (Q184). More pages: the author's list ([project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M2).
@@ -129,6 +129,21 @@ Each question lists every area it touches in `technology` (values from [project/
 - Options: as many as the question needs, no fixed count (author, Q199, 2026-11-14): the reader is a model, not a person, so a list of 20 is no burden. The runner takes up to 25 written options (letters A-Y) and appends Unsure as the next letter. No Not covered option since 2026-11-05 (Q038).
 - The number of correct options varies from one to all of them (1 correct and 19 wrong is valid). The model is never told how many: every question carries the same instruction, "Choose all the correct options. There can be more than one."
 - A model that learns "usually one answer" or "usually all but one" gains nothing, and with many options a guess is almost never exactly right (6 options plus Unsure: about 1 in 64).
+
+### 3.9 Paired questions
+An administrator rarely questions a counter in the abstract. The question comes when the screen does not match what they expect. A model that does not know the counter is then misled by the screen. A pair asks one fact two ways (author, 2026-11-14):
+
+| Kind | Tests | Input |
+|---|---|---|
+| Know | The definition and the formula | Text |
+| Explain | Why a screen disagrees with what the administrator expects | Screenshot or table |
+| Compute | A value predicted from the inputs | Text or table |
+| Decide | The action the reading leads to (move VMs, add capacity, nothing) | Any |
+
+- Know and Explain are the pair: `pair` in the metadata of both, checked by lint. Compute and Decide are the usual Level 400 forms; they need no tag.
+- Reading the pair: wrong on both is a knowledge gap (fix the knowledge base); right on Know and wrong on Explain is a reading failure (fix the harness or the reading plan); wrong on Know and right on Explain is a guess.
+- Each question is sent alone, so one never gives away the other.
+- First pair: [ESXi CPU Demand and Usage: vCenter vs VCF Operations](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-41-esxi-cpu-demand-vcenter-vs-vcf-operations.md) and [ESXi CPU Demand differs between VCF Operations and vCenter](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-132-esxi-cpu-demand-differs-between-tools.md). The Explain question is Level 400: it needs arithmetic across three screenshots.
 
 ## 4. Sample size
 - The set has no target size. What its size buys is precision, and the report prints it for the set as run: the 95% margin on the final score (`report.py`, `_margin`; the summary README).

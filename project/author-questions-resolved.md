@@ -4,6 +4,23 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q218 · CPU > Demand · Is a CPU reservation inside Demand?
+
+- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (Reservation: CPU vs memory); [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
+- Search: not from the book; found by the structure review of 2026-11-14.
+- Question: resource-controls says Run, Used, Demand and Usage do not include a CPU reservation; host/demand says ESXi Demand includes the reservations of running VMs and of the kernel; sp5 capacity demand uses Demand = Max(Utilization, Reservation), a model with the same word. Which holds for the vCenter counter? (A) VM Demand excludes reservations, host Demand includes the kernel's and the running VMs' reservations (two objects, two rules); (B) neither includes them; (C) other.
+- Written as now: both, in different files; the capacity model's Demand is not marked as a different thing.
+- Final answer (expert call on the wording; the counter behaviour needs you): whatever the counter does, sp5 capacity demand gets one line: its Demand is the capacity model, not `cpu.demand`. One home for the counter rule: resource-controls, with host/demand pointing to it.
+- Answer: Author (2026-11-14): (A). vCenter ESXi CPU Demand does not include the hypervisor reservation; VCF Operations ESXi CPU Demand includes it and the CPU reservations of running VMs. Evidence: one 9.1 host, VCF Operations Demand about 2,915 MHz = vCenter Demand about 199 MHz + System Resource Reservation 2.72 GHz. The difference goes back to vRealize Operations: operations view vs administration view. Applied: ESXi CPU Demand has a section vCenter vs VCF Operations (the one home of the counter rule; resource-controls and sp5 capacity demand point to it); questions 0362 and 0363 (a pair).
+
+### Q219 · CPU > Demand · ESXi Demand on a host with no VMs
+
+- Files: [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Provider and consumer](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/provider-consumer.md).
+- Search 1: "If a host has no VM, Demand will likely show flat 0"
+- Question: host/demand says Demand on a host with no VMs is flat at 0, or flat at the kernel reservation (one example at 10.21%); provider-consumer says host Demand is VM demand only and flat at 0. Which, and when does each case occur?
+- Written as now: both.
+- Answer: follows from Q218 (author, 2026-11-14): flat at 0 in vCenter, flat at the kernel reservation in VCF Operations. Applied in ESXi CPU Demand and Provider and consumer (its flat 0 is the vCenter counter).
+
 ### Q212 · Mission > Release gate · Is beating the frontier model a 1.0 requirement?
 
 - Files: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Mission: "1.0 minimum"); [MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md) (section 1, "A proof that Agent E2 works"); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (sections 1, 7.5 and 15); [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py) (`gate`, `mcnemar`).
@@ -61,7 +78,6 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Question: each of the 12 lines of misconceptions.md is written twice: in the `## Misconceptions` section of the file it names, and again, reworded, in misconceptions.md. Two copies drift. (A) keep two hand-written copies; (B) one home: mark the promoted line in its file (a metadata list `up_front`), and primer.py builds the block from the marks, so misconceptions.md is generated and archived. The model gets the same text; the author edits one place; lint keeps the 3,000-token budget.
 - Written as now: two copies, by design (KNOWLEDGE-ENGINEERING.md, section 4). Recommended: B. In the new agent the reading set brings a file with its `## Misconceptions` section whenever the question names it; the up-front copy only covers beliefs the question does not name, which needs the text, not a second home for it.
 - Answer: Author (2026-11-14): agree, live in one place. Applied: each of the 12 lines is a `## Misconceptions` line of its knowledge file, marked by the metadata field `up_front`; harness/primer.py builds the up-front block from the marks; knowledge/misconceptions.md archived (project/archive/misconceptions-2026-11-14.md); lint checks each mark matches exactly one line. Retrieval check, BM25: 76% to 77%, 109 to 110 of 196.
-
 
 ### Q213 · Repository rules · Sources folder: read-only or author-added
 

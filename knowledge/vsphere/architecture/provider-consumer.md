@@ -16,7 +16,7 @@
 
 ## ESXi CPU Demand
 - kind: sum-of-consumers metric: the sum over the VMs of what they would use with no contention, an internal metric of the CPU scheduler.
-- Not the sum of all VM worlds + VMkernel worlds: kernel work is in Usage, not in Demand. A host with no VMs shows Demand flat at 0 while Usage is not 0.
+- Not the sum of all VM worlds + VMkernel worlds: kernel work is in Usage, not in Demand. A host with no VMs shows vCenter Demand flat at 0 while Usage is not 0. VCF Operations Demand adds the kernel's and the running VMs' CPU reservations, so it sits flat at the kernel reservation instead.
 
 ## CPU Ready on ESXi
 - A VM is a consumer. Multiple VMs can share the same physical core, at a performance cost.
@@ -48,7 +48,7 @@
 
 ## Misconceptions
 - "ESXi CPU Ready is high, so the host waits for CPU" → Ready measures a consumer waiting to be scheduled; a physical core or thread is always ready. A Ready value on ESXi is an aggregate of its VMs: read the VMs, starting with the worst.
-- "ESXi CPU Demand = VM usage + kernel usage" → wrong. It is VM demand only; kernel work is in Usage. See [`vsphere/technology/cpu/metrics/host/demand`](../technology/cpu/metrics/host/demand.md).
+- "ESXi CPU Demand = VM usage + kernel usage" → wrong. It is VM demand only (VCF Operations adds reservations); kernel work is in Usage. See [`vsphere/technology/cpu/metrics/host/demand`](../technology/cpu/metrics/host/demand.md).
 
 ## Metadata
 ```yaml

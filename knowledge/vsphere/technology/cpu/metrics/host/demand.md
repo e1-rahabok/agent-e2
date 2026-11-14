@@ -8,23 +8,38 @@
 - Not the sum of VM worlds plus VMkernel worlds.
 - An internal metric of the CPU scheduler: the ideal total demand had there been no contention at all.
 
-## Behaviour
+## vCenter vs VCF Operations
+Same name, two formulas. vCenter looks from the administration view (what the scheduler wants now); VCF Operations from the operations view (what the host must be able to deliver). The split dates back to vRealize Operations; it is not a 9.x change.
+
+| Tool | ESXi CPU Demand (MHz) includes | Excludes |
+|---|---|---|
+| vCenter (`cpu.demand`) | The demand of the running VMs | The kernel's CPU reservation (System Resource Reservation) and the CPU reservations of VMs |
+| VCF Operations (`CPU\|Demand`) | The vCenter value, plus the kernel's CPU reservation and the CPU reservations of running VMs | |
+
+- Usage is one counter in both tools: actual use by running VMs and the kernel. VCF Operations stores the 5-minute average of the 20-second samples.
+- Example, one ESXi 9.1 host, same hour: CPU System Resource Reservation 2.72 GHz. vCenter Demand averages 199 MHz (182-223). VCF Operations Demand sits at 2,913-2,918 MHz: 2,720 + about 195. Usage agrees: about 330 MHz in both; one 20-second vCenter peak of 2,326 MHz becomes a 5-minute value of 484 MHz in VCF Operations.
+- Arithmetic check: a 5-minute average cannot exceed the largest 20-second sample. A VCF Operations Demand far above the vCenter maximum is the formula, not the rollup.
+- On a quiet host, VCF Operations Demand sits far above Usage with no contention: the gap is reserved capacity, not unmet demand. When the kernel uses more than its reservation, VCF Operations Demand can sit below Usage. vCenter Demand on a quiet host sits below Usage, because kernel work is in Usage only.
+- Host with no VMs: vCenter Demand flat at 0; VCF Operations Demand flat at the kernel reservation. Example: flat 10.21% for weeks in VCF Operations, equal to Overhead (MHz). Usage is not 0 in either: it includes kernel work such as vSAN and NSX.
+- VM CPU Demand does not include the VM's reservation in either tool ([resource controls](../../../../architecture/resource-controls.md), Reservation: CPU vs memory).
+
+## Behaviour (both tools)
 - Internal counter of the kernel CPU scheduler. The kernel knows Hyper-Threading costs performance, so Demand looks at a different context from Utilization and Used.
 - Value at ESXi: summation over the VMs, not over physical threads. So it is not available per core or thread.
 - Can exceed 500%. Example: a host running flat out with Usage (%) above 100%; Demand 4.7x higher.
-- Includes reservations of running VMs and of the kernel. Usage includes actual use by running VMs and the kernel.
-- Host with no VMs: Demand flat at 0, or flat at the kernel reservation. Example: flat 10.21% for weeks, equal to Overhead (MHz). Usage is not 0: it includes kernel work such as vSAN and NSX.
-- Example, real-time chart of a host without VMs: Usage about 3,000 MHz on average (peak 6,727 MHz), Demand 0 throughout.
+- Example, vCenter real-time chart of a host without VMs: Usage about 3,000 MHz on average (peak 6,727 MHz), Demand 0 throughout.
 ![ESXi with no running VM: CPU Usage in MHz averages about 2,946 MHz with peaks near 6,700 MHz while CPU Demand stays at 0](../../images/esxi-cpu-demand-usage-without-vm.png)
-- Kernel reservation below kernel use: Demand below Usage.
 - Once VMs share cores, Demand is higher than Usage.
 - Not capped at 100%.
 ![ESXi CPU Demand chart](../../images/esxi-cpu-demand-chart.png)
 
 ## Misconceptions
-- "ESXi Demand = VM usage + kernel usage" → wrong. Demand counts VM demand and reservations, not usage.
-- "Demand above 300% means the host is 3x overloaded" → Demand sums VM demand and reservations. Check contention.
-- "Host with no VMs has 0 Demand" → it can be 0, or flat at the kernel reservation. Either way Usage is not 0: kernel work is in Usage, not in Demand.
+- "ESXi Demand = VM usage + kernel usage" → wrong. Demand counts VM demand (and, in VCF Operations, reservations), not usage.
+- "ESXi CPU Demand in vCenter and in VCF Operations is the same counter" → same name, two formulas. VCF Operations adds the kernel's and the running VMs' CPU reservations.
+- "VCF Operations Demand far above vCenter Demand is a rollup bug" → it is the reservations. Subtract the CPU System Resource Reservation (host > Configure > System > System Resource Reservation) and the VM reservations, and compare.
+- "Demand above Usage means VMs wait for CPU" → in VCF Operations the gap can be reservation alone. Check Ready and Co-stop.
+- "Demand above 300% means the host is 3x overloaded" → Demand sums VM demand (and, in VCF Operations, reservations). Check contention.
+- "Host with no VMs has 0 Demand" → 0 in vCenter, flat at the kernel reservation in VCF Operations. Either way Usage is not 0: kernel work is in Usage, not in Demand.
 
 ## Metadata
 ```yaml
@@ -47,6 +62,7 @@ same_name:
 - vsphere/technology/cpu/metrics/virtual-motherboard/demand
 same_meaning: []
 related:
+- vsphere/architecture/resource-controls
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vsphere/technology/cpu/concepts/hyper-threading
 - vsphere/technology/cpu/metrics/comparisons/host-consumption-metrics
@@ -68,6 +84,6 @@ source:
 corrections:
 - "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
 review_notes:
-- 'Section Behaviour: from CPU > ESXi.'
+- 'Section vCenter vs VCF Operations: a VM reservation and that VM''s demand: summed, or the higher of the two? Check the VCF Operations host CPU metric definitions (techdocs.broadcom.com, VCF Operations, Metric definitions > Host System > CPU).'
 status: draft
 ```

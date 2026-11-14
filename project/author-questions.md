@@ -77,23 +77,6 @@ Each entry has:
 - Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
 - Answer:
 
-### Q218 · CPU > Demand · Is a CPU reservation inside Demand?
-
-- Files: [Resource controls](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/resource-controls.md) (Reservation: CPU vs memory); [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Demand (capacity)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/demand.md).
-- Search: not from the book; found by the structure review of 2026-11-14.
-- Question: resource-controls says Run, Used, Demand and Usage do not include a CPU reservation; host/demand says ESXi Demand includes the reservations of running VMs and of the kernel; sp5 capacity demand uses Demand = Max(Utilization, Reservation), a model with the same word. Which holds for the vCenter counter? (A) VM Demand excludes reservations, host Demand includes the kernel's and the running VMs' reservations (two objects, two rules); (B) neither includes them; (C) other.
-- Written as now: both, in different files; the capacity model's Demand is not marked as a different thing.
-- Final answer (expert call on the wording; the counter behaviour needs you): whatever the counter does, sp5 capacity demand gets one line: its Demand is the capacity model, not `cpu.demand`. One home for the counter rule: resource-controls, with host/demand pointing to it.
-- Answer:
-
-### Q219 · CPU > Demand · ESXi Demand on a host with no VMs
-
-- Files: [ESXi CPU Demand](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/demand.md); [Provider and consumer](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/provider-consumer.md).
-- Search 1: "If a host has no VM, Demand will likely show flat 0"
-- Question: host/demand says Demand on a host with no VMs is flat at 0, or flat at the kernel reservation (one example at 10.21%); provider-consumer says host Demand is VM demand only and flat at 0. Which, and when does each case occur?
-- Written as now: both.
-- Answer:
-
 ### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
 
 - Files: [ESXi CPU Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md); [Core Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
