@@ -89,7 +89,7 @@ Reviewed together: each covers what the other lacks.
 Demand = Max (Utilization, Reservation)
 ```
 
-- This Demand is the capacity model, not the vCenter counter `cpu.demand`, which leaves reservations out. ESXi CPU Demand in VCF Operations does add the reservations of running VMs and of the kernel (ESXi CPU Demand, section vCenter vs VCF Operations).
+- This Demand is the capacity model, not the vCenter counter `cpu.demand`, which leaves reservations out. ESXi CPU Demand in VCF Operations follows this model per VM (the higher of demand and reservation) and adds the kernel's reservation (ESXi CPU Demand, section vCenter vs VCF Operations).
 - A reservation not yet consumed affects capacity, not performance.
 - Example: a VM using 4 GHz with a 5 GHz reservation counts as 5 GHz: the extra 1 GHz is guaranteed to it.
 - Compute per VM, then sum at the ESXi host. A sum of utilization and a sum of reservation taken separately gives a different, wrong number.

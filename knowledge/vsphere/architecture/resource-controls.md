@@ -75,7 +75,7 @@ reservation is guaranteed; utilization may be < reservation
 | Aspect | CPU reservation | Memory reservation |
 |---|---|---|
 | When it applies | On demand, and only under contention. If the VM does not use CPU, or the host has enough CPU for every VM, the reservation does not come into play. | Also on demand: only memory the VM has touched is held. Once touched, it stays held. |
-| Effect on utilization metrics | None. VM Run, Used, Demand, Usage do not include it. Exception: ESXi CPU Demand in VCF Operations adds the reservations of running VMs and of the kernel (ESXi CPU Demand, section vCenter vs VCF Operations). They are 0 or near 0 if the Guest OS is not running. | None at power-on. Consumed grows as the VM touches memory; it does not jump to the reservation. |
+| Effect on utilization metrics | None. VM Run, Used, Demand, Usage do not include it. Exception: ESXi CPU Demand in VCF Operations takes, per running VM, the higher of demand and reservation, and adds the kernel's reservation (ESXi CPU Demand, section vCenter vs VCF Operations). They are 0 or near 0 if the Guest OS is not running. | None at power-on. Consumed grows as the VM touches memory; it does not jump to the reservation. |
 | Example: 16 GB VM, powered on, sitting at BIOS | CPU metrics ≈ 0. | 10 GB reservation → VM Memory Consumed stays low. Until the VM has touched all memory within its reservation, the VMkernel can give the untouched part to other VMs. |
 | After use | — | Once the VM asks for memory and is served, the physical RAM stays reserved, even if the VM is idle for days. The page is effectively locked. |
 

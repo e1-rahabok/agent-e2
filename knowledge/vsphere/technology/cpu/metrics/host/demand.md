@@ -14,8 +14,9 @@ Same name, two formulas. vCenter looks from the administration view (what the sc
 | Tool | ESXi CPU Demand (MHz) includes | Excludes |
 |---|---|---|
 | vCenter (`cpu.demand`) | The demand of the running VMs | The kernel's CPU reservation (System Resource Reservation) and the CPU reservations of VMs |
-| VCF Operations (`CPU\|Demand`) | The vCenter value, plus the kernel's CPU reservation and the CPU reservations of running VMs | |
+| VCF Operations (`CPU\|Demand`) | Per running VM, the higher of its demand and its CPU reservation; plus the kernel's CPU reservation | |
 
+- Per VM, the higher of the two, not the sum: a VM demanding 4 GHz with a 5 GHz reservation counts 5 GHz; demanding 6 GHz, it counts 6 GHz. The same rule as the capacity model (Capacity demand, section Demand).
 - Usage is one counter in both tools: actual use by running VMs and the kernel. VCF Operations stores the 5-minute average of the 20-second samples.
 - Example, one ESXi 9.1 host, same hour: CPU System Resource Reservation 2.72 GHz. vCenter Demand averages 199 MHz (182-223). VCF Operations Demand sits at 2,913-2,918 MHz: 2,720 + about 195. Usage agrees: about 330 MHz in both; one 20-second vCenter peak of 2,326 MHz becomes a 5-minute value of 484 MHz in VCF Operations.
 - Arithmetic check: a 5-minute average cannot exceed the largest 20-second sample. A VCF Operations Demand far above the vCenter maximum is the formula, not the rollup.
@@ -83,7 +84,6 @@ source:
   path: The World of Metrics > Metrics Nuances > Virtualization Impact; CPU > ESXi > Demand
 corrections:
 - "2026-11-02 correction ('provider metric') refined by Q009 (2026-11-03): ESXi Demand is a sum-of-consumer metric held at the provider."
-review_notes:
-- 'Section vCenter vs VCF Operations: a VM reservation and that VM''s demand: summed, or the higher of the two? Check the VCF Operations host CPU metric definitions (techdocs.broadcom.com, VCF Operations, Metric definitions > Host System > CPU).'
+review_notes: []
 status: draft
 ```
