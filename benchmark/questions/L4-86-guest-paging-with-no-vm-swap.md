@@ -72,5 +72,5 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [layer-confusion]
-status: reviewed
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
 ```

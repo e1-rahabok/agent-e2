@@ -66,5 +66,5 @@ answer: [B, D, E, F, H, K]
 misconception: [G, J, A]
 level: 400                      # author 2026-11-05
 misconception_type: [same-name-other-object, frequency-and-hyper-threading]
-status: reviewed
+status: draft                     # reviewed as a free-text question; converted to multiple choice 2026-11-14 (Q199): review again
 ```
