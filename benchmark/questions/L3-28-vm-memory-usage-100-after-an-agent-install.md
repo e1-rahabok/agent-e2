@@ -39,7 +39,7 @@ Which statements are correct?
 
 ## Notes
 - From the knowledge base, Guest OS memory vs VM memory, section Example: Guest OS more accurate (an Active Directory server, a Telegraf-based agent every 5 minutes, VM Active at 100% for more than 12 hours, a vCenter alarm).
-- The vCenter alarm "Virtual machine memory usage" reads the VM memory Usage counter (vSphere Monitoring and Performance, default alarms).
+- The vCenter alarm "Virtual machine memory usage" reads the VM memory Usage counter (VMware vSphere 9.1 documentation, project/sources/vmware-vsphere-9-1.pdf: Preconfigured vSphere Alarms, Table 474, p. 2140, "Monitors virtual machine memory usage"; the VM counter Usage, Table 444, p. 2101).
 - Prompt sharpened: VMware Tools is running, so the option on VCF Operations Usage (%) is decidable.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 

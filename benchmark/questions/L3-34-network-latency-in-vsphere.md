@@ -13,7 +13,7 @@ Which statements are correct?
 - D. With no dropped packets on either VM in that window, the network and the hosts added no delay to these calls.
 - E. CPU contention (Ready, Co-stop) on either VM adds delay without a drop: a packet waits until the vCPU runs.
 - F. Virtual interrupt coalescing on the adapter batches packets and can add a few hundred microseconds to a few milliseconds.
-- G. A VM in the path, such as a firewall, an NSX Edge or a security agent VM, can slow every flow through it without a drop on the two VMs.
+- G. A VM in the path, such as an NSX Edge or a security agent VM, can slow every flow through it with no drop on the two VMs.
 - H. Latency is measured where traffic ends: in the application, in the guest, or with the network team's flow and packet tools.
 - I. The distributed port group has its own performance chart in vCenter, with latency for each port.
 - J. Both VMs sit on one distributed port group, so their traffic never leaves the hosts and the physical network is ruled out.

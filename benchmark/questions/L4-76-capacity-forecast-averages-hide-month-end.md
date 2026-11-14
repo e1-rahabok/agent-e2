@@ -21,7 +21,7 @@ Which statements are correct?
 - J. The forecast already counts the payroll project, because VCF Operations projects committed demand from vCenter.
 - K. Neither Capacity Remaining nor Time Remaining reads contention, so check VM CPU Ready and Co-stop during the last close.
 - L. With three month-ends in 90 days, the 9.1.1 engine projects the month-end pattern forward as a periodic term.
-- M. The project should not go on this cluster before new capacity is added or other load moves out before the November close.
+- M. The project should go on this cluster only after new capacity is added or other load is moved out before the November close.
 
 ## Likely wrong answer
 - A: "Capacity Remaining is 24% and Time Remaining is 210 days, and the trend gives a year, so there is room for the project."

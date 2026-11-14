@@ -2,6 +2,7 @@
 
 ## Prompt
 - After a host BIOS power policy change, VM CPU Latency went up by about 15%.
+- esxtop power view on the host: %A/MPERF fell from about 100% to about 85% after the change.
 - CPU Ready and Co-Stop are unchanged. No limit, reservation or shares were changed on the VM.
 
 Which statements are correct?
@@ -12,7 +13,7 @@ Which statements are correct?
 - D. Unchanged Ready and Co-Stop show that the vCPUs do not wait longer for a physical thread.
 - E. Like Disk Latency and Memory Latency, CPU Latency measures time the VM waits to be served.
 - F. If the guest runs Linux, its Steal Time would rise by about the same amount as CPU Latency.
-- G. CPU Latency counts the time a CPU limit holds the vCPU back, so a limit would explain the rise.
+- G. CPU Latency includes Max Limited, the time a CPU limit holds a vCPU back, so a limit explains the rise.
 - H. Work inside the guest takes as long as before, because only the reported Latency changed.
 
 ## Likely wrong answer
@@ -23,17 +24,17 @@ Which statements are correct?
 - Answer: A, C, D.
 - A is true: CPU Latency (%LAT_C) includes power saving below nominal frequency; lower frequency raises it.
 - B is false: the misconception; the rise is a frequency effect, not time spent waiting. Waiting shows in Ready and Co-Stop, which are flat.
-- C is true: at a lower clock the VM runs slower but is not waiting to be served, like on an older CPU.
+- C is true: %A/MPERF at about 85% shows the cores run below nominal frequency; at a lower clock the VM runs slower but is not waiting to be served, like on an older CPU.
 - D is true: flat Ready and Co-Stop support no added contention.
 - E is false: Disk Latency and Memory Latency do mean the VM waits; CPU Latency does not always mean a performance problem (same name, different meaning).
 - F is false: Linux Steal Time includes only Ready; VM CPU Latency includes more factors, frequency among them. Ready is flat, so Steal Time stays flat.
-- G is false: CPU Latency excludes Max Limited; a limit shows in Ready, not in Latency. The prompt also rules out a new limit.
+- G is false: CPU Latency excludes Max Limited; the time a limit holds a vCPU back shows in Ready, not in Latency. The prompt also rules out a new limit.
 - H is false: the VM runs slower at the lower clock, so the same work takes longer; it is a speed change, not contention.
 
 ## Notes
 - Tests: Same name, different meaning (CPU Latency vs Disk / Memory Latency).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
-- Sharpened stem: no resource setting changed on the VM (rules out a limit for option G).
+- Sharpened stem: no resource setting changed on the VM (rules out a limit for option G). The %A/MPERF line (actual against nominal frequency, named in the latency knowledge file) gives the frequency drop that options C and H need as evidence, not as an inference.
 
 ## Metadata
 ```yaml

@@ -45,7 +45,7 @@ You run the health check on this VM. Which statements are correct?
 - I is false: vSphere has no VM network latency counter.
 - J is false: contention first, consumption after; consumption sizes the VM and does not show whether it waits. Efficiency (sizing) comes last.
 - K is true: received and transmitted drops are 0.
-- L is false: the peaks of different metrics can come from different 20-second blocks, and the peak is one value per cycle; check the job's timeline against the two cycles.
+- L is false: the data gives only the job's start (02:00) and that it took three times longer, not when it ran slow; the peak is one value per 5-minute cycle, with no time inside it. Check the job's timeline against the two cycles.
 - M is false: CPU waits are about 2% of the run time and memory wait is 0%; adding vCPUs or memory does not address a storage wait.
 - N is true: run queue, page-outs and disk queue inside the guest belong to the Guest OS layer, checked as its own object. If the storage flow finds nothing, the wait is inside the Guest OS.
 

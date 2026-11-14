@@ -9,7 +9,7 @@ Which statements are correct?
 
 - A. The two values are inconsistent, which points to a collection or reporting fault.
 - B. VM Memory Usage in vCenter reads the VM's Active memory.
-- C. A memory Demand counter, like CPU Demand, would show whether the VMs need more memory.
+- C. The VMs' memory Demand counter in vCenter, like CPU Demand, shows whether they need more memory.
 - D. Host Memory Usage reads Consumed: the memory the VMs have claimed on the host.
 - E. Host Memory Usage at 95% shows the host is short of memory, so more RAM is needed.
 - F. Cluster Memory Usage in vCenter reads Active memory, like the VM.
@@ -25,7 +25,7 @@ Which statements are correct?
 - Answer: B, D, G, I.
 - A is false: the same name measures different things per object (two-level memory hierarchy): VM level is what is actively used (performance), host level is what the VMs have claimed (capacity).
 - B is true: vCenter VM Memory Usage (%) maps to Active.
-- C is false: vCenter has no memory Demand counter; memory is space, not time.
+- C is false: vCenter has no memory Demand counter (CPU has one); memory is space, not time.
 - D is true: ESXi Memory Usage maps to Consumed, a capacity counter.
 - E is false: the misconception; high Consumed is not proof of shortage, and this confusion has led customers to buy more RAM than needed.
 - F is false: cluster Memory Usage maps to Consumed, with VM overhead included.

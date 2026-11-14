@@ -14,8 +14,8 @@ Which statements are correct?
 - G. Every item in the report is overhead, because each one consumes host resources.
 - H. A capacity buffer is a kind of overhead and belongs on the same line of the report.
 - I. A vMotion is overhead, because it can raise the VM's Consumed memory on the destination host.
-- J. The VM swap file (.vswp) belongs in the report as overhead, like the VM log files.
-- K. The CPU and memory that vSAN processes use on each host are overhead, unlike the FTT copy.
+- J. The VM swap file (.vswp) belongs in such a report as overhead.
+- K. The CPU and memory that vSAN processes use on each host are overhead.
 
 ## Likely wrong answer
 - G: "Yes, everything on that list is overhead: it all eats capacity."
@@ -32,12 +32,13 @@ Which statements are correct?
 - H is false: buffers (capacity, cost, DR, security) are a separate category from overhead.
 - I is false: vMotion is not overhead to the VM; it can change VM metrics on the destination (swapped or compressed pages become regular pages).
 - J is false: the swap file enables memory overcommit at ESXi level; it is not overhead.
-- K is true: ESXi memory consumed and CPU used by vSAN processes are overhead; the FTT policy is not.
+- K is true: ESXi memory consumed and CPU used by vSAN processes are overhead, although the FTT copy they manage is not.
 
 ## Notes
 - Tests: Principle: overhead vs not overhead.
 - The old key point "not overhead: snapshots, HA spare host, FTT policy" is tested by the false options C, D and E; "not overhead = optional" is in the reason for F and G.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Review 2026-11-14: options J and K hold one fact each; K no longer says the FTT copy is not overhead (that gave away E), J no longer says the log files are overhead (that gave away B).
 
 ## Metadata
 ```yaml

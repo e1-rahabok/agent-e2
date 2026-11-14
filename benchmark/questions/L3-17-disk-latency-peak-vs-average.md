@@ -11,7 +11,7 @@ Which statements are correct?
 - A. The peak cannot be real: a 20-second value can be at most 15 times the 5-minute value it belongs to.
 - B. The peak is the highest of the 15 twenty-second values in the 5-minute collection cycle.
 - C. The peak is taken across all 20 virtual disks, reads and writes together.
-- D. The 5-minute value averages IO across the disks and the cycle, so one 20-second point of one disk can exceed it far more than 15 times.
+- D. One 20-second point of one disk can exceed the 5-minute value, an average over all disks, far more than 15 times.
 - E. VCF Operations keeps all 15 twenty-second values of each cycle, so you can see when within 02:15 the burst came.
 - F. The peak metric tells you which of the 20 virtual disks had the stall.
 - G. It is a one-off: every other peak that day stays below about 22 ms, and the 5-minute values stay low.

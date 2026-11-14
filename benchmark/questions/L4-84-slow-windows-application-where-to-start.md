@@ -15,7 +15,7 @@ Which statements are correct?
 - E. A wait inside Windows that the VM does not share, such as a disk queue with low VM disk latency, points to the guest.
 - F. If Windows shows no wait, or the signs point down, read Ready, Co-stop, memory contention and disk latency of the VM.
 - G. Windows cannot see the time a vCPU waits for a physical CPU, so a clean Windows does not prove the VM is healthy.
-- H. vSphere cannot see a queue inside Windows, so a VM with no contention does not prove Windows is healthy.
+- H. ESXi cannot see a queue inside Windows, so a VM with no contention does not prove Windows is healthy.
 - I. Adding vCPUs and memory first is a safe step; measure afterwards whether the slowness has gone away.
 - J. A processor queue with idle vCPUs shrinks when vCPUs are added, since more threads can run at once.
 - K. High page-in on its own proves Windows is short of memory, even without page-out or a disk queue.
@@ -34,7 +34,7 @@ Which statements are correct?
 - E true: IO stuck in the Windows queue never reaches the VM; a wait inside Windows is a Guest OS or application cause (sizing, configuration).
 - F true: with no wait in Windows, or every vCPU busy, or a disk queue with high VM disk latency, the wait is below Windows: read the VM.
 - G true: a busy vCPU can be waiting for a physical thread; Windows cannot see it.
-- H true: the two layers are separate; the VM cannot see Windows' queues.
+- H true: the two layers are separate; the VM and ESXi cannot see Windows' queues.
 - I false: a queue with idle vCPUs gets worse with more vCPUs (more context switching); read the queues before any change.
 - J false: queue high with idle vCPUs means locks, threads that cannot run in parallel or kernel work; more vCPUs make it worse.
 - K false: binaries, memory-mapped files and prefetch cause page-in; look for page-in and page-out together with a high disk queue.

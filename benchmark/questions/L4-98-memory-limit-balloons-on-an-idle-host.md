@@ -12,7 +12,7 @@
 Which statements are correct?
 
 - A. Host swapping happens only when the host itself runs short of memory, so here the Swapped counter must be wrong.
-- B. The 24,576 MB limit on RP-Reporting is below the memory its three VMs use; the pool's Consumed is flat near that value.
+- B. The 24,576 MB limit on RP-Reporting is far below the 40 GB configured on its three VMs; the pool's Consumed is flat near it.
 - C. The VM's own limit showing Unlimited does not rule out a limit: a limit on its parent or an ancestor pool also caps it.
 - D. Linux cannot see the pool limit and runs as if all 16 GB were there, so ESX compresses and swaps to stay under it.
 - E. Unlike shares, which act only under contention, a limit caps the pool's memory at all times, even on hosts with free memory.

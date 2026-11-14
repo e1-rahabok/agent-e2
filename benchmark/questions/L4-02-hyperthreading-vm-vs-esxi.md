@@ -16,6 +16,7 @@ Which statements are correct?
 - H. The 62.5% is the charge for sharing a core with a busy sibling thread, not unmet demand.
 - I. The CPU Ready of both VMs rises, because the sibling thread on the same core is busy.
 - J. The 62.5% is a reporting error: a fully busy single-vCPU VM should show 100% CPU Usage.
+- K. Utilization (%) of each of the two threads of that core is about 100%, as each runs all the time.
 
 ## Likely wrong answer
 - A: "The VMs are under-utilised."
@@ -23,7 +24,7 @@ Which statements are correct?
 - J: "62.5% on a busy VM is a reporting bug."
 
 ## Expected key points
-- Answer: B, D, E, F, H.
+- Answer: B, D, E, F, H, K.
 - A is false: the VMs are fully busy (Run about 100%); the 62.5% is the charge for the shared core, not idle capacity.
 - B is true: Core Utilization is 100% whether 1 or 2 threads run; Utilization (thread level) tells which.
 - C is false: ESXi records the core gain as 1.25x, not 2x; Usage (MHz) at core level reflects that Hyper-Threading benefit.
@@ -34,10 +35,11 @@ Which statements are correct?
 - H is true: VM Usage is Hyper-Threading aware; when both threads run each VM is charged a 37.5% penalty, so it shows about 62.5%.
 - I is false: Ready does not register Hyper-Threading contention; sharing the core happens in hardware, not in the scheduler.
 - J is false: not a bug; a different vantage point from the host. The VM cannot see the core or its threads; ESXi can.
+- K is true: Thread Utilization counts the time a thread runs, whatever its sibling does; both threads run all the time, so each shows 100% (esxtop adds the two to 200% for the core).
 
 ## Notes
 - Tests: Same name, different meaning (consumer vs provider vantage point).
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). Option K keeps the reviewed key point Thread Utilization = 100%.
 
 ## Metadata
 ```yaml
@@ -60,7 +62,7 @@ attachments: []
 origin: book
 source_path: "The World of Metrics > Metrics Nuances: Naming Complexity; Other Nuances (Formula)."
 answer_type: deterministic
-answer: [B, D, E, F, H]
+answer: [B, D, E, F, H, K]
 misconception: [G, J, A]
 level: 400                      # author 2026-11-05
 misconception_type: [same-name-other-object, frequency-and-hyper-threading]

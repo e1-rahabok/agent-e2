@@ -20,13 +20,14 @@ Which statements are correct?
 - J. Turning off deep C-states in the ESXi settings also turns off Turbo Boost on those hosts.
 - K. Turning off all C-states in the BIOS is the vendor's advice for every host, for the best performance per watt.
 - L. Latency Sensitivity High on the VM is free: the physical cores it uses stay available to other VMs.
+- M. Latency Sensitivity High on the market-data VM, with full reservations, can further cut its network latency and jitter.
 
 ## Likely wrong answer
 - A: "Balanced slows everything down: set High Performance everywhere."
 - B: "A power setting can't add microseconds; look at the network."
 
 ## Expected key points
-- Answer: C, D, E, F, G, H, I.
+- Answer: C, D, E, F, G, H, I, M.
 - A is false: Balanced typically costs little or nothing, and on hosts with idle cores it can raise performance through Turbo Boost.
 - B is false: a deeper C-state takes longer to start running again, which matches spikes on the first messages after a quiet period.
 - C is true: Balanced lets ESXi use deep C-states (C2 or deeper) when cores are idle; High Performance stops at C1.
@@ -39,9 +40,11 @@ Which statements are correct?
 - J is false: firmware thermal management still sets each core's frequency; turning off deep C-states does not turn off Turbo.
 - K is false: for the best performance per watt the advice is to activate all C-states in the BIOS and leave the choice to ESXi.
 - L is false: Latency Sensitivity High removes the assigned physical cores from the pool for other VMs and VMkernel worlds, and it needs full reservations.
+- M is true: with Latency Sensitivity High the scheduler tries to give each vCPU a physical core of its own, and network latency and jitter drop greatly; it needs a full memory reservation and, from virtual hardware 14, a full CPU reservation.
 
 ## Notes
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Review 2026-11-14: option M added, so the old key point "Latency Sensitivity High on the VM with full reservations" as a further measure survives as a true option; L tests its cost.
 
 ## Metadata
 ```yaml
@@ -52,7 +55,7 @@ technology: [cpu]
 task: judge-setting
 level: 300
 answer_type: deterministic
-answer: [C, D, E, F, G, H, I]
+answer: [C, D, E, F, G, H, I, M]
 misconception: [A, B]
 input: [text]
 object: [esxi]
