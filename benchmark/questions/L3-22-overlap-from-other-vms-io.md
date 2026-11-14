@@ -42,7 +42,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/overlap
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [provider-vs-consumer]

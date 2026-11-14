@@ -41,7 +41,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/memory-overhead
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [consumption-as-contention, provider-vs-consumer]
 status: draft
 ```

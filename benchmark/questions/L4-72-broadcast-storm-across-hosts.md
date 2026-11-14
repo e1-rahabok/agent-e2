@@ -28,7 +28,7 @@ E: blaming the VMs that show the most drops. Or F: treating it as a host problem
 - Next: isolate app-17 (disconnect its adapter or move it to a quarantine port group), then find the cause on it.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - The CSV is synthetic, generated with a fixed seed: the drop share falls with the vCPU count of the receiver.
 
 ## Metadata
@@ -52,7 +52,7 @@ knowledge_main: vsphere/technology/network/metrics/distributed-switch/packets
 attachments:
   - 0216/vms-network-one-sample-1035.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, C, D]
 misconception: [E, F]
 misconception_type: []

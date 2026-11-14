@@ -20,8 +20,6 @@ from verify import answer_letters
 
 META = '\n## Metadata\n```yaml\n'
 UNSURE = 'Unsure: the information available does not settle this question.'
-# Scoring that removes the reward for guessing: a wrong answer costs as much as a right one earns.
-POINTS = {'exact': 1, 'unsure': 0, 'wrong': -1}
 TABLE_EXT = ('.csv', '.xlsx', '.xls')
 IMAGE_EXT = ('.png', '.jpg', '.jpeg', '.webp')
 # A prompt links each attachment by its path, e.g. [the attached chart](0004/chart.png), so a reviewer can open it on GitHub.
@@ -181,13 +179,13 @@ def parse(text, mapping):
 
 
 def score(question, picked):
-    """Exact match, partial credit, misconception picked, and points: +1 exact, 0 Unsure, -1 anything else.
+    """Exact match, partial credit, misconception picked, Unsure (benchmark/design.md, section 7).
 
     Unsure counts only when chosen alone; Unsure mixed with other letters is a hedge and scores as wrong.
     An unparseable answer scores as wrong: the user would get no usable answer.
     """
     if picked is None:
-        return {'exact': 0, 'partial': 0.0, 'misconception': 0, 'not_covered': 0, 'unsure': 0, 'points': POINTS['wrong'], 'parse_ok': 0}
+        return {'exact': 0, 'partial': 0.0, 'misconception': 0, 'unsure': 0, 'parse_ok': 0}
     correct, chosen = set(question.answer), set(picked)
     unsure = int(chosen == {'UN'})
     exact = int(chosen == correct)
@@ -196,8 +194,6 @@ def score(question, picked):
         'exact': exact,
         'partial': round(max(0, hits - wrong) / len(correct), 3),
         'misconception': int(bool(chosen & set(question.misconception))),
-        'not_covered': int('NC' in chosen),
         'unsure': unsure,
-        'points': POINTS['exact'] if exact else POINTS['unsure'] if unsure else POINTS['wrong'],
         'parse_ok': 1,
     }

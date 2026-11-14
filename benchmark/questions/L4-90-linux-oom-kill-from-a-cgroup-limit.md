@@ -43,7 +43,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the outside-the-knowledge-base slot of the Guest OS area (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12, outside the knowledge base"
 misconception_type: [layer-confusion]
 status: draft
 ```

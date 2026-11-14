@@ -47,7 +47,7 @@ knowledge:
 attachments:
   - 0037/vcf-operations-vm-metrics-tab.png
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A]
 misconception: [B]
 object: [vm]

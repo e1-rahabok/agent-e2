@@ -66,7 +66,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/cpu
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6); revised 2026-11-12"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 answer: [A, D, E]
 misconception: [B, F]
 misconception_type: [unit-and-normalization, provider-vs-consumer]

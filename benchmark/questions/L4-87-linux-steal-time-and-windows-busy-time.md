@@ -49,7 +49,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Guest OS slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B]
 misconception: [D, E, F]
 misconception_type: [layer-confusion, frequency-and-hyper-threading]

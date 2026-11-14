@@ -46,10 +46,10 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 
 ### How the benchmark tests it
 - Override rate (report table `Final score`): share of knowledge base answers that state the misconception although every needed file was in the context. It isolates prior override from retrieval misses. Target: 0.
-- Lift: knowledge base mode score minus baseline score, per model. A model with high baseline and low lift is answering from memory.
-- Basics (proposal, not built): about 10 Level 100-200 questions in baseline mode only (HA admission control, DRS, resource pool shares, vMotion). They check trait 1. A model that fails them cannot read the knowledge base, which assumes them. Not part of the final score.
-- Misconception rate in knowledge base modes, and the questions where the knowledge base and the vSphere documentation disagree ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.7).
-- A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate in the same mode:
+- Lift: Agent E2 score minus Base score, per model. A model with high baseline and low lift is answering from memory.
+- Basics: the Level 100-200 questions of the run set, read on Base. They check trait 1: a model that fails them cannot read the knowledge base, which assumes them.
+- Misconception rate on Agent E2, and the questions where the knowledge base and the vSphere documentation disagree ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 3.7).
+- A challenger that needs more hardware (a dense model of about 70B, or any tier B model) stays only if both hold, against the best current candidate on Agent E2:
   1. final score higher by more than the margin;
   2. override rate not higher.
 - Otherwise it is dropped, and a tie goes to the cheaper model.
@@ -90,7 +90,7 @@ The goal is Level 400 on a narrow domain, for VMware administrators. That sets w
 - Precision: a provider may serve 16-bit or 8-bit weights; the site may run 4-bit on a 48 GB GPU. 4-bit costs some accuracy on multi-step reasoning.
 - Version: the provider serves what it chose to load under the id (mistral-small changed from 24B dense to Mistral Small 4 without a new id).
 - Speed: gateway latency measures the provider and the network, not the customer GPU.
-- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run (after 1.0: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), section M5 Live test).
+- Guard: before release, the chosen model is run once on the benchmark from local weights, at the deployed precision, on the target GPU. The release score is that run ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M5 and M6).
 
 ## 3. Selection criteria
 Two limits decide:
@@ -137,10 +137,11 @@ Preferred, not required:
 - Request settings (`model_params` in `config.yaml`; [benchmark/runner/README.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/README.md), section Request settings per model): qwen3.8-27b and muse-glimmer-30b are reasoning models. With the default settings they spend 2,000-4,300 tokens per answer thinking, are cut off at the 4,000-token cap, and take 3-8 times longer than gemma-4-31b-it. The final round sends reasoning off (`effort: none` for Qwen, `enabled: false` for Muse). That is a choice: it measures the model without thinking, and a deployment with thinking on needs its own run. The next entries of each list (effort low, with room for 8,000 tokens) are the fallback when the preflight or the health check finds cut-off answers.
 
 ## 5. Frontier reference
-- One frontier model, without the knowledge base, in one mode, `web` (search available, the model decides, as in a chat product): anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Web search on, as Claude has it; effort capped at medium, for the cost of the author's subscription.
+- One frontier model, without the knowledge base: anthropic/claude-opus-5.5 only, because Agent E2 is built with Claude (Q164). Effort capped at medium, for cost.
 - Run it with `--models anthropic/claude-opus-5.5`: its proven concurrency is 3 in `concurrency_by_model` (`config.yaml`); the provider rate-limits above that in a short trial, and the governor probes upward from 3.
 - Effort: `model_params` in `config.yaml` sends `reasoning: {effort: medium}` and `max_tokens: 8000` (room for the thinking). The gateway accepts it (tested live 2026-11-13).
-- Mode in the final round: `web` only (the baseline prompt plus open web search and page fetch, no knowledge base, no instruction to search: how an administrator's chat product behaves). No prompt-only run: a user cannot switch search off by typing a prompt, so that mode measures nothing a user meets (author, 2026-11-13). The prompt-only result of 2026-11-13 (67%) stays in the archive as history.
+- Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
+- No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets (author, 2026-11-13). The result without tools of 2026-11-13 (67%) stays in the archive as history.
 
 ## 6. Judge
 - Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.

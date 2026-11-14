@@ -27,7 +27,7 @@ B: deleted in the guest means free on the datastore.
 - F is wrong: a thick disk keeps its full size; unmap applies only to thin disks.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot "UNMAP" (project/plan.md, M2). Counts only after author approval.
+- Drafted by Claude 2026-11-12. Counts only after author approval.
 - Windows sends unmap on delete when delete notifications are on and the virtual hardware supports it; the stem implies it did not, so the guest side is the first thing to check. The options do not depend on why.
 - Vendor documents: VMFS 6 automatic space reclamation and its 1 MB granularity, vSphere Storage, "Space Reclamation Requests from VMFS Datastores" (https://docs.vmware.com/en/VMware-vSphere/8.0/vsphere-storage/GUID-BC1A172C-E649-4812-B8B2-A9E45AC97051.html); Broadcom KB 314380 (unmap granularity above 1 MB). The key does not depend on the exact reclamation rate: the knowledge base gives 25-50 MB/s at Low, some Broadcom pages give 100 MB/s.
 
@@ -50,7 +50,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/metrics/host/datastore
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [layer-confusion]

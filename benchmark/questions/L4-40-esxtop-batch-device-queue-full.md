@@ -49,7 +49,7 @@ knowledge_main: vsphere/tools/esxtop/storage
 attachments:
   - 0086/esx-07-esxtop-batch-disk-devices-1-hour.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, E]
 misconception: [B]
 misconception_type: [layer-confusion]

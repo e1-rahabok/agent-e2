@@ -49,7 +49,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/swapped
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [B, D]
 misconception: [A, C]
 misconception_type: [cumulative-vs-current]

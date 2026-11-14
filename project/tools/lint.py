@@ -177,7 +177,7 @@ def main():
             v = (fm or {}).get(k)
             if v is not None and (not isinstance(v, list) or any(x not in allowed[allowed_k] for x in v)):
                 bad(f, f'{k} must be a list of {", ".join(allowed[allowed_k])}')
-        if st in ('draft', 'reviewed'):  # coverage tags on every question that runs (benchmark/design.md, section 3.7)
+        if st in ('draft', 'reviewed'):  # coverage tags on every question that runs (benchmark/design.md, section 3)
             for k in ('object', 'tool', 'knowledge_main', 'misconception_type'):
                 if k not in (fm or {}): bad(f, f'{k} is missing (benchmark/README.md, section Metadata tags)')
         mt = (fm or {}).get('misconception_type') or []
@@ -258,7 +258,6 @@ def main():
     check_catalog(allowed, ids, {fm.get('id'): FILE_LINK.sub(r'\1', body) for fm, body in docs.values()}, bad)
     check_flows({fm.get('id'): (fm, body) for fm, body in docs.values()}, bad)
     check_titles(bad)  # titles and headings are machine input: harness/kb.py puts both in front of every chunk (Q181)
-    check_question_count(bad)
 
     # every image file must be linked from a knowledge file, so the AI gets its context
     for img in glob.glob('knowledge/**/images/*.png', recursive=True):
@@ -268,19 +267,6 @@ def main():
     for p in problems: print(p)
     print(f'{len(docs)} knowledge files checked, {len(problems)} problems')
     return 1 if problems else 0
-
-def check_question_count(bad):
-    """The run set's size in the documents that state it must match the question files (status draft or reviewed).
-    Added 2026-11-14: benchmark/design.md still said 150 after the run set grew to 196."""
-    n = 0
-    for f in glob.glob('benchmark/questions/*.md'):
-        fm, _ = split(f)
-        n += (fm or {}).get('status') in ('draft', 'reviewed')
-    text = open('benchmark/design.md').read()
-    for phrase in (f'Run set ({n})', f'{n} questions in the development set'):
-        if phrase not in text:
-            bad('benchmark/design.md', f'the run set has {n} questions: "{phrase}" not found (sections 3 and 4)')
-
 
 def check_repo_terms(allowed, bad):
     """One word per concept in the repository (project/terms.md): flag the replaced words."""

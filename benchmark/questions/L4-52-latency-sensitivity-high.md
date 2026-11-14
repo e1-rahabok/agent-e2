@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/configuration/latency-sensitivity
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, D, F]
 misconception: [C, E]
 misconception_type: [consumption-as-contention]

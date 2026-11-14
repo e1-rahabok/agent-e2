@@ -50,7 +50,7 @@ knowledge_main: vsphere/technology/cpu/metrics/comparisons/host-contention-metri
 attachments:
   - 0115/esx-07-vms-cpu-14-to-15.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, F, G]
 misconception: [B, D]
 misconception_type: [average-hides-worst, provider-vs-consumer]

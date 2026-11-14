@@ -27,7 +27,7 @@ E: "a small share and no complaints, so it does not matter". Or D: reading 0 rec
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): the screenshot became a CSV chart export; the management pack score removed (fairness); the question now tests transmit drops hidden by TCP and a regular drop pattern; after the independent review, the top-of-rack option was removed (that fact belongs to a Guest OS question). The CSV is synthetic, generated with a fixed seed.
+- Revised 2026-11-12: the screenshot became a CSV chart export; the management pack score removed (fairness); the question now tests transmit drops hidden by TCP and a regular drop pattern; after the independent review, the top-of-rack option was removed (that fact belongs to a Guest OS question). The CSV is synthetic, generated with a fixed seed.
 
 ## Metadata
 ```yaml
@@ -47,7 +47,7 @@ knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets-d
 attachments:
   - 0074/app-12-network-packets-past-day.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, B]
 misconception: [E, D]
 misconception_type: []

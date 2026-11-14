@@ -53,7 +53,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/concepts/dpm
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [average-hides-worst, provider-vs-consumer]
 status: reviewed
 ```

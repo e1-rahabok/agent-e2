@@ -47,7 +47,7 @@ B: "more uplinks, more bandwidth for the VM". Or the capacity report's view: 26%
 - Broadcom KB 321396, Understanding IP Hash load balancing (a VM talking to several IP addresses can use several uplinks): https://knowledge.broadcom.com/external/article/321396/understanding-ip-hash-load-balancing.html
 - Broadcom KB 452506, Expected behavior for Load-Based Teaming port reassignment: https://knowledge.broadcom.com/external/article/452506/expected-behavior-for-loadbased-teaming.html
 - vSphere 9.0 networking, Load Balancing Algorithms Available for Virtual Switches (same behaviour as the 8.0 pages: the default policy maps a port to one uplink; one VM is capped at one uplink unless it has several adapters): https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-0/vsphere-networking/networking-policies/teaming-and-failover-policy/load-balancing-algorithms-for-virtual-switches.html. No separate 9.1 page was found; the 8.0 and 9.0 pages describe unchanged behaviour.
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -67,7 +67,7 @@ knowledge:
 knowledge_main: vsphere/tools/esxtop/network
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots, outside the knowledge base (benchmark/design.md, section 3.5)"
+source_path: "Drafted by Claude 2026-11-12, outside the knowledge base"
 answer: [A, C, E]
 misconception: [B, D]
 misconception_type: [average-hides-worst]

@@ -45,7 +45,7 @@ knowledge_main: vsphere/technology/storage/metrics/host/adapter-and-path
 attachments:
   - 0081/host-adapter-latency-40-hosts-1-week.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A, C, E]
 misconception: [B]
 misconception_type: [average-hides-worst, rollup-and-interval]

@@ -19,7 +19,7 @@ C: assuming compression happens inside the guest.
 - Swapping, compression and page sharing are done by the VMkernel, without the Guest OS knowing.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): "four techniques" removed; ESXi has five (sharing, ballooning, compression, swap to host cache, host swapping).
+- Revised 2026-11-12: "four techniques" removed; ESXi has five (sharing, ballooning, compression, swap to host cache, host swapping).
 
 ## Metadata
 ```yaml
@@ -39,7 +39,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/ballooning
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A]
 misconception: [C]
 misconception_type: [layer-confusion]

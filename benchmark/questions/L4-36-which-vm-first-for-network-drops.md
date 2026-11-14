@@ -26,7 +26,7 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
+- Revised 2026-11-12: the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
 
 ## Metadata
 ```yaml
@@ -46,7 +46,7 @@ knowledge_main: vsphere/technology/network/metrics/virtual-motherboard/packets-d
 attachments:
   - 0082/vm-network-drops-one-week.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [B]
 misconception: [A]
 misconception_type: [rollup-and-interval]

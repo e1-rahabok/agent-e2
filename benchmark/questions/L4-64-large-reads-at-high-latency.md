@@ -35,7 +35,7 @@ C: comparing the latency of large and small IOs as if they were the same work.
 - F is wrong: vSphere offers an IOPS limit per virtual disk, not a throughput limit; with large blocks, an IOPS limit caps the throughput too.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot "large IO size and latency" (project/plan.md, M2). Counts only after author approval.
+- Drafted by Claude 2026-11-12. Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -56,7 +56,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/iops
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, D, E]
 misconception: [C]
 misconception_type: [unit-and-normalization]

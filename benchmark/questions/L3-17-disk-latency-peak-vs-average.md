@@ -41,7 +41,7 @@ knowledge_main: vcf-operations/features/peak-20-second-metrics
 attachments:
   - 0089/db-14-disk-latency-1-day.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [rollup-and-interval]
 status: draft
 ```

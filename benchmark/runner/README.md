@@ -74,7 +74,7 @@ python3 benchmark/runner/retrieval_eval.py
 ### Multiple choice: question and score
 - A multiple-choice question has one or more correct options.
 - A run asks every question once, per model and mode.
-- 5 runs per question, because hosted models do not answer the same way twice. Reason: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.2.
+- 5 runs per question. The answer is sampled at the model card's temperature (1.0), so one run is one draw; the case of Agent E2 is read at temperature 0, the answer is not. The 5 runs give the mean (final score), the consensus-of-3 projection and consistency. Reason: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.2.
 - Every question says: "Choose all the correct options. There can be more than one." One option is appended: "Unsure". There is no "Not covered" option: the system answers from the knowledge base first and from the model's own knowledge where it is silent (author, Q038, 2026-11-05).
 - Exact: answer letters match the key exactly. 1 or 0 per answer.
 - Classes: correct (exact letters), Unsure (chosen alone), confident wrong (anything else, including unparseable). The model is told a wrong answer is worse than Unsure. No points: see [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.1.
@@ -86,21 +86,21 @@ python3 benchmark/runner/retrieval_eval.py
 - Reason and design: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.
 - Partial: credit for each correct letter picked, minus wrong letters. Shows near misses on multi-answer questions.
 - Majority: for each question, take the answer given most often over the 5 runs, then score it. Shows what the model answers "usually".
-- Margin: 95% interval on Majority. Set by the number of questions: 196 questions give about ±5 points on the final score (benchmark/design.md, section 4).
+- Margin: 95% interval on Majority, from the number of questions (about ±5 points at 200 questions; benchmark/design.md, section 4).
 
 ### Modes: baseline, agent-e2, web
 
 | | Baseline | Agent E2 (`agent-e2`) | Web (frontier reference) |
 |---|---|---|---|
 | Knowledge base | None | Yes | None |
-| Who decides what to read | Nobody | The agent's code, from the knowledge base's map | The model: web search and page fetch, its own choice |
-| Model calls | 1 | 2 in the common case: the case (temperature 0), the answer; plus a gap follow-up and a repair when needed | 1 plus up to 5 tool calls |
+| Who decides what to read | Nobody | The agent's code, from the knowledge base's map | The model: web search and page fetch are offered (`tool_choice: auto`); it may search, fetch, or answer without either |
+| Model calls | 1 | 2 in the common case: the case (temperature 0, so the same question gets the same reading set) and the answer (the model card's sampling, as a local server runs it); plus a gap follow-up and a repair when needed | 1, plus up to 5 tool calls when the model chooses to search |
 | What the model gets | The prompt only | The case, computed facts, catalog facts, the reading set (16K), the up-front blocks, the prompt | The prompt and the pages it chose to read |
 | Runs on | Every candidate | Every candidate | The frontier reference only |
 
-- Two runs per candidate (author, 2026-11-14): Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs `web` only: a user cannot switch search off, so the reference is the model as a user meets it (author, 2026-11-13).
+- Two runs per candidate (author, 2026-11-14): Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs one mode, `web`: search is available and Opus decides whether to use it, as in a chat product. There is no run with search removed: a user cannot switch it off, so that run measures nothing a user meets (author, 2026-11-13).
 - Agent E2 answers pass the answer verifier ([harness/verify.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/verify.py)): a missing ANSWER line, a letter that is not an option, or Unsure mixed with other letters gets one repair turn. Baseline and web are not verified.
-- Recall columns: Recall counts the needed files whose text reached the model (the reading set and any gap follow-up). Seen equals Recall for Agent E2: the model sees every file the agent plans.
+- Recall column: the needed files whose text reached the model (the reading set and any gap follow-up). Agent E2 only: Base and web read no knowledge base.
 - Classic and agentic modes were removed on 2026-11-14; `run.py` refuses them.
 
 ### Index version
@@ -175,9 +175,9 @@ python3 benchmark/runner/retrieval_eval.py
   - Gemma 4 31B and Muse Glimmer 30B: temperature 1.0, top_p 0.95, top_k 64. Qwen 3.8 27B: temperature 1.0, top_p 0.95, top_k 20.
   - Reason: a local server (vLLM, and others that read the card) applies these by default, so the benchmark sees what a user sees. Until 2026-11-13 every model ran at 0.2.
   - The frontier reference sends none: the provider's default, as a chat user meets it.
+  - The judge and Agent E2's case call (stage 1) run at temperature 0: a reading step, not an answer.
   - The gateway accepted top_p and top_k for all three candidates (one call each, 2026-11-13). Whether every provider honours top_k is not known.
 - `--temperature` replaces the settings for every model: an experiment, not the release run.
-- The judge stays at 0.
 
 ## What it does
 1. Loads `knowledge/` exactly as `ARCHITECTURE.md`, section Local LLM use: metadata split off, body chunked by `##` heading.
@@ -189,7 +189,7 @@ python3 benchmark/runner/retrieval_eval.py
      - `baseline`: no knowledge base;
      - `agent-e2`: the six stages of harness/AGENT.md: the case, the reading plan (16K tokens), computed facts, the answer, the checks (verifier, one gap follow-up);
      - `web`: the frontier reference, web search and page fetch at the model's choice;
-   - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Not-covered pick, Unsure pick;
+   - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Unsure pick;
    - free text: the judge scores 0-3; credit = score / 3;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
 6. Writes the benchmark folder: `answers.csv`, `config.json`, `traces.jsonl`, `report.md`.
@@ -199,8 +199,8 @@ python3 benchmark/runner/retrieval_eval.py
 | File | Content | In git |
 |---|---|---|
 | `config.json` | Index version (git SHA), models with tags and prices, request settings per model (`model_params`), up-front blocks, judge and its price, settings | Yes |
-| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall, model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
-| `report.md` | Final score and sub-scores; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, fallback, cost), by area and level; hardest questions | Yes |
+| `answers.csv` | One row per answer: model, provider, mode, track, question, answer type, input, level, run, option order, letters, scores (exact, partial, misconception, unsure, credit, confident wrong), judge model, score and missed point, answer text (free text), retrieval recall (Agent E2), model calls (`steps`), stages that acted (`tools_used`: compute, gap, repair, consensus) or the web reference's tools, verifier flags, repaired, tokens, latency, cost | Yes |
+| `report.md` | Final score and sub-scores; release gate and consensus projection; free-text judge table; multiple-choice matrix (exact, partial, majority, margin, consistency, misconception, parse failures, recall, model calls, cost), by area and task; hardest questions | Yes |
 | `traces.jsonl` | Full prompt and retrieval trace per answer | No (large); keep locally |
 | `run.log` | Console output of the run, written by `run_all.py` | No |
 

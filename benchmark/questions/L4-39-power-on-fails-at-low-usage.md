@@ -20,7 +20,7 @@ Why does the power-on fail when the cluster is at 30%? What do you change, and w
 - Design: a fixed reservation isolates a pool and caps what its children can borrow; an expandable one is flexible, but one child can take all of the parent's spare reservation. Keep part of the capacity unreserved (the documentation advises at least 10%).
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): the tree as a CSV export, the error as text; no screenshot.
+- Revised 2026-11-12: the tree as a CSV export, the error as text; no screenshot.
 - Expandable reservations walk up the tree while each ancestor is expandable (vSphere 9.1 Resource Management, Expandable Reservations Example).
 - Admission control questions test different facts: L2-10 (reservations, not usage), L4-30 (Invalid vs Overcommitted), this one (the walk up the tree stops at a fixed reservation).
 
@@ -44,7 +44,7 @@ knowledge_main: vsphere/object-types/cluster/concepts/admission-control-and-clus
 attachments:
   - 0085/resource-pool-tree.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation; revised 2026-11-12 (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention]
 status: draft
 ```

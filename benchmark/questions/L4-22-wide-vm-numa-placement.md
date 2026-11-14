@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/concepts/numa
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, D, E]
 misconception: [B, C]
 misconception_type: [frequency-and-hyper-threading]

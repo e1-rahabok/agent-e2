@@ -27,7 +27,7 @@ B: swap equals configured memory. Or E: powered-off VMs already hold their swap 
 - F is wrong: the file is created at power-on whatever the memory pressure.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot "swap file space on a mass power-on" (project/plan.md, M2). Counts only after author approval.
+- Drafted by Claude 2026-11-12. Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/concepts/vm-files
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D]
 misconception: [B, E]
 misconception_type: []

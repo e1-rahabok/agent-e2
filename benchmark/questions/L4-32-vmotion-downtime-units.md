@@ -29,7 +29,7 @@ C: the value read as milliseconds (1,450,000 ms is about 24 minutes) instead of 
 - E is wrong: downtime varies per migration with the page-change rate, the vMotion network and host load, not only with memory size.
 
 ## Notes
-- Revised 2026-11-12 (question set 1.0): the screenshot became values as text; the guide values are stated in the prompt (benchmark/design.md, section 6.1, F3); the stun-time table option (a UI detail) replaced by the downtime mechanism.
+- Revised 2026-11-12: the screenshot became values as text; the guide values are stated in the prompt (benchmark/design.md, section 6.1, F3); the stun-time table option (a UI detail) replaced by the downtime mechanism.
 - Unit: Broadcom KB 436882, How to identify vMotion stun time for a vMotion (https://knowledge.broadcom.com/external/article/436882): downtime and stun time are logged in microseconds.
 
 ## Metadata
@@ -49,7 +49,7 @@ knowledge:
 knowledge_main: vsphere/object-types/vm/vmotion
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation; revised 2026-11-12 (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 answer: [A, B, D]
 misconception: [C]
 misconception_type: [unit-and-normalization]

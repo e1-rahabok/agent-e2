@@ -45,7 +45,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/page-sharing
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [B]
 misconception: [D, E]
 misconception_type: [threshold-transplanted]

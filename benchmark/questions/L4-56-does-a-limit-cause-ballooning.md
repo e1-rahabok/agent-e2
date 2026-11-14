@@ -27,7 +27,7 @@ B: Granted above the limit read as the limit not working. Or E: ballooned memory
 ## Notes
 - From the author's samples (docx, 2026-11-12): a 16 GB MySQL VM on RHEL with a 2 GB limit (effective limit 2.12 GB); Guest Needed Memory 13.4-13.6 GB; Granted about 2.8-3.0 GB; Consumed just under 2 GB; Balloon flat at 63.66% for 7 days. The CSV is generated to reproduce those values.
 - Open with the author: does a limit cause ballooning? The author's sample reads the flat balloon as proof that it does not. Vendor documents say a VM at its limit can show high balloon or swap (vSphere 9.1 Monitoring and Performance, memory troubleshooting: "high swap or balloon memory ... has reached its resource limit"; Broadcom KB 326270). 63.66% is near the Mem.CtlMaxPercent default of 65% (vSphere 9.1 documentation, advanced memory attributes). The key avoids the disputed point.
-- This question also carries the plan's memory slot "ballooned pages show as In Use in the guest" (option D).
+- This question also tests "ballooned pages show as In Use in the guest" (option D).
 
 ## Metadata
 ```yaml

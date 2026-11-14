@@ -90,5 +90,5 @@ Started by one operational question; ends in a choice to act, with its reason. N
 | [`project/sources/`](project/sources) | Source documents. Read-only |
 | [`project/knowledge-rules/`](project/knowledge-rules) | Rules for knowledge files, one module each: placement, flows, metadata, thresholds, writing, terminology |
 | [`project/templates/`](project/templates) | Templates for knowledge files: concept, metric, configuration, alerts (one object type), screen, and the three flow kinds (health check, troubleshooting, decision tree) |
-| [`project/tools/`](project/tools) | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py`, `coverage.py` (question set against the blueprint) |
+| [`project/tools/`](project/tools) | `lint.py` and `tags.yaml` (checks and allowed values), `link_refs.py` and `moved.yaml` (old file ids → current ids), `tidy.py`, `kpi_csv.py`, `answered.py`, `renumber_questions.py`, `coverage.py` (what the question set covers: counts per tag value) |
 | [`project/archive/`](project/archive) | Retired documents |

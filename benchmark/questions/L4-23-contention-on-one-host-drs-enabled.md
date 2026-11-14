@@ -41,7 +41,7 @@ knowledge:
 knowledge_main: vsphere/object-types/cluster/troubleshooting/vm-insufficient-resources-in-drs-cluster
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 answer: [A]
 misconception: [B]
 misconception_type: [average-hides-worst]

@@ -28,7 +28,7 @@ C: treating a hardware thread as a full core. Or F: reading the ratio as content
 - F is wrong: Ready follows concurrent demand, not the configured ratio.
 
 ## Notes
-- Drafted 2026-11-12 for the System slots (question set 1.0, plan M2).
+- Drafted 2026-11-12.
 - Hyper-Threading: ESXi accounts a core with both threads busy as 1.25 times one thread alone (each thread 62.5%); the real gain per application varies (knowledge base, hyper-threading).
 
 ## Metadata
@@ -50,7 +50,7 @@ knowledge:
 knowledge_main: sp5-framework/capacity/overcommit
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, D, E]
 misconception: [C, F]
 misconception_type: [frequency-and-hyper-threading, consumption-as-contention]

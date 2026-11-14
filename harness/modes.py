@@ -127,23 +127,23 @@ def answer(mode, client, model, question, images, cfg, retriever, kind='choice')
     """Run one question in one mode. kind: choice (letters), open (free text), chat or chat_final (conversation).
     With cfg consensus_samples n > 1 (choice questions, Agent E2): n samples of the answer on one reading set; the letters
     stand only when every sample gives the same set, otherwise the answer is Unsure (harness/README.md, section Consensus).
-    Returns (result, ids used, trace, fallback flag). The flag stays for the run log's column: Agent E2 has no fallback."""
+    Returns (result, ids used, trace)."""
     if mode not in MODES:
         raise ValueError(f'unknown mode {mode!r}: {", ".join(MODES)}')
     trace = []
     if mode == 'baseline':
         res, used = baseline(client, model, question, images, cfg, trace, kind)
-        return res, used, trace, False
+        return res, used, trace
     if mode == 'web':
-        res, used = web_only(client, model, question, images, cfg, trace, kind)
-        return res, used, trace, False
+        res, used = web_search_on(client, model, question, images, cfg, trace, kind)
+        return res, used, trace
     prep = agent.prepare(client, model, question, images, cfg, trace, retriever, kind, PROMPTS)
     n = cfg.get('consensus_samples') or 1
     if n > 1 and kind == 'choice':
         res, used = _consensus(n, client, model, question, cfg, trace, retriever, prep)
     else:
         res, used = agent.write(client, model, question, cfg, trace, retriever, kind, prep, _verified)
-    return res, used, trace, False
+    return res, used, trace
 
 
 def _consensus(n, client, model, question, cfg, trace, retriever, prep):
@@ -196,23 +196,23 @@ def converse(mode, client, model, turns, images, cfg, retriever):
     """The shipped assistant: one question, or the question, Agent E2's clarifying questions and the user's reply.
 
     turns: [question] or [question, clarifying reply, user's reply].
-    Returns a dict: type 'clarify' (questions) or 'answer' (result), plus ids used, trace and fallback flag.
+    Returns a dict: type 'clarify' (questions) or 'answer' (result), plus ids used and trace.
     """
     if len(turns) >= 3:
         question, kind = clarify.joined(turns[0], turns[1], turns[2]), 'chat_final'
     else:
         question, kind = turns[0], 'chat'
-    res, used, trace, fb = answer(mode, client, model, question, images, cfg, retriever, kind)
+    res, used, trace = answer(mode, client, model, question, images, cfg, retriever, kind)
     asked = clarify.parse(res.get('content') or '')
     if asked and kind == 'chat':
         _step(trace, 'clarify', '', asked)
-        return {'type': 'clarify', 'questions': asked, 'result': res, 'used': used, 'trace': trace, 'fallback': fb}
+        return {'type': 'clarify', 'questions': asked, 'result': res, 'used': used, 'trace': trace}
     if asked:  # asked a second time: the rule allows one round; one repair turn to answer
         _step(trace, 'clarify_again', '', asked)
-        res, used, trace2, fb = answer(mode, client, model, question + '\n\nAnswer now. Do not ask the user again.',
-                                       images, cfg, retriever, 'chat_final')
+        res, used, trace2 = answer(mode, client, model, question + '\n\nAnswer now. Do not ask the user again.',
+                                   images, cfg, retriever, 'chat_final')
         trace += trace2
-    return {'type': 'answer', 'result': res, 'used': used, 'trace': trace, 'fallback': fb}
+    return {'type': 'answer', 'result': res, 'used': used, 'trace': trace}
 
 
 # Reference mode `web` (benchmark): what a chat product gives a frontier model when web search is on. The descriptions say
@@ -228,8 +228,9 @@ REF_WEB_TOOLS = [
 TOOL_NAMES = [t['function']['name'] for t in REF_WEB_TOOLS]   # the only tool calls left: the web reference's
 
 
-def web_only(client, model, question, images, cfg, trace, kind='choice'):
-    """Reference mode: the baseline prompt plus web search and page fetch that the model may use or ignore.
+def web_search_on(client, model, question, images, cfg, trace, kind='choice'):
+    """Reference mode `web`: the baseline prompt plus web search and page fetch that the model may use or ignore
+    (tool_choice auto: the model decides whether to search; it may answer with no search at all).
     No knowledge base, no instruction to search, the open web (no host list), no answer verifier. Returns (result, [])."""
     wcfg = dict(cfg.get('web') or {})
     wcfg.update({'enabled': True, 'search_hosts': [], 'allow_hosts': []})

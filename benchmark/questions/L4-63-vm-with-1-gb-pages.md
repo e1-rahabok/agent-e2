@@ -47,7 +47,7 @@ knowledge:
 knowledge_main: vsphere/technology/memory/concepts/large-memory-pages
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [consumption-as-contention]

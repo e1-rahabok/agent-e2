@@ -28,7 +28,7 @@ B: the datastore average stands for every VM on it.
 - D is wrong: queues and the snapshot chain add latency at any load.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot "datastore latency average hides one VM" (project/plan.md, M2). Counts only after author approval.
+- Drafted by Claude 2026-11-12. Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -51,7 +51,7 @@ knowledge_main: vsphere/technology/storage/troubleshooting/vm-storage-performanc
 attachments:
   - 0184/ds-fin01-vms-disk-24-hours.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, E, F]
 misconception: [B, D]
 misconception_type: [average-hides-worst]

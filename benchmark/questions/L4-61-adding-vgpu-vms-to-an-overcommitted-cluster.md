@@ -42,7 +42,7 @@ knowledge:
 knowledge_main: vsphere/technology/gpu/gpu-monitoring
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the memory slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [consumption-as-contention]
 status: draft
 ```

@@ -51,7 +51,7 @@ English words carry a general meaning and a VMware operations meaning. A word is
 | author | Iwan Rahabok, who owns the knowledge and reviews it | - |
 
 ## Examples
-- The benchmark has 5 runs; each run goes through the same 196 questions.
+- The benchmark has 5 runs; each run goes through the same questions.
 - A question's credit is the mean of its 5 runs; the worst run is reported as consistency (since 2026-11-13).
 
 ## Open: one word for two things

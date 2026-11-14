@@ -45,7 +45,7 @@ knowledge:
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/co-stop
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the CPU slots (project/plan.md, M2)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A]
 misconception: [B, E]
 misconception_type: [provider-vs-consumer]

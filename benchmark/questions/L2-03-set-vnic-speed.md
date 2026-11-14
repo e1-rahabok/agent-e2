@@ -18,7 +18,7 @@ Can you set the VM's vNIC speed to 500 Mbps to do this? If not, what controls ex
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0). The VMX setting is `ethernetX.linkspeed`, from vSphere 8.0 Update 2, 10,000 to 65,000 Mbps; values outside the range fall back to 10 Gbps. Vendor sources for the reported link speed: Broadcom KB 368812, How to change the vmxnet3 link speed of a VM, https://knowledge.broadcom.com/external/article/368812/how-to-change-the-vmxnet3-link-speed-of.html; Broadcom KB 444078, VMXNET3 guest OS link speed does not enforce bandwidth limits, https://knowledge.broadcom.com/external/article/444078/vmxnet3-guest-os-link-speed-resets-and-d.html.
+- Revised 2026-11-12. The VMX setting is `ethernetX.linkspeed`, from vSphere 8.0 Update 2, 10,000 to 65,000 Mbps; values outside the range fall back to 10 Gbps. Vendor sources for the reported link speed: Broadcom KB 368812, How to change the vmxnet3 link speed of a VM, https://knowledge.broadcom.com/external/article/368812/how-to-change-the-vmxnet3-link-speed-of.html; Broadcom KB 444078, VMXNET3 guest OS link speed does not enforce bandwidth limits, https://knowledge.broadcom.com/external/article/444078/vmxnet3-guest-os-link-speed-resets-and-d.html.
 - The knowledge base says the vNIC takes the speed of the vmnic behind its port group (network-characteristics, Coarse allocation). The KB articles above say VMXNET3 reports 10 Gbps by default. The key follows the vendor articles; reported for a knowledge base fix.
 
 ## Metadata
@@ -40,7 +40,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/concepts/network-characteristics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 100-200 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: []
 status: draft
 ```

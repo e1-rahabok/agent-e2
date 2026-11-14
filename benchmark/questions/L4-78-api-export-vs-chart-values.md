@@ -49,7 +49,7 @@ knowledge:
 knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the System slots (question set 1.0)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [tool-confusion, unit-and-normalization]

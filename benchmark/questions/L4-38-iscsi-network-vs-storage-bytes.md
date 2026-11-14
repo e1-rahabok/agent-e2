@@ -20,7 +20,7 @@ Explain both. Then, for the busiest sample, estimate the network receive and tra
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): the 2,016-row workbook became a 48-row CSV; after the independent review, packets are sums per sample, as vCenter shows them, and the key accepts 1-2 packets per read each way. The CSV is synthetic, generated with a fixed seed from the frame model of ip-storage-network-accounting, with ±0.2% noise.
+- Revised 2026-11-12: the 2,016-row workbook became a 48-row CSV; after the independent review, packets are sums per sample, as vCenter shows them, and the key accepts 1-2 packets per read each way. The CSV is synthetic, generated with a fixed seed from the frame model of ip-storage-network-accounting, with ±0.2% noise.
 
 ## Metadata
 ```yaml
@@ -40,7 +40,7 @@ knowledge_main: vsphere/technology/storage/concepts/ip-storage-network-accountin
 attachments:
   - 0084/esx-21-iscsi-storage-and-vmnic4.csv
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [unit-and-normalization]
 status: draft
 ```

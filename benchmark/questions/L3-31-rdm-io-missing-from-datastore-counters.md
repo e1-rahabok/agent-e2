@@ -30,7 +30,7 @@ B: reading the gap as lost IO.
 - F is wrong: the compatibility mode changes how SCSI commands are virtualized, not where the data lives.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for question set 1.0, Storage slot (Level 300 read-metric), replacing "write latency below read latency": that slot depends on the array's cache design, so its key would not be decidable from public mechanisms. Counts only after author approval.
+- Drafted by Claude 2026-11-12, replacing a question on "write latency below read latency": that topic depends on the array's cache design, so its key would not be decidable from public mechanisms. Counts only after author approval.
 
 ## Metadata
 ```yaml
@@ -52,7 +52,7 @@ knowledge:
 knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/datastore
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12 for the Storage slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 answer: [A, C, D]
 misconception: [B]
 misconception_type: [same-name-other-object]

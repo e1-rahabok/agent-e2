@@ -25,7 +25,7 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Expect
 
-Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in `web` only; 196 questions, 5 runs each, judge openai/gpt-6.1-terra. Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
+Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (196 on 2026-11-14), 5 runs each, judge openai/gpt-6.1-terra. Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
 | Run folder | Modes | Answers | Request settings | Time | Cost US$ |
 |---|---|---|---|---|---|
@@ -47,7 +47,7 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 2. Four `run.py` in parallel, one folder per model: `benchmark/results/<date>-<model>/`.
 3. Health check inside each run: stops it when 25% of the last 40 answers are cut off, unreadable or failed.
 4. Recovery (table below).
-5. When all four are complete: [`benchmark/results/README.md`](results/README.md) (one analysis of all runs, written by `summarize.py`); the run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. Nothing else stays at the `results/` level.
+5. When all four are complete: [`benchmark/results/README.md`](results/README.md) (one analysis of all runs, written by `summarize.py`); the run folders of earlier rounds move to `project/archive/benchmark-results-before-<date>/`. The retrieval check outputs (`retrieval-<date>/`) stay.
 
 ## Steps for the LLM
 
@@ -76,10 +76,10 @@ Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the fro
 
 ## After the round
 
-1. `ls benchmark/results`: four run folders and [`README.md`](../README.md), nothing else. Read [`README.md`](../README.md).
+1. `ls benchmark/results`: four run folders, [`README.md`](results/README.md) and the retrieval check outputs (`retrieval-<date>/`), nothing else. Read [`README.md`](results/README.md).
 2. `python3 project/tools/lint.py` reports 0 problems; `python3 -m unittest harness/test_tools.py` and `python3 -m unittest benchmark/runner/test_runner.py` pass. Read the results, not only the exit codes.
 3. Add one entry to [`project/plan.md`](../project/plan.md) (Decisions, latest first): what ran, the final scores, time and cost against the projection, anything unexpected. Update the "Result so far" cells in [`benchmark/models.md`](models.md), section 4, from the README.
-4. Commit everything (run folders without `traces.jsonl`, [`README.md`](../README.md), the archive move, the plan and models changes). The message describes the change in plain words and names no model.
+4. Commit everything (run folders without `traces.jsonl`, [`README.md`](results/README.md), the archive move, the plan and models changes). The message describes the change in plain words and names no model.
 5. Push the session branch, open a pull request, merge it with a merge commit (not squash), and check that `main` holds [`benchmark/results/README.md`](results/README.md). Do this yourself in the same session.
 6. Reply to the human: the Final score table and the Reading lines of the README, actual time and cost against the projection, anything the human must decide.
 

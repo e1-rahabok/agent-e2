@@ -22,7 +22,7 @@ Will the proposal protect the VMs? What causes the slowdown, and what would you 
 - The reservations cannot be granted: total reservations are capped at 75% of each uplink, 2 × 18.75 = 37.5 Gb/s per host, against 40 × 2 = 80 Gb/s. Per-VM reservations also need a reservation for virtual machine traffic at the switch, which is 0 today, and they enter DRS placement.
 
 ## Notes
-- Drafted by Claude 2026-11-12 for the network slots of question set 1.0 (origin: synthetic). Counts only after author approval.
+- Drafted by Claude 2026-11-12 (origin: synthetic). Counts only after author approval.
 - Revised after the independent review (2026-11-12): the shares now cause the symptom; shares divide only among active traffic types (vSphere Networking, Bandwidth Allocation for System Traffic; netioc, section Shares and its misconceptions).
 
 ## Metadata
@@ -44,7 +44,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/concepts/netioc
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-12, network slots (benchmark/design.md, section 3)"
+source_path: "Drafted by Claude 2026-11-12"
 misconception_type: []
 status: draft
 ```

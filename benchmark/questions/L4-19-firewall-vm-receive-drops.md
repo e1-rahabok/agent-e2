@@ -23,7 +23,7 @@ What causes the drops, and what do you change? What would you check before chang
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
-- Revised 2026-11-12 (question set 1.0): the ring size advice no longer cites the book; Ready and per-vCPU saturation added to the stem so the ring, not CPU, is the cause. After the independent review: vsish counters read as increases; Broadcom KB 2039495 (VMXNET3 loss in high bursts when buffers run out) moved here from the key.
+- Revised 2026-11-12: the ring size advice no longer cites the book; Ready and per-vCPU saturation added to the stem so the ring, not CPU, is the cause. After the independent review: vsish counters read as increases; Broadcom KB 2039495 (VMXNET3 loss in high bursts when buffers run out) moved here from the key.
 ## Metadata
 ```yaml
 id: "0060"
@@ -44,7 +44,7 @@ knowledge:
 knowledge_main: vsphere/technology/network/vnic-rx-drops
 attachments: []
 origin: synthetic
-source_path: "Drafted by Claude 2026-11-05 for the Level 400 allocation (benchmark/design.md, section 3.6)"
+source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [layer-confusion]
 status: draft
 ```
