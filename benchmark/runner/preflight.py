@@ -4,7 +4,7 @@
 The first full benchmark found out after 2 hours that a reasoning model was cut off at the token cap on 85% of its
 answers. Every check here would have caught that in two minutes. For each run of the round (model and modes) it:
   1. reads the account credits;
-  2. answers a sample (4 multiple-choice, 2 judged, 1 screenshot question) in each mode, once per entry of the model's
+  2. answers a sample (6 multiple-choice questions and 1 screenshot question) in each mode, once per entry of the model's
      list `model_params` in config.yaml, in order, until one entry answers cleanly;
   3. checks the sample: no API error, readable letters, no answer cut off at max_tokens, completion tokens well under
      max_tokens, every mode answered;
@@ -32,13 +32,10 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'harness'
 import exitcodes as X  # noqa: E402
 import questions as C  # noqa: E402
 
-JUDGE_TOKENS = (1800, 340)      # judge prompt and reply tokens per judged answer, measured on 3,109 judge calls (2026-11-13)
-JUDGE_SECONDS = 5.0             # judge latency per judged answer
 
 
 def pick_sample(questions, n=7):
-    """Evenly spaced questions so the sample is the same every time: 4 multiple-choice, 2 judged, the rest screenshot.
-    With no judged question in the set (every question multiple choice since Q199, 2026-11-14), 6 multiple-choice."""
+    """Evenly spaced questions so the sample is the same every time: 6 multiple-choice text questions, the rest screenshot."""
     ok = [c for c in questions if c.scorable]
 
     def spaced(items, k):
@@ -47,9 +44,8 @@ def pick_sample(questions, n=7):
         step = max(len(items) // k, 1)
         return items[::step][:k]
     choice = [c for c in ok if c.choice and not c.has_images]
-    judged = [c for c in ok if not c.choice and not c.has_images]
     vision = [c for c in ok if c.has_images]
-    out = spaced(choice, 4 if judged else 6) + spaced(judged, 2) + spaced(vision, max(n - 6, 1))
+    out = spaced(choice, 6) + spaced(vision, max(n - 6, 1))
     return out[:n]
 
 
@@ -87,22 +83,14 @@ def evaluate(rows, max_tokens, modes, min_parse_rate=0.95, max_token_share=0.5):
     return problems, stats
 
 
-def project(stats, n_questions, runs, judged_share, concurrency, judge_cost):
+def project(stats, n_questions, runs, concurrency):
     """Time (minutes) and cost (US$) of the whole run from the sample's per-mode means."""
     seconds = cost = 0.0
     for m, s in stats.items():
         n = n_questions * runs
-        seconds += n * (s['latency'] + judged_share * JUDGE_SECONDS) / max(concurrency, 1)
-        cost += n * (s['cost'] + judged_share * judge_cost)
+        seconds += n * s['latency'] / max(concurrency, 1)
+        cost += n * s['cost']
     return seconds / 60, cost
-
-
-def _judge_cost(meta, judge_model):
-    p = (meta.get(judge_model) or {}).get('pricing') or {}
-    try:
-        return JUDGE_TOKENS[0] * float(p['input']) + JUDGE_TOKENS[1] * float(p['output'])
-    except (KeyError, TypeError, ValueError):
-        return 0.0
 
 
 def run_sample(model, modes, ids, params, cfg_path, log):
@@ -131,9 +119,8 @@ def check_model(model, modes, ladder, cfg, cfg_path, sample, meta, pf, log):
             return {'model': model, 'ok': False, 'refused': True, 'params': params, 'problems': problems, 'attempts': attempts}
         if not problems:
             questions = [q for q in C.load() if q.scorable]
-            judged_share = sum(1 for q in questions if not q.choice) / len(questions)
             return {'model': model, 'ok': True, 'params': params, 'stats': stats, 'attempts': attempts,
-                    'n_questions': len(questions), 'judged_share': judged_share, 'max_tokens': max_tokens}
+                    'n_questions': len(questions), 'max_tokens': max_tokens}
     return {'model': model, 'ok': False, 'problems': attempts[-1]['problems'], 'attempts': attempts}
 
 
@@ -161,8 +148,7 @@ def run_preflight(cfg, cfg_path, plan, client, log=print, only=None):
             v['modes'] = p['modes']
             if v['ok']:
                 conc = (cfg.get('concurrency_by_model') or {}).get(p['model'], cfg['concurrency'])
-                v['minutes'], v['cost'] = project(v['stats'], v['n_questions'], cfg['runs'], v['judged_share'], conc,
-                                                  _judge_cost(meta, cfg['judge_model']))
+                v['minutes'], v['cost'] = project(v['stats'], v['n_questions'], cfg['runs'], conc)
             report['runs'][p['model']] = v
             report['ok'] &= v['ok']
             report['refused'] |= bool(v.get('refused'))

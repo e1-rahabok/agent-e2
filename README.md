@@ -86,7 +86,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | [harness/AGENT.md](harness/AGENT.md)                 | What the agent knows up front, what it decides, its rules, how it is improved                               |
 | [harness/README.md](harness/README.md)               | What each harness part does for an expert answer; modules                                                   |
 | [benchmark/design.md](benchmark/design.md)           | How the benchmark proves the claim; final score                                                             |
-| [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference; judge                      |
+| [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference                             |
 | [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on a local model: setup, steps, pass criteria                                        |
 | [project/plan.md](project/plan.md)                   | Milestones, decisions, open work                                                                            |
 | [CONTRIBUTING.md](CONTRIBUTING.md)                   | How to add or change a file                                                                                 |

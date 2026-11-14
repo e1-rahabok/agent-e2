@@ -1,6 +1,6 @@
 # Models
 
-Candidate models, the frontier reference and the judge for the benchmark. Not indexed.
+Candidate models and the frontier reference for the benchmark. Not indexed.
 Settings: [benchmark/runner/config.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/config.yaml). Why a small local model can win: [MISSION.md](../MISSION.md), section 3. Model size: section Model size and speed below.
 
 ## 1. What model the goal needs
@@ -143,16 +143,8 @@ Preferred, not required:
 - Mode `web`: search available, Opus decides. The baseline prompt plus two tools, web search and page fetch, offered with `tool_choice: auto` and no instruction to search; at most 5 tool calls ([harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `web_search_on`). Opus may answer from its own knowledge without a search, as in a chat product with search on. `tools_used` in `answers.csv` records each search and fetch it chose.
 - No run with the tools removed: a user cannot switch search off in a chat product by typing a prompt, so that run measures nothing a user meets (author, 2026-11-13). The result without tools of 2026-11-13 (67%) stays in the archive as history.
 
-## 6. Judge
-- No judged question in the run set since 2026-11-14 (Q199): every question is multiple choice, so the judge is not called. It stays for judged questions, if any return; archiving it is open (project/plan.md, M4).
-- Grades judged answers 0-3: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py). Method: [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 14.
-- Model: `judge_model` in `config.yaml`, now openai/gpt-6.1-terra (reason is openai/gpt-5.6-sol is 4x the price with minimal difference).
-- Rules:
-  - never a candidate (the runner refuses the benchmark);
-  - a different vendor from the frontier reference, so no model family grades its own answers;
-  - vision, because screenshot questions can be free text;
-  - temperature 0.
-- The judge is only used in benchmark. It is never deployed: at a customer site nothing is graded. In real world, VMware Administrator is the real judge. 
+## 6. Judge (archived)
+- Archived 2026-11-14 (author): every benchmark question is multiple choice (Q199), so nothing is graded by a model. Code: [project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py). In the real world the VMware administrator is the judge: answers are rated in the product and in the live test.
 
 ## 7. Removed
 | Model | Date | Reason |

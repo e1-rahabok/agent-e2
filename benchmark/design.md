@@ -74,12 +74,11 @@ Levels follow `KNOWLEDGE-ENGINEERING.md`, section Misconceptions and Level 400.
 | Answer type | The answer is | Scored by |
 |---|---|---|
 | Deterministic | One or more option letters (A, B, C, ...). Exactly right or not | The runner, by comparing letters |
-| Judged | Free text | A judge model, 0-3 against the key points (section 14). None in the run set since 2026-11-14 |
 
 - Every question of the run set is deterministic (author, Q199 F, 2026-11-14): exact, cheap, free of scorer bias, and covered by consensus of samples. The judge scored free text unreliably: a 250-word answer scored 0 when one side sentence contradicted a key point, and judged answers carried most of the confident-wrong rate.
 - What options lose, and where it is measured instead: a real administrator asks without options, and options can reward recognition. The guard in the set: many plausible false options, each wrong for a reason the knowledge base states, the Level 300 misconception among them, and exact match of the whole set (section 3.8). The free-text answer itself is measured in the live test, judged by the author.
 - Example, deterministic ([CPU reservation behaviour](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-05-cpu-reservation-behaviour.md)): "Choose all the correct statements" about CPU reservation, options A to G. Key: A, B, C, D. Any other set of letters is wrong.
-- Metadata: `answer_type: deterministic | judged`.
+- Metadata: `answer_type: deterministic` (lint rejects any other value).
 
 ### 3.4 By input type
 | Input type | What it is | How it reaches the model |
@@ -156,7 +155,7 @@ The frontier model must be able to answer every question from public knowledge. 
 - F1. Public words only. Counter and feature names as the product shows them (vCenter, VCF Operations, esxtop, Windows, Linux). No Agent E2 terms: SP5 Framework, Triple See Method, KPI, realm, IaaS high utilization, virtual motherboard (say VM), Close for Business.
 - F2. No vCommunity management pack metrics: Cluster Performance, Cluster Consumption and Cluster Risk, Close for Business, VM, Guest OS and ESXi Performance (%), inter-host imbalance, any `vCommunity|` key. Native VCF Operations metrics are allowed: CPU Contention (%), Memory Contention (%), the 20-second peak metrics, Capacity Remaining.
 - F3. Decidable from mechanisms and public documents. A strong expert without Agent E2 could answer it. An author threshold appears only when the prompt states it ("your team alerts at 10 ms").
-- F4. The rules hold for the title, the prompt, the options, `## Likely wrong answer` and `## Expected key points`: the judge reads the key points, and a frontier answer cannot state a term it has never seen.
+- F4. The rules hold for the title, the prompt, the options, `## Likely wrong answer` and `## Expected key points`: reviewers read the key points as the reasons of the key.
 - F5. Evidence first. A Level 300-400 stem is an operator's situation with the data a tool shows: values, a table, a time window. Not a knowledge-file sentence turned into a question (the 2026-11-11 review found most synthetic questions tested recall of the knowledge base).
 - F6. No question is picked or dropped because the frontier model fails it. An adversarial set, if ever used, is declared and reported apart.
 - Lint checks F1, F2 and F4 against the list `question_fairness` in [project/tools/tags.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/project/tools/tags.yaml). F3, F5 and F6 are review items (section 11).
@@ -227,7 +226,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Luck | How much of a model's score is unstable. |
 | Confident-wrong rate | Answers that would mislead an operator. |
 | Unsure rate, accuracy when answered | A cautious model with gaps vs a reckless one. |
-| Misconception rate | How often the misconception option is picked, or a judged answer states it. The core Level 400 signal. |
+| Misconception rate | How often the misconception option is picked. The core Level 400 signal. |
 | Override rate | Agent E2 answers that state the misconception although every needed file was read ([benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 1). |
 | Retrieval recall | Agent E2 only: whether the needed files reached the model; separates retrieval from reasoning. |
 | Stages used, verifier flags | Which stages of Agent E2 acted (compute, gap follow-up, repair, consensus), and the web reference's tool calls. |
@@ -236,16 +235,15 @@ The frontier model must be able to answer every question from public knowledge. 
 ### 7.4 Final score
 - One number, 0-100%, for each model and mode (Base, Agent E2, web). Sub-scores support it: by answer type, by input type, by level.
 - Question credit, 0 to 1, the mean of the 5 runs (author, 2026-11-13):
-  - deterministic: the share of runs with exactly the right letters;
-  - judged (none in the run set since 2026-11-14): the mean judge score over the runs, divided by 3.
+  - the share of runs with exactly the right letters.
 - Worst run: the same score with each question on its lowest run. Reported next to the final score as consistency; not a gate.
 - Final score = sum of question credits / number of questions. Every question weighs the same, whatever its level, answer type or input type.
 - Sub-score = the same mean within one group. A question counts for every input type it includes. The mix of the set (section 3.6) sets how much each group weighs in the final score.
 - Reasons:
   - mean, not worst run: an operator asks once and gets one answer; the mean of the runs is the best estimate of that answer's quality. The worst run measures something else (does it never fail?) and stays in the report as consistency. Until 2026-11-13 the worst run counted;
   - one weight per question: no group can carry the score by a formula choice; coverage keeps the mix honest (section 3.7);
-  - judge score / 3: a partly right judged answer earns part credit, as a human examiner would give. A deterministic answer has no part credit, because a partly right set of letters is a wrong answer an operator would act on.
-- Confident-wrong rate: wrong letters that are not Unsure (and, for a judged question, a score of 0 not marked unsure).
+  - no part credit: a partly right set of letters is a wrong answer an operator would act on.
+- Confident-wrong rate: wrong letters that are not Unsure.
 - Margin: 95% interval on the final score from the number of questions (section 4).
 - Runner: [benchmark/runner/report.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/report.py), function `final`. Report table `Final score`.
 
@@ -336,37 +334,9 @@ For the set:
 - Column names are the product's metric names (for example `CPU|Ready (%)`, `Usage for vm-01 (Percent)`), so the reading follows the product, not the header's English.
 - A CSV is generated by a seeded script, then checked: every value the key relies on is in it, and nothing contradicts the key. Time stamps, object names and noise are realistic; names are invented, never a customer's.
 
-## 14. Judged questions and the judge
-- None in the run set since 2026-11-14 (author, Q199 F): every question is multiple choice. The judge code stays in the runner; whether to archive it is open (project/plan.md, M4). The rules below hold for any judged question added later.
-- Questions with `answer_type: judged` are answered without options and scored 0-3 by a judge model. Code: [benchmark/runner/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/judge.py).
-- The candidate runs in the same modes as for deterministic questions (Base, Agent E2, web), with an open-answer prompt: plain text, at most 250 words, conclusion first, then mechanism and reason, then what to check next; say so when the information does not settle the question. Code: [harness/modes.py](https://github.com/e1-rahabok/agent-e2/blob/main/harness/modes.py), `PROMPTS['open']`.
-- The judge gets: the prompt with its tables, the images, `## Expected key points`, `## Likely wrong answer`, and the answer. The candidate never sees the key.
-- `## Expected key points` is the answer key for the judge, not a script for the candidate:
-  - each bullet is one fact a correct answer must state, in any words, in any order;
-  - a full answer covers every key point. Four key points take about 3-6 sentences (80-150 words), the length an expert gives a colleague;
-  - order: the conclusion first, then the reason, then what to check next;
-  - as many key points as the question takes. Most questions take 2-5. A long scenario can take more; the 250-word limit is then too short (a per-question answer length is a to-do);
-  - a key point that is only nice to know is not a key point: it goes in `## Notes`.
-- Example ([CPU Latency without contention](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-01-cpu-latency-frequency.md)): a full answer reads like: No. Ready and Co-stop are flat, so the VM is not waiting for a physical CPU. CPU Latency rose because the BIOS power policy lowered the clock speed: the VM runs slower, as on an older CPU. Unlike Disk or Memory Latency, CPU Latency does not always mean a performance problem. Check the power policy and the frequency.
-- Rubric:
-
-| Score | Meaning |
-|---|---|
-| 0 | Wrong, falls into the likely wrong answer, or contradicts a key point. Also: says the information does not settle it (marked unsure). |
-| 1 | Avoids the likely wrong answer, but the reason is missing or wrong. |
-| 2 | Correct conclusion with the right reason (mechanism or vantage point from the key points). |
-| 3 | As 2, and states what to check next, or covers every key point. |
-
-- Judge rules (in its prompt): judge facts, not style or length; a contradiction of a key point caps the score at 0; the key points are the truth even where general IT practice differs; reward nothing the key points do not contain.
-- Reply: one JSON object (`score`, `misconception`, `unsure`, `missed`, `reason`). One retry when it is not valid JSON; then the answer counts as failed and `--resume` retries it.
-- Each run of a question is judged separately. The question credit is the mean score over the runs / 3 (section 7.4).
-- Judge choice: a frontier model, never a candidate, from a different vendor than the frontier reference, with vision, temperature 0. See [benchmark/models.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/models.md), section 6.
-- Recorded per answer in `answers.csv`: `judge_model`, `judge_score`, `judge_missed`, `reason`, `misconception`, `unsure`, and the answer text.
-- Checks on the judge:
-  - the author reviews every score 0 and every question where runs disagree by 2 or more points;
-  - an author score overrides the judge: correct the key points, then re-score;
-  - a key point the judge misreads is rewritten as one testable fact per bullet.
-- Cost: one judge call per judged answer, about 1,800 input tokens (more with a table; `JUDGE_TOKENS` in benchmark/runner/preflight.py).
+## 14. Free-text answers
+- Not in the benchmark (author, Q199 F, 2026-11-14). The judge model that scored them 0-3 is archived with its rubric ([project/archive/legacy/judge-2026-11-14/judge.py](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/legacy/judge-2026-11-14/judge.py)); this section's earlier rules are in git history.
+- Free-text answers are measured in the field: the author judges real questions in the live test ([benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md), step 9) and operators rate every answer in the product ([MISSION.md](https://github.com/e1-rahabok/agent-e2/blob/main/MISSION.md), section 5, Feedback).
 
 ## 15. Target history
 - Goal: the local model with the knowledge base answers better than the best frontier model without it.

@@ -29,7 +29,7 @@ product: [vsphere]                # vsphere | vsan | nsx | vcf-operations | wind
 technology: [cpu]                 # cpu | memory | storage | network | system
 task: read-metric                 # read-metric | troubleshoot | decide-capacity | explain-mechanism | judge-setting
 level: 400                        # 100 | 200 | 300 | 400
-answer_type: deterministic        # deterministic | judged
+answer_type: deterministic        # every question is multiple choice (Q199)
 input: [text]                     # text | table | screenshot; from the attachments
 object: [vm]                      # vm | esxi | cluster | resource-pool | datastore | network | guest-os
 tool: [vcenter]                   # vcenter | vcf-operations | esxtop | guest-os-tools | none

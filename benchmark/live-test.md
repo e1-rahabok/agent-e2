@@ -34,7 +34,6 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 |---|---|
 | Runner `--local <url>`: point [`harness/llm.py`](../harness/llm.py) at the local server; no API key required | Today the client requires `AI_GATEWAY_API_KEY` |
 | Vision and context checks from config, not from the gateway model list | The runner reads the `vision` tag and context window from the gateway; a local server has no tags |
-| Judge later, only if judged questions return to the set (none since 2026-11-14, Q199): save judged answers offline, score them after the VM is back online | The judge is a frontier model; it is not on the offline VM |
 | Timings per model turn in `answers.csv` (time to first token, tokens per second) | Speed on the target GPU is a result of this test |
 
 ## 5. Steps
@@ -42,8 +41,8 @@ Why it matters: the benchmark reaches models through a gateway; the mission is a
 2. Build the VM, attach the GPU, copy the bundle in. Then block egress.
 3. Prove the block: an outbound request from the VM fails; the firewall log shows the attempt dropped.
 4. Smoke test: one question on Base and on Agent E2; the trace shows the case, the reading plan, the computed facts and the checks working.
-5. Benchmark: every question of the run set, Agent E2 and Base, 5 runs, at `context_window: 32000`, with the deployment profile (`consensus_samples: 3`; [harness/README.md](../harness/README.md), section 6a), since this run is the release score. Deterministic questions are scored on the VM; judged answers are saved for the judge.
-6. Judge: bring the saved answers to a connected machine; the judge scores them; the report is built.
+5. Benchmark: every question of the run set, Agent E2 and Base, 5 runs, at `context_window: 32000`, with the deployment profile (`consensus_samples: 3`; [harness/README.md](../harness/README.md), section 6a), since this run is the release score. Every question is multiple choice, so it is scored on the VM.
+6. Report: the runner scores the letters on the VM and builds the report; nothing needs a connected machine.
 7. Compare: paired, question by question, with the gateway run of the same model on Agent E2 (`design.md`, section 8). Note any question that changes.
 8. Speed: median and 95th percentile time per answer and per model turn, on Agent E2; GPU memory at peak.
 9. Operator session: the author asks 20 real questions from the field, with screenshots, and judges each answer (right, partly right, wrong, unsure). The assistant runs the conversation mode (`modes.converse`): for each question, record whether it asked a clarifying question, whether asking was right (odd question, text and attachment disagree, a missing fact that changes the answer), and the answer after the reply. Every wrong answer is traced to knowledge, retrieval or model.

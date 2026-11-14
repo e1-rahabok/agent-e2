@@ -212,8 +212,8 @@ def main():
         if km is not None and km not in ((fm or {}).get('knowledge') or []):
             bad(f, f'knowledge_main "{km}" must also be listed in knowledge (benchmark/README.md)')
         at = (fm or {}).get('answer_type')
-        if at not in ('deterministic', 'judged'):
-            bad(f, f'answer_type "{at}" must be deterministic or judged (benchmark/design.md, section 3.3)')
+        if at != 'deterministic':
+            bad(f, f'answer_type "{at}" must be deterministic: every question is multiple choice (Q199; benchmark/design.md, section 3.3)')
         if (fm or {}).get('level') not in (100, 200, 300, 400):
             bad(f, 'level must be 100, 200, 300 or 400 (benchmark/design.md, section 3.2)')
         atts = (fm or {}).get('attachments') or []
