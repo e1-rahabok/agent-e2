@@ -9,27 +9,52 @@
   - [the VM export](0239/vms-monday-0830-0930.csv): per VM, its pool and host, the busy-hour averages of CPU Ready, Co-stop, Usage, Memory Contention, Balloon and virtual disk latency;
   - [the pool and host export](0239/pools-and-hosts-monday-0830-0930.csv): every 5 minutes, the CPU usage of each pool (MHz) and of each host (% of its 32 GHz).
 
-What is the most likely cause? Weigh the evidence for and against CPU capacity, memory, storage and the batch jobs. Give the checks in order, what you change now, and what you do not change, with reasons.
+Which statements are correct?
+
+- A. The most likely cause is a 40 GHz CPU limit on RP-Web, not on RP-Batch: CHG-4471 hit the wrong pool.
+- B. RP-Web CPU usage sits flat at about 39.8-40.0 GHz in every 5-minute sample, which is the shape of a ceiling.
+- C. RP-Batch varies between about 28.6 and 32.7 GHz, so nothing in the data shows it held at 40 GHz.
+- D. The batch jobs take CPU from the web VMs: a limit on RP-Batch starves its sibling pool.
+- E. Many VMs show high CPU Ready, so the cluster is short of CPU and the two hosts are needed.
+- F. Every host runs at about 30-48% of its CPU, so the cluster is not short of CPU capacity.
+- G. Web VMs show 9-18% Ready on every host, batch VMs on the same hosts below 1%: the wait follows the pool, not the host.
+- H. A pool limit applies across the cluster, so a web VM on a quiet host is held back by the load of web VMs on other hosts.
+- I. Memory Contention near 0 on every VM, web and batch alike, rules memory out as the cause of the slowness.
+- J. batch-03's 3 GB of balloon shows its host is short of memory now, so memory is a second cause.
+- K. web-17's virtual disk latency of about 9 ms explains the slow pages across all the web applications.
+- L. CPU Ready leaves out the time a vCPU is held back by a limit; a limit shows only as lower Usage.
+- M. In vCenter, Max Limited on the web VMs shows how long each of them was held back by a limit in the hour.
+- N. More vCPUs on the web VMs would give them more CPU, because each added vCPU brings its own entitlement.
+- O. Remove the limit from RP-Web now, put the intended cap on RP-Batch if still wanted, then check that web VM Ready falls.
 
 ## Likely wrong answer
-"Many VMs show high CPU Ready, so the cluster is short of CPU: add the two hosts." Or "The batch jobs take the CPU from the web VMs."
+- D: "The batch jobs take the CPU from the web VMs."
+- E: "Many VMs show high CPU Ready, so the cluster is short of CPU: add the two hosts."
 
 ## Expected key points
-- Most likely cause: a CPU limit of 40 GHz on RP-Web, not on RP-Batch: CHG-4471 hit the wrong pool.
-- Evidence: RP-Web CPU usage is flat at about 39.8-40.0 GHz in every 5-minute sample, a ceiling; RP-Batch varies (about 28.6-32.7 GHz) and is not capped by 40 GHz.
-- The web VMs show CPU Ready of 9-18% on every host, while the batch VMs on the same hosts show below 1%. Ready includes the time a VM is held back by a limit.
-- Not CPU capacity: every host runs at about 30-48% of its CPU. A pool limit is cluster-wide, so a web VM on a quiet host is held back by the load of web VMs on other hosts.
-- Not memory: Memory Contention is near 0 everywhere. batch-03 shows 3 GB ballooned with 0 contention: past reclamation, not current waiting.
-- Not storage: virtual disk latency is low; web-17 at about 9 ms is one VM and does not explain every web application.
-- Not the batch jobs: they run within their normal usage and do not touch RP-Web's CPU.
-- Checks: the CPU limit of RP-Web and RP-Batch in the pool settings; the script and the change record; Max Limited on the web VMs (vCenter) to confirm the time spent held back.
-- Change now: remove the limit from RP-Web; put the intended cap on RP-Batch if still wanted. Then check that Ready on the web VMs falls.
-- Do not add hosts: the cluster has spare CPU, and a pool limit caps the web VMs whatever the host count. Do not add vCPUs: more vCPUs share the same 40 GHz.
+- Answer: A, B, C, F, G, H, I, M, O.
+- A true: the pool the change was meant for runs below the limit and the other pool sits flat at it: the change hit the wrong pool.
+- B true: export, RP-Web 39,815-40,007 MHz, flat sample after sample near a round number.
+- C true: export, RP-Batch 28,566-32,694 MHz; it varies with its load.
+- D false: a limit caps only its own pool and frees CPU for the siblings; it cannot raise Ready in another pool.
+- E false: Ready confined to one pool, with spare host CPU, is a limit. Check pool and VM limits first.
+- F true: export, hosts at 29.9-47.6% of 32 GHz.
+- G true: export, web VMs 9.2-17.9% Ready, batch VMs 0.8% at most, on the same hosts.
+- H true: a pool's limit is cluster-wide while each VM runs on one host.
+- I true: export, Memory Contention 0.00-0.19% on every VM.
+- J false: Balloon is memory reclaimed earlier; batch-03 shows Memory Contention 0, so it does not wait now.
+- K false: one VM at about 9 ms cannot explain slow pages on every web application; the other web VMs sit at 1-4 ms.
+- L false: Ready includes the time held back by a limit (the limbo queue); vCenter also reports it as Max Limited.
+- M true: Max Limited (ms) confirms the time spent held back by a limit.
+- N false: more vCPUs share the same 40 GHz pool limit.
+- O true: the fix is the setting; adding hosts does not help a pool at its limit. Then confirm Ready falls.
 
 ## Notes
 - Drafted 2026-11-12 as the second long scenario.
 - CSVs generated by a seeded script: RP-Web 39,815-40,007 MHz; RP-Batch 28,566-32,694 MHz; the VM usage of each pool sums to its pool mean (39,939 and 30,122 MHz); host usage is the sum of its VMs plus about 3% for the kernel, 30-48% of 32 GHz; web VMs Ready 9.2-17.9%, batch VMs 0.8% at most.
 - A limit on a resource pool applies across the cluster (vSphere 9.1 Resource Management, Resource Pool Attributes). Ready includes limit time; vCenter reports it as Max Limited.
+- Option J does not say where batch-03's balloon came from; whether a limit causes ballooning is open (Q214).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -39,7 +64,9 @@ product: [vsphere, vcf-operations]
 technology: [system, cpu, memory, storage]
 task: troubleshoot
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [A, B, C, F, G, H, I, M, O]
+misconception: [D, E]
 input: [table]
 object: [resource-pool, vm, esxi, cluster]
 tool: [vcf-operations, vcenter]

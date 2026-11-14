@@ -6,17 +6,42 @@
 - The application team sees latency spikes of a few hundred microseconds on the first messages after a quiet period, not during busy periods.
 - They ask you to set every host in the data center to High Performance.
 
-Should you? What in the Balanced policy can cause this, what does High Performance change, and what does it cost?
+Which statements are correct?
+
+- A. Balanced always slows VMs down, so High Performance belongs on every host in the data center, not only these.
+- B. A host power policy cannot add microseconds of latency, so the cause must be in the network.
+- C. Under Balanced, idle cores can drop into deeper C-states that take longer to wake, delaying the first work after a lull.
+- D. High Performance turns off the power-saving features, giving steadier, lower latency to latency-sensitive work.
+- E. When some cores are idle, Balanced can let the busy cores reach higher Turbo Boost frequencies than High Performance allows.
+- F. High Performance gives up the power savings of Balanced, so the hosts draw more power.
+- G. For most workloads, the Balanced policy costs little or no performance.
+- H. Apply High Performance to the hosts that run the latency-sensitive VM, such as a dedicated cluster or host group.
+- I. If High Performance is not enough, turning off C-states, C1E included, in the BIOS of those hosts can help.
+- J. Turning off deep C-states in the ESXi settings also turns off Turbo Boost on those hosts.
+- K. Turning off all C-states in the BIOS is the vendor's advice for every host, for the best performance per watt.
+- L. Latency Sensitivity High on the VM is free: the physical cores it uses stay available to other VMs.
 
 ## Likely wrong answer
-"Balanced always slows VMs down: set High Performance on every host." Or: "A power policy cannot add microseconds; look at the network."
+- A: "Balanced slows everything down: set High Performance everywhere."
+- B: "A power setting can't add microseconds; look at the network."
 
 ## Expected key points
-- Under Balanced, idle cores enter deeper sleep states (C-states) and can run at a lower frequency. A deeper state takes longer to wake, so the first work after a quiet period starts late.
-- High Performance turns those power-saving features off: steadier, lower latency for latency-sensitive work.
-- Cost: more power and heat. And when some cores are idle, Balanced can let the busy cores reach higher Turbo Boost frequencies than High Performance allows, so some workloads lose peak speed.
-- For most workloads Balanced costs little or nothing. Apply High Performance to the hosts that run the latency-sensitive VM (a dedicated cluster or host group), not to every host.
-- If that is not enough: deeper measures for that host or VM, such as C-states (including C1E) off in the BIOS, or Latency Sensitivity High on the VM with full reservations.
+- Answer: C, D, E, F, G, H, I.
+- A is false: Balanced typically costs little or nothing, and on hosts with idle cores it can raise performance through Turbo Boost.
+- B is false: a deeper C-state takes longer to start running again, which matches spikes on the first messages after a quiet period.
+- C is true: Balanced lets ESXi use deep C-states (C2 or deeper) when cores are idle; High Performance stops at C1.
+- D is true: High Performance uses no power-saving features; the Balanced policy can slightly reduce performance of latency-sensitive workloads.
+- E is true: idle cores leave thermal room, so busy cores boost higher (about 151% of nominal under Balanced against about 130% under High Performance in the whitepaper chart).
+- F is true: High Performance has no power-saving features; reducing power is what Balanced is for.
+- G is true: Balanced typically gives little or no performance reduction.
+- H is true: use High Performance only where sub-second latency matters; elsewhere it costs power and can lose Turbo headroom.
+- I is true: C-states including C1E can reduce the performance of a few workloads highly sensitive to latency; deactivating them in the BIOS can help those.
+- J is false: firmware thermal management still sets each core's frequency; turning off deep C-states does not turn off Turbo.
+- K is false: for the best performance per watt the advice is to activate all C-states in the BIOS and leave the choice to ESXi.
+- L is false: Latency Sensitivity High removes the assigned physical cores from the pool for other VMs and VMkernel worlds, and it needs full reservations.
+
+## Notes
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -26,7 +51,9 @@ product: [vsphere]
 technology: [cpu]
 task: judge-setting
 level: 300
-answer_type: judged
+answer_type: deterministic
+answer: [C, D, E, F, G, H, I]
+misconception: [A, B]
 input: [text]
 object: [esxi]
 tool: [none]

@@ -8,22 +8,42 @@
   - clientStats: droppedRx rose by 2,620.
   - vmxnet3 rxSummary: running out of buffers rose by 2,620; number of times the 1st ring is full rose by 354; 1st ring size 512; 2nd ring size 512; all other reasons unchanged at 0.
 
-What causes the drops, and what do you change? What would you check before changing it?
+Which statements about the cause, the fix and the checks before the fix are correct?
+
+- A. The drops happen inside the host, between the virtual switch port and the guest driver, not on the physical network.
+- B. The physical network is congested: ask for faster uplinks, or ask the network team to check the switch.
+- C. The guest's VMXNET3 receive ring is too small for the bursts: the drop count matches "running out of buffers".
+- D. The fix is a larger receive ring in the guest's VMXNET3 driver, for example 2,048 instead of 512, within the driver's maximum.
+- E. Before raising the ring, check that the guest drains it in time: no vCPU in Ready or Co-stop, none saturated by packet work.
+- F. A larger receive ring stops the drops even when the guest's vCPUs cannot keep up with the packet rate.
+- G. The drops come from CPU Ready, which keeps the vCPUs from emptying the ring.
+- H. For a firewall appliance, check whether the VM uses receive side scaling, so several vCPUs process its receive queues.
+- I. The vSphere performance charts show that packets were dropped, but only vsish on the host shows why.
+- J. A full VMXNET3 receive ring is invisible to the hypervisor: only the guest counts the drop.
+- K. Receive drops on the vNIC belong to the network team, since the packets arrived over the uplinks.
 
 ## Likely wrong answer
-"The physical network is congested: ask for a faster uplink, or ask the network team to check the switch."
+- B: "The physical network is congested: ask for a faster uplink, or ask the network team to check the switch."
+- K: "Receive drops are a network problem, so the network team owns them."
 
 ## Expected key points
-- The VM's receive ring is too small for the bursts: the drop count matches "running out of buffers", and the 1st ring is full hundreds of times. All other drop reasons are 0.
-- The drop happens inside the host, between the virtual switch and the guest driver, not on the physical network: the uplinks show nothing.
-- Fix: raise the receive ring size in the guest's VMXNET3 driver (512 is small; for example 2,048 or more, within the driver's maximum).
-- Check first that the guest drains the ring in time: no vCPU waiting on Ready or Co-stop, no vCPU saturated by packet processing. A larger ring absorbs a burst; it does not help a guest that cannot keep up.
-- For a network appliance, also check whether the VM uses receive side scaling (RSS), so several vCPUs process its receive queues.
-- vSphere charts show that packets are dropped, not why: vsish on the host shows the reason.
+- Answer: A, C, D, E, H, I.
+- A true: the uplinks show nothing; the drop happens between the virtual switch and the guest driver.
+- B false: the uplinks show no drops and no errors, and every drop matches a full guest ring.
+- C true: the drop count matches "running out of buffers", the 1st ring is full hundreds of times, and all other drop reasons are 0.
+- D true: 512 is small for the bursts; raise the receive ring in the guest driver.
+- E true: a larger ring absorbs a burst; it does not help a guest that cannot keep up.
+- F false: a ring that the guest does not empty in time fills whatever its size; check the guest's CPU and the vCPUs' Ready and Co-stop first.
+- G false: CPU Ready is below 1% and no vCPU is saturated, so the ring size, not CPU, is the cause.
+- H true: RSS spreads the receive queues over several vCPUs for network-intensive appliances, at some CPU cost.
+- I true: only the rxSummary counters in vsish tell a full ring from the other causes.
+- J false: the drop is counted at the port (droppedRx), at the VM (esxtop %DRPRX, vCenter droppedRx) and by the guest.
+- K false: a full VMXNET3 ring is caused and fixed in the Guest OS driver, so the Guest OS owner fixes it.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12: the ring size advice no longer cites the book; Ready and per-vCPU saturation added to the stem so the ring, not CPU, is the cause. After the independent review: vsish counters read as increases; Broadcom KB 2039495 (VMXNET3 loss in high bursts when buffers run out) moved here from the key.
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 ## Metadata
 ```yaml
 id: "0060"
@@ -34,7 +54,9 @@ object: [vm, guest-os]
 tool: [vcenter, esxtop]
 task: troubleshoot
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [A,C,D,E,H,I]
+misconception: [B,K]
 input: [text]
 knowledge:
   - vsphere/technology/network/vnic-rx-drops

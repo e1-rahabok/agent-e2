@@ -9,24 +9,49 @@
 - Inside rpt-app-03, `free` reports 16 GB in total, almost nothing free, and 3 GB of guest swap in use. VMware Tools runs and the balloon driver is loaded. The application is slow.
 - The application team asks for two changes: set sched.mem.maxmemctl to 0 on the VM so the balloon stops pushing the guest into swap, and move the VM with vMotion to a host that has even more free memory.
 
-What causes Balloon and Swapped on a host with this much free memory? Would the two requested changes help? What do you change, and what do you expect to see afterwards?
+Which statements are correct?
+
+- A. Host swapping happens only when the host itself runs short of memory, so here the Swapped counter must be wrong.
+- B. The 24,576 MB limit on RP-Reporting is below the memory its three VMs use; the pool's Consumed is flat near that value.
+- C. The VM's own limit showing Unlimited does not rule out a limit: a limit on its parent or an ancestor pool also caps it.
+- D. Linux cannot see the pool limit and runs as if all 16 GB were there, so ESX compresses and swaps to stay under it.
+- E. Unlike shares, which act only under contention, a limit caps the pool's memory at all times, even on hosts with free memory.
+- F. With sched.mem.maxmemctl at 0, reclamation on rpt-app-03 stops, because ESX then has no way left to take memory back.
+- G. Host swapping picks pages without knowing which ones the guest needs, unlike a balloon, which lets the guest choose.
+- H. Moving rpt-app-03 with vMotion to a host with more free memory ends the swapping of its memory.
+- I. The expandable reservation of RP-Reporting lets the pool borrow memory from RP-Tenants above its 24,576 MB limit.
+- J. Raise or remove the pool limit so it covers what its VMs need, or size the VMs to fit under it; check ancestor pools too.
+- K. Put a memory limit on each of the three VMs, so that the pool's 24 GB is shared out fairly among them.
+- L. Once the limit no longer binds, swapped and compressed pages return only as the guest touches them: Swapped falls slowly.
+- M. The 3 GB of swap that Linux reports is the 2.1 GB Swapped that vCenter reports, measured from inside the guest.
 
 ## Likely wrong answer
-"Ballooning and swapping happen only when the host is short of memory, and the VM limit is Unlimited, so the counters or the VM tools are wrong." Or: "Turn the balloon driver off with sched.mem.maxmemctl, or vMotion the VM to a bigger host." Both miss the limit on the parent resource pool and the fact that a limit is enforced when the host has free memory.
+- A: "The host is not short of memory and the VM limit is Unlimited, so the counters or the tools are wrong."
+- F: "Turn the balloon driver off with sched.mem.maxmemctl."
+- H: "vMotion the VM to a host with more free memory."
 
 ## Expected key points
-- Cause: the memory limit of the parent pool RP-Reporting (24 GB) is lower than the memory its three VMs touch (about 40 GB configured; Granted of rpt-app-03 alone is 15.4 GB). The VM's own limit of Unlimited does not rule this out: the vendor's troubleshooting text says that with free host memory and high swap or balloon, the VM, its parent pool or an ancestor pool has reached its limit. Unlike shares, a limit applies at all times.
-- Mechanism: the limit caps the physical memory ESX gives to the VMs of the pool. The Guest OS does not know it (Linux sees 16 GB), so it keeps using memory above what the pool allows. The VMkernel then reclaims from the VMs: it inflates the balloon first, then compresses, then swaps (Broadcom KB 326270). That produces Balloon, Compressed and Swapped with a host in the high state. The evidence in the prompt fits: pool Consumed pinned at the limit, all VMs of the pool affected, no VM outside the pool affected, host state high.
-- The first requested change does not help: setting sched.mem.maxmemctl to 0 stops ballooning, but the memory above the limit must still be reclaimed. The vendor says that then the host is forced to swap, which is less desirable than ballooning, and host swapping picks pages blind to what the guest needs.
-- The second requested change does not help: the limit belongs to the pool and travels with the VM. Free memory on the target host is not relevant.
-- Fix: raise or remove the pool limit so it covers the combined demand of its VMs, or right-size the VMs so their working sets fit under it. If the limit is a real contract, size the VMs to fit it; do not add VM limits. Check the ancestor pools too.
-- Expect: the balloon deflates once the VMs are no longer over the limit. Swapped and compressed pages come back only when the guest touches them, so the slowness fades gradually, and the guest swap in use stays until the pages are touched again or swap is emptied.
+- Answer: B, C, D, E, G, J, L.
+- A false: with free host memory and no VM outside the pool reclaimed, swapping comes from a limit on the VM or its pool.
+- B true: 24 GB against 40 GB configured (rpt-app-03 alone has 15.4 GB granted); the pool's Consumed is pinned at the cap.
+- C true: the vendor's troubleshooting text names the VM, its parent pool or an ancestor pool as the place of a limit that is too restrictive.
+- D true: a limit is not visible to the Guest OS; when Consumed tries to grow beyond it, the result is Compressed and Swapped memory.
+- E true: shares act only when demand exceeds supply; a limit is an absolute cap, applied with free host memory too.
+- F false: without the balloon, ESX still reclaims, by compression and host swapping; the memory above the limit must still go.
+- G true: ballooning lets the guest choose; compression and host swapping pick pages without guest knowledge.
+- H false: the limit belongs to the pool and follows the VM to any host; free memory on the target host does not matter.
+- I false: an expandable reservation concerns admission of reservations from the parent; a limit is a separate cap that it does not lift.
+- J true: the fix is the pool limit or the VMs' size; if the limit is a real contract, size the VMs to fit it.
+- K false: VM limits are invisible to the guest and make performance unpredictable; rightsize instead.
+- L true: compressed and swapped data stays out until the guest requests it; the slowness fades gradually.
+- M false: host-level swapping is transparent to the guest and distinct from swapping inside the guest OS.
 
 ## Notes
-- Public source: Broadcom KB 326270, "Impact of virtual machine memory and CPU resource limits" (limit below configured memory: "The VMkernel first tries to reclaim memory by inflating the Balloon Driver", then compression, then swap; "The guest operating system is not aware of this limit"; the Updated On field is empty). VMware vSphere 9.1 PDF (build of 2026-11-02): Monitoring and Performance, memory troubleshooting ("the virtual machine (or resource pool) has reached its resource limit"; the virtual machine, its parent pool or ancestor pools may have a limit that is too restrictive); Resource Management, advanced virtual machine attributes (sched.mem.maxmemctl: "If the ESX host needs to reclaim additional memory, it is forced to swap. Swapping is less desirable than ballooning").
-- Why one answer: the vendor names the pool limit as a cause of balloon and swap on a host with free memory, and the prompt shows the pool limit below the combined memory of its VMs. The two requested changes have no effect on a limit that belongs to the pool.
-- Debatable risk: the knowledge file ballooned.md says a limit causes Swapped and Compressed, not Balloon directly; the vendor KB says balloon comes first (author question Q014 is open). The key follows the vendor KB and the prompt shows a non-zero Balloon. The way a cluster-wide pool limit is split across hosts is not documented in detail, so the key does not predict which VM is hit hardest.
+- Public source: Broadcom KB 326270, "Impact of virtual machine memory and CPU resource limits" ("The guest operating system is not aware of this limit"; the Updated On field is empty). VMware vSphere 9.1 PDF (build of 2026-11-02): Monitoring and Performance, memory troubleshooting ("the virtual machine (or resource pool) has reached its resource limit"; the virtual machine, its parent pool or ancestor pools may have a limit that is too restrictive); Resource Management, advanced virtual machine attributes (sched.mem.maxmemctl: "If the ESX host needs to reclaim additional memory, it is forced to swap. Swapping is less desirable than ballooning").
+- Open author question Q214 (does a memory limit cause ballooning): the knowledge base as written says a limit causes Compressed and Swapped, not Balloon directly. Following it, no option says where the Balloon of the pool's VMs comes from or whether it deflates after the fix; every option holds whichever way Q214 is answered. The old key's balloon-first mechanism (KB 326270) and the expectation that the balloon deflates were dropped for that reason. The prompt keeps the Balloon values as context.
+- The way a cluster-wide pool limit is split across hosts is not documented in detail, so no option predicts which VM is hit hardest. No option compares the pool's Consumed with the exact limit: whether the effective limit includes overhead is open (Q205).
 - Rewritten 2026-11-13 to raise difficulty: the cause moves from a VM limit shown in Edit Settings to a limit on the parent pool (VM shows Unlimited, VMs on three hosts); two plausible wrong fixes added (sched.mem.maxmemctl, vMotion); chart readings and guest counters added as distractors.
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -36,7 +61,9 @@ product: [vsphere]
 technology: [memory]
 task: troubleshoot
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [B, C, D, E, G, J, L]
+misconception: [A, F, H]
 input: [text]
 object: [vm, esxi, resource-pool]
 tool: [vcenter]

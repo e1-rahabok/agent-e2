@@ -7,23 +7,46 @@
 - [The attached export](0235/cluster-cpu-demand-90-days.csv) holds 90 days of cluster CPU demand, as a percentage of usable capacity: the daily average and the highest 5-minute value of each day.
 - The capacity manager fitted a line to the daily averages: "Demand grows about 0.1 point a day from about 63%. We reach 100% in about a year. We can take the new 600-vCPU payroll project when it goes live next month, without buying hosts."
 
-Is the capacity manager right? What do the export and the two VCF Operations numbers tell you, and what do you change?
+Which statements are correct?
+
+- A. The capacity manager is right: 24% remaining, 210 days and a year-long trend leave room for the payroll project.
+- B. At the last three month-end closes, the highest 5-minute demand reached about 93%, 96% and 98% of usable capacity.
+- C. Outside the last two working days of each month, the daily highest values stay at or below about 81% of usable capacity.
+- D. At the current rise of about 2 points a month, the November close is near 100% of usable capacity before the project lands.
+- E. Capacity Remaining is the free capacity right now: usable capacity minus the demand measured in the last collection.
+- F. Capacity Remaining looks only 3 days ahead, so on 12 November it cannot show the month-end close of November.
+- G. The aggressive setting forecasts from the mean of the upper and lower bounds, so short month-end peaks weigh less.
+- H. Moving the policy to aggressive gave the cluster more usable capacity, which is why the forecast shows room.
+- I. For production finance, use a conservative setting, checked so that its upper bound reaches the last month-end peaks.
+- J. The forecast already counts the payroll project, because VCF Operations projects committed demand from vCenter.
+- K. Neither Capacity Remaining nor Time Remaining reads contention, so check VM CPU Ready and Co-stop during the last close.
+- L. With three month-ends in 90 days, the 9.1.1 engine projects the month-end pattern forward as a periodic term.
+- M. The project should not go on this cluster before new capacity is added or other load moves out before the November close.
 
 ## Likely wrong answer
-"Yes: Capacity Remaining is 24% and Time Remaining is 210 days, and the trend gives a year, so there is room for the project."
+- A: "Capacity Remaining is 24% and Time Remaining is 210 days, and the trend gives a year, so there is room for the project."
 
 ## Expected key points
-- No. The daily averages hide the month-end peaks: the highest 5-minute demand reached 93% of usable capacity on 31 August, 96% on 30 September and 98% on 30 October, rising about 2 points a month. The next month-end is near 100% before the project.
-- Outside the last two working days of each month the peaks stay at or below about 81%: the risk is the periodic month-end close, not the daily trend.
-- An aggressive setting keeps the forecast near the mean, so month-end peaks count less; the room is the same, and the cluster runs short at the peaks. For production finance use a conservative setting, high enough that the upper bound reaches the month-end peaks: a 2-day close is a few percent of the points, and a lower percentile leaves it out.
-- Capacity Remaining reports the smallest remaining capacity (usable capacity minus the highest projected demand) in the next 3 days, so in mid-November it does not show the month-end close.
-- The payroll project is committed future demand: no projection includes it. Add its demand on top before deciding.
-- Neither number reads contention: check VM CPU Ready and Co-stop during the last month-end close; if VMs already waited there, the cluster is full at its peaks.
-- Decision: do not place the project without new capacity, or move other load out before the next month-end.
+- Answer: B, C, D, F, G, I, K, M.
+- A false: the daily averages hide the month-end peaks, which already reach 98%; the project is not in any projection.
+- B true: export, highest 5-minute values on 31 August 93.4, 30 September 95.6, 30 October 97.8.
+- C true: every other day peaks at 80.9 or less; the risk is the periodic month-end close, not the daily trend.
+- D true: about 2 points a month on top of 97.8 puts the November close near 100% with no project load added.
+- E false: Capacity Remaining is a projection over the next 3 days, set by its tightest point, not current free capacity.
+- F true: the 3-day window is fixed; a peak further ahead is not in Capacity Remaining.
+- G true: aggressive uses the mean of the bounds; a 2-day close is a few percent of the points and barely moves it.
+- H false: the room is the same; aggressive only lets occasional peaks count less, so the cluster can run short at those peaks.
+- I true: conservative uses the upper bound; for production, check that the upper bound reaches the last month-end peaks before trusting Time Remaining.
+- J false: committed future demand (projects not yet created) is in no projection; add it on top.
+- K true: both numbers read utilization against usable capacity; contention shows in VM CPU Ready and Co-stop at the peak.
+- L false: the 9.1.1 engine fits one time-decay weighted line with no periodic term; a periodic peak counts only through the upper bound.
+- M true: the cluster is full at its month-end peaks before the project; place it only after new capacity or after moving load out.
 
 ## Notes
 - Drafted 2026-11-12. Capacity Remaining looks 3 days ahead; Time Remaining reads the long projection; a conservative risk setting keeps peaks in the forecast (VCF Operations 9.1 documentation, capacity analytics). The key holds for both engines. Before 9.1.1 the engine could project the month-end pattern; the 9.1.1 engine (VCF blog, 2026-10-20) fits one time-decay weighted line to up to 90 days, the length of this export, and keeps a periodic peak only through the upper quantile bound. Capacity Remaining as the smallest remaining capacity: TechDocs 9.1 Capacity Analytics Generated Metrics ("the maximum point") and VCF blog 2025-08-12 ("the minimum capacity left").
 - CSV generated by a seeded script; peaks on the last two working days of each month 88.1-97.8 (month-end days 93.4, 95.6, 97.8); all other days at most 80.9.
+- Option G rests on the risk-level mapping in capacity-forecast (Conservative = upper bound, Aggressive = mean of the bounds), which has an open review note against the 9.1.1 TechDocs.
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -33,7 +56,9 @@ product: [vcf-operations, vsphere]
 technology: [system, cpu]
 task: decide-capacity
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [B, C, D, F, G, I, K, M]
+misconception: [A]
 input: [table]
 object: [cluster]
 tool: [vcf-operations]

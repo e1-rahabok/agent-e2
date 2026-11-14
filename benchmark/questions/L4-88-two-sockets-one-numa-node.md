@@ -7,20 +7,42 @@
 - esxtop, memory panel with the NUMA columns, VM row: NHN 1, N%L 100.
 - The database administrator says: "Windows shows two sockets, so the VM spans two NUMA nodes and half of its memory is remote. Set cores per socket to 16 to fix it."
 
-Is the administrator right? What decides the NUMA layout the VM gets, and what does cores per socket change?
+Which statements are correct?
+
+- A. The administrator is right: two sockets in Windows mean two NUMA nodes, with half of the memory remote.
+- B. NHN 1 and N%L 100 in esxtop show one home node, with all of the VM's memory local to that node.
+- C. Since vSphere 6.5, cores per socket no longer sets the virtual NUMA layout; it only sets the sockets the guest sees.
+- D. ESXi builds the virtual NUMA layout from the host's nodes; 16 vCPUs and 128 GB fit one node, so the VM gets one virtual node.
+- E. To see the NUMA layout from inside the guest, read the NUMA node count in Windows, not the socket count.
+- F. Setting cores per socket to 16 is needed so that ESXi keeps the VM's memory within one node.
+- G. Virtual NUMA is off for this VM by default, because it applies only to VMs of 8 vCPUs or fewer.
+- H. With cores per socket at 8, ESXi creates two virtual NUMA nodes of 8 vCPUs each and splits the memory between them.
+- I. Pinning the VM to node 1 with CPU and memory affinity is the safe way to keep its memory local.
+- J. A remote-memory value that stays the same across two esxtop samples means ESXi keeps migrating the VM between nodes.
+- K. With 16 vCPUs on 20-core nodes the VM must run on hyper-threads, which spreads it over both sockets.
 
 ## Likely wrong answer
-"Two sockets in Windows mean two NUMA nodes and remote memory; set cores per socket to 16."
+- A: "Two sockets in Windows mean two NUMA nodes and remote memory."
+- F: "Set cores per socket to 16 to fix it."
 
 ## Expected key points
-- No: the VM runs in one NUMA node with all of its memory local (one home node, N%L 100).
-- Since vSphere 6.5, cores per socket does not set the NUMA layout. It only sets how the vCPUs are presented to the guest as sockets, which matters for licensing.
-- ESXi builds the VM's virtual NUMA layout from the host's physical NUMA nodes. 16 vCPUs and 128 GB fit one node of 20 cores and 512 GB, so the VM gets one NUMA node.
-- Windows sees two sockets but one NUMA node: read the NUMA node count in Windows, or the esxtop NUMA columns, not the socket count.
-- Changing cores per socket to 16 changes the socket count Windows and SQL Server see, not where ESXi places the memory; it fixes nothing here.
+- Answer: B, C, D, E.
+- A false: the VM runs in one NUMA node with all memory local (NHN 1, N%L 100); the socket count is a presentation for licensing.
+- B true: one number in NHN is one home node; N%L 100 is all memory local.
+- C true: from vSphere 6.5 cores per socket only changes the guest's socket presentation, which can matter for licensing.
+- D true: vNUMA takes its topology from the host; 16 vCPUs and 128 GB fit one node of 20 cores and 512 GB.
+- E true: Windows sees two sockets but one NUMA node; the node count, or the esxtop NUMA columns, show the layout.
+- F false: cores per socket changes the socket count Windows and SQL Server see, not where ESXi places the memory.
+- G false: by default vNUMA is active only for VMs with more than 8 vCPUs, so it is on for this 16-vCPU VM.
+- H false: that was the behaviour before vSphere 6.5; now the VM fits one physical node and gets one virtual node.
+- I false: affinity takes the VM out of NUMA management (no rebalancing, no memory migration).
+- J false: steady remote memory over samples is placement (memory larger than the node), not a migration; a migration shows N%L climbing.
+- K false: hyper-threads come into play by size when the vCPU count is above the physical core count of the node; 16 vCPUs fit its 20 cores, and NHN 1 shows one home node.
 
 ## Notes
 - Sources: the knowledge base (virtual NUMA, section corespersocket: from vSphere 6.5 corespersocket no longer changes the vNUMA topology; the 16-vCPU example that fits one node); Performance Best Practices for VMware vSphere 9.1, virtual NUMA. Replaces a draft on Task Manager vs Performance Monitor whose key could not be verified in a VM (ESXi does not show the guest the host clock registers).
+- No option touches `numa.*` options in Advanced Parameters or when ESXi rebuilds the vNUMA layout: both are open (Q216).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -30,7 +52,9 @@ product: [windows, vsphere]
 technology: [cpu, memory]
 task: explain-mechanism
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [B, C, D, E]
+misconception: [A, F]
 input: [text]
 object: [guest-os, vm, esxi]
 tool: [guest-os-tools, esxtop]

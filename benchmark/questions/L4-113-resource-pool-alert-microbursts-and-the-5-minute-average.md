@@ -6,26 +6,45 @@
   - Red: highest 20-second vCPU Ready in the cycle above 24%, and CPU Contention (%) of the cycle above 6%.
   - Orange: highest 20-second vCPU Ready above 12%, and CPU Contention (%) above 3%.
 - Last cycle (11:05), the data of the pool:
-  - 14 VMs sat behind a short CPU storm on their hosts for one 20-second sample each: Ready 80% in that sample, about 0% in the other 14 samples. Co-stop and Other Wait are negligible.
+  - 14 VMs sat behind a short CPU storm on their hosts in the same 20-second sample: Ready 80% on both vCPUs in that sample, about 0% in the other 14 samples. Co-stop and Other Wait are negligible.
   - 4 VMs had a steady Ready of 7% to 8% in all 15 samples, with 11% as the highest sample.
   - 22 VMs were quiet.
-- The infrastructure team asks why it received a notification, and the application owner of Web asks why the red alert did not fire when 14 VMs had 80% Ready.
+- The application owner of Web sees that 14 VMs had 80% Ready and asks which pool alerts fired in this cycle, and why.
 
-Which alerts fire for the pool Web in this cycle? Explain how the numbers decide, why the alert needs two conditions, and what the team should check.
+Which statements are correct?
+
+- A. The red alert fires, because 14 of 40 VMs (35%) had 80% Ready in a sample, far above 24%.
+- B. One 80% sample among 15 gives a 5-minute Ready of about 5.3%.
+- C. The orange alert fires for the pool; the red alert does not.
+- D. The 4 VMs with a steady 7% to 8% Ready count toward red, since their 5-minute value is above 6%.
+- E. No alert fires, because averaging over the cycle leaves the storm VMs with too little Ready.
+- F. The 4 steady VMs count toward neither alert, because their highest sample, 11%, is below 12%.
+- G. The 80% sample shows that these VMs waited for CPU for most of the 5-minute cycle.
+- H. The 20-second peak condition catches a stall that the 5-minute average dilutes about 15 times.
+- I. The 5-minute condition keeps one short spike from firing the alert unless it moves the cycle's value.
+- J. 14 VMs hit in the same 20-second sample point to one common cause on the hosts, not a steady CPU shortage.
+- K. The remedy is to add vCPUs to the 14 VMs that the storm hit, so they ride out the next one.
 
 ## Likely wrong answer
-Red fires, because 14 of 40 VMs (35%) had 80% Ready, far over 24%. Or nothing fires, because no VM reached 6% Contention. Both ignore that an 80% sample is diluted to 5.3% over 15 samples, which is under red and over orange.
+- A: "Red fires: 35% of the VMs had 80% Ready, far over 24%."
+- E: "Nothing fires: once averaged over 5 minutes the storm is gone."
 
 ## Expected key points
-- Orange fires, red does not.
-- The 5-minute value of one 80% sample is 80 / 15 = 5.3% Ready (Contention is at least the Ready, with negligible other terms, so about 5.3%). That is above the orange 3% and below the red 6%. The highest sample (80%) is above both 24% and 12%.
-- Orange: the 14 VMs hit by the storm meet both conditions, 14 of 40 = 35%, over 25%, so orange fires. Red: no VM meets both red conditions, so 0 of 40.
-- The 4 steady VMs do not count: their highest sample, 11%, is under the orange 12%, although their 5-minute Ready (7% to 8%) is high. A condition on the 5-minute value alone would count them and miss the burst; a condition on the 20-second peak alone would fire on any one-off frozen sample.
-- Two conditions: the peak shows an acute stall that a 5-minute average dilutes 15 times; the 5-minute value shows it was not a single sample. Together they fire on bursts that are big enough to move the average.
-- Orange goes to the infrastructure team only; red would also go to the application team (receivers follow the severity). The application owner is correctly not alerted: the VMs recovered inside the cycle.
-- Check: 14 VMs hit in the same 20-second sample point to one common cause (a burst on the hosts: a batch job, a vMotion or backup storm, another pool), not to a steady lack of CPU in the pool. Look at the time alignment, the hosts and the busiest VMs of that sample, and follow the VM CPU contention flow for the VMs hit; do not add vCPUs.
+- Answer: B, C, F, H, I, J.
+- A is false: the misconception; red also needs CPU Contention above 6%, and the storm VMs reach only about 5.3%. No VM meets both red conditions: 0 of 40.
+- B is true: 80 / 15 = 5.3% Ready over the cycle; with Co-stop and Other Wait negligible, CPU Contention is about 5.3% too (it is never below Ready).
+- C is true: the 14 storm VMs meet both orange conditions (peak 80% above 12%, Contention 5.3% above 3%): 14 of 40 = 35%, over 25%. For red, 5.3% is below 6%.
+- D is false: their highest sample, 11%, is below the red 24% (and the orange 12%), so they fail the peak condition. A condition on the 5-minute value alone would count them and miss the burst.
+- E is false: the misconception; 5.3% is above the orange 3%, and the peak (80%) is above both 12% and 24%.
+- F is true: both conditions must hold for the same VM in the same cycle; a steady 7% to 8% with an 11% peak fails the orange peak value of 12%.
+- G is false: one sample is 20 seconds; the VMs were near 0% Ready in the other 14 samples and recovered inside the cycle.
+- H is true: a 5-minute average dilutes one 20-second sample 15 times; the peak keeps the acute stall visible.
+- I is true: the sustained condition shows the burst was big enough to move the cycle's value, so a one-off frozen sample alone does not fire the alert.
+- J is true: many VMs hit in the same sample point to a burst on the hosts (a batch job, a vMotion or backup storm, another pool); check the time alignment, the hosts and the busiest VMs of that sample, and follow the VM CPU contention flow for the VMs hit.
+- K is false: adding vCPUs to a VM with CPU contention makes its performance worse; the cause is a common burst, not the VM size.
 
 ## Notes
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped key point: which team receives orange and red (infrastructure team red and orange, application team red only). It is the site's alert design, not stated in the prompt, so no option can rest on it. Sharpened stem: the storm hit both vCPUs of each of the 14 VMs in the same 20-second sample, so the VM-level Ready of that sample is 80%. The last bullet no longer says that a notification arrived and red did not fire: in a multiple-choice question that would give the answer away.
 - Public source: Real-time statistics are sampled every 20 seconds, and the 5-minute (past day) interval rolls up 15 samples (vSphere Monitoring and Performance, "Data Collection Intervals", Broadcom TechDocs, vSphere 9.0). The arithmetic 80 / 15 follows from the 300 / 20 = 15 samples. VCF Operations Ready (%) definition: Ready as a share of the sample interval.
 - Knowledge file logic: vsphere/object-types/resource-pool/resource-pool-alerts, "Resource pool CPU contention": "a burst (VM Peak vCPU Ready) and sustained contention (VM CPU Contention) together"; vcf-operations/features/peak-20-second-metrics: the peak is the highest of the 15 20-second values. Receivers follow vm-alerts (infrastructure team red and orange, application team red only); the pool and ESXi alerts exist so the infrastructure team can act before the application team is alerted.
 - Why one answer: with the thresholds in the prompt, the arithmetic leaves exactly one result (orange only), and the reasons for two conditions follow from dilution.
@@ -39,7 +58,9 @@ product: [vcf-operations, vsphere]
 technology: [cpu, system]
 task: troubleshoot
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [B, C, F, H, I, J]
+misconception: [A, E]
 input: [text]
 object: [resource-pool, vm]
 tool: [vcf-operations]

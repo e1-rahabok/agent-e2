@@ -6,22 +6,44 @@
 - Their monitoring tool shows the VM's daily average CPU at 25% for the last month.
 - They ask you to prove VMware vSphere is not the cause, or to give the VM more vCPUs and memory.
 
-Where do you start, what do you ask them to measure, and how do you decide whether the cause is inside Windows or below it?
+Which statements are correct?
+
+- A. Start by pinning down the slowness with the team: which transaction is slow, how slow against normal, and when.
+- B. The time window of the slowness becomes the window of every later check, in Windows and in vSphere.
+- C. A 25% daily CPU average and 62% memory in Task Manager show the VM has headroom, so resources are not the cause.
+- D. In that window, read the Windows wait signs at high resolution: CPU queue, paging, disk queue, network discards.
+- E. A wait inside Windows that the VM does not share, such as a disk queue with low VM disk latency, points to the guest.
+- F. If Windows shows no wait, or the signs point down, read Ready, Co-stop, memory contention and disk latency of the VM.
+- G. Windows cannot see the time a vCPU waits for a physical CPU, so a clean Windows does not prove the VM is healthy.
+- H. vSphere cannot see a queue inside Windows, so a VM with no contention does not prove Windows is healthy.
+- I. Adding vCPUs and memory first is a safe step; measure afterwards whether the slowness has gone away.
+- J. A processor queue with idle vCPUs shrinks when vCPUs are added, since more threads can run at once.
+- K. High page-in on its own proves Windows is short of memory, even without page-out or a disk queue.
+- L. If the VM's virtual disk latency is fine, the application inside Windows cannot be seeing a storage delay.
 
 ## Likely wrong answer
-"CPU averages 25% and memory 62%, so the VM has headroom" (no slow window found). Or: "Give it more vCPUs and memory to be safe."
+- C: "CPU averages 25% and memory 62%, so the VM has headroom."
+- I: "Give it more vCPUs and memory to be safe."
 
 ## Expected key points
-- Start by quantifying the slowness with the application team: which transaction is slow, how slow against normal, and when (a time, a schedule, or all the time).
-- That time window drives every later check, in Windows and in vSphere. A daily average or a morning screenshot hides the slow minutes.
-- Read the Windows queues at high resolution in the window (Performance Monitor): CPU queue per processor; paging with the disk queue and % Committed Bytes In Use; disk queue or latency; network discards. Any order.
-- A queue found inside Windows (CPU queue, paging, disk queue with low VM disk latency) is a Windows or application cause: sizing or configuration inside the guest.
-- No wait inside Windows, or signs that point down (every vCPU busy, disk queue with high VM disk latency): check the VM in the same window: CPU Ready and Co-stop, memory contention, virtual disk latency, dropped packets.
-- Windows cannot see a vCPU waiting for a physical CPU, and ESXi cannot see a queue inside Windows, so both layers are read; neither proves the other healthy.
-- Do not add vCPUs or memory before the queues are read: a queue with idle vCPUs gets worse with more vCPUs.
+- Answer: A, B, D, E, F, G, H.
+- A true: quantify first; the team describes the symptom in Windows terms.
+- B true: the window found by quantifying steers every later step; a daily average or a morning screenshot hides the slow minutes.
+- C false: a daily average and one snapshot outside the slow window cannot show a wait; no slow window was found yet.
+- D true: the Windows wait signs, read at their highest resolution in the window. Any order.
+- E true: IO stuck in the Windows queue never reaches the VM; a wait inside Windows is a Guest OS or application cause (sizing, configuration).
+- F true: with no wait in Windows, or every vCPU busy, or a disk queue with high VM disk latency, the wait is below Windows: read the VM.
+- G true: a busy vCPU can be waiting for a physical thread; Windows cannot see it.
+- H true: the two layers are separate; the VM cannot see Windows' queues.
+- I false: a queue with idle vCPUs gets worse with more vCPUs (more context switching); read the queues before any change.
+- J false: queue high with idle vCPUs means locks, threads that cannot run in parallel or kernel work; more vCPUs make it worse.
+- K false: binaries, memory-mapped files and prefetch cause page-in; look for page-in and page-out together with a high disk queue.
+- L false: IO waiting in the Windows queue (filter driver, antivirus, application) never reaches the VM, so VM disk latency stays low.
 
 ## Notes
 - Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order is a design choice of the flow.
+- No option uses a queue band: whether Guest Peak CPU Queue is per vCPU or a total is open (Q217).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata
 ```yaml
@@ -31,7 +53,9 @@ product: [windows, vsphere]
 technology: [system, cpu, memory, storage]
 task: troubleshoot
 level: 400
-answer_type: judged
+answer_type: deterministic
+answer: [A, B, D, E, F, G, H]
+misconception: [C, I]
 input: [text]
 object: [guest-os, vm]
 tool: [guest-os-tools, vcenter]
