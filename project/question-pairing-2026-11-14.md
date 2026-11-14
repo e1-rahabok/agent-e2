@@ -271,7 +271,7 @@ Medium
 - Total: 82 pairs (16 ready, 66 to write). New questions: 79. The author's screenshots: 48 new, plus 1 recapture (0050).
 
 ## 7. Phase 2: writers
-One change set. Each writer reads this whole plan, writes only its own files and the knowledge files listed for it, and reports. New files take temporary names `L<level>-9NN-<slug>.md` in the writer's range; `project/tools/renumber_questions.py` numbers them at the end. New ids in the writer's range; gaps are closed before the commit.
+One change set. Each writer reads this whole plan, writes only its own files and the knowledge files listed for it, and reports. New files take temporary names `L<level>-9NN-<slug>.md` in the writer's range; [`project/tools/renumber_questions.py`](tools/renumber_questions.py) numbers them at the end. New ids in the writer's range; gaps are closed before the commit.
 
 | Writer | Questions | Knowledge files it may edit | New ids | Temp numbers |
 |---|---|---|---|---|
