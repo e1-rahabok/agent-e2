@@ -4,8 +4,8 @@ Usage: python3 project/tools/answered.py
 """
 import re
 
-text = open('project/author-questions.md').read().split('\n## Resolved index')[0]  # open questions only; resolved ones are in author-questions-resolved.md
-for block in re.split(r'(?=^### Q)', text, flags=re.M)[1:]:
+texts = [open(f, encoding='utf-8').read() for f in ['project/author-questions-release-1.0.md', 'project/author-questions-future-release.md']]  # open questions only
+for block in [b for text in texts for b in re.split(r'(?=^### Q)', text, flags=re.M)[1:]]:
     m = re.search(r'^- Answer:(.*)\Z', block, re.M | re.S)
     answer = m.group(1).strip() if m else ''
     if answer:
