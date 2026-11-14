@@ -1,7 +1,7 @@
 # ESXi CPU capacity: threads, not hertz
 
 ## Prompt
-Two ESXi hosts:
+Two VMware ESXi 9.1 hosts:
 - ESXi 01: 20 cores, 40 threads, nominal speed 1.0 GHz, All Cores Turbo 1.2 GHz, Single Core Turbo 2 GHz.
 - ESXi 02: 10 cores, 20 threads, speed 2.0 GHz, All Cores Turbo 2.4 GHz, Single Core Turbo 4 GHz.
 
@@ -23,10 +23,6 @@ ESXi 02:
 - E. 20 threads
 - F. It depends
 
-Hints:
-- The two hosts have different specifications, so the two answers must be different.
-- ESXi capacity can also be expressed in CPU compute cycles: the amount of processing it can do per second. That is not the same as the count of cores.
-
 ## Likely wrong answer
 A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo or Hyper-Threading.
 
@@ -38,7 +34,11 @@ A for both (20 GHz = cores x nominal GHz), or a GHz figure that includes Turbo o
 
 ## Notes
 - The second hint pushes toward GHz on purpose. It is a distractor.
-- The quiz image holds the same two hosts and options as the prompt. It is not sent to the candidate: it is not a product screenshot (author, 2026-11-05).
+- The quiz image holds the same two hosts and options as the prompt. It is not sent to the LLM as it's just for human reviewer convenience.
+- Hints:
+  - The two hosts have different specifications, so the two answers must be different.
+  - ESXi capacity can also be expressed in CPU compute cycles: the amount of processing it can do per second. That is not the same as the count of cores.
+
 
 ![Quiz image: two ESXi hosts, their CPU specification and the capacity options](0006/two-esxi-hosts-specification-and-capacity-options.png)
 
@@ -63,5 +63,5 @@ source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > CPU > Q3 ESX
 answer_type: judged
 level: 400                      # author 2026-11-05
 misconception_type: [frequency-and-hyper-threading]
-status: draft
+status: reviewed
 ```
