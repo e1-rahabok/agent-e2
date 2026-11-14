@@ -152,7 +152,7 @@ Archived on 2026-11-14 (author): the decision log of the classic and agentic gen
   - Context budget set to 16K.
   - Source documents moved to [project/sources](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources), writing templates to [project/templates](https://github.com/e1-rahabok/agent-e2/blob/main/project/templates): `knowledge/` holds only what the model reads.
   - This plan replaces `project/todo.md` (archived as [project/archive/todo-2026-11-06.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/todo-2026-11-06.md)).
-- Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions.md), section Resolved.
+- Earlier decisions: [project/archive/review-2026-11-04.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/archive/review-2026-11-04.md), section 9; [project/author-questions-resolved.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/author-questions-resolved.md).
 
 ## Open work of M3 and M4 before 2026-11-14 (archived)
 
