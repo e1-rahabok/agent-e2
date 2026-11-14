@@ -14,7 +14,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/model-open%20weights%2C%20local-6e7781?labelColor=3d444d" alt="Model: open weights, local">
   <img src="https://img.shields.io/badge/runs-locally%20%28data%20stays%20on%20site%29-6e7781?labelColor=3d444d" alt="Runs locally">
-  <img src="https://img.shields.io/badge/knowledge%20files-285-6e7781?labelColor=3d444d" alt="Knowledge files: 285">
+  <img src="https://img.shields.io/badge/knowledge%20files-286-6e7781?labelColor=3d444d" alt="Knowledge files: 286">
   <img src="https://img.shields.io/badge/benchmark%20questions-196-6e7781?labelColor=3d444d" alt="Benchmark questions: 196">
   <img src="https://img.shields.io/badge/target-99%25%20final%20score-6e7781?labelColor=3d444d" alt="Target: 99% final score">
 </p>
@@ -24,7 +24,9 @@
 # Agent E2
 
 - What it is:
-  - An LLM-based expert system on a local LLM. The agent and the harness lead: code follows the expert's procedure, decides what to read from the knowledge base's map and computes the exact values; the model reads and writes ([harness/AGENT.md](harness/AGENT.md)).
+  - A VMware consultant, not an LLM aid. It answers Level 400 questions, and it leads a consultation: asked "Can you guide me over capacity planning for a vSphere cluster? You're my expert consultant", it interviews you for what the plan needs, names every default it assumes, computes the answer with code, and explains which number limits your hosts and why.
+  - Under the hood, an expert system on a local LLM. The agent and the harness lead: code follows the expert's procedure, decides what to read from the knowledge base's map, asks for missing inputs and computes the exact values; the model reads and writes ([harness/AGENT.md](harness/AGENT.md)).
+  - Consultations: capacity planning in release 1.0; 14 more planned after 1.0 ([project/consultations.md](project/consultations.md)).
 - Scope for Phase 1:
   - vSphere metrics. Performance & Capacity management. Monitoring and Troubleshooting.
 - Name:
@@ -89,12 +91,13 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 | [benchmark/models.md](benchmark/models.md)           | Model design: which frozen model to ship, size and hardware; frontier reference                             |
 | [benchmark/live-test.md](benchmark/live-test.md)     | The system deployed on a local model: setup, steps, pass criteria                                        |
 | [project/plan.md](project/plan.md)                   | Milestones, decisions, open work                                                                            |
+| [project/consultations.md](project/consultations.md) | The consultations Agent E2 leads: capacity planning in 1.0, 14 more after 1.0                                |
 | [CONTRIBUTING.md](CONTRIBUTING.md)                   | How to add or change a file                                                                                 |
 
 ## Status
 
 - Goal not achieved yet. Agent E2, the neuro-symbolic expert system, was built on 2026-11-14 and has not run a round. The next round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
-- Retrieval check (2026-11-14): Agent E2's reading set holds 76% of the needed files with keyword search (109 of 196 questions complete), 80% with hybrid search (117 of 196) ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- Retrieval check (2026-11-14): Agent E2's reading set holds 82% of the needed files with keyword search (128 of 196 questions complete); hybrid search last measured at 80% (117 of 196) before the structure review ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
 
