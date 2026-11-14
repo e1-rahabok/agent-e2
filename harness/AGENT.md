@@ -106,7 +106,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 | Search | Recall | Every needed file | Main file missing | 3 needed files | 4 | 5 or more |
 |---|---|---|---|---|---|---|
 | BM25 | 76% | 109 of 196 (56%) | 25 | 52% | 33% | 21% |
-| Hybrid | HYB_R | HYB_C | HYB_M | HYB_3 | HYB_4 | HYB_5 |
+| Hybrid | 80% | 117 of 196 (60%) | 19 | 57% | 40% | 26% |
 
 - Outputs: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). The design was measured against classic mode before it was built: hybrid recall 69% to 80%, complete 46% to 59% ([archived](../project/archive/benchmark-results-before-2026-11-14/retrieval-2026-11-14/plan-hybrid.md)); generations are not compared further.
 - Not tuned to the questions: one design, the tiers as the knowledge base defines its links; two settings tried (section size 250 or 400 tokens, derive cap 3 or 8), within 2 questions of each other.

@@ -50,7 +50,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - Current numbers and history: [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md), M3.
 
 ## What is a good number
-- Levels agreed by the author (Q130, 2026-11-12). Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid HYB_LINE: bad. Output: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). Earlier generations are archived and not compared.
+- Levels agreed by the author (Q130, 2026-11-12). Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid recall 80%, 117 of 196 complete (60%), main file missing on 19: bad. Output: [benchmark/results/retrieval-2026-11-14/](../benchmark/results/retrieval-2026-11-14/hybrid.md). Earlier generations are archived and not compared.
 
 ### Why the retrieval number must be higher than the release score
 - Release gate ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5): final score at least 85% on Agent E2, Level 400 at least 80%, confident-wrong at most 3%.

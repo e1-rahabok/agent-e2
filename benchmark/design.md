@@ -314,7 +314,7 @@ The frontier model must be able to answer every question from public knowledge. 
 
 ## 9. Retrieval check
 - The final score mixes harness and model. The retrieval check separates them: [benchmark/runner/retrieval_eval.py](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/runner/retrieval_eval.py) checks, without a model, whether each question's `knowledge` files are found and placed in Agent E2's reading set (the code-only case). Guide: [benchmark/retrieval-check.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/retrieval-check.md).
-- Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid HYB_LINE. Output: [benchmark/results/retrieval-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-14/hybrid.md). Re-baselined when the question bank changes (Q206).
+- Baseline of the Agent E2 generation (2026-11-14, 196 questions): BM25 recall 76%, 109 of 196 complete (56%), main file missing on 25; hybrid recall 80%, 117 of 196 complete (60%), main file missing on 19. Output: [benchmark/results/retrieval-2026-11-14/](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/results/retrieval-2026-11-14/hybrid.md). Re-baselined when the question bank changes (Q206).
 - Every wrong answer is classified: file not in context (harness or knowledge), file in context but answer wrong (model or prompt), file not in the knowledge base (gap). Detail: `ARCHITECTURE.md`, section 6.
 
 ## 10. Validity threats

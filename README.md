@@ -94,7 +94,7 @@ The model is frozen; we do not train it. We improve the three parts around it, a
 ## Status
 
 - Goal not achieved yet. Agent E2, the neuro-symbolic expert system, was built on 2026-11-14 and has not run a round. The next round runs two runs per candidate model, Base (the model alone) and Agent E2, and the frontier reference ([`benchmark/RUN.md`](benchmark/RUN.md)).
-- Retrieval check (2026-11-14): Agent E2's reading set holds 76% of the needed files with keyword search (109 of 196 questions complete), HYB_SHORT with hybrid search ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
+- Retrieval check (2026-11-14): Agent E2's reading set holds 76% of the needed files with keyword search (109 of 196 questions complete), 80% with hybrid search (117 of 196) ([output](benchmark/results/retrieval-2026-11-14/hybrid.md)).
 - Earlier generations (classic and agentic modes) and their results are archived in [`project/archive/`](project/archive) and not compared.
 - Plan, milestones and decisions: [`project/plan.md`](project/plan.md).
 
