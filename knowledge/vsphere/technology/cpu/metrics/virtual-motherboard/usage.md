@@ -52,11 +52,13 @@ Usage (%) = (sum of Usage (MHz) of each vCPU + VM-level load) / VM static CPU sp
 - "Use Usage for capacity" → it includes frequency. Use Run for capacity.
 - "Usage (%) above 90%, so add vCPUs" → check Run. Turbo inflates Usage.
 - "Usage (MHz) cannot exceed the VM capacity" → Turbo pushes it above.
+- "Linux, VM and ESXi CPU Usage share a name, so they mean the same" → no. Metrics with the same name on different objects differ in formula and meaning. Check the same_name links before answering.
 
 ## Metadata
 ```yaml
 id: vsphere/technology/cpu/metrics/virtual-motherboard/usage
 retriever_guide: metric-meaning
+up_front: 'Linux, VM and ESXi CPU Usage share a name, so they mean the same'
 scope: vsphere
 technology:
 - cpu

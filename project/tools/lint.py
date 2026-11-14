@@ -284,7 +284,7 @@ def check_question_count(bad):
 
 def check_repo_terms(allowed, bad):
     """One word per concept in the repository (project/terms.md): flag the replaced words."""
-    skip = ('project/terms.md', 'project/author-questions.md', 'project/author-questions-resolved.md', 'project/author-questions-release-1.0.md', 'project/author-questions-future-release.md', 'project/tools/tags.yaml')
+    skip = ('project/terms.md', 'project/author-questions.md', 'project/author-questions-resolved.md', 'project/tools/tags.yaml')
     records = ('project/archive/', 'project/review-', 'benchmark/results/')
     for f in sorted(glob.glob('**/*.md', recursive=True)):
         if f in skip or f.startswith(records):
@@ -322,9 +322,11 @@ def check_terminology(docs, bad):
             if t.lower() in seen: bad(g, f'term "{t}" has two entries')
             seen.add(t.lower())
             if e['file'] and e['file'] not in docs: bad(g, f'term "{t}": File {e["file"]} is not a knowledge id')
-    m = os.path.join('knowledge', 'misconceptions.md')
-    for ref in re.findall(r'See `([^`]+)`', FILE_LINK.sub(r'\1', open(m).read())):
-        if ref not in docs: bad('knowledge/misconceptions.md', f'See `{ref}` is not a knowledge id')
+    import primer as _primer  # up-front misconceptions: one home, the marked line of a file (Q211)
+    for i, d in docs.items():
+        b = d.meta.get('up_front')
+        if b and not _primer.up_front_line(d, b):
+            bad(d.path, f'up_front "{b[:40]}" must match exactly one line of ## Misconceptions that starts with - "{b[:20]}..."')
 
 
 def check_file_types(bad):

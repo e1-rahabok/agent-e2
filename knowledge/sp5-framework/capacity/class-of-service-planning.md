@@ -76,7 +76,7 @@
 - "Each class has a minimum VM Performance (%)" → the promise is relative contention (1x, 2x, 3x). One set of KPI levels for every class; compare the class groups.
 - "Set the Gold reservation on each VM" → set it on the resource pool; VM-level reservation changes HA admission control and restart.
 - "A Bronze cluster at 90% CPU is overloaded" → a mostly Bronze cluster is planned to run near 100% of its usable threads; contention decides: read Cluster Performance (%).
-- "Overcommit ratio per core" → the plan counts threads, not cores; 3:1 per thread is 6:1 per core with Hyper-Threading.
+- "Overcommit ratio per core" → a vCPU runs on a physical thread, so the plan counts threads: 3:1 per thread is 6:1 per core with Hyper-Threading.
 - "The host fits as many VMs as its allocation allows" → allocation is one of six numbers; at planning, memory utilization or CPU reservation often binds first.
 - "Memory tiering lets Silver and Bronze reach their memory ratio" → the ratio is against DRAM; NVMe is about 1,000x slower and is left out of the plan. Tiering is measured in the running stage, with its own risk and performance signals ([`vsphere/technology/memory/concepts/memory-tiering`](../../vsphere/technology/memory/concepts/memory-tiering.md)).
 
@@ -84,6 +84,7 @@
 ```yaml
 id: sp5-framework/capacity/class-of-service-planning
 retriever_guide: how-it-works
+up_front: 'Overcommit ratio per core'
 scope: sp5-framework
 technology:
 - cpu

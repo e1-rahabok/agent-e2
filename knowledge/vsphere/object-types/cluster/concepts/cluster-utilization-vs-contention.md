@@ -29,11 +29,13 @@
 ## Misconceptions
 - "Low cluster utilization means no performance problem" → check worst VM contention.
 - "No ballooning, so no memory contention" → past compression can cause contention now.
+- "The cluster is saturated, so there is a performance problem" → saturation is high utilization, not a metric next to it. High utilization can lead to contention but not always; a performance problem exists only when there is contention.
 
 ## Metadata
 ```yaml
 id: vsphere/object-types/cluster/concepts/cluster-utilization-vs-contention
 retriever_guide: how-it-works
+up_front: 'The cluster is saturated, so there is a performance problem'
 scope: vsphere
 technology:
 - cpu

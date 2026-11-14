@@ -110,11 +110,13 @@ flowchart TB
 - "Demand is not affected by Hyper-Threading because the Guest OS cannot see threads" → mixes realms. Demand is a VM-realm kernel counter; the VMkernel sees threads.
 - "VM disk IOPS and latency are normal, so storage is not the problem" while the guest disk queue is high → incomplete. The IO may still be queued in area A.
 - Equating the plain-English demand/usage above with the vSphere Demand/Usage metrics → wrong.
+- "A counter stored on the VM object is a VM metric; the VM includes its Guest OS" → no. A VM is the virtual motherboard; the Guest OS is a separate layer above it. A counter belongs to the layer that produces it, not to the object that stores it.
 
 ## Metadata
 ```yaml
 id: vsphere/architecture/vm-vs-guest-os
 retriever_guide: how-it-works
+up_front: 'A counter stored on the VM object is a VM metric; the VM includes its Guest OS'
 scope: vsphere
 technology:
 - cpu

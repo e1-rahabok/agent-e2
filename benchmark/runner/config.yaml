@@ -88,7 +88,7 @@ consensus_samples: 1          # multiple choice, Agent E2: n answer samples on o
 context_window: 32000         # the deployed model's window (MISSION.md, section 5); a prompt above it is flagged in the trace (context_over)
 image_tokens: 1500            # estimated prompt tokens per image, for the window check; re-check against the deployed model
 primer:                       # up-front blocks in Agent E2's answer prompt (harness/primer.py)
-  rules: true                 # Level 300 misconceptions (knowledge/misconceptions.md)
+  rules: true                 # Level 300 misconceptions: the ## Misconceptions lines marked up_front in their files
   terms: true                 # confusable pairs (knowledge/glossary.md)
 
 # Pin providers per model when known, e.g. openai/gpt-oss-20b: [groq]

@@ -1,7 +1,7 @@
 """Up-front knowledge: blocks added to Agent E2's answer prompt. Design: harness/AGENT.md, section 4.5.
 
 Each block is generated from the knowledge base at start, so it cannot drift from it:
-  rules      Level 300 misconceptions and their corrections (knowledge/misconceptions.md)
+  rules      Level 300 misconceptions: the `## Misconceptions` lines marked `up_front` in their knowledge files
   terms      confusable pairs (knowledge/glossary.md, column Not to confuse with)
 A confident wrong belief is never looked up, so its correction is in place before the model reasons. Each block has a
 switch in benchmark/runner/config.yaml, key primer. The map, flow index and procedure blocks of the tool loop are gone
@@ -13,18 +13,30 @@ import re
 
 BLOCKS = ('rules', 'terms')
 BUDGET_TOKENS = 3000          # all blocks together; lint checks it
-MISCONCEPTIONS = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'knowledge', 'misconceptions.md')
 
 def rules_block(docs):
-    """The bullet lines of knowledge/misconceptions.md under its first '## ' heading, whatever that heading says."""
-    if not os.path.exists(MISCONCEPTIONS):
-        return ''
-    with open(MISCONCEPTIONS) as f:
-        t = f.read()
-    m = re.search(r'^## .*$', t, re.M)
+    """The up-front misconceptions: the `## Misconceptions` line of each knowledge file whose metadata `up_front` names
+    its wrong belief. One home (author, Q211): the line lives in its file; this block only collects it."""
     import kb
-    lines = [kb.FILE_LINK.sub(r'\1', l) for l in t[m.end():].split('\n') if l.startswith('- ')] if m else []
+    lines = []
+    for i in sorted(docs):
+        belief = docs[i].meta.get('up_front')
+        if not belief:
+            continue
+        line = up_front_line(docs[i], belief)
+        if line:
+            right = line.split('→', 1)[1].strip() if '→' in line else ''
+            lines.append(f'- "{belief}" → {kb.FILE_LINK.sub(r"\\1", right)} See `{i}`.')
     return '\n'.join(['## Level 300 misconceptions'] + lines) if lines else ''
+
+
+def up_front_line(doc, belief):
+    """The line of the file's `## Misconceptions` section that starts with the quoted belief, or None."""
+    for head, text in doc.sections:
+        if head == 'Misconceptions':
+            hits = [l for l in text.split('\n') if l.startswith(f'- "{belief}"')]
+            return hits[0] if len(hits) == 1 else None
+    return None
 
 
 def terms_block(docs):

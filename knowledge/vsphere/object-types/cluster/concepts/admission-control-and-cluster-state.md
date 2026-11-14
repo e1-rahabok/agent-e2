@@ -59,7 +59,7 @@
 - Leave headroom for per-VM memory virtualization overhead and for migration overhead, both reserved on top of the VMs' reservations.
 
 ## Misconceptions
-- "The host is at 30% CPU, so the VM will power on" → admission control checks unreserved capacity, not usage.
+- "The host is at 30% CPU, so the VM will power on" → admission control counts reservations, not usage: a host at low usage can refuse a power-on.
 - "Yellow cluster means VMs are starving" → running VMs still have their reservations; resource pool reservations cannot all be met.
 - "Add a host to fix a red cluster" → red is an inconsistency in the tree; fix the reservations.
 - "Expandable pools isolate departments" → only Fixed pools isolate.
@@ -71,6 +71,7 @@
 ```yaml
 id: vsphere/object-types/cluster/concepts/admission-control-and-cluster-state
 retriever_guide: how-it-works
+up_front: 'The host is at 30% CPU, so the VM will power on'
 scope: vsphere
 technology:
 - cpu

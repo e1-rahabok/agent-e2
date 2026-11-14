@@ -1,4 +1,6 @@
-# Level 300 misconceptions
+# Level 300 misconceptions (archived 2026-11-14)
+
+Archived (author, Q211): each line now lives in one place, the `## Misconceptions` section of its knowledge file, marked by the metadata field `up_front`; harness/primer.py builds the up-front block from the marks. Links below are as they were.
 
 Beliefs a model applies without looking anything up, each corrected, with the file that holds the mechanism. Sent to the model with every question (up-front block `rules`, config `primer.rules`, `harness/primer.py`). Not indexed: search returns the file with the mechanism, not this one-line summary (`harness/kb.py`, `NOT_INDEXED`). What belongs here: [project/knowledge-rules/terminology.md](../project/knowledge-rules/terminology.md).
 

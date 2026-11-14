@@ -151,12 +151,14 @@
 - "CPU cycles dropped after the downsize, so add the vCPUs back" → raise the shares; the vCPU count was not the constraint.
 - "Free memory dropped after the downsize: a problem" → expected; the removed memory was unused.
 - "Start every VM small" → upsizing is harder, slower and NUMA-sensitive; price is the better lever.
+- "Consumed memory stays high, so the VM needs more memory" → memory is a cache: Consumed stays high once pages are touched; that is not demand. VM Active is not a capacity counter. Size a Guest OS from Guest OS counters.
 
 ## Metadata
 
 ```yaml
 id: sp5-framework/capacity/rightsizing
 retriever_guide: how-it-works
+up_front: 'Consumed memory stays high, so the VM needs more memory'
 scope: sp5-framework
 technology:
 - cpu
