@@ -18,7 +18,7 @@ Which statements about the cause, the fix and the checks before the fix are corr
 - F. A larger receive ring stops the drops even when the guest's vCPUs cannot keep up with the packet rate.
 - G. The drops come from CPU Ready on the appliance, which keeps its vCPUs from emptying the ring in time.
 - H. For a firewall appliance, check whether receive side scaling spreads its receive queues over several vCPUs.
-- I. The vSphere performance charts show that packets were dropped, but only vsish on the host shows why.
+- I. The vSphere performance charts show that packets were dropped, not why; the reason is in the vsish rxSummary.
 - J. A full VMXNET3 receive ring is invisible to the hypervisor: only the guest counts the drop.
 - K. Receive drops on the vNIC belong to the network team, since the packets arrived over the uplinks.
 
@@ -36,7 +36,7 @@ Which statements about the cause, the fix and the checks before the fix are corr
 - F false: a ring that the guest does not empty in time fills whatever its size; check the guest's CPU and the vCPUs' Ready and Co-stop first.
 - G false: CPU Ready is below 1% and no vCPU is saturated, so the ring size, not CPU, is the cause.
 - H true: RSS spreads the receive queues over several vCPUs for network-intensive appliances, at some CPU cost.
-- I true: only the rxSummary counters in vsish tell a full ring from the other causes.
+- I true: the charts count drops (droppedRx, %DRPRX) without a reason; the rxSummary counters in vsish tell a full ring from the other causes.
 - J false: the drop is counted at the port (droppedRx), at the VM (esxtop %DRPRX, vCenter droppedRx) and by the guest.
 - K false: a full VMXNET3 ring is caused and fixed in the Guest OS driver, so the Guest OS owner fixes it.
 

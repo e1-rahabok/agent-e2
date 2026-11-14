@@ -3,7 +3,7 @@
 ## Prompt
 - A cluster of 4 ESXi 9.1 hosts, 1 TB of memory each, no memory tiering. HA admission control: cluster resource percentage, 25% for one host failure.
 - Today it runs 4.8 TB of configured VM memory, none of it reserved. Host Consumed is about 55% on each host. No balloon, compression or swap.
-- The plan: add 12 AI inference VMs with a vGPU each, 128 GB of memory per VM (1.5 TB in total). The GPUs fit.
+- The plan: add 12 AI inference VMs with a vGPU each, 128 GB of memory per VM (1.5 TB in total). The GPUs fit, also with one host down.
 - The capacity manager says: "Consumed is 55%, so about 1.8 TB is free. The 1.5 TB of new VMs fit, with HA admission control green."
 
 Is the capacity manager right, and what changes for the existing VMs, in normal operation and after a host failure? Which statements are correct?
@@ -43,7 +43,7 @@ Is the capacity manager right, and what changes for the existing VMs, in normal 
 ## Notes
 - Sources: the knowledge base, GPU monitoring, section vGPU and host memory (full reservation, never reclaimed, counted in full by admission control, excluded from memory tiering); vSphere 9.1 documentation, vSphere Resource Management (PCI passthrough and vGPU VMs require a full memory reservation) and vSphere Availability, Cluster Resources Percentage.
 - Arithmetic: today Consumed 55% of 4 TB = 2.2 TB; plus 1.5 TB = 3.7 TB (92.5%). 4 TB - 1.5 TB = 2.5 TB for 4.8 TB configured (1.92:1); after a failure 3 TB - 1.5 TB = 1.5 TB for 2.2 TB consumed. Overhead ignored.
-- Converted from judged to multiple choice (Q199 F, 2026-11-14).
+- Converted from judged to multiple choice (Q199 F, 2026-11-14). Review 2026-11-14: the prompt now says the GPUs fit with one host down, so option G (all 1.5 TB reserved after a failure) does not depend on GPU capacity.
 
 ## Metadata
 ```yaml

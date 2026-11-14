@@ -35,7 +35,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - F. 12 vCPUs are more than one NUMA node holds, so ESXi splits the VM across both nodes.
 - G. The same NHN, NRMEM and N%L at 14:00 and 14:10 show steady placement, not a migration in progress.
 - H. The NUMA rebalancer will make the remote memory local within minutes once the host is quiet.
-- I. Pin the VM to node 0 with CPU and memory affinity, so that its memory becomes local.
+- I. Pinning the VM to node 0 with CPU and memory affinity would put all 512 GB of its memory on node 0.
 - J. Size the memory to fit one node, from what the database needs inside the guest.
 - K. If the database needs more than one node of memory, split the VM so each part's memory is local to its vCPUs.
 - L. A VM with manual CPU or memory affinity gets no NUMA rebalancing and no memory migration.
@@ -43,7 +43,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 
 ## Likely wrong answer
 - B: "The remote memory means ESXi keeps moving the VM between nodes."
-- I: "Pin it to node 0 with CPU and memory affinity."
+- I: "Pin it to node 0 with CPU and memory affinity, and its memory becomes local."
 
 ## Expected key points
 - Answer: A, C, E, G, J, K, L, M.
@@ -55,7 +55,7 @@ Which statements about the NUMA columns of `db-ora-07`, their cause and the fix 
 - F false: each node has 16 cores; 12 vCPUs fit one node, and NHN shows a single home node.
 - G true: a migration shows N%L climbing between samples; steady values are placement.
 - H false: the home node cannot hold 512 GB, so no rebalancing makes the remote part local.
-- I false: affinity takes the VM out of NUMA management and cannot make memory larger than the node local.
+- I false: node 0 holds 384 GB, so no affinity can make 512 GB local; affinity also takes the VM out of NUMA management.
 - J true: size from the guest's need, not from the configured 512 GB.
 - K true: two NUMA clients, each with local memory, and two vNUMA nodes the database can use. Size it to split evenly across as few nodes as possible.
 - L true: manual CPU or memory affinity removes the VM from NUMA scheduling.
