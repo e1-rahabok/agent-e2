@@ -26,7 +26,6 @@ Where each thing lives. For people; not indexed. How the parts work together: [A
 | [`knowledge/vcf-operations/`](knowledge/vcf-operations) | The product VCF Operations: its role, `features/`, `dashboards/` and the report suite as built in it, and how an alert definition works (`alert-definitions`). How to design them is method (`sp5-framework/outputs/`); metrics it computes about vSphere objects live with those objects |
 | [`knowledge/guest-os/`](knowledge/guest-os) | Windows and Linux: a separate realm from the VM; the hypervisor neither sees nor controls it. The Guest OS alerts: `guest-os-alerts` |
 | [`knowledge/glossary.md`](knowledge/glossary.md) | The agent's vocabulary |
-| [`knowledge/misconceptions.md`](knowledge/misconceptions.md) | Level 300 wrong beliefs and their corrections, given to the agent up front; not indexed. Where knowledge lives: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md), section 2 |
 | `harness/` | Retrieval, catalog, calculator, planning calculator, flow executor, agent loop, verifier. [README](harness/README.md), [AGENT.md](harness/AGENT.md) |
 
 ## Flows
@@ -83,7 +82,7 @@ Started by one operational question; ends in a choice to act, with its reason. N
 |---|---|
 | [`project/README.md`](project/README.md) | What the project folder holds |
 | [`project/plan.md`](project/plan.md) | Milestones, decisions, open work. Read first |
-| [`project/author-questions.md`](project/author-questions.md) | Questions for the author |
+| [`project/author-questions.md`](project/author-questions.md), [`project/author-questions-resolved.md`](project/author-questions-resolved.md) | Open questions for the author (Release 1.0, Future release); answered ones, kept as history |
 | [`project/design-thresholds.md`](project/design-thresholds.md) | Threshold catalog design: use cases, files, fields. Proposal |
 | [`project/sources/alert_close_cycle_design_best_practices.md`](project/sources/alert_close_cycle_design_best_practices.md) | Example of an alert close cycle design, for review (Q155 answer; reviewed in [`project/design-thresholds.md`](project/design-thresholds.md), section 9.5) |
 | [`project/archive/`](project/archive) | Records no longer maintained: reviews, the plan's decisions before 2026-11-14, results of earlier benchmark generations, legacy code and designs |

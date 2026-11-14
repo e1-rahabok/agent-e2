@@ -278,7 +278,7 @@ The frontier model must be able to answer every question from public knowledge. 
 | Final score, run set (196) | at least 85% | Margin about ±5 (section 4); below 85 an operator stops trusting the answers |
 | Level 400 sub-score | at least 80% | 131 questions (margin about ±7): the one sub-score that gates. The mission is Level 400; Level 100-300 can carry the total |
 | Confident-wrong rate | at most 3% | The answers an operator acts on. A wrong answer marked Unsure is not one of them |
-| Misconceptions of [knowledge/misconceptions.md](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/misconceptions.md) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
+| Up-front misconceptions (the `## Misconceptions` lines marked `up_front`) | none stated as true | They are given up front; stating one is a harness or model defect, not a gap. Author check of the answers |
 | Held-out set (30) | at most 11 points below the development set | One-sided 95% for 196 against 30 questions at about 87%: a larger drop means the knowledge base or retrieval is fitted to the visible questions |
 
 - Consensus: the deployed profile sets `consensus_samples: 3`; the benchmark runs one sample and reads the projection next to the gate in each `report.md` (section Consensus of 3, projected), the exact mean over all draws of 3 of the 5 runs. Same result at a third of the cost.

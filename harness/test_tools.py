@@ -417,18 +417,20 @@ class PrimerTest(unittest.TestCase):
         self.assertEqual(len(lines), len(pairs))
         self.assertTrue(all(' vs ' in l for l in lines))
 
-    def test_rules_block_takes_only_the_misconception_lines(self):
+    def test_rules_block_collects_the_marked_lines_from_their_files(self):
         t = self.P.rules_block(DOCS)
-        self.assertTrue(t.startswith('## Level 300 misconceptions\n- '))
-        self.assertNotIn('What belongs here', t)
-        self.assertNotIn('Correction', t)
-
-    def test_rules_and_glossary_keep_only_the_id_of_a_file_link(self):
-        t = self.P.rules_block(DOCS)
-        self.assertNotIn('.md)', t)
+        self.assertTrue(t.startswith('## Level 300 misconceptions\n- "'))
+        marked = [i for i, d in DOCS.items() if d.meta.get('up_front')]
+        self.assertGreaterEqual(len(marked), 10)
+        for i in marked:
+            self.assertIn(f'See `{i}`.', t)
+        self.assertNotIn('.md)', t)                 # file links reduced to ids
         self.assertIn('See `vsphere/architecture/vm-vs-guest-os`', t)
-        files = [e['file'] for e in kb.glossary(DOCS) if e['file']]
-        self.assertTrue(files and all(f in DOCS for f in files))
+
+    def test_up_front_mark_must_match_one_line(self):
+        d = DOCS['vsphere/architecture/vm-vs-guest-os']
+        self.assertIsNotNone(self.P.up_front_line(d, d.meta['up_front']))
+        self.assertIsNone(self.P.up_front_line(d, 'a belief no line holds'))
 
     def test_answer_prompt_carries_the_blocks(self):
         class Recorder(MockClient):

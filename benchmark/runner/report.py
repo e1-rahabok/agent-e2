@@ -139,7 +139,7 @@ def consensus(rows, k=3, modes=('agent-e2',)):
 
 
 # Release gate (benchmark/design.md, section 7.5; author, Q130, 2026-11-12). Read on Agent E2 (mode agent-e2, 2026-11-14).
-# Not computed here: no misconception of knowledge/misconceptions.md stated as true (author check of each answer),
+# Not computed here: no up-front misconception (lines marked up_front) stated as true (author check of each answer),
 # and the held-out set at most 11 points below the development set (a separate run).
 GATE = {'final': 0.85, 'level:400': 0.80, 'confident_wrong': 0.03}
 ALPHA = 0.05  # paired test against the frontier model: reported as an outcome, not a gate (author, 2026-11-13)
@@ -285,7 +285,7 @@ def write(run_dir):
             for name, v, lim, ok in gate(fin, all_scored, m, mode):
                 val = f'{v:.3f}' if name.startswith('Paired') and not math.isnan(v) else _pct(v)
                 L.append(f'| {m} | {name} | {val} | {lim} | {"-" if ok is None else "yes" if ok else "no"} |')
-        L += ['', '- Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check), and the held-out set at most 11 points below the development set (separate run). Method: `benchmark/design.md`, section 7.5.']
+        L += ['', '- Not read here: no up-front misconception (lines marked `up_front`) stated as true (author check), and the held-out set at most 11 points below the development set (separate run). Method: `benchmark/design.md`, section 7.5.']
     L += ['', '## Sub-scores', '',
           '| Model | Mode | Deterministic | Judged | Text | Table | Screenshot | Level 100 | Level 200 | Level 300 | Level 400 |',
           '|---|---|---|---|---|---|---|---|---|---|---|']

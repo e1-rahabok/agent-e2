@@ -102,13 +102,13 @@ flowchart LR
 |---|---|---|---|
 | Retrieved when a question needs it | Mechanisms, metrics, misconceptions, flows | `knowledge/**/*.md` (indexed) | About 315K tokens (2026-11-13): too large to send with every question |
 | Looked up exactly | Units, rollups, statistics levels, thresholds, user terms | `knowledge/catalog/*.yaml` (loaded into SQLite) | An exact value must not depend on ranking or model memory |
-| Given up front, every question | Misconceptions with the widest reach, confusable pairs, flow index, map | [`knowledge/misconceptions.md`](knowledge/misconceptions.md); built from [`knowledge/glossary.md`](knowledge/glossary.md) and file ids by [`harness/primer.py`](harness/primer.py) | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
+| Given up front, every question | Misconceptions with the widest reach, confusable pairs | Built by [`harness/primer.py`](harness/primer.py) from the `## Misconceptions` lines marked `up_front` in their files and from [`knowledge/glossary.md`](knowledge/glossary.md) | A confident wrong belief is never looked up: the correction must be in place before the model reasons |
 | Executed as code | Arithmetic identities, flow step order, answer checks, user-word mapping | [`harness/calc.py`](harness/calc.py), `capacity.py`, `flows.py`, `verify.py`, `terms.py` | Small models slip on arithmetic and skip steps; code does not |
 | Agent instructions | Knowledge base first, same-name check, threshold only with its source, Unsure | [`harness/modes.py`](harness/modes.py) (system prompts), [`harness/primer.py`](harness/primer.py) (procedure) | Conduct for every answer, not a fact about one metric |
 
 - One home per fact. The mechanism lives in `knowledge/`; code and up-front text hold only what they need to act and point to the file. `calc.py` converts a summation counter from ms to %; why Ready is a summation counter is in the Ready file. Each up-front misconception ends with `See <id>`.
 - Up-front text reaches every answer, a retrieved file only the answers that find it. A wrong up-front line or prompt rule therefore costs more than a wrong metric file, and its review comes first.
-- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. [`knowledge/misconceptions.md`](knowledge/misconceptions.md) is given up front and kept out of the index ([`harness/kb.py`](harness/kb.py), `NOT_INDEXED`): search must return the file with the mechanism, not the one-line summary. `knowledge/` is not the same as indexed: the catalog is not chunked as prose either.
+- All domain knowledge the author reviews lives in `knowledge/`, whatever its path to the model. Every knowledge file is indexed; the up-front block is built from marked lines of those files, so no fact has a second, unindexed copy (Q211, 2026-11-14). `knowledge/` is not the same as chunked prose: the catalog is loaded, not chunked.
 - Not deployed: `project/` (lint, allowed tags, moved ids) and `benchmark/` check the knowledge and hold nothing the agent reads.
 
 ## 3. Knowledge forms
@@ -157,9 +157,9 @@ This is the one definition of the levels; the benchmark uses it ([`benchmark/des
 
 - Example: "Swap Consumed = Swap Out - Swap In" → no. Swap Out and Swap In are cumulative totals; Swap Consumed is what sits in swap now, like VM Swapped.
 
-### One concept, two homes
-- In the file: `## Misconceptions`, in the user's own words, next to the mechanism. A question that carries the belief retrieves its correction. It reaches only the answers that retrieve the file.
-- Up front: [`knowledge/misconceptions.md`](knowledge/misconceptions.md), the dozen with the widest reach, each one also in the file it names. A model never looks up what it is sure of, so these corrections are in place before it reasons.
+### One home, two paths to the model
+- Home: `## Misconceptions` in the file, in the user's own words, next to the mechanism. A question that carries the belief brings its correction through the reading set.
+- Up front: the dozen with the widest reach are marked in their file (metadata `up_front`: the wrong belief, as quoted in the line). [`harness/primer.py`](harness/primer.py) collects the marked lines into the up-front block, so the correction is in place before the model reasons, even when the question does not name the file. One copy: the author edits the line in its file (author, Q211, 2026-11-14).
 - Not a confusable pair: two real terms swapped (Core vs Thread Utilization) is a vocabulary error, kept in the glossary; a misconception is a wrong belief about how something works.
 
 ### Misconception types

@@ -38,6 +38,7 @@ Every knowledge file and every benchmark question ends with a `## Metadata` sect
 | `source.document` / `source.path` | Source document (with version and revision) and heading path or pages. |
 | `corrections` | Facts that differ from the source document named in `source.document`. Each entry names the section it affects. |
 | `review_notes` | Only what is still to check: section, what, and the URL or document to check against. No who-said-it tags. A settled item is deleted. |
+| `up_front` | Optional. The wrong belief of one `## Misconceptions` line of this file, as quoted in that line: the line goes to the model with every question (up-front block `rules`, [`harness/primer.py`](../../harness/primer.py)). Lint checks it matches exactly one line. |
 | `status` | draft (not reviewed) or reviewed. Agent E2 says so when an answer depends on a draft file. |
 
 - Audit information (corrections, what is still to check, review state) lives only in the metadata block. Body text and headings carry no audit markers and no who-said-it tags: no "", no "the author states".
@@ -54,6 +55,6 @@ The concepts behind the tags; the allowed values are in [`project/tools/tags.yam
 - Pillar: availability, performance, security, capacity, value. Not a technology.
 - Metric class: contention, consumption, context. Not a pillar.
 - Metric: a measured value with name, unit and formula, for one object type. Counter: the raw source counter (`cpu.ready.summation`); a metric may use several. Property: an attribute set by configuration or capability (configured hosts, maximum VMs), not produced at an interval. A count of inventory (VMs in a cluster) and a state (power state) are metrics: `knowledge/foundations/input-types`.
-- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One concept, two homes: `## Misconceptions` in the file, and the widest-reaching ones up front in [`knowledge/misconceptions.md`](../../knowledge/misconceptions.md). [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md), section 4.
+- Misconception: a wrong conclusion from a true observation or a public rule of thumb, held with confidence at Level 300, with the mechanism that corrects it. One home: `## Misconceptions` in the file; the widest-reaching ones are also sent up front, marked by `up_front`. [`KNOWLEDGE-ENGINEERING.md`](../KNOWLEDGE-ENGINEERING.md), section 4.
 - Level 400: mechanism, where the reading misleads, what to check instead. Level 300: a metric and a common threshold at face value.
 - Thread (physical): a hardware thread, a provider. Thread (software): an OS thread, a consumer.

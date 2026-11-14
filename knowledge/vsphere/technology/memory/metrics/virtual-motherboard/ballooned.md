@@ -24,7 +24,7 @@
 - See [`vsphere/technology/memory/concepts/ballooning`](../../concepts/ballooning.md).
 
 ## Misconceptions
-- "Ballooned > 0, so the host is under memory pressure now" → not necessarily.
+- "Ballooned > 0, so the host is under memory pressure now" → not necessarily. Ballooned, Compressed and Swapped are past tense: memory reclaimed earlier. VM memory contention decides whether the VM waits now.
 - "Ballooning means VMs are contending for RAM" → check Contention.
 - "A limit causes ballooning" → not directly. A limit causes Compressed or Swapped when Consumed tries to grow beyond it.
 
@@ -32,6 +32,7 @@
 ```yaml
 id: vsphere/technology/memory/metrics/virtual-motherboard/ballooned
 retriever_guide: metric-meaning
+up_front: 'Ballooned > 0, so the host is under memory pressure now'
 scope: vsphere
 technology:
 - memory

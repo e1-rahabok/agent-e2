@@ -158,7 +158,7 @@ def build(folders, today=None):
             for name, v, limit, ok in R.gate(fin, rows, m, E2, ref):
                 L.append(f'| {m} | {name} | {v:.0%} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |' if not name.startswith('Paired') else
                          f'| {m} | {name} | p {v:.3f} | {limit} | {"-" if ok is None else "yes" if ok else "no"} |')
-        L += ['', 'Not read here: no misconception of `knowledge/misconceptions.md` stated as true (author check of the answers), and the held-out set at most 11 points below the development set (a separate run).', '']
+        L += ['', 'Not read here: no up-front misconception (lines marked `up_front`) stated as true (author check of the answers), and the held-out set at most 11 points below the development set (a separate run).', '']
     if (cfg0.get('consensus_samples') or 1) <= 1 and (cfg0.get('runs') or 0) >= 3:
         L += R.consensus_table(fin, R.consensus(rows))[1:] + ['']
     L += ['## Reading', ''] + [f'- {x}' for x in reading(fin, rows, info, ref)] + ['']

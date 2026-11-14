@@ -35,11 +35,13 @@ flowchart TD
 
 ## Misconceptions
 - "Used is far below Run, so the VM needs more vCPUs" → power saving and Hyper-Threading lower Used; more vCPUs do not change either.
+- "CPU Used or Usage is high, so add vCPUs" → read Run first. Turbo raises Used and Usage above Run, and more vCPUs change neither.
 
 ## Metadata
 ```yaml
 id: vsphere/technology/cpu/troubleshooting/run-vs-used-gap
 retriever_guide: troubleshooting
+up_front: 'CPU Used or Usage is high, so add vCPUs'
 scope: vsphere
 technology:
 - cpu

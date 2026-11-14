@@ -54,6 +54,7 @@
 ```yaml
 id: vsphere/architecture/provider-consumer
 retriever_guide: how-it-works
+up_front: 'ESXi CPU Ready is high, so the host waits for CPU'
 scope: vsphere
 technology:
 - cpu
