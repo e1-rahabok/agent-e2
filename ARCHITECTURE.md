@@ -1,7 +1,6 @@
 # Architecture
 
 The whole system: how the repository is organized, and how the model, agent, harness and knowledge work together at run time. Not indexed.
-The agent: [harness/AGENT.md](harness/AGENT.md). Harness parts: [harness/README.md](harness/README.md). Knowledge, folders and writing rules: [KNOWLEDGE-ENGINEERING.md](KNOWLEDGE-ENGINEERING.md). Benchmark: [benchmark/design.md](benchmark/design.md).
 
 ## Components
 | Component | Design document |
@@ -43,9 +42,9 @@ flowchart LR
 - Product: what runs at the customer site.
   - `knowledge/`: Level 400 mechanisms, metrics, misconceptions and flows (health checks, troubleshooting, decision trees), plus exact data in [`knowledge/catalog/`](knowledge/catalog). Up-front text and domain code in `harness/` act on it ([`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2). Version 1.0 covers vSphere 9.1 metrics, the VCF Operations metrics and models computed on vSphere objects, and the Guest OS layer, for performance and capacity; the end scope is the private cloud stack (vSAN, NSX, Kubernetes, and VCF Operations beyond its vSphere metrics).
   - `harness/`: the software around the model: hybrid retrieval, link expansion, exact tools (catalog lookup, calculator; the planning calculator and the flow executor are built but not yet called by the agent), answer verifier, web fetch and search, and the agent. Reads `knowledge/`; depends on no other folder.
-  - Agent: the expert's procedure as code, a neuro-symbolic expert system (built 2026-11-14; [`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/planner.py`](harness/planner.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
-  - Model: an open-weight vision model on local GPUs (one GPU is the stretch target; two to four are allowed), chosen by benchmark ([`benchmark/models.md`](benchmark/models.md)). Not stored here.
-- Proof: shows that the product works: the release gate on the benchmark. A higher score than a frontier model is an outcome, not a goal.
+  - Agent: the expert's procedure as code, a neuro-symbolic expert system ([`harness/AGENT.md`](harness/AGENT.md)). It reads the question into a case, plans the reading set from the knowledge base's map ([`harness/planner.py`](harness/planner.py)), runs the exact tools, decides whether to ask, calls the model to read and write, and checks the answer.
+  - Model: an open-weight vision model on local GPUs, chosen by benchmark ([`benchmark/models.md`](benchmark/models.md)). Not stored here.
+- Proof: shows that the product works by passing the benchmark. A higher score than a frontier model is an outcome, not a goal.
   - `benchmark/`: questions with answer keys and their attachments, the candidate models ([`benchmark/models.md`](benchmark/models.md)), the runner, results. One final score, 0-100%, with sub-scores by answer type (deterministic, judged), input type (text, table, screenshot) and level (100-400). Luck removed: Unsure option, confident-wrong rate, each question scored on the mean of 5 runs, the worst run reported as consistency. Never indexed: it holds the answer keys.
 - Project: how this repository is built and kept correct.
   - `project/`: plan (milestones, decisions, open work), author questions, reviews, archive.
@@ -59,10 +58,10 @@ flowchart LR
 | Knowledge | Level 400 facts, mechanisms, misconceptions, flows (markdown) and exact data (YAML catalog); up-front misconceptions | `knowledge/` | Nothing. It is the first source; where it speaks, it wins. |
 | Agent | The expert's procedure as code: six stages from question to checked answer ([`harness/AGENT.md`](harness/AGENT.md)) | [`harness/agent.py`](harness/agent.py), [`harness/planner.py`](harness/planner.py) | The case, the reading set, which exact tools run on which values, whether to ask, when the answer is accepted. |
 | Harness | The execution environment and the guardrails: hybrid search engine (BM25 + vectors), SQLite catalog, calculator, planning calculator and flow executor (not yet called), web fetch and search, budgets, the answer verifier | `harness/` | Nothing on its own: it runs what the agent asks and enforces the limits. |
-| Model | An open-weight vision LLM on local GPUs (one GPU is the stretch target; [`benchmark/models.md`](benchmark/models.md)) | served by vLLM, llama.cpp or Ollama | How to read the question and the images into the case, and how to read the reading set into an answer: which options are right, which mechanism applies. It does not choose what to read. |
+| Model | An open-weight vision LLM on local GPUs ([`benchmark/models.md`](benchmark/models.md)) | served by vLLM, llama.cpp or Ollama | How to read the question and the images into the case, and how to read the reading set into an answer: which options are right, which mechanism applies. It does not choose what to read. |
 
 - The agent leads, the model reads. The model does not know what the knowledge base holds, so it cannot plan the lookups; the knowledge base records its own map (file kinds, links, catalog, flows), so code can ([`harness/AGENT.md`](harness/AGENT.md), section 2).
-- One pipeline for every question (author, 2026-11-14). Classic mode (one search, then one answer) and agentic mode (the model chooses its tools) are removed; their code is archived ([`harness/AGENT.md`](harness/AGENT.md), section 2). Baseline (the model alone) and web (the frontier reference) are benchmark references, not product modes.
+- One pipeline for every question. Baseline (the model alone) and web (the frontier reference) are benchmark references, not product modes.
 - The model's own memory of vSphere metrics comes from public Internet text and repeats the misconceptions the knowledge base corrects.
 - The model is told to use the knowledge base first; where the knowledge base speaks, it wins; where it is silent, the model may use its own knowledge and must say so.
 - The knowledge base does not answer by itself. It must be found, read and applied to the question.
@@ -162,7 +161,7 @@ Each mechanism blocks one failure of a small model. None needs the Internet. Har
 2. Split each file at `## Metadata`. Parse the yaml block into filter fields. Do not embed it.
 3. Chunk the body by `##` heading. Files are short, so one file is often one chunk. Mermaid charts are left out of the indexed and retrieved text: they repeat the numbered steps for GitHub, and the model follows the steps (retrieval check 2026-11-11: no change on the files as they were; with the flows rewritten to the template, search 59% → 60%, complete 60 → 61 of 95). File links [`id`](path.md) are reduced to `id`: the path is for reviewers on GitHub (retrieval check 2026-11-11: unchanged, 60%, 78%, 61/95).
 4. Prefix each chunk with the file title and `id`, so a chunk is understood without its neighbours.
-5. Keep image links in the chunk. The text next to each image states the same facts, so a text-only model loses nothing.
+5. Keep image links in the chunk. The text next to each image states the same facts so Agent E2 can understand it.
 6. Index each `images` entry as its own record (path, alt text, tags), so an image can be retrieved by product, object, metric or type, and returned with what it shows.
 7. Load `knowledge/catalog/*.yaml` into a database for exact lookups (unit, rollup, statistics level, thresholds, object relations). Do not chunk it as prose.
 8. Up front as well as indexed: the misconception lines marked `up_front` in their files and the confusable pairs of [`knowledge/glossary.md`](knowledge/glossary.md) reach the model with every question as up-front blocks ([`harness/primer.py`](harness/primer.py)). All five paths by which knowledge reaches the model: [`KNOWLEDGE-ENGINEERING.md`](KNOWLEDGE-ENGINEERING.md), section 2.
