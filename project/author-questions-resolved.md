@@ -4,6 +4,15 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ## Resolved
 
+### Q234 · Guest OS > CPU > Run queue · Threads waiting for a lock: Ready or Wait?
+
+- Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue, step 3); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) (section Cases, Misconceptions); [Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md).
+- Search: "waiting for a Software Lock (like a Mutex or Semaphore)" (author's text in Q232); "marked as \"Ready\" because they aren't waiting on I/O".
+- Question: your text for the alert says threads waiting for a lock are marked Ready. run-queue.md and its misconception say a thread blocked on a lock is in the Wait state and joins the queue (Ready) only when the lock is released; the queue counts Ready threads only. Which holds? (A) a blocked thread is Wait; the queue holds the threads that were woken and are runnable but make no progress (contention on the lock, spinning); (B) threads waiting for the lock are counted in the queue; (C) other.
+- Written as now: A, in both files (alert step 3 and run-queue).
+- Expert reading: A. On Windows a thread blocked on a mutex or semaphore is Waiting; Processor Queue Length counts Ready, Standby and Deferred Ready.
+- Answer: (author, 2026-11-15) A. None of the files cited here says a lock-blocked thread is Ready; the "Ready" wording came from the author's chat message about Q232, not from the knowledge base, so there was no conflict between files. A blocked thread is in Wait; the queue holds the threads that are Ready. No file change: [guest-os-alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) and [run-queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) already read A.
+
 ### Q233 · Benchmark > L4-077 · Option C (queue unchanged after a downsize) with a per vCPU metric
 
 - Files: [CPU usage dropped after a downsize](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-077-cpu-usage-dropped-after-downsize.md) (option C, the export 0236); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (CPU checks after a change).
