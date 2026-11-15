@@ -113,6 +113,6 @@ Only these stop the round:
 
 ## A smaller run
 
-- One model, one mode: `python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-04`.
+- One model, one mode: `python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004`.
 - `run.py --dry-run` prints the answers and a rough cost. It undercounts a model that thinks. Trust `preflight.py --models <id>` instead.
 - `python3 benchmark/runner/run_all.py --dry-run` prints the plan of the round without any call.

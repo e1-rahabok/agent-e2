@@ -4,7 +4,7 @@
 Examples:
   python3 benchmark/runner/run.py --dry-run
   python3 benchmark/runner/run.py --mock --runs 2
-  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-04
+  AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py --models google/gemma-4-31b-it --modes agent-e2 --runs 1 --questions L4-004
   AI_GATEWAY_API_KEY=... python3 benchmark/runner/run.py              # full matrix from config.yaml
   python3 benchmark/runner/run.py --resume benchmark/results/<benchmark-id>   # models, modes, runs and questions come from the folder
   python3 benchmark/runner/run.py --models <id> --max-minutes 110            # stops cleanly after 110 minutes (exit code 3)
@@ -50,7 +50,7 @@ def main():
     ap.add_argument('--models', help='comma-separated model ids (default: config)')
     ap.add_argument('--modes', help='comma-separated: baseline, agent-e2 (candidates); web (the frontier reference)')
     ap.add_argument('--runs', type=int)
-    ap.add_argument('--questions', help='comma-separated: an id or a file-name fragment, e.g. L4-04,L1-,esxtop')
+    ap.add_argument('--questions', help='comma-separated: an id or a file-name fragment, e.g. L4-004,L1-,esxtop')
     ap.add_argument('--temperature', type=float)
     ap.add_argument('--concurrency', type=int, help='proven parallel requests for every model (overrides concurrency and concurrency_by_model)')
     ap.add_argument('--no-adaptive', action='store_true', help='keep every model at its proven concurrency: no probing upward')
