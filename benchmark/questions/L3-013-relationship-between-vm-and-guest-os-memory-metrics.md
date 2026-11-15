@@ -12,6 +12,7 @@ Which statements about the VM memory metrics and the Guest OS memory metrics are
 - E. If VMware Tools is not running, VCF Operations falls back to Consumed for the VM's memory Utilization.
 - F. Once a guest has touched a page, ESXi has no way to take that memory back from the VM.
 - G. A memory limit at the guest's In Use value is a safe way to make ESXi take back the memory the guest freed.
+- H. On a Linux VM, stopping the VMware Tools service (vmtoolsd) stops ESXi from ballooning the VM.
 
 ## Likely wrong answer
 C: a Guest OS counter and a VM counter with the same name read as one. Or F, the over-correction: ESXi can never take memory back.
@@ -25,8 +26,10 @@ C: a Guest OS counter and a VM counter with the same name read as one. Or F, the
 - E is true: VCF Operations VM memory Utilization falls back to Consumed when guest metrics from VMware Tools are not collected; Consumed holds idle and cache pages, so the value reads higher.
 - F is false: ESXi takes memory back by ballooning, compression and swapping. This is the over-correction of "ESXi does not see guest frees".
 - G is false: the guest cannot see a limit, so it keeps using memory as if it had all of it, and the result is unpredictable; a limit used instead of right-sizing can cause a worse problem than a smaller VM.
+- H is false: on Linux the balloon driver is the kernel module `vmw_balloon`, not part of open-vm-tools; ballooning goes on while vmtoolsd is stopped. "VMware Tools: Not running" reports the service, not the driver.
 
 ## Notes
+- 2026-11-15, Q223 answered (the knowledge base stands: a stopped Tools service does not stop ballooning on Linux): H added as a false option on the Linux case. Key unchanged: A, B, D, E.
 - Options rewritten 2026-11-14 to the theory option rules (design.md 3.9; project/question-pairing-2026-11-14.md): one fact per option; F the over-correction and G the wrong action added (author approved, 2026-11-14).
 - Option D was "If VMware Tools is not running, the hypervisor cannot balloon the VM". The knowledge base (ballooning; Broadcom KB 313773) says the driver is a kernel driver: on Linux `vmw_balloon` is in the kernel and not part of open-vm-tools, so a Linux VM keeps ballooning while vmtoolsd is stopped. D now states the case both agree on (Windows without VMware Tools); the Linux case is raised as an author question (project/question-pairing-2026-11-14.md, section 1, item 5).
 - Review 2026-11-15: the quiz's options A (the two layers are managed independently), B (the values and patterns differ) and C (a page freed in the guest is freed in ESXi) are tested by 0095 (B, C, D, E); they are replaced by facts 0095 lacks: VCF Operations Utilization above 100% (A), unusable guest memory (B) and the two compression counters (C). D and E, the quiz's own facts, stay. G's reason no longer rests on whether a limit causes ballooning (open author question Q214). Key unchanged: A, B, D, E.
@@ -56,7 +59,7 @@ source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q2 
 answer_type: deterministic
 level: 300                      # author 2026-11-05
 answer: [A,B,D,E]
-misconception: [C]
+misconception: [C, H]
 misconception_type: [layer-confusion]
 status: draft
 ```
