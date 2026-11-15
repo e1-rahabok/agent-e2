@@ -267,6 +267,5 @@ source:
 corrections: []
 review_notes:
   - "To check: Sections 'CPU', 'Memory' and 'Capacity': the Product label line of each of the eight label entries, verbatim; vSphere Client 9.1 and VCF Operations 9.1.1 screens (live product), and the chart label tables of the vSphere 9.1 documentation (Overview Performance Charts, p. 2033 onward)."
-  - "To check: Section 'CPU', entry ESXi CPU Usage (%): the Better name CPU Throughput (% of nominal) is a proposal, not settled; open author question Q236."
 status: reviewed
 ```
