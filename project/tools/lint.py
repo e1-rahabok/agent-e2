@@ -4,6 +4,10 @@ Exit code 0 = pass, 1 = problems found. Allowed values come from
 project/tools/tags.yaml."""
 import glob, hashlib, os, re, sys, yaml
 
+# Windows returns paths with '\'; every check here compares paths with '/' (the repository's form).
+_glob_native = glob.glob
+glob.glob = lambda pattern, **kw: [p.replace(os.sep, '/') for p in _glob_native(pattern, **kw)]
+
 HARNESS = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'harness')
 sys.path.insert(0, HARNESS)
 from kb import split, NOT_INDEXED, FILE_LINK  # noqa: E402  (the parser the harness uses, so lint and retrieval read files the same way)
@@ -575,7 +579,7 @@ def check_catalog(allowed, ids, bodies, bad, docs=None):
         for k in ('id', 'title', 'review_notes', 'status'):
             if k not in meta: bad(path, f'meta.{k} missing')
         if meta.get('status') not in allowed['status']: bad(path, f'meta.status "{meta.get("status")}" not allowed')
-        if meta.get('id') != path[len('knowledge/'):-5]: bad(path, f'meta.id "{meta.get("id")}" does not match path')
+        if meta.get('id') != path.replace(os.sep, '/')[len('knowledge/'):-5]: bad(path, f'meta.id "{meta.get("id")}" does not match path')
         name = os.path.basename(path)
         rows = data.get('rows') or []
         if name == 'vcenter-counters.yaml':

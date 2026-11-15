@@ -486,7 +486,7 @@ class RoundHelpersTest(unittest.TestCase):
         self.assertEqual(first[first.index('--modes') + 1], 'baseline,web')
         self.assertIn('"effort": "none"', first[first.index('--params') + 1])
         again = RA.child_cmd(e, '/out', 50, resume=True)
-        self.assertEqual(again[again.index('--resume') + 1], '/out/20261114-m')
+        self.assertEqual(again[again.index('--resume') + 1], os.path.join('/out', '20261114-m'))
         self.assertNotIn('--models', again)
 
 
