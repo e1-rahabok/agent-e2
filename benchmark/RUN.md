@@ -25,15 +25,15 @@ When the round is complete: merge it to main, then give me the summary.
 
 ## Expect
 
-Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (196 on 2026-11-14), 5 runs each, judge openai/gpt-6.1-terra. Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
+Two runs per candidate, Base (`baseline`) and Agent E2 (`agent-e2`), and the frontier reference in one mode, `web` (search available, Opus decides whether to use it); every question of the run set (226 on 2026-11-15; questions with status `awaiting-input` do not run), 5 runs each. No judge: every question is multiple choice (Q199). Projected from the validity sample of 2026-11-14 (Gemma, 9 questions: US$ 0.0026 and 33 s per Agent E2 answer on the gateway, 2 model calls each) and the model prices; Opus from the round of 2026-11-13. Read these as plus or minus 30%; the preflight gives the real numbers before the round starts.
 
 | Run folder | Modes | Answers | Request settings | Time | Cost US$ |
 |---|---|---|---|---|---|
-| `<date>-gemma-4-31b-it` | baseline, agent-e2 | 1,960 | default | about 50 min | about 3 |
-| `<date>-qwen3.8-27b` | baseline, agent-e2 | 1,960 | reasoning off | about 50 min | about 3 |
-| `<date>-muse-glimmer-30b` | baseline, agent-e2 | 1,960 | reasoning off | about 60 min | about 7 |
-| `<date>-claude-opus-5.5` | web | 980 | effort medium, 8,000 tokens | about 70 min | about 27 |
-| Total | | 6,860 | | 1.5 to 2 hours | about 40 (52 with the safety factor) |
+| `<date>-gemma-4-31b-it` | baseline, agent-e2 | 2,260 | default | about 60 min | about 3.5 |
+| `<date>-qwen3.8-27b` | baseline, agent-e2 | 2,260 | reasoning off | about 60 min | about 3.5 |
+| `<date>-muse-glimmer-30b` | baseline, agent-e2 | 2,260 | reasoning off | about 70 min | about 8 |
+| `<date>-claude-opus-5.5` | web | 1,130 | effort medium, 8,000 tokens | about 80 min | about 31 |
+| Total | | 7,910 | | 1.5 to 2 hours | about 46 (60 with the safety factor) |
 
 - The four runs go in parallel, so the round takes as long as the slowest run (Opus, at its starting concurrency of 3; the runner raises it while the provider allows).
 - An Agent E2 answer sends about 17,000 input tokens over its 2 model calls (the case call about 1,500, the answer call about 15,000 with the reading set), against about 400 for Base.
