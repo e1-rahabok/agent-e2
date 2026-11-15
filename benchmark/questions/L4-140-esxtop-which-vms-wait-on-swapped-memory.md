@@ -16,7 +16,7 @@ Which statements are correct?
 - F. The VM holding the most memory in its swap file is the VM slowed most by memory right now.
 - G. While ESXi compresses a page, the vCPU of that VM stops until the compression is done.
 - H. Memory that sits in a swap file is harmless to its VM from now on.
-- I. Migrate the VM with the largest SWCUR first, to end its wait on memory.
+- I. Moving the VM with the largest SWCUR to another host first gives its users relief soonest.
 
 ## Input to supply
 - Product: ESXi 9.1, esxtop over SSH. One host under memory pressure (state soft or hard in the header), with no host cache configured.

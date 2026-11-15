@@ -149,6 +149,15 @@ Each entry has:
 - Final answer (expert call): (A) for sizing, which must not cut a VM that the balloon already squeezes; ballooning.md keeps the mechanism and points to guest-os-sizing for the rule. For you: choose.
 - Answer:
 
+### Q228 · Memory > VM > Usage (%) · VCF Operations 9.1: VM Memory Usage (%) and Workload (%)
+
+- Files: [VM Memory Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/usage.md) (section By tool); [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (entry VM Memory Usage (%)).
+- Search: not from the book. In the files: "Workload (%) falls back to Consumed".
+- Question: the knowledge base says VCF Operations VM Memory Usage (%) = Guest OS Needed Memory / Total Capacity, falling back to Active without guest data, and that VM Workload (%) falls back to Consumed. The VCF Operations 9.1 metric list (TechDocs, Virtual Machine metrics, updated 2026-11-12: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html) lists Memory|Usage (%) (`mem|usage_average`) as disabled by default, with no description; it lists no VM Memory|Workload (%), only Host Workload and Guest Workload, both disabled; Mem|Utilization (KB) (`mem|vmMemoryDemand`) is enabled, described as the guest OS memory required or the VM's consumption. Which holds in 9.1? (A) Keep the files; add that 9.1 disables Usage (%) by default. (B) Rewrite on Utilization (KB) and name only the enabled metrics; VM Workload (%) leaves the files. (C) Other.
+- Written as now: Usage (%) and Workload (%) as above. Questions [0394](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-60-vm-memory-usage-vcenter-vs-vcf-operations.md) to 0397 and 0400 test the Usage (%) formula and the fallback; their captures enable the metric and read the formula on the screen; none tests Workload (%).
+- Final answer (expert call): (A) for Usage (%), plus what the 9.1 list names enabled; Workload (%) on a VM needs your field check in a 9.1 instance.
+- Answer:
+
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.

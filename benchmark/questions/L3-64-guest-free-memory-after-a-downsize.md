@@ -7,11 +7,11 @@
 Which statements about the VM after the downsize are correct?
 
 - A. Lower guest free memory after the cut shows that the new size is too small.
-- B. Pages the guest writes out, and VM memory contention, over a full business cycle show if the cut went too far.
+- B. Guest page-out and VM memory contention across a business cycle show if the cut went too far.
 - C. VM memory contention at 0 over a business cycle proves the new size is enough.
 - D. Add memory back until guest free memory returns to its level before the cut.
 - E. A large cut is made in steps, with a check over a business cycle after each step.
-- F. VM Memory Usage (%) in VCF Operations rises after the cut even if Needed Memory stays the same.
+- F. VCF Operations VM Memory Usage (%) rises after the cut even if Needed Memory does not.
 - G. VM Consumed falling after the cut shows that the guest has enough memory.
 
 ## Likely wrong answer

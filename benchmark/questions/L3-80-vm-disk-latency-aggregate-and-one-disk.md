@@ -1,7 +1,7 @@
 # VM disk latency across many virtual disks
 
 ## Prompt
-- A database VM has 8 virtual disks. VCF Operations shows, for this VM, a VM-level read latency built from all its virtual disks, the read latency of each virtual disk, and Peak Latency within collection cycle.
+- A database VM has 12 virtual disks. VCF Operations shows, for this VM, a VM-level read latency built from all its virtual disks, the read latency of each virtual disk, and Peak Latency within collection cycle.
 
 Which statements are correct?
 
@@ -32,6 +32,7 @@ B: the VM's latency is low, so every disk is fine. Or C, the overshoot: no VM-le
 - Theory half of pair D4 with 0423 (practical; design.md, section 3.9). Different VM and numbers from 0423.
 - No option computes the aggregate: the knowledge base does not say whether it weights the disks by their IO.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D4 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: 12 virtual disks, so the situation differs from 0423 (8 or more). Key unchanged.
 
 ## Metadata
 ```yaml

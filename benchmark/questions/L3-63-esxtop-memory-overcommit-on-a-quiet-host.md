@@ -8,15 +8,15 @@ See [the esxtop memory panel header](0399/esxtop-memory-header-overcommit.png).
 
 Which statements are correct?
 
-- A. The memory requested on the host is about 1.3 to 1.6 times the memory ESXi manages.
+- A. For each 1 GB that ESXi manages, about 1.3 to 1.6 GB is requested.
 - B. The VMs on this host are short of memory right now, as the ticket says.
 - C. In the memory state shown, host pressure triggers no ballooning, compression or swapping.
 - D. MEMCTL, SWAP and ZIP at 0 show that nothing is ballooned, swapped or compressed now.
 - E. Read as a percentage, the overcommit value is how full the host's memory is.
-- F. Host swapping cannot start while overcommit stays below 1.
+- F. Host swapping cannot start on this host while the overcommit stays below 1.
 - G. Keep moving VMs off the host until esxtop shows no overcommit at all.
 - H. The three values close together show a steady overcommit over the last 15 minutes.
-- I. The header shows the host in the soft memory state.
+- I. The VMKMEM line of the header shows the host in the soft memory state.
 
 ## Input to supply
 - Product: ESXi 9.1, esxtop over SSH.

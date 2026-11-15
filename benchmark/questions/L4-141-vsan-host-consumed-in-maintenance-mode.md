@@ -9,14 +9,14 @@ See [the vCenter memory chart of the host](0390/vcenter-host-memory-consumed-mai
 Which statements are correct?
 
 - A. Consumed fell when the VMs left and then stayed about level for the rest of the chart.
-- B. Consumed fell to about 0 once the last VM had left the host.
-- C. What stays in Consumed is the memory that the kernel and its services, vSAN among them, use themselves.
+- B. Consumed fell to about 0 once the last VM had left the host for maintenance.
+- C. With no VMs left, Consumed holds the host's own working memory: kernel modules, vSAN and other services.
 - D. An empty host's Consumed should match the memory figure on the System Resource Reservation page.
-- E. The figure on the System Resource Reservation page is set aside for the host's own services; it does not measure their use.
+- E. The System Resource Reservation figure is set aside for the host's own services, not measured use.
 - F. The steady Consumed of the empty host is a kernel memory leak to report to the vendor.
 - G. Only vSAN keeps an empty host's Consumed above 0; a host without it would show none.
 - H. Restart the host before it returns to service, so that it starts again with Consumed at 0.
-- I. The VMs took their overhead memory with them when they left the host.
+- I. The VMs took their overhead memory with them when they moved to the other hosts.
 
 ## Input to supply
 - Product: vSphere Client 9.1; one ESXi host in a vSAN cluster.

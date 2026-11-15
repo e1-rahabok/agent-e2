@@ -8,13 +8,13 @@ See [the VCF Operations memory charts of the VM](0397/vcf-operations-vm-memory-g
 
 Which statements are correct?
 
-- A. The Needed Memory chart has no points where the dip is.
+- A. The Needed Memory chart has a gap that lines up with the dip.
 - B. During the dip, the Usage (%) line sits at the level of the active memory line.
 - C. While Usage (%) dips, Utilization rises to about the level of Consumed.
 - D. Consumed falls during the dip.
 - E. The guest needed less memory for half an hour and then needed it again.
 - F. Every Usage (%) value on these charts, before and after the dip too, comes from active memory.
-- G. Size the VM down to the lowest Usage (%) on these charts.
+- G. Plan the VM's new size on the low point of the Usage (%) line.
 
 ## Input to supply
 - Product: VCF Operations 9.1; a Windows Server VM with VMware Tools, 8 GB or more, whose guest uses much of its memory as cache (Guest|Needed Memory well above active memory).

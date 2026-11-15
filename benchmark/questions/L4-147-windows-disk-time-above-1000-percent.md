@@ -21,7 +21,7 @@ Which statements are correct?
 
 ## Input to supply
 - Product and version: Windows Server 2022 VM on vSphere 9.1 (vSphere Client 9.1); one data virtual disk (E:) on a Paravirtual SCSI controller.
-- How to produce it: a read-only random load with a deep queue on a datastore with moderate latency (3-15 ms), for example `diskspd -b8K -d900 -o16 -t2 -r -w0 -Sh E:\test.dat` (create the file first). Wait 2 minutes before capturing.
+- How to produce it: a read-only random load with a deep queue on a datastore with moderate latency (3-15 ms), for example `diskspd -b8K -d900 -o12 -t2 -r -w0 -Sh E:\test.dat` (create the file first). Wait 2 minutes before capturing.
 - Screen 1, Performance Monitor, Report view, sample interval 60 seconds, counters PhysicalDisk(the data disk): % Disk Time, Avg. Disk Queue Length, Disk Transfers/sec, Avg. Disk sec/Transfer. Save as `0418/perfmon-physicaldisk-report.png`.
 - Screen 2, vSphere Client > the VM > Monitor > Performance > Advanced > Virtual disk, Chart Options: Real-time, object the data disk (scsiM:N), counters Read latency and Average read requests per second, with the legend table. Capture within the same minutes as screen 1. Save as `0418/vcenter-vm-virtual-disk-real-time.png`.
 - Condition the key depends on: % Disk Time 1,000% or more; Avg. Disk Queue Length within 5% of Disk Transfers/sec x Avg. Disk sec/Transfer; Avg. Disk sec/Transfer (in ms) within 15% of the vCenter Read latency of the same minutes; Disk Transfers/sec within 10% of the vCenter read requests per second.

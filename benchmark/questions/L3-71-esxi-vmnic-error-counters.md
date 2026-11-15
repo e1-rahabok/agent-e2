@@ -21,11 +21,11 @@ A: a small error rate is normal background. The overshoot is B: every error is a
 ## Expected key points
 - Answer: C, D, E, G.
 - A false: the misconception. Error, unknown and dropped packets are expected to be 0 at all times; any count is a fault to find.
-- B false: the over-correction. Errors have several causes: damaged frames from cabling or optics (CRC and checksum errors), wrong sizes (length errors), a full NIC buffer (FIFO, over errors), hardware limits (missed errors).
+- B false: the over-correction. Errors have several causes: damaged frames, typically a bad cable (CRC and checksum errors), wrong sizes (length errors), a NIC that cannot keep up at its ring size (FIFO, missed errors), its hardware buffer (over errors).
 - C true: an average across members hides the outlier until the problem is widespread; read the worst vmnic.
 - D true: esxcli counters are cumulative: read them twice to see whether they still grow.
 - E true: Receive FIFO errors and Transmit FIFO errors mean the NIC cannot process: ring buffer full.
-- F false: the wrong action. The count is cumulative and may be old, and the error type points to the cause, which can be the cable, the optic or the switch port rather than the NIC.
+- F false: the wrong action. The count is cumulative and may be old, and the error type points to the cause: a CRC error is typically a bad cable, a FIFO or missed error a ring too small for the traffic.
 - G true: the VMkernel TCP/IP stack carries the host's own traffic (vSAN, vMotion, NFS, iSCSI) and counts its retransmits (vSAN Performance for Support, `net-stats`); they point to loss in the physical network.
 - H false: VM traffic is TCP inside the Guest OS; the host does not see its retransmits.
 

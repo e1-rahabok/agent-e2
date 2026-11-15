@@ -13,7 +13,7 @@ Which statements are correct?
 - C. At this usage, free memory stayed above the level at which ESXi starts to balloon.
 - D. No VM on the host waited on memory at any point of the week.
 - E. The VMs wait for memory now, because a host above 90% usage delays the pages they touch.
-- F. Once ballooning starts on this host, its VMs begin to wait for memory.
+- F. Memory that ESXi takes back through the balloon is memory the VMs then wait for.
 - G. No level of host memory usage, even 100%, can make the VMs wait for memory.
 - H. Move VMs off the host now, so that they do not slow down once ballooning starts.
 

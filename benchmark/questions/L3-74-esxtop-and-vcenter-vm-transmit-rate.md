@@ -7,15 +7,17 @@
 
 Which statements are correct?
 
-- A. Both tools are right: esxtop shows megabits per second; the vSphere Client chart shows kilobytes per second.
+- A. esxtop shows the rate in megabits per second.
 - B. One of the two tools is wrong, since both show the same traffic in the same minute.
 - C. The vSphere Client value times 8, divided by about 1,000, gives about the esxtop value.
-- D. The vSphere Client value is in megabits per second, the same unit as esxtop.
+- D. The vSphere Client chart has already converted its value to megabits per second.
 - E. The vSphere Client value is in kilobits per second, so dividing it by 1,000 gives the esxtop value.
 - F. The only difference is bits against bytes: esxtop shows 8 times the vSphere Client value.
 - G. The gap comes from the sampling interval: esxtop averages a few seconds, the chart 20 seconds.
 - H. The VM transmits about 3 Gb/s.
 - I. Open a support case for the vCenter network counter.
+- J. esxtop and the vSphere Client cannot be compared for the same VM.
+- K. The number in the vSphere Client chart is about 125 times smaller than the number in esxtop.
 
 ## Input to supply
 - Product and version: vSphere 9.1 (ESXi 9.1, vSphere Client 9.1).
@@ -24,29 +26,32 @@ Which statements are correct?
 - Screen 1, esxtop on the VM's host, `n` (network panel), default 5-second refresh: the header and the row of the VM's port (USED-BY shows the VM), with PORT-ID, USED-BY, TEAM-PNIC, PKTTX/s, MbTX/s, PKTRX/s, MbRX/s visible. Save as `0412/esxtop-network-panel.png`.
 - Screen 2, vSphere Client > the VM > Monitor > Performance > Advanced > Network, Chart Options: Real-time, object the VM, counters Data transmit rate and Data receive rate, with the legend table (Units column, Latest, Maximum). Keep the chart title in the capture. Save as `0412/vcenter-vm-network-real-time.png`.
 - Capture both within the same minute.
-- Condition the key depends on: esxtop MbTX/s of the VM's port between 2,800 and 3,200; the vSphere Client Data transmit rate between 340,000 and 390,000 KBps (Latest), with the line flat within about 5% over the last 10 minutes.
+- Condition the key depends on: esxtop MbTX/s of the VM's port between 2,800 and 3,200; the vSphere Client Data transmit rate between 340,000 and 390,000 KBps (Latest), with the line flat within about 5% over the last 10 minutes; Data transmit rate x 8 / 1,000 within 10% of MbTX/s.
 - Masking: mask every VM, host, datastore and cluster name.
 
 ## Likely wrong answer
-B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only bits against bytes, a factor of 8.
+B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only bits against bytes, a factor of 8. The overshoot is J: the tools cannot be compared.
 
 ## Expected key points
 - Answer: A, C, H.
-- A true: esxtop network throughput is megabits per second (MbTX/s); vCenter VM network throughput (Data transmit rate) is kilobytes per second, as the API stores it.
-- B false: the units differ; after conversion the two agree.
+- A true: esxtop network throughput is megabits per second (MbTX/s).
+- B false: the misconception. Both are right: vCenter VM network throughput (Data transmit rate) is kilobytes per second, as the API stores it; after conversion the two agree within 10%.
 - C true: KBps x 8 is kilobits per second; divided by about 1,000 it is megabits per second. About 365,000 KBps x 8 / 1,000 is about 2,900-3,000 Mbps.
-- D false: the VM's Data transmit rate is kilobytes per second (the legend's Units column), even where a network chart carries Mbps in its title.
+- D false: the VM's Data transmit rate is kilobytes per second (the legend's Units column), even where a network chart carries Mbps in its title; nothing is converted.
 - E false: the unit is kilobytes; skipping the factor 8 gives a value 8 times too low.
 - F false: bits against bytes is a factor of 8; kilo against mega adds a factor of about 1,000, about 125 in all.
 - G false: a steady stream gives the same rate over 5 or 20 seconds; the interval cannot explain a factor of about 125.
 - H true: esxtop shows about 3,000 Mbps; the vSphere Client value converts to the same.
-- I false: both counters are correct.
+- I false: the wrong action. Both counters are correct.
+- J false: the over-correction. A steady stream gives the same rate in both tools once kilobytes per second are turned into megabits per second.
+- K false: the screen reading. The vSphere Client number (340,000-390,000) is about 125 times larger than the esxtop number (2,800-3,200), because kilobytes are a smaller unit than megabits.
 
 ## Notes
 - Paired with the theory question 0029 (theory and practical; design.md, section 3.9).
 - Units checked against the vendor before writing (project/question-pairing-2026-11-14.md, section 5): net.transmitted is kiloBytesPerSecond in the vSphere Web Services API 9.1 reference (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/network_counters.html); the vSphere 9.1 documentation lists the VM Data Transmit Rate as kilobytes per second under the chart title Network Rate (Mbps); Broadcom KB 447068 says the performance charts and their CSV export show network metrics in KBps. vcenter-statistics and units-vs-vsphere-client were corrected to this.
 - Whether esxtop counts a megabit as 10^6 or 2^20 bits changes the conversion by about 5%; the options use "about" so the key holds either way.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C13 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: A one fact (it was the negation of B); D reworded away from 0029; J (over-correction) and K (a false screen reading) added; the condition ties the two values together. Key unchanged: A, C, H.
 
 ## Metadata
 ```yaml

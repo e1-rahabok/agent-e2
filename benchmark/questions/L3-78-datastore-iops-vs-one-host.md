@@ -13,6 +13,8 @@ Which statements are correct?
 - E. Host A's value also counts the reads of VMs on other hosts that use the same datastore.
 - F. Open a case: VCF Operations under-reports host A's datastore IO.
 - G. Reads of host A's VMs from other datastores are part of host A's value for this datastore.
+- H. The datastore value and the per-host values cannot be compared.
+- I. Host A carries most of the datastore's reads in this window.
 
 ## Input to supply
 - Product and version: VCF Operations 9.1, vSphere 9.1.
@@ -35,10 +37,13 @@ B: the datastore and host A's view of it must match, so a value is wrong. Or F: 
 - E false: a host counts only the IO it sends.
 - F false: nothing is missing; the other hosts carry the rest.
 - G false: the value is per datastore instance; IO to other datastores is counted under those datastores.
+- H false: the over-correction. The datastore object spans the hosts that mount it; their values add up to it.
+- I false: the screen reading. Host A's average is 40% or less of the datastore's.
 
 ## Notes
 - Paired with the theory question 0049 (theory and practical; design.md, section 3.9).
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C22 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: H (over-correction) and I (a false screen reading) added; knowledge_main is host/datastore. Key unchanged: A, C, D.
 
 ## Metadata
 ```yaml
@@ -56,7 +61,7 @@ knowledge:
   - vsphere/architecture/object-relationships
   - vsphere/technology/storage/metrics/host/datastore
   - vsphere/technology/storage/concepts/storage-layers
-knowledge_main: vsphere/architecture/object-relationships
+knowledge_main: vsphere/technology/storage/metrics/host/datastore
 attachments:
   - 0417/vcf-operations-datastore-read-iops-24h.png
   - 0417/vcf-operations-hosts-datastore-read-iops-24h.png

@@ -12,14 +12,14 @@ Which statements are correct?
 - C. Peak Latency within collection cycle rose in the same hour, because it takes the worst 20 seconds across all the virtual disks.
 - D. No VM-level metric could have shown this disk's latency.
 - E. Close the ticket: the VM-level latency stayed within target all day.
-- F. The slow disk's latency can be set aside because it did few IOs.
+- F. A disk with few IOs can be left out of the latency check.
 - G. The next checks follow the slow disk: its read and write latency, errors, outstanding IO and the datastore behind it.
 - H. The slow disk carried most of the VM's IO in that hour.
 
 ## Input to supply
 - Product and version: VCF Operations 9.1, vSphere 9.1.
-- Object: one VM with 6 or more virtual disks.
-- How to produce it: keep 5 or more disks busy all day at low latency (1 ms or less, a few thousand IOPS in total), and for about one hour run a small read load (100-300 IOPS) on one disk that sits on a slow datastore (for example an NFS export on a small server, or a busy array), so that its read latency is 15 ms or more.
+- Object: one VM with 8 or more virtual disks.
+- How to produce it: keep 7 or more disks busy all day at low latency (1 ms or less, a few thousand IOPS in total), and for about one hour run a small read load (100-300 IOPS) on one disk that sits on a slow datastore (for example an NFS export on a small server, or a busy array), so that its read latency is 15 ms or more.
 - Screen 1, VCF Operations > the VM > Metrics: the virtual disk aggregate of all instances, Read Latency (ms) and Read IOPS, last 24 hours. Save as `0423/vcf-operations-vm-disk-aggregate-24h.png`.
 - Screen 2, the same VM, Read Latency (ms) and Read IOPS of each virtual disk instance (scsiM:N), last 24 hours, on one chart or as a list with the values for the slow hour. Save as `0423/vcf-operations-vm-virtual-disks-24h.png`.
 - Screen 3, the same VM, Peak Latency within collection cycle (ms), last 24 hours. Save as `0423/vcf-operations-vm-peak-latency-24h.png`.
@@ -36,7 +36,7 @@ B or E: the VM's disk latency is low all day, so storage is fine and the ticket 
 - C true: the peak metric takes the highest 20-second value across all virtual disks, read and write; screen 3 rises in the slow hour.
 - D false: the over-correction. Peak Latency within collection cycle showed it.
 - E false: the wrong action. The report reads from the slow disk.
-- F false: latency with low IOPS points to a queue in one of the layers; the report waited on every one of those IOs.
+- F false: latency with low IOPS points to a queue in one of the layers; the report waited on every one of that disk's IOs.
 - G true: the flow goes per virtual disk, read and write, then errors, then IOPS and outstanding IO, then the backing device and the configuration.
 - H false: the slow disk did under 10% of the VM's IOPS in that hour.
 
@@ -44,6 +44,7 @@ B or E: the VM's disk latency is low all day, so storage is fine and the ticket 
 - Practical half of pair D4 with 0422 (theory; design.md, section 3.9).
 - No option computes the aggregate: the knowledge base does not say whether it weights the disks by their IO. The condition fixes the values the key reads.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item D4 (origin: synthetic). Counts only after author approval.
+- Review 2026-11-15: F one fact; 8 or more disks, so that the aggregate can stay at 3 ms or less whatever its weighting (one disk at 15 ms among eight averages to 2.75 ms even unweighted). Key unchanged: A, C, G.
 
 ## Metadata
 ```yaml
