@@ -73,7 +73,7 @@
 | Will this datastore run out of space? | Running | [`vsphere/technology/storage/datastore-space-headroom`](../../vsphere/technology/storage/datastore-space-headroom.md) |
 | When does the cluster run out? | Running, long term | [`sp5-framework/capacity/forecasting`](forecasting.md); [`vcf-operations/features/capacity-forecast`](../../vcf-operations/features/capacity-forecast.md) |
 | What can be reclaimed? | Running | [`sp5-framework/capacity/reclamation`](reclamation.md), [`sp5-framework/capacity/unused-vm`](unused-vm.md) |
-| Should this VM be resized? | Running | [`sp5-framework/capacity/rightsizing`](rightsizing.md); [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md); [`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md) |
+| Should this VM be resized? | Running | [`sp5-framework/capacity/rightsizing`](rightsizing.md); [`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md); [`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md) |
 | How are the results shown? | Running | [`sp5-framework/outputs/capacity-dashboards`](../outputs/capacity-dashboards.md) |
 
 - Network capacity has no file of its own yet: hosts with 50 Gb rarely hit the limit ([`sp5-framework/capacity/supply`](supply.md), section Private cloud components).

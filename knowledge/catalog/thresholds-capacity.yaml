@@ -38,7 +38,7 @@ models:
     orange: 90-95
     red: 95-100
   source: knowledge-base
-  kb: guest-os/system/concepts/guest-os-sizing
+  kb: guest-os/system/guest-os-sizing
 - id: cluster-consumption-cluster-wide-esxi-cpu-thread-utilization
   metric: Cluster-wide ESXi CPU thread utilization (%)
   group: Utilization

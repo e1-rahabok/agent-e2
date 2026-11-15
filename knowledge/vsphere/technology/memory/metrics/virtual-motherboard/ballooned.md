@@ -14,7 +14,7 @@
 
 ## Behaviour
 - Ballooned pages are removed from Granted: not functionally used.
-- Guest OS memory counters still include them: the driver's pinned pages count as In Use. Guest OS sizing keeps them, with no deduction ([`guest-os/system/concepts/guest-os-sizing`](../../../../../guest-os/system/concepts/guest-os-sizing.md), section Ballooned memory in sizing).
+- Guest OS memory counters still include them: the driver's pinned pages count as In Use. Guest OS sizing keeps them, with no deduction ([`guest-os/system/guest-os-sizing`](../../../../../guest-os/system/guest-os-sizing.md), section Ballooned memory in sizing).
 - A flat Ballooned value for weeks: the Balloon Target held for weeks, and the guest ran within the rest of its memory.
 - A limit causes ballooning, also on a host with free memory. A limit lowers the VM's memory target. ESXi reclaims what is above it with the balloon first, then compression, then host swap. See [`vsphere/technology/memory/concepts/memory-limit`](../../concepts/memory-limit.md).
 - The 4 memory layers explain why Consumed grows under a limit: the Guest OS uses more memory, the VM layer makes that Consumed, and ESXi reclaims when Consumed would pass the limit. They do not stop the balloon: the balloon is how ESXi takes memory back when the driver runs.

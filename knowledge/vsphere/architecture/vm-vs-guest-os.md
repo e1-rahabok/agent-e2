@@ -34,17 +34,7 @@
 - If the BIOS is running, the VM is 100% available, even if Windows or Linux has not booted.
 
 ## Availability: Guest OS
-- Requires checking that the kernel, scheduler, disk subsystem and core IPC/management layers are responding.
-
-| OS | Command | Meaning |
-|---|---|---|
-| Windows | `sc query RpcSs` | `sc.exe` queries the Service Control Manager (SCM), the Windows subsystem managing background services, drivers and startup processes. |
-| Linux | `systemctl is-system-running` | Queries systemd's state manager across all managed daemons. |
-
-- `systemctl is-system-running` results:
-  - `running`: all initialized daemons active.
-  - `degraded`: kernel and main system up; at least one service failed or crashed.
-  - `starting` / `stopping`: booting or shutting down.
+- Guest OS availability is checked inside the Guest OS, not from the VM: the kernel, scheduler, disk subsystem and core IPC and management layers must respond. A VM can be 100% available while its Guest OS is hung. The check and its commands: [`guest-os/system/guest-os-availability`](../../guest-os/system/guest-os-availability.md).
 
 ## Visibility layers: Definition
 - Guest OS and VM see different parts of the same resource activity.
@@ -143,6 +133,7 @@ related:
 - vsphere/technology/cpu/concepts/guest-os-vs-vm-cpu
 - vsphere/architecture/overhead
 - sp5-framework/observability/thresholds
+- guest-os/system/guest-os-availability
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Virtualization Impact > What, exactly, is a VM?; The World of Metrics > Metrics Nuances > Virtualization Impact > Visibility (from former vsphere/architecture/vm-vs-guest-os)

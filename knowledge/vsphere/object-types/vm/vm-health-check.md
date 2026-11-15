@@ -40,7 +40,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 8. Configuration (VirtualMachine). [`vsphere/object-types/vm/configuration/vm-configuration-review`](configuration/vm-configuration-review.md). Also the drill-down when an earlier step failed: a configuration issue can cause an availability, performance or security problem, and known bugs are mostly configuration (older version, incompatible settings). Limits, shares and reservations explain contention the host does not cause ([`vsphere/architecture/resource-controls`](../../architecture/resource-controls.md)). vMotion stun time: [`vsphere/object-types/vm/vmotion`](vmotion.md). → step 9.
 9. Efficiency (VirtualMachine). Consumption sizes the VM:
    - CPU: Run, Usage, Demand. Usage includes Turbo; compare with Run before upsizing ([`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`](../../technology/cpu/metrics/comparisons/consumption-metrics.md)). Oversized: [`vsphere/technology/cpu/decision-tree/oversized-vm-downsizing`](../../technology/cpu/decision-tree/oversized-vm-downsizing.md).
-   - Memory: VM Memory Consumed is the VM's footprint on ESXi, not the Guest OS need ([`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../../technology/memory/metrics/virtual-motherboard/consumed.md)); size the VM's memory from Guest OS metrics ([`guest-os/system/concepts/guest-os-sizing`](../../../guest-os/system/concepts/guest-os-sizing.md)).
+   - Memory: VM Memory Consumed is the VM's footprint on ESXi, not the Guest OS need ([`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../../technology/memory/metrics/virtual-motherboard/consumed.md)); size the VM's memory from Guest OS metrics ([`guest-os/system/guest-os-sizing`](../../../guest-os/system/guest-os-sizing.md)).
    - Storage: IOPS and throughput ([`vsphere/technology/storage/metrics/virtual-motherboard/iops`](../../technology/storage/metrics/virtual-motherboard/iops.md)). Network: throughput ([`vsphere/technology/network/metrics/virtual-motherboard/throughput`](../../technology/network/metrics/virtual-motherboard/throughput.md)).
    - Idle VM: [`vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm`](../../technology/cpu/metrics/virtual-motherboard/idle-vm.md).
 - Not checked in 1.0: security and compliance (future phase).
@@ -107,7 +107,7 @@ internal_derive:
 - vsphere/object-types/vm/vmotion
 - vsphere/technology/cpu/decision-tree/oversized-vm-downsizing
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 - vsphere/technology/storage/metrics/virtual-motherboard/iops
 - vsphere/technology/network/metrics/virtual-motherboard/throughput
 - vsphere/technology/cpu/metrics/virtual-motherboard/idle-vm

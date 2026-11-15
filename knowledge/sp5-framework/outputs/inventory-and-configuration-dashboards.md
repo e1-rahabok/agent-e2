@@ -19,20 +19,15 @@
   - what needs attention first, then the overall configuration, so the dashboard drives action;
   - a balance between ease of use, page load time and completeness. Not every setting of every object fits; screen space is the other limit.
 - What to review per object: [`sp5-framework/concepts/configuration-management`](../concepts/configuration-management.md) and the object review lists, such as [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../vsphere/object-types/vm/configuration/vm-configuration-review.md).
-
-## The configuration dashboard set
-- VM Configuration and VM Storage Configuration work together. The second was split out because one dashboard was too large to use.
-- ESXi Configuration and vSphere Cluster Configuration work together. The cluster one carries the vSphere prefix because cluster is a generic English word. A drill-down from cluster to ESXi would help but adds UI complexity.
-- vSphere Resource Management is separate: its settings span VMs, resource pools and clusters, and their flexibility and complexity need their own dashboard.
-- vSphere Network Configuration and vSAN Configuration are basic and due for enhancement.
-- With a larger screen, add checks or legends to the pie charts.
+- Settings that span object types (shares, reservations and limits across VMs, resource pools and clusters) get their own dashboard rather than a corner of the VM dashboard.
+- Pie charts of settings: add checks or legends when the screen allows.
 - In a large environment, add a filter by class of service (Gold, Silver, Bronze), defaulting to Gold, so less critical workloads do not clutter the view.
+- The configuration dashboards as built in VCF Operations: [`vcf-operations/dashboards/configuration-dashboards`](../../vcf-operations/dashboards/configuration-dashboards.md).
 
 ## Misconceptions
 - "Alert on inventory changes" → inventory has no good or bad; watch changes on dashboards.
 - "Show every setting" → show what needs attention first; completeness costs page speed and space.
 - "Configuration dashboards without a standard" → drift has no meaning until the standard is documented.
-- "Resource settings fit in the VM dashboard" → shares, reservations and limits span VMs, resource pools and clusters; they need their own dashboard.
 - "Default the filter to all workloads" → default to Gold; the critical workloads come first.
 
 ## Metadata
@@ -63,11 +58,11 @@ related:
 - vsphere/object-types/esxi/configuration/esxi-configuration-review
 - vsphere/object-types/cluster/configuration/cluster-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance
+- vcf-operations/dashboards/configuration-dashboards
 source:
   document: Knowledge base
   path: 'Overall Design Approach > Overall Design: Inventory Dashboards; Overall Design: Configuration Dashboard'
 corrections: []
-review_notes:
-- 'To check: Section ''The configuration dashboard set'': the configuration dashboards in VCF Operations 9.1 (names, and whether vSphere Network Configuration and vSAN Configuration were enhanced); a live VCF Operations 9.1 instance.'
+review_notes: []
 status: draft
 ```

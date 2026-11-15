@@ -58,7 +58,7 @@ rows:
   match: ['(add|more|increase|give it)( more)? (ram|memory)\b', 'needs? more (ram|memory)']
   means: Guest OS sizing paging free memory
   note: 'Whether a VM needs memory is a Guest OS question (paging, free memory, application cache), not a VM memory counter.'
-  files: [guest-os/system/concepts/guest-os-sizing, vsphere/architecture/vm-vs-guest-os]
+  files: [guest-os/system/guest-os-sizing, vsphere/architecture/vm-vs-guest-os]
 - id: host-memory-usage
   label: ESXi Memory Usage (%)
   premise: true
@@ -156,7 +156,7 @@ rows:
   match: ['\bsiz(e|ing) (the |a |this |my )?(vm|virtual machine)s?\b', '\b(vm|virtual machine) (cpu |memory )?siz(e|ing)\b', 'counter to (size|right-?size)']
   means: Guest OS sizing Net Run run queue
   note: 'VM sizing almost always means Guest OS sizing: Windows or Linux, from Net Run and the Guest OS run queue and memory counters, not VM Demand or Usage. Name that reading; the other meaning is the VM footprint ESXi gives it.'
-  files: [guest-os/system/concepts/guest-os-sizing, vsphere/technology/cpu/metrics/virtual-motherboard/net-run, vsphere/architecture/vm-vs-guest-os]
+  files: [guest-os/system/guest-os-sizing, vsphere/technology/cpu/metrics/virtual-motherboard/net-run, vsphere/architecture/vm-vs-guest-os]
   premise: true
 - id: rightsizing
   match: ['right-?siz', 'oversized', 'undersized', 'downsiz']

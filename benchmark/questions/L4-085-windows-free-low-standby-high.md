@@ -49,7 +49,7 @@ tool: [guest-os-tools, vcenter]
 knowledge:
   - guest-os/memory/windows-memory
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: guest-os/memory/windows-memory
 attachments:
   - 0264/perfmon-fs-03-memory-24h.csv

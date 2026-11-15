@@ -66,7 +66,7 @@ object: [vm, guest-os]
 tool: [vcf-operations]
 knowledge:
   - sp5-framework/capacity/rightsizing
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - guest-os/memory/windows-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/technology/memory/metrics/virtual-motherboard/latency

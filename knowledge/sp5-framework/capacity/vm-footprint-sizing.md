@@ -3,7 +3,7 @@
 ## Purpose
 - Size what the VM costs the underlying ESXi: its footprint.
 - A narrow use case: useful mainly when the VM migrates to a different ESXi host or cluster.
-- One of two sizing jobs. For the usual sizing question (how many vCPU and how much memory the workload demands), size the Guest OS (Windows or Linux) instead. There is no single "VM rightsizing": [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md), section VM rightsizing: two jobs.
+- One of two sizing jobs. For the usual sizing question (how many vCPU and how much memory the workload demands), size the Guest OS (Windows or Linux) instead. There is no single "VM rightsizing": [`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md), section VM rightsizing: two jobs.
 - Examples: migration to faster or slower CPUs, VMFS to vSAN (FTT policy), thin to thick disks.
 
 ## CPU
@@ -29,7 +29,7 @@ VM CPU Needed = (Sum over all vCPUs of (Used + Overlap + Co-stop + Ready + Other
 - System is VMkernel work the target host must also supply for the VM, so it counts in the footprint in GHz and in vCPU equivalents.
 - VM-level Used already holds System. Add System only when Used is the sum of the vCPU instances; do not add it twice to the VM-level value.
 - vCPUs needed on the target = footprint in GHz ÷ nominal clock of the target, rounded up, before headroom. The ratio holds when both clusters have the same CPU generation, power policy and Hyper-Threading load.
-- The footprint is the load on the infrastructure. Whether the Guest OS has enough vCPUs (its run queue) is a separate check: [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md).
+- The footprint is the load on the infrastructure. Whether the Guest OS has enough vCPUs (its run queue) is a separate check: [`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md).
 - CPU generation and speed (for example SPEC CPU 2017) can refine sizing. Risk: an application that prefers many slow threads may perform worse with fewer, faster vCPUs.
 
 ## Memory
@@ -67,7 +67,7 @@ object:
 internal_derive:
 - vsphere/technology/cpu/metrics/virtual-motherboard/used
 related:
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 source:
   document: Knowledge base

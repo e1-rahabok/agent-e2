@@ -38,13 +38,13 @@ technology: [memory]
 input: [text]
 task: decide-capacity
 knowledge:
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
   - vsphere/technology/memory/metrics/virtual-motherboard/active
 object: [vm, guest-os]
 tool: [none]
-knowledge_main: guest-os/system/concepts/guest-os-sizing
+knowledge_main: guest-os/system/guest-os-sizing
 attachments: []
 origin: quiz
 source_path: "vSphere Metric Quiz.docx (author upload 2026-11-03) > Memory > Q1 VM Memory Rightsize"

@@ -71,7 +71,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 
 ### Q227 · Guest OS > Sizing · Ballooned memory in Guest OS sizing: include or exclude?
 
-- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (new section Ballooned memory in sizing); [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md).
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md) (new section Ballooned memory in sizing); [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md).
 - Question: include (A), exclude (B) or split (C)?
 - Answer (2026-11-15, expert call): (A), include, no deduction.
   - The balloon pins its pages inside the guest (API 9.1 `mem.vmmemctl`), so Needed Memory already holds them.
@@ -208,7 +208,7 @@ Answered questions, moved out of [author-questions.md](author-questions.md) on 2
 - Written as now: both readings, in different files.
 - Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
 - Earlier lab evidence (2026-11-15, vcf-m02-nsx01a, 6 vCPU, one day at 5-minute points; Guest|Peak vCPU Queue within collection cycle and Guest|CPU Queue): all 284 peak values are whole multiples of 1/6 (1.3333, 0.8333, 0.5, 146.83 = 881/6); 282 of 284 Guest|CPU Queue values are whole multiples of 1/90 (6 vCPUs x 15 samples of 20 seconds). A guest reports a whole-number queue, so the counter is the total divided by the vCPU count: per vCPU, not a raw total. Both counters share one scale (6:05 PM: peak 146.83, average 10.24, about 146.83/15 plus the baseline). Reading A (the KPI's per vCPU), not B. Limits: one VM; 1/6 steps fit a divisor of 6 (or 3, 2, 1) and cannot prove the guest-side formula; 146.83 per vCPU would be a total queue of 881, which the Net Run and disk traces of that burst do not contradict but do not confirm.
-- Answer: (author, lab, 2026-11-15) per vCPU, for both metrics. Exports of two VMs: a 6-vCPU VM (1 day and 1 week, 5-minute points) and an 8-vCPU VM (1 month, 8,378 points). Peak values are all whole multiples of 1/6 on the first and of 1/8 on the second (1,599 of 8,378 fit 1/6); 5-minute values times 15 are whole multiples of the same step; the few exceptions are cycles with fewer than 15 samples (4, 8, 14 and 2, 7 samples). Peak is never below the 5-minute value and never above 15 times it (8-vCPU VM: ratio 1.00 to 15.00, median 5.0). Both metrics divide the guest's total queue by the vCPU count; the VM total is the value times the vCPU count. Applied: [run-queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) (new section Scale in VCF Operations, thresholds, case, misconceptions), [guest-os-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-performance.md), [guest-os-sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md), [guest-os-alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md), [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md), [peak-20-second-metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/peak-20-second-metrics.md) and the unit of two alert symptoms in thresholds-alerts.yaml. The alert value (20) it leaves open: Q232; the downsize question: Q233.
+- Answer: (author, lab, 2026-11-15) per vCPU, for both metrics. Exports of two VMs: a 6-vCPU VM (1 day and 1 week, 5-minute points) and an 8-vCPU VM (1 month, 8,378 points). Peak values are all whole multiples of 1/6 on the first and of 1/8 on the second (1,599 of 8,378 fit 1/6); 5-minute values times 15 are whole multiples of the same step; the few exceptions are cycles with fewer than 15 samples (4, 8, 14 and 2, 7 samples). Peak is never below the 5-minute value and never above 15 times it (8-vCPU VM: ratio 1.00 to 15.00, median 5.0). Both metrics divide the guest's total queue by the vCPU count; the VM total is the value times the vCPU count. Applied: [run-queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) (new section Scale in VCF Operations, thresholds, case, misconceptions), [guest-os-performance](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-performance.md), [guest-os-sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md), [guest-os-alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md), [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md), [peak-20-second-metrics](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vcf-operations/features/peak-20-second-metrics.md) and the unit of two alert symptoms in thresholds-alerts.yaml. The alert value (20) it leaves open: Q232; the downsize question: Q233.
 
 
 ### Q231 · Memory > ESXi > Reservation consumed · A 820 MB step on a 1 GB VM
@@ -2535,14 +2535,14 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q055 · Follow-ups to Q027 and Q029
 
-- Files: [VM footprint sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-footprint-sizing.md) (section CPU), [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Memory).
+- Files: [VM footprint sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-footprint-sizing.md) (section CPU), [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md) (section Memory).
 - Search: not from the book; from your answers to [Q027](#q027--consumer-objects--capacity--vm-cpu-needed-formula) and [Q029](#q029--consumer-objects--capacity--memory-utilization-ranges).
 - Question 1 ([Q027](#q027--consumer-objects--capacity--vm-cpu-needed-formula)): the formula ends with "/ 20000 * vCPU". The sum over all vCPUs divided by 20,000 already gives the footprint in vCPUs (2 vCPUs each fully busy: 40,000 / 20,000 = 2). Is the result meant in vCPUs, so "× vCPU" is not needed, or in % of the VM, so the division is by (20,000 × vCPU)?
 - Question 2 ([Q029](#q029--consumer-objects--capacity--memory-utilization-ranges)): option 2 has four ranges, 0-75, 75-85, 85-95, 95-100%. The image shows grey, green, yellow, orange and red. Is it grey (waste) below 75, green 75-85, yellow 85-95, red 95-100?
 - Written as now: [Q027](#q027--consumer-objects--capacity--vm-cpu-needed-formula) formula as you wrote it, with this question in review_notes. [Q029](#q029--consumer-objects--capacity--memory-utilization-ranges) boundaries only, no colours.
 - Answer to Q1: From my book, which you missed: "The System counter is not available per vCPU. Reason is the underlying physical core that does the IO work on behalf of the VM may be doing it for more than 1 vCPU. There is no way to break it down for each vCPU.". Because of this, I need to sum all the per-vCPU counters one by one, then add CPU System. After that, we divide by 20000 x vCPU. Is it clear?
 - Answer to Q2: Grey is the 5th region. Only applicable to Capacity. It's not applicable to Performance as there is no such thing as wastage performance. Grey symbolizes wastage. It's placed below green. For Guest OS Memory, the range is 0 - 75 - 85 - 90 - 95 - 100. Yes, green is 10 point wide. Add in to do to upload Part 1 of my book to complete the capacity and performance management knowledge.
-- Done 2026-11-05: [VM footprint sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-footprint-sizing.md) (divisor 20,000 × vCPU, System reason, example); [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (ranges 75-85-90-95-100, grey below 75 for capacity only). To-do added: upload Part 1 of the book.
+- Done 2026-11-05: [VM footprint sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/vm-footprint-sizing.md) (divisor 20,000 × vCPU, System reason, example); [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md) (ranges 75-85-90-95-100, grey below 75 for capacity only). To-do added: upload Part 1 of the book.
 
 ### Q027 · Consumer Objects > Capacity · VM CPU Needed formula
 
@@ -2556,7 +2556,7 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
 
 ### Q028 · Consumer Objects > Capacity · Balloon in Guest OS memory sizing
 
-- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md)
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md)
 - Search: "Exclude balloon"
 - Question: the text excludes balloon, but the sizing table marks Ballooned in blue (include) with "The memory was taken by Tools". Include or exclude?
 - Written as now: exclude, flagged.
@@ -2564,16 +2564,16 @@ On the file https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/o
   If it’s from free page, then exclude.
   If it’s from non-free page, then include.
   To be conservative, I recommend include.
-- Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md), rule changed to Include balloon, with the reason.
+- Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md), rule changed to Include balloon, with the reason.
 
 ### Q029 · Consumer Objects > Capacity · Memory utilization ranges
 
-- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md)
+- Files: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md)
 - Search: "The company is wasting money if the utilization falls below 50%"
 - Question: the text gives waste below 50% and risk above 75%, which matches bar 1. You recommend bar 2, where green starts near 75%. What are the ranges for bar 2?
 - Written as now: bar 2 recommended, no numbers stated.
 - Answer: I’d recommend 0 - 75% - 85% – 95% - 100% as Windows and Linux tend to cache memory.
-- Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md), option 2 boundaries added. Follow-up on the colour of each range: [Q055](#q055--follow-ups-to-q027-and-q029).
+- Done 2026-11-05: [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-sizing.md), option 2 boundaries added. Follow-up on the colour of each range: [Q055](#q055--follow-ups-to-q027-and-q029).
 
 ### Q030 · Provider Objects > Performance · vMotion in Cluster Performance (%)
 

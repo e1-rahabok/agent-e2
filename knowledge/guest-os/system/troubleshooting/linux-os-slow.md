@@ -38,7 +38,7 @@ flowchart TD
    - → step 6.
 6. Network (Guest OS). Ring-full drops on the vmxnet3 interface: `pkts rx OOB` per receive queue in `ethtool -S` (`ip -s link` RX dropped leaves them out): the guest's receive ring is full, caused and fixed inside Linux ([`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
 7. Verdict.
-   - A wait found inside Linux (queue, memory stall, disk wait with low VM latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Linux queues worse.
+   - A wait found inside Linux (queue, memory stall, disk wait with low VM latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/guest-os-sizing`](../guest-os-sizing.md)) and configuration ([`guest-os/system/guest-os-configuration-review`](../guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Linux queues worse.
    - No wait inside Linux, or the signs point down (every vCPU busy, disk wait with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
 
 ## Order rationale
@@ -87,8 +87,8 @@ internal_derive:
 - sp5-framework/performance/vm-slow
 - guest-os/storage/disk-queue
 - vsphere/technology/network/vnic-rx-drops
-- guest-os/system/concepts/guest-os-sizing
-- guest-os/system/concepts/guest-os-configuration-review
+- guest-os/system/guest-os-sizing
+- guest-os/system/guest-os-configuration-review
 related:
 - guest-os/system/troubleshooting/ms-windows-slow
 - vsphere/architecture/vm-vs-guest-os

@@ -72,13 +72,12 @@ object:
 internal_derive:
 - sp5-framework/concepts/configuration-management
 related:
-- guest-os/system/concepts/guest-os-configuration-review
+- guest-os/system/guest-os-configuration-review
 - vsphere/technology/storage/storage-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/technology/cpu/concepts/virtual-numa
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 - vsphere/technology/storage/concepts/snapshot-impact
-- vsphere/technology/storage/storage-configuration-review
 source:
   document: Knowledge base; Broadcom KB 401070 (vVols deprecation); VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number), p. 1488
   path: 'Configuration Management > Review List > Consumer Objects > Tools; VM; Compute-related; Storage-related Configuration'

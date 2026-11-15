@@ -53,7 +53,7 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
   - guest-os/memory/windows-memory
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments: []
 origin: synthetic

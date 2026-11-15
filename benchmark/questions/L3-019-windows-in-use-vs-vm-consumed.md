@@ -57,7 +57,7 @@ knowledge:
   - guest-os/memory/windows-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - sp5-framework/capacity/rightsizing
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 attachments: []
 origin: real-ticket

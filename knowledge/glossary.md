@@ -189,7 +189,7 @@ Agent E2's vocabulary: one entry per concept, with its other names, the term it 
 - **Guest OS sizing**: Sizing vCPU and memory from Guest OS counters (inside).
   - Also called: VM rightsizing (inside the guest)
   - Not to confuse with VM footprint: Guest OS sizing reads Guest OS counters (inside), guest queue included, VM overhead excluded; VM footprint reads vSphere counters (outside), VM overhead included, guest queue excluded. Two jobs, two formulas.
-  - File: [`guest-os/system/concepts/guest-os-sizing`](guest-os/system/concepts/guest-os-sizing.md)
+  - File: [`guest-os/system/guest-os-sizing`](guest-os/system/guest-os-sizing.md)
 - **Model**: How one pillar of one object is quantified into a number and a decision: capacity, availability, security model. Example: Cluster Consumption and Cluster Risk decide, with Cluster Performance, whether a cluster is closed.
   - Not to confuse with KPI: a KPI scores performance only; capacity and risk are scored by models, so Cluster Risk is a model, not a KPI.
   - File: [`sp5-framework/concepts/modelling`](sp5-framework/concepts/modelling.md)

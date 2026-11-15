@@ -101,7 +101,7 @@ internal_derive:
 - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
 related:
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 - guest-os/system/guest-os-performance
 images:
   - path: images/windows-memory-categories-diagram.png

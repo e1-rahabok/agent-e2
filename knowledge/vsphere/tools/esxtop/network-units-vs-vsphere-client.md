@@ -14,7 +14,7 @@
 
 ## Metadata
 ```yaml
-id: vsphere/tools/esxtop/units-vs-vsphere-client
+id: vsphere/tools/esxtop/network-units-vs-vsphere-client
 retriever_guide: metric-meaning
 scope: vsphere
 technology:

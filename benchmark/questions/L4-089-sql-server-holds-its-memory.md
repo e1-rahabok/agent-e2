@@ -61,9 +61,9 @@ tool: [guest-os-tools, vcenter]
 knowledge:
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/concepts/memory-layers
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - guest-os/memory/sql-server-memory
-  - guest-os/system/concepts/guest-os-configuration-review
+  - guest-os/system/guest-os-configuration-review
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - vsphere/architecture/resource-controls
 knowledge_main: vsphere/technology/memory/concepts/guest-os-vs-vm-memory

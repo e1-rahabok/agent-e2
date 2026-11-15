@@ -50,7 +50,7 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
   - vsphere/tools/esxtop/memory
   - vsphere/technology/cpu/metrics/virtual-motherboard/swap-wait
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/latency
 attachments: []
 origin: synthetic

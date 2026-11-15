@@ -55,7 +55,7 @@ object: [guest-os]
 tool: [guest-os-tools]
 knowledge:
   - guest-os/system/troubleshooting/linux-os-slow
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - vsphere/technology/memory/concepts/ballooning
 knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments: []

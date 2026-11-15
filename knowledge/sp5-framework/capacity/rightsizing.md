@@ -4,7 +4,7 @@
 
 - VMs. Not ESXi hosts, datastores or vSAN: their size rarely changes once bought.
 - Kubernetes nodes are sized as part of the Kubernetes cluster design, not one by one.
-- "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names: Guest OS sizing, from Guest OS counters ([`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md)), and VM footprint, from vSphere counters ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md)). What each includes and excludes, with use cases: [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md), section VM rightsizing: two jobs.
+- "VM rightsizing" is a misleading term: it usually means the Guest OS, not the virtual motherboard. Two jobs, two names: Guest OS sizing, from Guest OS counters ([`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md)), and VM footprint, from vSphere counters ([`sp5-framework/capacity/vm-footprint-sizing`](vm-footprint-sizing.md)). What each includes and excludes, with use cases: [`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md), section VM rightsizing: two jobs.
 - This file covers why VMs are oversized in a private cloud, what that costs the company, and how to get a downsize accepted and proven.
 
 ## Causes of oversizing
@@ -54,7 +54,7 @@
 | Disk | Rightsize the file system: a Windows or Linux partition change |
 | Disk | Use fewer RDMs; with array thin provisioning, check unmap for wastage |
 
-- The Guest OS counters and formulas behind these rules: [`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md).
+- The Guest OS counters and formulas behind these rules: [`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md).
 
 - One VM vs the fleet: the aim of high utilization is for each VM at its busy time. A group of hundreds of right-sized monster VMs still averages about 40%, because at any moment some are busy and others idle (section Monster VMs Capacity Management).
 
@@ -95,7 +95,7 @@
 | Application-aware | Exclude Java VMs, databases and Kubernetes nodes from the standard formula: they manage their own memory or run containers. Work with the DBA or Kubernetes SRE |
 | Open | A public dashboard any owner can use: transparency builds trust |
 
-- Java VMs and databases: size from the application's own memory limit first ([`guest-os/system/concepts/guest-os-sizing`](../../guest-os/system/concepts/guest-os-sizing.md), section Applications that manage their own memory).
+- Java VMs and databases: size from the application's own memory limit first ([`guest-os/system/guest-os-sizing`](../../guest-os/system/guest-os-sizing.md), section Applications that manage their own memory).
 - Hardware sizes: no fixed vCPU count. Above the host's L3 domain a VM pays a cache cost; above the cores of its NUMA node it reads remote memory ([`sp5-framework/capacity/vm-size`](vm-size.md)). The Hyper-Threading penalty depends on whether the sibling thread is busy (host load, or more vCPUs than the NUMA node has cores), not on VM size against a CCD.
 
 ## Monster VMs Capacity Management
@@ -182,7 +182,7 @@ object:
 - VirtualMachine
 internal_derive: []
 related:
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 - sp5-framework/capacity/vm-footprint-sizing
 - vsphere/technology/cpu/concepts/cpu-topology
 - vsphere/technology/cpu/concepts/numa

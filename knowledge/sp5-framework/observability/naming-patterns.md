@@ -77,7 +77,7 @@ related:
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
 - vsphere/technology/memory/metrics/virtual-motherboard/usage
 - vsphere/technology/storage/metrics/virtual-motherboard/virtual-disk
-- vsphere/tools/esxtop/units-vs-vsphere-client
+- vsphere/tools/esxtop/network-units-vs-vsphere-client
 source:
   document: Knowledge base
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity

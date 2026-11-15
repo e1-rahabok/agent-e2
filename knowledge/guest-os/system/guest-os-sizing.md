@@ -1,6 +1,6 @@
 # Guest OS sizing
 
-![What to include and exclude in Guest OS sizing](../images/guest-os-sizing-what-to-include-and-exclude.png)
+![What to include and exclude in Guest OS sizing](images/guest-os-sizing-what-to-include-and-exclude.png)
 
 ## VM rightsizing: two jobs
 - "VM rightsizing" mixes two different sizing jobs with two different formulas. Asking "what size should this VM be?" without saying which one leads to the wrong counters.
@@ -22,7 +22,7 @@
   - Migrating from classic VMFS to vSAN → VM footprint: the hypervisor metric adjusts for the vSAN FTT policy.
   - Converting virtual disks from thin to thick → VM footprint: guest consumption is irrelevant, the disk inflates to its configured size.
 - After the demand is known, project it from past data and adjust the new size to fit NUMA.
-- CPU, RAM and storage each use a different approach. VM footprint: see [`sp5-framework/capacity/vm-footprint-sizing`](../../../sp5-framework/capacity/vm-footprint-sizing.md).
+- CPU, RAM and storage each use a different approach. VM footprint: see [`sp5-framework/capacity/vm-footprint-sizing`](../../sp5-framework/capacity/vm-footprint-sizing.md).
 
 ## Layer
 - Guest OS layer: Windows or Linux, running on the VM. The VM is a virtual motherboard; it cannot see inside the Guest OS.
@@ -40,7 +40,7 @@
 ## CPU: include
 | Item | Reason |
 |---|---|
-| Co-stop, Ready | Runtime the guest demanded. Guest numbers miss it: its time was frozen. Limits are already accounted. A resize moves these waits with host load and NUMA: verify after it ([`sp5-framework/capacity/rightsizing`](../../../sp5-framework/capacity/rightsizing.md), section Before vs after). |
+| Co-stop, Ready | Runtime the guest demanded. Guest numbers miss it: its time was frozen. Limits are already accounted. A resize moves these waits with host load and NUMA: verify after it ([`sp5-framework/capacity/rightsizing`](../../sp5-framework/capacity/rightsizing.md), section Before vs after). |
 | Other Wait, Swap Wait | Same as Ready: the CPU waited for RAM or IO. |
 | Overlap | Runtime the guest demanded. Already inside Run, so not added separately when using Run. |
 | Guest OS CPU run queue | The primary counter that Windows or Linux cannot keep up. |
@@ -75,11 +75,11 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - Option 1 (not recommended): waste below 50%, risk above 75%.
 - Applications touch only part of their working set; the rest becomes cache. Active + cache above 95% is fine.
 - ESXi waits until about 99% before ballooning. Windows and Linux also cache.
-![Two memory utilization range schemes](../images/memory-utilization-range-two-schemes.png)
+![Two memory utilization range schemes](images/memory-utilization-range-two-schemes.png)
 
 | Rule | Reason |
 |---|---|
-| Include cache | Sizing on in-use only leaves no cache or free memory: the guest pages out. Name the result Needed Memory, not Demand. How much: the cache Windows ranks high stays in; Free, Reserve and Normal Priority cache are left out, except a buffer of 5% of the memory ([`guest-os/memory/windows-memory`](../../memory/windows-memory.md), section Needed Memory). The image's Cache Page (Exclude) is that reclaimable cache. |
+| Include cache | Sizing on in-use only leaves no cache or free memory: the guest pages out. Name the result Needed Memory, not Demand. How much: the cache Windows ranks high stays in; Free, Reserve and Normal Priority cache are left out, except a buffer of 5% of the memory ([`guest-os/memory/windows-memory`](../memory/windows-memory.md), section Needed Memory). The image's Cache Page (Exclude) is that reclaimable cache. |
 | Exclude page file | Too conservative: In Use already contains cache. Proactive page-in (memory-mapped files) makes unmet demand impossible to isolate. |
 | Include balloon | No deduction: a cut must not shrink a VM the balloon already squeezes. |
 | No fallback to VM metrics | Inaccurate for the guest. |
@@ -88,15 +88,15 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 - Windows and Linux differ more for memory than for CPU.
 
 ## Ballooned memory in sizing
-- This section is the one home of the sizing rule for ballooned memory. The balloon mechanism: [`vsphere/technology/memory/concepts/ballooning`](../../../vsphere/technology/memory/concepts/ballooning.md).
+- This section is the one home of the sizing rule for ballooned memory. The balloon mechanism: [`vsphere/technology/memory/concepts/ballooning`](../../vsphere/technology/memory/concepts/ballooning.md).
 - Rule: size on Guest OS Needed Memory as VMware Tools reports it, with no deduction for VM Memory Ballooned.
-- The balloon driver allocates its pages inside the Guest OS and pins them (vSphere API 9.1, `mem.vmmemctl`). The Guest OS counts them as in use, neither free nor cache, so Needed Memory, which subtracts Free and the Reserve and Normal Priority cache, already holds them ([`guest-os/memory/windows-memory`](../../memory/windows-memory.md), section Needed Memory).
+- The balloon driver allocates its pages inside the Guest OS and pins them (vSphere API 9.1, `mem.vmmemctl`). The Guest OS counts them as in use, neither free nor cache, so Needed Memory, which subtracts Free and the Reserve and Normal Priority cache, already holds them ([`guest-os/memory/windows-memory`](../memory/windows-memory.md), section Needed Memory).
 - A page the balloon took from Free is not demand: Needed Memory then reads higher than the application needs, by up to the balloon size.
 - A page the balloon took from In Use is demand: the Guest OS paged the data out to make room, and the data still needs memory. A deduction would then read lower than the application needs, by up to the balloon size.
 - The Guest OS counters give the balloon size, not the share of it taken from Free. So the error of inclusion and the error of deduction have the same bound; inclusion errs toward too much memory, deduction toward too little on a VM that is already squeezed.
 - Too much memory costs DIMM; too little costs guest paging and slower work. Sizing takes the cheaper error.
 - One VM can be read by hand: when guest Free fell by about the balloon size while the balloon inflated and guest page-out did not rise, the balloon took free pages, and deducting it is safe for that VM.
-- A balloon is a provider event: host pressure or a limit. The fix for the balloon is on the provider side (the host or the limit), not a smaller Guest OS ([`vsphere/technology/memory/concepts/ballooning`](../../../vsphere/technology/memory/concepts/ballooning.md), section Trigger and requirement).
+- A balloon is a provider event: host pressure or a limit. The fix for the balloon is on the provider side (the host or the limit), not a smaller Guest OS ([`vsphere/technology/memory/concepts/ballooning`](../../vsphere/technology/memory/concepts/ballooning.md), section Trigger and requirement).
 
 ## Memory downsizing: which VMs give memory back
 - Contention is excluded from the size, not from the choice of VM. A VM with memory contention above 0 already waits (a limit, or host reclamation); a VM whose guest pages out is already short. Neither gives memory back.
@@ -107,7 +107,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 ## Applications that manage their own memory
 - A database or a runtime that keeps its own cache (SQL Server buffer pool, Java heap) grows into the memory its own limit allows and keeps it. Windows In Use, the process working set and VM Active then show the limit, not the need.
-- Size such a VM from the application's limit first, then from Needed Memory. SQL Server: [`guest-os/memory/sql-server-memory`](../../memory/sql-server-memory.md).
+- Size such a VM from the application's limit first, then from Needed Memory. SQL Server: [`guest-os/memory/sql-server-memory`](../memory/sql-server-memory.md).
 
 ## Sizing rules
 | Rule | Reason |
@@ -136,7 +136,7 @@ Guest OS Recommended Size (vCPU) = round up for NUMA (projection (Guest OS Neede
 
 ## Metadata
 ```yaml
-id: guest-os/system/concepts/guest-os-sizing
+id: guest-os/system/guest-os-sizing
 retriever_guide: how-it-works
 scope: guest-os
 technology:
@@ -163,12 +163,12 @@ related:
 - vsphere/technology/memory/concepts/ballooning
 - guest-os/memory/sql-server-memory
 images:
-  - path: ../images/guest-os-sizing-what-to-include-and-exclude.png
+  - path: images/guest-os-sizing-what-to-include-and-exclude.png
     product: [vcf-operations]
     object: [VirtualMachine]
     topic: 'Guest OS sizing'
     image_type: table
-  - path: ../images/memory-utilization-range-two-schemes.png
+  - path: images/memory-utilization-range-two-schemes.png
     product: [vcf-operations]
     object: [VirtualMachine]
     topic: 'Guest OS sizing'

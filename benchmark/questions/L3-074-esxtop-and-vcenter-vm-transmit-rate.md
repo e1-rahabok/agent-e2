@@ -48,7 +48,7 @@ B: the numbers are about 125 times apart, so one tool must be wrong. Or F: only 
 
 ## Notes
 - Paired with the theory question 0029 (theory and practical; design.md, section 3.9).
-- Units checked against the vendor before writing (project/question-pairing-2026-11-14.md, section 5): net.transmitted is kiloBytesPerSecond in the vSphere Web Services API 9.1 reference (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/network_counters.html); the vSphere 9.1 documentation lists the VM Data Transmit Rate as kilobytes per second under the chart title Network Rate (Mbps); Broadcom KB 447068 says the performance charts and their CSV export show network metrics in KBps. vcenter-statistics and units-vs-vsphere-client were corrected to this.
+- Units checked against the vendor before writing (project/question-pairing-2026-11-14.md, section 5): net.transmitted is kiloBytesPerSecond in the vSphere Web Services API 9.1 reference (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/network_counters.html); the vSphere 9.1 documentation lists the VM Data Transmit Rate as kilobytes per second under the chart title Network Rate (Mbps); Broadcom KB 447068 says the performance charts and their CSV export show network metrics in KBps. vcenter-statistics and network-units-vs-vsphere-client were corrected to this.
 - Whether esxtop counts a megabit as 10^6 or 2^20 bits changes the conversion by about 5%; the options use "about" so the key holds either way.
 - Drafted 2026-11-14 from project/question-pairing-2026-11-14.md, item C13 (origin: synthetic). Counts only after author approval.
 - Review 2026-11-15: A one fact (it was the negation of B); D reworded away from 0029; J (over-correction) and K (a false screen reading) added; the condition ties the two values together. Key unchanged: A, C, H.
@@ -66,11 +66,11 @@ input: [screenshot]
 object: [vm]
 tool: [vcenter, esxtop]
 knowledge:
-  - vsphere/tools/esxtop/units-vs-vsphere-client
+  - vsphere/tools/esxtop/network-units-vs-vsphere-client
   - vsphere/tools/vsphere-client/vcenter-statistics
   - vsphere/tools/esxtop/network
   - vsphere/technology/network/metrics/virtual-motherboard/throughput
-knowledge_main: vsphere/tools/esxtop/units-vs-vsphere-client
+knowledge_main: vsphere/tools/esxtop/network-units-vs-vsphere-client
 attachments:
   - 0412/esxtop-network-panel.png
   - 0412/vcenter-vm-network-real-time.png

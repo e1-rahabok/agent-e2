@@ -49,7 +49,7 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/usage
   - vsphere/technology/memory/metrics/virtual-motherboard/utilization
   - vsphere/technology/memory/metrics/virtual-motherboard/active
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments: []
 origin: synthetic

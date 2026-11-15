@@ -31,9 +31,9 @@ level: 100
 answer_type: deterministic
 input: [text]
 knowledge:
-  - vsphere/tools/esxtop/units-vs-vsphere-client
+  - vsphere/tools/esxtop/network-units-vs-vsphere-client
   - vsphere/technology/network/metrics/virtual-motherboard/throughput
-knowledge_main: vsphere/tools/esxtop/units-vs-vsphere-client
+knowledge_main: vsphere/tools/esxtop/network-units-vs-vsphere-client
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"

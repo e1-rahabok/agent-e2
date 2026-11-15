@@ -68,7 +68,7 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/utilization
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments:
   - 0397/vcf-operations-vm-memory-guest-data-gap-2h.png

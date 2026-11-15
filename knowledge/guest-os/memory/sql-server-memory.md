@@ -29,7 +29,7 @@
 - Step size: a choice of method, not a threshold; no Microsoft document gives one. Larger steps take fewer cycles and overshoot further; smaller steps land closer and take more cycles.
 - First step: it can remove at least the low point of Memory Manager: Free Memory (KB) over the baseline cycle. That memory is committed to SQL Server and was unused at every sample of the cycle.
 - Keep `min server memory (MB)` well below the value under test: Microsoft does not recommend setting min and max to the same or nearly the same value.
-- Resizing the VM after the last step: the new `max server memory (MB)`, plus SQL Server memory outside it (thread stacks and the other allocations), plus Windows and the other processes. Then the memory rules of [`guest-os/system/concepts/guest-os-sizing`](../system/concepts/guest-os-sizing.md) apply: Needed Memory, read with SQL Server at its new limit, in the green band.
+- Resizing the VM after the last step: the new `max server memory (MB)`, plus SQL Server memory outside it (thread stacks and the other allocations), plus Windows and the other processes. Then the memory rules of [`guest-os/system/guest-os-sizing`](../system/guest-os-sizing.md) apply: Needed Memory, read with SQL Server at its new limit, in the green band.
 
 ## Misconceptions
 - "Windows shows 95% in use, so the VM needs more memory" → SQL Server grew into the memory its `max server memory (MB)` allows, and the default allows nearly all. The setting decides the value, not the need.
@@ -52,7 +52,7 @@ layer:
 - guest-os
 internal_derive:
 - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 related:
 - guest-os/memory/windows-memory
 - vsphere/technology/memory/metrics/virtual-motherboard/active

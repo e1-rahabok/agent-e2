@@ -72,7 +72,7 @@ knowledge:
   - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - sp5-framework/capacity/rightsizing
 knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/net-run
 attachments:

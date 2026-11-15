@@ -64,11 +64,11 @@ object: [vm, guest-os]
 tool: [vcf-operations]
 knowledge:
   - sp5-framework/capacity/rightsizing
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - vsphere/technology/memory/concepts/guest-os-vs-vm-memory
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
-knowledge_main: guest-os/system/concepts/guest-os-sizing
+knowledge_main: guest-os/system/guest-os-sizing
 attachments:
   - 0079/vm-memory-30-days.csv
 origin: synthetic

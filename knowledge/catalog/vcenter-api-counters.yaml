@@ -139,7 +139,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: used
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 - counter: disk.provisioned
   object: VirtualMachine
   rollup: latest
@@ -147,7 +147,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: provisioned
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 - counter: disk.unshared
   object: VirtualMachine
   rollup: latest
@@ -155,7 +155,7 @@ rows:
   unit: kiloBytes
   level: 1
   summary: unshared
-  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
+  kb: vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 - counter: cpu.usage
   object: HostSystem
   rollup: average
