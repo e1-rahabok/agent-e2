@@ -34,7 +34,7 @@ VM Demand   = Min (Limit, Consumed + Ballooned + Zipped + Swapped)
 |---|---|
 | Cluster Configuration \| vSphere HA \| HA Memory Failover (%) | HA failover for memory. |
 | Memory \| Demand \| Usable Capacity after HA and Buffer (GB) | Total minus HA and buffer. |
-| Memory \| ESX System Usage (GB) | Kernel reservation. |
+| Memory \| ESX System Usage (GB) | Kernel reservation (VCF Operations metric). |
 | Memory \| Utilization (KB) | Sum of hosts. |
 | Memory \| Demand \| Workload (%) | Utilization / usable. |
 | Memory \| Memory Allocated on all Powered On Consumers | Sum of hosts. |

@@ -19,6 +19,8 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Compression: the compression cache (the zipped pages held in DRAM) is inside ESXi Memory Consumed, because cache pages are ESXi pages in use, not free. Only the memory compression freed leaves ESXi Memory Consumed.
 - Example: a 4 KB page compressed to 1 KB keeps 1 KB in ESXi Memory Consumed and frees 3 KB.
 - Includes actual kernel use, not kernel reservation.
+- Excludes VM reservations as such: raising a running VM's reservation by 8 GB left host Consumed flat at 12.4 GB on a 9.1 lab host ([ESXi memory metrics compared](../comparisons/host-memory-metrics.md), section VM reservation across counters).
+- Sits above the Resource memory consumed counter of the host group: 12.45 GB against 11.88 GB on that host, a gap of about 0.5 GB.
 
 ## Behaviour
 - The primary ESXi utilization counter, but full of cache and inactive pages. Near 100% in an overcommitted host is the goal, not a problem.
@@ -27,7 +29,7 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Includes non-VM consumers: kernel, vSAN, NSX. Can exceed the memory allocated to all running VMs.
 ![ESXi memory Consumed above the memory allocated to running VMs](../../images/esxi-memory-consumed-above-vm-allocated.png)
 - Host with 0 VMs: example 17 GB consumed, likely vSAN.
-- Same host: kernel reservation (ESX System Usage) about 57 GB, Consumed about 17.5 GB. Consumed is actual use, not reservation.
+- Same host: kernel reservation (VCF Operations Memory | ESX System Usage) about 57 GB, Consumed about 17.5 GB. Consumed is actual use, not reservation.
 ![ESXi with no VMs: ESX System Usage (kernel reservation) vs Consumed](../../images/esxi-memory-system-usage-vs-consumed-host-without-vms.png)
 - Example: 255 GB host, 229 GB consumed = 191 GB by the one VM + 36 GB by the kernel. Kernel consumption = sum of 3 kernel resource pools.
 - Evacuated host: Consumed fell from 400 GB to 32 GB (vSAN), not 0. Kernel usage stayed nearly constant; kernel reservation did not change.
@@ -87,6 +89,8 @@ source:
   path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Virtual Memory; Relationship; Memory > ESXi > Consumption Metrics > Consumed
 corrections: []
 review_notes:
+- 'Section ''Scope'': the gap of about 0.5 GB between host Consumed and the host group Resource memory consumed (9.1 lab host, 2026-11-15) has no explanation yet; not VM overhead, which read 0.'
+- 'ESX System Usage: the formula of the VCF Operations metric mem|host_systemUsage is not published; the reading as the kernel reservation (host/system allocation minimum) rests on the author''s answer. https://techdocs.broadcom.com (VCF Operations 9.1, Host System metrics)'
 - 'Section ''Scope'': from Memory > Architecture.'
 - 'Sections Formula, Behaviour: from Memory > ESXi.'
 - 'Section ''Formula'' (compression): Consumed = total host memory minus free host memory, from the vSphere Web Services API 9.1, https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html; esxtop CNSM excludes the memory saved by compression (vSphere 9.1 documentation, esxtop Memory panel).'

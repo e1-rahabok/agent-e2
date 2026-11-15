@@ -37,17 +37,6 @@ Each entry has:
 - Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
-### Q215 · Memory > ESXi > Utilization · ESX System Usage: vCenter counter or VCF Operations metric?
-
-- Files: [ESXi memory utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md); [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); [Memory capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-capacity.md); [ESXi Consumed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md); [ESXi memory metrics compared](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/comparisons/host-memory-metrics.md).
-- Search 1: "ESX System Usage"
-- Question: your earlier answer ("Memory \ ESX System Usage (KB). It is a raw counter from vCenter ... a legacy name") is in the files, which call it the kernel reservation. The VCF Operations 9.1 Host System metrics page (TechDocs, updated 2026-11-12) lists "Mem|ESX System Usage: Memory usage by the VMkernel and ESX user-level services", key `mem|host_systemUsage`, a key VCF Operations computes, and separately "Mem|VM kernel Usage (KB)", key `mem|sysUsage_average`, which is vCenter `mem.sysUsage` (API 9.1: "Used by VMkernel", without VMs and vSphere services). consumed.md records ESX System Usage at 57 GB on a host with no VMs while host Consumed read 17.5 GB: a reservation, not current use. (A) keep as written; (B) ESX System Usage is a VCF Operations metric (`mem|host_systemUsage`) that behaves as the kernel reservation; vCenter `mem.sysUsage` is current VMkernel use, shown in VCF Operations as VM kernel Usage; (C) other.
-- Written as now: "ESX System Usage is the kernel reservation. Raw vCenter counter: Memory \ ESX System Usage (KB). The name is legacy." The same in overhead.md, memory-capacity.md, host/consumed.md and host-memory-metrics.md.
-- Final answer (review 2026-11-14; expert call on the names, the reservation reading is yours): B. Sources: https://techdocs.broadcom.com (VCF Operations 9.1, Host System metrics); https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html.
-  - Change if accepted: the five files; a review note "To check: the formula of `mem|host_systemUsage` (not published)".
-  - For you: A, B or C; and whether any vCenter 9.1 screen shows ESX System Usage.
-- Answer:
-
 ### Q216 · CPU > NUMA > Virtual NUMA · `numa.*` options and the topology rebuild in vSphere 9.1
 
 - Files: [Virtual NUMA](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/virtual-numa.md); [project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md) (section 4); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (After 1.0, the manual reminder on `numa.autosize.once`).

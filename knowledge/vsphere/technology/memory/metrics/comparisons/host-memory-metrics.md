@@ -11,7 +11,7 @@
 | Past contention | Swap (5 counters), Compressed, Host cache | Capacity more than performance. |
 | Capacity warning | Balloon, State, Low Free Threshold | Leading indicators. |
 | Utilization | Consumed, Granted, Shared, Shared Common, Utilization | Consumed is the main capacity counter. |
-| Reservation | Total reservation, Reservation consumed, Reservation available | Reservations cannot be overcommitted. |
+| Reservation | Total reservation (capacity), Reservation consumed, Reservation available | Reservations cannot be overcommitted. |
 | Other | Zero, Overhead, Heap (kernel heap, small and constant) | - |
 | Internal | Active (kernel memory allocation), Persistent Memory, VMFS pointer block cache | Not for operations. The cache capacity miss ratio may be of interest. |
 
@@ -24,13 +24,30 @@
 | Total Capacity | 736.7 GB | Physical memory. |
 | Usable Memory | 729 GB | About 1% below total. Likely vCenter Managed: memory the kernel manages for VMs, kernel and user worlds. |
 | VMkernel Usage | 7.6 GB | Far below kernel reservation (51.6 GB). |
-| Host Usage | 367.07 GB | Sum of VM Consumed. Excludes ESX system usage. Use: migration. |
+| Host Usage | 367.07 GB | Sum of VM Consumed. Excludes ESX System Usage. Use: migration. |
 | Machine Demand | 247.96 GB | Sum of VM Utilization. |
-| Utilization | 299.56 GB | Machine Demand + ESX System Usage. |
+| Utilization | 299.56 GB | Machine Demand + ESX System Usage (a VCF Operations metric, the kernel reservation). |
 | Consumed | 404.42 GB | Highest, unless sharing savings are large. |
 
 - Workload = Utilization / Usable.
 ![Host Usage, Machine Demand, Utilization, Consumed across hosts](../../images/esxi-memory-usage-demand-utilization-consumed-across-hosts.png)
+
+## VM reservation across counters
+- Test on a 9.1 lab host, vCenter Advanced Performance, 20-second samples: a running VM's reservation was raised twice (+820 MB, then +8 GB). Only the reservation counters moved.
+
+| Counter (vCenter) | Unit | Moves with a VM reservation | Reading |
+|---|---|---|---|
+| Reservation consumed | MB | Yes, by the full step | VMs only; no kernel reservation or kernel use |
+| Reservation available | KB | Yes, falls by the same amount | Total reservation minus Reservation consumed |
+| Total reservation | MB | No | Reservable capacity of the host, about 362,000 MB on the lab host |
+| Consumed | KB | No | Pages the host holds; about 12.4 GB, flat |
+| Granted | KB | No | Mapped memory of VMs and management agents; about 11.9 GB, flat |
+| VMkernel consumed | KB | No | Use by the VMkernel itself; about 0.70 GB, drifting 4 MB in an hour |
+| Overhead consumed | KB | No | 0 throughout |
+
+- Reason: Consumed, Granted and VMkernel consumed count pages in use. A reservation change by itself does not change the pages the host holds, so a VM reservation is in none of them.
+- A VM reservation therefore shows only in the reservation counters. A host can hold large reservations and show a low Consumed.
+- The kernel reservation (System Resource Reservation, 4.21 GB on the lab host) is in none of these seven counters; it is host/system Resource memory allocation minimum ([overhead](../../../../architecture/overhead.md), section Memory metrics).
 
 ## Misconceptions
 - "Use host Latency for performance" → it is an average. Use the worst VM.
