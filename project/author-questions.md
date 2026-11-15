@@ -308,13 +308,4 @@ Each entry has:
 
 ## Future release
 
-### Q229 · Scope > Competitor products · Linux KVM memory architecture note: keep it out of the knowledge base?
-
-- Files: [project/sources/linux_kvm_memory_architecture.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/linux_kvm_memory_architecture.md); [project/knowledge-rules/placement.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/placement.md) (Scope: VCF only); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing: competitor products).
-- Search: not from the book; the uploaded note, sections 1 to 3.
-- Question: the note describes the Linux KVM hypervisor: `virtio_balloon`, `memory.max` in cgroup v2, `memcg` direct reclaim, OOM kill of the VMM process, `virtio-mem` and free page reporting. The repository rule excludes competitor products, their behaviour and comparisons with them. Nothing from it went into `knowledge/` (2026-11-15). Its one useful contrast for Agent E2: on KVM a limit and the balloon are decoupled (lowering `memory.max` never inflates the balloon, and without swap the VMM is killed), while ESXi balloons first when a limit binds. That contrast explains why an administrator from Linux believes "a limit never balloons". (A) keep KVM out: the contrast stays in this entry only; (B) one sentence in the Memory limit file and the Ballooned misconception line, with no KVM mechanism, as the origin of the belief; (C) a KVM section or comparison file (reverses the Not doing row and the placement rule); (D) other.
-- Written as now: no KVM in `knowledge/`. The ESXi note beside it was digested (Q214).
-- Final answer (expert call): A. The product has no use for KVM mechanics: customers run VCF, and a comparison file invites questions the knowledge base cannot answer well. Revisit if field questions from Linux administrators show the belief often.
-  - For you: A, B, C or D.
-- Answer:
-
+- None open.

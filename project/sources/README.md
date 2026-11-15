@@ -13,3 +13,6 @@ Examples:
 These files may cut across multiple VCF components (vSphere, NSX, vSAN, etc.), which is why this folder sits at the `knowledge/` level rather than under a specific component.
 
 The structured knowledge under `vsphere/`, `nsx/`, etc. is derived from these raw materials.
+
+## future/
+Sources for future releases. Not digested: nothing in them is in `knowledge/`, and each file says so in its first line. Move a file up to `project/sources/` when a release takes it in (author, 2026-11-15, Q229).
