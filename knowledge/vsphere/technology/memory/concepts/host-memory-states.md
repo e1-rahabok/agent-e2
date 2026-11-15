@@ -34,6 +34,7 @@
 ## Reclamation sequence
 - ESX uses five mechanisms to reduce the ESXi pages each VM takes: page sharing, ballooning, memory compression, swap to host cache, regular host-level swapping.
 - Page sharing runs continuously. The other four start in that order as memory pressure rises.
+- The order holds for a VM above its memory target because of a limit too, with the host in any state.
 - Ballooning starts when host memory begins to get low and a VM's memory usage approaches its memory target.
 - Compression starts when VM memory usage approaches the level at which host-level swapping would be required.
 - Swap to host cache starts when compression does not keep VM memory usage low enough, if a host cache is configured.
@@ -47,7 +48,7 @@
 - Target 99% during HA or maintenance → 99% × 11 / 12 = 90.75% in normal operation.
 - At that level hosts do not reach the balloon state, so VMs are not swapped.
 - Balloon in such a cluster points to a VM-level cause such as a limit, not host pressure.
-- A limit does not cause balloon directly. It causes Compressed or Swapped when Consumed tries to grow beyond it. See [`vsphere/technology/memory/metrics/virtual-motherboard/ballooned`](../metrics/virtual-motherboard/ballooned.md).
+- A limit is a second trigger for reclamation, independent of the host state: ESXi balloons first, then compresses and swaps, also in the High state. See [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md).
 
 ## Low Free Threshold
 - Counter: Low Free Threshold (KB). The free-memory level below which ESXi reclaims memory from VMs.
@@ -89,6 +90,7 @@ internal_derive: []
 related:
 - vsphere/technology/memory/concepts/ballooning
 - vsphere/technology/memory/concepts/swap-and-compression
+- vsphere/technology/memory/concepts/memory-limit
 - vsphere/technology/memory/metrics/host/ballooned
 - vsphere/technology/memory/metrics/host/consumed
 - vsphere/technology/memory/configuration/host-level-swapping

@@ -12,6 +12,16 @@
 - The Guest OS must have enough swap space configured for ballooning.
 - How much is requested depends on the Idle Memory Tax. Do not change it.
 
+## Inflate and deflate, step by step
+1. The memory scheduler sets a Balloon Target for the VM (the counter VM Memory Balloon Target).
+2. The driver polls the hypervisor about once per second and sees its size is below the target.
+3. It asks the Guest OS for 4 KB pages. The guest gives free pages first; when none are left, it drops clean cache, then pages cold pages out to guest swap.
+4. The driver pins those pages, so the guest cannot reuse them, and passes their page numbers to the VM monitor through a hypercall.
+5. The VM monitor invalidates their second-level page table entries and returns the ESXi pages to the VMkernel. Consumed falls at once.
+- Deflate: the scheduler lowers the target; the driver unpins its pages and frees them to the guest allocator. ESXi allocates nothing at that moment. When the guest next writes a freed page, an EPT violation exits to the VM monitor, which maps a new zero-filled ESXi page. So Consumed rises again only as the guest touches pages.
+- Ceiling: the driver stops at 65% of configured memory by default (host option Mem.CtlMaxPercent; `sched.mem.maxmemctl`, in MB, sets it per VM). What is still above the target is compressed or swapped.
+- Second-level page tables and the EPT violation: see [`vsphere/technology/memory/metrics/virtual-motherboard/consumed`](../metrics/virtual-motherboard/consumed.md).
+
 ## Performance impact
 - Ballooning by itself does not cause a performance problem.
 - A problem occurs when Windows or Linux requests a ballooned page again.
@@ -33,8 +43,8 @@
 - Reason: past pressure. Compressed and swapped data is not brought back until requested (it costs CPU). The balloon deflates proactively when pressure ends.
 
 ## Trigger and requirement
-- Trigger: host memory begins to get low and the VM's memory usage approaches its memory target. The balloon inflates when the host enters the Soft state (free memory at 64% of minFree; see [`vsphere/technology/memory/concepts/host-memory-states`](host-memory-states.md)).
-- No host pressure, no balloon: a VM inside its configured memory on a host with free memory is never ballooned, with or without VMware Tools. It reuses its own mapped pages.
+- Two triggers. Host pressure: host memory begins to get low and the VM's memory usage approaches its memory target; the balloon inflates when the host enters the Soft state (free memory at 64% of minFree; see [`vsphere/technology/memory/concepts/host-memory-states`](host-memory-states.md)). A limit: the VM, or a pool above it, would grow past its limit; the balloon inflates on a host with free memory too (see [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md)).
+- No host pressure and no limit, no balloon: a VM inside its configured memory on a host with free memory is never ballooned, with or without VMware Tools. It reuses its own mapped pages.
 - The balloon driver makes the guest OS give up the pages it considers least valuable. Windows: the driver ships with VMware Tools. Linux: the driver is `vmw_balloon`, in the upstream kernel and loaded automatically on a VMware VM; open-vm-tools does not contain it (Broadcom KB 313773).
 - Performance closely matches a native system under similar memory constraints.
 - The guest OS must have enough swap space configured.
@@ -68,6 +78,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/ballooned
 - vsphere/technology/memory/metrics/virtual-motherboard/balloon-target
 - vsphere/technology/memory/concepts/swap-and-compression
+- vsphere/technology/memory/concepts/memory-limit
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 images:
   - path: ../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png
@@ -82,5 +93,6 @@ corrections: []
 review_notes:
 - 'Overcommit technique content: Performance Best Practices for VMware vSphere 9.1 (revision 20260624), ESX Memory Considerations > Memory Overcommit Techniques (pp. 33-34); https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
 - 'To check: Section ''Mechanism'': Idle Memory Tax is the Mem.IdleTax setting.'
+- 'To check: Section ''Inflate and deflate, step by step'': the one-second polling interval of the driver (an older Resource Management guide states it; check vSphere 9.1 documentation, Memory Balloon Driver) and that the guest takes Free, then cache, then guest swap.'
 status: draft
 ```

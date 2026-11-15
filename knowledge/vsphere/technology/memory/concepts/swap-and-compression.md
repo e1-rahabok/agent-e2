@@ -16,7 +16,7 @@
   - balloon driver deactivated;
   - balloon driver not running yet, for example while the guest boots;
   - balloon driver too slow for current demand;
-  - balloon at its maximum size (sched.mem.maxmemctl, or the guest-type maximum).
+  - balloon at its maximum size (Mem.CtlMaxPercent, default 65% of configured memory; sched.mem.maxmemctl per VM; or the guest-type maximum).
 - Ballooning lets the guest choose which pages to give back. Host swapping picks pages without guest knowledge.
 - Compression cache: up to 10% of VM memory by default (Mem.MemZipMaxPct, 5-100%). Compressed pages beyond the cache are swapped.
 - Swap space reserved per VM = configured memory - memory reservation. In practice only a fraction is used.
@@ -50,7 +50,7 @@
 - 64 GB VM. Swapped plus compressed peaked at 20 GB over 7 days.
 - Consumed was flat for 7 days, just under the effective limit: a limit. The effective limit includes the VM's overhead, so Consumed stays a little below it.
 - Granted hovered above Consumed and above the effective limit: Granted ignores the limit.
-- The guest kept using pages: some were swapped in; others were compressed or swapped to make room under the limit. So Swapped fell while Compressed rose: they moved in opposite directions.
+- The guest kept using pages: some were swapped in; others were compressed or swapped to make room under the limit. So Swapped fell while Compressed rose: they moved in opposite directions. The balloon, first in line under a limit, was already at its ceiling or could not take enough (see [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md)).
 - Each swap-in is a wait for the vCPU that touched the page, so VM memory contention rose at those moments. That is the slowness the application sees.
 - The host had free memory: the cause is the VM's limit, not the host. Fix: remove the limit or raise it to what the guest needs. More memory for the host or the VM changes nothing while the limit stays.
 ![Limit: Consumed flat, swapped and compressed move in opposite directions](../images/vm-memory-limit-swapped-and-compressed-move-opposite.png)
@@ -61,6 +61,12 @@
 - Swap to host cache starts when compression does not keep usage low enough, if a host cache is configured (an administrator-configured swap cache, in most cases on SSD). Much faster than regular swap files on hard disks, even if some swapped pages are active.
 - Regular host-level swapping starts when the host cache is full or none is configured. High access latency can degrade VM performance significantly.
 - Host-level swapping is transparent to the guest OS and distinct from swapping inside the guest OS.
+
+## Cost of a swapped page
+- ESXi removes the page from the second-level page tables. The guest still believes the page is in RAM.
+- When a vCPU touches it, an EPT violation exits to the VM monitor. The vCPU waits while the VMkernel reads the page back from the swap file: a synchronous wait, which VM memory contention counts. A compressed page waits for a decompression instead, much shorter.
+- Double paging: if the guest later pages out that same page to its own swap, ESXi first reads it in from the host swap file, and the guest writes it straight back to guest swap. One page costs two reads and a write, on both swap devices. Pressure on both layers amplifies the I/O.
+- A VM at a memory limit is the usual case: ESXi swaps blindly, the guest pages by its own rules. See [`vsphere/technology/memory/concepts/memory-limit`](memory-limit.md).
 
 ## Misconceptions
 - "Swapped = Swap in - Swap out" → in and out run in parallel on different pages.
@@ -93,6 +99,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/swap-in-rate
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
 - vsphere/technology/memory/concepts/ballooning
+- vsphere/technology/memory/concepts/memory-limit
 images:
   - path: ../images/vm-memory-swap-out-rate-sum-matches-swapped.png
     product: [vsphere]

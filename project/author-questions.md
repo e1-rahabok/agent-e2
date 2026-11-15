@@ -37,17 +37,6 @@ Each entry has:
 - Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
-### Q214 · Memory > Balloon · Does a memory limit cause ballooning?
-
-- Files: [VM Ballooned](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/ballooned.md) (section Behaviour); [Host memory states](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/host-memory-states.md).
-- Search 1: "Does limit result in Balloon?"
-- Question: your earlier answer ("not directly": a limit results in swapped or compressed when Consumed tries to grow beyond it) is in the files. Two sources point the other way. The vSphere 9.1 documentation, memory performance table (p. 2037): "If free memory is available on the hosts and the virtual machines are experiencing high swap or balloon memory, the virtual machine (or resource pool) has reached its resource limit." And the file's own example: an 8 GB VM with a 2 GB limit "was heavily ballooned". A limit caps the VM's memory target, and ESXi reclaims from a VM above its target with the balloon first when the driver runs. (A) keep: under a limit the direct result is Compressed or Swapped, not Balloon; (B) a limit lowers the VM's target; ESXi reclaims above it with the balloon first, then compression and swap, even with free host memory; (C) other.
-- Written as now: (A) in both files. The review of 2026-11-14 changed only the balloon maximum in the example: Mem.CtlMaxPercent, default 65% (vSphere 9.1 documentation, p. 600; was "around 63%").
-- Final answer (review 2026-11-14; expert call): B. The four layers still explain why Consumed grows under a limit; they do not stop the balloon, which is how ESXi enforces the target when the driver runs.
-  - Change if accepted: ballooned.md (Behaviour, a misconception line "A limit cannot cause ballooning"), host-memory-states.md. No question key depends on the line (grep, 2026-11-14).
-  - For you: A, B or C.
-- Answer:
-
 ### Q215 · Memory > ESXi > Utilization · ESX System Usage: vCenter counter or VCF Operations metric?
 
 - Files: [ESXi memory utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/utilization.md); [Overhead](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/architecture/overhead.md) (section Memory metrics); [Memory capacity](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/memory-capacity.md); [ESXi Consumed](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/consumed.md); [ESXi memory metrics compared](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/comparisons/host-memory-metrics.md).
@@ -214,6 +203,7 @@ Each entry has:
 - Search 1: "The small gap above the limit is VM overhead" (old line, removed)
 - Question: The old line said the small gap above the limit is VM overhead. In the example data, Consumed sits just under Memory|Effective limit and Granted above it. Did the line mean the gap between Consumed and Granted? Is the effective limit the configured limit plus overhead?
 - Written as now: Consumed stays a little below the effective limit because the effective limit includes overhead; Granted sits above it and ignores the limit (draft, review note).
+- Evidence added 2026-11-15: the uploaded ESXi memory note ([project/sources/vmware_esxi_memory_architecture.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/vmware_esxi_memory_architecture.md), section 3) says a limit caps Consumed and does not restrict overhead, which another setting (`sched.mem.overheadMax`) bounds. That fits an effective limit of 2.12 GB for a 2 GB limit (limit plus overhead) with Consumed just under 2 GB (question 0141). It sits badly with VM Memory Overhead ("Consumed sits just below the limit plus overhead"). Proposed: the limit caps Consumed alone; Effective limit = limit + overhead; Consumed stays at or just under the limit, not under limit plus overhead. The Memory limit file states only the first part and carries a review note.
 - Answer:
 
 ### Q202 · Memory > Overhead · Kernel memory reservation with vSAN and NSX
@@ -318,5 +308,13 @@ Each entry has:
 
 ## Future release
 
-- None open.
+### Q229 · Scope > Competitor products · Linux KVM memory architecture note: keep it out of the knowledge base?
+
+- Files: [project/sources/linux_kvm_memory_architecture.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/sources/linux_kvm_memory_architecture.md); [project/knowledge-rules/placement.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/knowledge-rules/placement.md) (Scope: VCF only); [project/plan.md](https://github.com/e1-rahabok/agent-e2/blob/main/project/plan.md) (Not doing: competitor products).
+- Search: not from the book; the uploaded note, sections 1 to 3.
+- Question: the note describes the Linux KVM hypervisor: `virtio_balloon`, `memory.max` in cgroup v2, `memcg` direct reclaim, OOM kill of the VMM process, `virtio-mem` and free page reporting. The repository rule excludes competitor products, their behaviour and comparisons with them. Nothing from it went into `knowledge/` (2026-11-15). Its one useful contrast for Agent E2: on KVM a limit and the balloon are decoupled (lowering `memory.max` never inflates the balloon, and without swap the VMM is killed), while ESXi balloons first when a limit binds. That contrast explains why an administrator from Linux believes "a limit never balloons". (A) keep KVM out: the contrast stays in this entry only; (B) one sentence in the Memory limit file and the Ballooned misconception line, with no KVM mechanism, as the origin of the belief; (C) a KVM section or comparison file (reverses the Not doing row and the placement rule); (D) other.
+- Written as now: no KVM in `knowledge/`. The ESXi note beside it was digested (Q214).
+- Final answer (expert call): A. The product has no use for KVM mechanics: customers run VCF, and a comparison file invites questions the knowledge base cannot answer well. Revisit if field questions from Linux administrators show the belief often.
+  - For you: A, B, C or D.
+- Answer:
 

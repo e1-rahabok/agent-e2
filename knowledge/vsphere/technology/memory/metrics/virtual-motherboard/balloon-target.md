@@ -4,6 +4,7 @@
 - Memory the hypervisor wants the balloon driver to reclaim from this VM.
 - Non-zero: the hypervisor has asked the VM to give back memory.
 - The Guest OS performs the reallocation. So Balloon Target can be 0 while Ballooned is above 0.
+- Two causes of a non-zero target: host memory pressure, and a VM above its limit (the target covers the excess; see [`vsphere/technology/memory/concepts/memory-limit`](../../concepts/memory-limit.md)). The driver stops at its ceiling, 65% of configured memory by default; a target above it leaves the rest to compression and swap.
 
 ## Misconceptions
 - "Balloon Target 0, so Ballooned must be 0" → the guest releases pages on its own schedule.

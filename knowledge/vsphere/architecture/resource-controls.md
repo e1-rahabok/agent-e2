@@ -85,7 +85,7 @@ reservation is guaranteed; utilization may be < reservation
 - Not visible to the Guest OS.
 - Result is unpredictable. Can cause a worse performance problem than reducing the VM configuration.
 - CPU limit: impacts the CPU Ready counter.
-- Memory limit: set in the VMX file as `sched.mem.max`.
+- Memory limit: set in the VMX file as `sched.mem.max`. Enforced at all times, also with free host memory: balloon first, then compression, then host swap. See [`vsphere/technology/memory/concepts/memory-limit`](../technology/memory/concepts/memory-limit.md).
 
 ## Entitlement
 - What the VM is entitled to. A dynamic value determined by the hypervisor.
