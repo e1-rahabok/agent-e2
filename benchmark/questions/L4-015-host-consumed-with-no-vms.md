@@ -22,7 +22,7 @@ B: expecting Consumed to equal the kernel reservation. Or F, the over-correction
 - Answer: A, C.
 - A is true: host Consumed counts pages in physical DIMM: VMs, VM overhead and all kernel processes (user and kernel space), including vSAN and NSX. With 0 VMs it is the kernel and its services.
 - B is false: Consumed includes actual kernel use, not the kernel reservation.
-- C is true: reservation and use are different metric types; the reservation is a minimum held for the kernel, and its use can stay below it (here about 41 against 49 GB).
+- C is true: reservation and use are different metric types; the reservation is a minimum guaranteed to the kernel, not pages set aside, and its use can stay below it (here about 41 against 49 GB).
 - D is false: the kernel, vSAN and NSX keep memory with no VMs; it is normal use, not a leak.
 - E is false: VM overhead leaves with the VMs; what stays is the kernel's own use.
 - F is false: the kernel and its other services consume memory too; a host with no VMs does not show 0 Consumed, with or without vSAN.

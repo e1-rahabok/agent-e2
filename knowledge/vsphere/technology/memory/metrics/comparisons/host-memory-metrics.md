@@ -25,7 +25,7 @@
 | Usable Memory | 729 GB | About 1% below total. Likely vCenter Managed: memory the kernel manages for VMs, kernel and user worlds. |
 | VMkernel Usage | 7.6 GB | Far below kernel reservation (51.6 GB). |
 | Host Usage | 367.07 GB | Sum of VM Consumed. Excludes ESX System Usage. Use: migration. |
-| Machine Demand | 247.96 GB | Sum of VM Utilization. |
+| Machine Demand | 247.96 GB | Sum of the VM terms: VM Utilization raised to the reservation, plus overhead ([`vsphere/technology/memory/metrics/host/utilization`](../host/utilization.md)). |
 | Utilization | 299.56 GB | Machine Demand + ESX System Usage (a VCF Operations metric, the kernel reservation). |
 | Consumed | 404.42 GB | Highest, unless sharing savings are large. |
 

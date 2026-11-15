@@ -27,7 +27,7 @@
 - A problem occurs when Windows or Linux requests a ballooned page again.
 - The more ballooned, swapped and compressed, the higher the chance of a future performance hit.
 - Severity depends on VM shares, reservation, limit and configured RAM. 10 MB ballooned hurts a 4 GB VM more than a 512 GB VM.
-- Example: a 16 GB VM with 10,430 MB ballooned (63.66%) for 4 weeks, flat. The Guest OS never requested those pages; it worked within the remaining 6 GB. Granted + Swapped + Compressed was a flat line.
+- Example: a 16 GB VM with about 10 GB ballooned, near the 65% ceiling, for 4 weeks, flat. The Guest OS never requested those pages; it worked within the remaining 6 GB. Granted + Swapped + Compressed was a flat line.
 ![Heavily ballooned VM: latency spikes are rare](../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png)
 
 ## Capacity impact
