@@ -19,7 +19,7 @@ VCF Operations Usage (%) = Consumed / Total Capacity
 - Compression: the compression cache (the zipped pages held in DRAM) is inside ESXi Memory Consumed, because cache pages are ESXi pages in use, not free. Only the memory compression freed leaves ESXi Memory Consumed.
 - Example: a 4 KB page compressed to 1 KB keeps 1 KB in ESXi Memory Consumed and frees 3 KB.
 - Includes actual kernel use, not kernel reservation.
-- Excludes VM reservations as such: raising a running VM's reservation by 8 GB left host Consumed flat at 12.4 GB on a 9.1 lab host ([ESXi memory metrics compared](../comparisons/host-memory-metrics.md), section VM reservation across counters).
+- Excludes VM reservations as such: raising a running VM's reservation by several GB left host Consumed flat on a 9.1 lab host ([ESXi memory metrics compared](../comparisons/host-memory-metrics.md), section VM reservation across counters).
 - Sits above the Resource memory consumed counter of the host group: 12.45 GB against 11.88 GB on that host, a gap of about 0.5 GB.
 
 ## Behaviour

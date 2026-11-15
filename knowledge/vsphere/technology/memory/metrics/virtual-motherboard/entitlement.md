@@ -9,12 +9,12 @@ Entitlement = Granted + Overhead
 - ESXi memory the VM deserves, as determined by the ESXi scheduler.
 
 ## Observed behaviour
-- On a 9.1 lab VM (8 GiB configured), Entitlement tracked Consumed sample by sample at about 1.104 times Consumed (6.10 GiB against 5.53 GiB), while Granted stayed at 6,356,764 KB and Overhead consumed at 58,460 KB. Granted plus Overhead (6.12 GiB) did not move with it, so the formula above did not describe this VM (Q230).
-- A reservation did not change it: Entitlement stayed near 6.1 GiB with an 8 GiB reservation set and after it was removed ([VM memory metrics compared](../comparisons/vm-memory-metrics.md), section VM reservation across counters).
+- On a 9.1 lab VM at rest, Entitlement tracked Consumed sample by sample at a fixed ratio of about 1.1, while Granted and Overhead consumed stayed flat. Granted plus Overhead did not move with it, so the formula above did not describe this VM (Q230).
+- A reservation did not change it: Entitlement kept following Consumed after a reservation was set and after it was removed ([VM memory metrics compared](../comparisons/vm-memory-metrics.md), section VM reservation across counters).
 
 ## Misconceptions
 - "Entitlement is what the VM uses" → it is a scheduler value.
-- "Entitlement rises to the VM's reservation" → it stayed below an 8 GiB reservation on the lab VM (6.1 GiB).
+- "Entitlement rises to the VM's reservation" → it stayed below a reservation that was above Consumed on the lab VM.
 
 ## Metadata
 ```yaml
