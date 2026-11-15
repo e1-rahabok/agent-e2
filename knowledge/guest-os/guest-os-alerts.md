@@ -9,7 +9,7 @@
 
 ## Guest OS CPU run queue
 - Goal: catch a long CPU run queue, which is less known than CPU utilization. It is often independent of the virtualization layer: some applications spawn too many threads. It also shows the VM owner that the infrastructure team sees inside Windows and Linux.
-- Guest OS Peak CPU Queue, 20-second: the queue itself ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md)).
+- Guest OS Peak CPU Queue (Guest|Peak vCPU Queue within collection cycle), 20-second: the queue itself, per vCPU: VCF Operations divides the total by the vCPU count, so above 20 means a total above 20 times the vCPU count (160 threads on 8 vCPUs) ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Scale in VCF Operations).
 - VM CPU Net Run: confirms a real workload. The queue counter gives false positives, so Net Run is required and the wait is longer ([`vsphere/technology/cpu/metrics/virtual-motherboard/net-run`](../vsphere/technology/cpu/metrics/virtual-motherboard/net-run.md)).
 - Red only, to reduce noise. To add an orange, halve the queue value and keep Net Run: red is 2x orange in the set.
 - Use it with the VM CPU contention and VM CPU consumption alerts ([`vsphere/object-types/vm/vm-alerts`](../vsphere/object-types/vm/vm-alerts.md)). Remediation:
@@ -37,6 +37,7 @@
 
 ## Misconceptions
 - "Guest OS alerts go to the infrastructure team" → they go to the application team; infrastructure has its own VM and host alerts.
+- "Run queue above 20 is a total of 20 threads" → the symptom reads the per vCPU value; the total is 20 times the vCPU count.
 - "Run queue above 20 is always a CPU shortage" → check the VM CPU contention and consumption alerts first; if neither fired, the application creates too many threads.
 - "Alert on the run queue alone" → the counter gives false positives; the alert also requires Net Run and a longer wait.
 - "Alert on low free memory" → the Guest OS uses free memory as cache; check paging and benchmark the application.
@@ -76,6 +77,7 @@ source:
   path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption)'
 corrections: []
 review_notes:
+- 'Section ''Guest OS CPU run queue'': the 20 (and the optional 10) may have been written for a total queue; the metric is per vCPU, which makes 20 about 10 times the KPI red level per vCPU (16). Open (Q232).'
 - 'Section ''Guest OS CPU run queue'': the source thanks Darren Farrer for the collaboration on the remediation.'
 - 'Section ''Guest OS CPU run queue'': the source gives the optional orange as Peak CPU Queue above 10 with Net Run above 75%, half the red queue value; written as the 2x rule.'
 - 'Section ''Consumption: daily checks, no alert'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. Parked after 1.0 (Q142).'

@@ -18,7 +18,7 @@
 ## Pairs
 | Object | 5-minute average | 20-second peak |
 |---|---|---|
-| Guest OS | CPU Run Queue | Peak CPU Queue within collection cycle |
+| Guest OS | CPU Run Queue (Guest\|CPU Queue; per vCPU) | Peak vCPU Queue within collection cycle (Guest\|Peak vCPU Queue within collection cycle; per vCPU) |
 | Guest OS | CPU Context Switch | Peak CPU Context Switch within collection cycle |
 | Guest OS | Memory Page-out Rate | Peak Guest OS Page-out Rate within collection cycle |
 | Guest OS | Disk Queue Length | Peak Disk Queue within collection cycle |

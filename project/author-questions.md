@@ -37,15 +37,21 @@ Each entry has:
 - Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
-### Q217 · Guest OS > CPU > Run queue · Peak CPU Queue: per vCPU or total?
+### Q232 · Guest OS > Alerts > CPU run queue · Alert value 20 on a per vCPU metric
 
-- Files: [Guest OS Performance (%)](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/guest-os-performance.md); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md); [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md); [thresholds-performance.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-performance.yaml) (kpi row); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml) (the queue symptom).
+- Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue); [thresholds-alerts.yaml](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/catalog/thresholds-alerts.yaml) (`sym-guest-os-cpu-queue-above-20`, alert `alert-guest-os-cpu-queue-red`); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md).
+- Search: "Peak CPU Queue above 10 with Net Run above 75%" is not a string from the book; check the alert table in Guest OS Alerts for the queue value.
+- Question: since Q217 the peak queue is known to be per vCPU. The red symptom above 20 then needs a total of 160 threads on 8 vCPUs, and the KPI turns red at 16 per vCPU. Was 20 written for a total, or for the per vCPU value? (A) per vCPU as written (the alert is rare by design); (B) 20 was a total, so the per vCPU value is lower: give the value to keep (and the optional orange, now half of it); (C) other.
+- Written as now: 20 (red) and the optional orange of 10, both read per vCPU, with a review note; the catalog unit is `count per vCPU`.
+- Expert reading: B is likely, but a new number cannot be invented; it needs your value.
+- Answer:
+
+### Q233 · Benchmark > L4-077 · Option C (queue unchanged after a downsize) with a per vCPU metric
+
+- Files: [CPU usage dropped after a downsize](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-077-cpu-usage-dropped-after-downsize.md) (option C, the export 0236); [rightsizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/rightsizing.md) (CPU checks after a change).
 - Search: not from the book.
-- Question: one VCF Operations metric, `guest|20_sec_peak_cpu_queue`, feeds the Guest OS Performance (%) KPI, which reads it per vCPU ("The run queue stat is already per vCPU"; zero at 16), and an alert symptom above 20 count, which run-queue.md and guest-os-alerts read as a total ("Queue 53 on 8 vCPUs"). Both cannot hold: per vCPU, 20 is past the KPI's zero. (A) per vCPU: the alert value is wrong; (B) a total: the KPI divides by the vCPU count first; (C) other.
-- Written as now: both readings, in different files.
-- Final answer (review 2026-11-14): needs the VCF Operations 9.1 metric definition of Guest|Peak CPU Queue, or your lab. Expert reading: B; Windows Processor Queue Length is one queue for all processors, and the alert's example reads it as a total.
-- Lab evidence (2026-11-15, vcf-m02-nsx01a, 6 vCPU, one day at 5-minute points; Guest|Peak vCPU Queue within collection cycle and Guest|CPU Queue): all 284 peak values are whole multiples of 1/6 (1.3333, 0.8333, 0.5, 146.83 = 881/6); 282 of 284 Guest|CPU Queue values are whole multiples of 1/90 (6 vCPUs x 15 samples of 20 seconds). A guest reports a whole-number queue, so the counter is the total divided by the vCPU count: per vCPU, not a raw total. Both counters share one scale (6:05 PM: peak 146.83, average 10.24, about 146.83/15 plus the baseline). Reading A (the KPI's per vCPU), not B. Limits: one VM; 1/6 steps fit a divisor of 6 (or 3, 2, 1) and cannot prove the guest-side formula; 146.83 per vCPU would be a total queue of 881, which the Net Run and disk traces of that burst do not contradict but do not confirm.
-- Follow-up for you: (1) confirm on a VM with another vCPU count (2 vCPUs gives steps of 1/2, 4 gives 1/4, 8 gives 1/8) in the same export; (2) if per vCPU holds, the alert symptom above 20 (sym-guest-os-cpu-queue-above-20) and "Queue 53 on 8 vCPUs" in run-queue.md and guest-os-alerts.md read a total and need correcting; run-queue.md, the alert value and the KPI row stay unchanged until you answer.
+- Question: the key says the guest peak queue "should stay the same after a downsize" and the export shows 2-4 in both weeks. VCF Operations shows the queue per vCPU, so halving the vCPUs (16 to 8) with the same total queue doubles the value. Does the export hold the VCF Operations per vCPU value (then a flat value means the total halved, which contradicts a VM waiting more), or a total? (A) rebuild the export as per vCPU, with the value doubling, and reword C to the total; (B) keep the export as a total and say so in the prompt; (C) other.
+- Written as now: knowledge says the total stays the same, per vCPU rises in proportion; the question is unchanged, with a note. Same check for L4-042 ("run queue 2, in total for the 24 vCPUs": the wording says total, so it holds).
 - Answer:
 
 ### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
