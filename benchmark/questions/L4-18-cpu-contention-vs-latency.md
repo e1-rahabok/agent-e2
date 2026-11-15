@@ -13,28 +13,31 @@
 
 Which statements are correct?
 
-- A. db-11 waits for a physical thread: Ready is counted in both Contention and Latency, so the two agree.
-- B. app-31 is starved of CPU: a Latency above 37.5% means the host cannot serve it.
-- C. app-31 loses speed to Hyper-Threading and a lower clock: CPU Latency counts both, and Contention counts neither.
+- A. Most of db-11's 9% CPU Contention is Ready: its vCPUs waited for a physical thread.
+- B. app-31's 0.8% CPU Contention shows its vCPUs rarely waited to be scheduled.
+- C. In VCF Operations 9.1, CPU Contention counts the throughput a vCPU loses to a busy sibling thread and to a clock below nominal.
 - D. The two tools disagree on app-31, so one of them reports wrong data.
-- E. Setting app-31's host to High Performance removes the frequency part of its Latency; the Hyper-Threading part stays while sibling threads are busy.
-- F. Raising app-31's CPU shares lowers its Latency.
+- E. CPU Contention counts the time a CPU limit holds a vCPU back.
+- F. Raise app-31's CPU shares to bring its Latency down.
+- G. CPU Contention counts Swap Wait, the time a vCPU waits for a page to come in from ESXi swap.
 
 ## Likely wrong answer
-B: a CPU Latency above 37.5% read as starvation. Or D: one tool must be wrong.
+C: CPU Contention read as the old Latency-based counter. Or D: one tool must be wrong.
 
 ## Expected key points
-- Answer: A, C, E.
-- A: Ready (8.5%) is part of both counters; db-11 waits for a thread. Its host or placement is the next check.
-- B is wrong: Ready, Co-stop and Overlap are low and the guest run queue is short; Hyper-Threading alone can cost up to 37.5%, and a lower clock adds to it.
-- C: from VCF Operations 8.18, CPU Contention = Ready (with the time a limit holds back) + Co-stop + Overlap + Other Wait. CPU Latency counts Ready without the limit part, Co-stop, Overlap, the Hyper-Threading effect and power saving below the base clock.
+- Answer: A, B, E.
+- A: Ready (8.5%) makes up most of db-11's 9% (Ready + Co-stop + Overlap = 9.0%); db-11 waits for a thread. Its limits, shares and host load are the next checks.
+- B: from VCF Operations 8.18, CPU Contention = Ready (with the time a limit holds back) + Co-stop + Overlap + Other Wait when below 1%. app-31's parts are low, so it barely waited.
+- C is wrong: that was CPU Contention before VCF Operations 8.18, when it mapped to CPU Latency. Now it counts only time the vCPU does not run; frequency does not apply to a vCPU that is not running.
 - D is wrong: two counters with two formulas. Each is right for what it counts.
-- E: High Performance stops power saving below the base clock (%A/MPERF about 90 shows it now). A busy sibling thread still slows the vCPU.
+- E: Contention includes Ready caused by a limit, so it shows the VM's contention whatever the cause; CPU Latency leaves that time out.
 - F is wrong: shares decide who runs first when vCPUs wait in Ready; app-31 is not waiting.
+- G is wrong: Swap Wait belongs to memory contention, not to CPU Contention.
 
 ## Notes
 - Revised 2026-11-12: the earlier key said VCF Operations CPU Contention counts frequency and Hyper-Threading. That was true before VCF Operations 8.18 (Contention mapped to CPU Latency); in 9.1 it is false. The question now tests the difference between the two counters.
 - Hint moved out of the prompt (author, 2026-11-14: a hint helps the frontier model, not the local model), for reviewers: ": the cores run below the base clock" (after %A/MPERF about 90).
+- Trimmed 2026-11-14 to what CPU Contention counts (project/question-pairing-2026-11-14.md, decision 4): the options on CPU Latency counting frequency and Hyper-Threading (old B, C, E) were removed, because 0002 and 0102 test that fact; C, E and G are new single facts on Contention. Key changed from A, C, E to A, B, E.
 
 ## Metadata
 ```yaml
@@ -57,8 +60,8 @@ knowledge_main: vsphere/technology/cpu/metrics/virtual-motherboard/contention
 attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
-answer: [A, C, E]
-misconception: [B, D]
+answer: [A, B, E]
+misconception: [C, D]
 misconception_type: [tool-confusion, frequency-and-hyper-threading]
 status: draft
 ```

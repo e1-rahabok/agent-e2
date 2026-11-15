@@ -18,6 +18,13 @@
 - Windows: confirm the drop at the host (vsish `rxSummary`, running out of buffers). The Windows counter that carries the ring-full count is in `review_notes`.
 - So the drop is visible to the hypervisor and to the guest. It is caused and fixed in the guest (larger ring, CPU), which is why the Guest OS owner fixes it.
 
+## Drop by an NSX Distributed Firewall rule
+- An NSX Distributed Firewall rule that drops or rejects a VM's traffic discards the frames in the filter on the VM's port (vmware-sfw), at the boundary of the port's I/O chain, before the guest receives them or after the guest sent them.
+- The hypervisor counts these drops on the VM: esxtop %DRPRX or %DRPTX of the VM's port, and the vCenter real-time network charts of the VM.
+- The guest does not see them: no ring-full or out-of-buffer errors in the VM. The vmnics show no drops either.
+- To confirm: the filter statistics (`summarize-dvfilter`, `vsipioctl`), v4 drop and v4 reject rows. Counts close to the vNIC drops place the drop in the firewall.
+- A drop the policy intends needs no action. Distributed Firewall drop counts move with the VM in a vMotion, so the drops may have happened on an earlier host.
+
 ## Transmit drop: congested top-of-rack switch
 - Ethernet does not acknowledge frames. Unless 802.3x PAUSE flow control holds it back, ESXi counts a frame as sent once the physical NIC has put it on the wire.
 - A frame dropped by a congested top-of-rack switch is counted only in that switch.
@@ -47,6 +54,7 @@ sequenceDiagram
 - "The Guest OS shows no dropped packets, so the network is clean" → on transmit, a drop at the top-of-rack switch is invisible to ESXi and to the guest; look at TCP retransmissions and the switch counters.
 - "A receive drop on the VM means the physical network dropped it" → a full guest receive ring drops it inside the host; check the guest's CPU, the vCPU's Ready and the ring size.
 - "The hypervisor cannot see a VMXNET3 ring drop" → it counts it at the port and the VM (%DRPRX, droppedRx); the guest sees it too.
+- "vCenter shows receive drops on the VM, so the guest's ring must be full" → a Distributed Firewall rule drops frames before the guest; check the guest's out-of-buffer count and the filter statistics.
 
 ## Metadata
 ```yaml
@@ -70,12 +78,13 @@ related:
 - vsphere/tools/esxtop/network
 - sp5-framework/concepts/realms-and-layers
 source:
-  document: Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07)
-  path: Scenario 1 (RX, guest buffer exhaustion); Scenario 2 (TX, top-of-rack congestion)
+  document: Packet Lifecycle and Metric Accounting in Virtualized Networks (2026-11-07); Broadcom KB 449113 (ESXi 8.x, NSX 4.x)
+  path: Scenario 1 (RX, guest buffer exhaustion); Scenario 2 (TX, top-of-rack congestion); KB 449113, Packet drops observed on VMXNET3 vNIC due to Distributed Firewall policy
 corrections:
 - '2026-11-07: a full VMXNET3 receive ring is counted by the hypervisor (port, %DRPRX, droppedRx) and the guest. Corrects the reason given in Q070 (not visible to the hypervisor); the conclusion, fixed in the guest, stands.'
 - '2026-11-14: the source names the Linux counter rx_out_of_buffer (a Mellanox mlx5 name). The vmxnet3 driver shows the ring-full count as "pkts rx OOB" (pktsRxOutOfBuf) in ethtool -S, and rx_dropped leaves it out (https://github.com/torvalds/linux/blob/master/drivers/net/vmxnet3/vmxnet3_ethtool.c).'
 review_notes:
+- 'Section ''Drop by an NSX Distributed Firewall rule'': Broadcom KB 449113 is written for ESXi 8.x and NSX 4.x; check that it holds for vSphere 9.1 and NSX in VCF 9.1, https://knowledge.broadcom.com/external/article/449113.'
 - 'To check: which Windows VMXNET3 counter carries the ring-full count (Packets Received Discarded, ifHCInDiscards, or none); Broadcom KB 324556 and KB 437897 name only the host view (vsish rxSummary, running out of buffers).'
 status: draft
 ```

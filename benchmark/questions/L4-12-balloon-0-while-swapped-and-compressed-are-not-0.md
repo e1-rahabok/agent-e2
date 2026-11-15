@@ -48,5 +48,6 @@ level: 400                      # author 2026-11-05
 answer: [B,C]
 misconception: [A,D]
 misconception_type: [cumulative-vs-current, reclamation-as-contention]
+pair: "0391"
 status: draft
 ```

@@ -103,6 +103,61 @@ Each entry has:
 - Written as now: both, unreconciled.
 - Answer:
 
+### Q223 · Memory > Balloon · Does "VMware Tools not running" stop ballooning?
+
+- Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md); question [0022](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-13-relationship-between-vm-and-guest-os-memory-metrics.md).
+- Search: not from the book.
+- Question: your answer of 2026-11-14 on question 0022: the balloon driver comes from the VMware Tools service, so they are the same thing. ballooning.md says: "Ballooning needs the balloon driver loaded, not the VMware Tools service: a Linux VM keeps ballooning while vmtoolsd is stopped." On Linux the driver is `vmw_balloon`, in the upstream kernel; open-vm-tools does not contain it. On Windows the driver ships with VMware Tools and runs as a kernel driver, apart from the Tools service; "VMware Tools: Not running" in vCenter reports the service. Broadcom KB 313773 lists the kernel commits of `vmw_balloon`; no vendor document found says whether the service is needed, so the documents do not settle it. Does a stopped Tools service stop ballooning? Question [0052](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L2-13-balloon-above-zero.md) dropped its option on this point until the answer.
+- Written as now: ballooning.md as quoted. Question 0022, option D, now states the case both agree on (VMware Tools not installed on a Windows VM); key A, B, D, E.
+- Final answer (expert call): the knowledge base stands: "not running" (the service) and "not installed" (no driver) differ. For you: a case you have seen where a VM with Tools installed but its service stopped was not ballooned; else accept.
+- Answer:
+
+### Q224 · Observability > Collection interval · VCF Operations 5-minute ms values: 100% at 20,000 or 300,000 ms per vCPU?
+
+- Files: [Collection interval](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/collection-interval.md) (section Short problems in 5-minute collection; Misconceptions); [Aggregation](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/observability/aggregation.md) (Sample length); question [0104](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-48-run-above-used-more-vcpus.md).
+- Search: not from the book.
+- Question: your answer of 2026-11-14 on question 0104: 20,000 ms is 20 seconds, not 5 minutes, so 0104 is right. The knowledge base says: "The 100% of any millisecond value in VCF Operations is 20,000 ms, not 300,000 ms: it averages the 15 20-second values. CPU Ready of 3,000 ms is 15%, not 1%." A 5-minute point is then a value per 20 seconds, and a 4-vCPU VM peaks at 80,000 ms. 0104's export says "1,200,000 ms is 100%" and shows Run of about 375,000 ms. Both cannot hold. Which is right?
+- Check on one VM: VCF Operations CPU|Ready (ms) and CPU|Ready (%) at the same 5-minute point. If (%) / 100 × 20,000 × vCPUs equals the ms value, the base is 20,000; if it needs 300,000, the base is 300,000.
+- Written as now: the knowledge base says 20,000; 0104 uses 300,000. 0104 is unchanged; the new pair on this fact (VCF Operations against vCenter Ready in ms) is held.
+- Final answer (expert call): 20,000 ms, as the knowledge base says (VCF Operations averages the 15 samples). Then 0104's export is rescaled (80,000 ms = 100%, Run about 25,000 ms) and its stem loses the base line. For you: the check above.
+- Answer:
+
+### Q225 · CPU > Hyper-Threading > Used · A thread with a busy sibling: Used at 62.5% of Run, or half?
+
+- Files: [esxtop CPU](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/tools/esxtop/cpu.md); [VM CPU Used](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/virtual-motherboard/used.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
+- Search: not from the book.
+- Question: the knowledge base charges a thread whose sibling also runs 62.5% of a core (1.25x per core): used.md, hyper-threading, and since 2026-11-14 esxtop/cpu (world %USED is 62.5% of %RUN; it said "%RUN can be twice %USED" before). The vSphere 9.1 documentation, esxtop CPU panel (p. 2153), says each busy PCPU of a pair "accounts for half of the CPU usage" (PCPU USED). hyper-threading already lists "37.5% (VM Usage) and 50% (ESXi Used)" as open. Which holds? (A) 62.5% for VM and world Used, 50% for PCPU USED: two counters, two rules. (B) 62.5% for both; the 9.1 text is out of date. (C) 50% for both. Close to [Q220](#q220--cpu--hyper-threading--thread-utilization-with-both-threads-busy-100-or-200).
+- Written as now: (A) in effect; a review note in esxtop/cpu.
+- Final answer (expert call): (A). For you: confirm on an esxtop PCPU panel of a host with both threads of a core busy.
+- Answer:
+
+### Q226 · SP5 > SLA > Availability · Usable hosts during maintenance: 8 or 9 of 10?
+
+- Files: [IaaS SLAs](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/concepts/sla-metrics.md) (Availability SLA, the 10-host example); [Supply](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/sp5-framework/capacity/supply.md) (Total vs usable after host loss).
+- Search: "Example on a 10-host cluster with 1 HA host (usable 9 hosts)"; "| 1 | Maintenance mode | 9/10 = 90% | 9/9 = 100% |".
+- Question: supply.md now says a 10-host cluster with one HA host has 8 usable hosts while one host is in maintenance: vSphere HA admission control counts only hosts that are connected and not in maintenance mode (vSphere 9.1 Availability, percentage admission control), so the HA reserve stays. This settled question [0233](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-37-usable-capacity-ha-and-maintenance.md). sla-metrics still computes Operational Availability with usable 9 in that case. Which model? (a) Operational Availability divides by the planned usable (9) whatever the maintenance; sla-metrics says so and stops pointing at supply's after-event column. (b) It divides by the usable of the event (9/8 and 8/7, capped at 100%), so maintenance never lowers it. (c) Your model lets the HA host cover one host in maintenance; supply then shows two views, protected usable (8) and unprotected (9). Related to [Q222](#q222--sp5--sla--availability--does-a-host-in-maintenance-mode-lower-operational-availability).
+- Written as now: supply 8, sla-metrics 9.
+- Final answer (expert call): (a): availability is measured against the planned service; usable capacity is what is safe to use now. For you: choose.
+- Answer:
+
+### Q227 · Guest OS > Sizing · Ballooned memory in Guest OS sizing: include or exclude?
+
+- Files: [Ballooning](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/ballooning.md) (section Capacity impact; Misconceptions); [Guest OS sizing](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/system/concepts/guest-os-sizing.md) (section Memory, rule table).
+- Search: not from the book. In the files: "Exclude it from Guest OS sizing"; "Include balloon".
+- Question: ballooning.md says a balloon is a request from ESXi, not from the application, so it is excluded from Guest OS sizing. guest-os-sizing.md includes it, conservatively: a ballooned page taken from a free guest page is not demand, one taken from a used page is, and the two cannot be told apart. Broadcom KBs give VCF Operations memory Utilization as Guest Needed Memory + page-in + Total Capacity - Guest Physically Usable Memory (KB 439253, KB 390432); none says where ballooned pages go. Which rule? (A) Include, conservatively; ballooning.md changes. (B) Exclude; guest-os-sizing.md changes. (C) Split: deduct ballooned pages taken from free memory, keep those taken from in-use memory, when the guest shows which (ballooning.md describes the split but says the two cannot be told apart).
+- Written as now: both, in two files. No benchmark option rests on it.
+- Final answer (expert call): (A) for sizing, which must not cut a VM that the balloon already squeezes; ballooning.md keeps the mechanism and points to guest-os-sizing for the rule. For you: choose.
+- Answer:
+
+### Q228 · Memory > VM > Usage (%) · VCF Operations 9.1: VM Memory Usage (%) and Workload (%)
+
+- Files: [VM Memory Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/usage.md) (section By tool); [glossary](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/glossary.md) (entry VM Memory Usage (%)).
+- Search: not from the book. In the files: "Workload (%) falls back to Consumed".
+- Question: the knowledge base says VCF Operations VM Memory Usage (%) = Guest OS Needed Memory / Total Capacity, falling back to Active without guest data, and that VM Workload (%) falls back to Consumed. The VCF Operations 9.1 metric list (TechDocs, Virtual Machine metrics, updated 2026-11-12: https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1/infrastructure-operations/metric-property-and-alert-definitions/metrics-definitions-in-vrealize-operations-manager/metrics-for-vcenter-server-components/virtual-machine-metrics.html) lists Memory|Usage (%) (`mem|usage_average`) as disabled by default, with no description; it lists no VM Memory|Workload (%), only Host Workload and Guest Workload, both disabled; Mem|Utilization (KB) (`mem|vmMemoryDemand`) is enabled, described as the guest OS memory required or the VM's consumption. Which holds in 9.1? (A) Keep the files; add that 9.1 disables Usage (%) by default. (B) Rewrite on Utilization (KB) and name only the enabled metrics; VM Workload (%) leaves the files. (C) Other.
+- Written as now: Usage (%) and Workload (%) as above. Questions [0394](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L3-60-vm-memory-usage-vcenter-vs-vcf-operations.md) to 0397 and 0400 test the Usage (%) formula and the fallback; their captures enable the metric and read the formula on the screen; none tests Workload (%).
+- Final answer (expert call): (A) for Usage (%), plus what the 9.1 list names enabled; Workload (%) on a VM needs your field check in a 9.1 instance.
+- Answer:
+
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
@@ -115,7 +170,7 @@ Each entry has:
 
 ### Q195 · ESXi storage I/O path · Where does a Paravirtual SCSI queue limit show?
 
-- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question [0361](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-131-two-queue-limits-on-one-virtual-disk.md) (Two queue limits on one virtual disk).
+- Files: [ESXi storage I/O path](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-io-path.md) (section Queues on the path); [ESXi storage latency stack](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/storage/concepts/esxi-storage-latency-stack.md); question [0361](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/questions/L4-129-two-queue-limits-on-one-virtual-disk.md) (Two queue limits on one virtual disk).
 - Search 1: "pvscsi queue depth"
 - Search 2: "The hypervisor software queues are throttling requests"
 - Question: the ESXi source file says high KAVG and QAVG (above 2 to 5 ms) with low DAVG usually occur when the concurrent requests of a VM exceed the configured queue depths, and names the pvscsi queue depth and Disk.SchedNumReqOutstanding. The knowledge file reads the two limits apart: a request that exceeds the Paravirtual SCSI queue depth (64 per device, 254 per adapter) waits in the Guest OS, before the virtual device takes it, and shows in the Guest OS counters, not in KAVG or QAVG; a request that exceeds the VMkernel device queue depth (DQLEN) waits in the VMkernel and shows as QUED and QAVG. Which holds? And what does Disk.SchedNumReqOutstanding limit, with what default, and when?

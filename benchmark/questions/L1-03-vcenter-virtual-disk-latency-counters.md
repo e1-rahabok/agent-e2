@@ -14,14 +14,6 @@ Which of the counters in the chart measure latency? Choose all that apply.
 ## Screenshot
 ![vCenter advanced chart of one VM, Virtual disk: read and write latency (ms), read and write rate (KBps)](0034/vcenter-vm-virtual-disk-chart.png)
 
-## Input to supply
-- Tool: vCenter (vSphere Client 9.1).
-- Where: one VM > Monitor > Performance > Advanced > Chart Options > Virtual disk.
-- Counters to tick: Read latency, Write latency, Read rate, Write rate. Real-time interval.
-- Must show: the legend at the bottom with the 4 counter names and their units (ms, KBps).
-- Mask the VM name and the host name.
-- Save as `benchmark/questions/34/vcenter-vm-virtual-disk-chart.png`.
-
 ## Likely wrong answer
 C or D: taking the rate (KBps) for latency.
 
@@ -31,6 +23,7 @@ C or D: taking the rate (KBps) for latency.
 - Read rate and Write rate are in kilobytes per second: throughput, not latency.
 
 ## Notes
+- 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the VM name masked in the title and the legend (author: every VM name is masked); the stale `## Input to supply` removed.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). 
 
 ## Metadata

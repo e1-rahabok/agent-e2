@@ -34,7 +34,8 @@
 %USED = %RUN + %SYS - %OVRLP
 100% = %RUN + %RDY + %CSTP + %WAIT      (per vCPU world)
 ```
-- On a Hyper-Threading host %RUN can be twice %USED: two busy sibling threads are each charged half.
+- On a Hyper-Threading host a world's %USED falls below its %RUN while the sibling thread is busy: with both threads busy all the time, %USED is 62.5% of %RUN ([`vsphere/technology/cpu/metrics/virtual-motherboard/used`](../../technology/cpu/metrics/virtual-motherboard/used.md)).
+- A clock below nominal lowers %USED below %RUN; Turbo raises %USED above %RUN.
 - %WAIT includes %IDLE. %WAIT - %IDLE (= %VMWAIT) of the vCPU worlds estimates guest IO wait. Expand the VM with e and read the worlds named vcpu. Estimate only: a vCPU also waits for events other than IO.
 - A world's percentages are of one physical core. A resource pool at 30% %USED on a 2-way host uses 30% of one core, not of the host.
 
@@ -155,6 +156,7 @@ corrections: []
 review_notes:
 - 'Sections ''Summary lines'', ''State counters'', ''Power'': load average meaning, CORE UTIL batch behaviour, %MLMTD inside %RDY, the two formulas, %RUN vs %USED with Hyper-Threading, %WAIT - %IDLE as guest IO wait estimate, per-core percentages, %A/MPERF formula and CPPC from the vSphere 9.1 documentation (PDF built 2026-11-02), vSphere Monitoring and Performance > Performance Monitoring Utilities: resxtop and esxtop > CPU Panel, CPU Power Panel (pp. 2150-2155).'
 - 'The 9.1 documentation still lists HTQ in the CPU panel; the field is not shown since ESXi 7.0 and not on ESXi 9.1; the documentation is out of date.'
+- 'To check: Section ''State counters'': world %USED at 62.5% of %RUN with both threads busy (the VM CPU Used and Hyper-Threading files) against the vSphere 9.1 CPU panel text (p. 2153), which says only that each busy PCPU of a Hyper-Threading pair accounts for half of the CPU usage (PCPU USED); same open item as the Hyper-Threading penalty figures in hyper-threading.'
 - 'To check: Section ''Summary stats'': what the CPU column shows (always blank in tests) and whether AMLMT shows when a limit is applied; unconfirmed.'
 status: draft
 ```

@@ -12,10 +12,10 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - D. db-sql-01, java-erp-02 and db-pg-03 are not donors: their guests need nearly all their memory, though Active is low.
 - E. The new size of a donor is its peak Needed Memory itself; headroom above it is waste.
 - F. legacy-app-07 and appliance-09 cannot be sized: VMware Tools is not running, so there is no guest data.
-- G. mq-broker-06 is not a donor: its guest already pages out heavily.
+- G. mq-broker-06 is not a donor: its guest already pages out.
 - H. rpt-batch-08 is not a donor: its memory contention above 0 shows it already waits.
 - I. Consumed stays near configured once the guest has touched its pages, so it says little about what the guest needs now.
-- J. Non Zero Active over-reports, so it sits above what the guest needs.
+- J. Non Zero Active sits above Guest Needed Memory on most of these VMs.
 - K. Reclaim in steps, and check guest page-out and memory contention after each step.
 - L. Active misses the cache that SQL Server, the Java heap and PostgreSQL work from.
 - M. Consumed near configured on most VMs shows that the cluster is short of memory.
@@ -34,7 +34,7 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - G true: a page-out rate of 1,240 per second: the guest is short already.
 - H true: memory contention of 3.4% (with Consumed of 20.1 of 32 GB, likely a limit). Contention is excluded from the size, not from the choice of VM.
 - I true: Consumed is not used for the choice: a guest that frees a page only updates its free list, so Consumed stays high whatever the guest needs now.
-- J false: Active is usually far below Consumed and below what the guest needs; in the export it is below Needed Memory on every VM that has guest data.
+- J false: in the export Non Zero Active is below Guest Needed Memory on all 38 VMs that have guest data; Active is usually far below Consumed and below what the guest needs.
 - K true: cut in steps, not all at once, and check over a business cycle before the next step.
 - L true: SQL Server, the Java heap and PostgreSQL hold caches they depend on; Active is a sample of recently touched pages and does not see how the application uses its cache.
 - M false: Consumed holds guest cache; memory used as cache is not demand. Six VMs need less than a third of their configured memory.
@@ -43,6 +43,9 @@ Which statements about the VMs to take memory from, and the counters to use, are
 - Revised 2026-11-12: the 300-VM export that was to be supplied is now a generated 40-VM export (a CSV of 1.0 must stay small; design.md, section 13.1). The ask is 256 GB instead of 1 TB.
 - The amounts are illustrative. Headroom of 25% above Guest Needed Memory, rounded up to 4 GB, gives 284 GB. An answer with another headroom that names the six VMs and reaches 256 GB is right, with or without small trims on other VMs.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Option C holds for any headroom up to about 50%: 432 GB configured minus 1.5 x 111.6 GB needed leaves about 265 GB.
+- Checked 2026-11-14 as the practical half of 0021 (project/question-pairing-2026-11-14.md, pair A4): every option decided from the knowledge files and the export; no defect found, options unchanged.
+- Review 2026-11-15: J holds one fact (it joined "over-reports" and "sits above"); "heavily" dropped from G. Key unchanged.
+- Paired with 0021 (theory and practical; design.md, section 3.9).
 
 ## Metadata
 ```yaml
@@ -55,6 +58,7 @@ level: 400
 answer_type: deterministic
 answer: [A,C,D,F,G,H,I,K,L]
 misconception: [B]
+pair: "0021"
 input: [table]
 object: [vm, guest-os]
 tool: [vcf-operations]

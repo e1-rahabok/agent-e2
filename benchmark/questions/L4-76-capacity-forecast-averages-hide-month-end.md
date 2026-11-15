@@ -72,5 +72,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [rollup-and-interval, average-hides-worst]
+pair: "0430"
 status: draft
 ```

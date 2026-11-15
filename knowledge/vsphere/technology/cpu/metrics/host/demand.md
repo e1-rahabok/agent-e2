@@ -36,7 +36,7 @@ Same name, two formulas. vCenter looks from the administration view (what the sc
 
 ## Misconceptions
 - "ESXi Demand = VM usage + kernel usage" → wrong. Demand counts VM demand (and, in VCF Operations, reservations), not usage.
-- "ESXi CPU Demand in vCenter and in VCF Operations is the same counter" → same name, two formulas. VCF Operations adds the kernel's and the running VMs' CPU reservations.
+- "ESXi CPU Demand in vCenter and in VCF Operations is the same counter" → same name, two formulas. VCF Operations counts the kernel's CPU reservation and, per running VM, the higher of its demand and its CPU reservation.
 - "VCF Operations Demand far above vCenter Demand is a rollup bug" → it is the reservations. Subtract the CPU System Resource Reservation (host > Configure > System > System Resource Reservation) and the VM reservations, and compare.
 - "Demand above Usage means VMs wait for CPU" → in VCF Operations the gap can be reservation alone. Check Ready and Co-stop.
 - "Demand above 300% means the host is 3x overloaded" → Demand sums VM demand (and, in VCF Operations, reservations). Check contention.

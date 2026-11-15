@@ -24,7 +24,7 @@ Consumed = Granted - savings (sharing)
 - Compressed: the freed part of a compressed page (for example 3 KB of a 4 KB page compressed to 1 KB) is excluded.
 - Includes touched reserved memory; untouched reserved memory is not counted.
 - Capped by a limit. Can reach, not exceed, configured memory.
-- vCenter Guest | Memory Usage is the same as Consumed. Do not use it.
+- The vSphere API quick statistics of a VM carry two memory values with similar names. Guest memory usage (`guestMemoryUsage`) is active guest memory: the Active estimate, not Consumed and not a Guest OS counter. Host memory usage (`hostMemoryUsage`) is consumed host memory including the VM's overhead, so it reads above this counter, which excludes overhead.
 
 ## Mechanism: second-level page tables
 - Three address spaces: guest virtual (the application's), guest physical (the memory the VM presents to the Guest OS) and machine pages (ESXi's physical memory).
@@ -73,8 +73,8 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/zero-pages
 - vsphere/technology/memory/metrics/virtual-motherboard/active
 source:
-  document: Knowledge base
-  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed; section Mechanism from the author's hypervisor memory management manual (project/sources/hypervisor_memory_management_manual.md)
+  document: Knowledge base; vSphere Web Services API 9.1
+  path: The World of Metrics > Metrics Nuances > Complexity > Naming Complexity; Memory > Architecture > Guest OS vs VM; Memory > VM > Consumption Metrics > Consumed; section Mechanism from the author's hypervisor memory management manual (project/sources/hypervisor_memory_management_manual.md); VirtualMachineQuickStats, guestMemoryUsage and hostMemoryUsage (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/vim.vm.Summary.QuickStats.html)
 corrections: []
 review_notes:
 - 'Section ''View'': from Memory > Architecture.'

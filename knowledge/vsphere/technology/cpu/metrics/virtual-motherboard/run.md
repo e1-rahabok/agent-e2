@@ -25,8 +25,8 @@
 - Two VMs share one core, each runs half the time, half of it overlapping: Run 50%, Used 40.625%.
 - Both threads busy all the time: Run 100%, Used 62.5%.
 
-## Not included in Run
-- Interrupts (Overlap).
+## Outside Run's accounting
+- Interrupts (Overlap): Run keeps counting while the vCPU is interrupted, so Run holds the Overlap time. Net Run = Run - Overlap.
 - System time: IO done by the hypervisor and charged back to the VM.
 - Power management and frequency scaling.
 - Simultaneous multithreading (Hyper-Threading).
@@ -85,6 +85,6 @@ source:
 corrections: []
 review_notes:
 - Sections Mechanism, Run vs Guest OS, Run vs Used, and the last 2 misconceptions: from CPU > Architecture.
-- 'Sections Not included in Run, Instance, Use: from CPU > VM.'
+- 'Sections Outside Run''s accounting, Instance, Use: from CPU > VM.'
 status: draft
 ```

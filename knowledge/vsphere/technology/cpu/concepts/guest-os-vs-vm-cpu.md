@@ -24,7 +24,7 @@
 | Guest OS | How the frozen time is accounted | Effect |
 |---|---|---|
 | Windows | Not accounted. | Windows reports a higher utilization than vSphere. |
-| Linux | Steal Time only with the VM's steal clock: `stealclock.enable = TRUE`, hardware version 13 or later, a kernel with the VMware steal clock (mainline 5.7 or later, or a distribution backport). Without it: not accounted, as in Windows. | With the steal clock, `st` follows VM CPU Ready; without it, `st` stays 0 however high Ready is. |
+| Linux | Steal Time only with the VM's steal clock: `stealclock.enable = TRUE`, hardware version 13 or later, a kernel with the VMware steal clock (mainline 5.7 or later, or a distribution backport). Photon OS tracks it by default. Without it: not accounted, as in Windows. | With the steal clock, `st` follows VM CPU Ready; without it, `st` stays 0 however high Ready is. |
 
 - Windows example:
   - second 0-1: the vCPU runs 100%.
@@ -136,11 +136,10 @@ images:
     topic: 'vCPU states'
     image_type: diagram
 source:
-  document: Knowledge base
+  document: Knowledge base; Broadcom KB 434983 and KB 376609 (steal time on vSphere); Broadcom TechDocs, Tanzu GemFire 10.1, High CPU Steal (section VMware ESXi)
   path: CPU > Architecture > Guest OS vs VM
 corrections: []
 review_notes:
 - 'To check: Section ''Blind spots per layer'': how often ESXi updates the guest on per-core frequency; unconfirmed.'
-- "Section 'Windows vs Linux accounting': steal clock from Broadcom KB 434983 (https://knowledge.broadcom.com/external/article/434983) and the Linux VMware steal clock (arch/x86/kernel/cpu/vmware.c, mainline 5.7). To check: a vSphere 9.1 document for `stealclock.enable` on general VMs (the KB is written for Tanzu)."
 status: draft
 ```

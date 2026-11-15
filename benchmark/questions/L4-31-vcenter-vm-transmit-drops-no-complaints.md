@@ -51,5 +51,6 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [A, B]
 misconception: [E, D]
 misconception_type: []
+pair: "0404"
 status: draft
 ```

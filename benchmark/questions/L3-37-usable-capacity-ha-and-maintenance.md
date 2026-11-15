@@ -9,8 +9,8 @@ Which statements are correct for the capacity plan?
 
 - A. Usable capacity is 6 hosts' worth: one host for HA failover and one for maintenance.
 - B. Usable capacity is 7 hosts' worth: the HA host also covers maintenance, because both are spare capacity.
-- C. Above about 75% of the 8-host total load, a host in maintenance leaves the 7 others without a spare host's worth of capacity: a host failure in the window would leave VMs short.
-- D. The 12.5% is held back on every host: each host keeps one eighth of its CPU and memory idle.
+- C. With a load above about 75% of the 8 hosts' total capacity, a host in maintenance leaves the 7 others without a spare host's worth of capacity: a host failure in the window would leave VMs short.
+- D. HA admission control stops new power-ons once cluster CPU usage passes 87.5%.
 - E. Usable capacity is 7 hosts' worth most of the month and 6 only during maintenance windows, so the plan can be set at 7.
 
 ## Likely wrong answer
@@ -21,11 +21,13 @@ B: counting the HA host as the maintenance host. Or E: letting usable capacity m
 - A: 8 − 1 (failover) − 1 (maintenance) = 6 hosts' worth, about 75% of total.
 - B is wrong: with one host in maintenance, HA still needs a host's worth of failover among the 7 left; the same host cannot be both.
 - C: 75% of 8 hosts is 6 hosts' worth of load; during maintenance 7 hosts carry it, which leaves exactly one spare host's worth. With more load, a host failure during maintenance leaves VMs short.
-- D is wrong: the failover capacity is cluster-wide accounting, not an idle slice on each host.
+- D is wrong: HA admission control counts reservations (plus overhead) against the failover capacity, not usage; most VMs here have no reservation, so usage can pass 87.5% with no power-on refused.
 - E is wrong: usable capacity is a chosen constant. VMs placed in the 7th host's worth have nowhere to go when a maintenance window comes.
 - HA admission control does not hold the plan by itself: it counts reservations, and most VMs have none. The capacity process holds it.
 
 ## Notes
+- Review 2026-11-15: C names the base (total capacity); D replaced by the usage-versus-reservations trap of HA admission control. Key unchanged.
+- 2026-11-14 (project/question-pairing-2026-11-14.md, section 2): A and B were not decidable, because the usable-capacity table of sp5-framework/capacity/supply read as the HA host covering maintenance. The table is corrected from vSphere 9.1 Availability (HA admission control counts only hosts not in maintenance mode and keeps its failover capacity among them); options and key unchanged.
 - Drafted 2026-11-12. The design rule (one maintenance host on top of HA) is stated in the prompt (benchmark/design.md, section 6.1, F3).
 - HA admission control: vSphere 9.1 Availability, Cluster Resources Percentage Admission Control (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-availability/creating-and-using-vsphere-ha-clusters/vsphere-ha-admission-control.html).
 

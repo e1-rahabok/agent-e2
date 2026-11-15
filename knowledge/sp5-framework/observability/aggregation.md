@@ -38,7 +38,9 @@ ESXi CPU Ready (%) = ESXi CPU Ready (ms) / (sample length in ms × vCPUs of runn
 - Worst 5th percentile excludes: 10 members 0.5; 20 1; 50 2.5; 100 5; 200 10; 500 25.
 - Count reads as real life: 5 affected users out of 100,000 is 0.005% as an average, but 5 as a count. Track the red count (expected 0) and the orange count as an earlier warning.
 - Sum: when every member can be green while the parent sum is red, the threshold was not scaled to the member count.
-- Use two together when one is not enough: worst for depth, percentile for breadth. Make one primary, the other secondary. Worst far above the 95th percentile: the worst is an outlier. Close together: a real problem.
+- Use two together when one is not enough: worst for depth, percentile for breadth. Make one primary, the other secondary.
+- Worst far above the 99th percentile: at most 1% of the values reach that level, so the worst is an outlier. Worst close to the 99th percentile: the level recurs, a real problem.
+- The 95th percentile alone does not separate the two: a problem that fills 1-5% of the values (about 20 to 100 of the 2,016 five-minute points of a week) leaves the 95th percentile low and the 99th percentile high.
 
 ## Two kinds of peak
 - Peak across time of one metric, and peak among members at one time.

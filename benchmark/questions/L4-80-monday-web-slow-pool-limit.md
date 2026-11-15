@@ -83,5 +83,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12 as the second long scenario"
 misconception_type: [provider-vs-consumer, reclamation-as-contention]
+pair: "0429"
 status: draft
 ```

@@ -72,5 +72,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05"
 misconception_type: [unit-and-normalization]
+pair: "0410"
 status: draft
 ```

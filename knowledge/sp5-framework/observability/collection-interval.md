@@ -23,7 +23,7 @@
 
 ## Short problems in 5-minute collection
 - VCF Operations collects every 5 minutes by default. A problem shorter than 5 minutes can be missed.
-- Example: idle 08:00:00-08:02:30, busy 08:02:30-08:07:30, idle again. Collections at 08:00, 08:05 and 08:10 each average half busy, half idle. To appear whole in one point, a spike may have to last 10 minutes.
+- Example: idle 08:00:00-08:02:30, busy 08:02:30-08:07:30, idle again. The points at 08:05 and 08:10 each average half busy, half idle; the 08:00 point covers 07:55-08:00 and is idle. To appear whole in one point, a spike may have to last 10 minutes.
 - The 100% of any millisecond value in VCF Operations is 20,000 ms, not 300,000 ms: it averages the 15 20-second values. CPU Ready of 3,000 ms is 15%, not 1%.
 - Storing all 15 20-second values costs 15x the data. Usually only the peak is used: [`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md).
 - vCenter statistics levels do not apply to VCF Operations. It collects from vCenter through its own filter, set in the policy ([`vsphere/tools/vsphere-client/vcenter-statistics`](../../vsphere/tools/vsphere-client/vcenter-statistics.md)).

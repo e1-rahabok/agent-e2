@@ -54,5 +54,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, D, E]
 misconception: [B, C]
 misconception_type: [reclamation-as-contention, same-name-other-object]
+pair: "0367"
 status: draft
 ```

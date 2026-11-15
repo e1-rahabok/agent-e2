@@ -28,10 +28,12 @@
 - `"0"`: deactivates SplitRx for that adapter. `"1"`: activates it.
 - Overrides the host-wide setting for that adapter.
 - Change in vSphere Client: right-click the VM, Edit Settings, VM Options tab, expand Advanced, Edit Configuration. Set `ethernetX.emuRxMode`, or add it with Add Configuration Params if it is not present.
+- A change of `ethernetX.emuRxMode` takes effect only after the VM is restarted, or after that vNIC is disconnected from the VM and connected again. Until then the adapter keeps its earlier behaviour. The host-wide `NetSplitRxMode` change, by contrast, takes effect at once.
 
 ## Misconceptions
 - "SplitRx is always on for all traffic" → automatic activation requires the conditions above. The default host setting only allows it.
 - "SplitRx helps traffic that stays inside the host" → automatic activation does not apply to purely internal traffic. Manual activation is required for that.
+- "A per-adapter SplitRx change applies at once, like the host-wide one" → `ethernetX.emuRxMode` takes effect only after a VM restart or a disconnect and reconnect of that vNIC.
 
 ## Metadata
 ```yaml
@@ -56,9 +58,6 @@ source:
   document: Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
   path: ESX Networking Considerations > SplitRx Mode (pp. 49-50)
 corrections: []
-review_notes:
-- Checked against 9.1 (revision 20260624). Pages 49-50 unchanged. The 10,000 packets per second condition is unchanged.
-- 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
-- The 10,000 packets per second condition is confirmed in the 9.1 document (p. 49).
+review_notes: []
 status: draft
 ```

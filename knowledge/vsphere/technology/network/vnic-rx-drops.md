@@ -43,8 +43,19 @@ vsish -e get /net/portsets/DvsPortset-0/ports/<port>/vmxnet3/rxSummary
 - Network VMs (firewalls, routers) or VMs expecting high packet rates: check whether the VM requests NetQ RSS.
 - VMXNET3 can lose packets in very high bursts when buffers run out (KB 2039495).
 
+## Single receive queue
+- A VMXNET3 adapter with one receive queue has all its receive interrupts processed by one vCPU. That vCPU can saturate while the VM's other vCPUs idle, and the ring fills because it is not drained (Broadcom KB 440347).
+- Symptoms of a single receive queue: running out of buffers and # of times the 1st ring is full rise in rxSummary; moving the VM to another host does not help (Broadcom KB 440347).
+- Raising the VMXNET3 receive rings to their maximum does not stop drops caused by a single receive queue: a larger ring absorbs a burst, it does not drain faster (Broadcom KB 440347).
+- The fix is Receive Side Scaling (RSS) in the Guest OS, with several receive queues spread over the vCPUs. Windows: VMXNET3 adapter Properties, Advanced tab, Maximum Number of RSS queues. Linux: the vmxnet3 driver parameter `num_rqs` (Broadcom KB 440347).
+- The number of receive queues a VM can use is capped by its vCPU count: a 4-vCPU VM uses at most 4 (Broadcom KB 440347).
+- Check the active queues on the host: `vsish -e ls /net/portsets/<switch>/ports/<port>/vmxnet3/rxqueues/` lists one directory per queue (Broadcom KB 440347).
+- Guest RSS spreads receive work over vCPUs inside the VM. Host-side RSS on the physical NIC is a separate setting ([`vsphere/technology/network/configuration/rss-and-interrupt-coalescing`](configuration/rss-and-interrupt-coalescing.md)).
+
 ## Misconceptions
 - "vSphere shows the drop reason" → only vsish shows it.
+- "The largest receive ring fixes every receive drop" → with one receive queue, one vCPU drains the ring; turn on RSS in the guest instead.
+- "Configure more receive queues than vCPUs for headroom" → the queues a VM can use are capped by its vCPU count.
 - "Receive drops on the vNIC are the network team's problem" → a full VMXNET3 ring is caused and fixed in the Guest OS driver.
 
 ## Metadata
@@ -70,9 +81,10 @@ related:
 - vsphere/technology/network/metrics/host/packets-dropped
 - sp5-framework/performance/performance-management
 source:
-  document: Knowledge base
-  path: Network > ESXi > Contention Metrics > Dropped Packet > vsish
+  document: Knowledge base; Broadcom KB 440347 (Mitigating VMXNET3 adapter packet drops due to single receive queue)
+  path: 'Network > ESXi > Contention Metrics > Dropped Packet > vsish; section Single receive queue from Broadcom KB 440347'
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Single receive queue'': Broadcom KB 440347 names no ESXi version; check against the vSphere 9.1 documentation. https://knowledge.broadcom.com/external/article/440347'
 status: draft
 ```

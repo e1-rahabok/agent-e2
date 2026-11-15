@@ -40,6 +40,8 @@ Do you add the vCPUs, and what do you check instead? Which statements are correc
 ## Notes
 - From the author's samples: a 4-vCPU 64-bit Ubuntu VM with Used about 44% of Run, minimal System and Overlap; Used lowered by power saving and SMT; if Run is far from 100% and the team wants faster performance, the answer is not to add vCPUs. Values reproduced in the export.
 - Converted from judged to multiple choice (Q199 F, 2026-11-14). Dropped from the old key: "ask for the guest's view (run queue and per-process CPU) before any size change"; the guest run queue knowledge is under open author question Q217.
+- Leak closed 2026-11-14 on the knowledge side (project/question-pairing-2026-11-14.md, decision 3): the example row of run-vs-used-gap no longer gives this VM's numbers. The export and its base are unchanged while the author question on VCF Operations 5-minute ms values is open.
+- Paired with 0003 (theory and practical, design.md 3.9).
 
 ## Metadata
 ```yaml
@@ -66,5 +68,6 @@ attachments:
 origin: book
 source_path: "Author samples (docx, 2026-11-12) > Why Run is higher than Used"
 misconception_type: [frequency-and-hyper-threading]
+pair: "0003"
 status: draft
 ```

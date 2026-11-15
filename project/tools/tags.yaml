@@ -47,6 +47,9 @@ question_prompt_hints:
   '(?i)\bwhich single\b': 'tells that one option is correct: use the plural'
   '(?i)\bchoose the most\b': 'tells that one option is correct: use the plural'
   '(?i)\bwhat is the most likely\b': 'tells that one option is correct: use the plural'
+  '(?i)\bwhat is (its|the) (capacity|relationship)\b': 'tells that one option is correct: use the plural'
+  '(?i)\bby how much\b': 'tells that one option is correct: use the plural'
+  '(?i)\bhow (is|are) [^?.]* related\b': 'tells that one option is correct: use the plural'
 # Size cap of a CSV attachment in 1.0: the runner puts it in the prompt (benchmark/design.md, section 13.1). About 3,000 tokens.
 question_csv_max_chars: 12000
 # Prompt-injection guard: rejected in every knowledge file (body and metadata) and every benchmark prompt.

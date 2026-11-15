@@ -68,5 +68,6 @@ attachments: []
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-05; revised 2026-11-12"
 misconception_type: [consumption-as-contention, frequency-and-hyper-threading]
+pair: "0374"
 status: draft
 ```

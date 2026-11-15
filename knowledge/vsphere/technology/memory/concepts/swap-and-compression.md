@@ -25,7 +25,7 @@
 ## Transition: input, process, output
 | Stage | Metric | Meaning |
 |---|---|---|
-| Input | Swap Target | Pages to be compressed or swapped. Not pages already processed. Read it as compress-swap target. |
+| Input | Swap Target | The level of compressed plus swapped memory ESXi aims at for the VM. Compare it with Swapped; do not add it to Swapped. Above Swapped, ESXi can swap when it must; below Swapped, it stops swapping. Read it as compress-swap target. |
 | Process | Compression rate, Decompression rate | Rate of compressing and decompressing. |
 | Process | Swap out rate, Swap in rate | Rate of moving pages from DIMM to the swap file and back. |
 | Output | Swapped, Swap out, Swap in | Swap result. |
@@ -105,8 +105,8 @@ images:
     metric: ['VM Memory Consumed', 'VM Memory Swapped', 'VM Memory Compressed']
     image_type: timeline
 source:
-  document: Knowledge base
-  path: Memory > VM > Swap + Compress; Transition; Example; Quiz
+  document: Knowledge base; vSphere Web Services API 9.1
+  path: Memory > VM > Swap + Compress; Transition; Example; Quiz; Memory counters, swaptarget (https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/memory_counters.html)
 corrections: []
 review_notes:
 - 'To check: Section ''Example: limit, swap and compress in opposite directions'': the effective limit includes the VM overhead (Consumed just under it; Granted above it), read from the chart of this example; check against the VCF Operations 9.1 metric definition of Memory|Effective limit, https://techdocs.broadcom.com/us/en/vmware-cis/vcf/vcf-9-0-and-later/9-1.html.'

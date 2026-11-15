@@ -13,6 +13,7 @@
 - A new metric, not a replacement. The 5-minute average stays for trends and capacity; the peak shows the short burst the average hides. The VM KPI reads the peak.
 - Stores only the peak of the 15 points every 5 minutes, not all 15: less IO and storage. Answers: did the VM or guest have a problem in any 20-second period?
 - Takes the peak across instances: all virtual disks (read and write), all vCPUs. A 64-vCPU VM gets one metric. Which vCPU it was rarely changes the remediation.
+- Computed at collection time: each 5-minute cycle the adapter reads the 15 samples of 20 seconds that vCenter holds and records the highest. vCenter keeps its 20-second samples for about an hour; the peak metric stays in VCF Operations after they are gone, so a burst can be read days later.
 
 ## Pairs
 | Object | 5-minute average | 20-second peak |
@@ -77,9 +78,10 @@ images:
     topic: '20-second peak vs 5-minute average'
     image_type: timeline
 source:
-  document: Knowledge base
-  path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics'
+  document: Knowledge base; Broadcom KB 444403, Understanding "Peak" or "Worst" Performance Metrics in VMware VCF / Aria Operations (VCF Operations 9.x)
+  path: 'Consumer Objects > Performance: VM & Guest OS > 20-second Peak Metrics; KB 444403 (15 samples of 20 seconds per 5-minute cycle; vCenter keeps 20-second data typically 1 hour; VCF Operations "permanently records that brief spike")'
 corrections: []
-review_notes: []
+review_notes:
+- 'Section ''Design'': collection-time computation and the peak outliving vCenter''s 20-second samples from Broadcom KB 444403, https://knowledge.broadcom.com/external/article/444403. The KB gives no retention period of its own for peak metrics.'
 status: draft
 ```

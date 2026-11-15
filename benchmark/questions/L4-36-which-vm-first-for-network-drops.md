@@ -3,7 +3,6 @@
 ## Prompt
 - [The attached export](0082/vm-network-drops-one-week.csv) is a VCF Operations view of 40 VMs over one week, built from 5-minute samples: the maximum and the 99th percentile of Packets Dropped (%), the week's sum of received and transmitted packets dropped, and the average usage rate.
 - The team sorted the view by the maximum of Packets Dropped (%) and plans to open network tickets for the top five VMs.
-- You can open one ticket today.
 
 Which VMs should be investigated first?
 
@@ -18,16 +17,19 @@ A: ranking VMs by the maximum percentage, which short spikes on near-idle VMs do
 
 ## Expected key points
 - Answer: B.
-- The top five by maximum are near-idle job VMs: their 99th percentile is 0 and they dropped a few hundred to about 1,300 packets in the week. A high percentage in a sample with almost no traffic is a few packets.
-- db-07: 1% of the week's samples (about 100 minutes) are at 1.9% or more, and it dropped about 4.18 million transmitted packets while carrying real traffic. At about 1.5 KB per packet that is about 6 GB resent.
+- A is wrong: the top five by maximum are near-idle job VMs: their 99th percentile is 0 and they dropped a few hundred to about 1,300 packets in the week. A high percentage in a sample with almost no traffic is a few packets.
+- B is correct: db-07: 1% of the week's samples (about 100 minutes) are at 1.9% or more, and it dropped about 4.18 million transmitted packets while carrying real traffic. At about 1.5 KB per packet that is about 6 GB resent.
 - Rank drops by a percentile and by the packet count, not by the maximum percentage. The maximum of a short, spiky metric says little.
 - C is wrong: web-04's 99th percentile is 0.02% and its totals are small; its maximum is one spike.
+- D is wrong: rpt-11's 1,334 receive drops lead the five, but its 99th percentile is 0 at 4 KBps: a near-idle VM with a few short spikes.
 - E is wrong: on a busy database, about 100 minutes a week at 1.9% or more and millions of dropped packets are real loss that TCP hides by resending. Raise it with the network team.
 
 ## Notes
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 - Revised 2026-11-12: the 400-VM workbook became a 40-VM CSV; the management pack score removed (fairness). The question now tests which statistic ranks VMs for drops; the spike formula is in 0061, transmit drops hidden by TCP in 0074. The CSV is synthetic, generated with a fixed seed.
 - Stem made plural (2026-11-14): the singular form told the candidate that one option is correct (Q199: the count is never disclosed). Was: "Which VM should be investigated first?"
+- 2026-11-14: the stem line "You can open one ticket today" removed: it told the candidate that one option is correct (design.md 6.2). Practical half of 0061 (project/question-pairing-2026-11-14.md, A13). Key unchanged.
+- Review 2026-11-15: the key point for D added. Key unchanged.
 
 ## Metadata
 ```yaml
@@ -51,5 +53,6 @@ source_path: "Drafted by Claude 2026-11-05"
 answer: [B]
 misconception: [A]
 misconception_type: [rollup-and-interval]
+pair: "0061"
 status: draft
 ```

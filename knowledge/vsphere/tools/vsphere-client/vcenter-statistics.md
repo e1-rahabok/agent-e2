@@ -83,8 +83,12 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 ## Units
 - KB in vCenter counters = 1,024 bytes. KBps = 1,024 bytes per second.
 - kb (kilobit) = 1,000 bits. kbps = 1,000 bits per second.
-- The API and the charts use different units for the same counter. The API returns memory in KB (mem.consumed, mem.vmmemctl, mem.overhead), swap rates in KBps, disk and network usage in KBps, and space in KB. The vSphere Client charts convert: memory to MB, space to GB, network usage to Mbps. A value exported through the API and read as MB is 1,024 times too large.
-- Network counters such as net.received are labelled Kbps but measured in kilobytes per second. esxtop network uses megabits. See [`vsphere/tools/esxtop/units-vs-vsphere-client`](../esxtop/units-vs-vsphere-client.md).
+- The API and the charts use different units for memory and space. The API returns memory in KB (mem.consumed, mem.vmmemctl, mem.overhead), swap rates in KBps, disk usage in KBps, and space in KB. The vSphere Client charts convert memory to MB and space to GB. A memory value exported through the API and read as MB is 1,024 times too large.
+- Network throughput counters (net.usage, net.received, net.transmitted, net.bytesRx, net.bytesTx) are kilobytes per second in the vSphere 9.1 API (PerfCounterInfo unit kiloBytesPerSecond). The vSphere Client Advanced performance charts and their CSV export show the same KBps values (Broadcom KB 447068; KB 445815 names Data receive rate and Data transmit rate in KBps).
+- The VM and host network charts carry Mbps in their title (Network (Mbps), Network Rate (Mbps)), but the vSphere 9.1 documentation lists their counters (Usage, Data receive rate, Data transmit rate) in kilobytes per second. Read the counter's unit in the chart legend, not the chart title.
+- The vSphere 9.1 documentation writes the unit of net.received and net.transmitted as "Kilobytes per second (Kbps)". The unit is kilobytes per second; Kbps is the abbreviation for kilobits.
+- The vSphere 9.1 documentation lists Megabits per second for two stacked Overview charts only: the cluster Hosts view (Network (Mbps), the 10 hosts with the most network usage) and the host Virtual Machines view (Network (Mbps), the 10 VMs with the most network usage).
+- Comparing a vSphere Client network value with a tool that reports bits: multiply KBps by 8 for kilobits per second, then divide by 1,000 for megabits per second. 1 Gbps of traffic is about 122,000 KBps (1,024-byte KB). esxtop network uses megabits per second. See [`vsphere/tools/esxtop/units-vs-vsphere-client`](../esxtop/units-vs-vsphere-client.md).
 
 ## History loss
 - Removing an object from vCenter and adding it again deletes its history.
@@ -100,6 +104,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 
 ## Misconceptions
 - "An API value of 4,194,304 for VM Consumed is 4 TB" → the API unit is KB: 4 GB.
+- "The VM network chart is titled Mbps, so its Usage line is in megabits" → VM and host Usage, Data receive rate and Data transmit rate are kilobytes per second; a line at 61,000 is about 0.5 Gbps, not 61 Gbps.
 - "The Real-time chart shows real-time data" → it shows 20-second averages, the label is the UI's. A burst of 1-3 seconds needs esxtop or the 2-second tier of VCF Operations 9.1.
 - "The 1 Week chart shows the peak" → it shows 30-minute averages. Use real-time or esxtop for bursts.
 - "Max rollup is always available" → only at statistics level 4.
@@ -136,8 +141,8 @@ related:
 - vsphere/tools/esxtop/units-vs-vsphere-client
 - vsphere/tools/vsphere-client/performance-guidance
 source:
-  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number)
-  path: vSphere Monitoring and Performance > Monitoring Inventory Objects with Performance Charts > Data Counters, Data Collection Intervals, Statistics Levels, Performance Chart Types; Troubleshoot and Enhance Performance > Empty Performance Charts; Hosts > GPU charts (pp. 2025-2031, 2065-2067, 2123-2124)
+  document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1.1 reference, Network Counters; Broadcom KB 447068; Broadcom KB 445815
+  path: vSphere Monitoring and Performance > Monitoring Inventory Objects with Performance Charts > Data Counters, Data Collection Intervals, Statistics Levels, Performance Chart Types; Troubleshoot and Enhance Performance > Empty Performance Charts; Hosts > GPU charts; Clusters, Hosts and Virtual Machines > Network (Mbps) and Network Rate (Mbps) (pp. 2025-2031, 2041, 2065-2067, 2078-2082, 2106-2108, 2123-2124)
 corrections: []
 review_notes:
 - 'Section ''Statistics levels'': VM CPU Ready is the sum over the vCPUs: Broadcom KB 387750, https://knowledge.broadcom.com/external/article/387750.'
@@ -145,6 +150,6 @@ review_notes:
 - 'Section ''Collection intervals'': the document says 1 Week rolls up 12 points of 1 Day every 2 hours (text under 1 Week) and 6 points every 30 minutes (text under 1 Day). The table uses the arithmetic: 6 x 5 min = 30 min; 4 x 30 min = 2 h; 12 x 2 h = 1 day.'
 - 'To check: Section ''Rollup type'': the Summation example (20,000 ms per vCPU per 20-second sample = 100%) and the burst dilution factors are arithmetic, not from the document.'
 - 'Section ''Statistics levels'': the level 1 contention list is derived from the level 1 table and the chart tables (VM CPU Ready: level 1). The document is inconsistent on disk latency: the level 2 row says all disk metrics except numberRead and numberWrite; the chart tables list deviceLatency, totalReadLatency and totalWriteLatency at level 3.'
-- 'Section ''Units'': the document labels net.received and net.transmitted "Kilobytes per second (Kbps)". Kbps is the bit abbreviation; the label says kilobytes.'
+- 'Section ''Units'': whether the stacked Overview charts titled Network (Mbps) (cluster Hosts view, host Virtual Machines view) plot megabits or kilobytes per second: the vSphere 9.1 documentation lists Mbps for these two charts and KBps for the single-object charts under the same title (pp. 2041, 2078, 2082, 2106); check on a vSphere Client 9.1. API units: https://developer.broadcom.com/xapis/vsphere-web-services-api/9.1/network_counters.html. Charts and CSV export in KBps: https://knowledge.broadcom.com/external/article/447068 and https://knowledge.broadcom.com/external/article/445815.'
 status: draft
 ```

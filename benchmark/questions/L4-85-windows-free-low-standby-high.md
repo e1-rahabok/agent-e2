@@ -58,5 +58,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B, C, D]
 misconception: [E, F]
 misconception_type: [consumption-as-contention, layer-confusion]
+pair: "0382"
 status: draft
 ```

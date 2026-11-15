@@ -1,7 +1,7 @@
 # Contention counters in a vCenter host network chart
 
 ## Prompt
-Review [The attached screenshot](0042/vcenter-esxi-network-chart.png) 
+Review [the attached screenshot](0042/vcenter-esxi-network-chart.png).
 
 Which counters in the chart show contention, and what value do you expect from them on a healthy host? Choose all that apply.
 
@@ -14,13 +14,6 @@ Which counters in the chart show contention, and what value do you expect from t
 ## Screenshot
 ![vCenter advanced chart of one ESXi host, Network: usage, packets received, receive and transmit packets dropped per vmnic](0042/vcenter-esxi-network-chart.png)
 
-## Input to supply
-- Tool: vCenter (vSphere Client 9.1).
-- Where: one ESXi host > Monitor > Performance > Advanced > Chart Options > Network, object: the host (all vmnics).
-- Counters to tick: Receive packets dropped, Transmit packets dropped, Usage, Packets received. Real-time or Last day.
-- Mask the host name.
-- Save as `benchmark/questions/42/vcenter-esxi-network-chart.png`.
-
 ## Likely wrong answer
 C: reading host network Usage as a sign of trouble.
 
@@ -31,6 +24,7 @@ C: reading host network Usage as a sign of trouble.
 - Receive drops are far more common than transmit drops; a pattern goes to the network team.
 
 ## Notes
+- 2026-11-14 (project/question-pairing-2026-11-14.md, section 3.B): in the screenshot, the host name masked in the title and the legend (host, VM, datastore and cluster names are masked: benchmark/design.md, section 13); the stale `## Input to supply` removed.
 - Drafted by Claude 2026-11-05 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after author approval.
 ## Metadata
 ```yaml

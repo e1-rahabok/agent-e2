@@ -6,7 +6,7 @@
 - vCenter and VCF Operations have no metrics for standard switches and their port groups. Look at each parent host; a dashboard can cycle through hosts.
 
 ## Counters
-- Bits per second: receive, transmit, usage rate. Duplicate metrics exist; the reason is unclear.
+- Kilobytes per second (KBps, 1 KB = 1,024 bytes): Data receive rate, Data transmit rate, Usage. The chart title can say Mbps; the counters are KBps ([`vcenter-statistics`](../../../../tools/vsphere-client/vcenter-statistics.md), section Units). Duplicate metrics exist; the reason is unclear.
 - Usage rate = receive + transmit. With full duplex it can exceed the physical link speed.
 - Packets per second: receive, transmit.
 - List all vmnics in a table to find which one to plot.
@@ -14,7 +14,7 @@
 
 ## Packet size
 ```text
-Average packet size = bits per second / packets per second
+Average packet size (bytes) = rate (KBps) × 1,024 / packets per second
 ```
 - A large change across the environment is worth investigating.
 
@@ -57,7 +57,7 @@ images:
     metric: ['ESXi Network Usage Rate', 'ESXi Network Data Receive Rate', 'ESXi Network Data Transmit Rate']
     image_type: timeline
 source:
-  document: Knowledge base
+  document: Knowledge base; vSphere 9.1 documentation, Hosts > Network Rate (Mbps) (pp. 2078-2079)
   path: Network > ESXi > ESXi intro; Consumption Metrics; Unusual Packets
 corrections: []
 review_notes: []

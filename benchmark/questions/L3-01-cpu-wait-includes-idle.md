@@ -61,5 +61,6 @@ answer: [A, C, D, E]
 misconception: [B]
 level: 300                      # author 2026-11-05
 misconception_type: [layer-confusion]
+pair: "0372"
 status: draft
 ```

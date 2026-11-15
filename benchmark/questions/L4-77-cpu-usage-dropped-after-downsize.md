@@ -66,5 +66,6 @@ attachments:
 origin: synthetic
 source_path: "Drafted by Claude 2026-11-12"
 misconception_type: [consumption-as-contention]
+pair: "0365"
 status: draft
 ```

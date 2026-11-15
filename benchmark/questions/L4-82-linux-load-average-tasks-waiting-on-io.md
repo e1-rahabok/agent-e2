@@ -59,5 +59,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [B, C, D]
 misconception: [A, E]
 misconception_type: [same-name-other-object, consumption-as-contention]
+pair: "0428"
 status: draft
 ```

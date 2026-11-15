@@ -53,5 +53,6 @@ source_path: "Drafted by Claude 2026-11-12"
 answer: [A, B]
 misconception: [D, E, F]
 misconception_type: [layer-confusion, frequency-and-hyper-threading]
+pair: "0368"
 status: reviewed
 ```
