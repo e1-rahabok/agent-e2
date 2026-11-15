@@ -12,7 +12,7 @@ Which statements are correct?
 - B. The host's Total reservation rises by 12 GB, the amount the VM now reserves.
 - C. The VM's Consumed and Granted stay at their level when the task completes.
 - D. The host's Reservation consumed rises and its Reservation available falls by the same amount.
-- E. The VM's Entitlement chart rises to 12 GB and shows the new reservation.
+- E. The VM's Overhead consumed rises by the 12 GB the VM now reserves.
 - F. The reservation is a setting of the VM: Edit Settings and the reconfigure task show it.
 - G. The host's Consumed rises by about 3 GB, the part of the reservation the VM has not touched yet.
 - H. Consumed did not move, so the change was not applied; the administrator should repeat it.
@@ -29,7 +29,7 @@ Which statements are correct?
 - B false: Total reservation is the host's reservable capacity (Reservation consumed plus Reservation available). It does not follow the VMs' reservations.
 - C true: a reservation changes no page, so Consumed and Granted keep their level.
 - D true: the host's reservation counters take the change: Reservation consumed rises, and Reservation available falls by the same amount because Total reservation stays the same.
-- E false: Entitlement is a scheduler value that follows the VM's consumption; it did not rise to a reservation on the lab VM.
+- E false: Overhead consumed is the memory of the VM's virtualization data structures; a reservation does not change it (flat in the lab test).
 - F true: the reservation is a VM setting, recorded in the VM's configuration and in the reconfigure task event (`config.memoryAllocation.reservation: old -> new`).
 - G false: host Consumed counts pages in use, and the reservation backs none of them; it does not rise by the untouched part either.
 - H false: the flat Consumed is the expected result of a reservation; the task completed, so the change applied. Repeating it changes nothing.
@@ -38,9 +38,9 @@ Which statements are correct?
 
 ## Notes
 - Pair with 0442 (practical: the same fact on a VM chart and the task list). A fact gets two questions at most (design.md, section 3.9).
-- No option rests on whether Reservation consumed counts the reservation as set or only the touched part (open author question Q231): D and the key read the same under both readings. No option rests on the Entitlement formula (open author question Q230); E only says Entitlement does not show the reservation.
+- No option rests on whether Reservation consumed counts the reservation as set or only the touched part (author question Q231, future release): D and the key read the same under both readings. No option uses Entitlement, a kernel value with no operations use (Q230, answered 2026-11-15).
 - Distinct from 0014 (a memory reservation is backed as pages are touched, with a CPU reservation as the contrast): this question asks which counters take a reservation change.
-- Evidence behind C, D, E and F: the author's lab test of 2026-11-15, one VM, the reservation set and later removed (knowledge: vm-memory-metrics, section VM reservation across counters; host-memory-metrics, section VM reservation across counters).
+- Evidence behind C, D, E and F (E: Overhead consumed): the author's lab test of 2026-11-15, one VM, the reservation set and later removed (knowledge: vm-memory-metrics, section VM reservation across counters; host-memory-metrics, section VM reservation across counters).
 - Written 2026-11-15 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
 ## Metadata

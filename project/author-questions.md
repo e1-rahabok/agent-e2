@@ -127,24 +127,6 @@ Each entry has:
 - Final answer (expert call): (A) for Usage (%), plus what the 9.1 list names enabled; Workload (%) on a VM needs your field check in a 9.1 instance.
 - Answer:
 
-### Q230 · Memory > VM > Entitlement · Entitlement = Granted + Overhead, or about 1.1 times Consumed?
-
-- Files: [VM Memory Entitlement](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/virtual-motherboard/entitlement.md); [VM memory metrics compared](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/comparisons/vm-memory-metrics.md) (the table Virtual view vs physical view says Entitlement is Granted + Overhead).
-- Search: not from the book; the lab export of 2026-11-15.
-- Question: the files give Entitlement = Granted + Overhead. A 9.1 lab VM (8 GiB configured, no pressure, no limit, one hour of 20-second samples) shows Granted flat at 6,356,764 KB and Overhead consumed flat at 58,460 KB (sum 6,415,224 KB), while Entitlement moved with Consumed: 6,404,020 KB against Consumed 5,799,284 KB, ratio 1.1042 to 1.1043 on every sample, and about 11 MB below the sum. A reservation of 8 GiB set and removed did not change it. (A) the formula holds only under some condition (name it); (B) Entitlement is derived from Consumed (about 1.104 times it here) and the formula is replaced; (C) other.
-- Written as now: the formula, with the lab behaviour in a new section Observed behaviour of the entitlement file.
-- Final answer (expert call): needs the vSphere API definition of `mem.entitlement` and your reading; the ratio may be Consumed plus a fixed fraction for overhead and ESXi pages, not a formula over Granted.
-- Answer:
-
-### Q231 · Memory > ESXi > Reservation consumed · Counted as set, or touched pages? The 1 GB VM step
-
-- Files: [ESXi Memory Reservation counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md); [ESXi memory metrics compared](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/comparisons/host-memory-metrics.md) (section VM reservation across counters).
-- Search: not from the book; the lab exports of 2026-11-15.
-- Question: your first note says Reservation consumed measures actual consumption, not just reserved. The second test settled one point against it: you raised the reservation of an 8 GiB VM from 0 to 8 GiB while that VM had consumed 5.5 GiB (Granted 6.06 GiB); host Reservation consumed rose by exactly 8,192 MB. Touched pages cannot make 8,192 MB, so the files now say the counter counts the reservation as set. The first step does not fit: at about 03:59 UTC (11:59 local) host Reservation consumed rose by 820 MB, which you tied to the 1 GB VM. (A) what reservation did you set on the 1 GB VM, and how much memory had it touched (if you set 1 GB, 820 MB suggests touched pages; if you set 820 MB, the counter counts as set); (B) keep "counted as set" and treat the 820 MB as another cause; (C) other.
-- Written as now: "Reservation consumed ... counted as set. It follows the setting, not the pages the VM touched", with a review note on the open 820 MB step.
-- Final answer (expert call): needs you: the reservation you set on the 1 GB VM.
-- Answer:
-
 ### Q198 · CPU > NUMA settings · NPS-1 default or the setting that matches the silicon?
 
 - Files: [NUMA settings](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/configuration/numa-settings.md) (section AMD EPYC); [CPU topology](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/cpu-topology.md) (section NUMA); source: project/sources/vmware_vsphere_numa_architecture_and_sizing_guide.md, section 2.
@@ -305,6 +287,14 @@ Each entry has:
 - Answer:
 
 ## Future release
+
+### Q231 · Memory > ESXi > Reservation consumed · A 820 MB step on a 1 GB VM
+
+- Files: [ESXi Memory Reservation counters](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/metrics/host/reservation.md) (review note, section Counter scope).
+- Search: not from the book; the lab exports of 2026-11-15.
+- Question: low priority, not blocking. The files say host Reservation consumed counts a VM's reservation as set: one 8 GiB VM that had consumed 5.5 GiB raised it by exactly 8,192 MB. An earlier step of 820 MB (about 03:59 UTC, 11:59 local) on a 1 GB VM does not fit. Only if you remember it: what reservation did you set on the 1 GB VM? (A) 1 GB, so the counter counted touched pages there; (B) about 820 MB, so as set; (C) do not remember: drop it.
+- Written as now: "counted as set", with a review note naming the open step. No screenshot or CSV needed.
+- Answer:
 
 ### Q216 · CPU > NUMA > Virtual NUMA · Topology rebuild and `numa.autosize.once` in vSphere 9.1 (lab checks)
 

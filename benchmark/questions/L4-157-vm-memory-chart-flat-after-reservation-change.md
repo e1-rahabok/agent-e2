@@ -10,7 +10,7 @@ Which statements are correct?
 
 - A. Consumed did not rise when the reservation was set, so the reservation was not applied.
 - B. The task list shows the reservation set from 0 to 8,192 MB and later back to 0, both tasks completed.
-- C. Entitlement rose to 8 GB while the reservation was set and fell back when it was removed.
+- C. Consumed fell when the reservation was removed, because ESXi may reclaim memory that is no longer reserved.
 - D. In UTC the changes fall at about 04:06 and 04:22, and Consumed never moves by 1% between neighbouring rows, those times included.
 - E. Ballooned memory is 0 only while the reservation is set, so the reservation kept ESXi from ballooning the VM.
 - F. Granted stays below 8 GB in every row, so the VM had touched less memory than it reserved.
@@ -20,13 +20,13 @@ Which statements are correct?
 
 ## Likely wrong answer
 - A: "Consumed should jump to the reservation; it did not, so the reservation failed."
-- C: "A reservation raises the entitlement to its size."
+- C: "Removing a reservation lets ESXi take the memory back."
 
 ## Expected key points
 - Answer: B, D, F, I.
 - A false: a reservation does not back pages, so VM Consumed does not rise with it; the tasks completed.
 - B true: the task events show `config.memoryAllocation.reservation: 0 -> 8192` and later `8192 -> 0`, both Completed.
-- C false: Entitlement stays between 6,359,036 and 6,438,876 KB (about 6.1 GiB) in every row, below 8 GB; it follows Consumed, not the reservation.
+- C false: Consumed moves by 0.4% or less between neighbouring rows around 04:22, and with free host memory ESXi has no reason to reclaim; removing a reservation does not take memory back.
 - D true: 12:06 and 12:22 in UTC+8 are 04:06 and 04:22 in UTC; the largest change of Consumed between two neighbouring rows in the hour is 0.44%, and the changes at 04:06 and 04:22 are 0.4% or less, so no step shows at either time.
 - E false: Ballooned memory is 0 in every row, before the first change and after the removal too; with free host memory nothing was ballooned, so the reservation shows no effect on it.
 - F true: Granted is flat at 6,356,764 KB (6.06 GiB), below 8 GB (8,388,608 KB); Granted counts the pages the VM has mapped, so the VM had touched less than its reservation.
@@ -37,8 +37,8 @@ Which statements are correct?
 ## Notes
 - Pair with 0441 (theory). Wrong on both: a knowledge gap. Right on theory and wrong on practical: a reading failure (the time zone, the unit, or taking a flat chart for a failed change).
 - Attachments: the author's lab capture of 2026-11-15 (one VM, vCenter 9.1). The export is the real-time chart of the VM downsampled to one row per minute (60 rows, 03:28 to 04:27 UTC); the task screenshot is cropped to the task list. Lab VM and host names stay (design.md, section 13).
-- The condition the key depends on holds in the export: Consumed 5,758,392 to 5,830,972 KB, Entitlement 6,359,036 to 6,438,876 KB, Granted 6,356,764 KB and Overhead consumed 58,460 KB in every row, Ballooned memory 0.
-- No option rests on whether the host's Reservation consumed counts the reservation as set (open author question Q231) or on the Entitlement formula (Q230). I states only that the host counters take the reservation.
+- The condition the key depends on holds in the export: Consumed 5,758,392 to 5,830,972 KB, Granted 6,356,764 KB and Overhead consumed 58,460 KB in every row, Ballooned memory 0.
+- No option rests on whether the host's Reservation consumed counts the reservation as set (author question Q231, future release). No option uses Entitlement, a kernel value (Q230, answered 2026-11-15). I states only that the host counters take the reservation.
 - Leak guard: the knowledge base does not state this capture's values (checked 2026-11-15; the VM-level lab lines in vm-memory-metrics, entitlement and resource-controls carry no numbers).
 - Written 2026-11-15 from the knowledge files listed in `knowledge` (origin: synthetic). Counts only after approval (design.md, section 6.2).
 
@@ -56,7 +56,6 @@ object: [vm, esxi]
 tool: [vcenter]
 knowledge:
   - vsphere/technology/memory/metrics/comparisons/vm-memory-metrics
-  - vsphere/technology/memory/metrics/virtual-motherboard/entitlement
   - vsphere/technology/memory/metrics/virtual-motherboard/granted
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
   - vsphere/technology/memory/metrics/host/reservation
