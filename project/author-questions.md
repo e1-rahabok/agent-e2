@@ -151,15 +151,6 @@ Each entry has:
   - For you: E (the better name for Total Capacity (GHz)); accept or change the list.
 - Answer:
 
-### Q207 · Benchmark > Field set · Real questions from you
-
-- Files: [benchmark/live-test.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/live-test.md) (step 9: 20 real questions); [benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md) (section 7.5, held-out set); [harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md) (section 4.6, coverage boundary).
-- Question: can you give real questions now, and about how many? Real means asked by an operator, not written from the knowledge base: your tickets, consulting cases, customer emails and chats. The question text only, as asked; no answer needed; kept out of the repository (customer data). (A) yes, now, about N; (B) at release only; (C) none: the 20 of the live test are enough.
-- Why it needs you: Claude wrote every benchmark question from the knowledge files, so the questions use the files' own words. Only real questions show how often an operator's question falls outside the knowledge base, and how retrieval does on an operator's words. The stems alone, options removed, already lose much: recall 83% to 72%, main file missing on 18 to 37 of 275 (retrieval check, BM25, 2026-11-15).
-- Written as now: held-out set of 30, drawn at release; 20 real questions in the live test; the coverage boundary has no search-score limit, waiting for this set. Public Broadcom community questions Claude can collect without you (question text only).
-- Recommended: A.
-- Answer:
-
 ### Q205 · Memory > Swap and compression > Example · Gap between Consumed and the effective limit
 
 - Files: [Swap and compression](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/memory/concepts/swap-and-compression.md) (section Example: limit, swap and compress in opposite directions).
