@@ -12,7 +12,7 @@
 - The guest counter is the value at the moment of each 20-second sample, not an average. VCF Operations builds two metrics from those samples, in the next section.
 
 ## Scale in VCF Operations
-- Two metrics on the VM object: Guest|CPU Queue (5-minute value, the mean of the 15 samples of 20 seconds) and Guest|Peak vCPU Queue within collection cycle (the highest of the same 15; key `guest|20_sec_peak_cpu_queue`). The names mix CPU and vCPU; both mean the same unit.
+- Two metrics on the VM object: Guest|CPU Queue (5-minute value, the mean of the 15 samples of 20 seconds) and Guest|Peak vCPU Queue within collection cycle (the highest of the same 15; key `guest|20_sec_peak_cpu_queue`). The names say CPU and vCPU; both mean the same unit, per vCPU. Say "vCPU" for the peak metric: on a large VM a count per CPU and a count per vCPU differ by the whole vCPU count.
 - Both are the guest's total queue divided by the VM's vCPU count: the average queue per vCPU. The total on the VM is the value times the vCPU count. An 8-vCPU VM with 24 threads in the queue shows 3. Windows PerfMon (System \ Processor Queue Length) and Linux `vmstat` show the total.
 - How to tell from an export, with no access to the guest: the guest reports a whole number of threads, so every peak value is a whole multiple of 1/vCPU count (8 vCPUs: steps of 0.125) and every 5-minute value a whole multiple of 1/(15 × vCPU count). A raw total would show whole numbers. A cycle that lost samples (a gap in the 20-second collection) shows a finer step for that cycle only.
 - The peak is never below the 5-minute value and never above 15 times it. The ratio reaches 15 only when one sample holds all the queue and the other 14 are zero; the median is about 5.
@@ -20,7 +20,7 @@
 
 ## Thresholds
 - Colour levels per processor: the Guest OS KPI row "Peak vCPU run queue length (count)" in the threshold catalog (one place per number). The VCF Operations value is already per vCPU, so it compares directly with the KPI levels; a PerfMon or `vmstat` total is divided by the vCPU count first.
-- The alert symptoms on these metrics (above 20 for the 20-second peak, above 4 for the 5-minute value) are tested on the same per vCPU value. Above 20 per vCPU is a total of 160 queued threads on 8 vCPUs, while the KPI turns red at 16 per vCPU. Whether 20 was meant per vCPU is open ([`guest-os/guest-os-alerts`](../guest-os-alerts.md), section Guest OS CPU run queue).
+- The alert symptoms on these metrics (red above 20 for the 20-second peak, above 4 for the 5-minute value) are tested on the same per vCPU value, so one value works for a VM of any size. 20 per vCPU is high on purpose (a total of 160 threads on 8 vCPUs, 320 on 16): the alert fires only on an extreme queue, to avoid false positives. The KPI turns red at 16. When the alert fires, read the two checks in [`guest-os/guest-os-alerts`](../guest-os-alerts.md), section Guest OS CPU run queue.
 - PerfMon UI text: divide by processors; below 10 per processor is normally acceptable. MSDN: above 2 sustained indicates congestion. SQL Server documentation: 3.
 - Utilization can be 100% with a low queue: the workload runs as fast as it can. Adding vCPUs then slows it (more context switching).
 

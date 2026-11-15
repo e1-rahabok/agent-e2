@@ -9,13 +9,16 @@
 
 ## Guest OS CPU run queue
 - Goal: catch a long CPU run queue, which is less known than CPU utilization. It is often independent of the virtualization layer: some applications spawn too many threads. It also shows the VM owner that the infrastructure team sees inside Windows and Linux.
-- Guest OS Peak CPU Queue (Guest|Peak vCPU Queue within collection cycle), 20-second: the queue itself, per vCPU: VCF Operations divides the total by the vCPU count, so above 20 means a total above 20 times the vCPU count (160 threads on 8 vCPUs) ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Scale in VCF Operations).
+- Guest OS Peak vCPU Queue (Guest|Peak vCPU Queue within collection cycle), 20-second: the queue itself, per vCPU: VCF Operations divides the total by the vCPU count, so one value fits a VM of any size. Above 20 means a total above 20 times the vCPU count (160 threads on 8 vCPUs). The value is high on purpose, so the alert fires only on an extreme queue ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Scale in VCF Operations).
 - VM CPU Net Run: confirms a real workload. The queue counter gives false positives, so Net Run is required and the wait is longer ([`vsphere/technology/cpu/metrics/virtual-motherboard/net-run`](../vsphere/technology/cpu/metrics/virtual-motherboard/net-run.md)).
 - Red only, to reduce noise. To add an orange, halve the queue value and keep Net Run: red is 2x orange in the set.
 - Use it with the VM CPU contention and VM CPU consumption alerts ([`vsphere/object-types/vm/vm-alerts`](../vsphere/object-types/vm/vm-alerts.md)). Remediation:
   1. VM CPU contention alert also fired → follow its remediation.
   2. VM CPU consumption alert also fired → follow its remediation.
-  3. Neither → find why the application creates so many threads. Compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
+  3. Neither → find why the application creates so many threads. Check two things on the VM:
+     - Multi-threaded application: many threads may contend for a software lock (mutex, semaphore). The queued threads cannot move to idle vCPUs, because they depend on a resource held by a thread on another vCPU: a bottleneck, not a shortage of vCPUs. Per-vCPU CPU time then shows idle vCPUs next to a long queue. A thread blocked on the lock is in Wait and not in the queue; the queue holds the threads that are Ready ([`guest-os/cpu/metrics/run-queue`](cpu/metrics/run-queue.md), section Cases).
+     - Privileged Time high and User Time low: the kernel (drivers, interrupts) uses the CPU, not the application: a driver or kernel-locking issue.
+     Then Compare with the other software of the same business application, and with the same software in other applications. For commercial software, ask the vendor. Without an answer, exclude the application from this alert.
 
 ## Guest OS disk queue
 - Guest OS disk queue, 20-second peak: the queue itself ([`guest-os/storage/disk-queue`](storage/disk-queue.md)).
@@ -77,9 +80,8 @@ source:
   path: 'Proactive Operations > Alert > Application Team > Guest OS Alerts (CPU Contention, Disk Contention Alert, Other Contention Alerts, Consumption)'
 corrections: []
 review_notes:
-- 'Section ''Guest OS CPU run queue'': the 20 (and the optional 10) may have been written for a total queue; the metric is per vCPU, which makes 20 about 10 times the KPI red level per vCPU (16). Open (Q232).'
 - 'Section ''Guest OS CPU run queue'': the source thanks Darren Farrer for the collaboration on the remediation.'
-- 'Section ''Guest OS CPU run queue'': the source gives the optional orange as Peak CPU Queue above 10 with Net Run above 75%, half the red queue value; written as the 2x rule.'
+- 'Section ''Guest OS CPU run queue'': the source gives the optional orange as Peak vCPU Queue above 10 with Net Run above 75%, half the red queue value; written as the 2x rule.'
 - 'Section ''Consumption: daily checks, no alert'': the source says no alert is defined; the alert count table in Alerts Planning shows Guest OS Disk consumption 1. Parked after 1.0 (Q142).'
 - 'Section ''Guest OS disk queue'': the source says CPU Usage above 1 GHz without naming the object; written as VM CPU Usage, as in the VM alerts.'
 status: draft

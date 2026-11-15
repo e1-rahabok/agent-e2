@@ -24,6 +24,7 @@ When the author corrects a wording mistake, add it here. A word users also say g
 | misreading (for the up-front list) | misconception | One concept, one word: the up-front lines are misconceptions promoted from their files. |
 | kind (as a field name) | retriever_guide | "kind" does not say what the field is for. |
 | Utilization (ESXi CPU, when threads are meant) | Thread Utilization | Plain "Utilization" is easily confused with Core Utilization. Author correction, Q008. |
+| Peak CPU Queue (the VCF Operations metric) | Peak vCPU Queue: Guest\|Peak vCPU Queue within collection cycle | The value is per vCPU. CPU and vCPU differ by the whole vCPU count on a large VM. Author correction, Q232, 2026-11-15. |
 | architecture (for settings) | configuration | Architecture means the big picture, not individual settings. |
 | interpretation (as a folder) | troubleshooting | Interpretation is the purpose of every metric file. |
 | foundations (as a folder) | a name for what the folder holds: observability, architecture | The content was neither basic (Level 100-200) nor lower stack; the word said nothing. |
