@@ -66,7 +66,7 @@ object: [guest-os]
 tool: [vcf-operations, guest-os-tools]
 knowledge:
   - guest-os/system/troubleshooting/linux-os-slow
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
 knowledge_main: guest-os/system/troubleshooting/linux-os-slow
 attachments:
   - 0387/vcf-operations-linux-vm-guest-memory-7-days.png

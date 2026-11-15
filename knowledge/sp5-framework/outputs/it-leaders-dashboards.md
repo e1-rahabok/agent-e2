@@ -58,29 +58,14 @@
   - capacity: enough? If not, when to act? What changed?
   - performance: against the KPI.
 
-## Capacity Summary dashboard
-- VCF Operations ships two sample dashboards for presenting live information to senior management: Inventory Summary and Capacity Summary. They are for the operations team to present, not for self-service.
-- Capacity Summary explains remaining capacity and time; Inventory Summary explains available resources and what runs on them.
-- Top section: the vSphere World summary.
-  - Weekly average VM growth across all data centres, running and powered off. VM count rising without utilization rising means the new VMs are not yet used.
-  - Overcommit ratio: the efficiency of running many workloads on shared hosts. Read it together with contention (performance dashboards). Overcommit is what makes a private cloud cheaper than the public cloud.
-  - VCF Operations counts physical cores, not logical (hyper-threaded) cores, in all CPU capacity calculations.
-- Bottom section: two columns, compute and storage, with the same design.
-  - Network is left out: it is an interconnect, not a node, so its capacity is much harder to compute.
-  - The words compute and storage replace vSphere cluster and datastore to keep it simple.
-  - A heat map sized by capacity and coloured by time remaining. Compute boxes have a fixed size: no single metric sizes a cluster (hosts, CPU GHz, CPU cores, memory).
-  - Selecting a cluster or datastore drills down to remaining capacity and time remaining in days.
-- Capacity remaining is not shown at the World level: it misleads in a large or global estate, and clusters serve different purposes and are not interchangeable.
-- With on-premises and public cloud (for example VMware Cloud on AWS), split the dashboard into two columns, given the screen space.
+## Sample dashboards in VCF Operations
+- VCF Operations ships two sample dashboards for presenting live information to senior management: Inventory Summary and Capacity Summary. The operations team presents them; they are not for self-service.
+- Capacity Summary as built (World summary, compute and storage heat maps, why network and World-level capacity remaining are left out): [`vcf-operations/dashboards/capacity-summary-dashboard`](../../vcf-operations/dashboards/capacity-summary-dashboard.md).
 
 ## Misconceptions
 - "Executives want detail" → summary and trend first, exceptions only; drill-down on request.
 - "One leadership dashboard fits all layers" → middle managers and senior leaders differ in channel, frequency, focus and authority.
 - "Report Operational Availability to the business" → end customers count scheduled downtime too; report Actual Availability.
-- "Show capacity remaining for the whole World" → clusters are not interchangeable; show it per cluster and datastore.
-- "VM count growth means demand growth" → without utilization growth, the new VMs are not yet used.
-- "A high overcommit ratio is a problem" → it is efficiency; read it with contention.
-- "CPU capacity counts hyper-threads" → VCF Operations counts physical cores (Total Capacity (GHz) = cores × base frequency: capacity at base clock); plan capacity per physical thread.
 - "Use technical terms on executive dashboards" → use the organisation's business terms.
 
 ## Metadata
@@ -111,6 +96,7 @@ related:
 - sp5-framework/outputs/capacity-dashboards
 - sp5-framework/capacity/supply
 - sp5-framework/outputs/system-engagement
+- vcf-operations/dashboards/capacity-summary-dashboard
 source:
   document: Knowledge base
   path: 'Overall Design Approach > Overall Design: IT Leaders Dashboard (General Requirements, Sample Requirements Analysis: Business Applications, Operations Overview; Sample Dashboards: Capacity Summary, How to Use, Points to Note)'

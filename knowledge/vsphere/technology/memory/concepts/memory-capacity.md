@@ -51,12 +51,6 @@
 - Cluster Memory \| Workload (%) is described in VCF Operations 9.1 (Cluster Compute Resource metrics); the description gives no formula for the limit and contention it includes.
 - Usable capacity in the VCF Operations capacity engine is Total Capacity minus HA minus buffer (Capacity Analytics Generated Metrics); the method's usable capacity: [`sp5-framework/capacity/supply`](../../../../sp5-framework/capacity/supply.md).
 
-## Storage: used above allocated
-- vSAN protects in software. A 10 GB thick disk with a RAID-1, FTT=1 policy consumes 20 GB of vSAN capacity.
-
-## Misconceptions
-- "Allocated is the ceiling of used" → vSAN protection and other files exceed it.
-
 ## Metadata
 ```yaml
 id: vsphere/technology/memory/concepts/memory-capacity
@@ -70,7 +64,6 @@ pillar:
 product:
 - vsphere
 - vcf-operations
-- vsan
 object:
 - HostSystem
 - ClusterComputeResource

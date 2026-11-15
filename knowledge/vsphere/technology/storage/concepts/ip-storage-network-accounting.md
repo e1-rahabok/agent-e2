@@ -65,7 +65,7 @@ internal_derive:
 related:
 - vsphere/technology/storage/metrics/virtual-motherboard/disk-latency
 - vsphere/technology/network/metrics/host/throughput
-- vsphere/tools/esxtop/units-vs-vsphere-client
+- vsphere/tools/esxtop/network-units-vs-vsphere-client
 source:
   document: Knowledge base
   path: Storage > Architecture > IP storage accounting (iSCSI over 10 GbE)

@@ -106,6 +106,14 @@ current frequency = %A/MPERF x nominal frequency
 - Device list: `sched-stats -t sys-service-stats` (service, count, time, name such as VMK-igbn-rxq0, TCPIPRX, Netpoll, SCSI).
 - Some services are reported under VMK-timer, for example vDS IOChain.
 
+## Documentation guidance
+- Performance Best Practices for vSphere 9.1 (pp. 27-28) gives these esxtop readings:
+  - esxtop CPU panel, first line (load average): a value equal to or greater than 1 means the system is overloaded.
+  - esxtop PCPU line (usage of physical CPUs): 80% is a reasonable ceiling.
+  - esxtop PCPU line: 90% should be a warning.
+  - The same document notes that organizations set their own standards for the target load percentage.
+- These are utilization levels of a host in normal operation, so they are capacity signals, not proof of a performance problem: the contention of the host's VMs decides that. The load a host carries after another host fails: [`vsphere/object-types/esxi/esxi-health-check`](../../object-types/esxi/esxi-health-check.md), section Documentation guidance (esxtop).
+
 ## Misconceptions
 - "%RDY 300% is impossible" → summed over vCPUs.
 - "%A/MPERF per VM" → per physical CPU only.
@@ -153,8 +161,8 @@ images:
     metric: ['esxtop %A/MPERF', 'esxtop %UTIL']
     image_type: screenshot
 source:
-  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 335065
-  path: Provider Objects > esxtop > CPU; vSphere Monitoring and Performance > Performance Monitoring Utilities (resxtop and esxtop) > CPU Panel, CPU Power Panel (pp. 2150-2155); KB 335065 (CPU usage increase after update to ESXi 7.0.3 or later), Cause
+  document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 335065; Performance Best Practices for VMware vSphere 9.1 (revision 20260624)
+  path: Provider Objects > esxtop > CPU; vSphere Monitoring and Performance > Performance Monitoring Utilities (resxtop and esxtop) > CPU Panel, CPU Power Panel (pp. 2150-2155); KB 335065 (CPU usage increase after update to ESXi 7.0.3 or later), Cause; Performance Best Practices 9.1, ESX CPU Considerations (pp. 27-28)
 corrections:
 - 'Section ''State counters'': the vSphere 9.1 documentation, CPU Panel, %RUN (p. 2154), says %RUN can be twice as large as %USED on a Hyper-Threading host. Hyper-Threading alone brings a world''s %USED to 62.5% of %RUN at nominal clock (Broadcom KB 335065: a flat 25% throughput benefit for the core); twice needs a clock below nominal as well.'
 - 'Section ''State counters'': the vSphere 9.1 documentation, CPU Panel, PCPU USED(%) (p. 2153), says PCPU USED equals the total sum of %USED of the worlds that ran on the PCPU. With both threads of a core busy, each PCPU shows half of the core (the same row says so) while each world is charged 62.5%, so the worlds add to more.'

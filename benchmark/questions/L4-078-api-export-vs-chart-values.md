@@ -51,7 +51,7 @@ object: [vm]
 tool: [vcenter]
 knowledge:
   - vsphere/tools/vsphere-client/vcenter-statistics
-  - vsphere/tools/esxtop/units-vs-vsphere-client
+  - vsphere/tools/esxtop/network-units-vs-vsphere-client
   - vsphere/technology/storage/metrics/virtual-motherboard/disk
 knowledge_main: vsphere/tools/vsphere-client/vcenter-statistics
 attachments: []

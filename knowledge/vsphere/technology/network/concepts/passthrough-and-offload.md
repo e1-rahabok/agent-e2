@@ -1,4 +1,4 @@
-# Device passthrough and offload
+# Device passthrough, offload and Enhanced Data Path
 
 ## DirectPath I/O
 - Uses Intel VT-d or AMD-Vi hardware support. See [`vsphere/technology/cpu/concepts/hardware-assisted-virtualization`](../../cpu/concepts/hardware-assisted-virtualization.md).

@@ -37,7 +37,7 @@
 - Pages taken from Free: In Use rises by the balloon size while the application's need does not change.
 - Pages taken from In Use: In Use does not change; the Guest OS paged the data out, and that data is still demand.
 - The Guest OS counters show the balloon size, not how much of it came from Free, so the distortion of Guest OS sizing is bounded by the balloon size but not measured.
-- Sizing rule for ballooned memory (include it, no deduction): [`guest-os/system/concepts/guest-os-sizing`](../../../../guest-os/system/concepts/guest-os-sizing.md), section Ballooned memory in sizing.
+- Sizing rule for ballooned memory (include it, no deduction): [`guest-os/system/guest-os-sizing`](../../../../guest-os/system/guest-os-sizing.md), section Ballooned memory in sizing.
 
 ## Ballooned vs compressed and swapped
 - ESXi knows nothing of free memory inside the guest. Compression and swapping pick pages at random. Ballooning lets the guest choose.
@@ -82,7 +82,7 @@ related:
 - vsphere/technology/memory/concepts/swap-and-compression
 - vsphere/technology/memory/concepts/memory-limit
 - vsphere/technology/memory/metrics/virtual-motherboard/latency
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 images:
   - path: ../images/vm-memory-heavy-balloon-with-rare-latency-spikes.png
     product: [vsphere]

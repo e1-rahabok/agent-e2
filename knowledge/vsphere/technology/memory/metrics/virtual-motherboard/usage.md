@@ -7,7 +7,7 @@
 
 ## Use
 - For operations, vCenter Usage (%): not for sizing or capacity. Active does not see how the Guest OS uses its cache, so a cut to it removes that cache.
-- For operations, VCF Operations Usage (%): Guest OS sizing, as Needed Memory against the VM's size; sizing rules: [`guest-os/system/concepts/guest-os-sizing`](../../../../../guest-os/system/concepts/guest-os-sizing.md), section Memory.
+- For operations, VCF Operations Usage (%): Guest OS sizing, as Needed Memory against the VM's size; sizing rules: [`guest-os/system/guest-os-sizing`](../../../../../guest-os/system/guest-os-sizing.md), section Memory.
 - VCF Operations 9.1 lists VM Memory|Usage (%) (`mem|usage_average`) among the metrics disabled by default, with no description (Virtual Machine metrics). To chart it, enable it in the policy; its history starts at that point.
 - Without the metric, the same ratio comes from two metrics that 9.1 collects by default: Guest|Needed Memory (`guest|mem.needed_latest`) over Mem|Total Capacity (KB) (`mem|guest_provisioned`).
 
@@ -58,7 +58,7 @@ related:
 - vsphere/technology/memory/metrics/virtual-motherboard/consumed
 - vsphere/technology/memory/metrics/virtual-motherboard/utilization
 - vsphere/technology/memory/metrics/virtual-motherboard/active
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 images:
   - path: ../../images/vcf-operations-vm-memory-usage-falls-back-to-active.png
     product: [vcf-operations]

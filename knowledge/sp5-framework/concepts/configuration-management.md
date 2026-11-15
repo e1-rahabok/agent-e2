@@ -73,7 +73,7 @@
 
 ## Review lists by object
 - A setting has several sides (NFS security is storage, datastore and security). The lists group by object; a setting can appear under two objects.
-- Guest OS: [`guest-os/system/concepts/guest-os-configuration-review`](../../guest-os/system/concepts/guest-os-configuration-review.md).
+- Guest OS: [`guest-os/system/guest-os-configuration-review`](../../guest-os/system/guest-os-configuration-review.md).
 - VM and VMware Tools: [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../vsphere/object-types/vm/configuration/vm-configuration-review.md).
 - Shares, reservations, limits, resource pools: [`vsphere/object-types/vm/configuration/resource-settings-guidance`](../../vsphere/object-types/vm/configuration/resource-settings-guidance.md).
 - ESXi: [`vsphere/object-types/esxi/configuration/esxi-configuration-review`](../../vsphere/object-types/esxi/configuration/esxi-configuration-review.md).
@@ -119,7 +119,7 @@ internal_derive:
 - sp5-framework/concepts/overview
 related:
 - sp5-framework/concepts/health-risk-efficiency
-- guest-os/system/concepts/guest-os-configuration-review
+- guest-os/system/guest-os-configuration-review
 - vsphere/object-types/vm/configuration/vm-configuration-review
 - vsphere/object-types/vm/configuration/resource-settings-guidance
 - vsphere/object-types/esxi/configuration/esxi-configuration-review

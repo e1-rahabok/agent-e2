@@ -82,7 +82,7 @@ related:
 - vsphere/tools/esxtop/overview
 - vsphere/technology/network/metrics/host/packets-dropped
 - vsphere/technology/network/vnic-rx-drops
-- vsphere/tools/esxtop/units-vs-vsphere-client
+- vsphere/tools/esxtop/network-units-vs-vsphere-client
 - vsphere/technology/network/concepts/nic-teaming
 source:
   document: Knowledge base; VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); Broadcom KB 312565 (all ESXi versions)

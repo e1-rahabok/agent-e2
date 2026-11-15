@@ -89,7 +89,7 @@ What the vCenter 9.1 API offered per object type in one inventory (an export of 
 - The VM and host network charts carry Mbps in their title (Network (Mbps), Network Rate (Mbps)), but the vSphere 9.1 documentation lists their counters (Usage, Data receive rate, Data transmit rate) in kilobytes per second. Read the counter's unit in the chart legend, not the chart title.
 - The vSphere 9.1 documentation writes the unit of net.received and net.transmitted as "Kilobytes per second (Kbps)". The unit is kilobytes per second; Kbps is the abbreviation for kilobits.
 - The vSphere 9.1 documentation lists Megabits per second for two stacked Overview charts only: the cluster Hosts view (Network (Mbps), the 10 hosts with the most network usage) and the host Virtual Machines view (Network (Mbps), the 10 VMs with the most network usage).
-- Comparing a vSphere Client network value with a tool that reports bits: multiply KBps by 8 for kilobits per second, then divide by 1,000 for megabits per second. 1 Gbps of traffic is about 122,000 KBps (1,024-byte KB). esxtop network uses megabits per second. See [`vsphere/tools/esxtop/units-vs-vsphere-client`](../esxtop/units-vs-vsphere-client.md).
+- Comparing a vSphere Client network value with a tool that reports bits: multiply KBps by 8 for kilobits per second, then divide by 1,000 for megabits per second. 1 Gbps of traffic is about 122,000 KBps (1,024-byte KB). esxtop network uses megabits per second. See [`vsphere/tools/esxtop/network-units-vs-vsphere-client`](../esxtop/network-units-vs-vsphere-client.md).
 
 ## History loss
 - Removing an object from vCenter and adding it again deletes its history.
@@ -139,7 +139,7 @@ related:
 - vsphere/architecture/metric-sources
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/virtual-motherboard/ready
-- vsphere/tools/esxtop/units-vs-vsphere-client
+- vsphere/tools/esxtop/network-units-vs-vsphere-client
 - vsphere/tools/vsphere-client/performance-guidance
 source:
   document: VMware vSphere 9.1 product documentation (PDF built 2026-11-02; the copyright page carries no revision number); vSphere Web Services API 9.1.1 reference, Network Counters; Broadcom KB 447068; Broadcom KB 445815; Broadcom KB 387750; vSphere Web Services API 9.1 reference, CPU and disk counters

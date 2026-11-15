@@ -37,7 +37,7 @@ object: [vm]
 tool: [vcenter, vcf-operations]
 knowledge:
   - sp5-framework/capacity/rightsizing
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - vsphere/technology/cpu/metrics/virtual-motherboard/net-run
   - vsphere/technology/cpu/metrics/virtual-motherboard/demand
   - vsphere/technology/cpu/metrics/virtual-motherboard/usage

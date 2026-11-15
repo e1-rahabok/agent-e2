@@ -7,7 +7,7 @@
 - Which VM CPU counter comes from ESXi and which from vCenter: [`vsphere/technology/cpu/metrics/comparisons/consumption-metrics`](../technology/cpu/metrics/comparisons/consumption-metrics.md), section Source of each.
 
 ## Each tool reads a different copy
-- esxtop reads the host directly, at its own refresh interval (5 seconds by default), and in its own units: network in megabits per second, where vCenter shows kilobytes per second ([`vsphere/tools/esxtop/units-vs-vsphere-client`](../tools/esxtop/units-vs-vsphere-client.md)).
+- esxtop reads the host directly, at its own refresh interval (5 seconds by default), and in its own units: network in megabits per second, where vCenter shows kilobytes per second ([`vsphere/tools/esxtop/network-units-vs-vsphere-client`](../tools/esxtop/network-units-vs-vsphere-client.md)).
 - The vSphere Client Real-time chart shows the 20-second samples; history from 1 Day onward shows rolled-up averages at the configured statistics level.
 - VCF Operations collects from vCenter every 5 minutes and stores the 5-minute average of the 20-second samples; its 20-second peak metrics keep the highest of the 15 samples ([`vcf-operations/features/peak-20-second-metrics`](../../vcf-operations/features/peak-20-second-metrics.md)).
 - VCF Operations also computes metrics of its own under a vSphere name. ESXi CPU Demand in VCF Operations counts the kernel's CPU reservation and, per running VM, the higher of its demand and its CPU reservation; vCenter `cpu.demand` leaves both reservations out ([`vsphere/technology/cpu/metrics/host/demand`](../technology/cpu/metrics/host/demand.md), section vCenter vs VCF Operations).
@@ -40,7 +40,7 @@ object:
 internal_derive:
 - vsphere/tools/vsphere-client/vcenter-statistics
 - vsphere/technology/cpu/metrics/comparisons/consumption-metrics
-- vsphere/tools/esxtop/units-vs-vsphere-client
+- vsphere/tools/esxtop/network-units-vs-vsphere-client
 - vcf-operations/features/peak-20-second-metrics
 - vsphere/technology/cpu/metrics/host/demand
 related:

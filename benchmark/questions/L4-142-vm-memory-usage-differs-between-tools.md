@@ -73,7 +73,7 @@ knowledge:
   - vsphere/technology/memory/metrics/virtual-motherboard/active
   - vsphere/technology/memory/metrics/virtual-motherboard/consumed
   - vsphere/technology/memory/metrics/virtual-motherboard/latency
-  - guest-os/system/concepts/guest-os-sizing
+  - guest-os/system/guest-os-sizing
   - sp5-framework/observability/collection-interval
 knowledge_main: vsphere/technology/memory/metrics/virtual-motherboard/usage
 attachments:

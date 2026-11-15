@@ -146,7 +146,7 @@ related:
 - sp5-framework/capacity/rightsizing
 - vsphere/technology/storage/metrics/host/datastore
 - vsphere/technology/storage/concepts/snapshot-impact
-- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 - vsphere/technology/cpu/concepts/idle-and-unused-vcpus
 images:
   - path: images/reclamation-five-areas-easiest-to-hardest-diagram.png

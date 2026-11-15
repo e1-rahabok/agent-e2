@@ -42,6 +42,7 @@
 | Thick VMDK | Used = configured size, whatever the guest uses. |
 
 - vSAN protection applies to every file on the datastore, including snapshots and logs.
+- vSAN protects in software, so used space can exceed allocated space: a 10 GB thick disk with a RAID-1, FTT=1 policy consumes 20 GB of vSAN capacity.
 
 ## vSphere Client: Used vs Allocated
 - New VM, 10 GB thin disk on vSAN, powered off: Used 1.9 KB; Allocated 12.22 GB (10 GB configured + 2.22 GB).
@@ -53,6 +54,7 @@
 - "Thick disk Used = guest usage" → it is the configured size.
 - "Snapshots apply to every RDM" → only to virtual-mode RDMs; a physical-mode RDM is snapshotted by the array.
 - "Hard disk size in the UI includes vSAN" → it shows configured size, the guest view.
+- "Allocated is the ceiling of used" → vSAN protection and the VM's other files (snapshots, swap, logs) can take it above.
 
 ## Metadata
 ```yaml
@@ -73,10 +75,7 @@ object:
 internal_derive: []
 related:
 - vsphere/technology/storage/concepts/snapshot-impact
-- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-virtual-disk-used
-- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
-- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
-- vsphere/technology/storage/metrics/virtual-motherboard/disk-space-snapshot
+- vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 images:
   - path: ../images/vm-snapshot-files.png
     product: [vsphere]

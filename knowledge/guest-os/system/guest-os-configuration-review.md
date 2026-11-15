@@ -1,7 +1,7 @@
 # Guest OS configuration review
 
 ## Separation from the VM
-- The Guest OS and the VM have their own requirements, and in large organizations two teams own them. The VM review (virtual motherboard and VMware Tools): [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../../vsphere/object-types/vm/configuration/vm-configuration-review.md).
+- The Guest OS and the VM have their own requirements, and in large organizations two teams own them. The VM review (virtual motherboard and VMware Tools): [`vsphere/object-types/vm/configuration/vm-configuration-review`](../../vsphere/object-types/vm/configuration/vm-configuration-review.md).
 
 ## Checks
 - **Type**
@@ -36,7 +36,7 @@
 
 ## Metadata
 ```yaml
-id: guest-os/system/concepts/guest-os-configuration-review
+id: guest-os/system/guest-os-configuration-review
 retriever_guide: what-to-set
 scope: guest-os
 technology:
@@ -56,7 +56,7 @@ internal_derive:
 - sp5-framework/concepts/configuration-management
 related:
 - vsphere/object-types/vm/configuration/vm-configuration-review
-- guest-os/system/concepts/guest-os-sizing
+- guest-os/system/guest-os-sizing
 - vsphere/architecture/vm-vs-guest-os
 source:
   document: Knowledge base

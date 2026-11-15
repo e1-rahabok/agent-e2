@@ -62,7 +62,7 @@ object: [datastore]
 tool: [vcf-operations]
 knowledge:
   - vsphere/technology/storage/datastore-space-headroom
-  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
+  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space
   - vsphere/technology/storage/concepts/snapshot-impact
   - sp5-framework/capacity/overcommit
 knowledge_main: vsphere/technology/storage/datastore-space-headroom

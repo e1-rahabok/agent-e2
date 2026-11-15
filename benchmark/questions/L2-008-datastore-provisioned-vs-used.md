@@ -38,9 +38,8 @@ input: [table]
 object: [datastore, vm]
 tool: [vcf-operations]
 knowledge:
-  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
-  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space-used
-knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/disk-space-provisioned
+  - vsphere/technology/storage/metrics/virtual-motherboard/disk-space
+knowledge_main: vsphere/technology/storage/metrics/virtual-motherboard/disk-space
 attachments:
   - 0046/datastore-ds01-vm-disk-space.csv
 origin: synthetic

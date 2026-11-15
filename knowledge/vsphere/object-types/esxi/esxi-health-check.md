@@ -58,11 +58,7 @@ Order: availability, performance, security, capacity; within each pillar the wha
 - ESXi Performance green with high utilization → the host works hard and serves its VMs; a capacity question, not a performance one.
 
 ## Documentation guidance (esxtop)
-- Performance Best Practices for vSphere 9.1 (pp. 27-28) gives these esxtop readings:
-  - esxtop CPU panel, first line (load average): a value equal to or greater than 1 means the system is overloaded.
-  - esxtop PCPU line (usage of physical CPUs): 80% is a reasonable ceiling.
-  - esxtop PCPU line: 90% should be a warning.
-  - The same document notes that organizations set their own standards for the target load percentage.
+- Performance Best Practices for vSphere 9.1 gives esxtop utilization levels for a host: load average and a PCPU ceiling and warning ([`vsphere/tools/esxtop/cpu`](../../tools/esxtop/cpu.md), section Documentation guidance).
 - These levels describe a host in normal operation. They say nothing about the loss of a host: in a cluster of N identical hosts with one failure to tolerate, the N - 1 hosts left carry the whole load, so each runs at N / (N - 1) times its normal utilization. A host just under 80% in a small cluster lands above 90% after a failure. The check belongs to the cluster (step 8), not to the host.
 - Knowledge base reading: these are utilization levels, so they are capacity signals. Confirm a performance problem with the contention of the host's VMs (step 2). Load average 1.00 means all PCPUs fully used. See [`vsphere/tools/esxtop/cpu`](../../tools/esxtop/cpu.md).
 

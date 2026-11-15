@@ -37,7 +37,7 @@ flowchart TD
    - → step 6.
 6. Network (Guest OS). VM receive drops on the VMXNET3 vNIC (VM Network Packets Dropped, receive; at the host, vsish `rxSummary`, running out of buffers): the guest's receive ring is full, caused and fixed inside Windows (ring size, the CPU that drains the ring). No Windows counter is confirmed to carry the ring-full count ([`vsphere/technology/network/concepts/packet-drop-accounting`](../../../vsphere/technology/network/concepts/packet-drop-accounting.md); flow [`vsphere/technology/network/vnic-rx-drops`](../../../vsphere/technology/network/vnic-rx-drops.md)). → step 7.
 7. Verdict.
-   - A wait found inside Windows (queue, paging, disk wait with low VM disk latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/concepts/guest-os-sizing`](../concepts/guest-os-sizing.md)) and configuration ([`guest-os/system/concepts/guest-os-configuration-review`](../concepts/guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Windows queues worse.
+   - A wait found inside Windows (queue, paging, disk wait with low VM disk latency, ring full) → the cause is in the Guest OS or the application: Guest OS sizing ([`guest-os/system/guest-os-sizing`](../guest-os-sizing.md)) and configuration ([`guest-os/system/guest-os-configuration-review`](../guest-os-configuration-review.md)). Still confirm the VM has no contention in the window: a VM wait makes Windows queues worse.
    - No wait inside Windows, or the signs point down (every vCPU busy, disk queue with high VM latency) → the VM: [`sp5-framework/performance/vm-slow`](../../../sp5-framework/performance/vm-slow.md), step 2, with the window from step 1.
 
 ## Order rationale
@@ -88,8 +88,8 @@ internal_derive:
 - guest-os/memory/windows-memory
 - guest-os/storage/disk-queue
 - vsphere/technology/network/vnic-rx-drops
-- guest-os/system/concepts/guest-os-sizing
-- guest-os/system/concepts/guest-os-configuration-review
+- guest-os/system/guest-os-sizing
+- guest-os/system/guest-os-configuration-review
 related:
 - guest-os/system/troubleshooting/linux-os-slow
 - vsphere/architecture/vm-vs-guest-os
