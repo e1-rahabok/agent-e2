@@ -65,7 +65,7 @@ flowchart TD
 | 5 Answer | Model | 1 (n with consensus) | The draft answer |
 | 6 Check | Code | 0-1 gap follow-up, 0-1 repair | The checked answer |
 
-- Common case: 2 model calls (agentic averaged 5-8, classic 1). The understand call reads about 1-2K tokens and writes a few hundred; the answer call reads about 16K.
+- Common case: 2 model calls (agentic averaged 5-8, classic 1). The understand call reads about 1-2K tokens and writes a few hundred; the answer call reads about 32K.
 - Consensus samples share one prompt, so on a local vLLM server they run as one batch on a cached prefix.
 
 ## 4. The stages
@@ -87,7 +87,7 @@ flowchart TD
 - Not built: `layer` as a field; the case shown back to the user before the answer (a product screen, M6).
 
 ### 4.2 Plan: the reading set
-Code, from what the knowledge base records about itself ([`harness/planner.py`](planner.py)). Tiers, packed in this order into the context budget (`context_tokens`, 16K):
+Code, from what the knowledge base records about itself ([`harness/planner.py`](planner.py)). Tiers, packed in this order into the context budget (`context_tokens`, 32K since 2026-11-15):
 
 | Tier | Files | Form |
 |---|---|---|
@@ -100,6 +100,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 
 - Search reads a table's header (the metric names), not its data rows, whose times and numbers would outweigh the question's words; an ask that names no topic ("Which statements are correct?") is not searched as a claim (structure review 2026-11-14).
 - Tiers 4 and 5: the claims of a Level 400 question test different mechanisms, and the mechanism file seldom shares the question's words. The links record which file a metric derives from; one search per claim finds the file for each claim.
+- Budget 32K (author, 2026-11-15; 16K before). Retrieval check, BM25, 275 questions, with the named tier capped: with options 16K 171 complete and main file missing 21; 24K 204 and 10; 32K 209 and 7; 48K 210 and 7. Stem only: 119 and 39; 133 and 35; 134 and 34; 134 and 34. The gain stops at 32K. The hardware allows it: up to four large GPUs are acceptable (author, 2026-11-15), and the context window is 64K. The risk is distraction by files the question does not need: the benchmark round reads it from the traces, as wrong answers with every needed file present; if they rise, the budget goes to 24K.
 - Named files whole only for the first 3 (2026-11-15). A question names many metric files by ordinary title words, and every named file used to be read whole, ahead of search: across the 275 questions the tier pulled 1,611 files, of which 318 were needed (20%); one-word matches 769, of which 70 (9%); a median of 4,900 tokens of the 16K budget, over 8,000 on 55 questions, so the last search hit, often the main file, fell out. Retrieval check, BM25, against all named files whole: first 3 whole with the strongest names first, complete 165 to 171 and main file missing 26 to 21 (with options), 117 to 119 and 39 to 39 (stem only). Tried and not taken: first 4, 5 or 6 whole (169, 169, 168 with options); one-word matches moved behind search as sections (main file missing 21 with options, but 41 stem only).
 - Sections: the candidate list averages 21 files against room for about 14 whole files. With whole files, 10 points of needed-file recall were planned and then cut by the budget (plan 78%, context 68%, BM25). A secondary file gives its best sections (BM25 on the question). The retrieval check counts a file as read when its sections are.
 - Deterministic: the same question gets the same reading set. Consensus samples then differ only in reasoning, so a disagreement marks doubt in the reasoning, not a different search.
@@ -158,7 +159,7 @@ Code, from what the knowledge base records about itself ([`harness/planner.py`](
 | Exact values | Computed facts from the catalog and the calculator | `catalog` and `calculate` calls |
 | Order of checks | The flow file read whole (tier 1); to build: the flow executor takes the branch (Q166) | `flow` tool; the model took the branch |
 | One question, one path | Deterministic plan | Lookups chosen per run |
-| Budget | Reading set 16K; context window 32K (`context_window`; a prompt above it is flagged, `context_over`); at most 4 model calls (case, answer, gap, repair) plus consensus samples | 8 tool calls, 12K tokens of tool output |
+| Budget | Reading set 32K; context window 64K (`context_window`; a prompt above it is flagged, `context_over`); at most 4 model calls (case, answer, gap, repair) plus consensus samples | 8 tool calls, 12K tokens of tool output |
 
 - The benchmark uses the deployment budgets, so the score predicts the product. Time per question on the target GPU: 2 model turns in the common case; measured in the live test (M5). Validity sample of 2026-11-14 (Gemma on the gateway, 9 questions): 2 model calls per answer, 11-23K prompt tokens per answer (both calls), 19-59 seconds.
 

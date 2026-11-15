@@ -93,7 +93,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 - URLs and web search:
   - A page the user gives is evidence to check, not a source to follow. A small model tends to repeat text the user supplied, so the harness labels it and the answer states where the page agrees with the knowledge base and where it does not, and why. Level 300 errors in vendor KB articles and blogs are common; correcting them is where Agent E2 beats a frontier model, which tends to agree with the page.
   - Web search runs only when the question needs current facts: a known bug or defect, a symptom after an upgrade, a version, build or patch level, a configuration maximum or default of a release, a renamed product or feature. Known bugs are part of every configuration check (Q104), and the knowledge base is always behind on them. Other questions are answered from the knowledge base without search.
-  - Trim: a page or search result is chunked and only the relevant parts (a few hundred to about 2,000 tokens) enter the context, after the knowledge-base files, so the 16K budget keeps the knowledge base.
+  - Trim: a page or search result is chunked and only the relevant parts (a few hundred to about 2,000 tokens) enter the context, after the knowledge-base files, so the 32K budget keeps the knowledge base.
   - Without Internet access: say the page cannot be opened, ask for the relevant paragraph, answer from the knowledge base.
 
 ### Answer
@@ -115,7 +115,7 @@ Requirements for the shipped assistant. Findings from the author's demo app (202
 | Data stays on site | No customer data leaves the customer network. Agent E2 answers without Internet access. A call out carries only public knowledge requests (a URL the user gives, an update download), never customer data. Updates also arrive as an offline bundle. |
 | One tested system | The app calls `harness/` for retrieval, tools, prompt and verifier. Prompt and settings are versioned in the repository; an edited prompt is an untested prompt. |
 | Vision | Hard requirement (author, 2026-11-14). Administrators upload screenshots, often several per question, and every current foundation model family reads images. Agent E2 reads the pixels of every uploaded image; there is no text-only mode and no text-only model. |
-| Model | Open weights with a commercial licence, vision (above), at least 32K context. Hardware: as little as passes the release gate; one GPU is the stretch target, multiple server class GPUs are acceptable. Chosen by the benchmark. |
+| Model | Open weights with a commercial licence, vision (above), at least 64K context. Hardware: as little as passes the release gate; one GPU is the stretch target, multiple server class GPUs are acceptable. Chosen by the benchmark. |
 | Reproducibility | Every answer stores question, answer, cited ids, tool trace, index version, prompt version, model, settings. |
 | Accuracy | Release gate in section 1, measured on the shipped configuration. |
 | Feedback | Rate and flag every answer, with a cause (knowledge gap, wrong fact, retrieval miss, model error). |

@@ -79,7 +79,7 @@ AI_GATEWAY_API_KEY=... python3 benchmark/runner/retrieval_eval.py --embeddings  
 - No, as a target. 100% is possible on paper and still not the aim:
   - The key is a human judgment: each question's `knowledge` list is what its writer thought necessary. Some lists name a file the answer does not strictly need; some miss one. 100% against an imperfect key is not 100% of what matters.
   - Overfitting: the last few percent are reached by tuning files and links to the visible questions. That raises this number without helping a real user's question. The held-out set ([benchmark/design.md](https://github.com/e1-rahabok/agent-e2/blob/main/benchmark/design.md), section 7.5) would expose it.
-  - The budget is finite: a question that needs 7 files competes for 16K tokens; cutting other context to fit it can hurt elsewhere.
+  - The budget is finite: a question that needs 7 files competes for 32K tokens; cutting other context to fit it can hurt elsewhere.
   - Real users phrase questions in ways no set covers; a perfect score here does not carry over.
 - Perfect is the right goal for one thing, and it is the gate: no question misses its main file (`knowledge_main`). A miss of a supporting file is tolerable; a miss of the main file is a defect to fix every time.
 - Watch the held-out set: when it scores clearly below the visible set, retrieval is being fitted, not improved.

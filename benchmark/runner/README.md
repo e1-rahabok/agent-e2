@@ -92,7 +92,7 @@ python3 benchmark/runner/retrieval_eval.py
 | Knowledge base | None | Yes | None |
 | Who decides what to read | Nobody | The agent's code, from the knowledge base's map | The model: web search and page fetch are offered (`tool_choice: auto`); it may search, fetch, or answer without either |
 | Model calls | 1 | 2 in the common case: the case (temperature 0, so the same question gets the same reading set) and the answer (the model card's sampling, as a local server runs it); plus a gap follow-up and a repair when needed | 1, plus up to 5 tool calls when the model chooses to search |
-| What the model gets | The prompt only | The case, computed facts, catalog facts, the reading set (16K), the up-front blocks, the prompt | The prompt and the pages it chose to read |
+| What the model gets | The prompt only | The case, computed facts, catalog facts, the reading set (32K), the up-front blocks, the prompt | The prompt and the pages it chose to read |
 | Runs on | Every candidate | Every candidate | The frontier reference only |
 
 - Two runs per candidate (author, 2026-11-14): Base and Agent E2. Agent E2 is the shipped system ([harness/AGENT.md](https://github.com/e1-rahabok/agent-e2/blob/main/harness/AGENT.md)); Base is the same model alone. The frontier reference runs one mode, `web`: search is available and Opus decides whether to use it, as in a chat product. There is no run with search removed: a user cannot switch it off, so that run measures nothing a user meets (author, 2026-11-13).
@@ -184,7 +184,7 @@ python3 benchmark/runner/retrieval_eval.py
    - multiple choice: shuffles the options (same order for every model and mode within a run) and appends "Unsure"; free text: sends the prompt as written;
    - answers in the mode:
      - `baseline`: no knowledge base;
-     - `agent-e2`: the six stages of harness/AGENT.md: the case, the reading plan (16K tokens), computed facts, the answer, the checks (verifier, one gap follow-up);
+     - `agent-e2`: the six stages of harness/AGENT.md: the case, the reading plan (32K tokens), computed facts, the answer, the checks (verifier, one gap follow-up);
      - `web`: the frontier reference, web search and page fetch at the model's choice;
    - multiple choice: parses `ANSWER:`, maps letters back, scores exact match, partial credit, misconception picked, Unsure pick;
 5. Questions with image attachments are sent with their images (track `vision`); every candidate must have vision.
