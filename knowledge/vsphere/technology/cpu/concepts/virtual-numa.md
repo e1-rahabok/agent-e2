@@ -10,7 +10,7 @@
 - Requires virtual hardware version 8 or later.
 - Default: vNUMA is active only for VMs with more than 8 vCPUs.
 - Older releases set vNUMA with VMX options: `numa.vcpu.min` (activate it for a smaller VM), `numa.vcpu.maxPerVirtualNode` (vCPUs per virtual node).
-- vSphere 9.1, virtual hardware version 20 and later: set a manual layout in Edit Settings > Virtual Hardware > CPU, menu vNUMA Topology. Do not add `numa.*` attributes in the VM's Advanced Parameters: they are no longer offered there or supported for this use.
+- vSphere 9.1, virtual hardware version 20 and later: set a manual layout in Edit Settings > Virtual Hardware > CPU, menu vNUMA Topology. The Advanced Parameters tab still accepts any attribute and does not validate it, so an accepted `numa.*` key is not proof that ESXi honors it. Use only the documented ones, such as `numa.allowHotadd` (see CPU Hot Add). A VM carries `numa.autosize.cookie` and `numa.autosize.vcpu.maxPerVirtualNode` by default; ESXi writes them.
 
 ## Topology initialization
 - The vNUMA topology is built at power-on from the NUMA topology of the host the VM starts on, and from the VM's vCPU count and memory.
@@ -50,7 +50,7 @@
 ## Misconceptions
 - "vMotion rebuilds the vNUMA layout for the new host" → it does not. The layout stays through the move; the next power cycle on the new host rebuilds it.
 - "The vNUMA layout is fixed at the first power-on" → in vSphere 9.1 (virtual hardware 20 and later) it is rebuilt at every power cycle, unless the cluster setting `VPXD_PersistVnuma` keeps it.
-- "Set `numa.autosize.once` or other `numa.*` options in the VM's advanced parameters" → in 9.1 use the vNUMA Topology menu in Edit Settings > CPU; to keep a layout across reboots, use the cluster setting `VPXD_PersistVnuma`.
+- "Set `numa.autosize.once` in the VM's advanced parameters to keep the layout" → in 9.1 the VM does not list it by default; use the vNUMA Topology menu in Edit Settings > CPU for a layout, and the cluster setting `VPXD_PersistVnuma` to keep it across reboots.
 - "corespersocket sets the NUMA layout" → from vSphere 6.5 it does not. It sets the guest socket presentation.
 - "vNUMA is on for every VM" → by default it is on only for VMs with more than 8 vCPUs.
 
@@ -77,6 +77,7 @@ source:
   path: Guest Operating System CPU Considerations > Virtual NUMA (vNUMA) (p. 57); Using NUMA Systems with ESXi > Virtual NUMA Controls (option numa.autosize.once)
 corrections: []
 review_notes:
+- 'To check (lab, Q216 in project/author-questions.md): whether 9.1 rebuilds the topology at every power cycle (sizing guide) or keeps it unless the vCPU count changes (https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html); whether numa.autosize.once (vSphere 9.1 p. 1945) is honored.'
 - 'Source URL for the vCPU count sentence: https://techdocs.broadcom.com/us/en/vmware-cis/vsphere/vsphere/9-1/vsphere-resource-management/using-numa-systems-with-esxi/using-virtual-numa.html'
 - Checked against 9.1 (revision 20260624). Page 57 unchanged. Page reference updated.
 - 'Source URL: https://www.vmware.com/docs/vsphere-esxi-vcenter-server-9-1-performance-best-practices'
