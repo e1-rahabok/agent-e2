@@ -48,7 +48,7 @@ Each entry:
   - B. The KB default (128 GB on 2 sockets).
   - C. Both: the KB by host size, with 64 GB as the field value for a given host size.
 - Recommended: C. The KB scales with installed memory; one static number fits one host size.
-- Answer:
+- Answer: A. The KB is outdated. You should know as there is no more 4 socket ESXi. 2 socket are rare. Most are single socket.
 
 ### Q239 · CPU > Frequency · Likely vCPU speed on a busy cluster
 
