@@ -37,15 +37,6 @@ Each entry has:
 - Re-checked 2026-11-14: still the first build step for the real world (guided troubleshooting is a 1.0 requirement, MISSION.md, Ways to ask, 4). In the field a question arrives without options, so the flow tier and the computed path carry more of the answer than in the benchmark.
 - Answer:
 
-### Q234 · Guest OS > CPU > Run queue · Threads waiting for a lock: Ready or Wait?
-
-- Files: [Guest OS alerts](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/guest-os-alerts.md) (section Guest OS CPU run queue, step 3); [Processor queue](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/metrics/run-queue.md) (section Cases, Misconceptions); [Windows CPU scheduling](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/guest-os/cpu/windows-cpu-scheduling.md).
-- Search: "waiting for a Software Lock (like a Mutex or Semaphore)" (author's text in Q232); "marked as \"Ready\" because they aren't waiting on I/O".
-- Question: your text for the alert says threads waiting for a lock are marked Ready. run-queue.md and its misconception say a thread blocked on a lock is in the Wait state and joins the queue (Ready) only when the lock is released; the queue counts Ready threads only. Which holds? (A) a blocked thread is Wait; the queue holds the threads that were woken and are runnable but make no progress (contention on the lock, spinning); (B) threads waiting for the lock are counted in the queue; (C) other.
-- Written as now: A, in both files (alert step 3 and run-queue).
-- Expert reading: A. On Windows a thread blocked on a mutex or semaphore is Waiting; Processor Queue Length counts Ready, Standby and Deferred Ready.
-- Answer:
-
 ### Q220 · CPU > Hyper-Threading · Thread Utilization with both threads busy: 100% or 200%?
 
 - Files: [ESXi CPU Usage](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/usage.md); [Core Utilization](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/metrics/host/core-utilization.md); [Hyper-Threading](https://github.com/e1-rahabok/agent-e2/blob/main/knowledge/vsphere/technology/cpu/concepts/hyper-threading.md).
