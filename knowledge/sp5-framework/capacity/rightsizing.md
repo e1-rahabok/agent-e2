@@ -129,10 +129,10 @@
 
 - CPU:
   - total CPU use should stay the same;
-  - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back. Why: default shares are per vCPU, so halving the vCPUs halves the VM's shares while its demand stays the same. On a contended host the VM then gets less than it demands: Usage falls below Demand and Ready rises, while the guest run queue stays the same ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md));
+  - if CPU cycles (GHz) drop after the change, raise the VM's shares instead of adding vCPUs back. Why: default shares are per vCPU, so halving the vCPUs halves the VM's shares while its demand stays the same. On a contended host the VM then gets less than it demands: Usage falls below Demand and Ready rises, while the guest's total run queue stays the same ([`vsphere/technology/cpu/metrics/virtual-motherboard/ready`](../../vsphere/technology/cpu/metrics/virtual-motherboard/ready.md));
   - load spread across all vCPUs → each remaining vCPU shows higher utilization;
   - uneven load, vCPUs taking turns → each remaining vCPU shows about the same utilization;
-  - Guest OS CPU run queue should stay the same; if it rises, check the thread states;
+  - Guest OS CPU run queue: the total should stay the same; if it rises, check the thread states. VCF Operations shows the queue per vCPU, so for the same total it rises in proportion to the cut (16 to 8 vCPUs doubles the value shown) ([`guest-os/cpu/metrics/run-queue`](../../guest-os/cpu/metrics/run-queue.md), section Scale in VCF Operations);
   - context switches rise when the application runs many threads; the rise should be small.
 - Memory:
   - less free memory and more paging in the Guest OS;

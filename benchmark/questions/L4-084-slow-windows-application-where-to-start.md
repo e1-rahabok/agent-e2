@@ -42,7 +42,7 @@ Which statements are correct?
 
 ## Notes
 - Follows the Windows slow flow (knowledge_main). The key does not require the flow's order of Windows counters: that order is a design choice of the flow.
-- No option uses a queue band: whether Guest Peak CPU Queue is per vCPU or a total is open (Q217).
+- No option uses a queue band. Guest Peak CPU Queue in VCF Operations is per vCPU (Q217, settled 2026-11-15).
 - Converted from judged to multiple choice (Q199 F, 2026-11-14).
 
 ## Metadata

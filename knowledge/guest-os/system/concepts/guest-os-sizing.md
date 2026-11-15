@@ -51,7 +51,7 @@ Guest OS CPU Needed (vCPU) = configured vCPU - Idle + run queue factor
 ```
 - Unit: vCPU, not % or GHz.
 - Configured - Idle includes Ready, Co-stop, Swap Wait and Other Wait.
-- Run queue factor example: 8 vCPU, run queue 28. At 3 per vCPU, 8 vCPU absorb 24. Shortage 4. Each added vCPU takes 1 process + 3 queued: add 1 vCPU.
+- Run queue factor example: 8 vCPU, run queue 28 (the total in the guest; VCF Operations shows 3.5, the total divided by the vCPU count: multiply before using this formula). At 3 per vCPU, 8 vCPU absorb 24. Shortage 4. Each added vCPU takes 1 process + 3 queued: add 1 vCPU.
 - Without the run queue factor, Guest OS Needed is usually within 10% of CPU Usage. Usage is higher with System time and Turbo; lower with HT and down-clocking.
 
 ## CPU recommendation

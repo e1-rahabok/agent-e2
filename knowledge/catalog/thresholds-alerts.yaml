@@ -36,7 +36,7 @@ symptoms:
   interval: 20s
   operator: '>'
   value: 20
-  unit: count
+  unit: count per vCPU
   source: knowledge-base
   kb: guest-os/cpu/metrics/run-queue
 - id: sym-vm-cpu-net-run-above-75
@@ -169,7 +169,7 @@ symptoms:
   metric: Guest OS CPU Queue
   operator: '>'
   value: 4
-  unit: count
+  unit: count per vCPU
   source: knowledge-base
   kb: guest-os/cpu/metrics/run-queue
 - id: sym-esxi-cpu-thread-utilization-above-40
